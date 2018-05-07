@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Glucose</Name>
+    <MolarMass value="180.1559" unit="g/mol"/>
+    <State>Liquid</State>
+    <MaximumDiffusionFlux value="1.0" unit="g/cm^2 s"/>
+    <MichaelisCoefficient value="0.8"/>
+    <Clearance>
+        <RenalDynamics>
+            <Regulation>
+                <ChargeInBlood>Neutral</ChargeInBlood>
+                <FractionUnboundInPlasma value="1.0"/>
+                <ReabsorptionRatio value="INF"/>
+                <TransportMaximum value="0.375" unit="g/min"/>
+            </Regulation>
+        </RenalDynamics>
+    </Clearance>
+</Substance>

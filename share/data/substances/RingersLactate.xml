@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>RingersLactate</Name>
+    <Component Name="Sodium">
+        <Concentration value="0.299" unit="g/dL"/>
+    </Component>
+    <Component Name="Chloride">
+        <Concentration value="0.386" unit="g/dL"/>
+    </Component>
+    <Component Name="Lactate">
+        <Concentration value="0.249" unit="g/dL"/>
+    </Component>
+    <Component Name="Potassium">
+        <Concentration value="0.0156" unit="g/dL"/>
+    </Component>
+    <Component Name="Calcium">
+        <Concentration value="0.006" unit="g/dL"/>
+    </Component>
+</SubstanceCompound>

@@ -1,0 +1,10 @@
+# the name of the target operating system
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_GENERATOR "GNU Makefiles")
+set(CMAKE_SYSTEM_PROCESSOR "x86_64")
+# which compilers to use for C and C++
+set(CMAKE_C_COMPILER gcc-5)
+set(CMAKE_C_FLAGS "-mtune=core2 -std=c11 -fPIC")
+set(CMAKE_CXX_COMPILER g++-5)
+set(CMAKE_CXX_FLAGS "-mtune=core2 -std=c++11 -fPIC")
+

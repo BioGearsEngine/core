@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Oxygen</Name>
+    <Density value="1429.0" unit="g/m^3"/>
+    <MolarMass value="32.0" unit="g/mol"/>
+    <State>Gas</State>
+    <RelativeDiffusionCoefficient value="1.0"/>
+    <SolubilityCoefficient value="0.024" unit="1/atm"/>
+</Substance>

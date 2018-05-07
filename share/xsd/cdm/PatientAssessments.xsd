@@ -1,0 +1,186 @@
+<!--
+Copyright 2015 Applied Research Associates, Inc.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the License
+at:
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+-->
+<!-- @brief Assessmentse to be performed to preformed on the patient -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
+	
+	<xs:include schemaLocation="Properties.xsd"/>
+	
+	<!-- @brief Base Patient Assessment type -->
+	<xs:complexType name="PatientAssessmentData">
+		<xs:complexContent>
+			<xs:extension base="ObjectData"/>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- @brief A group of tests that measure how well the lungs take in and release air, and how well they move gases from the atmosphere into the body's circulation. -->
+	<xs:complexType name="PulmonaryFunctionTestData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>
+					<xs:element name="ExpiratoryReserveVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Difference between the amount of air in the lungs after a normal exhale and the amount after an exhale with force. -->
+					<xs:element name="ForcedVitalCapacity" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of air which can be forcibly exhaled from the lungs after taking the deepest possible breath. -->
+					<xs:element name="ForcedExpiratoryVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of air which can be exhaled with force in one breath. -->
+					<xs:element name="ForcedExpiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Measures air flow halfway through an exhale. -->
+					<xs:element name="FunctionalResidualCapacity" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The volume of air in the lungs at the end of a normal exhaled breath. -->
+					<xs:element name="InspiratoryCapacity" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The difference between the maximum lung capacity and the volume at the end of a normal tidal volume exhalation. -->
+					<xs:element name="InspiratoryReserveVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The difference between the maximum lung volume and the volume at the end of a normal inhalation. -->
+					<xs:element name="MaximumVoluntaryVentilation" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of air that can be breathed in and out during 1 minute. -->
+					<xs:element name="PeakExpiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Air flow during forced exhale of the deepest possible breath. -->
+					<xs:element name="ResidualVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of air in the lungs after the patient has exhaled completely. -->                 
+					<xs:element name="SlowVitalCapacity" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of air that can be exhaled slowly after the deepest possible inhalation. -->
+					<xs:element name="TotalLungCapacity" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The volume of air in the lungs after the deepest possible inhalation. -->
+					<xs:element name="VitalCapacity" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The volume of air that can be exhaled from the lungs after the deepest possible inhalation. -->
+					<xs:element name="LungVolumePlot" type="FunctionVolumeVsTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The lung volume as a function of time from the pulmonary function test. -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="PulmonaryFunctionTest" type="PulmonaryFunctionTestData"/>
+	
+	<!-- @brief A blood test used to evaluate overall health and detect a wide range of disorders.
+	     @details References<br>
+	              http://www.nlm.nih.gov/medlineplus/ency/article/003642.htm <br>
+	              http://www.mayoclinic.org/tests-procedures/complete-blood-count/basics/results/prc-20014088-->
+	<xs:complexType name="CompleteBloodCountData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>
+					<xs:element name="Hematocrit" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Volume percentage of red blood cells in the blood.-->								
+					<xs:element name="Hemoglobin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The concentration of hemoglobin in the blood.-->
+					<xs:element name="PlateletCount" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Number of platelets per volume of blood.-->
+					<xs:element name="MeanCorpuscularHemoglobin" type="ScalarMassPerAmountData" minOccurs="0" maxOccurs="1"/> <!--<< @brief (MCH) Hemoglobin amount per red blood cell.-->
+					<xs:element name="MeanCorpuscularHemoglobinConcentration" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief (MCHC) The amount of hemoglobin relative to the size of the cell (hemoglobin concentration) per red blood cell.-->
+					<xs:element name="MeanCorpuscularVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief (MCV) Average red blood cell size.-->
+					<xs:element name="RedBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>	<!--<< @brief  Number of red blood cells per volume of blood.-->
+					<xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Number of white blood cells per volume of blood.-->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CompleteBloodCount" type="CompleteBloodCountData"/>
+	
+	<!-- @brief A comprehensive metabolic panel is a group of 14 blood tests which provide a clinician with an overall picture of the body's chemical balance and metabolism.
+	     @details Reference https://www.nlm.nih.gov/medlineplus/ency/article/003468.htm -->
+	<xs:complexType name="ComprehensiveMetabolicPanelData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>
+					<xs:element name="Albumin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Albumin is a protein made by the liver. A serum albumin test measures the amount of this protein in the clear liquid portion of the blood.-->
+					<xs:element name="ALP" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Alkaline phosphatase (ALP) is a protein found in all body tissues. Tissues with higher amounts of ALP include the liver, bile ducts, and bone.-->
+					<xs:element name="ALT" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Alanine transaminase (ALT) is an enzyme found in the highest amounts in the liver. Injury to the liver results in release of the substance into the blood.-->
+					<xs:element name="AST" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief AST (aspartate aminotransferase) is an enzyme found in high amounts in liver, heart, and muscle cells. It is also found in lesser amounts in other tissues.-->
+					<xs:element name="BUN" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief BUN stands for blood urea nitrogen. Urea nitrogen is what forms when protein breaks down. -->
+					<xs:element name="Calcium" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief  About half of the calcium in the blood is attached to proteins, mainly albumin. For this reason, the calcium blood test can be misleading, and sometimes needs tests to confirm the result. -->
+					<xs:element name="Chloride" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Chloride is a type of electrolyte. It works with other electrolytes such as potassium, sodium, and carbon dioxide (CO2). These substances help keep the proper balance of body fluids and maintain the body's acid-base balance.-->
+					<xs:element name="CO2" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Most of the CO2 is in the form of a substance called bicarbonate (HCO3-). Therefore, the CO2 blood test is really a measure of your blood bicarbonate level.-->
+					<xs:element name="Creatinine" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Measures the level of creatinine in the blood. This test is done to see how well your kidneys work.-->
+					<xs:element name="Glucose" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Measures the amount of a sugar called glucose in a sample of your blood. -->
+					<xs:element name="Potassium" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Measures the amount of potassium in the fluid portion (serum) of the blood. Potassium (K+) helps nerves and muscles communicate. It also helps move nutrients into cells and waste products out of cells. -->
+					<xs:element name="Sodium" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Measures the amount of sodium in the blood. -->
+					<xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Bilirubin is a yellowish pigment found in bile, a fluid made by the liver. A small amount of older red blood cells are replaced by new blood cells every day. Bilirubin is left after these older blood cells are removed. The liver helps break down bilirubin so that it can be removed from the body in the stool. -->
+					<xs:element name="TotalProtein" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Measures the total amount of two classes of proteins found in the fluid portion of your blood. These are albumin and globulin. -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ComprehensiveMetabolicPanel" type="ComprehensiveMetabolicPanelData"/>
+	
+	<!-- @brief Indicator used to signal if something is present -->
+	<xs:simpleType name="enumPresenceIndicator">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Positive"/>
+			<xs:enumeration value="Negative"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- @brief Clarity of a something -->
+	<xs:simpleType name="enumClarityIndicator">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Clear"/>
+			<xs:enumeration value="SlightlyCloudy"/>
+			<xs:enumeration value="Cloudy"/>
+			<xs:enumeration value="Turbid"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- @brief Urine Colors -->
+	<xs:simpleType name="enumUrineColor">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PaleYellow"/>
+			<xs:enumeration value="Yellow"/>
+			<xs:enumeration value="DarkYellow"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- @brief Microscope power used in observation -->
+	<xs:simpleType name="enumMicroscopicObservationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LowPowerField"/>
+			<xs:enumeration value="HighPowerField"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- @brief Quantitative types used in observation with a microscope -->
+	<xs:simpleType name="enumMicroscopicObservationAmount">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Few"/>
+			<xs:enumeration value="Moderate"/>
+			<xs:enumeration value="Many"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- @brief Urinalysis is the physical, chemical, and microscopic examination of urine. It involves a number of tests to detect and measure various compounds that pass through the urine.
+	     @details References<br>
+	              https://labtestsonline.org/understanding/analytes/urinalysis/ui-exams/start/1/
+	-->
+	<xs:complexType name="UrinalysisData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>					
+					<xs:element name="Color" type="enumUrineColor" minOccurs="0" maxOccurs="1"/> <!-- @brief Color of the urine. -->
+					<xs:element name="Appearance" type="enumClarityIndicator" minOccurs="0" maxOccurs="1"/> <!-- @brief Clarity of the urine. -->
+					<xs:element name="Glucose" type="enumPresenceIndicator" minOccurs="0" maxOccurs="1"/><!-- @brief Glucose is normally not present in urine. When glucose is present, the condition is called glucosuria. -->
+					<xs:element name="Ketone" type="enumPresenceIndicator" minOccurs="0" maxOccurs="1"/><!-- @brief  Ketones are not normally found in the urine. They are intermediate products of fat metabolism. They can form when a person does not process enough carbohydrates. -->
+					<xs:element name="Bilirubin" type="ScalarData" minOccurs="0" maxOccurs="1"/><!-- @brief Bilirubin is not present in the urine of normal, healthy individuals. Bilirubin is a waste product that is produced by the liver from the hemoglobin of RBCs that are removed from circulation. -->
+					<xs:element name="SpecificGravity" type="ScalarData" minOccurs="0" maxOccurs="1"/><!-- @brief A measure of urine concentration that can be determined using a chemical test. -->
+					<xs:element name="Blood" type="enumPresenceIndicator" minOccurs="0" maxOccurs="1"/><!-- @brief This test is used to detect hemoglobin in the urine (hemoglobinuria). Hemoglobin is an oxygen-transporting protein found inside red blood cells (RBCs). Its presence in the urine indicates blood in the urine (known as hematuria).-->
+					<xs:element name="pH" type="ScalarData" minOccurs="0" maxOccurs="1"/><!-- @brief As with specific gravity, there are typical but not "abnormal" pH values. The kidneys play an important role in maintaining the acid-base balance of the body.  -->
+					<xs:element name="Protein" type="enumPresenceIndicator" minOccurs="0" maxOccurs="1"/><!-- @brief The protein test pad measures the amount of albumin in the urine. Normally, there will not be detectable quantities. -->
+					<xs:element name="Urobilinogen" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!-- @brief Urobilinogen is normally present in urine in low concentrations. It is formed in the intestine from bilirubin, and a portion of it is absorbed back into the bloodstream. -->
+					<xs:element name="Nitrite" type="enumPresenceIndicator" minOccurs="0" maxOccurs="1"/><!-- @brief This test detects nitrite and is based upon the fact that many bacteria can convert nitrate to nitrite in the urine. -->
+					<xs:element name="LeukocyteEsterase" type="enumPresenceIndicator" minOccurs="0" maxOccurs="1"/><!-- @brief Leukocyte esterase is an enzyme present in most white blood cells (WBCs). Normally, a few white blood cells (see microscopic examination) are present in urine and this test is negative. When the number of WBCs in urine increases significantly, this screening test will become positive.-->
+					
+					<xs:element name="Microscopic" type="UrinalysisMicroscopicData" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+	<xs:complexType name="UrinalysisMicroscopicData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>
+					<xs:element name="ObservationType" type="enumMicroscopicObservationType" minOccurs="1" maxOccurs="1"/><!-- @brief Microscope power used in observation -->
+					<xs:element name="RedBloodCells" type="ScalarAmountData" minOccurs="0" maxOccurs="1"/> <!-- @brief Number of red blood cells viewed. -->
+					<xs:element name="WhiteBloodCells" type="ScalarAmountData" minOccurs="0" maxOccurs="1"/> <!-- @brief Number of white blood cells viewed. -->
+					<xs:element name="EpithelialCells" type="enumMicroscopicObservationAmount" minOccurs="0" maxOccurs="1"/><!-- @brief Amount of epithelial cells viewed. -->
+					<xs:element name="Casts" type="ScalarAmountData" minOccurs="0" maxOccurs="1"/> <!-- @brief Casts are cylindrical particles sometimes found in urine that are formed from coagulated protein secreted by kidney cells. .  -->
+					<xs:element name="Crystals" type="enumMicroscopicObservationAmount" minOccurs="0" maxOccurs="1"/> <!-- @brief Amount of crystals viewed. -->
+					<xs:element name="Bacteria" type="enumMicroscopicObservationAmount" minOccurs="0" maxOccurs="1"/> <!-- @brief Amount of bacteria viewed. -->
+					<xs:element name="Trichomonads" type="enumMicroscopicObservationAmount" minOccurs="0" maxOccurs="1"/> <!-- @brief Trichomonads are parasites that may be found in the urine of women or men (rarely).-->
+					<xs:element name="Yeast" type="enumMicroscopicObservationAmount" minOccurs="0" maxOccurs="1"/> <!-- @brief Amount of yeasts viewed. -->                         
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+	<xs:element name="Urinalysis" type="UrinalysisData"/>
+	
+</xs:schema>

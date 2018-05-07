@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Nutrition xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Carbohydrate value="57.0" unit="g"/>
+    <CarbohydrateDigestionRate value="0.625" unit="g/min"/>
+    <Fat value="23.0" unit="g"/>
+    <FatDigestionRate value="0.055" unit="g/min"/>
+    <Protein value="20.0" unit="g"/>
+    <ProteinDigestionRate value="0.157" unit="g/min"/>
+    <Calcium value="300.0" unit="mg"/>
+    <Sodium value="380.0" unit="mg"/>
+    <Water value="1.0" unit="L"/>
+</Nutrition>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Triacylglycerol</Name>
+    <Density value="875.2" unit="kg/m^3"/>
+    <MolarMass value="807.339" unit="g/mol"/>
+    <State>Liquid</State>
+    <MaximumDiffusionFlux value="0.5" unit="g/cm^2 s"/>
+    <MichaelisCoefficient value="0.8"/>
+</Substance>

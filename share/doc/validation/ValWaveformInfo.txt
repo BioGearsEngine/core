@@ -1,0 +1,49 @@
+#pound sign indicates comments and will not be read by MATLAB
+#Format = ValidationName,NumberOfPeriods
+#Number of periods indicates how many you want to average to get your final waveform that will be compared against
+#Make NumberOfPeriods = 1 for normal analysis
+#ANYTHING OTHER THAN 1 WILL USE THE ALTERNATIVE WAVEFORM ANALYSIS 
+#NumberOfPeriods must be greater than or equal to 1, but not greater than the total number of periods in the validation data.
+#For Circuit analysis, leave as 1.
+#MATLAB STARTS READING BELOW HERE
+Systemic Blood Pressure,5
+Total Blood Volume (BVT),1
+Stroke Volume,1
+Cardiac Output (CO),1
+Renal Blood Volume (BVR),1
+Renal Blood Pressure (BPR),1
+Renal Blood Flow (BQR),1
+Pulmonary Arterial Blood Volume (BVPA),1
+Pulmonary Arterial Blood Pressure (BPPA),1
+Pulmonary Arterial Blood Flow,1
+Pulmonary Capillary Blood Volume (BVPC),1
+Pulmonary Capillary Blood Pressure (BPPC),1
+Pulmonary Capillary Blood Flow (BQPC),1
+Pulmonary Venous Blood Volume (BVPV),1
+Pulmonary Venous Blood Pressure (BPPV),1
+Pulmonary Venous Blood Flow (BQPV),1
+Pulmonary Capillary Wedge Pressure (BPW),1
+Hepatic Blood Volume (BVH),1
+Hepatic Blood Pressure (BPH),1
+Hepatic Artery Blood Flow (BQH),1
+Portal Vein Blood Flow (BQH),1
+Cerebral Blood Volume (BVC),1
+Cerebral Blood Pressure (BPC),1
+Cerebral Blood Flow (BQC),1
+Venous Blood Volume (BVV),1
+Venous Blood Pressure (BPV),1
+Venous Blood Flow (BQV),1
+Central Venous Pressure (CVP),1
+Leg Blood Volume (BVF),1
+Femoral Artery Blood Pressure (BPF),1
+Femoral Artery Blood Flow (BQF),1
+Brachial Blood Volume (BVAX),1
+Brachial Blood Pressure (BPAX),1
+Brachial Blood Flow (BQAX),1
+Left Heart Volume,1
+Left Heart Pressure,1
+Tracheal O2 Partial Pressure,1
+Tracheal CO2 Partial Pressure,1
+Alveolar O2 Pressure,1
+Alveolar CO2 Pressure,1
+Total Alveolar Pressure,1

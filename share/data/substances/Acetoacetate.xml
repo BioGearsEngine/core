@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.1.1-beta" xsi:schemaLocation="">
+    <Name>Acetoacetate</Name>
+    <MolarMass value="102.09" unit="g/mol"/>
+    <State>Liquid</State>
+    <Clearance>
+        <Systemic>
+            <FractionExcretedInFeces value="0.0"/>
+            <FractionUnboundInPlasma value="1.0"/>
+            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
+            <RenalClearance value="0.0" unit="mL/min kg"/>
+            <SystemicClearance value="17.8" unit="mL/min kg"/>
+        </Systemic>
+        <RenalDynamics>
+            <Regulation>
+                <ChargeInBlood>Neutral</ChargeInBlood>
+                <FractionUnboundInPlasma value="1.0"/>
+                <ReabsorptionRatio value="INF"/>
+                <TransportMaximum value="INF" unit="mg/min"/>
+            </Regulation>
+        </RenalDynamics>
+    </Clearance>
+</Substance>

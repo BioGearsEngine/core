@@ -1,0 +1,1 @@
+Open Mainpage.html in your browser, which will redirect you to index.html located in the html folder.

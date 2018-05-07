@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Glucagon</Name>
+    <MolarMass value="3482.75" unit="g/mol"/>
+    <State>Liquid</State>
+    <Clearance>
+        <Systemic>
+            <FractionExcretedInFeces value="0.0"/>
+            <FractionUnboundInPlasma value="1.0"/>
+            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
+            <RenalClearance value="0.0" unit="mL/min kg"/>
+            <SystemicClearance value="9.0" unit="mL/min kg"/>
+        </Systemic>
+        <RenalDynamics>
+            <Clearance value="0.0" unit="mL/min kg"/>
+        </RenalDynamics>
+    </Clearance>
+</Substance>

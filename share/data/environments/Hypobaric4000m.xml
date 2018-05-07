@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EnvironmentalConditions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <SurroundingType>Air</SurroundingType>
+    <AirVelocity value="0.0" unit="m/s"/>
+    <AmbientTemperature value="22.0" unit="degC"/>
+    <AtmosphericPressure value="475.0" unit="mmHg"/>
+    <ClothingResistance value="0.5" unit="clo"/>
+    <Emissivity value="0.9"/>
+    <MeanRadiantTemperature value="22.0" unit="degC"/>
+    <RelativeHumidity value="0.5"/>
+    <RespirationAmbientTemperature value="22.0" unit="degC"/>
+    <AmbientGas Name="Nitrogen">
+        <FractionAmount value="0.7901"/>
+    </AmbientGas>
+    <AmbientGas Name="Oxygen">
+        <FractionAmount value="0.2095"/>
+    </AmbientGas>
+    <AmbientGas Name="CarbonDioxide">
+        <FractionAmount value="4.0E-4"/>
+    </AmbientGas>
+</EnvironmentalConditions>

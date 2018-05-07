@@ -1,0 +1,53 @@
+<!--END GENERATE_TREEVIEW-->
+<!--BEGIN !GENERATE_TREEVIEW-->
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id="footer">
+    <div class="container">
+        <div class='row text-muted'>
+            <div class='footer-row col-md-8'>Copyright &copy; 2016 <a href='http://www.ara.com'>Applied Research Associates, Inc.</a> All Rights Reserved. Sponsored by <a href='http://www.tatrc.org'>TATRC</a></div>
+            <div class='footer-row col-md-1'><a href='https://www.biogearsengine.com/support/contact'>Contact</a></div>
+            <div class='footer-row col-md-1'><a href='https://www.biogearsengine.com/support/terms'>Terms</a></div>
+            <div class='footer-row col-md-1'><a href='https://www.biogearsengine.com/support/privacy'>Privacy</a></div>
+            <div class='footer-icons col-md-1'>
+                <a class="footer-follow-icon" target="_blank" href="https://www.facebook.com/biogears.engine">
+                    <img src="bootstrap/facebook.png" alt="FB">
+                </a>
+                <a class="footer-follow-icon" target="_blank" href="https://twitter.com/BioGearsEngine">
+                    <img src="bootstrap/twitter.png" alt="TW">
+                </a>
+                <a class="footer-follow-icon" target="_blank" href="http://www.linkedin.com/pub/biogears-engine/8a/389/846">
+                    <img src="bootstrap/linkedin.png" alt="LI">
+                </a>
+                <a class="footer-follow-icon" target="_blank" href="http://www.slideshare.net/BioGearsEngine/">
+                    <img src="bootstrap/slideshare.png" alt="SS">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	$(function(){
+		$('.cse-search').change(function(){
+			$('.adjust-right li.active').focus();
+		});
+		$('.cse-search').on('click', function(){
+			if($(this).hasClass('active')){
+				$(this).removeClass('active');
+				$('.google-cse').slideUp();
+			} else {
+				$(this).addClass('active');
+				$('.google-cse').hide().removeClass('hide').slideDown();
+			}
+		});
+	});
+</script>
+<!--END !GENERATE_TREEVIEW-->
+</body>
+</html>

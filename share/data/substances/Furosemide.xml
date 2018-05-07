@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Furosemide</Name>
+    <MolarMass value="330.74" unit="g/mol"/>
+    <State>Liquid</State>
+    <Clearance>
+        <Systemic>
+            <FractionExcretedInFeces value="0.08"/>
+            <FractionUnboundInPlasma value="0.05"/>
+            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
+            <RenalClearance value="2.25" unit="mL/min kg"/>
+            <SystemicClearance value="4.62" unit="mL/min kg"/>
+        </Systemic>
+        <RenalDynamics>
+            <Clearance value="2.25" unit="mL/min kg"/>
+        </RenalDynamics>
+    </Clearance>
+    <Pharmacokinetics>
+        <Physicochemicals>
+            <AcidDissociationConstant value="3.0"/>
+            <BindingProtein>Albumin</BindingProtein>
+            <BloodPlasmaRatio value="0.75"/>
+            <FractionUnboundInPlasma value="0.05"/>
+            <IonicState>Acid</IonicState>
+            <LogP value="2.03"/>
+        </Physicochemicals>
+    </Pharmacokinetics>
+    <Pharmacodynamics>
+        <Bronchodilation value="0.0"/>
+        <DiastolicPressureModifier value="0.0"/>
+        <EC50 value="0.4462" unit="ug/mL"/>
+        <EMaxShapeParameter value="1.0"/>
+        <HeartRateModifier value="0.0"/>
+        <NeuromuscularBlock value="0.0"/>
+        <PupillaryResponse>
+            <ReactivityModifier value="0.0"/>
+            <SizeModifier value="0.0"/>
+        </PupillaryResponse>
+        <RespirationRateModifier value="0.0"/>
+        <Sedation value="0.0"/>
+        <SystolicPressureModifier value="0.0"/>
+        <TidalVolumeModifier value="0.0"/>
+        <TubularPermeabilityModifier value="0.8"/>
+        <CentralNervousModifier value="0.0"/>
+        <EffectSiteRateConstant value="0.0" unit="1/min"/>
+    </Pharmacodynamics>
+</Substance>

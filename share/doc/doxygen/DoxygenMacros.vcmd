@@ -1,0 +1,1095 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SerializableSnippets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <commands>
+    <Snippet>
+      <id>1</id>
+      <name>FunctionHeader</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+    Private Function IsAlpha(ByVal strEval As String) As Boolean
+        If (Asc(strEval) &gt;= Asc("A") And Asc(strEval) &lt;= Asc("Z")) _
+        Or (Asc(strEval) &gt;= Asc("a") And Asc(strEval) &lt;= Asc("z")) Then
+            IsAlpha = True
+        Else
+            IsAlpha = False
+        End If
+    End Function
+    Dim commentOpenAsterisk As String = "/***************************************************************************************************"
+    Dim commentCloseAsterisk As String = "***************************************************************************************************/"
+    Dim commentSeperatorDash As String = "//--------------------------------------------------------------------------------------------------"
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+	        'DESCRIPTION: Creates a comment block for the currently selected C/C++ function prototype
+
+        On Error GoTo _ERROR
+
+        Dim content As String
+        Dim buffer As String
+        Dim buffer2 As String
+        Dim returnType As String
+        Dim functionName As String
+        Dim tokens As String()
+        Dim tokens2 As String()
+        Dim tokens3 As String()
+        Dim bRaiseError As Boolean
+        Dim bSkip As Boolean
+        Dim i As Integer
+        Dim j As Integer
+        Dim k As Integer
+        Dim nCurLen As Integer
+        Dim nMaxLen As Integer
+        Dim nParamTabAdd As Integer
+        Dim params As New System.Collections.ArrayList
+        Dim e As System.Collections.IEnumerator
+        Dim descr As String
+
+        ' default the values
+        content = String.Empty
+        buffer = String.Empty
+        buffer2 = String.Empty
+        returnType = String.Empty
+        functionName = String.Empty
+        bRaiseError = False
+        bSkip = False
+        i = 0
+        j = 0
+        k = 0
+        nCurLen = 0
+        nMaxLen = 0
+        nParamTabAdd = 0
+        descr = String.Empty
+
+        ' verify we have a valid C++ file
+        If DTE.ActiveDocument.Language &lt;&gt; EnvDTE.Constants.dsCPP Then
+            MsgBox("You need to have an active C/C++ document open" + vbLf + _
+                   "with the function prototype selected.", _
+                   MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+            Exit Sub
+        End If
+
+        ' extract the selected content, remove all carriage return and line feeds,
+        ' and trim any whitespace from the ends of the string
+        content = DTE.ActiveDocument.Selection.Text
+        content = content.Replace(vbCrLf, " ")
+        content = content.Replace(vbTab, " ")
+        content = content.Trim()
+
+        ' verify the header content remaining after the above alterations
+        If (String.IsNullOrEmpty(content) = True) Then
+            MsgBox("The selected area does not contain any valid" + vbLf + _
+                   "text for function header generation.", _
+                   MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+            Exit Sub
+        End If
+
+        ' make sure there is a '(' and a ')'
+        i = content.IndexOf("(")
+        j = content.IndexOf(")")
+        If ((i = -1) Or (j = -1) Or (i &gt; j)) Then
+            MsgBox("It is possible that the function you are trying " + vbLf + _
+                   "to work with has a syntax error.", _
+                   MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+            Exit Sub
+        End If
+
+
+        ' -----------------------------------------------
+        '
+        ' function name extraction
+        '
+        ' -----------------------------------------------
+
+        ' obtain the function name by locating the opening
+        ' parenthesis index and then walk backwards until we
+        ' find a space or hit the beginning of the string.
+        ' from the beginning index, we will then extract the
+        ' substring from the function name
+        buffer = content.Substring(0, i)
+
+        ' for any space that exists to the left of the '('
+        ' symbol, remove them and then continue with the
+        ' function name extraction
+        j = i
+        If ((j &gt; 0) And (content.Chars(j - 1).ToString() = " ")) Then
+            While ((j &gt; 0) And (content.Chars(j - 1).ToString() = " "))
+                j = j - 1
+            End While
+
+            If (j &lt; 0) Then
+                MsgBox("Unable to extract the function name.", _
+                   MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+                Exit Sub
+            End If
+
+            content = content.Remove(j, i - j)
+        End If
+
+        ' now, we should have no spaces between the function name
+        ' and the opening parenthesis so now, we will walk backwards
+        ' to find the first whitespace and when to locate it, we have
+        ' found the index of the character starting just before the
+        ' function name.
+        ' NOTE: we could be on a constructor where there is no space
+        ' to find so we must make sure we go as far back as the length
+        ' of the string only and no further
+        i = content.IndexOf("(")
+        j = 0
+        If ((content.Contains(" ") = True) And (content.IndexOf(" ") &lt; i)) Then
+            j = i
+            While ((j &gt; 0) And (content.Chars(j - 1).ToString() &lt;&gt; " "))
+                j = j - 1
+            End While
+
+            If (j &lt; 0) Then
+                MsgBox("Unable to extract the function name.", _
+                   MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+                Exit Sub
+            End If
+        End If
+
+        functionName = buffer.Substring(j, i - j)
+
+
+        ' -----------------------------------------------
+        '
+        ' function return type extraction
+        '
+        ' -----------------------------------------------
+
+        '  obtain the function return type
+        If j &gt; 0 Then
+            returnType = buffer.Substring(0, j - 1).Trim()
+        End If
+
+        ' check for a possible inline in the string
+        ' NOTE: we assume the inline keyword exists
+        ' at the beginning of the string so when we
+        ' find it, we simply remove it and retain
+        ' the string to the right of it
+        buffer = returnType.ToLower()
+        If buffer.Contains("inline") = True Then
+            j = buffer.IndexOf("inline")
+            returnType = returnType.Substring(j + 6, returnType.Length - (j + 6))
+            returnType = returnType.Trim()
+        End If
+
+        ' now, remove any potential function decoration symbols
+        ' that could exist between the return type and the name
+        ' of the function
+        If returnType.Contains(" ") = True Then
+            returnType = returnType.Substring(0, returnType.IndexOf(" "))
+            returnType = returnType.Trim()
+        End If
+
+
+        ' -----------------------------------------------
+        '
+        ' function parameter list collection
+        '
+        ' -----------------------------------------------
+
+        ' remove the opening and closing braces
+        i = content.IndexOf("(")
+        content = content.Substring(i + 1, content.IndexOf(")") - (i + 1)).Trim()
+
+        ' split the string over the commas
+        tokens = content.Split(",")
+
+        ' verify we actually have tokens and are valid
+        If ((tokens.Length &gt;= 1) And (String.IsNullOrEmpty(tokens(0)) = False)) Then
+            For i = 0 To tokens.Length - 1
+
+                bSkip = False
+
+                ' remove(any) comments from the tokens, for example:
+                '   const bool bIsValid /* = true */
+                ' where the /* = true */ should be removed
+                ' OR
+                ' extract the function parameter argument that
+                ' could be embedded in the comment, for example:
+                '   CMyObject* /* pPointerToObject */
+                ' where the pPointerToObject should be extracted
+                ' and set back into the token slot
+                '
+                ' if the function name parameter is not embedded inside of
+                ' a comment, then we will assume it to be the first token
+                ' that resides to the left of a comment, where the comment
+                ' is the first comment to reside beside something that is
+                ' not contained in a comment
+                '
+                '   E.g., const char* /* comment 1 */ const /* comment 2 */ pszName /* comment 3 */ /* comment 4 */ ... /* comment N */
+                '
+                ' where "comment 3" is assumed to be the comment beside
+                ' the function parameter name
+                '
+                ' if the function parameter name is embedded in a comment,
+                ' then the comment immediately to the right-most non-comment
+                ' is assumed to contain the function name parameter
+                '
+                '   E.g., const char* /* comment 1 */ const /* pszName = NULL */ /* comment 3 */ /* comment 4 */ ... /* comment N */
+
+
+                ' remove all comments
+                buffer = tokens(i).Trim()
+                j = buffer.IndexOf("/*")
+                k = buffer.IndexOf("*/")
+                If ((j &lt;&gt; -1) And (k &lt;&gt; -1) And (k &gt; j)) Then
+                    Do
+                        ' remove the current comment
+                        buffer = buffer.Remove(j, (k + 2) - j).Trim()
+
+                        ' look for the next comment
+                        j = buffer.IndexOf("/*")
+                        k = buffer.IndexOf("*/")
+                    Loop While ((j &lt;&gt; -1) And (k &lt;&gt; -1) And (k &gt; j))
+                End If
+
+                ' remove all asterisks, ampersands, and const keywords
+                buffer2 = buffer
+                buffer = buffer.Replace("*", "").Replace("&amp;", "").Trim()
+                buffer = buffer.Replace("const ", "").Replace(" const ", "").Replace(" const", "").Trim()
+
+                ' tokenize the current function parameter over the space character
+                tokens2 = buffer.Split(" ")
+                tokens3 = tokens2
+
+                ' if we have two or more items, then we should have, at a minimum,
+                ' the function parameter type and function parameter name.  thus,
+                ' take the last token found, which should be the name of the function
+                ' parameter
+                If ((tokens2.Length &gt;= 2) And (String.IsNullOrEmpty(tokens2(0)) = False)) Then
+                    tokens(i) = tokens2(tokens2.Length - 1)
+                Else
+                    ' else, we did not find the function parameter name so
+                    ' lets look for it in the comments, if any have been found
+
+                    ' reset the tokens to include the const strings as they can
+                    ' come after the type of argument (e.g., const char* const ...)
+                    tokens2 = buffer2.Split(" ")
+
+                    ' to locate the comment that is anticipated to house the
+                    ' function parameter name, we are going to assume the comment
+                    ' residing to the immediate right of the last token in the
+                    ' tokens2 collection above.  in this comment, we also assume
+                    ' the first token (based upon splitting over the space
+                    ' character) is the name of the token.  we will ensure the
+                    ' name is a valid C++ function name and handle all errors
+                    bRaiseError = True
+                    If ((tokens2.Length &gt;= 1) And (String.IsNullOrEmpty(tokens2(0)) = False)) Then
+                        ' look for the last token in the original token string,
+                        ' starting from the end of the original token (e.g.,
+                        ' we do not want to find the first "const" when we want
+                        ' to find the seconds "const")
+                        j = tokens(i).LastIndexOf(tokens2(tokens2.Length - 1))
+                        If -1 &lt;&gt; j Then
+                            ' obtain everything to the right of the last token
+                            buffer = tokens(i).Substring(j + tokens2(tokens2.Length - 1).Length).Trim()
+
+                            ' look for the first opening and closing comment tags
+                            j = buffer.IndexOf("/*")
+                            k = buffer.IndexOf("*/")
+                            If ((j &lt;&gt; -1) And (k &lt;&gt; -1) And (k &gt; j)) Then
+                                ' extract the everything to the right of the opening comment
+                                buffer = buffer.Substring(j + 2).Trim()
+
+                                ' walk the string, looking for the first non-alphanumeric,
+                                ' non-underscore character and stop
+                                j = 0
+                                If (IsAlpha(buffer(j)) = True) Or (IsNumeric(buffer(j)) = True) Or (buffer(j) = "_") Then
+                                    Do
+                                        j = j + 1
+                                    Loop While (j &lt;= k) And ((IsAlpha(buffer(j)) = True) Or (IsNumeric(buffer(j)) = True) Or (buffer(j) = "_"))
+                                End If
+
+                                ' if we did not walk off the end of the string
+                                ' and did not pass the closing comment tags, set
+                                ' the token name.  otherwise, we are unable to
+                                ' locate the function parameter name
+                                If (j &lt; buffer.Length) And (j &lt;= k) Then
+                                    tokens(i) = buffer.Substring(0, j)
+                                    bRaiseError = False
+                                End If
+                            Else
+                                ' else, we do not have any embedded comments so as a last
+                                ' attempt to process the content, check for function parameters
+                                ' that only have a type and if
+                            End If
+                        End If
+                    End If
+                End If
+
+                ' if we have reached an error state and the token length
+                ' is only equal to one, then we will assume the parameter
+                ' is just a listing of the parameter type and not the
+                ' parameter name.  for example, the following class method
+                ' has two function parameters that list their types and not
+                ' their(names):
+                '
+                ' LRESULT CMyWindow::OnGetEditMode(WPARAM, LPARAM)
+                If bRaiseError And tokens3.Length = 1 Then
+                    bSkip = True
+                    bRaiseError = False
+                End If
+
+                ' process any error condition as needed
+                If bRaiseError = True Then
+                    Err.Raise(-1, "FunctionHeader", "function parameter number " &amp; (i + 1) &amp; " does not have a valid name.")
+                End If
+
+                ' store the parameter name, only if we are not to skip the token
+                If bSkip = False Then
+                    params.Add(tokens(i))
+                End If
+            Next
+        End If
+
+
+        ' -----------------------------------------------
+        '
+        ' maximum length variable name determination
+        '
+        ' -----------------------------------------------
+
+        ' obtain the length of the longest variable name.
+        nMaxLen = 0
+        e = params.GetEnumerator()
+        While e.MoveNext
+            If nMaxLen &lt; Len(e.Current) Then
+                nMaxLen = Len(e.Current)
+            End If
+        End While
+
+        ' safety net to assure we have a length of atleast one
+        ' to represent the number of whitespace characters to
+        ' print out between the variable name and the description
+        If nMaxLen = 0 Then
+            nMaxLen = 1
+        End If
+
+
+        ' -----------------------------------------------
+        '
+        ' start of function header construction
+        '
+        ' -----------------------------------------------
+
+        ' start to construct the function header string
+        descr = ""
+        descr = descr + commentSeperatorDash + vbLf
+        descr = descr + "/// \brief" + vbLf
+        descr = descr + "/// &lt;BRIEF_DESCRIPTION&gt;" + vbLf
+
+        ' only append the starting three forward slashes
+        ' if we have parameters to list out
+        If params.Count &gt; 0 Then
+            descr = descr + "///" + vbLf
+        End If
+
+
+        ' -----------------------------------------------
+        '
+        ' function parameter list output
+        '
+        ' -----------------------------------------------
+        nParamTabAdd = 4 - ((12 + nMaxLen) Mod 4)
+        e = params.GetEnumerator
+        While e.MoveNext
+            ' start with appending the current variable name
+            descr = descr + "/// \param  " + e.Current
+
+            ' obtain the length of the current variable name
+            nCurLen = Len(e.Current)
+
+            ' output whitespace characters, which is the maximum
+            ' length of all variables, minus the length of the current
+            ' variable, plus a tab
+            j = 0
+            Do While j &lt; (nMaxLen - nCurLen + nParamTabAdd)
+                descr = descr + " "
+                j = j + 1
+            Loop
+
+            ' append the description entry message
+            descr = descr + "&lt;VAR_DESCRIPTION&gt;" + vbLf
+        End While
+
+
+        ' -----------------------------------------------
+        '
+        ' return type output
+        '
+        ' -----------------------------------------------
+
+        ' check that returnType is not zero length and that void is not in the string
+        ' If InStr returns a 0, that means that either returnType is a null string or
+        ' that it couldn't find void in the string
+        If (returnType.Length &gt; 0) And (returnType.Contains("void") = False) Then
+            descr = descr + "///" + vbLf
+            descr = descr + "/// \return " + "&lt;DESCRIPTION&gt;" + vbLf
+        End If
+        descr = descr + "///" + vbLf
+        descr = descr + "/// \details" + vbLf
+        descr = descr + "/// &lt;DETAILED_DESCRIPTION&gt;" + vbLf
+
+        descr = descr + commentSeperatorDash + vbLf
+
+        ' -----------------------------------------------
+        '
+        ' end of function header construction
+        '
+        ' -----------------------------------------------
+
+        ' position cursor at start of selected line and assign the constructed
+        ' function header to the active selection
+        DTE.ActiveDocument.Selection.GotoLine(DTE.ActiveDocument.Selection.TopPoint.Line)
+        DTE.ActiveDocument.Selection.StartOfLine()
+        DTE.ActiveDocument.Selection.Text = descr
+
+_Exit:
+        Exit Sub
+
+_ERROR:
+        MsgBox( _
+            "An error has occurred:" &amp; vbCrLf &amp; vbCrLf &amp; _
+            "Number : " &amp; Err.Number &amp; vbCrLf &amp; _
+            "Source : " &amp; Err.Source &amp; vbCrLf &amp; _
+            "Line Number : " &amp; Err.Erl &amp; vbCrLf &amp; _
+            "Description : " &amp; Err.Description, vbCrLf &amp; _
+            MsgBoxStyle.OkOnly &amp; MsgBoxStyle.Critical, _
+            "Function Header Error")
+        Err.Clear()
+	End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>2</id>
+      <name>FileHeader</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+    Dim commentOpenAsterisk As String = "/***************************************************************************************************"
+    Dim commentCloseAsterisk As String = "***************************************************************************************************/"
+    Dim commentSeperatorDash As String = "//--------------------------------------------------------------------------------------------------"
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+ 'DESCRIPTION: Insert file header
+
+        Dim fileName As String
+        Dim fileHeader As String
+
+        fileName = DTE.ActiveDocument.Name
+        If fileName.Length = 0 Then
+            fileName = "&lt;Filename&gt;"
+        End If
+
+        fileHeader = ""
+        fileHeader = fileHeader + commentSeperatorDash + vbLf
+        fileHeader = fileHeader + "/// \file " + fileName + vbLf
+        fileHeader = fileHeader + "///" + vbLf
+        Copyright(fileHeader)
+        fileHeader = fileHeader + "///" + vbLf
+        fileHeader = fileHeader + "/// $Revision$" + vbLf
+        fileHeader = fileHeader + "/// $Date$" + vbLf
+        fileHeader = fileHeader + "///" + vbLf
+        fileHeader = fileHeader + "/// \brief &lt;BRIEF DESCRIPTION&gt;" + vbLf
+        fileHeader = fileHeader + "///" + vbLf
+        fileHeader = fileHeader + "/// \details &lt;FULL DESCRIPTION&gt;" + vbLf
+        fileHeader = fileHeader + commentSeperatorDash + vbLf
+
+        ' position cursor at start of selected line and assign the constructed
+        ' function header to the active selection
+        DTE.ActiveDocument.Selection.GotoLine(DTE.ActiveDocument.Selection.TopPoint.Line)
+        DTE.ActiveDocument.Selection.StartOfLine()
+        DTE.ActiveDocument.Selection.Text = fileHeader
+		
+	End Sub
+
+Sub Copyright(ByRef fileHeader)
+        'DESCRIPTION: Insert the copyright info
+
+        'Dim fileHeader As String
+
+        fileHeader = ""
+        fileHeader = fileHeader + "///  \copyright Copyright (c) 2014, APPLIED RESEARCH ASSOCIATES INC. All rights reserved." + vbLf
+        fileHeader = fileHeader + "/// " + vbLf
+        fileHeader = fileHeader + "/// BSD-3 License:\n" + vbLf
+        fileHeader = fileHeader + "/// Redistribution and use in source and binary forms, with or without" + vbLf
+        fileHeader = fileHeader + "/// modification, are permitted provided that the following conditions are met:" + vbLf
+        fileHeader = fileHeader + "/// * Redistributions of source code must retain the above copyright" + vbLf
+        fileHeader = fileHeader + "/// notice, this list of conditions and the following disclaimer." + vbLf
+        fileHeader = fileHeader + "/// * Redistributions in binary form must reproduce the above copyright" + vbLf
+        fileHeader = fileHeader + "/// notice, this list of conditions and the following disclaimer in the" + vbLf
+        fileHeader = fileHeader + "/// documentation and/or other materials provided with the distribution." + vbLf
+        fileHeader = fileHeader + "/// * Neither the name of the Applied Research Associates Inc. nor the" + vbLf
+        fileHeader = fileHeader + "/// names of its contributors may be used to endorse or promote products" + vbLf
+        fileHeader = fileHeader + "/// derived from this software without specific prior written permission." + vbLf
+        fileHeader = fileHeader + "/// " + vbLf
+        fileHeader = fileHeader + "/// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND" + vbLf
+        fileHeader = fileHeader + "/// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED" + vbLf
+        fileHeader = fileHeader + "/// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE" + vbLf
+        fileHeader = fileHeader + "/// DISCLAIMED. IN NO EVENT SHALL APPLIED RESEARCH ASSOCIATES INC. BE LIABLE FOR ANY" + vbLf
+        fileHeader = fileHeader + "/// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES" + vbLf
+        fileHeader = fileHeader + "/// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;" + vbLf
+        fileHeader = fileHeader + "/// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND" + vbLf
+        fileHeader = fileHeader + "/// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT" + vbLf
+        fileHeader = fileHeader + "/// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS" + vbLf
+        fileHeader = fileHeader + "/// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." + vbLf
+    End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>3</id>
+      <name>ClassHeader</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+    Dim commentSeperatorDash As String = "//--------------------------------------------------------------------------------------------------"
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+		'DESCRIPTION: Insert Class header
+
+        Dim content As String
+        Dim buffer As String
+        Dim i As Integer
+        Dim tokens As String()
+        Dim className As String
+        Dim classHeader As String
+
+        ' extract the selected content, remove all carriage return and line feeds,
+        ' and trim any whitespace from the ends of the string
+        content = DTE.ActiveDocument.Selection.Text
+        content = content.Replace(vbCrLf, "")
+        content = content.Trim()
+
+        ' verify the class keyword is present
+        If content.ToLower().Contains("class ") = False Then
+            MsgBox("The selected area does not contain any valid" + vbLf + _
+                   "text for class header generation.", _
+                   MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+            Exit Sub
+        End If
+
+        ' look for the colon character and if found, trim off everything
+        ' to the right of the class name, including the colon and any
+        ' whitespace that may exist between the class name and the colon.
+        ' NOTE: since classes can include namespaces, we cannot look for
+        ' the colon alone as we will pick up the first colon of the
+        ' namespace qualifier.  Thus, we hold a temporary buffer with the
+        ' namespace qualifier being replaced by two periods, which allows
+        ' us to then search for the single colon character.  The two
+        ' periods preserves the correct number of characters and thus
+        ' allows using an index between the two strings without any
+        ' adjustments to the index
+        buffer = content.Replace("::", "..")
+        i = buffer.IndexOf(":")
+        If i &lt;&gt; -1 Then
+            ' ensure there are no other remaining colon characters and if
+            ' so, notify the user and bail out
+            If buffer.IndexOf(":", i + 1) &lt;&gt; -1 Then
+                MsgBox("The selected text contains more than one colon" + vbLf + _
+                       "character and cannot be processed.", _
+                       MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+                Exit Sub
+            End If
+            content = content.Substring(0, i).Trim()
+        End If
+
+        ' if the user has selected and area that is going beyond the class
+        ' name, then lets drop it by looking for the opening bracket character.
+        ' when found, if we do, drop everthing to the right of, and including,
+        ' the opening bracket character
+        i = content.IndexOf("{")
+        If i &lt;&gt; -1 Then
+            content = content.Remove(i, content.Length - i).Trim()
+        End If
+
+        ' tokenize the remaining strings as the last string is the class name
+        tokens = content.Split(" ")
+
+        ' verify we have tokens to process
+        If tokens.Length = 0 Then
+            MsgBox("Unable to extract the class name.", _
+                   MsgBoxStyle.Exclamation + MsgBoxStyle.OkOnly)
+            Exit Sub
+        End If
+
+        ' extract the last token, which is the class name
+        className = tokens(tokens.Length - 1)
+
+        ' build up the class header string
+        classHeader = ""
+        classHeader = classHeader + commentSeperatorDash + vbLf
+        classHeader = classHeader + "/// \brief" + vbLf
+        classHeader = classHeader + "/// &lt;BRIEF_DESCRIPTION&gt;" + vbLf
+        classHeader = classHeader + "///" + vbLf
+        classHeader = classHeader + "/// &lt;DETAILED_DESCRIPTION&gt;" + vbLf
+        classHeader = classHeader + commentSeperatorDash + vbLf
+
+        ' position cursor at start of selected line and assign the constructed
+        ' function header to the active selection
+        DTE.ActiveDocument.Selection.GotoLine(DTE.ActiveDocument.Selection.TopPoint.Line)
+        DTE.ActiveDocument.Selection.StartOfLine()
+        DTE.ActiveDocument.Selection.Text = classHeader
+
+	End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>4</id>
+      <name>HeaderFileTemplate</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+    	Dim commentSeperatorDash As String = "//--------------------------------------------------------------------------------------------------"
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+		'DESCRIPTION: Creates a C++ class header template
+
+        ' uppercase file name
+        Dim strFileNameUC As String
+        strFileNameUC = ""
+        strFileNameUC = DTE.ActiveDocument.Name
+        strFileNameUC = UCase(strFileNameUC)
+        strFileNameUC = Replace(strFileNameUC, ".", "_")
+
+        ' class name
+        Dim strClassName As String
+        strClassName = ""
+        strClassName = DTE.ActiveDocument.Name
+
+        Dim pos As Integer
+        pos = InStr(strClassName, ".")
+        If ((pos - 1) &gt; 0) Then
+            strClassName = Left(strClassName, pos - 1)
+        End If
+
+        ' class template
+
+        Dim strTemplate As String
+        strTemplate = ""
+        strTemplate = strTemplate + commentSeperatorDash + vbLf
+        strTemplate = strTemplate + "/// \file " + DTE.ActiveDocument.Name + vbLf
+        strTemplate = strTemplate + "///" + vbLf
+        Copyright(strTemplate)
+        strTemplate = strTemplate + "///" + vbLf
+        strTemplate = strTemplate + "/// $Revision$" + vbLf
+        strTemplate = strTemplate + "/// $Date$" + vbLf
+        strTemplate = strTemplate + "///" + vbLf
+        strTemplate = strTemplate + "/// \brief Contains the interface declaration for the " + strClassName + " class." + vbLf
+        strTemplate = strTemplate + "///" + vbLf
+        strTemplate = strTemplate + "/// \details &lt;FULL DESCRIPTION&gt;" + vbLf
+        strTemplate = strTemplate + commentSeperatorDash + vbLf + vbLf + vbLf
+        strTemplate = strTemplate + "#ifndef " + strFileNameUC + vbLf
+        strTemplate = strTemplate + "#define " + strFileNameUC + vbLf + vbLf
+        strTemplate = strTemplate + "// system include files" + vbLf + vbLf
+        strTemplate = strTemplate + "// project include files" + vbLf + vbLf
+        strTemplate = strTemplate + "// external project include files" + vbLf + vbLf
+        strTemplate = strTemplate + "// forward declarations" + vbLf + vbLf
+        strTemplate = strTemplate + "// typedefs" + vbLf + vbLf
+        strTemplate = strTemplate + "// constants" + vbLf + vbLf
+        strTemplate = strTemplate + "// defines" + vbLf + vbLf
+        strTemplate = strTemplate + "// namespaces" + vbLf + vbLf
+        strTemplate = strTemplate + commentSeperatorDash + vbLf
+        strTemplate = strTemplate + "/// \brief" + vbLf
+        strTemplate = strTemplate + "/// &lt;BRIEF_DESCRIPTION&gt;" + vbLf
+        strTemplate = strTemplate + "///" + vbLf
+        strTemplate = strTemplate + "/// &lt;DETAILED_DESCRIPTION&gt;" + vbLf
+        strTemplate = strTemplate + commentSeperatorDash + vbLf
+        strTemplate = strTemplate + "class " + strClassName + vbLf
+        strTemplate = strTemplate + "{" + vbLf
+        strTemplate = strTemplate + "public:" + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// constants" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// structs" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// enumerations  FirstSecondEnum" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// constructors / destructors / assignment operator" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// accessors" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// modifiers" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// methods" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// i/o" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// static methods" + vbLf + vbLf
+        strTemplate = strTemplate + "protected:" + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// attributes" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// resources" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// helper methods" + vbLf + vbLf
+        strTemplate = strTemplate + "private:" + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// static methods" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// disabled" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// attributes" + vbLf + vbLf
+        strTemplate = strTemplate
+        strTemplate = strTemplate + "// helper methods" + vbLf + vbLf
+        strTemplate = strTemplate + "};" + vbLf + vbLf
+        strTemplate = strTemplate + "// end namespaces" + vbLf + vbLf
+        strTemplate = strTemplate + "#endif" + vbTab + "// " + DTE.ActiveDocument.Name
+
+        DTE.ActiveDocument.Selection.Text = strTemplate
+        DTE.ActiveDocument.Selection.MoveTo(11, 5)
+	End Sub
+Sub Copyright(ByRef fileHeader)
+        'DESCRIPTION: Insert the copyright info
+
+        'Dim fileHeader As String
+
+        fileHeader = ""
+        fileHeader = fileHeader + "///  \copyright Copyright (c) 2014, APPLIED RESEARCH ASSOCIATES INC. All rights reserved." + vbLf
+        fileHeader = fileHeader + "/// " + vbLf
+        fileHeader = fileHeader + "/// BSD-3 License:\n" + vbLf
+        fileHeader = fileHeader + "/// Redistribution and use in source and binary forms, with or without" + vbLf
+        fileHeader = fileHeader + "/// modification, are permitted provided that the following conditions are met:" + vbLf
+        fileHeader = fileHeader + "/// * Redistributions of source code must retain the above copyright" + vbLf
+        fileHeader = fileHeader + "/// notice, this list of conditions and the following disclaimer." + vbLf
+        fileHeader = fileHeader + "/// * Redistributions in binary form must reproduce the above copyright" + vbLf
+        fileHeader = fileHeader + "/// notice, this list of conditions and the following disclaimer in the" + vbLf
+        fileHeader = fileHeader + "/// documentation and/or other materials provided with the distribution." + vbLf
+        fileHeader = fileHeader + "/// * Neither the name of the Applied Research Associates Inc. nor the" + vbLf
+        fileHeader = fileHeader + "/// names of its contributors may be used to endorse or promote products" + vbLf
+        fileHeader = fileHeader + "/// derived from this software without specific prior written permission." + vbLf
+        fileHeader = fileHeader + "/// " + vbLf
+        fileHeader = fileHeader + "/// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND" + vbLf
+        fileHeader = fileHeader + "/// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED" + vbLf
+        fileHeader = fileHeader + "/// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE" + vbLf
+        fileHeader = fileHeader + "/// DISCLAIMED. IN NO EVENT SHALL APPLIED RESEARCH ASSOCIATES INC. BE LIABLE FOR ANY" + vbLf
+        fileHeader = fileHeader + "/// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES" + vbLf
+        fileHeader = fileHeader + "/// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;" + vbLf
+        fileHeader = fileHeader + "/// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND" + vbLf
+        fileHeader = fileHeader + "/// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT" + vbLf
+        fileHeader = fileHeader + "/// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS" + vbLf
+        fileHeader = fileHeader + "/// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." + vbLf
+    End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>5</id>
+      <name>ImplementationFileTemplate</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+    	Dim commentSeperatorDash As String = "//--------------------------------------------------------------------------------------------------"
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+		'DESCRIPTION: Creates a C++ class implemenation template
+
+        ' uppercase file name
+        Dim strFileNameUC As String
+        strFileNameUC = ""
+        strFileNameUC = DTE.ActiveDocument.Name
+        strFileNameUC = UCase(strFileNameUC)
+        strFileNameUC = Replace(strFileNameUC, ".", "_")
+
+        ' header file name
+        Dim strHeaderFileName As String
+        strHeaderFileName = ""
+        strHeaderFileName = DTE.ActiveDocument.Name
+
+        Dim pos As Integer
+        pos = InStr(strHeaderFileName, ".")
+        If (pos &gt; 0) Then
+            strHeaderFileName = Left(strHeaderFileName, pos)
+            strHeaderFileName = strHeaderFileName + "h"
+        End If
+
+        ' class name
+        Dim strClassName As String
+        strClassName = ""
+        strClassName = DTE.ActiveDocument.Name
+
+        pos = InStr(strClassName, ".")
+        If ((pos - 1) &gt; 0) Then
+            strClassName = Left(strClassName, pos - 1)
+        End If
+
+        ' class template
+        Dim strTemplate As String
+        strTemplate = ""
+        strTemplate = strTemplate + commentSeperatorDash + vbLf
+        strTemplate = strTemplate + "/// \file " + DTE.ActiveDocument.Name + vbLf
+        strTemplate = strTemplate + "///" + vbLf
+        Copyright(strTemplate)
+        strTemplate = strTemplate + "///" + vbLf
+        strTemplate = strTemplate + "/// $Revision$" + vbLf
+        strTemplate = strTemplate + "/// $Date$" + vbLf
+        strTemplate = strTemplate + "///" + vbLf
+        strTemplate = strTemplate + "/// \brief Contains the implementation for the " + strClassName + " class interface." + vbLf
+        strTemplate = strTemplate + "///" + vbLf
+        strTemplate = strTemplate + "/// \details &lt;FULL DESCRIPTION&gt;" + vbLf
+        strTemplate = strTemplate + commentSeperatorDash + vbLf + vbLf + vbLf
+        strTemplate = strTemplate + "// precompiled header file" + vbLf
+        strTemplate = strTemplate + "#include ""StdAfx.h""" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// system include files" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// corresponding header file" + vbLf
+        strTemplate = strTemplate + "#include " + """" + strHeaderFileName + """" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// project include files" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// external project include files" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// static member initialization" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// typedefs" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// constants" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// defines" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "// namespaces" + vbLf
+        strTemplate = strTemplate + vbLf
+        strTemplate = strTemplate + "#ifdef _DEBUG" + vbLf
+        strTemplate = strTemplate + "#define new DEBUG_NEW" + vbLf
+        strTemplate = strTemplate + "#undef THIS_FILE" + vbLf
+        strTemplate = strTemplate + "static char THIS_FILE[] = __FILE__;" + vbLf
+        strTemplate = strTemplate + "#endif" + vbLf
+        strTemplate = strTemplate + vbLf
+
+        DTE.ActiveDocument.Selection.Text = strTemplate
+        DTE.ActiveDocument.Selection.StartOfDocument()
+	End Sub
+	Sub Copyright(ByRef fileHeader)
+        'DESCRIPTION: Insert the copyright info
+
+        'Dim fileHeader As String
+
+        fileHeader = ""
+        fileHeader = fileHeader + "///  \copyright Copyright (c) 2014, APPLIED RESEARCH ASSOCIATES INC. All rights reserved." + vbLf
+        fileHeader = fileHeader + "/// " + vbLf
+        fileHeader = fileHeader + "/// BSD-3 License:\n" + vbLf
+        fileHeader = fileHeader + "/// Redistribution and use in source and binary forms, with or without" + vbLf
+        fileHeader = fileHeader + "/// modification, are permitted provided that the following conditions are met:" + vbLf
+        fileHeader = fileHeader + "/// * Redistributions of source code must retain the above copyright" + vbLf
+        fileHeader = fileHeader + "/// notice, this list of conditions and the following disclaimer." + vbLf
+        fileHeader = fileHeader + "/// * Redistributions in binary form must reproduce the above copyright" + vbLf
+        fileHeader = fileHeader + "/// notice, this list of conditions and the following disclaimer in the" + vbLf
+        fileHeader = fileHeader + "/// documentation and/or other materials provided with the distribution." + vbLf
+        fileHeader = fileHeader + "/// * Neither the name of the Applied Research Associates Inc. nor the" + vbLf
+        fileHeader = fileHeader + "/// names of its contributors may be used to endorse or promote products" + vbLf
+        fileHeader = fileHeader + "/// derived from this software without specific prior written permission." + vbLf
+        fileHeader = fileHeader + "/// " + vbLf
+        fileHeader = fileHeader + "/// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND" + vbLf
+        fileHeader = fileHeader + "/// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED" + vbLf
+        fileHeader = fileHeader + "/// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE" + vbLf
+        fileHeader = fileHeader + "/// DISCLAIMED. IN NO EVENT SHALL APPLIED RESEARCH ASSOCIATES INC. BE LIABLE FOR ANY" + vbLf
+        fileHeader = fileHeader + "/// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES" + vbLf
+        fileHeader = fileHeader + "/// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;" + vbLf
+        fileHeader = fileHeader + "/// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND" + vbLf
+        fileHeader = fileHeader + "/// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT" + vbLf
+        fileHeader = fileHeader + "/// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS" + vbLf
+        fileHeader = fileHeader + "/// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." + vbLf
+    End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>6</id>
+      <name>ToDo</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+	'DESCRIPTION: Insert a TODO
+
+        Dim Text As String
+
+        Text = "///\todo &lt;DESCRIPTION&gt;"
+
+        DTE.ActiveDocument.Selection.Text = Text
+	End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>7</id>
+      <name>Image</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+		
+        'DESCRIPTION: Insert an image
+
+        Dim Text As String
+
+        Text = "///\image html &lt;FILE_PATH&gt; [""&lt;CAPTION&gt;""]"
+
+        DTE.ActiveDocument.Selection.Text = Text
+	End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>8</id>
+      <name>ExternalLink</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+		'DESCRIPTION: Insert an external link
+
+        Dim Text As String
+
+        Text = "///&lt;a href=""&lt;ADDRESS&gt;""&gt;&lt;NAME&gt;&lt;/a&gt;"
+
+        DTE.ActiveDocument.Selection.Text = Text
+	End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>9</id>
+      <name>Bug</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+		
+        'DESCRIPTION: Insert a bug description
+
+        Dim Text As String
+
+        Text = "///\bug &lt;DESCRIPTION&gt;"
+
+        DTE.ActiveDocument.Selection.Text = Text
+	End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+    <Snippet>
+      <id>10</id>
+      <name>NewLine</name>
+      <code>Imports EnvDTE
+Imports EnvDTE80
+Imports Microsoft.VisualBasic
+
+Public Class C
+	Implements VisualCommanderExt.ICommand
+
+	Sub Run(DTE As EnvDTE80.DTE2, package As Microsoft.VisualStudio.Shell.Package) Implements VisualCommanderExt.ICommand.Run
+		
+        'DESCRIPTION: Insert new line
+
+        Dim Text As String
+
+        Text = "/// "
+
+        DTE.ActiveDocument.Selection.Text = Text
+	End Sub
+
+End Class
+</code>
+      <referencedAssemblies />
+      <type>Command</type>
+      <lang>VB</lang>
+      <langVersion>v4.0</langVersion>
+      <enabled>true</enabled>
+    </Snippet>
+  </commands>
+  <extensions />
+  <commonCode />
+</SerializableSnippets>

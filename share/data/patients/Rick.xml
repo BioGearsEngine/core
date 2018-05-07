@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Patient xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Rick</Name>
+    <Sex>Male</Sex>
+    <Age value="23.0" unit="yr"/>
+    <Weight value="161.0" unit="lb"/>
+    <Height value="68.0" unit="in"/>
+    <BodyFatFraction value="0.18"/>
+    <DiastolicArterialPressureBaseline value="80.0" unit="mmHg"/>
+    <HeartRateBaseline value="100.0" unit="1/min"/>
+    <RespirationRateBaseline value="16.0" unit="1/min"/>
+    <SystolicArterialPressureBaseline value="120.0" unit="mmHg"/>
+</Patient>

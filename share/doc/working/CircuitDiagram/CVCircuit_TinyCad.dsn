@@ -1,0 +1,1267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--This file was written by TinyCAD Version 2.80.06 Build #626 Production Release
+If you wish to view this file go to http://tinycad.sourceforge.net to
+download the executable.-->
+<TinyCADSheets>
+	<TinyCAD>
+		<NAME>Sheet 1</NAME>
+		<DETAILS>
+			<Size width='1050' height='1485'/>
+			<GUIDES horiz='7' vert='5'/>
+			<TITLE></TITLE>
+			<AUTHOR></AUTHOR>
+			<REVISION>1.0</REVISION>
+			<DOCNUMBER></DOCNUMBER>
+			<ORGANISATION></ORGANISATION>
+			<SHEETS>1 of 1</SHEETS>
+			<SHOWS>0</SHOWS>
+			<DATE></DATE>
+			<GRID spacing='100.00000' snap='0'/>
+		</DETAILS>
+		<FONT id='1'>
+			<HEIGHT>-10</HEIGHT>
+			<WIDTH>0</WIDTH>
+			<WEIGHT>400</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='3'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>400</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='4'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='5'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='6'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='7'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='8'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='9'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='10'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='11'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>255</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='12'>
+			<HEIGHT>-17</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>400</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<STYLE id='0'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
+		<STYLE id='2'>
+			<STYLE>2</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
+		<STYLE id='5'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
+		<STYLE id='6'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>2</THICKNESS>
+		</STYLE>
+		<FILL id='0'>
+			<INDEX>-1</INDEX>
+			<COLOR>000000</COLOR>
+		</FILL>
+		<SYMBOLDEF id='1'>
+			<NAME type='0'>RE</NAME>
+			<REF type='0'>R?</REF>
+			<DESCRIPTION>Resistor (USA Style)</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='72.00000,54.00000'/>
+			<REF_POINT power='1' part='0' pos='72.00000,54.00000'/>
+			<TinyCAD>
+				<PIN pos='70.00000,34.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='70.00000,54.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='68.00000,40.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='68.00000,41.60000' style='5' fill='0'>
+					<POINT pos='4.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='68.00000,42.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='68.00000,43.60000' style='5' fill='0'>
+					<POINT pos='4.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='68.00000,44.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='68.00000,45.60000' style='5' fill='0'>
+					<POINT pos='4.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='70.00000,46.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='70.00000,47.60000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.40000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='70.00000,40.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.60000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='2'>
+			<NAME type='0'>D2</NAME>
+			<REF type='0'>D?</REF>
+			<DESCRIPTION>small diode</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='42.00000,26.00000'/>
+			<TinyCAD>
+				<PIN pos='40.00000,26.00000' which='0' elec='0' direction='0' part='0' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='40.00000,12.00000' which='0' elec='0' direction='1' part='0' number='2' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='38.00000,20.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='40.00000,18.00000' style='5' fill='0'>
+					<POINT pos='2.00000,2.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='38.00000,18.00000' style='5' fill='0'>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='38.00000,18.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='40.00000,20.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='40.00000,17.00000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='3'>
+			<NAME type='0'>D</NAME>
+			<REF type='0'>D?</REF>
+			<DESCRIPTION>Diode</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='58.00000,74.00000'/>
+			<TinyCAD>
+				<PIN pos='56.00000,66.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='56.00000,73.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='54.40000,68.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='3.20000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='54.40000,71.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='3.20000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='56.00000,71.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='56.00000,68.00000' style='5' fill='0'>
+					<POINT pos='1.60000,0.00000' arc='0'/>
+					<POINT pos='0.00000,3.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='54.40000,68.00000' style='5' fill='0'>
+					<POINT pos='1.60000,3.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='56.00000,66.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='4'>
+			<NAME type='0'>C_VAR</NAME>
+			<REF type='0'>C?</REF>
+			<DESCRIPTION>Capacitor</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='61.00000,53.00000'/>
+			<TinyCAD>
+				<PIN pos='58.00000,45.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='15' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='58.00000,53.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='15' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='56.00000,48.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='56.00000,50.00000' style='6' fill='0'>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='54.00000,45.00000' style='5' fill='0'>
+					<POINT pos='7.00000,6.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='54.00000,45.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.00000,2.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='54.00000,45.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.00000,1.00000' arc='0'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='5'>
+			<NAME type='0'>R_VAR</NAME>
+			<REF type='0'>Z?</REF>
+			<DESCRIPTION>I can haz description?</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT></DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>None</NAME>
+				<DEFAULT>None</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='74.00000,54.00000'/>
+			<TinyCAD>
+				<PIN pos='70.00000,34.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='70.00000,54.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='69.00000,40.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='1.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='69.00000,41.60000' style='5' fill='0'>
+					<POINT pos='2.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='69.00000,42.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='69.00000,43.60000' style='5' fill='0'>
+					<POINT pos='2.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='69.00000,44.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='69.00000,45.60000' style='5' fill='0'>
+					<POINT pos='2.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='70.00000,46.60000' style='5' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='1.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='70.00000,47.60000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.40000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='70.00000,40.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.60000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='66.00000,42.00000' style='5' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='8.00000,4.00000' arc='0'/>
+					<POINT pos='7.00000,2.00000' arc='0'/>
+					<POINT pos='8.00000,4.00000' arc='0'/>
+					<POINT pos='6.00000,4.00000' arc='0'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='6'>
+			<NAME type='0'>C</NAME>
+			<REF type='0'>C?</REF>
+			<DESCRIPTION>Capacitor</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='60.00000,53.00000'/>
+			<TinyCAD>
+				<PIN pos='58.00000,45.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='15' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='58.00000,53.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='15' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='56.00000,48.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='56.00000,50.00000' style='6' fill='0'>
+					<POINT pos='4.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='7'>
+			<NAME type='0'>New Symbol</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>CurrSrc</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='80.65800,83.65600'/>
+			<TinyCAD>
+				<ELLIPSE a='72.25800,69.05600' b='80.65800,77.05600' style='5' fill='0'/>
+				<POWER pos='76.45800,75.85600' which='3' direction='0'></POWER>
+				<WIRE a='76.45800,69.25600' b='76.45800,64.45600'/>
+				<WIRE a='76.45800,76.85600' b='76.45800,83.65600'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='8'>
+			<NAME type='0'>New Symbol</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>Source</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Other</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000000</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='74.00000,60.00000'/>
+			<TinyCAD>
+				<POLYGON pos='50.00000,36.00000' style='5' fill='0'>
+					<POINT pos='0.00000,12.00000' arc='0'/>
+					<POINT pos='12.00000,0.00000' arc='0'/>
+					<POINT pos='24.00000,12.00000' arc='0'/>
+					<POINT pos='12.00000,24.00000' arc='0'/>
+					<POINT pos='0.00000,12.00000' arc='0'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<OPTIONS>
+			<GRID>0</GRID>
+			<UNITS>1</UNITS>
+			<COLOR_WIRE>000000</COLOR_WIRE>
+			<COLOR_BUS>000000</COLOR_BUS>
+			<COLOR_JUNCTION>000000</COLOR_JUNCTION>
+			<COLOR_NOCONNECT>000000</COLOR_NOCONNECT>
+			<COLOR_LABEL>208000</COLOR_LABEL>
+			<COLOR_POWER>000000</COLOR_POWER>
+			<COLOR_PIN>000000</COLOR_PIN>
+			<COLOR_HIDDEN_PIN>208020</COLOR_HIDDEN_PIN>
+			<COLOR_BACKGROUND>FFFFFF</COLOR_BACKGROUND>
+			<COLOR_NOTETEXT_FILL>AFFFFF</COLOR_NOTETEXT_FILL>
+			<COLOR_NOTETEXT_LINE>FF0000</COLOR_NOTETEXT_LINE>
+			<COLOR_NOTETEXT_TEXT>FF0000</COLOR_NOTETEXT_TEXT>
+		</OPTIONS>
+		<SYMBOL id='1' pos='38.00000,98.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R0' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='52.00000,98.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D0' show='0' pos='-8.00000,-4.00000'/>
+			<FIELD type='0' description='Name' value='D2' show='0' pos='1.00000,-12.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='85.00000,90.60000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R1' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='66.00000,98.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D1' show='0' pos='-8.00000,-4.00000'/>
+			<FIELD type='0' description='Name' value='D2' show='0' pos='1.00000,-12.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='108.00000,84.60000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='Rs' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='99.20000,90.60000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='R2' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='114.40000,90.60000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='R3' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<WIRE a='85.20000,88.80000' b='85.20000,82.60000'/>
+		<WIRE a='85.20000,82.60000' b='94.00000,82.60000'/>
+		<WIRE a='108.00000,82.60000' b='114.00000,82.60000'/>
+		<WIRE a='114.00000,82.60000' b='114.00000,88.40000'/>
+		<SYMBOL id='1' pos='128.40000,90.60000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='R4' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='190.00000,98.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='R5' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='142.00000,98.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D4' show='0' pos='-8.00000,-4.00000'/>
+			<FIELD type='0' description='Name' value='D2' show='0' pos='-14.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='156.00000,98.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D5' show='0' pos='-8.00000,-4.00000'/>
+			<FIELD type='0' description='Name' value='D2' show='0' pos='-14.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='10.00000,96.00000' which='3' direction='1'></POWER>
+		<POWER pos='85.20000,93.40000' which='3' direction='3'></POWER>
+		<POWER pos='99.60000,93.20000' which='3' direction='3'></POWER>
+		<POWER pos='114.00000,93.00000' which='3' direction='3'></POWER>
+		<SYMBOL id='1' pos='153.80000,138.20000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R8' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='130.20000,149.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R9' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='109.80000,149.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R9v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='133.80000,138.20000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R8v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<POWER pos='134.20000,144.40000' which='3' direction='3'></POWER>
+		<POWER pos='109.98000,155.00000' which='3' direction='3'></POWER>
+		<POWER pos='198.00000,96.00000' which='3' direction='1'></POWER>
+		<SYMBOL id='1' pos='68.40000,34.60000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R15' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='116.60000,16.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R17' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='96.80000,16.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R17v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='48.40000,34.60000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R15v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='87.22000,163.54000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R10' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='131.72000,234.68000' part='0' rotate='2' can_scale='1' show_power='0' scale_x='1.13000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R13v' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='69.30000,203.18000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R12v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='68.00000,176.60000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R11v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='67.48000,163.54000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R10v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='97.00000,22.40000' which='3' direction='3'></POWER>
+		<POWER pos='48.80000,24.60000' which='3' direction='3'></POWER>
+		<POWER pos='67.74000,169.80000' which='3' direction='3'></POWER>
+		<POWER pos='68.00000,182.08000' which='3' direction='3'></POWER>
+		<POWER pos='69.30000,208.92000' which='3' direction='2'></POWER>
+		<POWER pos='120.60000,249.80000' which='3' direction='3'></POWER>
+		<POWER pos='138.74000,236.26000' which='3' direction='3'></POWER>
+		<JUNCTION pos='190.00000,96.00000'/>
+		<WIRE style='0' a='112.60000,14.00000' b='190.60000,14.00000'/>
+		<JUNCTION pos='142.00000,96.00000'/>
+		<SYMBOL id='1' pos='154.00000,116.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R6' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='134.00000,116.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R6v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='134.00000,122.00000' which='3' direction='3'></POWER>
+		<JUNCTION pos='134.00000,114.00000'/>
+		<SYMBOL id='1' pos='130.00000,126.80000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R7' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='109.60000,126.80000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R7v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='109.60000,133.00000' which='3' direction='3'></POWER>
+		<JUNCTION pos='18.00000,96.00000'/>
+		<WIRE a='154.00000,114.00000' b='190.15888,114.02617'/>
+		<WIRE a='190.30841,124.80374' b='130.00000,124.80000'/>
+		<WIRE a='190.65794,136.18131' b='154.00000,136.20000'/>
+		<WIRE a='190.20748,146.95888' b='130.00000,147.00000'/>
+		<WIRE a='191.21383,161.64393' b='86.70000,161.54000'/>
+		<WIRE a='190.12336,174.58150' b='87.48000,174.60000'/>
+		<WIRE a='190.45290,201.43907' b='88.38000,201.32000'/>
+		<WIRE style='0' a='190.60000,14.00000' b='190.00000,242.00000'/>
+		<TEXT pos='128.00000,112.00000' direction='3' font='3' color='000000'>Right Arm</TEXT>
+		<TEXT pos='120.40000,132.20000' direction='3' font='3' color='000000'>Left Arm</TEXT>
+		<TEXT pos='139.40000,144.20000' direction='3' font='3' color='000000'>Right Leg</TEXT>
+		<TEXT pos='117.92000,156.66000' direction='3' font='3' color='000000'>Left Leg</TEXT>
+		<TEXT pos='76.04000,181.52000' direction='3' font='3' color='000000'>Muscle</TEXT>
+		<TEXT pos='114.52000,240.84000' direction='3' font='3' color='000000'>Left Kidney</TEXT>
+		<TEXT pos='62.26000,199.96000' direction='3' font='3' color='000000'>Liver</TEXT>
+		<TEXT pos='147.40000,237.64000' direction='3' font='3' color='000000'>Splanchnic</TEXT>
+		<TEXT pos='78.80000,169.36000' direction='3' font='12' color='000000'>Fat</TEXT>
+		<TEXT pos='18.80000,91.40000' direction='3' font='3' color='000000'>Vena Cava</TEXT>
+		<TEXT pos='188.80000,92.80000' direction='0' font='3' color='000000'>Aorta</TEXT>
+		<TEXT pos='89.80000,9.80000' direction='3' font='3' color='000000'>Brain</TEXT>
+		<TEXT pos='30.60000,29.00000' direction='3' font='3' color='000000'>Myocardium</TEXT>
+		<TEXT pos='44.80000,103.40000' direction='3' font='3' color='000000'>Right Heart</TEXT>
+		<TEXT pos='136.60000,103.40000' direction='3' font='3' color='000000'>Left Heart</TEXT>
+		<TEXT pos='85.96000,77.84000' direction='3' font='3' color='000000'>Pulmonary Circulation</TEXT>
+		<JUNCTION pos='52.00000,96.00000'/>
+		<JUNCTION pos='65.20000,96.00000'/>
+		<JUNCTION pos='156.00000,96.00000'/>
+		<JUNCTION pos='176.00000,96.00000'/>
+		<JUNCTION pos='128.00000,96.00000'/>
+		<JUNCTION pos='38.00000,96.00000'/>
+		<WIRE a='52.40000,114.00000' b='18.20000,114.02617'/>
+		<WIRE a='51.40000,124.80000' b='18.00000,124.80374'/>
+		<WIRE a='52.00000,136.20000' b='18.20000,136.18131'/>
+		<WIRE a='48.20000,147.00000' b='18.20000,146.95888'/>
+		<WIRE a='41.74000,161.54000' b='18.26000,161.64393'/>
+		<WIRE a='42.00000,174.60000' b='18.00000,174.58150'/>
+		<TEXT pos='139.40000,100.00000' direction='3' font='5' color='000000'>LH1</TEXT>
+		<TEXT pos='130.20000,102.80000' direction='3' font='4' color='000000'>LH2</TEXT>
+		<TEXT pos='183.69692,101.58308' direction='3' font='8' color='000000'>AA1</TEXT>
+		<TEXT pos='152.00000,94.00000' direction='3' font='6' color='000000'>AA2</TEXT>
+		<TEXT pos='174.15385,94.00000' direction='3' font='7' color='000000'>AA3</TEXT>
+		<TEXT pos='49.04615,99.96923' direction='3' font='10' color='000000'>RH1</TEXT>
+		<TEXT pos='36.00000,94.76923' direction='3' font='11' color='000000'>RH2</TEXT>
+		<TEXT pos='50.06154,36.83077' direction='3' font='9' color='000000'>MC1</TEXT>
+		<TEXT pos='18.55385,95.49231' direction='3' font='9' color='000000'>VC1</TEXT>
+		<TEXT pos='128.41538,117.63077' direction='3' font='9' color='000000'>RA1</TEXT>
+		<TEXT pos='102.86154,128.78462' direction='3' font='9' color='000000'>LA1</TEXT>
+		<TEXT pos='103.95538,151.22615' direction='3' font='9' color='000000'>LL1</TEXT>
+		<TEXT pos='59.47538,167.28615' direction='3' font='9' color='000000'>FF1</TEXT>
+		<TEXT pos='60.20769,180.50000' direction='3' font='9' color='000000'>MS1</TEXT>
+		<TEXT pos='63.09385,204.63385' direction='3' font='9' color='000000'>LV1</TEXT>
+		<JUNCTION pos='94.40000,114.00000'/>
+		<JUNCTION pos='77.60000,124.80000'/>
+		<JUNCTION pos='92.20000,136.20000'/>
+		<JUNCTION pos='74.80000,147.00000'/>
+		<JUNCTION pos='49.88000,161.80000'/>
+		<JUNCTION pos='50.06000,174.60000'/>
+		<JUNCTION pos='49.48000,201.18000'/>
+		<TEXT pos='92.40000,118.20000' direction='3' font='9' color='000000'>RA2</TEXT>
+		<TEXT pos='75.40000,130.20000' direction='3' font='9' color='000000'>LA2</TEXT>
+		<TEXT pos='89.40000,141.80000' direction='3' font='9' color='000000'>RL2</TEXT>
+		<TEXT pos='74.20000,152.40000' direction='3' font='9' color='000000'>LL2</TEXT>
+		<TEXT pos='47.42000,159.24000' direction='3' font='9' color='000000'>FF2</TEXT>
+		<TEXT pos='48.12000,172.50000' direction='3' font='9' color='000000'>MS2</TEXT>
+		<TEXT pos='45.40000,199.46000' direction='3' font='9' color='000000'>LV2</TEXT>
+		<JUNCTION pos='76.70769,14.00000'/>
+		<SYMBOL id='4' pos='54.92308,95.84615' part='0' rotate='1' can_scale='1' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Other' value='..' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<POWER pos='52.20000,72.00000' which='3' direction='0'></POWER>
+		<SYMBOL id='5' pos='88.78000,205.18000' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='5' pos='87.48000,178.60000' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='5' pos='158.22000,236.42000' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='145.72308,95.84615' part='0' rotate='5' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='71.92308,182.58615' part='0' rotate='4' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='73.33077,209.01385' part='0' rotate='4' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='142.61692,236.87385' part='0' rotate='4' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.61000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='69.48000,169.80000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='98.80000,22.40000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='87.20000,93.40000' part='0' rotate='0' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.57500'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='101.60000,93.20000' part='0' rotate='0' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.57500'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='116.20000,93.20000' part='0' rotate='0' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.57500'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='136.00000,122.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='111.80000,132.80000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='136.00000,144.40000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='111.92000,155.26000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='198.00000,98.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-8.00000,4.40000'/>
+		</SYMBOL>
+		<POWER pos='141.80000,76.60000' which='3' direction='0'></POWER>
+		<SYMBOL id='4' pos='18.00000,98.80000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='-8.00000,-7.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-8.00000,4.40000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='50.60000,32.60000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<JUNCTION pos='97.00000,14.20000'/>
+		<JUNCTION pos='99.80000,88.60000'/>
+		<JUNCTION pos='142.00000,96.00000'/>
+		<JUNCTION pos='190.00000,96.00000'/>
+		<JUNCTION pos='18.00000,96.00000'/>
+		<JUNCTION pos='134.00000,114.00000'/>
+		<JUNCTION pos='133.80000,136.40000'/>
+		<JUNCTION pos='109.80000,124.60000'/>
+		<JUNCTION pos='110.12000,147.00000'/>
+		<JUNCTION pos='67.22000,161.54000'/>
+		<JUNCTION pos='68.00000,174.60000'/>
+		<JUNCTION pos='138.74000,232.42000'/>
+		<JUNCTION pos='69.30000,201.18000'/>
+		<JUNCTION pos='120.60000,241.80000'/>
+		<WIRE a='156.00000,96.00000' b='176.00000,96.00000'/>
+		<SYMBOL id='7' pos='17.20000,136.60000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='1.00000,-14.80000'/>
+			<FIELD type='0' description='Name' value='New Symbol' show='0' pos='1.00000,-17.20000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-12.40000'/>
+		</SYMBOL>
+		<SYMBOL id='7' pos='16.00000,94.80000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='1.00000,-17.20000'/>
+			<FIELD type='0' description='Name' value='New Symbol' show='0' pos='1.00000,-17.20000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-14.80000'/>
+		</SYMBOL>
+		<POWER pos='13.00000,136.60000' which='3' direction='1'></POWER>
+		<POWER pos='11.80000,76.00000' which='3' direction='0'></POWER>
+		<WIRE a='18.00000,95.83551' b='11.80000,94.80000'/>
+		<WIRE a='18.00000,96.26168' b='13.00000,117.60000'/>
+		<JUNCTION pos='67.00000,46.47000'/>
+		<TEXT pos='60.52000,51.07000' direction='3' font='9' color='000000'>PE1</TEXT>
+		<SYMBOL id='7' pos='86.40000,50.67000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='-19.20000,2.00000'/>
+			<FIELD type='0' description='Name' value='New Symbol' show='0' pos='1.00000,-17.20000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-19.20000,4.40000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='71.06000,46.87000' part='0' rotate='4' can_scale='1' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Other' value='..' show='0' pos='1.00000,-6.00000'/>
+		</SYMBOL>
+		<POWER pos='66.80000,38.67000' which='3' direction='2'></POWER>
+		<POWER pos='85.80000,46.47000' which='3' direction='3'></POWER>
+		<SYMBOL id='8' pos='56.00000,84.07000' part='0' rotate='2' can_scale='1' show_power='0' scale_x='0.49167' scale_y='0.32500'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='-7.80000,2.00000'/>
+			<FIELD type='0' description='Name' value='New Symbol' show='0' pos='1.00000,-22.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-7.80000,4.40000'/>
+			<FIELD type='0' description='Other' value='..' show='0' pos='-7.80000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='8' pos='145.60000,87.87000' part='0' rotate='2' can_scale='1' show_power='0' scale_x='0.46667' scale_y='0.32500'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='-7.80000,2.00000'/>
+			<FIELD type='0' description='Name' value='New Symbol' show='0' pos='1.00000,-22.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-7.80000,4.40000'/>
+			<FIELD type='0' description='Other' value='..' show='0' pos='-7.80000,6.80000'/>
+		</SYMBOL>
+		<TEXT pos='51.40000,82.47000' direction='3' font='10' color='000000'>+</TEXT>
+		<TEXT pos='141.00000,86.47000' direction='3' font='10' color='000000'>+</TEXT>
+		<TEXT pos='141.40000,81.27000' direction='3' font='10' color='000000'>-</TEXT>
+		<TEXT pos='51.80000,76.27000' direction='3' font='10' color='000000'>-</TEXT>
+		<WIRE a='51.92308,87.84615' b='52.00000,87.84615'/>
+		<WIRE a='52.00000,87.84615' b='52.00000,84.07000'/>
+		<WIRE style='2' a='67.20000,46.47000' b='67.20000,78.07000'/>
+		<WIRE style='2' a='67.20000,78.07000' b='55.60000,78.07000'/>
+		<WIRE style='2' a='126.20000,82.07000' b='138.00000,82.07000'/>
+		<TEXT pos='81.16000,52.00000' direction='3' font='3' color='000000'>Pericardium</TEXT>
+		<JUNCTION pos='52.00000,84.20000'/>
+		<JUNCTION pos='141.60000,87.60000'/>
+		<TEXT pos='144.88000,89.40000' direction='3' font='5' color='000000'>LH3</TEXT>
+		<TEXT pos='44.68000,85.40000' direction='3' font='5' color='000000'>RH3</TEXT>
+		<TEXT pos='10.00000,79.00000' direction='0' font='3' color='000000'>Bleeding</TEXT>
+		<TEXT pos='12.00000,124.00000' direction='0' font='3' color='000000'>IV</TEXT>
+		<JUNCTION pos='121.00000,255.20000'/>
+		<TEXT pos='128.60000,262.00000' direction='3' font='3' color='000000'>Right Kidney</TEXT>
+		<SYMBOL id='1' pos='120.60000,243.60000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R14v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='5' pos='140.60000,245.60000' part='0' rotate='6' can_scale='1' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='124.63077,249.95385' part='0' rotate='4' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<WIRE style='0' a='155.00000,241.60000' b='155.00000,255.00000'/>
+		<SYMBOL id='5' pos='140.60000,259.00000' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='124.80000,263.20000' part='0' rotate='4' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<POWER pos='121.00000,263.00000' which='3' direction='3'></POWER>
+		<SYMBOL id='1' pos='122.60000,257.20000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R14v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<WIRE style='0' a='190.00056,241.78692' b='147.40000,241.80000'/>
+		<WIRE style='0' a='147.40000,241.80000' b='147.40000,241.60000'/>
+		<WIRE a='70.20000,255.20000' b='70.20000,241.60000'/>
+		<JUNCTION pos='70.40000,241.60000'/>
+		<WIRE a='44.00000,241.60000' b='18.00000,241.57383'/>
+		<JUNCTION pos='48.60000,32.60000'/>
+		<JUNCTION pos='28.40000,32.60000'/>
+		<WIRE a='18.00000,242.00000' b='18.00000,32.80000'/>
+		<WIRE a='18.00000,14.00000' b='18.00000,32.60000'/>
+		<WIRE a='68.40000,32.60000' b='190.55105,32.60000'/>
+		<WIRE style='2' a='67.20000,52.04702' b='126.20000,52.40000'/>
+		<WIRE style='2' a='126.20000,52.40000' b='126.20000,82.07000'/>
+		<SYMBOL id='3' pos='67.20000,94.60000' part='0' rotate='1' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D?' show='0' pos='1.00000,-5.00000'/>
+			<FIELD type='0' description='Name' value='D' show='0' pos='-8.00000,-4.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='65.40000,88.60000'/>
+		<JUNCTION pos='85.20000,88.60000'/>
+		<WIRE a='66.00000,96.00000' b='65.20000,96.00000'/>
+		<SYMBOL id='3' pos='67.20000,104.40000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D?' show='0' pos='1.00000,-5.00000'/>
+			<FIELD type='0' description='Name' value='D' show='0' pos='-8.00000,-4.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='114.00000,88.40000'/>
+		<SYMBOL id='1' pos='85.20000,105.20000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R1' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='87.00000,103.20000' part='0' rotate='0' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.57500'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='98.80000,105.20000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='R2' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='101.20000,103.40000' part='0' rotate='0' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.57500'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='113.80000,105.20000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='R3' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<SYMBOL id='6' pos='115.80000,102.80000' part='0' rotate='0' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.57500'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='C' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<POWER pos='85.20000,98.60000' which='3' direction='3'></POWER>
+		<POWER pos='99.40000,98.60000' which='3' direction='3'></POWER>
+		<POWER pos='113.60000,98.00000' which='3' direction='3'></POWER>
+		<SYMBOL id='1' pos='128.20000,105.00000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='R4' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='3' pos='130.00000,101.80000' part='0' rotate='1' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D?' show='0' pos='1.00000,-5.00000'/>
+			<FIELD type='0' description='Name' value='D' show='0' pos='-8.00000,-4.00000'/>
+		</SYMBOL>
+		<SYMBOL id='3' pos='130.00000,96.80000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='D?' show='0' pos='1.00000,-5.00000'/>
+			<FIELD type='0' description='Name' value='D' show='0' pos='-8.00000,-4.00000'/>
+		</SYMBOL>
+		<WIRE a='85.20000,103.20000' b='85.20000,108.20000'/>
+		<WIRE a='85.20000,108.20000' b='93.20000,108.20000'/>
+		<SYMBOL id='1' pos='106.60000,110.20000' part='0' rotate='3' can_scale='0' show_power='0' scale_x='1.00000' scale_y='0.70000'>
+			<FIELD type='0' description='Ref' value='Rs' show='0' pos='-8.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<WIRE a='106.60000,108.20000' b='113.80000,108.20000'/>
+		<WIRE a='113.80000,108.20000' b='113.80000,103.20000'/>
+		<JUNCTION pos='85.20000,103.20000'/>
+		<JUNCTION pos='99.20000,103.20000'/>
+		<JUNCTION pos='113.80000,103.20000'/>
+		<SYMBOL id='1' pos='67.99664,190.25385' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R11v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='67.99664,195.73385' which='3' direction='3'></POWER>
+		<WIRE a='190.12000,188.23535' b='87.47664,188.25385'/>
+		<WIRE a='41.99664,188.25385' b='17.99664,188.23535'/>
+		<JUNCTION pos='50.05664,188.25385'/>
+		<SYMBOL id='5' pos='87.47664,192.25385' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='71.91972,196.24000' part='0' rotate='4' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='67.99664,188.25385'/>
+		<TEXT pos='78.32000,194.16000' direction='3' font='3' color='000000'>Skin</TEXT>
+		<WIRE a='190.02526,232.48000' b='190.02526,232.40000'/>
+		<SYMBOL id='1' pos='131.81474,227.08615' part='0' rotate='2' can_scale='1' show_power='0' scale_x='1.13000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R13v' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='138.83474,228.66615' which='3' direction='3'></POWER>
+		<SYMBOL id='5' pos='158.31474,228.82615' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='142.71166,229.28000' part='0' rotate='4' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.61000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='138.83474,224.82615'/>
+		<SYMBOL id='1' pos='131.81474,219.02615' part='0' rotate='2' can_scale='1' show_power='0' scale_x='1.13000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R13v' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='138.83474,220.60615' which='3' direction='3'></POWER>
+		<SYMBOL id='5' pos='158.31474,220.76615' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='142.71166,221.22000' part='0' rotate='4' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.61000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='138.83474,216.76615'/>
+		<SYMBOL id='1' pos='131.81474,211.48615' part='0' rotate='2' can_scale='1' show_power='0' scale_x='1.13000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R13v' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='138.83474,213.06615' which='3' direction='3'></POWER>
+		<SYMBOL id='5' pos='158.31474,213.22615' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='142.71166,213.68000' part='0' rotate='4' can_scale='1' show_power='0' scale_x='1.00000' scale_y='0.61000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='138.83474,209.22615'/>
+		<TEXT pos='151.06000,229.80000' direction='3' font='3' color='000000'>Large Intestine</TEXT>
+		<TEXT pos='152.10000,221.74000' direction='3' font='3' color='000000'>Small Intestine</TEXT>
+		<TEXT pos='151.84000,213.94000' direction='3' font='3' color='000000'>Spleen</TEXT>
+		<SYMBOL id='1' pos='99.12000,221.74000' part='0' rotate='2' can_scale='1' show_power='0' scale_x='1.13000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R13v' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<WIRE a='111.81474,216.76615' b='99.12000,219.14000'/>
+		<WIRE a='111.81474,209.22615' b='99.12000,219.14000'/>
+		<WIRE a='111.81474,224.82615' b='99.12000,219.48000'/>
+		<WIRE a='111.72000,232.42000' b='99.12000,219.48000'/>
+		<WIRE a='79.12000,219.48000' b='69.33077,201.01385'/>
+		<JUNCTION pos='99.12000,219.14000'/>
+		<TEXT pos='87.42000,225.38000' direction='3' font='3' color='000000'>Portal Vein</TEXT>
+		<TEXT pos='73.64000,93.96000' direction='3' font='3' color='000000'>Arteries</TEXT>
+		<TEXT pos='86.38000,86.68000' direction='3' font='3' color='000000'>Capillaries</TEXT>
+		<TEXT pos='105.10000,86.42000' direction='3' font='3' color='000000'>Veins</TEXT>
+		<TEXT pos='68.70000,85.90000' direction='3' font='3' color='000000'>Left</TEXT>
+		<TEXT pos='68.44000,109.04000' direction='3' font='3' color='000000'>Right</TEXT>
+		<TEXT pos='102.50000,111.72000' direction='3' font='9' color='000000'>Shunt</TEXT>
+		<SYMBOL id='1' pos='67.47664,269.63385' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='R11v' show='0' pos='-12.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='RE' show='0' pos='-20.00000,-4.00000'/>
+		</SYMBOL>
+		<POWER pos='67.47664,275.11385' which='3' direction='3'></POWER>
+		<WIRE a='190.12000,267.61535' b='86.95664,267.63385'/>
+		<WIRE a='41.47664,267.63385' b='17.47664,267.61535'/>
+		<JUNCTION pos='49.53664,267.63385'/>
+		<SYMBOL id='5' pos='86.95664,271.63385' part='0' rotate='6' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='Z?' show='0' pos='-20.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='R_VAR' show='0' pos='1.00000,-18.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='-20.00000,4.40000'/>
+			<FIELD type='1' description='None' value='None' show='0' pos='-20.00000,6.80000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='71.39972,275.62000' part='0' rotate='4' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C?' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='0' description='Name' value='C_VAR' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,-3.60000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='67.47664,267.63385'/>
+		<WIRE a='18.00000,242.00000' b='18.00000,267.61575'/>
+		<WIRE style='0' a='190.00116,241.56000' b='190.12000,267.61535'/>
+		<TEXT pos='64.02000,265.48000' direction='3' font='3' color='000000'>Bone</TEXT>
+		<WIRE a='76.80000,14.00000' b='18.00000,14.00000'/>
+		<WIRE a='28.40000,32.60000' b='18.00000,32.60000'/>
+		<WIRE a='114.00000,114.00000' b='52.40000,114.00000'/>
+		<WIRE a='89.80000,124.80000' b='51.40000,124.80000'/>
+		<WIRE a='113.60000,136.20000' b='52.00000,136.20000'/>
+		<WIRE a='90.80000,147.00000' b='48.20000,147.00000'/>
+		<WIRE a='47.48000,161.54000' b='41.74000,161.54000'/>
+		<WIRE a='48.00000,174.60000' b='42.00000,174.60000'/>
+		<WIRE a='47.99664,188.25385' b='41.72000,188.25385'/>
+		<WIRE a='41.72000,188.25385' b='41.72000,188.25364'/>
+		<WIRE a='49.30000,201.18000' b='18.26000,201.18000'/>
+		<WIRE a='47.47664,267.63385' b='41.47664,267.63385'/>
+		<WIRE style='0' a='147.40000,241.80000' b='140.60000,241.80000'/>
+		<WIRE style='0' a='140.60000,241.80000' b='140.60000,241.60000'/>
+		<WIRE style='0' a='155.00000,255.00000' b='140.60000,255.00000'/>
+		<WIRE a='190.12000,209.28615' b='158.31474,209.28615'/>
+		<WIRE a='158.31474,209.28615' b='158.31474,209.22615'/>
+		<WIRE a='190.12000,216.82615' b='158.31474,216.82615'/>
+		<WIRE a='158.31474,216.82615' b='158.31474,216.76615'/>
+		<WIRE a='190.12000,224.88615' b='158.31474,224.88615'/>
+		<WIRE a='158.31474,224.88615' b='158.31474,224.82615'/>
+		<WIRE a='190.02526,232.48000' b='158.22000,232.48000'/>
+		<WIRE a='158.22000,232.48000' b='158.22000,232.42000'/>
+		<WIRE a='131.81474,209.22615' b='138.31474,209.22615'/>
+		<WIRE a='131.81474,216.76615' b='138.31474,216.76615'/>
+		<WIRE a='131.81474,224.82615' b='138.31474,224.82615'/>
+		<WIRE a='131.72000,232.42000' b='138.22000,232.42000'/>
+		<WIRE a='100.60000,241.60000' b='44.00000,241.60000'/>
+		<WIRE a='102.60000,255.20000' b='70.20000,255.20000'/>
+		<TEXT pos='62.56000,239.08460' direction='3' font='3' color='000000'>Renal Vein</TEXT>
+	</TinyCAD>
+</TinyCADSheets>

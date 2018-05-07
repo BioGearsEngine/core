@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Potassium</Name>
+    <Classification>Ion</Classification>
+    <MolarMass value="39.1" unit="g/mol"/>
+    <State>Liquid</State>
+    <MembraneResistance value="0.248" unit="ohm"/>
+    <Clearance>
+        <RenalDynamics>
+            <Regulation>
+                <ChargeInBlood>Positive</ChargeInBlood>
+                <FractionUnboundInPlasma value="1.0"/>
+                <ReabsorptionRatio value="3.0"/>
+                <TransportMaximum value="INF" unit="mg/min"/>
+            </Regulation>
+        </RenalDynamics>
+    </Clearance>
+</Substance>

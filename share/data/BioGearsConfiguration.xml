@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BioGearsConfiguration xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+  
+  <!-- You can override any of the engine defaults here, they will be used in both loading a state file and initializing an engine from a patient. -->
+  <!-- Don't edit these unless you know what you are doing! -->
+  
+  <!-- This will change the time step --> 
+  <!-- <TimeStep readOnly="false" unit="s" value="0.02"/> -->
+</BioGearsConfiguration>
+

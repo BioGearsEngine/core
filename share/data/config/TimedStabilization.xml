@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PhysiologyEngineTimedStabilization xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <TrackingStabilization>Off</TrackingStabilization>
+    <RestingStabilizationTime value="600.0" unit="s"/>
+    <FeedbackStabilizationTime value="20.0" unit="s"/>
+    <ConditionStabilization Name="ImpairedAlveolarExchange">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="Starvation">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="ChronicPericardialEffusion">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="ChronicVentricularSystolicDysfunction">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="ChronicObstructivePulmonaryDisease">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="DiabetesType1">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="DiabetesType2">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="ChronicAnemia">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="Dehydration">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="LobarPneumonia">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="InitialEnvironment">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+    <ConditionStabilization Name="ChronicRenalStenosis">
+        <Time value="600.0" unit="s"/>
+    </ConditionStabilization>
+</PhysiologyEngineTimedStabilization>

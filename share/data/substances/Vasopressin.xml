@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Vasopressin</Name>
+    <MolarMass value="1084.24" unit="g/mol"/>
+    <State>Liquid</State>
+    <Clearance>
+        <Systemic>
+            <FractionExcretedInFeces value="0.0"/>
+            <FractionUnboundInPlasma value="0.99"/>
+            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
+            <RenalClearance value="1.13" unit="mL/min kg"/>
+            <SystemicClearance value="15.17" unit="mL/min kg"/>
+        </Systemic>
+        <RenalDynamics>
+            <Clearance value="1.13" unit="mL/min kg"/>
+        </RenalDynamics>
+    </Clearance>
+    <Pharmacokinetics>
+        <Physicochemicals>
+            <AcidDissociationConstant value="9.8"/>
+            <BindingProtein>Albumin</BindingProtein>
+            <BloodPlasmaRatio value="1.0"/>
+            <FractionUnboundInPlasma value="0.99"/>
+            <IonicState>Neutral</IonicState>
+            <LogP value="-4.8"/>
+        </Physicochemicals>
+    </Pharmacokinetics>
+    <Pharmacodynamics>
+        <Bronchodilation value="0.0"/>
+        <DiastolicPressureModifier value="0.9"/>
+        <EC50 value="0.001" unit="ug/mL"/>
+        <EMaxShapeParameter value="1"/>
+        <HeartRateModifier value="0.0"/>
+        <NeuromuscularBlock value="0.0"/>
+        <PupillaryResponse>
+            <ReactivityModifier value="0.0"/>
+            <SizeModifier value="0.0"/>
+        </PupillaryResponse>
+        <RespirationRateModifier value="0.0"/>
+        <Sedation value="0.0"/>
+        <SystolicPressureModifier value="0.9"/>
+        <TidalVolumeModifier value="0.0"/>
+        <TubularPermeabilityModifier value="-1.0"/>
+        <CentralNervousModifier value="0.0"/>
+        <EffectSiteRateConstant value="0.0" unit="1/min"/>
+    </Pharmacodynamics>
+</Substance>

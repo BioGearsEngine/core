@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.1.1-beta" xsi:schemaLocation="">
+    <Name>Tristearin</Name>
+    <Density value="862.0" unit="kg/m^3"/>
+    <MolarMass value="891.48" unit="g/mol"/>
+    <State>Liquid</State>
+</Substance>

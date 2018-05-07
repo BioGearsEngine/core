@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Nitrogen</Name>
+    <Density value="1251.0" unit="g/m^3"/>
+    <MolarMass value="28.0134" unit="g/mol"/>
+    <State>Gas</State>
+    <RelativeDiffusionCoefficient value="0.53"/>
+    <SolubilityCoefficient value="0.012" unit="1/atm"/>
+</Substance>
