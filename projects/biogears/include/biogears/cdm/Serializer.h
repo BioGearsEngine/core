@@ -26,6 +26,8 @@ specific language governing permissions and limitations under the License.
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/framework/XMLGrammarPoolImpl.hpp>
 
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 CDM_BIND_DECL(ObjectData)
 

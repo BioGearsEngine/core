@@ -11,9 +11,16 @@ option(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML
 #         right library all others should be called in the respective projects
 #         to promote some independence
 ###############################################################################
+include(ProcessorCount)
+ProcessorCount(N)
+if(NOT N EQUAL 0)
+  math(EXPR PARALLEL_JOBS ${N}/2)
+  set(ARA_${ROOT_PROJECT_NAME}_PARALLEL_JOBS ${PARALLEL_JOBS} CACHE STRING "Number of Parallel Jobs for IDEs if supported")
+endif()
 
 if(WIN32)
   set(LIBRARY_INSTALL_DIR bin)
+  add_compile_options("/MP${ARA_${ROOT_PROJECT_NAME}_PARALLEL_JOBS}")
 else()
   set(LIBRARY_INSTALL_DIR lib)
 endif()
