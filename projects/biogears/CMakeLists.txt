@@ -198,6 +198,11 @@ else()
 
     target_include_directories(lib${PROJECT_NAME}_string  PUBLIC ${${PREFIX}_string_INCLUDES} )
     target_link_libraries(lib${PROJECT_NAME}_string  ${${PREFIX}_string_LIBS} )
+    install(TARGETS lib${PROJECT_NAME}_string
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+        ARCHIVE DESTINATION lib
+     )
   endif(WIN32)
    ###############################################################################
   # libBiogears_cdm
@@ -247,6 +252,11 @@ else()
   else()
     target_link_libraries(lib${PROJECT_NAME}_cdm  ${${PREFIX}_cdm_LIBS} )
   endif()
+  install(TARGETS lib${PROJECT_NAME}_cdm
+      RUNTIME DESTINATION bin
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+      ARCHIVE DESTINATION lib
+   )
   ###############################################################################
   # libBiogears
   ###############################################################################
@@ -342,6 +352,11 @@ else()
 
      target_include_directories(lib${PROJECT_NAME}_jni  PUBLIC ${${PREFIX}_jni_INCLUDES} )
      target_link_libraries(lib${PROJECT_NAME}_jni  lib${PROJECT_NAME} ${${PREFIX}_jni_LIBS} )
+     install(TARGETS lib${PROJECT_NAME}_jni
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+         ARCHIVE DESTINATION lib
+      )
    endif()
 endif()
 
@@ -371,12 +386,12 @@ else()
 endif()
  
 install(DIRECTORY 
-    a${CMAKE_CURRENT_SOURCE_DIR}/include/biogears
-    ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include/biogears
-    ${CMAKE_CURRENT_SOURCE_DIR}/jni/include/biogears
-    ${CMAKE_CURRENT_SOURCE_DIR}/string/include/biogears
-        DESTINATION include/
-        FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-        )
+    include/biogears
+    cdm/include/biogears
+    jni/include/biogears
+    string/include/biogears
+    DESTINATION include/
+    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+    )
   
 message(STATUS "")
