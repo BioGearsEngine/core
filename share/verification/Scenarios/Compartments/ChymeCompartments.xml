@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+    <Name>ChymeCompartments</Name>
+    <Description>Validation scenario to make sure all compartment level data requests match up with the expected results</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	
+  <DataRequests>
+	<!-- SmallIntestine -->
+	<!-- No chyme flow at this point
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineChyme" Name="InFlow"  Unit="mL/s" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineChyme" Name="OutFlow"  Unit="mL/s" Precision="0"/>
+	-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineChyme" Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineChyme" Name="Volume"   Unit="mL"   Precision="0"/>	
+  </DataRequests>
+	
+	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+	
+</Scenario>

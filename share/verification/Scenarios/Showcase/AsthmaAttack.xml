@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+    <Name>AsthmaAttack</Name>
+    <Description>Showcase scenario: Patient is afflicted with an severe acute asthma attack. Albuterol is administered.</Description>
+    <InitialParameters>
+		<PatientFile>Carol.xml</PatientFile>
+	</InitialParameters>
+
+	<!-- Base system data required for asthma attack showcase scenario -->
+  <DataRequests>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"               Unit="L"          Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                   Unit="mL"          Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"              Unit="unitless"    Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                 Unit="L/min"      Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                     Unit="1/min"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"             Unit="mL"          Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"          Unit="mmHg"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"      Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"               Unit="1/min"       Precision="2"/>  
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction" Unit="unitless"    Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH"                       Unit="unitless"    Precision="2"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="0"/>
+  </DataRequests>
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
+    </Action>
+    <Action xsi:type="AsthmaAttackData">
+		<Comment>Insult: Severe acute asthma attack</Comment>
+        <Severity value="0.7"/>       
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+		<Time value="10" unit="min"/>
+	</Action>  
+	
+	<Action xsi:type="InhalerConfigurationData">
+		<Comment>Intervention: Administer bronchodilator (albuterol) through inhaler</Comment>
+		<Configuration>
+			<Substance>Albuterol</Substance>
+			<MeteredDose value="90.0" unit="ug"/>
+			<NozzleLoss value="0.04"/>
+		</Configuration>
+	</Action>  
+	<Action xsi:type="ConsciousRespirationData" AppendToPrevious="true">
+		<Command xsi:type="ForcedExhaleData">
+			<ExpiratoryReserveVolumeFraction value="1.0"/>
+			<Period value="3.0" unit="s"/>			
+		</Command>  
+		<Command xsi:type="UseInhalerData"/>	
+		<Command xsi:type="ForcedInhaleData">
+			<InspiratoryCapacityFraction value="1.0"/>
+			<Period value="5.0" unit="s"/>          
+		</Command> 
+		<Command xsi:type="BreathHoldData">
+			<Period value="10.0" unit="s"/>          
+		</Command> 
+		<Command xsi:type="ForcedExhaleData">
+			<ExpiratoryReserveVolumeFraction value="0.0"/>
+			<Period value="3.0" unit="s"/>			
+		</Command>
+    </Action>	
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="5" unit="min"/>
+	</Action>
+	
+	<Action xsi:type="PatientAssessmentRequestData" Type="PulmonaryFunctionTest">
+		<Comment>Assessment: Pulmonary function test</Comment>
+	</Action>
+	
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="1" unit="min"/>
+	</Action>		
+</Scenario>

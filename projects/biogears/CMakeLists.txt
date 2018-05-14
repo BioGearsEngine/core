@@ -30,7 +30,7 @@ if(WIN32)
 endif()
 find_package(Threads REQUIRED)
 
-find_package(Boost 1.60.0 COMPONENTS system REQUIRED)
+#find_package(Boost 1.60.0 COMPONENTS system REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Log4cpp REQUIRED)
 find_package(CodeSynthesis REQUIRED)
@@ -130,7 +130,7 @@ if(ARA_${PREFIX}_BUILD_STATIC)
         ${PREFIX}_INCLUDE_DIR
         ${PREFIX}_PRIVATE_INCLUDE_DIR
         ${PREFIX}_GENERATED_INCLUDE_DIR
-        Boost_INCLUDE_DIRS
+#        Boost_INCLUDE_DIRS
         Eigen3_INCLUDE_DIRS
         Log4cpp_INCLUDE_DIRS
   )
@@ -146,7 +146,7 @@ if(ARA_${PREFIX}_BUILD_STATIC)
   set(${PREFIX}_LIBS
         ${CMAKE_THREAD_LIBS_INIT}
         ${CMAKE_DL_LIBS}
-        ${Boost_LIBRARIES}
+ #       ${Boost_LIBRARIES}
         ${EIGEN_LIBRARIES}
         ${Log4cpp_LIBRARIES}
         ${CodeSynthesis_LIBRARIES}
@@ -279,7 +279,7 @@ else()
           ${${PREFIX}_GENERATED_INCLUDE_DIR}
           ${CMAKE_CURRENT_SOURCE_DIR}/string/include
           ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
-          ${Boost_INCLUDE_DIRS}
+#          ${Boost_INCLUDE_DIRS}
           ${Eigen3_INCLUDE_DIRS}
           ${Log4cpp_INCLUDE_DIRS}
   )
@@ -288,7 +288,7 @@ else()
   set(${PREFIX}_LIBS
         ${CMAKE_THREAD_LIBS_INIT}
         ${CMAKE_DL_LIBS}
-        ${Boost_LIBRARIES}
+#        ${Boost_LIBRARIES}
         ${EIGEN_LIBRARIES}
         ${Log4cpp_LIBRARIES}
   )

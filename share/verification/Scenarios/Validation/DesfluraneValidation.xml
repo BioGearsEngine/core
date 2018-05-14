@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+    <Name>DesfluraneScenario</Name>
+    <Description>Patient breathing in Desflurane</Description>
+	<InitialParameters>
+		<PatientFile>StandardMale.xml</PatientFile>
+		<Configuration xsi:type="BioGearsConfigurationData">
+			<DrugsConfiguration>
+        <PDModel>Off</PDModel>
+      </DrugsConfiguration>
+		</Configuration>
+	</InitialParameters>
+	
+		<!-- Base system data required for all scenario verification -->
+    
+  <DataRequests SamplesPerSecond="1">
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Desflurane" Unit="ug/mL" Precision="9"/>
+	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Name="EndTidalFraction" Unit="" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Name="SystemicMassCleared" Unit="ug" Precision="9"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Name="MassInBody" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Desflurane" Name="MassCleared" Unit="ug" Precision="2"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Desflurane" Name="MassCleared" Unit="ug" Precision="2"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Desflurane" Name="MassCleared" Unit="ug" Precision="2"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Desflurane" Name="MassExcreted" Unit="ug" Precision="2"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Desflurane" Name="MassExcreted" Unit="ug" Precision="2"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Desflurane" Name="MassExcreted" Unit="ug" Precision="2"/>
+  </DataRequests>
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="50" unit="s"/>       
+    </Action>
+    <Action xsi:type="AnesthesiaMachineConfigurationData">
+      <Configuration>
+        <Connection>Mask</Connection>
+        <InletFlow value="5.0" unit="L/min"/>
+        <InspiratoryExpiratoryRatio value="0.5"/>
+        <OxygenFraction value="0.23"/>
+        <OxygenSource>Wall</OxygenSource>
+        <PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
+        <PrimaryGas>Nitrogen</PrimaryGas>
+        <RespiratoryRate value="16.0" unit="1/min"/>
+        <VentilatorPressure value="0.0" unit="cmH2O"/>
+        <OxygenBottleOne>
+          <Volume value="660" unit="L"/>
+        </OxygenBottleOne>
+        <OxygenBottleTwo>
+          <Volume value="660" unit="L"/>
+        </OxygenBottleTwo>
+      </Configuration>
+    </Action>  
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="50" unit="s"/>       
+    </Action>
+    <Action xsi:type="AnesthesiaMachineConfigurationData">
+      <Configuration>
+        <LeftChamber>
+          <State>On</State>
+          <SubstanceFraction value="0.05"/>					
+          <Substance>Desflurane</Substance>
+        </LeftChamber>
+      </Configuration>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.5" unit="hr"/>       
+    </Action>
+	<Action xsi:type="AnesthesiaMachineConfigurationData">
+      <Configuration>
+        <LeftChamber>
+          <State>Off</State>
+        </LeftChamber>
+      </Configuration>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="2" unit="hr"/>       
+    </Action>
+</Scenario>
+

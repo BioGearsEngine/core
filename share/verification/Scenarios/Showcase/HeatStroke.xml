@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+  <Name>HeatStroke</Name>
+  <Description>Showcase scenario: Heat Stroke showcase scenario.</Description>
+  <InitialParameters>
+		<PatientFile>Jeff.xml</PatientFile>
+	</InitialParameters>
+	
+	<!-- Base system data required for heat stroke showcase scenario -->
+  <DataRequests>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                 Unit="1/min"    Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"         Unit="mL"       Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"               Unit="mL"       Precision="2"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"      Unit="mmHg"     Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"  Unit="mmHg"     Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure" Unit="mmHg"     Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"             Unit="L/min"   Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"           Unit="1/min"    Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"          Unit="unitless" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"           Unit="degC"     Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"           Unit="degC"     Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SweatRate" 				         Unit="mg/min"      Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalMetabolicRate"        Unit="kcal/day" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalWorkRateLevel"        Unit="unitless" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="FatigueLevel"              Unit="unitless" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="AchievedExerciseLevel"     Unit="unitless" Precision="2"/>
+  </DataRequests>
+	
+	<Action xsi:type="EnvironmentChangeData">
+		<Comment>Insult: High altitude</Comment>
+		<ConditionsFile>CheyenneMountainAprilCool.xml</ConditionsFile>
+    </Action>
+		
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
+    </Action>
+	
+	<!-- Segment 1: Hiking -->
+	<Action xsi:type="ExerciseData">
+		<Comment>Insult: Moderate hiking</Comment>
+		<Intensity value="0.1"/>
+	</Action>
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="10" unit="min"/>
+	</Action>
+	
+	<Action xsi:type="EnvironmentChangeData">
+		<Comment>Insult: Increased temperature </Comment>
+		<Conditions>
+			<AmbientTemperature value="20.0" unit="degC"/>
+			<MeanRadiantTemperature value="20.0" unit="degC"/>
+			<RespirationAmbientTemperature value="20.0" unit="degC"/>
+		</Conditions>
+	</Action>
+
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="10" unit="min"/>
+	</Action>
+	
+	<Action xsi:type="EnvironmentChangeData">
+		<Comment>Insult: Increased ambient temperature </Comment>
+		<ConditionsFile>CheyenneMountainAprilWarm.xml</ConditionsFile>
+    </Action>
+	
+	<Action xsi:type="ExerciseData">
+		<Comment>Intervention: Rest for one minute </Comment>
+		<Intensity value="0.0"/>
+	</Action>
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="1" unit="min"/>
+	</Action>
+	
+	<!-- Segment 2a: Rock Climbing -->
+	<Action xsi:type="ExerciseData">
+		<Comment>Insult: Intense rock climbing</Comment>
+		<Intensity value="0.45"/>
+	</Action>
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="10" unit="min"/>
+	</Action>
+	
+	<!-- Segment 2b: At the top -->
+	<Action xsi:type="ExerciseData">
+		<Comment>Intervention: Stop rock climbing</Comment>
+		<Intensity value="0"/>
+	</Action>
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="0.5" unit="min"/>
+	</Action>
+	
+	<!-- Segment 3a: Bystander Intervention: Remove Clothing -->
+	<Action xsi:type="EnvironmentChangeData">
+		<Comment>Intervention: Remove clothing</Comment>
+		<Conditions>
+			<ClothingResistance value="0.5" unit="clo"/>
+		</Conditions>
+	</Action>	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+	</Action>
+	
+	<!-- Segment 3b: Bystander Intervention: Active Cooling  -->   
+	<Action xsi:type="ThermalApplicationData" AppendToPrevious="true">
+		<Comment>Intervention: Cold packs</Comment>	
+      <AppliedTemperature>			
+        <State>On</State>
+			  <Temperature value="36" unit="degF"/> 
+			  <SurfaceAreaFraction value="0.1" unit="unitless"/> 			
+		  </AppliedTemperature>
+    </Action> 
+	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+	</Action>
+	
+	<!-- Segment 3c: Bystander Intervention: I.V. -->
+	<Action xsi:type="SubstanceCompoundInfusionData">
+		<Comment>Intervention: Administer IV</Comment>
+		<SubstanceCompound>Saline</SubstanceCompound>
+		<BagVolume value="500" unit="mL"/>
+		<Rate value="50" unit="mL/min"/>
+	</Action> 
+	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="5" unit="min"/>       
+	</Action>
+	
+	<!-- Segment 4: Transport -->
+	<Action xsi:type="EnvironmentChangeData">
+		<Comment>Intervention: Environment change, inside an ambulance </Comment>
+		<ConditionsFile>CheyenneMountainAmbulance.xml</ConditionsFile>
+    </Action>
+	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="5" unit="min"/>       
+	</Action>
+	
+	<!-- Assessment Metabolic Panel -->
+	<Action xsi:type="PatientAssessmentRequestData" Type="ComprehensiveMetabolicPanel"/>
+	
+</Scenario>

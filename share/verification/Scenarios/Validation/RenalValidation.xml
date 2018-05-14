@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+  <Name>Renal Validation</Name>
+  <Description>Validation of Renal Data</Description>
+	<!-- <OverrideDecimalFormatting DecimalFormat="FixedMantissa" Precision="6"/> -->
+  <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+   
+  <!--System Data Requests-->	
+  <DataRequests>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="FiltrationFraction" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate" Unit="mL/min" Precision="0"/>	
+	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftAfferentArterioleResistance" Unit="mmHg min/mL" Precision="4"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftBowmansCapsulesHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftBowmansCapsulesOsmoticPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEfferentArterioleResistance" Unit="mmHg min/mL" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftFiltrationFraction" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularCapillariesHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationRate" Unit="mL/min" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationSurfaceArea" Unit="m^2" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFluidPermeability" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftNetFiltrationPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftNetReabsorptionPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftPeritubularCapillariesHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftPeritubularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftReabsorptionFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftReabsorptionRate" Unit="mL/min" Precision="0"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularReabsorptionFiltrationSurfaceArea" Unit="m^2" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularReabsorptionFluidPermeability" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularOsmoticPressure" Unit="mmHg" Precision="0"/>
+	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RenalBloodFlow" Unit="mL/min" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RenalPlasmaFlow" Unit="mL/min" Precision="0"/>
+	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance" Unit="mmHg min/mL" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightBowmansCapsulesHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightBowmansCapsulesOsmoticPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEfferentArterioleResistance" Unit="mmHg min/mL" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightFiltrationFraction" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularCapillariesHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationRate" Unit="mL/min" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationSurfaceArea" Unit="m^2" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFluidPermeability" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightNetFiltrationPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightNetReabsorptionPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightPeritubularCapillariesHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightPeritubularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightReabsorptionFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightReabsorptionRate" Unit="mL/min" Precision="0"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularReabsorptionFiltrationSurfaceArea" Unit="m^2" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularReabsorptionFluidPermeability" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularHydrostaticPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularOsmoticPressure" Unit="mmHg" Precision="0"/>
+	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RenalVascularResistance" Unit="mmHg min/mL" Precision="3"/>
+	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrinationRate" Unit="mL/s" Precision="0"/>
+	<!-- Don't support enums at this time
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineColor"/>-->
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineOsmolality" Unit="mOsm/kg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineOsmolarity" Unit="mOsm/L" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate" Unit="L/day" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineSpecificGravity" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineVolume" Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineUreaNitrogenConcentration" Unit="g/L" Precision="1"/>
+	
+	<!--Compartment Data Requests-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Ketones" Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Albumin"      Name="Concentration"  Unit="mg/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Bicarbonate"  Name="Concentration"  Unit="mg/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Calcium"      Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Chloride"     Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Creatinine"   Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Glucose"      Name="Concentration"  Unit="g/L" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Lactate"      Name="Concentration"  Unit="g/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Potassium"    Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Sodium"       Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Urea"         Name="Concentration"  Unit="g/L" Precision="1"/>
+	
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyVasculature"         Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftRenalArtery"               Name="InFlow"   Unit="mL/min" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftRenalArtery"               Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftRenalArtery"               Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftRenalVein"                 Name="Pressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftRenalVein"                 Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftAfferentArteriole"         Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftAfferentArteriole"         Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftGlomerularCapillaries"     Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftGlomerularCapillaries"     Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftEfferentArteriole"         Name="Pressure" Unit="mmHg" Precision="0"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftEfferentArteriole"         Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftPeritubularCapillaries"    Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftPeritubularCapillaries"    Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftBowmansCapsules"           Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftBowmansCapsules"           Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules"                   Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules"                   Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                    Name="InFlow"   Unit="L/day" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                    Name="Volume"   Unit="mL" Precision="2"/>
+	
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature"         Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalArtery"               Name="InFlow"   Unit="mL/min" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalArtery"               Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalArtery"               Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalVein"                 Name="Pressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalVein"                 Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAfferentArteriole"         Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAfferentArteriole"         Name="Volume"    Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightGlomerularCapillaries"     Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightGlomerularCapillaries"     Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightEfferentArteriole"         Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightEfferentArteriole"         Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightPeritubularCapillaries"    Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightPeritubularCapillaries"    Name="Volume"   Unit="mL" Precision="1"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules"              Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules"              Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules"                      Name="Pressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules"                      Name="Volume"   Unit="mL" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                       Name="InFlow"   Unit="L/day" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                       Name="Volume"   Unit="mL" Precision="2"/>
+	
+	<!-- Substance Specific Properties -->
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketones" Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albumin"      Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="8"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albumin"      Name="Clearance-GlomerularFilterability" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Bicarbonate"  Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="5"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Bicarbonate"  Name="Clearance-RenalExcretionRate" Unit="g/day" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Bicarbonate"  Name="Clearance-RenalFiltrationRate" Unit="g/day" Precision="0"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Bicarbonate"  Name="Clearance-RenalReabsorptionRate" Unit="g/day" Precision="0"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Calcium"      Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Calcium"      Name="Clearance-RenalExcretionRate" Unit="mg/min" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Calcium"      Name="Clearance-RenalFiltrationRate" Unit="mg/min" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Calcium"      Name="Clearance-RenalReabsorptionRate" Unit="mg/min" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Chloride"     Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Chloride"     Name="Clearance-RenalExcretionRate" Unit="mg/min" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Chloride"     Name="Clearance-RenalFiltrationRate" Unit="mg/min" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Chloride"     Name="Clearance-RenalReabsorptionRate" Unit="mg/min" Precision="1"/>
+  <DataRequest xsi:type="SubstanceDataRequestData" Substance="Chloride"     Name="Clearance-GlomerularFilterability" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Creatinine"   Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="2"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Creatinine"   Name="Clearance-RenalExcretionRate" Unit="mg/min" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Creatinine"   Name="Clearance-RenalFiltrationRate" Unit="mg/min" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Creatinine"   Name="Clearance-RenalReabsorptionRate" Unit="mg/min" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose"      Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose"      Name="Clearance-RenalExcretionRate" Unit="g/day" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose"      Name="Clearance-RenalFiltrationRate" Unit="g/day" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose"      Name="Clearance-GlomerularFilterability" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose"      Name="Clearance-RenalReabsorptionRate" Unit="g/day" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Hemoglobin"   Name="Clearance-GlomerularFilterability" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate"      Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sodium"       Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sodium"       Name="Clearance-RenalExcretionRate" Unit="g/day" Precision="2"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sodium"       Name="Clearance-RenalFiltrationRate" Unit="g/day" Precision="0"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sodium"       Name="Clearance-GlomerularFilterability" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sodium"       Name="Clearance-RenalReabsorptionRate" Unit="g/day" Precision="0"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Urea"         Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Urea"         Name="Clearance-RenalExcretionRate" Unit="mg/min" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Urea"         Name="Clearance-RenalFiltrationRate" Unit="mg/min" Precision="1"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Urea"         Name="Clearance-RenalReabsorptionRate" Unit="mg/min" Precision="1"/>
+
+	
+	<!--Initialization testing - these are not included in the table, but are helpful to initialize substances-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Ketones" Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Albumin"      Name="Concentration"  Unit="g/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Bicarbonate"  Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Calcium"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Creatinine"   Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Glucose"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Lactate"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Sodium"       Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Urea"         Name="Concentration"  Unit="g/L" Precision="3"/>
+	
+<!--Initialization testing - these are not included in the table, but are helpful to initialize substances-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Ketones" Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Albumin"      Name="Concentration"  Unit="g/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Bicarbonate"  Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Calcium"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Creatinine"   Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Glucose"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Lactate"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Sodium"       Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules" Substance="Urea"         Name="Concentration"  Unit="g/L" Precision="3"/>
+	
+
+
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Ketones" Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Albumin"      Name="Concentration"  Unit="g/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Bicarbonate"  Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Calcium"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Creatinine"   Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Glucose"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Lactate"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Sodium"       Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Urea"         Name="Concentration"  Unit="g/L" Precision="3"/>
+
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Ketones" Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Albumin"      Name="Concentration"  Unit="g/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Bicarbonate"  Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Calcium"      Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Creatinine"   Name="Concentration"  Unit="g/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Glucose"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Lactate"      Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Sodium"       Name="Concentration"  Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Urea"         Name="Concentration"  Unit="g/L" Precision="3"/>
+  </DataRequests>
+	
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="2" unit="min"/>	  
+    </Action>
+	
+	<Action xsi:type="PatientAssessmentRequestData" Type="Urinalysis"/>
+</Scenario>
+

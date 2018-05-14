@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+    <Name>Energy Validation</Name>
+    <Description>Validation of Endocrine data</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	
+  <DataRequests>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InsulinSynthesisRate" Unit="pmol/min" Precision="0"/>
+  </DataRequests>
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="2" unit="min"/>	  
+    </Action>
+</Scenario>
+

@@ -1,0 +1,1745 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+  <Name>CPRForceScale</Name>
+  <Description>This scenario tests the force scale. Cardiac function is terminated and then successive chest compressions are performed.
+	This scenario is used for validation.</Description>
+  <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    
+	<!-- Base system data required for all scenario verification -->
+  <DataRequests>
+  <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="L/min"      Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent"                 Unit="g"           Precision="0"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryCapillariesWedgePressure" Unit="mmHg"        Precision="2"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                       Unit="mL"          Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                   Unit="L"          Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideSaturation"           Unit="unitless"    Precision="3"/>  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"     Unit="unitless"    Precision="4"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"          Unit="L/min"       Precision="2"/>  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"            Unit="cmH2O"       Precision="2"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"                   Unit="degC"        Precision="1"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"             Unit="mL/min"      Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideProductionRate"       Unit="mL/min"      Precision="3"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate"          Unit="mL/min"      Precision="0"/> 
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RenalBloodFlow"                    Unit="L/min"      Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftAfferentArterioleResistance"   Unit="mmHg min/mL" Precision="4"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance"  Unit="mmHg min/mL" Precision="4"/>
+  
+  <DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"                            Name="Pressure"        Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"                           Name="Pressure"        Unit="cmH2O" Precision="0"/>
+ 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Sodium"        Name="Concentration" Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules"  Substance="Sodium"        Name="Concentration" Unit="g/L" Precision="2"/>
+  
+  <DataRequest xsi:type="SubstanceDataRequestData"  Substance="Oxygen"         Name="AlveolarTransfer" Unit="mL/s" Precision="2"/>
+  <DataRequest xsi:type="SubstanceDataRequestData"  Substance="CarbonDioxide"  Name="AlveolarTransfer" Unit="mL/s" Precision="2"/>
+  
+  <DataRequest Substance="Epinephrine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="LiverGlycogen" Unit="g" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
+
+	<!-- Anything action specific data needed for verification of this scenario -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature" Name="InFlow" Unit="mL/s" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature" Name="OutFlow" Unit="mL/s" Precision="0"/> 	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartEjectionFraction" Unit="unitless" Precision="2"/>	
+  </DataRequests>
+	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+	
+	<Action xsi:type="CardiacArrestData" State="On"/>
+	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="10" unit="s"/>       
+    </Action>
+	
+	<!-- 0+ --> 
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 10+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 20+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 30+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 40+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 50+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 60+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 70+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 80+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 90+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 100+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 110+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 120+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 130+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 140+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 150+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 160+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 170+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 180+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 190+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 200+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 210+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 220+ -->
+	<!--1-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--2-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--3-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--4-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--5-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--6-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--7-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+    <!--8-->
+    <Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--9-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	<!--10-->
+	<Action xsi:type="ChestCompressionForceScaleData"> 
+        <ForceScale value="0.6228"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.75" unit="s"/>       
+    </Action>
+	
+	<!-- 230+ -->
+   
+</Scenario>

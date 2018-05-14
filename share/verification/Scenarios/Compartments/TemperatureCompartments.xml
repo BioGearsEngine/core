@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+  <Name>TemperatureCompartments</Name>
+  <Description>Output everything from every property from these compartments</Description>
+  <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    
+  <DataRequests>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalCore" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalCore" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalCore" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalCore" Name="Heat"                Unit="J" Precision="3"/>	
+
+  <DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalSkin" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalSkin" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalSkin" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalSkin" Name="Heat"                Unit="J" Precision="3"/>	
+
+  <DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Active" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Active" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Active" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Active" Name="Heat"                Unit="J" Precision="3"/>		
+  
+  <DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Clothing" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Clothing" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Clothing" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Clothing" Name="Heat"                Unit="J" Precision="3"/>		
+  
+  <DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Enclosure" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Enclosure" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Enclosure" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Enclosure" Name="Heat"                Unit="J" Precision="3"/>		
+  
+  <DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalCore" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalCore" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalCore" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalCore" Name="Heat"                Unit="J" Precision="3"/>		
+  
+  <DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalSkin" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalSkin" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalSkin" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="ExternalSkin" Name="Heat"                Unit="J" Precision="3"/>		
+  
+  <DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Ambient" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Ambient" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Ambient" Name="Temperature"         Unit="degC" Precision="3"/>
+	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Ambient" Name="Heat"                Unit="J" Precision="3"/>	
+  </DataRequests>	
+  
+	<Action xsi:type="AdvanceTimeData">
+     <Time value="30" unit="s"/>       
+  </Action>
+</Scenario>

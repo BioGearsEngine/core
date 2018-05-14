@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
 #include <Eigen/Core>
+#include <Eigen/Dense>
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 

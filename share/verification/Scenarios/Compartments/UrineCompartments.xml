@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+    <Name>UrineCompartments</Name>
+    <Description>Validation scenario to make sure all compartment level data requests match up with the expected results</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	
+  <DataRequests>
+	
+	<!-- LeftUreter -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                     Name="InFlow"        Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                     Name="OutFlow"       Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                     Name="Pressure"      Unit="mmHg"   Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                     Name="Volume"        Unit="mL"     Precision="1"/>		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter" Substance="Sodium"  Name="Concentration" Unit="ug/mL"  Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter" Substance="Sodium"  Name="Mass"          Unit="ug"     Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter" Substance="Sodium"  Name="Molarity"      Unit="mmol/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter" Substance="Albumin" Name="Concentration" Unit="ug/mL"  Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter" Substance="Albumin" Name="Mass"          Unit="ug"     Precision="2"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter" Substance="Albumin" Name="Molarity"      Unit="mmol/L" Precision="2"/>
+	
+	<!-- RightUreter -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                     Name="InFlow"        Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                     Name="OutFlow"       Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                     Name="Pressure"      Unit="mmHg"   Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                     Name="Volume"        Unit="mL"     Precision="1"/>		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Sodium"  Name="Concentration" Unit="ug/mL"  Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Sodium"  Name="Mass"          Unit="ug"     Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Sodium"  Name="Molarity"      Unit="mmol/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Albumin" Name="Concentration" Unit="ug/mL"  Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Albumin" Name="Mass"          Unit="ug"     Precision="2"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter" Substance="Albumin" Name="Molarity"      Unit="mmol/L" Precision="2"/>
+  
+  <!-- Ureters -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters"                     Name="InFlow"        Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters"                     Name="OutFlow"       Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters"                     Name="Pressure"      Unit="mmHg"   Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters"                     Name="Volume"        Unit="mL"     Precision="1"/>		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters" Substance="Sodium"  Name="Concentration" Unit="ug/mL"  Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters" Substance="Sodium"  Name="Mass"          Unit="ug"     Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters" Substance="Sodium"  Name="Molarity"      Unit="mmol/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters" Substance="Albumin" Name="Concentration" Unit="ug/mL"  Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters" Substance="Albumin" Name="Mass"          Unit="ug"     Precision="2"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ureters" Substance="Albumin" Name="Molarity"      Unit="mmol/L" Precision="2"/>
+	
+	
+	<!-- Bladder -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder"                     Name="InFlow"        Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder"                     Name="OutFlow"       Unit="mL/s"   Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder"                     Name="Pressure"      Unit="mmHg"   Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder"                     Name="Volume"        Unit="mL"     Precision="1"/>		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Sodium"  Name="Concentration" Unit="ug/mL"  Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Sodium"  Name="Mass"          Unit="ug"     Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Sodium"  Name="Molarity"      Unit="mmol/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Albumin" Name="Concentration" Unit="ug/mL"  Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Albumin" Name="Mass"          Unit="ug"     Precision="2"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Albumin" Name="Molarity"      Unit="mmol/L" Precision="2"/>
+  </DataRequests>
+	
+	
+	<Action xsi:type="AdvanceTimeData">
+    <Time value="30" unit="s"/>       
+  </Action>
+	
+</Scenario>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+    <Name>Respiratory Validation</Name>
+    <Description>Validation scenario running all of the possible respiratory scenarios</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters> 
+
+	<!--System Data Requests-->	
+  <DataRequests>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="AlveolarArterialGradient"       Unit="mmHg"      Precision="4"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CarricoIndex"                   Unit="mmHg"      Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"  Unit="unitless"  Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxidePressure"  Unit="cmH2O"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExpiratoryFlow"                 Unit="L/s"       Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="InspiratoryExpiratoryRatio"     Unit="unitless"  Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="InspiratoryFlow"                Unit="L/s"       Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryCompliance"            Unit="L/cmH2O"   Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryResistance"            Unit="cmH2O s/L" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationDriverPressure"      Unit="cmH2O"     Precision="4"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationMusclePressure"      Unit="cmH2O"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                Unit="1/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SpecificVentilation"            Unit="unitless"  Precision="4"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                    Unit="mL"        Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"       Unit="L/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalDeadSpaceVentilation"      Unit="L/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                Unit="mL"        Precision="4"/>	
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalPulmonaryVentilation"      Unit="L/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"         Unit="cmH2O"     Precision="4"/>	
+	<DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                         Unit="g"         Precision="4"/>
+	
+	<!--Compartment Data Requests -->
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina" Name="Pressure" Unit="cmH2O" Precision="4"/>	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
+	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftPleuralCavity" Name="Pressure" Unit="cmH2O" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightPleuralCavity" Name="Pressure" Unit="cmH2O" Precision="4"/>
+	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="PulmonaryLungs" Name="Volume" Unit="mL" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftLungPulmonary" Name="Pressure" Unit="cmH2O" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightLungPulmonary" Name="Pressure" Unit="cmH2O" Precision="4"/>	
+	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli" Name="Volume" Unit="mL" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli" Name="Pressure" Unit="cmH2O" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
+	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Name="Volume" Unit="mL" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Name="Pressure" Unit="cmH2O" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
+
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftDeadSpace" Name="Volume" Unit="mL" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftDeadSpace" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftDeadSpace" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
+	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightDeadSpace" Name="Volume" Unit="mL" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightDeadSpace" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightDeadSpace" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>  
+  </DataRequests> 
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="2" unit="min"/>       
+    </Action>	
+	
+	<Action xsi:type="PatientAssessmentRequestData" Type="PulmonaryFunctionTest"/>
+</Scenario>
+<!--PFT Test not currently included: Forced Vital Capacity, Forced Expiratory Flow 25-75%, Maximum Voluntary Ventilation, Peak Expiratory Flow, Slow Vital Capacity, Forced Expiratory Flow 1 minute,
+FEV1/FVC-->

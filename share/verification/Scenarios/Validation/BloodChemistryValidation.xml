@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+  <Name>Blood Chemistry Validation</Name>
+  <Description>Validation of Blood Chemistry data</Description>
+  <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	
+  <DataRequests>
+	<DataRequest Name="BloodDensity" xsi:type="PhysiologyDataRequestData" Unit="kg/m^3" Precision="0"/>
+	<DataRequest Name="BloodPH" xsi:type="PhysiologyDataRequestData" Precision="2"/>
+	<DataRequest Name="BloodSpecificHeat" xsi:type="PhysiologyDataRequestData" Unit="J/K kg" Precision="0"/>
+	<DataRequest Name="BloodUreaNitrogenConcentration" xsi:type="PhysiologyDataRequestData" Unit="mg/dL" Precision="1"/>
+	<DataRequest Name="CarbonDioxideSaturation" xsi:type="PhysiologyDataRequestData" Precision="2"/>
+  <DataRequest Name="CarbonMonoxideSaturation" xsi:type="PhysiologyDataRequestData" Precision="2"/>
+	<DataRequest Name="Hematocrit" xsi:type="PhysiologyDataRequestData" Precision="3"/> 
+	<DataRequest Name="HemoglobinContent" xsi:type="PhysiologyDataRequestData" Unit="g" Precision="1"/>
+	<DataRequest Name="OxygenSaturation" xsi:type="PhysiologyDataRequestData" Precision="2"/>
+	<DataRequest Name="PlasmaVolume" xsi:type="PhysiologyDataRequestData" Unit="mL" Precision="0"/>
+	<DataRequest Name="Phosphate" xsi:type="PhysiologyDataRequestData" Unit="mmol/L" Precision="1"/>
+  <DataRequest Name="PulseOximetry" xsi:type="PhysiologyDataRequestData" Precision="2"/>
+	<DataRequest Name="RedBloodCellCount" xsi:type="PhysiologyDataRequestData" Unit="ct/uL" Precision="0"/>
+	<DataRequest Name="ShuntFraction" xsi:type="PhysiologyDataRequestData" Precision="3"/>
+	<DataRequest Name="StrongIonDifference" xsi:type="PhysiologyDataRequestData" Unit="mmol/L" Precision="1"/>
+	<DataRequest Name="TotalProteinConcentration" xsi:type="PhysiologyDataRequestData" Unit="g/dL" Precision="0"/>
+	<DataRequest Name="VolumeFractionNeutralLipidInPlasma" xsi:type="PhysiologyDataRequestData" Precision="5"/>
+	<DataRequest Name="VolumeFractionNeutralPhospholipidInPlasma" xsi:type="PhysiologyDataRequestData" Precision="5"/>
+	<DataRequest Name="WhiteBloodCellCount" xsi:type="PhysiologyDataRequestData" Unit="ct/uL" Precision="0"/>
+	
+	<DataRequest Name="ArterialCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="ArterialOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="PulmonaryArterialCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/> 
+	<DataRequest Name="PulmonaryArterialOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="PulmonaryVenousCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="PulmonaryVenousOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/> 
+	<DataRequest Name="VenousCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="VenousOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+  
+	<DataRequest Substance="Albumin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="1"/>
+	<DataRequest Substance="Bicarbonate" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="3"/>
+	<DataRequest Substance="Calcium" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/L" Precision="2"/>
+	<DataRequest Substance="Chloride" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/L" Precision="4"/>
+	<DataRequest Substance="Creatinine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/L" Precision="1"/>
+	<DataRequest Substance="Epinephrine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="4"/>
+	<DataRequest Substance="Globulin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="1"/>
+	<DataRequest Substance="Glucagon" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="3"/>
+	<DataRequest Substance="Glucose" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="1"/>
+	<DataRequest Substance="Hemoglobin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="2"/>
+	<DataRequest Substance="Insulin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="3"/>
+	<DataRequest Substance="Ketones" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/L" Precision="3"/>
+	<DataRequest Substance="Lactate" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/L" Precision="3"/>
+	<DataRequest Substance="Potassium" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/L" Precision="2"/>
+	<DataRequest Substance="Sodium" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="3"/>
+	<DataRequest Substance="Triacylglycerol" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="0"/>
+	<DataRequest Substance="Urea" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="2"/>
+  
+  </DataRequests>
+		
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="2" unit="min"/>		
+    </Action>
+	
+	<Action xsi:type="PatientAssessmentRequestData" Type="CompleteBloodCount"/>
+	<Action xsi:type="PatientAssessmentRequestData" Type="ComprehensiveMetabolicPanel"/>
+	
+</Scenario>
+

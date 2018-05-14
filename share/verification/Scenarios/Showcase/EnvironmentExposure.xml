@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+  <Name>EnvironmentExposure</Name>
+  <Description>Showcase scenario: Patient is exposed to sub-zero temperatures and develops hypothermia.</Description>
+  <InitialParameters>
+		<PatientFile>Jane.xml</PatientFile>
+	</InitialParameters>
+	
+  <!-- Base system data required for environment exposure showcase scenario -->
+  <DataRequests>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalMetabolicRate"          Unit="kcal/day" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"       Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"        Unit="mmHg"   Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"             Unit="degC"   Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                   Unit="1/min"  Precision="2"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"    Unit="mmHg"   Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"   Unit="mmHg"   Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"             Unit="1/min"  Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"             Unit="degC"   Precision="1"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideProductionRate" Unit="mL/min" Precision="3"/>	
+  </DataRequests>
+	
+	<!-- Segment 0 -->
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
+    </Action>
+	
+	<!-- Segment 1: Getting the paper -->
+	<Action xsi:type="EnvironmentChangeData">
+	   <Comment>Insult: Cold weather exposure</Comment>
+	   <ConditionsFile>AnchorageDecember.xml</ConditionsFile>
+    </Action>	
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="40" unit="min"/>       
+    </Action>
+	
+	<!-- Segment 2a: Getting Inside -->
+    <Action xsi:type="EnvironmentChangeData">
+	   <Comment>Intervention: Move indoors</Comment>
+	   <ConditionsFile>AnchorageInside.xml</ConditionsFile>
+    </Action> 
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="0.5" unit="min"/>       
+    </Action>
+	
+	<!-- Segment 2b: Active Heating -->
+	<Action xsi:type="ThermalApplicationData" AppendToPrevious="true">
+		<Comment>Intervention: Heat pack applied</Comment>
+	    <ActiveHeating>
+			  <Power value="100" unit="W"/> 
+			  <SurfaceAreaFraction value="0.1" unit="unitless"/> 			
+	    </ActiveHeating>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="10" unit="min"/>       
+    </Action>
+
+</Scenario>
+
