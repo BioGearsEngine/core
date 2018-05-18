@@ -56,6 +56,7 @@ if( ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS )
 endif()
 
 add_subdirectory(biogears)
+add_subdirectory(scenario_driver)
 add_subdirectory(howto)
 add_subdirectory(unit)
 
