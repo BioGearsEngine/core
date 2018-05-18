@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include "BioGearsScenarioDriver.h"
 
-#include <biogears/engine/Verification.h>
+#include "Verification.h"
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 bool BioGearsScenarioDriver::Configure(int argc, char* argv[])
