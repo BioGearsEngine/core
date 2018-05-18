@@ -69,7 +69,8 @@ create_stage()
 # to stage (AKA move dep DLLs to the run folder for debugging.
 ################################################################################
 if(ARA_${ROOT_PROJECT_NAME}_BUILD_${ROOT_PROJECT_NAME})
-add_dependencies(STAGE ${ROOT_PROJECT_NAME})
+  add_dependencies(STAGE ${ROOT_PROJECT_NAME})
+  add_dependencies(STAGE scenario_driver)
 endif()
 
 ###############################################################################

@@ -10,7 +10,7 @@ cmake_policy(VERSION 3.8.0)
 ###############################################################################
 # Base Variables
 ###############################################################################
-set(PROJECT_NAME scneario_driver)
+set(PROJECT_NAME scenario_driver)
 set(PREFIX scene)
 
 set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
@@ -72,6 +72,7 @@ set_target_properties(${PROJECT_NAME}
   PROJECT_LABEL "${PROJECT_NAME}"
   DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
   CXX_STANDARD 14
+  VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
 
 ###############################################################################
