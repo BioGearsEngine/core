@@ -10,26 +10,26 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief BioGears specific data for our methodology  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
   <xs:include schemaLocation="../cdm/Physiology.xsd"/>
   <xs:include schemaLocation="../cdm/PatientActions.xsd"/>
- 
+
   <xs:complexType name="BioGearsBloodChemistrySystemData">
     <xs:complexContent>
       <xs:extension base="BloodChemistrySystemData">
-        <xs:sequence> 
+        <xs:sequence>
           <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsCardiovascularSystemData">
     <xs:complexContent>
       <xs:extension base="CardiovascularSystemData">
-        <xs:sequence> 
+        <xs:sequence>
           <!-- Driver -->
           <xs:element name="StartSystole" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HeartFlowDetected" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
@@ -56,7 +56,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="CardiacCyclePulmonaryArteryPressureHigh_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="LastCardiacCycleMeanArterialCO2PartialPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CardiacCycleStrokeVolume_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <!-- Cardiac Cycle Averages -->          
+          <!-- Cardiac Cycle Averages -->
           <xs:element name="CardiacCycleArterialPressure_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CardiacCycleArterialCO2PartialPressure_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CardiacCyclePulmonaryCapillariesWedgePressure_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
@@ -65,16 +65,16 @@ specific language governing permissions and limitations under the License.
           <xs:element name="CardiacCyclePulmonaryArteryPressure_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CardiacCycleCentralVenousPressure_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CardiacCycleSkinFlow_mL_Per_s" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
-          
+
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsDrugSystemData">
     <xs:complexContent>
       <xs:extension base="DrugSystemData">
-        <xs:sequence> 
+        <xs:sequence>
           <xs:element name="BolusAdministration" type="SubstanceBolusStateData" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="SarinRbcAcetylcholinesteraseComplex_nM" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="AgedRbcAcetylcholinesterase_nM" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -82,69 +82,69 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsEndocrineSystemData">
     <xs:complexContent>
       <xs:extension base="EndocrineSystemData">
-        <xs:sequence> 
-		
+        <xs:sequence>
+
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsEnergySystemData">
     <xs:complexContent>
       <xs:extension base="EnergySystemData">
-        <xs:sequence>           
+        <xs:sequence>
           <xs:element name="BloodpH" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BicarbonateMolarity_mmol_Per_L" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsGastrointestinalSystemData">
     <xs:complexContent>
       <xs:extension base="GastrointestinalSystemData">
-        <xs:sequence> 
-		
+        <xs:sequence>
+
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsHepaticSystemData">
     <xs:complexContent>
       <xs:extension base="HepaticSystemData">
-        <xs:sequence> 
-          
+        <xs:sequence>
+
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsNervousSystemData">
     <xs:complexContent>
       <xs:extension base="NervousSystemData">
-        <xs:sequence> 
+        <xs:sequence>
           <xs:element name="ArterialOxygenSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsRenalSystemData">
     <xs:complexContent>
       <xs:extension base="RenalSystemData">
-        <xs:sequence> 
+        <xs:sequence>
           <xs:element name="Urinating" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
           <xs:element name="LeftAfferentResistance_mmHg_s_Per_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="RightAfferentResistance_mmHg_s_Per_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="LeftSodiumFlowSetPoint_mg_Per_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="RightSodiumFlowSetPoint_mg_Per_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          
+
           <xs:element name="UrineProductionRate_mL_Per_min" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="UrineOsmolarity_mOsm_Per_L" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="SodiumConcentration_mg_Per_mL" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
@@ -157,7 +157,7 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsRespiratorySystemData">
     <xs:complexContent>
       <xs:extension base="RespiratorySystemData">
@@ -182,8 +182,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ArterialCO2PartialPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BreathingCycleTime_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BreathTimeExhale_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="DefaultDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>   
-          <xs:element name="DriverPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>       
+          <xs:element name="DefaultDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="DriverPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="DriverPressureMin_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ElapsedBreathingCycleTime_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="IEscaleFactor" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -191,7 +191,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="MaxDriverPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PeakRespiratoryDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PreviousTargetAlveolarVentilation_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="VentilationFrequency_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>          
+          <xs:element name="VentilationFrequency_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationToTidalVolumeSlope" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialO2RunningAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCO2RunningAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
@@ -207,19 +207,20 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsTissueSystemData">
     <xs:complexContent>
       <xs:extension base="TissueSystemData">
-        <xs:sequence> 
+        <xs:sequence>
           <xs:element name="RestingPatientMass_kg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="RestingFluidMass_kg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="O2ConsumedRunningAverage_mL_Per_s" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CO2ProducedRunningAverage_mL_Per_s" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="RespiratoryQuotientRunningAverage" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="FatigueRunningAverage" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
 </xs:schema>

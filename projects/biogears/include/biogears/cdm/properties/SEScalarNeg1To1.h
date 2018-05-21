@@ -23,8 +23,8 @@ public:
 
   CDM::ScalarNeg1To1Data* Unload() const;
 
-  double GetValue() const { return SEScalar::GetValue(); }
-  double GetValue(const NoUnit& unitless) const { return SEScalar::GetValue(); }
+  using SEScalar::GetValue;
+  double GetValue(const NoUnit& unitless) const;
   void SetValue(double d);
   void SetValue(double d, const NoUnit& unitless);
 };

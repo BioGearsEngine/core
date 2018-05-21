@@ -27,6 +27,11 @@ CDM::ScalarNeg1To1Data* SEScalarNeg1To1::Unload() const
 	return data;
 }
 
+double SEScalarNeg1To1::GetValue(const NoUnit& unitless) const
+{ 
+  return SEScalar::GetValue(); 
+}
+
 void SEScalarNeg1To1::SetValue(double d)
 { 
   if (d > 1 || d < -1)

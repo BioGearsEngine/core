@@ -27,12 +27,20 @@ CDM::ScalarFractionData* SEScalarFraction::Unload() const
 	return data;
 }
 
-void SEScalarFraction::SetValue(double d)
-{ 
-  SEScalar::SetValue(d);
+//double SEScalarFraction::GetValue() const { 
+//  return SEScalar::GetValue(); 
+//}
+
+double SEScalarFraction::GetValue(const NoUnit& unitless) const {
+  return SEScalar::GetValue(); 
 }
+
+//void SEScalarFraction::SetValue(double d)
+//{ 
+//  SEScalar::SetValue(d);
+//}
 
 void SEScalarFraction::SetValue(double d, const NoUnit& unitless)
 { 
-  SEScalarFraction::SetValue(d);
+  SEScalar::SetValue(d);
 }

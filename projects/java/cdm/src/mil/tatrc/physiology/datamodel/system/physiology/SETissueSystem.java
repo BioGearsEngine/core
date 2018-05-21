@@ -20,7 +20,7 @@ import mil.tatrc.physiology.datamodel.system.SESystem;
 public class SETissueSystem extends SEPhysiologySystem implements SESystem
 {
   protected SEScalarVolumePerTime 			carbonDioxideProductionRate;
-  protected SEScalarFraction			 			dehydrationFraction;
+  protected SEScalar0To1					 			dehydrationFraction;
   protected SEScalarVolume        			extracellularFluidVolume;
   protected SEScalarVolume        			extravascularFluidVolume;
   protected SEScalarVolume        			intracellularFluidVolume;
@@ -212,10 +212,10 @@ public class SETissueSystem extends SEPhysiologySystem implements SESystem
   {
     return dehydrationFraction == null ? false : dehydrationFraction.isValid();
   }
-  public SEScalarFraction getDehydrationFraction()
+  public SEScalar0To1 getDehydrationFraction()
   {
     if (dehydrationFraction == null)
-    	dehydrationFraction = new SEScalarFraction();
+    	dehydrationFraction = new SEScalar0To1();
     return dehydrationFraction;
   }
   

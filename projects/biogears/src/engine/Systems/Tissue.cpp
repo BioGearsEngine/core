@@ -113,12 +113,13 @@ void Tissue::Clear()
   m_RightAlveoli = nullptr;
   m_LeftPulmonaryCapillaries = nullptr;
   m_RightPulmonaryCapillaries = nullptr;
-  
+
   m_PatientActions = nullptr;
 
   m_O2ConsumedRunningAverage_mL_Per_s.Reset();
   m_CO2ProducedRunningAverage_mL_Per_s.Reset();
   m_RespiratoryQuotientRunningAverage.Reset();
+  m_FatigueRunningAverage.Reset();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -134,6 +135,7 @@ void Tissue::Initialize()
   SELiquidCompartment* vascular;
   SEScalarMassPerVolume density;
   GeneralMath::CalculateWaterDensity(m_data.GetEnergy().GetCoreTemperature(), density);
+  m_RestingFluidMass_kg = 0.0;
   for (auto tissueVascular : m_TissueToVascular)
   {
     tissue = tissueVascular.first;
@@ -143,14 +145,14 @@ void Tissue::Initialize()
     m_RestingFluidMass_kg += vascular->GetVolume(VolumeUnit::mL)*m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
     m_RestingFluidMass_kg += intracellular.GetVolume(VolumeUnit::mL)*density.GetValue(MassPerVolumeUnit::kg_Per_mL);
     m_RestingFluidMass_kg += extracellular.GetVolume(VolumeUnit::mL)*density.GetValue(MassPerVolumeUnit::kg_Per_mL);
-  
+
     //We need the vascular and extracellular volume baselines to calculate protein dilution for oncotic pressure determination
     //Not performing a localized oncotic pressure calculation yet--may revisit
     //m_VascularVolumeBaselines[vascular] = vascular->GetVolume(VolumeUnit::mL);
     //m_ExtracellularVolumeBaselines[tissue] = extracellular.GetVolume(VolumeUnit::mL);
   }
   m_RestingPatientMass_kg = m_data.GetPatient().GetWeight(MassUnit::kg);
-    GetIntracellularFluidPH().SetValue(7.0);
+  GetIntracellularFluidPH().SetValue(7.0);
 
   /// \cite guyton2006medical
   GetOxygenConsumptionRate().SetValue(250.0, VolumePerTimeUnit::mL_Per_min);
@@ -170,8 +172,8 @@ void Tissue::Initialize()
   GetMuscleGlycogen().SetValue(.02 * m_data.GetPatient().GetMuscleMass(MassUnit::g), MassUnit::g);  //2% of muscle mass
   GetStoredProtein().SetValue(110, MassUnit::g); //"Reusable" protein stores are usually about 1% of total body protein, ~110 g (https://www.nap.edu/read/10490/chapter/12#595)
   GetStoredFat().SetValue(m_data.GetPatient().GetWeight(MassUnit::g) * m_data.GetPatient().GetBodyFatFraction().GetValue(), MassUnit::g);
-  
- 
+
+
 
   GetDehydrationFraction().SetValue(0);
 
@@ -185,6 +187,9 @@ bool Tissue::Load(const CDM::BioGearsTissueSystemData& in)
   m_O2ConsumedRunningAverage_mL_Per_s.Load(in.O2ConsumedRunningAverage_mL_Per_s());
   m_CO2ProducedRunningAverage_mL_Per_s.Load(in.CO2ProducedRunningAverage_mL_Per_s());
   m_RespiratoryQuotientRunningAverage.Load(in.RespiratoryQuotientRunningAverage());
+  m_RestingPatientMass_kg = in.RestingPatientMass_kg();
+  m_RestingFluidMass_kg = in.RestingFluidMass_kg();
+  m_FatigueRunningAverage.Load(in.FatigueRunningAverage());
 
   BioGearsSystem::LoadState();
   return true;
@@ -202,6 +207,10 @@ void Tissue::Unload(CDM::BioGearsTissueSystemData& data) const
   data.O2ConsumedRunningAverage_mL_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_O2ConsumedRunningAverage_mL_Per_s.Unload()));
   data.CO2ProducedRunningAverage_mL_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_CO2ProducedRunningAverage_mL_Per_s.Unload()));
   data.RespiratoryQuotientRunningAverage(std::unique_ptr<CDM::RunningAverageData>(m_RespiratoryQuotientRunningAverage.Unload()));
+  data.RestingPatientMass_kg(m_RestingPatientMass_kg);
+  data.RestingFluidMass_kg(m_RestingFluidMass_kg);
+  data.FatigueRunningAverage(std::unique_ptr<CDM::RunningAverageData>(m_FatigueRunningAverage.Unload()));
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -214,6 +223,7 @@ void Tissue::Unload(CDM::BioGearsTissueSystemData& data) const
 void Tissue::SetUp()
 {
   m_Dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
+  m_Patient = &m_data.GetPatient();
 
   //"Reusable" protein stores are usually about 1% of total body protein, ~110 g (https://www.nap.edu/read/10490/chapter/12#595)
   m_maxProteinStorage_g = 110;
@@ -249,7 +259,7 @@ void Tissue::SetUp()
   m_FatInsulin = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Fat)->GetSubstanceQuantity(*m_Insulin);
   m_FatGlucagon = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Fat)->GetSubstanceQuantity(*m_Glucagon);
   m_FatTAG = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Fat)->GetSubstanceQuantity(*m_Triacylglycerol);
-  
+
   //These were m_GutE1 and m_GutE1ToE3, respectively.  These were compliance elements in old tissue circuits so I have changed them to their new names
   m_GutE3 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::TissueNode::GutE3);
   m_GutE3ToGround = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::GutE3ToGround);
@@ -298,18 +308,18 @@ void Tissue::SetUp()
   //Store paths from vascular node to first extracellular node (i.e. vascular oncotic pressure source)
   m_VascularCopPaths.clear();
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Fat)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::FatVToFatE1);
-  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Bone)] =  m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BoneVToBoneE1);
-  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain)] =  m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BrainVToBrainE1);
+  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Bone)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BoneVToBoneE1);
+  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BrainVToBrainE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LargeIntestine)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LargeIntestineVToGutE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::SmallIntestine)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SmallIntestineVToGutE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SplanchnicVToGutE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftKidney)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftKidneyVToLeftKidneyE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightKidney)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightKidneyVToRightKidneyE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LiverVToLiverE1);
-  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftLung)] =  m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1);
+  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftLung)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightLung)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightLungVToRightLungE1);
-  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Muscle)] =  m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MuscleVToMuscleE1);
-  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Myocardium)] =  m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MyocardiumVToMyocardiumE1);
+  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Muscle)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MuscleVToMuscleE1);
+  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Myocardium)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MyocardiumVToMyocardiumE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Skin)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinVToSkinE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Spleen)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SpleenVToSpleenE1);
 
@@ -347,7 +357,7 @@ void Tissue::SetUp()
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Skin)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinE3ToSkinI);
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Spleen)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SpleenE3ToSpleenI);
 
-  
+
 
   m_ConsumptionProdutionTissues.clear();
   m_ConsumptionProdutionTissues.push_back(m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Fat));
@@ -370,7 +380,7 @@ void Tissue::SetUp()
     if (m_TissueToVascular.find(tissue) == m_TissueToVascular.end() || m_TissueToVascular[tissue] == nullptr)
       Warning("Tissue found a tissue compartment that is not mapped to a vascular compartment  : " + tissue->GetName());
     /*if (m_VascularCopPaths.find(tissue) == m_VascularCopPaths.end() || m_VascularCopPaths[tissue] == nullptr)
-      Warning("Tissue found a tissue compartment that does not have a vascular colloid oncotic pressure path  : " + tissue->GetName());*/
+    Warning("Tissue found a tissue compartment that does not have a vascular colloid oncotic pressure path  : " + tissue->GetName());*/
     if (m_InterstitialCopPaths.find(tissue) == m_InterstitialCopPaths.end() || m_InterstitialCopPaths[tissue] == nullptr)
       Warning("Tissue found a tissue compartment that does not have an interstitial colloid oncotic pressure path  : " + tissue->GetName());
     if (m_ExtraToIntraPaths.find(tissue) == m_ExtraToIntraPaths.end() || m_ExtraToIntraPaths[tissue] == nullptr)
@@ -389,7 +399,7 @@ void Tissue::AtSteadyState()
 
   if (m_data.GetState() == EngineState::AtInitialStableState)
   {
-    // Apply our conditions   
+    // Apply our conditions		
     if (m_data.GetConditions().HasStarvation())
       SetStarvationState();
     if (m_data.GetConditions().HasDehydration())
@@ -482,7 +492,7 @@ void Tissue::SetStarvationState()
   double bodyDensity_g_Per_cm3 = (SiriBodyDensity_g_Per_cm3 + BrozekBodyDensity_g_Per_cm3) / 2.0;
   m_Patient->GetBodyDensity().SetValue(bodyDensity_g_Per_cm3, MassPerVolumeUnit::g_Per_cm3);  //See BioGears::SetUpPatient()
 
-  //Set new blood concentrations
+                                                                                              //Set new blood concentrations
   m_data.GetSubstances().SetLiquidCompartmentNonGasesForStarvation(starvedTime_hr);
 }
 
@@ -546,7 +556,7 @@ void Tissue::CalculateDiffusion()
   SETissueCompartment* tissue;
   SELiquidCompartment* vascular;
   const SESubstanceTissuePharmacokinetics* tissueKinetics;
-  
+
   for (auto tissueVascular : m_TissueToVascular)
   {
     tissue = tissueVascular.first;
@@ -558,8 +568,8 @@ void Tissue::CalculateDiffusion()
     for (const SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances())
     {
       double moved_ug;  //used only for possible debugging output
-      tissueKinetics = nullptr;   
-      if(sub->HasPK())
+      tissueKinetics = nullptr;
+      if (sub->HasPK())
         tissueKinetics = sub->GetPK()->GetTissueKinetics(tissue->GetName());
       //Check to see if substance is a drug with the appropriate parameters to calculate PK diffusion
       // If the substance is a PBPK drug, then diffusion is computed by perfusion limited diffusion, as described in \cite huisinga2012modeling
@@ -570,7 +580,7 @@ void Tissue::CalculateDiffusion()
           Error("Attempted to diffuse a substance with PK that had no partition coefficient available.");
           continue;
         }
-        PerfusionLimitedDiffusion(*tissue, *vascular, *sub, tissueKinetics->GetPartitionCoefficient(), m_Dt_s); //Balance happens in the method     
+        PerfusionLimitedDiffusion(*tissue, *vascular, *sub, tissueKinetics->GetPartitionCoefficient(), m_Dt_s); //Balance happens in the method			
       }
       // Otherwise, the diffusion is computed by either:
       // Instantaneous diffusion, Simple diffusion, Facilitated diffusion, or Active diffusion
@@ -637,7 +647,7 @@ void Tissue::CalculateDiffusion()
             double massToAreaCoefficient_cm2_Per_g = 1.0; /// \todo Define relationship between tissue mass and membrane area.
             double capCoverage_cm2 = massToAreaCoefficient_cm2_Per_g * tissue->GetTotalMass(MassUnit::g);
             double maximumMassFlux = sub->GetMaximumDiffusionFlux(MassPerAreaTimeUnit::g_Per_cm2_s);
-            double combinedCoefficient_g_Per_s = maximumMassFlux*capCoverage_cm2;
+            double combinedCoefficient_g_Per_s = maximumMassFlux * capCoverage_cm2;
 
             //Vascular to Extracellular
             moved_ug = MoveMassByFacilitatedDiffusion(*vascular, extracellular, *sub, combinedCoefficient_g_Per_s, m_Dt_s);
@@ -648,48 +658,48 @@ void Tissue::CalculateDiffusion()
           //This Albumin diffusion is in case we start dynamically adjusting oncotic pressures, perhaps during hemorrhages or sepsis
           //if (sub->GetName() == "Albumin")
           //{
-          //  //Don't transport while engine is stabilizing
-          //  if (m_data.GetState() < EngineState::AtInitialStableState)
-          //    continue;
-          //  double albuminReflection = 0.903;
-          //  double albuminK_mL_Per_s = 0.1339;
-          //  double vascularToExtraFlow_mL_Per_s = m_VascularCopPaths[tissue]->GetFlow(VolumePerTimeUnit::mL_Per_s);  //Vascular to Extra Path is first path in Tissue Paths vector
-          //  //Need to add other contributions to gut in-flow (see Set-Up)
-          //  if (tissue->GetName() == BGE::TissueCompartment::Gut)
-          //  {
-          //    vascularToExtraFlow_mL_Per_s += m_SmallIntestineToGut->GetFlow(VolumePerTimeUnit::mL_Per_s);
-          //    vascularToExtraFlow_mL_Per_s += m_SplanchnicToGut->GetFlow(VolumePerTimeUnit::mL_Per_s);
-          //  }
-          //  double pecletNumber = vascularToExtraFlow_mL_Per_s * (1 - albuminK_mL_Per_s) / albuminK_mL_Per_s;
-          //  moved_ug = vascularToExtraFlow_mL_Per_s * (1 - albuminK_mL_Per_s) * ((vascular->GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) -
-          //    exp(-pecletNumber) * extracellular.GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL)) / (1 - exp(-pecletNumber))) * m_Dt_s;
-          //  if (moved_ug > 0)
-          //  {
-          //    if (moved_ug > vascular->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug))
-          //    {
-          //      moved_ug = vascular->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
-          //    }
-          //    DistributeMassbyVolumeWeighted(extracellular, *sub, moved_ug, MassUnit::ug);
-          //    DistributeMassbyMassWeighted(*vascular, *sub, -moved_ug, MassUnit::ug);
-          //  }
-          //  //We can't allow albumin to be pushed back through capillary
-          //  /*else
-          //  {
-          //    if (-moved_ug > extracellular.GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug))
-          //    {
-          //      moved_ug = -extracellular.GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
-          //    }
-          //    DistributeMassbyMassWeighted(extracellular, *sub, moved_ug, MassUnit::ug);
-          //    DistributeMassbyVolumeWeighted(*vascular, *sub, -moved_ug, MassUnit::ug);
-          //  }*/
+          //	//Don't transport while engine is stabilizing
+          //	if (m_data.GetState() < EngineState::AtInitialStableState)
+          //		continue;
+          //	double albuminReflection = 0.903;
+          //	double albuminK_mL_Per_s = 0.1339;
+          //	double vascularToExtraFlow_mL_Per_s = m_VascularCopPaths[tissue]->GetFlow(VolumePerTimeUnit::mL_Per_s);  //Vascular to Extra Path is first path in Tissue Paths vector
+          //	//Need to add other contributions to gut in-flow (see Set-Up)
+          //	if (tissue->GetName() == BGE::TissueCompartment::Gut)
+          //	{
+          //		vascularToExtraFlow_mL_Per_s += m_SmallIntestineToGut->GetFlow(VolumePerTimeUnit::mL_Per_s);
+          //		vascularToExtraFlow_mL_Per_s += m_SplanchnicToGut->GetFlow(VolumePerTimeUnit::mL_Per_s);
+          //	}
+          //	double pecletNumber = vascularToExtraFlow_mL_Per_s * (1 - albuminK_mL_Per_s) / albuminK_mL_Per_s;
+          //	moved_ug = vascularToExtraFlow_mL_Per_s * (1 - albuminK_mL_Per_s) * ((vascular->GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) -
+          //		exp(-pecletNumber) * extracellular.GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL)) / (1 - exp(-pecletNumber))) * m_Dt_s;
+          //	if (moved_ug > 0)
+          //	{
+          //		if (moved_ug > vascular->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug))
+          //		{
+          //			moved_ug = vascular->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
+          //		}
+          //		DistributeMassbyVolumeWeighted(extracellular, *sub, moved_ug, MassUnit::ug);
+          //		DistributeMassbyMassWeighted(*vascular, *sub, -moved_ug, MassUnit::ug);
+          //	}
+          //	//We can't allow albumin to be pushed back through capillary
+          //	/*else
+          //	{
+          //		if (-moved_ug > extracellular.GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug))
+          //		{
+          //			moved_ug = -extracellular.GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
+          //		}
+          //		DistributeMassbyMassWeighted(extracellular, *sub, moved_ug, MassUnit::ug);
+          //		DistributeMassbyVolumeWeighted(*vascular, *sub, -moved_ug, MassUnit::ug);
+          //	}*/
           //}
 
         }
 
-      //Now that mass has been moved, balance to set concentrations and molarities
-      vascular->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
-      extracellular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
-      intracellular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
+        //Now that mass has been moved, balance to set concentrations and molarities
+        vascular->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
+        extracellular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
+        intracellular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
       }
     }
   }
@@ -803,14 +813,14 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double anaerobic_ATP_Per_Glucose = 2;
   double lactate_Per_Glucose = 2;
   double glucose_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_Glucose / 686; //686 kcal/mol energy generated when burning glucose completely via bomb calorimeter \cite boron2012medical
-  double TAG_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_TAG / (3*2340 + 686); //Palmitic acid free energy is 2340 kcal, glycerol is similar to glucose, so assume 686 \cite voet2013fundamentals
+  double TAG_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_TAG / (3 * 2340 + 686); //Palmitic acid free energy is 2340 kcal, glycerol is similar to glucose, so assume 686 \cite voet2013fundamentals
   double AA_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_AA / 387.189; //Alanine heat of combustion is 1.62 MJ/mol \cite livesey1984energy
   double ketones_CellularEfficiency = glucose_CellularEfficiency; //Assuming the same as glucose
   double mandatoryMuscleAnaerobicFraction = .1; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = 1200; //see Energy::Exercise
 
-  //Patients with COPD show higher levels of anaerobic metabolism \cite mathur1999cerebral \cite engelen2000factors
+                               //Patients with COPD show higher levels of anaerobic metabolism \cite mathur1999cerebral \cite engelen2000factors
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease())
   {
     mandatoryMuscleAnaerobicFraction *= 1.5; //50% increase
@@ -837,7 +847,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   // We do not use the cardiac output as total flow rate because all of the fractions must sum to one at each time slice.
   for (SETissueCompartment* tissue : m_ConsumptionProdutionTissues)
   {
-    if(tissue == m_BrainTissue)
+    if (tissue == m_BrainTissue)
       continue;
     vascular = m_TissueToVascular[tissue];
     if (vascular->HasInFlow())
@@ -988,8 +998,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
 
       brainEnergyDeficit_kcal = brainNeededEnergy_kcal > 0 ? brainNeededEnergy_kcal : 0; //Any needed energy we have left is a deficit
 
-      //Useful debugging information
-      //m_data.GetDataTrack().Probe("BrainDeficitFraction", brainEnergyDeficit_kcal / (.2 * baseEnergyRequested_kcal));
+                                                                                         //Useful debugging information
+                                                                                         //m_data.GetDataTrack().Probe("BrainDeficitFraction", brainEnergyDeficit_kcal / (.2 * baseEnergyRequested_kcal));
 
       TissueGlucose->Balance(BalanceLiquidBy::Mass);
       TissueO2->Balance(BalanceLiquidBy::Mass);
@@ -1003,7 +1013,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     //They can also consume ketones in some quantities, but we're not modeling that
     //The muscles always have some level of anaerobic activity
     //Additionally, the muscles perform all of the additional work from exercise
-    double tissueNeededEnergy_kcal = nonbrainNeededEnergy_kcal*BloodFlowFraction;
+    double tissueNeededEnergy_kcal = nonbrainNeededEnergy_kcal * BloodFlowFraction;
     double muscleMandatoryAnaerobicNeededEnergy_kcal = 0;
     if (tissue == m_MuscleTissue)
     {
@@ -1021,7 +1031,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     double localHormoneFactor = Hepatic::CalculateRelativeHormoneChange(GetLiverInsulinSetPoint().GetValue(AmountPerVolumeUnit::mmol_Per_L)*1e9, GetLiverGlucagonSetPoint().GetValue(MassPerVolumeUnit::mg_Per_mL)*1e9, vascular->GetSubstanceQuantity(*m_Insulin), vascular->GetSubstanceQuantity(*m_Glucagon), m_data);
     BLIM(localHormoneFactor, -2, 0);  //positive hormone factors mean we should consume the expected 30g/day
     double AAConsumptionRate_g_Per_day = GeneralMath::LinearInterpolator(0, 2, 15, 110, -localHormoneFactor);
-    
+
     double AAToConsume_mol = (AAConsumptionRate_g_Per_day * time_s * BloodFlowFraction) / (24 * 3600 * m_AminoAcids->GetMolarMass(MassPerAmountUnit::g_Per_mol));
 
     //See if we actually have enough AA to meet the request and carry it out
@@ -1103,7 +1113,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     //todo readdress this scaling with respect to exercise to try to make the respiratory quotient trend correctly
     double rateLimitingTuningFactor = GeneralMath::LinearInterpolator(0, 2, 0, .001, -localHormoneFactor);
 
-    double usableEnergyAsTissueTAG_kcal = rateLimitingTuningFactor*(TissueTAG->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*TissueVolume_L) * ATP_Per_TAG * energyPerMolATP_kcal / TAG_CellularEfficiency;
+    double usableEnergyAsTissueTAG_kcal = rateLimitingTuningFactor * (TissueTAG->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*TissueVolume_L) * ATP_Per_TAG * energyPerMolATP_kcal / TAG_CellularEfficiency;
 
     //If we have enough usable intracellular TAG to meet the request for this tissue
     if (tissueNeededEnergy_kcal > 0 && usableEnergyAsTissueTAG_kcal >= tissueNeededEnergy_kcal)
@@ -1205,7 +1215,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       totalCO2Produced_mol += glucoseToConsume_mol * CO2_Per_Glucose;
     }
     //If we don't have enough glucose
-    else if(tissueNeededEnergy_kcal > 0)
+    else if (tissueNeededEnergy_kcal > 0)
     {
       double glucoseToConsume_mol = TissueGlucose->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*TissueVolume_L;
 
@@ -1340,9 +1350,9 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       double energyAsMuscleGlycogen_kcal = (GetMuscleGlycogen(MassUnit::g) / m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol)) * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
 
       //If we have enough
-      if (energyAsMuscleGlycogen_kcal >= (tissueNeededEnergy_kcal+muscleMandatoryAnaerobicNeededEnergy_kcal))
+      if (energyAsMuscleGlycogen_kcal >= (tissueNeededEnergy_kcal + muscleMandatoryAnaerobicNeededEnergy_kcal))
       {
-        double glycogenConsumed_g = ((tissueNeededEnergy_kcal+muscleMandatoryAnaerobicNeededEnergy_kcal) / energyAsMuscleGlycogen_kcal) * GetMuscleGlycogen(MassUnit::g);
+        double glycogenConsumed_g = ((tissueNeededEnergy_kcal + muscleMandatoryAnaerobicNeededEnergy_kcal) / energyAsMuscleGlycogen_kcal) * GetMuscleGlycogen(MassUnit::g);
         double glycogenConsumed_mol = glycogenConsumed_g / m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol);
         GetMuscleGlycogen().IncrementValue(-glycogenConsumed_g, MassUnit::g);
         TissueLactate->GetMass().IncrementValue(glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -1384,13 +1394,13 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
 
   }//end of the tissue loop
 
-  //Update outputs
+   //Update outputs
   totalO2Consumed_mol += m_hepaticO2Consumed_mol;
   totalCO2Produced_mol += m_hepaticCO2Produced_mol;
   oxygenConsumptionRate_g_Per_s = totalO2Consumed_mol * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / time_s;
   carbonDioxideProductionRate_g_Per_s = totalCO2Produced_mol * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / time_s;
-  double O2Consumption_mL_Per_s = (oxygenConsumptionRate_g_Per_s / m_O2->GetDensity(MassPerVolumeUnit::g_Per_mL)) ;
-  double CO2Production_mL_Per_s = (carbonDioxideProductionRate_g_Per_s / m_CO2->GetDensity(MassPerVolumeUnit::g_Per_mL)) ;
+  double O2Consumption_mL_Per_s = (oxygenConsumptionRate_g_Per_s / m_O2->GetDensity(MassPerVolumeUnit::g_Per_mL));
+  double CO2Production_mL_Per_s = (carbonDioxideProductionRate_g_Per_s / m_CO2->GetDensity(MassPerVolumeUnit::g_Per_mL));
   respiratoryQuotient = totalCO2Produced_mol / totalO2Consumed_mol;
 
   m_O2ConsumedRunningAverage_mL_Per_s.Sample(O2Consumption_mL_Per_s);
@@ -1414,7 +1424,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   //GetCarbonDioxideProductionRate().SetValue(CO2Production_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   //GetRespiratoryExchangeRatio().SetValue(respiratoryQuotient);
   m_energy->GetLactateProductionRate().SetValue(lactateProductionRate_mol_Per_s, AmountPerTimeUnit::mol_Per_s);
-  achievedWorkRate_W = (1/m_Dt_s)*3600*24*(exerciseEnergyRequested_kcal - brainEnergyDeficit_kcal - nonbrainEnergyDeficit_kcal) / kcal_Per_day_Per_Watt;
+  achievedWorkRate_W = (1 / m_Dt_s) * 3600 * 24 * (exerciseEnergyRequested_kcal - brainEnergyDeficit_kcal - nonbrainEnergyDeficit_kcal) / kcal_Per_day_Per_Watt;
 
   if (m_PatientActions->HasExercise())
   {
@@ -1432,15 +1442,23 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   }
 
   double fatigue = ((brainEnergyDeficit_kcal + nonbrainEnergyDeficit_kcal) / (baseEnergyRequested_kcal + exerciseEnergyRequested_kcal));
-  /// \event Patient: Fatigue - Energy stores are sub-maximal.
-  if (fatigue > 0.0) 
+
+  //sample to set so that it doesn't log like crazy 
+  fatigue = m_FatigueRunningAverage.Sample(fatigue);
+
+  /// \event Patient: Fatigue - Energy stores are sub-maximal, skip if beginning of cardiac cycle.
+  if (!m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
   {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, true, m_data.GetSimulationTime());
+    if (fatigue > 0.0035)
+    {
+      m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, true, m_data.GetSimulationTime());
+    }
+    else if (fatigue < 0.000001)
+    {
+      m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, false, m_data.GetSimulationTime());
+    }
   }
-  else 
-  {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, false, m_data.GetSimulationTime());
-  }
+
   m_energy->GetFatigueLevel().SetValue(fatigue);
 
   //Update other patient parameters
@@ -1452,9 +1470,16 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double bodyDensity_g_Per_cm3 = (SiriBodyDensity_g_Per_cm3 + BrozekBodyDensity_g_Per_cm3) / 2.0;
   m_Patient->GetBodyDensity().SetValue(bodyDensity_g_Per_cm3, MassPerVolumeUnit::g_Per_cm3);  //See BioGears::SetUpPatient()
 
-  //Reset O2/CO2 member variables since they're static
+                                                                                              //Reset O2/CO2 member variables since they're static
   m_hepaticCO2Produced_mol = 0;
   m_hepaticO2Consumed_mol = 0;
+
+  //reset average at beginning of cardiac cycle:
+  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
+  {
+    m_FatigueRunningAverage.Reset();
+    m_FatigueRunningAverage.Reset();
+  }
 
   //Useful debugging information
   //m_data.GetDataTrack().Probe("InstantaneousBrainEnergyDeficit_kcal", brainEnergyDeficit_kcal);
@@ -1469,8 +1494,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   int steps = m_data.GetSimulationTime().GetValue(TimeUnit::s)/time_s;
   if (steps % 5000 == 0 && m_AnaerobicTissues.length() > 1)
   {
-    Info(m_AnaerobicTissues + "used anaerobic energy in the last 100 seconds.");
-    m_AnaerobicTissues.clear();
+  Info(m_AnaerobicTissues + "used anaerobic energy in the last 100 seconds.");
+  m_AnaerobicTissues.clear();
   }
   */
 }
@@ -1490,7 +1515,7 @@ void Tissue::ProteinStorageAndRelease()
 
   double aminoAcidsBaseline_mg_Per_dL = 50;  // \todo make this a CDM set point like glucose?
 
-  //Patients with diabetes type 2 show increased blood AA; allow for up to 30 mg/dL elevation in severe cases \cite guyton2006medical p989
+                                             //Patients with diabetes type 2 show increased blood AA; allow for up to 30 mg/dL elevation in severe cases \cite guyton2006medical p989
   if (m_data.GetConditions().HasDiabetesType2())
   {
     if (m_data.GetConditions().GetDiabetesType2()->HasInsulinResistanceSeverity())
@@ -1500,7 +1525,7 @@ void Tissue::ProteinStorageAndRelease()
     }
   }
 
-   double hormoneFactor = Hepatic::CalculateRelativeHormoneChange(GetMuscleInsulinSetPoint().GetValue(AmountPerVolumeUnit::mmol_Per_L)*1e9, GetMuscleGlucagonSetPoint().GetValue(MassPerVolumeUnit::mg_Per_mL)*1e9, m_MuscleInsulin, m_MuscleGlucagon, m_data);
+  double hormoneFactor = Hepatic::CalculateRelativeHormoneChange(GetMuscleInsulinSetPoint().GetValue(AmountPerVolumeUnit::mmol_Per_L)*1e9, GetMuscleGlucagonSetPoint().GetValue(MassPerVolumeUnit::mg_Per_mL)*1e9, m_MuscleInsulin, m_MuscleGlucagon, m_data);
 
   //Guyton says protein blood concentrations should only rise 2-3 mg/dL even after eating because of absorption into tissues
   double proteinStorageLowerRate_g_Per_s = .3;
@@ -1591,64 +1616,64 @@ void Tissue::ProteinStorageAndRelease()
 //--------------------------------------------------------------------------------------------------
 void Tissue::Dehydrate()
 {
-    SEPatient& Patient = m_data.GetPatient();
-    SEDehydration* dehydration = m_data.GetConditions().GetDehydration();
-    SEScalarMassPerVolume density;
-    GeneralMath::CalculateWaterDensity(m_data.GetEnergy().GetCoreTemperature(), density);
+  SEPatient& Patient = m_data.GetPatient();
+  SEDehydration* dehydration = m_data.GetConditions().GetDehydration();
+  SEScalarMassPerVolume density;
+  GeneralMath::CalculateWaterDensity(m_data.GetEnergy().GetCoreTemperature(), density);
 
-    //dehydration determine patient weight loss due to water deficiency 
-    double fractionalWeightLoss = dehydration->GetDehydrationFraction().GetValue();
+  //dehydration determine patient weight loss due to water deficiency 
+  double fractionalWeightLoss = dehydration->GetDehydrationFraction().GetValue();
 
-    //Set tissue value on CDM
-    GetDehydrationFraction().SetValue(fractionalWeightLoss);
+  //Set tissue value on CDM
+  GetDehydrationFraction().SetValue(fractionalWeightLoss);
 
-    double patientMass_kg = m_Patient->GetWeight(MassUnit::kg);
+  double patientMass_kg = m_Patient->GetWeight(MassUnit::kg);
 
-    double waterReduction_L = patientMass_kg * fractionalWeightLoss / density.GetValue(MassPerVolumeUnit::kg_Per_L);
+  double waterReduction_L = patientMass_kg * fractionalWeightLoss / density.GetValue(MassPerVolumeUnit::kg_Per_L);
 
-    //from fraction that is water
-    double waterReductionFraction = waterReduction_L / m_data.GetTissue().GetTotalBodyFluidVolume(VolumeUnit::L);
+  //from fraction that is water
+  double waterReductionFraction = waterReduction_L / m_data.GetTissue().GetTotalBodyFluidVolume(VolumeUnit::L);
 
-    //tracking fluid losses
-    double temp_mL = 0.0;
-    double totalFluidLoss_mL = 0.0;
+  //tracking fluid losses
+  double temp_mL = 0.0;
+  double totalFluidLoss_mL = 0.0;
 
-    //loop over extracellular fluid compartments and decrement 
-    for (SETissueCompartment* tissue : m_data.GetCompartments().GetTissueLeafCompartments())
-    {
-      SELiquidCompartment& extracellularFluid = m_data.GetCompartments().GetExtracellularFluid(*tissue);   //get the compartment
-      temp_mL = extracellularFluid.GetVolume().GetValue(VolumeUnit::mL);   //pull the volume
-      totalFluidLoss_mL += temp_mL * waterReductionFraction;
-      extracellularFluid.GetVolume().SetValue(temp_mL * (1 - waterReductionFraction), VolumeUnit::mL);   //set the total volume 
-      extracellularFluid.Balance(BalanceLiquidBy::Mass);
+  //loop over extracellular fluid compartments and decrement 
+  for (SETissueCompartment* tissue : m_data.GetCompartments().GetTissueLeafCompartments())
+  {
+    SELiquidCompartment& extracellularFluid = m_data.GetCompartments().GetExtracellularFluid(*tissue);   //get the compartment
+    temp_mL = extracellularFluid.GetVolume().GetValue(VolumeUnit::mL);   //pull the volume
+    totalFluidLoss_mL += temp_mL * waterReductionFraction;
+    extracellularFluid.GetVolume().SetValue(temp_mL * (1 - waterReductionFraction), VolumeUnit::mL);   //set the total volume 
+    extracellularFluid.Balance(BalanceLiquidBy::Mass);
 
-      SELiquidCompartment& intracellularFluid = m_data.GetCompartments().GetIntracellularFluid(*tissue);   //get the compartment 
-      temp_mL = intracellularFluid.GetVolume().GetValue(VolumeUnit::mL);   //pull the volume
-      totalFluidLoss_mL += temp_mL * waterReductionFraction;
-      intracellularFluid.GetVolume().SetValue(temp_mL * (1 - waterReductionFraction), VolumeUnit::mL);   //set new volume
-      intracellularFluid.Balance(BalanceLiquidBy::Mass);
-    }
-    double blood_mL = 0.0;
-    for (SELiquidCompartment* cmpt : m_data.GetCompartments().GetVascularLeafCompartments())
-    {
-      if (!cmpt->HasVolume())
-        continue;
-      temp_mL = cmpt->GetVolume(VolumeUnit::mL);   //pull the volume
-      totalFluidLoss_mL += temp_mL * waterReductionFraction;
-      blood_mL += temp_mL;
-      cmpt->GetVolume().SetValue(temp_mL * (1 - waterReductionFraction), VolumeUnit::mL);
-      cmpt->Balance(BalanceLiquidBy::Mass);
-    }
+    SELiquidCompartment& intracellularFluid = m_data.GetCompartments().GetIntracellularFluid(*tissue);   //get the compartment 
+    temp_mL = intracellularFluid.GetVolume().GetValue(VolumeUnit::mL);   //pull the volume
+    totalFluidLoss_mL += temp_mL * waterReductionFraction;
+    intracellularFluid.GetVolume().SetValue(temp_mL * (1 - waterReductionFraction), VolumeUnit::mL);   //set new volume
+    intracellularFluid.Balance(BalanceLiquidBy::Mass);
+  }
+  double blood_mL = 0.0;
+  for (SELiquidCompartment* cmpt : m_data.GetCompartments().GetVascularLeafCompartments())
+  {
+    if (!cmpt->HasVolume())
+      continue;
+    temp_mL = cmpt->GetVolume(VolumeUnit::mL);   //pull the volume
+    totalFluidLoss_mL += temp_mL * waterReductionFraction;
+    blood_mL += temp_mL;
+    cmpt->GetVolume().SetValue(temp_mL * (1 - waterReductionFraction), VolumeUnit::mL);
+    cmpt->Balance(BalanceLiquidBy::Mass);
+  }
 
-    //set patient weight
-    double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
-    double bodyWeightLost_kg = bloodDensity_kg_Per_mL * totalFluidLoss_mL;
+  //set patient weight
+  double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+  double bodyWeightLost_kg = bloodDensity_kg_Per_mL * totalFluidLoss_mL;
 
-    patientMass_kg -= bodyWeightLost_kg;
-    m_Patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
+  patientMass_kg -= bodyWeightLost_kg;
+  m_Patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
 
-    //need to set blood volume here
-    m_data.GetCardiovascular().GetBloodVolume().SetValue(blood_mL, VolumeUnit::mL);
+  //need to set blood volume here
+  m_data.GetCardiovascular().GetBloodVolume().SetValue(blood_mL, VolumeUnit::mL);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1680,7 +1705,7 @@ void Tissue::FatStorageAndRelease()
   double fatReleaseLowerRate_g_Per_s = .002546; //maxStoredProtein_g/ 12 * 3600
   double fatReleaseUpperRate_g_Per_s = .061111; //maxStoredProtein_g/ .5 * 3600
 
-  //https://www.wolframalpha.com/input/?i=y%3D.002546%2B.058565%2F(1%2Be%5E(-15(x-.75)))+from+0%3Cy%3C.08+and+0%3Cx%3C2
+                                                //https://www.wolframalpha.com/input/?i=y%3D.002546%2B.058565%2F(1%2Be%5E(-15(x-.75)))+from+0%3Cy%3C.08+and+0%3Cx%3C2
   double fatReleaseRate_g_Per_s = fatReleaseLowerRate_g_Per_s + GeneralMath::LogisticFunction(fatReleaseUpperRate_g_Per_s - fatReleaseLowerRate_g_Per_s, .75, 15, -hormoneFactor);
 
   //remove excess triacylglycerol from blood and store in fat tissue
@@ -1748,6 +1773,9 @@ void Tissue::CalculateVitals()
     currentFluidMass_kg += m_data.GetCompartments().GetExtracellularFluid(*tissue).GetVolume(VolumeUnit::mL)*density.GetValue(MassPerVolumeUnit::kg_Per_mL);
   }
   double dehydrationFraction = (m_RestingFluidMass_kg - currentFluidMass_kg) / m_RestingPatientMass_kg;
+  BLIM(dehydrationFraction, 0.0, 1.0);
+
+
   GetDehydrationFraction().SetValue(dehydrationFraction);
   if (dehydrationFraction > 0.03)
   {
@@ -1774,7 +1802,7 @@ void Tissue::CalculateVitals()
   {
     icvol_mL += itr.second->GetVolume(VolumeUnit::mL);
   }
-  GetExtracellularFluidVolume().SetValue(ecVol_mL,VolumeUnit::mL);
+  GetExtracellularFluidVolume().SetValue(ecVol_mL, VolumeUnit::mL);
   GetIntracellularFluidVolume().SetValue(icvol_mL, VolumeUnit::mL);
   GetExtravascularFluidVolume().SetValue(ecVol_mL + icvol_mL, VolumeUnit::mL);
   bloodvol_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
@@ -1862,7 +1890,7 @@ void Tissue::DistributeMassbyVolumeWeighted(SELiquidCompartment& cmpt, const SES
     {
       mass = -subQ->GetMass(unit);
       Info("The amount of mass decrement to distribute by volume weighted was greater than available. High probability of negative mass. DistributeMassbyMassWeighted is preferred for decrements.");
-    }    
+    }
   }
 
   if (!cmpt.HasChildren())
@@ -1910,7 +1938,7 @@ void Tissue::DistributeMassbyMassWeighted(SELiquidCompartment& cmpt, const SESub
   {
     mass = -mass > subQ->GetMass(unit) ? -subQ->GetMass(unit) : mass;
   }
-  
+
   if (!cmpt.HasChildren())
   {
     subQ->GetMass().IncrementValue(mass, unit);
@@ -1989,7 +2017,7 @@ double Tissue::PerfusionLimitedDiffusion(SETissueCompartment& tissue, SELiquidCo
   {
     // If it's going in, distribute by volume
     // If it's coming out, distribute by mass
-      // If mass is exactly zero then going in by mass weighted won't work.
+    // If mass is exactly zero then going in by mass weighted won't work.
     if (MassIncrement_ug > 0.)
     {
       if (MassIncrement_ug > vSubQ->GetMass(MassUnit::ug))
@@ -2003,7 +2031,7 @@ double Tissue::PerfusionLimitedDiffusion(SETissueCompartment& tissue, SELiquidCo
         MassIncrement_ug = -tSubQ->GetMass(MassUnit::ug);
       DistributeMassbyVolumeWeighted(vascular, sub, -MassIncrement_ug, MassUnit::ug);
       DistributeMassbyMassWeighted(intracellular, sub, MassIncrement_ug, MassUnit::ug);
-    }    
+    }
 
     vSubQ->Balance(BalanceLiquidBy::Mass);
     tSubQ->Balance(BalanceLiquidBy::Mass);
@@ -2242,25 +2270,25 @@ double Tissue::MoveMassByFacilitatedDiffusion(SELiquidCompartment& source, SELiq
   return amountIncrement_g;
 } // End FacilitatedMassDiffusion
 
-/// --------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates the mass transport of a substance between compartments by active transport
-///
-/// \param source: source compartment
-/// \param target: target compartment
-/// \param sub: substance that is diffusing 
-/// \param pumpRate_g_Per_s: the rate at which the pump is currently working
-/// \param timestep_s: the time step
-///
-/// \details
-/// This is a simplified pumping mechanism. This single mechanism lumps together all of the 
-/// biological mechanisms which "pump" a substance across a membrane against an electrochemical
-/// or other gradient (all energy-requiring transport mechanisms). It computes a mass increment
-/// based on a pump rate and then increments the mass. TThe method does not automatically update the concentration,
-/// molarity, partial pressure, and other data in the compartment following the mass increment.
-/// ***MUST CALL BALANCE TO UPDATE CONCENTRATION, MOLARITY, ETC.***
-/// Note that the sign of the increment is determined by the source and target designation.
-//--------------------------------------------------------------------------------------------------
+  /// --------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Calculates the mass transport of a substance between compartments by active transport
+  ///
+  /// \param source: source compartment
+  /// \param target: target compartment
+  /// \param sub: substance that is diffusing 
+  /// \param pumpRate_g_Per_s: the rate at which the pump is currently working
+  /// \param timestep_s: the time step
+  ///
+  /// \details
+  /// This is a simplified pumping mechanism. This single mechanism lumps together all of the 
+  /// biological mechanisms which "pump" a substance across a membrane against an electrochemical
+  /// or other gradient (all energy-requiring transport mechanisms). It computes a mass increment
+  /// based on a pump rate and then increments the mass. TThe method does not automatically update the concentration,
+  /// molarity, partial pressure, and other data in the compartment following the mass increment.
+  /// ***MUST CALL BALANCE TO UPDATE CONCENTRATION, MOLARITY, ETC.***
+  /// Note that the sign of the increment is determined by the source and target designation.
+  //--------------------------------------------------------------------------------------------------
 double Tissue::MoveMassByActiveTransport(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double pumpRate_g_Per_s, double timestep_s)
 {
   const SELiquidSubstanceQuantity* srcQ = source.GetSubstanceQuantity(sub);
@@ -2314,13 +2342,13 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
 {
   //All terms are on the basis of a single cell using model from Yi2003Mathematical--these will be converted to macro level using reported cell volume/surface area ratio from same source
   double faradaysConstant_C_Per_mol = 96485;
-  double idealGasConstant = 8.314;    //Amazingly, R has same value in J/mol-K and mL-Pa/K-umol
-  double temperature_K = 310.0;   //Replace w/ call to body temperature
+  double idealGasConstant = 8.314;		//Amazingly, R has same value in J/mol-K and mL-Pa/K-umol
+  double temperature_K = 310.0;		//Replace w/ call to body temperature
   double membranePotential_V = tissue.GetMembranePotential(ElectricPotentialUnit::V);
-  double cellSurfaceArea_cm2 = 7.7e-5;    //From Yi
-  double scaleFactor = tissue.GetTotalMass(MassUnit::kg) * 1e6 / cellSurfaceArea_cm2;   //Carlson reports 1*10^6 cm^2 / kg tissue relationship
+  double cellSurfaceArea_cm2 = 7.7e-5;		//From Yi2003Mathematical
+  double scaleFactor = tissue.GetTotalMass(MassUnit::kg) * 1e6 / cellSurfaceArea_cm2;		//Carlson reports 1*10^6 cm^2 / kg tissue relationship
 
-  //Get all ion concentrations
+                                                                                        //Get all ion concentrations
   double naExtracellular_mM = extra.GetSubstanceQuantity(*m_Sodium)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   double naIntracellular_mM = intra.GetSubstanceQuantity(*m_Sodium)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   double kExtracellular_mM = extra.GetSubstanceQuantity(*m_Potassium)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
@@ -2332,7 +2360,7 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
 
 
   /// \ @cite lindblad 1996model
-  double naConductance_mC_Per_V_min =2.925e-5;
+  double naConductance_mC_Per_V_min = 2.925e-5;
   double kConductance_mC_Per_V_min = 7.0e-4;
   double clConductance_mC_Per_V_min = 2.81e-4;
   //double calciumConductance_S_Per_mL = 1.0 / (m_Calcium->GetMembraneResistance(ElectricResistanceUnit::Ohm));
@@ -2346,10 +2374,10 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
   //Calculate pump rate using information from previous time step--this will lag a time step behind everything but it 
   //shouldn't make a huge difference
   double NaKPumpRate_umol_Per_min = SodiumPotassiumPump(naIntracellular_mM, naExtracellular_mM, kExtracellular_mM, membranePotential_V);
-  
+
   //Calculate new membrane potential (uses previous pump rate)
-  membranePotential_V = (naConductance_mC_Per_V_min*naNernst_V + kConductance_mC_Per_V_min*kNernst_V +
-    clConductance_mC_Per_V_min*clNernst_V - faradaysConstant_C_Per_mol*NaKPumpRate_umol_Per_min / 1000.0) / 
+  membranePotential_V = (naConductance_mC_Per_V_min*naNernst_V + kConductance_mC_Per_V_min * kNernst_V +
+    clConductance_mC_Per_V_min * clNernst_V - faradaysConstant_C_Per_mol * NaKPumpRate_umol_Per_min / 1000.0) /
     (naConductance_mC_Per_V_min + kConductance_mC_Per_V_min + clConductance_mC_Per_V_min);
   tissue.GetMembranePotential().SetValue(membranePotential_V, ElectricPotentialUnit::V);
 
@@ -2357,7 +2385,7 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
   //Units:  1000 factor converts mol/C to umol/mC 
   double naFlux_umol_Per_min = -((1000.0 * naConductance_mC_Per_V_min / faradaysConstant_C_Per_mol) * (membranePotential_V - naNernst_V) + 3 * NaKPumpRate_umol_Per_min);
   double kFlux_umol_Per_min = -((1000.0 * kConductance_mC_Per_V_min / faradaysConstant_C_Per_mol) *(membranePotential_V - kNernst_V) - 2 * NaKPumpRate_umol_Per_min);
-  double clFlux_umol_Per_min = (1000.0 * clConductance_mC_Per_V_min/faradaysConstant_C_Per_mol)*(membranePotential_V - clNernst_V);
+  double clFlux_umol_Per_min = (1000.0 * clConductance_mC_Per_V_min / faradaysConstant_C_Per_mol)*(membranePotential_V - clNernst_V);
   //double calciumDiffusion_mol_Per_mL_s = calciumConductance_S_Per_mL*(membranePotential_V - calciumNernst_V) / (faradaysConstant_C_Per_mol * 2);
 
   //This commented out block of code takes regulatory volume increase and decrease into account.  In essence, cells can rapidly transport
@@ -2367,24 +2395,24 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
   //These constants from Hernandez1998Modeling are used to determined regulatory volume increase/decrease.
   //Boundaries are from Hoffman1989Membrane
 
-  /*double qNa_mL6_Per_umol_min = 0.1 * 1.0e-6 * 60.0 * cellSurfaceArea_cm2;    //Value reported = 0.1 mL^4/mol-s --> Convert to mL^6/umol-min to fit with units later on
+  /*double qNa_mL6_Per_umol_min = 0.1 * 1.0e-6 * 60.0 * cellSurfaceArea_cm2;		//Value reported = 0.1 mL^4/mol-s --> Convert to mL^6/umol-min to fit with units later on
   double qK_mL6_Per_umol_min = 10.0 * 1.0e-6 * 60.0 * cellSurfaceArea_cm2;
   double volLimitUpper_mL = 1.01*intracellularVolumeBaseline_mL;
   double volLimitLower_mL = 0.99*intracellularVolumeBaseline_mL;
   if (intracellularVolume_mL <= volLimitLower_mL)
   {
-    qNa_mL6_Per_umol_min *= (volLimitLower_mL - intracellularVolume_mL) / volLimitLower_mL;
-    qK_mL6_Per_umol_min = 0.0;
+  qNa_mL6_Per_umol_min *= (volLimitLower_mL - intracellularVolume_mL) / volLimitLower_mL;
+  qK_mL6_Per_umol_min = 0.0;
   }
   else if (intracellularVolume_mL >= volLimitUpper_mL)
   {
-    qNa_mL6_Per_umol_min = 0.0;
-    qK_mL6_Per_umol_min *= (intracellularVolume_mL - volLimitUpper_mL) / volLimitUpper_mL;
+  qNa_mL6_Per_umol_min = 0.0;
+  qK_mL6_Per_umol_min *= (intracellularVolume_mL - volLimitUpper_mL) / volLimitUpper_mL;
   }
   else
   {
-    qNa_mL6_Per_umol_min = 0.0;
-    qK_mL6_Per_umol_min = 0.0;
+  qNa_mL6_Per_umol_min = 0.0;
+  qK_mL6_Per_umol_min = 0.0;
   }
 
   double psiNa_umol_Per_min = qNa_mL6_Per_umol_min*(naExtracellular_mM*clExtracellular_mM - naIntracellular_mM*clIntracellular_mM);
@@ -2392,7 +2420,7 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
 
   naFlux_umol_Per_min += psiNa_umol_Per_min;
   kFlux_umol_Per_min += psiK_umol_Per_min;
-  clFlux_umol_Per_min += (psiNa_umol_Per_min + psiK_umol_Per_min);*/  //Cl flux is coupled to both of these process to maintain electroneutrality
+  clFlux_umol_Per_min += (psiNa_umol_Per_min + psiK_umol_Per_min);*/	//Cl flux is coupled to both of these process to maintain electroneutrality
 
   //End of optional RVI/RVD functionality
 
@@ -2400,7 +2428,7 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
   double naIncrement_ug = (naFlux_umol_Per_min*m_Sodium->GetMolarMass(MassPerAmountUnit::g_Per_mol))*(m_Dt_s / 60) * scaleFactor;
   double kIncrement_ug = (kFlux_umol_Per_min*m_Potassium->GetMolarMass(MassPerAmountUnit::g_Per_mol))*(m_Dt_s / 60) * scaleFactor;
   double clIncrement_ug = (clFlux_umol_Per_min*m_Chloride->GetMolarMass(MassPerAmountUnit::g_Per_mol))*(m_Dt_s / 60) * scaleFactor;
-  
+
 
   SESubstance* ion;
   double incrementer_ug = 0.0;
@@ -2448,7 +2476,7 @@ double Tissue::SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double 
   double KTerm = extraK_mM / (extraK_mM + potassiumMichaelis_mM);
   double NaTerm = 1.0 / (1.0 + pow((sodiumMichaelis_mM / intraNa_mM), 1.5));
   double sigma = (1.0 / 7.0) * (exp(extraNa_mM / 69.73) - 1);
-  double beta = potential_V * 96485.0 / (8.314 * 310.0);    
+  double beta = potential_V * 96485.0 / (8.314 * 310.0);
   double f = 1.0 / (1.0 + 0.1245 * exp(-0.1*beta) + 0.0365 * sigma * exp(-beta));
 
   double pumpFlux_umol_Per_min = maxPumpRate_umol_Per_min * f * NaTerm * KTerm;
@@ -2461,8 +2489,8 @@ double Tissue::CalciumPump(double intraCa_M)
   double maxCurrent_A_Per_mL = 0.0033;
   double calciumMichaelis_M = 2.75e-7;
 
-  double calciumCurrent_A_Per_mL = maxCurrent_A_Per_mL*intraCa_M / (intraCa_M + calciumMichaelis_M);
-  
+  double calciumCurrent_A_Per_mL = maxCurrent_A_Per_mL * intraCa_M / (intraCa_M + calciumMichaelis_M);
+
   return calciumCurrent_A_Per_mL;
 }
 
@@ -2480,7 +2508,7 @@ void Tissue::CalculateTissueFluidFluxes()
 {
   SETissueCompartment* tissue;
   SEFluidCircuitPath* osmoticFlow;
-  SEFluidCircuitPath* lymphFlow;
+  //SEFluidCircuitPath* lymphFlow;
   std::string complianceName;
 
   double naIntra_mM = 0.0;
@@ -2492,7 +2520,7 @@ void Tissue::CalculateTissueFluidFluxes()
   double mOsmIntra = 0.0;
   double mOsmExtra = 0.0;
   double hydraulicConductivity_mL_Per_min_mM = 0.0;
-  double proteinIntra_mM = 112.0;   //Need this to get osmotically stable cell with the desired ion concentrations  
+  double proteinIntra_mM = 112.0;		//Need this to get osmotically stable cell with the desired ion concentrations	
   double intracellularVolumeBaseline_mL = 0.0;
   double intracellularVolume_mL = 0.0;
   double extracellularVolumeBaseline_mL = 0.0;
@@ -2513,7 +2541,7 @@ void Tissue::CalculateTissueFluidFluxes()
 
     intracellularVolumeBaseline_mL = osmoticFlow->GetTargetNode().GetVolumeBaseline(VolumeUnit::mL);
     intracellularVolume_mL = intracellular.GetVolume(VolumeUnit::mL);
-    hydraulicConductivity_mL_Per_min_mM = 0.3 * tissue->GetTotalMass(MassUnit::kg); //Carlson has units of mL/min-kg-mmol --> multiply by tissue mass up front
+    hydraulicConductivity_mL_Per_min_mM = 0.3 * tissue->GetTotalMass(MassUnit::kg);	//Carlson has units of mL/min-kg-mmol --> multiply by tissue mass up front
 
     naIntra_mM = intracellular.GetSubstanceQuantity(*m_Sodium)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
     naExtra_mM = extracellular.GetSubstanceQuantity(*m_Sodium)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
@@ -2526,7 +2554,7 @@ void Tissue::CalculateTissueFluidFluxes()
     mOsmExtra = naExtra_mM + kExtra_mM + clExtra_mM;
 
     osmoticFlow->GetNextFlowSource().SetValue(hydraulicConductivity_mL_Per_min_mM*(mOsmIntra - mOsmExtra), VolumePerTimeUnit::mL_Per_min);
-  
+
   }
 
 }
@@ -2545,7 +2573,7 @@ void Tissue::CalculateTissueFluidFluxes()
 void Tissue::CalculateOncoticPressure()
 {
   //We don't want to mess with the pressure sources on the circuit until stabilization has been completed
-  
+
   if (m_data.GetState() < EngineState::AtSecondaryStableState)
   {
     return;
@@ -2555,7 +2583,7 @@ void Tissue::CalculateOncoticPressure()
   SEFluidCircuitPath* interstitialCOP;
   double albuminMassInBlood_g = m_Albumin->GetMassInBlood(MassUnit::g);
   //Albumin mass in tissue is only in the extracellular space because we set albumin to 0 in intracellular and do not diffuse it across cell membrane.
-  double albuminMassInTissue_g = m_Albumin->GetMassInTissue(MassUnit::g); 
+  double albuminMassInTissue_g = m_Albumin->GetMassInTissue(MassUnit::g);
   double vascularVolume_dL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::dL);
   double interstitialVolume_dL = 0.0;
 
@@ -2578,7 +2606,7 @@ void Tissue::CalculateOncoticPressure()
   double totalProteinVascular_g_Per_dL = 1.6 * albuminVascular_g_Per_dL;
   double vascularOncoticPressure_mmHg = 2.1 * totalProteinVascular_g_Per_dL + 0.16 * pow(totalProteinVascular_g_Per_dL, 2) + 0.009 * pow(totalProteinVascular_g_Per_dL, 3);
   double interstitialOncoticPressure_mmHg = 2.8 * albuminInterstitial_g_Per_dL + 0.18 * pow(albuminInterstitial_g_Per_dL, 2) + 0.012 * pow(albuminInterstitial_g_Per_dL, 3);
-  
+
   //Set plasma oncotic pressure on all vascular COP paths.  We don't use the vascular compartment also stored in this map, but we might
   //use it in the future if we set pressure compartment by compartment rather than globally.
   for (auto vascularPair : m_VascularCopPaths)

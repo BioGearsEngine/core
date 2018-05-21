@@ -229,14 +229,8 @@ public class HowTo_EngineUse
    
    // Let's do something to the patient, you can either send actions over one at a time, or pass in a List<SEAction>
    SEHemorrhage h = new SEHemorrhage();
-   // IntegerArray mcisIn = h.getMCIS();
    //The injury code is stored in a 5 digit Integer Array (which contains an IntegerList)
    //Access IntegerList and add code for severe bleeding from abdominal artery--42650)
-   // mcisIn.getIntegerList().add(4);
-   // mcisIn.getIntegerList().add(2);
-   // mcisIn.getIntegerList().add(6);
-   // mcisIn.getIntegerList().add(5);
-   // mcisIn.getIntegerList().add(0);
    bge.processAction(h);
    // Note CDM is not updated after this call, you have to advance some time
 
@@ -258,3 +252,4 @@ public class HowTo_EngineUse
    // Note you can now run a static (scenario) or another dynamic engine with the bge object, it will allocate and manage a new C++ engine 
  }
 }
+

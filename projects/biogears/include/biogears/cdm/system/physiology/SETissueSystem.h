@@ -18,13 +18,13 @@ class BIOGEARS_API SETissueSystem : public SESystem
 {
 public:
 
-	SETissueSystem(Logger* logger);
-	virtual ~SETissueSystem();
+  SETissueSystem(Logger* logger);
+  virtual ~SETissueSystem();
 
   virtual void Clear();// Deletes all members
-  
-	virtual const SEScalar* GetScalar(const std::string& name);
-	
+
+  virtual const SEScalar* GetScalar(const std::string& name);
+
   virtual bool Load(const CDM::TissueSystemData& in);
   virtual CDM::TissueSystemData* Unload() const;
 protected:
@@ -37,13 +37,13 @@ public:
   virtual double GetCarbonDioxideProductionRate(const VolumePerTimeUnit& unit) const;
 
   virtual bool HasDehydrationFraction() const;
-  virtual SEScalarFraction& GetDehydrationFraction();
+  virtual SEScalar0To1& GetDehydrationFraction();
   virtual double GetDehydrationFraction() const;
 
   virtual bool HasExtracellularFluidVolume() const;
   virtual SEScalarVolume& GetExtracellularFluidVolume();
   virtual double GetExtracellularFluidVolume(const VolumeUnit& unit) const;
- 
+
   virtual bool HasExtravascularFluidVolume() const;
   virtual SEScalarVolume& GetExtravascularFluidVolume();
   virtual double GetExtravascularFluidVolume(const VolumeUnit& unit) const;
@@ -110,8 +110,8 @@ public:
 
 
 protected:
-  SEScalarVolumePerTime*    m_CarbonDioxideProductionRate;
-  SEScalarFraction*         m_DehydrationFraction;
+  SEScalarVolumePerTime * m_CarbonDioxideProductionRate;
+  SEScalar0To1*				m_DehydrationFraction;
   SEScalarVolume*           m_ExtracellularFluidVolume;
   SEScalarVolume*           m_ExtravascularFluidVolume;
   SEScalarVolume*           m_IntracellularFluidVolume;

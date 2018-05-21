@@ -619,7 +619,7 @@ void Drugs::CalculateDrugEffects()
   //Loop over substances
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances())
   {
-    if (!sub->HasPD())
+    if (sub == nullptr || !sub->HasPD())
       continue;
 
     SESubstancePharmacodynamics& pd = sub->GetPD();
@@ -688,8 +688,10 @@ void Drugs::CalculateDrugEffects()
     neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
 
     bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
-    pupilSizeResponseLevel += pd.GetPupillaryResponse().GetSizeModifier().GetValue() * concentrationEffects_unitless;
-    pupilReactivityResponseLevel += pd.GetPupillaryResponse().GetReactivityModifier().GetValue() * concentrationEffects_unitless;
+    
+    auto& pupillaryResponse = pd.GetPupillaryResponse();
+    pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier().GetValue() * concentrationEffects_unitless;
+    pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier().GetValue() * concentrationEffects_unitless;
 
   }
 

@@ -37,6 +37,10 @@ const NoUnit NoUnit::unitless;
 const std::string unitless = "unitless";
 
 SEScalar::SEScalar() : SEProperty()
+  ,m_isnan(false)
+  ,m_isinf(false)
+  ,m_readOnly(false)
+  ,m_value(1.0)
 {	
 	Clear();
 }
@@ -92,7 +96,10 @@ bool SEScalar::Set(const SEScalar& s)
   if (m_readOnly)
     throw CommonDataModelException("Scalar is marked read-only");
 	m_value = s.m_value;
-	m_isnan = (std::isnan(m_value)) ? true : false;
+	m_isnan = (std::isnan(m_value)) ? 
+    true 
+    : 
+    false;
 	m_isinf = (std::isinf(m_value)) ? true : false;	
 	return true;
 }
@@ -164,7 +171,11 @@ void SEScalar::SetValue(double d)
   if (m_readOnly)
     throw CommonDataModelException("Scalar is marked read-only");
   m_value = d;
-  m_isnan = (std::isnan(m_value)) ? true : false;
+  m_isnan = (std::isnan(m_value)) 
+    ? 
+    true 
+    : 
+    false;
   m_isinf = (std::isinf(m_value)) ? true : false;
 }
 
@@ -197,7 +208,7 @@ void SEScalar::Average(int cnt)
 
 bool SEScalar::Equals(const SEScalar& to) const
 {
-	if (m_isnan && to.m_isnan)
+	if (m_isnan && to.m_isnan) //This Violates C++ Spec 
 		return true;
 	if (m_isnan || to.m_isnan)
 		return false;

@@ -47,7 +47,7 @@ protected:
   void SetUp();
 
 public:
-  void AtSteadyState(); 
+  void AtSteadyState();
   void PreProcess();
   void Process();
   void PostProcess();
@@ -68,7 +68,7 @@ protected:
   void CalculateVitals();
   void CheckGlycogenLevels();
   void ManageSubstancesAndSaturation();
-  
+
   // Postprocess Methods
 
 
@@ -87,7 +87,7 @@ protected:
   void AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonary, SELiquidCompartment& vascular, SESubstance& sub, double DiffusingCapacityO2_mL_Per_s_mmHg, double timestep_s);
 
   double MoveMassByInstantDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double timestep_s);
-  double MoveMassBySimpleDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double permeabilityCofficient_mL_Per_s, double timestep_s);  
+  double MoveMassBySimpleDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double permeabilityCofficient_mL_Per_s, double timestep_s);
   double MoveMassByFacilitatedDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double combinedCoefficient_g_Per_s, double timestep_s);
   double MoveMassByActiveTransport(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double pumpRate_g_Per_s, double timestep_s);
   void CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartment& extra, SELiquidCompartment& intra, SELiquidCompartment& vascular);
@@ -98,13 +98,14 @@ protected:
   double SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double extraK_mM, double potential_V);
   double CalciumPump(double intraCa_M);
 
-  
+
   // Serializable member variables (Set in Initialize and in schema)
   double m_RestingPatientMass_kg;
   double m_RestingFluidMass_kg;
   RunningAverage m_O2ConsumedRunningAverage_mL_Per_s;
   RunningAverage m_CO2ProducedRunningAverage_mL_Per_s;
   RunningAverage m_RespiratoryQuotientRunningAverage;
+  RunningAverage m_FatigueRunningAverage;
 
 
   // Stateless member variable (Set in SetUp())
@@ -120,21 +121,21 @@ protected:
   SESubstance*                m_Triacylglycerol;
   SESubstance*                m_O2;
   SESubstance*                m_CO2;
-  SESubstance*                m_CO; 
+  SESubstance*                m_CO;
   SESubstance*                m_Lactate;
   SESubstance*                m_Ketones;
   SESubstance*                m_Creatinine;
   SESubstance*                m_Sodium;
-  SESubstance*          m_Potassium;
+  SESubstance*				  m_Potassium;
   SESubstance*                m_Calcium;
-  SESubstance*          m_Chloride;
+  SESubstance*				  m_Chloride;
   SESubstance*                m_Insulin;
   SESubstance*                m_Urea;
 
   SEFluidCircuitNode*         m_GutE3;
   SEFluidCircuitPath*         m_GutE3ToGround;
-  SEFluidCircuitPath*     m_SmallIntestineToGut;
-  SEFluidCircuitPath*     m_SplanchnicToGut;
+  SEFluidCircuitPath*		  m_SmallIntestineToGut;
+  SEFluidCircuitPath*		  m_SplanchnicToGut;
 
   SELiquidSubstanceQuantity*  m_MuscleInsulin;
   SELiquidSubstanceQuantity*  m_MuscleGlucagon;
@@ -163,8 +164,8 @@ protected:
   SEGasCompartment*           m_RightAlveoli;
   SELiquidCompartment*        m_LeftPulmonaryCapillaries;
   SELiquidCompartment*        m_RightPulmonaryCapillaries;
-  
-  SEPatientActionCollection*  m_PatientActions;  
+
+  SEPatientActionCollection*  m_PatientActions;
   SEPatient*                  m_Patient;
   SEEnergySystem*             m_energy;
 
@@ -177,6 +178,3 @@ protected:
   std::vector<SETissueCompartment*>                    m_ConsumptionProdutionTissues;
   std::string                 m_AnaerobicTissues;
 };
-
-
-

@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ScalarMassData.hxx>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/schema/ScalarElectricPotentialData.hxx>
-
+#include <biogears/cdm/properties/SEScalar0To1.h>
 
 SETissueSystem::SETissueSystem(Logger* logger) : SESystem(logger)
 {
@@ -181,7 +181,7 @@ void SETissueSystem::Unload(CDM::TissueSystemData& data) const
   if (m_CarbonDioxideProductionRate != nullptr)
     data.CarbonDioxideProductionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CarbonDioxideProductionRate->Unload()));
   if (m_DehydrationFraction != nullptr)
-    data.DehydrationFraction(std::unique_ptr<CDM::ScalarFractionData>(m_DehydrationFraction->Unload()));
+    data.DehydrationFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_DehydrationFraction->Unload()));
   if (m_ExtracellularFluidVolume != nullptr)
     data.ExtracellularFluidVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ExtracellularFluidVolume->Unload()));
   if (m_ExtravascularFluidVolume != nullptr)
@@ -241,10 +241,10 @@ bool SETissueSystem::HasDehydrationFraction() const
 {
   return m_DehydrationFraction == nullptr ? false : m_DehydrationFraction->IsValid();
 }
-SEScalarFraction& SETissueSystem::GetDehydrationFraction()
+SEScalar0To1& SETissueSystem::GetDehydrationFraction()
 {
   if (m_DehydrationFraction == nullptr)
-    m_DehydrationFraction = new SEScalarFraction();
+    m_DehydrationFraction = new SEScalar0To1();
   return *m_DehydrationFraction;
 }
 double SETissueSystem::GetDehydrationFraction() const

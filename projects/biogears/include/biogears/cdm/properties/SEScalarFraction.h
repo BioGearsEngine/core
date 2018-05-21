@@ -23,9 +23,9 @@ public:
 
   CDM::ScalarFractionData* Unload() const;
 
-  double GetValue() const { return SEScalar::GetValue(); }
-  double GetValue(const NoUnit& unitless) const { return SEScalar::GetValue(); }
-  void SetValue(double d);
+  using SEScalar::GetValue;
+  double GetValue(const NoUnit& unitless) const; 
+  using SEScalar::SetValue;
   void SetValue(double d, const NoUnit& unitless);
 };
 

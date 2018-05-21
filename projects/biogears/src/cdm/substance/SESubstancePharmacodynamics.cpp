@@ -22,40 +22,40 @@ specific language governing permissions and limitations under the License.
 
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger) : Loggable(logger)
 {
-	m_Bronchodilation = nullptr;
-	m_DiastolicPressureModifier = nullptr;
-	m_EC50 = nullptr;
+  m_Bronchodilation = nullptr;
+  m_DiastolicPressureModifier = nullptr;
+  m_EC50 = nullptr;
   m_EMaxShapeParameter = nullptr;
-	m_HeartRateModifier = nullptr;
-	m_NeuromuscularBlock = nullptr;
+  m_HeartRateModifier = nullptr;
+  m_NeuromuscularBlock = nullptr;
   m_PupillaryResponse = nullptr;
-	m_RespirationRateModifier = nullptr;
-	m_Sedation = nullptr;
-	m_SystolicPressureModifier = nullptr;
+  m_RespirationRateModifier = nullptr;
+  m_Sedation = nullptr;
+  m_SystolicPressureModifier = nullptr;
   m_TidalVolumeModifier = nullptr;
   m_TubularPermeabilityModifier = nullptr;
-	m_CentralNervousModifier = nullptr;
-	m_EffectSiteRateConstant = nullptr;
+  m_CentralNervousModifier = nullptr;
+  m_EffectSiteRateConstant = nullptr;
 }
 
-SESubstancePharmacodynamics::~SESubstancePharmacodynamics() 
+SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
 {
-	Clear();
+  Clear();
 }
 
 void SESubstancePharmacodynamics::Clear()
 {
-	SAFE_DELETE(m_Bronchodilation);
-	SAFE_DELETE(m_DiastolicPressureModifier);
-	SAFE_DELETE(m_EC50);
+  SAFE_DELETE(m_Bronchodilation);
+  SAFE_DELETE(m_DiastolicPressureModifier);
+  SAFE_DELETE(m_EC50);
   SAFE_DELETE(m_EMaxShapeParameter);
-	SAFE_DELETE(m_HeartRateModifier);
-	SAFE_DELETE(m_NeuromuscularBlock);
+  SAFE_DELETE(m_HeartRateModifier);
+  SAFE_DELETE(m_NeuromuscularBlock);
   SAFE_DELETE(m_PupillaryResponse);
-	SAFE_DELETE(m_RespirationRateModifier);
-	SAFE_DELETE(m_Sedation);
-	SAFE_DELETE(m_SystolicPressureModifier);
-	SAFE_DELETE(m_TidalVolumeModifier);
+  SAFE_DELETE(m_RespirationRateModifier);
+  SAFE_DELETE(m_Sedation);
+  SAFE_DELETE(m_SystolicPressureModifier);
+  SAFE_DELETE(m_TidalVolumeModifier);
   SAFE_DELETE(m_TubularPermeabilityModifier);
   SAFE_DELETE(m_CentralNervousModifier);
   SAFE_DELETE(m_EffectSiteRateConstant);
@@ -88,159 +88,171 @@ bool SESubstancePharmacodynamics::IsValid() const
   if (!HasTubularPermeabilityModifier())
     return false;
   if (!HasCentralNervousModifier())
-	  return false;
+    return false;
   if (!HasEffectSiteRateConstant())
-	  return false;
+    return false;
   return true;
 }
 
 const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
 {
-	if (name.compare("Bronchodilation") == 0)
-		return &GetBronchodilation();
-	if (name.compare("DiastolicPressureModifier") == 0)
-		return &GetDiastolicPressureModifier();
-	if (name.compare("EC50") == 0)
-		return &GetEC50();
+  if (name.compare("Bronchodilation") == 0)
+    return &GetBronchodilation();
+  if (name.compare("DiastolicPressureModifier") == 0)
+    return &GetDiastolicPressureModifier();
+  if (name.compare("EC50") == 0)
+    return &GetEC50();
   if (name.compare("EMaxShapeParameter") == 0)
     return &GetEMaxShapeParameter();
   if (name.compare("HeartRateModifier") == 0)
-		return &GetHeartRateModifier();
-	if (name.compare("NeuromuscularBlock") == 0)
-		return &GetNeuromuscularBlock();
-	if (name.compare("RespirationRateModifier") == 0)
-		return &GetRespirationRateModifier();
-	if (name.compare("Sedation") == 0)
-		return &GetSedation();
-	if (name.compare("SystolicPressureModifier") == 0)
-		return &GetSystolicPressureModifier();
-	if (name.compare("TidalVolumeModifier") == 0)
-		return &GetTidalVolumeModifier();
+    return &GetHeartRateModifier();
+  if (name.compare("NeuromuscularBlock") == 0)
+    return &GetNeuromuscularBlock();
+  if (name.compare("RespirationRateModifier") == 0)
+    return &GetRespirationRateModifier();
+  if (name.compare("Sedation") == 0)
+    return &GetSedation();
+  if (name.compare("SystolicPressureModifier") == 0)
+    return &GetSystolicPressureModifier();
+  if (name.compare("TidalVolumeModifier") == 0)
+    return &GetTidalVolumeModifier();
   if (name.compare("TubularPermeabilityModifier") == 0)
     return &GetTubularPermeabilityModifier();
   if (name.compare("CentralNervousModifier") == 0)
-	  return &GetCentralNervousModifier();
+    return &GetCentralNervousModifier();
   if (name.compare("EffectSiteRateConstant") == 0)
-	  return &GetEffectSiteRateConstant();
+    return &GetEffectSiteRateConstant();
 
   return GetPupillaryResponse().GetScalar(name);
 }
 
 bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData& in)
 {
-	GetBronchodilation().Load(in.Bronchodilation());
-	GetDiastolicPressureModifier().Load(in.DiastolicPressureModifier());
-	GetEC50().Load(in.EC50());
+  GetBronchodilation().Load(in.Bronchodilation());
+  GetDiastolicPressureModifier().Load(in.DiastolicPressureModifier());
+  GetEC50().Load(in.EC50());
   GetEMaxShapeParameter().Load(in.EMaxShapeParameter());
   GetHeartRateModifier().Load(in.HeartRateModifier());
-	GetNeuromuscularBlock().Load(in.NeuromuscularBlock());
+  GetNeuromuscularBlock().Load(in.NeuromuscularBlock());
   GetPupillaryResponse().Load(in.PupillaryResponse());
-	GetRespirationRateModifier().Load(in.RespirationRateModifier());
-	GetSedation().Load(in.Sedation());
-	GetSystolicPressureModifier().Load(in.SystolicPressureModifier());
-	GetTidalVolumeModifier().Load(in.TidalVolumeModifier());
+  GetRespirationRateModifier().Load(in.RespirationRateModifier());
+  GetSedation().Load(in.Sedation());
+  GetSystolicPressureModifier().Load(in.SystolicPressureModifier());
+  GetTidalVolumeModifier().Load(in.TidalVolumeModifier());
   GetTubularPermeabilityModifier().Load(in.TubularPermeabilityModifier());
   GetCentralNervousModifier().Load(in.CentralNervousModifier());
   GetEffectSiteRateConstant().Load(in.EffectSiteRateConstant());
-	CalculateDerived();
-	return true;
+  CalculateDerived();
+  return true;
 }
 
 CDM::SubstancePharmacodynamicsData*  SESubstancePharmacodynamics::Unload() const
 {
   if (!IsValid())
     return nullptr;
-	CDM::SubstancePharmacodynamicsData* data= new CDM::SubstancePharmacodynamicsData();
-	Unload(*data);
-	return data;
+  CDM::SubstancePharmacodynamicsData* data = new CDM::SubstancePharmacodynamicsData();
+  Unload(*data);
+  return data;
 }
 
 void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& data) const
 {
-	if (HasBronchodilation())
-		data.Bronchodilation(std::unique_ptr<CDM::ScalarFractionData>(m_Bronchodilation->Unload()));
-	if (HasDiastolicPressureModifier())
-		data.DiastolicPressureModifier(std::unique_ptr<CDM::ScalarFractionData>(m_DiastolicPressureModifier->Unload()));
-	if (HasEC50())
-		data.EC50(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EC50->Unload()));
+  if (HasBronchodilation())
+    data.Bronchodilation(std::unique_ptr<CDM::ScalarFractionData>(m_Bronchodilation->Unload()));
+  if (HasDiastolicPressureModifier())
+    data.DiastolicPressureModifier(std::unique_ptr<CDM::ScalarFractionData>(m_DiastolicPressureModifier->Unload()));
+  if (HasEC50())
+    data.EC50(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EC50->Unload()));
   if (HasEMaxShapeParameter())
     data.EMaxShapeParameter(std::unique_ptr<CDM::ScalarData>(m_EMaxShapeParameter->Unload()));
   if (HasHeartRateModifier())
-		data.HeartRateModifier(std::unique_ptr<CDM::ScalarFractionData>(m_HeartRateModifier->Unload()));
-	if (HasNeuromuscularBlock())
-		data.NeuromuscularBlock(std::unique_ptr<CDM::ScalarFractionData>(m_NeuromuscularBlock->Unload()));
+    data.HeartRateModifier(std::unique_ptr<CDM::ScalarFractionData>(m_HeartRateModifier->Unload()));
+  if (HasNeuromuscularBlock())
+    data.NeuromuscularBlock(std::unique_ptr<CDM::ScalarFractionData>(m_NeuromuscularBlock->Unload()));
   if (HasPupillaryResponse())
     data.PupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_PupillaryResponse->Unload()));
   if (HasRespirationRateModifier())
-		data.RespirationRateModifier(std::unique_ptr<CDM::ScalarFractionData>(m_RespirationRateModifier->Unload()));
-	if (HasSedation())
-		data.Sedation(std::unique_ptr<CDM::ScalarFractionData>(m_Sedation->Unload()));
-	if (HasSystolicPressureModifier())
-		data.SystolicPressureModifier(std::unique_ptr<CDM::ScalarFractionData>(m_SystolicPressureModifier->Unload()));
-	if (HasTidalVolumeModifier())
-		data.TidalVolumeModifier(std::unique_ptr<CDM::ScalarFractionData>(m_TidalVolumeModifier->Unload()));
+    data.RespirationRateModifier(std::unique_ptr<CDM::ScalarFractionData>(m_RespirationRateModifier->Unload()));
+  if (HasSedation())
+    data.Sedation(std::unique_ptr<CDM::ScalarFractionData>(m_Sedation->Unload()));
+  if (HasSystolicPressureModifier())
+    data.SystolicPressureModifier(std::unique_ptr<CDM::ScalarFractionData>(m_SystolicPressureModifier->Unload()));
+  if (HasTidalVolumeModifier())
+    data.TidalVolumeModifier(std::unique_ptr<CDM::ScalarFractionData>(m_TidalVolumeModifier->Unload()));
   if (HasTubularPermeabilityModifier())
     data.TubularPermeabilityModifier(std::unique_ptr<CDM::ScalarFractionData>(m_TubularPermeabilityModifier->Unload()));
   if (HasCentralNervousModifier())
-	  data.CentralNervousModifier(std::unique_ptr<CDM::ScalarFractionData>(m_CentralNervousModifier->Unload()));
+    data.CentralNervousModifier(std::unique_ptr<CDM::ScalarFractionData>(m_CentralNervousModifier->Unload()));
   if (HasEffectSiteRateConstant())
-	  data.EffectSiteRateConstant(std::unique_ptr<CDM::ScalarFrequencyData>(m_EffectSiteRateConstant->Unload()));
+    data.EffectSiteRateConstant(std::unique_ptr<CDM::ScalarFrequencyData>(m_EffectSiteRateConstant->Unload()));
 }
 
 void SESubstancePharmacodynamics::CalculateDerived()
 {
-	
+
 }
 
 bool SESubstancePharmacodynamics::HasBronchodilation() const
 {
-	return (m_Bronchodilation == nullptr) ? false : m_Bronchodilation->IsValid();
+  return (m_Bronchodilation == nullptr) ? false : m_Bronchodilation->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetBronchodilation()
 {
-	if (m_Bronchodilation == nullptr)
-		m_Bronchodilation = new SEScalarFraction();
-	return *m_Bronchodilation;
+  if (m_Bronchodilation == nullptr) {
+    m_Bronchodilation = new SEScalarFraction();
+  }
+
+  return *m_Bronchodilation;
 }
 double SESubstancePharmacodynamics::GetBronchodilation() const
 {
-	if (m_Bronchodilation == nullptr)
-		return SEScalar::dNaN();
-	return m_Bronchodilation->GetValue();
+  if (m_Bronchodilation == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_Bronchodilation->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasDiastolicPressureModifier() const
 {
-	return (m_DiastolicPressureModifier == nullptr) ? false : m_DiastolicPressureModifier->IsValid();
+  return (m_DiastolicPressureModifier == nullptr) ? false : m_DiastolicPressureModifier->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetDiastolicPressureModifier()
 {
-	if (m_DiastolicPressureModifier == nullptr)
-		m_DiastolicPressureModifier = new SEScalarFraction();
-	return *m_DiastolicPressureModifier;
+  if (m_DiastolicPressureModifier == nullptr) {
+    m_DiastolicPressureModifier = new SEScalarFraction();
+  }
+
+  return *m_DiastolicPressureModifier;
 }
 double SESubstancePharmacodynamics::GetDiastolicPressureModifier() const
 {
-	if (m_DiastolicPressureModifier == nullptr)
-		return SEScalar::dNaN();
-	return m_DiastolicPressureModifier->GetValue();
+  if (m_DiastolicPressureModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_DiastolicPressureModifier->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasEC50() const
 {
-	return (m_EC50 == nullptr) ? false : m_EC50->IsValid();
+  return (m_EC50 == nullptr) ? false : m_EC50->IsValid();
 }
 SEScalarMassPerVolume& SESubstancePharmacodynamics::GetEC50()
 {
-	if (m_EC50 == nullptr)
-		m_EC50 = new SEScalarMassPerVolume();
-	return *m_EC50;
+  if (m_EC50 == nullptr) {
+    m_EC50 = new SEScalarMassPerVolume();
+  }
+
+  return *m_EC50;
 }
 double SESubstancePharmacodynamics::GetEC50(const MassPerVolumeUnit& unit) const
 {
-	if (m_EC50 == nullptr)
-		return SEScalar::dNaN();
-	return m_EC50->GetValue(unit);
+  if (m_EC50 == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_EC50->GetValue(unit);
 }
 
 bool SESubstancePharmacodynamics::HasEMaxShapeParameter() const
@@ -249,49 +261,61 @@ bool SESubstancePharmacodynamics::HasEMaxShapeParameter() const
 }
 SEScalar& SESubstancePharmacodynamics::GetEMaxShapeParameter()
 {
-  if (m_EMaxShapeParameter == nullptr)
+  if (m_EMaxShapeParameter == nullptr) {
     m_EMaxShapeParameter = new SEScalar();
+  }
+
   return *m_EMaxShapeParameter;
 }
 double SESubstancePharmacodynamics::GetEMaxShapeParameter() const
 {
-  if (m_EMaxShapeParameter == nullptr)
+  if (m_EMaxShapeParameter == nullptr) {
     return SEScalar::dNaN();
+  }
+ 
   return m_EMaxShapeParameter->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasHeartRateModifier() const
 {
-	return (m_HeartRateModifier == nullptr) ? false : m_HeartRateModifier->IsValid();
+  return (m_HeartRateModifier == nullptr) ? false : m_HeartRateModifier->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetHeartRateModifier()
 {
-	if (m_HeartRateModifier == nullptr)
-		m_HeartRateModifier = new SEScalarFraction();
-	return *m_HeartRateModifier;
+  if (m_HeartRateModifier == nullptr) {
+    m_HeartRateModifier = new SEScalarFraction();
+  }
+
+  return *m_HeartRateModifier;
 }
 double SESubstancePharmacodynamics::GetHeartRateModifier() const
 {
-	if (m_HeartRateModifier == nullptr)
-		return SEScalar::dNaN();
-	return m_HeartRateModifier->GetValue();
+  if (m_HeartRateModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_HeartRateModifier->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasNeuromuscularBlock() const
 {
-	return (m_NeuromuscularBlock == nullptr) ? false : m_NeuromuscularBlock->IsValid();
+  return (m_NeuromuscularBlock == nullptr) ? false : m_NeuromuscularBlock->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetNeuromuscularBlock()
 {
-	if (m_NeuromuscularBlock == nullptr)
-		m_NeuromuscularBlock = new SEScalarFraction();
-	return *m_NeuromuscularBlock;
+  if (m_NeuromuscularBlock == nullptr) {
+    m_NeuromuscularBlock = new SEScalarFraction();
+  }
+
+  return *m_NeuromuscularBlock;
 }
 double SESubstancePharmacodynamics::GetNeuromuscularBlock() const
 {
-	if (m_NeuromuscularBlock == nullptr)
-		return SEScalar::dNaN();
-	return m_NeuromuscularBlock->GetValue();
+  if (m_NeuromuscularBlock == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_NeuromuscularBlock->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasPupillaryResponse() const
@@ -300,8 +324,10 @@ bool SESubstancePharmacodynamics::HasPupillaryResponse() const
 }
 SEPupillaryResponse& SESubstancePharmacodynamics::GetPupillaryResponse()
 {
-  if (m_PupillaryResponse == nullptr)
+  if (m_PupillaryResponse == nullptr) {
     m_PupillaryResponse = new SEPupillaryResponse(GetLogger());
+  }
+
   return *m_PupillaryResponse;
 }
 const SEPupillaryResponse* SESubstancePharmacodynamics::GetPupillaryResponse() const
@@ -315,70 +341,84 @@ void SESubstancePharmacodynamics::RemovePupillaryResponse()
 
 bool SESubstancePharmacodynamics::HasRespirationRateModifier() const
 {
-	return (m_RespirationRateModifier == nullptr) ? false : m_RespirationRateModifier->IsValid();
+  return (m_RespirationRateModifier == nullptr) ? false : m_RespirationRateModifier->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetRespirationRateModifier()
 {
-	if (m_RespirationRateModifier == nullptr)
-		m_RespirationRateModifier = new SEScalarFraction();
-	return *m_RespirationRateModifier;
+  if (m_RespirationRateModifier == nullptr) {
+    m_RespirationRateModifier = new SEScalarFraction();
+  }
+
+  return *m_RespirationRateModifier;
 }
 double SESubstancePharmacodynamics::GetRespirationRateModifier() const
 {
-	if (m_RespirationRateModifier == nullptr)
-		return SEScalar::dNaN();
-	return m_RespirationRateModifier->GetValue();
+  if (m_RespirationRateModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_RespirationRateModifier->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasSedation() const
 {
-	return (m_Sedation == nullptr) ? false : m_Sedation->IsValid();
+  return (m_Sedation == nullptr) ? false : m_Sedation->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetSedation()
 {
-	if (m_Sedation == nullptr)
-		m_Sedation = new SEScalarFraction();
-	return *m_Sedation;
+  if (m_Sedation == nullptr) {
+    m_Sedation = new SEScalarFraction();
+  }
+
+  return *m_Sedation;
 }
 double SESubstancePharmacodynamics::GetSedation() const
 {
-	if (m_Sedation == nullptr)
-		return SEScalar::dNaN();
-	return m_Sedation->GetValue();
+  if (m_Sedation == nullptr)
+    return SEScalar::dNaN();
+  return m_Sedation->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasSystolicPressureModifier() const
 {
-	return (m_SystolicPressureModifier == nullptr) ? false : m_SystolicPressureModifier->IsValid();
+  return (m_SystolicPressureModifier == nullptr) ? false : m_SystolicPressureModifier->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetSystolicPressureModifier()
 {
-	if (m_SystolicPressureModifier == nullptr)
-		m_SystolicPressureModifier = new SEScalarFraction();
-	return *m_SystolicPressureModifier;
+  if (m_SystolicPressureModifier == nullptr) {
+    m_SystolicPressureModifier = new SEScalarFraction();
+  }
+
+  return *m_SystolicPressureModifier;
 }
 double SESubstancePharmacodynamics::GetSystolicPressureModifier() const
 {
-	if (m_SystolicPressureModifier == nullptr)
-		return SEScalar::dNaN();
-	return m_SystolicPressureModifier->GetValue();
+  if (m_SystolicPressureModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_SystolicPressureModifier->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasTidalVolumeModifier() const
 {
-	return (m_TidalVolumeModifier == nullptr) ? false : m_TidalVolumeModifier->IsValid();
+  return (m_TidalVolumeModifier == nullptr) ? false : m_TidalVolumeModifier->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetTidalVolumeModifier()
 {
-	if (m_TidalVolumeModifier == nullptr)
-		m_TidalVolumeModifier = new SEScalarFraction();
-	return *m_TidalVolumeModifier;
+  if (m_TidalVolumeModifier == nullptr) {
+    m_TidalVolumeModifier = new SEScalarFraction();
+  }
+
+  return *m_TidalVolumeModifier;
 }
 double SESubstancePharmacodynamics::GetTidalVolumeModifier() const
 {
-	if (m_TidalVolumeModifier == nullptr)
-		return SEScalar::dNaN();
-	return m_TidalVolumeModifier->GetValue();
+  if (m_TidalVolumeModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_TidalVolumeModifier->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasTubularPermeabilityModifier() const
@@ -393,41 +433,50 @@ SEScalarFraction& SESubstancePharmacodynamics::GetTubularPermeabilityModifier()
 }
 double SESubstancePharmacodynamics::GetTubularPermeabilityModifier() const
 {
-  if (m_TubularPermeabilityModifier == nullptr)
+  if (m_TubularPermeabilityModifier == nullptr) {
     return SEScalar::dNaN();
+  }
+
   return m_TubularPermeabilityModifier->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasCentralNervousModifier() const
 {
-	return (m_CentralNervousModifier == nullptr) ? false : m_CentralNervousModifier->IsValid();
+  return (m_CentralNervousModifier == nullptr) ? false : m_CentralNervousModifier->IsValid();
 }
 SEScalarFraction& SESubstancePharmacodynamics::GetCentralNervousModifier()
 {
-	if (m_CentralNervousModifier == nullptr)
-		m_CentralNervousModifier = new SEScalarFraction();
-	return *m_CentralNervousModifier;
+  if (m_CentralNervousModifier == nullptr) {
+    m_CentralNervousModifier = new SEScalarFraction();
+  }
+
+  return *m_CentralNervousModifier;
 }
 double SESubstancePharmacodynamics::GetCentralNervousModifier() const
 {
-	if (m_CentralNervousModifier == nullptr)
-		return SEScalar::dNaN();
-	return m_CentralNervousModifier->GetValue();
+  if (m_CentralNervousModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_CentralNervousModifier->GetValue();
 }
 
 bool SESubstancePharmacodynamics::HasEffectSiteRateConstant() const
 {
-	return (m_EffectSiteRateConstant == nullptr) ? false : m_EffectSiteRateConstant->IsValid();
+  return (m_EffectSiteRateConstant == nullptr) ? false : m_EffectSiteRateConstant->IsValid();
 }
 SEScalarFrequency& SESubstancePharmacodynamics::GetEffectSiteRateConstant()
 {
-	if (m_EffectSiteRateConstant == nullptr)
-		m_EffectSiteRateConstant = new SEScalarFrequency();
-	return *m_EffectSiteRateConstant;
+  if (m_EffectSiteRateConstant == nullptr)
+  {
+    m_EffectSiteRateConstant = new SEScalarFrequency();
+  }
+
+  return *m_EffectSiteRateConstant;
 }
 double SESubstancePharmacodynamics::GetEffectSiteRateConstant(const FrequencyUnit& unit) const
 {
-	if (m_EffectSiteRateConstant == nullptr)
-		return SEScalar::dNaN();
-	return m_EffectSiteRateConstant->GetValue(unit);
+  if (m_EffectSiteRateConstant == nullptr)
+    return SEScalar::dNaN();
+  return m_EffectSiteRateConstant->GetValue(unit);
 }

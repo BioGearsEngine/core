@@ -54,7 +54,7 @@ specific language governing permissions and limitations under the License.
 
 Energy::Energy(BioGears& bg) : SEEnergySystem(bg.GetLogger()), m_data(bg), m_circuitCalculator(GetLogger())
 {
-  Clear();
+Clear();
 }
 
 Energy::~Energy()
@@ -79,7 +79,7 @@ void Energy::Clear()
   m_InternalTemperatureCircuit = nullptr;
   m_TemperatureCircuit = nullptr;
 
-  m_BloodpH.Reset(); 
+  m_BloodpH.Reset();
   m_BicarbonateMolarity_mmol_Per_L.Reset();
 }
 
@@ -95,7 +95,7 @@ void Energy::Initialize()
   //Initialization of other system variables
   /// \cite herman2008physics
   GetCoreTemperature().SetValue(37.0, TemperatureUnit::C);
-  GetSkinTemperature().SetValue(33.0, TemperatureUnit::C);  
+  GetSkinTemperature().SetValue(33.0, TemperatureUnit::C);
   /// \cite phypers2006lactate
   GetLactateProductionRate().SetValue(1.3, AmountPerTimeUnit::mol_Per_day);
   /// \cite guyton2006medical
@@ -168,45 +168,6 @@ void Energy::SetUp()
   m_skinExtravascularToSweatingGroundPath = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinSweating);
 }
 
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Applies an imposed dehydration time to the current fluid stores
-///
-/// \details
-/// Starvation uses a coarse time-step approach with an assumed time-step of one day. This coarse time-step
-/// is used to to manually decrement all of the fluid stores which represents the loss due to urination, sweating, and other mechanisms.
-/// For time-steps longer than one day there is a reduced fluid loss.
-//--------------------------------------------------------------------------------------------------
-//void Energy::Dehydration(double time)
-//{
-//  Warning("Consume Dehydration is currently disabled.");
-//  return;
-//  //Fluid loss is approximately 2600 mL/day. Shirreffs SM. Markers of hydration status. J Sports Med Phys Fitness 2000;40:80-4. 
-//  //After the first day without fluid intake, the renal loss decreases by 1000 mL leading to a total fluid loss of 1600 mL/day after day one.
-//  double fluidLossRate_mL_Per_day = 2600;
-//  double fluidLossRate_mL_Per_day2 = 1600;
-//  double coarseTimeStep_days = time;
-//  double fluidLoss_mL = 0.0;
-//
-//  if (coarseTimeStep_days<0.0)
-//    /// \error Cannot specify elapsed time less than zero in the consume meal action.
-//    Error("Cannot specify a negative time since last meal. Time since last meal is now set to zero.");
-//
-//  if (coarseTimeStep_days > 1.0)
-//    fluidLoss_mL = fluidLossRate_mL_Per_day + fluidLossRate_mL_Per_day2*(coarseTimeStep_days - 1.0);
-//  else
-//    fluidLoss_mL = fluidLossRate_mL_Per_day*coarseTimeStep_days;
-//
-//  SEScalarVolume fluidDehydrated;
-//  fluidDehydrated.SetValue(-fluidLoss_mL, VolumeUnit::mL);
-//
-//  // How do we take fluid from the body m_data.GetCircuits().DistributeVolume(fluidDehydrated);
-//
-//  //Patient weight decrease due to fluid mass lost
-//  double patientMassLost_kg = m_data.GetConfiguration().GetWaterDensity(MassPerVolumeUnit::kg_Per_mL)*fluidLoss_mL;
-//  m_Patient->GetWeight().IncrementValue(-patientMassLost_kg, MassUnit::kg);
-//}
-
 void Energy::AtSteadyState()
 {
   if (m_data.GetState() == EngineState::AtInitialStableState)
@@ -244,14 +205,14 @@ void Energy::PreProcess()
 void Energy::Exercise()
 {
   //if (!m_PatientActions->HasExercise() && !m_Patient->IsEventActive(CDM::enumPatientEvent::Fatigue))  //remove fatigue check?
-    //return;
+  //return;
 
   double exerciseIntensity = 0.0;
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double maxWorkRate_W = 1200.0;
   double kcal_Per_day_Per_Watt = 20.6362855;
-  
+
   // Only try to get intensity if the exercise action is active
   if (m_PatientActions->HasExercise())
   {
@@ -269,9 +230,9 @@ void Energy::Exercise()
 
   // The MetabolicRateGain is used to ramp the metabolic rate to the value specified by the user's exercise intensity.
   double MetabolicRateGain = 1.0;
-  double workRateDesired_W = exerciseIntensity*maxWorkRate_W;
-  double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day + workRateDesired_W*kcal_Per_day_Per_Watt;
-  double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain*(TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day)*m_dT_s;
+  double workRateDesired_W = exerciseIntensity * maxWorkRate_W;
+  double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day + workRateDesired_W * kcal_Per_day_Per_Watt;
+  double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day)*m_dT_s;
   GetTotalMetabolicRate().SetValue(TotalMetabolicRateProduced_kcal_Per_day, PowerUnit::kcal_Per_day);
 }
 
@@ -319,7 +280,7 @@ void Energy::CalculateVitalSigns()
   double skinTemperature_degC = m_skinNode->GetTemperature(TemperatureUnit::C);
   GetCoreTemperature().SetValue(coreTemperature_degC, TemperatureUnit::C);
   GetSkinTemperature().SetValue(skinTemperature_degC, TemperatureUnit::C);
-  std::stringstream ss; 
+  std::stringstream ss;
 
   //Hypothermia check
   double coreTempIrreversible_degC = 20.0;   /// \cite Stocks2004HumanPhysiologicalResponseCold
@@ -432,8 +393,8 @@ void Energy::CalculateMetabolicHeatGeneration()
 
   if (coreTemperature_degC < 34.0) //Hypothermic state inducing metabolic depression (decline of metabolic heat generation)
   {
-    totalMetabolicRateNew_W = summitMetabolism_W*pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
-    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);     /// \cite mallet2002hypothermia
+    totalMetabolicRateNew_W = summitMetabolism_W * pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
+    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);		 /// \cite mallet2002hypothermia
   }
   else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
   {
@@ -446,14 +407,14 @@ void Energy::CalculateMetabolicHeatGeneration()
   else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) //Basic Metabolic rate
   {
     double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day;
-    double MetabolicRateGain = 0.0001;  //Used to ramp the metabolic rate from its current value to the basal value if the patient meets the basal criteria
-    double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain*(TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day);
+    double MetabolicRateGain = 0.0001;	//Used to ramp the metabolic rate from its current value to the basal value if the patient meets the basal criteria
+    double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day);
     GetTotalMetabolicRate().SetValue(TotalMetabolicRateProduced_kcal_Per_day, PowerUnit::kcal_Per_day);
   }
-  else if (coreTemperature_degC>40.0  && !m_PatientActions->HasExercise()) //Core temperature greater than 40.0. If not exercising, then the hyperthermia leads to increased metabolism
+  else if (coreTemperature_degC>40.0 && !m_PatientActions->HasExercise()) //Core temperature greater than 40.0. If not exercising, then the hyperthermia leads to increased metabolism
   {
-    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day*pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC);  //The metabolic heat generated will increase by 11% for every degree above 40.0 C
-    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_Kcal_Per_day, PowerUnit::kcal_Per_day);                  /// \cite pate2001thermal                 
+    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day * pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC);  //The metabolic heat generated will increase by 11% for every degree above 40.0 C
+    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_Kcal_Per_day, PowerUnit::kcal_Per_day);								  /// \cite pate2001thermal								  
   }
 
   m_temperatureGroundToCorePath->GetNextHeatSource().SetValue(GetTotalMetabolicRate(PowerUnit::W), PowerUnit::W);
@@ -474,17 +435,19 @@ void Energy::CalculateSweatRate()
   double coreTemperatureHigh_degC = config.GetCoreTemperatureHigh(TemperatureUnit::C);
   double sweatHeatTranferCoefficient_W_Per_K = config.GetSweatHeatTransfer(HeatConductanceUnit::W_Per_K);
   double vaporizationEnergy_J_Per_kg = config.GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
-  double sweatSodiumConcentration_mM = 51.0;      /// \cite shirreffs1997whole
-  double sweatPotassiumConcentration_mM = 6.0;    /// \cite shirreffs1997whole
-  double sweatChlorideConcentration_mM = 48.0;    /// \cite shirreffs1997whole
-  static double totalSweatLost_mL = 0;
+  double sweatSodiumConcentration_mM = 51.0;			/// \cite shirreffs1997whole
+  double sweatPotassiumConcentration_mM = 6.0;		/// \cite shirreffs1997whole
+  double sweatChlorideConcentration_mM = 48.0;		/// \cite shirreffs1997whole
+                                                  // static double totalSweatLost_mL = 0; --Used to figure out total sweat loss during exercise scenario during debugging
 
-  /// \todo Convert to sweat density once specific gravity calculation is in
+
+
+                                                  /// \todo Convert to sweat density once specific gravity calculation is in
   SEScalarMassPerVolume sweatDensity;
   GeneralMath::CalculateWaterDensity(m_skinNode->GetTemperature(), sweatDensity);
   double dehydrationFraction = m_data.GetTissue().GetDehydrationFraction().GetValue();
 
-  //m_data.GetDataTrack().Probe("DehydrationPercentage", dehydrationFraction*100);
+  //m_data.GetDataTrack().Probe("DehydrationPercent", dehydrationFraction*100);
 
   //Calculate sweat rate (in kg/s) from core temperature feedback.
   //The sweat rate heat transfer is determined from a control equation that attempts to keep the core temperature in line
@@ -493,14 +456,13 @@ void Energy::CalculateSweatRate()
   double dehydrationScalingFactor = GeneralMath::LinearInterpolator(0, .1, 1, 0, dehydrationFraction);
   BLIM(dehydrationScalingFactor, 0, 1);
 
-  //m_data.GetDataTrack().Probe("DehydrationScalingFactor", dehydrationScalingFactor);
-
-  double sweatRate_kg_Per_s = dehydrationScalingFactor*(0.25*sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg)*(coreTemperature_degC - coreTemperatureHigh_degC);
-  double maxSweatRate_kg_Per_s = 12.5 * m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2) / 60 / 1000; //10 - 15 g/min/m2
+  double sweatRate_kg_Per_s = dehydrationScalingFactor * (0.25*sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg)*(coreTemperature_degC - coreTemperatureHigh_degC);
+  double maxSweatRate_kg_Per_s = 12.5 * m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2) / 60.0 / 1000.0; //10 - 15 g/min/m2
   BLIM(sweatRate_kg_Per_s, 0.0, maxSweatRate_kg_Per_s);
 
+
   //Account for mass lost by subtracting from the current patient mass
-  double massLost_kg = sweatRate_kg_Per_s*m_dT_s;
+  double massLost_kg = sweatRate_kg_Per_s * m_dT_s;
   m_Patient->GetWeight().IncrementValue(-massLost_kg, MassUnit::kg);
   GetSweatRate().SetValue(sweatRate_kg_Per_s, MassPerTimeUnit::kg_Per_s);
 
@@ -523,8 +485,8 @@ void Energy::CalculateSweatRate()
   //Set the flow source on the extravascular circuit to begin removing the fluid that is excreted
   double sweatRate_mL_Per_s = sweatRate_kg_Per_s / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_mL);
   m_skinExtravascularToSweatingGroundPath->GetNextFlowSource().SetValue(sweatRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-  totalSweatLost_mL += sweatRate_mL_Per_s * m_dT_s;
 
+  //totalSweatLost_mL += sweatRate_mL_Per_s * m_dT_s;
   //m_data.GetDataTrack().Probe("CumulativeSweatLost_mL", totalSweatLost_mL);
 }
 
@@ -544,11 +506,11 @@ void Energy::UpdateHeatResistance()
 
   double alphaScale = .5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
 
-  //The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
-  //When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin. 
-  //The opposite occurs for skin blood flow decrease.
+                          //The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
+                          //When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin. 
+                          //The opposite occurs for skin blood flow decrease.
   double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale*bloodDensity_kg_Per_m3*bloodSpecificHeat_J_Per_K_kg*skinBloodFlow_m3_Per_s);
-  
+
   coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
   //m_data.GetDataTrack().Probe("CoreToSkinResistance", coreToSkinResistance_K_Per_W);
   m_coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
