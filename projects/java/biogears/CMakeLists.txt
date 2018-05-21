@@ -198,7 +198,7 @@ add_custom_target(run-plots
     VERBATIM
     USES_TERMINAL
 )
-set (args "DEbugRun.config")
+set (args "DebugRun.config")
 add_custom_target(run-debug-plots
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
