@@ -185,12 +185,22 @@ add_custom_target(run-drug-validation
     VERBATIM
     USES_TERMINAL
 )
+
 set (args "VerificationScenarios.config ${GIT_HASH}")
 add_custom_target(run-verification
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     VERBATIM
     USES_TERMINAL
 )
+
+set (args "DebugRun.config")
+add_custom_target(run-debug
+    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"    mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+    VERBATIM
+    USES_TERMINAL
+)
+
 set (args "PlotRun.config")
 add_custom_target(run-plots
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
@@ -240,6 +250,7 @@ add_custom_target(rebase-tests
     VERBATIM
     USES_TERMINAL
 )
+
 set (args "")
 add_custom_target(biogears-gui
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.biogears.gui.Bio ${args}
@@ -255,6 +266,8 @@ add_dependencies(run-system-validation stage_runtime ${PROJECT_NAME})
 add_dependencies(report-system-validation stage_runtime ${PROJECT_NAME})
 add_dependencies(run-patient-validation stage_runtime ${PROJECT_NAME})
 add_dependencies(run-drug-validation stage_runtime ${PROJECT_NAME})
+add_dependencies(run-debug stage_runtime ${PROJECT_NAME})
+
 add_dependencies(run-plots stage_runtime ${PROJECT_NAME})
 add_dependencies(run-debug-plots stage_runtime ${PROJECT_NAME})
 add_dependencies(run-cdm-tests stage_runtime ${PROJECT_NAME})
@@ -274,6 +287,8 @@ set_target_properties(run-system-validation    PROPERTIES FOLDER "Java" )
 set_target_properties(report-system-validation PROPERTIES FOLDER "Java" )
 set_target_properties(run-patient-validation   PROPERTIES FOLDER "Java" )
 set_target_properties(run-drug-validation      PROPERTIES FOLDER "Java" )
+set_target_properties(run-debug                 PROPERTIES FOLDER "Java" )
+
 set_target_properties(run-plots                PROPERTIES FOLDER "Java" )
 set_target_properties(run-debug-plots          PROPERTIES FOLDER "Java" )
 set_target_properties(run-cdm-tests            PROPERTIES FOLDER "Java" )

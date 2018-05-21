@@ -43,7 +43,7 @@ public class SEScenario
 		
 		String searchDir;
 		if(args.length==0)
-			searchDir="../verification/Scenarios";
+			searchDir="verification/Scenarios";
 		else
 			searchDir=args[0];
 		List<String> files=FileUtils.findFiles(searchDir, ".xml", true);
