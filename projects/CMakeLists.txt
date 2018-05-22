@@ -51,9 +51,7 @@ endif()
 #         this list
 ###############################################################################
 
-if( ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS )
- find_package(Java)
-endif()
+find_package(Java)
 
 add_subdirectory(biogears)
 add_subdirectory(scenario_driver)
