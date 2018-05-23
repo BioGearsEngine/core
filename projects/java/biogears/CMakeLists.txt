@@ -157,28 +157,28 @@ add_custom_target(gen-docs
     VERBATIM
     USES_TERMINAL
 )
-set (args "ValidationSystems.config" "${GIT_HASH}")
+set (args "ValidationSystems.config" )
 add_custom_target(run-system-validation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "${GIT_HASH}")
+set (args "")
 add_custom_target(report-system-validation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "ValidationPatients.config ${GIT_HASH}")
+set (args "ValidationPatients.config")
 add_custom_target(run-patient-validation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "${GIT_HASH}")
+set (args "")
 add_custom_target(run-drug-validation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -186,7 +186,7 @@ add_custom_target(run-drug-validation
     USES_TERMINAL
 )
 
-set (args "VerificationScenarios.config ${GIT_HASH}")
+set (args "VerificationScenarios.config")
 add_custom_target(run-verification
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     VERBATIM
@@ -215,14 +215,14 @@ add_custom_target(run-debug-plots
     VERBATIM
     USES_TERMINAL
 )
-set (args "CDMUnitTests.config ${GIT_HASH}")
+set (args "CDMUnitTests.config")
 add_custom_target(run-cdm-tests
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "BGEUnitTests.config ${GIT_HASH}")
+set (args "BGEUnitTests.config")
 add_custom_target(run-bge-tests
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
