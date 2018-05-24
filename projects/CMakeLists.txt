@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.8.0)
 enable_language(CXX)
 
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
-option(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" OFF)
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
 
 ###############################################################################
@@ -52,6 +51,7 @@ endif()
 ###############################################################################
 
 find_package(Java)
+option(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND})
 
 add_subdirectory(biogears)
 add_subdirectory(scenario_driver)
@@ -59,7 +59,7 @@ add_subdirectory(howto)
 add_subdirectory(unit)
 
 
- if(Java_FOUND)
+if(Java_FOUND AND ARA_${PROJECT_NAME}_BUILD_JAVATOOLS)
   add_subdirectory(java)
 endif()
 

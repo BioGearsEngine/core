@@ -135,7 +135,7 @@ if(ARA_${PREFIX}_BUILD_STATIC)
         Log4cpp_INCLUDE_DIRS
   )
   if(ARA_${PROJECT_NAME}_BUILD_JAVATOOLS)
-	  list(APPEND ${PREFIX}_INCLUDES   Java_JAVA_INCLUDE_DIRS )
+	  list(APPEND ${PREFIX}_INCLUDES   Java_INCLUDE_DIRS )
   endif()
   list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
   ensure_paths_set(${PREFIX}_INCLUDES lib${PROJECT_NAME})
@@ -310,7 +310,7 @@ else()
   ###############################################################################
   # libBiogears_jni
   ###############################################################################
-  if(Java_FOUND)
+  if(Java_FOUND AND ARA_${PROJECT_NAME}_BUILD_JAVATOOLS)
   message(STATUS "JAVA STUFF")
      add_library(lib${PROJECT_NAME}_jni  SHARED ${LIB${PREFIX}_JNI_SOURCES} ${LIB${PREFIX}_JNI_HEADERS})
   	   set_target_properties(lib${PROJECT_NAME}_jni
