@@ -47,9 +47,9 @@ BioGears either requires or has planned requirment for the following 3rd party l
 |Library|Version|Date|Source|
 |-------|-------|----|------|
 |log4cpp| 1.1   |2017-07-13  |https://sourceforge.net/projects/log4cpp/|
-|boost  | 1.66   |2017-12-18 |https://boost.org|
 |xerces-c| 3.2.0   |2017-08-28  |https://xerces.apache.org/xerces-c/
 |xsd| 4.0   |2017-07-13  |https://www.codesynthesis.com/products/xsd/
+
 
 ##Build Instructions
 
