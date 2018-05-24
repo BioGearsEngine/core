@@ -151,7 +151,7 @@ endfunction(xjc_generate_java)
 set(CMAKE_JAVA_TARGET_OUTPUT_DIR ${CMAKE_BINARY_DIR}/outputs/jar)
 set(CMAKE_JAVA_COMPILE_FLAGS -nowarn)
 
-if(Java_FOUND AND ARA_${PROJECT_NAME}_BUILD_JAVATOOLS)
+if(Java_FOUND AND ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
 	add_subdirectory(schema)
 	add_subdirectory(cdm)
 	add_subdirectory(engine)
