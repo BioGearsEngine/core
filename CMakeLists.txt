@@ -71,6 +71,7 @@ create_stage()
 if(ARA_${ROOT_PROJECT_NAME}_BUILD_${ROOT_PROJECT_NAME})
   add_dependencies(STAGE ${ROOT_PROJECT_NAME})
   add_dependencies(STAGE scenario_driver)
+  add_dependencies(STAGE test_driver)
 endif()
 
 ###############################################################################

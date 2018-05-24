@@ -55,6 +55,7 @@ option(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based developmen
 
 add_subdirectory(biogears)
 add_subdirectory(scenario_driver)
+add_subdirectory(test_driver)
 add_subdirectory(howto)
 add_subdirectory(unit)
 

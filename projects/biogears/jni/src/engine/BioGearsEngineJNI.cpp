@@ -462,7 +462,7 @@ void BioGearsEngineJNI::PushData(double time_s)
 		if (firstUpdate)
 		{
 			firstUpdate = false;
-			jobjectArray sary = jniEnv->NewObjectArray(headings.size(), jniEnv->FindClass("java/lang/String"), jniEnv->NewStringUTF(""));
+			jobjectArray sary = jniEnv->NewObjectArray(static_cast<jsize>(headings.size()), jniEnv->FindClass("java/lang/String"), jniEnv->NewStringUTF(""));
 			for (unsigned int i = 0; i < headings.size(); i++)
 				jniEnv->SetObjectArrayElement(sary, i, jniEnv->NewStringUTF(headings[i].c_str()));
 			m = jniEnv->GetMethodID(jniEnv->GetObjectClass(jniObj), "setCDMHeadings", "([Ljava/lang/String;)V");
@@ -473,7 +473,7 @@ void BioGearsEngineJNI::PushData(double time_s)
 
 		// Gather up the requested data into an array and pass it over to java
 		// The order is set in the header order
-		jdoubleArray ary = jniEnv->NewDoubleArray(trk->GetProbes()->size());
+		jdoubleArray ary = jniEnv->NewDoubleArray(static_cast<jsize>(trk->GetProbes()->size()));
 
 		jboolean isCopy = JNI_FALSE;
 		jdouble* reqData = jniEnv->GetDoubleArrayElements(ary, &isCopy);
