@@ -19,10 +19,10 @@ specific language governing permissions and limitations under the License.
 #else
 #define DEBUGOUT(x) 
 #endif
-
-#define CDM mil::tatrc::physiology::datamodel
+namespace mil {  namespace tatrc { namespace physiology { namespace datamodel {  } } } }
 //using namespace mil::tatrc::phsyiology::datamodel;
 #define CDM_BIND_DECL(type) namespace mil{ namespace tatrc{ namespace physiology{ namespace datamodel { class type; } } } }
+namespace CDM = mil::tatrc::physiology::datamodel;
 
 #include <memory>
 #include <stdio.h>

@@ -44,7 +44,6 @@ function(REGISTER_XSD schema root_dir component resource_path)
       OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml      OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd 
     )
     message(STATUS "Generating ${schema}.hxx and ${schema}.cxx")
-
     execute_process( WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
                      COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
@@ -149,6 +148,7 @@ function(REGISTER_XSD_FILE file cfg_file root_dir component resource_path)
       OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd 
     )
     message(STATUS "Generating ${root_dir}/${component}${schema}{.hxx,.cxx}")
+    message(STATUS "COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS}")
     execute_process( 
                      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
