@@ -135,7 +135,7 @@ if(ARA_${PREFIX}_BUILD_STATIC)
         Log4cpp_INCLUDE_DIRS
   )
   if(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
-	  list(APPEND ${PREFIX}_INCLUDES   Java_INCLUDE_DIRS )
+	  list(APPEND ${PREFIX}_INCLUDES   Java_JNI_INCLUDE_DIR)
   endif()
   list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
   ensure_paths_set(${PREFIX}_INCLUDES lib${PROJECT_NAME})
@@ -342,7 +342,7 @@ else()
              ${CMAKE_CURRENT_SOURCE_DIR}/string/include
              ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
              ${CMAKE_CURRENT_SOURCE_DIR}/jni/include
-             ${Java_INCLUDE_DIRS}
+             ${Java_JNI_INCLUDE_DIR}
      )
 
      set(${PREFIX}_jni_LIBS
