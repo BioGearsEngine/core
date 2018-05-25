@@ -204,6 +204,7 @@ if(Java_JAVA_EXECUTABLE)
           PATH_SUFFIXES
 					include/linux
 					include/win32
+					include/darwin
           PATHS ${JAVA_HOME}
                 ${_JAVA_EXECUTABLE_HOME}/../
 					 NO_DEFAULT_PATH
