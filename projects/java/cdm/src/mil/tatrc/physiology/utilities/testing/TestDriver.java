@@ -1,4 +1,4 @@
-/**************************************************************************************
+	  	/**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
@@ -577,7 +577,7 @@ public class TestDriver
 		public TestJob job;
 		public void run()
 		{
-			if(job.PlottableResults && !job.skipPlot)
+			if(job != null && job.PlottableResults && !job.skipPlot)
 			{  				
 				for(int i=0; i<job.baselineFiles.size(); i++)
 				{
@@ -587,7 +587,7 @@ public class TestDriver
 					compare.setFullReportPath(job.reportFiles.get(i)); 
 					if( Files.isRegularFile(Paths.get(job.computedFiles.get(i))) )
 					{
-						Set<String> failures = null;
+						Set<String> failures = new HashSet<String>();
 						if(Files.isRegularFile(Paths.get(job.baselineFiles.get(i))) )
 						{
 							failures = compare.compare(job.baselineFiles.get(i), job.computedFiles.get(i));
@@ -599,6 +599,7 @@ public class TestDriver
 							}
 							compare.write();
 						}
+
 						if((job.plotType == PlotType.FastPlotErrors || job.plotType == PlotType.FullPlotErrors) && failures.isEmpty())
 						{
 							Log.info("No plots for "+job.computedFiles.get(i));
