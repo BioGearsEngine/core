@@ -209,7 +209,7 @@ Open the %BioGears.xcodeproj file in Xcode.  Select Product > Scheme > Edit Sche
 
 - Set the executable to %BioGearsScenarioDriver if it isn't already.
 - Set the build configuration to Debug or Release depending on the desired mode.
-- On the arguments tab, add an entry to "Arguments Passed On Launch" which specifies a path to a scenario to run (e.g. ../verification/Scenarios/Basic/Basic1.xml).
+- On the arguments tab, add an entry to "Arguments Passed On Launch" which specifies a path to a scenario to run (e.g. verification/Scenarios/Basic/Basic1.xml).
 - On the options tab, check "Use custom working directory" and set it to the %BioGears bin folder.
 
 Close the dialog and click the Run button to build and launch the %BioGears scenario driver.
@@ -226,7 +226,7 @@ these are necessary for command line builds.  After Xcode loads the project it c
 src directory to build.
 
 After %BioGears is built, navigate to the bin directory and launch the scenario driver from there, specifying the scenario you want to run as the first parameter
-(e.g. `./Release/BioGearsScenarioDriver ../verification/Scenarios/Basic/Basic1.xml`).
+(e.g. `./Release/BioGearsScenarioDriver verification/Scenarios/Basic/Basic1.xml`).
 
 #### Running the GUI from Eclipse
 

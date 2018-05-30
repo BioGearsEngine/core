@@ -54,7 +54,7 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
   SECompartmentManager cmptMgr(subMgr);
 
   std::string dir = GetCurrentWorkingDirectory();
-  dir.append("/verification/Scenarios");
+  dir.append("verification/Scenarios");
 
   SETestReport testReport(m_Logger);
   SETestSuite&  testSuite = testReport.CreateTestSuite();

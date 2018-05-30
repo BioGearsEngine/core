@@ -81,7 +81,7 @@ set_target_properties(${PROJECT_NAME}
     OUTPUT_NAME ${SHORT_NAME}
     PROJECT_LABEL "${PROJECT_NAME}"
     )
-add_dependencies(${PROJECT_NAME} libbiogears         
+add_dependencies(${PROJECT_NAME} libbiogears_jni
         Java_DataModelBindings
         Java_CommonDataModel
         Java_BioGearsEngine

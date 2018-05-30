@@ -137,7 +137,7 @@ std::string GetCurrentWorkingDirectory()
     char path[MAXPATH];
     GETCWD(path, MAXPATH);
 
-    return std::string(path);
+    return std::string(path) + "/";
 }
 
 BIOGEARS_API std::recursive_mutex g_fileSystemMutex;
