@@ -37,7 +37,7 @@ void BioGearsEngineTest::RenalCircuitAndTransportTest(const std::string& sTestDi
   DataTrack     graphTrk;
   std::ofstream graphFile;
 
-  BioGears bg(sTestDirectory + "\\RenalCircuitAndTransportTest.log");
+  BioGears bg(sTestDirectory + "/RenalCircuitAndTransportTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
@@ -144,8 +144,8 @@ void BioGearsEngineTest::RenalCircuitAndTransportTest(const std::string& sTestDi
 
     if (i == 0)
     {
-      graphTrk.CreateFile(std::string(sTestDirectory + "\\RenalTransportOutput.txt").c_str(), graphFile);
-      circiutTrk.CreateFile(std::string(sTestDirectory + "\\RenalCircuitOutput.txt").c_str(), circuitFile);
+      graphTrk.CreateFile(std::string(sTestDirectory + "/RenalTransportOutput.txt").c_str(), graphFile);
+      circiutTrk.CreateFile(std::string(sTestDirectory + "/RenalCircuitOutput.txt").c_str(), circuitFile);
     }
     graphTrk.StreamTrackToFile(graphFile);
     circiutTrk.StreamTrackToFile(circuitFile);
@@ -163,7 +163,7 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
 {
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "\\RenalFeedbackTest.log");
+  BioGears bg(sTestDirectory + "/RenalFeedbackTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
@@ -449,7 +449,7 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
     }
     }
   }
-  trk.WriteTrackToFile(std::string(sTestDirectory + "\\" + sTestName + ".txt").c_str());
+  trk.WriteTrackToFile(std::string(sTestDirectory + "/" + sTestName + ".txt").c_str());
   std::stringstream ss;
   ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run " << sTestName << "CircuitAndTransportTest";
   bg.GetLogger()->Info(ss.str(), "RenalFeedbackTest");
@@ -478,7 +478,7 @@ void BioGearsEngineTest::RenalSystemTest(RenalSystems systemtest, const std::str
 
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "\\RenalSystemTest.log");
+  BioGears bg(sTestDirectory + "/RenalSystemTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
@@ -686,7 +686,7 @@ void BioGearsEngineTest::RenalSystemTest(RenalSystems systemtest, const std::str
       }
     }
   }
-  trk.WriteTrackToFile(std::string(sTestDirectory + "\\" + sTestName + ".txt").c_str());
+  trk.WriteTrackToFile(std::string(sTestDirectory + "/" + sTestName + ".txt").c_str());
   std::stringstream ss;
   ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run " << sTestName << "SecretionandUrinatingTest";
   bg.GetLogger()->Info(ss.str(), "RenalSystemTest");

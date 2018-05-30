@@ -300,7 +300,7 @@ public class FileUtils
     StringBuilder sb = new StringBuilder();    
     if(directory != null && directory.length() > 0)
     {
-      sb.append("\\");
+      sb.append("/");
       sb.append(directory);
     }         
     String path = sb.toString();
@@ -309,7 +309,7 @@ public class FileUtils
     createDirectory(path);
     
     //create file and return it
-    return new File(path+"\\"+filename+extension);  
+    return new File(path+"/"+filename+extension);  
   }
 
 
@@ -665,7 +665,7 @@ public class FileUtils
     if(path == null)
       return file;
     
-    return path + "\\" + file;
+    return path + "/" + file;
   }
 
 
@@ -676,11 +676,11 @@ public class FileUtils
   public static String addTrailingSlash(String path)
   {
     if(path == null)
-      return "\\";
+      return "/";
     
-    if(!path.endsWith("\\") && !path.endsWith("/"))
+    if(!path.endsWith("/") && !path.endsWith("/"))
     {
-      path += "\\";
+      path += "/";
     }
     
     return path;
@@ -930,8 +930,8 @@ public class FileUtils
   {
     for(String l : srcDir.list())
     {
-      File s = new File(srcDir.getAbsolutePath()+"\\"+l);
-      File t = new File(tgtDir.getAbsolutePath()+"\\"+l);
+      File s = new File(srcDir.getAbsolutePath()+"/"+l);
+      File t = new File(tgtDir.getAbsolutePath()+"/"+l);
       
       if(s.isDirectory())
       {

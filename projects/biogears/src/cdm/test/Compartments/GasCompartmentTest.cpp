@@ -1105,7 +1105,7 @@ void CommonDataModelTest::GasCompartmentTest(const std::string& rptDirectory)
   m_PercentTolerance = 2.0;
   m_OutDirectory = rptDirectory;
 
-  m_Logger->ResetLogFile(rptDirectory + "\\GasCompartmentTest.log");
+  m_Logger->ResetLogFile(rptDirectory + "/GasCompartmentTest.log");
   SETestReport testReport(m_Logger);
 
   SESubstanceManager subMgr(m_Logger);
@@ -1131,5 +1131,5 @@ void CommonDataModelTest::GasCompartmentTest(const std::string& rptDirectory)
   UpdateGasLinks.SetName("UpdateGasLinks");
   TestUpdateGasLinks(UpdateGasLinks, subMgr);
 
-  testReport.WriteFile(rptDirectory + "\\GasCompartmentTestReport.xml");
+  testReport.WriteFile(rptDirectory + "/GasCompartmentTestReport.xml");
 }

@@ -23,11 +23,11 @@ void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory
 {
   TimingProfile pTimer;
   std::string testName = "ReadSubstanceDirectory";
-  m_Logger->ResetLogFile(rptDirectory + "\\" + testName + ".log");
+  m_Logger->ResetLogFile(rptDirectory + "/" + testName + ".log");
   SESubstance obj(m_Logger);
 
   std::string dir = GetCurrentWorkingDirectory();
-  dir.append("\\substances");
+  dir.append("/substances");
 
   SETestReport testReport(m_Logger);
   SETestSuite&  testSuite = testReport.CreateTestSuite();
@@ -42,5 +42,5 @@ void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory
   testCase.SetName(obj.GetName());
   // TODO would be nice to listen to errors on the logger and add them to the testCase failures...
 
-	testReport.WriteFile(rptDirectory +"\\"+testName+"Report.xml");
+	testReport.WriteFile(rptDirectory +"/"+testName+"Report.xml");
 }

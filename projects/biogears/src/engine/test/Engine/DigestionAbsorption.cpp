@@ -36,13 +36,13 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
   std::string outputName;
  
   if (mealType == CarbsOnly)
-    outputName = "\\DigestionTestCarbs";
+    outputName = "/DigestionTestCarbs";
   if (mealType == ProteinOnly)
-    outputName = "\\DigestionTestProtein";
+    outputName = "/DigestionTestProtein";
   if (mealType == FatOnly)
-    outputName = "\\DigestionTestFat";
+    outputName = "/DigestionTestFat";
   if (mealType == Balanced)
-    outputName = "\\DigestionTestABalanced";
+    outputName = "/DigestionTestABalanced";
   
   m_Logger->ResetLogFile(rptDirectory + outputName + ".log");
   std::ofstream file;
@@ -350,13 +350,13 @@ void BioGearsEngineTest::AbsorptionTest(const std::string& rptDirectory, MealTyp
   std::string outputName;
 
   if (mealType == CarbsOnly)
-    outputName = "\\AbsoptionCarbs";
+    outputName = "/AbsoptionCarbs";
   if (mealType == ProteinOnly)
-    outputName = "\\AbsoptionProtein";
+    outputName = "/AbsoptionProtein";
   if (mealType == FatOnly)
-    outputName = "\\AbsoptionFat";
+    outputName = "/AbsoptionFat";
   if (mealType == Balanced)
-    outputName = "\\AbsoptionBalanced";
+    outputName = "/AbsoptionBalanced";
 
   m_Logger->ResetLogFile(rptDirectory + outputName + ".log");
   std::ofstream file;

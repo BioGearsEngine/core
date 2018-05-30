@@ -4482,7 +4482,7 @@ void CommonDataModelTest::BasicCircuitPreProcess(double dT)
 //--------------------------------------------------------------------------------------------------
 void CommonDataModelTest::BasicCircuitTest(const std::string& outputDirectory)
 {
-  m_Logger = new Logger(outputDirectory + "\\BasicCircuit.log");
+  m_Logger = new Logger(outputDirectory + "/BasicCircuit.log");
 	double timeStep_s = 1.0/165.0;
 	double currentTime_s = 0.0;
 	DataTrack trk1;
@@ -4545,14 +4545,14 @@ void CommonDataModelTest::BasicCircuitTest(const std::string& outputDirectory)
 		if (currentTime_s > 80 && !serialized)
 		{
 			serialized = true;
-			std::string xmlDir = outputDirectory + "\\BasicCircuit.xml";
+			std::string xmlDir = outputDirectory + "/BasicCircuit.xml";
       TestCircuitSerialization(xmlDir);
       fluidCircuit = m_Circuits.GetFluidCircuit("Fluid");
 		}
 	}
 
   m_Circuits.Clear();
-	std::string sOutputFile = outputDirectory + "\\BasicCircuit.txt";
+	std::string sOutputFile = outputDirectory + "/BasicCircuit.txt";
 	trk1.WriteTrackToFile(sOutputFile.c_str());
 }
 
@@ -5226,7 +5226,7 @@ void CommonDataModelTest::ValidationComprehensive2SINCenteredTest(const std::str
 
 void CommonDataModelTest::RunTest(const std::string& outputDirectory, const std::string& testName, enumCDMTestSourceType sourceType, int testIndex)
 {
-	m_Logger = new Logger(outputDirectory + "\\" + testName + ".log");
+	m_Logger = new Logger(outputDirectory + "/" + testName + ".log");
 	double timeStep_s = 1.0 / 165.0;
 	double currentTime_s = 0.0;
 	DataTrack trk1;
@@ -5274,7 +5274,7 @@ void CommonDataModelTest::RunTest(const std::string& outputDirectory, const std:
 		if (!serialized && currentTime_s > 8)
 		{
 			serialized = true;
-			std::string xmlDir = outputDirectory + "\\" + testName + ".xml";
+			std::string xmlDir = outputDirectory + "/" + testName + ".xml";
       TestCircuitSerialization(xmlDir); 
       fluidCircuit = m_Circuits.GetFluidCircuit("Fluid");
 		}
@@ -5285,7 +5285,7 @@ void CommonDataModelTest::RunTest(const std::string& outputDirectory, const std:
 		if (outputTime_s >= 10) // outputs every 10 secs
 		{
 			outputTime_s = 0;
-			std::string sOutputFile = outputDirectory + "\\" + testName + ".txt";
+			std::string sOutputFile = outputDirectory + "/" + testName + ".txt";
 			trk1.WriteTrackToFile(sOutputFile.c_str());
 		}
 	}

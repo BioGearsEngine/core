@@ -48,7 +48,7 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
 	std::ofstream fileCircuit;
 	std::ofstream fileGraph;
 	
-	BioGears bg(sTestDirectory + "\\AnesthesiaMachineCircuitAndTransportTest.log");
+	BioGears bg(sTestDirectory + "/AnesthesiaMachineCircuitAndTransportTest.log");
 	bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -78,8 +78,8 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
 	{
 		amCircuit = &bg.GetCircuits().GetAnesthesiaMachineCircuit();
 		amGraph = &bg.GetCompartments().GetAnesthesiaMachineGraph();
-		sCircuitFileName = "\\AnesthesiaMachineCircuitOutput.txt";
-		sTransportFileName = "\\AnesthesiaMachineTransportOutput.txt";
+		sCircuitFileName = "/AnesthesiaMachineCircuitOutput.txt";
+		sTransportFileName = "/AnesthesiaMachineTransportOutput.txt";
 
 		//Allow things to flow to ground, since the respiratory circuit isn't here
 		//This approximates the total respiratory system resistance
@@ -93,8 +93,8 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
 
 		amCircuit = &bg.GetCircuits().GetRespiratoryAndAnesthesiaMachineCircuit();
 		amGraph = &bg.GetCompartments().GetRespiratoryAndAnesthesiaMachineGraph();
-		sCircuitFileName = "\\RespiratoryAndAnesthesiaMachineCircuitOutput.txt";
-		sTransportFileName = "\\RespiratoryAndAnesthesiaMachineTransportOutput.txt";
+		sCircuitFileName = "/RespiratoryAndAnesthesiaMachineCircuitOutput.txt";
+		sTransportFileName = "/RespiratoryAndAnesthesiaMachineTransportOutput.txt";
 
 		//Precharge the stomach to prevent negative volume
 		amCircuit->GetNode(BGE::RespiratoryNode::Stomach)->GetNextPressure().Set(env.GetAtmosphericPressure());

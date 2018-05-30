@@ -41,7 +41,7 @@ void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfigura
   std::ofstream fileGraph;
   std::ofstream fAerosolGraph;
 
-  BioGears bg(sTestDirectory + "\\RespiratoryCircuitAndTransportTest.log");
+  BioGears bg(sTestDirectory + "/RespiratoryCircuitAndTransportTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -61,8 +61,8 @@ void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfigura
 	  rCircuit = &bg.GetCircuits().GetRespiratoryCircuit();
 	  rGraph = &bg.GetCompartments().GetRespiratoryGraph();
     aGraph = nullptr;
-	  sCircuitFileName = "\\RespiratoryCircuitOutput.txt";
-	  sTransportFileName = "\\RespiratoryTransportOutput.txt";
+	  sCircuitFileName = "/RespiratoryCircuitOutput.txt";
+	  sTransportFileName = "/RespiratoryTransportOutput.txt";
     sAerosolTxptFileName = "";
   }
   else if (config == RespiratoryWithInhaler)
@@ -70,9 +70,9 @@ void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfigura
 	  rCircuit = &bg.GetCircuits().GetRespiratoryAndInhalerCircuit();
 	  rGraph = &bg.GetCompartments().GetRespiratoryAndInhalerGraph();
     aGraph = &bg.GetCompartments().GetAerosolAndInhalerGraph();
-	  sCircuitFileName = "\\RespiratoryAndInhalerCircuitOutput.txt";
-	  sTransportFileName = "\\RespiratoryAndInhalerTransportOutput.txt";
-    sAerosolTxptFileName = "\\AerosolInhalerTransportOutput.txt";
+	  sCircuitFileName = "/RespiratoryAndInhalerCircuitOutput.txt";
+	  sTransportFileName = "/RespiratoryAndInhalerTransportOutput.txt";
+    sAerosolTxptFileName = "/AerosolInhalerTransportOutput.txt";
 
     // Get an aerosolized substance
     SESubstance* albuterol = bg.GetSubstances().GetSubstance("Albuterol");
@@ -93,8 +93,8 @@ void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfigura
     rCircuit = &bg.GetCircuits().GetRespiratoryAndMechanicalVentilatorCircuit();
     rGraph = &bg.GetCompartments().GetRespiratoryAndMechanicalVentilatorGraph();
     aGraph = nullptr;
-    sCircuitFileName = "\\RespiratoryAndMechanicalVentilatorCircuitOutput.txt";
-    sTransportFileName = "\\RespiratoryAndMechanicalVentilatorTransportOutput.txt";
+    sCircuitFileName = "/RespiratoryAndMechanicalVentilatorCircuitOutput.txt";
+    sTransportFileName = "/RespiratoryAndMechanicalVentilatorTransportOutput.txt";
     sAerosolTxptFileName = "";
   }
   else
@@ -188,7 +188,7 @@ void BioGearsEngineTest::RespiratoryDriverTest(const std::string& sTestDirectory
 {
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "\\RespiratoryDriverTest.log");
+  BioGears bg(sTestDirectory + "/RespiratoryDriverTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -295,7 +295,7 @@ void BioGearsEngineTest::RespiratoryDriverTest(const std::string& sTestDirectory
       DriverPressure_cmH2O = DriverPressure_cmH2O - PressureIncrement_cmH2O;
     }
   }
-  trk1.WriteTrackToFile(std::string(sTestDirectory + "\\RespiratoryDriverOutput.txt").c_str());
+  trk1.WriteTrackToFile(std::string(sTestDirectory + "/RespiratoryDriverOutput.txt").c_str());
   std::stringstream ss;
   ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run";
   bg.GetLogger()->Info(ss.str(), "RespiratoryDriverTest");

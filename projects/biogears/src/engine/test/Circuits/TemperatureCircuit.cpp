@@ -36,7 +36,7 @@ specific language governing permissions and limitations under the License.
 //This test holds EnvironmentSkin and EnvironmentCore sources constant and varies BMR
 void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "\\InternalTemperatureVariableBMRCircuitTest.log");
+  BioGears bg(sTestDirectory + "/InternalTemperatureVariableBMRCircuitTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -99,7 +99,7 @@ void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::st
 		outTrk.Track(time_s, m_TCircuit);
 		if (i == 0)
 		{
-			outTrk.CreateFile(std::string(sTestDirectory + "\\InternalTemperatureVariableBMRCircuitOutput.txt").c_str(), file);
+			outTrk.CreateFile(std::string(sTestDirectory + "/InternalTemperatureVariableBMRCircuitOutput.txt").c_str(), file);
 		}
 		outTrk.StreamTrackToFile(file);
 		time_s += deltaT_s;
@@ -110,7 +110,7 @@ void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::st
 //This test holds BMR and EnvironmentCore sources constant and varies EnvironmentSkin
 void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::string& sTestDirectory)
 {
-	BioGears bg(sTestDirectory + "\\InternalTemperatureVariableSkinCircuitTest.log");
+	BioGears bg(sTestDirectory + "/InternalTemperatureVariableSkinCircuitTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -196,7 +196,7 @@ void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::s
 		outTrk.Track(time_s, m_TCircuit);
 		if (i == 0)
 		{
-			outTrk.CreateFile(std::string(sTestDirectory + "\\InternalTemperatureVariableSkinCircuitOutput.txt").c_str(), file);
+			outTrk.CreateFile(std::string(sTestDirectory + "/InternalTemperatureVariableSkinCircuitOutput.txt").c_str(), file);
 		}
 		outTrk.StreamTrackToFile(file);
 		time_s += deltaT_s;
@@ -207,7 +207,7 @@ void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::s
 //This test holds BMR and EnvironmentSkin sources constant and varies EnvironmentCore
 void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "\\InternalTemperatureVariableCoreCircuitTest.log");
+  BioGears bg(sTestDirectory + "/InternalTemperatureVariableCoreCircuitTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -292,7 +292,7 @@ void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::s
 		outTrk.Track(time_s, m_TCircuit);
 		if (i == 0)
 		{
-			outTrk.CreateFile(std::string(sTestDirectory + "\\InternalTemperatureVariableCoreCircuitOutput.txt").c_str(), file);
+			outTrk.CreateFile(std::string(sTestDirectory + "/InternalTemperatureVariableCoreCircuitOutput.txt").c_str(), file);
 		}
 		outTrk.StreamTrackToFile(file);
 		time_s += deltaT_s;
@@ -303,7 +303,7 @@ void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::s
 //This test uses a constant BMR in place of the Energy circuit and varies ambient temperature
 void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::string& sTestDirectory)
 {
-	BioGears bg(sTestDirectory + "\\EnvironmentVariableTemperatureCircuitTest.log");
+	BioGears bg(sTestDirectory + "/EnvironmentVariableTemperatureCircuitTest.log");
 	bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -416,7 +416,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
 		outTrk.Track(time_s, m_ECircuit);
 		if (i == 0)
 		{
-			outTrk.CreateFile(std::string(sTestDirectory + "\\EnvironmentVariableTemperatureCircuitOutput.txt").c_str(), file);
+			outTrk.CreateFile(std::string(sTestDirectory + "/EnvironmentVariableTemperatureCircuitOutput.txt").c_str(), file);
 		}
 		outTrk.StreamTrackToFile(file);
 		time_s += deltaT_s;
@@ -427,7 +427,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
 //This test uses both the Environment and Energy circuits, varying both BMR and ambient temp
 void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "\\CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest.log");
+  BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -570,7 +570,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
 		outTrk.Track(time_s, m_TECircuit);
 		if (i == 0)
 		{
-			outTrk.CreateFile(std::string(sTestDirectory + "\\CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitOutput.txt").c_str(), file);
+			outTrk.CreateFile(std::string(sTestDirectory + "/CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitOutput.txt").c_str(), file);
 		}
 		outTrk.StreamTrackToFile(file);
 		time_s += deltaT_s;
@@ -581,7 +581,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
 //This test verifies that the Skin temperature drops when drastically lowering other values
 void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "\\CombinedInternalAndEnvironmentSkinTempDropCircuitTest.log");
+  BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentSkinTempDropCircuitTest.log");
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -664,7 +664,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
 		outTrk.Track(time_s, m_TECircuit);
 		if (i == 0)
 		{
-			outTrk.CreateFile(std::string(sTestDirectory + "\\CombinedInternalAndEnvironmentSkinTempDropCircuitOutput.txt").c_str(), file);
+			outTrk.CreateFile(std::string(sTestDirectory + "/CombinedInternalAndEnvironmentSkinTempDropCircuitOutput.txt").c_str(), file);
 		}
 		outTrk.StreamTrackToFile(file);
 		time_s += deltaT_s;
@@ -675,7 +675,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
 //This test compares Environment circuit output to ISO data
 void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTestDirectory)
 {
-	BioGears bg(sTestDirectory + "\\EnvironmentTemperatureInput.log");
+	BioGears bg(sTestDirectory + "/EnvironmentTemperatureInput.log");
 	bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -773,6 +773,6 @@ void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTe
 		trk.Track("EvaporativeHeatLoss(W/m^2)", i, dEvaporativeHeatLoss_WPerM2[i]);
 	}
 
-	std::string sOutputFile = sTestDirectory + "\\EnvironmentISO7730Comparison.txt";
+	std::string sOutputFile = sTestDirectory + "/EnvironmentISO7730Comparison.txt";
 	trk.WriteTrackToFile(sOutputFile.c_str());
 }

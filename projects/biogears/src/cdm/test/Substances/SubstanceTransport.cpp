@@ -36,7 +36,7 @@ specific language governing permissions and limitations under the License.
 
 void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirectory)
 {
-  m_Logger->ResetLogFile(sTestDirectory + "\\LargeFlowTransportTest.log");
+  m_Logger->ResetLogFile(sTestDirectory + "/LargeFlowTransportTest.log");
   SEFluidCircuit& circuit = m_Circuits.CreateFluidCircuit("Circuit");
   SEFluidCircuitCalculator CircuitCalculator(m_Logger);
 
@@ -119,7 +119,7 @@ void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirecto
     }
     outTrk.Probe("TotalMass(g)", totalMass);
     if (time == 0)
-      outTrk.CreateFile(std::string(sTestDirectory + "\\LargeFlowTransport.txt").c_str(), file);
+      outTrk.CreateFile(std::string(sTestDirectory + "/LargeFlowTransport.txt").c_str(), file);
     outTrk.StreamProbesToFile(time, file);
 
     CircuitCalculator.Process(circuit,deltaT);
@@ -141,7 +141,7 @@ void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirecto
 
 void CommonDataModelTest::LiquidTransportTest(const std::string& rptDirectory)
 {
-  Logger logger(rptDirectory + "\\LiquidTransportTest.log");
+  Logger logger(rptDirectory + "/LiquidTransportTest.log");
   SEFluidCircuit& circuit = m_Circuits.CreateFluidCircuit("Circuit");
   SEFluidCircuitCalculator CircuitCalculator(&logger);
 
@@ -315,7 +315,7 @@ void CommonDataModelTest::LiquidTransportTest(const std::string& rptDirectory)
     }
     
 		if (time == 0)
-			outTrk.CreateFile(std::string(rptDirectory + "\\LiquidTransport.txt").c_str(), file);
+			outTrk.CreateFile(std::string(rptDirectory + "/LiquidTransport.txt").c_str(), file);
 		outTrk.StreamProbesToFile(time, file);
 		time += deltaT_s;
 	}
@@ -326,7 +326,7 @@ void CommonDataModelTest::LiquidTransportTest(const std::string& rptDirectory)
 
 void CommonDataModelTest::GasTransportTest(const std::string& rptDirectory)
 {
-  Logger logger(rptDirectory + "\\GasTransportTest.log");
+  Logger logger(rptDirectory + "/GasTransportTest.log");
   SEFluidCircuit& circuit = m_Circuits.CreateFluidCircuit("Circuit");
   SEFluidCircuitCalculator CircuitCalculator(&logger);
 
@@ -496,7 +496,7 @@ void CommonDataModelTest::GasTransportTest(const std::string& rptDirectory)
     }
 
 		if (time == 0)
-			outTrk.CreateFile(std::string(rptDirectory + "\\GasTransport.txt").c_str(), file);
+			outTrk.CreateFile(std::string(rptDirectory + "/GasTransport.txt").c_str(), file);
 		outTrk.StreamProbesToFile(time, file);
 		time += deltaT_s;
 	}

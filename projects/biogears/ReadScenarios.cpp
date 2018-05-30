@@ -46,7 +46,7 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
 {
   TimingProfile pTimer;
   std::string testName = "ReadScenarios";
-  m_Logger->ResetLogFile(rptDirectory + "\\" + testName + ".log");
+  m_Logger->ResetLogFile(rptDirectory + "/" + testName + ".log");
   SESubstanceManager subMgr(m_Logger);
   subMgr.LoadSubstanceDirectory();
   SEScenario scenario(subMgr);
@@ -54,7 +54,7 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
   SECompartmentManager cmptMgr(subMgr);
 
   std::string dir = GetCurrentWorkingDirectory();
-  dir.append("\\..\\verification\\Scenarios");
+  dir.append("/../verification/Scenarios");
 
   SETestReport testReport(m_Logger);
   SETestSuite&  testSuite = testReport.CreateTestSuite();
@@ -156,5 +156,5 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
       testCase.SetName(*it);
 		}
 	}
-  testReport.WriteFile(rptDirectory + "\\" + testName + "Report.xml");	
+  testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");	
 }

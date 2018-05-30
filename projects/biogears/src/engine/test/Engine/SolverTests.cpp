@@ -33,7 +33,7 @@ std::chrono::microseconds::rep vectorAverage(std::vector<std::chrono::microsecon
 
 void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
 {
-  m_Logger->ResetLogFile(rptDirectory + "\\SolverSpeedTest.log");
+  m_Logger->ResetLogFile(rptDirectory + "/SolverSpeedTest.log");
 
   // Set up our test report
   SETestReport testReport = SETestReport(m_Logger);
@@ -822,6 +822,6 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
   Info(ss);
 
   //What should we write out in the report and/or Track?
-  //testReport.WriteFile(rptDirectory + "\\SolverSpeedTest.xml");
+  //testReport.WriteFile(rptDirectory + "/SolverSpeedTest.xml");
 
 }

@@ -38,11 +38,11 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   std::string outputName;
   if (testName != "Custom")
   {
-    outputName = "\\" + testName;
+    outputName = "/" + testName;
   }
   else
   {
-    outputName = "\\CustomNutrientKineticsTest";
+    outputName = "/CustomNutrientKineticsTest";
   }
 
   m_Logger->ResetLogFile(rptDirectory + outputName + ".log");

@@ -57,31 +57,31 @@ void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProdu
   std::string outputName;
   if (!usingAcidBase && !usingProductionConsumption && !usingDiffusion && !activeDiffusion)
   {
-    outputName = "\\FourCompartmentTestSimple";
+    outputName = "/FourCompartmentTestSimple";
   }
   else if (usingAcidBase && !usingProductionConsumption && !usingDiffusion && !activeDiffusion)
   {
-    outputName = "\\AcidBaseFourCompartmentTest";
+    outputName = "/AcidBaseFourCompartmentTest";
   }
   else if (!usingAcidBase && !usingProductionConsumption && usingDiffusion && !activeDiffusion)
   {
-    outputName = "\\FiveCompartmentTestWithDiffusion";
+    outputName = "/FiveCompartmentTestWithDiffusion";
   }
   else if (usingAcidBase && usingProductionConsumption && !usingDiffusion && !activeDiffusion)
   {
-    outputName = "\\AcidBaseFourCompartmentTestWithProductionConsumption";
+    outputName = "/AcidBaseFourCompartmentTestWithProductionConsumption";
   }
   else if (usingAcidBase && !usingProductionConsumption && usingDiffusion && !activeDiffusion)
   {
-    outputName = "\\AcidBaseFiveCompartmentTestWithDiffusion";
+    outputName = "/AcidBaseFiveCompartmentTestWithDiffusion";
   }
   else if (usingAcidBase && usingProductionConsumption && usingDiffusion && !activeDiffusion)
   {
-    outputName = "\\AcidBaseFiveCompartmentTestWithProductionConsumptionAndDiffusion";
+    outputName = "/AcidBaseFiveCompartmentTestWithProductionConsumptionAndDiffusion";
   }
   else if (!usingAcidBase && !usingProductionConsumption && usingDiffusion && activeDiffusion)
   {
-    outputName = "\\FiveCompartmentTestWithActiveDiffusion";
+    outputName = "/FiveCompartmentTestWithActiveDiffusion";
   }
   m_Logger->ResetLogFile(rptDirectory + outputName + ".log");
   std::ofstream file;

@@ -66,7 +66,7 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
   DataTrack outTrk;
   std::ofstream file;
 
-  BioGears bg(sTestDirectory + "\\" + tName + ".log");
+  BioGears bg(sTestDirectory + "/" + tName + ".log");
   bg.GetLogger()->Info("Running " + tName);
   bg.GetPatient().LoadFile("./patients/StandardMale.xml");
   bg.SetupPatient();
@@ -140,7 +140,7 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
 
     if (i == 0)
     {
-      outTrk.CreateFile(std::string(sTestDirectory + "\\" + tName + ".txt").c_str(), file);
+      outTrk.CreateFile(std::string(sTestDirectory + "/" + tName + ".txt").c_str(), file);
     }
 
     time_s += timeStep_s;

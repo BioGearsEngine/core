@@ -43,7 +43,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
 
   DataTrack trk;
 
-  BioGears bg(rptDirectory + "\\AcidBaseMath.log");
+  BioGears bg(rptDirectory + "/AcidBaseMath.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
@@ -108,7 +108,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
   bool compareBeforeAfter = false;
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "\\AcidBaseMath.txt";
+  std::string   rptFile = rptDirectory + "/AcidBaseMath.txt";
 
   unsigned int testID = 0;
 
@@ -286,7 +286,7 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
   // It’s making sure the solver gives the same answer when it's feed back the previous answer.
 
   DataTrack trk;
-  BioGears bg(rptDirectory + "\\AcidBaseFeedback.log");
+  BioGears bg(rptDirectory + "/AcidBaseFeedback.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
@@ -341,7 +341,7 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "\\AcidBaseFeedback.txt";
+  std::string   rptFile = rptDirectory + "/AcidBaseFeedback.txt";
 
   c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
@@ -399,7 +399,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   // Did not test negatives because the engine already has checks for negative mass and concentrations. 
 
   DataTrack trk;
-  BioGears bg(rptDirectory + "\\AcidBaseLimits.log");
+  BioGears bg(rptDirectory + "/AcidBaseLimits.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
@@ -452,7 +452,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "\\AcidBaseLimits.txt";
+  std::string   rptFile = rptDirectory + "/AcidBaseLimits.txt";
 
   c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
@@ -595,12 +595,12 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
 void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
 {
   DataTrack trk;
-  BioGears bg(rptDirectory + "\\AcidBaseExtreme.log");
+  BioGears bg(rptDirectory + "/AcidBaseExtreme.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "\\AcidBaseExtreme.txt";
+  std::string   rptFile = rptDirectory + "/AcidBaseExtreme.txt";
 
 
   SESubstance* O2 = subMgr.GetSubstance("Oxygen");
@@ -1251,7 +1251,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
 
 void BioGearsEngineTest::AcidBaseBloodGasTests(const std::string& sOutputDirectory)
 {
-  BioGears bg(sOutputDirectory + "\\AcidBaseBloodGasTests.log");
+  BioGears bg(sOutputDirectory + "/AcidBaseBloodGasTests.log");
 
   // Set up our test report
   SETestReport testReport = SETestReport(bg.GetLogger());
@@ -1267,8 +1267,8 @@ void BioGearsEngineTest::AcidBaseBloodGasTests(const std::string& sOutputDirecto
   //AcidBaseBloodGasTest(bg, METABOLIC_ACIDOSIS, testSuite, sOutputDirectory);
   //AcidBaseBloodGasTest(bg, RESPIRATORY_ALKALOSIS, testSuite, sOutputDirectory);
 
-  std::string results = sOutputDirectory + "\\AcidBaseBloodGasTests.txt";
+  std::string results = sOutputDirectory + "/AcidBaseBloodGasTests.txt";
   bg.GetDataTrack().WriteTrackToFile(results.c_str());
 
-  testReport.WriteFile(sOutputDirectory + "\\AcidBaseBloodGasTestsReport.xml");
+  testReport.WriteFile(sOutputDirectory + "/AcidBaseBloodGasTestsReport.xml");
 }

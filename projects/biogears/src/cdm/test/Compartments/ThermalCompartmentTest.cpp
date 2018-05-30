@@ -699,7 +699,7 @@ void CommonDataModelTest::ThermalCompartmentTest(const std::string& rptDirectory
   m_PercentTolerance = 2.0;
   m_OutDirectory = rptDirectory;
 
-  m_Logger->ResetLogFile(rptDirectory + "\\ThermalCompartmentTest.log");
+  m_Logger->ResetLogFile(rptDirectory + "/ThermalCompartmentTest.log");
   SETestReport testReport(m_Logger);
 
   SESubstanceManager subMgr(m_Logger);
@@ -721,5 +721,5 @@ void CommonDataModelTest::ThermalCompartmentTest(const std::string& rptDirectory
   CircuitHeatTemperatureAndFlows.SetName("ThermalCompartmentHeatTemperatureAndFlows");
   TestCircuitHeatTemperatureAndFlows(CircuitHeatTemperatureAndFlows, subMgr);
 
-  testReport.WriteFile(rptDirectory + "\\ThermalCompartmentTestReport.xml");
+  testReport.WriteFile(rptDirectory + "/ThermalCompartmentTestReport.xml");
 }
