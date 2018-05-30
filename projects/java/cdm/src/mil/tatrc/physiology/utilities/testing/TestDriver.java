@@ -1,4 +1,4 @@
-	  	/**************************************************************************************
+/**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
@@ -501,19 +501,21 @@ public class TestDriver
 	{
 		job.baselineFiles.clear();
 		job.computedFiles.clear();
-		
+	
 		String[] dirs = baseName.substring(0, baseName.indexOf(".xml")).split("[/\\\\]");
 		String baseline = job.baselineDirectory;
 		for(int i=0; i<dirs.length-1; i++)
-			baseline+="/"+dirs[i];
+		{
+      baseline+="/"+dirs[i];
+    }
 		baseline+="/Current Baseline/"+dirs[dirs.length-1]+"Results.zip";
 		job.baselineFiles.add(baseline);
-		//example : ..\verification\Scenarios\Validation\Current Baseline\Patient-ValidationResults.zip
+		//example : verification\Scenarios\Validation\Current Baseline\Patient-ValidationResults.zip
 		String output = job.computedDirectory;
 		for(int i=0; i<dirs.length; i++)
 			output+="/"+dirs[i];
 		output+="Results.txt";
-		//example : ./Scenarios/Validation/Patient-ValidationResults.txt
+		//example : Scenarios/Validation/Patient-ValidationResults.txt
 		job.computedFiles.add(output);
 	}
 
@@ -521,7 +523,7 @@ public class TestDriver
 	{
 		public TestJob job;
 		public void run()
-		{  		  	
+		{  		 
 			for(String toCompute : job.computedFiles)
 			{
 				if(job.PlottableResults)
@@ -530,13 +532,13 @@ public class TestDriver
 					{
 						String[] dirs = toCompute.substring(0,toCompute.indexOf(".txt")).split("[/\\\\]");
 						String report = toCompute.substring(0,toCompute.indexOf(".txt"))+"/"+dirs[dirs.length-1]+"Report.xml";
-						job.reportFiles.add(report);
+            job.reportFiles.add(report);
 					}
 					else
 					{
 						String path = toCompute.substring(0, toCompute.lastIndexOf("."));
 						path = path + path.substring(path.lastIndexOf("/")) + "Report.xml";
-						job.reportFiles.add(path);
+            job.reportFiles.add(path);
 					}
 				}
 				else
@@ -669,7 +671,7 @@ public class TestDriver
 	{
 		List<String> currentGroup;
 		TestReport report = new TestReport();  	
-		report.setFullReportPath(".\\"+this.name+"Report.xml");  	
+		report.setFullReportPath(this.name+"Report.xml");  	
 		for(TestJob job : this.jobs)
 		{
 			String group = job2groups.get(job);
@@ -737,7 +739,6 @@ public class TestDriver
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Hostname can not be resolved");
 		}  
 		//Get revision number if found add it to the email and make a copy of the bin
 		String commit= "";

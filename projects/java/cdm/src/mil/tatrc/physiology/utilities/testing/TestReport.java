@@ -86,23 +86,28 @@ public class TestReport
 	{
 		path = path.replaceAll("[\\\\]", "/");
 		String dir = path.substring(0,path.lastIndexOf("/")+1);
-		setReportDirectory(dir);
+		dir = (dir == null || dir.isEmpty()) ? "./" : dir;
+    setReportDirectory(dir);
 		String file = path.substring(path.lastIndexOf("/")+1);
 		setFileName(file);
 	}
 
 	public void setReportDirectory(String dir)
 	{
-		try
-		{
-			FileUtils.createDirectory(dir);
-			this.reportDir=dir+"/";
-		}
-		catch(Exception ex)
-		{
-			Log.error(ex);
-			this.reportDir="./";
-		}
+    if(dir != null && !dir.isEmpty()) {
+		  try
+		  {
+			  FileUtils.createDirectory(dir);
+			  this.reportDir=dir;
+		  }
+		  catch(Exception ex)
+		  {
+			  Log.error(ex);
+        this.reportDir="./";
+		  }
+    } else {
+      this.reportDir="./";
+    }
 	}
 
 	public void setFileName(String fileName)
@@ -117,7 +122,6 @@ public class TestReport
 			this.name = fileName;
 			this.fileName=fileName+".xml";// make it an xml file
 		}
-
 	}
 	public void setFileName(String name, String extension)
 	{

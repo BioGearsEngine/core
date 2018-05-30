@@ -164,5 +164,5 @@ void CommonDataModelTest::TissueCompartmentTest(const std::string& rptDirectory)
 
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Serialization"), TimeUnit::s);
 
-  testReport.WriteFile(rptDirectory + "\\TissueCompartmentTestReport.xml");
+  testReport.WriteFile(rptDirectory + "/TissueCompartmentTestReport.xml");
 }
