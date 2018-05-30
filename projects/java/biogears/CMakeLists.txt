@@ -189,6 +189,7 @@ add_custom_target(run-drug-validation
 set (args "VerificationScenarios.config")
 add_custom_target(run-verification
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )

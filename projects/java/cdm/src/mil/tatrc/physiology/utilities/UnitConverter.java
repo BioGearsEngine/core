@@ -32,19 +32,19 @@ public class UnitConverter
   /** Loads Unit Conversion DLL */
   static
   {
-    String UCEDefsPath = System.getProperty("user.dir") + "/UCEDefs.txt";
-    String UCEDefsHomePath = System.getProperty("user.home") + "/UCEDefs.txt";
-    
-    try{
-            Files.copy(
-              new File(UCEDefsPath).toPath()
-              , new File(UCEDefsHomePath).toPath()
-              , REPLACE_EXISTING);
-    }
-    catch (IOException e)
-    {
-      System.err.println("Unable to locate UCEDefs.txt");
-    }
+    //String UCEDefsPath = System.getProperty("user.dir") + "/UCEDefs.txt";
+    //String UCEDefsHomePath = System.getProperty("user.home") + "/UCEDefs.txt";
+    //
+    //try{
+    //        Files.copy(
+    //          new File(UCEDefsPath).toPath()
+    //          , new File(UCEDefsHomePath).toPath()
+    //          , REPLACE_EXISTING);
+    //}
+    //catch (IOException e)
+    //{
+    //  System.err.println("[JAVA] Unable to locate UCEDefs.txt");
+    //}
 
     Resources resources = new Resources();
     System.out.println("Attempting to load release libraries");

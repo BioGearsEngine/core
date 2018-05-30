@@ -51,7 +51,7 @@ public:
 		if (uce == nullptr)
 		{
 			uce = new CUnitConversionEngine();
-			uce->LoadDefinitionsFlatFile(uce->GetWorkingDirectory() + "/UCEDefs.txt");
+			uce->LoadDefinitionsFlatFile("UCEDefs.txt");
 		}
 		return *uce;
 	}
