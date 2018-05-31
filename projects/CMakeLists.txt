@@ -4,7 +4,12 @@ enable_language(CXX)
 
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
-
+find_path (
+  ARA_${ROOT_PROJECT_NAME}_Verification_DIR
+  NAME Scenarios
+  PATHS ${PROJECT_SOURCE_DIR}/../verification
+  DOC "Optional directory path to a hiarchial verification filetree of baseline archives. This will be used by Java Utilities to find Baselines"
+)
 ###############################################################################
 # Step 1: Some packages need to be configured globally to ensure they find the 
 #         right library all others should be called in the respective projects
