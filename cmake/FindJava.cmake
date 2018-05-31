@@ -196,6 +196,7 @@ if(Java_JAVA_EXECUTABLE)
 					 include/
           PATHS ${JAVA_HOME}
                 ${_JAVA_EXECUTABLE_HOME}/../
+                $ENV{JAVA_HOME}
 					 NO_DEFAULT_PATH
            DOC "Log4cpp Include Path"
     )
@@ -207,6 +208,7 @@ if(Java_JAVA_EXECUTABLE)
 					include/darwin
           PATHS ${JAVA_HOME}
                 ${_JAVA_EXECUTABLE_HOME}/../
+                $ENV{JAVA_HOME}
 					 NO_DEFAULT_PATH
            DOC "Log4cpp Include Path"
     )
