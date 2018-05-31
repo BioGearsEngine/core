@@ -69,6 +69,7 @@ if(WIN32)
 else()
     configure_file(src/mil/tatrc/physiology/utilities/Resources.java.nix.in src/mil/tatrc/physiology/utilities/Resources.java )
 endif()
+    configure_file(src/mil/tatrc/physiology/utilities/testing/TestDriver.java.in src/mil/tatrc/physiology/utilities/testing/TestDriver.java )
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.java"   "Sources\\")
 add_source_files(SRCS ${CMAKE_CURRENT_BINARY_DIR}/src "*.java"   "Sources\\")
 
