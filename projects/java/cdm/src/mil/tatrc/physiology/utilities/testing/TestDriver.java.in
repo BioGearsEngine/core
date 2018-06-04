@@ -409,18 +409,15 @@ public class TestDriver
             {  job.resultsFiles = value; continue;  }   
           }
         }
-        job.verificationDirectory += Paths.get(job.verificationDirectory, job.computedDirectory).toString();
-        System.out.println(job.verificationDirectory);
+        job.verificationDirectory = Paths.get(job.verificationDirectory, job.computedDirectory).toString();
         if(job.resultsFiles!=null && !job.resultsFiles.isEmpty())
         {
           for(String result : job.resultsFiles.split(","))
           {
             Path possiblePath = Paths.get(job.baselineDirectory+"/"+result+".zip");
-            System.out.println(possiblePath.toString());
             if(Files.exists(possiblePath))
             {  job.baselineFiles.add(possiblePath.toString()); }
             possiblePath = Paths.get(job.verificationDirectory+"/"+result+".zip");
-            System.out.println(possiblePath.toString());
             if(Files.exists(possiblePath))
             {  job.baselineFiles.add(possiblePath.toString());  }
             job.computedFiles.add(job.computedDirectory+"/"+result+".txt");
@@ -435,11 +432,10 @@ public class TestDriver
           else
           {
             Path possiblePath = Paths.get(job.baselineDirectory+"/"+job.name+".zip");
-            System.out.println(possiblePath.toString());
+            System.out.println("Possible Path = " + job.baselineDirectory+" , "+job.name+".zip" );
             if(Files.exists(possiblePath))
             { job.baselineFiles.add(possiblePath.toString()); }
             possiblePath = Paths.get(job.verificationDirectory+"/"+job.name+".zip");
-            System.out.println(possiblePath.toString());
             if(Files.exists(possiblePath))
             { job.baselineFiles.add(possiblePath.toString()); }
             job.computedFiles.add(job.computedDirectory+"/"+job.name+".txt");
@@ -514,13 +510,20 @@ public class TestDriver
     job.computedFiles.clear();
   
     String[] dirs = baseName.substring(0, baseName.indexOf(".xml")).split("[/\\\\]");
-    String baseline = job.baselineDirectory;
+    String dir = job.baselineDirectory;
+    String path = "";
     for(int i=0; i<dirs.length-1; i++)
     {
-      baseline+="/"+dirs[i];
+      path += "/" + dirs[i];
     }
-    baseline+="/Current Baseline/"+dirs[dirs.length-1]+"Results.zip";
-    job.baselineFiles.add(baseline);
+    Path possiblePath = Paths.get(dir , path , "/Current Baseline/"+dirs[dirs.length-1]+"Results.zip");
+    if( Files.exists(possiblePath) ){
+            job.baselineFiles.add( possiblePath.toString() );
+    }
+    possiblePath = Paths.get(job.verificationDirectory,  path, "/Current Baseline/"+dirs[dirs.length-1]+"Results.zip");
+    if( Files.exists(possiblePath) ) {
+            job.baselineFiles.add(possiblePath.toString() );
+    }
     //example : verification\Scenarios\Validation\Current Baseline\Patient-ValidationResults.zip
     String output = job.computedDirectory;
     for(int i=0; i<dirs.length; i++)

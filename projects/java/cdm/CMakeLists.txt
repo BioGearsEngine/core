@@ -85,8 +85,7 @@ add_jar(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/share/jar/jfreechart-1.0.13.jar
         ${PROJECT_SOURCE_DIR}/share/jar/swtgraphics2d.jar
         ${PROJECT_SOURCE_DIR}/share/jar/zip4j-1.3.1.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/mailapi.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/smtp.jar
+        ${PROJECT_BINARY_DIR}/runtime/jar/javax.mail-1.6.1.jar
         ${PROJECT_SOURCE_DIR}/share/jar/log4j-1.2.17.jar
         ${PROJECT_SOURCE_DIR}/share/jar/xmlbeans-2.6.0.jar
         ${PROJECT_SOURCE_DIR}/share/jar/jdom-2.0.2.jar

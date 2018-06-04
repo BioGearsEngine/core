@@ -112,7 +112,7 @@ genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/outputs/jar/CommonDataModel.jar 
         ${PROJECT_BINARY_DIR}/outputs/jar/DataModelBindings.jar
         ${PROJECT_BINARY_DIR}/runtime/jar/jdom-2.0.2.jar
-        ${PROJECT_BINARY_DIR}/runtime/jar/mailapi.jar
+        ${PROJECT_BINARY_DIR}/runtime/jar/javax.mail-1.6.1.jar
     )
 add_custom_command(
     OUTPUT  ${PROJECT_BINARY_DIR}/runtime

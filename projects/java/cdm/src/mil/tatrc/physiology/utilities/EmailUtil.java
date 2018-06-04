@@ -70,9 +70,9 @@ public class EmailUtil
 	 */
    public void sendHTML(String content)
    {
+       // Get system properties
      try
      {
-       // Get system properties
        Properties properties = System.getProperties();
        // Setup mail server
        properties.setProperty("mail.smtp.host", this.smtp);
@@ -84,7 +84,7 @@ public class EmailUtil
        // Override the host for HELO or EHLO
        if (smtp != null && trans instanceof SMTPTransport)
        {
-         ((SMTPTransport) trans).setLocalHost("SED-ABRAY.ara.wan");
+         ((SMTPTransport) trans).setLocalHost("biogears-dev01.us.ara.wan");
        }
        // Create a default MimeMessage object.
        MimeMessage message = new MimeMessage(session);
@@ -102,9 +102,17 @@ public class EmailUtil
        // Send message
        Transport.send(message);
      }
+     catch (NoSuchProviderException e)
+     {
+       Log.error(e);
+     }
+     catch (AddressException e)
+     {
+       Log.error(e.getMessage());
+     }
      catch (MessagingException mex) 
      {
-       Log.error(mex);
+       Log.error(mex.getMessage());
      }
    }
    
@@ -114,7 +122,7 @@ public class EmailUtil
   	 emailer.setSender("abray@ara.com");
   	 emailer.addRecipient("abray@ara.com");
   	 emailer.addRecipient("boday@ara.com");
-  	 emailer.setSMTP("smtp.ara.wan");
+  	 emailer.setSMTP("SED-ABRAY.ara.wan");
   	 emailer.setSubject("Test Email");
   	 emailer.sendHTML("<html><title>Test</title><body>Test Email</body></html>");
    }
