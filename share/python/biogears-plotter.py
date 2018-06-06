@@ -33,16 +33,19 @@ LOG_LEVEL_3 = 3
 LOG_LEVEL_4 = 4
 
 
-_output_directory = None;
+_output_directory = None
 _root_directory   = None
+_clean_directory  = False
 def main( args):
     global _log_verbose
     global _root_directory
     global _output_directory
+    global _clean_directory
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', help="Adjust the log verbosity.", dest='verbosity', default=0, action='count' )
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
     parser.add_argument('-r', help="recursivly plot directories", dest='recurse', action='store_true')
+    parser.add_argument('-c', '--clean' , help="remove output directories recursivly before plotting", dest='cleanup', action='store_true')
     parser.add_argument('--root',
         dest='root', action="store", 
         help="Set an alternative root dir", default="")
@@ -63,6 +66,8 @@ def main( args):
 
     _root_directory = args.root
     _output_directory = args.outdir if args.outdir else args.root
+    _clean_directory = args.cleanup
+
     log("INPUT = {}".format(_root_directory),LOG_LEVEL_2)
     log("OUTPUT = {}".format(_output_directory),LOG_LEVEL_2)
     log("Recursive Mode = {}".format(args.recurse),LOG_LEVEL_2)
@@ -106,11 +111,11 @@ def plot(root_dir, source, skip_count):
         basename, extension = os.path.splitext(os.path.basename(resolved_path))
         outputdir = os.path.join(dirname,basename)
 
-        #TODO: Make removal a flag always create
+        if os.path.isdir(outputdir) and _clean_directory: 
+          shutil.rmtree(outputdir)
         if not os.path.exists(outputdir):
           os.makedirs(outputdir)
-        #        os.path.isdir(outputdir):
-        #    shutil.rmtree(outputdir)
+        os.remove(resolved_path)
 
         #TODO: Validity Check on Log Length
 
