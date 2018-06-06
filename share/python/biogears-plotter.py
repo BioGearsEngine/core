@@ -43,7 +43,7 @@ def main( args):
     global _clean_directory
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', help="Adjust the log verbosity.", dest='verbosity', default=0, action='count' )
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 1.1')
     parser.add_argument('-r', help="recursivly plot directories", dest='recurse', action='store_true')
     parser.add_argument('-c', '--clean' , help="remove output directories recursivly before plotting", dest='cleanup', action='store_true')
     parser.add_argument('--root',
@@ -94,33 +94,34 @@ def run_plots(root_dir, sources, skip_count, recurse):
 
 def plot(root_dir, source, skip_count):
     valid_regex = '[.](txt|csv)'
-    resolved_path = os.path.join(root_dir,source)
-    basename,extension     = os.path.splitext(resolved_path)
+    input_source = os.path.join(root_dir,source)
+    basename,extension     = os.path.splitext(input_source)
+    output_path = os.path.join(_output_directory,os.path.relpath(basename,_root_directory))
+   
     log("{}{}".format(basename,extension),LOG_LEVEL_4)
-    if ( not os.path.exists(resolved_path)):
-        log ("plot called with non exist file. This should not occur! {0}".format(resolved_path),LOG_LEVEL_0 )    
+    if ( not os.path.exists(input_source)):
+        log ("plot called with non exist file. This should not occur! {0}".format(input_source),LOG_LEVEL_0 )    
     if ( not re.match( valid_regex, extension) ):
-        log ("Skipping {0}".format(os.path.basename(resolved_path)),LOG_LEVEL_3 )
+        log ("Skipping {0}".format(os.path.basename(input_source)),LOG_LEVEL_3 )
     else:
-        log ("{0}".format(resolved_path),LOG_LEVEL_1)
+        log ("{0}".format(input_source),LOG_LEVEL_1)
 
         # verDirOut = r'D:\BioGears\verification\Plots' + '\\' + verDir
         # targetDir = verDirOut + '\\' + fileName
         #Create directory for plots ()
-        dirname   =  os.path.dirname(resolved_path) 
-        basename, extension = os.path.splitext(os.path.basename(resolved_path))
-        outputdir = os.path.join(dirname,basename)
+        dirname   =  os.path.dirname(output_path) 
+        basename, extension = os.path.splitext(os.path.basename(output_path))
+        out_dir = os.path.join(dirname,basename)
 
-        if os.path.isdir(outputdir) and _clean_directory: 
-          shutil.rmtree(outputdir)
-        if not os.path.exists(outputdir):
-          os.makedirs(outputdir)
-        os.remove(resolved_path)
+        if os.path.isdir(output_path) and _clean_directory: 
+          shutil.rmtree(output_path)
+        if not os.path.exists(output_path):
+          os.makedirs(output_path)
 
         #TODO: Validity Check on Log Length
 
         #Read in results file
-        dataCSV = pd.read_csv(resolved_path,sep=',', header=0)
+        dataCSV = pd.read_csv(input_source,sep=',', header=0)
         #Extract data calls (specified in xml)
         colNames = list(dataCSV)
         #Time = x-axis by default
@@ -164,8 +165,10 @@ def plot(root_dir, source, skip_count):
                 plt.xlabel('Time (s)')
                 plt.ylabel(col + unit)
                 plt.grid()
-                figName = os.path.join(outputdir,"{}.png".format(col))
+                figName = os.path.join(out_dir,"{}.png".format(col))
                 log("Saving : {0}".format(figName), LOG_LEVEL_3)
+                if os.path.exists(figName):
+                    os.remove(figName)
                 plt.savefig(figName)
                 plt.close()
 
