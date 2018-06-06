@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>Naloxone</Name>
     <Description>Inject standard patient with Naloxone!</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
@@ -164,11 +164,11 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="3" unit="min"/>       
     </Action>
-	<!--Administer 200ug of Naloxone.  This should completely reverse respiratory depression due to Fentanyl's short elimination half-life-->
+	<!--Administer 115ug of Naloxone.  This should completely reverse respiratory depression due to Fentanyl's short elimination half-life-->
 	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
         <Substance>Naloxone</Substance>
-        <Concentration value="10" unit="ug/mL"/>
-        <Dose value="20" unit="mL"/>
+        <Concentration value="100" unit="ug/mL"/>
+        <Dose value="2.0" unit="mL"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="15" unit="min"/>       

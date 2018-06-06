@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Vasopressin</Name>
+    <Description>Inject standard patient with Vasopressin!</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    
+	<!-- Base system data required for all scenario verification -->
+  <DataRequests>
+ 
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"				   Unit="1/min"		  Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="3"/>					
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="mL"          Precision="3"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance"			Unit="mmHg s/mL"	Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ground"  Name="InFlow"   Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Vasopressin" Name="PlasmaConcentration" Unit="ug/mL" Precision="8"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineOsmolality" Unit="mOsm/kg" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate"          Unit="mL/min"      Precision="3"/> 
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CerebralBloodFlow" Unit="mL/min"       Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracranialPressure" Unit="mmHg"      Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="CerebralPerfusionPressure" Unit="mmHg" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinVasculature"  Name="InFlow"   Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature"  Name="InFlow"   Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineVasculature"  Name="InFlow"   Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature"  Name="InFlow"   Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumVasculature"  Name="InFlow"   Unit="mL/min" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Oxygen"                 Name="PartialPressure" Unit="mmHg"   Precision="0"/> 
+
+	
+  </DataRequests>
+	
+	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Vasopressin</Substance>
+        <Concentration value="0.0417" unit="ug/mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="20" unit="min"/>       
+    </Action>
+		<Action xsi:type="SubstanceInfusionData">
+        <Substance>Vasopressin</Substance>
+        <Concentration value="0.1754" unit="ug/mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="20" unit="min"/>       
+    </Action>
+		<Action xsi:type="SubstanceInfusionData">
+        <Substance>Vasopressin</Substance>
+        <Concentration value="0.518" unit="ug/mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="20" unit="min"/>       
+    </Action>
+</Scenario>
+

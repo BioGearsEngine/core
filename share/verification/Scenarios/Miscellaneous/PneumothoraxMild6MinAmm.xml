@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+    <Name>Pneumothorax - moderate - 6 min</Name>
+    <Description></Description>
+    <InitialParameters>
+        <PatientFile>StandardMale.xml</PatientFile>
+    </InitialParameters>
+    <DataRequests>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume" Unit="mL"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume" Unit="mL"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxidePressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryArterialCarbonDioxidePressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput" Unit="mL/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulseOximetry"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryArterialPressure" Unit="mmHg"/>
+    </DataRequests>
+
+    <Action xsi:type="TensionPneumothoraxData" Type="Closed" Side="Right">
+        <Severity value="0.3"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="3.0" unit="min"/>
+    </Action>
+    <Action xsi:type="TensionPneumothoraxData" Type="Closed" Side="Right">
+        <Severity value="0.0"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="3.0" unit="min"/>
+    </Action>
+</Scenario>

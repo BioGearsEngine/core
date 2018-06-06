@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>Nathan</Name>
     <Description>Nathan is injected with Fentanyl before a Ventilator mask is placed and oxygen is administered via an anesthesia machine.
         An oxygen wall port pressure loss occurs, and then the oxygen source is transferred to another oxygen container.

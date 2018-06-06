@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+    <Name>TBI - severe - burr</Name>
+    <Description></Description>
+    <InitialParameters>
+        <PatientFile>StandardMale.xml</PatientFile>
+    </InitialParameters>
+    <DataRequests>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="CerebralPerfusionPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracranialPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="CerebralBloodFlow" Unit="mL/min"/>
+    </DataRequests>
+	
+    <Action xsi:type="BrainInjuryData" Type="Diffuse">
+        <Severity value="1.0"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="3.0" unit="min"/>
+    </Action>
+    <Action xsi:type="BrainInjuryData" Type="Diffuse">
+        <Severity value="0.0"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="3.0" unit="min"/>
+    </Action>
+</Scenario>

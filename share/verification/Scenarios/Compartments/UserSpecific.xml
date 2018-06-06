@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
 	<Name>UserSpecific</Name>
 	<Description>Use this to look at a specific compartment </Description>
 	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>	
@@ -150,6 +150,24 @@
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Potassium" Name="Molarity" Unit="mmol/L" Precision="2"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Potassium" Name="Molarity" Unit="mmol/L" Precision="2"/>
 		
+				<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalArtery" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAfferentArteriole" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightGlomerularCapillaries" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightEfferentArteriole" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightPeritubularCapillaries" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="2"/>
+		
+				<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalArtery" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAfferentArteriole" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightGlomerularCapillaries" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightEfferentArteriole" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightPeritubularCapillaries" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBowmansCapsules" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="2"/>
+		
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyVasculature" Substance="Potassium" Name="Molarity" Unit="mmol/L" Precision="2"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature" Substance="Potassium" Name="Molarity" Unit="mmol/L" Precision="2"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatVasculature" Substance="Potassium" Name="Molarity" Unit="mmol/L" Precision="2"/>
@@ -190,6 +208,36 @@
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenVasculature" Substance="Calcium" Name="Molarity" Unit="mmol/L" Precision="3"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinVasculature" Substance="Calcium" Name="Molarity" Unit="mmol/L" Precision="3"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature" Substance="Calcium" Name="Molarity" Unit="mmol/L" Precision="3"/>		
+		
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SplanchnicVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LargeIntestineVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature" Substance="Albumin" Name="Concentration" Unit="g/dL" Precision="3"/>	
+
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular" Substance="Albumin"   Name="Concentration"   Unit="g/dL"  Precision="2"/>
+
+				
 
 	</DataRequests>
 	

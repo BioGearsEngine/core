@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>SalineInfusion</Name>
     <Description>Administration of 0.9% saline solution to a healthy organism</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
@@ -12,6 +12,9 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracellularFluidVolume"          Unit="L"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtracellularFluidVolume"          Unit="L"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBodyFluidVolume"          Unit="L"          Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
@@ -89,6 +92,6 @@
         <Rate value="2000" unit="mL/hr"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="241" unit="min"/>       
+        <Time value="90" unit="min"/>       
     </Action>
 </Scenario>

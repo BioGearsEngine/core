@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>IVFluids</Name>
     <Description>Administration of IV s to a healthy patient</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
@@ -12,6 +12,9 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracellularFluidVolume"          Unit="L"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtracellularFluidVolume"          Unit="L"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBodyFluidVolume"          Unit="L"          Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
@@ -66,10 +69,13 @@
   <DataRequest Substance="Epinephrine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="LiverGlycogen" Unit="g" Precision="2"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
-  </DataRequests>
+
 
 	<!-- Anything action specific data needed for verification of this scenario -->
-	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Albumin"       Name="Concentration" Unit="g/L"    Precision="1"/>
+	</DataRequests>
+		
+		
 	<Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>

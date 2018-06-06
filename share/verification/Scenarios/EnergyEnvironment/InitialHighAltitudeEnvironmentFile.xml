@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>InitialHighAltitudeEnvironmentFile</Name>
     <Description>The patient is stabilized to an environment that mimics high altitude conditions by loading an xml file.</Description>
     <InitialParameters>
@@ -95,6 +95,7 @@
   
   <DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Ambient"                 Name="Pressure"   Unit="mmHg" Precision="0"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="SweatRate" Unit="ug/s" Precision="2"/>  
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumVasculature"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
   </DataRequests>
 		
 	<Action xsi:type="AdvanceTimeData">

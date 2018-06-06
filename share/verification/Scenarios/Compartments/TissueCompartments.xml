@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
   <Name>TissueCompartments</Name>
   <Description>Output everything from every tissue compartment for O2, CO2, and Succs</Description>
   <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
@@ -43,9 +43,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -110,9 +109,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -177,9 +175,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -244,9 +241,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -311,9 +307,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -378,9 +373,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -445,9 +439,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="TissueCompartmentDataRequestData" Compartment="LiverTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -512,9 +505,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -579,9 +571,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -646,9 +637,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -713,9 +703,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -780,9 +769,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>
@@ -847,9 +835,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular" Substance="Succinylcholine"        Name="Mass"            Unit="ug"     Precision="1"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   <!-- Intracellular -->
-  <!-- BioGears does not have any flow between Extracellular and Intracellular
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"                                    Name="InFlow"          Unit="mL/s"   Precision="0"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>-->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"                                    Name="OutFlow"         Unit="mL/s"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"                                    Name="Pressure"        Unit="mmHg"   Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"                                    Name="Volume"          Unit="mL"     Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular" Substance="Oxygen"                 Name="Concentration"   Unit="ug/mL"  Precision="2"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>OxygenTankPressureLoss</Name>
     <Description>Patient is injected with succinylcholine prior to the administration of oxygen via a Ventilator mask. The primary oxygen feed tank loses
         begins to lose pressure. The patient is injected with additional succinylcholine and the oxygen feed is switched to the secondary tank.

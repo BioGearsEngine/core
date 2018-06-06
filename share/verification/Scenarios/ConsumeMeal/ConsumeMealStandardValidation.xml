@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.2.0-beta" xsi:schemaLocation="">
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
 	<Name>CarbMeal</Name>
 	<Description>Giving just a carb meal as action</Description>
 	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
@@ -99,7 +99,7 @@
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineVasculature" Substance="Urea"       Name="Concentration" Unit="mg/dL" Precision="1"/>  
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineVasculature" Substance="AminoAcids"       Name="Mass" Unit="mg" Precision="2"/>  
 
-		<!-- Data needed for senario condition validation -->    
+		<!-- Data needed for scenario condition validation -->    
 	  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartEjectionFraction" Precision="3"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
 	  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Pericardium" Name="Volume"   Unit="mL" Precision="0"/>

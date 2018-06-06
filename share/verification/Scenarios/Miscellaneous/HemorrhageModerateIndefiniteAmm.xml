@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+    <Name>Hemorrhage - moderate - indefinite</Name>
+    <Description></Description>
+    <InitialParameters>
+        <PatientFile>StandardMale.xml</PatientFile>
+    </InitialParameters>
+    <DataRequests>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput" Unit="mL/min"/>
+        <DataRequest xsi:type="SubstanceDataRequestData" Substance="Epinephrine" Name="BloodConcentration" Unit="ug/mL"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="UrinationRate" Unit="mL/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume" Unit="mL"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume" Unit="mL"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent" Unit="g"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulsePressure" Unit="mmHg"/>
+    </DataRequests>
+
+    
+<!--Read me:
+	-To start a hemorrhage: provide the compartment and a severity (scale 0.0-1.0)
+	-Valid Compartments
+		-Head
+		-Major Artery
+		-Lung
+		-Myocardium
+		-Spleen
+		-Liver
+		-Kidney
+		-Splanchnic
+		-Small Intestine
+		-Large Intestine
+		-Arm
+		-Leg
+		-Vena Cava
+	-To stop a hemorrhage: enter compartment a severity of 0 
+-->    
+	<!--AMM team has a flat bleed rate of 100 mL/min.  This is almost impossible in the leg in BioGears because of resistance in leg compartments.
+		Maybe for leg/arm bleeds (which don't seem to bleed as much as they should), we automatically take blood from both arm/leg compartments (whichever
+		is relevant) to get a better flow.-->
+    <Action xsi:type="HemorrhageData" Compartment="Leg">
+        <Severity value="0.8"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="4.0" unit="hr"/>
+    </Action>
+</Scenario>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+    <Name>stress - mild - 6 min</Name>
+    <Description></Description>
+    <InitialParameters>
+        <PatientFile>StandardMale.xml</PatientFile>
+    </InitialParameters>
+	<DataRequests>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput" Unit="mL/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg"/>
+        <DataRequest xsi:type="SubstanceDataRequestData" Substance="Epinephrine" Name="BloodConcentration" Unit="ug/mL"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryArterialCarbonDioxidePressure" Unit="mmHg"/>
+        <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="BloodConcentration" Unit="ug/mL"/>
+        <DataRequest xsi:type="SubstanceDataRequestData" Substance="Insulin" Name="BloodConcentration" Unit="ug/mL"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate" Unit="1/min"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxidePressure" Unit="mmHg"/>
+    </DataRequests>
+	
+    <Action xsi:type="AcuteStressData">
+        <Severity value="0.6"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="3.0" unit="min"/>
+    </Action>
+    <Action xsi:type="AcuteStressData">
+        <Severity value="0.0"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="3.0" unit="min"/>
+    </Action>
+</Scenario>
