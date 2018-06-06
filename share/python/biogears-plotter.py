@@ -45,7 +45,7 @@ def main( args):
     parser.add_argument('-r', help="recursivly plot directories", dest='recurse', action='store_true')
     parser.add_argument('--root',
         dest='root', action="store", 
-        help="Set an alternative root dir", default="./")
+        help="Set an alternative root dir", default="")
     parser.add_argument('--outdir',
         dest='outdir', action="store", 
         help="Optional Output directory instead of inlinline layout ")
@@ -103,8 +103,7 @@ def plot(root_dir, source, skip_count):
         # targetDir = verDirOut + '\\' + fileName
         #Create directory for plots ()
         dirname   =  os.path.dirname(resolved_path) 
-        basename, extension = os.path.splitext(resolved_path)
-        
+        basename, extension = os.path.splitext(os.path.basename(resolved_path))
         outputdir = os.path.join(dirname,basename)
 
         #TODO: Make removal a flag always create
