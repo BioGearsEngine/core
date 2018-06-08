@@ -10,20 +10,20 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/properties/SEScalarAmount.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/schema/Properties.hxx>
-#include <biogears/cdm/properties/SEScalarAmount.h>
 
 const AmountUnit AmountUnit::mol("mol");
 const AmountUnit AmountUnit::pmol("pmol");
 
 CDM::ScalarAmountData* SEScalarAmount::Unload() const
 {
-	if(!IsValid())
-		return nullptr;
+  if (!IsValid())
+    return nullptr;
   CDM::ScalarAmountData* data(new CDM::ScalarAmountData());
   SEScalarQuantity::Unload(*data);
-	return data;
+  return data;
 }
 
 bool AmountUnit::IsValidUnit(const std::string& unit)
@@ -36,10 +36,10 @@ bool AmountUnit::IsValidUnit(const std::string& unit)
 }
 const AmountUnit& AmountUnit::GetCompoundUnit(const std::string& unit)
 {
-	if(mol.GetString().compare(unit)==0)
-		return mol;
-	if (pmol.GetString().compare(unit) == 0)
-		return pmol;
+  if (mol.GetString().compare(unit) == 0)
+    return mol;
+  if (pmol.GetString().compare(unit) == 0)
+    return pmol;
   std::stringstream err;
   err << unit << " is not a valid Amount unit";
   throw CommonDataModelException(err.str());

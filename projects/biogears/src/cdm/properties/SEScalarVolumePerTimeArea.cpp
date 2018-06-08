@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
+#include <biogears/cdm/stdafx.h>
 
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_min_m2("mL/min m^2");
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_s_m2("mL/s m^2");
@@ -33,7 +33,7 @@ bool VolumePerTimeAreaUnit::IsValidUnit(const std::string& unit)
   if (mL_Per_s_m2.GetString().compare(unit) == 0)
     return true;
   if (L_Per_min_m2.GetString().compare(unit) == 0)
-	  return true;
+    return true;
   return false;
 }
 
@@ -44,7 +44,7 @@ const VolumePerTimeAreaUnit& VolumePerTimeAreaUnit::GetCompoundUnit(const std::s
   if (mL_Per_s_m2.GetString().compare(unit) == 0)
     return mL_Per_s_m2;
   if (L_Per_min_m2.GetString().compare(unit) == 0)
-	  return L_Per_min_m2;
+    return L_Per_min_m2;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimeArea unit";
   throw CommonDataModelException(err.str());

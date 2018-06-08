@@ -11,14 +11,19 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/schema/BioGearsBloodChemistrySystemData.hxx>
 #include <biogears/cdm/utils/RunningAverage.h>
+
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
-
+class	SELiquidCompartment;
+class SELiquidSubstanceQuantity;
+class BioGears;
 /**
  * @brief @copydoc Physiology_BloodChemistrySystemData
  * The Blood Chemistry System holds the system-level blood substance data that is computed on the compartment level by other systems.

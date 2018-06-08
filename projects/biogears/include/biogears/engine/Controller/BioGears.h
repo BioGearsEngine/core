@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/engine/Controller/BioGearsCircuits.h>
 #include <biogears/engine/Controller/BioGearsCompartments.h>
 #include <biogears/engine/Controller/BioGearsConfiguration.h>
@@ -21,7 +24,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/scenario/SEConditionManager.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 
@@ -39,14 +41,41 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Tissue.h>
 #include <biogears/engine/Systems/Environment.h>
 
-#include <biogears/engine/Equipment/ECG.h>
 #include <biogears/engine/Equipment/AnesthesiaMachine.h>
 #include <biogears/engine/Equipment/Inhaler.h>
 
 #include <biogears/engine/Systems/Saturation.h>
 
+class SEPatientAssessment;
 class BioGearsScenarioExec;
 enum class EngineState { NotReady=0, Initialization, InitialStabilization, AtInitialStableState, SecondaryStabilization, AtSecondaryStableState, Active };
+
+class ECG;
+class DataTrack;
+class SaturationCalculator;
+class BioGearsSubstances;
+class SEPatient;
+class SEBloodChemistrySystem;
+class SECardiovascularSystem;
+class SEDrugSystem;
+class SEEndocrineSystem;
+class SEEnergySystem;
+class SEGastrointestinalSystem;
+class SEHepaticSystem;
+class SENervousSystem;
+class SERenalSystem;
+class SERespiratorySystem;
+class SETissueSystem;
+class SEEnvironment;
+class SEAnesthesiaMachine;
+class SEElectroCardioGram;
+class SEInhaler;
+class SEActionManager;
+class SEConditionManager;
+class BioGearsCircuits;
+class BioGearsCompartments;
+class BioGearsConfiguration;
+class SEScalarTime;
 
 /**
 * @brief Manages and controls execution of all data/systems in %BioGears
@@ -65,55 +94,55 @@ public:
   virtual ~BioGears();
 
  
-  EngineState                             GetState() { return m_State; }
+  EngineState                             GetState();
 
   DataTrack&                              GetDataTrack();
-  SaturationCalculator&                   GetSaturationCalculator() { return *m_SaturationCalculator; }
+  SaturationCalculator&                   GetSaturationCalculator();
 
-  BioGearsSubstances&                     GetSubstances() { return *m_Substances; }
+  BioGearsSubstances&                     GetSubstances();
 
-  SEPatient&                              GetPatient() { return *m_Patient; }
+  SEPatient&                              GetPatient();
   bool                                    GetPatientAssessment(SEPatientAssessment& assessment);
 
-  SEBloodChemistrySystem&                 GetBloodChemistry() { return *m_BloodChemistrySystem; }
-  SECardiovascularSystem&                 GetCardiovascular() { return *m_CardiovascularSystem; }
-  SEDrugSystem&                           GetDrugs() { return *m_DrugSystem; }
-  SEEndocrineSystem&                      GetEndocrine() { return *m_EndocrineSystem; }
-  SEEnergySystem&                         GetEnergy() { return *m_EnergySystem; }
-  SEGastrointestinalSystem&               GetGastrointestinal() { return *m_GastrointestinalSystem; }
-  SEHepaticSystem&                        GetHepatic() { return *m_HepaticSystem; }
-  SENervousSystem&                        GetNervous() { return *m_NervousSystem; }
-  SERenalSystem&                          GetRenal() { return *m_RenalSystem; }
-  SERespiratorySystem&                    GetRespiratory() { return *m_RespiratorySystem; }
-  SETissueSystem&                         GetTissue() { return *m_TissueSystem; }
+  SEBloodChemistrySystem&                 GetBloodChemistry();
+  SECardiovascularSystem&                 GetCardiovascular();
+  SEDrugSystem&                           GetDrugs();
+  SEEndocrineSystem&                      GetEndocrine();
+  SEEnergySystem&                         GetEnergy();
+  SEGastrointestinalSystem&               GetGastrointestinal();
+  SEHepaticSystem&                        GetHepatic();
+  SENervousSystem&                        GetNervous();
+  SERenalSystem&                          GetRenal();
+  SERespiratorySystem&                    GetRespiratory();
+  SETissueSystem&                         GetTissue();
 
-  SEEnvironment&                          GetEnvironment() { return *m_Environment; }
+  SEEnvironment&                          GetEnvironment();
 
-  SEAnesthesiaMachine&                    GetAnesthesiaMachine() { return *m_AnesthesiaMachine; }
+  SEAnesthesiaMachine&                    GetAnesthesiaMachine();
 
-  SEElectroCardioGram&                    GetECG() { return *m_ECG; }
+  SEElectroCardioGram&                    GetECG();
 
-  SEInhaler&                              GetInhaler() { return *m_Inhaler; }
+  SEInhaler&                              GetInhaler();
 
-  SEActionManager&                        GetActions() { return *m_Actions; }
+  SEActionManager&                        GetActions();
 
-  SEConditionManager&                     GetConditions() { return *m_Conditions; }
+  SEConditionManager&                     GetConditions();
 
-  BioGearsCircuits&                       GetCircuits() { return *m_Circuits; }
+  BioGearsCircuits&                       GetCircuits();
 
 
-  BioGearsCompartments&                   GetCompartments() { return *m_Compartments; }
+  BioGearsCompartments&                   GetCompartments();
 
-  const BioGearsConfiguration&            GetConfiguration() { return *m_Config; }
+  const BioGearsConfiguration&            GetConfiguration();
 
-  const SEScalarTime&                     GetEngineTime() { return *m_CurrentTime; }
-  const SEScalarTime&                     GetSimulationTime() { return *m_SimulationTime; }
-  const SEScalarTime&                     GetTimeStep() { return m_Config->GetTimeStep(); }
+  const SEScalarTime&                     GetEngineTime();
+  const SEScalarTime&                     GetSimulationTime();
+  const SEScalarTime&                     GetTimeStep();
 
-  CDM::enumBioGearsAirwayMode::value      GetAirwayMode() { return m_AirwayMode; }
+  CDM::enumBioGearsAirwayMode::value      GetAirwayMode();
   void                                    SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
 
-  CDM::enumOnOff::value                   GetIntubation() { return m_Intubation; }
+  CDM::enumOnOff::value                   GetIntubation();
   void                                    SetIntubation(CDM::enumOnOff::value s);
 
   bool CreateCircuitsAndCompartments();

@@ -10,9 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
-#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/schema/ScalarNeg1To1Data.hxx>
 
 SEPupillaryResponse::SEPupillaryResponse(Logger* logger)
@@ -135,5 +135,3 @@ double SEPupillaryResponse::GetSizeModifier() const
 
   return m_SizeModifier->GetValue();
 }
-
-

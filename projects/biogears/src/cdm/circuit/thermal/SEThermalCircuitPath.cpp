@@ -10,14 +10,14 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
+#include <biogears/cdm/stdafx.h>
 
-SEThermalCircuitPath::SEThermalCircuitPath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name) :
-  SECircuitPath<SEScalarPower, SEScalarHeatResistance, SEScalarHeatCapacitance, SEScalarHeatInductance, SEScalarTemperature, SEScalarEnergy>(src, tgt ,name), 
-  m_ThermalSourceNode(src), m_ThermalTargetNode(tgt)
+SEThermalCircuitPath::SEThermalCircuitPath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name)
+  : SECircuitPath<SEScalarPower, SEScalarHeatResistance, SEScalarHeatCapacitance, SEScalarHeatInductance, SEScalarTemperature, SEScalarEnergy>(src, tgt, name)
+  , m_ThermalSourceNode(src)
+  , m_ThermalTargetNode(tgt)
 {
-
 }
 
 SEThermalCircuitPath::~SEThermalCircuitPath()
@@ -259,7 +259,6 @@ double SEThermalCircuitPath::GetInductanceBaseline(const HeatInductanceUnit& uni
     return SEScalar::dNaN();
   return m_InductanceBaseline->GetValue(unit);
 }
-
 
 ///////////////////////////
 // Thermal Flux Types //

@@ -10,34 +10,36 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/stdafx.h>
-#include <biogears/engine/Systems/Nervous.h>
-#include <biogears/schema/BioGearsNervousSystemData.hxx>
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
-#include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
-#include <biogears/cdm/system/physiology/SEDrugSystem.h>
-#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarNeg1To1.h>
-#include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
+#include <biogears/cdm/system/physiology/SEDrugSystem.h>
+#include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
+#include <biogears/engine/Systems/Nervous.h>
+#include <biogears/engine/stdafx.h>
+#include <biogears/schema/BioGearsNervousSystemData.hxx>
 
-#pragma warning(disable:4786)
-#pragma warning(disable:4275)
+#pragma warning(disable : 4786)
+#pragma warning(disable : 4275)
 
 // #define VERBOSE
 
-Nervous::Nervous(BioGears& bg) : SENervousSystem(bg.GetLogger()), m_data(bg)
+Nervous::Nervous(BioGears& bg)
+  : SENervousSystem(bg.GetLogger())
+  , m_data(bg)
 {
   Clear();
 }
@@ -69,7 +71,6 @@ void Nervous::Initialize()
   GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(0);
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(0);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(0);
- 
 }
 
 bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
@@ -106,15 +107,15 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
 void Nervous::SetUp()
 {
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
-  m_normalizedGammaHeartRate  = m_data.GetConfiguration().GetNormalizedHeartRateIntercept();
-  m_normalizedGammaElastance  = m_data.GetConfiguration().GetNormalizedHeartElastanceIntercept();
+  m_normalizedGammaHeartRate = m_data.GetConfiguration().GetNormalizedHeartRateIntercept();
+  m_normalizedGammaElastance = m_data.GetConfiguration().GetNormalizedHeartElastanceIntercept();
   m_normalizedGammaCompliance = m_data.GetConfiguration().GetNormalizedComplianceIntercept();
   m_normalizedGammaResistance = m_data.GetConfiguration().GetNormalizedResistanceIntercept();
-  m_normalizedAlphaHeartRate  = m_data.GetConfiguration().GetNormalizedHeartRateSympatheticSlope();
-  m_normalizedAlphaElastance  = m_data.GetConfiguration().GetNormalizedHeartElastanceSympatheticSlope();
+  m_normalizedAlphaHeartRate = m_data.GetConfiguration().GetNormalizedHeartRateSympatheticSlope();
+  m_normalizedAlphaElastance = m_data.GetConfiguration().GetNormalizedHeartElastanceSympatheticSlope();
   m_normalizedAlphaCompliance = m_data.GetConfiguration().GetNormalizedComplianceParasympatheticSlope();
   m_normalizedAlphaResistance = m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope();
-  m_normalizedBetaHeartRate   = m_data.GetConfiguration().GetNormalizedHeartRateParasympatheticSlope();
+  m_normalizedBetaHeartRate = m_data.GetConfiguration().GetNormalizedHeartRateParasympatheticSlope();
   m_Succinylcholine = m_data.GetSubstances().GetSubstance("Succinylcholine");
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
 
@@ -174,7 +175,6 @@ void Nervous::Process()
 //--------------------------------------------------------------------------------------------------
 void Nervous::PostProcess()
 {
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -198,14 +198,12 @@ void Nervous::BaroreceptorFeedback()
   //Adjusting the mean arterial pressure set-point to account for cardiovascular drug effects
   double meanArterialPressureSetPoint_mmHg = m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg) //m_MeanArterialPressureNoFeedbackBaseline_mmHg
     + m_data.GetEnergy().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);
-  
+
   //Adjust the MAP set-point for baroreceptors for anesthetics, opioids, and sedatives.  Other drugs should leave set-point as is.
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances())
-  {
+  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
     if (!sub->HasPD())
       continue;
-    if ((sub->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (sub->GetClassification() == CDM::enumSubstanceClass::Sedative) || (sub->GetClassification() == CDM::enumSubstanceClass::Opioid))
-    {
+    if ((sub->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (sub->GetClassification() == CDM::enumSubstanceClass::Sedative) || (sub->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
       meanArterialPressureSetPoint_mmHg += m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg);
       break;
       //Only want to apply the blood pressure change ONCE (In case there are multiple sedative/opioids/etc)
@@ -219,28 +217,28 @@ void Nervous::BaroreceptorFeedback()
   //Calculate the normalized change in heart rate
   double normalizedHeartRate = GetBaroreceptorHeartRateScale().GetValue();
   double tauHeartRate_s = m_data.GetConfiguration().GetHeartRateDistributedTimeDelay(TimeUnit::s);
-  double deltaNormalizedHeartRate = (1.0 / tauHeartRate_s)*(-normalizedHeartRate + m_normalizedAlphaHeartRate*sympatheticFraction - m_normalizedBetaHeartRate*parasympatheticFraction + m_normalizedGammaHeartRate)*m_dt_s;
+  double deltaNormalizedHeartRate = (1.0 / tauHeartRate_s) * (-normalizedHeartRate + m_normalizedAlphaHeartRate * sympatheticFraction - m_normalizedBetaHeartRate * parasympatheticFraction + m_normalizedGammaHeartRate) * m_dt_s;
   normalizedHeartRate += deltaNormalizedHeartRate;
   GetBaroreceptorHeartRateScale().SetValue(normalizedHeartRate);
-  
+
   //Calculate the normalized change in heart elastance
   double normalizedHeartElastance = GetBaroreceptorHeartElastanceScale().GetValue();
   double tauElastance_s = m_data.GetConfiguration().GetHeartElastanceDistributedTimeDelay(TimeUnit::s);
-  double deltaNormalizedHeartElastance = (1.0 / tauElastance_s)*(-normalizedHeartElastance + m_normalizedAlphaElastance*sympatheticFraction + m_normalizedGammaElastance)*m_dt_s;
+  double deltaNormalizedHeartElastance = (1.0 / tauElastance_s) * (-normalizedHeartElastance + m_normalizedAlphaElastance * sympatheticFraction + m_normalizedGammaElastance) * m_dt_s;
   normalizedHeartElastance += deltaNormalizedHeartElastance;
   GetBaroreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
-  
+
   //Calculate the normalized change in flow resistance for any cardiovascular resistor
   double normalizedResistance = GetBaroreceptorResistanceScale().GetValue();
   double tauResistance_s = m_data.GetConfiguration().GetSystemicResistanceDistributedTimeDelay(TimeUnit::s);
-  double deltaNormalizedResistance = (1.0 / tauResistance_s)*(-normalizedResistance + m_normalizedAlphaResistance*sympatheticFraction + m_normalizedGammaResistance)*m_dt_s;
+  double deltaNormalizedResistance = (1.0 / tauResistance_s) * (-normalizedResistance + m_normalizedAlphaResistance * sympatheticFraction + m_normalizedGammaResistance) * m_dt_s;
   normalizedResistance += deltaNormalizedResistance;
   GetBaroreceptorResistanceScale().SetValue(normalizedResistance);
-  
+
   //Calculate the normalized change in flow compliance for any cardiovascular compliance
   double normalizedCompliance = GetBaroreceptorComplianceScale().GetValue();
   double tauCompliance_s = m_data.GetConfiguration().GetVenousComplianceDistributedTimeDelay(TimeUnit::s);
-  double deltaNormalizedCompliance = (1.0 / tauCompliance_s)*(-normalizedCompliance + m_normalizedAlphaCompliance*parasympatheticFraction + m_normalizedGammaCompliance)*m_dt_s;
+  double deltaNormalizedCompliance = (1.0 / tauCompliance_s) * (-normalizedCompliance + m_normalizedAlphaCompliance * parasympatheticFraction + m_normalizedGammaCompliance) * m_dt_s;
   normalizedCompliance += deltaNormalizedCompliance;
   GetBaroreceptorComplianceScale().SetValue(normalizedCompliance);
 #ifdef VERBOSE
@@ -259,7 +257,7 @@ void Nervous::BaroreceptorFeedback()
 ///
 /// \details
 /// Intracranial pressure is checked to determine if the patient has Intracranial Hyper/hypotension
-/// Fasciculation can occur as a result of calcium/magnesium deficiency 
+/// Fasciculation can occur as a result of calcium/magnesium deficiency
 /// (or other electrolyte imbalances),succinylcholine, nerve agents, ALS
 /// Currently, only fasciculations due to the nerve agent Sarin are active.  Other causes are a subject of model improvement
 //------------------------------------------------------------------------------------------
@@ -267,36 +265,32 @@ void Nervous::BaroreceptorFeedback()
 void Nervous::CheckNervousStatus()
 {
   //-----Check Brain Status-----------------
-    double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
+  double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
 
-    //Intracranial Hypertension
-    if (icp_mmHg > 25.0) // \cite steiner2006monitoring
-    {
+  //Intracranial Hypertension
+  if (icp_mmHg > 25.0) // \cite steiner2006monitoring
+  {
     /// \event Patient: Intracranial Hypertension. The intracranial pressure has risen above 25 mmHg.
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, true, m_data.GetSimulationTime());
-    }
-    else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypertension) && icp_mmHg < 24.0)
-    {
+  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypertension) && icp_mmHg < 24.0) {
     /// \event Patient: End Intracranial Hypertension. The intracranial pressure has fallen below 24 mmHg.
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
-    }
+  }
 
-    //Intracranial Hypotension
-    if (icp_mmHg < 7.0) // \cite steiner2006monitoring
-    {
+  //Intracranial Hypotension
+  if (icp_mmHg < 7.0) // \cite steiner2006monitoring
+  {
     /// \event Patient: Intracranial Hypotension. The intracranial pressure has fallen below 7 mmHg.
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypotension, true, m_data.GetSimulationTime());
-    }
-    else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypotension) && icp_mmHg > 7.5)
-    {
+  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypotension) && icp_mmHg > 7.5) {
     /// \event Patient: End Intracranial Hypotension. The intracranial pressure has risen above 7.5 mmHg.
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
-    }
+  }
 
-  //------Fasciculations:-------------------------------------------  
+  //------Fasciculations:-------------------------------------------
 
-    //----Fasciculations due to calcium deficiency (inactive)----------------------------------
-    /*if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) < 1.0)
+  //----Fasciculations due to calcium deficiency (inactive)----------------------------------
+  /*if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) < 1.0)
     {
     /// \event Patient: Patient is fasciculating due to calcium deficiency
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
@@ -306,44 +300,40 @@ void Nervous::CheckNervousStatus()
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
     }*/
 
-    //-----Fasciculations due to Sarin--------------------------------------------------
-    //Occurs due to inhibition of acetylcholinesterase, the enzyme which breaks down the neurotransmitter acetylcholine
-    double RbcAche_mol_Per_L = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
-    double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9);   //8 nM is the baseline activity of Rbc-Ache
-    if (m_data.GetSubstances().IsActive(*m_Sarin))
-    {
-      ///\cite nambda1971cholinesterase
-      //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least 
-      //80% of Rbc-Ache was inhibited.  This was relaxed to 70% because BioGears is calibrated to throw an irreversible state at
-      //100% inhibition when, in actuality, a patient with 100% rbc-ache inhibition will likely survive (rbc-ache thought to act as a buffer
-      //for neuromuscular ache)
-      if (RbcFractionInhibited > 0.7)
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
-      else if ((m_data.GetSubstances().IsActive(*m_Sarin)) && (RbcFractionInhibited < 0.68))
-      {
-        //Oscillations around 70% rbc-ache inhibition are highly unlikely but give some leeway for reversal just in case
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
-      }
+  //-----Fasciculations due to Sarin--------------------------------------------------
+  //Occurs due to inhibition of acetylcholinesterase, the enzyme which breaks down the neurotransmitter acetylcholine
+  double RbcAche_mol_Per_L = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
+  if (m_data.GetSubstances().IsActive(*m_Sarin)) {
+    ///\cite nambda1971cholinesterase
+    //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
+    //80% of Rbc-Ache was inhibited.  This was relaxed to 70% because BioGears is calibrated to throw an irreversible state at
+    //100% inhibition when, in actuality, a patient with 100% rbc-ache inhibition will likely survive (rbc-ache thought to act as a buffer
+    //for neuromuscular ache)
+    if (RbcFractionInhibited > 0.7)
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+    else if ((m_data.GetSubstances().IsActive(*m_Sarin)) && (RbcFractionInhibited < 0.68)) {
+      //Oscillations around 70% rbc-ache inhibition are highly unlikely but give some leeway for reversal just in case
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
     }
-    //----Fasciculations due to Succinylcholine administration.---------------------------------------------------  
-    //No evidence exists for a correlation between the plasma concentration of succinylcholine
-    //and the degree or presence of fasciculation.  Rather, it has been observed that transient fasciculation tends to occur in most patients after initial dosing
-    //(particularly at a dose of 1.5 mg/kg, see refs below), subsiding once depolarization at neuromuscular synapses is accomplished.  Therefore, we model this
-    //effect by initiating fasciculation when succinylcholine enters the body and removing it when the neuromuscular block level (calculated in Drugs.cpp) reaches
-    //90% of maximum.  To prevent fasciculation from being re-flagged as succinylcholine leaves the body and the block dissipates, we use a sentinel (m_blockActive, 
-    //initialized to FALSE) so that the event cannot be triggered more than once.
-    /// \cite @appiah2004pharmacology, @cite mcloughlin1994influence 
-    double neuromuscularBlockLevel = m_data.GetDrugs().GetNeuromuscularBlockLevel().GetValue();
-    if (m_data.GetSubstances().IsActive(*m_Succinylcholine)&&(neuromuscularBlockLevel>0.0))
-    {
-      if ((neuromuscularBlockLevel <0.9)&&(!m_blockActive))
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
-      else
-      {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
-        m_blockActive = true;
-      }
+  }
+  //----Fasciculations due to Succinylcholine administration.---------------------------------------------------
+  //No evidence exists for a correlation between the plasma concentration of succinylcholine
+  //and the degree or presence of fasciculation.  Rather, it has been observed that transient fasciculation tends to occur in most patients after initial dosing
+  //(particularly at a dose of 1.5 mg/kg, see refs below), subsiding once depolarization at neuromuscular synapses is accomplished.  Therefore, we model this
+  //effect by initiating fasciculation when succinylcholine enters the body and removing it when the neuromuscular block level (calculated in Drugs.cpp) reaches
+  //90% of maximum.  To prevent fasciculation from being re-flagged as succinylcholine leaves the body and the block dissipates, we use a sentinel (m_blockActive,
+  //initialized to FALSE) so that the event cannot be triggered more than once.
+  /// \cite @appiah2004pharmacology, @cite mcloughlin1994influence
+  double neuromuscularBlockLevel = m_data.GetDrugs().GetNeuromuscularBlockLevel().GetValue();
+  if (m_data.GetSubstances().IsActive(*m_Succinylcholine) && (neuromuscularBlockLevel > 0.0)) {
+    if ((neuromuscularBlockLevel < 0.9) && (!m_blockActive))
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+    else {
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+      m_blockActive = true;
     }
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -360,11 +350,10 @@ void Nervous::ChemoreceptorFeedback()
 {
 
   if (!m_FeedbackActive)
-  return;
-  
+    return;
+
   double normalized_pO2 = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_ArterialOxygenSetPoint_mmHg;
   double normalized_pCO2 = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg) / m_ArterialCarbonDioxideSetPoint_mmHg;
-  
 
   // The chemoreceptor heart rate modification function shape parameters.
   // See NervousMethodology documentation for details.
@@ -397,21 +386,16 @@ void Nervous::ChemoreceptorFeedback()
   if (CNSChange >= 0.25)
     modifier = 0.0;
 
-
-
-  //set to zero if below .1 percent 
+  //set to zero if below .1 percent
   if (modifier < 0.001)
     modifier = 0.0;
 
-  GetChemoreceptorHeartRateScale().SetValue(maxHeartRateDelta*modifier);
-
- 
+  GetChemoreceptorHeartRateScale().SetValue(maxHeartRateDelta * modifier);
 
   // Calculate the normalized change in heart elastance
   double normalizedHeartElastance = 1.0;
   /// \todo Compute and apply chemoreceptor-mediated contractility changes
   GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -432,32 +416,25 @@ void Nervous::SetPupilEffects()
   double rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
 
   // Calculate the TBI response
-  if (m_data.GetActions().GetPatientActions().HasBrainInjury())
-  {
+  if (m_data.GetActions().GetPatientActions().HasBrainInjury()) {
     SEBrainInjury* b = m_data.GetActions().GetPatientActions().GetBrainInjury();
 
-    if (b->GetSeverity().GetValue() > 0)
-    {
+    if (b->GetSeverity().GetValue() > 0) {
       double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
 
-      if (b->GetType() == CDM::enumBrainInjuryType::Diffuse)
-      {
+      if (b->GetType() == CDM::enumBrainInjuryType::Diffuse) {
         //https://www.wolframalpha.com/input/?i=y%3D(1+%2F+(1+%2B+exp(-2.0*(x+-+24))))+from+18%3Cx%3C28
-        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0*(icp_mmHg - 24))));
+        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
         //https://www.wolframalpha.com/input/?i=y%3D-.001*pow(10,+.27*(x+-+15))+from+18%3Cx%3C28+and+-1%3Cy%3C0
-        leftPupilReactivityResponseLevel += -.001*pow(10, .27*(icp_mmHg - 15));
+        leftPupilReactivityResponseLevel += -.001 * pow(10, .27 * (icp_mmHg - 15));
         rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
         rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
-      }
-      else if (b->GetType() == CDM::enumBrainInjuryType::LeftFocal)
-      {
-        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0*(icp_mmHg - 24))));
-        leftPupilReactivityResponseLevel += -.001*pow(10, .27*(icp_mmHg - 15));
-      }
-      else if(b->GetType() == CDM::enumBrainInjuryType::RightFocal)
-      {
-        rightPupilSizeResponseLevel += (1 / (1 + exp(-2.0*(icp_mmHg - 24))));
-        rightPupilReactivityResponseLevel += -.001*pow(10, .27*(icp_mmHg - 15));
+      } else if (b->GetType() == CDM::enumBrainInjuryType::LeftFocal) {
+        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
+        leftPupilReactivityResponseLevel += -.001 * pow(10, .27 * (icp_mmHg - 15));
+      } else if (b->GetType() == CDM::enumBrainInjuryType::RightFocal) {
+        rightPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
+        rightPupilReactivityResponseLevel += -.001 * pow(10, .27 * (icp_mmHg - 15));
       }
     }
   }

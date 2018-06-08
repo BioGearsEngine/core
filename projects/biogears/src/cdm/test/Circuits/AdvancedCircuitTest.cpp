@@ -10,31 +10,31 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/test/CommonDataModelTest.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
+#include <biogears/cdm/circuit/electrical/SEElectricalCircuitCalculator.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
-#include <biogears/cdm/circuit/electrical/SEElectricalCircuitCalculator.h>
-#include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitCalculator.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
+#include <biogears/cdm/circuit/thermal/SEThermalCircuitCalculator.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
-#include <biogears/cdm/circuit/thermal/SEThermalCircuitCalculator.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
 
 //*********************************************************
 //Circuit Setup
@@ -102,7 +102,6 @@ void CommonDataModelTest::FluidPreProcess(SEFluidCircuit& c, double dT)
   c.GetPath("Path1")->GetNextPressureSource().SetValue(dPotential, PressureUnit::Pa);
 }
 
-
 //*********************************************************
 //Main Calls
 //*********************************************************
@@ -145,8 +144,7 @@ void CommonDataModelTest::ElectricalCircuitTest(const std::string& sTestDirector
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
-  while (dT < 100)
-  {
+  while (dT < 100) {
     //PreProcess - to be done by the systems
     ElectricalCircuit->GetPath("Path1")->GetNextVoltageSource().SetValue(20 + 20 * sin(dT), ElectricPotentialUnit::V);
     //Process
@@ -156,16 +154,15 @@ void CommonDataModelTest::ElectricalCircuitTest(const std::string& sTestDirector
     dT += timeStep_s;
     //sampleDT += dDT;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(dT, *ElectricalCircuit);
     }
-    if (!serialized && dT > 80)
-    {
+    if (!serialized && dT > 80) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/ElectricalCircuit.xml";
-      TestCircuitSerialization(xmlDir);      
+      TestCircuitSerialization(xmlDir);
       ElectricalCircuit = m_Circuits.GetElectricalCircuit("Electric");
     }
   }
@@ -178,8 +175,8 @@ void CommonDataModelTest::FluidCircuitTest(const std::string& sTestDirectory)
   m_Logger->ResetLogFile(sTestDirectory + "/FluidCircuitTest.log");
   double timeStep_s = 1.0 / 165.0;
   Info("Fluid Circuit");
-  SEFluidCircuit*  fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");
-  SEFluidCircuitCalculator      fluidCalculator(m_Logger);
+  SEFluidCircuit* fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");
+  SEFluidCircuitCalculator fluidCalculator(m_Logger);
   fluidCircuit->StateChange();
   std::string sOutputFile = sTestDirectory + "/FluidCircuit.txt";
   //-----------------------------------------------------------
@@ -211,8 +208,7 @@ void CommonDataModelTest::FluidCircuitTest(const std::string& sTestDirectory)
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
-  while (dT < 100)
-  {
+  while (dT < 100) {
     //PreProcess - to be done by the systems
     fluidCircuit->GetPath("Path1")->GetNextPressureSource().SetValue(20 + 20 * sin(dT), PressureUnit::Pa);
     //Process
@@ -222,13 +218,12 @@ void CommonDataModelTest::FluidCircuitTest(const std::string& sTestDirectory)
     dT += timeStep_s;
     //sampleDT += dDT;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(dT, *fluidCircuit);
     }
-    if (!serialized && dT > 80)
-    {
+    if (!serialized && dT > 80) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/FluidCircuit.xml";
       TestCircuitSerialization(xmlDir);
@@ -245,7 +240,7 @@ void CommonDataModelTest::ThermalCircuitTest(const std::string& sTestDirectory)
   double timeStep_s = 1.0 / 165.0;
   Info("Thermal Circuit");
   SEThermalCircuit* ThermalCircuit = &m_Circuits.CreateThermalCircuit("Thermal");
-  SEThermalCircuitCalculator    ThermalCircuitCalculator(m_Logger);
+  SEThermalCircuitCalculator ThermalCircuitCalculator(m_Logger);
   ThermalCircuit->StateChange();
   std::string sOutputFile = sTestDirectory + "/ThermalCircuit.txt";
   //-----------------------------------------------------------
@@ -277,8 +272,7 @@ void CommonDataModelTest::ThermalCircuitTest(const std::string& sTestDirectory)
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
-  while (dT < 100)
-  {
+  while (dT < 100) {
     //PreProcess - to be done by the systems
     ThermalCircuit->GetPath("Path1")->GetNextTemperatureSource().SetValue(20 + 20 * sin(dT), TemperatureUnit::K);
     //Process
@@ -288,7 +282,7 @@ void CommonDataModelTest::ThermalCircuitTest(const std::string& sTestDirectory)
     dT += timeStep_s;
     //sampleDT += dDT;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(dT, *ThermalCircuit);
@@ -305,10 +299,9 @@ void CommonDataModelTest::ThermalCircuitTest(const std::string& sTestDirectory)
           trk1.Probe(cmpt->GetName() + "Cmpt_Heat", dT, cmpt->GetHeat().GetValue(EnergyUnit::J));
       }*/
     }
-    if (!serialized && dT > 80)
-    {
+    if (!serialized && dT > 80) {
       serialized = true;
-      std::string xmlDir = sTestDirectory + "/ThermalCircuit.xml"; 
+      std::string xmlDir = sTestDirectory + "/ThermalCircuit.xml";
       TestCircuitSerialization(xmlDir);
       ThermalCircuit = m_Circuits.GetThermalCircuit("Thermal");
     }
@@ -361,7 +354,7 @@ void CommonDataModelTest::CombinedCircuitTest(const std::string& sTestDirectory)
   SEFluidCircuitPath& MasterPath1 = MasterCircuit->CreatePath(MasterNode4, MasterNode1, "MasterPath1");
   MasterPath1.GetNextPressureSource().SetValue(20, PressureUnit::Pa);
   //Slave Circuit
-   SEFluidCircuit* SlaveCircuit = &m_Circuits.CreateFluidCircuit("Slave");
+  SEFluidCircuit* SlaveCircuit = &m_Circuits.CreateFluidCircuit("Slave");
   //-----------------------------------------------------------
   //Nodes
   SEFluidCircuitNode& SlaveNode1 = SlaveCircuit->CreateNode("SlaveNode1");
@@ -394,8 +387,7 @@ void CommonDataModelTest::CombinedCircuitTest(const std::string& sTestDirectory)
 
   bool serialized = false;
   double sample = 0;
-  while (currentTime_s < 100)
-  {
+  while (currentTime_s < 100) {
     //PreProcess - to be done by the systems
     double dPotential = 20 + 20 * sin(currentTime_s);
     MasterCircuit->GetPath("MasterPath1")->GetNextPressureSource().SetValue(dPotential, PressureUnit::Pa);
@@ -406,15 +398,14 @@ void CommonDataModelTest::CombinedCircuitTest(const std::string& sTestDirectory)
     currentTime_s += timeStep_s;
     //sampleDT += dDT;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(currentTime_s, *CombinedCircuit);
     }
-    if (!serialized && currentTime_s > 80)
-    {
+    if (!serialized && currentTime_s > 80) {
       serialized = true;
-      std::string xmlDir = sTestDirectory + "/CombinedCircuitTest.xml"; 
+      std::string xmlDir = sTestDirectory + "/CombinedCircuitTest.xml";
       TestCircuitSerialization(xmlDir);
       // Loading will create a new circuit, so we need to delete our old ones
       // And hook up to the new ones
@@ -469,8 +460,7 @@ void CommonDataModelTest::InterCircuitComparisonTest(const std::string& sTestDir
 
   bool serialized = false;
   double sample = 0;
-  while (currentTime_s < 100)
-  {
+  while (currentTime_s < 100) {
     //PreProcess - to be done by the systems
     FluidPreProcess(*fluidCircuit, currentTime_s);
     //Process
@@ -479,13 +469,12 @@ void CommonDataModelTest::InterCircuitComparisonTest(const std::string& sTestDir
     fluidCalculator.PostProcess(*fluidCircuit);
     currentTime_s += timeStep_s;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(currentTime_s, *fluidCircuit);
     }
-    if (!serialized && currentTime_s > 80)
-    {
+    if (!serialized && currentTime_s > 80) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/InterCircuitComparison.xml";
       TestCircuitSerialization(xmlDir);
@@ -551,8 +540,7 @@ void CommonDataModelTest::InterCircuitIndividualTest(const std::string& sTestDir
 
   bool serialized = false;
   double sample = 0;
-  while (currentTime_s < 100)
-  {
+  while (currentTime_s < 100) {
     //Process
     fluidCalculator.Process(*fluidCircuit1, timeStep_s);
     fluidCalculator.Process(*fluidCircuit2, timeStep_s);
@@ -562,14 +550,13 @@ void CommonDataModelTest::InterCircuitIndividualTest(const std::string& sTestDir
 
     currentTime_s += timeStep_s;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(currentTime_s, *fluidCircuit1);
       trk2.Track(currentTime_s, *fluidCircuit2);
     }
-    if (!serialized && currentTime_s > 80)
-    {
+    if (!serialized && currentTime_s > 80) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/InterCircuitIndividual.xml";
       TestCircuitSerialization(xmlDir);
@@ -761,10 +748,8 @@ void CommonDataModelTest::DynamicallyChangingCircuitTest(const std::string& sTes
   double sample = 0;
   double dT = 0.0;
   bool bChanged = false;
-  while (dT < 100)
-  {
-    if (!bChanged && dT > 50)
-    {
+  while (dT < 100) {
+    if (!bChanged && dT > 50) {
       std::cout << "Modify Circuit\n";
       //Change element types
       fluidCircuit->GetPath("Path2")->GetResistance().Invalidate();
@@ -799,13 +784,12 @@ void CommonDataModelTest::DynamicallyChangingCircuitTest(const std::string& sTes
     fluidCalculator.PostProcess(*fluidCircuit);
     dT += timeStep_s;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(dT, *fluidCircuit);
     }
-    if (!serialized && dT > 80)
-    {
+    if (!serialized && dT > 80) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/DynamicallyChangingCircuit.xml";
       TestCircuitSerialization(xmlDir);
@@ -824,7 +808,7 @@ void CommonDataModelTest::DynamicallyChangingCircuitTest(const std::string& sTes
 /// \param  sTestDirectory points to the unit test directory
 ///
 /// \details
-/// This tests the ability to solve a circuit correctly with a positive and negative reference 
+/// This tests the ability to solve a circuit correctly with a positive and negative reference
 /// potential value.
 //--------------------------------------------------------------------------------------------------
 void CommonDataModelTest::NonZeroReferencePositive(const std::string& sTestDirectory)
@@ -864,8 +848,7 @@ void CommonDataModelTest::NonZeroReferencePositive(const std::string& sTestDirec
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
-  while (dT < 100)
-  {
+  while (dT < 100) {
     //PreProcess - to be done by the systems
     FluidPreProcess(*fluidCircuit, dT);
     //Process
@@ -874,13 +857,12 @@ void CommonDataModelTest::NonZeroReferencePositive(const std::string& sTestDirec
     fluidCalculator.PostProcess(*fluidCircuit);
     dT += timeStep_s;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(dT, *fluidCircuit);
     }
-    if (!serialized && dT > 80)
-    {
+    if (!serialized && dT > 80) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/NonZeroReferencePositive.xml";
       TestCircuitSerialization(xmlDir);
@@ -934,12 +916,11 @@ void CommonDataModelTest::NonZeroReferenceNegative(const std::string& sTestDirec
   SEFluidCircuitPath& Path1 = fluidCircuit->CreatePath(Node4, Node1, "Path1");
   Path1.GetNextPressureSource().SetValue(20, PressureUnit::Pa);
   fluidCircuit->StateChange();
-  
+
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
-  while (dT < 100)
-  {
+  while (dT < 100) {
     //PreProcess - to be done by the systems
     FluidPreProcess(*fluidCircuit, dT);
     //Process
@@ -948,13 +929,12 @@ void CommonDataModelTest::NonZeroReferenceNegative(const std::string& sTestDirec
     fluidCalculator.PostProcess(*fluidCircuit);
     dT += timeStep_s;
     sample += timeStep_s;
-    if (sample > 0.1)// every 0.1 seconds, track state of circuit
+    if (sample > 0.1) // every 0.1 seconds, track state of circuit
     {
       sample = 0;
       trk1.Track(dT, *fluidCircuit);
     }
-    if (!serialized && dT > 80)
-    {
+    if (!serialized && dT > 80) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/NonZeroReferenceNegative.xml";
       TestCircuitSerialization(xmlDir);
@@ -1012,16 +992,12 @@ void CommonDataModelTest::PolarizedCapacitorTest(const std::string& sTestDirecto
 
   bool serialized = false;
   double sample = 0;
-  while (currentTime_s < 150)
-  {
-    if (currentTime_s > 100)
-    {
+  while (currentTime_s < 150) {
+    if (currentTime_s > 100) {
       //Change it back, but more pressure
       fluidCircuit->GetPath("Path4")->GetNextPressureSource().SetValue(30, PressureUnit::Pa);
       fluidCircuit->GetPath("Path1")->GetNextPressureSource().SetValue(0, PressureUnit::Pa);
-    }
-    else if (currentTime_s > 50)
-    {
+    } else if (currentTime_s > 50) {
       //Change element types
       fluidCircuit->GetPath("Path1")->GetNextPressureSource().SetValue(20, PressureUnit::Pa);
       fluidCircuit->GetPath("Path4")->GetNextPressureSource().SetValue(0, PressureUnit::Pa);
@@ -1032,8 +1008,7 @@ void CommonDataModelTest::PolarizedCapacitorTest(const std::string& sTestDirecto
     fluidCalculator.PostProcess(*fluidCircuit);
     currentTime_s += timeStep_s;
     trk1.Track(currentTime_s, *fluidCircuit);
-    if (!serialized && currentTime_s > 130)
-    {
+    if (!serialized && currentTime_s > 130) {
       serialized = true;
       std::string xmlDir = sTestDirectory + "/NonZeroReferenceNegative.xml";
       TestCircuitSerialization(xmlDir);
@@ -1071,18 +1046,16 @@ void CommonDataModelTest::PreChargeComplianceZeroVolume(const std::string& sTest
   fluidCircuit->StateChange();
 
   bool serialized = false;
-  while (currentTime_s < 1.0)
-  {
+  while (currentTime_s < 1.0) {
     //Process
     fluidCalculator.Process(*fluidCircuit, timeStep_s);
     //PostProcess
     fluidCalculator.PostProcess(*fluidCircuit);
     currentTime_s += timeStep_s;
     trk1.Track(currentTime_s, *fluidCircuit);
-    if (!serialized && currentTime_s > 0.8)
-    {
+    if (!serialized && currentTime_s > 0.8) {
       serialized = true;
-      std::string xmlDir = sTestDirectory + "/PreChargeComplianceZeroVolume.xml"; 
+      std::string xmlDir = sTestDirectory + "/PreChargeComplianceZeroVolume.xml";
       TestCircuitSerialization(xmlDir);
       fluidCircuit = m_Circuits.GetFluidCircuit("Fluid");
     }
@@ -1118,18 +1091,16 @@ void CommonDataModelTest::PreChargeComplianceNonZeroVolume(const std::string& sT
   fluidCircuit->StateChange();
 
   bool serialized = false;
-  while (currentTime_s < 1.0)
-  {
+  while (currentTime_s < 1.0) {
     //Process
     fluidCalculator.Process(*fluidCircuit, timeStep_s);
     //PostProcess
     fluidCalculator.PostProcess(*fluidCircuit);
     currentTime_s += timeStep_s;
     trk1.Track(currentTime_s, *fluidCircuit);
-    if (!serialized && currentTime_s > 0.8)
-    {
+    if (!serialized && currentTime_s > 0.8) {
       serialized = true;
-      std::string xmlDir = sTestDirectory + "/PreChargeComplianceNonZeroVolume.xml"; 
+      std::string xmlDir = sTestDirectory + "/PreChargeComplianceNonZeroVolume.xml";
       TestCircuitSerialization(xmlDir);
       fluidCircuit = m_Circuits.GetFluidCircuit("Fluid");
     }
@@ -1141,18 +1112,18 @@ void CommonDataModelTest::PreChargeComplianceNonZeroVolume(const std::string& sT
 
 void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory)
 {
-  SETestReport testReport(m_Logger);  
+  SETestReport testReport(m_Logger);
   SETestSuite& testSuite = testReport.CreateTestSuite();
   testSuite.SetName("Locking");
   SETestCase* testCase;
- 
+
   TimingProfile pTimer;
   pTimer.Start("Suite");
-  
+
   std::cout << "CircuitLockingTestTest\n";
 
   m_Logger->ResetLogFile(sOutputDirectory + "/CircuitLockingTest.log");
- 
+
   SEFluidCircuit* fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");
   //-----------------------------------------------------------
   //Nodes
@@ -1184,10 +1155,9 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
   SEFluidCircuitPath& potentialSource = fluidCircuit->CreatePath(Node5, Node1, "Potential Source");
   potentialSource.GetPotentialSourceBaseline().SetValue(10, PressureUnit::Pa);
   SEFluidCircuitPath& dummyPath = fluidCircuit->CreatePath(Node1, Node3, "Short");
-  
+
   fluidCircuit->SetNextAndCurrentFromBaselines();
   fluidCircuit->StateChange();
-
 
   // No need to calc the circuit since we already set some values on it
   // Lock the circuit
@@ -1199,19 +1169,19 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
   //First time through (i = 0) locked circuit
   //Second time through (i = 1) serialized locked circuit
   //Third time through (i = 2) unlocked circuit
-  for (int i = 0; i <= 2; i++)
-  {
+  for (int i = 0; i <= 2; i++) {
     caught = false;
     testCase = &testSuite.CreateTestCase();
-    testCase->SetName("VolumeBaseline"+type);
+    testCase->SetName("VolumeBaseline" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetVolumeBaseline().IncrementValue(2, VolumeUnit::m3); }
-    catch (...) {
-      caught = true; }
-    if (i!=2 && !caught)
+      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetVolumeBaseline().IncrementValue(2, VolumeUnit::m3);
+    } catch (...) {
+      caught = true;
+    }
+    if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked VolumeBaseline");
-    if (i==2 && caught)
+    if (i == 2 && caught)
       testCase->AddFailure("I should be able to modify an unlocked VolumeBaseline");
     testCase->GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
 
@@ -1220,9 +1190,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("Volume" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetVolume().IncrementValue(2, VolumeUnit::m3); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetVolume().IncrementValue(2, VolumeUnit::m3);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked Volume");
     if (i == 2 && caught)
@@ -1235,8 +1206,7 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     pTimer.Start("Test");
     try {
       fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetNextVolume().IncrementValue(2, VolumeUnit::m3);
-    }
-    catch (...) {
+    } catch (...) {
       caught = true;
     }
     if (i != 2 && !caught)
@@ -1252,8 +1222,7 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     pTimer.Start("Test");
     try {
       fluidCircuit->GetPath("Short")->GetSourceNode().GetNextVolume().IncrementValue(2, VolumeUnit::m3);
-    }
-    catch (...) {
+    } catch (...) {
       caught = true;
     }
     if (caught)
@@ -1265,9 +1234,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("Pressure" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetPressure().IncrementValue(2, PressureUnit::Pa); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetPressure().IncrementValue(2, PressureUnit::Pa);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked Pressure");
     if (i == 2 && caught)
@@ -1279,9 +1249,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("NextPressure" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetNextPressure().IncrementValue(2, PressureUnit::Pa); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Capacitor")->GetSourceNode().GetNextPressure().IncrementValue(2, PressureUnit::Pa);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked NextPressure");
     if (i == 2 && caught)
@@ -1293,9 +1264,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("Flow" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Capacitor")->GetFlow().IncrementValue(2, VolumePerTimeUnit::m3_Per_s); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Capacitor")->GetFlow().IncrementValue(2, VolumePerTimeUnit::m3_Per_s);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked Flow");
     if (i == 2 && caught)
@@ -1307,9 +1279,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("NextFlow" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Capacitor")->GetNextFlow().IncrementValue(2, VolumePerTimeUnit::m3_Per_s); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Capacitor")->GetNextFlow().IncrementValue(2, VolumePerTimeUnit::m3_Per_s);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked NextFlow");
     if (i == 2 && caught)
@@ -1321,9 +1294,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("FlowSource" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Flow Source")->GetFlowSource().IncrementValue(2, VolumePerTimeUnit::m3_Per_s); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Flow Source")->GetFlowSource().IncrementValue(2, VolumePerTimeUnit::m3_Per_s);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked FlowSource");
     if (i == 2 && caught)
@@ -1335,9 +1309,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("Resistance" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Resistor")->GetResistance().IncrementValue(2, FlowResistanceUnit::Pa_s_Per_m3); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Resistor")->GetResistance().IncrementValue(2, FlowResistanceUnit::Pa_s_Per_m3);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked Resistance");
     if (i == 2 && caught)
@@ -1349,9 +1324,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("Capacitance" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Capacitor")->GetCapacitance().IncrementValue(2, FlowComplianceUnit::m3_Per_Pa); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Capacitor")->GetCapacitance().IncrementValue(2, FlowComplianceUnit::m3_Per_Pa);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked Capacitance");
     if (i == 2 && caught)
@@ -1363,9 +1339,10 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("Inductance" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Inductor")->GetInductance().IncrementValue(2, FlowInertanceUnit::Pa_s2_Per_m3); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Inductor")->GetInductance().IncrementValue(2, FlowInertanceUnit::Pa_s2_Per_m3);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked Inductance");
     if (i == 2 && caught)
@@ -1377,25 +1354,23 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
     testCase->SetName("PotentialSource" + type);
     pTimer.Start("Test");
     try {
-      fluidCircuit->GetPath("Potential Source")->GetPotentialSource().IncrementValue(2, PressureUnit::Pa); }
-    catch (...) {
-      caught = true; }
+      fluidCircuit->GetPath("Potential Source")->GetPotentialSource().IncrementValue(2, PressureUnit::Pa);
+    } catch (...) {
+      caught = true;
+    }
     if (i != 2 && !caught)
       testCase->AddFailure("I should not be able to modify a locked PotentialSource");
     if (i == 2 && caught)
       testCase->AddFailure("I should be able to modify an unlocked PotentialSource");
     testCase->GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
 
-    if (i == 0)
-    {
+    if (i == 0) {
       // Serialize and try again
       std::string xmlDir = sOutputDirectory + "/CircuitLockingCircuit.xml";
       TestCircuitSerialization(xmlDir);
       fluidCircuit = m_Circuits.GetFluidCircuit("Fluid");
       type = " Locked After Serialization";
-    }
-    else if (i == 1)
-    {
+    } else if (i == 1) {
       m_Circuits.SetReadOnly(false);
       type = " Unlocked";
     }

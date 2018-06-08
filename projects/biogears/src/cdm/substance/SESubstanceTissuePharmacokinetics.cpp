@@ -16,37 +16,40 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarData.hxx>
 
-SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger) : Loggable(logger), m_Name(name)
+SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger)
+  : Loggable(logger)
+  , m_Name(name)
 {
   m_PartitionCoefficient = nullptr;
 }
 
 SESubstanceTissuePharmacokinetics::~SESubstanceTissuePharmacokinetics()
 {
-	Clear();
+  Clear();
 }
 
 void SESubstanceTissuePharmacokinetics::Clear()
-{;
+{
+  ;
   SAFE_DELETE(m_PartitionCoefficient)
 }
 
 bool SESubstanceTissuePharmacokinetics::Load(const CDM::SubstanceTissuePharmacokineticsData& in)
 {
-  Clear();   
+  Clear();
   if (in.PartitionCoefficient().present())
     GetPartitionCoefficient().Load(in.PartitionCoefficient().get());
   return true;
 }
-CDM::SubstanceTissuePharmacokineticsData*  SESubstanceTissuePharmacokinetics::Unload() const
+CDM::SubstanceTissuePharmacokineticsData* SESubstanceTissuePharmacokinetics::Unload() const
 {
-	CDM::SubstanceTissuePharmacokineticsData* data = new CDM::SubstanceTissuePharmacokineticsData();
-	Unload(*data);
-	return data;
+  CDM::SubstanceTissuePharmacokineticsData* data = new CDM::SubstanceTissuePharmacokineticsData();
+  Unload(*data);
+  return data;
 }
 void SESubstanceTissuePharmacokinetics::Unload(CDM::SubstanceTissuePharmacokineticsData& data) const
 {
-  data.Name(m_Name);  
+  data.Name(m_Name);
   if (m_PartitionCoefficient != nullptr)
     data.PartitionCoefficient(std::unique_ptr<CDM::ScalarData>(m_PartitionCoefficient->Unload()));
 }

@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/Serializer.h>  
 
 #include <biogears/schema/BioGears.hxx>
 
@@ -37,8 +37,8 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
   char* msg(XMLString::transcode(err.getMessage()));
 
   error_ << uri << ":"
-    << loc->getLineNumber() << ":" << loc->getColumnNumber() << " "
-    << (warn ? "warning: " : "error: ") << msg << std::ends;
+         << loc->getLineNumber() << ":" << loc->getColumnNumber() << " "
+         << (warn ? "warning: " : "error: ") << msg << std::ends;
   /// \error Invalid schema file
   std::cerr << error_.str() << std::endl;
   std::cerr << err.getRelatedData() << std::endl;
@@ -52,7 +52,6 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
 
 Serializer::Serializer()
 {
-  
 }
 
 Serializer::~Serializer()
@@ -77,15 +76,13 @@ bool Serializer::Initialize(Logger* logger)
   ErrorHandler eh;
   DOMLSParser* parser(CreateParser(logger));
   parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
-  if (!parser->loadGrammar(shortDir.c_str(), Grammar::SchemaGrammarType, true))
-  {
+  if (!parser->loadGrammar(shortDir.c_str(), Grammar::SchemaGrammarType, true)) {
     err << "Error: unable to load : " << shortDir << std::ends;
     /// \error Unable to recognize schema grammar
     logger->Error(err);
     return false;
   }
-  if (eh.failed())
-  {// TODO append error some how
+  if (eh.failed()) { // TODO append error some how
     err << "Error loading : " << shortDir << std::ends;
     /// \error Unable to load
     logger->Error(err);
@@ -111,10 +108,10 @@ DOMLSParser* Serializer::CreateParser(Logger* logger) const
 
   DOMLSParser* parser(
     impl->createLSParser(
-    DOMImplementationLS::MODE_SYNCHRONOUS,
-    0,
-    XMLPlatformUtils::fgMemoryManager,
-    m_GrammerPool.get()));
+      DOMImplementationLS::MODE_SYNCHRONOUS,
+      0,
+      XMLPlatformUtils::fgMemoryManager,
+      m_GrammerPool.get()));
 
   DOMConfiguration* conf(parser->getDomConfig());
 
@@ -162,8 +159,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   if (m_me == nullptr)
     m_me = new Serializer();
 
-  if (!m_me->m_Initialized && !m_me->Initialize(logger))
-  {
+  if (!m_me->m_Initialized && !m_me->Initialize(logger)) {
     /// \error Serializer was not able to initialize
     logger->Error("Serializer was not able to initialize");
     return std::unique_ptr<CDM::ObjectData>();
@@ -173,11 +169,11 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   std::unique_ptr<DOMLSParser> parser(m_me->CreateParser(logger));
   parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
   std::unique_ptr<xercesc::DOMDocument> doc(parser->parseURI(xmlFile.c_str()));
-  if (eh.failed() || doc == nullptr)
-  {
+  if (eh.failed() || doc == nullptr) {
     // TODO Append parse error
     /// \error Error reading xml file
-    err << "Error reading xml file " << xmlFile << "\n" << eh.getError() << std::ends;
+    err << "Error reading xml file " << xmlFile << "\n"
+        << eh.getError() << std::ends;
     logger->Error(err);
     return std::unique_ptr<CDM::ObjectData>();
   }
@@ -222,4 +218,3 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   logger->Error(err);
   return obj;
 }
-

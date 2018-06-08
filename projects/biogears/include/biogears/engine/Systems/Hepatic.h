@@ -11,17 +11,28 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SEHepaticSystem.h>
 #include <biogears/schema/BioGearsHepaticSystemData.hxx>
+
+class SETissueSystem;
+class SELiquidSubstanceQuantity;
+class SELiquidSubstanceQuantity;
+class SESubstance;
+class SETissueSystem;
+class SEEnergySystem;
+class SEPatient;
+class BioGears;
 
 /**
  * @copydoc Physiology_HepaticystemData
  */  
 class BIOGEARS_API Hepatic : public SEHepaticSystem, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	Hepatic(BioGears& bg);

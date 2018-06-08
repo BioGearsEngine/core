@@ -10,29 +10,25 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
-#include <biogears/schema/LiquidCompartmentGraphData.hxx>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/LiquidCompartmentGraphData.hxx>
 
 bool SELiquidCompartmentGraph::Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
   m_Name = in.Name();
-  for (auto name : in.Compartment())
-  {
+  for (auto name : in.Compartment()) {
     SELiquidCompartment* cmpt = cmptMgr.GetLiquidCompartment(name);
-    if (cmpt == nullptr)
-    {
+    if (cmpt == nullptr) {
       Error("Could not find compartment " + name + " for graph " + m_Name);
       return false;
     }
     AddCompartment(*cmpt);
   }
-  for (auto name : in.Link())
-  {
+  for (auto name : in.Link()) {
     SELiquidCompartmentLink* link = cmptMgr.GetLiquidLink(name);
-    if (link == nullptr)
-    {
+    if (link == nullptr) {
       Error("Could not find link " + name + " for graph " + m_Name);
       return false;
     }

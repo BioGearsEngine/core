@@ -10,26 +10,28 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/CompartmentManagerData.hxx>
 #include <biogears/schema/GasCompartmentGraphData.hxx>
 #include <biogears/schema/LiquidCompartmentGraphData.hxx>
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
-SECompartmentManager::SECompartmentManager(SESubstanceManager& subMgr) : Loggable(subMgr.GetLogger()), m_subMgr(subMgr)
+SECompartmentManager::SECompartmentManager(SESubstanceManager& subMgr)
+  : Loggable(subMgr.GetLogger())
+  , m_subMgr(subMgr)
 {
-  m_O2      = subMgr.GetSubstance("Oxygen");
-  m_CO2     = subMgr.GetSubstance("CarbonDioxide");
-  m_CO      = subMgr.GetSubstance("CarbonMonoxide");
-  m_Hb      = subMgr.GetSubstance("Hemoglobin");
-  m_HbO2    = subMgr.GetSubstance("Oxyhemoglobin");
-  m_HbCO2   = subMgr.GetSubstance("Carbaminohemoglobin");
+  m_O2 = subMgr.GetSubstance("Oxygen");
+  m_CO2 = subMgr.GetSubstance("CarbonDioxide");
+  m_CO = subMgr.GetSubstance("CarbonMonoxide");
+  m_Hb = subMgr.GetSubstance("Hemoglobin");
+  m_HbO2 = subMgr.GetSubstance("Oxyhemoglobin");
+  m_HbCO2 = subMgr.GetSubstance("Carbaminohemoglobin");
   m_HbO2CO2 = subMgr.GetSubstance("OxyCarbaminohemoglobin");
-  m_HbCO    = subMgr.GetSubstance("Carboxyhemoglobin");
+  m_HbCO = subMgr.GetSubstance("Carboxyhemoglobin");
   Clear();
 }
 SECompartmentManager::~SECompartmentManager()
@@ -53,7 +55,7 @@ void SECompartmentManager::Clear()
   m_LiquidLeafCompartments.clear();
   DELETE_VECTOR(m_LiquidLinks);
   m_LiquidName2Links.clear();
-  m_LiquidSubstances.clear(); 
+  m_LiquidSubstances.clear();
   DELETE_VECTOR(m_LiquidGraphs);
   m_LiquidName2Graphs.clear();
 
@@ -69,68 +71,57 @@ void SECompartmentManager::Clear()
   m_TissueName2Compartments.clear();
 }
 
-#define LOAD_COMPARTMENT(type) \
-for (auto& cData : in.type##Compartment()) \
-{ \
-  if (!Create##type##Compartment(cData.Name()).Load(cData, m_subMgr, circuits)) \
-    return false; \
-} 
-#define LOAD_THERMAL_COMPARTMENT(type) \
-for (auto& cData : in.type##Compartment()) \
-{ \
-  if (!Create##type##Compartment(cData.Name()).Load(cData, circuits)) \
-    return false; \
-} 
-#define LOAD_LINK(type) \
-for (auto& cData : in.type##Link()) \
-{ \
-  auto* src = Get##type##Compartment(cData.SourceCompartment()); \
-  if (src == nullptr) \
-  { \
-    Error("Unable to find source compartment " + cData.SourceCompartment() + " for link " + cData.Name().c_str()); \
-    return false; \
-  } \
-  auto* tgt = Get##type##Compartment(cData.TargetCompartment()); \
-  if (src == nullptr) \
-  { \
-    Error("Unable to find target compartment " + cData.TargetCompartment() + " for link " + cData.Name().c_str()); \
-    return false; \
-  } \
-  if (!Create##type##Link(*src, *tgt, cData.Name()).Load(cData, circuits)) \
-    return false; \
-}
-#define LOAD_HIERARCHY(type) \
-for (auto& cData : in.type##Compartment()) \
-{ \
-  auto* cmpt = Get##type##Compartment(cData.Name()); \
-  for (auto name : cData.Child()) \
-  { \
-    auto* child = Get##type##Compartment(name); \
-    if (child == nullptr) \
-    { \
-      Error("Could not find child " + name + " for node " + cmpt->GetName()); \
-      return false; \
-    } \
-    cmpt->AddChild(*child); \
-  } \
-}
-#define LOAD_GRAPH(type) \
-for (auto& cData : in.type##Graph()) \
-{ \
-  if (!Create##type##Graph(cData.Name()).Load(cData, *this)) \
-    return false; \
-} 
-#define LOAD_SUBSTANCE(type) \
-for (auto subName : in.type##Substance()) \
-{ \
-  SESubstance* sub = m_subMgr.GetSubstance(subName); \
-  if (sub == nullptr) \
-  { \
-    Error("Could not find substance " + subName); \
-    return false; \
-  } \
-  Add##type##CompartmentSubstance(*sub); \
-}
+#define LOAD_COMPARTMENT(type)                                                    \
+  for (auto& cData : in.type##Compartment()) {                                    \
+    if (!Create##type##Compartment(cData.Name()).Load(cData, m_subMgr, circuits)) \
+      return false;                                                               \
+  }
+#define LOAD_THERMAL_COMPARTMENT(type)                                  \
+  for (auto& cData : in.type##Compartment()) {                          \
+    if (!Create##type##Compartment(cData.Name()).Load(cData, circuits)) \
+      return false;                                                     \
+  }
+#define LOAD_LINK(type)                                                                                              \
+  for (auto& cData : in.type##Link()) {                                                                              \
+    auto* src = Get##type##Compartment(cData.SourceCompartment());                                                   \
+    if (src == nullptr) {                                                                                            \
+      Error("Unable to find source compartment " + cData.SourceCompartment() + " for link " + cData.Name().c_str()); \
+      return false;                                                                                                  \
+    }                                                                                                                \
+    auto* tgt = Get##type##Compartment(cData.TargetCompartment());                                                   \
+    if (src == nullptr) {                                                                                            \
+      Error("Unable to find target compartment " + cData.TargetCompartment() + " for link " + cData.Name().c_str()); \
+      return false;                                                                                                  \
+    }                                                                                                                \
+    if (!Create##type##Link(*src, *tgt, cData.Name()).Load(cData, circuits))                                         \
+      return false;                                                                                                  \
+  }
+#define LOAD_HIERARCHY(type)                                                    \
+  for (auto& cData : in.type##Compartment()) {                                  \
+    auto* cmpt = Get##type##Compartment(cData.Name());                          \
+    for (auto name : cData.Child()) {                                           \
+      auto* child = Get##type##Compartment(name);                               \
+      if (child == nullptr) {                                                   \
+        Error("Could not find child " + name + " for node " + cmpt->GetName()); \
+        return false;                                                           \
+      }                                                                         \
+      cmpt->AddChild(*child);                                                   \
+    }                                                                           \
+  }
+#define LOAD_GRAPH(type)                                       \
+  for (auto& cData : in.type##Graph()) {                       \
+    if (!Create##type##Graph(cData.Name()).Load(cData, *this)) \
+      return false;                                            \
+  }
+#define LOAD_SUBSTANCE(type)                           \
+  for (auto subName : in.type##Substance()) {          \
+    SESubstance* sub = m_subMgr.GetSubstance(subName); \
+    if (sub == nullptr) {                              \
+      Error("Could not find substance " + subName);    \
+      return false;                                    \
+    }                                                  \
+    Add##type##CompartmentSubstance(*sub);             \
+  }
 
 bool SECompartmentManager::Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits)
 {
@@ -153,7 +144,7 @@ bool SECompartmentManager::Load(const CDM::CompartmentManagerData& in, SECircuit
   LOAD_HIERARCHY(Thermal);
 
   LOAD_COMPARTMENT(Tissue);
-  
+
   StateChange();
   return true;
 }
@@ -190,14 +181,11 @@ void SECompartmentManager::Unload(CDM::CompartmentManagerData& data) const
 
   for (SETissueCompartment* cmpt : m_TissueCompartments)
     data.TissueCompartment().push_back(std::unique_ptr<CDM::TissueCompartmentData>(cmpt->Unload()));
- 
 }
-
 
 bool SECompartmentManager::HasCompartment(CDM::enumCompartmentType::value type, const std::string& name) const
 {
-  switch (type)
-  {
+  switch (type) {
   case CDM::enumCompartmentType::Gas:
     return HasGasCompartment(name);
   case CDM::enumCompartmentType::Liquid:
@@ -211,8 +199,7 @@ bool SECompartmentManager::HasCompartment(CDM::enumCompartmentType::value type, 
 }
 SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::value type, const std::string& name)
 {
-  switch (type)
-  {
+  switch (type) {
   case CDM::enumCompartmentType::Gas:
     return GetGasCompartment(name);
   case CDM::enumCompartmentType::Liquid:
@@ -226,8 +213,7 @@ SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::va
 }
 const SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::value type, const std::string& name) const
 {
-  switch (type)
-  {
+  switch (type) {
   case CDM::enumCompartmentType::Gas:
     return GetGasCompartment(name);
   case CDM::enumCompartmentType::Liquid:
@@ -251,11 +237,10 @@ SEGasCompartment& SECompartmentManager::CreateGasCompartment(const std::string& 
 void SECompartmentManager::DeleteGasCompartment(const std::string& name)
 {
   SEGasCompartment* cmpt = GetGasCompartment(name);
-  if (cmpt != nullptr)
-  {
+  if (cmpt != nullptr) {
     m_GasName2Compartments.erase(name);
     Remove(m_GasCompartments, cmpt);
-    Remove(m_GasLeafCompartments, cmpt); 
+    Remove(m_GasLeafCompartments, cmpt);
     for (SEGasCompartmentGraph* g : m_GasGraphs)
       g->RemoveCompartment(*cmpt);
     SAFE_DELETE(cmpt);
@@ -288,8 +273,7 @@ SEGasCompartmentLink& SECompartmentManager::CreateGasLink(SEGasCompartment& src,
 void SECompartmentManager::DeleteGasLink(const std::string& name)
 {
   SEGasCompartmentLink* link = GetGasLink(name);
-  if (link != nullptr)
-  {
+  if (link != nullptr) {
     m_GasName2Links.erase(name);
     Remove(m_GasLinks, link);
     for (SEGasCompartmentGraph* g : m_GasGraphs)
@@ -318,14 +302,11 @@ SEGasCompartmentGraph& SECompartmentManager::CreateGasGraph(const std::string& n
   SEGasCompartmentGraph* graph = nullptr;
 
   auto find = m_GasName2Graphs.find(name);
-  if (find == end(m_GasName2Graphs))
-  {
+  if (find == end(m_GasName2Graphs)) {
     graph = new SEGasCompartmentGraph(name, GetLogger());
     m_GasName2Graphs[name] = graph;
     m_GasGraphs.push_back(graph);
-  }
-  else
-  {
+  } else {
     graph = find->second;
     if (graph->GetName() != name)
       throw CommonDataModelException("Compartment Graph already exists for name(" + name + ")");
@@ -335,8 +316,7 @@ SEGasCompartmentGraph& SECompartmentManager::CreateGasGraph(const std::string& n
 void SECompartmentManager::DeleteGasGraph(const std::string& name)
 {
   SEGasCompartmentGraph* graph = GetGasGraph(name);
-  if (graph != nullptr)
-  {
+  if (graph != nullptr) {
     m_GasName2Graphs.erase(name);
     Remove(m_GasGraphs, graph);
     SAFE_DELETE(graph);
@@ -366,11 +346,9 @@ const std::vector<SEGasCompartmentGraph*>& SECompartmentManager::GetGasGraphs()
 }
 void SECompartmentManager::AddGasCompartmentSubstance(SESubstance& s)
 {
-  if (!Contains(m_GasSubstances, s))
-  {
+  if (!Contains(m_GasSubstances, s)) {
     m_GasSubstances.push_back(&s);
-    for (auto itr : m_GasName2Compartments)
-    {
+    for (auto itr : m_GasName2Compartments) {
       if (AllowGasSubstance(s, *itr.second))
         AddSubstance<SEGasCompartment>(s, *itr.second);
     }
@@ -392,8 +370,7 @@ SELiquidCompartment& SECompartmentManager::CreateLiquidCompartment(const std::st
 void SECompartmentManager::DeleteLiquidCompartment(const std::string& name)
 {
   SELiquidCompartment* cmpt = GetLiquidCompartment(name);
-  if (cmpt != nullptr)
-  {
+  if (cmpt != nullptr) {
     m_LiquidName2Compartments.erase(name);
     Remove(m_LiquidCompartments, cmpt);
     Remove(m_LiquidLeafCompartments, cmpt);
@@ -429,10 +406,9 @@ SELiquidCompartmentLink& SECompartmentManager::CreateLiquidLink(SELiquidCompartm
 void SECompartmentManager::DeleteLiquidLink(const std::string& name)
 {
   SELiquidCompartmentLink* link = GetLiquidLink(name);
-  if (link != nullptr)
-  {
+  if (link != nullptr) {
     m_LiquidName2Links.erase(name);
-    Remove(m_LiquidLinks, link); 
+    Remove(m_LiquidLinks, link);
     for (SELiquidCompartmentGraph* g : m_LiquidGraphs)
       g->RemoveLink(*link);
     SAFE_DELETE(link);
@@ -459,14 +435,11 @@ SELiquidCompartmentGraph& SECompartmentManager::CreateLiquidGraph(const std::str
   SELiquidCompartmentGraph* graph = nullptr;
 
   auto find = m_LiquidName2Graphs.find(name);
-  if (find == end(m_LiquidName2Graphs))
-  {
+  if (find == end(m_LiquidName2Graphs)) {
     graph = new SELiquidCompartmentGraph(name, GetLogger());
     m_LiquidName2Graphs[name] = graph;
     m_LiquidGraphs.push_back(graph);
-  }
-  else
-  {
+  } else {
     graph = find->second;
     if (graph->GetName() != name)
       throw CommonDataModelException("Compartment Graph already exists for name(" + name + ")");
@@ -476,8 +449,7 @@ SELiquidCompartmentGraph& SECompartmentManager::CreateLiquidGraph(const std::str
 void SECompartmentManager::DeleteLiquidGraph(const std::string& name)
 {
   SELiquidCompartmentGraph* graph = GetLiquidGraph(name);
-  if (graph != nullptr)
-  {
+  if (graph != nullptr) {
     m_LiquidName2Graphs.erase(name);
     Remove(m_LiquidGraphs, graph);
     SAFE_DELETE(graph);
@@ -506,13 +478,11 @@ const std::vector<SELiquidCompartmentGraph*>& SECompartmentManager::GetLiquidGra
   return m_LiquidGraphs;
 }
 void SECompartmentManager::AddLiquidCompartmentSubstance(SESubstance& s)
-{  
-  if (!Contains(m_LiquidSubstances, s))
-  {
+{
+  if (!Contains(m_LiquidSubstances, s)) {
     m_LiquidSubstances.push_back(&s);
-    for (auto itr : m_LiquidName2Compartments)
-    {
-      if(AllowLiquidSubstance(s, *itr.second))
+    for (auto itr : m_LiquidName2Compartments) {
+      if (AllowLiquidSubstance(s, *itr.second))
         AddSubstance<SELiquidCompartment>(s, *itr.second);
     }
   }
@@ -533,8 +503,7 @@ SEThermalCompartment& SECompartmentManager::CreateThermalCompartment(const std::
 void SECompartmentManager::DeleteThermalCompartment(const std::string& name)
 {
   SEThermalCompartment* cmpt = GetThermalCompartment(name);
-  if (cmpt != nullptr)
-  {
+  if (cmpt != nullptr) {
     m_ThermalName2Compartments.erase(name);
     Remove(m_ThermalCompartments, cmpt);
     Remove(m_ThermalLeafCompartments, cmpt);
@@ -568,8 +537,7 @@ SEThermalCompartmentLink& SECompartmentManager::CreateThermalLink(SEThermalCompa
 void SECompartmentManager::DeleteThermalLink(const std::string& name)
 {
   SEThermalCompartmentLink* link = GetThermalLink(name);
-  if (link != nullptr)
-  {
+  if (link != nullptr) {
     m_ThermalName2Links.erase(name);
     Remove(m_ThermalLinks, link);
     SAFE_DELETE(link);
@@ -599,7 +567,7 @@ const std::vector<SEThermalCompartmentLink*>& SECompartmentManager::GetThermalLi
 SETissueCompartment& SECompartmentManager::CreateTissueCompartment(const std::string& name)
 {
   if (HasTissueCompartment(name))
-      throw CommonDataModelException("Compartment already exists for name(" + name + ")");
+    throw CommonDataModelException("Compartment already exists for name(" + name + ")");
 
   SETissueCompartment* tissue = new SETissueCompartment(name, GetLogger());
   m_TissueName2Compartments[name] = tissue;
@@ -608,8 +576,7 @@ SETissueCompartment& SECompartmentManager::CreateTissueCompartment(const std::st
 void SECompartmentManager::DeleteTissueCompartment(const std::string& name)
 {
   SETissueCompartment* cmpt = GetTissueCompartment(name);
-  if (cmpt != nullptr)
-  {
+  if (cmpt != nullptr) {
     m_TissueName2Compartments.erase(name);
     Remove(m_TissueCompartments, cmpt);
     Remove(m_TissueLeafCompartments, cmpt);
@@ -637,8 +604,6 @@ const std::vector<SETissueCompartment*>& SECompartmentManager::GetTissueLeafComp
   return m_TissueLeafCompartments;
 }
 
-
-
 ///////////////////////
 // General Utilities //
 ///////////////////////
@@ -647,83 +612,70 @@ void SECompartmentManager::StateChange()
 {
   // All of our Name 2 Compartment Maps are up to date
   // So track the compartments into our various vectors
-  // for easier access and functional support 
+  // for easier access and functional support
 
   // Also, get a list of all of our leaves
   // The hierarchy should be build and good to go
 
   m_GasCompartments.clear();
   m_GasLeafCompartments.clear();
-  for (auto itr : m_GasName2Compartments)
-  {
+  for (auto itr : m_GasName2Compartments) {
     m_GasCompartments.push_back(itr.second);
-    if (!itr.second->HasChildren())
-    {
+    if (!itr.second->HasChildren()) {
       m_GasLeafCompartments.push_back(itr.second);
     }
     itr.second->StateChange();
     SetSubstances<SEGasCompartment>(*itr.second, m_GasSubstances);
   }
   m_GasLinks.clear();
-  for (auto itr : m_GasName2Links)
-  {
+  for (auto itr : m_GasName2Links) {
     m_GasLinks.push_back(itr.second);
   }
   m_GasGraphs.clear();
-  for (auto itr : m_GasName2Graphs)
-  {
+  for (auto itr : m_GasName2Graphs) {
     m_GasGraphs.push_back(itr.second);
     itr.second->StateChange();
   }
 
   m_LiquidCompartments.clear();
   m_LiquidLeafCompartments.clear();
-  for (auto itr : m_LiquidName2Compartments)
-  {
+  for (auto itr : m_LiquidName2Compartments) {
     m_LiquidCompartments.push_back(itr.second);
-    if (!itr.second->HasChildren())
-    {
+    if (!itr.second->HasChildren()) {
       m_LiquidLeafCompartments.push_back(itr.second);
     }
     itr.second->StateChange();
     SetSubstances<SELiquidCompartment>(*itr.second, m_LiquidSubstances);
   }
   m_LiquidLinks.clear();
-  for (auto itr : m_LiquidName2Links)
-  {
+  for (auto itr : m_LiquidName2Links) {
     m_LiquidLinks.push_back(itr.second);
   }
   m_LiquidGraphs.clear();
-  for (auto itr : m_LiquidName2Graphs)
-  {
+  for (auto itr : m_LiquidName2Graphs) {
     m_LiquidGraphs.push_back(itr.second);
     itr.second->StateChange();
   }
 
   m_ThermalCompartments.clear();
   m_ThermalLeafCompartments.clear();
-  for (auto itr : m_ThermalName2Compartments)
-  {
+  for (auto itr : m_ThermalName2Compartments) {
     m_ThermalCompartments.push_back(itr.second);
-    if (!itr.second->HasChildren())
-    {
+    if (!itr.second->HasChildren()) {
       m_ThermalLeafCompartments.push_back(itr.second);
     }
     itr.second->StateChange();
   }
   m_ThermalLinks.clear();
-  for (auto itr : m_ThermalName2Links)
-  {
+  for (auto itr : m_ThermalName2Links) {
     m_ThermalLinks.push_back(itr.second);
   }
 
   m_TissueCompartments.clear();
   m_TissueLeafCompartments.clear();
-  for (auto itr : m_TissueName2Compartments)
-  {
+  for (auto itr : m_TissueName2Compartments) {
     m_TissueCompartments.push_back(itr.second);
-    if (!itr.second->HasChildren())
-    {
+    if (!itr.second->HasChildren()) {
       m_TissueLeafCompartments.push_back(itr.second);
     }
     itr.second->StateChange();
@@ -762,17 +714,15 @@ void SECompartmentManager::UpdateLinks(SELiquidCompartmentGraph& graph)
   UpdateLinks<SELiquidCompartment, SELiquidCompartmentLink>(graph.GetCompartments(), graph.GetLinks());
 }
 
-template<typename CompartmentType, typename LinkType>
+template <typename CompartmentType, typename LinkType>
 void SECompartmentManager::UpdateLinks(const std::vector<CompartmentType*>& compartments, const std::vector<LinkType*>& links) const
 {
-  for (CompartmentType* cmpt : compartments)
-  {
+  for (CompartmentType* cmpt : compartments) {
     cmpt->m_Links.clear();
     cmpt->m_IncomingLinks.clear();
     cmpt->m_OutgoingLinks.clear();
   }
-  for (LinkType* link : links)
-  {
+  for (LinkType* link : links) {
     CompartmentType& src = link->GetSourceCompartment();
     CompartmentType& tgt = link->GetTargetCompartment();
 
@@ -781,49 +731,40 @@ void SECompartmentManager::UpdateLinks(const std::vector<CompartmentType*>& comp
     tgt.m_Links.push_back(link);
     tgt.m_IncomingLinks.push_back(link);
   }
-  for (CompartmentType* pnt : compartments)
-  {
-    if (pnt->HasChildren())
-    {
+  for (CompartmentType* pnt : compartments) {
+    if (pnt->HasChildren()) {
       for (CompartmentType* child : pnt->GetChildren())
         GetChildLinks<CompartmentType, LinkType>(pnt, child);
     }
   }
 }
 
-template<typename CompartmentType, typename LinkType>
+template <typename CompartmentType, typename LinkType>
 void SECompartmentManager::GetChildLinks(CompartmentType* pnt, CompartmentType* child) const
 {
-  if (child->HasChildren())
-  {
+  if (child->HasChildren()) {
     for (CompartmentType* grandchild : child->GetChildren())
       GetChildLinks<CompartmentType, LinkType>(child, grandchild);
   }
-  for (LinkType* in : child->m_IncomingLinks)
-  {
-    if (!Contains(pnt->m_Links, (*in)))
-    {
+  for (LinkType* in : child->m_IncomingLinks) {
+    if (!Contains(pnt->m_Links, (*in))) {
       pnt->m_Links.push_back(in);
       pnt->m_IncomingLinks.push_back(in);
     }
   }
-  for (LinkType* out : child->m_OutgoingLinks)
-  {
-    if (!Contains(pnt->m_Links, (*out)))
-    {
+  for (LinkType* out : child->m_OutgoingLinks) {
+    if (!Contains(pnt->m_Links, (*out))) {
       pnt->m_Links.push_back(out);
       pnt->m_OutgoingLinks.push_back(out);
     }
   }
 }
 
-template<typename CompartmentType>
+template <typename CompartmentType>
 void SECompartmentManager::FindLeaves(CompartmentType* cmpt, std::vector<CompartmentType*>& leaves) const
 {
-  if (cmpt->HasChildren())
-  {
-    for (CompartmentType* child : cmpt->GetChildren())
-    {
+  if (cmpt->HasChildren()) {
+    for (CompartmentType* child : cmpt->GetChildren()) {
       if (child->HasChildren())
         FindLeaves(child, leaves);
       else
@@ -832,21 +773,18 @@ void SECompartmentManager::FindLeaves(CompartmentType* cmpt, std::vector<Compart
   }
 }
 
-template<typename CompartmentType>
+template <typename CompartmentType>
 CompartmentType& SECompartmentManager::CreateCompartment(const std::string& name, std::map<std::string, CompartmentType*>& name2cmpt, std::vector<SESubstance*>* substances)
 {
   CompartmentType* cmpt = nullptr;
 
   auto find = name2cmpt.find(name);
-  if (find == end(name2cmpt))
-  {
+  if (find == end(name2cmpt)) {
     cmpt = new CompartmentType(name, GetLogger());
     name2cmpt[name] = cmpt;
     if (substances != nullptr)
       SetSubstances(*cmpt, *substances);
-  }
-  else
-  {
+  } else {
     cmpt = find->second;
     if (cmpt->GetName() != name)
       throw CommonDataModelException("Compartment already exists for name(" + name + ")");
@@ -854,13 +792,13 @@ CompartmentType& SECompartmentManager::CreateCompartment(const std::string& name
   return *cmpt;
 }
 
-template<typename CompartmentType>
+template <typename CompartmentType>
 bool SECompartmentManager::HasCompartment(const std::string& name, const std::map<std::string, CompartmentType*>& name2cmpt) const
 {
   return name2cmpt.find(name) != name2cmpt.end();
 }
 
-template<typename CompartmentType>
+template <typename CompartmentType>
 CompartmentType* SECompartmentManager::GetCompartment(const std::string& name, std::map<std::string, CompartmentType*>& name2cmpt) const
 {
   auto it = name2cmpt.find(name);
@@ -869,7 +807,7 @@ CompartmentType* SECompartmentManager::GetCompartment(const std::string& name, s
   return nullptr;
 }
 
-template<typename CompartmentType>
+template <typename CompartmentType>
 const CompartmentType* SECompartmentManager::GetCompartment(const std::string& name, const std::map<std::string, CompartmentType*>& name2cmpt) const
 {
   auto it = name2cmpt.find(name);
@@ -878,21 +816,18 @@ const CompartmentType* SECompartmentManager::GetCompartment(const std::string& n
   return nullptr;
 }
 
-template<typename LinkType, typename CompartmentType>
+template <typename LinkType, typename CompartmentType>
 LinkType& SECompartmentManager::CreateLink(CompartmentType& src, CompartmentType& tgt, const std::string& name, std::map<std::string, LinkType*>& name2link) const
 {
   LinkType* link = nullptr;
 
   auto find = name2link.find(name);
-  if (find == end(name2link))
-  {
+  if (find == end(name2link)) {
     link = new LinkType(src, tgt, name);
     name2link[name] = link;
     src.AddLink(*link);
     tgt.AddLink(*link);
-  }
-  else
-  {
+  } else {
     link = find->second;
     if (link->GetName() != name)
       throw CommonDataModelException("Link already exists for name(" + name + ")");
@@ -900,14 +835,14 @@ LinkType& SECompartmentManager::CreateLink(CompartmentType& src, CompartmentType
   return *link;
 }
 
-template<typename LinkType>
+template <typename LinkType>
 bool SECompartmentManager::HasLink(const std::string& name, const std::map<std::string, LinkType*>& name2link) const
 {
   return name2link.find(name) != end(name2link);
 }
 
-template<typename LinkType>
-LinkType* SECompartmentManager::GetLink(const std::string& name, std::map<std::string, LinkType*>&name2link) const
+template <typename LinkType>
+LinkType* SECompartmentManager::GetLink(const std::string& name, std::map<std::string, LinkType*>& name2link) const
 {
   auto it = name2link.find(name);
   if (it != name2link.end())
@@ -915,7 +850,7 @@ LinkType* SECompartmentManager::GetLink(const std::string& name, std::map<std::s
   return nullptr;
 }
 
-template<typename LinkType>
+template <typename LinkType>
 const LinkType* SECompartmentManager::GetLink(const std::string& name, const std::map<std::string, LinkType*>& name2link) const
 {
   auto it = name2link.find(name);
@@ -924,25 +859,20 @@ const LinkType* SECompartmentManager::GetLink(const std::string& name, const std
   return nullptr;
 }
 
-template<typename CompartmentType>
+template <typename CompartmentType>
 void SECompartmentManager::SetSubstances(CompartmentType& cmpt, std::vector<SESubstance*>& substances) const
 {
   // Add any substance quantites to this new compartment, if its a quantity holding type
-  SEGasCompartment*    gcmpt = dynamic_cast<SEGasCompartment*>(&cmpt);
+  SEGasCompartment* gcmpt = dynamic_cast<SEGasCompartment*>(&cmpt);
   SELiquidCompartment* lcmpt = dynamic_cast<SELiquidCompartment*>(&cmpt);
-  if (gcmpt != nullptr || lcmpt != nullptr)
-  {
-    for (SESubstance* s : substances)
-    {           
-      if (gcmpt != nullptr)
-      {
+  if (gcmpt != nullptr || lcmpt != nullptr) {
+    for (SESubstance* s : substances) {
+      if (gcmpt != nullptr) {
         if (!AllowGasSubstance(*s, *gcmpt))
           continue;
         if (!gcmpt->HasSubstanceQuantity(*s))
           gcmpt->CreateSubstanceQuantity(*s);
-      }
-      else if (lcmpt != nullptr)
-      {        
+      } else if (lcmpt != nullptr) {
         if (!AllowLiquidSubstance(*s, *lcmpt))
           continue;
         SELiquidSubstanceQuantity& subQ = lcmpt->CreateSubstanceQuantity(*s);
@@ -953,7 +883,7 @@ void SECompartmentManager::SetSubstances(CompartmentType& cmpt, std::vector<SESu
   }
 }
 
-template<typename CompartmentType>
+template <typename CompartmentType>
 void SECompartmentManager::AddSubstance(SESubstance& s, CompartmentType& cmpt) const
 {
   if (cmpt.HasSubstanceQuantity(s))

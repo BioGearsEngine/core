@@ -10,20 +10,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/stdafx.h>
 
-
-SEFunctionVolumeVsTime::SEFunctionVolumeVsTime() : SEFunction()
+SEFunctionVolumeVsTime::SEFunctionVolumeVsTime()
+  : SEFunction()
 {
-	
 }
 
 SEFunctionVolumeVsTime::~SEFunctionVolumeVsTime()
 {
-	Clear();
+  Clear();
 }
 
 void SEFunctionVolumeVsTime::Clear()
@@ -42,7 +41,7 @@ bool SEFunctionVolumeVsTime::Load(const CDM::FunctionVolumeVsTimeData& in)
   return IsValid();
 }
 
-CDM::FunctionVolumeVsTimeData*  SEFunctionVolumeVsTime::Unload() const
+CDM::FunctionVolumeVsTimeData* SEFunctionVolumeVsTime::Unload() const
 {
   if (!IsValid())
     return nullptr;

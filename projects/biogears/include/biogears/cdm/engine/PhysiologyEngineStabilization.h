@@ -11,13 +11,19 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
+#include <biogears/cdm/CommonDataModel.h>
+
+#include <biogears/schema/enumOnOff.hxx>
+
 class PhysiologyEngine;
 class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration; 
 class SECondition;
-#include <biogears/schema/enumOnOff.hxx>
 
 CDM_BIND_DECL(PhysiologyEngineStabilizationData)
+
 class BIOGEARS_API PhysiologyEngineStabilization : public Loggable
 {
 public:

@@ -10,41 +10,41 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/SEActionManager.h>
-#include <biogears/schema/PatientActionData.hxx>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/AnesthesiaMachineActionData.hxx>
 #include <biogears/schema/EnvironmentActionData.hxx>
 #include <biogears/schema/InhalerActionData.hxx>
-#include <biogears/schema/AnesthesiaMachineActionData.hxx>
+#include <biogears/schema/PatientActionData.hxx>
 
-SEActionManager::SEActionManager(SESubstanceManager& substances) : Loggable(substances.GetLogger()), 
-                                                                   m_PatientActions(substances),
-	                                                                 m_AnesthesiaMachineActions(substances),
-																                                   m_EnvironmentActions(substances),
-																                                   m_InhalerActions(substances),
-	                                                                 m_Substances(substances)
+SEActionManager::SEActionManager(SESubstanceManager& substances)
+  : Loggable(substances.GetLogger())
+  , m_PatientActions(substances)
+  , m_AnesthesiaMachineActions(substances)
+  , m_EnvironmentActions(substances)
+  , m_InhalerActions(substances)
+  , m_Substances(substances)
 {
-	
 }
 
 SEActionManager::~SEActionManager()
 {
-	Clear();
+  Clear();
 }
 
 void SEActionManager::Clear()
 {
-	m_PatientActions.Clear();
-	m_AnesthesiaMachineActions.Clear();
-	m_EnvironmentActions.Clear();
-	m_InhalerActions.Clear();
-	m_ProcessedActions.clear();
+  m_PatientActions.Clear();
+  m_AnesthesiaMachineActions.Clear();
+  m_EnvironmentActions.Clear();
+  m_InhalerActions.Clear();
+  m_ProcessedActions.clear();
 }
 
 bool SEActionManager::ProcessAction(const CDM::ActionData& in)
 {
   const CDM::PatientActionData* pAction = dynamic_cast<const CDM::PatientActionData*>(&in);
-  if (pAction!=nullptr)
+  if (pAction != nullptr)
     return m_PatientActions.ProcessAction(*pAction);
   const CDM::EnvironmentActionData* eAction = dynamic_cast<const CDM::EnvironmentActionData*>(&in);
   if (eAction != nullptr)
@@ -69,24 +69,24 @@ void SEActionManager::Unload(std::vector<CDM::ActionData*>& to)
 
 bool SEActionManager::ProcessAction(const SEAction& action)
 {
-	// Store the action data. This is intended to be able to 
-	// Serialize out all the actions that the engine was asked to perform
+  // Store the action data. This is intended to be able to
+  // Serialize out all the actions that the engine was asked to perform
   CDM::ActionData* aData = action.Unload();
-	m_ProcessedActions.push_back(action.Unload());
+  m_ProcessedActions.push_back(action.Unload());
 
-	if (dynamic_cast<const SEPatientAction*>(&action) != nullptr)
+  if (dynamic_cast<const SEPatientAction*>(&action) != nullptr)
     return m_PatientActions.ProcessAction(dynamic_cast<const CDM::PatientActionData&>(*aData));
 
-	if (dynamic_cast<const SEAnesthesiaMachineAction*>(&action) != nullptr)
+  if (dynamic_cast<const SEAnesthesiaMachineAction*>(&action) != nullptr)
     return m_AnesthesiaMachineActions.ProcessAction(dynamic_cast<const CDM::AnesthesiaMachineActionData&>(*aData));
 
-	if (dynamic_cast<const SEEnvironmentAction*>(&action) != nullptr)
+  if (dynamic_cast<const SEEnvironmentAction*>(&action) != nullptr)
     return m_EnvironmentActions.ProcessAction(dynamic_cast<const CDM::EnvironmentActionData&>(*aData));
 
-	if (dynamic_cast<const SEInhalerAction*>(&action) != nullptr)
+  if (dynamic_cast<const SEInhalerAction*>(&action) != nullptr)
     return m_InhalerActions.ProcessAction(dynamic_cast<const CDM::InhalerActionData&>(*aData));
-	
-	/// \error Unsupported Action
-	Error("Unsupported Action");
-	return false;
+
+  /// \error Unsupported Action
+  Error("Unsupported Action");
+  return false;
 }

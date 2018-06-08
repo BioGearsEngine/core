@@ -11,22 +11,22 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/stdafx.h>
-#include <biogears/schema/TestReport.hxx>
 #include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/schema/TestReport.hxx>
 
-
-SETestReport::SETestReport(Logger* logger) : Loggable(logger)
+SETestReport::SETestReport(Logger* logger)
+  : Loggable(logger)
 {
 }
 
 SETestReport::~SETestReport()
 {
-	Clear();
+  Clear();
 }
 
 void SETestReport::Clear()
 {
-	DELETE_VECTOR(m_testSuite);
+  DELETE_VECTOR(m_testSuite);
 }
 
 void SETestReport::Reset()
@@ -35,59 +35,52 @@ void SETestReport::Reset()
 
 bool SETestReport::Load(const CDM::TestReportData& in)
 {
-	Reset();
+  Reset();
 
-	SETestSuite* sx;
-	CDM::TestSuite* sData;
-	for(unsigned int i=0; i<in.TestSuite().size(); i++)
-	{
-		sData=(CDM::TestSuite*)&in.TestSuite().at(i);
-		if(sData!=nullptr)
-		{
-			sx=new SETestSuite(GetLogger());
-			sx->Load(*sData);
-		}
-		m_testSuite.push_back(sx);
-	}
+  SETestSuite* sx;
+  CDM::TestSuite* sData;
+  for (unsigned int i = 0; i < in.TestSuite().size(); i++) {
+    sData = (CDM::TestSuite*)&in.TestSuite().at(i);
+    if (sData != nullptr) {
+      sx = new SETestSuite(GetLogger());
+      sx->Load(*sData);
+    }
+    m_testSuite.push_back(sx);
+  }
 
-	return true;
+  return true;
 }
 
-std::unique_ptr<CDM::TestReportData>  SETestReport::Unload() const
+std::unique_ptr<CDM::TestReportData> SETestReport::Unload() const
 {
-	std::unique_ptr<CDM::TestReportData> data(new CDM::TestReportData());
-	Unload(*data);
-	return data;
+  std::unique_ptr<CDM::TestReportData> data(new CDM::TestReportData());
+  Unload(*data);
+  return data;
 }
 
 void SETestReport::Unload(CDM::TestReportData& data) const
 {
-	for(unsigned int i=0; i<m_testSuite.size(); i++)
-	{
-		data.TestSuite().push_back(*m_testSuite.at(i)->Unload());
-	}
+  for (unsigned int i = 0; i < m_testSuite.size(); i++) {
+    data.TestSuite().push_back(*m_testSuite.at(i)->Unload());
+  }
 }
 
-
 bool SETestReport::WriteFile(const std::string& fileName)
-{ 
-	xml_schema::namespace_infomap map;
-	map[""].name = "uri:/mil/tatrc/physiology/datamodel";
-	map[""].schema = "BioGears.xsd";
+{
+  xml_schema::namespace_infomap map;
+  map[""].name = "uri:/mil/tatrc/physiology/datamodel";
+  map[""].schema = "BioGears.xsd";
 
-	try
-	{
-		std::ofstream outFile;
-		outFile.open(fileName);
-		std::unique_ptr<CDM::TestReportData> unloaded = Unload();
-		CDM::TestReport(outFile, *unloaded, map);
-	}
-	catch (const xml_schema::exception& e)
-	{
+  try {
+    std::ofstream outFile;
+    outFile.open(fileName);
+    std::unique_ptr<CDM::TestReportData> unloaded = Unload();
+    CDM::TestReport(outFile, *unloaded, map);
+  } catch (const xml_schema::exception& e) {
     Error(e.what());
-		return false;
-	}
-	return true;
+    return false;
+  }
+  return true;
 }
 
 SETestSuite& SETestReport::CreateTestSuite()
@@ -98,5 +91,5 @@ SETestSuite& SETestReport::CreateTestSuite()
 }
 const std::vector<SETestSuite*>& SETestReport::GetTestSuites() const
 {
-	return m_testSuite;
+  return m_testSuite;
 }

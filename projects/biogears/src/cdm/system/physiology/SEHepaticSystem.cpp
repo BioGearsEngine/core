@@ -10,15 +10,16 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/physiology/SEHepaticSystem.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/properties/SEScalarMassPerTime.h>
-#include <biogears/schema/ScalarMassPerTimeData.hxx>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/physiology/SEHepaticSystem.h>
 #include <biogears/schema/ScalarAmountPerTimeData.hxx>
+#include <biogears/schema/ScalarMassPerTimeData.hxx>
 
-SEHepaticSystem::SEHepaticSystem(Logger* logger) : SESystem(logger)
+SEHepaticSystem::SEHepaticSystem(Logger* logger)
+  : SESystem(logger)
 {
   m_KetoneProductionRate = nullptr;
   m_HepaticGluconeogenesisRate = nullptr;
@@ -35,7 +36,6 @@ void SEHepaticSystem::Clear()
 
   SAFE_DELETE(m_KetoneProductionRate);
   SAFE_DELETE(m_HepaticGluconeogenesisRate);
-
 }
 
 const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
@@ -49,14 +49,14 @@ const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
 
 bool SEHepaticSystem::Load(const CDM::HepaticSystemData& in)
 {
-	SESystem::Load(in);
+  SESystem::Load(in);
 
   if (in.KetoneProductionRate().present())
     GetKetoneProductionRate().Load(in.KetoneProductionRate().get());
   if (in.HepaticGluconeogenesisRate().present())
     GetHepaticGluconeogenesisRate().Load(in.HepaticGluconeogenesisRate().get());
 
-	return true;
+  return true;
 }
 CDM::HepaticSystemData* SEHepaticSystem::Unload() const
 {
@@ -66,13 +66,12 @@ CDM::HepaticSystemData* SEHepaticSystem::Unload() const
 }
 void SEHepaticSystem::Unload(CDM::HepaticSystemData& data) const
 {
-	SESystem::Unload(data);
+  SESystem::Unload(data);
 
   if (m_KetoneProductionRate != nullptr)
     data.KetoneProductionRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_KetoneProductionRate->Unload()));
   if (m_HepaticGluconeogenesisRate != nullptr)
     data.HepaticGluconeogenesisRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_HepaticGluconeogenesisRate->Unload()));
-
 }
 
 bool SEHepaticSystem::HasKetoneProductionRate() const

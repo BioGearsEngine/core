@@ -10,46 +10,43 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
+#include <biogears/cdm/stdafx.h>
 
 #include <biogears/cdm/properties/SEScalarPower.h>
 
-SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment & tgt, const std::string& name) : SECompartmentLink(name,src.GetLogger()), m_SourceCmpt(src), m_TargetCmpt(tgt)
+SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const std::string& name)
+  : SECompartmentLink(name, src.GetLogger())
+  , m_SourceCmpt(src)
+  , m_TargetCmpt(tgt)
 {
   m_HeatTransferRate = nullptr;
   m_Path = nullptr;
 }
 SEThermalCompartmentLink::~SEThermalCompartmentLink()
 {
-
 }
 
 bool SEThermalCompartmentLink::Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits)
 {
   if (!SECompartmentLink::Load(in, circuits))
     return false;
-  if (in.Path().present())
-  {
-    if (circuits == nullptr)
-    {
+  if (in.Path().present()) {
+    if (circuits == nullptr) {
       Error("Link is mapped to circuit path, " + in.Path().get() + ", but no circuit manager was provided, cannot load");
       return false;
     }
     SEThermalCircuitPath* path = circuits->GetThermalPath(in.Path().get());
-    if (path == nullptr)
-    {
+    if (path == nullptr) {
       Error("Link is mapped to circuit path, " + in.Path().get() + ", but provided circuit manager did not have that path");
       return false;
     }
     MapPath(*path);
-  }
-  else
-  {
+  } else {
     if (in.HeatTransferRate().present())
       const_cast<SEScalarPower&>(GetHeatTransferRate()).Load(in.HeatTransferRate().get());
-  }  
+  }
   return true;
 }
 CDM::ThermalCompartmentLinkData* SEThermalCompartmentLink::Unload()

@@ -10,18 +10,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
+#include <biogears/cdm/stdafx.h>
 
-SEScenarioAutoSerialization::SEScenarioAutoSerialization(Logger* logger) : Loggable(logger)
+SEScenarioAutoSerialization::SEScenarioAutoSerialization(Logger* logger)
+  : Loggable(logger)
 {
   m_Period = nullptr;
   m_PeriodTimeStamps = (CDM::enumOnOff::value)-1;
   m_AfterActions = (CDM::enumOnOff::value)-1;
-  m_ReloadState  = (CDM::enumOnOff::value)-1;
-  m_Directory    = "";
-  m_FileName     = "";
+  m_ReloadState = (CDM::enumOnOff::value)-1;
+  m_Directory = "";
+  m_FileName = "";
 }
 
 SEScenarioAutoSerialization::~SEScenarioAutoSerialization()
@@ -71,7 +72,7 @@ bool SEScenarioAutoSerialization::Load(const CDM::ScenarioAutoSerializationData&
 }
 CDM::ScenarioAutoSerializationData* SEScenarioAutoSerialization::Unload() const
 {
-  CDM::ScenarioAutoSerializationData*data(new CDM::ScenarioAutoSerializationData());
+  CDM::ScenarioAutoSerializationData* data(new CDM::ScenarioAutoSerializationData());
   Unload(*data);
   return data;
 }
@@ -135,11 +136,11 @@ void SEScenarioAutoSerialization::SetAfterActions(CDM::enumOnOff::value v)
 }
 bool SEScenarioAutoSerialization::HasAfterActions() const
 {
-  return m_AfterActions == ((CDM::enumOnOff::value) - 1) ? false : true;
+  return m_AfterActions == ((CDM::enumOnOff::value)-1) ? false : true;
 }
 void SEScenarioAutoSerialization::InvalidateAfterActions()
 {
-  m_AfterActions = (CDM::enumOnOff::value) - 1;
+  m_AfterActions = (CDM::enumOnOff::value)-1;
 }
 
 CDM::enumOnOff::value SEScenarioAutoSerialization::GetReloadState() const
@@ -152,11 +153,11 @@ void SEScenarioAutoSerialization::SetReloadState(CDM::enumOnOff::value v)
 }
 bool SEScenarioAutoSerialization::HasReloadState() const
 {
-  return m_ReloadState == ((CDM::enumOnOff::value) - 1) ? false : true;
+  return m_ReloadState == ((CDM::enumOnOff::value)-1) ? false : true;
 }
 void SEScenarioAutoSerialization::InvalidateReloadState()
 {
-  m_ReloadState = (CDM::enumOnOff::value) - 1;
+  m_ReloadState = (CDM::enumOnOff::value)-1;
 }
 
 std::string SEScenarioAutoSerialization::GetDirectory() const

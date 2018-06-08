@@ -10,71 +10,71 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/conditions/SEStarvation.h>
-#include <biogears/schema/StarvationData.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ScalarTimeData.hxx>
+#include <biogears/schema/StarvationData.hxx>
 
-SEStarvation::SEStarvation() : SEPatientCondition()
+SEStarvation::SEStarvation()
+  : SEPatientCondition()
 {
-	m_TimeSinceMeal = nullptr;
+  m_TimeSinceMeal = nullptr;
 }
 
 SEStarvation::~SEStarvation()
 {
-	Clear();
+  Clear();
 }
 
 void SEStarvation::Clear()
 {
-	SEPatientCondition::Clear();
-	SAFE_DELETE(m_TimeSinceMeal);
+  SEPatientCondition::Clear();
+  SAFE_DELETE(m_TimeSinceMeal);
 }
 
 bool SEStarvation::IsValid() const
 {
-	return SEPatientCondition::IsValid() && HasTimeSinceMeal();
+  return SEPatientCondition::IsValid() && HasTimeSinceMeal();
 }
 
 bool SEStarvation::Load(const CDM::StarvationData& in)
 {
-	SEPatientCondition::Load(in);
-	GetTimeSinceMeal().Load(in.TimeSinceMeal());
-	return true;
+  SEPatientCondition::Load(in);
+  GetTimeSinceMeal().Load(in.TimeSinceMeal());
+  return true;
 }
 
 CDM::StarvationData* SEStarvation::Unload() const
 {
-	CDM::StarvationData*data(new CDM::StarvationData());
-	Unload(*data);
-	return data;
+  CDM::StarvationData* data(new CDM::StarvationData());
+  Unload(*data);
+  return data;
 }
 
 void SEStarvation::Unload(CDM::StarvationData& data) const
 {
-	SEPatientCondition::Unload(data);
-	if (m_TimeSinceMeal != nullptr)
-		data.TimeSinceMeal(std::unique_ptr<CDM::ScalarTimeData>(m_TimeSinceMeal->Unload()));
+  SEPatientCondition::Unload(data);
+  if (m_TimeSinceMeal != nullptr)
+    data.TimeSinceMeal(std::unique_ptr<CDM::ScalarTimeData>(m_TimeSinceMeal->Unload()));
 }
 
 bool SEStarvation::HasTimeSinceMeal() const
 {
-	return m_TimeSinceMeal == nullptr ? false : m_TimeSinceMeal->IsValid();
+  return m_TimeSinceMeal == nullptr ? false : m_TimeSinceMeal->IsValid();
 }
 
 SEScalarTime& SEStarvation::GetTimeSinceMeal()
 {
-	if (m_TimeSinceMeal == nullptr)
+  if (m_TimeSinceMeal == nullptr)
     m_TimeSinceMeal = new SEScalarTime();
-	return *m_TimeSinceMeal;
+  return *m_TimeSinceMeal;
 }
 
-
-void SEStarvation::ToString(std::ostream &str) const
+void SEStarvation::ToString(std::ostream& str) const
 {
-	str << "Patient Condition : Starvation";
-	if (HasComment())
-		str << "\n\tComment: " << m_Comment;
-	str << std::flush;
+  str << "Patient Condition : Starvation";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << std::flush;
 }

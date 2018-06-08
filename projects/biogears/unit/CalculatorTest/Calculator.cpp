@@ -14,50 +14,50 @@ specific language governing permissions and limitations under the License.
 
 double Calculator::Add(double a, double b)
 {
-	return Plus(a, b);
+  return Plus(a, b);
 }
 
 double Calculator::Plus(double a, double b)
 {
-	return a + b;
+  return a + b;
 }
 
 double Calculator::Subtract(double a, double b)
 {
-	return Minus(a, b);
+  return Minus(a, b);
 }
 
 double Calculator::Minus(double a, double b)
 {
-	return a - b;
+  return a - b;
 }
 
 double Calculator::Multiply(double a, double b)
 {
-	return Star(a, b);
+  return Star(a, b);
 }
 
 double Calculator::Star(double a, double b)
 {
-	return a * b;
+  return a * b;
 }
 
 double Calculator::Divide(double a, double b)
 {
-	return Quotient(a, b);
+  return Quotient(a, b);
 }
 
 double Calculator::Quotient(double a, double b)
 {
-	return a / b;
+  return a / b;
 }
 
 void Calculator::Save(double a)
 {
-	m_Saved = a;
+  m_Saved = a;
 }
 
 double Calculator::GetSaved()
 {
-	return m_Saved;
+  return m_Saved;
 }

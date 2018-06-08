@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
@@ -18,12 +20,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
+class SELiquidCompartment;
+class SELiquidSubstanceQuantity;
+class SEFluidCircuitPath;
+class BioGears;
+
 /**
 * @brief @copydoc Physiology_GastrointestinalSystemData
 */
 class BIOGEARS_API Gastrointestinal : public SEGastrointestinalSystem, public BioGearsSystem
 {
-  friend BioGears;
+  friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
   Gastrointestinal(BioGears& bg);

@@ -10,11 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/utils/TaskRunner/TaskRunner.h>
 #include <biogears/cdm/utils/TaskRunner/TaskProcessor.h>
+#include <biogears/cdm/utils/TaskRunner/TaskRunner.h>
 
-#include <thread>
 #include <iomanip>
+#include <thread>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -27,13 +27,12 @@ specific language governing permissions and limitations under the License.
 //--------------------------------------------------------------------------------------------------
 TaskRunner::TaskRunner()
 {
-    m_threadCount = std::thread::hardware_concurrency();
-	std::cout << "System supports " << m_threadCount << " threads." << std::endl;
-    if (m_threadCount == 0)
-    {
-        m_threadCount = 1;
-    }
-	std::cout << "Will execute with " << m_threadCount << std::endl;
+  m_threadCount = std::thread::hardware_concurrency();
+  std::cout << "System supports " << m_threadCount << " threads." << std::endl;
+  if (m_threadCount == 0) {
+    m_threadCount = 1;
+  }
+  std::cout << "Will execute with " << m_threadCount << std::endl;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -43,7 +42,7 @@ TaskRunner::TaskRunner()
 /// \param  threadCount     number of threads to use
 //--------------------------------------------------------------------------------------------------
 TaskRunner::TaskRunner(unsigned int threadCount)
-    : m_threadCount(threadCount)
+  : m_threadCount(threadCount)
 {
 }
 
@@ -55,7 +54,7 @@ TaskRunner::TaskRunner(unsigned int threadCount)
 //--------------------------------------------------------------------------------------------------
 void TaskRunner::AddTask(std::unique_ptr<Task> task)
 {
-    m_tasks.push(std::move(task));
+  m_tasks.push(std::move(task));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -64,30 +63,24 @@ void TaskRunner::AddTask(std::unique_ptr<Task> task)
 //--------------------------------------------------------------------------------------------------
 void TaskRunner::Run()
 {
-    m_totalTaskCount = m_tasks.size();
+  m_totalTaskCount = m_tasks.size();
 
-    if (m_echoPercentComplete)
-    {
-        PrintProgress();
+  if (m_echoPercentComplete) {
+    PrintProgress();
+  }
+
+  if (m_threadCount == 1) {
+    TaskProcessor(this)();
+  } else {
+    std::vector<std::thread> threads;
+    for (unsigned int i = 0; i < m_threadCount; ++i) {
+      threads.push_back(std::thread(TaskProcessor(this)));
     }
 
-    if (m_threadCount == 1)
-    {
-        TaskProcessor(this)();
+    for (std::thread& thread : threads) {
+      thread.join();
     }
-    else
-    {
-        std::vector<std::thread> threads;
-        for (unsigned int i = 0; i < m_threadCount; ++i)
-        {
-            threads.push_back(std::thread(TaskProcessor(this)));
-        }
-
-        for (std::thread& thread : threads)
-        {
-            thread.join();
-        }
-    }
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -99,19 +92,16 @@ void TaskRunner::Run()
 //--------------------------------------------------------------------------------------------------
 std::unique_ptr<Task> TaskRunner::GetNextTask()
 {
-    std::lock_guard<std::recursive_mutex> lock(m_taskQueueMutex);
+  std::lock_guard<std::recursive_mutex> lock(m_taskQueueMutex);
 
-    if (m_tasks.empty())
-    {
-        return nullptr;
-    }
-    else
-    {
-        std::unique_ptr<Task> pNextTask = std::move(m_tasks.front());
-        m_tasks.pop();
+  if (m_tasks.empty()) {
+    return nullptr;
+  } else {
+    std::unique_ptr<Task> pNextTask = std::move(m_tasks.front());
+    m_tasks.pop();
 
-        return pNextTask;
-    }
+    return pNextTask;
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -120,14 +110,13 @@ std::unique_ptr<Task> TaskRunner::GetNextTask()
 //--------------------------------------------------------------------------------------------------
 void TaskRunner::ReportTaskComplete()
 {
-    if (m_echoPercentComplete)
-    {
-        std::lock_guard<std::recursive_mutex> lock(m_taskQueueMutex);
+  if (m_echoPercentComplete) {
+    std::lock_guard<std::recursive_mutex> lock(m_taskQueueMutex);
 
-        ++m_tasksComplete;
+    ++m_tasksComplete;
 
-        PrintProgress();
-    }
+    PrintProgress();
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -137,27 +126,23 @@ void TaskRunner::ReportTaskComplete()
 //--------------------------------------------------------------------------------------------------
 void TaskRunner::PrintProgress()
 {
-    std::lock_guard<std::recursive_mutex> lock(m_taskQueueMutex);
+  std::lock_guard<std::recursive_mutex> lock(m_taskQueueMutex);
 
-    double percent = static_cast<double>(m_tasksComplete) / static_cast<double>(m_totalTaskCount);
-    unsigned int progress = static_cast<unsigned int>(percent * 30.0);
+  double percent = static_cast<double>(m_tasksComplete) / static_cast<double>(m_totalTaskCount);
+  unsigned int progress = static_cast<unsigned int>(percent * 30.0);
 
-    std::ios::fmtflags flags(std::cout.flags());
+  std::ios::fmtflags flags(std::cout.flags());
 
-    std::cout << "TaskRunner   [";
-    for (unsigned int i = 0; i < 30; ++i)
-    {
-        if (i < progress)
-        {
-            std::cout << "=";
-        }
-        else
-        {
-            std::cout << " ";
-        }
+  std::cout << "TaskRunner   [";
+  for (unsigned int i = 0; i < 30; ++i) {
+    if (i < progress) {
+      std::cout << "=";
+    } else {
+      std::cout << " ";
     }
+  }
 
-    std::cout << "] " << std::fixed << std::setprecision(2) << (percent * 100.0) << "%\n";
+  std::cout << "] " << std::fixed << std::setprecision(2) << (percent * 100.0) << "%\n";
 
-    std::cout.flags(flags);
+  std::cout.flags(flags);
 }

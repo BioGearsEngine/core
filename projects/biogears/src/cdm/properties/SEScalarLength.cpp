@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/stdafx.h>
 
 const LengthUnit LengthUnit::m("m");
 const LengthUnit LengthUnit::cm("cm");
@@ -42,7 +42,7 @@ bool LengthUnit::IsValidUnit(const std::string& unit)
   if (in.GetString().compare(unit) == 0)
     return true;
   if (ft.GetString().compare(unit) == 0)
-	  return true;
+    return true;
   return false;
 }
 
@@ -59,7 +59,7 @@ const LengthUnit& LengthUnit::GetCompoundUnit(const std::string& unit)
   if (in.GetString().compare(unit) == 0)
     return in;
   if (ft.GetString().compare(unit) == 0)
-	  return ft;
+    return ft;
   std::stringstream err;
   err << unit << " is not a valid Length unit";
   throw CommonDataModelException(err.str());

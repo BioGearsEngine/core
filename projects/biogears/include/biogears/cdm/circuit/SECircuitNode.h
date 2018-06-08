@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#include <biogears/cdm/CommonDataModel.h>
+
 namespace mil { namespace tatrc { namespace physiology { namespace datamodel { class CircuitNodeData; } } } }
 
 #define CIRCUIT_NODE_TEMPLATE typename PotentialScalar, typename QuantityScalar

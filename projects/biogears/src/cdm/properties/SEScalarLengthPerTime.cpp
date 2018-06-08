@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
+#include <biogears/cdm/stdafx.h>
 
 const LengthPerTimeUnit LengthPerTimeUnit::m_Per_s("m/s");
 const LengthPerTimeUnit LengthPerTimeUnit::cm_Per_s("cm/s");

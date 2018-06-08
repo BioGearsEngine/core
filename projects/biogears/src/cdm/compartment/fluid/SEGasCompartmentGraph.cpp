@@ -10,32 +10,28 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
-#include <biogears/schema/GasCompartmentGraphData.hxx>
-#include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/GasCompartmentGraphData.hxx>
 
 bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
   m_Name = in.Name();
-  for (auto name : in.Compartment())
-  {
+  for (auto name : in.Compartment()) {
     SEGasCompartment* cmpt = cmptMgr.GetGasCompartment(name);
-    if (cmpt == nullptr)
-    {
+    if (cmpt == nullptr) {
       Error("Could not find compartment " + name + " for graph " + m_Name);
       return false;
     }
     AddCompartment(*cmpt);
   }
-  for (auto name : in.Link())
-  {
+  for (auto name : in.Link()) {
     SEGasCompartmentLink* link = cmptMgr.GetGasLink(name);
-    if (link == nullptr)
-    {
+    if (link == nullptr) {
       Error("Could not find link " + name + " for graph " + m_Name);
       return false;
     }
@@ -60,34 +56,26 @@ void SEGasCompartmentGraph::Unload(CDM::GasCompartmentGraphData& data)
 
 void SEGasCompartmentGraph::BalanceByIntensive()
 {
-  for (auto cmpt : GetCompartments())
-  {
+  for (auto cmpt : GetCompartments()) {
     // Make sure Volume Fractions sum to 1.0 and adjust accordingly
     double totalVolumeFraction = 0;
-    for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities())
-    {
+    for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities()) {
       if (subQ->HasVolumeFraction())
         totalVolumeFraction += subQ->GetVolumeFraction().GetValue();
     }
-    if (totalVolumeFraction == 0.0)
-    {
-      for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities())
-      {
+    if (totalVolumeFraction == 0.0) {
+      for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities()) {
         if (subQ->HasVolumeFraction())
           subQ->SetToZero();
       }
       continue;
-    }
-    else
-    {
+    } else {
       //Adjust to keep the volume fractions making sense
-		//Make it a little more sensitive than the error check later just to be safe
-      if (std::abs(1.0 - totalVolumeFraction) > (ZERO_APPROX / 10.0))
-      {
-        for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities())
-        {
+      //Make it a little more sensitive than the error check later just to be safe
+      if (std::abs(1.0 - totalVolumeFraction) > (ZERO_APPROX / 10.0)) {
+        for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities()) {
           //Adjust everything the same amount to make sure the volume fraction is 1.0
-			double volumeFractionErrorFraction = 1.0 / totalVolumeFraction;  //<1 = too high; >1 = too low
+          double volumeFractionErrorFraction = 1.0 / totalVolumeFraction; //<1 = too high; >1 = too low
           subQ->GetVolumeFraction().SetValue(subQ->GetVolumeFraction().GetValue() * volumeFractionErrorFraction);
         }
       }

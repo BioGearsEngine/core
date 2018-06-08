@@ -10,39 +10,39 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SEPatientDataRequest.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/PatientDataRequestData.hxx>
 
-SEPatientDataRequest::SEPatientDataRequest(const SEDecimalFormat* dfault) : SEDataRequest(dfault)
+SEPatientDataRequest::SEPatientDataRequest(const SEDecimalFormat* dfault)
+  : SEDataRequest(dfault)
 {
-	
 }
 
 SEPatientDataRequest::~SEPatientDataRequest()
 {
-	Clear();
+  Clear();
 }
 
 void SEPatientDataRequest::Clear()
 {
-	SEDataRequest::Clear();
+  SEDataRequest::Clear();
 }
 
 bool SEPatientDataRequest::Load(const CDM::PatientDataRequestData& in)
-{	
-	SEDataRequest::Load(in);
-	return true;
+{
+  SEDataRequest::Load(in);
+  return true;
 }
 
 CDM::PatientDataRequestData* SEPatientDataRequest::Unload() const
 {
-	CDM::PatientDataRequestData* data = new CDM::PatientDataRequestData();
-	Unload(*data);
-	return data;
+  CDM::PatientDataRequestData* data = new CDM::PatientDataRequestData();
+  Unload(*data);
+  return data;
 }
 
 void SEPatientDataRequest::Unload(CDM::PatientDataRequestData& data) const
 {
-	SEDataRequest::Unload(data);
+  SEDataRequest::Unload(data);
 }

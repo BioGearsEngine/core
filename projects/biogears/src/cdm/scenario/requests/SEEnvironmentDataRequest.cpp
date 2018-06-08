@@ -10,39 +10,39 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SEEnvironmentDataRequest.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/EnvironmentDataRequestData.hxx>
 
-SEEnvironmentDataRequest::SEEnvironmentDataRequest(const SEDecimalFormat* dfault) : SEDataRequest(dfault)
+SEEnvironmentDataRequest::SEEnvironmentDataRequest(const SEDecimalFormat* dfault)
+  : SEDataRequest(dfault)
 {
-	
 }
 
 SEEnvironmentDataRequest::~SEEnvironmentDataRequest()
 {
-	Clear();
+  Clear();
 }
 
 void SEEnvironmentDataRequest::Clear()
 {
-	SEDataRequest::Clear();
+  SEDataRequest::Clear();
 }
 
 bool SEEnvironmentDataRequest::Load(const CDM::EnvironmentDataRequestData& in)
-{	
-	SEDataRequest::Load(in);
-	return true;
+{
+  SEDataRequest::Load(in);
+  return true;
 }
 
 CDM::EnvironmentDataRequestData* SEEnvironmentDataRequest::Unload() const
 {
-	CDM::EnvironmentDataRequestData* data = new CDM::EnvironmentDataRequestData();
-	Unload(*data);
-	return data;
+  CDM::EnvironmentDataRequestData* data = new CDM::EnvironmentDataRequestData();
+  Unload(*data);
+  return data;
 }
 
 void SEEnvironmentDataRequest::Unload(CDM::EnvironmentDataRequestData& data) const
 {
-	SEDataRequest::Unload(data);
+  SEDataRequest::Unload(data);
 }

@@ -11,16 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // Testing creating and converting units
-#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/properties/SEScalarAmount.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
@@ -31,172 +30,164 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <exception>
 
 void CommonDataModelTest::ConvertList(std::vector<std::string> stringList)
 {
-	if (stringList.empty())
-		return;
+  if (stringList.empty())
+    return;
 
-	int size = stringList.size();
-	for (int i=0; i < size; i++)
-	{
-		for (int j=0; j < size; j++)
-		{
-			if (i == j)
-				continue;
+  int size = stringList.size();
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      if (i == j)
+        continue;
 
-			std::cout << "converting from " << stringList[i] << " to " << stringList[j] << std::endl;
-			//Convert(1.0, stringList[i], stringList[j]); TODO this whole test should use our predefined compound units
-		}
-	}
+      std::cout << "converting from " << stringList[i] << " to " << stringList[j] << std::endl;
+      //Convert(1.0, stringList[i], stringList[j]); TODO this whole test should use our predefined compound units
+    }
+  }
 }
 
 void CommonDataModelTest::UnitsTest(const std::string& sOutputDirectory)
 {
-	try
-	{
-		std::vector<std::string> stringList;
+  try {
+    std::vector<std::string> stringList;
 
-		SEScalarAmount amount;
+    SEScalarAmount amount;
     amount.SetValue(1.0, AmountUnit::GetCompoundUnit("mol"));
 
     ((SEUnitScalar&)amount).SetValue(5.0, AmountUnit::GetCompoundUnit("mol"));
-    try
-    {
+    try {
       ((SEUnitScalar&)amount).SetValue(5.0, AmountPerVolumeUnit::GetCompoundUnit("mol/L"));
-    }
-    catch (CommonDataModelException ex)
-    {
+    } catch (CommonDataModelException ex) {
       // i am expexting this
     }
 
-
-		SEScalarAmountPerVolume amountPerVolume;
+    SEScalarAmountPerVolume amountPerVolume;
     amountPerVolume.SetValue(1.0, AmountPerVolumeUnit::GetCompoundUnit("mol/L"));
 
-		SEScalarLength length;
+    SEScalarLength length;
     length.SetValue(1.0, LengthUnit::GetCompoundUnit("cm"));
-		stringList.clear();
-		stringList.push_back("cm");
-		stringList.push_back("in");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("cm");
+    stringList.push_back("in");
+    ConvertList(stringList);
 
     ((SEScalar&)length).GetValue();
 
-		SEScalarFlowCompliance flowCompliance;
+    SEScalarFlowCompliance flowCompliance;
     flowCompliance.SetValue(1.0, FlowComplianceUnit::GetCompoundUnit("L/cmH2O"));
-		stringList.clear();
-		stringList.push_back("L/cmH2O");
-		stringList.push_back("mL/mmHg");
-		stringList.push_back("m^3/Pa");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("L/cmH2O");
+    stringList.push_back("mL/mmHg");
+    stringList.push_back("m^3/Pa");
+    ConvertList(stringList);
 
-		SEScalarFlowInertance flowInertance;
+    SEScalarFlowInertance flowInertance;
     flowInertance.SetValue(1.0, FlowInertanceUnit::GetCompoundUnit("mmHg s^2/mL"));
-		stringList.clear();
-		stringList.push_back("mmHg s^2/mL");
-		stringList.push_back("Pa s^2/m^3");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("mmHg s^2/mL");
+    stringList.push_back("Pa s^2/m^3");
+    ConvertList(stringList);
 
-		SEScalarFlowResistance flowResistance;
+    SEScalarFlowResistance flowResistance;
     flowResistance.SetValue(1.0, FlowResistanceUnit::GetCompoundUnit("cmH2O s/L"));
-		stringList.clear();
-		stringList.push_back("cmH2O s/L");
-		stringList.push_back("mmHg s/L");
-		stringList.push_back("Pa s/m^3");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("cmH2O s/L");
+    stringList.push_back("mmHg s/L");
+    stringList.push_back("Pa s/m^3");
+    ConvertList(stringList);
 
-		SEScalarFraction fraction;
-		fraction.SetValue(1.0);
+    SEScalarFraction fraction;
+    fraction.SetValue(1.0);
 
-		SEScalarFrequency frequency;
+    SEScalarFrequency frequency;
     frequency.SetValue(1.0, FrequencyUnit::GetCompoundUnit("1/min"));
-		stringList.clear();
-		stringList.push_back("1/min");
-		stringList.push_back("1/s");
-		stringList.push_back("Hz");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("1/min");
+    stringList.push_back("1/s");
+    stringList.push_back("Hz");
+    ConvertList(stringList);
 
-		SEScalarInversePressure inversePressure;
+    SEScalarInversePressure inversePressure;
     inversePressure.SetValue(1.0, InversePressureUnit::GetCompoundUnit("1/cmH2O"));
-		stringList.clear();
-		stringList.push_back("1/cmH2O");
-		stringList.push_back("1/mmHg");
-		stringList.push_back("1/Pa");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("1/cmH2O");
+    stringList.push_back("1/mmHg");
+    stringList.push_back("1/Pa");
+    ConvertList(stringList);
 
-		SEScalarMass mass;
+    SEScalarMass mass;
     mass.SetValue(1.0, MassUnit::GetCompoundUnit("g"));
-		stringList.clear();
-		stringList.push_back("g");
-		stringList.push_back("ug");
-		stringList.push_back("mg");
-		stringList.push_back("kg");
-		stringList.push_back("lb");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("g");
+    stringList.push_back("ug");
+    stringList.push_back("mg");
+    stringList.push_back("kg");
+    stringList.push_back("lb");
+    ConvertList(stringList);
 
-		SEScalarMassPerMass massPerMass;
+    SEScalarMassPerMass massPerMass;
     massPerMass.SetValue(1.0, MassPerMassUnit::GetCompoundUnit("ug/kg"));
 
-		SEScalarMassPerTime massPerTime;
+    SEScalarMassPerTime massPerTime;
     massPerTime.SetValue(1.0, MassPerTimeUnit::GetCompoundUnit("ug/s"));
 
-		SEScalarMassPerVolume massPerVolume;
+    SEScalarMassPerVolume massPerVolume;
     massPerVolume.SetValue(1.0, MassPerVolumeUnit::GetCompoundUnit("g/dL"));
-		stringList.clear();
-		stringList.push_back("g/dL");
-		stringList.push_back("ug/mL");
-		stringList.push_back("mg/m^3");
-		stringList.push_back("kg/m^3");
-		stringList.push_back("ug/L");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("g/dL");
+    stringList.push_back("ug/mL");
+    stringList.push_back("mg/m^3");
+    stringList.push_back("kg/m^3");
+    stringList.push_back("ug/L");
+    ConvertList(stringList);
 
-		SEScalarPressure pressure;
+    SEScalarPressure pressure;
     pressure.SetValue(1.0, PressureUnit::GetCompoundUnit("Pa"));
-		stringList.clear();
-		stringList.push_back("Pa");
-		stringList.push_back("mmHg");
-		stringList.push_back("cmH2O");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("Pa");
+    stringList.push_back("mmHg");
+    stringList.push_back("cmH2O");
+    ConvertList(stringList);
 
-		SEScalarTemperature temperature;
+    SEScalarTemperature temperature;
     temperature.SetValue(1.0, TemperatureUnit::GetCompoundUnit("degF"));
-		stringList.clear();
-		stringList.push_back("degF");
-		stringList.push_back("degC");
-		stringList.push_back("K");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("degF");
+    stringList.push_back("degC");
+    stringList.push_back("K");
+    ConvertList(stringList);
 
-		SEScalarTime time;
+    SEScalarTime time;
     time.SetValue(1.0, TimeUnit::GetCompoundUnit("s"));
-		stringList.clear();
-		stringList.push_back("s");
-		stringList.push_back("yr");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("s");
+    stringList.push_back("yr");
+    ConvertList(stringList);
 
-		SEScalarVolume volume;
+    SEScalarVolume volume;
     volume.SetValue(1.0, VolumeUnit::GetCompoundUnit("L"));
-		stringList.clear();
-		stringList.push_back("L");
-		stringList.push_back("mL");
-		stringList.push_back("m^3");
-		ConvertList(stringList);
+    stringList.clear();
+    stringList.push_back("L");
+    stringList.push_back("mL");
+    stringList.push_back("m^3");
+    ConvertList(stringList);
 
-		SEScalarVolumePerPressure volumePerPressure;
+    SEScalarVolumePerPressure volumePerPressure;
     volumePerPressure.SetValue(1.0, VolumePerPressureUnit::GetCompoundUnit("L/Pa"));
 
-		SEScalarVolumePerTime volumePerTime;
+    SEScalarVolumePerTime volumePerTime;
     volumePerTime.SetValue(1.0, VolumePerTimeUnit::GetCompoundUnit("L/s"));
-		stringList.clear();
-		stringList.push_back("L/s");
-		stringList.push_back("mL/s");
-		stringList.push_back("L/min");
-		stringList.push_back("m^3/s");
-		ConvertList(stringList);
-	}
-	catch (std::exception& e)
-	{
-		std::cout << "caught exception: " << e.what() << std::endl;
-	}
+    stringList.clear();
+    stringList.push_back("L/s");
+    stringList.push_back("mL/s");
+    stringList.push_back("L/min");
+    stringList.push_back("m^3/s");
+    ConvertList(stringList);
+  } catch (std::exception& e) {
+    std::cout << "caught exception: " << e.what() << std::endl;
+  }
 }

@@ -10,62 +10,61 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
-#include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/schema/ScalarMassData.hxx>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/schema/ScalarMassData.hxx>
 #include <biogears/schema/ScalarVolumeData.hxx>
 
-SEUseInhaler::SEUseInhaler() : SEConsciousRespirationCommand()
+SEUseInhaler::SEUseInhaler()
+  : SEConsciousRespirationCommand()
 {
-	
 }
 
 SEUseInhaler::~SEUseInhaler()
 {
-	Clear();
+  Clear();
 }
 
 void SEUseInhaler::Clear()
 {
-	SEConsciousRespirationCommand::Clear();
+  SEConsciousRespirationCommand::Clear();
 }
 
 bool SEUseInhaler::IsValid() const
 {
-	return SEConsciousRespirationCommand::IsValid();
+  return SEConsciousRespirationCommand::IsValid();
 }
 
 bool SEUseInhaler::IsActive() const
 {
-	return SEConsciousRespirationCommand::IsActive();
+  return SEConsciousRespirationCommand::IsActive();
 }
 
 bool SEUseInhaler::Load(const CDM::UseInhalerData& in)
 {
-	SEConsciousRespirationCommand::Load(in);
-	return true;
+  SEConsciousRespirationCommand::Load(in);
+  return true;
 }
 
 CDM::UseInhalerData* SEUseInhaler::Unload() const
 {
-	CDM::UseInhalerData*data(new CDM::UseInhalerData());
-	Unload(*data);
-	return data;
+  CDM::UseInhalerData* data(new CDM::UseInhalerData());
+  Unload(*data);
+  return data;
 }
 
 void SEUseInhaler::Unload(CDM::UseInhalerData& data) const
 {
-	SEConsciousRespirationCommand::Unload(data);
+  SEConsciousRespirationCommand::Unload(data);
 }
 
-
-void SEUseInhaler::ToString(std::ostream &str) const
+void SEUseInhaler::ToString(std::ostream& str) const
 {
-	str << "Use Inhaler";
-	if (HasComment())
-		str << "\n\tComment: " << m_Comment;	
-	str << std::flush;
+  str << "Use Inhaler";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << std::flush;
 }

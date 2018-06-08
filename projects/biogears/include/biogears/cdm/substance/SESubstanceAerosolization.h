@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 CDM_BIND_DECL(SubstanceAerosolizationData)
 
 class BIOGEARS_API SESubstanceAerosolization : public Loggable

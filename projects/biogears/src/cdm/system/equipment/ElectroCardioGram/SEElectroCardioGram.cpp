@@ -10,15 +10,16 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/schema/ScalarElectricPotentialData.hxx>
 
-SEElectroCardioGram::SEElectroCardioGram(Logger* logger) : SESystem(logger)
+SEElectroCardioGram::SEElectroCardioGram(Logger* logger)
+  : SESystem(logger)
 {
-	m_Lead1ElectricPotential = nullptr;
+  m_Lead1ElectricPotential = nullptr;
   m_Lead2ElectricPotential = nullptr;
   m_Lead3ElectricPotential = nullptr;
   m_Lead4ElectricPotential = nullptr;
@@ -39,7 +40,7 @@ SEElectroCardioGram::~SEElectroCardioGram()
 
 void SEElectroCardioGram::Clear()
 {
-	SAFE_DELETE(m_Lead1ElectricPotential);
+  SAFE_DELETE(m_Lead1ElectricPotential);
   SAFE_DELETE(m_Lead2ElectricPotential);
   SAFE_DELETE(m_Lead3ElectricPotential);
   SAFE_DELETE(m_Lead4ElectricPotential);
@@ -55,8 +56,8 @@ void SEElectroCardioGram::Clear()
 
 bool SEElectroCardioGram::Load(const CDM::ElectroCardioGramData& in)
 {
-	if(in.Lead1ElectricPotential().present())
-		GetLead1ElectricPotential().Load(in.Lead1ElectricPotential().get());
+  if (in.Lead1ElectricPotential().present())
+    GetLead1ElectricPotential().Load(in.Lead1ElectricPotential().get());
   if (in.Lead2ElectricPotential().present())
     GetLead2ElectricPotential().Load(in.Lead2ElectricPotential().get());
   if (in.Lead3ElectricPotential().present())
@@ -79,20 +80,20 @@ bool SEElectroCardioGram::Load(const CDM::ElectroCardioGramData& in)
     GetLead11ElectricPotential().Load(in.Lead11ElectricPotential().get());
   if (in.Lead12ElectricPotential().present())
     GetLead12ElectricPotential().Load(in.Lead12ElectricPotential().get());
-	return true;
+  return true;
 }
 
-CDM::ElectroCardioGramData*  SEElectroCardioGram::Unload() const
+CDM::ElectroCardioGramData* SEElectroCardioGram::Unload() const
 {
-	CDM::ElectroCardioGramData* data = new CDM::ElectroCardioGramData();
-	Unload(*data);
-	return data;
+  CDM::ElectroCardioGramData* data = new CDM::ElectroCardioGramData();
+  Unload(*data);
+  return data;
 }
 
 void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
 {
-	if (m_Lead1ElectricPotential != nullptr)
-		data.Lead1ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead1ElectricPotential->Unload()));
+  if (m_Lead1ElectricPotential != nullptr)
+    data.Lead1ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead1ElectricPotential->Unload()));
   if (m_Lead2ElectricPotential != nullptr)
     data.Lead2ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead2ElectricPotential->Unload()));
   if (m_Lead3ElectricPotential != nullptr)
@@ -119,8 +120,8 @@ void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
 
 const SEScalar* SEElectroCardioGram::GetScalar(const std::string& name)
 {
-	if (name.compare("Lead1ElectricPotential") == 0)
-		return &GetLead1ElectricPotential();
+  if (name.compare("Lead1ElectricPotential") == 0)
+    return &GetLead1ElectricPotential();
   if (name.compare("Lead2ElectricPotential") == 0)
     return &GetLead2ElectricPotential();
   if (name.compare("Lead3ElectricPotential") == 0)
@@ -143,24 +144,24 @@ const SEScalar* SEElectroCardioGram::GetScalar(const std::string& name)
     return &GetLead11ElectricPotential();
   if (name.compare("Lead12ElectricPotential") == 0)
     return &GetLead12ElectricPotential();
-	return nullptr;
+  return nullptr;
 }
 
 bool SEElectroCardioGram::HasLead1ElectricPotential() const
 {
-	return m_Lead1ElectricPotential == nullptr ? false : m_Lead1ElectricPotential->IsValid();
+  return m_Lead1ElectricPotential == nullptr ? false : m_Lead1ElectricPotential->IsValid();
 }
 SEScalarElectricPotential& SEElectroCardioGram::GetLead1ElectricPotential()
 {
-	if (m_Lead1ElectricPotential == nullptr)
-		m_Lead1ElectricPotential = new SEScalarElectricPotential();
-	return *m_Lead1ElectricPotential;
+  if (m_Lead1ElectricPotential == nullptr)
+    m_Lead1ElectricPotential = new SEScalarElectricPotential();
+  return *m_Lead1ElectricPotential;
 }
 double SEElectroCardioGram::GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const
 {
-	if (m_Lead1ElectricPotential == nullptr)
-		return SEScalar::dNaN();
-	return m_Lead1ElectricPotential->GetValue(unit);
+  if (m_Lead1ElectricPotential == nullptr)
+    return SEScalar::dNaN();
+  return m_Lead1ElectricPotential->GetValue(unit);
 }
 
 bool SEElectroCardioGram::HasLead2ElectricPotential() const

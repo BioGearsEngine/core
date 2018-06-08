@@ -10,18 +10,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/substance/SESubstanceAerosolization.h>
-#include <biogears/schema/SubstanceAerosolizationData.hxx>
-#include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/schema/ScalarLengthData.hxx>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstanceAerosolization.h>
+#include <biogears/schema/ScalarLengthData.hxx>
+#include <biogears/schema/ScalarMassPerVolumeData.hxx>
+#include <biogears/schema/SubstanceAerosolizationData.hxx>
 
-SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger) : Loggable(logger)
+SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger)
+  : Loggable(logger)
 {
   m_BronchioleModifier = nullptr;
   m_InflammationCoefficient = nullptr;
@@ -30,7 +31,7 @@ SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger) : Loggable(
 
 SESubstanceAerosolization::~SESubstanceAerosolization()
 {
-	Clear();
+  Clear();
 }
 
 void SESubstanceAerosolization::Clear()
@@ -53,7 +54,7 @@ bool SESubstanceAerosolization::IsValid() const
 
 const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
 {
-	if (name.compare("BronchioleModifier") == 0)
+  if (name.compare("BronchioleModifier") == 0)
     return &GetBronchioleModifier();
   if (name.compare("InflammationCoefficient") == 0)
     return &GetInflammationCoefficient();
@@ -62,25 +63,25 @@ const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
 
 bool SESubstanceAerosolization::Load(const CDM::SubstanceAerosolizationData& in)
 {
-	Clear();
-	GetBronchioleModifier().Load(in.BronchioleModifier());
+  Clear();
+  GetBronchioleModifier().Load(in.BronchioleModifier());
   GetInflammationCoefficient().Load(in.InflammationCoefficient());
   GetParticulateSizeDistribution().Load(in.ParticulateSizeDistribution());
   return true;
 }
 
-CDM::SubstanceAerosolizationData*  SESubstanceAerosolization::Unload() const
+CDM::SubstanceAerosolizationData* SESubstanceAerosolization::Unload() const
 {
   if (!IsValid())
     return nullptr;
-	CDM::SubstanceAerosolizationData* data = new CDM::SubstanceAerosolizationData();
-	Unload(*data);
-	return data;
+  CDM::SubstanceAerosolizationData* data = new CDM::SubstanceAerosolizationData();
+  Unload(*data);
+  return data;
 }
 
 void SESubstanceAerosolization::Unload(CDM::SubstanceAerosolizationData& data) const
 {
-	if (HasBronchioleModifier())
+  if (HasBronchioleModifier())
     data.BronchioleModifier(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_BronchioleModifier->Unload()));
   if (HasInflammationCoefficient())
     data.InflammationCoefficient(std::unique_ptr<CDM::Scalar0To1Data>(m_InflammationCoefficient->Unload()));

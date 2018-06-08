@@ -10,31 +10,31 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include "Hormones.h"
 #include "MockPhysiology.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-class TestableHormones : Hormones
-{
+class TestableHormones : Hormones {
 public:
-	TestableHormones(Physiology* Phys) : Hormones(Phys){};
-	using Hormones::ApplyPainStimulus;
-	using Hormones::m_ExperiencedPainValueExt;
-	using Hormones::m_ExternalPainStimulusValue;
-	using Hormones::m_PainCmpt;
+  TestableHormones(Physiology* Phys)
+    : Hormones(Phys){};
+  using Hormones::ApplyPainStimulus;
+  using Hormones::m_ExperiencedPainValueExt;
+  using Hormones::m_ExternalPainStimulusValue;
+  using Hormones::m_PainCmpt;
 };
 
 TEST(HormonesTest, ApplyPainStim)
 {
-	MockPhysiology Phys;
-	TestableHormones *Hormones = new TestableHormones(&(Physiology)Phys);
-	float _externalPain = 5.0;
-	int _iCmpt = 1;
+  MockPhysiology Phys;
+  TestableHormones* Hormones = new TestableHormones(&(Physiology)Phys);
+  float _externalPain = 5.0;
+  int _iCmpt = 1;
 
-	Hormones->ApplyPainStimulus(_externalPain, _iCmpt);
+  Hormones->ApplyPainStimulus(_externalPain, _iCmpt);
 
-	ASSERT_EQ(_externalPain, Hormones->m_ExperiencedPainValueExt);
-	ASSERT_EQ(_externalPain, Hormones->m_ExternalPainStimulusValue);
-	ASSERT_EQ(_iCmpt, Hormones->m_PainCmpt);
+  ASSERT_EQ(_externalPain, Hormones->m_ExperiencedPainValueExt);
+  ASSERT_EQ(_externalPain, Hormones->m_ExternalPainStimulusValue);
+  ASSERT_EQ(_iCmpt, Hormones->m_PainCmpt);
 }

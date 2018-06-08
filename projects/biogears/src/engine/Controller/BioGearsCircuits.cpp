@@ -10,10 +10,12 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/stdafx.h>
 #include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/stdafx.h>
 
-BioGearsCircuits::BioGearsCircuits(BioGears& bg) : SECircuitManager(bg.GetLogger()), m_data(bg)
+BioGearsCircuits::BioGearsCircuits(BioGears& bg)
+  : SECircuitManager(bg.GetLogger())
+  , m_data(bg)
 {
   Clear();
 }
@@ -25,7 +27,7 @@ BioGearsCircuits::~BioGearsCircuits()
 
 void BioGearsCircuits::Clear()
 {
-  SECircuitManager::Clear(); 
+  SECircuitManager::Clear();
   m_CombinedCardiovascularCircuit = nullptr;
   m_CardiovascularCircuit = nullptr;
   m_RenalCircuit = nullptr;
@@ -44,73 +46,62 @@ bool BioGearsCircuits::Load(const CDM::CircuitManagerData& in)
   if (!SECircuitManager::Load(in))
     return false;
   m_CombinedCardiovascularCircuit = GetFluidCircuit(BGE::Circuits::FullCardiovascular);
-  if (m_CombinedCardiovascularCircuit == nullptr)
-  {
+  if (m_CombinedCardiovascularCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::FullCardiovascular));
     return false;
   }
   m_CardiovascularCircuit = GetFluidCircuit(BGE::Circuits::Cardiovascular);
-  if (m_CardiovascularCircuit == nullptr)
-  {
+  if (m_CardiovascularCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::Cardiovascular));
     return false;
   }
   m_RenalCircuit = GetFluidCircuit(BGE::Circuits::Renal);
-  if (m_RenalCircuit == nullptr)
-  {
+  if (m_RenalCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::Renal));
     return false;
   }
   m_RespiratoryCircuit = GetFluidCircuit(BGE::Circuits::Respiratory);
-  if (m_RespiratoryCircuit == nullptr)
-  {
+  if (m_RespiratoryCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::Respiratory));
     return false;
   }
   m_AnesthesiaMachineCircuit = GetFluidCircuit(BGE::Circuits::AnesthesiaMachine);
-  if (m_AnesthesiaMachineCircuit == nullptr)
-  {
+  if (m_AnesthesiaMachineCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::AnesthesiaMachine));
     return false;
   }
   m_CombinedRespiratoryAnesthesiaCircuit = GetFluidCircuit(BGE::Circuits::RespiratoryAnesthesia);
-  if (m_CombinedRespiratoryAnesthesiaCircuit == nullptr)
-  {
+  if (m_CombinedRespiratoryAnesthesiaCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::RespiratoryAnesthesia));
     return false;
   }
   m_CombinedRespiratoryInhalerCircuit = GetFluidCircuit(BGE::Circuits::RespiratoryInhaler);
-  if (m_CombinedRespiratoryInhalerCircuit == nullptr)
-  {
+  if (m_CombinedRespiratoryInhalerCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::RespiratoryInhaler));
     return false;
   }
   m_CombinedRespiratoryMechanicalVentilatorCircuit = GetFluidCircuit(BGE::Circuits::RespiratoryMechanicalVentilator);
-  if (m_CombinedRespiratoryMechanicalVentilatorCircuit == nullptr)
-  {
+  if (m_CombinedRespiratoryMechanicalVentilatorCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::RespiratoryMechanicalVentilator));
     return false;
   }
   m_TemperatureCircuit = GetThermalCircuit(BGE::Circuits::Temperature);
-  if (m_TemperatureCircuit == nullptr)
-  {
+  if (m_TemperatureCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::Temperature));
     return false;
   }
   m_InternalTemperatureCircuit = GetThermalCircuit(BGE::Circuits::InternalTemperature);
-  if (m_InternalTemperatureCircuit == nullptr)
-  {
+  if (m_InternalTemperatureCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::InternalTemperature));
     return false;
   }
   m_ExternalTemperatureCircuit = GetThermalCircuit(BGE::Circuits::ExternalTemperature);
-  if (m_ExternalTemperatureCircuit == nullptr)
-  {
+  if (m_ExternalTemperatureCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::ExternalTemperature));
     return false;
   }
   return true;
-}  
+}
 
 void BioGearsCircuits::SetReadOnlyFluid(bool b)
 {
@@ -121,14 +112,14 @@ void BioGearsCircuits::SetReadOnlyFluid(bool b)
   GetFluidNode(BGE::RespiratoryNode::Stomach)->GetPressure().SetReadOnly(false);
   GetFluidNode(BGE::RespiratoryNode::Stomach)->GetNextPressure().SetReadOnly(false);
   GetFluidNode(BGE::InhalerNode::Mouthpiece)->GetPressure().SetReadOnly(false);
-  GetFluidNode(BGE::InhalerNode::Mouthpiece)->GetNextPressure().SetReadOnly(false);  
+  GetFluidNode(BGE::InhalerNode::Mouthpiece)->GetNextPressure().SetReadOnly(false);
 }
 
 SEFluidCircuit& BioGearsCircuits::GetActiveCardiovascularCircuit()
 {
   if (m_CombinedCardiovascularCircuit == nullptr)
     m_CombinedCardiovascularCircuit = &CreateFluidCircuit(BGE::Circuits::FullCardiovascular);
-	return *m_CombinedCardiovascularCircuit;
+  return *m_CombinedCardiovascularCircuit;
 }
 SEFluidCircuit& BioGearsCircuits::GetCardiovascularCircuit()
 {
@@ -145,8 +136,7 @@ SEFluidCircuit& BioGearsCircuits::GetRenalCircuit()
 
 SEFluidCircuit& BioGearsCircuits::GetActiveRespiratoryCircuit()
 {
-  switch (m_data.GetAirwayMode())
-  {
+  switch (m_data.GetAirwayMode()) {
   case CDM::enumBioGearsAirwayMode::Free:
     return *m_RespiratoryCircuit;
   case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:

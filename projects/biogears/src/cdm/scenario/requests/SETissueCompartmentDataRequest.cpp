@@ -10,16 +10,16 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
-#include <biogears/schema/TissueCompartmentDataRequestData.hxx>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
+#include <biogears/schema/TissueCompartmentDataRequestData.hxx>
 
-SETissueCompartmentDataRequest::SETissueCompartmentDataRequest(const SEDecimalFormat* dfault) : SECompartmentDataRequest(dfault)
+SETissueCompartmentDataRequest::SETissueCompartmentDataRequest(const SEDecimalFormat* dfault)
+  : SECompartmentDataRequest(dfault)
 {
-
 }
 
 SETissueCompartmentDataRequest::~SETissueCompartmentDataRequest()
@@ -37,7 +37,6 @@ size_t SETissueCompartmentDataRequest::HashCode()
   size_t h = SECompartmentDataRequest::HashCode();
   return h;
 }
-
 
 bool SETissueCompartmentDataRequest::Load(const CDM::TissueCompartmentDataRequestData& in)
 {

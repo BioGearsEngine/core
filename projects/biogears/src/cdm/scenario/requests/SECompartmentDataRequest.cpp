@@ -10,77 +10,77 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SECompartmentDataRequest.h>
-#include <biogears/schema/CompartmentDataRequestData.hxx>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
+#include <biogears/schema/CompartmentDataRequestData.hxx>
 
-SECompartmentDataRequest::SECompartmentDataRequest(const SEDecimalFormat* dfault) : SEDataRequest(dfault)
+SECompartmentDataRequest::SECompartmentDataRequest(const SEDecimalFormat* dfault)
+  : SEDataRequest(dfault)
 {
-	m_Compartment = ""; 
+  m_Compartment = "";
 }
 
 SECompartmentDataRequest::~SECompartmentDataRequest()
 {
-	Clear();
+  Clear();
 }
 
 void SECompartmentDataRequest::Clear()
 {
-	SEDataRequest::Clear();
-	m_Compartment = "";
+  SEDataRequest::Clear();
+  m_Compartment = "";
 }
 
 size_t SECompartmentDataRequest::HashCode()
 {
-	size_t h = SEDataRequest::HashCode();
-	h += std::hash<std::string>()(m_Compartment);
-	return h;
+  size_t h = SEDataRequest::HashCode();
+  h += std::hash<std::string>()(m_Compartment);
+  return h;
 }
 
 bool SECompartmentDataRequest::Load(const CDM::CompartmentDataRequestData& in)
-{	
-	SEDataRequest::Load(in);
-	SetCompartment(in.Compartment());
-	return true;
+{
+  SEDataRequest::Load(in);
+  SetCompartment(in.Compartment());
+  return true;
 }
 
 void SECompartmentDataRequest::Unload(CDM::CompartmentDataRequestData& data) const
 {
-	SEDataRequest::Unload(data);
-	data.Compartment(m_Compartment);
+  SEDataRequest::Unload(data);
+  data.Compartment(m_Compartment);
 }
 
 std::string SECompartmentDataRequest::GetCompartment() const
 {
-	return m_Compartment;
+  return m_Compartment;
 }
 void SECompartmentDataRequest::SetCompartment(const std::string& name)
 {
-	m_Compartment = name;
+  m_Compartment = name;
 }
 bool SECompartmentDataRequest::HasCompartment() const
 {
-	return !m_Compartment.empty();
+  return !m_Compartment.empty();
 }
 void SECompartmentDataRequest::InvalidateCompartment()
 {
-	m_Compartment = "";
+  m_Compartment = "";
 }
 
-void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& name, const std::string&unit)
+void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& name, const std::string& unit)
 {
-	m_Compartment = cmpt;
-	m_Name = name;
-	m_RequestedUnit = unit;
-	m_Unit = nullptr;
+  m_Compartment = cmpt;
+  m_Name = name;
+  m_RequestedUnit = unit;
+  m_Unit = nullptr;
 }
 
 void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& name, const CCompoundUnit& unit)
 {
-	m_Compartment = cmpt;
-	m_Name = name;
-	m_RequestedUnit = "";
-	m_Unit = &unit;
+  m_Compartment = cmpt;
+  m_Name = name;
+  m_RequestedUnit = "";
+  m_Unit = &unit;
 }
-

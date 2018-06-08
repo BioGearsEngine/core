@@ -11,9 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
+#include <biogears/schema/enumCharge.hxx>
+
 class SESubstanceClearanceAnatomyEffect;
 CDM_BIND_DECL(SubstanceClearanceData)
-#include <biogears/schema/enumCharge.hxx>
 
 enum class RenalDynamic{ Clearance, Regulation };
 class BIOGEARS_API SESubstanceClearance : public Loggable

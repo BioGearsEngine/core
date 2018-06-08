@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarPressureTimePerVolumeArea.h>
+#include <biogears/cdm/stdafx.h>
 
 const PressureTimePerVolumeAreaUnit PressureTimePerVolumeAreaUnit::mmHg_min_Per_mL_m2("mmHg min/mL m^2");
 const PressureTimePerVolumeAreaUnit PressureTimePerVolumeAreaUnit::mmHg_s_Per_mL_m2("mmHg s/mL m^2");
@@ -31,7 +31,7 @@ bool PressureTimePerVolumeAreaUnit::IsValidUnit(const std::string& unit)
   if (mmHg_min_Per_mL_m2.GetString().compare(unit) == 0)
     return true;
   if (mmHg_s_Per_mL_m2.GetString().compare(unit) == 0)
-	  return true;
+    return true;
   if (dyn_s_Per_cm5_m2.GetString().compare(unit) == 0)
     return true;
   return false;
@@ -42,7 +42,7 @@ const PressureTimePerVolumeAreaUnit& PressureTimePerVolumeAreaUnit::GetCompoundU
   if (mmHg_min_Per_mL_m2.GetString().compare(unit) == 0)
     return mmHg_min_Per_mL_m2;
   if (mmHg_s_Per_mL_m2.GetString().compare(unit) == 0)
-	  return mmHg_s_Per_mL_m2;
+    return mmHg_s_Per_mL_m2;
   if (dyn_s_Per_cm5_m2.GetString().compare(unit) == 0)
     return dyn_s_Per_cm5_m2;
   std::stringstream err;

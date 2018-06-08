@@ -10,12 +10,13 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
+#include <biogears/cdm/stdafx.h>
 
 // Note this must match the enum values
-template<> char const* enumStrings<EigenCircuitSolver>::values[] = { "Direct", "PartialPivLu", "FullPivLu", "JacobiSvd", "HouseholderQr", "Ldlt", "Llt", "SparseLU", "SparseQR", "BiCGSTAB", "ConjugateGradient" };
+template <>
+char const* enumStrings<EigenCircuitSolver>::values[] = { "Direct", "PartialPivLu", "FullPivLu", "JacobiSvd", "HouseholderQr", "Ldlt", "Llt", "SparseLU", "SparseQR", "BiCGSTAB", "ConjugateGradient" };
 char const* EigenCircuitSolver::Value(size_t idx)
 {
-  return enumStrings<EigenCircuitSolver>::values[idx];  
+  return enumStrings<EigenCircuitSolver>::values[idx];
 }

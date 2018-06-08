@@ -10,75 +10,77 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ScalarVolumePerTimeData.hxx>
 
-SEPericardialEffusion::SEPericardialEffusion() : SEPatientAction()
+SEPericardialEffusion::SEPericardialEffusion()
+  : SEPatientAction()
 {
-	m_EffusionRate = nullptr;
+  m_EffusionRate = nullptr;
 }
 
 SEPericardialEffusion::~SEPericardialEffusion()
 {
-	Clear();
+  Clear();
 }
 
 void SEPericardialEffusion::Clear()
 {
-	SEPatientAction::Clear();
-	SAFE_DELETE(m_EffusionRate);
+  SEPatientAction::Clear();
+  SAFE_DELETE(m_EffusionRate);
 }
 
 bool SEPericardialEffusion::IsValid() const
 {
-	return SEPatientAction::IsValid() && HasEffusionRate();
+  return SEPatientAction::IsValid() && HasEffusionRate();
 }
 
 bool SEPericardialEffusion::IsActive() const
 {
-	return IsValid() ? !m_EffusionRate->IsZero() : false;
+  return IsValid() ? !m_EffusionRate->IsZero() : false;
 }
 
 bool SEPericardialEffusion::Load(const CDM::PericardialEffusionData& in)
 {
-	SEPatientAction::Load(in);
-	GetEffusionRate().Load(in.EffusionRate());
-	return true;
+  SEPatientAction::Load(in);
+  GetEffusionRate().Load(in.EffusionRate());
+  return true;
 }
 
 CDM::PericardialEffusionData* SEPericardialEffusion::Unload() const
 {
-	CDM::PericardialEffusionData*data(new CDM::PericardialEffusionData());
-	Unload(*data);
-	return data;
+  CDM::PericardialEffusionData* data(new CDM::PericardialEffusionData());
+  Unload(*data);
+  return data;
 }
 
 void SEPericardialEffusion::Unload(CDM::PericardialEffusionData& data) const
 {
-	SEPatientAction::Unload(data);
-	if (m_EffusionRate != nullptr)
-		data.EffusionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_EffusionRate->Unload()));
+  SEPatientAction::Unload(data);
+  if (m_EffusionRate != nullptr)
+    data.EffusionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_EffusionRate->Unload()));
 }
 
 bool SEPericardialEffusion::HasEffusionRate() const
 {
-	return m_EffusionRate == nullptr ? false : m_EffusionRate->IsValid();
+  return m_EffusionRate == nullptr ? false : m_EffusionRate->IsValid();
 }
 
 SEScalarVolumePerTime& SEPericardialEffusion::GetEffusionRate()
 {
-	if (m_EffusionRate == nullptr)
-		m_EffusionRate = new SEScalarVolumePerTime();
-	return *m_EffusionRate;
+  if (m_EffusionRate == nullptr)
+    m_EffusionRate = new SEScalarVolumePerTime();
+  return *m_EffusionRate;
 }
 
-void SEPericardialEffusion::ToString(std::ostream &str) const
+void SEPericardialEffusion::ToString(std::ostream& str) const
 {
-	str << "Patient Action : Pericardial Effusion"; 
-	if(HasComment())
-		str<<"\n\tComment: "<<m_Comment;
-	str << "\n\tEffusion Rate: "; HasEffusionRate() ? str << *m_EffusionRate : str << "NaN";
-	str << std::flush;
+  str << "Patient Action : Pericardial Effusion";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tEffusion Rate: ";
+  HasEffusionRate() ? str << *m_EffusionRate : str << "NaN";
+  str << std::flush;
 }

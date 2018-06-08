@@ -12,40 +12,40 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 
-SEAnesthesiaMachineAction::SEAnesthesiaMachineAction() : SEAction()
+SEAnesthesiaMachineAction::SEAnesthesiaMachineAction()
+  : SEAction()
 {
-
 }
 
 SEAnesthesiaMachineAction::~SEAnesthesiaMachineAction()
 {
-	Clear();
+  Clear();
 }
 
 void SEAnesthesiaMachineAction::Clear()
 {
-	SEAction::Clear();
+  SEAction::Clear();
 }
 
 bool SEAnesthesiaMachineAction::IsValid() const
 {
-	return SEAction::IsValid();
+  return SEAction::IsValid();
 }
 
 bool SEAnesthesiaMachineAction::Load(const CDM::AnesthesiaMachineActionData& in)
 {
-	SEAction::Load(in);
-	return true;
+  SEAction::Load(in);
+  return true;
 }
 
 CDM::AnesthesiaMachineActionData* SEAnesthesiaMachineAction::Unload() const
 {
-	CDM::AnesthesiaMachineActionData* data = new CDM::AnesthesiaMachineActionData();
-	Unload(*data);
-	return data;
+  CDM::AnesthesiaMachineActionData* data = new CDM::AnesthesiaMachineActionData();
+  Unload(*data);
+  return data;
 }
 
 void SEAnesthesiaMachineAction::Unload(CDM::AnesthesiaMachineActionData& data) const
 {
-	SEAction::Unload(data);
+  SEAction::Unload(data);
 }

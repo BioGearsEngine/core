@@ -10,41 +10,41 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
+#include <biogears/cdm/stdafx.h>
 
-SEChestCompression::SEChestCompression() : SEPatientAction()
+SEChestCompression::SEChestCompression()
+  : SEPatientAction()
 {
-
 }
 
 SEChestCompression::~SEChestCompression()
 {
-	Clear();
+  Clear();
 }
 
 void SEChestCompression::Clear()
 {
-	SEPatientAction::Clear();
+  SEPatientAction::Clear();
 }
 
 bool SEChestCompression::IsValid() const
 {
-	return SEPatientAction::IsValid();
+  return SEPatientAction::IsValid();
 }
 
 bool SEChestCompression::IsActive() const
 {
-	return IsValid();
+  return IsValid();
 }
 
 bool SEChestCompression::Load(const CDM::ChestCompressionData& in)
 {
-	SEPatientAction::Load(in);
-	return true;
+  SEPatientAction::Load(in);
+  return true;
 }
 
 void SEChestCompression::Unload(CDM::ChestCompressionData& data) const
 {
-	SEPatientAction::Unload(data);
+  SEPatientAction::Unload(data);
 }

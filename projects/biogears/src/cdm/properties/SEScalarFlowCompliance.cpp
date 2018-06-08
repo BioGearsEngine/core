@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
+#include <biogears/cdm/stdafx.h>
 
 const FlowComplianceUnit FlowComplianceUnit::L_Per_cmH2O("L/cmH2O");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_mmHg("mL/mmHg");
@@ -50,7 +50,7 @@ const FlowComplianceUnit& FlowComplianceUnit::GetCompoundUnit(const std::string&
     return mL_Per_cmH2O;
   if (m3_Per_Pa.GetString().compare(unit) == 0)
     return m3_Per_Pa;
- std::stringstream err;
+  std::stringstream err;
   err << unit << " is not a valid FlowCompliance unit";
   throw CommonDataModelException(err.str());
 }

@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
+#include <biogears/cdm/stdafx.h>
 
 const EnergyPerAmountUnit EnergyPerAmountUnit::kcal_Per_mol("kcal/mol");
 const EnergyPerAmountUnit EnergyPerAmountUnit::kJ_Per_mol("kJ/mol");

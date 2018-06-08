@@ -10,17 +10,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEProperty.h>
+#include <biogears/cdm/stdafx.h>
 
 SEProperty::SEProperty()
 {
-	Clear();
+  Clear();
 }
 
 SEProperty::~SEProperty()
 {
-	Clear();
+  Clear();
 }
 
 void SEProperty::Clear()
@@ -29,11 +29,9 @@ void SEProperty::Clear()
 
 bool SEProperty::Load(const CDM::PropertyData& in)
 {
-	return true;
+  return true;
 }
-
 
 void SEProperty::Unload(CDM::PropertyData& data) const
 {
-
 }

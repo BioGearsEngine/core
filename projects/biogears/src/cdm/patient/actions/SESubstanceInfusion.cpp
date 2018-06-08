@@ -10,105 +10,107 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/ScalarMassPerVolumeData.hxx>
+#include <biogears/schema/ScalarVolumeData.hxx>
+#include <biogears/schema/ScalarVolumePerTimeData.hxx>
 
-SESubstanceInfusion::SESubstanceInfusion(const SESubstance& substance) : SESubstanceAdministration(), m_Substance(substance)
+SESubstanceInfusion::SESubstanceInfusion(const SESubstance& substance)
+  : SESubstanceAdministration()
+  , m_Substance(substance)
 {
-	m_Rate=nullptr;
-	m_Concentration=nullptr;
+  m_Rate = nullptr;
+  m_Concentration = nullptr;
 }
 
 SESubstanceInfusion::~SESubstanceInfusion()
 {
-	Clear();
+  Clear();
 }
-
 
 void SESubstanceInfusion::Clear()
 {
-	SESubstanceAdministration::Clear();
-	m_Rate=nullptr;
-	m_Concentration=nullptr;	
+  SESubstanceAdministration::Clear();
+  m_Rate = nullptr;
+  m_Concentration = nullptr;
 }
-
 
 bool SESubstanceInfusion::IsValid() const
 {
-	return SESubstanceAdministration::IsValid() && HasRate() && HasConcentration();
+  return SESubstanceAdministration::IsValid() && HasRate() && HasConcentration();
 }
 
 bool SESubstanceInfusion::IsActive() const
 {
-	return IsValid() ? !m_Rate->IsZero() : false;
+  return IsValid() ? !m_Rate->IsZero() : false;
 }
 
 bool SESubstanceInfusion::Load(const CDM::SubstanceInfusionData& in)
 {
-	SESubstanceAdministration::Load(in);
-	GetRate().Load(in.Rate());
-	GetConcentration().Load(in.Concentration());
-	return true;
+  SESubstanceAdministration::Load(in);
+  GetRate().Load(in.Rate());
+  GetConcentration().Load(in.Concentration());
+  return true;
 }
 
 CDM::SubstanceInfusionData* SESubstanceInfusion::Unload() const
 {
-	CDM::SubstanceInfusionData*data(new CDM::SubstanceInfusionData());
-	Unload(*data);
-	return data;
+  CDM::SubstanceInfusionData* data(new CDM::SubstanceInfusionData());
+  Unload(*data);
+  return data;
 }
 
 void SESubstanceInfusion::Unload(CDM::SubstanceInfusionData& data) const
 {
-	SESubstanceAdministration::Unload(data);
-	if(m_Rate!=nullptr)
-		data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
-	if(m_Concentration!=nullptr)
-		data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
+  SESubstanceAdministration::Unload(data);
+  if (m_Rate != nullptr)
+    data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
+  if (m_Concentration != nullptr)
+    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
   data.Substance(m_Substance.GetName());
 }
 
 bool SESubstanceInfusion::HasRate() const
 {
-	return m_Rate==nullptr?false:m_Rate->IsValid();
+  return m_Rate == nullptr ? false : m_Rate->IsValid();
 }
 SEScalarVolumePerTime& SESubstanceInfusion::GetRate()
 {
-	if(m_Rate==nullptr)
-		m_Rate=new SEScalarVolumePerTime();
-	return *m_Rate;
+  if (m_Rate == nullptr)
+    m_Rate = new SEScalarVolumePerTime();
+  return *m_Rate;
 }
 
 bool SESubstanceInfusion::HasConcentration() const
 {
-	return m_Concentration==nullptr?false:m_Concentration->IsValid();
+  return m_Concentration == nullptr ? false : m_Concentration->IsValid();
 }
 SEScalarMassPerVolume& SESubstanceInfusion::GetConcentration()
 {
-	if(m_Concentration==nullptr)
-		m_Concentration=new SEScalarMassPerVolume();
-	return *m_Concentration;
+  if (m_Concentration == nullptr)
+    m_Concentration = new SEScalarMassPerVolume();
+  return *m_Concentration;
 }
 
 SESubstance& SESubstanceInfusion::GetSubstance() const
 {
-	return (SESubstance&)m_Substance;
+  return (SESubstance&)m_Substance;
 }
 
-void SESubstanceInfusion::ToString(std::ostream &str) const
+void SESubstanceInfusion::ToString(std::ostream& str) const
 {
-	str << "Patient Action : Substance Infusion"; 
-	if(HasComment())
-		str<<"\n\tComment: "<<m_Comment;
-	str << "\n\tRate: "; HasRate() ? str << *m_Rate : str << "NaN";
-	str << "\n\tConcentration: "; HasConcentration() ? str << *m_Concentration : str << "NaN";
-	str << "\n\tSubstance: " << m_Substance.GetName();
-	str	<<std::flush;
+  str << "Patient Action : Substance Infusion";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tRate: ";
+  HasRate() ? str << *m_Rate : str << "NaN";
+  str << "\n\tConcentration: ";
+  HasConcentration() ? str << *m_Concentration : str << "NaN";
+  str << "\n\tSubstance: " << m_Substance.GetName();
+  str << std::flush;
 }

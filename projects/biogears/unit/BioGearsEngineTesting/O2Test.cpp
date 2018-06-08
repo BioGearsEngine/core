@@ -14,10 +14,10 @@ specific language governing permissions and limitations under the License.
 
 TEST(O2Test, SampleTest)
 {
-	int a = 1;
-	int b = 2;
+  int a = 1;
+  int b = 2;
 
-	int expected = 3;
+  int expected = 3;
 
-	ASSERT_EQ(a + b, 3);
+  ASSERT_EQ(a + b, 3);
 }

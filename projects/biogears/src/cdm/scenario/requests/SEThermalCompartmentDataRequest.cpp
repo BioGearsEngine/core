@@ -10,23 +10,22 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
-#include <biogears/schema/ThermalCompartmentDataRequestData.hxx>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
+#include <biogears/schema/ThermalCompartmentDataRequestData.hxx>
 
-SEThermalCompartmentDataRequest::SEThermalCompartmentDataRequest(const SEDecimalFormat* dfault) : SECompartmentDataRequest(dfault)
+SEThermalCompartmentDataRequest::SEThermalCompartmentDataRequest(const SEDecimalFormat* dfault)
+  : SECompartmentDataRequest(dfault)
 {
-
 }
 
 SEThermalCompartmentDataRequest::~SEThermalCompartmentDataRequest()
 {
   Clear();
 }
-
 
 bool SEThermalCompartmentDataRequest::Load(const CDM::ThermalCompartmentDataRequestData& in)
 {

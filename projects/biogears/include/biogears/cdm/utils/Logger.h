@@ -18,6 +18,8 @@ specific language governing permissions and limitations under the License.
 #include <log4cpp/Category.hh>
 #pragma  warning(pop)
 
+#include <biogears/cdm/CommonDataModel.h>
+
 class Logger;
 class SEScalarTime;
 class BIOGEARS_API Loggable

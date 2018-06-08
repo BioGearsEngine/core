@@ -20,16 +20,12 @@ void TimingProfile::Clear()
 
 void TimingProfile::Reset(const std::string& label)
 {
-  if (label.empty())
-  {
+  if (label.empty()) {
     return;
   }
-  if (m_timers[label].state == State::Running)
-  {
+  if (m_timers[label].state == State::Running) {
     m_timers[label].start = Clock::now();
-  }
-  else if (m_timers[label].state == State::Ran)
-  {
+  } else if (m_timers[label].state == State::Ran) {
     m_timers[label].state = State::Ready;
   }
 
@@ -39,8 +35,7 @@ void TimingProfile::Reset(const std::string& label)
 
 void TimingProfile::Start(const std::string& label)
 {
-  if (label.empty())
-  {
+  if (label.empty()) {
     return;
   }
 
@@ -53,13 +48,11 @@ void TimingProfile::Start(const std::string& label)
 
 void TimingProfile::Stop(const std::string& label)
 {
-  if (label.empty())
-  {
+  if (label.empty()) {
     return;
   }
 
-  if (m_timers[label].state == State::Running)
-  {
+  if (m_timers[label].state == State::Running) {
     m_timers[label].end = Clock::now();
     m_timers[label].state = State::Ran;
   }
@@ -70,8 +63,7 @@ void TimingProfile::Stop(const std::string& label)
 
 double TimingProfile::GetElapsedTime_s(const std::string& label)
 {
-  if (label.empty())
-  {
+  if (label.empty()) {
     return 0;
   }
 
@@ -86,18 +78,13 @@ double TimingProfile::GetElapsedTime_s(const std::string& label)
 
 void TimingProfile::Print(const std::string& label)
 {
-  if (label.empty())
-  {
-    for (const std::pair<std::string, Timer>& timerPair : m_timers)
-    {
-      if (timerPair.second.state != State::Ready)
-      {
+  if (label.empty()) {
+    for (const std::pair<std::string, Timer>& timerPair : m_timers) {
+      if (timerPair.second.state != State::Ready) {
         std::cout << "TimingProfile:Elapsed:" << timerPair.first << ":" << GetElapsedTime_s(timerPair.first) << std::endl;
       }
     }
-  }
-  else
-  {
+  } else {
     std::cout << "TimingProfile:Elapsed:" << label << ":" << GetElapsedTime_s(label) << "s" << std::endl;
   }
 }

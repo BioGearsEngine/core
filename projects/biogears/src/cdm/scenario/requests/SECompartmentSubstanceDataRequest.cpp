@@ -10,83 +10,84 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
-#include <biogears/schema/CompartmentSubstanceDataRequestData.hxx>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
+#include <biogears/schema/CompartmentSubstanceDataRequestData.hxx>
 
-SECompartmentSubstanceDataRequest::SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault) : SECompartmentDataRequest(dfault)
+SECompartmentSubstanceDataRequest::SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault)
+  : SECompartmentDataRequest(dfault)
 {
-	m_Substance = nullptr;
+  m_Substance = nullptr;
 }
 
 SECompartmentSubstanceDataRequest::~SECompartmentSubstanceDataRequest()
 {
-	Clear();
+  Clear();
 }
 
 void SECompartmentSubstanceDataRequest::Clear()
 {
-	SECompartmentDataRequest::Clear();
-	m_Substance = nullptr;
+  SECompartmentDataRequest::Clear();
+  m_Substance = nullptr;
 }
 
 size_t SECompartmentSubstanceDataRequest::HashCode()
 {
-	size_t h = SECompartmentDataRequest::HashCode();
-	if (m_Substance != nullptr)
-		h += std::hash<std::string>()(m_Substance->GetName());
-	return h;
+  size_t h = SECompartmentDataRequest::HashCode();
+  if (m_Substance != nullptr)
+    h += std::hash<std::string>()(m_Substance->GetName());
+  return h;
 }
 
 bool SECompartmentSubstanceDataRequest::Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances)
-{	
-	SECompartmentDataRequest::Load(in);
-	if (in.Substance().present())
-		SetSubstance(substances.GetSubstance(in.Substance().get()));
-	return true;
+{
+  SECompartmentDataRequest::Load(in);
+  if (in.Substance().present())
+    SetSubstance(substances.GetSubstance(in.Substance().get()));
+  return true;
 }
 
 void SECompartmentSubstanceDataRequest::Unload(CDM::CompartmentSubstanceDataRequestData& data) const
 {
-	SECompartmentDataRequest::Unload(data);
-	if (HasSubstance())
-		data.Substance(m_Substance->GetName());
+  SECompartmentDataRequest::Unload(data);
+  if (HasSubstance())
+    data.Substance(m_Substance->GetName());
 }
 
 SESubstance* SECompartmentSubstanceDataRequest::GetSubstance() const
 {
-	return m_Substance;
+  return m_Substance;
 }
 void SECompartmentSubstanceDataRequest::SetSubstance(SESubstance* substance)
 {
-	m_Substance = substance;
+  m_Substance = substance;
 }
 bool SECompartmentSubstanceDataRequest::HasSubstance() const
 {
-	return m_Substance == nullptr ? false : true;
+  return m_Substance == nullptr ? false : true;
 }
 void SECompartmentSubstanceDataRequest::InvalidateSubstance()
 {
-	m_Substance = nullptr;
+  m_Substance = nullptr;
 }
 
-void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string&unit)
+void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit)
 {
-	m_Compartment = cmpt;
-	m_Substance = &substance; 
-	m_Name = name;
-	m_RequestedUnit = unit;
-	m_Unit = nullptr;
+  m_Compartment = cmpt;
+  m_Substance = &substance;
+  m_Name = name;
+  m_RequestedUnit = unit;
+  m_Unit = nullptr;
 }
 
 void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit)
 {
-	m_Compartment = cmpt;
-	m_Substance = &substance;
-	m_Name = name;
-	m_RequestedUnit = "";
-	m_Unit = &unit;
+  m_Compartment = cmpt;
+  m_Substance = &substance;
+  m_Name = name;
+  m_RequestedUnit = "";
+  m_Unit = &unit;
 }

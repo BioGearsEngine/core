@@ -11,10 +11,24 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/schema/BioGearsTissueSystemData.hxx>
+#include <biogears/cdm/utils/RunningAverage.h>
+#include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
 
+class SESubstance;
+class SEGasCompartment;
+class SETissueCompartment;
+class SELiquidCompartment;
+class SELiquidSubstanceQuantity;
+class SEPatientActionCollection;
+class SEPatient;
+class SEEnergySystem;
+class BioGears;
 /**
  * @brief This class encapsulates logic necessary to connect independent systems together.
  * @details Each system calculates the behavior that occurs within its individual physiology function; 
@@ -24,7 +38,7 @@ specific language governing permissions and limitations under the License.
  */  
 class BIOGEARS_API Tissue : public SETissueSystem, public BioGearsSystem
 {
-  friend BioGears;
+  friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
   Tissue(BioGears& bg);

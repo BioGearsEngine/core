@@ -10,56 +10,56 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
+#include <biogears/cdm/stdafx.h>
 
-SEUrinate::SEUrinate() : SEPatientAction()
+SEUrinate::SEUrinate()
+  : SEPatientAction()
 {
-
 }
 
 SEUrinate::~SEUrinate()
 {
-	Clear();
+  Clear();
 }
 
 void SEUrinate::Clear()
 {
-	SEPatientAction::Clear();
+  SEPatientAction::Clear();
 }
 
 bool SEUrinate::IsValid() const
 {
-	return SEPatientAction::IsValid();
+  return SEPatientAction::IsValid();
 }
 
 bool SEUrinate::IsActive() const
 {
-	return IsValid();
+  return IsValid();
 }
 
 bool SEUrinate::Load(const CDM::UrinateData& in)
 {
-	SEPatientAction::Load(in);
-	return true;
+  SEPatientAction::Load(in);
+  return true;
 }
 
 CDM::UrinateData* SEUrinate::Unload() const
 {
-	CDM::UrinateData*data(new CDM::UrinateData());
-	Unload(*data);
-	return data;
+  CDM::UrinateData* data(new CDM::UrinateData());
+  Unload(*data);
+  return data;
 }
 
 void SEUrinate::Unload(CDM::UrinateData& data) const
 {
-	SEPatientAction::Unload(data);
+  SEPatientAction::Unload(data);
 }
 
-void SEUrinate::ToString(std::ostream &str) const
+void SEUrinate::ToString(std::ostream& str) const
 {
-	str << "Patient Action : Urinate"; 
-	if(HasComment())
-		str<<"\n\tComment: "<<m_Comment;
-	str << std::flush;
+  str << "Patient Action : Urinate";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << std::flush;
 }

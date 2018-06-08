@@ -10,62 +10,60 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
+#include <biogears/cdm/stdafx.h>
 
 SEConsciousRespirationCommand::SEConsciousRespirationCommand()
 {
-	m_Comment = "";
+  m_Comment = "";
 }
 
 SEConsciousRespirationCommand::~SEConsciousRespirationCommand()
 {
-	Clear();
+  Clear();
 }
 
 void SEConsciousRespirationCommand::Clear()
 {
-	m_Comment = "";
+  m_Comment = "";
 }
 
 bool SEConsciousRespirationCommand::Load(const CDM::ConsciousRespirationCommandData& in)
 {
-	if (in.Comment().present())
-		m_Comment = in.Comment().get();
-	return true;
+  if (in.Comment().present())
+    m_Comment = in.Comment().get();
+  return true;
 }
 
 void SEConsciousRespirationCommand::Unload(CDM::ConsciousRespirationCommandData& data) const
 {
-	if (HasComment())
-		data.Comment(m_Comment);
+  if (HasComment())
+    data.Comment(m_Comment);
 }
 
 bool SEConsciousRespirationCommand::IsValid() const
 {
-	return true;
+  return true;
 }
 
 bool SEConsciousRespirationCommand::IsActive() const
 {
-	return true;
+  return true;
 }
 
 std::string SEConsciousRespirationCommand::GetComment() const
 {
-	return m_Comment;
+  return m_Comment;
 }
 void SEConsciousRespirationCommand::SetComment(const std::string& comment)
 {
-	m_Comment = comment;
+  m_Comment = comment;
 }
 bool SEConsciousRespirationCommand::HasComment() const
 {
-	return m_Comment.empty() ? false : true;
+  return m_Comment.empty() ? false : true;
 }
 void SEConsciousRespirationCommand::InvalidateComment()
 {
-	m_Comment = "";
+  m_Comment = "";
 }
-
-

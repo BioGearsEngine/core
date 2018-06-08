@@ -12,14 +12,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 
-SEInhalerAction::SEInhalerAction() : SEAction()
+SEInhalerAction::SEInhalerAction()
+  : SEAction()
 {
-
 }
 
 SEInhalerAction::~SEInhalerAction()
 {
-	Clear();
+  Clear();
 }
 
 void SEInhalerAction::Clear()
@@ -29,23 +29,23 @@ void SEInhalerAction::Clear()
 
 bool SEInhalerAction::IsValid() const
 {
-	return SEAction::IsValid();
+  return SEAction::IsValid();
 }
 
 bool SEInhalerAction::Load(const CDM::InhalerActionData& in)
 {
-	SEAction::Load(in);
-	return true;
+  SEAction::Load(in);
+  return true;
 }
 
 CDM::InhalerActionData* SEInhalerAction::Unload() const
 {
-	CDM::InhalerActionData* data = new CDM::InhalerActionData();
-	Unload(*data);
-	return data;
+  CDM::InhalerActionData* data = new CDM::InhalerActionData();
+  Unload(*data);
+  return data;
 }
 
 void SEInhalerAction::Unload(CDM::InhalerActionData& data) const
 {
-	SEAction::Unload(data);
+  SEAction::Unload(data);
 }

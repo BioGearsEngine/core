@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/schema/SubstanceTissuePharmacokineticsData.hxx>
 
 class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable

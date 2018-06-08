@@ -10,43 +10,44 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/stdafx.h>
-#include <biogears/engine/Systems/Renal.h>
-#include <biogears/schema/RunningAverageData.hxx>
 #include <biogears/engine/Systems/Drugs.h>
+#include <biogears/engine/Systems/Renal.h>
+#include <biogears/engine/stdafx.h>
+#include <biogears/schema/RunningAverageData.hxx>
 
 #include <biogears/cdm/circuit/SECircuit.h>
-#include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
+#include <biogears/cdm/circuit/SECircuitPath.h>
+#include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFlowResistance.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
-#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
-#include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>
 
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
-
 
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 
-Renal::Renal(BioGears& bg) : SERenalSystem(bg.GetLogger()), m_data(bg)
+Renal::Renal(BioGears& bg)
+  : SERenalSystem(bg.GetLogger())
+  , m_data(bg)
 {
   Clear();
 }
@@ -165,7 +166,7 @@ void Renal::Initialize()
 {
   BioGearsSystem::Initialize();
 
-  m_Urinating = false;  
+  m_Urinating = false;
   m_leftAfferentResistance_mmHg_s_Per_mL = m_leftAfferentArteriolePath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
   m_rightAfferentResistance_mmHg_s_Per_mL = m_rightAfferentArteriolePath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
   m_leftSodiumFlowSetPoint_mg_Per_s = 4.7;
@@ -236,24 +237,21 @@ void Renal::Initialize()
   // Missing Name="UrineUreaConcentration" Unit="g/L"/>
   GetUrineUreaNitrogenConcentration().SetValue(7.5, MassPerVolumeUnit::g_Per_L);
 
-
   // Set a Clearance of zero for ALL substances
   // Determine substance filterability based on other parameters (if provided)
   // This won't change, unless the substance parameters change
-  for (SESubstance* sub : m_data.GetSubstances().GetSubstances())
-  {
-      CalculateFilterability(*sub);
-      if (!sub->GetClearance().HasRenalDynamic())
-        sub->GetClearance().SetRenalDynamic(RenalDynamic::Clearance);
-      if (!sub->GetClearance().HasRenalClearance())
-        sub->GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_min_kg);
-      if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation)
-      {
-        sub->GetClearance().GetRenalFiltrationRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
-        sub->GetClearance().GetRenalReabsorptionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
-        sub->GetClearance().GetRenalExcretionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);     
-        sub->GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_min_kg);
-      }
+  for (SESubstance* sub : m_data.GetSubstances().GetSubstances()) {
+    CalculateFilterability(*sub);
+    if (!sub->GetClearance().HasRenalDynamic())
+      sub->GetClearance().SetRenalDynamic(RenalDynamic::Clearance);
+    if (!sub->GetClearance().HasRenalClearance())
+      sub->GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_min_kg);
+    if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation) {
+      sub->GetClearance().GetRenalFiltrationRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
+      sub->GetClearance().GetRenalReabsorptionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
+      sub->GetClearance().GetRenalExcretionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
+      sub->GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_min_kg);
+    }
   }
 }
 
@@ -307,8 +305,8 @@ void Renal::Unload(CDM::BioGearsRenalSystemData& data) const
 }
 
 void Renal::SetUp()
-{ 
-  m_dt = m_data.GetTimeStep().GetValue(TimeUnit::s);  
+{
+  m_dt = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_patient = &m_data.GetPatient();
 
   //Substances
@@ -317,14 +315,13 @@ void Renal::SetUp()
   m_glucose = &m_data.GetSubstances().GetGlucose();
   m_lactate = &m_data.GetSubstances().GetLactate();
   m_potassium = &m_data.GetSubstances().GetPotassium();
-  
 
   //Substance quantities
 
   //Compartments
   m_aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
   m_venaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava);
-  
+
   m_leftKidneyTissue = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftKidney);
   m_leftGlomerular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftGlomerularCapillaries);
   m_leftPeritubular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftPeritubularCapillaries);
@@ -353,7 +350,7 @@ void Renal::SetUp()
   m_leftReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2 = m_data.GetConfiguration().GetLeftTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
   m_rightReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2 = m_data.GetConfiguration().GetRightTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-   m_RenalCircuit = &m_data.GetCircuits().GetRenalCircuit();
+  m_RenalCircuit = &m_data.GetCircuits().GetRenalCircuit();
   //Left
   m_leftGlomerularNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftGlomerularCapillaries);
   m_leftNetGlomerularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetGlomerularCapillaries);
@@ -439,8 +436,7 @@ void Renal::SetUp()
 //--------------------------------------------------------------------------------------------------
 void Renal::AtSteadyState()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState)
-  {
+  if (m_data.GetState() == EngineState::AtInitialStableState) {
     /*
     if (m_data.GetConditions().HasConsumeMeal())
     {
@@ -450,8 +446,7 @@ void Renal::AtSteadyState()
     */
   }
 
-  if (m_data.GetState() == EngineState::AtSecondaryStableState)
-  {
+  if (m_data.GetState() == EngineState::AtSecondaryStableState) {
     //We were letting the substances flow out to get the initial concentrations correct
     //We want to do this out of the pressure source, not the urethra to ensure the flow bringing substances into the compartment is the same as the flow taking it out
     //But now we're stable and want to start filling the bladder, so make substances stay in bladder as they come in with the fluid
@@ -461,7 +456,7 @@ void Renal::AtSteadyState()
     renalGraph->StateChange();
     combinedCardiovascularGraph->RemoveLink(BGE::UrineLink::BladderToGroundSource);
     combinedCardiovascularGraph->StateChange();
-  } 
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -490,11 +485,11 @@ void Renal::PreProcess()
 ///
 /// \details
 /// The renal system must run its substance transport independently from the circuit calculations, which
-/// occur in Cardiovascular::Process. This series of functions clears all of the necessary substances to 
+/// occur in Cardiovascular::Process. This series of functions clears all of the necessary substances to
 /// the bladder, restores bicarbonate if necessary and calculates the renal systemic outputs.
 //--------------------------------------------------------------------------------------------------
 void Renal::Process()
-{ 
+{
   //Circuit Processing is done on the entire circulatory circuit elsewhere
   CalculateActiveTransport();
   CalculateVitalSigns();
@@ -505,7 +500,7 @@ void Renal::Process()
 /// Conducts the post processing for the renal system
 ///
 /// \details
-/// The renal circuit post processing occurs with the cardiovascular system's post process. There is 
+/// The renal circuit post processing occurs with the cardiovascular system's post process. There is
 /// currently no other functionality needed for renal post process.
 //--------------------------------------------------------------------------------------------------
 void Renal::PostProcess()
@@ -520,10 +515,10 @@ void Renal::PostProcess()
 /// \details
 /// This function adjusts the filtration resistance of the glomerular capillaries based on any changes in
 /// permeability or glomerular capillary surface area. CalculateColloidOsmoticPressure is then called
-/// to adjust the pressure gradient from the glomerular capillaries to the bowman's space. 
+/// to adjust the pressure gradient from the glomerular capillaries to the bowman's space.
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateUltrafiltrationFeedback()
-{ 
+{
   //Tuning parameters
   double glomerularOsmoticSensitivity = 1.0;
   double bowmansOsmoticSensitivity = 1.0;
@@ -536,20 +531,16 @@ void Renal::CalculateUltrafiltrationFeedback()
   double surfaceArea_m2 = 0.0;
 
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       filterResistancePath = m_leftGlomerularFilterResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetLeftGlomerularFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
-      surfaceArea_m2 = GetLeftGlomerularFiltrationSurfaceArea().GetValue(AreaUnit::m2);     
+      surfaceArea_m2 = GetLeftGlomerularFiltrationSurfaceArea().GetValue(AreaUnit::m2);
 
       glomerularOsmoticSourcePath = m_leftGlomerularOsmoticSourcePath;
       bowmansOsmoticSourcePath = m_leftBowmansOsmoticSourcePath;
-    }
-    else
-    {
+    } else {
       //RIGHT
       filterResistancePath = m_rightGlomerularFilterResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightGlomerularFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
@@ -581,7 +572,6 @@ void Renal::CalculateUltrafiltrationFeedback()
   }
 }
 
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Calculates changes in fluid reabsorption
@@ -598,7 +588,7 @@ void Renal::CalculateReabsorptionFeedback()
 
   //Determine the permeability
   //Only allow water to be reabsorbed more easily
-  //adjust permeability base upon arterial pressure 
+  //adjust permeability base upon arterial pressure
   CalculateFluidPermeability();
   //Modify the permeability based on plasma sodium concentration
   //This needs to come after CalculateFluidPermeability
@@ -609,14 +599,12 @@ void Renal::CalculateReabsorptionFeedback()
   SEFluidCircuitPath* tubulesOsmoticSourcePath = nullptr;
   SEFluidCircuitPath* filterResistancePath = nullptr;
   double filterResistance_mmHg_s_Per_mL = 0.0;
-    double permeability_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
+  double permeability_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
   double surfaceArea_m2 = 0.0;
 
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       filterResistancePath = m_leftReabsorptionResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetLeftTubularReabsorptionFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
@@ -624,9 +612,7 @@ void Renal::CalculateReabsorptionFeedback()
 
       peritubularOsmoticSourcePath = m_leftPeritubularOsmoticSourcePath;
       tubulesOsmoticSourcePath = m_leftTubulesOsmoticSourcePath;
-    }
-    else
-    {
+    } else {
       //RIGHT
       filterResistancePath = m_rightReabsorptionResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightTubularReabsorptionFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
@@ -662,7 +648,7 @@ void Renal::CalculateReabsorptionFeedback()
 /// Turns cleared lactate into glucose
 ///
 /// \details
-/// This function performs the renal contribution to gluconeogenesis. The lactate is converted at a 
+/// This function performs the renal contribution to gluconeogenesis. The lactate is converted at a
 /// 1 to 1 mass ratio into glucose. This will effectively remove all lactate from the urine up until
 /// the transport maximum. If the converted mass exceeds the transport maximum, it is capped at the max
 /// and the remainder continues to the urine.
@@ -681,19 +667,15 @@ void Renal::CalculateGluconeogenesis()
   double lactateExcreted_mg = 0;
 
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
     double glucoseReabsorptionMass_mg = 0.0;
-    if (kidney == 0)
-    {
+    if (kidney == 0) {
       //LEFT
       ureterLactate = m_leftUreterLactate;
       peritubularGlucose = m_leftPeritubularGlucose;
       glucoseReabsorptionMass_mg = m_SubstanceTransport.leftGlucoseReabsorptionMass_mg;
       lactateExcreted_mg = m_SubstanceTransport.leftLactateExcretedMass_mg;
-    }
-    else
-    {
+    } else {
       //RIGHT
       ureterLactate = m_rightUreterLactate;
       peritubularGlucose = m_rightPeritubularGlucose;
@@ -702,11 +684,10 @@ void Renal::CalculateGluconeogenesis()
     }
 
     double reabsorptionRate_mg_Per_s = (lactateExcreted_mg + glucoseReabsorptionMass_mg) / m_dt;
-    
+
     //Convert 1-to-1 Lactate to Glucose and put in PeritubularCapillaries
     //If Converted Glucose + Reabsorbed Glucose > TM, the difference is excreted as Lactate
-    if (!m_glucose->GetClearance().GetRenalTransportMaximum().IsInfinity())
-    {
+    if (!m_glucose->GetClearance().GetRenalTransportMaximum().IsInfinity()) {
       double transportMaximum_mg_Per_s = m_glucose->GetClearance().GetRenalTransportMaximum(MassPerTimeUnit::mg_Per_s);
       reabsorptionRate_mg_Per_s = MIN(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
     }
@@ -722,8 +703,7 @@ void Renal::CalculateGluconeogenesis()
 
     //Sometimes we pull everything out of the ureterNode, but get a super small negative mass
     //Just make that super small negative mass zero
-    if (ureterLactate->GetMass().IsNegative())
-    {
+    if (ureterLactate->GetMass().IsNegative()) {
       ureterLactate->GetMass().SetValue(0.0, MassUnit::mg);
     }
 
@@ -743,7 +723,7 @@ void Renal::CalculateGluconeogenesis()
   double patientWeight_kg = m_patient->GetWeight(MassUnit::kg);
   m_lactate->GetClearance().GetRenalClearance().SetValue(totalLactateExcretionRate_mg_Per_s / plasmaConcentration_mg_Per_mL / patientWeight_kg, VolumePerTimeMassUnit::mL_Per_s_kg);
 
-  double singleExcreted_mg = totalLactateExcretionRate_mg_Per_s * m_dt * 0.5;// We are assuming the kidneys are each doing the same amount of work
+  double singleExcreted_mg = totalLactateExcretionRate_mg_Per_s * m_dt * 0.5; // We are assuming the kidneys are each doing the same amount of work
   m_leftKidneyIntracellularLactate->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
   m_leftKidneyIntracellularLactate->GetMassCleared().IncrementValue(singleExcreted_mg, MassUnit::mg);
   m_rightKidneyIntracellularLactate->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
@@ -775,38 +755,31 @@ void Renal::ProcessActions()
 /// also calculates average clearance rates for substances to be used in the consume meal condition.
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateActiveTransport()
-{   
+{
   m_SubstanceTransport.leftLactateExcretedMass_mg = 0;
   m_SubstanceTransport.rightLactateExcretedMass_mg = 0;
   m_SubstanceTransport.leftGlucoseReabsorptionMass_mg = 0.0;
   m_SubstanceTransport.rightGlucoseReabsorptionMass_mg = 0.0;
 
   unsigned int i = 0;
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances())
-  {
+  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
     if (!sub->HasClearance())
       continue;
-    if(!sub->GetClearance().HasRenalDynamic())
+    if (!sub->GetClearance().HasRenalDynamic())
       continue;
-    if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation)
-    {
+    if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation) {
       //This is the generic methodology
       CalculateGlomerularTransport(*sub);
       CalculateReabsorptionTransport(*sub);
-      if (sub == m_potassium)
-      {
+      if (sub == m_potassium) {
         CalculateSecretion();
       }
 
       CalculateExcretion(*sub);
-    }
-    else if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Clearance)
-    {
+    } else if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Clearance) {
       //This bypasses the generic methodology and just automatically clears
       CalculateAutomaticClearance(*sub);
-    }
-    else
-    {
+    } else {
       /// \error Fatal: Unrecognized renal clearance type
       Fatal("Unrecognized renal clearance type.");
     }
@@ -836,17 +809,13 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
   double filtrationRate_mg_Per_s = 0.0;
 
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       glomerular = m_leftGlomerular;
       bowmans = m_leftBowmans;
       filterResistancePath = m_leftGlomerularFilterResistancePath;
-    }
-    else
-    {
+    } else {
       //RIGHT
       glomerular = m_rightGlomerular;
       bowmans = m_rightBowmans;
@@ -863,8 +832,7 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
     double flow_mL_Per_s = filterResistancePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
 
     //Don't allow back flow
-    if (flow_mL_Per_s < 0.0)
-    {
+    if (flow_mL_Per_s < 0.0) {
       continue;
     }
 
@@ -872,25 +840,24 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
     double fractionUnbound = sub.GetClearance().GetFractionUnboundInPlasma().GetValue();
 
     double massToMove_mg = concentration_mg_Per_mL * flow_mL_Per_s * m_dt * filterability * fractionUnbound;
-    
+
     //Make sure we don't try to move too much
     massToMove_mg = MIN(massToMove_mg, glomerularSubQ->GetMass().GetValue(MassUnit::mg));
-        
+
     //Increment & decrement
     glomerularSubQ->GetMass().IncrementValue(-massToMove_mg, MassUnit::mg);
     bowmansSubQ->GetMass().IncrementValue(massToMove_mg, MassUnit::mg);
 
     //Sometimes we pull everything out of the Glomerular, but get a super small negative mass
     //Just make that super small negative mass zero
-    if (glomerularSubQ->GetMass().GetValue(MassUnit::mg) < 0.0)
-    {
+    if (glomerularSubQ->GetMass().GetValue(MassUnit::mg) < 0.0) {
       glomerularSubQ->GetMass().SetValue(0.0, MassUnit::mg);
     }
 
     //Calculate new concentrations
     glomerularSubQ->Balance(BalanceLiquidBy::Mass);
     bowmansSubQ->Balance(BalanceLiquidBy::Mass);
-    
+
     //Set the substance output values
     filtrationRate_mg_Per_s += massToMove_mg / m_dt;
   }
@@ -901,13 +868,13 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// Determines secretion of substance from peritubular capillaries to ureter 
+/// Determines secretion of substance from peritubular capillaries to ureter
 ///
 /// \param  sub Substance to be secreted
 ///
 /// \details
 /// This function calculates how much of a substance is secreted into the distal tubules and collecting ducts
-/// from the peritubular capillaries in the Kidney. We allow this process to take place after reabsorption and 
+/// from the peritubular capillaries in the Kidney. We allow this process to take place after reabsorption and
 /// place the substance directly into the ureter node as a means to simulate the distal and collecting ducts.
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateSecretion()
@@ -919,31 +886,26 @@ void Renal::CalculateSecretion()
   double potassiumConcentration_g_Per_dL = 0.0;
   double peritubularVolume_dL = 0.0;
 
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       ureterPotassium = m_leftUreterPotassium;
       peritubularPotassium = m_leftPeritubularPotassium;
       peritubularVolume_dL = m_leftPeritubular->GetVolume().GetValue(VolumeUnit::dL);
-    }
-    else
-    {
+    } else {
       //RIGHT
       ureterPotassium = m_rightUreterPotassium;
       peritubularPotassium = m_rightPeritubularPotassium;
       peritubularVolume_dL = m_rightPeritubular->GetVolume().GetValue(VolumeUnit::dL);
     }
 
-    //grab current concentration and volume, 
+    //grab current concentration and volume,
     potassiumConcentration_g_Per_dL = peritubularPotassium->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_dL);
 
     //only do if current levels of potassium are too high:
-    if (potassiumConcentration_g_Per_dL > m_baselinePotassiumConcentration_g_Per_dL)
-    {
-      //calculate mass to move in mg: 
-      massPotassiumToMove_mg = (potassiumConcentration_g_Per_dL - m_baselinePotassiumConcentration_g_Per_dL)*peritubularVolume_dL;
+    if (potassiumConcentration_g_Per_dL > m_baselinePotassiumConcentration_g_Per_dL) {
+      //calculate mass to move in mg:
+      massPotassiumToMove_mg = (potassiumConcentration_g_Per_dL - m_baselinePotassiumConcentration_g_Per_dL) * peritubularVolume_dL;
 
       //Increment & decrement
       peritubularPotassium->GetMass().IncrementValue(-massPotassiumToMove_mg, MassUnit::mg);
@@ -980,18 +942,12 @@ void Renal::CalculateFilterability(SESubstance& sub)
   double filterability = 0.0;
 
   //Everything below a certain size is 1.0, and everything above is 0.0
-  if (molecularRadius_nm < 1.8)
-  {
+  if (molecularRadius_nm < 1.8) {
     filterability = 1.0;
-  }
-  else if (molecularRadius_nm > 4.4)
-  {
+  } else if (molecularRadius_nm > 4.4) {
     filterability = 0.0;
-  }
-  else
-  {
-    switch (sub.GetClearance().GetChargeInBlood())
-    {
+  } else {
+    switch (sub.GetClearance().GetChargeInBlood()) {
     case CDM::enumCharge::Positive:
       filterability = 0.0386 * pow(molecularRadius_nm, 4.0) - 0.431 * pow(molecularRadius_nm, 3.0)
         + 1.61 * pow(molecularRadius_nm, 2.0) - 2.6162 * molecularRadius_nm + 2.607;
@@ -1009,7 +965,7 @@ void Renal::CalculateFilterability(SESubstance& sub)
       break;
     }
   }
-  
+
   //Bound it
   filterability = LIMIT(filterability, 0.0, 1.0);
 
@@ -1045,10 +1001,8 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
   double permeabilityModificationFactor = 1.0;
 
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
 
       tubulesSubQ = m_leftTubules->GetSubstanceQuantity(sub);
@@ -1056,9 +1010,7 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
       reabsorptionResistancePath = m_leftReabsorptionResistancePath;
       //Add a factor to make substances reabsorb more or less avidly
       permeabilityModificationFactor = m_leftReabsorptionPermeabilityModificationFactor;
-    }
-    else
-    {
+    } else {
       //RIGHT
       tubulesSubQ = m_rightTubules->GetSubstanceQuantity(sub);
       peritubularSubQ = m_rightPeritubular->GetSubstanceQuantity(sub);
@@ -1067,25 +1019,21 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
       permeabilityModificationFactor = m_rightReabsorptionPermeabilityModificationFactor;
     }
 
-    
     //Now do the transport
     double concentration_mg_Per_mL = tubulesSubQ->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
     double flow_mL_Per_s = reabsorptionResistancePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
 
     //Don't allow back flow
-    if (flow_mL_Per_s < 0.0)
-    {
+    if (flow_mL_Per_s < 0.0) {
       continue;
     }
 
     //Get the ratio of how this substance moves with water flow
     double massToMove_mg = 0.0;
-    if (sub.GetClearance().GetRenalReabsorptionRatio().IsInfinity())
-    {
+    if (sub.GetClearance().GetRenalReabsorptionRatio().IsInfinity()) {
       //Infinity, so move all the mass
       massToMove_mg = tubulesSubQ->GetMass().GetValue(MassUnit::mg);
-    }
-    else //Not Infinity
+    } else //Not Infinity
     {
 
       double reabsorptionRatio = sub.GetClearance().GetRenalReabsorptionRatio().GetValue();
@@ -1093,31 +1041,26 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
       //limit the ratio to 1 to allow for concentrated urine
       massModification = MIN(massModification, 1.0);
       massToMove_mg = concentration_mg_Per_mL * flow_mL_Per_s * m_dt * reabsorptionRatio * massModification;
-    }       
+    }
 
     //Make sure we don't try to move too much
     massToMove_mg = MIN(massToMove_mg, tubulesSubQ->GetMass().GetValue(MassUnit::mg));
 
     double reabsorptionRate_mg_Per_s = massToMove_mg / m_dt;
     //Stay below the maximum allowable transport
-    if (!sub.GetClearance().GetRenalTransportMaximum().IsInfinity())
-    {
+    if (!sub.GetClearance().GetRenalTransportMaximum().IsInfinity()) {
       double transportMaximum_mg_Per_s = sub.GetClearance().GetRenalTransportMaximum().GetValue(MassPerTimeUnit::mg_Per_s);
       reabsorptionRate_mg_Per_s = MIN(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
-    } 
-    
+    }
+
     massToMove_mg = reabsorptionRate_mg_Per_s * m_dt;
 
     //Store information about glucose to be used later in Gluconeogenesis
-    if (&sub == m_glucose)
-    {
-      if (kidney == 0)
-      {
+    if (&sub == m_glucose) {
+      if (kidney == 0) {
         //Left
         m_SubstanceTransport.leftGlucoseReabsorptionMass_mg = massToMove_mg;
-      }
-      else
-      {
+      } else {
         //Right
         m_SubstanceTransport.rightGlucoseReabsorptionMass_mg = massToMove_mg;
       }
@@ -1157,21 +1100,17 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
 void Renal::CalculateExcretion(SESubstance& sub)
 {
   //This will always be a time-step behind
-  
+
   SELiquidCompartment* tubules = nullptr;
   SEFluidCircuitPath* excretionPath = nullptr;
   double totalExcretionRate_mg_Per_s = 0.0;
 
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       tubules = m_leftTubules;
       excretionPath = m_leftUreterPath;
-    }
-    else
-    {
+    } else {
       //RIGHT
       tubules = m_rightTubules;
       excretionPath = m_rightUreterPath;
@@ -1185,15 +1124,11 @@ void Renal::CalculateExcretion(SESubstance& sub)
     //Make sure it's not a super small negative number
     totalExcretionRate_mg_Per_s += MAX(excretionRate_mg_Per_s, 0.0);
 
-    if (&sub == m_lactate)
-    {
-      if (kidney == 0)
-      {
+    if (&sub == m_lactate) {
+      if (kidney == 0) {
         //Left
         m_SubstanceTransport.leftLactateExcretedMass_mg = excretionRate_mg_Per_s * m_dt;
-      }
-      else
-      {
+      } else {
         //Right
         m_SubstanceTransport.rightLactateExcretedMass_mg = excretionRate_mg_Per_s * m_dt;
       }
@@ -1205,29 +1140,24 @@ void Renal::CalculateExcretion(SESubstance& sub)
   double plasmaConcentration_mg_Per_mL = m_aorta->GetSubstanceQuantity(sub)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
   double patientWeight_kg = m_patient->GetWeight(MassUnit::kg);
 
-  if (totalExcretionRate_mg_Per_s <= 0.0 || patientWeight_kg <= 0.0)
-  {
+  if (totalExcretionRate_mg_Per_s <= 0.0 || patientWeight_kg <= 0.0) {
     sub.GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_s_kg);
-  }
-  else
+  } else
     sub.GetClearance().GetRenalClearance().SetValue(totalExcretionRate_mg_Per_s / plasmaConcentration_mg_Per_mL / patientWeight_kg, VolumePerTimeMassUnit::mL_Per_s_kg);
 
   //Set substance compartment effects
   //Gluconeogenesis calculates it for Lactate later
-  if (&sub != m_lactate)
-  {
+  if (&sub != m_lactate) {
     SELiquidSubstanceQuantity* leftKidneySubQ = m_data.GetCompartments().GetIntracellularFluid(*m_leftKidneyTissue).GetSubstanceQuantity(sub);
     SELiquidSubstanceQuantity* rightKidneySubQ = m_data.GetCompartments().GetIntracellularFluid(*m_rightKidneyTissue).GetSubstanceQuantity(sub);
 
-    double singleExcreted_mg = totalExcretionRate_mg_Per_s * m_dt * 0.5;// We are assuming the kindneys are doing the same amount of work
+    double singleExcreted_mg = totalExcretionRate_mg_Per_s * m_dt * 0.5; // We are assuming the kindneys are doing the same amount of work
     leftKidneySubQ->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
     leftKidneySubQ->GetMassCleared().IncrementValue(singleExcreted_mg, MassUnit::mg);
     rightKidneySubQ->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
     rightKidneySubQ->GetMassCleared().IncrementValue(singleExcreted_mg, MassUnit::mg);
   }
-
 }
-
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -1235,8 +1165,8 @@ void Renal::CalculateExcretion(SESubstance& sub)
 ///
 /// \details
 /// This function calculates how much of each substance to remove via the kidneys. Drugs are removed from
-/// the tissue compartment in keeping with the PK methodology, while the remaining substances are cleared 
-/// directly from the vascular compartments. The removed mass of the substance is then added to the 
+/// the tissue compartment in keeping with the PK methodology, while the remaining substances are cleared
+/// directly from the vascular compartments. The removed mass of the substance is then added to the
 /// bladder compartment and the total body mass of the substance is adjusted accordingly.
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateAutomaticClearance(SESubstance& sub)
@@ -1247,7 +1177,7 @@ void Renal::CalculateAutomaticClearance(SESubstance& sub)
   SESubstanceClearance& clearance = sub.GetClearance();
 
   if (clearance.GetRenalClearance().IsZero())
-    return;//nothing to do
+    return; //nothing to do
 
   //Renal Volume Cleared - Clearance happens through the renal system
   renalVolumeCleared_mL = (clearance.GetRenalClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * patientWeight_kg * m_dt) / 2;
@@ -1286,8 +1216,7 @@ void Renal::CalculateVitalSigns()
   double hematocrit = m_data.GetBloodChemistry().GetHematocrit().GetValue();
 
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
     SEFluidCircuitPath* glomerularOsmoticSourcePath = nullptr;
     SEFluidCircuitPath* bowmansOsmoticSourcePath = nullptr;
     SEFluidCircuitNode* glomerularNode = nullptr;
@@ -1305,8 +1234,7 @@ void Renal::CalculateVitalSigns()
     SEFluidCircuitNode* netPeritubularNode = nullptr;
     SEFluidCircuitNode* netTubulesNode = nullptr;
 
-    if (kidney == 0)
-    {
+    if (kidney == 0) {
       //LEFT
       filterResistancePath = m_leftGlomerularFilterResistancePath;
       glomerularOsmoticSourcePath = m_leftPeritubularOsmoticSourcePath;
@@ -1332,8 +1260,8 @@ void Renal::CalculateVitalSigns()
       GetLeftBowmansCapsulesOsmoticPressure().Set(bowmansOsmoticSourcePath->GetNextPressureSource());
       GetLeftGlomerularCapillariesHydrostaticPressure().Set(glomerularNode->GetNextPressure());
       GetLeftGlomerularCapillariesOsmoticPressure().Set(glomerularOsmoticSourcePath->GetNextPressureSource());
-      
-      GetLeftGlomerularFiltrationRate().Set(filterResistancePath->GetNextFlow());     
+
+      GetLeftGlomerularFiltrationRate().Set(filterResistancePath->GetNextFlow());
       double pressureDiff_mmHg = netGlomerularCapillariesNode->GetNextPressure().GetValue(PressureUnit::mmHg) - netBowmansCapsulesNode->GetNextPressure().GetValue(PressureUnit::mmHg);
       GetLeftNetFiltrationPressure().SetValue(pressureDiff_mmHg, PressureUnit::mmHg);
       double filtrationCoefficient = 0.0;
@@ -1341,7 +1269,7 @@ void Renal::CalculateVitalSigns()
         filtrationCoefficient = GetLeftGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s) / GetLeftNetFiltrationPressure().GetValue(PressureUnit::mmHg);
 
       GetLeftGlomerularFiltrationCoefficient().SetValue(filtrationCoefficient, VolumePerTimePressureUnit::mL_Per_s_mmHg);
-      
+
       GetLeftPeritubularCapillariesHydrostaticPressure().Set(peritubularNode->GetNextPressure());
       GetLeftPeritubularCapillariesOsmoticPressure().Set(peritubularOsmoticSourcePath->GetNextPressureSource());
       GetLeftTubularHydrostaticPressure().Set(tubulesNode->GetNextPressure());
@@ -1362,11 +1290,9 @@ void Renal::CalculateVitalSigns()
       double filtrationFraction = 0.0;
       if (renalPlasmaFlow_mL_Per_s != 0)
         filtrationFraction = GetLeftGlomerularFiltrationRate(VolumePerTimeUnit::mL_Per_s) / renalPlasmaFlow_mL_Per_s;
-      
+
       GetLeftFiltrationFraction().SetValue(filtrationFraction);
-    }
-    else
-    {
+    } else {
       //RIGHT
       filterResistancePath = m_rightGlomerularFilterResistancePath;
       glomerularOsmoticSourcePath = m_rightPeritubularOsmoticSourcePath;
@@ -1425,8 +1351,7 @@ void Renal::CalculateVitalSigns()
     }
   }
 
-  GetGlomerularFiltrationRate().SetValue(GetLeftGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s) + 
-    GetRightGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s), VolumePerTimeUnit::mL_Per_s);
+  GetGlomerularFiltrationRate().SetValue(GetLeftGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s) + GetRightGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s), VolumePerTimeUnit::mL_Per_s);
 
   double renalBloodFlow_mL_Per_s = m_rightAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_leftAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
   GetRenalBloodFlow().SetValue(renalBloodFlow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
@@ -1438,29 +1363,27 @@ void Renal::CalculateVitalSigns()
     GetRenalVascularResistance().SetValue(pressureDiff_mmHg / renalBloodFlow_mL_Per_s, FlowResistanceUnit::mmHg_s_Per_mL);
   else
     GetRenalVascularResistance().SetValue(m_CVOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  
+
   //Do the urine specific values
   GetUrineVolume().SetValue(m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL), VolumeUnit::mL);
   double urineProductionRate_mL_Per_s = m_leftUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_rightUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
   GetUrineProductionRate().SetValue(urineProductionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-  
+
   // Urine specific gravity is calculated by dividing the mass of all the substances in a fluid & the fluid itself by the weight of just the fluid
   SEScalarMass substanceMass;
-  for (SELiquidSubstanceQuantity* subQ : m_bladder->GetSubstanceQuantities())
-  {
+  for (SELiquidSubstanceQuantity* subQ : m_bladder->GetSubstanceQuantities()) {
     if (subQ->HasMass())
       substanceMass.Increment(subQ->GetMass());
   }
 
-  //increment water mass onto substance mass to get total mass: 
+  //increment water mass onto substance mass to get total mass:
   GeneralMath::CalculateSpecificGravity(substanceMass, GetUrineVolume(), GetUrineSpecificGravity());
 
   // Urine osmolality is the osmotic pressure of sodium, glucose and urea over the weight of the fluid
-  
 
   GeneralMath::CalculateOsmolality(m_bladderSodium->GetMolarity(), m_bladderPotassium->GetMolarity(), m_bladderGlucose->GetMolarity(), m_bladderUrea->GetMolarity(), GetUrineSpecificGravity(), GetUrineOsmolality());
   GeneralMath::CalculateOsmolarity(m_bladderSodium->GetMolarity(), m_bladderPotassium->GetMolarity(), m_bladderGlucose->GetMolarity(), m_bladderUrea->GetMolarity(), GetUrineOsmolarity());
-  
+
   double urineUreaConcentration_g_Per_L = m_bladderUrea->GetConcentration(MassPerVolumeUnit::g_Per_L);
   //2.14 = MW Urea(60) / MW N2 (2*14)
   GetUrineUreaNitrogenConcentration().SetValue(urineUreaConcentration_g_Per_L / 2.14, MassPerVolumeUnit::g_Per_L);
@@ -1473,29 +1396,23 @@ void Renal::CalculateVitalSigns()
   // Do running averages for events
   // Only calculate the running average when not urinating, since the production rate shuts off during urination
   // This will keep the events from freaking out when urinating
-  if (m_Urinating == false)
-  {
+  if (m_Urinating == false) {
     m_urineProductionRate_mL_Per_min_runningAvg.Sample(Convert(urineProductionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s, VolumePerTimeUnit::mL_Per_min));
     m_urineOsmolarity_mOsm_Per_L_runningAvg.Sample(GetUrineOsmolarity(OsmolarityUnit::mOsm_Per_L));
     m_sodiumExcretionRate_mg_Per_min_runningAvg.Sample(m_sodium->GetClearance().GetRenalExcretionRate(MassPerTimeUnit::mg_Per_min));
-  }   
+  }
 
   //Only check these once each cardiac cycle (using running average for entire cycle)
   //Otherwise, they could turn on and off like crazy as the flows fluctuate throughout the cycle
-  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle) && m_Urinating == false)
-  {
-    if (m_data.GetState() > EngineState::InitialStabilization)
-    {// Don't throw events if we are initializing
-    //Handle Events
-    /// \cite lahav1992intermittent
-    /// 2.5 mL/min 
-      if (m_urineProductionRate_mL_Per_min_runningAvg.Value() > 2.5)
-      {
+  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle) && m_Urinating == false) {
+    if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+      //Handle Events
+      /// \cite lahav1992intermittent
+      /// 2.5 mL/min
+      if (m_urineProductionRate_mL_Per_min_runningAvg.Value() > 2.5) {
         /// \event Patient: Diuresis. Occurs when the urine production rate double to around 2.5 ml/min. \cite lahav1992intermittent
         m_patient->SetEvent(CDM::enumPatientEvent::Diuresis, true, m_data.GetSimulationTime());
-      }
-      else if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 1.0)
-      {
+      } else if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 1.0) {
         /// \event Patient: Ends when the urine production rate falls below 1.0 mL/min (near normal urine production). \cite lahav1992intermittent
         m_patient->SetEvent(CDM::enumPatientEvent::Diuresis, false, m_data.GetSimulationTime());
       }
@@ -1503,26 +1420,20 @@ void Renal::CalculateVitalSigns()
       /// \cite valtin1995renal
       /// p. 116
       /// urine osmolarity must be hyperosmotic relative to plasma and urine production rate must be less than 0.5 mL/min
-      if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 0.5 && m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() > 280)
-      {
+      if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 0.5 && m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() > 280) {
         /// \event Patient: Antidiuresis occurs when urine production rate is less than 0.5 mL/min and the urine osmolarity is hyperosmotic to the plasma \cite valtin1995renal
         m_patient->SetEvent(CDM::enumPatientEvent::Antidiuresis, true, m_data.GetSimulationTime());
-      }
-      else if ((m_urineProductionRate_mL_Per_min_runningAvg.Value() > 0.55 || m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() < 275))
-      {
+      } else if ((m_urineProductionRate_mL_Per_min_runningAvg.Value() > 0.55 || m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() < 275)) {
         /// \event Patient: Antidiuresis. Ends when urine production rate rises back above 0.55 mL/min or the urine osmolarity falls below that of the plasma \cite valtin1995renal
         m_patient->SetEvent(CDM::enumPatientEvent::Antidiuresis, false, m_data.GetSimulationTime());
       }
 
       /// \cite Zager1988HypoperfusionRate
       /// Computing percent decrease as (1-1.6/11.2)*100 = 85 percent decrease or 15% total flow (using 20ml/s as "normal" value, below 3ml/s):
-      if (renalBloodFlow_mL_Per_s < 3.0)
-      {
-        /// \event Patient: hypoperfusion occurs when renal blood flow decreases below 3 ml/s 
+      if (renalBloodFlow_mL_Per_s < 3.0) {
+        /// \event Patient: hypoperfusion occurs when renal blood flow decreases below 3 ml/s
         m_patient->SetEvent(CDM::enumPatientEvent::RenalHypoperfusion, true, m_data.GetSimulationTime());
-      }
-      else if (renalBloodFlow_mL_Per_s > 4.0)
-      {
+      } else if (renalBloodFlow_mL_Per_s > 4.0) {
         /// \event Patient: hypoperfusion ends when blood flow recovers above 4 ml/s
         m_patient->SetEvent(CDM::enumPatientEvent::RenalHypoperfusion, false, m_data.GetSimulationTime());
       }
@@ -1531,25 +1442,20 @@ void Renal::CalculateVitalSigns()
       ///  1:6 ratio for sodium excretion in pressure natriuresis in rats, validation for sodium excretion = 2.4 mg/min
       //sub->GetClearance()->GetRenalExcretionRate().SetValue(excretionRate_mg_Per_s, MassPerTimeUnit::mg_Per_s);
 
-      if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() > 14.4)
-      {
+      if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() > 14.4) {
         /// \event Patient: Natriuresis. Occurs when the sodium excretion rate rises above 14.4 mg/min \cite moss2013hormonal
         m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, true, m_data.GetSimulationTime());
-      }
-      else if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() < 14.0)
-      {
+      } else if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() < 14.0) {
         /// \event Patient: Ends when the sodium excretion rate falls below 14.0 mg/min \cite moss2013hormonal
         m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, false, m_data.GetSimulationTime());
       }
     }
 
-    //reset at start of cardiac cycle 
+    //reset at start of cardiac cycle
     m_urineProductionRate_mL_Per_min_runningAvg.Reset();
     m_urineOsmolarity_mOsm_Per_L_runningAvg.Reset();
     m_sodiumExcretionRate_mg_Per_min_runningAvg.Reset();
   }
-
-  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1557,10 +1463,10 @@ void Renal::CalculateVitalSigns()
 /// Empties the bladder of fluid and substances.
 ///
 /// \details
-/// Urination empties the bladder.This can be called as an action or will automatically occur if the bladder 
+/// Urination empties the bladder.This can be called as an action or will automatically occur if the bladder
 /// volume exceeds the maximum volume. Currently the outflow portion is disabled due to a bug in the generic
 /// transporter. This has been replaced by setting the bladder volume and substance quantities to 1 mL &
-/// 0 ug respectively. 
+/// 0 ug respectively.
 //--------------------------------------------------------------------------------------------------
 void Renal::Urinate()
 {
@@ -1568,36 +1474,29 @@ void Renal::Urinate()
   GetUrinationRate().SetValue(0.0, VolumePerTimeUnit::mL_Per_min);
 
   //Check and see if the bladder is overfull or if there is an action called
-  if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) > bladderMaxVolume_mL)
-  {
+  if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) > bladderMaxVolume_mL) {
     /// \event Patient: FunctionalIncontinence: The patient's bladder has reached a maximum
     m_patient->SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, true, m_data.GetSimulationTime());
     m_Urinating = true;
   }
 
-  if (m_data.GetActions().GetPatientActions().HasUrinate())
-  {
+  if (m_data.GetActions().GetPatientActions().HasUrinate()) {
     m_data.GetActions().GetPatientActions().RemoveUrinate();
     m_Urinating = true;
   }
 
   //Now deal with the action
-  if (m_Urinating)
-  {   
+  if (m_Urinating) {
     //Stop urinating when the bladder volume drops below 1.0 mL
-    if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) < 1.0)
-    {
+    if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) < 1.0) {
       m_Urinating = false;
       //The urethra resistances will use the baselines value of an open switch to stop the flow
 
       //Turn off the event
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::FunctionalIncontinence))
-      {
+      if (m_patient->IsEventActive(CDM::enumPatientEvent::FunctionalIncontinence)) {
         m_patient->SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, false, m_data.GetSimulationTime());
-      }     
-    }
-    else
-    {
+      }
+    } else {
       //Prevent anything from leaving except for what's in the bladder
       m_leftUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
       m_rightUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1621,7 +1520,7 @@ void Renal::Urinate()
 /// sums the inflow and outflow to the bladder node each time step and updates the bladder volume accordingly.
 //--------------------------------------------------------------------------------------------------
 void Renal::UpdateBladderVolume()
-{ 
+{
   /// \todo Eventually replace this entire thing with a compliance and model peristaltic flow
 
   //Don't fill the bladder during stabilization
@@ -1632,12 +1531,12 @@ void Renal::UpdateBladderVolume()
   //This will work for both filling the bladder and urinating
   double bladderFlow_mL_Per_s = m_bladderToGroundPressurePath->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
   double volumeIncrement_mL = bladderFlow_mL_Per_s * m_dt;
-  double bladderVolume_mL = m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) + volumeIncrement_mL;  
+  double bladderVolume_mL = m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) + volumeIncrement_mL;
 
   //Don't let this get below zero during urination
   //The urination action will catch it next time around, so this shouldn't be hit more than once (and likely never)
   bladderVolume_mL = MAX(bladderVolume_mL, 0.0);
-  m_bladderNode->GetNextVolume().SetValue(bladderVolume_mL, VolumeUnit::mL);  
+  m_bladderNode->GetNextVolume().SetValue(bladderVolume_mL, VolumeUnit::mL);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1677,9 +1576,9 @@ void Renal::CalculateColloidOsmoticPressure(SEScalarMassPerVolume& albuminConcen
 bool Renal::CalculateUrinalysis(SEUrinalysis& u)
 {
   u.Reset();
-  
+
   double urineOsm_Per_kg = GetUrineOsmolality(OsmolalityUnit::mOsm_Per_kg);
-  if (urineOsm_Per_kg <= 400)// Need cite for this
+  if (urineOsm_Per_kg <= 400) // Need cite for this
     u.SetColorResult(CDM::enumUrineColor::PaleYellow);
   else if (urineOsm_Per_kg > 400 && urineOsm_Per_kg <= 750)
     u.SetColorResult(CDM::enumUrineColor::Yellow);
@@ -1689,12 +1588,12 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
   //u.SetApperanceResult();
   double bladder_glucose_mg_Per_dL = m_bladderGlucose->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL);
 
-  if (bladder_glucose_mg_Per_dL >= 100.0)/// \cite roxe1990urinalysis
+  if (bladder_glucose_mg_Per_dL >= 100.0) /// \cite roxe1990urinalysis
     u.SetGlucoseResult(CDM::enumPresenceIndicator::Positive);
   else
     u.SetGlucoseResult(CDM::enumPresenceIndicator::Negative);
 
-  if (bladder_glucose_mg_Per_dL >= 5.0)/// \cite roxe1990urinalysis
+  if (bladder_glucose_mg_Per_dL >= 5.0) /// \cite roxe1990urinalysis
     u.SetKetoneResult(CDM::enumPresenceIndicator::Positive);
   else
     u.SetKetoneResult(CDM::enumPresenceIndicator::Negative);
@@ -1709,7 +1608,7 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
 
   //u.GetPHResult().Set();
 
-  if (bladder_glucose_mg_Per_dL > 30.0)/// \cite roxe1990urinalysis
+  if (bladder_glucose_mg_Per_dL > 30.0) /// \cite roxe1990urinalysis
     u.SetProteinResult(CDM::enumPresenceIndicator::Positive);
   else
     u.SetProteinResult(CDM::enumPresenceIndicator::Negative);
@@ -1731,14 +1630,13 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
 ///
 /// \details
 /// The renal section of the consume meal condition is responsible for clearing renal specific substances from
-/// the blood. This is accomplished by taking the calculated clearance rate for the substance and multiplying 
-/// by elapsedTime_s, which gives a total cleared mass for the given time. The new mass of the substance is then 
+/// the blood. This is accomplished by taking the calculated clearance rate for the substance and multiplying
+/// by elapsedTime_s, which gives a total cleared mass for the given time. The new mass of the substance is then
 /// distributed to the blood and tissue.
 //--------------------------------------------------------------------------------------------------
 void Renal::ConsumeMeal(double elapsedTime_s)
-{ 
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances())
-  {
+{
+  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
     if (!sub->HasClearance())
       continue;
     if (!sub->GetClearance().HasRenalDynamic())
@@ -1751,7 +1649,7 @@ void Renal::ConsumeMeal(double elapsedTime_s)
 
     SEScalarMass massCleared_mg;
     massCleared_mg.SetValue(volumeCleared_mL * aortaConcentration_mg_Per_mL, MassUnit::mg);
-//  AMB m_data.GetCircuits().DistributeBloodAndTissueMass(*sub, massCleared_mg);
+    //  AMB m_data.GetCircuits().DistributeBloodAndTissueMass(*sub, massCleared_mg);
   }
 
   //Don't bother updating the bladder because it will get the proper concentrations during stabilization
@@ -1765,7 +1663,7 @@ void Renal::ConsumeMeal(double elapsedTime_s)
 /// This function modifies the permeability of the tubules based on plasma sodium. The plasma sodium
 /// is representative of the plasma osmolarity. As the concentration of sodium rises, the osmoreceptors
 /// attempt to reabsorb more fluid to offset the rising sodium. The inverse occurs when the sodium concentration
-/// is low. 
+/// is low.
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateOsmoreceptorFeedback()
 {
@@ -1773,68 +1671,58 @@ void Renal::CalculateOsmoreceptorFeedback()
   //Note: the permeability feedback due to local pressure change has already occurred
 
   //Tuning parameters
-  double sodiumSensitivity = 10.0; 
-  
+  double sodiumSensitivity = 10.0;
+
   double permeability_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
-  
-  ///\todo get the aorta osmolarity instead of sodium concentration 
+
+  ///\todo get the aorta osmolarity instead of sodium concentration
   double sodiumConcentration_mg_Per_mL = m_data.GetSubstances().GetSodium().GetBloodConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
   sodiumConcentration_mg_Per_mL = m_sodiumConcentration_mg_Per_mL_runningAvg.Sample(sodiumConcentration_mg_Per_mL);
 
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetLeftTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      
-        m_leftReabsorptionPermeabilityModificationFactor = pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
+      m_leftReabsorptionPermeabilityModificationFactor = pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
 
-        if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-        {
-          permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_leftReabsorptionPermeabilityModificationFactor;
+      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+        permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_leftReabsorptionPermeabilityModificationFactor;
 
-          //Modify reabsorption resistance
-          GetLeftTubularReabsorptionFluidPermeability().SetValue(permeability_mL_Per_s_Per_mmHg_Per_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
-        }
-    }
-    else
-    {
+        //Modify reabsorption resistance
+        GetLeftTubularReabsorptionFluidPermeability().SetValue(permeability_mL_Per_s_Per_mmHg_Per_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
+      }
+    } else {
       //RIGHT
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      
-        m_rightReabsorptionPermeabilityModificationFactor = pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
-        if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-        {
-          permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_rightReabsorptionPermeabilityModificationFactor;
+      m_rightReabsorptionPermeabilityModificationFactor = pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
+      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+        permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_rightReabsorptionPermeabilityModificationFactor;
 
-          //Modify reabsorption resistance
-          GetRightTubularReabsorptionFluidPermeability().SetValue(permeability_mL_Per_s_Per_mmHg_Per_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
-        }
+        //Modify reabsorption resistance
+        GetRightTubularReabsorptionFluidPermeability().SetValue(permeability_mL_Per_s_Per_mmHg_Per_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
+      }
     }
   }
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-  {
+  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     m_sodiumConcentration_mg_Per_mL_runningAvg.Reset();
   }
 }
-
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Modifies the afferent resistance due to TGF
 ///
 /// \details
-/// Updates the afferent resistance as a function of sodium delivery into the tubules node. 
-/// This function drives the afferent resistance along the 
+/// Updates the afferent resistance as a function of sodium delivery into the tubules node.
+/// This function drives the afferent resistance along the
 /// proper path as a response to increased or decreased sodium delivery.
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateTubuloglomerularFeedback()
 {
-  //Get substances and appropriate paths and node which will be utilized in this implementation 
+  //Get substances and appropriate paths and node which will be utilized in this implementation
   SEFluidCircuitPath* tubulesPath = nullptr;
   SEFluidCircuitPath* afferentResistancePath = nullptr;
   SEFluidCircuitNode* renalArteryNode = nullptr;
@@ -1845,51 +1733,43 @@ void Renal::CalculateTubuloglomerularFeedback()
   double sodiumConcentration_mg_Per_mL = 0.0;
   double tubulesFlow_mL_Per_s = 0.0;
 
-  //set max/min afferent resistance to be zero initially 
+  //set max/min afferent resistance to be zero initially
   double maxAfferentResistance_mmHg_s_Per_mL = 0.0;
   double minAfferentResistance_mmHg_s_Per_mL = 0.0;
 
-  
   //Do it separate for both kidneys
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       afferentResistancePath = m_leftAfferentArteriolePath;
       tubulesPath = m_leftTubulesPath;
 
-      //set max/min afferent equal to the member variable 
+      //set max/min afferent equal to the member variable
       maxAfferentResistance_mmHg_s_Per_mL = m_maxLeftAfferentResistance_mmHg_s_Per_mL;
       minAfferentResistance_mmHg_s_Per_mL = m_minLeftAfferentResistance_mmHg_s_Per_mL;
 
       //Get the concentration and flow rate on tubules path to compute sodium flow rate
       sodiumConcentration_mg_Per_mL = m_leftTubulesSodium->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
 
-      if (tubulesPath->HasNextFlow())
-      {
+      if (tubulesPath->HasNextFlow()) {
         tubulesFlow_mL_Per_s = tubulesPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
-      }     
+      }
       sodiumFlow_mg_Per_s = tubulesFlow_mL_Per_s * sodiumConcentration_mg_Per_mL;
-  
+
       //On the off chance it's negative (like the first time-step) don't do anything
       if (sodiumFlow_mg_Per_s < 0.0 && m_data.GetState() <= EngineState::InitialStabilization)
         continue;
-      
+
       //Keep a running average, so the resistance doesn't go crazy
       sodiumFlow_mg_Per_s = m_leftSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization &&
-        m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-      {
+      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         //Don't change the resistance - just figure out what it is
         m_leftSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
       sodiumFlowSetPoint_mg_Per_s = m_leftSodiumFlowSetPoint_mg_Per_s;
-    }
-    else
-    {
+    } else {
       //RIGHT
       afferentResistancePath = m_rightAfferentArteriolePath;
       tubulesPath = m_rightTubulesPath;
@@ -1900,8 +1780,7 @@ void Renal::CalculateTubuloglomerularFeedback()
       //Get the concentration and flow rate on tubules path to compute sodium flow rate
       sodiumConcentration_mg_Per_mL = m_rightTubulesSodium->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
 
-      if (tubulesPath->HasNextFlow())
-      {
+      if (tubulesPath->HasNextFlow()) {
         tubulesFlow_mL_Per_s = tubulesPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
       }
       sodiumFlow_mg_Per_s = tubulesFlow_mL_Per_s * sodiumConcentration_mg_Per_mL;
@@ -1909,22 +1788,19 @@ void Renal::CalculateTubuloglomerularFeedback()
       //On the off chance it's negative (like the first time-step) don't do anything
       if (sodiumFlow_mg_Per_s < 0.0 && m_data.GetState() < EngineState::InitialStabilization)
         continue;
-  
+
       //Keep a running average, so the resistance doesn't go crazy
       sodiumFlow_mg_Per_s = m_rightSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization &&
-        m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-      {
+      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         //Don't change the resistance - just figure out what it is
         m_rightSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
       sodiumFlowSetPoint_mg_Per_s = m_rightSodiumFlowSetPoint_mg_Per_s;
     }
-    
-    if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-    {
+
+    if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
       //Us the "current" resistance, to continually drive towards the response we want - the next value is overwritten by the baseline during postprocess
       double currentAfferentResistance_mmHg_s_Per_mL = afferentResistancePath->GetResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
       double nextAfferentResistance_mmHg_s_Per_mL = afferentResistancePath->GetNextResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1934,48 +1810,39 @@ void Renal::CalculateTubuloglomerularFeedback()
       //normalize to reduce how dramatic the changes are (may need to add a tuning factor)
       double sodiumChangeNormal = 0.0;
       //First time through this will be zero
-      if (sodiumFlowSetPoint_mg_Per_s > 0.0)
-      {
+      if (sodiumFlowSetPoint_mg_Per_s > 0.0) {
         sodiumChangeNormal = sodiumChange / sodiumFlowSetPoint_mg_Per_s;
-      }     
+      }
 
       //create control statement to drive resistance to get desired sodium flow rate, damping needed to get steady flow rate
       double dampingFactor = 0.001;
-      if (m_data.GetState() < EngineState::Active)
-      {
+      if (m_data.GetState() < EngineState::Active) {
         //Make the damping factor higher to get to homeostasis faster
         dampingFactor = 0.005;
       }
-      
-      nextAfferentResistance_mmHg_s_Per_mL *= currentAfferentResistance_mmHg_s_Per_mL / nextAfferentResistance_mmHg_s_Per_mL + dampingFactor*sodiumChangeNormal;
+
+      nextAfferentResistance_mmHg_s_Per_mL *= currentAfferentResistance_mmHg_s_Per_mL / nextAfferentResistance_mmHg_s_Per_mL + dampingFactor * sodiumChangeNormal;
       BLIM(nextAfferentResistance_mmHg_s_Per_mL, minAfferentResistance_mmHg_s_Per_mL, maxAfferentResistance_mmHg_s_Per_mL);
-      if (kidney == 0)
-      {
+      if (kidney == 0) {
         //LEFT
         m_leftAfferentResistance_mmHg_s_Per_mL = nextAfferentResistance_mmHg_s_Per_mL;
-      }
-      else
-      {
+      } else {
         //RIGHT
         m_rightAfferentResistance_mmHg_s_Per_mL = nextAfferentResistance_mmHg_s_Per_mL;
       }
     }
 
     //set the resistance each time step:
-    if (kidney == 0)
-    {
-      //LEFT    
+    if (kidney == 0) {
+      //LEFT
       afferentResistancePath->GetNextResistance().SetValue(m_leftAfferentResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    }
-    else
-    {
+    } else {
       //RIGHT
       afferentResistancePath->GetNextResistance().SetValue(m_rightAfferentResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
   }
-  //reset sodium flow at start of cardiac cycle 
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-  {
+  //reset sodium flow at start of cardiac cycle
+  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     m_leftSodiumFlow_mg_Per_s_runningAvg.Reset();
     m_rightSodiumFlow_mg_Per_s_runningAvg.Reset();
   }
@@ -1986,9 +1853,9 @@ void Renal::CalculateTubuloglomerularFeedback()
 /// Modifies the tubule fluid permeability as a function of arterial pressure
 ///
 /// \details
-///  A rise in arterial pressure results in an increase in fluid permeability of the tubules. 
-///  As arterial pressure rises 
-/// 
+///  A rise in arterial pressure results in an increase in fluid permeability of the tubules.
+///  As arterial pressure rises
+///
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateFluidPermeability()
 {
@@ -2000,84 +1867,68 @@ void Renal::CalculateFluidPermeability()
   double permeability_mL_Per_s_mmHg_m2 = 0.0;
   double leftArterialPressure_mmHg = 0.0;
   double rightArterialPressure_mmHg = 0.0;
-  double tubularPermeabilityModifier = 1.0; 
+  double tubularPermeabilityModifier = 1.0;
 
   if (m_data.GetDrugs().HasTubularPermeabilityChange())
     tubularPermeabilityModifier -= m_data.GetDrugs().GetTubularPermeabilityChange().GetValue();
 
-  for (unsigned int kidney = 0; kidney < 2; kidney++)
-  {
-    if (kidney == 0)
-    {
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
       //LEFT
       permeability_mL_Per_s_mmHg_m2 = GetLeftTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      //get the renal arterial pressure: 
+      //get the renal arterial pressure:
       leftArterialPressure_mmHg = m_leftRenalArteryNode->GetNextPressure().GetValue(PressureUnit::mmHg);
 
-      //take a sample so that permeability doesn't go crazy: 
+      //take a sample so that permeability doesn't go crazy:
       leftArterialPressure_mmHg = m_leftRenalArterialPressure_mmHg_runningAvg.Sample(leftArterialPressure_mmHg);
 
       //compute desired permeability as a function of arterial pressure, else set as baseline
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-      {
-        if (round(leftArterialPressure_mmHg) >= 80.0)
-        {
-          permeability_mL_Per_s_mmHg_m2 = a*pow(leftArterialPressure_mmHg, 2) + b*leftArterialPressure_mmHg + c;
-        }
-        else
-        {
+      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+        if (round(leftArterialPressure_mmHg) >= 80.0) {
+          permeability_mL_Per_s_mmHg_m2 = a * pow(leftArterialPressure_mmHg, 2) + b * leftArterialPressure_mmHg + c;
+        } else {
           permeability_mL_Per_s_mmHg_m2 = m_leftReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
         }
       }
 
       //cap permeability to bound tubules reabsorption resistance:
-      if (permeability_mL_Per_s_mmHg_m2 < 0.01)
-      {
+      if (permeability_mL_Per_s_mmHg_m2 < 0.01) {
         permeability_mL_Per_s_mmHg_m2 = 0.01;
       }
 
-      //set the permeability (modifier should only change computed permeability if diuretics are circulating): 
-      GetLeftTubularReabsorptionFluidPermeability().SetValue(tubularPermeabilityModifier*permeability_mL_Per_s_mmHg_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
-    }
-    else
-    {
+      //set the permeability (modifier should only change computed permeability if diuretics are circulating):
+      GetLeftTubularReabsorptionFluidPermeability().SetValue(tubularPermeabilityModifier * permeability_mL_Per_s_mmHg_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
+    } else {
       //RIGHT
       permeability_mL_Per_s_mmHg_m2 = GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      //get the renal arterial pressure: 
+      //get the renal arterial pressure:
       rightArterialPressure_mmHg = m_rightRenalArteryNode->GetNextPressure().GetValue(PressureUnit::mmHg);
 
-      //take a sample so that permeability doesn't go crazy: 
+      //take a sample so that permeability doesn't go crazy:
       rightArterialPressure_mmHg = m_rightRenalArterialPressure_mmHg_runningAvg.Sample(rightArterialPressure_mmHg);
 
       //compute desired permeability as a function of arterial pressure, else set as baseline
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-      {
-        if (round(rightArterialPressure_mmHg) >= 80.0)
-        {
-          permeability_mL_Per_s_mmHg_m2 = a*pow(rightArterialPressure_mmHg, 2) + b*rightArterialPressure_mmHg + c;
-        }
-        else
-        {
+      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+        if (round(rightArterialPressure_mmHg) >= 80.0) {
+          permeability_mL_Per_s_mmHg_m2 = a * pow(rightArterialPressure_mmHg, 2) + b * rightArterialPressure_mmHg + c;
+        } else {
           permeability_mL_Per_s_mmHg_m2 = m_rightReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
         }
       }
 
       //cap permeability to bound tubules reabsorption resistance:
-      if (permeability_mL_Per_s_mmHg_m2 < 0.01)
-      {
+      if (permeability_mL_Per_s_mmHg_m2 < 0.01) {
         permeability_mL_Per_s_mmHg_m2 = 0.01;
       }
 
-      //set the permeability: 
-      GetRightTubularReabsorptionFluidPermeability().SetValue(tubularPermeabilityModifier*permeability_mL_Per_s_mmHg_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
+      //set the permeability:
+      GetRightTubularReabsorptionFluidPermeability().SetValue(tubularPermeabilityModifier * permeability_mL_Per_s_mmHg_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
     }
-    
   }
   //reset average at start of cardiac cycle
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-  {
+  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     m_leftRenalArterialPressure_mmHg_runningAvg.Reset();
     m_rightRenalArterialPressure_mmHg_runningAvg.Reset();
   }

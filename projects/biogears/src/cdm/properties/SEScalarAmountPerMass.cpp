@@ -10,24 +10,24 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
+#include <biogears/cdm/stdafx.h>
 
 AmountPerMassUnit AmountPerMassUnit::ct_Per_g("ct/g");
 AmountPerMassUnit AmountPerMassUnit::ct_Per_ug("ct/ug");
 
 CDM::ScalarAmountPerMassData* SEScalarAmountPerMass::Unload() const
 {
-	if(!IsValid())
-		return nullptr;
-	CDM::ScalarAmountPerMassData* data(new CDM::ScalarAmountPerMassData());
+  if (!IsValid())
+    return nullptr;
+  CDM::ScalarAmountPerMassData* data(new CDM::ScalarAmountPerMassData());
   SEScalarQuantity::Unload(*data);
-	return data;
+  return data;
 }
 
 bool AmountPerMassUnit::IsValidUnit(const std::string& unit)
 {
-  if(ct_Per_g.GetString().compare(unit) == 0)
+  if (ct_Per_g.GetString().compare(unit) == 0)
     return true;
   if (ct_Per_ug.GetString().compare(unit) == 0)
     return true;
@@ -35,10 +35,10 @@ bool AmountPerMassUnit::IsValidUnit(const std::string& unit)
 }
 const AmountPerMassUnit& AmountPerMassUnit::GetCompoundUnit(const std::string& unit)
 {
-	if(ct_Per_g.GetString().compare(unit)==0)
-		return ct_Per_g;
-	if(ct_Per_ug.GetString().compare(unit)==0)
-		return ct_Per_ug;
+  if (ct_Per_g.GetString().compare(unit) == 0)
+    return ct_Per_g;
+  if (ct_Per_ug.GetString().compare(unit) == 0)
+    return ct_Per_ug;
   std::stringstream err;
   err << unit << " is not a valid AmountPerMass unit";
   throw CommonDataModelException(err.str());

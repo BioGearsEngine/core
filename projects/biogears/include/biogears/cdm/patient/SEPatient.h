@@ -11,12 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-class SEEventHandler;
-class SENutrition;
-CDM_BIND_DECL(PatientData)
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/schema/enumPatientEvent.hxx>
 #include <biogears/schema/enumSex.hxx>
 
+class SEEventHandler;
+class SENutrition;
+
+CDM_BIND_DECL(PatientData)
 class BIOGEARS_API SEPatient : public Loggable
 {
 public:

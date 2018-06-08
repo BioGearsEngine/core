@@ -9,16 +9,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/CircuitManagerData.hxx>
 
-SECircuitManager::SECircuitManager(Logger* logger) : Loggable(logger)
+SECircuitManager::SECircuitManager(Logger* logger)
+  : Loggable(logger)
 {
-
 }
 SECircuitManager::~SECircuitManager()
 {
@@ -37,38 +37,32 @@ bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
   Clear();
   for (const CDM::ElectricalCircuitNodeData& n : in.ElectricalNode())
     CreateNode<ELECTRICAL_LEDGER_TYPES>(n.Name(), m_ElectricalLedger).Load(n);
-  for (const CDM::ElectricalCircuitPathData& p : in.ElectricalPath())
-  {
-    SEElectricalCircuitNode* src = GetNode(p.SourceNode(),m_ElectricalLedger);
-    if (src == nullptr)
-    {
+  for (const CDM::ElectricalCircuitPathData& p : in.ElectricalPath()) {
+    SEElectricalCircuitNode* src = GetNode(p.SourceNode(), m_ElectricalLedger);
+    if (src == nullptr) {
       Error("Could not find source node " + p.SourceNode() + " from path " + p.Name().c_str());
       return false;
     }
     SEElectricalCircuitNode* tgt = GetNode(p.TargetNode(), m_ElectricalLedger);
-    if (tgt == nullptr)
-    {
+    if (tgt == nullptr) {
       Error("Could not find target node " + p.TargetNode() + " from path " + p.Name().c_str());
       return false;
     }
     CreatePath<ELECTRICAL_LEDGER_TYPES>(*src, *tgt, p.Name(), m_ElectricalLedger).Load(p);
   }
   for (const CDM::ElectricalCircuitData& c : in.ElectricalCircuit())
-    CreateCircuit<ELECTRICAL_LEDGER_TYPES>(c.Name(), m_ElectricalLedger).Load(c,m_ElectricalLedger.nodes,m_ElectricalLedger.paths);
+    CreateCircuit<ELECTRICAL_LEDGER_TYPES>(c.Name(), m_ElectricalLedger).Load(c, m_ElectricalLedger.nodes, m_ElectricalLedger.paths);
 
   for (const CDM::FluidCircuitNodeData& n : in.FluidNode())
     CreateNode<FLUID_LEDGER_TYPES>(n.Name(), m_FluidLedger).Load(n);
-  for (const CDM::FluidCircuitPathData& p : in.FluidPath())
-  {
+  for (const CDM::FluidCircuitPathData& p : in.FluidPath()) {
     SEFluidCircuitNode* src = GetNode(p.SourceNode(), m_FluidLedger);
-    if (src == nullptr)
-    {
+    if (src == nullptr) {
       Error("Could not find source node " + p.SourceNode() + " from path " + p.Name().c_str());
       return false;
     }
     SEFluidCircuitNode* tgt = GetNode(p.TargetNode(), m_FluidLedger);
-    if (tgt == nullptr)
-    {
+    if (tgt == nullptr) {
       Error("Could not find target node " + p.TargetNode() + " from path " + p.Name().c_str());
       return false;
     }
@@ -76,20 +70,17 @@ bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
   }
   for (const CDM::FluidCircuitData& c : in.FluidCircuit())
     CreateCircuit<FLUID_LEDGER_TYPES>(c.Name(), m_FluidLedger).Load(c, m_FluidLedger.nodes, m_FluidLedger.paths);
-  
+
   for (const CDM::ThermalCircuitNodeData& n : in.ThermalNode())
     CreateNode<THERMAL_LEDGER_TYPES>(n.Name(), m_ThermalLedger).Load(n);
-  for (const CDM::ThermalCircuitPathData& p : in.ThermalPath())
-  {
+  for (const CDM::ThermalCircuitPathData& p : in.ThermalPath()) {
     SEThermalCircuitNode* src = GetNode(p.SourceNode(), m_ThermalLedger);
-    if (src == nullptr)
-    {
+    if (src == nullptr) {
       Error("Could not find source node " + p.SourceNode() + " from path " + p.Name().c_str());
       return false;
     }
     SEThermalCircuitNode* tgt = GetNode(p.TargetNode(), m_ThermalLedger);
-    if (tgt == nullptr)
-    {
+    if (tgt == nullptr) {
       Error("Could not find target node " + p.TargetNode() + " from path " + p.Name().c_str());
       return false;
     }
@@ -134,27 +125,24 @@ void SECircuitManager::SetReadOnly(bool b)
 {
   SetReadOnlyElectrical(b);
   SetReadOnlyFluid(b);
-  SetReadOnlyThermal(b); 
+  SetReadOnlyThermal(b);
 }
 
 void SECircuitManager::SetReadOnlyElectrical(bool b)
 {
-  for (auto nItr : m_ElectricalLedger.nodes)
-  {
-    if(nItr.second->HasQuantityBaseline())
+  for (auto nItr : m_ElectricalLedger.nodes) {
+    if (nItr.second->HasQuantityBaseline())
       nItr.second->GetQuantityBaseline().SetReadOnly(b);
-    if(nItr.second->HasQuantity())
+    if (nItr.second->HasQuantity())
       nItr.second->GetQuantity().SetReadOnly(b);
-    
-    if(nItr.second->HasPotential())
+
+    if (nItr.second->HasPotential())
       nItr.second->GetPotential().SetReadOnly(b);
-    if(nItr.second->HasNextPotential())
+    if (nItr.second->HasNextPotential())
       nItr.second->GetNextPotential().SetReadOnly(b);
   }
-  for (auto pItr : m_ElectricalLedger.paths)
-  {
-    if (pItr.second->HasCapacitanceBaseline())
-    {
+  for (auto pItr : m_ElectricalLedger.paths) {
+    if (pItr.second->HasCapacitanceBaseline()) {
       if (pItr.second->GetSourceNode().HasNextQuantity())
         pItr.second->GetSourceNode().GetNextQuantity().SetReadOnly(b);
       if (pItr.second->GetTargetNode().HasNextQuantity())
@@ -180,8 +168,7 @@ void SECircuitManager::SetReadOnlyElectrical(bool b)
 
 void SECircuitManager::SetReadOnlyFluid(bool b)
 {
-  for (auto nItr : m_FluidLedger.nodes)
-  {
+  for (auto nItr : m_FluidLedger.nodes) {
     if (nItr.second->HasQuantityBaseline())
       nItr.second->GetQuantityBaseline().SetReadOnly(b);
     if (nItr.second->HasQuantity())
@@ -192,10 +179,8 @@ void SECircuitManager::SetReadOnlyFluid(bool b)
     if (nItr.second->HasNextPotential())
       nItr.second->GetNextPotential().SetReadOnly(b);
   }
-  for (auto pItr : m_FluidLedger.paths)
-  {
-    if (pItr.second->HasCapacitanceBaseline())
-    {
+  for (auto pItr : m_FluidLedger.paths) {
+    if (pItr.second->HasCapacitanceBaseline()) {
       if (pItr.second->GetSourceNode().HasNextQuantity())
         pItr.second->GetSourceNode().GetNextQuantity().SetReadOnly(b);
       if (pItr.second->GetTargetNode().HasNextQuantity())
@@ -221,8 +206,7 @@ void SECircuitManager::SetReadOnlyFluid(bool b)
 
 void SECircuitManager::SetReadOnlyThermal(bool b)
 {
-  for (auto nItr : m_ThermalLedger.nodes)
-  {
+  for (auto nItr : m_ThermalLedger.nodes) {
     if (nItr.second->HasQuantityBaseline())
       nItr.second->GetQuantityBaseline().SetReadOnly(b);
     if (nItr.second->HasQuantity())
@@ -233,10 +217,8 @@ void SECircuitManager::SetReadOnlyThermal(bool b)
     if (nItr.second->HasNextPotential())
       nItr.second->GetNextPotential().SetReadOnly(b);
   }
-  for (auto pItr : m_ThermalLedger.paths)
-  {
-    if (pItr.second->HasCapacitanceBaseline())
-    {
+  for (auto pItr : m_ThermalLedger.paths) {
+    if (pItr.second->HasCapacitanceBaseline()) {
       if (pItr.second->GetSourceNode().HasNextQuantity())
         pItr.second->GetSourceNode().GetNextQuantity().SetReadOnly(b);
       if (pItr.second->GetTargetNode().HasNextQuantity())

@@ -10,17 +10,18 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
-#include <biogears/schema/SubstancePharmacodynamicsData.hxx>
-#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/schema/ScalarFrequencyData.hxx>
+#include <biogears/schema/ScalarMassPerVolumeData.hxx>
+#include <biogears/schema/SubstancePharmacodynamicsData.hxx>
 
-SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger) : Loggable(logger)
+SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
+  : Loggable(logger)
 {
   m_Bronchodilation = nullptr;
   m_DiastolicPressureModifier = nullptr;
@@ -146,7 +147,7 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   return true;
 }
 
-CDM::SubstancePharmacodynamicsData*  SESubstancePharmacodynamics::Unload() const
+CDM::SubstancePharmacodynamicsData* SESubstancePharmacodynamics::Unload() const
 {
   if (!IsValid())
     return nullptr;
@@ -189,7 +190,6 @@ void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& dat
 
 void SESubstancePharmacodynamics::CalculateDerived()
 {
-
 }
 
 bool SESubstancePharmacodynamics::HasBronchodilation() const
@@ -272,7 +272,7 @@ double SESubstancePharmacodynamics::GetEMaxShapeParameter() const
   if (m_EMaxShapeParameter == nullptr) {
     return SEScalar::dNaN();
   }
- 
+
   return m_EMaxShapeParameter->GetValue();
 }
 
@@ -467,8 +467,7 @@ bool SESubstancePharmacodynamics::HasEffectSiteRateConstant() const
 }
 SEScalarFrequency& SESubstancePharmacodynamics::GetEffectSiteRateConstant()
 {
-  if (m_EffectSiteRateConstant == nullptr)
-  {
+  if (m_EffectSiteRateConstant == nullptr) {
     m_EffectSiteRateConstant = new SEScalarFrequency();
   }
 

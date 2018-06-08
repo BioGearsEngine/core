@@ -11,9 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
+
 struct error_functor;
+class SESubstance;
+class SELiquidCompartment;
+class SELiquidSubstanceQuantity;
+class BioGears;
 
 /**
 * @brief
@@ -22,8 +30,8 @@ struct error_functor;
 class BIOGEARS_API SaturationCalculator : public Loggable
 {
 protected:
-  friend error_functor;
-  friend BioGears;
+  friend struct error_functor;
+  friend class BioGears;
   friend class BioGearsEngineTest;
 
   SaturationCalculator(BioGears& bg);

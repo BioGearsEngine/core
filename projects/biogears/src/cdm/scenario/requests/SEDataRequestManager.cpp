@@ -10,12 +10,13 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
-#include <biogears/schema/DataRequestsData.hxx>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/schema/DataRequestsData.hxx>
 
-SEDataRequestManager::SEDataRequestManager(Logger* logger) : Loggable(logger)
+SEDataRequestManager::SEDataRequestManager(Logger* logger)
+  : Loggable(logger)
 {
   m_DefaultDecimalFormatting = nullptr;
   m_OverrideDecimalFormatting = nullptr;
@@ -37,7 +38,7 @@ void SEDataRequestManager::Clear()
 
 bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceManager& subMgr)
 {
-  Clear();  
+  Clear();
   if (in.Filename().present())
     m_ResultsFile = in.Filename().get();
   if (in.SamplesPerSecond().present())
@@ -46,12 +47,10 @@ bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceMana
     GetDefaultDecimalFormatting().Load(in.DefaultDecimalFormatting().get());
   if (in.OverrideDecimalFormatting().present())
     GetOverrideDecimalFormatting().Load(in.OverrideDecimalFormatting().get());
- 
-  for (unsigned int i = 0; i < in.DataRequest().size(); i++)
-  {
+
+  for (unsigned int i = 0; i < in.DataRequest().size(); i++) {
     SEDataRequest* dr = newFromBind(in.DataRequest()[i], subMgr, m_DefaultDecimalFormatting);
-    if (dr != nullptr)
-    {
+    if (dr != nullptr) {
       if (HasOverrideDecimalFormatting())
         ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
       m_Requests.push_back(dr);
@@ -60,7 +59,7 @@ bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceMana
   return true;
 }
 
-CDM::DataRequestsData*  SEDataRequestManager::Unload() const
+CDM::DataRequestsData* SEDataRequestManager::Unload() const
 {
   CDM::DataRequestsData* data = new CDM::DataRequestsData();
   Unload(*data);
@@ -79,7 +78,6 @@ void SEDataRequestManager::Unload(CDM::DataRequestsData& data) const
   for (SEDataRequest* dr : m_Requests)
     data.DataRequest().push_back(std::unique_ptr<CDM::DataRequestData>(dr->Unload()));
 }
-
 
 bool SEDataRequestManager::HasDefaultDecimalFormatting() const
 {
@@ -167,69 +165,59 @@ SETissueCompartmentDataRequest& SEDataRequestManager::CreateTissueCompartmentDat
   return *dr;
 }
 
-
 SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& data, SESubstanceManager& substances, const SEDecimalFormat* dfault)
 {
   const CDM::DataRequestData* drData = &data;
   const CDM::PhysiologyDataRequestData* physSysData = dynamic_cast<const CDM::PhysiologyDataRequestData*>(drData);
-  if (physSysData != nullptr)
-  {
+  if (physSysData != nullptr) {
     SEPhysiologyDataRequest* sys = new SEPhysiologyDataRequest(dfault);
     sys->Load(*physSysData);
     return sys;
   }
   const CDM::GasCompartmentDataRequestData* gasData = dynamic_cast<const CDM::GasCompartmentDataRequestData*>(drData);
-  if (gasData != nullptr)
-  {
+  if (gasData != nullptr) {
     SEGasCompartmentDataRequest* Comp = new SEGasCompartmentDataRequest(dfault);
     Comp->Load(*gasData, substances);
     return Comp;
   }
   const CDM::LiquidCompartmentDataRequestData* liquidData = dynamic_cast<const CDM::LiquidCompartmentDataRequestData*>(drData);
-  if (liquidData != nullptr)
-  {
+  if (liquidData != nullptr) {
     SELiquidCompartmentDataRequest* Comp = new SELiquidCompartmentDataRequest(dfault);
     Comp->Load(*liquidData, substances);
     return Comp;
   }
   const CDM::ThermalCompartmentDataRequestData* thermData = dynamic_cast<const CDM::ThermalCompartmentDataRequestData*>(drData);
-  if (thermData != nullptr)
-  {
+  if (thermData != nullptr) {
     SEThermalCompartmentDataRequest* Comp = new SEThermalCompartmentDataRequest(dfault);
     Comp->Load(*thermData);
     return Comp;
   }
   const CDM::TissueCompartmentDataRequestData* tissueData = dynamic_cast<const CDM::TissueCompartmentDataRequestData*>(drData);
-  if (tissueData != nullptr)
-  {
+  if (tissueData != nullptr) {
     SETissueCompartmentDataRequest* Comp = new SETissueCompartmentDataRequest(dfault);
     Comp->Load(*tissueData);
     return Comp;
   }
   const CDM::PatientDataRequestData* patData = dynamic_cast<const CDM::PatientDataRequestData*>(drData);
-  if (patData != nullptr)
-  {
+  if (patData != nullptr) {
     SEPatientDataRequest* sys = new SEPatientDataRequest(dfault);
     sys->Load(*patData);
     return sys;
   }
   const CDM::SubstanceDataRequestData* subData = dynamic_cast<const CDM::SubstanceDataRequestData*>(drData);
-  if (subData != nullptr)
-  {
+  if (subData != nullptr) {
     SESubstanceDataRequest* sub = new SESubstanceDataRequest(dfault);
     sub->Load(*subData, substances);
     return sub;
   }
   const CDM::EnvironmentDataRequestData* envData = dynamic_cast<const CDM::EnvironmentDataRequestData*>(drData);
-  if (envData != nullptr)
-  {
+  if (envData != nullptr) {
     SEEnvironmentDataRequest* env = new SEEnvironmentDataRequest(dfault);
     env->Load(*envData);
     return env;
   }
   const CDM::EquipmentDataRequestData* equipSysData = dynamic_cast<const CDM::EquipmentDataRequestData*>(drData);
-  if (equipSysData != nullptr)
-  {
+  if (equipSysData != nullptr) {
     SEEquipmentDataRequest* sys = new SEEquipmentDataRequest(dfault);
     sys->Load(*equipSysData);
     return sys;

@@ -10,9 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-#include <biogears/engine/stdafx.h>
 #include <biogears/engine/Equipment/ECG.h>
+#include <biogears/engine/stdafx.h>
 
 #include <biogears/engine/Systems/Cardiovascular.h>
 
@@ -22,13 +21,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
 
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsSystem.h>
 /*
 ========================
 Constructors
 ========================
 */
 
-ECG::ECG(BioGears& bg) : SEElectroCardioGram(bg.GetLogger()), m_data(bg), m_interpolator(bg.GetLogger())
+ECG::ECG(BioGears& bg)
+  : SEElectroCardioGram(bg.GetLogger())
+  , m_data(bg)
+  , m_interpolator(bg.GetLogger())
 {
   Clear();
 }
@@ -52,20 +56,20 @@ void ECG::Clear()
 ///
 /// \details
 /// Local member variables used in the ECG class are initialized here. These variables are used to
-/// keep track of the heart cycle and to create the ECG machine's output. 
+/// keep track of the heart cycle and to create the ECG machine's output.
 /// SEElectrocardioGramInterpolater also loads in the data needed to create the output and
-/// interpolates it to match our time step. Placing the variables in this function allows for the 
+/// interpolates it to match our time step. Placing the variables in this function allows for the
 /// system to be easy initialized at the beginning of a simulation or after a crash.
 //--------------------------------------------------------------------------------------------------
 void ECG::Initialize()
 {
   BioGearsSystem::Initialize();
 
-  m_heartRhythmTime.SetValue(0,TimeUnit::s);
+  m_heartRhythmTime.SetValue(0, TimeUnit::s);
   m_heartRhythmPeriod.SetValue(0, TimeUnit::s);
   CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_interpolator));
   // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
-/* Code to write out the ECG data in a format easy to view in plotting tools 
+  /* Code to write out the ECG data in a format easy to view in plotting tools 
   std::vector<double> original_s = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
   std::vector<double> original_mV = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
   DataTrack Original;  
@@ -74,7 +78,7 @@ void ECG::Initialize()
   Original.WriteTrackToFile("OriginalECG.txt");
 */
   m_interpolator.Interpolate(m_data.GetTimeStep());
-/* Code to write out the Interpolated ECG data in a format easy to view in plotting tools
+  /* Code to write out the Interpolated ECG data in a format easy to view in plotting tools
   std::vector<double> interpolated_s = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
   std::vector<double> interpolated_mV = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
   DataTrack Interpolated;
@@ -88,8 +92,8 @@ void ECG::Initialize()
 bool ECG::Load(const CDM::BioGearsElectroCardioGramData& in)
 {
   if (!SEElectroCardioGram::Load(in))
-    return false;  
-  BioGearsSystem::LoadState(); 
+    return false;
+  BioGearsSystem::LoadState();
   m_heartRhythmTime.Load(in.HeartRythmTime());
   m_heartRhythmPeriod.Load(in.HeartRythmPeriod());
   m_interpolator.Load(in.Waveforms());
@@ -126,7 +130,6 @@ void ECG::SetUp()
 //--------------------------------------------------------------------------------------------------
 void ECG::PreProcess()
 {
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -144,21 +147,19 @@ void ECG::PreProcess()
 //--------------------------------------------------------------------------------------------------
 void ECG::Process()
 {
-  m_heartRhythmTime.IncrementValue(m_dt_s,TimeUnit::s);
-	if (m_heartRhythmTime.GetValue(TimeUnit::s) >= m_heartRhythmPeriod.GetValue(TimeUnit::s))
-	{
-    m_heartRhythmTime.SetValue(0,TimeUnit::s);
-		m_heartRhythmPeriod.SetValue(1/m_data.GetCardiovascular().GetHeartRate(FrequencyUnit::Per_s),TimeUnit::s);	
-		// Currently we  have one data set for all currently supported Heart Rhythms
-		// Eventually we will support multiple rhythmic data
-		if(m_data.GetCardiovascular().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
-			m_interpolator.StartNewCycle(CDM::enumHeartRhythm::NormalSinus);
-    else
-    {
+  m_heartRhythmTime.IncrementValue(m_dt_s, TimeUnit::s);
+  if (m_heartRhythmTime.GetValue(TimeUnit::s) >= m_heartRhythmPeriod.GetValue(TimeUnit::s)) {
+    m_heartRhythmTime.SetValue(0, TimeUnit::s);
+    m_heartRhythmPeriod.SetValue(1 / m_data.GetCardiovascular().GetHeartRate(FrequencyUnit::Per_s), TimeUnit::s);
+    // Currently we  have one data set for all currently supported Heart Rhythms
+    // Eventually we will support multiple rhythmic data
+    if (m_data.GetCardiovascular().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
+      m_interpolator.StartNewCycle(CDM::enumHeartRhythm::NormalSinus);
+    else {
       m_ss << m_data.GetCardiovascular().GetHeartRhythm() << " is not a supported Heart Rhythm for ECG";
       Error(m_ss);
     }
-	}
+  }
   m_interpolator.CalculateWaveformsElectricPotential();
 }
 
@@ -173,5 +174,4 @@ void ECG::Process()
 //--------------------------------------------------------------------------------------------------
 void ECG::PostProcess()
 {
-
 }

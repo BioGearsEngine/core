@@ -10,37 +10,38 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/stdafx.h>
 
-SEScalarFraction::SEScalarFraction() : SEScalar()
+SEScalarFraction::SEScalarFraction()
+  : SEScalar()
 {
-
 }
 
 CDM::ScalarFractionData* SEScalarFraction::Unload() const
 {
-	if(!IsValid())
-		return nullptr;
-	CDM::ScalarFractionData* data(new CDM::ScalarFractionData());
-	SEScalar::Unload(*data);
-	return data;
+  if (!IsValid())
+    return nullptr;
+  CDM::ScalarFractionData* data(new CDM::ScalarFractionData());
+  SEScalar::Unload(*data);
+  return data;
 }
 
-//double SEScalarFraction::GetValue() const { 
-//  return SEScalar::GetValue(); 
+//double SEScalarFraction::GetValue() const {
+//  return SEScalar::GetValue();
 //}
 
-double SEScalarFraction::GetValue(const NoUnit& unitless) const {
-  return SEScalar::GetValue(); 
+double SEScalarFraction::GetValue(const NoUnit& unitless) const
+{
+  return SEScalar::GetValue();
 }
 
 //void SEScalarFraction::SetValue(double d)
-//{ 
+//{
 //  SEScalar::SetValue(d);
 //}
 
 void SEScalarFraction::SetValue(double d, const NoUnit& unitless)
-{ 
+{
   SEScalar::SetValue(d);
 }

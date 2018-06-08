@@ -11,10 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(SubstancePhysicochemicalData)
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/schema/enumSubstanceIonicState.hxx>
 #include <biogears/schema/enumSubstanceBindingProtein.hxx>
 
+CDM_BIND_DECL(SubstancePhysicochemicalData)
 class BIOGEARS_API SESubstancePhysicochemicals : public Loggable
 {
 public:

@@ -10,16 +10,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/schema/AnesthesiaMachineOxygenBottleData.hxx>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
+#include <biogears/schema/AnesthesiaMachineOxygenBottleData.hxx>
 #include <biogears/schema/ScalarVolumeData.hxx>
 
-SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger) : Loggable(logger)
+SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger)
+  : Loggable(logger)
 {
-	m_Volume = nullptr;
+  m_Volume = nullptr;
 }
 
 SEAnesthesiaMachineOxygenBottle::~SEAnesthesiaMachineOxygenBottle()
@@ -34,16 +35,16 @@ void SEAnesthesiaMachineOxygenBottle::Clear()
 
 bool SEAnesthesiaMachineOxygenBottle::Load(const CDM::AnesthesiaMachineOxygenBottleData& in)
 {
-	if(in.Volume().present())
-		GetVolume().Load(in.Volume().get());
-	return true;
+  if (in.Volume().present())
+    GetVolume().Load(in.Volume().get());
+  return true;
 }
 
 CDM::AnesthesiaMachineOxygenBottleData* SEAnesthesiaMachineOxygenBottle::Unload() const
 {
-	CDM::AnesthesiaMachineOxygenBottleData* data = new CDM::AnesthesiaMachineOxygenBottleData();
-	Unload(*data);
-	return data;
+  CDM::AnesthesiaMachineOxygenBottleData* data = new CDM::AnesthesiaMachineOxygenBottleData();
+  Unload(*data);
+  return data;
 }
 
 void SEAnesthesiaMachineOxygenBottle::Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const
@@ -66,28 +67,28 @@ const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const std::string& na
 
 bool SEAnesthesiaMachineOxygenBottle::HasVolume() const
 {
-	return m_Volume==nullptr?false:m_Volume->IsValid();
+  return m_Volume == nullptr ? false : m_Volume->IsValid();
 }
 
 SEScalarVolume& SEAnesthesiaMachineOxygenBottle::GetVolume()
 {
-	if(m_Volume==nullptr)
-		m_Volume = new SEScalarVolume();
-	return *m_Volume;
+  if (m_Volume == nullptr)
+    m_Volume = new SEScalarVolume();
+  return *m_Volume;
 }
 double SEAnesthesiaMachineOxygenBottle::GetVolume(const VolumeUnit& unit) const
 {
-	if (m_Volume == nullptr)
-		return SEScalar::dNaN();
-	return m_Volume->GetValue(unit);
+  if (m_Volume == nullptr)
+    return SEScalar::dNaN();
+  return m_Volume->GetValue(unit);
 }
 
-void SEAnesthesiaMachineOxygenBottle::ToString(std::ostream &str)
+void SEAnesthesiaMachineOxygenBottle::ToString(std::ostream& str)
 {
-	str<<" Anesthesia Machine Oxygen Bottle, ";
-	if(HasVolume())
-		str<<"\rVolume : "<<GetVolume();
-	else
-		str<<"\rVolume : NaN"<<GetVolume();
-	str<<std::flush;
+  str << " Anesthesia Machine Oxygen Bottle, ";
+  if (HasVolume())
+    str << "\rVolume : " << GetVolume();
+  else
+    str << "\rVolume : NaN" << GetVolume();
+  str << std::flush;
 }

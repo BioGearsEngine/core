@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
+#include <biogears/cdm/stdafx.h>
 
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::L_Per_s_g("L/s g");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_s_g("mL / s g");
@@ -39,7 +39,7 @@ bool VolumePerTimeMassUnit::IsValidUnit(const std::string& unit)
   if (mL_Per_s_kg.GetString().compare(unit) == 0)
     return true;
   if (uL_Per_min_kg.GetString().compare(unit) == 0)
-	  return true;
+    return true;
   return false;
 }
 
@@ -54,7 +54,7 @@ const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const std::s
   if (mL_Per_s_kg.GetString().compare(unit) == 0)
     return mL_Per_s_kg;
   if (uL_Per_min_kg.GetString().compare(unit) == 0)
-	  return uL_Per_min_kg;
+    return uL_Per_min_kg;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimeMass unit";
   throw CommonDataModelException(err.str());

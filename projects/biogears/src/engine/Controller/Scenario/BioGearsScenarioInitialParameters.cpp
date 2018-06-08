@@ -10,16 +10,16 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/stdafx.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioInitialParameters.h>
+#include <biogears/engine/stdafx.h>
 
-BioGearsScenarioInitialParameters::BioGearsScenarioInitialParameters(SESubstanceManager& subMgr) : SEScenarioInitialParameters(subMgr)
+BioGearsScenarioInitialParameters::BioGearsScenarioInitialParameters(SESubstanceManager& subMgr)
+  : SEScenarioInitialParameters(subMgr)
 {
 }
 
 BioGearsScenarioInitialParameters::~BioGearsScenarioInitialParameters()
 {
-	
 }
 
 BioGearsConfiguration& BioGearsScenarioInitialParameters::GetConfiguration()

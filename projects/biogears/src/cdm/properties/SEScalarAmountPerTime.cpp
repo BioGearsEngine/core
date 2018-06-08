@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
+#include <biogears/cdm/stdafx.h>
 
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_day("mol/day");
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_s("mol/s");

@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(CircuitPathData)
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/enumOpenClosed.hxx>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 
@@ -20,6 +20,8 @@ CDM_BIND_DECL(CircuitPathData)
 #define ELECTRICAL_CIRCUIT_PATH SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge
 #define FLUID_CIRCUIT_PATH SEScalarVolumePerTime, SEScalarFlowResistance, SEScalarFlowCompliance, SEScalarFlowInertance, SEScalarPressure, SEScalarVolume
 #define THERMAL_CIRCUIT_PATH SEScalarPower, SEScalarHeatResistance, SEScalarHeatCapacitance, SEScalarHeatInductance, SEScalarTemperature, SEScalarEnergy
+
+CDM_BIND_DECL(CircuitPathData)
 
 template<CIRCUIT_PATH_TEMPLATE>
 class SECircuitPath : public Loggable

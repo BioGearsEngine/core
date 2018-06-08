@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarInverseVolume.h>
+#include <biogears/cdm/stdafx.h>
 
 const InverseVolumeUnit InverseVolumeUnit::Inverse_L("1/L");
 const InverseVolumeUnit InverseVolumeUnit::Inverse_mL("1/mL");

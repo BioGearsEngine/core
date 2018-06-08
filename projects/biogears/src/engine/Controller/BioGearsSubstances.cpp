@@ -10,24 +10,26 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/stdafx.h>
-#include <biogears/cdm/system/environment/SEEnvironment.h>
-#include <biogears/engine/Controller/BioGearsSubstances.h>
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
-#include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
+#include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/system/environment/SEEnvironment.h>
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsSubstances.h>
+#include <biogears/engine/stdafx.h>
 
-BioGearsSubstances::BioGearsSubstances(BioGears& data) : SESubstanceManager(data.GetLogger()), m_data(data)
+BioGearsSubstances::BioGearsSubstances(BioGears& data)
+  : SESubstanceManager(data.GetLogger())
+  , m_data(data)
 {
   m_isCOActive = false;
 }
@@ -65,7 +67,7 @@ void BioGearsSubstances::Clear()
 }
 
 void BioGearsSubstances::InitializeSubstances()
-{ 
+{
   // NOTE!!
   // The way BioGears sets up,
   // Substance initialization relies on environmental state,
@@ -134,7 +136,7 @@ void BioGearsSubstances::InitializeGasCompartments()
   SEGasCompartment* LeftAlveoli = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli);
   LeftAlveoli->GetSubstanceQuantity(*m_CO2)->GetVolumeFraction().SetValue(0.050);
   LeftAlveoli->GetSubstanceQuantity(*m_O2)->GetVolumeFraction().SetValue(0.155);
-  LeftAlveoli->GetSubstanceQuantity(*m_N2)->GetVolumeFraction().SetValue(1- 0.050 - 0.155);
+  LeftAlveoli->GetSubstanceQuantity(*m_N2)->GetVolumeFraction().SetValue(1 - 0.050 - 0.155);
   LeftAlveoli->Balance(BalanceGasBy::VolumeFraction);
   SEGasCompartment* RightDeadSpace = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightDeadSpace);
   RightDeadSpace->GetSubstanceQuantity(*m_CO2)->GetVolumeFraction().SetValue(0.011);
@@ -160,11 +162,9 @@ void BioGearsSubstances::InitializeGasCompartments()
   Stomach->GetSubstanceQuantity(*m_O2)->GetVolumeFraction().SetValue(0.0);
   Stomach->Balance(BalanceGasBy::VolumeFraction);
 
-  //Initialize the compartments to Ambient values 
-  for (SEGasCompartment* cmpt : m_data.GetCompartments().GetAnesthesiaMachineLeafCompartments())
-  {
-    if (cmpt->HasVolume())
-    {
+  //Initialize the compartments to Ambient values
+  for (SEGasCompartment* cmpt : m_data.GetCompartments().GetAnesthesiaMachineLeafCompartments()) {
+    if (cmpt->HasVolume()) {
       cmpt->GetSubstanceQuantity(*m_O2)->GetVolumeFraction().SetValue(AmbientO2VF);
       cmpt->GetSubstanceQuantity(*m_CO2)->GetVolumeFraction().SetValue(AmbientCO2VF);
       cmpt->GetSubstanceQuantity(*m_N2)->GetVolumeFraction().SetValue(AmbientN2VF);
@@ -172,10 +172,8 @@ void BioGearsSubstances::InitializeGasCompartments()
     }
   }
 
-  for (SEGasCompartment* cmpt : m_data.GetCompartments().GetInhalerLeafCompartments())
-  {
-    if (cmpt->HasVolume())
-    {
+  for (SEGasCompartment* cmpt : m_data.GetCompartments().GetInhalerLeafCompartments()) {
+    if (cmpt->HasVolume()) {
       cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().SetValue(AmbientO2VF);
       cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetVolumeFraction().SetValue(AmbientCO2VF);
       cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetN2())->GetVolumeFraction().SetValue(AmbientN2VF);
@@ -188,9 +186,9 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
 {
   BioGearsCompartments& cmpts = m_data.GetCompartments();
 
-  SEScalarMassPerVolume   albuminConcentration;
-  SEScalarFraction        hematocrit;
-  SEScalarTemperature     bodyTemp;
+  SEScalarMassPerVolume albuminConcentration;
+  SEScalarFraction hematocrit;
+  SEScalarTemperature bodyTemp;
   SEScalarAmountPerVolume strongIonDifference;
   SEScalarAmountPerVolume phosphate;
 
@@ -202,7 +200,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
 
   m_data.GetSaturationCalculator().SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
-  double Hb_total_g_Per_dL = hematocrit.GetValue()*34.0;
+  double Hb_total_g_Per_dL = hematocrit.GetValue() * 34.0;
 
   // Convert to mmol/L
   // Note that we would need to use 1/4 of the molecular weight of the hemoglobin tetramer
@@ -265,23 +263,23 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Spleen), Hb_total_mM, 0.830039, 0.0616463, 0.131757, 1.38878, 26.0903, 7.37385);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::VenaCava), Hb_total_mM, 0.813122, 0.0591948, 0.146203, 1.39669, 26.1035, 7.3716);
 
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Bone),       *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Bone));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Brain),      *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Brain));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Fat),        *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Fat));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Gut),        *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Gut));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Bone), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Bone));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Brain), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Brain));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Fat), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Fat));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Gut), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Gut));
   InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::LeftKidney), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftKidney));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::LeftLung),   *cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftLung));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Liver),      *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Liver));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Muscle),     *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Muscle));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::LeftLung), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftLung));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Liver), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Liver));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Muscle), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Muscle));
   InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Myocardium), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Myocardium));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::RightKidney),*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightKidney));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::RightLung),  *cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightLung));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Skin),       *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Skin));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Spleen),     *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Spleen));
-  
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::RightKidney), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightKidney));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::RightLung), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightLung));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Skin), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Skin));
+  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Spleen), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Spleen));
+
   SEScalarMassPerVolume concentration;
   concentration.SetValue(0.146448, MassPerVolumeUnit::g_Per_dL);
-  SetSubstanceConcentration(*m_HCO3, cmpts.GetUrineLeafCompartments(), concentration);    
+  SetSubstanceConcentration(*m_HCO3, cmpts.GetUrineLeafCompartments(), concentration);
 }
 void BioGearsSubstances::InitializeBloodGases(SELiquidCompartment& cmpt, double Hb_total_mM, double O2_sat, double O2_mmol_Per_L, double CO2_sat, double CO2_mmol_Per_L, double HCO3_mmol_Per_L, double pH, bool distribute)
 {
@@ -302,12 +300,12 @@ void BioGearsSubstances::InitializeBloodGases(SELiquidCompartment& cmpt, double 
 
   //Assume no HbO2CO2 at first (O2sat + CO2sat < 100%)
   double HbUnbound_mM = Hb_total_mM * (1 - O2_sat - CO2_sat);
-  if (std::abs(HbUnbound_mM) <= ZERO_APPROX) HbUnbound_mM = 0;
+  if (std::abs(HbUnbound_mM) <= ZERO_APPROX)
+    HbUnbound_mM = 0;
 
   //If our assumption was wrong, that means there was HbO2CO2 contributing to sat values
   //Any negative is due to HbO2CO2
-  if (HbUnbound_mM < 0)
-  {
+  if (HbUnbound_mM < 0) {
     double HbO2CO2_mM = -HbUnbound_mM;
     HbO2CO2->GetMolarity().SetValue(HbO2CO2_mM, AmountPerVolumeUnit::mmol_Per_L);
     HbO2CO2->Balance(BalanceLiquidBy::Molarity);
@@ -317,11 +315,13 @@ void BioGearsSubstances::InitializeBloodGases(SELiquidCompartment& cmpt, double 
     Hb->Balance(BalanceLiquidBy::Molarity);
 
     //Now we know HbUnbound and HbO2CO2, and we can solve HbO2 and HbCO2 using saturation values
-    double HbO2_mM = O2_sat*Hb_total_mM - HbO2CO2_mM;
-    double HbCO2_mM = CO2_sat*Hb_total_mM - HbO2CO2_mM;
+    double HbO2_mM = O2_sat * Hb_total_mM - HbO2CO2_mM;
+    double HbCO2_mM = CO2_sat * Hb_total_mM - HbO2CO2_mM;
 
-    if (std::abs(HbCO2_mM) <= ZERO_APPROX) HbCO2_mM = 0;
-    if (std::abs(HbO2_mM) <= ZERO_APPROX) HbO2_mM = 0;
+    if (std::abs(HbCO2_mM) <= ZERO_APPROX)
+      HbCO2_mM = 0;
+    if (std::abs(HbO2_mM) <= ZERO_APPROX)
+      HbO2_mM = 0;
 
     HbO2->GetMolarity().SetValue(HbO2_mM, AmountPerVolumeUnit::mmol_Per_L);
     HbO2->Balance(BalanceLiquidBy::Molarity);
@@ -329,15 +329,17 @@ void BioGearsSubstances::InitializeBloodGases(SELiquidCompartment& cmpt, double 
     HbCO2->Balance(BalanceLiquidBy::Molarity);
   }
   //If our assumption was right, we have excess Hb, and need to use the total Hb to solve
-  else
-  {
-    double HbO2CO2_mM = (O2_sat*Hb_total_mM) - Hb_total_mM + HbUnbound_mM + (CO2_sat*Hb_total_mM);
-    double HbO2_mM = O2_sat*Hb_total_mM - HbO2CO2_mM;
-    double HbCO2_mM = CO2_sat*Hb_total_mM - HbO2CO2_mM;
+  else {
+    double HbO2CO2_mM = (O2_sat * Hb_total_mM) - Hb_total_mM + HbUnbound_mM + (CO2_sat * Hb_total_mM);
+    double HbO2_mM = O2_sat * Hb_total_mM - HbO2CO2_mM;
+    double HbCO2_mM = CO2_sat * Hb_total_mM - HbO2CO2_mM;
 
-    if (std::abs(HbO2CO2_mM) <= ZERO_APPROX) HbO2CO2_mM = 0;
-    if (std::abs(HbCO2_mM) <= ZERO_APPROX) HbCO2_mM = 0;
-    if (std::abs(HbO2_mM) <= ZERO_APPROX) HbO2_mM = 0;
+    if (std::abs(HbO2CO2_mM) <= ZERO_APPROX)
+      HbO2CO2_mM = 0;
+    if (std::abs(HbCO2_mM) <= ZERO_APPROX)
+      HbCO2_mM = 0;
+    if (std::abs(HbO2_mM) <= ZERO_APPROX)
+      HbO2_mM = 0;
 
     Hb->GetMolarity().SetValue(HbUnbound_mM, AmountPerVolumeUnit::mmol_Per_L);
     Hb->Balance(BalanceLiquidBy::Molarity);
@@ -360,9 +362,9 @@ void BioGearsSubstances::InitializeBloodGases(SELiquidCompartment& cmpt, double 
 
   cmpt.GetPH().SetValue(pH);
 
-  if(distribute)
+  if (distribute)
     m_data.GetSaturationCalculator().CalculateBloodGasDistribution(cmpt);
-  
+
   /*std::cout << cmpt.GetName() << " O2 Partial Pressure " << O2->GetPartialPressure() << std::endl;
   std::cout << cmpt.GetName() << " CO2 Partial Pressure  " << CO2->GetPartialPressure() << std::endl;
   std::cout << cmpt.GetName() << " O2 Concentration " << O2->GetConcentration() << std::endl;
@@ -388,10 +390,8 @@ void BioGearsSubstances::InitializeBloodGases(SETissueCompartment& tissue, SELiq
 void BioGearsSubstances::WriteBloodGases()
 {
   std::stringstream ss;
-  for (SELiquidCompartment* cmpt : m_data.GetCompartments().GetVascularLeafCompartments())
-  {
-    if (cmpt->HasVolume())
-    {
+  for (SELiquidCompartment* cmpt : m_data.GetCompartments().GetVascularLeafCompartments()) {
+    if (cmpt->HasVolume()) {
       SELiquidSubstanceQuantity* O2 = cmpt->GetSubstanceQuantity(*m_O2);
       SELiquidSubstanceQuantity* CO2 = cmpt->GetSubstanceQuantity(*m_CO2);
       SELiquidSubstanceQuantity* Hb = cmpt->GetSubstanceQuantity(*m_Hb);
@@ -414,10 +414,8 @@ void BioGearsSubstances::WritePulmonaryGases()
   cmpts.push_back(m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli));
   cmpts.push_back(m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightDeadSpace));
   cmpts.push_back(m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightAlveoli));
-  for(SEGasCompartment* cmpt: cmpts)
-  {
-    if (cmpt->HasVolume())
-    {
+  for (SEGasCompartment* cmpt : cmpts) {
+    if (cmpt->HasVolume()) {
       SEGasSubstanceQuantity* O2 = cmpt->GetSubstanceQuantity(*m_O2);
       SEGasSubstanceQuantity* CO2 = cmpt->GetSubstanceQuantity(*m_CO2);
       SEGasSubstanceQuantity* N2 = cmpt->GetSubstanceQuantity(*m_N2);
@@ -437,7 +435,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
 
   SELiquidSubstanceQuantity* subQ;
   // Initialize Substances throughout the body
-  SEScalarMassPerVolume   concentration;
+  SEScalarMassPerVolume concentration;
   SEScalarAmountPerVolume molarity1;
   SEScalarAmountPerVolume molarity2;
 
@@ -456,7 +454,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   SELiquidCompartment* lymph = m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph);
   //Right now the lymph is not used, but code is in place and commented out in case we revisit
   SETissueCompartment* brain = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Brain);
-  
+
   // ALBUMIN //
   concentration.SetValue(4.5, MassPerVolumeUnit::g_Per_dL);
   SetSubstanceConcentration(*m_albumin, vascular, concentration);
@@ -476,7 +474,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // Tissue
   molarity1.SetValue(20.0 / (m_albumin->GetMolarMass(MassPerAmountUnit::g_Per_mmol)), AmountPerVolumeUnit::mmol_Per_L);
   molarity2.SetValue(0.0, AmountPerVolumeUnit::mmol_Per_L);
-  SetSubstanceMolarity(*m_albumin, tissue, molarity1,molarity2);
+  SetSubstanceMolarity(*m_albumin, tissue, molarity1, molarity2);
   //Lymph - should be same as extracellular
   /*concentration.SetValue(2.0, MassPerVolumeUnit::g_Per_dL);
   lymph->GetSubstanceQuantity(*m_albumin)->GetConcentration().Set(concentration);
@@ -486,10 +484,10 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   concentration.SetValue(50.0, MassPerVolumeUnit::mg_Per_dL);
   SetSubstanceConcentration(*m_aminoAcids, vascular, concentration);
   // Tissue
-  molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L)/ m_aminoAcids->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
+  molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_aminoAcids->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceMolarity(*m_aminoAcids, tissue, molarity1, molarity1);
   //Lymph
- /* lymph->GetSubstanceQuantity(*m_aminoAcids)->GetMolarity().Set(molarity1);
+  /* lymph->GetSubstanceQuantity(*m_aminoAcids)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_aminoAcids)->Balance(BalanceLiquidBy::Molarity);
 */
   // BICARBONATE IS SET IN GASES SECTION //
@@ -527,7 +525,6 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   subQ = bladder->GetSubstanceQuantity(*m_calcium);
   subQ->GetConcentration().Set(concentration);
   subQ->Balance(BalanceLiquidBy::Concentration);
-  
 
   // CHLORIDE //
   concentration.SetValue(0.362, MassPerVolumeUnit::g_Per_dL);
@@ -563,7 +560,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   subQ->Balance(BalanceLiquidBy::Concentration);
   subQ = rightUreter->GetSubstanceQuantity(*m_creatinine);
   subQ->GetConcentration().Set(concentration);
-  subQ->Balance(BalanceLiquidBy::Concentration);  
+  subQ->Balance(BalanceLiquidBy::Concentration);
   subQ = bladder->GetSubstanceQuantity(*m_creatinine);
   subQ->GetConcentration().Set(concentration);
   subQ->Balance(BalanceLiquidBy::Concentration);
@@ -572,7 +569,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity1.SetValue(0.106, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_creatinine, tissue, molarity1);
   //Lymph
- /* lymph->GetSubstanceQuantity(*m_creatinine)->GetMolarity().Set(molarity1);
+  /* lymph->GetSubstanceQuantity(*m_creatinine)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_creatinine)->Balance(BalanceLiquidBy::Molarity);*/
 
   // EPINEPHRINE //
@@ -585,11 +582,11 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   //molarity1.SetValue(0, AmountPerVolumeUnit::mmol_Per_L); //epinephrine: 183.2044 g/mol
   SetSubstanceMolarity(*m_epi, tissue, molarity1);
   //Lymph
- /* lymph->GetSubstanceQuantity(*m_epi)->GetMolarity().Set(molarity1);
+  /* lymph->GetSubstanceQuantity(*m_epi)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_epi)->Balance(BalanceLiquidBy::Molarity);
 */
   // GLUCAGON //
-  concentration.SetValue(0.079, MassPerVolumeUnit::ug_Per_L);  //We want 70 pg/mL, but it dips in stabilization, so set it higher
+  concentration.SetValue(0.079, MassPerVolumeUnit::ug_Per_L); //We want 70 pg/mL, but it dips in stabilization, so set it higher
   SetSubstanceConcentration(*m_glucagon, vascular, concentration);
   // Tissue
   molarity1.SetValue(0.0, AmountPerVolumeUnit::mmol_Per_L);
@@ -616,11 +613,11 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // Tissue
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceMolarity(*m_glucose, tissue, molarity1, molarity1);
- /* lymph->GetSubstanceQuantity(*m_glucose)->GetMolarity().Set(molarity1);
+  /* lymph->GetSubstanceQuantity(*m_glucose)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_glucose)->Balance(BalanceLiquidBy::Molarity);*/
 
   // INSULIN //
-  concentration.SetValue(0.85, MassPerVolumeUnit::ug_Per_L);  //118.1 pmol/L is desired (.6859 ug/L), was .85 because of stabilization dip, but it seems okay now
+  concentration.SetValue(0.85, MassPerVolumeUnit::ug_Per_L); //118.1 pmol/L is desired (.6859 ug/L), was .85 because of stabilization dip, but it seems okay now
   SetSubstanceConcentration(*m_insulin, vascular, concentration);
   // None in Urine
   leftBowmansCapsules->GetSubstanceQuantity(*m_insulin)->SetToZero();
@@ -660,7 +657,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity1.SetValue(0.09, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_ketones, tissue, molarity1);
   //Lymph
- /* lymph->GetSubstanceQuantity(*m_ketones)->GetMolarity().Set(molarity1);
+  /* lymph->GetSubstanceQuantity(*m_ketones)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_ketones)->Balance(BalanceLiquidBy::Molarity);*/
 
   // LACTATE //
@@ -682,7 +679,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // Tissue
   SetSubstanceMolarity(*m_lactate, tissue, molarity1, molarity1);
   //Lymph
- /* lymph->GetSubstanceQuantity(*m_lactate)->GetMolarity().Set(molarity1);
+  /* lymph->GetSubstanceQuantity(*m_lactate)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_lactate)->Balance(BalanceLiquidBy::Molarity);*/
 
   // POTASSIUM //
@@ -717,7 +714,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   //Lymph
   /*lymph->GetSubstanceQuantity(*m_potassium)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_potassium)->Balance(BalanceLiquidBy::Molarity);*/
-  
+
   // SODIUM //
   concentration.SetValue(0.335, MassPerVolumeUnit::g_Per_dL);
   SetSubstanceConcentration(*m_sodium, vascular, concentration);
@@ -774,7 +771,6 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainExtracellular)->GetSubstanceQuantity(*m_triacylglycerol)->Balance(BalanceLiquidBy::Molarity);
   m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_triacylglycerol)->GetMolarity().Set(molarity1);
   m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_triacylglycerol)->Balance(BalanceLiquidBy::Molarity);
-  
 
   // UREA //
   concentration.SetValue(270.0, MassPerVolumeUnit::mg_Per_L);
@@ -799,7 +795,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   subQ->Balance(BalanceLiquidBy::Concentration);
   subQ = rightUreter->GetSubstanceQuantity(*m_urea);
   subQ->GetConcentration().Set(concentration);
-  subQ->Balance(BalanceLiquidBy::Concentration);  
+  subQ->Balance(BalanceLiquidBy::Concentration);
   subQ = bladder->GetSubstanceQuantity(*m_urea);
   subQ->GetConcentration().Set(concentration);
   subQ->Balance(BalanceLiquidBy::Concentration);
@@ -830,7 +826,7 @@ void BioGearsSubstances::SetLiquidCompartmentNonGasesForStarvation(double time_h
   const std::vector<SETissueCompartment*>& tissue = m_data.GetCompartments().GetTissueLeafCompartments();
 
   // Initialize Substances throughout the body
-  SEScalarMassPerVolume   concentration;
+  SEScalarMassPerVolume concentration;
   SEScalarAmountPerVolume molarity1;
   SEScalarAmountPerVolume molarity2;
 
@@ -863,7 +859,7 @@ void BioGearsSubstances::SetLiquidCompartmentNonGasesForStarvation(double time_h
   // It's very nearly linear up to 3 days, where it stays hovering around 61 mg/dL
   double conc = 0;
   if (time_h < 72)
-    conc = 84.3105 - .39147*time_h - .00000434*time_h*time_h;
+    conc = 84.3105 - .39147 * time_h - .00000434 * time_h * time_h;
   else
     conc = 61.25;
   concentration.SetValue(conc, MassPerVolumeUnit::mg_Per_dL);
@@ -891,7 +887,7 @@ void BioGearsSubstances::SetLiquidCompartmentNonGasesForStarvation(double time_h
   // We'll hold constant after 3 days, though according to Garber, it might decrease a bit after that
   conc = 0;
   if (time_h < 72)
-    conc = 2.705 + .0276875*time_h + .00398698*time_h*time_h;
+    conc = 2.705 + .0276875 * time_h + .00398698 * time_h * time_h;
   else
     conc = 25.52;
   concentration.SetValue(conc, MassPerVolumeUnit::mg_Per_dL);
@@ -903,14 +899,13 @@ void BioGearsSubstances::SetLiquidCompartmentNonGasesForStarvation(double time_h
 
   // LACTATE //
   //Modified to match engine state in order to provide adequate substrate for gluconeogenesis
- 
+
   concentration.SetValue(32.5, MassPerVolumeUnit::mg_Per_dL);
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceConcentration(*m_lactate, vascular, concentration);
 
   // Tissue
   SetSubstanceMolarity(*m_lactate, tissue, molarity1, molarity1);
-  
 
   // TRIACYLGLYCEROL //
   //Not modified. \cite zauner2000resting shows it not changing much from basal levels, but since we don't model fatty acids, we'll see it rise over time.
@@ -931,7 +926,6 @@ void BioGearsSubstances::SetLiquidCompartmentNonGasesForStarvation(double time_h
 
   // IONS //
   //Not modified, but \cite elia1984mineral has good data for Na, K, Ca, and Cl (they don't change much during 4 day starvation)
-
 }
 
 bool BioGearsSubstances::LoadSubstanceDirectory()
@@ -974,9 +968,7 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   if (m_epi == nullptr)
     Error("Epinephrine Definition not found");
 
-  if (m_O2 == nullptr || m_CO == nullptr || m_CO2 == nullptr || m_N2 == nullptr ||
-    m_Hb == nullptr || m_HbO2 == nullptr || m_HbCO2 == nullptr || m_HbCO == nullptr || m_HbO2CO2 == nullptr ||
-    m_epi == nullptr || m_HCO3 == nullptr)
+  if (m_O2 == nullptr || m_CO == nullptr || m_CO2 == nullptr || m_N2 == nullptr || m_Hb == nullptr || m_HbO2 == nullptr || m_HbCO2 == nullptr || m_HbCO == nullptr || m_HbO2CO2 == nullptr || m_epi == nullptr || m_HCO3 == nullptr)
     return false;
 
   m_albumin = GetSubstance("Albumin");
@@ -1028,12 +1020,9 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   // These metabolites will be activated in initialization
 
   // Check that drugs have what we need
-  for (SESubstance* sub : m_Substances)
-  {
-    if (sub->HasPD())
-    {
-      if (sub->GetPD().GetEC50().IsZero() || sub->GetPD().GetEC50().IsNegative())
-      {
+  for (SESubstance* sub : m_Substances) {
+    if (sub->HasPD()) {
+      if (sub->GetPD().GetEC50().IsZero() || sub->GetPD().GetEC50().IsNegative()) {
         std::stringstream ss;
         ss << sub->GetName() << " cannot have EC50 <= 0";
         Fatal(ss);
@@ -1047,14 +1036,14 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
 void BioGearsSubstances::AddActiveSubstance(SESubstance& substance)
 {
   if (IsActive(substance))
-    return;// If its already active, don't do anything
-  
+    return; // If its already active, don't do anything
+
   SESubstanceManager::AddActiveSubstance(substance);
   if (substance.GetState() == CDM::enumSubstanceState::Gas)
     m_data.GetCompartments().AddGasCompartmentSubstance(substance);
   m_data.GetCompartments().AddLiquidCompartmentSubstance(substance);
 
-  if (&substance == m_CO)// We need to put HbCO in the system if CO is in the system
+  if (&substance == m_CO) // We need to put HbCO in the system if CO is in the system
   {
     m_isCOActive = true;
     AddActiveSubstance(*m_HbCO);
@@ -1067,8 +1056,6 @@ bool BioGearsSubstances::IsActive(const SESubstance& sub) const
     return m_isCOActive;
   return SESubstanceManager::IsActive(sub);
 }
-
-
 
 /// --------------------------------------------------------------------------------------------------
 /// \brief
@@ -1091,8 +1078,7 @@ void BioGearsSubstances::CalculateGenericClearance(double volumeCleared_mL, SELi
   double MassCleared_ug = volumeCleared_mL * concentration_ug_Per_mL;
   //Ensure mass does not become negative
   mass_ug -= MassCleared_ug;
-  if (mass_ug < 0)
-  {
+  if (mass_ug < 0) {
     mass_ug = 0;
   }
 
@@ -1108,7 +1094,7 @@ void BioGearsSubstances::CalculateGenericClearance(double volumeCleared_mL, SELi
 /// --------------------------------------------------------------------------------------------------
 /// \brief
 /// Calculates the substance mass cleared for a tissue compartment based on a volume
-/// 
+///
 /// \param VolumeCleared_mL: the volume of fluid cleared of a substance by some process
 /// \param tissue: a tissue compartment
 /// \param sub: a substance
@@ -1127,22 +1113,18 @@ void BioGearsSubstances::CalculateGenericClearance(double VolumeCleared_mL, SETi
   double mass_ug = subQ->GetMass(MassUnit::ug);
   double concentration_ug_Per_mL;
   SEScalarMassPerVolume concentration;
-  if (sub.HasPK())
-  {
+  if (sub.HasPK()) {
     GeneralMath::CalculateConcentration(subQ->GetMass(), tissue.GetMatrixVolume(), concentration, m_Logger);
     concentration_ug_Per_mL = concentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
-  }
-  else
-  {
+  } else {
     concentration_ug_Per_mL = subQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   }
-  
+
   //Calculate Mass Cleared
   double MassCleared_ug = VolumeCleared_mL * concentration_ug_Per_mL;
   //Ensure mass does not become negative
   mass_ug -= MassCleared_ug;
-  if (mass_ug < 0)
-  {
+  if (mass_ug < 0) {
     mass_ug = 0;
   }
 
@@ -1169,13 +1151,10 @@ void BioGearsSubstances::CalculateGenericExcretion(double VascularFlow_mL_Per_s,
     throw CommonDataModelException("No Substance Quantity found for substance " + sub.GetName());
   double concentration_ug_Per_mL;
   SEScalarMassPerVolume concentration;
-  if (sub.HasPK())
-  {
+  if (sub.HasPK()) {
     GeneralMath::CalculateConcentration(subQ->GetMass(), tissue.GetMatrixVolume(), concentration, m_Logger);
     concentration_ug_Per_mL = concentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
-  }
-  else
-  {
+  } else {
     concentration_ug_Per_mL = subQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   }
 
@@ -1233,8 +1212,7 @@ double BioGearsSubstances::GetSubstanceMass(SESubstance& sub, const std::vector<
 {
   double mass = 0;
   SELiquidSubstanceQuantity* subQ;
-  for (SELiquidCompartment* cmpt : cmpts)
-  {
+  for (SELiquidCompartment* cmpt : cmpts) {
     subQ = cmpt->GetSubstanceQuantity(sub);
     mass += subQ->GetMass(unit);
   }
@@ -1244,13 +1222,12 @@ double BioGearsSubstances::GetSubstanceMass(SESubstance& sub, const std::vector<
 {
   double mass = 0;
   SELiquidSubstanceQuantity* subQ;
-  for (auto itr : m_data.GetCompartments().GetExtracellularFluid())
-  {
-    subQ = itr.second->GetSubstanceQuantity(sub);;
+  for (auto itr : m_data.GetCompartments().GetExtracellularFluid()) {
+    subQ = itr.second->GetSubstanceQuantity(sub);
+    ;
     mass += subQ->GetMass(unit);
   }
-  for(auto itr : m_data.GetCompartments().GetIntracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetIntracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     mass += subQ->GetMass(unit);
   }
@@ -1260,8 +1237,7 @@ double BioGearsSubstances::GetSubstanceMass(SESubstance& sub, const std::vector<
 void BioGearsSubstances::SetSubstanceConcentration(SESubstance& sub, const std::vector<SELiquidCompartment*>& cmpts, const SEScalarMassPerVolume& concentration)
 {
   SELiquidSubstanceQuantity* subQ;
-  for (SELiquidCompartment* cmpt : cmpts)
-  {
+  for (SELiquidCompartment* cmpt : cmpts) {
     subQ = cmpt->GetSubstanceQuantity(sub);
     subQ->GetConcentration().Set(concentration);
     subQ->Balance(BalanceLiquidBy::Concentration);
@@ -1270,14 +1246,12 @@ void BioGearsSubstances::SetSubstanceConcentration(SESubstance& sub, const std::
 void BioGearsSubstances::SetSubstanceConcentration(SESubstance& sub, const std::vector<SETissueCompartment*>& cmpts, const SEScalarMassPerVolume& concentration)
 {
   SELiquidSubstanceQuantity* subQ;
-  for (auto itr : m_data.GetCompartments().GetExtracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetExtracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetConcentration().Set(concentration);
     subQ->Balance(BalanceLiquidBy::Concentration);
   }
-  for (auto itr : m_data.GetCompartments().GetIntracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetIntracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetConcentration().Set(concentration);
     subQ->Balance(BalanceLiquidBy::Concentration);
@@ -1286,14 +1260,12 @@ void BioGearsSubstances::SetSubstanceConcentration(SESubstance& sub, const std::
 void BioGearsSubstances::SetSubstanceConcentration(SESubstance& sub, const std::vector<SETissueCompartment*>& cmpts, const SEScalarMassPerVolume& extracellular, const SEScalarMassPerVolume& intracellular)
 {
   SELiquidSubstanceQuantity* subQ;
-  for (auto itr : m_data.GetCompartments().GetExtracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetExtracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetConcentration().Set(extracellular);
     subQ->Balance(BalanceLiquidBy::Concentration);
   }
-  for (auto itr : m_data.GetCompartments().GetIntracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetIntracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetConcentration().Set(intracellular);
     subQ->Balance(BalanceLiquidBy::Concentration);
@@ -1303,8 +1275,7 @@ void BioGearsSubstances::SetSubstanceConcentration(SESubstance& sub, const std::
 void BioGearsSubstances::SetSubstanceMolarity(SESubstance& sub, const std::vector<SELiquidCompartment*>& cmpts, const SEScalarAmountPerVolume& molarity)
 {
   SELiquidSubstanceQuantity* subQ;
-  for (SELiquidCompartment* cmpt : cmpts)
-  {
+  for (SELiquidCompartment* cmpt : cmpts) {
     subQ = cmpt->GetSubstanceQuantity(sub);
     subQ->GetMolarity().Set(molarity);
     subQ->Balance(BalanceLiquidBy::Molarity);
@@ -1313,14 +1284,12 @@ void BioGearsSubstances::SetSubstanceMolarity(SESubstance& sub, const std::vecto
 void BioGearsSubstances::SetSubstanceMolarity(SESubstance& sub, const std::vector<SETissueCompartment*>& cmpts, const SEScalarAmountPerVolume& molarity)
 {
   SELiquidSubstanceQuantity* subQ;
-  for (auto itr : m_data.GetCompartments().GetExtracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetExtracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetMolarity().Set(molarity);
     subQ->Balance(BalanceLiquidBy::Molarity);
   }
-  for (auto itr : m_data.GetCompartments().GetIntracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetIntracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetMolarity().Set(molarity);
     subQ->Balance(BalanceLiquidBy::Molarity);
@@ -1331,18 +1300,15 @@ void BioGearsSubstances::SetSubstanceMolarity(SESubstance& sub, const std::vecto
   SELiquidCompartment* intracellular = nullptr;
   SELiquidCompartment* extracellular = nullptr;
 
-  for (SETissueCompartment* cmpt : cmpts)
-  {
+  for (SETissueCompartment* cmpt : cmpts) {
     intracellular = m_data.GetCompartments().GetLiquidCompartment(cmpt->GetName() + "Intracellular");
-    if (intracellular != nullptr)
-    {
+    if (intracellular != nullptr) {
       intracellular->GetSubstanceQuantity(sub)->GetMolarity().Set(intracellularMolarity);
       intracellular->GetSubstanceQuantity(sub)->Balance(BalanceLiquidBy::Molarity);
     }
 
     extracellular = m_data.GetCompartments().GetLiquidCompartment(cmpt->GetName() + "Extracellular");
-    if (extracellular != nullptr)
-    {
+    if (extracellular != nullptr) {
       extracellular->GetSubstanceQuantity(sub)->GetMolarity().Set(extracellularMolarity);
       extracellular->GetSubstanceQuantity(sub)->Balance(BalanceLiquidBy::Molarity);
     }
@@ -1351,14 +1317,12 @@ void BioGearsSubstances::SetSubstanceMolarity(SESubstance& sub, const std::vecto
 void BioGearsSubstances::SetSubstanceMolarity(SESubstance& sub, const SEScalarAmountPerVolume& extracellular, const SEScalarAmountPerVolume& intracellular)
 {
   SELiquidSubstanceQuantity* subQ;
-  for (auto itr : m_data.GetCompartments().GetExtracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetExtracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetMolarity().Set(extracellular);
     subQ->Balance(BalanceLiquidBy::Molarity);
   }
-  for (auto itr : m_data.GetCompartments().GetIntracellularFluid())
-  {
+  for (auto itr : m_data.GetCompartments().GetIntracellularFluid()) {
     subQ = itr.second->GetSubstanceQuantity(sub);
     subQ->GetMolarity().Set(intracellular);
     subQ->Balance(BalanceLiquidBy::Molarity);
@@ -1378,7 +1342,7 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
 
   // This fraction vs. length histogram characterizes the size distribution for a polydispersed aerosol.
   // Length is the aerodynamic diameter of a particle, and Fraction is the fraction of the total
-  // that are contained in bin i, which is bounded by boundary i and boundary i+1. 
+  // that are contained in bin i, which is bounded by boundary i and boundary i+1.
   // The deposition fraction for each bin is computed from the equations fit by Hinds to the ICRP
   // model data @cite Rostami2009computationsal with as much resolution as is provided by the histogram.
   // Regardless of the provided resolution, particles with aerodynamic diameter less than 10^-4 micrometers
@@ -1403,23 +1367,21 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
   depositionsAlveoli.GetLength() = concentrations.GetLength();
 
   int numPerRegion = 1000; // This is how many times the equations are evaluated in a bin to get a mean deposition fraction
-  for (size_t i = 0; i < concentrations.NumberOfBins(); i++)
-  {
+  for (size_t i = 0; i < concentrations.NumberOfBins(); i++) {
     double binLength = concentrations.GetLength()[i + 1] - concentrations.GetLength()[i];
     double stepSize = binLength / double(numPerRegion); //
     double sumHeadAirways = 0.;
     double sumAnatomicalDeadspace = 0.;
     double sumAlveoli = 0.;
     double aerodynamicDiameter;
-    for (int j = 0; j < numPerRegion; j++)
-    {
-      aerodynamicDiameter = concentrations.GetLength()[i] + stepSize*j; //Start at the bottom of the bin and march towards the top minus one step
+    for (int j = 0; j < numPerRegion; j++) {
+      aerodynamicDiameter = concentrations.GetLength()[i] + stepSize * j; //Start at the bottom of the bin and march towards the top minus one step
       if (aerodynamicDiameter == 0)
         continue;
-      double inspirFrac = 1 - 0.5*(1 - 1 / (1 + 0.00076*pow(aerodynamicDiameter, 2.8)));
-      sumHeadAirways += inspirFrac * (1 / (1 + exp(6.84 + 1.183*log(aerodynamicDiameter))) + 1 / (1 + exp(0.924 - 1.885*log(aerodynamicDiameter))));
-      sumAnatomicalDeadspace += 0.00352 / aerodynamicDiameter*(exp(-0.23*pow((log(aerodynamicDiameter) + 3.4), 2)) + 63.9*exp(-0.819*pow((log(aerodynamicDiameter) - 1.61), 2)));
-      sumAlveoli += 0.0155 / aerodynamicDiameter*(exp(-0.416*pow((log(aerodynamicDiameter) + 2.84), 2)) + 19.11*exp(-0.482*pow((log(aerodynamicDiameter) - 1.362), 2)));
+      double inspirFrac = 1 - 0.5 * (1 - 1 / (1 + 0.00076 * pow(aerodynamicDiameter, 2.8)));
+      sumHeadAirways += inspirFrac * (1 / (1 + exp(6.84 + 1.183 * log(aerodynamicDiameter))) + 1 / (1 + exp(0.924 - 1.885 * log(aerodynamicDiameter))));
+      sumAnatomicalDeadspace += 0.00352 / aerodynamicDiameter * (exp(-0.23 * pow((log(aerodynamicDiameter) + 3.4), 2)) + 63.9 * exp(-0.819 * pow((log(aerodynamicDiameter) - 1.61), 2)));
+      sumAlveoli += 0.0155 / aerodynamicDiameter * (exp(-0.416 * pow((log(aerodynamicDiameter) + 2.84), 2)) + 19.11 * exp(-0.482 * pow((log(aerodynamicDiameter) - 1.362), 2)));
     }
     // Mean this region
     depositionsMouth.GetFraction().push_back(sumHeadAirways / numPerRegion);
@@ -1428,8 +1390,7 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
     // If any fractions are more than one, weight the error and distribute
     // More than 1.0 can happen with small particles, possibly due to
     // truncation in the equations in @cite Rostami2009computational.
-    if (depositionsMouth.GetFraction()[i] + depositionsAnatomicalDeadspace.GetFraction()[i] + depositionsAlveoli.GetFraction()[i] > 1.0)
-    {
+    if (depositionsMouth.GetFraction()[i] + depositionsAnatomicalDeadspace.GetFraction()[i] + depositionsAlveoli.GetFraction()[i] > 1.0) {
       double mag = depositionsMouth.GetFraction()[i] + depositionsAnatomicalDeadspace.GetFraction()[i] + depositionsAlveoli.GetFraction()[i];
       double delta = 1.0 - mag;
       depositionsMouth.GetFraction()[i] = depositionsMouth.GetFraction()[i] * (1. + delta / mag);
@@ -1443,9 +1404,9 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
   }
 
   // Now we can compute the size-independent deposition efficiencies for each compartment
-  // The fraction of the total that deposits in the mouth is equal to the sum of the 
+  // The fraction of the total that deposits in the mouth is equal to the sum of the
   // products of the fraction of each size times the deposition fractions of each size for the mouth.
-  // The fraction of the total that deposits in each subsequent windward compartment is the sum of the 
+  // The fraction of the total that deposits in each subsequent windward compartment is the sum of the
   // products of the fraction of each size times the deposition fractions of each size for the compartment
   // divided by the sum of (1-deposition fraction)*concentration fraction for the leeward compartment.
   double sumMouthProducts = 0.;
@@ -1456,8 +1417,7 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
   double sumDeadspaceOneMinusProducts = 0.;
   double sumAlveoliProducts = 0.;
 
-  for (size_t i = 0; i < concentrations.NumberOfBins(); i++)
-  {
+  for (size_t i = 0; i < concentrations.NumberOfBins(); i++) {
     sumMouthProducts += concentrations.GetFraction()[i] * depositionsMouth.GetFraction()[i];
     sumMouthOneMinusProducts += concentrations.GetFraction()[i] * (1 - depositionsMouth.GetFraction()[i]);
     sumCarinaProducts += concentrations.GetFraction()[i] * depositionsCarina.GetFraction()[i];
@@ -1469,9 +1429,9 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
 
   SizeIndependentDepositionEfficencyCoefficient* SIDECoefficients = new SizeIndependentDepositionEfficencyCoefficient();
   SIDECoefficients->m_mouth = sumMouthProducts;
-  SIDECoefficients->m_carina    = (sumMouthOneMinusProducts < 1.0e-12) ? 0 : sumCarinaProducts / sumMouthOneMinusProducts;
+  SIDECoefficients->m_carina = (sumMouthOneMinusProducts < 1.0e-12) ? 0 : sumCarinaProducts / sumMouthOneMinusProducts;
   SIDECoefficients->m_deadSpace = (sumCarinaOneMinusProducts < 1.0e-12) ? 0 : sumDeadspaceProducts / sumCarinaOneMinusProducts;
-  SIDECoefficients->m_alveoli   = (sumDeadspaceOneMinusProducts < 1.0e-12) ? 0 : sumAlveoliProducts / sumDeadspaceOneMinusProducts;
+  SIDECoefficients->m_alveoli = (sumDeadspaceOneMinusProducts < 1.0e-12) ? 0 : sumAlveoliProducts / sumDeadspaceOneMinusProducts;
   m_SIDECoefficients[&substance] = SIDECoefficients;
   // Now we do not need to track size distributions, only mass (via concentration).
 

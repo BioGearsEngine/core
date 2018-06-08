@@ -10,9 +10,42 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
+#include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
+#include <biogears/cdm/patient/SENutrition.h>
+#include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarAreaPerTimePressure.h>
+#include <biogears/cdm/properties/SEScalarElectricResistance.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
+#include <biogears/cdm/properties/SEScalarFlowElastance.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
+#include <biogears/cdm/properties/SEScalarHeatConductance.h>
+#include <biogears/cdm/properties/SEScalarHeatResistance.h>
+#include <biogears/cdm/properties/SEScalarInverseVolume.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
+
 #include <biogears/engine/stdafx.h>
-#include <biogears/schema/BioGearsConfigurationData.hxx>
+
 #include <biogears/schema/BaroreceptorConfigurationData.hxx>
+#include <biogears/schema/BioGearsConfigurationData.hxx>
 #include <biogears/schema/BloodChemistryConfigurationData.hxx>
 #include <biogears/schema/CardiovascularConfigurationData.hxx>
 #include <biogears/schema/CircuitConfigurationData.hxx>
@@ -21,186 +54,152 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/EnergyConfigurationData.hxx>
 #include <biogears/schema/EnvironmentConfigurationData.hxx>
 #include <biogears/schema/EnvironmentalConditionsData.hxx>
-#include <biogears/schema/EnergyConfigurationData.hxx>
 #include <biogears/schema/GastrointestinalConfigurationData.hxx>
 #include <biogears/schema/NervousConfigurationData.hxx>
+#include <biogears/schema/PatientNutrition.hxx>
 #include <biogears/schema/RenalConfigurationData.hxx>
 #include <biogears/schema/RespiratoryConfigurationData.hxx>
-#include <biogears/schema/TissueConfigurationData.hxx>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
-#include <biogears/schema/ScalarHeatCapacitancePerAmountData.hxx>
-#include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
-#include <biogears/schema/ScalarHeatCapacitancePerMassData.hxx>
-#include <biogears/cdm/properties/SEScalarHeatConductance.h>
-#include <biogears/schema/ScalarHeatConductanceData.hxx>
-#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
-#include <biogears/schema/ScalarEnergyPerMassData.hxx>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/schema/ScalarAreaData.hxx>
-#include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/schema/ScalarLengthData.hxx>
-#include <biogears/cdm/properties/SEScalarAreaPerTimePressure.h>
 #include <biogears/schema/ScalarAreaPerTimePressureData.hxx>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/schema/ScalarPressureData.hxx>
-#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
-#include <biogears/schema/ScalarMassPerAmountData.hxx>
-#include <biogears/cdm/properties/SEScalarFlowResistance.h>
-#include <biogears/schema/ScalarFlowResistanceData.hxx>
-#include <biogears/cdm/properties/SEScalarFlowElastance.h>
-#include <biogears/schema/ScalarFlowElastanceData.hxx>
-#include <biogears/cdm/properties/SEScalarHeatResistance.h>
-#include <biogears/schema/ScalarHeatResistanceData.hxx>
-#include <biogears/cdm/properties/SEScalarElectricResistance.h>
 #include <biogears/schema/ScalarElectricResistanceData.hxx>
-#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
-#include <biogears/schema/ScalarMassPerAmountData.hxx>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/schema/ScalarTemperatureData.hxx>
-#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
 #include <biogears/schema/ScalarEnergyPerAmountData.hxx>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/schema/ScalarEnergyPerMassData.hxx>
+#include <biogears/schema/ScalarFlowElastanceData.hxx>
+#include <biogears/schema/ScalarFlowResistanceData.hxx>
+#include <biogears/schema/ScalarFractionData.hxx>
+#include <biogears/schema/ScalarHeatCapacitancePerAmountData.hxx>
+#include <biogears/schema/ScalarHeatCapacitancePerMassData.hxx>
+#include <biogears/schema/ScalarHeatConductanceData.hxx>
+#include <biogears/schema/ScalarHeatResistanceData.hxx>
+#include <biogears/schema/ScalarLengthData.hxx>
+#include <biogears/schema/ScalarMassData.hxx>
+#include <biogears/schema/ScalarMassPerAmountData.hxx>
 #include <biogears/schema/ScalarMassPerTimeData.hxx>
-#include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
-#include <biogears/schema/ScalarVolumePerTimeAreaData.hxx>
-#include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
-#include <biogears/schema/ScalarVolumePerTimePressureAreaData.hxx>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
-#include <biogears/cdm/properties/SEScalarInverseVolume.h>
-#include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
+#include <biogears/schema/ScalarMassPerVolumeData.hxx>
 #include <biogears/schema/ScalarPowerPerAreaTemperatureToTheFourthData.hxx>
-#include <biogears/cdm/patient/SENutrition.h>
-#include <biogears/schema/PatientNutrition.hxx>
-#include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
-#include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
-#include <biogears/cdm/Serializer.h>
+#include <biogears/schema/ScalarPressureData.hxx>
+#include <biogears/schema/ScalarTemperatureData.hxx>
+#include <biogears/schema/ScalarTimeData.hxx>
+#include <biogears/schema/ScalarVolumeData.hxx>
+#include <biogears/schema/ScalarVolumePerTimeAreaData.hxx>
+#include <biogears/schema/ScalarVolumePerTimeData.hxx>
+#include <biogears/schema/ScalarVolumePerTimePressureAreaData.hxx>
+#include <biogears/schema/TissueConfigurationData.hxx>
 
-
-
-BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances) : PhysiologyEngineConfiguration(substances.GetLogger()), m_Substances(substances)
+BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
+  : PhysiologyEngineConfiguration(substances.GetLogger())
+  , m_Substances(substances)
 {
-	// Barorecptors
-	m_ResponseSlope = nullptr;
-	m_HeartRateDistributedTimeDelay = nullptr;
-	m_HeartElastanceDistributedTimeDelay = nullptr;
-	m_SystemicResistanceDistributedTimeDelay = nullptr;
-	m_VenousComplianceDistributedTimeDelay = nullptr;
-	m_NormalizedHeartRateIntercept = nullptr;
-	m_NormalizedHeartRateSympatheticSlope = nullptr;
-	m_NormalizedHeartRateParasympatheticSlope = nullptr;
-	m_NormalizedHeartElastanceIntercept = nullptr;
-	m_NormalizedHeartElastanceSympatheticSlope = nullptr;
-	m_NormalizedResistanceIntercept = nullptr;
-	m_NormalizedResistanceSympatheticSlope = nullptr;
-	m_NormalizedComplianceIntercept = nullptr;
-	m_NormalizedComplianceParasympatheticSlope = nullptr;
+  // Barorecptors
+  m_ResponseSlope = nullptr;
+  m_HeartRateDistributedTimeDelay = nullptr;
+  m_HeartElastanceDistributedTimeDelay = nullptr;
+  m_SystemicResistanceDistributedTimeDelay = nullptr;
+  m_VenousComplianceDistributedTimeDelay = nullptr;
+  m_NormalizedHeartRateIntercept = nullptr;
+  m_NormalizedHeartRateSympatheticSlope = nullptr;
+  m_NormalizedHeartRateParasympatheticSlope = nullptr;
+  m_NormalizedHeartElastanceIntercept = nullptr;
+  m_NormalizedHeartElastanceSympatheticSlope = nullptr;
+  m_NormalizedResistanceIntercept = nullptr;
+  m_NormalizedResistanceSympatheticSlope = nullptr;
+  m_NormalizedComplianceIntercept = nullptr;
+  m_NormalizedComplianceParasympatheticSlope = nullptr;
 
-	// Blood Chemistry
-	m_MeanCorpuscularHemoglobin = nullptr;
-	m_MeanCorpuscularVolume = nullptr;
-	m_StandardDiffusionDistance = nullptr;
-	m_StandardOxygenDiffusionCoefficient = nullptr;
+  // Blood Chemistry
+  m_MeanCorpuscularHemoglobin = nullptr;
+  m_MeanCorpuscularVolume = nullptr;
+  m_StandardDiffusionDistance = nullptr;
+  m_StandardOxygenDiffusionCoefficient = nullptr;
 
-	// Cardiovascular
+  // Cardiovascular
   m_LeftHeartElastanceMaximum = nullptr;
   m_LeftHeartElastanceMinimum = nullptr;
-	m_MinimumBloodVolumeFraction = nullptr;
+  m_MinimumBloodVolumeFraction = nullptr;
   m_RightHeartElastanceMaximum = nullptr;
   m_RightHeartElastanceMinimum = nullptr;
-	m_StandardPulmonaryCapillaryCoverage = nullptr;
+  m_StandardPulmonaryCapillaryCoverage = nullptr;
 
-	// Circuit
-	m_CardiovascularOpenResistance = nullptr;
-	m_DefaultClosedElectricResistance = nullptr;
-	m_DefaultClosedFlowResistance = nullptr;
-	m_DefaultClosedHeatResistance = nullptr;
-	m_DefaultOpenElectricResistance = nullptr;
-	m_DefaultOpenFlowResistance = nullptr;
-	m_DefaultOpenHeatResistance = nullptr;
-	m_MachineClosedResistance = nullptr;
-	m_MachineOpenResistance = nullptr;
-	m_RespiratoryClosedResistance = nullptr;
-	m_RespiratoryOpenResistance = nullptr;
+  // Circuit
+  m_CardiovascularOpenResistance = nullptr;
+  m_DefaultClosedElectricResistance = nullptr;
+  m_DefaultClosedFlowResistance = nullptr;
+  m_DefaultClosedHeatResistance = nullptr;
+  m_DefaultOpenElectricResistance = nullptr;
+  m_DefaultOpenFlowResistance = nullptr;
+  m_DefaultOpenHeatResistance = nullptr;
+  m_MachineClosedResistance = nullptr;
+  m_MachineOpenResistance = nullptr;
+  m_RespiratoryClosedResistance = nullptr;
+  m_RespiratoryOpenResistance = nullptr;
 
-	// Constants
-	m_OxygenMetabolicConstant = nullptr;
-	m_StefanBoltzmann = nullptr;
-	m_UniversalGasConstant = nullptr;
+  // Constants
+  m_OxygenMetabolicConstant = nullptr;
+  m_StefanBoltzmann = nullptr;
+  m_UniversalGasConstant = nullptr;
 
-  // Drugs 
+  // Drugs
   m_PDEnabled = CDM::enumOnOff::value(-1);
 
-	// Energy
-	m_BodySpecificHeat = nullptr;
-	m_CarbondDioxideProductionFromOxygenConsumptionConstant = nullptr;
-	m_CoreTemperatureLow = nullptr;
-	m_CoreTemperatureHigh = nullptr;
-	m_DeltaCoreTemperatureLow = nullptr;
-	m_EnergyPerATP = nullptr;
-	m_SweatHeatTransfer = nullptr;
-	m_VaporizationEnergy = nullptr;
-	m_VaporSpecificHeat = nullptr;
+  // Energy
+  m_BodySpecificHeat = nullptr;
+  m_CarbondDioxideProductionFromOxygenConsumptionConstant = nullptr;
+  m_CoreTemperatureLow = nullptr;
+  m_CoreTemperatureHigh = nullptr;
+  m_DeltaCoreTemperatureLow = nullptr;
+  m_EnergyPerATP = nullptr;
+  m_SweatHeatTransfer = nullptr;
+  m_VaporizationEnergy = nullptr;
+  m_VaporSpecificHeat = nullptr;
 
-	// Environment
-	m_AirDensity = nullptr;
-	m_AirSpecificHeat = nullptr;
-	m_MolarMassOfDryAir = nullptr;
-	m_MolarMassOfWaterVapor = nullptr;
+  // Environment
+  m_AirDensity = nullptr;
+  m_AirSpecificHeat = nullptr;
+  m_MolarMassOfDryAir = nullptr;
+  m_MolarMassOfWaterVapor = nullptr;
   m_InitialEnvironmentalConditions = nullptr;
-	m_WaterDensity = nullptr;
+  m_WaterDensity = nullptr;
 
-	// Gastrointestinal
-	m_CalciumDigestionRate = nullptr;
-	m_CalciumAbsorptionFraction = nullptr;
-	m_CarbohydrateAbsorptionFraction = nullptr;
-	m_DefaultCarbohydrateDigestionRate = nullptr;
-	m_DefaultFatDigestionRate = nullptr;
-	m_DefaultProteinDigestionRate = nullptr;
-	m_DefaultStomachContents = nullptr;
-	m_FatAbsorptionFraction = nullptr;
-	m_ProteinToUreaFraction = nullptr;
-	m_WaterDigestionRate = nullptr;
+  // Gastrointestinal
+  m_CalciumDigestionRate = nullptr;
+  m_CalciumAbsorptionFraction = nullptr;
+  m_CarbohydrateAbsorptionFraction = nullptr;
+  m_DefaultCarbohydrateDigestionRate = nullptr;
+  m_DefaultFatDigestionRate = nullptr;
+  m_DefaultProteinDigestionRate = nullptr;
+  m_DefaultStomachContents = nullptr;
+  m_FatAbsorptionFraction = nullptr;
+  m_ProteinToUreaFraction = nullptr;
+  m_WaterDigestionRate = nullptr;
 
   // Nervous
   m_PupilDiameterBaseline = nullptr;
-	
-	// Renal
-  m_RenalEnabled = CDM::enumOnOff::value(-1);
-	m_PlasmaSodiumConcentrationSetPoint = nullptr;
-	m_PeritubularPotassiumConcentrationSetPoint = nullptr;
-	m_LeftGlomerularFluidPermeabilityBaseline = nullptr;
-	m_LeftGlomerularFilteringSurfaceAreaBaseline = nullptr;
-	m_LeftTubularReabsorptionFluidPermeabilityBaseline = nullptr;
-	m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline = nullptr;
-	m_MaximumAfferentResistance = nullptr;
-	m_MinimumAfferentResistance = nullptr;
-	m_RightGlomerularFluidPermeabilityBaseline = nullptr;
-	m_RightGlomerularFilteringSurfaceAreaBaseline = nullptr;
-	m_RightTubularReabsorptionFluidPermeabilityBaseline = nullptr;
-	m_RightTubularReabsorptionFilteringSurfaceAreaBaseline = nullptr;
-	m_TargetSodiumDelivery = nullptr;
-	
 
-	// Respiratory
+  // Renal
+  m_RenalEnabled = CDM::enumOnOff::value(-1);
+  m_PlasmaSodiumConcentrationSetPoint = nullptr;
+  m_PeritubularPotassiumConcentrationSetPoint = nullptr;
+  m_LeftGlomerularFluidPermeabilityBaseline = nullptr;
+  m_LeftGlomerularFilteringSurfaceAreaBaseline = nullptr;
+  m_LeftTubularReabsorptionFluidPermeabilityBaseline = nullptr;
+  m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline = nullptr;
+  m_MaximumAfferentResistance = nullptr;
+  m_MinimumAfferentResistance = nullptr;
+  m_RightGlomerularFluidPermeabilityBaseline = nullptr;
+  m_RightGlomerularFilteringSurfaceAreaBaseline = nullptr;
+  m_RightTubularReabsorptionFluidPermeabilityBaseline = nullptr;
+  m_RightTubularReabsorptionFilteringSurfaceAreaBaseline = nullptr;
+  m_TargetSodiumDelivery = nullptr;
+
+  // Respiratory
   m_CentralControllerCO2PressureSetPoint = nullptr;
-	m_CentralVentilatoryControllerGain = nullptr;
+  m_CentralVentilatoryControllerGain = nullptr;
   m_PeripheralControllerCO2PressureSetPoint = nullptr;
-	m_PeripheralVentilatoryControllerGain = nullptr;
-	m_PleuralComplianceSensitivity = nullptr;
+  m_PeripheralVentilatoryControllerGain = nullptr;
+  m_PleuralComplianceSensitivity = nullptr;
   m_PulmonaryVentilationRateMaximum = nullptr;
-	m_VentilationTidalVolumeIntercept = nullptr;
-	m_VentilatoryOcclusionPressure = nullptr;
+  m_VentilationTidalVolumeIntercept = nullptr;
+  m_VentilatoryOcclusionPressure = nullptr;
 
   // Tissue
   m_TissueEnabled = CDM::enumOnOff::value(-1);
@@ -208,128 +207,127 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances) : P
 
 BioGearsConfiguration::~BioGearsConfiguration()
 {
-	Clear();
+  Clear();
 }
 
 void BioGearsConfiguration::Clear()
 {
-	PhysiologyEngineConfiguration::Clear();
+  PhysiologyEngineConfiguration::Clear();
 
-	// Barorecptors
-	SAFE_DELETE(m_ResponseSlope);
-	SAFE_DELETE(m_HeartRateDistributedTimeDelay);
-	SAFE_DELETE(m_HeartElastanceDistributedTimeDelay);
-	SAFE_DELETE(m_SystemicResistanceDistributedTimeDelay);
-	SAFE_DELETE(m_VenousComplianceDistributedTimeDelay);
-	SAFE_DELETE(m_NormalizedHeartRateIntercept);
-	SAFE_DELETE(m_NormalizedHeartRateSympatheticSlope);
-	SAFE_DELETE(m_NormalizedHeartRateParasympatheticSlope);
-	SAFE_DELETE(m_NormalizedHeartElastanceIntercept);
-	SAFE_DELETE(m_NormalizedHeartElastanceSympatheticSlope);
-	SAFE_DELETE(m_NormalizedResistanceIntercept);
-	SAFE_DELETE(m_NormalizedResistanceSympatheticSlope);
-	SAFE_DELETE(m_NormalizedComplianceIntercept);
-	SAFE_DELETE(m_NormalizedComplianceParasympatheticSlope);
-	
-	// Blood Chemistry
-	SAFE_DELETE(m_MeanCorpuscularHemoglobin);
-	SAFE_DELETE(m_MeanCorpuscularVolume);
-	SAFE_DELETE(m_StandardDiffusionDistance);
-	SAFE_DELETE(m_StandardOxygenDiffusionCoefficient);
+  // Barorecptors
+  SAFE_DELETE(m_ResponseSlope);
+  SAFE_DELETE(m_HeartRateDistributedTimeDelay);
+  SAFE_DELETE(m_HeartElastanceDistributedTimeDelay);
+  SAFE_DELETE(m_SystemicResistanceDistributedTimeDelay);
+  SAFE_DELETE(m_VenousComplianceDistributedTimeDelay);
+  SAFE_DELETE(m_NormalizedHeartRateIntercept);
+  SAFE_DELETE(m_NormalizedHeartRateSympatheticSlope);
+  SAFE_DELETE(m_NormalizedHeartRateParasympatheticSlope);
+  SAFE_DELETE(m_NormalizedHeartElastanceIntercept);
+  SAFE_DELETE(m_NormalizedHeartElastanceSympatheticSlope);
+  SAFE_DELETE(m_NormalizedResistanceIntercept);
+  SAFE_DELETE(m_NormalizedResistanceSympatheticSlope);
+  SAFE_DELETE(m_NormalizedComplianceIntercept);
+  SAFE_DELETE(m_NormalizedComplianceParasympatheticSlope);
 
-	// Cardiovascular
+  // Blood Chemistry
+  SAFE_DELETE(m_MeanCorpuscularHemoglobin);
+  SAFE_DELETE(m_MeanCorpuscularVolume);
+  SAFE_DELETE(m_StandardDiffusionDistance);
+  SAFE_DELETE(m_StandardOxygenDiffusionCoefficient);
+
+  // Cardiovascular
   SAFE_DELETE(m_LeftHeartElastanceMaximum);
   SAFE_DELETE(m_LeftHeartElastanceMinimum);
-	SAFE_DELETE(m_MinimumBloodVolumeFraction);
+  SAFE_DELETE(m_MinimumBloodVolumeFraction);
   SAFE_DELETE(m_RightHeartElastanceMaximum);
   SAFE_DELETE(m_RightHeartElastanceMinimum);
-	SAFE_DELETE(m_StandardPulmonaryCapillaryCoverage);
+  SAFE_DELETE(m_StandardPulmonaryCapillaryCoverage);
 
-	// Circuit
-	SAFE_DELETE(m_CardiovascularOpenResistance);
-	SAFE_DELETE(m_DefaultClosedElectricResistance);
-	SAFE_DELETE(m_DefaultClosedFlowResistance);
-	SAFE_DELETE(m_DefaultClosedHeatResistance);
-	SAFE_DELETE(m_DefaultOpenElectricResistance);
-	SAFE_DELETE(m_DefaultOpenFlowResistance);
-	SAFE_DELETE(m_DefaultOpenHeatResistance);
-	SAFE_DELETE(m_MachineClosedResistance);
-	SAFE_DELETE(m_MachineOpenResistance);
-	SAFE_DELETE(m_RespiratoryClosedResistance);
-	SAFE_DELETE(m_RespiratoryOpenResistance);
+  // Circuit
+  SAFE_DELETE(m_CardiovascularOpenResistance);
+  SAFE_DELETE(m_DefaultClosedElectricResistance);
+  SAFE_DELETE(m_DefaultClosedFlowResistance);
+  SAFE_DELETE(m_DefaultClosedHeatResistance);
+  SAFE_DELETE(m_DefaultOpenElectricResistance);
+  SAFE_DELETE(m_DefaultOpenFlowResistance);
+  SAFE_DELETE(m_DefaultOpenHeatResistance);
+  SAFE_DELETE(m_MachineClosedResistance);
+  SAFE_DELETE(m_MachineOpenResistance);
+  SAFE_DELETE(m_RespiratoryClosedResistance);
+  SAFE_DELETE(m_RespiratoryOpenResistance);
 
-	// Constants
-	SAFE_DELETE(m_OxygenMetabolicConstant);
-	SAFE_DELETE(m_StefanBoltzmann);
-	SAFE_DELETE(m_UniversalGasConstant);
+  // Constants
+  SAFE_DELETE(m_OxygenMetabolicConstant);
+  SAFE_DELETE(m_StefanBoltzmann);
+  SAFE_DELETE(m_UniversalGasConstant);
 
   // Drugs
   m_PDEnabled = CDM::enumOnOff::value(-1);
 
-	// Energy
-	SAFE_DELETE(m_BodySpecificHeat);
-	SAFE_DELETE(m_CarbondDioxideProductionFromOxygenConsumptionConstant);
-	SAFE_DELETE(m_CoreTemperatureLow);
-	SAFE_DELETE(m_CoreTemperatureHigh);
-	SAFE_DELETE(m_DeltaCoreTemperatureLow);
-	SAFE_DELETE(m_EnergyPerATP);
-	SAFE_DELETE(m_SweatHeatTransfer);
-	SAFE_DELETE(m_VaporizationEnergy);
-	SAFE_DELETE(m_VaporSpecificHeat);
+  // Energy
+  SAFE_DELETE(m_BodySpecificHeat);
+  SAFE_DELETE(m_CarbondDioxideProductionFromOxygenConsumptionConstant);
+  SAFE_DELETE(m_CoreTemperatureLow);
+  SAFE_DELETE(m_CoreTemperatureHigh);
+  SAFE_DELETE(m_DeltaCoreTemperatureLow);
+  SAFE_DELETE(m_EnergyPerATP);
+  SAFE_DELETE(m_SweatHeatTransfer);
+  SAFE_DELETE(m_VaporizationEnergy);
+  SAFE_DELETE(m_VaporSpecificHeat);
 
-	// Environment
-	SAFE_DELETE(m_AirDensity);
-	SAFE_DELETE(m_AirSpecificHeat);
-	SAFE_DELETE(m_MolarMassOfDryAir);
-	SAFE_DELETE(m_MolarMassOfWaterVapor);
+  // Environment
+  SAFE_DELETE(m_AirDensity);
+  SAFE_DELETE(m_AirSpecificHeat);
+  SAFE_DELETE(m_MolarMassOfDryAir);
+  SAFE_DELETE(m_MolarMassOfWaterVapor);
   SAFE_DELETE(m_InitialEnvironmentalConditions);
-	SAFE_DELETE(m_WaterDensity);
+  SAFE_DELETE(m_WaterDensity);
 
-	// Gastrointestinal
-	SAFE_DELETE(m_CalciumDigestionRate);
-	SAFE_DELETE(m_CalciumAbsorptionFraction); 
-	SAFE_DELETE(m_CarbohydrateAbsorptionFraction);
-	SAFE_DELETE(m_DefaultCarbohydrateDigestionRate);
-	SAFE_DELETE(m_DefaultFatDigestionRate);
-	SAFE_DELETE(m_DefaultProteinDigestionRate);
-	SAFE_DELETE(m_DefaultStomachContents);
-	SAFE_DELETE(m_FatAbsorptionFraction);
-	SAFE_DELETE(m_ProteinToUreaFraction);
-	SAFE_DELETE(m_WaterDigestionRate);
+  // Gastrointestinal
+  SAFE_DELETE(m_CalciumDigestionRate);
+  SAFE_DELETE(m_CalciumAbsorptionFraction);
+  SAFE_DELETE(m_CarbohydrateAbsorptionFraction);
+  SAFE_DELETE(m_DefaultCarbohydrateDigestionRate);
+  SAFE_DELETE(m_DefaultFatDigestionRate);
+  SAFE_DELETE(m_DefaultProteinDigestionRate);
+  SAFE_DELETE(m_DefaultStomachContents);
+  SAFE_DELETE(m_FatAbsorptionFraction);
+  SAFE_DELETE(m_ProteinToUreaFraction);
+  SAFE_DELETE(m_WaterDigestionRate);
 
   // Nervous
   SAFE_DELETE(m_PupilDiameterBaseline);
 
-	// Renal
+  // Renal
   m_RenalEnabled = CDM::enumOnOff::value(-1);
-	SAFE_DELETE(m_PlasmaSodiumConcentrationSetPoint);
-	SAFE_DELETE(m_PeritubularPotassiumConcentrationSetPoint);
-	SAFE_DELETE(m_LeftGlomerularFluidPermeabilityBaseline);
-	SAFE_DELETE(m_LeftGlomerularFilteringSurfaceAreaBaseline);
-	SAFE_DELETE(m_LeftTubularReabsorptionFluidPermeabilityBaseline);
-	SAFE_DELETE(m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline);
-	SAFE_DELETE(m_MaximumAfferentResistance);
-	SAFE_DELETE(m_MinimumAfferentResistance);
-	SAFE_DELETE(m_RightGlomerularFluidPermeabilityBaseline);
-	SAFE_DELETE(m_RightGlomerularFilteringSurfaceAreaBaseline);
-	SAFE_DELETE(m_RightTubularReabsorptionFluidPermeabilityBaseline);
-	SAFE_DELETE(m_RightTubularReabsorptionFilteringSurfaceAreaBaseline);
-	SAFE_DELETE(m_TargetSodiumDelivery);
+  SAFE_DELETE(m_PlasmaSodiumConcentrationSetPoint);
+  SAFE_DELETE(m_PeritubularPotassiumConcentrationSetPoint);
+  SAFE_DELETE(m_LeftGlomerularFluidPermeabilityBaseline);
+  SAFE_DELETE(m_LeftGlomerularFilteringSurfaceAreaBaseline);
+  SAFE_DELETE(m_LeftTubularReabsorptionFluidPermeabilityBaseline);
+  SAFE_DELETE(m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline);
+  SAFE_DELETE(m_MaximumAfferentResistance);
+  SAFE_DELETE(m_MinimumAfferentResistance);
+  SAFE_DELETE(m_RightGlomerularFluidPermeabilityBaseline);
+  SAFE_DELETE(m_RightGlomerularFilteringSurfaceAreaBaseline);
+  SAFE_DELETE(m_RightTubularReabsorptionFluidPermeabilityBaseline);
+  SAFE_DELETE(m_RightTubularReabsorptionFilteringSurfaceAreaBaseline);
+  SAFE_DELETE(m_TargetSodiumDelivery);
 
-	// Respiratory
+  // Respiratory
   SAFE_DELETE(m_CentralControllerCO2PressureSetPoint);
-	SAFE_DELETE(m_CentralVentilatoryControllerGain);
+  SAFE_DELETE(m_CentralVentilatoryControllerGain);
   SAFE_DELETE(m_PeripheralControllerCO2PressureSetPoint);
-	SAFE_DELETE(m_PeripheralVentilatoryControllerGain);
-	SAFE_DELETE(m_PleuralComplianceSensitivity);
+  SAFE_DELETE(m_PeripheralVentilatoryControllerGain);
+  SAFE_DELETE(m_PleuralComplianceSensitivity);
   SAFE_DELETE(m_PulmonaryVentilationRateMaximum);
-	SAFE_DELETE(m_VentilationTidalVolumeIntercept);
-	SAFE_DELETE(m_VentilatoryOcclusionPressure);
+  SAFE_DELETE(m_VentilationTidalVolumeIntercept);
+  SAFE_DELETE(m_VentilatoryOcclusionPressure);
 
   //Tissue
   m_TissueEnabled = CDM::enumOnOff::value(-1);
 }
-
 
 void BioGearsConfiguration::Initialize()
 {
@@ -341,120 +339,120 @@ void BioGearsConfiguration::Initialize()
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
   GetDynamicStabilizationCriteria().LoadFile("./config/DynamicStabilization.xml");
   //GetTimedStabilizationCriteria().LoadFile("./config/TimedStabilization.xml");
-  m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off);// Turn on to include stabilization tracking for debugging
-	
-	// Baroreceptors
-	GetResponseSlope().SetValue(12.0); //nu
-	GetHeartRateDistributedTimeDelay().SetValue(20.0, TimeUnit::s);
-	GetHeartElastanceDistributedTimeDelay().SetValue(20.0, TimeUnit::s);
-	GetSystemicResistanceDistributedTimeDelay().SetValue(30.0, TimeUnit::s);
-	GetVenousComplianceDistributedTimeDelay().SetValue(60.0, TimeUnit::s);
-	GetNormalizedHeartRateIntercept().SetValue(0.26); //Gamma Heart Rate
-	GetNormalizedHeartRateSympatheticSlope().SetValue(1.73); //Alpha Heart Rate
-	GetNormalizedHeartRateParasympatheticSlope().SetValue(0.25); //Beta Heart Rate
-	GetNormalizedHeartElastanceIntercept().SetValue(0.95); //Gamma Heart Elastance
-	GetNormalizedHeartElastanceSympatheticSlope().SetValue(0.1); //Alpha Elastance
-	GetNormalizedResistanceIntercept().SetValue(0.4); //Gamma Resistance
-	GetNormalizedResistanceSympatheticSlope().SetValue(1.2); //Alpha Resistance
-	GetNormalizedComplianceIntercept().SetValue(0.7); //Gamma Compliance
-	GetNormalizedComplianceParasympatheticSlope().SetValue(0.6); //Alpha Compliance
+  m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off); // Turn on to include stabilization tracking for debugging
 
-	//Blood Chemistry
-	GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL);// Guyton p419
-	GetMeanCorpuscularHemoglobin().SetValue(29, MassPerAmountUnit::pg_Per_ct);
-	GetStandardDiffusionDistance().SetValue(0.0006, LengthUnit::mm);
-	GetStandardOxygenDiffusionCoefficient().SetValue(0.00000000246, AreaPerTimePressureUnit::cm2_Per_min_mmHg);
+  // Baroreceptors
+  GetResponseSlope().SetValue(12.0); //nu
+  GetHeartRateDistributedTimeDelay().SetValue(20.0, TimeUnit::s);
+  GetHeartElastanceDistributedTimeDelay().SetValue(20.0, TimeUnit::s);
+  GetSystemicResistanceDistributedTimeDelay().SetValue(30.0, TimeUnit::s);
+  GetVenousComplianceDistributedTimeDelay().SetValue(60.0, TimeUnit::s);
+  GetNormalizedHeartRateIntercept().SetValue(0.26); //Gamma Heart Rate
+  GetNormalizedHeartRateSympatheticSlope().SetValue(1.73); //Alpha Heart Rate
+  GetNormalizedHeartRateParasympatheticSlope().SetValue(0.25); //Beta Heart Rate
+  GetNormalizedHeartElastanceIntercept().SetValue(0.95); //Gamma Heart Elastance
+  GetNormalizedHeartElastanceSympatheticSlope().SetValue(0.1); //Alpha Elastance
+  GetNormalizedResistanceIntercept().SetValue(0.4); //Gamma Resistance
+  GetNormalizedResistanceSympatheticSlope().SetValue(1.2); //Alpha Resistance
+  GetNormalizedComplianceIntercept().SetValue(0.7); //Gamma Compliance
+  GetNormalizedComplianceParasympatheticSlope().SetValue(0.6); //Alpha Compliance
 
-	// Cardiovascular
+  //Blood Chemistry
+  GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
+  GetMeanCorpuscularHemoglobin().SetValue(29, MassPerAmountUnit::pg_Per_ct);
+  GetStandardDiffusionDistance().SetValue(0.0006, LengthUnit::mm);
+  GetStandardOxygenDiffusionCoefficient().SetValue(0.00000000246, AreaPerTimePressureUnit::cm2_Per_min_mmHg);
+
+  // Cardiovascular
   GetLeftHeartElastanceMaximum().SetValue(2.49, FlowElastanceUnit::mmHg_Per_mL);
   GetLeftHeartElastanceMinimum().SetValue(0.049, FlowElastanceUnit::mmHg_Per_mL);
-	GetMinimumBloodVolumeFraction().SetValue(0.65); // \cite Guyton 11th ed p.279
+  GetMinimumBloodVolumeFraction().SetValue(0.65); // \cite Guyton 11th ed p.279
   GetRightHeartElastanceMaximum().SetValue(0.523, FlowElastanceUnit::mmHg_Per_mL);
   GetRightHeartElastanceMinimum().SetValue(0.0243, FlowElastanceUnit::mmHg_Per_mL);
-	GetStandardPulmonaryCapillaryCoverage().SetValue(0.70);
+  GetStandardPulmonaryCapillaryCoverage().SetValue(0.70);
 
-	// Circuits
-	GetCardiovascularOpenResistance().SetValue(100.0, FlowResistanceUnit::mmHg_s_Per_mL);
-	GetDefaultOpenElectricResistance().SetValue(1E100, ElectricResistanceUnit::Ohm);
-	GetDefaultOpenFlowResistance().SetValue(1E100, FlowResistanceUnit::Pa_s_Per_m3);
-	GetDefaultOpenHeatResistance().SetValue(1E100, HeatResistanceUnit::K_Per_W);
-	GetDefaultClosedElectricResistance().SetValue(1E-100, ElectricResistanceUnit::Ohm);
-	GetDefaultClosedFlowResistance().SetValue(1E-100, FlowResistanceUnit::Pa_s_Per_m3);
-	GetDefaultClosedHeatResistance().SetValue(1E-100, HeatResistanceUnit::K_Per_W);
-	GetMachineClosedResistance().SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
-	GetMachineOpenResistance().SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
-	GetRespiratoryClosedResistance().SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
-	GetRespiratoryOpenResistance().SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
+  // Circuits
+  GetCardiovascularOpenResistance().SetValue(100.0, FlowResistanceUnit::mmHg_s_Per_mL);
+  GetDefaultOpenElectricResistance().SetValue(1E100, ElectricResistanceUnit::Ohm);
+  GetDefaultOpenFlowResistance().SetValue(1E100, FlowResistanceUnit::Pa_s_Per_m3);
+  GetDefaultOpenHeatResistance().SetValue(1E100, HeatResistanceUnit::K_Per_W);
+  GetDefaultClosedElectricResistance().SetValue(1E-100, ElectricResistanceUnit::Ohm);
+  GetDefaultClosedFlowResistance().SetValue(1E-100, FlowResistanceUnit::Pa_s_Per_m3);
+  GetDefaultClosedHeatResistance().SetValue(1E-100, HeatResistanceUnit::K_Per_W);
+  GetMachineClosedResistance().SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
+  GetMachineOpenResistance().SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
+  GetRespiratoryClosedResistance().SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
+  GetRespiratoryOpenResistance().SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
 
-	// Constants
-	GetOxygenMetabolicConstant().SetValue(9.0);
-  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4);//http://physics.nist.gov/cuu/Constants/
+  // Constants
+  GetOxygenMetabolicConstant().SetValue(9.0);
+  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); //http://physics.nist.gov/cuu/Constants/
   GetUniversalGasConstant().SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); //http://physics.nist.gov/cuu/Constants/
 
-	// Drugs 
-	m_PDEnabled = CDM::enumOnOff::On;
+  // Drugs
+  m_PDEnabled = CDM::enumOnOff::On;
 
-	// Energy
-	GetBodySpecificHeat().SetValue(0.83, HeatCapacitancePerMassUnit::kcal_Per_K_kg);
-	GetCarbondDioxideProductionFromOxygenConsumptionConstant().SetValue(0.8);
-	GetCoreTemperatureLow().SetValue(36.8, TemperatureUnit::C);
-	GetCoreTemperatureHigh().SetValue(37.1, TemperatureUnit::C);
-	GetDeltaCoreTemperatureLow().SetValue(1.8, TemperatureUnit::C);
-	GetEnergyPerATP().SetValue(11.5, EnergyPerAmountUnit::kcal_Per_mol);  //Under standard conditions, it's 7.3 kcal/mol, but under intracellular conditions, it should be around 11.5
-	GetSweatHeatTransfer().SetValue(0.20833, HeatConductanceUnit::kcal_Per_K_s);
-	GetVaporizationEnergy().SetValue(2260.0, EnergyPerMassUnit::kJ_Per_kg);
-	GetVaporSpecificHeat().SetValue(1.890, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
+  // Energy
+  GetBodySpecificHeat().SetValue(0.83, HeatCapacitancePerMassUnit::kcal_Per_K_kg);
+  GetCarbondDioxideProductionFromOxygenConsumptionConstant().SetValue(0.8);
+  GetCoreTemperatureLow().SetValue(36.8, TemperatureUnit::C);
+  GetCoreTemperatureHigh().SetValue(37.1, TemperatureUnit::C);
+  GetDeltaCoreTemperatureLow().SetValue(1.8, TemperatureUnit::C);
+  GetEnergyPerATP().SetValue(11.5, EnergyPerAmountUnit::kcal_Per_mol); //Under standard conditions, it's 7.3 kcal/mol, but under intracellular conditions, it should be around 11.5
+  GetSweatHeatTransfer().SetValue(0.20833, HeatConductanceUnit::kcal_Per_K_s);
+  GetVaporizationEnergy().SetValue(2260.0, EnergyPerMassUnit::kJ_Per_kg);
+  GetVaporSpecificHeat().SetValue(1.890, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
 
-	// Environment
-	GetAirDensity().SetValue(1.225, MassPerVolumeUnit::kg_Per_m3);
-	GetAirSpecificHeat().SetValue(1.0035, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
-	GetMolarMassOfDryAir().SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
-	GetMolarMassOfWaterVapor().SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
+  // Environment
+  GetAirDensity().SetValue(1.225, MassPerVolumeUnit::kg_Per_m3);
+  GetAirSpecificHeat().SetValue(1.0035, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
+  GetMolarMassOfDryAir().SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
+  GetMolarMassOfWaterVapor().SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
   GetInitialEnvironmentalConditions().LoadFile("./environments/Standard.xml");
-	GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
+  GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
 
-	// Gastrointestinal
-	GetCalciumAbsorptionFraction().SetValue(0.25);// Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
-	GetCalciumDigestionRate().SetValue(2.7, MassPerTimeUnit::mg_Per_min);// Wasserman1992Intestinal
-	GetCarbohydrateAbsorptionFraction().SetValue(0.80);// Guyton p790
-	GetDefaultCarbohydrateDigestionRate().SetValue(0.5, MassPerTimeUnit::g_Per_min);// Guyton (About 4.25hr to digest the carbs in default meal)
-	GetDefaultFatDigestionRate().SetValue(0.055, MassPerTimeUnit::g_Per_min);// Guyton (About 8hr to digest the fat in the default meal)
-	GetDefaultProteinDigestionRate().SetValue(0.071, MassPerTimeUnit::g_Per_min);// Dangin2001Digestion (About 5hr to digest the protein in the default meal)
-	GetDefaultStomachContents().LoadFile("./nutrition/NoMacros.xml");// Refs are in the data spreadsheet
-	GetFatAbsorptionFraction().SetValue(0.248);// Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
-	// We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
-	GetProteinToUreaFraction().SetValue(0.405);// BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%. 
-	GetWaterDigestionRate().SetValue(0.417, VolumePerTimeUnit::mL_Per_s);// Peronnet2012Pharmacokinetic, Estimated from 300mL H20 being absorbed in 9.5-12m
-  
+  // Gastrointestinal
+  GetCalciumAbsorptionFraction().SetValue(0.25); // Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
+  GetCalciumDigestionRate().SetValue(2.7, MassPerTimeUnit::mg_Per_min); // Wasserman1992Intestinal
+  GetCarbohydrateAbsorptionFraction().SetValue(0.80); // Guyton p790
+  GetDefaultCarbohydrateDigestionRate().SetValue(0.5, MassPerTimeUnit::g_Per_min); // Guyton (About 4.25hr to digest the carbs in default meal)
+  GetDefaultFatDigestionRate().SetValue(0.055, MassPerTimeUnit::g_Per_min); // Guyton (About 8hr to digest the fat in the default meal)
+  GetDefaultProteinDigestionRate().SetValue(0.071, MassPerTimeUnit::g_Per_min); // Dangin2001Digestion (About 5hr to digest the protein in the default meal)
+  GetDefaultStomachContents().LoadFile("./nutrition/NoMacros.xml"); // Refs are in the data spreadsheet
+  GetFatAbsorptionFraction().SetValue(0.248); // Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
+  // We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
+  GetProteinToUreaFraction().SetValue(0.405); // BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%.
+  GetWaterDigestionRate().SetValue(0.417, VolumePerTimeUnit::mL_Per_s); // Peronnet2012Pharmacokinetic, Estimated from 300mL H20 being absorbed in 9.5-12m
+
   // Nervous
   GetPupilDiameterBaseline().SetValue(4, LengthUnit::mm);
 
-	// Renal
+  // Renal
   m_RenalEnabled = CDM::enumOnOff::On;
-	GetPlasmaSodiumConcentrationSetPoint().SetValue(3.23, MassPerVolumeUnit::mg_Per_mL);
-	GetPeritubularPotassiumConcentrationSetPoint().SetValue(0.0185, MassPerVolumeUnit::g_Per_dL);
-	GetLeftGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-	GetLeftGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
-	GetLeftTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-	GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
-	GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL);  //11.2
-	GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL);  //2.1 
-	GetRightGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-	GetRightGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
-	GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-	//GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_Per_mmHg_Per_m2);
-	GetRightTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
-	GetTargetSodiumDelivery().SetValue(0.201, MassPerTimeUnit::g_Per_min);
+  GetPlasmaSodiumConcentrationSetPoint().SetValue(3.23, MassPerVolumeUnit::mg_Per_mL);
+  GetPeritubularPotassiumConcentrationSetPoint().SetValue(0.0185, MassPerVolumeUnit::g_Per_dL);
+  GetLeftGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  GetLeftGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
+  GetLeftTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
+  GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL); //11.2
+  GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL); //2.1
+  GetRightGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  GetRightGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
+  GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  //GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_Per_mmHg_Per_m2);
+  GetRightTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
+  GetTargetSodiumDelivery().SetValue(0.201, MassPerTimeUnit::g_Per_min);
 
-	// Respiratory
+  // Respiratory
   GetCentralControllerCO2PressureSetPoint().SetValue(35.5, PressureUnit::mmHg);
-	GetCentralVentilatoryControllerGain().SetValue(1.44); //How much to add to the amplitude when the CO2 is off
+  GetCentralVentilatoryControllerGain().SetValue(1.44); //How much to add to the amplitude when the CO2 is off
   GetPeripheralControllerCO2PressureSetPoint().SetValue(35.5, PressureUnit::mmHg);
-	GetPeripheralVentilatoryControllerGain().SetValue(30.24); //How much to add to the amplitude when the CO2 is off
+  GetPeripheralVentilatoryControllerGain().SetValue(30.24); //How much to add to the amplitude when the CO2 is off
   GetPleuralComplianceSensitivity().SetValue(5.0, InverseVolumeUnit::Inverse_L);
   GetPulmonaryVentilationRateMaximum().SetValue(150.0, VolumePerTimeUnit::L_Per_min);
-	GetVentilationTidalVolumeIntercept().SetValue(0.3, VolumeUnit::L);
-	GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); //This increases the absolute max driver pressure
+  GetVentilationTidalVolumeIntercept().SetValue(0.3, VolumeUnit::L);
+  GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); //This increases the absolute max driver pressure
 
   // Tissue
   m_TissueEnabled = CDM::enumOnOff::On;
@@ -471,28 +469,27 @@ void BioGearsConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 
 void BioGearsConfiguration::Merge(const BioGearsConfiguration& from)
 {
-    m_Merge = true;
-    CDM_COPY((&from), this);
-    m_Merge = false;
+  m_Merge = true;
+  CDM_COPY((&from), this);
+  m_Merge = false;
 }
 
 bool BioGearsConfiguration::LoadFile(const std::string& file)
 {
-	// if file does not exist, we stick with defaults
+  // if file does not exist, we stick with defaults
 
-	CDM::BioGearsConfigurationData* pData;
-	std::unique_ptr<CDM::ObjectData> data;
+  CDM::BioGearsConfigurationData* pData;
+  std::unique_ptr<CDM::ObjectData> data;
 
-	data = Serializer::ReadFile(file,GetLogger());
-	pData = dynamic_cast<CDM::BioGearsConfigurationData*>(data.get());
-	if (pData == nullptr)
-	{
-		std::stringstream ss;
-		ss << "Configuration file : " << file << " not found, using default configuration" << std::endl;
-		Info(ss);
-		return true;
-	}
-	return Load(*pData);
+  data = Serializer::ReadFile(file, GetLogger());
+  pData = dynamic_cast<CDM::BioGearsConfigurationData*>(data.get());
+  if (pData == nullptr) {
+    std::stringstream ss;
+    ss << "Configuration file : " << file << " not found, using default configuration" << std::endl;
+    Info(ss);
+    return true;
+  }
+  return Load(*pData);
 }
 
 bool BioGearsConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& from)
@@ -506,204 +503,185 @@ bool BioGearsConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& f
 
 bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
 {
-	PhysiologyEngineConfiguration::Load(in);
+  PhysiologyEngineConfiguration::Load(in);
 
-	//Barorecptors
-	if (in.BaroreceptorConfiguration().present())
-	{
-		const CDM::BaroreceptorConfigurationData& config = in.BaroreceptorConfiguration().get();
-		if (config.ResponseSlope().present())
-			GetResponseSlope().Load(config.ResponseSlope().get());
-		if (config.HeartRateDistributedTimeDelay().present())
-			GetHeartRateDistributedTimeDelay().Load(config.HeartRateDistributedTimeDelay().get());
-		if (config.HeartElastanceDistributedTimeDelay().present())
-			GetHeartElastanceDistributedTimeDelay().Load(config.HeartElastanceDistributedTimeDelay().get());
-		if (config.SystemicResistanceDistributedTimeDelay().present())
-			GetSystemicResistanceDistributedTimeDelay().Load(config.SystemicResistanceDistributedTimeDelay().get());
-		if (config.VenousComplianceDistributedTimeDelay().present())
-			GetVenousComplianceDistributedTimeDelay().Load(config.VenousComplianceDistributedTimeDelay().get());
-		if (config.NormalizedHeartRateIntercept().present())
-			GetNormalizedHeartRateIntercept().Load(config.NormalizedHeartRateIntercept().get());
-		if (config.NormalizedHeartRateSympatheticSlope().present())
-			GetNormalizedHeartRateSympatheticSlope().Load(config.NormalizedHeartRateSympatheticSlope().get());
-		if (config.NormalizedHeartRateParasympatheticSlope().present())
-			GetNormalizedHeartRateParasympatheticSlope().Load(config.NormalizedHeartRateParasympatheticSlope().get());
-		if (config.NormalizedHeartElastanceIntercept().present())
-			GetNormalizedHeartElastanceIntercept().Load(config.NormalizedHeartElastanceIntercept().get());
-		if (config.NormalizedHeartElastanceSympatheticSlope().present())
-			GetNormalizedHeartElastanceSympatheticSlope().Load(config.NormalizedHeartElastanceSympatheticSlope().get());
-		if (config.NormalizedResistanceIntercept().present())
-			GetNormalizedResistanceIntercept().Load(config.NormalizedResistanceIntercept().get());
-		if (config.NormalizedResistanceSympatheticSlope().present())
-			GetNormalizedResistanceSympatheticSlope().Load(config.NormalizedResistanceSympatheticSlope().get());
-		if (config.NormalizedComplianceIntercept().present())
-			GetNormalizedComplianceIntercept().Load(config.NormalizedComplianceIntercept().get());
-		if (config.NormalizedComplianceParasympatheticSlope().present())
-			GetNormalizedComplianceParasympatheticSlope().Load(config.NormalizedComplianceParasympatheticSlope().get());
-	}
+  //Barorecptors
+  if (in.BaroreceptorConfiguration().present()) {
+    const CDM::BaroreceptorConfigurationData& config = in.BaroreceptorConfiguration().get();
+    if (config.ResponseSlope().present())
+      GetResponseSlope().Load(config.ResponseSlope().get());
+    if (config.HeartRateDistributedTimeDelay().present())
+      GetHeartRateDistributedTimeDelay().Load(config.HeartRateDistributedTimeDelay().get());
+    if (config.HeartElastanceDistributedTimeDelay().present())
+      GetHeartElastanceDistributedTimeDelay().Load(config.HeartElastanceDistributedTimeDelay().get());
+    if (config.SystemicResistanceDistributedTimeDelay().present())
+      GetSystemicResistanceDistributedTimeDelay().Load(config.SystemicResistanceDistributedTimeDelay().get());
+    if (config.VenousComplianceDistributedTimeDelay().present())
+      GetVenousComplianceDistributedTimeDelay().Load(config.VenousComplianceDistributedTimeDelay().get());
+    if (config.NormalizedHeartRateIntercept().present())
+      GetNormalizedHeartRateIntercept().Load(config.NormalizedHeartRateIntercept().get());
+    if (config.NormalizedHeartRateSympatheticSlope().present())
+      GetNormalizedHeartRateSympatheticSlope().Load(config.NormalizedHeartRateSympatheticSlope().get());
+    if (config.NormalizedHeartRateParasympatheticSlope().present())
+      GetNormalizedHeartRateParasympatheticSlope().Load(config.NormalizedHeartRateParasympatheticSlope().get());
+    if (config.NormalizedHeartElastanceIntercept().present())
+      GetNormalizedHeartElastanceIntercept().Load(config.NormalizedHeartElastanceIntercept().get());
+    if (config.NormalizedHeartElastanceSympatheticSlope().present())
+      GetNormalizedHeartElastanceSympatheticSlope().Load(config.NormalizedHeartElastanceSympatheticSlope().get());
+    if (config.NormalizedResistanceIntercept().present())
+      GetNormalizedResistanceIntercept().Load(config.NormalizedResistanceIntercept().get());
+    if (config.NormalizedResistanceSympatheticSlope().present())
+      GetNormalizedResistanceSympatheticSlope().Load(config.NormalizedResistanceSympatheticSlope().get());
+    if (config.NormalizedComplianceIntercept().present())
+      GetNormalizedComplianceIntercept().Load(config.NormalizedComplianceIntercept().get());
+    if (config.NormalizedComplianceParasympatheticSlope().present())
+      GetNormalizedComplianceParasympatheticSlope().Load(config.NormalizedComplianceParasympatheticSlope().get());
+  }
 
-	// Blood Chemistry
-	if (in.BloodChemistryConfiguration().present())
-	{
-		const CDM::BloodChemistryConfigurationData& config = in.BloodChemistryConfiguration().get();
-		if (config.MeanCorpuscularVolume().present())
-			GetMeanCorpuscularVolume().Load(config.MeanCorpuscularVolume().get());
-		if (config.MeanCorpuscularHemoglobin().present())
-			GetMeanCorpuscularHemoglobin().Load(config.MeanCorpuscularHemoglobin().get());
-		if (config.StandardDiffusionDistance().present())
-			GetStandardDiffusionDistance().Load(config.StandardDiffusionDistance().get());
-		if (config.StandardOxygenDiffusionCoefficient().present())
-			GetStandardOxygenDiffusionCoefficient().Load(config.StandardOxygenDiffusionCoefficient().get());
-	}
+  // Blood Chemistry
+  if (in.BloodChemistryConfiguration().present()) {
+    const CDM::BloodChemistryConfigurationData& config = in.BloodChemistryConfiguration().get();
+    if (config.MeanCorpuscularVolume().present())
+      GetMeanCorpuscularVolume().Load(config.MeanCorpuscularVolume().get());
+    if (config.MeanCorpuscularHemoglobin().present())
+      GetMeanCorpuscularHemoglobin().Load(config.MeanCorpuscularHemoglobin().get());
+    if (config.StandardDiffusionDistance().present())
+      GetStandardDiffusionDistance().Load(config.StandardDiffusionDistance().get());
+    if (config.StandardOxygenDiffusionCoefficient().present())
+      GetStandardOxygenDiffusionCoefficient().Load(config.StandardOxygenDiffusionCoefficient().get());
+  }
 
-	// Cardiovascular
-	if (in.CardiovascularConfiguration().present())
-	{
-		const CDM::CardiovascularConfigurationData& config = in.CardiovascularConfiguration().get();
+  // Cardiovascular
+  if (in.CardiovascularConfiguration().present()) {
+    const CDM::CardiovascularConfigurationData& config = in.CardiovascularConfiguration().get();
     if (config.LeftHeartElastanceMaximum().present())
       GetLeftHeartElastanceMaximum().Load(config.LeftHeartElastanceMaximum().get());
     if (config.LeftHeartElastanceMinimum().present())
       GetLeftHeartElastanceMinimum().Load(config.LeftHeartElastanceMinimum().get());
     if (config.MinimumBloodVolumeFraction().present())
-			GetMinimumBloodVolumeFraction().Load(config.MinimumBloodVolumeFraction().get());
+      GetMinimumBloodVolumeFraction().Load(config.MinimumBloodVolumeFraction().get());
     if (config.RightHeartElastanceMaximum().present())
       GetRightHeartElastanceMaximum().Load(config.RightHeartElastanceMaximum().get());
     if (config.RightHeartElastanceMinimum().present())
       GetRightHeartElastanceMinimum().Load(config.RightHeartElastanceMinimum().get());
     if (config.StandardPulmonaryCapillaryCoverage().present())
-			GetStandardPulmonaryCapillaryCoverage().Load(config.StandardPulmonaryCapillaryCoverage().get());
-	}
+      GetStandardPulmonaryCapillaryCoverage().Load(config.StandardPulmonaryCapillaryCoverage().get());
+  }
 
-	// Circuit
-	if (in.CircuitConfiguration().present())
-	{
-		const CDM::CircuitConfigurationData& config = in.CircuitConfiguration().get();
-		if (config.CardiovascularOpenResistance().present())
-			GetCardiovascularOpenResistance().Load(config.CardiovascularOpenResistance().get());
-		if (config.DefaultOpenElectricResistance().present())
-			GetDefaultOpenElectricResistance().Load(config.DefaultOpenElectricResistance().get());
-		if (config.DefaultOpenFlowResistance().present())
-			GetDefaultOpenFlowResistance().Load(config.DefaultOpenFlowResistance().get());
-		if (config.DefaultOpenHeatResistance().present())
-			GetDefaultOpenHeatResistance().Load(config.DefaultOpenHeatResistance().get());
-		if (config.DefaultClosedElectricResistance().present())
-			GetDefaultClosedElectricResistance().Load(config.DefaultClosedElectricResistance().get());
-		if (config.DefaultClosedFlowResistance().present())
-			GetDefaultClosedFlowResistance().Load(config.DefaultClosedFlowResistance().get());
-		if (config.DefaultClosedHeatResistance().present())
-			GetDefaultClosedHeatResistance().Load(config.DefaultClosedHeatResistance().get());
-		if (config.MachineClosedResistance().present())
-			GetMachineClosedResistance().Load(config.MachineClosedResistance().get());
-		if (config.MachineOpenResistance().present())
-			GetMachineOpenResistance().Load(config.MachineOpenResistance().get());
-		if (config.RespiratoryClosedResistance().present())
-			GetRespiratoryClosedResistance().Load(config.RespiratoryClosedResistance().get());
-		if (config.RespiratoryOpenResistance().present())
-			GetRespiratoryOpenResistance().Load(config.RespiratoryOpenResistance().get());
-	}
+  // Circuit
+  if (in.CircuitConfiguration().present()) {
+    const CDM::CircuitConfigurationData& config = in.CircuitConfiguration().get();
+    if (config.CardiovascularOpenResistance().present())
+      GetCardiovascularOpenResistance().Load(config.CardiovascularOpenResistance().get());
+    if (config.DefaultOpenElectricResistance().present())
+      GetDefaultOpenElectricResistance().Load(config.DefaultOpenElectricResistance().get());
+    if (config.DefaultOpenFlowResistance().present())
+      GetDefaultOpenFlowResistance().Load(config.DefaultOpenFlowResistance().get());
+    if (config.DefaultOpenHeatResistance().present())
+      GetDefaultOpenHeatResistance().Load(config.DefaultOpenHeatResistance().get());
+    if (config.DefaultClosedElectricResistance().present())
+      GetDefaultClosedElectricResistance().Load(config.DefaultClosedElectricResistance().get());
+    if (config.DefaultClosedFlowResistance().present())
+      GetDefaultClosedFlowResistance().Load(config.DefaultClosedFlowResistance().get());
+    if (config.DefaultClosedHeatResistance().present())
+      GetDefaultClosedHeatResistance().Load(config.DefaultClosedHeatResistance().get());
+    if (config.MachineClosedResistance().present())
+      GetMachineClosedResistance().Load(config.MachineClosedResistance().get());
+    if (config.MachineOpenResistance().present())
+      GetMachineOpenResistance().Load(config.MachineOpenResistance().get());
+    if (config.RespiratoryClosedResistance().present())
+      GetRespiratoryClosedResistance().Load(config.RespiratoryClosedResistance().get());
+    if (config.RespiratoryOpenResistance().present())
+      GetRespiratoryOpenResistance().Load(config.RespiratoryOpenResistance().get());
+  }
 
-	// Constants
-	if (in.ConstantsConfiguration().present())
-  {
+  // Constants
+  if (in.ConstantsConfiguration().present()) {
     const CDM::ConstantsConfigurationData& config = in.ConstantsConfiguration().get();
     if (config.OxygenMetabolicConstant().present())
-			GetOxygenMetabolicConstant().Load(config.OxygenMetabolicConstant().get());
-		if (config.StefanBoltzmann().present())
-			GetStefanBoltzmann().Load(config.StefanBoltzmann().get());
-		if (config.UniversalGasConstant().present())
-			GetUniversalGasConstant().Load(config.UniversalGasConstant().get());
-	}
+      GetOxygenMetabolicConstant().Load(config.OxygenMetabolicConstant().get());
+    if (config.StefanBoltzmann().present())
+      GetStefanBoltzmann().Load(config.StefanBoltzmann().get());
+    if (config.UniversalGasConstant().present())
+      GetUniversalGasConstant().Load(config.UniversalGasConstant().get());
+  }
 
-	// Drugs
-	if (in.DrugsConfiguration().present())
-	{
-		const CDM::DrugsConfigurationData& config = in.DrugsConfiguration().get();
-    if(config.PDModel().present())
-		  UsePDModel(config.PDModel().get());
-	}
-	
-	// Energy
-	if (in.EnergyConfiguration().present())
-	{
-		const CDM::EnergyConfigurationData& config = in.EnergyConfiguration().get();
-		if (config.BodySpecificHeat().present())
-			GetBodySpecificHeat().Load(config.BodySpecificHeat().get());
-		if (config.CoreTemperatureLow().present())
-			GetCoreTemperatureLow().Load(config.CoreTemperatureLow().get());
-		if (config.CoreTemperatureHigh().present())
-			GetCoreTemperatureHigh().Load(config.CoreTemperatureHigh().get());
-		if (config.DeltaCoreTemperatureLow().present())
-			GetDeltaCoreTemperatureLow().Load(config.DeltaCoreTemperatureLow().get());
-		if (config.EnergyPerATP().present())
-			GetEnergyPerATP().Load(config.EnergyPerATP().get());
-		if (config.SweatHeatTransfer().present())
-			GetSweatHeatTransfer().Load(config.SweatHeatTransfer().get());
-		if (config.VaporizationEnergy().present())
-			GetVaporizationEnergy().Load(config.VaporizationEnergy().get());
-		if (config.VaporSpecificHeat().present())
-			GetVaporSpecificHeat().Load(config.VaporSpecificHeat().get());
-	}
+  // Drugs
+  if (in.DrugsConfiguration().present()) {
+    const CDM::DrugsConfigurationData& config = in.DrugsConfiguration().get();
+    if (config.PDModel().present())
+      UsePDModel(config.PDModel().get());
+  }
 
-	// Environment
-	if (in.EnvironmentConfiguration().present())
-	{
-		const CDM::EnvironmentConfigurationData& config = in.EnvironmentConfiguration().get();
-		if (config.AirDensity().present())
-			GetAirDensity().Load(config.AirDensity().get());
-		if (config.AirSpecificHeat().present())
-			GetAirSpecificHeat().Load(config.AirSpecificHeat().get());
-		if (config.MolarMassOfDryAir().present())
-			GetMolarMassOfDryAir().Load(config.MolarMassOfDryAir().get());
-		if (config.MolarMassOfWaterVapor().present())
-			GetMolarMassOfWaterVapor().Load(config.MolarMassOfWaterVapor().get());
-    if (config.InitialEnvironmentalConditionsFile().present())
-    {
-      if (!GetInitialEnvironmentalConditions().LoadFile(config.InitialEnvironmentalConditionsFile().get()))
-      {
+  // Energy
+  if (in.EnergyConfiguration().present()) {
+    const CDM::EnergyConfigurationData& config = in.EnergyConfiguration().get();
+    if (config.BodySpecificHeat().present())
+      GetBodySpecificHeat().Load(config.BodySpecificHeat().get());
+    if (config.CoreTemperatureLow().present())
+      GetCoreTemperatureLow().Load(config.CoreTemperatureLow().get());
+    if (config.CoreTemperatureHigh().present())
+      GetCoreTemperatureHigh().Load(config.CoreTemperatureHigh().get());
+    if (config.DeltaCoreTemperatureLow().present())
+      GetDeltaCoreTemperatureLow().Load(config.DeltaCoreTemperatureLow().get());
+    if (config.EnergyPerATP().present())
+      GetEnergyPerATP().Load(config.EnergyPerATP().get());
+    if (config.SweatHeatTransfer().present())
+      GetSweatHeatTransfer().Load(config.SweatHeatTransfer().get());
+    if (config.VaporizationEnergy().present())
+      GetVaporizationEnergy().Load(config.VaporizationEnergy().get());
+    if (config.VaporSpecificHeat().present())
+      GetVaporSpecificHeat().Load(config.VaporSpecificHeat().get());
+  }
+
+  // Environment
+  if (in.EnvironmentConfiguration().present()) {
+    const CDM::EnvironmentConfigurationData& config = in.EnvironmentConfiguration().get();
+    if (config.AirDensity().present())
+      GetAirDensity().Load(config.AirDensity().get());
+    if (config.AirSpecificHeat().present())
+      GetAirSpecificHeat().Load(config.AirSpecificHeat().get());
+    if (config.MolarMassOfDryAir().present())
+      GetMolarMassOfDryAir().Load(config.MolarMassOfDryAir().get());
+    if (config.MolarMassOfWaterVapor().present())
+      GetMolarMassOfWaterVapor().Load(config.MolarMassOfWaterVapor().get());
+    if (config.InitialEnvironmentalConditionsFile().present()) {
+      if (!GetInitialEnvironmentalConditions().LoadFile(config.InitialEnvironmentalConditionsFile().get())) {
         Error("Unable to load InitialEnvironmentalConditions file");
         return false;
       }
-    }
-    else if (config.InitialEnvironmentalConditions().present())
-    {
-      if (!GetInitialEnvironmentalConditions().Load(config.InitialEnvironmentalConditions().get()))
-      {
+    } else if (config.InitialEnvironmentalConditions().present()) {
+      if (!GetInitialEnvironmentalConditions().Load(config.InitialEnvironmentalConditions().get())) {
         Error("Unable to load InitialEnvironmentalConditions");
         return false;
       }
     }
-		if (config.WaterDensity().present())
-			GetWaterDensity().Load(config.WaterDensity().get());
-	}
+    if (config.WaterDensity().present())
+      GetWaterDensity().Load(config.WaterDensity().get());
+  }
 
-	// Gastrointestinal
-	if (in.GastrointestinalConfiguration().present())
-	{
-		const CDM::GastrointestinalConfigurationData& config = in.GastrointestinalConfiguration().get();
+  // Gastrointestinal
+  if (in.GastrointestinalConfiguration().present()) {
+    const CDM::GastrointestinalConfigurationData& config = in.GastrointestinalConfiguration().get();
     if (config.CalciumAbsorptionFraction().present())
       GetCalciumAbsorptionFraction().Load(config.CalciumAbsorptionFraction().get());
     if (config.CalciumDigestionRate().present())
-			GetCalciumDigestionRate().Load(config.CalciumDigestionRate().get());
-		if (config.CarbohydrateAbsorptionFraction().present())
-			GetCarbohydrateAbsorptionFraction().Load(config.CarbohydrateAbsorptionFraction().get());
-		if (config.DefaultCarbohydrateDigestionRate().present())
-			GetDefaultCarbohydrateDigestionRate().Load(config.DefaultCarbohydrateDigestionRate().get());
-		if (config.DefaultFatDigestionRate().present())
-			GetDefaultFatDigestionRate().Load(config.DefaultFatDigestionRate().get());
-		if (config.DefaultProteinDigestionRate().present())
-			GetDefaultProteinDigestionRate().Load(config.DefaultProteinDigestionRate().get());
-    if (config.DefaultStomachContentsFile().present())
-    {
-      if(!GetDefaultStomachContents().LoadFile(config.DefaultStomachContentsFile().get()))
-      {
+      GetCalciumDigestionRate().Load(config.CalciumDigestionRate().get());
+    if (config.CarbohydrateAbsorptionFraction().present())
+      GetCarbohydrateAbsorptionFraction().Load(config.CarbohydrateAbsorptionFraction().get());
+    if (config.DefaultCarbohydrateDigestionRate().present())
+      GetDefaultCarbohydrateDigestionRate().Load(config.DefaultCarbohydrateDigestionRate().get());
+    if (config.DefaultFatDigestionRate().present())
+      GetDefaultFatDigestionRate().Load(config.DefaultFatDigestionRate().get());
+    if (config.DefaultProteinDigestionRate().present())
+      GetDefaultProteinDigestionRate().Load(config.DefaultProteinDigestionRate().get());
+    if (config.DefaultStomachContentsFile().present()) {
+      if (!GetDefaultStomachContents().LoadFile(config.DefaultStomachContentsFile().get())) {
         Error("Unable to load Standard Stomach Contents file");
         return false;
       }
-    }
-    else if (config.DefaultStomachContents().present())
-    {
-      if(!GetDefaultStomachContents().Load(config.DefaultStomachContents().get()))
-      {
+    } else if (config.DefaultStomachContents().present()) {
+      if (!GetDefaultStomachContents().Load(config.DefaultStomachContents().get())) {
         Error("Unable to load Standard Stomach Contents");
         return false;
       }
@@ -717,106 +695,101 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
       if (m_DefaultStomachContents->HasProtein() && !m_DefaultStomachContents->HasProteinDigestionRate())
         m_DefaultStomachContents->GetProteinDigestionRate().Set(GetDefaultProteinDigestionRate());
     }
-		if (config.FatAbsorptionFraction().present())
-			GetFatAbsorptionFraction().Load(config.FatAbsorptionFraction().get());
-		if (config.ProteinToUreaFraction().present())
-			GetProteinToUreaFraction().Load(config.ProteinToUreaFraction().get());
-		if (config.WaterDigestionRate().present())
-			GetWaterDigestionRate().Load(config.WaterDigestionRate().get());
-	}
+    if (config.FatAbsorptionFraction().present())
+      GetFatAbsorptionFraction().Load(config.FatAbsorptionFraction().get());
+    if (config.ProteinToUreaFraction().present())
+      GetProteinToUreaFraction().Load(config.ProteinToUreaFraction().get());
+    if (config.WaterDigestionRate().present())
+      GetWaterDigestionRate().Load(config.WaterDigestionRate().get());
+  }
 
   // Nervous
-  if (in.NervousConfiguration().present())
-  {
+  if (in.NervousConfiguration().present()) {
     const CDM::NervousConfigurationData& config = in.NervousConfiguration().get();
     if (config.PupilDiameterBaseline().present())
       GetPupilDiameterBaseline().Load(config.PupilDiameterBaseline().get());
   }
 
-	// Renal
-	if (in.RenalConfiguration().present())
-	{
-		const CDM::RenalConfigurationData& config = in.RenalConfiguration().get();
+  // Renal
+  if (in.RenalConfiguration().present()) {
+    const CDM::RenalConfigurationData& config = in.RenalConfiguration().get();
 
     if (config.EnableRenal().present())
-      EnableRenal(config.EnableRenal().get());    
+      EnableRenal(config.EnableRenal().get());
 
-		if (config.PlasmaSodiumConcentrationSetPoint().present())
-			GetPlasmaSodiumConcentrationSetPoint().Load(config.PlasmaSodiumConcentrationSetPoint().get());
+    if (config.PlasmaSodiumConcentrationSetPoint().present())
+      GetPlasmaSodiumConcentrationSetPoint().Load(config.PlasmaSodiumConcentrationSetPoint().get());
 
-		if (config.LeftGlomerularFluidPermeabilityBaseline().present())
-			GetLeftGlomerularFluidPermeabilityBaseline().Load(config.LeftGlomerularFluidPermeabilityBaseline().get());
-		if (config.LeftGlomerularFilteringSurfaceAreaBaseline().present())
-			GetLeftGlomerularFilteringSurfaceAreaBaseline().Load(config.LeftGlomerularFilteringSurfaceAreaBaseline().get());
-		if (config.LeftTubularReabsorptionFluidPermeabilityBaseline().present())
-			GetLeftTubularReabsorptionFluidPermeabilityBaseline().Load(config.LeftTubularReabsorptionFluidPermeabilityBaseline().get());
-		if (config.LeftTubularReabsorptionFilteringSurfaceAreaBaseline().present())
-			GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().Load(config.LeftTubularReabsorptionFilteringSurfaceAreaBaseline().get());
-		
-		if (config.MaximumAfferentResistance().present())
-			GetMaximumAfferentResistance().Load(config.MaximumAfferentResistance().get());
-		if (config.MinimumAfferentResistance().present())
-			GetMinimumAfferentResistance().Load(config.MinimumAfferentResistance().get());
-			
-		if (config.RightGlomerularFluidPermeabilityBaseline().present())
-			GetRightGlomerularFluidPermeabilityBaseline().Load(config.RightGlomerularFluidPermeabilityBaseline().get());
-		if (config.RightGlomerularFilteringSurfaceAreaBaseline().present())
-			GetRightGlomerularFilteringSurfaceAreaBaseline().Load(config.RightGlomerularFilteringSurfaceAreaBaseline().get());
-		if (config.RightTubularReabsorptionFluidPermeabilityBaseline().present())
-			GetRightTubularReabsorptionFluidPermeabilityBaseline().Load(config.RightTubularReabsorptionFluidPermeabilityBaseline().get());
-		if (config.RightTubularReabsorptionFilteringSurfaceAreaBaseline().present())
-			GetRightTubularReabsorptionFilteringSurfaceAreaBaseline().Load(config.RightTubularReabsorptionFilteringSurfaceAreaBaseline().get());
-		if (config.TargetSodiumDelivery().present())
-			GetTargetSodiumDelivery().Load(config.TargetSodiumDelivery().get());
+    if (config.LeftGlomerularFluidPermeabilityBaseline().present())
+      GetLeftGlomerularFluidPermeabilityBaseline().Load(config.LeftGlomerularFluidPermeabilityBaseline().get());
+    if (config.LeftGlomerularFilteringSurfaceAreaBaseline().present())
+      GetLeftGlomerularFilteringSurfaceAreaBaseline().Load(config.LeftGlomerularFilteringSurfaceAreaBaseline().get());
+    if (config.LeftTubularReabsorptionFluidPermeabilityBaseline().present())
+      GetLeftTubularReabsorptionFluidPermeabilityBaseline().Load(config.LeftTubularReabsorptionFluidPermeabilityBaseline().get());
+    if (config.LeftTubularReabsorptionFilteringSurfaceAreaBaseline().present())
+      GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().Load(config.LeftTubularReabsorptionFilteringSurfaceAreaBaseline().get());
 
-	}
-	
-	// Respiratory
-	if (in.RespiratoryConfiguration().present())
-	{
-		const CDM::RespiratoryConfigurationData& config = in.RespiratoryConfiguration().get();
+    if (config.MaximumAfferentResistance().present())
+      GetMaximumAfferentResistance().Load(config.MaximumAfferentResistance().get());
+    if (config.MinimumAfferentResistance().present())
+      GetMinimumAfferentResistance().Load(config.MinimumAfferentResistance().get());
+
+    if (config.RightGlomerularFluidPermeabilityBaseline().present())
+      GetRightGlomerularFluidPermeabilityBaseline().Load(config.RightGlomerularFluidPermeabilityBaseline().get());
+    if (config.RightGlomerularFilteringSurfaceAreaBaseline().present())
+      GetRightGlomerularFilteringSurfaceAreaBaseline().Load(config.RightGlomerularFilteringSurfaceAreaBaseline().get());
+    if (config.RightTubularReabsorptionFluidPermeabilityBaseline().present())
+      GetRightTubularReabsorptionFluidPermeabilityBaseline().Load(config.RightTubularReabsorptionFluidPermeabilityBaseline().get());
+    if (config.RightTubularReabsorptionFilteringSurfaceAreaBaseline().present())
+      GetRightTubularReabsorptionFilteringSurfaceAreaBaseline().Load(config.RightTubularReabsorptionFilteringSurfaceAreaBaseline().get());
+    if (config.TargetSodiumDelivery().present())
+      GetTargetSodiumDelivery().Load(config.TargetSodiumDelivery().get());
+  }
+
+  // Respiratory
+  if (in.RespiratoryConfiguration().present()) {
+    const CDM::RespiratoryConfigurationData& config = in.RespiratoryConfiguration().get();
     if (config.CentralControllerCO2PressureSetPoint().present())
       GetCentralControllerCO2PressureSetPoint().Load(config.CentralControllerCO2PressureSetPoint().get());
-		if (config.CentralVentilatoryControllerGain().present())
-			GetCentralVentilatoryControllerGain().Load(config.CentralVentilatoryControllerGain().get());
+    if (config.CentralVentilatoryControllerGain().present())
+      GetCentralVentilatoryControllerGain().Load(config.CentralVentilatoryControllerGain().get());
     if (config.PeripheralControllerCO2PressureSetPoint().present())
       GetPeripheralControllerCO2PressureSetPoint().Load(config.PeripheralControllerCO2PressureSetPoint().get());
-		if (config.PeripheralVentilatoryControllerGain().present())
-			GetPeripheralVentilatoryControllerGain().Load(config.PeripheralVentilatoryControllerGain().get());
-		if (config.PleuralComplianceSensitivity().present())
-			GetPleuralComplianceSensitivity().Load(config.PleuralComplianceSensitivity().get());
+    if (config.PeripheralVentilatoryControllerGain().present())
+      GetPeripheralVentilatoryControllerGain().Load(config.PeripheralVentilatoryControllerGain().get());
+    if (config.PleuralComplianceSensitivity().present())
+      GetPleuralComplianceSensitivity().Load(config.PleuralComplianceSensitivity().get());
     if (config.PulmonaryVentilationRateMaximum().present())
       GetPulmonaryVentilationRateMaximum().Load(config.PulmonaryVentilationRateMaximum().get());
-		if (config.VentilationTidalVolumeIntercept().present())
-			GetVentilationTidalVolumeIntercept().Load(config.VentilationTidalVolumeIntercept().get());
-		if (config.VentilatoryOcclusionPressure().present())
-			GetVentilatoryOcclusionPressure().Load(config.VentilatoryOcclusionPressure().get());
-	}
+    if (config.VentilationTidalVolumeIntercept().present())
+      GetVentilationTidalVolumeIntercept().Load(config.VentilationTidalVolumeIntercept().get());
+    if (config.VentilatoryOcclusionPressure().present())
+      GetVentilatoryOcclusionPressure().Load(config.VentilatoryOcclusionPressure().get());
+  }
 
   // Tissue
-  if (in.TissueConfiguration().present())
-  {
+  if (in.TissueConfiguration().present()) {
     const CDM::TissueConfigurationData& config = in.TissueConfiguration().get();
 
     if (config.EnableTissue().present())
       EnableTissue(config.EnableTissue().get());
   }
 
-	return true;
+  return true;
 }
 
 CDM::BioGearsConfigurationData* BioGearsConfiguration::Unload() const
 {
-	CDM::BioGearsConfigurationData* data(new CDM::BioGearsConfigurationData());
-	Unload(*data);
-	return data;
+  CDM::BioGearsConfigurationData* data(new CDM::BioGearsConfigurationData());
+  Unload(*data);
+  return data;
 }
 
 void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
 {
   PhysiologyEngineConfiguration::Unload(data);
 
-	// Barorecptor
+  // Barorecptor
   CDM::BaroreceptorConfigurationData* baro(new CDM::BaroreceptorConfigurationData());
   if (HasResponseSlope())
     baro->ResponseSlope(std::unique_ptr<CDM::ScalarData>(m_ResponseSlope->Unload()));
@@ -845,116 +818,116 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   if (HasNormalizedComplianceIntercept())
     baro->NormalizedComplianceIntercept(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceIntercept->Unload()));
   if (HasNormalizedComplianceParasympatheticSlope())
-    baro->NormalizedComplianceParasympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceParasympatheticSlope->Unload()));  
+    baro->NormalizedComplianceParasympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceParasympatheticSlope->Unload()));
   data.BaroreceptorConfiguration(std::unique_ptr<CDM::BaroreceptorConfigurationData>(baro));
 
-	// Blood Chemistry
+  // Blood Chemistry
   CDM::BloodChemistryConfigurationData* bc(new CDM::BloodChemistryConfigurationData());
-	if (HasMeanCorpuscularHemoglobin())
-		bc->MeanCorpuscularHemoglobin(std::unique_ptr<CDM::ScalarMassPerAmountData>(m_MeanCorpuscularHemoglobin->Unload()));
-	if (HasMeanCorpuscularVolume())
+  if (HasMeanCorpuscularHemoglobin())
+    bc->MeanCorpuscularHemoglobin(std::unique_ptr<CDM::ScalarMassPerAmountData>(m_MeanCorpuscularHemoglobin->Unload()));
+  if (HasMeanCorpuscularVolume())
     bc->MeanCorpuscularVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_MeanCorpuscularVolume->Unload()));
-	if (HasStandardDiffusionDistance())
+  if (HasStandardDiffusionDistance())
     bc->StandardDiffusionDistance(std::unique_ptr<CDM::ScalarLengthData>(m_StandardDiffusionDistance->Unload()));
-	if (HasStandardOxygenDiffusionCoefficient())
+  if (HasStandardOxygenDiffusionCoefficient())
     bc->StandardOxygenDiffusionCoefficient(std::unique_ptr<CDM::ScalarAreaPerTimePressureData>(m_StandardOxygenDiffusionCoefficient->Unload()));
   data.BloodChemistryConfiguration(std::unique_ptr<CDM::BloodChemistryConfigurationData>(bc));
 
-	// Cardiovascular
+  // Cardiovascular
   CDM::CardiovascularConfigurationData* cv(new CDM::CardiovascularConfigurationData());
   if (m_LeftHeartElastanceMaximum != nullptr)
     cv->LeftHeartElastanceMaximum(std::unique_ptr<CDM::ScalarFlowElastanceData>(m_LeftHeartElastanceMaximum->Unload()));
   if (m_LeftHeartElastanceMinimum != nullptr)
     cv->LeftHeartElastanceMinimum(std::unique_ptr<CDM::ScalarFlowElastanceData>(m_LeftHeartElastanceMinimum->Unload()));
   if (HasMinimumBloodVolumeFraction())
-		cv->MinimumBloodVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_MinimumBloodVolumeFraction->Unload()));
+    cv->MinimumBloodVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_MinimumBloodVolumeFraction->Unload()));
   if (m_RightHeartElastanceMaximum != nullptr)
     cv->RightHeartElastanceMaximum(std::unique_ptr<CDM::ScalarFlowElastanceData>(m_RightHeartElastanceMaximum->Unload()));
   if (m_RightHeartElastanceMinimum != nullptr)
     cv->RightHeartElastanceMinimum(std::unique_ptr<CDM::ScalarFlowElastanceData>(m_RightHeartElastanceMinimum->Unload()));
   if (HasStandardPulmonaryCapillaryCoverage())
-		cv->StandardPulmonaryCapillaryCoverage(std::unique_ptr<CDM::ScalarData>(m_StandardPulmonaryCapillaryCoverage->Unload()));
+    cv->StandardPulmonaryCapillaryCoverage(std::unique_ptr<CDM::ScalarData>(m_StandardPulmonaryCapillaryCoverage->Unload()));
   data.CardiovascularConfiguration(std::unique_ptr<CDM::CardiovascularConfigurationData>(cv));
 
-	// Circuits
+  // Circuits
   CDM::CircuitConfigurationData* circuit(new CDM::CircuitConfigurationData());
-	if (HasCardiovascularOpenResistance())
-		circuit->CardiovascularOpenResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_CardiovascularOpenResistance->Unload()));
-	if (HasDefaultClosedElectricResistance())
-		circuit->DefaultClosedElectricResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_DefaultClosedElectricResistance->Unload()));
-	if (HasDefaultClosedFlowResistance())
-		circuit->DefaultClosedFlowResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_DefaultClosedFlowResistance->Unload()));
-	if (HasDefaultClosedHeatResistance())
-		circuit->DefaultClosedHeatResistance(std::unique_ptr<CDM::ScalarHeatResistanceData>(m_DefaultClosedHeatResistance->Unload()));
-	if (HasDefaultOpenElectricResistance())
-		circuit->DefaultOpenElectricResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_DefaultOpenElectricResistance->Unload()));
-	if (HasDefaultOpenFlowResistance())
-		circuit->DefaultOpenFlowResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_DefaultOpenFlowResistance->Unload()));
-	if (HasDefaultOpenHeatResistance())
-		circuit->DefaultOpenHeatResistance(std::unique_ptr<CDM::ScalarHeatResistanceData>(m_DefaultOpenHeatResistance->Unload()));
-	if (HasMachineClosedResistance())
-		circuit->MachineClosedResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MachineClosedResistance->Unload()));
-	if (HasMachineOpenResistance())
-		circuit->MachineOpenResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MachineOpenResistance->Unload()));
-	if (HasRespiratoryClosedResistance())
-		circuit->RespiratoryClosedResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_RespiratoryClosedResistance->Unload()));
-	if (HasRespiratoryOpenResistance())
-		circuit->RespiratoryOpenResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_RespiratoryOpenResistance->Unload()));
+  if (HasCardiovascularOpenResistance())
+    circuit->CardiovascularOpenResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_CardiovascularOpenResistance->Unload()));
+  if (HasDefaultClosedElectricResistance())
+    circuit->DefaultClosedElectricResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_DefaultClosedElectricResistance->Unload()));
+  if (HasDefaultClosedFlowResistance())
+    circuit->DefaultClosedFlowResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_DefaultClosedFlowResistance->Unload()));
+  if (HasDefaultClosedHeatResistance())
+    circuit->DefaultClosedHeatResistance(std::unique_ptr<CDM::ScalarHeatResistanceData>(m_DefaultClosedHeatResistance->Unload()));
+  if (HasDefaultOpenElectricResistance())
+    circuit->DefaultOpenElectricResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_DefaultOpenElectricResistance->Unload()));
+  if (HasDefaultOpenFlowResistance())
+    circuit->DefaultOpenFlowResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_DefaultOpenFlowResistance->Unload()));
+  if (HasDefaultOpenHeatResistance())
+    circuit->DefaultOpenHeatResistance(std::unique_ptr<CDM::ScalarHeatResistanceData>(m_DefaultOpenHeatResistance->Unload()));
+  if (HasMachineClosedResistance())
+    circuit->MachineClosedResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MachineClosedResistance->Unload()));
+  if (HasMachineOpenResistance())
+    circuit->MachineOpenResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MachineOpenResistance->Unload()));
+  if (HasRespiratoryClosedResistance())
+    circuit->RespiratoryClosedResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_RespiratoryClosedResistance->Unload()));
+  if (HasRespiratoryOpenResistance())
+    circuit->RespiratoryOpenResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_RespiratoryOpenResistance->Unload()));
   data.CircuitConfiguration(std::unique_ptr<CDM::CircuitConfigurationData>(circuit));
 
-	// Constants
+  // Constants
   CDM::ConstantsConfigurationData* consts(new CDM::ConstantsConfigurationData());
   if (HasOxygenMetabolicConstant())
     consts->OxygenMetabolicConstant(std::unique_ptr<CDM::ScalarData>(m_OxygenMetabolicConstant->Unload()));
-	if (HasStefanBoltzmann())
+  if (HasStefanBoltzmann())
     consts->StefanBoltzmann(std::unique_ptr<CDM::ScalarPowerPerAreaTemperatureToTheFourthData>(m_StefanBoltzmann->Unload()));
-	if (HasUniversalGasConstant())
+  if (HasUniversalGasConstant())
     consts->UniversalGasConstant(std::unique_ptr<CDM::ScalarHeatCapacitancePerAmountData>(m_UniversalGasConstant->Unload()));
   data.ConstantsConfiguration(std::unique_ptr<CDM::ConstantsConfigurationData>(consts));
 
   // Drugs
   CDM::DrugsConfigurationData* drugs(new CDM::DrugsConfigurationData());
-  if(HasUsePDModel())
+  if (HasUsePDModel())
     drugs->PDModel(m_PDEnabled);
   data.DrugsConfiguration(std::unique_ptr<CDM::DrugsConfigurationData>(drugs));
 
-	// Energy
+  // Energy
   CDM::EnergyConfigurationData* energy(new CDM::EnergyConfigurationData());
-	if (HasBodySpecificHeat())
-		energy->BodySpecificHeat(std::unique_ptr<CDM::ScalarHeatCapacitancePerMassData>(m_BodySpecificHeat->Unload()));
-	if (HasCoreTemperatureLow())
-		energy->CoreTemperatureLow(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureLow->Unload()));
-	if (HasCoreTemperatureHigh())
-		energy->CoreTemperatureHigh(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureHigh->Unload()));
-	if (HasDeltaCoreTemperatureLow())
-		energy->DeltaCoreTemperatureLow(std::unique_ptr<CDM::ScalarTemperatureData>(m_DeltaCoreTemperatureLow->Unload()));
-	if (HasEnergyPerATP())
-		energy->EnergyPerATP(std::unique_ptr<CDM::ScalarEnergyPerAmountData>(m_EnergyPerATP->Unload()));
-	if (HasSweatHeatTransfer())
-		energy->SweatHeatTransfer(std::unique_ptr<CDM::ScalarHeatConductanceData>(m_SweatHeatTransfer->Unload()));
-	if (HasVaporSpecificHeat())
-		energy->VaporSpecificHeat(std::unique_ptr<CDM::ScalarHeatCapacitancePerMassData>(m_VaporSpecificHeat->Unload()));
-	if (HasVaporizationEnergy())
-		energy->VaporizationEnergy(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_VaporizationEnergy->Unload()));
+  if (HasBodySpecificHeat())
+    energy->BodySpecificHeat(std::unique_ptr<CDM::ScalarHeatCapacitancePerMassData>(m_BodySpecificHeat->Unload()));
+  if (HasCoreTemperatureLow())
+    energy->CoreTemperatureLow(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureLow->Unload()));
+  if (HasCoreTemperatureHigh())
+    energy->CoreTemperatureHigh(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureHigh->Unload()));
+  if (HasDeltaCoreTemperatureLow())
+    energy->DeltaCoreTemperatureLow(std::unique_ptr<CDM::ScalarTemperatureData>(m_DeltaCoreTemperatureLow->Unload()));
+  if (HasEnergyPerATP())
+    energy->EnergyPerATP(std::unique_ptr<CDM::ScalarEnergyPerAmountData>(m_EnergyPerATP->Unload()));
+  if (HasSweatHeatTransfer())
+    energy->SweatHeatTransfer(std::unique_ptr<CDM::ScalarHeatConductanceData>(m_SweatHeatTransfer->Unload()));
+  if (HasVaporSpecificHeat())
+    energy->VaporSpecificHeat(std::unique_ptr<CDM::ScalarHeatCapacitancePerMassData>(m_VaporSpecificHeat->Unload()));
+  if (HasVaporizationEnergy())
+    energy->VaporizationEnergy(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_VaporizationEnergy->Unload()));
   data.EnergyConfiguration(std::unique_ptr<CDM::EnergyConfigurationData>(energy));
 
-	// Environment
+  // Environment
   CDM::EnvironmentConfigurationData* env(new CDM::EnvironmentConfigurationData());
-	if (HasAirDensity())
-		env->AirDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_AirDensity->Unload()));
-	if (HasAirSpecificHeat())
+  if (HasAirDensity())
+    env->AirDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_AirDensity->Unload()));
+  if (HasAirSpecificHeat())
     env->AirSpecificHeat(std::unique_ptr<CDM::ScalarHeatCapacitancePerMassData>(m_AirSpecificHeat->Unload()));
-	if (HasMolarMassOfDryAir())
+  if (HasMolarMassOfDryAir())
     env->MolarMassOfDryAir(std::unique_ptr<CDM::ScalarMassPerAmountData>(m_MolarMassOfDryAir->Unload()));
-	if (HasMolarMassOfWaterVapor())
+  if (HasMolarMassOfWaterVapor())
     env->MolarMassOfWaterVapor(std::unique_ptr<CDM::ScalarMassPerAmountData>(m_MolarMassOfWaterVapor->Unload()));
   if (HasInitialEnvironmentalConditions())
     env->InitialEnvironmentalConditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_InitialEnvironmentalConditions->Unload()));
-	if (HasWaterDensity())
+  if (HasWaterDensity())
     env->WaterDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_WaterDensity->Unload()));
   data.EnvironmentConfiguration(std::unique_ptr<CDM::EnvironmentConfigurationData>(env));
 
-	// Gastrointestinal
+  // Gastrointestinal
   CDM::GastrointestinalConfigurationData* gi(new CDM::GastrointestinalConfigurationData());
   if (HasCalciumAbsorptionFraction())
     gi->CalciumAbsorptionFraction(std::unique_ptr<CDM::ScalarFractionData>(m_CalciumAbsorptionFraction->Unload()));
@@ -963,20 +936,20 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   if (HasCarbohydrateAbsorptionFraction())
     gi->CarbohydrateAbsorptionFraction(std::unique_ptr<CDM::ScalarFractionData>(m_CarbohydrateAbsorptionFraction->Unload()));
   if (HasDefaultCarbohydrateDigestionRate())
-		gi->DefaultCarbohydrateDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultCarbohydrateDigestionRate->Unload()));
-	if (HasDefaultFatDigestionRate())
-		gi->DefaultFatDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultFatDigestionRate->Unload()));
-	if (HasDefaultProteinDigestionRate())
-		gi->DefaultProteinDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultProteinDigestionRate->Unload()));
-	if (HasDefaultStomachContents())
+    gi->DefaultCarbohydrateDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultCarbohydrateDigestionRate->Unload()));
+  if (HasDefaultFatDigestionRate())
+    gi->DefaultFatDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultFatDigestionRate->Unload()));
+  if (HasDefaultProteinDigestionRate())
+    gi->DefaultProteinDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultProteinDigestionRate->Unload()));
+  if (HasDefaultStomachContents())
     gi->DefaultStomachContents(std::unique_ptr<CDM::NutritionData>(m_DefaultStomachContents->Unload()));
   if (HasFatAbsorptionFraction())
     gi->FatAbsorptionFraction(std::unique_ptr<CDM::ScalarFractionData>(m_FatAbsorptionFraction->Unload()));
   if (HasProteinToUreaFraction())
     gi->ProteinToUreaFraction(std::unique_ptr<CDM::ScalarFractionData>(m_ProteinToUreaFraction->Unload()));
   if (HasWaterDigestionRate())
-		gi->WaterDigestionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_WaterDigestionRate->Unload()));
-	data.GastrointestinalConfiguration(std::unique_ptr<CDM::GastrointestinalConfigurationData>(gi));
+    gi->WaterDigestionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_WaterDigestionRate->Unload()));
+  data.GastrointestinalConfiguration(std::unique_ptr<CDM::GastrointestinalConfigurationData>(gi));
 
   // Nervous
   CDM::NervousConfigurationData* n(new CDM::NervousConfigurationData());
@@ -984,7 +957,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
     n->PupilDiameterBaseline(std::unique_ptr<CDM::ScalarLengthData>(m_PupilDiameterBaseline->Unload()));
   data.NervousConfiguration(std::unique_ptr<CDM::NervousConfigurationData>(n));
 
-	// Renal
+  // Renal
   CDM::RenalConfigurationData* renal(new CDM::RenalConfigurationData());
   if (HasEnableRenal())
     renal->EnableRenal(m_RenalEnabled);
@@ -999,11 +972,11 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   if (HasLeftTubularReabsorptionFluidPermeabilityBaseline())
     renal->LeftTubularReabsorptionFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarData>(m_LeftTubularReabsorptionFluidPermeabilityBaseline->Unload()));
 
-	if (HasMaximumAfferentResistance())
-		renal->MaximumAfferentResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MaximumAfferentResistance->Unload()));
-	if (HasMinimumAfferentResistance())
-		renal->MinimumAfferentResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MinimumAfferentResistance->Unload()));
-	
+  if (HasMaximumAfferentResistance())
+    renal->MaximumAfferentResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MaximumAfferentResistance->Unload()));
+  if (HasMinimumAfferentResistance())
+    renal->MinimumAfferentResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MinimumAfferentResistance->Unload()));
+
   if (HasRightGlomerularFilteringSurfaceAreaBaseline())
     renal->RightGlomerularFilteringSurfaceAreaBaseline(std::unique_ptr<CDM::ScalarAreaData>(m_RightGlomerularFilteringSurfaceAreaBaseline->Unload()));
   if (HasRightGlomerularFluidPermeabilityBaseline())
@@ -1014,24 +987,24 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
     renal->RightTubularReabsorptionFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarData>(m_RightTubularReabsorptionFluidPermeabilityBaseline->Unload()));
   data.RenalConfiguration(std::unique_ptr<CDM::RenalConfigurationData>(renal));
 
-	// Respiratory
+  // Respiratory
   CDM::RespiratoryConfigurationData* resp(new CDM::RespiratoryConfigurationData());
   if (m_CentralControllerCO2PressureSetPoint != nullptr)
     resp->CentralControllerCO2PressureSetPoint(std::unique_ptr<CDM::ScalarPressureData>(m_CentralControllerCO2PressureSetPoint->Unload()));
   if (HasCentralVentilatoryControllerGain())
-		resp->CentralVentilatoryControllerGain(std::unique_ptr<CDM::ScalarData>(m_CentralVentilatoryControllerGain->Unload()));
+    resp->CentralVentilatoryControllerGain(std::unique_ptr<CDM::ScalarData>(m_CentralVentilatoryControllerGain->Unload()));
   if (m_PeripheralControllerCO2PressureSetPoint != nullptr)
     resp->PeripheralControllerCO2PressureSetPoint(std::unique_ptr<CDM::ScalarPressureData>(m_PeripheralControllerCO2PressureSetPoint->Unload()));
   if (HasPeripheralVentilatoryControllerGain())
-		resp->PeripheralVentilatoryControllerGain(std::unique_ptr<CDM::ScalarData>(m_PeripheralVentilatoryControllerGain->Unload()));
-	if (HasPleuralComplianceSensitivity())
-		resp->PleuralComplianceSensitivity(std::unique_ptr<CDM::ScalarInverseVolumeData>(m_PleuralComplianceSensitivity->Unload()));
+    resp->PeripheralVentilatoryControllerGain(std::unique_ptr<CDM::ScalarData>(m_PeripheralVentilatoryControllerGain->Unload()));
+  if (HasPleuralComplianceSensitivity())
+    resp->PleuralComplianceSensitivity(std::unique_ptr<CDM::ScalarInverseVolumeData>(m_PleuralComplianceSensitivity->Unload()));
   if (m_PulmonaryVentilationRateMaximum != nullptr)
     resp->PulmonaryVentilationRateMaximum(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_PulmonaryVentilationRateMaximum->Unload()));
   if (HasVentilationTidalVolumeIntercept())
-		resp->VentilationTidalVolumeIntercept(std::unique_ptr<CDM::ScalarVolumeData>(m_VentilationTidalVolumeIntercept->Unload()));
-	if (HasVentilatoryOcclusionPressure())
-		resp->VentilatoryOcclusionPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VentilatoryOcclusionPressure->Unload()));
+    resp->VentilationTidalVolumeIntercept(std::unique_ptr<CDM::ScalarVolumeData>(m_VentilationTidalVolumeIntercept->Unload()));
+  if (HasVentilatoryOcclusionPressure())
+    resp->VentilatoryOcclusionPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VentilatoryOcclusionPressure->Unload()));
   data.RespiratoryConfiguration(std::unique_ptr<CDM::RespiratoryConfigurationData>(resp));
 
   // Tissue
@@ -1046,13 +1019,13 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
 ////////////////////
 bool BioGearsConfiguration::HasResponseSlope() const
 {
-	return m_ResponseSlope == nullptr ? false : m_ResponseSlope->IsValid();
+  return m_ResponseSlope == nullptr ? false : m_ResponseSlope->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetResponseSlope()
 {
-	if (m_ResponseSlope == nullptr)
-		m_ResponseSlope = new SEScalar();
-	return *m_ResponseSlope;
+  if (m_ResponseSlope == nullptr)
+    m_ResponseSlope = new SEScalar();
+  return *m_ResponseSlope;
 }
 double BioGearsConfiguration::GetResponseSlope() const
 {
@@ -1063,30 +1036,30 @@ double BioGearsConfiguration::GetResponseSlope() const
 
 bool BioGearsConfiguration::HasHeartRateDistributedTimeDelay() const
 {
-	return m_HeartRateDistributedTimeDelay == nullptr ? false : m_HeartRateDistributedTimeDelay->IsValid();
+  return m_HeartRateDistributedTimeDelay == nullptr ? false : m_HeartRateDistributedTimeDelay->IsValid();
 }
 SEScalarTime& BioGearsConfiguration::GetHeartRateDistributedTimeDelay()
 {
-	if (m_HeartRateDistributedTimeDelay == nullptr)
-		m_HeartRateDistributedTimeDelay = new SEScalarTime();
-	return *m_HeartRateDistributedTimeDelay;
+  if (m_HeartRateDistributedTimeDelay == nullptr)
+    m_HeartRateDistributedTimeDelay = new SEScalarTime();
+  return *m_HeartRateDistributedTimeDelay;
 }
 double BioGearsConfiguration::GetHeartRateDistributedTimeDelay(const TimeUnit& unit) const
 {
   if (m_HeartRateDistributedTimeDelay == nullptr)
-    return SEScalar::dNaN();    
+    return SEScalar::dNaN();
   return m_HeartRateDistributedTimeDelay->GetValue(unit);
 }
 
 bool BioGearsConfiguration::HasHeartElastanceDistributedTimeDelay() const
 {
-	return m_HeartElastanceDistributedTimeDelay == nullptr ? false : m_HeartElastanceDistributedTimeDelay->IsValid();
+  return m_HeartElastanceDistributedTimeDelay == nullptr ? false : m_HeartElastanceDistributedTimeDelay->IsValid();
 }
 SEScalarTime& BioGearsConfiguration::GetHeartElastanceDistributedTimeDelay()
 {
-	if (m_HeartElastanceDistributedTimeDelay == nullptr)
-		m_HeartElastanceDistributedTimeDelay = new SEScalarTime();
-	return *m_HeartElastanceDistributedTimeDelay;
+  if (m_HeartElastanceDistributedTimeDelay == nullptr)
+    m_HeartElastanceDistributedTimeDelay = new SEScalarTime();
+  return *m_HeartElastanceDistributedTimeDelay;
 }
 double BioGearsConfiguration::GetHeartElastanceDistributedTimeDelay(const TimeUnit& unit) const
 {
@@ -1097,13 +1070,13 @@ double BioGearsConfiguration::GetHeartElastanceDistributedTimeDelay(const TimeUn
 
 bool BioGearsConfiguration::HasSystemicResistanceDistributedTimeDelay() const
 {
-	return m_SystemicResistanceDistributedTimeDelay == nullptr ? false : m_SystemicResistanceDistributedTimeDelay->IsValid();
+  return m_SystemicResistanceDistributedTimeDelay == nullptr ? false : m_SystemicResistanceDistributedTimeDelay->IsValid();
 }
 SEScalarTime& BioGearsConfiguration::GetSystemicResistanceDistributedTimeDelay()
 {
-	if (m_SystemicResistanceDistributedTimeDelay == nullptr)
-		m_SystemicResistanceDistributedTimeDelay = new SEScalarTime();
-	return *m_SystemicResistanceDistributedTimeDelay;
+  if (m_SystemicResistanceDistributedTimeDelay == nullptr)
+    m_SystemicResistanceDistributedTimeDelay = new SEScalarTime();
+  return *m_SystemicResistanceDistributedTimeDelay;
 }
 double BioGearsConfiguration::GetSystemicResistanceDistributedTimeDelay(const TimeUnit& unit) const
 {
@@ -1112,16 +1085,15 @@ double BioGearsConfiguration::GetSystemicResistanceDistributedTimeDelay(const Ti
   return m_SystemicResistanceDistributedTimeDelay->GetValue(unit);
 }
 
-
 bool BioGearsConfiguration::HasVenousComplianceDistributedTimeDelay() const
 {
-	return m_VenousComplianceDistributedTimeDelay == nullptr ? false : m_VenousComplianceDistributedTimeDelay->IsValid();
+  return m_VenousComplianceDistributedTimeDelay == nullptr ? false : m_VenousComplianceDistributedTimeDelay->IsValid();
 }
 SEScalarTime& BioGearsConfiguration::GetVenousComplianceDistributedTimeDelay()
 {
-	if (m_VenousComplianceDistributedTimeDelay == nullptr)
-		m_VenousComplianceDistributedTimeDelay = new SEScalarTime();
-	return *m_VenousComplianceDistributedTimeDelay;
+  if (m_VenousComplianceDistributedTimeDelay == nullptr)
+    m_VenousComplianceDistributedTimeDelay = new SEScalarTime();
+  return *m_VenousComplianceDistributedTimeDelay;
 }
 double BioGearsConfiguration::GetVenousComplianceDistributedTimeDelay(const TimeUnit& unit) const
 {
@@ -1132,13 +1104,13 @@ double BioGearsConfiguration::GetVenousComplianceDistributedTimeDelay(const Time
 
 bool BioGearsConfiguration::HasNormalizedHeartRateIntercept() const
 {
-	return m_NormalizedHeartRateIntercept == nullptr ? false : m_NormalizedHeartRateIntercept->IsValid();
+  return m_NormalizedHeartRateIntercept == nullptr ? false : m_NormalizedHeartRateIntercept->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedHeartRateIntercept()
 {
-	if (m_NormalizedHeartRateIntercept == nullptr)
-		m_NormalizedHeartRateIntercept = new SEScalar();
-	return *m_NormalizedHeartRateIntercept;
+  if (m_NormalizedHeartRateIntercept == nullptr)
+    m_NormalizedHeartRateIntercept = new SEScalar();
+  return *m_NormalizedHeartRateIntercept;
 }
 double BioGearsConfiguration::GetNormalizedHeartRateIntercept() const
 {
@@ -1149,13 +1121,13 @@ double BioGearsConfiguration::GetNormalizedHeartRateIntercept() const
 
 bool BioGearsConfiguration::HasNormalizedHeartRateSympatheticSlope() const
 {
-	return m_NormalizedHeartRateSympatheticSlope == nullptr ? false : m_NormalizedHeartRateSympatheticSlope->IsValid();
+  return m_NormalizedHeartRateSympatheticSlope == nullptr ? false : m_NormalizedHeartRateSympatheticSlope->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedHeartRateSympatheticSlope()
 {
-	if (m_NormalizedHeartRateSympatheticSlope == nullptr)
-		m_NormalizedHeartRateSympatheticSlope = new SEScalar();
-	return *m_NormalizedHeartRateSympatheticSlope;
+  if (m_NormalizedHeartRateSympatheticSlope == nullptr)
+    m_NormalizedHeartRateSympatheticSlope = new SEScalar();
+  return *m_NormalizedHeartRateSympatheticSlope;
 }
 double BioGearsConfiguration::GetNormalizedHeartRateSympatheticSlope() const
 {
@@ -1166,13 +1138,13 @@ double BioGearsConfiguration::GetNormalizedHeartRateSympatheticSlope() const
 
 bool BioGearsConfiguration::HasNormalizedHeartRateParasympatheticSlope() const
 {
-	return m_NormalizedHeartRateParasympatheticSlope == nullptr ? false : m_NormalizedHeartRateParasympatheticSlope->IsValid();
+  return m_NormalizedHeartRateParasympatheticSlope == nullptr ? false : m_NormalizedHeartRateParasympatheticSlope->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedHeartRateParasympatheticSlope()
 {
-	if (m_NormalizedHeartRateParasympatheticSlope == nullptr)
-		m_NormalizedHeartRateParasympatheticSlope = new SEScalar();
-	return *m_NormalizedHeartRateParasympatheticSlope;
+  if (m_NormalizedHeartRateParasympatheticSlope == nullptr)
+    m_NormalizedHeartRateParasympatheticSlope = new SEScalar();
+  return *m_NormalizedHeartRateParasympatheticSlope;
 }
 double BioGearsConfiguration::GetNormalizedHeartRateParasympatheticSlope() const
 {
@@ -1183,13 +1155,13 @@ double BioGearsConfiguration::GetNormalizedHeartRateParasympatheticSlope() const
 
 bool BioGearsConfiguration::HasNormalizedHeartElastanceIntercept() const
 {
-	return m_NormalizedHeartElastanceIntercept == nullptr ? false : m_NormalizedHeartElastanceIntercept->IsValid();
+  return m_NormalizedHeartElastanceIntercept == nullptr ? false : m_NormalizedHeartElastanceIntercept->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedHeartElastanceIntercept()
 {
-	if (m_NormalizedHeartElastanceIntercept == nullptr)
-		m_NormalizedHeartElastanceIntercept = new SEScalar();
-	return *m_NormalizedHeartElastanceIntercept;
+  if (m_NormalizedHeartElastanceIntercept == nullptr)
+    m_NormalizedHeartElastanceIntercept = new SEScalar();
+  return *m_NormalizedHeartElastanceIntercept;
 }
 double BioGearsConfiguration::GetNormalizedHeartElastanceIntercept() const
 {
@@ -1200,13 +1172,13 @@ double BioGearsConfiguration::GetNormalizedHeartElastanceIntercept() const
 
 bool BioGearsConfiguration::HasNormalizedHeartElastanceSympatheticSlope() const
 {
-	return m_NormalizedHeartElastanceSympatheticSlope == nullptr ? false : m_NormalizedHeartElastanceSympatheticSlope->IsValid();
+  return m_NormalizedHeartElastanceSympatheticSlope == nullptr ? false : m_NormalizedHeartElastanceSympatheticSlope->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedHeartElastanceSympatheticSlope()
 {
-	if (m_NormalizedHeartElastanceSympatheticSlope == nullptr)
-		m_NormalizedHeartElastanceSympatheticSlope = new SEScalar();
-	return *m_NormalizedHeartElastanceSympatheticSlope;
+  if (m_NormalizedHeartElastanceSympatheticSlope == nullptr)
+    m_NormalizedHeartElastanceSympatheticSlope = new SEScalar();
+  return *m_NormalizedHeartElastanceSympatheticSlope;
 }
 double BioGearsConfiguration::GetNormalizedHeartElastanceSympatheticSlope() const
 {
@@ -1217,13 +1189,13 @@ double BioGearsConfiguration::GetNormalizedHeartElastanceSympatheticSlope() cons
 
 bool BioGearsConfiguration::HasNormalizedResistanceIntercept() const
 {
-	return m_NormalizedResistanceIntercept == nullptr ? false : m_NormalizedResistanceIntercept->IsValid();
+  return m_NormalizedResistanceIntercept == nullptr ? false : m_NormalizedResistanceIntercept->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedResistanceIntercept()
 {
-	if (m_NormalizedResistanceIntercept == nullptr)
-		m_NormalizedResistanceIntercept = new SEScalar();
-	return *m_NormalizedResistanceIntercept;
+  if (m_NormalizedResistanceIntercept == nullptr)
+    m_NormalizedResistanceIntercept = new SEScalar();
+  return *m_NormalizedResistanceIntercept;
 }
 double BioGearsConfiguration::GetNormalizedResistanceIntercept() const
 {
@@ -1234,13 +1206,13 @@ double BioGearsConfiguration::GetNormalizedResistanceIntercept() const
 
 bool BioGearsConfiguration::HasNormalizedResistanceSympatheticSlope() const
 {
-	return m_NormalizedResistanceSympatheticSlope == nullptr ? false : m_NormalizedResistanceSympatheticSlope->IsValid();
+  return m_NormalizedResistanceSympatheticSlope == nullptr ? false : m_NormalizedResistanceSympatheticSlope->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedResistanceSympatheticSlope()
 {
-	if (m_NormalizedResistanceSympatheticSlope == nullptr)
-		m_NormalizedResistanceSympatheticSlope = new SEScalar();
-	return *m_NormalizedResistanceSympatheticSlope;
+  if (m_NormalizedResistanceSympatheticSlope == nullptr)
+    m_NormalizedResistanceSympatheticSlope = new SEScalar();
+  return *m_NormalizedResistanceSympatheticSlope;
 }
 double BioGearsConfiguration::GetNormalizedResistanceSympatheticSlope() const
 {
@@ -1251,13 +1223,13 @@ double BioGearsConfiguration::GetNormalizedResistanceSympatheticSlope() const
 
 bool BioGearsConfiguration::HasNormalizedComplianceIntercept() const
 {
-	return m_NormalizedComplianceIntercept == nullptr ? false : m_NormalizedComplianceIntercept->IsValid();
+  return m_NormalizedComplianceIntercept == nullptr ? false : m_NormalizedComplianceIntercept->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedComplianceIntercept()
 {
-	if (m_NormalizedComplianceIntercept == nullptr)
-		m_NormalizedComplianceIntercept = new SEScalar();
-	return *m_NormalizedComplianceIntercept;
+  if (m_NormalizedComplianceIntercept == nullptr)
+    m_NormalizedComplianceIntercept = new SEScalar();
+  return *m_NormalizedComplianceIntercept;
 }
 double BioGearsConfiguration::GetNormalizedComplianceIntercept() const
 {
@@ -1268,13 +1240,13 @@ double BioGearsConfiguration::GetNormalizedComplianceIntercept() const
 
 bool BioGearsConfiguration::HasNormalizedComplianceParasympatheticSlope() const
 {
-	return m_NormalizedComplianceParasympatheticSlope == nullptr ? false : m_NormalizedComplianceParasympatheticSlope->IsValid();
+  return m_NormalizedComplianceParasympatheticSlope == nullptr ? false : m_NormalizedComplianceParasympatheticSlope->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetNormalizedComplianceParasympatheticSlope()
 {
-	if (m_NormalizedComplianceParasympatheticSlope == nullptr)
-		m_NormalizedComplianceParasympatheticSlope = new SEScalar();
-	return *m_NormalizedComplianceParasympatheticSlope;
+  if (m_NormalizedComplianceParasympatheticSlope == nullptr)
+    m_NormalizedComplianceParasympatheticSlope = new SEScalar();
+  return *m_NormalizedComplianceParasympatheticSlope;
 }
 double BioGearsConfiguration::GetNormalizedComplianceParasympatheticSlope() const
 {
@@ -1289,13 +1261,13 @@ double BioGearsConfiguration::GetNormalizedComplianceParasympatheticSlope() cons
 
 bool BioGearsConfiguration::HasMeanCorpuscularHemoglobin() const
 {
-	return m_MeanCorpuscularHemoglobin == nullptr ? false : m_MeanCorpuscularHemoglobin->IsValid();
+  return m_MeanCorpuscularHemoglobin == nullptr ? false : m_MeanCorpuscularHemoglobin->IsValid();
 }
 SEScalarMassPerAmount& BioGearsConfiguration::GetMeanCorpuscularHemoglobin()
 {
-	if (m_MeanCorpuscularHemoglobin == nullptr)
-		m_MeanCorpuscularHemoglobin = new SEScalarMassPerAmount();
-	return *m_MeanCorpuscularHemoglobin;
+  if (m_MeanCorpuscularHemoglobin == nullptr)
+    m_MeanCorpuscularHemoglobin = new SEScalarMassPerAmount();
+  return *m_MeanCorpuscularHemoglobin;
 }
 double BioGearsConfiguration::GetMeanCorpuscularHemoglobin(const MassPerAmountUnit& unit) const
 {
@@ -1306,13 +1278,13 @@ double BioGearsConfiguration::GetMeanCorpuscularHemoglobin(const MassPerAmountUn
 
 bool BioGearsConfiguration::HasMeanCorpuscularVolume() const
 {
-	return m_MeanCorpuscularVolume == nullptr ? false : m_MeanCorpuscularVolume->IsValid();
+  return m_MeanCorpuscularVolume == nullptr ? false : m_MeanCorpuscularVolume->IsValid();
 }
 SEScalarVolume& BioGearsConfiguration::GetMeanCorpuscularVolume()
 {
-	if (m_MeanCorpuscularVolume == nullptr)
-		m_MeanCorpuscularVolume = new SEScalarVolume();
-	return *m_MeanCorpuscularVolume;
+  if (m_MeanCorpuscularVolume == nullptr)
+    m_MeanCorpuscularVolume = new SEScalarVolume();
+  return *m_MeanCorpuscularVolume;
 }
 double BioGearsConfiguration::GetMeanCorpuscularVolume(const VolumeUnit& unit) const
 {
@@ -1323,13 +1295,13 @@ double BioGearsConfiguration::GetMeanCorpuscularVolume(const VolumeUnit& unit) c
 
 bool BioGearsConfiguration::HasStandardDiffusionDistance() const
 {
-	return m_StandardDiffusionDistance == nullptr ? false : m_StandardDiffusionDistance->IsValid();
+  return m_StandardDiffusionDistance == nullptr ? false : m_StandardDiffusionDistance->IsValid();
 }
 SEScalarLength& BioGearsConfiguration::GetStandardDiffusionDistance()
 {
-	if (m_StandardDiffusionDistance == nullptr)
-		m_StandardDiffusionDistance = new SEScalarLength();
-	return *m_StandardDiffusionDistance;
+  if (m_StandardDiffusionDistance == nullptr)
+    m_StandardDiffusionDistance = new SEScalarLength();
+  return *m_StandardDiffusionDistance;
 }
 double BioGearsConfiguration::GetStandardDiffusionDistance(const LengthUnit& unit) const
 {
@@ -1340,13 +1312,13 @@ double BioGearsConfiguration::GetStandardDiffusionDistance(const LengthUnit& uni
 
 bool BioGearsConfiguration::HasStandardOxygenDiffusionCoefficient() const
 {
-	return m_StandardOxygenDiffusionCoefficient == nullptr ? false : m_StandardOxygenDiffusionCoefficient->IsValid();
+  return m_StandardOxygenDiffusionCoefficient == nullptr ? false : m_StandardOxygenDiffusionCoefficient->IsValid();
 }
 SEScalarAreaPerTimePressure& BioGearsConfiguration::GetStandardOxygenDiffusionCoefficient()
 {
-	if (m_StandardOxygenDiffusionCoefficient == nullptr)
-		m_StandardOxygenDiffusionCoefficient = new SEScalarAreaPerTimePressure();
-	return *m_StandardOxygenDiffusionCoefficient;
+  if (m_StandardOxygenDiffusionCoefficient == nullptr)
+    m_StandardOxygenDiffusionCoefficient = new SEScalarAreaPerTimePressure();
+  return *m_StandardOxygenDiffusionCoefficient;
 }
 double BioGearsConfiguration::GetStandardOxygenDiffusionCoefficient(const AreaPerTimePressureUnit& unit) const
 {
@@ -1394,13 +1366,13 @@ double BioGearsConfiguration::GetLeftHeartElastanceMinimum(const FlowElastanceUn
 
 bool BioGearsConfiguration::HasMinimumBloodVolumeFraction() const
 {
-	return m_MinimumBloodVolumeFraction == nullptr ? false : m_MinimumBloodVolumeFraction->IsValid();
+  return m_MinimumBloodVolumeFraction == nullptr ? false : m_MinimumBloodVolumeFraction->IsValid();
 }
 SEScalarFraction& BioGearsConfiguration::GetMinimumBloodVolumeFraction()
 {
-	if (m_MinimumBloodVolumeFraction == nullptr)
-		m_MinimumBloodVolumeFraction = new SEScalarFraction();
-	return *m_MinimumBloodVolumeFraction;
+  if (m_MinimumBloodVolumeFraction == nullptr)
+    m_MinimumBloodVolumeFraction = new SEScalarFraction();
+  return *m_MinimumBloodVolumeFraction;
 }
 double BioGearsConfiguration::GetMinimumBloodVolumeFraction() const
 {
@@ -1445,13 +1417,13 @@ double BioGearsConfiguration::GetRightHeartElastanceMinimum(const FlowElastanceU
 
 bool BioGearsConfiguration::HasStandardPulmonaryCapillaryCoverage() const
 {
-	return m_StandardPulmonaryCapillaryCoverage == nullptr ? false : m_StandardPulmonaryCapillaryCoverage->IsValid();
+  return m_StandardPulmonaryCapillaryCoverage == nullptr ? false : m_StandardPulmonaryCapillaryCoverage->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetStandardPulmonaryCapillaryCoverage()
 {
-	if (m_StandardPulmonaryCapillaryCoverage == nullptr)
-		m_StandardPulmonaryCapillaryCoverage = new SEScalar();
-	return *m_StandardPulmonaryCapillaryCoverage;
+  if (m_StandardPulmonaryCapillaryCoverage == nullptr)
+    m_StandardPulmonaryCapillaryCoverage = new SEScalar();
+  return *m_StandardPulmonaryCapillaryCoverage;
 }
 double BioGearsConfiguration::GetStandardPulmonaryCapillaryCoverage() const
 {
@@ -1466,13 +1438,13 @@ double BioGearsConfiguration::GetStandardPulmonaryCapillaryCoverage() const
 
 bool BioGearsConfiguration::HasCardiovascularOpenResistance() const
 {
-	return m_CardiovascularOpenResistance == nullptr ? false : m_CardiovascularOpenResistance->IsValid();
+  return m_CardiovascularOpenResistance == nullptr ? false : m_CardiovascularOpenResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetCardiovascularOpenResistance()
 {
-	if (m_CardiovascularOpenResistance == nullptr)
-		m_CardiovascularOpenResistance = new SEScalarFlowResistance();
-	return *m_CardiovascularOpenResistance;
+  if (m_CardiovascularOpenResistance == nullptr)
+    m_CardiovascularOpenResistance = new SEScalarFlowResistance();
+  return *m_CardiovascularOpenResistance;
 }
 double BioGearsConfiguration::GetCardiovascularOpenResistance(const FlowResistanceUnit& unit) const
 {
@@ -1483,13 +1455,13 @@ double BioGearsConfiguration::GetCardiovascularOpenResistance(const FlowResistan
 
 bool BioGearsConfiguration::HasDefaultClosedElectricResistance() const
 {
-	return m_DefaultClosedElectricResistance == nullptr ? false : m_DefaultClosedElectricResistance->IsValid();
+  return m_DefaultClosedElectricResistance == nullptr ? false : m_DefaultClosedElectricResistance->IsValid();
 }
 SEScalarElectricResistance& BioGearsConfiguration::GetDefaultClosedElectricResistance()
 {
-	if (m_DefaultClosedElectricResistance == nullptr)
-		m_DefaultClosedElectricResistance = new SEScalarElectricResistance();
-	return *m_DefaultClosedElectricResistance;
+  if (m_DefaultClosedElectricResistance == nullptr)
+    m_DefaultClosedElectricResistance = new SEScalarElectricResistance();
+  return *m_DefaultClosedElectricResistance;
 }
 double BioGearsConfiguration::GetDefaultClosedElectricResistance(const ElectricResistanceUnit& unit) const
 {
@@ -1500,13 +1472,13 @@ double BioGearsConfiguration::GetDefaultClosedElectricResistance(const ElectricR
 
 bool BioGearsConfiguration::HasDefaultClosedFlowResistance() const
 {
-	return m_DefaultClosedFlowResistance == nullptr ? false : m_DefaultClosedFlowResistance->IsValid();
+  return m_DefaultClosedFlowResistance == nullptr ? false : m_DefaultClosedFlowResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetDefaultClosedFlowResistance()
 {
-	if (m_DefaultClosedFlowResistance == nullptr)
-		m_DefaultClosedFlowResistance = new SEScalarFlowResistance();
-	return *m_DefaultClosedFlowResistance;
+  if (m_DefaultClosedFlowResistance == nullptr)
+    m_DefaultClosedFlowResistance = new SEScalarFlowResistance();
+  return *m_DefaultClosedFlowResistance;
 }
 double BioGearsConfiguration::GetDefaultClosedFlowResistance(const FlowResistanceUnit& unit) const
 {
@@ -1517,13 +1489,13 @@ double BioGearsConfiguration::GetDefaultClosedFlowResistance(const FlowResistanc
 
 bool BioGearsConfiguration::HasDefaultClosedHeatResistance() const
 {
-	return m_DefaultClosedHeatResistance == nullptr ? false : m_DefaultClosedHeatResistance->IsValid();
+  return m_DefaultClosedHeatResistance == nullptr ? false : m_DefaultClosedHeatResistance->IsValid();
 }
 SEScalarHeatResistance& BioGearsConfiguration::GetDefaultClosedHeatResistance()
 {
-	if (m_DefaultClosedHeatResistance == nullptr)
-		m_DefaultClosedHeatResistance = new SEScalarHeatResistance();
-	return *m_DefaultClosedHeatResistance;
+  if (m_DefaultClosedHeatResistance == nullptr)
+    m_DefaultClosedHeatResistance = new SEScalarHeatResistance();
+  return *m_DefaultClosedHeatResistance;
 }
 double BioGearsConfiguration::GetDefaultClosedHeatResistance(const HeatResistanceUnit& unit) const
 {
@@ -1534,13 +1506,13 @@ double BioGearsConfiguration::GetDefaultClosedHeatResistance(const HeatResistanc
 
 bool BioGearsConfiguration::HasDefaultOpenElectricResistance() const
 {
-	return m_DefaultOpenElectricResistance == nullptr ? false : m_DefaultOpenElectricResistance->IsValid();
+  return m_DefaultOpenElectricResistance == nullptr ? false : m_DefaultOpenElectricResistance->IsValid();
 }
 SEScalarElectricResistance& BioGearsConfiguration::GetDefaultOpenElectricResistance()
 {
-	if (m_DefaultOpenElectricResistance == nullptr)
-		m_DefaultOpenElectricResistance = new SEScalarElectricResistance();
-	return *m_DefaultOpenElectricResistance;
+  if (m_DefaultOpenElectricResistance == nullptr)
+    m_DefaultOpenElectricResistance = new SEScalarElectricResistance();
+  return *m_DefaultOpenElectricResistance;
 }
 double BioGearsConfiguration::GetDefaultOpenElectricResistance(const ElectricResistanceUnit& unit) const
 {
@@ -1551,13 +1523,13 @@ double BioGearsConfiguration::GetDefaultOpenElectricResistance(const ElectricRes
 
 bool BioGearsConfiguration::HasDefaultOpenFlowResistance() const
 {
-	return m_DefaultOpenFlowResistance == nullptr ? false : m_DefaultOpenFlowResistance->IsValid();
+  return m_DefaultOpenFlowResistance == nullptr ? false : m_DefaultOpenFlowResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetDefaultOpenFlowResistance()
 {
-	if (m_DefaultOpenFlowResistance == nullptr)
-		m_DefaultOpenFlowResistance = new SEScalarFlowResistance();
-	return *m_DefaultOpenFlowResistance;
+  if (m_DefaultOpenFlowResistance == nullptr)
+    m_DefaultOpenFlowResistance = new SEScalarFlowResistance();
+  return *m_DefaultOpenFlowResistance;
 }
 double BioGearsConfiguration::GetDefaultOpenFlowResistance(const FlowResistanceUnit& unit) const
 {
@@ -1568,13 +1540,13 @@ double BioGearsConfiguration::GetDefaultOpenFlowResistance(const FlowResistanceU
 
 bool BioGearsConfiguration::HasDefaultOpenHeatResistance() const
 {
-	return m_DefaultOpenHeatResistance == nullptr ? false : m_DefaultOpenHeatResistance->IsValid();
+  return m_DefaultOpenHeatResistance == nullptr ? false : m_DefaultOpenHeatResistance->IsValid();
 }
 SEScalarHeatResistance& BioGearsConfiguration::GetDefaultOpenHeatResistance()
 {
-	if (m_DefaultOpenHeatResistance == nullptr)
-		m_DefaultOpenHeatResistance = new SEScalarHeatResistance();
-	return *m_DefaultOpenHeatResistance;
+  if (m_DefaultOpenHeatResistance == nullptr)
+    m_DefaultOpenHeatResistance = new SEScalarHeatResistance();
+  return *m_DefaultOpenHeatResistance;
 }
 double BioGearsConfiguration::GetDefaultOpenHeatResistance(const HeatResistanceUnit& unit) const
 {
@@ -1585,13 +1557,13 @@ double BioGearsConfiguration::GetDefaultOpenHeatResistance(const HeatResistanceU
 
 bool BioGearsConfiguration::HasMachineClosedResistance() const
 {
-	return m_MachineClosedResistance == nullptr ? false : m_MachineClosedResistance->IsValid();
+  return m_MachineClosedResistance == nullptr ? false : m_MachineClosedResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetMachineClosedResistance()
 {
-	if (m_MachineClosedResistance == nullptr)
-		m_MachineClosedResistance = new SEScalarFlowResistance();
-	return *m_MachineClosedResistance;
+  if (m_MachineClosedResistance == nullptr)
+    m_MachineClosedResistance = new SEScalarFlowResistance();
+  return *m_MachineClosedResistance;
 }
 double BioGearsConfiguration::GetMachineClosedResistance(const FlowResistanceUnit& unit) const
 {
@@ -1602,13 +1574,13 @@ double BioGearsConfiguration::GetMachineClosedResistance(const FlowResistanceUni
 
 bool BioGearsConfiguration::HasMachineOpenResistance() const
 {
-	return m_MachineOpenResistance == nullptr ? false : m_MachineOpenResistance->IsValid();
+  return m_MachineOpenResistance == nullptr ? false : m_MachineOpenResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetMachineOpenResistance()
 {
-	if (m_MachineOpenResistance == nullptr)
-		m_MachineOpenResistance = new SEScalarFlowResistance();
-	return *m_MachineOpenResistance;
+  if (m_MachineOpenResistance == nullptr)
+    m_MachineOpenResistance = new SEScalarFlowResistance();
+  return *m_MachineOpenResistance;
 }
 double BioGearsConfiguration::GetMachineOpenResistance(const FlowResistanceUnit& unit) const
 {
@@ -1619,13 +1591,13 @@ double BioGearsConfiguration::GetMachineOpenResistance(const FlowResistanceUnit&
 
 bool BioGearsConfiguration::HasRespiratoryClosedResistance() const
 {
-	return m_RespiratoryClosedResistance == nullptr ? false : m_RespiratoryClosedResistance->IsValid();
+  return m_RespiratoryClosedResistance == nullptr ? false : m_RespiratoryClosedResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetRespiratoryClosedResistance()
 {
-	if (m_RespiratoryClosedResistance == nullptr)
-		m_RespiratoryClosedResistance = new SEScalarFlowResistance();
-	return *m_RespiratoryClosedResistance;
+  if (m_RespiratoryClosedResistance == nullptr)
+    m_RespiratoryClosedResistance = new SEScalarFlowResistance();
+  return *m_RespiratoryClosedResistance;
 }
 double BioGearsConfiguration::GetRespiratoryClosedResistance(const FlowResistanceUnit& unit) const
 {
@@ -1636,13 +1608,13 @@ double BioGearsConfiguration::GetRespiratoryClosedResistance(const FlowResistanc
 
 bool BioGearsConfiguration::HasRespiratoryOpenResistance() const
 {
-	return m_RespiratoryOpenResistance == nullptr ? false : m_RespiratoryOpenResistance->IsValid();
+  return m_RespiratoryOpenResistance == nullptr ? false : m_RespiratoryOpenResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetRespiratoryOpenResistance()
 {
-	if (m_RespiratoryOpenResistance == nullptr)
-		m_RespiratoryOpenResistance = new SEScalarFlowResistance();
-	return *m_RespiratoryOpenResistance;
+  if (m_RespiratoryOpenResistance == nullptr)
+    m_RespiratoryOpenResistance = new SEScalarFlowResistance();
+  return *m_RespiratoryOpenResistance;
 }
 double BioGearsConfiguration::GetRespiratoryOpenResistance(const FlowResistanceUnit& unit) const
 {
@@ -1656,13 +1628,13 @@ double BioGearsConfiguration::GetRespiratoryOpenResistance(const FlowResistanceU
 ////////////////
 bool BioGearsConfiguration::HasOxygenMetabolicConstant() const
 {
-	return m_OxygenMetabolicConstant == nullptr ? false : m_OxygenMetabolicConstant->IsValid();
+  return m_OxygenMetabolicConstant == nullptr ? false : m_OxygenMetabolicConstant->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetOxygenMetabolicConstant()
 {
-	if (m_OxygenMetabolicConstant == nullptr)
-		m_OxygenMetabolicConstant = new SEScalar();
-	return *m_OxygenMetabolicConstant;
+  if (m_OxygenMetabolicConstant == nullptr)
+    m_OxygenMetabolicConstant = new SEScalar();
+  return *m_OxygenMetabolicConstant;
 }
 double BioGearsConfiguration::GetOxygenMetabolicConstant() const
 {
@@ -1673,13 +1645,13 @@ double BioGearsConfiguration::GetOxygenMetabolicConstant() const
 
 bool BioGearsConfiguration::HasStefanBoltzmann() const
 {
-	return m_StefanBoltzmann == nullptr ? false : m_StefanBoltzmann->IsValid();
+  return m_StefanBoltzmann == nullptr ? false : m_StefanBoltzmann->IsValid();
 }
 SEScalarPowerPerAreaTemperatureToTheFourth& BioGearsConfiguration::GetStefanBoltzmann()
 {
-	if (m_StefanBoltzmann == nullptr)
+  if (m_StefanBoltzmann == nullptr)
     m_StefanBoltzmann = new SEScalarPowerPerAreaTemperatureToTheFourth();
-	return *m_StefanBoltzmann;
+  return *m_StefanBoltzmann;
 }
 double BioGearsConfiguration::GetStefanBoltzmann(const PowerPerAreaTemperatureToTheFourthUnit& unit) const
 {
@@ -1690,13 +1662,13 @@ double BioGearsConfiguration::GetStefanBoltzmann(const PowerPerAreaTemperatureTo
 
 bool BioGearsConfiguration::HasUniversalGasConstant() const
 {
-	return m_UniversalGasConstant == nullptr ? false : m_UniversalGasConstant->IsValid();
+  return m_UniversalGasConstant == nullptr ? false : m_UniversalGasConstant->IsValid();
 }
 SEScalarHeatCapacitancePerAmount& BioGearsConfiguration::GetUniversalGasConstant()
 {
-	if (m_UniversalGasConstant == nullptr)
+  if (m_UniversalGasConstant == nullptr)
     m_UniversalGasConstant = new SEScalarHeatCapacitancePerAmount();
-	return *m_UniversalGasConstant;
+  return *m_UniversalGasConstant;
 }
 double BioGearsConfiguration::GetUniversalGasConstant(const HeatCapacitancePerAmountUnit& unit) const
 {
@@ -1710,13 +1682,13 @@ double BioGearsConfiguration::GetUniversalGasConstant(const HeatCapacitancePerAm
 /////////////
 bool BioGearsConfiguration::HasBodySpecificHeat() const
 {
-	return m_BodySpecificHeat == nullptr ? false : m_BodySpecificHeat->IsValid();
+  return m_BodySpecificHeat == nullptr ? false : m_BodySpecificHeat->IsValid();
 }
 SEScalarHeatCapacitancePerMass& BioGearsConfiguration::GetBodySpecificHeat()
 {
-	if (m_BodySpecificHeat == nullptr)
-		m_BodySpecificHeat = new SEScalarHeatCapacitancePerMass();
-	return *m_BodySpecificHeat;
+  if (m_BodySpecificHeat == nullptr)
+    m_BodySpecificHeat = new SEScalarHeatCapacitancePerMass();
+  return *m_BodySpecificHeat;
 }
 double BioGearsConfiguration::GetBodySpecificHeat(const HeatCapacitancePerMassUnit& unit) const
 {
@@ -1727,13 +1699,13 @@ double BioGearsConfiguration::GetBodySpecificHeat(const HeatCapacitancePerMassUn
 
 bool BioGearsConfiguration::HasCarbondDioxideProductionFromOxygenConsumptionConstant() const
 {
-	return m_CarbondDioxideProductionFromOxygenConsumptionConstant == nullptr ? false : m_CarbondDioxideProductionFromOxygenConsumptionConstant->IsValid();
+  return m_CarbondDioxideProductionFromOxygenConsumptionConstant == nullptr ? false : m_CarbondDioxideProductionFromOxygenConsumptionConstant->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetCarbondDioxideProductionFromOxygenConsumptionConstant()
 {
-	if (m_CarbondDioxideProductionFromOxygenConsumptionConstant == nullptr)
-		m_CarbondDioxideProductionFromOxygenConsumptionConstant = new SEScalar();
-	return *m_CarbondDioxideProductionFromOxygenConsumptionConstant;
+  if (m_CarbondDioxideProductionFromOxygenConsumptionConstant == nullptr)
+    m_CarbondDioxideProductionFromOxygenConsumptionConstant = new SEScalar();
+  return *m_CarbondDioxideProductionFromOxygenConsumptionConstant;
 }
 double BioGearsConfiguration::GetCarbondDioxideProductionFromOxygenConsumptionConstant() const
 {
@@ -1744,13 +1716,13 @@ double BioGearsConfiguration::GetCarbondDioxideProductionFromOxygenConsumptionCo
 
 bool BioGearsConfiguration::HasCoreTemperatureHigh() const
 {
-	return m_CoreTemperatureHigh == nullptr ? false : m_CoreTemperatureHigh->IsValid();
+  return m_CoreTemperatureHigh == nullptr ? false : m_CoreTemperatureHigh->IsValid();
 }
 SEScalarTemperature& BioGearsConfiguration::GetCoreTemperatureHigh()
 {
-	if (m_CoreTemperatureHigh == nullptr)
-		m_CoreTemperatureHigh = new SEScalarTemperature();
-	return *m_CoreTemperatureHigh;
+  if (m_CoreTemperatureHigh == nullptr)
+    m_CoreTemperatureHigh = new SEScalarTemperature();
+  return *m_CoreTemperatureHigh;
 }
 double BioGearsConfiguration::GetCoreTemperatureHigh(const TemperatureUnit& unit) const
 {
@@ -1761,13 +1733,13 @@ double BioGearsConfiguration::GetCoreTemperatureHigh(const TemperatureUnit& unit
 
 bool BioGearsConfiguration::HasCoreTemperatureLow() const
 {
-	return m_CoreTemperatureLow == nullptr ? false : m_CoreTemperatureLow->IsValid();
+  return m_CoreTemperatureLow == nullptr ? false : m_CoreTemperatureLow->IsValid();
 }
 SEScalarTemperature& BioGearsConfiguration::GetCoreTemperatureLow()
 {
-	if (m_CoreTemperatureLow == nullptr)
-		m_CoreTemperatureLow = new SEScalarTemperature();
-	return *m_CoreTemperatureLow;
+  if (m_CoreTemperatureLow == nullptr)
+    m_CoreTemperatureLow = new SEScalarTemperature();
+  return *m_CoreTemperatureLow;
 }
 double BioGearsConfiguration::GetCoreTemperatureLow(const TemperatureUnit& unit) const
 {
@@ -1778,13 +1750,13 @@ double BioGearsConfiguration::GetCoreTemperatureLow(const TemperatureUnit& unit)
 
 bool BioGearsConfiguration::HasDeltaCoreTemperatureLow() const
 {
-	return m_DeltaCoreTemperatureLow == nullptr ? false : m_DeltaCoreTemperatureLow->IsValid();
+  return m_DeltaCoreTemperatureLow == nullptr ? false : m_DeltaCoreTemperatureLow->IsValid();
 }
 SEScalarTemperature& BioGearsConfiguration::GetDeltaCoreTemperatureLow()
 {
-	if (m_DeltaCoreTemperatureLow == nullptr)
-		m_DeltaCoreTemperatureLow = new SEScalarTemperature();
-	return *m_DeltaCoreTemperatureLow;
+  if (m_DeltaCoreTemperatureLow == nullptr)
+    m_DeltaCoreTemperatureLow = new SEScalarTemperature();
+  return *m_DeltaCoreTemperatureLow;
 }
 double BioGearsConfiguration::GetDeltaCoreTemperatureLow(const TemperatureUnit& unit) const
 {
@@ -1795,13 +1767,13 @@ double BioGearsConfiguration::GetDeltaCoreTemperatureLow(const TemperatureUnit& 
 
 bool BioGearsConfiguration::HasEnergyPerATP() const
 {
-	return m_EnergyPerATP == nullptr ? false : m_EnergyPerATP->IsValid();
+  return m_EnergyPerATP == nullptr ? false : m_EnergyPerATP->IsValid();
 }
 SEScalarEnergyPerAmount& BioGearsConfiguration::GetEnergyPerATP()
 {
-	if (m_EnergyPerATP == nullptr)
-		m_EnergyPerATP = new SEScalarEnergyPerAmount();
-	return *m_EnergyPerATP;
+  if (m_EnergyPerATP == nullptr)
+    m_EnergyPerATP = new SEScalarEnergyPerAmount();
+  return *m_EnergyPerATP;
 }
 double BioGearsConfiguration::GetEnergyPerATP(const EnergyPerAmountUnit& unit) const
 {
@@ -1812,13 +1784,13 @@ double BioGearsConfiguration::GetEnergyPerATP(const EnergyPerAmountUnit& unit) c
 
 bool BioGearsConfiguration::HasSweatHeatTransfer() const
 {
-	return m_SweatHeatTransfer == nullptr ? false : m_SweatHeatTransfer->IsValid();
+  return m_SweatHeatTransfer == nullptr ? false : m_SweatHeatTransfer->IsValid();
 }
 SEScalarHeatConductance& BioGearsConfiguration::GetSweatHeatTransfer()
 {
-	if (m_SweatHeatTransfer == nullptr)
-		m_SweatHeatTransfer = new SEScalarHeatConductance();
-	return *m_SweatHeatTransfer;
+  if (m_SweatHeatTransfer == nullptr)
+    m_SweatHeatTransfer = new SEScalarHeatConductance();
+  return *m_SweatHeatTransfer;
 }
 double BioGearsConfiguration::GetSweatHeatTransfer(const HeatConductanceUnit& unit) const
 {
@@ -1829,13 +1801,13 @@ double BioGearsConfiguration::GetSweatHeatTransfer(const HeatConductanceUnit& un
 
 bool BioGearsConfiguration::HasVaporizationEnergy() const
 {
-	return m_VaporizationEnergy == nullptr ? false : m_VaporizationEnergy->IsValid();
+  return m_VaporizationEnergy == nullptr ? false : m_VaporizationEnergy->IsValid();
 }
 SEScalarEnergyPerMass& BioGearsConfiguration::GetVaporizationEnergy()
 {
-	if (m_VaporizationEnergy == nullptr)
-		m_VaporizationEnergy = new SEScalarEnergyPerMass();
-	return *m_VaporizationEnergy;
+  if (m_VaporizationEnergy == nullptr)
+    m_VaporizationEnergy = new SEScalarEnergyPerMass();
+  return *m_VaporizationEnergy;
 }
 double BioGearsConfiguration::GetVaporizationEnergy(const EnergyPerMassUnit& unit) const
 {
@@ -1846,13 +1818,13 @@ double BioGearsConfiguration::GetVaporizationEnergy(const EnergyPerMassUnit& uni
 
 bool BioGearsConfiguration::HasVaporSpecificHeat() const
 {
-	return m_VaporSpecificHeat == nullptr ? false : m_VaporSpecificHeat->IsValid();
+  return m_VaporSpecificHeat == nullptr ? false : m_VaporSpecificHeat->IsValid();
 }
 SEScalarHeatCapacitancePerMass& BioGearsConfiguration::GetVaporSpecificHeat()
 {
-	if (m_VaporSpecificHeat == nullptr)
-		m_VaporSpecificHeat = new SEScalarHeatCapacitancePerMass();
-	return *m_VaporSpecificHeat;
+  if (m_VaporSpecificHeat == nullptr)
+    m_VaporSpecificHeat = new SEScalarHeatCapacitancePerMass();
+  return *m_VaporSpecificHeat;
 }
 double BioGearsConfiguration::GetVaporSpecificHeat(const HeatCapacitancePerMassUnit& unit) const
 {
@@ -1866,13 +1838,13 @@ double BioGearsConfiguration::GetVaporSpecificHeat(const HeatCapacitancePerMassU
 //////////////////
 bool BioGearsConfiguration::HasAirDensity() const
 {
-	return m_AirDensity == nullptr ? false : m_AirDensity->IsValid();
+  return m_AirDensity == nullptr ? false : m_AirDensity->IsValid();
 }
 SEScalarMassPerVolume& BioGearsConfiguration::GetAirDensity()
 {
-	if (m_AirDensity == nullptr)
-		m_AirDensity = new SEScalarMassPerVolume();
-	return *m_AirDensity;
+  if (m_AirDensity == nullptr)
+    m_AirDensity = new SEScalarMassPerVolume();
+  return *m_AirDensity;
 }
 double BioGearsConfiguration::GetAirDensity(const MassPerVolumeUnit& unit) const
 {
@@ -1883,13 +1855,13 @@ double BioGearsConfiguration::GetAirDensity(const MassPerVolumeUnit& unit) const
 
 bool BioGearsConfiguration::HasAirSpecificHeat() const
 {
-	return m_AirSpecificHeat == nullptr ? false : m_AirSpecificHeat->IsValid();
+  return m_AirSpecificHeat == nullptr ? false : m_AirSpecificHeat->IsValid();
 }
 SEScalarHeatCapacitancePerMass& BioGearsConfiguration::GetAirSpecificHeat()
 {
-	if (m_AirSpecificHeat == nullptr)
-		m_AirSpecificHeat = new SEScalarHeatCapacitancePerMass();
-	return *m_AirSpecificHeat;
+  if (m_AirSpecificHeat == nullptr)
+    m_AirSpecificHeat = new SEScalarHeatCapacitancePerMass();
+  return *m_AirSpecificHeat;
 }
 double BioGearsConfiguration::GetAirSpecificHeat(const HeatCapacitancePerMassUnit& unit) const
 {
@@ -1900,13 +1872,13 @@ double BioGearsConfiguration::GetAirSpecificHeat(const HeatCapacitancePerMassUni
 
 bool BioGearsConfiguration::HasMolarMassOfDryAir() const
 {
-	return m_MolarMassOfDryAir == nullptr ? false : m_MolarMassOfDryAir->IsValid();
+  return m_MolarMassOfDryAir == nullptr ? false : m_MolarMassOfDryAir->IsValid();
 }
 SEScalarMassPerAmount& BioGearsConfiguration::GetMolarMassOfDryAir()
 {
-	if (m_MolarMassOfDryAir == nullptr)
-		m_MolarMassOfDryAir = new SEScalarMassPerAmount();
-	return *m_MolarMassOfDryAir;
+  if (m_MolarMassOfDryAir == nullptr)
+    m_MolarMassOfDryAir = new SEScalarMassPerAmount();
+  return *m_MolarMassOfDryAir;
 }
 double BioGearsConfiguration::GetMolarMassOfDryAir(const MassPerAmountUnit& unit) const
 {
@@ -1917,13 +1889,13 @@ double BioGearsConfiguration::GetMolarMassOfDryAir(const MassPerAmountUnit& unit
 
 bool BioGearsConfiguration::HasMolarMassOfWaterVapor() const
 {
-	return m_MolarMassOfWaterVapor == nullptr ? false : m_MolarMassOfWaterVapor->IsValid();
+  return m_MolarMassOfWaterVapor == nullptr ? false : m_MolarMassOfWaterVapor->IsValid();
 }
 SEScalarMassPerAmount& BioGearsConfiguration::GetMolarMassOfWaterVapor()
 {
-	if (m_MolarMassOfWaterVapor == nullptr)
-		m_MolarMassOfWaterVapor = new SEScalarMassPerAmount();
-	return *m_MolarMassOfWaterVapor;
+  if (m_MolarMassOfWaterVapor == nullptr)
+    m_MolarMassOfWaterVapor = new SEScalarMassPerAmount();
+  return *m_MolarMassOfWaterVapor;
 }
 double BioGearsConfiguration::GetMolarMassOfWaterVapor(const MassPerAmountUnit& unit) const
 {
@@ -1949,13 +1921,13 @@ const SEEnvironmentalConditions* BioGearsConfiguration::GetInitialEnvironmentalC
 
 bool BioGearsConfiguration::HasWaterDensity() const
 {
-	return m_WaterDensity == nullptr ? false : m_WaterDensity->IsValid();
+  return m_WaterDensity == nullptr ? false : m_WaterDensity->IsValid();
 }
 SEScalarMassPerVolume& BioGearsConfiguration::GetWaterDensity()
 {
-	if (m_WaterDensity == nullptr)
-		m_WaterDensity = new SEScalarMassPerVolume();
-	return *m_WaterDensity;
+  if (m_WaterDensity == nullptr)
+    m_WaterDensity = new SEScalarMassPerVolume();
+  return *m_WaterDensity;
 }
 double BioGearsConfiguration::GetWaterDensity(const MassPerVolumeUnit& unit) const
 {
@@ -1970,13 +1942,13 @@ double BioGearsConfiguration::GetWaterDensity(const MassPerVolumeUnit& unit) con
 
 bool BioGearsConfiguration::HasCalciumDigestionRate() const
 {
-	return m_CalciumDigestionRate == nullptr ? false : m_CalciumDigestionRate->IsValid();
+  return m_CalciumDigestionRate == nullptr ? false : m_CalciumDigestionRate->IsValid();
 }
 SEScalarMassPerTime& BioGearsConfiguration::GetCalciumDigestionRate()
 {
-	if (m_CalciumDigestionRate == nullptr)
-		m_CalciumDigestionRate = new SEScalarMassPerTime();
-	return *m_CalciumDigestionRate;
+  if (m_CalciumDigestionRate == nullptr)
+    m_CalciumDigestionRate = new SEScalarMassPerTime();
+  return *m_CalciumDigestionRate;
 }
 double BioGearsConfiguration::GetCalciumDigestionRate(const MassPerTimeUnit& unit) const
 {
@@ -1987,13 +1959,13 @@ double BioGearsConfiguration::GetCalciumDigestionRate(const MassPerTimeUnit& uni
 
 bool BioGearsConfiguration::HasCalciumAbsorptionFraction() const
 {
-	return m_CalciumAbsorptionFraction == nullptr ? false : m_CalciumAbsorptionFraction->IsValid();
+  return m_CalciumAbsorptionFraction == nullptr ? false : m_CalciumAbsorptionFraction->IsValid();
 }
 SEScalarFraction& BioGearsConfiguration::GetCalciumAbsorptionFraction()
 {
-	if (m_CalciumAbsorptionFraction == nullptr)
-		m_CalciumAbsorptionFraction = new SEScalarFraction();
-	return *m_CalciumAbsorptionFraction;
+  if (m_CalciumAbsorptionFraction == nullptr)
+    m_CalciumAbsorptionFraction = new SEScalarFraction();
+  return *m_CalciumAbsorptionFraction;
 }
 double BioGearsConfiguration::GetCalciumAbsorptionFraction() const
 {
@@ -2004,13 +1976,13 @@ double BioGearsConfiguration::GetCalciumAbsorptionFraction() const
 
 bool BioGearsConfiguration::HasCarbohydrateAbsorptionFraction() const
 {
-	return m_CarbohydrateAbsorptionFraction == nullptr ? false : m_CarbohydrateAbsorptionFraction->IsValid();
+  return m_CarbohydrateAbsorptionFraction == nullptr ? false : m_CarbohydrateAbsorptionFraction->IsValid();
 }
 SEScalarFraction& BioGearsConfiguration::GetCarbohydrateAbsorptionFraction()
 {
-	if (m_CarbohydrateAbsorptionFraction == nullptr)
-		m_CarbohydrateAbsorptionFraction = new SEScalarFraction();
-	return *m_CarbohydrateAbsorptionFraction;
+  if (m_CarbohydrateAbsorptionFraction == nullptr)
+    m_CarbohydrateAbsorptionFraction = new SEScalarFraction();
+  return *m_CarbohydrateAbsorptionFraction;
 }
 double BioGearsConfiguration::GetCarbohydrateAbsorptionFraction() const
 {
@@ -2021,13 +1993,13 @@ double BioGearsConfiguration::GetCarbohydrateAbsorptionFraction() const
 
 bool BioGearsConfiguration::HasDefaultCarbohydrateDigestionRate() const
 {
-	return m_DefaultCarbohydrateDigestionRate == nullptr ? false : m_DefaultCarbohydrateDigestionRate->IsValid();
+  return m_DefaultCarbohydrateDigestionRate == nullptr ? false : m_DefaultCarbohydrateDigestionRate->IsValid();
 }
 SEScalarMassPerTime& BioGearsConfiguration::GetDefaultCarbohydrateDigestionRate()
 {
-	if (m_DefaultCarbohydrateDigestionRate == nullptr)
-		m_DefaultCarbohydrateDigestionRate = new SEScalarMassPerTime();
-	return *m_DefaultCarbohydrateDigestionRate;
+  if (m_DefaultCarbohydrateDigestionRate == nullptr)
+    m_DefaultCarbohydrateDigestionRate = new SEScalarMassPerTime();
+  return *m_DefaultCarbohydrateDigestionRate;
 }
 double BioGearsConfiguration::GetDefaultCarbohydrateDigestionRate(const MassPerTimeUnit& unit) const
 {
@@ -2038,13 +2010,13 @@ double BioGearsConfiguration::GetDefaultCarbohydrateDigestionRate(const MassPerT
 
 bool BioGearsConfiguration::HasDefaultFatDigestionRate() const
 {
-	return m_DefaultFatDigestionRate == nullptr ? false : m_DefaultFatDigestionRate->IsValid();
+  return m_DefaultFatDigestionRate == nullptr ? false : m_DefaultFatDigestionRate->IsValid();
 }
 SEScalarMassPerTime& BioGearsConfiguration::GetDefaultFatDigestionRate()
 {
-	if (m_DefaultFatDigestionRate == nullptr)
-		m_DefaultFatDigestionRate = new SEScalarMassPerTime();
-	return *m_DefaultFatDigestionRate;
+  if (m_DefaultFatDigestionRate == nullptr)
+    m_DefaultFatDigestionRate = new SEScalarMassPerTime();
+  return *m_DefaultFatDigestionRate;
 }
 double BioGearsConfiguration::GetDefaultFatDigestionRate(const MassPerTimeUnit& unit) const
 {
@@ -2055,13 +2027,13 @@ double BioGearsConfiguration::GetDefaultFatDigestionRate(const MassPerTimeUnit& 
 
 bool BioGearsConfiguration::HasDefaultProteinDigestionRate() const
 {
-	return m_DefaultProteinDigestionRate == nullptr ? false : m_DefaultProteinDigestionRate->IsValid();
+  return m_DefaultProteinDigestionRate == nullptr ? false : m_DefaultProteinDigestionRate->IsValid();
 }
 SEScalarMassPerTime& BioGearsConfiguration::GetDefaultProteinDigestionRate()
 {
-	if (m_DefaultProteinDigestionRate == nullptr)
-		m_DefaultProteinDigestionRate = new SEScalarMassPerTime();
-	return *m_DefaultProteinDigestionRate;
+  if (m_DefaultProteinDigestionRate == nullptr)
+    m_DefaultProteinDigestionRate = new SEScalarMassPerTime();
+  return *m_DefaultProteinDigestionRate;
 }
 double BioGearsConfiguration::GetDefaultProteinDigestionRate(const MassPerTimeUnit& unit) const
 {
@@ -2072,13 +2044,13 @@ double BioGearsConfiguration::GetDefaultProteinDigestionRate(const MassPerTimeUn
 
 bool BioGearsConfiguration::HasDefaultStomachContents() const
 {
-	return m_DefaultStomachContents != nullptr;
+  return m_DefaultStomachContents != nullptr;
 }
 SENutrition& BioGearsConfiguration::GetDefaultStomachContents()
 {
-	if (m_DefaultStomachContents == nullptr)
-		m_DefaultStomachContents = new SENutrition(GetLogger());
-	return *m_DefaultStomachContents;
+  if (m_DefaultStomachContents == nullptr)
+    m_DefaultStomachContents = new SENutrition(GetLogger());
+  return *m_DefaultStomachContents;
 }
 const SENutrition* BioGearsConfiguration::GetDefaultStomachContents() const
 {
@@ -2087,13 +2059,13 @@ const SENutrition* BioGearsConfiguration::GetDefaultStomachContents() const
 
 bool BioGearsConfiguration::HasFatAbsorptionFraction() const
 {
-	return m_FatAbsorptionFraction == nullptr ? false : m_FatAbsorptionFraction->IsValid();
+  return m_FatAbsorptionFraction == nullptr ? false : m_FatAbsorptionFraction->IsValid();
 }
 SEScalarFraction& BioGearsConfiguration::GetFatAbsorptionFraction()
 {
-	if (m_FatAbsorptionFraction == nullptr)
-		m_FatAbsorptionFraction = new SEScalarFraction();
-	return *m_FatAbsorptionFraction;
+  if (m_FatAbsorptionFraction == nullptr)
+    m_FatAbsorptionFraction = new SEScalarFraction();
+  return *m_FatAbsorptionFraction;
 }
 double BioGearsConfiguration::GetFatAbsorptionFraction() const
 {
@@ -2104,13 +2076,13 @@ double BioGearsConfiguration::GetFatAbsorptionFraction() const
 
 bool BioGearsConfiguration::HasProteinToUreaFraction() const
 {
-	return m_ProteinToUreaFraction == nullptr ? false : m_ProteinToUreaFraction->IsValid();
+  return m_ProteinToUreaFraction == nullptr ? false : m_ProteinToUreaFraction->IsValid();
 }
 SEScalarFraction& BioGearsConfiguration::GetProteinToUreaFraction()
 {
-	if (m_ProteinToUreaFraction == nullptr)
-		m_ProteinToUreaFraction = new SEScalarFraction();
-	return *m_ProteinToUreaFraction;
+  if (m_ProteinToUreaFraction == nullptr)
+    m_ProteinToUreaFraction = new SEScalarFraction();
+  return *m_ProteinToUreaFraction;
 }
 double BioGearsConfiguration::GetProteinToUreaFraction() const
 {
@@ -2121,13 +2093,13 @@ double BioGearsConfiguration::GetProteinToUreaFraction() const
 
 bool BioGearsConfiguration::HasWaterDigestionRate() const
 {
-	return m_WaterDigestionRate == nullptr ? false : m_WaterDigestionRate->IsValid();
+  return m_WaterDigestionRate == nullptr ? false : m_WaterDigestionRate->IsValid();
 }
 SEScalarVolumePerTime& BioGearsConfiguration::GetWaterDigestionRate()
 {
-	if (m_WaterDigestionRate == nullptr)
-		m_WaterDigestionRate = new SEScalarVolumePerTime();
-	return *m_WaterDigestionRate;
+  if (m_WaterDigestionRate == nullptr)
+    m_WaterDigestionRate = new SEScalarVolumePerTime();
+  return *m_WaterDigestionRate;
 }
 double BioGearsConfiguration::GetWaterDigestionRate(const VolumePerTimeUnit& unit) const
 {
@@ -2163,13 +2135,13 @@ double BioGearsConfiguration::GetPupilDiameterBaseline(const LengthUnit& unit) c
 
 bool BioGearsConfiguration::HasPlasmaSodiumConcentrationSetPoint() const
 {
-	return m_PlasmaSodiumConcentrationSetPoint == nullptr ? false : m_PlasmaSodiumConcentrationSetPoint->IsValid();
+  return m_PlasmaSodiumConcentrationSetPoint == nullptr ? false : m_PlasmaSodiumConcentrationSetPoint->IsValid();
 }
 SEScalarMassPerVolume& BioGearsConfiguration::GetPlasmaSodiumConcentrationSetPoint()
 {
-	if (m_PlasmaSodiumConcentrationSetPoint == nullptr)
-		m_PlasmaSodiumConcentrationSetPoint = new SEScalarMassPerVolume();
-	return *m_PlasmaSodiumConcentrationSetPoint;
+  if (m_PlasmaSodiumConcentrationSetPoint == nullptr)
+    m_PlasmaSodiumConcentrationSetPoint = new SEScalarMassPerVolume();
+  return *m_PlasmaSodiumConcentrationSetPoint;
 }
 double BioGearsConfiguration::GetPlasmaSodiumConcentrationSetPoint(const MassPerVolumeUnit& unit) const
 {
@@ -2180,30 +2152,30 @@ double BioGearsConfiguration::GetPlasmaSodiumConcentrationSetPoint(const MassPer
 
 bool BioGearsConfiguration::HasPeritubularPotassiumConcentrationSetPoint() const
 {
-	return m_PeritubularPotassiumConcentrationSetPoint == nullptr ? false : m_PeritubularPotassiumConcentrationSetPoint->IsValid();
+  return m_PeritubularPotassiumConcentrationSetPoint == nullptr ? false : m_PeritubularPotassiumConcentrationSetPoint->IsValid();
 }
 SEScalarMassPerVolume& BioGearsConfiguration::GetPeritubularPotassiumConcentrationSetPoint()
 {
-	if (m_PeritubularPotassiumConcentrationSetPoint == nullptr)
-		m_PeritubularPotassiumConcentrationSetPoint = new SEScalarMassPerVolume();
-	return *m_PeritubularPotassiumConcentrationSetPoint;
+  if (m_PeritubularPotassiumConcentrationSetPoint == nullptr)
+    m_PeritubularPotassiumConcentrationSetPoint = new SEScalarMassPerVolume();
+  return *m_PeritubularPotassiumConcentrationSetPoint;
 }
 double BioGearsConfiguration::GetPeritubularPotassiumConcentrationSetPoint(const MassPerVolumeUnit& unit) const
 {
-	if (m_PeritubularPotassiumConcentrationSetPoint == nullptr)
-		return SEScalar::dNaN();
-	return m_PeritubularPotassiumConcentrationSetPoint->GetValue(unit);
+  if (m_PeritubularPotassiumConcentrationSetPoint == nullptr)
+    return SEScalar::dNaN();
+  return m_PeritubularPotassiumConcentrationSetPoint->GetValue(unit);
 }
 
 bool BioGearsConfiguration::HasLeftGlomerularFluidPermeabilityBaseline() const
 {
-	return m_LeftGlomerularFluidPermeabilityBaseline == nullptr ? false : m_LeftGlomerularFluidPermeabilityBaseline->IsValid();
+  return m_LeftGlomerularFluidPermeabilityBaseline == nullptr ? false : m_LeftGlomerularFluidPermeabilityBaseline->IsValid();
 }
 SEScalarVolumePerTimePressureArea& BioGearsConfiguration::GetLeftGlomerularFluidPermeabilityBaseline()
 {
-	if (m_LeftGlomerularFluidPermeabilityBaseline == nullptr)
-		m_LeftGlomerularFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
-	return *m_LeftGlomerularFluidPermeabilityBaseline;
+  if (m_LeftGlomerularFluidPermeabilityBaseline == nullptr)
+    m_LeftGlomerularFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
+  return *m_LeftGlomerularFluidPermeabilityBaseline;
 }
 double BioGearsConfiguration::GetLeftGlomerularFluidPermeabilityBaseline(const VolumePerTimePressureAreaUnit& unit) const
 {
@@ -2214,13 +2186,13 @@ double BioGearsConfiguration::GetLeftGlomerularFluidPermeabilityBaseline(const V
 
 bool BioGearsConfiguration::HasLeftGlomerularFilteringSurfaceAreaBaseline() const
 {
-	return m_LeftGlomerularFilteringSurfaceAreaBaseline == nullptr ? false : m_LeftGlomerularFilteringSurfaceAreaBaseline->IsValid();
+  return m_LeftGlomerularFilteringSurfaceAreaBaseline == nullptr ? false : m_LeftGlomerularFilteringSurfaceAreaBaseline->IsValid();
 }
 SEScalarArea& BioGearsConfiguration::GetLeftGlomerularFilteringSurfaceAreaBaseline()
 {
-	if (m_LeftGlomerularFilteringSurfaceAreaBaseline == nullptr)
-		m_LeftGlomerularFilteringSurfaceAreaBaseline = new SEScalarArea();
-	return *m_LeftGlomerularFilteringSurfaceAreaBaseline;
+  if (m_LeftGlomerularFilteringSurfaceAreaBaseline == nullptr)
+    m_LeftGlomerularFilteringSurfaceAreaBaseline = new SEScalarArea();
+  return *m_LeftGlomerularFilteringSurfaceAreaBaseline;
 }
 double BioGearsConfiguration::GetLeftGlomerularFilteringSurfaceAreaBaseline(const AreaUnit& unit) const
 {
@@ -2231,13 +2203,13 @@ double BioGearsConfiguration::GetLeftGlomerularFilteringSurfaceAreaBaseline(cons
 
 bool BioGearsConfiguration::HasLeftTubularReabsorptionFluidPermeabilityBaseline() const
 {
-	return m_LeftTubularReabsorptionFluidPermeabilityBaseline == nullptr ? false : m_LeftTubularReabsorptionFluidPermeabilityBaseline->IsValid();
+  return m_LeftTubularReabsorptionFluidPermeabilityBaseline == nullptr ? false : m_LeftTubularReabsorptionFluidPermeabilityBaseline->IsValid();
 }
 SEScalarVolumePerTimePressureArea& BioGearsConfiguration::GetLeftTubularReabsorptionFluidPermeabilityBaseline()
 {
-	if (m_LeftTubularReabsorptionFluidPermeabilityBaseline == nullptr)
-		m_LeftTubularReabsorptionFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
-	return *m_LeftTubularReabsorptionFluidPermeabilityBaseline;
+  if (m_LeftTubularReabsorptionFluidPermeabilityBaseline == nullptr)
+    m_LeftTubularReabsorptionFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
+  return *m_LeftTubularReabsorptionFluidPermeabilityBaseline;
 }
 double BioGearsConfiguration::GetLeftTubularReabsorptionFluidPermeabilityBaseline(const VolumePerTimePressureAreaUnit& unit) const
 {
@@ -2248,13 +2220,13 @@ double BioGearsConfiguration::GetLeftTubularReabsorptionFluidPermeabilityBaselin
 
 bool BioGearsConfiguration::HasLeftTubularReabsorptionFilteringSurfaceAreaBaseline() const
 {
-	return m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr ? false : m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline->IsValid();
+  return m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr ? false : m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline->IsValid();
 }
 SEScalarArea& BioGearsConfiguration::GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline()
 {
-	if (m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr)
-		m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline = new SEScalarArea();
-	return *m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline;
+  if (m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr)
+    m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline = new SEScalarArea();
+  return *m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline;
 }
 double BioGearsConfiguration::GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline(const AreaUnit& unit) const
 {
@@ -2265,13 +2237,13 @@ double BioGearsConfiguration::GetLeftTubularReabsorptionFilteringSurfaceAreaBase
 
 bool BioGearsConfiguration::HasMaximumAfferentResistance() const
 {
-	return m_MaximumAfferentResistance == nullptr ? false : m_MaximumAfferentResistance->IsValid();
+  return m_MaximumAfferentResistance == nullptr ? false : m_MaximumAfferentResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetMaximumAfferentResistance()
 {
-	if (m_MaximumAfferentResistance == nullptr)
-		m_MaximumAfferentResistance = new SEScalarFlowResistance();
-	return *m_MaximumAfferentResistance;
+  if (m_MaximumAfferentResistance == nullptr)
+    m_MaximumAfferentResistance = new SEScalarFlowResistance();
+  return *m_MaximumAfferentResistance;
 }
 double BioGearsConfiguration::GetMaximumAfferentResistance(const FlowResistanceUnit& unit) const
 {
@@ -2282,13 +2254,13 @@ double BioGearsConfiguration::GetMaximumAfferentResistance(const FlowResistanceU
 
 bool BioGearsConfiguration::HasMinimumAfferentResistance() const
 {
-	return m_MinimumAfferentResistance == nullptr ? false : m_MinimumAfferentResistance->IsValid();
+  return m_MinimumAfferentResistance == nullptr ? false : m_MinimumAfferentResistance->IsValid();
 }
 SEScalarFlowResistance& BioGearsConfiguration::GetMinimumAfferentResistance()
 {
-	if (m_MinimumAfferentResistance == nullptr)
-		m_MinimumAfferentResistance = new SEScalarFlowResistance();
-	return *m_MinimumAfferentResistance;
+  if (m_MinimumAfferentResistance == nullptr)
+    m_MinimumAfferentResistance = new SEScalarFlowResistance();
+  return *m_MinimumAfferentResistance;
 }
 double BioGearsConfiguration::GetMinimumAfferentResistance(const FlowResistanceUnit& unit) const
 {
@@ -2299,13 +2271,13 @@ double BioGearsConfiguration::GetMinimumAfferentResistance(const FlowResistanceU
 
 bool BioGearsConfiguration::HasRightGlomerularFluidPermeabilityBaseline() const
 {
-	return m_RightGlomerularFluidPermeabilityBaseline == nullptr ? false : m_RightGlomerularFluidPermeabilityBaseline->IsValid();
+  return m_RightGlomerularFluidPermeabilityBaseline == nullptr ? false : m_RightGlomerularFluidPermeabilityBaseline->IsValid();
 }
 SEScalarVolumePerTimePressureArea& BioGearsConfiguration::GetRightGlomerularFluidPermeabilityBaseline()
 {
-	if (m_RightGlomerularFluidPermeabilityBaseline == nullptr)
-		m_RightGlomerularFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
-	return *m_RightGlomerularFluidPermeabilityBaseline;
+  if (m_RightGlomerularFluidPermeabilityBaseline == nullptr)
+    m_RightGlomerularFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
+  return *m_RightGlomerularFluidPermeabilityBaseline;
 }
 double BioGearsConfiguration::GetRightGlomerularFluidPermeabilityBaseline(const VolumePerTimePressureAreaUnit& unit) const
 {
@@ -2316,13 +2288,13 @@ double BioGearsConfiguration::GetRightGlomerularFluidPermeabilityBaseline(const 
 
 bool BioGearsConfiguration::HasRightGlomerularFilteringSurfaceAreaBaseline() const
 {
-	return m_RightGlomerularFilteringSurfaceAreaBaseline == nullptr ? false : m_RightGlomerularFilteringSurfaceAreaBaseline->IsValid();
+  return m_RightGlomerularFilteringSurfaceAreaBaseline == nullptr ? false : m_RightGlomerularFilteringSurfaceAreaBaseline->IsValid();
 }
 SEScalarArea& BioGearsConfiguration::GetRightGlomerularFilteringSurfaceAreaBaseline()
 {
-	if (m_RightGlomerularFilteringSurfaceAreaBaseline == nullptr)
-		m_RightGlomerularFilteringSurfaceAreaBaseline = new SEScalarArea();
-	return *m_RightGlomerularFilteringSurfaceAreaBaseline;
+  if (m_RightGlomerularFilteringSurfaceAreaBaseline == nullptr)
+    m_RightGlomerularFilteringSurfaceAreaBaseline = new SEScalarArea();
+  return *m_RightGlomerularFilteringSurfaceAreaBaseline;
 }
 double BioGearsConfiguration::GetRightGlomerularFilteringSurfaceAreaBaseline(const AreaUnit& unit) const
 {
@@ -2333,13 +2305,13 @@ double BioGearsConfiguration::GetRightGlomerularFilteringSurfaceAreaBaseline(con
 
 bool BioGearsConfiguration::HasRightTubularReabsorptionFluidPermeabilityBaseline() const
 {
-	return m_RightTubularReabsorptionFluidPermeabilityBaseline == nullptr ? false : m_RightTubularReabsorptionFluidPermeabilityBaseline->IsValid();
+  return m_RightTubularReabsorptionFluidPermeabilityBaseline == nullptr ? false : m_RightTubularReabsorptionFluidPermeabilityBaseline->IsValid();
 }
 SEScalarVolumePerTimePressureArea& BioGearsConfiguration::GetRightTubularReabsorptionFluidPermeabilityBaseline()
 {
-	if (m_RightTubularReabsorptionFluidPermeabilityBaseline == nullptr)
-		m_RightTubularReabsorptionFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
-	return *m_RightTubularReabsorptionFluidPermeabilityBaseline;
+  if (m_RightTubularReabsorptionFluidPermeabilityBaseline == nullptr)
+    m_RightTubularReabsorptionFluidPermeabilityBaseline = new SEScalarVolumePerTimePressureArea();
+  return *m_RightTubularReabsorptionFluidPermeabilityBaseline;
 }
 double BioGearsConfiguration::GetRightTubularReabsorptionFluidPermeabilityBaseline(const VolumePerTimePressureAreaUnit& unit) const
 {
@@ -2350,13 +2322,13 @@ double BioGearsConfiguration::GetRightTubularReabsorptionFluidPermeabilityBaseli
 
 bool BioGearsConfiguration::HasRightTubularReabsorptionFilteringSurfaceAreaBaseline() const
 {
-	return m_RightTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr ? false : m_RightTubularReabsorptionFilteringSurfaceAreaBaseline->IsValid();
+  return m_RightTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr ? false : m_RightTubularReabsorptionFilteringSurfaceAreaBaseline->IsValid();
 }
 SEScalarArea& BioGearsConfiguration::GetRightTubularReabsorptionFilteringSurfaceAreaBaseline()
 {
-	if (m_RightTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr)
-		m_RightTubularReabsorptionFilteringSurfaceAreaBaseline = new SEScalarArea();
-	return *m_RightTubularReabsorptionFilteringSurfaceAreaBaseline;
+  if (m_RightTubularReabsorptionFilteringSurfaceAreaBaseline == nullptr)
+    m_RightTubularReabsorptionFilteringSurfaceAreaBaseline = new SEScalarArea();
+  return *m_RightTubularReabsorptionFilteringSurfaceAreaBaseline;
 }
 double BioGearsConfiguration::GetRightTubularReabsorptionFilteringSurfaceAreaBaseline(const AreaUnit& unit) const
 {
@@ -2367,13 +2339,13 @@ double BioGearsConfiguration::GetRightTubularReabsorptionFilteringSurfaceAreaBas
 
 bool BioGearsConfiguration::HasTargetSodiumDelivery()
 {
-	return m_TargetSodiumDelivery == nullptr ? false : m_TargetSodiumDelivery->IsValid();
+  return m_TargetSodiumDelivery == nullptr ? false : m_TargetSodiumDelivery->IsValid();
 }
 SEScalarMassPerTime& BioGearsConfiguration::GetTargetSodiumDelivery()
 {
-	if (m_TargetSodiumDelivery == nullptr)
-		m_TargetSodiumDelivery = new SEScalarMassPerTime();
-	return *m_TargetSodiumDelivery;
+  if (m_TargetSodiumDelivery == nullptr)
+    m_TargetSodiumDelivery = new SEScalarMassPerTime();
+  return *m_TargetSodiumDelivery;
 }
 
 //////////////////
@@ -2398,13 +2370,13 @@ double BioGearsConfiguration::GetCentralControllerCO2PressureSetPoint(const Pres
 
 bool BioGearsConfiguration::HasCentralVentilatoryControllerGain() const
 {
-	return m_CentralVentilatoryControllerGain == nullptr ? false : m_CentralVentilatoryControllerGain->IsValid();
+  return m_CentralVentilatoryControllerGain == nullptr ? false : m_CentralVentilatoryControllerGain->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetCentralVentilatoryControllerGain()
 {
-	if (m_CentralVentilatoryControllerGain == nullptr)
-		m_CentralVentilatoryControllerGain = new SEScalar();
-	return *m_CentralVentilatoryControllerGain;
+  if (m_CentralVentilatoryControllerGain == nullptr)
+    m_CentralVentilatoryControllerGain = new SEScalar();
+  return *m_CentralVentilatoryControllerGain;
 }
 double BioGearsConfiguration::GetCentralVentilatoryControllerGain() const
 {
@@ -2432,13 +2404,13 @@ double BioGearsConfiguration::GetPeripheralControllerCO2PressureSetPoint(const P
 
 bool BioGearsConfiguration::HasPeripheralVentilatoryControllerGain() const
 {
-	return m_PeripheralVentilatoryControllerGain == nullptr ? false : m_PeripheralVentilatoryControllerGain->IsValid();
+  return m_PeripheralVentilatoryControllerGain == nullptr ? false : m_PeripheralVentilatoryControllerGain->IsValid();
 }
 SEScalar& BioGearsConfiguration::GetPeripheralVentilatoryControllerGain()
 {
-	if (m_PeripheralVentilatoryControllerGain == nullptr)
-		m_PeripheralVentilatoryControllerGain = new SEScalar();
-	return *m_PeripheralVentilatoryControllerGain;
+  if (m_PeripheralVentilatoryControllerGain == nullptr)
+    m_PeripheralVentilatoryControllerGain = new SEScalar();
+  return *m_PeripheralVentilatoryControllerGain;
 }
 double BioGearsConfiguration::GetPeripheralVentilatoryControllerGain() const
 {
@@ -2449,13 +2421,13 @@ double BioGearsConfiguration::GetPeripheralVentilatoryControllerGain() const
 
 bool BioGearsConfiguration::HasPleuralComplianceSensitivity() const
 {
-	return m_PleuralComplianceSensitivity == nullptr ? false : m_PleuralComplianceSensitivity->IsValid();
+  return m_PleuralComplianceSensitivity == nullptr ? false : m_PleuralComplianceSensitivity->IsValid();
 }
 SEScalarInverseVolume& BioGearsConfiguration::GetPleuralComplianceSensitivity()
 {
-	if (m_PleuralComplianceSensitivity == nullptr)
+  if (m_PleuralComplianceSensitivity == nullptr)
     m_PleuralComplianceSensitivity = new SEScalarInverseVolume();
-	return *m_PleuralComplianceSensitivity;
+  return *m_PleuralComplianceSensitivity;
 }
 double BioGearsConfiguration::GetPleuralComplianceSensitivity(const InverseVolumeUnit& unit) const
 {
@@ -2483,13 +2455,13 @@ double BioGearsConfiguration::GetPulmonaryVentilationRateMaximum(const VolumePer
 
 bool BioGearsConfiguration::HasVentilatoryOcclusionPressure() const
 {
-	return m_VentilatoryOcclusionPressure == nullptr ? false : m_VentilatoryOcclusionPressure->IsValid();
+  return m_VentilatoryOcclusionPressure == nullptr ? false : m_VentilatoryOcclusionPressure->IsValid();
 }
 SEScalarPressure& BioGearsConfiguration::GetVentilatoryOcclusionPressure()
 {
-	if (m_VentilatoryOcclusionPressure == nullptr)
-		m_VentilatoryOcclusionPressure = new SEScalarPressure();
-	return *m_VentilatoryOcclusionPressure;
+  if (m_VentilatoryOcclusionPressure == nullptr)
+    m_VentilatoryOcclusionPressure = new SEScalarPressure();
+  return *m_VentilatoryOcclusionPressure;
 }
 double BioGearsConfiguration::GetVentilatoryOcclusionPressure(const PressureUnit& unit) const
 {
@@ -2500,13 +2472,13 @@ double BioGearsConfiguration::GetVentilatoryOcclusionPressure(const PressureUnit
 
 bool BioGearsConfiguration::HasVentilationTidalVolumeIntercept() const
 {
-	return m_VentilationTidalVolumeIntercept == nullptr ? false : m_VentilationTidalVolumeIntercept->IsValid();
+  return m_VentilationTidalVolumeIntercept == nullptr ? false : m_VentilationTidalVolumeIntercept->IsValid();
 }
 SEScalarVolume& BioGearsConfiguration::GetVentilationTidalVolumeIntercept()
 {
-	if (m_VentilationTidalVolumeIntercept == nullptr)
-		m_VentilationTidalVolumeIntercept = new SEScalarVolume();
-	return *m_VentilationTidalVolumeIntercept;
+  if (m_VentilationTidalVolumeIntercept == nullptr)
+    m_VentilationTidalVolumeIntercept = new SEScalarVolume();
+  return *m_VentilationTidalVolumeIntercept;
 }
 double BioGearsConfiguration::GetVentilationTidalVolumeIntercept(const VolumeUnit& unit) const
 {

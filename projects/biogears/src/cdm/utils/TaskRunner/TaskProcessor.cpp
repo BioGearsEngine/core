@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 /// \param  pTaskQueue  Pointer to the TaskQueue to draw Tasks from
 //--------------------------------------------------------------------------------------------------
 TaskProcessor::TaskProcessor(TaskQueue* pTaskQueue)
-    : m_pTaskQueue(pTaskQueue)
+  : m_pTaskQueue(pTaskQueue)
 {
 }
 
@@ -32,9 +32,8 @@ TaskProcessor::TaskProcessor(TaskQueue* pTaskQueue)
 //--------------------------------------------------------------------------------------------------
 void TaskProcessor::operator()()
 {
-    while (std::unique_ptr<Task> pTask = m_pTaskQueue->GetNextTask())
-    {
-        pTask->Run();
-        m_pTaskQueue->ReportTaskComplete();
-    }
+  while (std::unique_ptr<Task> pTask = m_pTaskQueue->GetNextTask()) {
+    pTask->Run();
+    m_pTaskQueue->ReportTaskComplete();
+  }
 }

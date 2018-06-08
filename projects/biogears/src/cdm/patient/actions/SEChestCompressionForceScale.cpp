@@ -10,94 +10,97 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForceScale.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/schema/Scalar0To1Data.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/Scalar0To1Data.hxx>
 #include <biogears/schema/ScalarTimeData.hxx>
 
-SEChestCompressionForceScale::SEChestCompressionForceScale() : SEChestCompression()
+SEChestCompressionForceScale::SEChestCompressionForceScale()
+  : SEChestCompression()
 {
-	m_ForceScale = nullptr;
-	m_ForcePeriod = nullptr;
+  m_ForceScale = nullptr;
+  m_ForcePeriod = nullptr;
 }
 
 SEChestCompressionForceScale::~SEChestCompressionForceScale()
 {
-	Clear();
+  Clear();
 }
 
 void SEChestCompressionForceScale::Clear()
 {
-	SEChestCompression::Clear();
-	SAFE_DELETE(m_ForceScale);
-	SAFE_DELETE(m_ForcePeriod);
+  SEChestCompression::Clear();
+  SAFE_DELETE(m_ForceScale);
+  SAFE_DELETE(m_ForcePeriod);
 }
 
 bool SEChestCompressionForceScale::IsValid() const
 {
-	return SEChestCompression::IsValid() && HasForceScale();
+  return SEChestCompression::IsValid() && HasForceScale();
 }
 
 bool SEChestCompressionForceScale::IsActive() const
 {
-	return IsValid() ? !m_ForceScale->IsZero() : false;
+  return IsValid() ? !m_ForceScale->IsZero() : false;
 }
 
 bool SEChestCompressionForceScale::Load(const CDM::ChestCompressionForceScaleData& in)
 {
-	SEChestCompression::Load(in);
-	GetForceScale().Load(in.ForceScale());
-	if (in.ForcePeriod().present())
-		GetForcePeriod().Load(in.ForcePeriod().get());
-	return true;
+  SEChestCompression::Load(in);
+  GetForceScale().Load(in.ForceScale());
+  if (in.ForcePeriod().present())
+    GetForcePeriod().Load(in.ForcePeriod().get());
+  return true;
 }
 
 CDM::ChestCompressionForceScaleData* SEChestCompressionForceScale::Unload() const
 {
-	CDM::ChestCompressionForceScaleData*data(new CDM::ChestCompressionForceScaleData());
-	Unload(*data);
-	return data;
+  CDM::ChestCompressionForceScaleData* data(new CDM::ChestCompressionForceScaleData());
+  Unload(*data);
+  return data;
 }
 
 void SEChestCompressionForceScale::Unload(CDM::ChestCompressionForceScaleData& data) const
 {
-	SEChestCompression::Unload(data);
-	if (m_ForceScale != nullptr)
-		data.ForceScale(std::unique_ptr<CDM::Scalar0To1Data>(m_ForceScale->Unload()));
-	if (m_ForcePeriod != nullptr)
-		data.ForcePeriod(std::unique_ptr<CDM::ScalarTimeData>(m_ForcePeriod->Unload()));
+  SEChestCompression::Unload(data);
+  if (m_ForceScale != nullptr)
+    data.ForceScale(std::unique_ptr<CDM::Scalar0To1Data>(m_ForceScale->Unload()));
+  if (m_ForcePeriod != nullptr)
+    data.ForcePeriod(std::unique_ptr<CDM::ScalarTimeData>(m_ForcePeriod->Unload()));
 }
 
 bool SEChestCompressionForceScale::HasForceScale() const
 {
-	return m_ForceScale == nullptr ? false : m_ForceScale->IsValid();
+  return m_ForceScale == nullptr ? false : m_ForceScale->IsValid();
 }
 SEScalar0To1& SEChestCompressionForceScale::GetForceScale()
 {
-	if (m_ForceScale == nullptr)
-		m_ForceScale = new SEScalar0To1();
-	return *m_ForceScale;
+  if (m_ForceScale == nullptr)
+    m_ForceScale = new SEScalar0To1();
+  return *m_ForceScale;
 }
 
 bool SEChestCompressionForceScale::HasForcePeriod() const
 {
-	return m_ForcePeriod == nullptr ? false : m_ForcePeriod->IsValid();
+  return m_ForcePeriod == nullptr ? false : m_ForcePeriod->IsValid();
 }
 SEScalarTime& SEChestCompressionForceScale::GetForcePeriod()
 {
-	if (m_ForcePeriod == nullptr)
-		m_ForcePeriod = new SEScalarTime();
-	return *m_ForcePeriod;
+  if (m_ForcePeriod == nullptr)
+    m_ForcePeriod = new SEScalarTime();
+  return *m_ForcePeriod;
 }
 
-void SEChestCompressionForceScale::ToString(std::ostream &str) const
+void SEChestCompressionForceScale::ToString(std::ostream& str) const
 {
-	str << "Patient Action : Chest Compression";
-	if (HasComment())
-		str << "\n\tComment: " << m_Comment;
-	str << "\n\tForceScale: "; HasForceScale() ? str << *m_ForceScale : str << "NaN";
-	str << "\n\tForcePeriod: "; HasForcePeriod() ? str << *m_ForcePeriod : str << "NaN";
-	str << std::flush;
+  str << "Patient Action : Chest Compression";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tForceScale: ";
+  HasForceScale() ? str << *m_ForceScale : str << "NaN";
+  str << "\n\tForcePeriod: ";
+  HasForcePeriod() ? str << *m_ForcePeriod : str << "NaN";
+  str << std::flush;
 }

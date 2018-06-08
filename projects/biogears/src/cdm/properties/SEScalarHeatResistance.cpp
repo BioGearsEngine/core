@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarHeatResistance.h>
+#include <biogears/cdm/stdafx.h>
 
 const HeatResistanceUnit HeatResistanceUnit::K_Per_W("K/W");
 const HeatResistanceUnit HeatResistanceUnit::C_Per_W("degC/W");

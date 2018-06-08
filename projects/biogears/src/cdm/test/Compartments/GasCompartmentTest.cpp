@@ -10,33 +10,32 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/utils/TimingProfile.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/cdm/utils/testing/SETestSuite.h>
-#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
-#include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
-#include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
-#include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
+#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
-#include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
+#include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/test/CommonDataModelTest.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-// Maybe we want to test a couple compartments that overlap 
+// Maybe we want to test a couple compartments that overlap
 // i.e. 2 compartments containing the same node and or path
 
 void CommonDataModelTest::TestGasFlows(SETestSuite& testSuite, SESubstanceManager& subMgr)
@@ -73,7 +72,7 @@ void CommonDataModelTest::TestGasFlows(SETestSuite& testSuite, SESubstanceManage
   right2middle->GetFlow().SetValue(smallInflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   cmptMgr.StateChange();
 
-  TestCompartmentSerialization(cmptMgr, m_OutDirectory+"/TestGasFlows.xml");
+  TestCompartmentSerialization(cmptMgr, m_OutDirectory + "/TestGasFlows.xml");
   left = cmptMgr.GetGasCompartment("Left");
   middle = cmptMgr.GetGasCompartment("Middle");
   right = cmptMgr.GetGasCompartment("Right");
@@ -84,27 +83,27 @@ void CommonDataModelTest::TestGasFlows(SETestSuite& testSuite, SESubstanceManage
 
   inflow_mL_Per_s = largeInflow_mL_Per_s + smallInflow_mL_Per_s;
   outflow_mL_Per_s = largeOutflow_mL_Per_s + smallOutflow_mL_Per_s;
-  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
@@ -114,27 +113,27 @@ void CommonDataModelTest::TestGasFlows(SETestSuite& testSuite, SESubstanceManage
   right2middle->GetFlow().SetValue(-smallInflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   inflow_mL_Per_s = largeInflow_mL_Per_s + smallOutflow_mL_Per_s;
   outflow_mL_Per_s = largeOutflow_mL_Per_s + smallInflow_mL_Per_s;
-  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
@@ -144,27 +143,27 @@ void CommonDataModelTest::TestGasFlows(SETestSuite& testSuite, SESubstanceManage
   middle2left->GetFlow().SetValue(-largeOutflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   inflow_mL_Per_s = largeOutflow_mL_Per_s + smallOutflow_mL_Per_s;
   outflow_mL_Per_s = largeInflow_mL_Per_s + smallInflow_mL_Per_s;
-  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
@@ -235,9 +234,9 @@ void CommonDataModelTest::TestGasHierarchyFlows(SETestSuite& testSuite, SESubsta
   L1C0->AddChild(*L2C1);
   L1C1->AddChild(*L2C2);
   L1C1->AddChild(*L2C3);
-  cmptMgr.StateChange();// Call this, AFTER YOU SET UP YOUR HIERARCHY, to ensure all parent compartments have their link data
+  cmptMgr.StateChange(); // Call this, AFTER YOU SET UP YOUR HIERARCHY, to ensure all parent compartments have their link data
 
-  TestCompartmentSerialization(cmptMgr, m_OutDirectory+"/TestGasHierarchyFlows.xml");
+  TestCompartmentSerialization(cmptMgr, m_OutDirectory + "/TestGasHierarchyFlows.xml");
   L0C0 = cmptMgr.GetGasCompartment("L0C0");
   L1C0 = cmptMgr.GetGasCompartment("L1C0");
   L1C1 = cmptMgr.GetGasCompartment("L1C1");
@@ -281,27 +280,27 @@ void CommonDataModelTest::TestFlow(SETestCase& testCase, SEGasCompartment& cmpt,
     testCase.AddFailure(cmpt.GetName() + " does not have Inflow");
   if (!cmpt.HasOutFlow())
     testCase.AddFailure(cmpt.GetName() + " does not have Outflow");
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
@@ -312,8 +311,8 @@ void CommonDataModelTest::TestGasHierarchy(SETestSuite& testSuite, SESubstanceMa
   SETestCase& testCase = testSuite.CreateTestCase();
   testCase.SetName("HierarchyVolumesPressuresFlows");
 
-  SESubstance* N2  = subMgr.GetSubstance("Nitrogen");
-  SESubstance* O2  = subMgr.GetSubstance("Oxygen");
+  SESubstance* N2 = subMgr.GetSubstance("Nitrogen");
+  SESubstance* O2 = subMgr.GetSubstance("Oxygen");
   SESubstance* CO2 = subMgr.GetSubstance("CarbonDioxide");
 
   SEScalarPressure partialPressure;
@@ -414,8 +413,8 @@ void CommonDataModelTest::TestGasHierarchy(SETestSuite& testSuite, SESubstanceMa
   L1C1->AddChild(*L2C3);
   cmptMgr.StateChange();
 
-  TestCompartmentSerialization(cmptMgr, m_OutDirectory+"/TestGasHierarchy.xml");
-  L0C0 = cmptMgr.GetGasCompartment("L0C0"); 
+  TestCompartmentSerialization(cmptMgr, m_OutDirectory + "/TestGasHierarchy.xml");
+  L0C0 = cmptMgr.GetGasCompartment("L0C0");
   L1C0 = cmptMgr.GetGasCompartment("L1C0");
   L1C1 = cmptMgr.GetGasCompartment("L1C1");
   L2C0 = cmptMgr.GetGasCompartment("L2C0");
@@ -435,72 +434,60 @@ void CommonDataModelTest::TestGasHierarchy(SETestSuite& testSuite, SESubstanceMa
   L2C3_O2 = L2C3->GetSubstanceQuantity(*O2);
   L2C3_CO2 = L2C3->GetSubstanceQuantity(*CO2);
 
-  // Check our Volumes 
+  // Check our Volumes
   double L1C0_expected_mL = L2C0_mL + L2C1_mL;
-  if (GeneralMath::PercentTolerance(L1C0->GetVolume(VolumeUnit::mL), L1C0_expected_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C0->GetVolume(VolumeUnit::mL), L1C0_expected_mL) > m_PercentTolerance) {
     m_ss << L1C0->GetName() << " const Volume is not correct : " << L1C0->GetVolume(VolumeUnit::mL) << " expected " << L1C0_expected_mL;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L1C0->GetVolume().GetValue(VolumeUnit::mL), L1C0_expected_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C0->GetVolume().GetValue(VolumeUnit::mL), L1C0_expected_mL) > m_PercentTolerance) {
     m_ss << L1C0->GetName() << " Volume is not correct : " << L1C0->GetVolume().GetValue(VolumeUnit::mL) << " expected " << L1C0_expected_mL;
     testCase.AddFailure(m_ss);
   }
   double L1C1_expected_mL = L2C2_mL + L2C3_mL;
-  if (GeneralMath::PercentTolerance(L1C1->GetVolume(VolumeUnit::mL), L1C1_expected_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C1->GetVolume(VolumeUnit::mL), L1C1_expected_mL) > m_PercentTolerance) {
     m_ss << L1C1->GetName() << " const Volume is not correct : " << L1C1->GetVolume(VolumeUnit::mL) << " expected " << L1C1_expected_mL;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L1C1->GetVolume().GetValue(VolumeUnit::mL), L1C1_expected_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C1->GetVolume().GetValue(VolumeUnit::mL), L1C1_expected_mL) > m_PercentTolerance) {
     m_ss << L1C1->GetName() << " Volume is not correct : " << L1C1->GetVolume().GetValue(VolumeUnit::mL) << " expected " << L1C1_expected_mL;
     testCase.AddFailure(m_ss);
   }
   double L0C0_expected_mL = L1C0_expected_mL + L1C1_expected_mL;
-  if (GeneralMath::PercentTolerance(L0C0->GetVolume(VolumeUnit::mL), L0C0_expected_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L0C0->GetVolume(VolumeUnit::mL), L0C0_expected_mL) > m_PercentTolerance) {
     m_ss << L0C0->GetName() << " const Volume is not correct : " << L0C0->GetVolume(VolumeUnit::mL) << " expected " << L0C0_expected_mL;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L0C0->GetVolume().GetValue(VolumeUnit::mL), L0C0_expected_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L0C0->GetVolume().GetValue(VolumeUnit::mL), L0C0_expected_mL) > m_PercentTolerance) {
     m_ss << L0C0->GetName() << " Volume is not correct : " << L0C0->GetVolume().GetValue(VolumeUnit::mL) << " expected " << L0C0_expected_mL;
     testCase.AddFailure(m_ss);
   }
 
   // Check our pressures
   double L1C0_expected_mmHg = (L2C0_mmHg * (L2C0_mL / L1C0_expected_mL)) + (L2C1_mmHg * (L2C1_mL / L1C0_expected_mL));
-  if (GeneralMath::PercentTolerance(L1C0->GetPressure(PressureUnit::mmHg), L1C0_expected_mmHg) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C0->GetPressure(PressureUnit::mmHg), L1C0_expected_mmHg) > m_PercentTolerance) {
     m_ss << L1C0->GetName() << " const Pressure is not correct : " << L1C0->GetPressure(PressureUnit::mmHg) << " expected " << L1C0_expected_mmHg;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L1C0->GetPressure().GetValue(PressureUnit::mmHg), L1C0_expected_mmHg) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C0->GetPressure().GetValue(PressureUnit::mmHg), L1C0_expected_mmHg) > m_PercentTolerance) {
     m_ss << L1C0->GetName() << " Pressure is not correct : " << L1C0->GetPressure().GetValue(PressureUnit::mmHg) << " expected " << L1C0_expected_mmHg;
     testCase.AddFailure(m_ss);
   }
   double L1C1_expected_mmHg = (L2C2_mmHg * (L2C2_mL / L1C1_expected_mL)) + (L2C3_mmHg * (L2C3_mL / L1C1_expected_mL));
-  if (GeneralMath::PercentTolerance(L1C1->GetPressure(PressureUnit::mmHg), L1C1_expected_mmHg) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C1->GetPressure(PressureUnit::mmHg), L1C1_expected_mmHg) > m_PercentTolerance) {
     m_ss << L1C1->GetName() << " const Pressure is not correct : " << L1C1->GetPressure(PressureUnit::mmHg) << " expected " << L1C1_expected_mmHg;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L1C1->GetPressure().GetValue(PressureUnit::mmHg), L1C1_expected_mmHg) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L1C1->GetPressure().GetValue(PressureUnit::mmHg), L1C1_expected_mmHg) > m_PercentTolerance) {
     m_ss << L1C1->GetName() << " Pressure is not correct : " << L1C1->GetPressure().GetValue(PressureUnit::mmHg) << " expected " << L1C1_expected_mmHg;
     testCase.AddFailure(m_ss);
   }
   double L0C0_expected_mmHg = (L1C0_expected_mmHg * (L1C0_expected_mL / L0C0_expected_mL)) + (L1C1_expected_mmHg * (L1C1_expected_mL / L0C0_expected_mL));
-  if (GeneralMath::PercentTolerance(L0C0->GetPressure(PressureUnit::mmHg), L0C0_expected_mmHg) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L0C0->GetPressure(PressureUnit::mmHg), L0C0_expected_mmHg) > m_PercentTolerance) {
     m_ss << L0C0->GetName() << " const Pressure is not correct : " << L0C0->GetPressure(PressureUnit::mmHg) << " expected " << L0C0_expected_mmHg;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L0C0->GetPressure().GetValue(PressureUnit::mmHg), L0C0_expected_mmHg) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L0C0->GetPressure().GetValue(PressureUnit::mmHg), L0C0_expected_mmHg) > m_PercentTolerance) {
     m_ss << L0C0->GetName() << " Pressure is not correct : " << L0C0->GetPressure().GetValue(PressureUnit::mmHg) << " expected " << L0C0_expected_mmHg;
     testCase.AddFailure(m_ss);
   }
@@ -508,40 +495,34 @@ void CommonDataModelTest::TestGasHierarchy(SETestSuite& testSuite, SESubstanceMa
   // Check substance volumes
   if (!L2C0_N2->HasVolume())
     testCase.AddFailure("N2 Volume was not set from VolumeFraction Balance");
-  double L2CO_N2_vol_mL = L2C0_mL*L2C0_N2_volFrac;
-  if (GeneralMath::PercentTolerance(L2C0_N2->GetVolume(VolumeUnit::mL), L2CO_N2_vol_mL) > m_PercentTolerance)
-  {
+  double L2CO_N2_vol_mL = L2C0_mL * L2C0_N2_volFrac;
+  if (GeneralMath::PercentTolerance(L2C0_N2->GetVolume(VolumeUnit::mL), L2CO_N2_vol_mL) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " N2 const Volume is not correct : " << L2C0_N2->GetVolume(VolumeUnit::mL) << " expected " << L2CO_N2_vol_mL;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C0_N2->GetVolume().GetValue(VolumeUnit::mL), L2CO_N2_vol_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_N2->GetVolume().GetValue(VolumeUnit::mL), L2CO_N2_vol_mL) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " N2 Volume is not correct : " << L2C0_N2->GetVolume(VolumeUnit::mL) << " expected " << L2CO_N2_vol_mL;
     testCase.AddFailure(m_ss);
-  }  
+  }
   if (!L2C0_O2->HasVolume())
     testCase.AddFailure("O2 Volume was not set from VolumeFraction Balance");
-  double L2CO_O2_vol_mL = L2C0_mL*L2C0_O2_volFrac;
-  if (GeneralMath::PercentTolerance(L2C0_O2->GetVolume(VolumeUnit::mL), L2CO_O2_vol_mL) > m_PercentTolerance)
-  {
+  double L2CO_O2_vol_mL = L2C0_mL * L2C0_O2_volFrac;
+  if (GeneralMath::PercentTolerance(L2C0_O2->GetVolume(VolumeUnit::mL), L2CO_O2_vol_mL) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " O2 const Volume is not correct : " << L2C0_O2->GetVolume(VolumeUnit::mL) << " expected " << L2CO_O2_vol_mL;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C0_O2->GetVolume().GetValue(VolumeUnit::mL), L2CO_O2_vol_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_O2->GetVolume().GetValue(VolumeUnit::mL), L2CO_O2_vol_mL) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " O2 Volume is not correct : " << L2C0_O2->GetVolume(VolumeUnit::mL) << " expected " << L2CO_O2_vol_mL;
     testCase.AddFailure(m_ss);
   }
   if (!L2C0_CO2->HasVolume())
     testCase.AddFailure("CO2 Volume was not set from VolumeFraction Balance");
-  double L2CO_CO2_vol_mL = L2C0_mL*L2C0_CO2_volFrac;
-  if (GeneralMath::PercentTolerance(L2C0_CO2->GetVolume(VolumeUnit::mL), L2CO_CO2_vol_mL) > m_PercentTolerance)
-  {
+  double L2CO_CO2_vol_mL = L2C0_mL * L2C0_CO2_volFrac;
+  if (GeneralMath::PercentTolerance(L2C0_CO2->GetVolume(VolumeUnit::mL), L2CO_CO2_vol_mL) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " CO2 const Volume is not correct : " << L2C0_CO2->GetVolume(VolumeUnit::mL) << " expected " << L2CO_CO2_vol_mL;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C0_CO2->GetVolume().GetValue(VolumeUnit::mL), L2CO_CO2_vol_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_CO2->GetVolume().GetValue(VolumeUnit::mL), L2CO_CO2_vol_mL) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " CO2 Volume is not correct : " << L2C0_CO2->GetVolume(VolumeUnit::mL) << " expected " << L2CO_CO2_vol_mL;
     testCase.AddFailure(m_ss);
   }
@@ -549,39 +530,33 @@ void CommonDataModelTest::TestGasHierarchy(SETestSuite& testSuite, SESubstanceMa
   if (!L2C0_N2->HasPartialPressure())
     testCase.AddFailure("N2 PartialPressure was not set from VolumeFraction Balance");
   GeneralMath::CalculatePartialPressureInGas(L2C0_N2->GetVolumeFraction(), L2C0->GetPressure(), partialPressure);
-  if (GeneralMath::PercentTolerance(L2C0_N2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_N2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " N2 const PartialPressure is not correct : " << L2C0_N2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C0_N2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_N2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " N2 PartialPressure is not correct : " << L2C0_N2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
   if (!L2C0_O2->HasPartialPressure())
     testCase.AddFailure("O2 PartialPressure was not set from VolumeFraction Balance");
   GeneralMath::CalculatePartialPressureInGas(L2C0_O2->GetVolumeFraction(), L2C0->GetPressure(), partialPressure);
-  if (GeneralMath::PercentTolerance(L2C0_O2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_O2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " O2 const PartialPressure is not correct : " << L2C0_O2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C0_O2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_O2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " O2 PartialPressure is not correct : " << L2C0_O2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
   if (!L2C0_CO2->HasPartialPressure())
     testCase.AddFailure("CO2 PartialPressure was not set from VolumeFraction Balance");
   GeneralMath::CalculatePartialPressureInGas(L2C0_CO2->GetVolumeFraction(), L2C0->GetPressure(), partialPressure);
-  if (GeneralMath::PercentTolerance(L2C0_CO2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_CO2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " CO2 const PartialPressure is not correct : " << L2C0_CO2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C0_CO2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C0_CO2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " CO2 PartialPressure is not correct : " << L2C0_CO2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
@@ -590,39 +565,33 @@ void CommonDataModelTest::TestGasHierarchy(SETestSuite& testSuite, SESubstanceMa
   if (!L2C1_N2->HasVolumeFraction())
     testCase.AddFailure("N2 VolumeFraction was not set from Volume Balance");
   double L2C1_N2_VolumeFraction = L2C1_N2_mL / L2C1_mL;
-  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity*>(L2C1_N2)->GetVolumeFraction(), L2C1_N2_VolumeFraction)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity*>(L2C1_N2)->GetVolumeFraction(), L2C1_N2_VolumeFraction) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " N2 const VolumeFraction is not correct : " << const_cast<const SEGasSubstanceQuantity*>(L2C1_N2)->GetVolumeFraction() << " expected " << L2C1_N2_VolumeFraction;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C1_N2->GetVolumeFraction().GetValue(), L2C1_N2_VolumeFraction) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_N2->GetVolumeFraction().GetValue(), L2C1_N2_VolumeFraction) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " N2 VolumeFraction is not correct : " << L2C1_N2->GetVolumeFraction() << " expected " << L2C1_N2_VolumeFraction;
     testCase.AddFailure(m_ss);
-  }  
+  }
   if (!L2C1_O2->HasVolumeFraction())
     testCase.AddFailure("O2 VolumeFraction was not set from Volume Balance");
   double L2C1_O2_VolumeFraction = L2C1_O2_mL / L2C1_mL;
-  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity*>(L2C1_O2)->GetVolumeFraction(), L2C1_O2_VolumeFraction)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity*>(L2C1_O2)->GetVolumeFraction(), L2C1_O2_VolumeFraction) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " O2 const VolumeFraction is not correct : " << const_cast<const SEGasSubstanceQuantity*>(L2C1_O2)->GetVolumeFraction() << " expected " << L2C1_O2_VolumeFraction;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C1_O2->GetVolumeFraction().GetValue(), L2C1_O2_VolumeFraction) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_O2->GetVolumeFraction().GetValue(), L2C1_O2_VolumeFraction) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " O2 VolumeFraction is not correct : " << L2C1_O2->GetVolumeFraction() << " expected " << L2C1_O2_VolumeFraction;
     testCase.AddFailure(m_ss);
   }
   if (!L2C1_CO2->HasVolumeFraction())
     testCase.AddFailure("CO2 VolumeFraction was not set from Volume Balance");
   double L2C1_CO2_VolumeFraction = L2C1_CO2_mL / L2C1_mL;
-  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity*>(L2C1_CO2)->GetVolumeFraction(), L2C1_CO2_VolumeFraction)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity*>(L2C1_CO2)->GetVolumeFraction(), L2C1_CO2_VolumeFraction) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " CO2 const VolumeFraction is not correct : " << const_cast<const SEGasSubstanceQuantity*>(L2C1_CO2)->GetVolumeFraction() << " expected " << L2C1_CO2_VolumeFraction;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C1_CO2->GetVolumeFraction().GetValue(), L2C1_CO2_VolumeFraction) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_CO2->GetVolumeFraction().GetValue(), L2C1_CO2_VolumeFraction) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " CO2 VolumeFraction is not correct : " << L2C1_CO2->GetVolumeFraction() << " expected " << L2C1_CO2_VolumeFraction;
     testCase.AddFailure(m_ss);
   }
@@ -630,39 +599,33 @@ void CommonDataModelTest::TestGasHierarchy(SETestSuite& testSuite, SESubstanceMa
   if (!L2C0_N2->HasPartialPressure())
     testCase.AddFailure("N2 PartialPressure was not set from VolumeFraction Balance");
   GeneralMath::CalculatePartialPressureInGas(L2C1_N2->GetVolumeFraction(), L2C1->GetPressure(), partialPressure);
-  if (GeneralMath::PercentTolerance(L2C1_N2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_N2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " N2 const PartialPressure is not correct : " << L2C1_N2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C1_N2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_N2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " N2 PartialPressure is not correct : " << L2C1_N2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
   if (!L2C1_O2->HasPartialPressure())
     testCase.AddFailure("O2 PartialPressure was not set from VolumeFraction Balance");
   GeneralMath::CalculatePartialPressureInGas(L2C1_O2->GetVolumeFraction(), L2C1->GetPressure(), partialPressure);
-  if (GeneralMath::PercentTolerance(L2C1_O2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_O2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " O2 const PartialPressure is not correct : " << L2C1_O2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C1_O2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_O2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " O2 PartialPressure is not correct : " << L2C1_O2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
   if (!L2C1_CO2->HasPartialPressure())
     testCase.AddFailure("CO2 PartialPressure was not set from VolumeFraction Balance");
   GeneralMath::CalculatePartialPressureInGas(L2C1_CO2->GetVolumeFraction(), L2C1->GetPressure(), partialPressure);
-  if (GeneralMath::PercentTolerance(L2C1_CO2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_CO2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " CO2 const PartialPressure is not correct : " << L2C1_CO2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(L2C1_CO2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(L2C1_CO2->GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " CO2 PartialPressure is not correct : " << L2C1_CO2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
@@ -705,7 +668,7 @@ void CommonDataModelTest::TestGasCircuitVolumesPressuresAndFlows(SETestSuite& te
   SEFluidCircuitNode& l1 = circuit.CreateNode("Left1");
   l1.GetNextPressure().SetValue(10., PressureUnit::mmHg);
   l1.GetVolumeBaseline().SetValue(10., VolumeUnit::mL);
-  SEFluidCircuitNode& l2 = circuit.CreateNode("Left2");  
+  SEFluidCircuitNode& l2 = circuit.CreateNode("Left2");
   l2.GetNextPressure().SetValue(22., PressureUnit::mmHg);
   // No Volume
   SEFluidCircuitNode& l3 = circuit.CreateNode("Left3");
@@ -736,13 +699,13 @@ void CommonDataModelTest::TestGasCircuitVolumesPressuresAndFlows(SETestSuite& te
   double smallInflow_mL_Per_s = 2.0;
   double inflow_mL_Per_s;
   double outflow_mL_Per_s;
-  SEFluidCircuitPath& p1 = circuit.CreatePath(l1, m1, "l1->m1");//Large Inflow
+  SEFluidCircuitPath& p1 = circuit.CreatePath(l1, m1, "l1->m1"); //Large Inflow
   p1.GetNextFlow().SetValue(largeInflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-  SEFluidCircuitPath& p2 = circuit.CreatePath(m1, r1, "m1->r1");//Small Outflow
+  SEFluidCircuitPath& p2 = circuit.CreatePath(m1, r1, "m1->r1"); //Small Outflow
   p2.GetNextFlow().SetValue(smallOutflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-  SEFluidCircuitPath& p3 = circuit.CreatePath(m2, l2, "m2->l2");// Large Outflow
+  SEFluidCircuitPath& p3 = circuit.CreatePath(m2, l2, "m2->l2"); // Large Outflow
   p3.GetNextFlow().SetValue(largeOutflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-  SEFluidCircuitPath& p4 = circuit.CreatePath(r2, m2, "r2->m2");// Small Inflow
+  SEFluidCircuitPath& p4 = circuit.CreatePath(r2, m2, "r2->m2"); // Small Inflow
   p4.GetNextFlow().SetValue(smallInflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   circuit.SetNextAndCurrentFromBaselines();
   circuit.StateChange();
@@ -786,7 +749,7 @@ void CommonDataModelTest::TestGasCircuitVolumesPressuresAndFlows(SETestSuite& te
   CheckGasPressureAndVolume(testCase, *middle);
   CheckGasPressureAndVolume(testCase, *right);
 
-  l1.GetNextPressure().SetValue(15., PressureUnit::mmHg);// <-- Compartment should return this pressure
+  l1.GetNextPressure().SetValue(15., PressureUnit::mmHg); // <-- Compartment should return this pressure
   l1.GetVolumeBaseline().SetValue(7, VolumeUnit::mL);
   l2.GetNextPressure().SetValue(28., PressureUnit::mmHg);
   l3.GetVolumeBaseline().SetValue(70., VolumeUnit::mL);
@@ -806,27 +769,27 @@ void CommonDataModelTest::TestGasCircuitVolumesPressuresAndFlows(SETestSuite& te
 
   inflow_mL_Per_s = largeInflow_mL_Per_s + smallInflow_mL_Per_s;
   outflow_mL_Per_s = largeOutflow_mL_Per_s + smallOutflow_mL_Per_s;
-  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
+  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
@@ -836,28 +799,28 @@ void CommonDataModelTest::TestGasCircuitVolumesPressuresAndFlows(SETestSuite& te
   p4.GetNextFlow().SetValue(-smallInflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   inflow_mL_Per_s = largeInflow_mL_Per_s + smallOutflow_mL_Per_s;
   outflow_mL_Per_s = largeOutflow_mL_Per_s + smallInflow_mL_Per_s;
-  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
 
@@ -866,28 +829,28 @@ void CommonDataModelTest::TestGasCircuitVolumesPressuresAndFlows(SETestSuite& te
   p3.GetNextFlow().SetValue(-largeOutflow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   inflow_mL_Per_s = largeOutflow_mL_Per_s + smallOutflow_mL_Per_s;
   outflow_mL_Per_s = largeInflow_mL_Per_s + smallInflow_mL_Per_s;
-  m_ss << "Middle Inflow : " <<middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
@@ -899,34 +862,27 @@ void CommonDataModelTest::CheckGasPressureAndVolume(SETestCase& testCase, SEGasC
   const std::vector<SEFluidCircuitNode*>& vNodes = cmpt.GetNodeMapping().GetNodes();
   bool hasVolume = false;
   double nVolume_mL = 0;
-  for (SEFluidCircuitNode* n : vNodes)
-  {
-    if (n->HasNextVolume())
-    {
+  for (SEFluidCircuitNode* n : vNodes) {
+    if (n->HasNextVolume()) {
       hasVolume = true;
       nVolume_mL += n->GetNextVolume().GetValue(VolumeUnit::mL);
     }
   }
-  if (hasVolume && cmpt.HasVolume())
-  {
+  if (hasVolume && cmpt.HasVolume()) {
     m_ss << "Cmpt Volume : " << cmpt.GetVolume(VolumeUnit::mL) << " vs. Node Volume " << nVolume_mL;
     Info(m_ss);
-    if (GeneralMath::PercentTolerance(cmpt.GetVolume(VolumeUnit::mL), nVolume_mL) > m_PercentTolerance)
-    {
+    if (GeneralMath::PercentTolerance(cmpt.GetVolume(VolumeUnit::mL), nVolume_mL) > m_PercentTolerance) {
       m_ss << cmpt.GetName() << " const Volume is not correct : " << cmpt.GetVolume(VolumeUnit::mL) << " expected " << nVolume_mL;
       testCase.AddFailure(m_ss);
     }
     m_ss << "Cmpt Volume : " << cmpt.GetVolume().GetValue(VolumeUnit::mL) << " vs. Node Volume " << nVolume_mL;
     Info(m_ss);
-    if (GeneralMath::PercentTolerance(cmpt.GetVolume().GetValue(VolumeUnit::mL), nVolume_mL) > m_PercentTolerance)
-    {
+    if (GeneralMath::PercentTolerance(cmpt.GetVolume().GetValue(VolumeUnit::mL), nVolume_mL) > m_PercentTolerance) {
       m_ss << cmpt.GetName() << " Volume is not correct : " << cmpt.GetVolume().GetValue(VolumeUnit::mL) << " expected " << nVolume_mL;
       testCase.AddFailure(m_ss);
     }
-  }
-  else
-  {
-    if (hasVolume && !cmpt.HasVolume())  
+  } else {
+    if (hasVolume && !cmpt.HasVolume())
       Error("Nodes have volume, but compartment does not");
     else if (!hasVolume && cmpt.HasVolume())
       Error("Nodes does not have volume, but compartment does");
@@ -941,54 +897,43 @@ void CommonDataModelTest::CheckGasPressureAndVolume(SETestCase& testCase, SEGasC
   bool averagePressure = false;
   int pressureNodes = 0;
   nVolume_mL = 0;
-  for (SEFluidCircuitNode* n : cmpt.GetNodeMapping().GetNodes())
-  {
-    if (n->HasNextPressure())
-    {
+  for (SEFluidCircuitNode* n : cmpt.GetNodeMapping().GetNodes()) {
+    if (n->HasNextPressure()) {
       averagePressure = true;
-      if (n->HasNextVolume())
-      {
+      if (n->HasNextVolume()) {
         volumeWeightedPressure = true;
         nVolume_mL += n->GetNextVolume().GetValue(VolumeUnit::mL);
       }
     }
   }
-  if (volumeWeightedPressure == false && averagePressure == false)
-  {
+  if (volumeWeightedPressure == false && averagePressure == false) {
     Info("No pressure values found on compartment");
     return;
   }
   const std::vector<SEFluidCircuitNode*>& pNodes = cmpt.GetNodeMapping().GetNodes();
   double nPressure_cmH2O = 0;
-  for (SEFluidCircuitNode* n : pNodes)
-  {
-    if (volumeWeightedPressure)
-    {
+  for (SEFluidCircuitNode* n : pNodes) {
+    if (volumeWeightedPressure) {
       if (n->HasNextPressure() && n->HasNextVolume())
         nPressure_cmH2O += n->GetNextPressure().GetValue(PressureUnit::cmH2O) * (n->GetNextVolume(VolumeUnit::mL) / nVolume_mL);
-    }
-    else
-    {
-      if (n->HasNextPressure())
-      {
+    } else {
+      if (n->HasNextPressure()) {
         pressureNodes++;
         nPressure_cmH2O += n->GetNextPressure().GetValue(PressureUnit::cmH2O);
       }
-    }    
+    }
   }
   if (!volumeWeightedPressure && averagePressure)
     nPressure_cmH2O /= pressureNodes;
   m_ss << "Cmpt Pressure : " << cmpt.GetPressure(PressureUnit::cmH2O) << " vs. Node Pressure " << nPressure_cmH2O;
   Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetPressure(PressureUnit::cmH2O), nPressure_cmH2O) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(cmpt.GetPressure(PressureUnit::cmH2O), nPressure_cmH2O) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const Pressure is not correct : " << cmpt.GetPressure(PressureUnit::cmH2O) << " expected " << nPressure_cmH2O;
     testCase.AddFailure(m_ss);
   }
   m_ss << "Cmpt Pressure : " << cmpt.GetPressure().GetValue(PressureUnit::cmH2O) << " vs. Node Pressure " << nPressure_cmH2O;
   Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetPressure().GetValue(PressureUnit::cmH2O), nPressure_cmH2O) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(cmpt.GetPressure().GetValue(PressureUnit::cmH2O), nPressure_cmH2O) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " Pressure Get methods are not equal! : " << cmpt.GetPressure().GetValue(PressureUnit::cmH2O) << " expected " << nPressure_cmH2O;
     testCase.AddFailure(m_ss);
   }
@@ -998,26 +943,22 @@ void CommonDataModelTest::TestGasSubstanceQuantity(SETestCase& testCase, SEGasCo
 {
   if (!subQ.HasVolume())
     testCase.AddFailure("Volume was not set on " + cmpt.GetName());
-  if (GeneralMath::PercentTolerance(subQ.GetVolume(VolumeUnit::mL), totalSubVolume_mL) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(subQ.GetVolume(VolumeUnit::mL), totalSubVolume_mL) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 const Volume is not correct : " << subQ.GetVolume(VolumeUnit::mL) << " expected " << totalSubVolume_mL;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(subQ.GetVolume().GetValue(VolumeUnit::mL), totalSubVolume_mL)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(subQ.GetVolume().GetValue(VolumeUnit::mL), totalSubVolume_mL) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 Volume is not correct : " << subQ.GetVolume(VolumeUnit::mL) << " expected " << totalSubVolume_mL;
     testCase.AddFailure(m_ss);
   }
   if (!subQ.HasVolumeFraction())
     testCase.AddFailure("VolumeFraction was not set on  " + cmpt.GetName());
   double subVolumeFraction = totalSubVolume_mL / totalVolume_mL;
-  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity&>(subQ).GetVolumeFraction(), subVolumeFraction)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(const_cast<const SEGasSubstanceQuantity&>(subQ).GetVolumeFraction(), subVolumeFraction) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 const VolumeFraction is not correct : " << const_cast<const SEGasSubstanceQuantity&>(subQ).GetVolumeFraction() << " expected " << subVolumeFraction;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(subQ.GetVolumeFraction().GetValue(), subVolumeFraction)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(subQ.GetVolumeFraction().GetValue(), subVolumeFraction) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 VolumeFraction is not correct : " << subQ.GetVolumeFraction() << " expected " << subVolumeFraction;
     testCase.AddFailure(m_ss);
   }
@@ -1025,13 +966,11 @@ void CommonDataModelTest::TestGasSubstanceQuantity(SETestCase& testCase, SEGasCo
     testCase.AddFailure("PartialPressure was not set on  " + cmpt.GetName());
   SEScalarPressure partialPressure;
   GeneralMath::CalculatePartialPressureInGas(subQ.GetVolumeFraction(), cmpt.GetPressure(), partialPressure);
-  if (GeneralMath::PercentTolerance(subQ.GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(subQ.GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 const PartialPressure is not correct : " << subQ.GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
-  if (GeneralMath::PercentTolerance(subQ.GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(subQ.GetPartialPressure().GetValue(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 PartialPressure is not correct : " << subQ.GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
     testCase.AddFailure(m_ss);
   }
@@ -1047,16 +986,16 @@ void CommonDataModelTest::TestUpdateGasLinks(SETestSuite& testSuite, SESubstance
 
   SECompartmentManager cmptMgr(subMgr);
 
-  SEGasCompartment& carina  = cmptMgr.CreateGasCompartment("Carina");
+  SEGasCompartment& carina = cmptMgr.CreateGasCompartment("Carina");
   SEGasCompartment& stomach = cmptMgr.CreateGasCompartment("Stomach");
-  SEGasCompartment& mouth   = cmptMgr.CreateGasCompartment("Mouth");
-  SEGasCompartment& env     = cmptMgr.CreateGasCompartment("Environment");
-  SEGasCompartment& equip   = cmptMgr.CreateGasCompartment("Equipment");
+  SEGasCompartment& mouth = cmptMgr.CreateGasCompartment("Mouth");
+  SEGasCompartment& env = cmptMgr.CreateGasCompartment("Environment");
+  SEGasCompartment& equip = cmptMgr.CreateGasCompartment("Equipment");
 
-  SEGasCompartmentLink& mouth2carina  = cmptMgr.CreateGasLink(mouth, carina, "MouthToCarina");
+  SEGasCompartmentLink& mouth2carina = cmptMgr.CreateGasLink(mouth, carina, "MouthToCarina");
   SEGasCompartmentLink& mouth2stomach = cmptMgr.CreateGasLink(mouth, stomach, "MouthToStomach");
-  SEGasCompartmentLink& env2mouth     = cmptMgr.CreateGasLink(env, mouth, "EnvironmentToMouth");
-  SEGasCompartmentLink& equip2mouth   = cmptMgr.CreateGasLink(equip, mouth, "EquipmentToMouth");
+  SEGasCompartmentLink& env2mouth = cmptMgr.CreateGasLink(env, mouth, "EnvironmentToMouth");
+  SEGasCompartmentLink& equip2mouth = cmptMgr.CreateGasLink(equip, mouth, "EquipmentToMouth");
 
   mouth2carina.GetFlow().SetValue(25, VolumePerTimeUnit::mL_Per_s);
   mouth2stomach.GetFlow().SetValue(33, VolumePerTimeUnit::mL_Per_s);
@@ -1096,7 +1035,7 @@ void CommonDataModelTest::TestUpdateGasLinks(SETestSuite& testSuite, SESubstance
 
   if (mouth.GetInFlow(VolumePerTimeUnit::mL_Per_s) != equip2mouth.GetFlow(VolumePerTimeUnit::mL_Per_s))
     testCase.AddFailure("Initial Mouth inflow is not the equipment flow");
-  
+
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
 }
 
@@ -1111,23 +1050,23 @@ void CommonDataModelTest::GasCompartmentTest(const std::string& rptDirectory)
   SESubstanceManager subMgr(m_Logger);
   subMgr.LoadSubstanceDirectory();
 
-  SETestSuite&  Flows = testReport.CreateTestSuite();
+  SETestSuite& Flows = testReport.CreateTestSuite();
   Flows.SetName("GasCompartmentFlows");
   TestGasFlows(Flows, subMgr);
 
-  SETestSuite&  HierarchyFlows = testReport.CreateTestSuite();
+  SETestSuite& HierarchyFlows = testReport.CreateTestSuite();
   HierarchyFlows.SetName("GasCompartmentHierarchyFlows");
   TestGasHierarchyFlows(HierarchyFlows, subMgr);
 
-  SETestSuite&  Hierarchy = testReport.CreateTestSuite();
+  SETestSuite& Hierarchy = testReport.CreateTestSuite();
   Hierarchy.SetName("GasCompartmentHierarchy");
   TestGasHierarchy(Hierarchy, subMgr);
 
-  SETestSuite&  CircuitVolumesPressuresAndFlows = testReport.CreateTestSuite();
+  SETestSuite& CircuitVolumesPressuresAndFlows = testReport.CreateTestSuite();
   CircuitVolumesPressuresAndFlows.SetName("GasCompartmentVolumesPressuresAndFlows");
   TestGasCircuitVolumesPressuresAndFlows(CircuitVolumesPressuresAndFlows, subMgr);
 
-  SETestSuite&  UpdateGasLinks = testReport.CreateTestSuite();
+  SETestSuite& UpdateGasLinks = testReport.CreateTestSuite();
   UpdateGasLinks.SetName("UpdateGasLinks");
   TestUpdateGasLinks(UpdateGasLinks, subMgr);
 

@@ -10,37 +10,37 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/PatientActionData.hxx>
 
-SEPatientAction::SEPatientAction() : SEAction()
+SEPatientAction::SEPatientAction()
+  : SEAction()
 {
-	
 }
 
 SEPatientAction::~SEPatientAction()
 {
-	Clear();
+  Clear();
 }
 
 void SEPatientAction::Clear()
 {
-	SEAction::Clear();
+  SEAction::Clear();
 }
 
 bool SEPatientAction::IsValid() const
 {
-	return SEAction::IsValid();
+  return SEAction::IsValid();
 }
 
 bool SEPatientAction::Load(const CDM::PatientActionData& in)
 {
-	SEAction::Load(in);
-	return true;
+  SEAction::Load(in);
+  return true;
 }
 
 void SEPatientAction::Unload(CDM::PatientActionData& data) const
 {
-	SEAction::Unload(data);
+  SEAction::Unload(data);
 }

@@ -10,17 +10,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
+#include <biogears/cdm/stdafx.h>
 
-SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManager& mgr) : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger()), m_Mgr(mgr)
+SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManager& mgr)
+  : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
+  , m_Mgr(mgr)
 {
-
 }
 SEElectricalCircuit::~SEElectricalCircuit()
 {
-
 }
 
 SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const std::string& name)
@@ -49,4 +49,3 @@ void SEElectricalCircuit::AddCircuit(SEElectricalCircuit& circuit)
   for (SEElectricalCircuitNode* node : circuit.GetReferenceNodes())
     AddReferenceNode(*node);
 }
-

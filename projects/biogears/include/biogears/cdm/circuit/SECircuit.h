@@ -11,12 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(CircuitData)
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 
 #define CIRCUIT_TEMPLATE typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType
 #define CIRCUIT_TYPES CircuitBindType,NodeType,CircuitNodeBindType,PathType,CircuitPathBindType
+
+CDM_BIND_DECL(CircuitData)
 
 template<CIRCUIT_TEMPLATE>
 class SECircuit : public Loggable

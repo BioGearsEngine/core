@@ -11,10 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/schema/Properties.hxx>
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/stdafx.h>
 // Compartments
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
@@ -23,79 +23,80 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 // Substances
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 // Patient
 #include <biogears/cdm/patient/SEPatient.h>
 // Systems
+#include <biogears/cdm/system/environment/SEEnvironment.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
+#include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEndocrineSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
+#include <biogears/cdm/system/physiology/SEHepaticSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
-#include <biogears/cdm/system/physiology/SEHepaticSystem.h>
-#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
-#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
-#include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
-#include <biogears/cdm/system/environment/SEEnvironment.h>
 // Scalars
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/utils/DataTrack.h>
 
 std::string Space2Underscore(const std::string& str)
 {
-	std::string s = str; 
-	std::transform(s.begin(), s.end(), s.begin(), [](char ch) {
-		return ch == ' ' ? '_' : ch;
-	});
-	return s;
+  std::string s = str;
+  std::transform(s.begin(), s.end(), s.begin(), [](char ch) {
+    return ch == ' ' ? '_' : ch;
+  });
+  return s;
 }
 
-PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine) : Loggable(engine.GetLogger()),
-                                                                         m_DataRequestMgr(engine.GetLogger()),
-                                                                         m_Patient((SEPatient&)engine.GetPatient()),
-                                                                         m_SubMgr((SESubstanceManager&)engine.GetSubstanceManager()),
-                                                                         m_CmptMgr((SECompartmentManager&)engine.GetCompartments())
-{  
+PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine)
+  : Loggable(engine.GetLogger())
+  , m_DataRequestMgr(engine.GetLogger())
+  , m_Patient((SEPatient&)engine.GetPatient())
+  , m_SubMgr((SESubstanceManager&)engine.GetSubstanceManager())
+  , m_CmptMgr((SECompartmentManager&)engine.GetCompartments())
+{
 
-  // TODO We are not handling nullptr well here... 
+  // TODO We are not handling nullptr well here...
 
-	SEBloodChemistrySystem* bchem = (SEBloodChemistrySystem*)engine.GetBloodChemistrySystem();
-  if(bchem != nullptr)
+  SEBloodChemistrySystem* bchem = (SEBloodChemistrySystem*)engine.GetBloodChemistrySystem();
+  if (bchem != nullptr)
     m_PhysiologySystems.push_back(bchem);
-	SECardiovascularSystem* cv = (SECardiovascularSystem*)engine.GetCardiovascularSystem();
+  SECardiovascularSystem* cv = (SECardiovascularSystem*)engine.GetCardiovascularSystem();
   if (cv != nullptr)
     m_PhysiologySystems.push_back(cv);
-	SEEndocrineSystem* endo = (SEEndocrineSystem*)engine.GetEndocrineSystem();
+  SEEndocrineSystem* endo = (SEEndocrineSystem*)engine.GetEndocrineSystem();
   if (endo != nullptr)
     m_PhysiologySystems.push_back(endo);
-	SEEnergySystem* energy = (SEEnergySystem*)engine.GetEnergySystem();
+  SEEnergySystem* energy = (SEEnergySystem*)engine.GetEnergySystem();
   if (energy != nullptr)
     m_PhysiologySystems.push_back(energy);
-	SERenalSystem* renal = (SERenalSystem*)engine.GetRenalSystem();
+  SERenalSystem* renal = (SERenalSystem*)engine.GetRenalSystem();
   if (renal != nullptr)
     m_PhysiologySystems.push_back(renal);
-	SEGastrointestinalSystem* gi = (SEGastrointestinalSystem*)engine.GetGastrointestinalSystem();
+  SEGastrointestinalSystem* gi = (SEGastrointestinalSystem*)engine.GetGastrointestinalSystem();
   if (gi != nullptr)
     m_PhysiologySystems.push_back(gi);
-	SERespiratorySystem* resp = (SERespiratorySystem*)engine.GetRespiratorySystem();
+  SERespiratorySystem* resp = (SERespiratorySystem*)engine.GetRespiratorySystem();
   if (resp != nullptr)
     m_PhysiologySystems.push_back(resp);
-	SEDrugSystem* drug = (SEDrugSystem*)engine.GetDrugSystem();
+  SEDrugSystem* drug = (SEDrugSystem*)engine.GetDrugSystem();
   if (drug != nullptr)
     m_PhysiologySystems.push_back(drug);
   SETissueSystem* tissue = (SETissueSystem*)engine.GetTissueSystem();
@@ -122,9 +123,13 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine) : Loggabl
   m_ForceConnection = false;
 }
 
-PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient,SESubstanceManager& subMgr,SECompartmentManager& cmptMgr,
-                                             const std::vector<SESystem*>& physiology, const std::vector<SESystem*>& equipment) : 
-                                             Loggable(patient.GetLogger()), m_DataRequestMgr(patient.GetLogger()), m_Patient(patient), m_SubMgr(subMgr), m_CmptMgr(cmptMgr)
+PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceManager& subMgr, SECompartmentManager& cmptMgr,
+  const std::vector<SESystem*>& physiology, const std::vector<SESystem*>& equipment)
+  : Loggable(patient.GetLogger())
+  , m_DataRequestMgr(patient.GetLogger())
+  , m_Patient(patient)
+  , m_SubMgr(subMgr)
+  , m_CmptMgr(cmptMgr)
 {
   for (auto* p : physiology)
     m_PhysiologySystems.push_back(p);
@@ -153,18 +158,15 @@ void PhysiologyEngineTrack::ResetFile()
 
 DataTrack& PhysiologyEngineTrack::GetDataTrack()
 {
-	return m_DataTrack;
+  return m_DataTrack;
 }
 
 void PhysiologyEngineTrack::SetupRequests()
 {
   bool isOpen = m_ResultsStream.is_open();
-  if (!isOpen || m_ForceConnection)
-  {// Process/Hook up all requests with their associated scalars
-    for (SEDataRequest* dr : m_DataRequestMgr.GetDataRequests())
-    {
-      if (!TrackRequest(*dr))
-      {// Could not hook this up, get rid of it
+  if (!isOpen || m_ForceConnection) { // Process/Hook up all requests with their associated scalars
+    for (SEDataRequest* dr : m_DataRequestMgr.GetDataRequests()) {
+      if (!TrackRequest(*dr)) { // Could not hook this up, get rid of it
         m_ss << "Unable to find data for " << m_Request2Scalar[dr]->Heading;
         Error(m_ss);
       }
@@ -179,224 +181,190 @@ void PhysiologyEngineTrack::SetupRequests()
 
 void PhysiologyEngineTrack::TrackData(double time_s)
 {
-	if (!m_DataRequestMgr.HasDataRequests())
-		return;// Nothing to do here...
+  if (!m_DataRequestMgr.HasDataRequests())
+    return; // Nothing to do here...
 
   SetupRequests();
-	PullData();
-	m_DataTrack.StreamProbesToFile(time_s, m_ResultsStream);
+  PullData();
+  m_DataTrack.StreamProbesToFile(time_s, m_ResultsStream);
 }
 void PhysiologyEngineTrack::PullData()
 {
-	SEDataRequestScalar* ds;
-	for (SEDataRequest* dr : m_DataRequestMgr.GetDataRequests())
-	{
-		ds = m_Request2Scalar[dr];
-    if (ds == nullptr)
-    {
+  SEDataRequestScalar* ds;
+  for (SEDataRequest* dr : m_DataRequestMgr.GetDataRequests()) {
+    ds = m_Request2Scalar[dr];
+    if (ds == nullptr) {
       Error("You cannot modify CSV Results file data requests in the middle of a run.");
       Error("Ignoring data request " + dr->GetName());
       continue;
     }
-    if (!ds->HasScalar())
-    {
+    if (!ds->HasScalar()) {
       m_DataTrack.Probe(ds->Heading, SEScalar::dNaN());
       continue;
     }
-		ds->UpdateScalar();// Update compartment if needed
-		if (ds->IsValid())
-		{
-      if (ds->HasUnit())
-      {
+    ds->UpdateScalar(); // Update compartment if needed
+    if (ds->IsValid()) {
+      if (ds->HasUnit()) {
         if (dr->GetUnit() == nullptr)
           dr->SetUnit(*ds->GetUnit());
         m_DataTrack.Probe(ds->Heading, ds->GetValue(*dr->GetUnit()));
-      }
-      else
+      } else
         m_DataTrack.Probe(ds->Heading, ds->GetValue());
-		}
-		else if (ds->IsInfinity())
-			m_DataTrack.Probe(ds->Heading, std::numeric_limits<double>::infinity());
-		else
-			m_DataTrack.Probe(ds->Heading, SEScalar::dNaN());
-	}
+    } else if (ds->IsInfinity())
+      m_DataTrack.Probe(ds->Heading, std::numeric_limits<double>::infinity());
+    else
+      m_DataTrack.Probe(ds->Heading, SEScalar::dNaN());
+  }
 }
 
-
 bool PhysiologyEngineTrack::TrackRequest(SEDataRequest& dr)
-{	
-	std::string name = dr.GetName();
-	SEDataRequestScalar* ds=new SEDataRequestScalar(GetLogger());	
-	m_Request2Scalar[&dr]=ds;
+{
+  std::string name = dr.GetName();
+  SEDataRequestScalar* ds = new SEDataRequestScalar(GetLogger());
+  m_Request2Scalar[&dr] = ds;
 
   bool success = ConnectRequest(dr, *ds);
 
-	// Now build out the heading string
-	if (dynamic_cast<const SEPhysiologyDataRequest*>(&dr) != nullptr || 
-		  dynamic_cast<const SEEquipmentDataRequest*>(&dr) != nullptr ||
-      dynamic_cast<const SEEnvironmentDataRequest*>(&dr) != nullptr ||
-	  	dynamic_cast<const SEPatientDataRequest*>(&dr) != nullptr)
-	{
-		if (dynamic_cast<const SEPatientDataRequest*>(&dr) != nullptr)
-			m_ss << "Patient";
+  // Now build out the heading string
+  if (dynamic_cast<const SEPhysiologyDataRequest*>(&dr) != nullptr || dynamic_cast<const SEEquipmentDataRequest*>(&dr) != nullptr || dynamic_cast<const SEEnvironmentDataRequest*>(&dr) != nullptr || dynamic_cast<const SEPatientDataRequest*>(&dr) != nullptr) {
+    if (dynamic_cast<const SEPatientDataRequest*>(&dr) != nullptr)
+      m_ss << "Patient";
 
-		if(!dr.GetUnit())
-			m_ss<<dr.GetName();
-		else
-			m_ss<<dr.GetName()<<"("<<*dr.GetUnit()<<")";
-		
-		
-		ds->Heading = Space2Underscore(m_ss.str());
-		m_ss.str("");//Reset Buffer
+    if (!dr.GetUnit())
+      m_ss << dr.GetName();
+    else
+      m_ss << dr.GetName() << "(" << *dr.GetUnit() << ")";
+
+    ds->Heading = Space2Underscore(m_ss.str());
+    m_ss.str(""); //Reset Buffer
     m_DataTrack.Probe(ds->Heading, 0);
     m_DataTrack.SetFormatting(ds->Heading, dr);
     return success;
-	}
-	const SEGasCompartmentDataRequest* gasDR = dynamic_cast<const SEGasCompartmentDataRequest*>(&dr);
-	if (gasDR != nullptr)
-	{// Not including type in the name, as I am making the assumption you don't have compartments with the same name even between types
-		if (gasDR->HasSubstance())
-		{
-			if (!dr.GetUnit())
-				m_ss << gasDR->GetCompartment() << "-"<< gasDR->GetSubstance()->GetName() << "-" << gasDR->GetName();
-			else
-				m_ss << gasDR->GetCompartment() << "-"<< gasDR->GetSubstance()->GetName() << "-" << gasDR->GetName() << "(" << *gasDR->GetUnit() << ")";
-		}
-		else
-		{	
-			if (!dr.GetUnit())
-				m_ss << gasDR->GetCompartment() << "-"<< gasDR->GetName();
-			else
-				m_ss << gasDR->GetCompartment() << "-"<< gasDR->GetName() << "(" << *gasDR->GetUnit() << ")";
-		}
-		ds->Heading = Space2Underscore(m_ss.str());
-		m_ss.str("");//Reset Buffer
+  }
+  const SEGasCompartmentDataRequest* gasDR = dynamic_cast<const SEGasCompartmentDataRequest*>(&dr);
+  if (gasDR != nullptr) { // Not including type in the name, as I am making the assumption you don't have compartments with the same name even between types
+    if (gasDR->HasSubstance()) {
+      if (!dr.GetUnit())
+        m_ss << gasDR->GetCompartment() << "-" << gasDR->GetSubstance()->GetName() << "-" << gasDR->GetName();
+      else
+        m_ss << gasDR->GetCompartment() << "-" << gasDR->GetSubstance()->GetName() << "-" << gasDR->GetName() << "(" << *gasDR->GetUnit() << ")";
+    } else {
+      if (!dr.GetUnit())
+        m_ss << gasDR->GetCompartment() << "-" << gasDR->GetName();
+      else
+        m_ss << gasDR->GetCompartment() << "-" << gasDR->GetName() << "(" << *gasDR->GetUnit() << ")";
+    }
+    ds->Heading = Space2Underscore(m_ss.str());
+    m_ss.str(""); //Reset Buffer
     m_DataTrack.Probe(ds->Heading, 0);
     m_DataTrack.SetFormatting(ds->Heading, dr);
     return success;
-	}		  
+  }
   const SELiquidCompartmentDataRequest* liquidDR = dynamic_cast<const SELiquidCompartmentDataRequest*>(&dr);
-  if (liquidDR != nullptr)
-  {// Not including type in the name, as I am making the assumption you don't have compartments with the same name even between types
-    if (liquidDR->HasSubstance())
-    {
+  if (liquidDR != nullptr) { // Not including type in the name, as I am making the assumption you don't have compartments with the same name even between types
+    if (liquidDR->HasSubstance()) {
       if (!dr.GetUnit())
         m_ss << liquidDR->GetCompartment() << "-" << liquidDR->GetSubstance()->GetName() << "-" << liquidDR->GetName();
       else
         m_ss << liquidDR->GetCompartment() << "-" << liquidDR->GetSubstance()->GetName() << "-" << liquidDR->GetName() << "(" << *liquidDR->GetUnit() << ")";
-    }
-    else
-    {
+    } else {
       if (!dr.GetUnit())
         m_ss << liquidDR->GetCompartment() << "-" << liquidDR->GetName();
       else
         m_ss << liquidDR->GetCompartment() << "-" << liquidDR->GetName() << "(" << *liquidDR->GetUnit() << ")";
     }
     ds->Heading = Space2Underscore(m_ss.str());
-    m_ss.str("");//Reset Buffer
+    m_ss.str(""); //Reset Buffer
     m_DataTrack.Probe(ds->Heading, 0);
     m_DataTrack.SetFormatting(ds->Heading, dr);
     return success;
   }
   const SEThermalCompartmentDataRequest* thermalDR = dynamic_cast<const SEThermalCompartmentDataRequest*>(&dr);
-  if (thermalDR != nullptr)
-  {// Not including type in the name, as I am making the assumption you don't have compartments with the same name even between types
-    
+  if (thermalDR != nullptr) { // Not including type in the name, as I am making the assumption you don't have compartments with the same name even between types
+
     if (!dr.GetUnit())
       m_ss << thermalDR->GetCompartment() << "-" << thermalDR->GetName();
     else
       m_ss << thermalDR->GetCompartment() << "-" << thermalDR->GetName() << "(" << *thermalDR->GetUnit() << ")";
- 
+
     ds->Heading = Space2Underscore(m_ss.str());
-    m_ss.str("");//Reset Buffer
+    m_ss.str(""); //Reset Buffer
     m_DataTrack.Probe(ds->Heading, 0);
     m_DataTrack.SetFormatting(ds->Heading, dr);
     return success;
   }
   const SETissueCompartmentDataRequest* tissueDR = dynamic_cast<const SETissueCompartmentDataRequest*>(&dr);
-  if (tissueDR != nullptr)
-  {
+  if (tissueDR != nullptr) {
     if (!dr.GetUnit())
       m_ss << tissueDR->GetCompartment() << "-" << tissueDR->GetName();
     else
       m_ss << tissueDR->GetCompartment() << "-" << tissueDR->GetName() << "(" << *tissueDR->GetUnit() << ")";
 
     ds->Heading = Space2Underscore(m_ss.str());
-    m_ss.str("");//Reset Buffer
+    m_ss.str(""); //Reset Buffer
     m_DataTrack.Probe(ds->Heading, 0);
     m_DataTrack.SetFormatting(ds->Heading, dr);
     return success;
   }
-	const SESubstanceDataRequest* subDR = dynamic_cast<const SESubstanceDataRequest*>(&dr);
-	if (subDR != nullptr)
-	{
-		if (subDR->HasCompartment())
-		{
-			if (!dr.GetUnit())
-				m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetCompartment() << "-" << subDR->GetName();
-			else
-				m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetCompartment() << "-" << subDR->GetName() << "(" << *subDR->GetUnit() << ")";
-			ds->Heading = Space2Underscore(m_ss.str());
-			m_ss.str("");//Reset Buffer
+  const SESubstanceDataRequest* subDR = dynamic_cast<const SESubstanceDataRequest*>(&dr);
+  if (subDR != nullptr) {
+    if (subDR->HasCompartment()) {
+      if (!dr.GetUnit())
+        m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetCompartment() << "-" << subDR->GetName();
+      else
+        m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetCompartment() << "-" << subDR->GetName() << "(" << *subDR->GetUnit() << ")";
+      ds->Heading = Space2Underscore(m_ss.str());
+      m_ss.str(""); //Reset Buffer
       m_DataTrack.Probe(ds->Heading, 0);
       m_DataTrack.SetFormatting(ds->Heading, dr);
       return success;
-		}
-		else
-		{
-			if (!dr.GetUnit())
-				m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetName();
-			else
-				m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetName() << "(" << *subDR->GetUnit() << ")";
-			ds->Heading = Space2Underscore(m_ss.str());
-			m_ss.str("");//Reset Buffer
+    } else {
+      if (!dr.GetUnit())
+        m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetName();
+      else
+        m_ss << subDR->GetSubstance()->GetName() << "-" << subDR->GetName() << "(" << *subDR->GetUnit() << ")";
+      ds->Heading = Space2Underscore(m_ss.str());
+      m_ss.str(""); //Reset Buffer
       m_DataTrack.Probe(ds->Heading, 0);
       m_DataTrack.SetFormatting(ds->Heading, dr);
       return success;
-		}
-	}
-	m_ss << "Unhandled data request : " << name << std::endl;
-	Fatal(m_ss);
+    }
+  }
+  m_ss << "Unhandled data request : " << name << std::endl;
+  Fatal(m_ss);
   return false;
 }
 
 bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScalar& ds)
 {
-	std::string name = dr.GetName();
-	if (dynamic_cast<const SEPhysiologyDataRequest*>(&dr) != nullptr)
-	{
-		// Make sure we mapped something
-    ds.SetScalar(SESystem::GetScalar(name, &m_PhysiologySystems), dr);    
-		return true;
-	}	
-  if (dynamic_cast<const SEEnvironmentDataRequest*>(&dr) != nullptr)
-  {
+  std::string name = dr.GetName();
+  if (dynamic_cast<const SEPhysiologyDataRequest*>(&dr) != nullptr) {
+    // Make sure we mapped something
+    ds.SetScalar(SESystem::GetScalar(name, &m_PhysiologySystems), dr);
+    return true;
+  }
+  if (dynamic_cast<const SEEnvironmentDataRequest*>(&dr) != nullptr) {
     // Make sure we mapped something
     ds.SetScalar(m_Environment->GetScalar(name), dr);
     return true;
   }
-	if (dynamic_cast<const SEEquipmentDataRequest*>(&dr) != nullptr)
-	{
+  if (dynamic_cast<const SEEquipmentDataRequest*>(&dr) != nullptr) {
     ds.SetScalar(SESystem::GetScalar(name, &m_EquipmentSystems), dr);
-		return true;
-	}
+    return true;
+  }
   const SEGasCompartmentDataRequest* gasDR = dynamic_cast<const SEGasCompartmentDataRequest*>(&dr);
-  if (gasDR != nullptr)
-  {
-    if (!m_CmptMgr.HasGasCompartment(gasDR->GetCompartment()))
-    {
+  if (gasDR != nullptr) {
+    if (!m_CmptMgr.HasGasCompartment(gasDR->GetCompartment())) {
       Error("Unknown gas compartment : " + gasDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
     SEGasCompartment* gasCmpt = (SEGasCompartment*)m_CmptMgr.GetGasCompartment(gasDR->GetCompartment());
 
-    if (gasDR->HasSubstance())
-    {
+    if (gasDR->HasSubstance()) {
       // Activate this substance so compartments have it
       m_SubMgr.AddActiveSubstance(*gasDR->GetSubstance());
-      if (gasCmpt->HasChildren())
-      {
+      if (gasCmpt->HasChildren()) {
         if (name == "Volume")
           ds.UpdateProperty = CompartmentUpdate::Volume;
         else if (name == "VolumeFraction")
@@ -406,18 +374,15 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
         ds.GasSubstance = gasCmpt->GetSubstanceQuantity(*gasDR->GetSubstance());
       }
       ds.SetScalar(gasCmpt->GetSubstanceQuantity(*gasDR->GetSubstance())->GetScalar(name), dr);
-    }
-    else
-    {
-      if (gasCmpt->HasChildren() || gasCmpt->HasNodeMapping())
-      {
+    } else {
+      if (gasCmpt->HasChildren() || gasCmpt->HasNodeMapping()) {
         if (name == "Volume")
           ds.UpdateProperty = CompartmentUpdate::Volume;
         if (name == "Pressure")
           ds.UpdateProperty = CompartmentUpdate::Pressure;
       }
 
-      {// Always Update these
+      { // Always Update these
         if (name == "InFlow")
           ds.UpdateProperty = CompartmentUpdate::InFlow;
         else if (name == "OutFlow")
@@ -429,22 +394,18 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
     return true;
   }
   const SELiquidCompartmentDataRequest* liquidDR = dynamic_cast<const SELiquidCompartmentDataRequest*>(&dr);
-  if (liquidDR != nullptr)
-  {
-    if (!m_CmptMgr.HasLiquidCompartment(liquidDR->GetCompartment()))
-    {
+  if (liquidDR != nullptr) {
+    if (!m_CmptMgr.HasLiquidCompartment(liquidDR->GetCompartment())) {
       Error("Unknown liquid compartment : " + liquidDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
     SELiquidCompartment* liquidCmpt = (SELiquidCompartment*)m_CmptMgr.GetLiquidCompartment(liquidDR->GetCompartment());
 
-    if (liquidDR->HasSubstance())
-    {
+    if (liquidDR->HasSubstance()) {
       // Activate this substance so compartments have it
       m_SubMgr.AddActiveSubstance(*liquidDR->GetSubstance());
-      if (liquidCmpt->HasChildren())
-      {
+      if (liquidCmpt->HasChildren()) {
         if (name == "Mass")
           ds.UpdateProperty = CompartmentUpdate::Mass;
         else if (name == "Concentration")
@@ -458,18 +419,15 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
         ds.LiquidSubstance = liquidCmpt->GetSubstanceQuantity(*liquidDR->GetSubstance());
       }
       ds.SetScalar(liquidCmpt->GetSubstanceQuantity(*liquidDR->GetSubstance())->GetScalar(name), dr);
-    }
-    else
-    {
-      if (liquidCmpt->HasChildren()  || liquidCmpt->HasNodeMapping())
-      {
+    } else {
+      if (liquidCmpt->HasChildren() || liquidCmpt->HasNodeMapping()) {
         if (name == "Volume")
           ds.UpdateProperty = CompartmentUpdate::Volume;
         if (name == "Pressure")
           ds.UpdateProperty = CompartmentUpdate::Pressure;
       }
 
-      {// Always Update these        
+      { // Always Update these
         if (name == "InFlow")
           ds.UpdateProperty = CompartmentUpdate::InFlow;
         else if (name == "OutFlow")
@@ -481,25 +439,22 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
     return true;
   }
   const SEThermalCompartmentDataRequest* thermalDR = dynamic_cast<const SEThermalCompartmentDataRequest*>(&dr);
-  if (thermalDR != nullptr)
-  {
-    if (!m_CmptMgr.HasThermalCompartment(thermalDR->GetCompartment()))
-    {
+  if (thermalDR != nullptr) {
+    if (!m_CmptMgr.HasThermalCompartment(thermalDR->GetCompartment())) {
       Error("Unknown thermal compartment : " + thermalDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
     SEThermalCompartment* thermalCmpt = (SEThermalCompartment*)m_CmptMgr.GetThermalCompartment(thermalDR->GetCompartment());
 
-    if (thermalCmpt->HasChildren() || thermalCmpt->HasNodeMapping())
-    {
+    if (thermalCmpt->HasChildren() || thermalCmpt->HasNodeMapping()) {
       if (name == "Heat")
         ds.UpdateProperty = CompartmentUpdate::Heat;
       if (name == "Temperature")
         ds.UpdateProperty = CompartmentUpdate::Temperature;
     }
 
-    {// Always Update these       
+    { // Always Update these
       if (name == "HeatTransferRateIn")
         ds.UpdateProperty = CompartmentUpdate::HeatTransferRateIn;
       else if (name == "HeatTransferRateOut")
@@ -510,10 +465,8 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
     return true;
   }
   const SETissueCompartmentDataRequest* tissueDR = dynamic_cast<const SETissueCompartmentDataRequest*>(&dr);
-  if (tissueDR != nullptr)
-  {
-    if (!m_CmptMgr.HasTissueCompartment(tissueDR->GetCompartment()))
-    {
+  if (tissueDR != nullptr) {
+    if (!m_CmptMgr.HasTissueCompartment(tissueDR->GetCompartment())) {
       Error("Unknown tissue compartment : " + tissueDR->GetCompartment());
       return false;
     }
@@ -522,55 +475,45 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
     ds.SetScalar(tissueCmpt->GetScalar(name), dr);
     return true;
   }
-	if (dynamic_cast<const SEPatientDataRequest*>(&dr) != nullptr)
-	{
-		// casting of the const to modify the patient
-		ds.SetScalar(m_Patient.GetScalar(name),dr);		
-		return true;
-	}
-	const SESubstanceDataRequest* subDR = dynamic_cast<const SESubstanceDataRequest*>(&dr);
-	if (subDR != nullptr)
-	{
-		// Removing const because I want to allocate and grab scalars to track for later
-		SESubstance* sub = (SESubstance*)subDR->GetSubstance();
+  if (dynamic_cast<const SEPatientDataRequest*>(&dr) != nullptr) {
+    // casting of the const to modify the patient
+    ds.SetScalar(m_Patient.GetScalar(name), dr);
+    return true;
+  }
+  const SESubstanceDataRequest* subDR = dynamic_cast<const SESubstanceDataRequest*>(&dr);
+  if (subDR != nullptr) {
+    // Removing const because I want to allocate and grab scalars to track for later
+    SESubstance* sub = (SESubstance*)subDR->GetSubstance();
     m_SubMgr.AddActiveSubstance(*sub);
-		if (subDR->HasCompartment())
-		{// I don't really have a generic/reflexive way of doing this...yet
-      if (subDR->GetName() == "PartitionCoefficient")
-      {
+    if (subDR->HasCompartment()) { // I don't really have a generic/reflexive way of doing this...yet
+      if (subDR->GetName() == "PartitionCoefficient") {
         SESubstanceTissuePharmacokinetics& tk = sub->GetPK().GetTissueKinetics(subDR->GetCompartment());
         ds.SetScalar(&tk.GetPartitionCoefficient(), dr);
         return true;
       }
-		}
-		else
-		{
-			ds.SetScalar(sub->GetScalar(name),dr);			
-			return true;
-		}		
-	}
-	m_ss << "Unhandled data request : " << name << std::endl;
-	Fatal(m_ss);
+    } else {
+      ds.SetScalar(sub->GetScalar(name), dr);
+      return true;
+    }
+  }
+  m_ss << "Unhandled data request : " << name << std::endl;
+  Fatal(m_ss);
   return false;
 }
 
 void SEDataRequestScalar::SetScalar(const SEScalar* s, SEDataRequest& dr)
 {
-  if (s==nullptr)
-  {
+  if (s == nullptr) {
     Fatal("Unknown Data Request : " + dr.GetName());
     return;
   }
-  SEGenericScalar::SetScalar(*s);  
-  if (HasUnit())
-  {
-    if (!dr.HasRequestedUnit())// Use set unit if none provide
+  SEGenericScalar::SetScalar(*s);
+  if (HasUnit()) {
+    if (!dr.HasRequestedUnit()) // Use set unit if none provide
       dr.SetUnit(*GetUnit());
-    else
-    {
+    else {
       const CCompoundUnit* unit = GetCompoundUnit(dr.GetRequestedUnit());
-      if (unit==nullptr)
-      {
+      if (unit == nullptr) {
         std::stringstream ss;
         ss << dr.GetRequestedUnit() << " is not compatible with " << dr.GetName();
         Fatal(ss);
@@ -582,102 +525,88 @@ void SEDataRequestScalar::SetScalar(const SEScalar* s, SEDataRequest& dr)
 
 void SEDataRequestScalar::UpdateScalar()
 {
-	if (UpdateProperty == CompartmentUpdate::None)
-		return;
+  if (UpdateProperty == CompartmentUpdate::None)
+    return;
 
-	if (GasCmpt != nullptr)
-	{
-		switch (UpdateProperty)
-		{
-		case CompartmentUpdate::InFlow:
-			GasCmpt->GetInFlow();
-			return;
-		case CompartmentUpdate::OutFlow:
+  if (GasCmpt != nullptr) {
+    switch (UpdateProperty) {
+    case CompartmentUpdate::InFlow:
+      GasCmpt->GetInFlow();
+      return;
+    case CompartmentUpdate::OutFlow:
       GasCmpt->GetOutFlow();
-			return;
-		case CompartmentUpdate::Volume:
+      return;
+    case CompartmentUpdate::Volume:
       GasCmpt->GetVolume();
-			return;
+      return;
     case CompartmentUpdate::Pressure:
       GasCmpt->GetPressure();
       return;
-    default:    
-      Error("Property is not supported on Gas Compartment");    
-		}
-	}
-	else if (GasSubstance != nullptr)
-	{
-		switch (UpdateProperty)
-		{
-		case CompartmentUpdate::Volume:
-			GasSubstance->GetVolume();
-			return;
-		case CompartmentUpdate::VolumeFraction:
+    default:
+      Error("Property is not supported on Gas Compartment");
+    }
+  } else if (GasSubstance != nullptr) {
+    switch (UpdateProperty) {
+    case CompartmentUpdate::Volume:
+      GasSubstance->GetVolume();
+      return;
+    case CompartmentUpdate::VolumeFraction:
       GasSubstance->GetVolumeFraction();
-			return;
-		case CompartmentUpdate::PartialPressure:
+      return;
+    case CompartmentUpdate::PartialPressure:
       GasSubstance->GetPartialPressure();
-			return;
+      return;
     default:
       Error("Property is not supported on Gas Substance");
-		}
-	}
-	else if (LiquidCmpt != nullptr)
-	{
-		switch (UpdateProperty)
-		{
-		case CompartmentUpdate::InFlow:
+    }
+  } else if (LiquidCmpt != nullptr) {
+    switch (UpdateProperty) {
+    case CompartmentUpdate::InFlow:
       LiquidCmpt->GetInFlow();
-			return;
-		case CompartmentUpdate::OutFlow:
+      return;
+    case CompartmentUpdate::OutFlow:
       LiquidCmpt->GetOutFlow();
-			return;
-		case CompartmentUpdate::Volume:
+      return;
+    case CompartmentUpdate::Volume:
       LiquidCmpt->GetVolume();
-			return;
-		case CompartmentUpdate::pH:
+      return;
+    case CompartmentUpdate::pH:
       LiquidCmpt->GetPH();
-			return;
+      return;
     case CompartmentUpdate::Pressure:
       LiquidCmpt->GetPressure();
       return;
     default:
       Error("Property is not supported on liquid Compartment");
-		}
-	}
-	else if (LiquidSubstance != nullptr)
-	{
-		switch (UpdateProperty)
-		{
-		case CompartmentUpdate::Mass:
+    }
+  } else if (LiquidSubstance != nullptr) {
+    switch (UpdateProperty) {
+    case CompartmentUpdate::Mass:
       LiquidSubstance->GetMass();
-			return;
+      return;
     case CompartmentUpdate::Molarity:
       LiquidSubstance->GetMolarity();
       return;
-		case CompartmentUpdate::Concentration:
+    case CompartmentUpdate::Concentration:
       LiquidSubstance->GetConcentration();
-			return;
-		case CompartmentUpdate::PartialPressure:
+      return;
+    case CompartmentUpdate::PartialPressure:
       LiquidSubstance->GetPartialPressure();
-			return;
-		case CompartmentUpdate::Saturation:
+      return;
+    case CompartmentUpdate::Saturation:
       LiquidSubstance->GetSaturation();
-			return;
+      return;
     default:
       Error("Property is not supported on Liquid Substance");
-		}
-	}
-  else if (ThermalCmpt != nullptr)
-  {
-    switch (UpdateProperty)
-    {
+    }
+  } else if (ThermalCmpt != nullptr) {
+    switch (UpdateProperty) {
     case CompartmentUpdate::HeatTransferRateIn:
       ThermalCmpt->GetHeatTransferRateIn();
       return;
     case CompartmentUpdate::HeatTransferRateOut:
       ThermalCmpt->GetHeatTransferRateOut();
-      return;   
+      return;
     case CompartmentUpdate::Heat:
       ThermalCmpt->GetHeat();
       return;
@@ -688,5 +617,5 @@ void SEDataRequestScalar::UpdateScalar()
       Error("Property is not supported on Thermal Substance");
     }
   }
-	Error("Could not update " + Heading);
+  Error("Could not update " + Heading);
 }

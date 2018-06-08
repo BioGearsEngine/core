@@ -10,14 +10,14 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
+#include <biogears/cdm/stdafx.h>
 
-SEFluidCircuitPath::SEFluidCircuitPath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name) :
-  SECircuitPath<SEScalarVolumePerTime, SEScalarFlowResistance, SEScalarFlowCompliance, SEScalarFlowInertance, SEScalarPressure, SEScalarVolume>(src, tgt, name),
-  m_FluidSourceNode(src), m_FluidTargetNode(tgt)
+SEFluidCircuitPath::SEFluidCircuitPath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name)
+  : SECircuitPath<SEScalarVolumePerTime, SEScalarFlowResistance, SEScalarFlowCompliance, SEScalarFlowInertance, SEScalarPressure, SEScalarVolume>(src, tgt, name)
+  , m_FluidSourceNode(src)
+  , m_FluidTargetNode(tgt)
 {
-
 }
 SEFluidCircuitPath::~SEFluidCircuitPath()
 {
@@ -258,7 +258,6 @@ double SEFluidCircuitPath::GetInertanceBaseline(const FlowInertanceUnit& unit) c
     return SEScalar::dNaN();
   return m_InductanceBaseline->GetValue(unit);
 }
-
 
 ///////////////////////////
 // Fluid Flux Types //

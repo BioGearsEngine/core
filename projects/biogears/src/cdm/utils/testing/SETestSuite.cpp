@@ -12,151 +12,141 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
-#include <biogears/schema/TestSuite.hxx>
 #include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/schema/TestErrorStatisticsData.hxx>
 #include <biogears/schema/TestCase.hxx>
+#include <biogears/schema/TestErrorStatisticsData.hxx>
+#include <biogears/schema/TestSuite.hxx>
 
-SETestSuite::SETestSuite(Logger* logger) : Loggable(logger)
+SETestSuite::SETestSuite(Logger* logger)
+  : Loggable(logger)
 {
-	m_Performed = true;
-	m_Name = "";
+  m_Performed = true;
+  m_Name = "";
 }
 
 SETestSuite::~SETestSuite()
 {
-	Clear();
+  Clear();
 }
 
 void SETestSuite::Clear()
 {
-	DELETE_VECTOR(m_SuiteEqualError);
-	DELETE_VECTOR(m_TestCase);
+  DELETE_VECTOR(m_SuiteEqualError);
+  DELETE_VECTOR(m_TestCase);
 }
 
 void SETestSuite::Reset()
 {
-	for(unsigned int i = 0; i<m_TestCase.size(); i++)
-	{
-		m_TestCase.at(i)->Reset();
-	}
-	m_Performed = false;
-	m_Name = "";
+  for (unsigned int i = 0; i < m_TestCase.size(); i++) {
+    m_TestCase.at(i)->Reset();
+  }
+  m_Performed = false;
+  m_Name = "";
 }
 
 bool SETestSuite::Load(const CDM::TestSuite& in)
 {
-	Reset();
+  Reset();
 
+  std::string sData;
+  for (unsigned int i = 0; i < in.Requirement().size(); i++) {
+    sData = (std::string)in.Requirement().at(i);
+    if (sData != nullptr)
+      m_Requirements.push_back(sData);
+  }
 
-	std::string sData;
-	for(unsigned int i=0; i<in.Requirement().size(); i++)
-	{
-		sData=(std::string)in.Requirement().at(i);
-		if(sData!=nullptr)
-			m_Requirements.push_back(sData);
-	}
+  SETestErrorStatistics* ex;
+  CDM::TestErrorStatisticsData* eData;
+  for (unsigned int i = 0; i < in.SuiteEqualError().size(); i++) {
+    eData = (CDM::TestErrorStatisticsData*)&in.SuiteEqualError().at(i);
+    if (eData != nullptr) {
+      ex = new SETestErrorStatistics(GetLogger());
+      ex->Load(*eData);
+    }
+    m_SuiteEqualError.push_back(ex);
+  }
 
-	SETestErrorStatistics* ex;
-	CDM::TestErrorStatisticsData* eData;
-	for(unsigned int i=0; i<in.SuiteEqualError().size(); i++)
-	{
-		eData=(CDM::TestErrorStatisticsData*)&in.SuiteEqualError().at(i);
-		if(eData!=nullptr)
-		{
-			ex=new SETestErrorStatistics(GetLogger());
-			ex->Load(*eData);
-		}
-		m_SuiteEqualError.push_back(ex);
-	}
-	
-	SETestCase* tx;
-	CDM::TestCase* tData;
-	for(unsigned int i=0; i<in.TestCase().size(); i++)
-	{
-		tData=(CDM::TestCase*)&in.SuiteEqualError().at(i);
-		if(tData!=nullptr)
-		{
-			tx=new SETestCase(m_Name, GetLogger());
-			tx->Load(*tData);
-		}
-		m_TestCase.push_back(tx);
-	}
-	m_Performed = in.Performed();
-	m_Name = in.Name();
+  SETestCase* tx;
+  CDM::TestCase* tData;
+  for (unsigned int i = 0; i < in.TestCase().size(); i++) {
+    tData = (CDM::TestCase*)&in.SuiteEqualError().at(i);
+    if (tData != nullptr) {
+      tx = new SETestCase(m_Name, GetLogger());
+      tx->Load(*tData);
+    }
+    m_TestCase.push_back(tx);
+  }
+  m_Performed = in.Performed();
+  m_Name = in.Name();
 
-	return true;
+  return true;
 }
 
-std::unique_ptr<CDM::TestSuite>  SETestSuite::Unload() const
+std::unique_ptr<CDM::TestSuite> SETestSuite::Unload() const
 {
-	std::unique_ptr<CDM::TestSuite> data(new CDM::TestSuite());
-	Unload(*data);
-	return data;
+  std::unique_ptr<CDM::TestSuite> data(new CDM::TestSuite());
+  Unload(*data);
+  return data;
 }
 
 void SETestSuite::Unload(CDM::TestSuite& data) const
 {
-	std::string sData;
-	for(unsigned int i=0; i<m_Requirements.size(); i++)
-	{
-		sData=m_Requirements.at(i);
-		if(sData!=nullptr)
-			data.Requirement().push_back(sData);
-	}
-	for(unsigned int i=0; i < m_SuiteEqualError.size(); i++)
-	{
-		data.SuiteEqualError().push_back(*m_SuiteEqualError.at(i)->Unload());
-	}
-	for(unsigned int i=0; i<m_TestCase.size(); i++)
-	{
-		data.TestCase().push_back(*m_TestCase.at(i)->Unload());
-	}
+  std::string sData;
+  for (unsigned int i = 0; i < m_Requirements.size(); i++) {
+    sData = m_Requirements.at(i);
+    if (sData != nullptr)
+      data.Requirement().push_back(sData);
+  }
+  for (unsigned int i = 0; i < m_SuiteEqualError.size(); i++) {
+    data.SuiteEqualError().push_back(*m_SuiteEqualError.at(i)->Unload());
+  }
+  for (unsigned int i = 0; i < m_TestCase.size(); i++) {
+    data.TestCase().push_back(*m_TestCase.at(i)->Unload());
+  }
 
-	data.Performed(m_Performed);
-	if(GetNumberOfTests() != 0)
-	{
-		data.Tests(GetNumberOfTests());
+  data.Performed(m_Performed);
+  if (GetNumberOfTests() != 0) {
+    data.Tests(GetNumberOfTests());
     data.Time(std::unique_ptr<CDM::ScalarTimeData>(GetDuration().Unload()));
-		data.Errors(GetNumberOfErrors());
-	}
+    data.Errors(GetNumberOfErrors());
+  }
 
-	if(m_Name.compare("") != 0)
-		data.Name(m_Name);
+  if (m_Name.compare("") != 0)
+    data.Name(m_Name);
 }
 
 void SETestSuite::SetName(const std::string& Name)
 {
-	m_Name = Name;
+  m_Name = Name;
 }
 
 std::string SETestSuite::GetName() const
 {
-	return m_Name;
+  return m_Name;
 }
 
 void SETestSuite::PerformSuite(bool performed)
 {
-	m_Performed = performed;
+  m_Performed = performed;
 }
 
 bool SETestSuite::PerformedSuite()
 {
-	return m_Performed;
+  return m_Performed;
 }
 
 const SEScalarTime& SETestSuite::GetDuration() const
 {
-	double time = 0;
-	for (unsigned int i = 0; i < m_TestCase.size(); i++)
-		time += m_TestCase.at(i)->GetDuration().GetValue(TimeUnit::s);
-	m_Time.SetValue(time,TimeUnit::s);
-	return m_Time;
+  double time = 0;
+  for (unsigned int i = 0; i < m_TestCase.size(); i++)
+    time += m_TestCase.at(i)->GetDuration().GetValue(TimeUnit::s);
+  m_Time.SetValue(time, TimeUnit::s);
+  return m_Time;
 }
 
 std::vector<std::string>& SETestSuite::GetRequirements()
 {
-	return m_Requirements;
+  return m_Requirements;
 }
 
 SETestCase& SETestSuite::CreateTestCase()
@@ -168,29 +158,27 @@ SETestCase& SETestSuite::CreateTestCase()
 
 const std::vector<SETestCase*>& SETestSuite::GetTestCases() const
 {
-	return m_TestCase;
+  return m_TestCase;
 }
 
 int SETestSuite::GetNumberOfErrors() const
 {
-	int count = 0;
+  int count = 0;
 
-	for (unsigned int i = 0; i < m_TestCase.size(); i++)
-	{
-		count += m_TestCase.at(i)->GetFailures().size();
-	}
+  for (unsigned int i = 0; i < m_TestCase.size(); i++) {
+    count += m_TestCase.at(i)->GetFailures().size();
+  }
 
-	return count;
+  return count;
 }
 
 int SETestSuite::GetNumberOfTests() const
 {
-	int count = 0;
+  int count = 0;
 
-	for (unsigned int i = 0; i < m_TestCase.size(); i++)
-	{
-		count ++;
-	}
+  for (unsigned int i = 0; i < m_TestCase.size(); i++) {
+    count++;
+  }
 
-	return count;
+  return count;
 }

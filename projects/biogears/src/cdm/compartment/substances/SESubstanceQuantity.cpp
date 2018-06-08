@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/stdafx.h>
 
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
-#include <biogears/schema/SubstanceQuantityData.hxx>
 #include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/schema/SubstanceQuantityData.hxx>
 
 bool SESubstanceQuantity::Load(const CDM::SubstanceQuantityData& in)
 {

@@ -12,38 +12,40 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/stdafx.h>
 
-#include <biogears/engine/Systems/Environment.h>
-#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
+#include <biogears/engine/Systems/Environment.h>
 
-#include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
+#include <biogears/cdm/substance/SESubstanceFraction.h>
 
 #include <biogears/cdm/system/environment/SEActiveCooling.h>
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
+#include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/properties/SEScalarHeatResistance.h>
-#include <biogears/cdm/properties/SEScalarArea.h>
-#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarMassPerTime.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-Environment::Environment(BioGears& bg) : SEEnvironment(bg.GetSubstances()), m_data(bg)
+Environment::Environment(BioGears& bg)
+  : SEEnvironment(bg.GetSubstances())
+  , m_data(bg)
 {
   Clear();
 }
@@ -52,7 +54,6 @@ Environment::~Environment()
 {
   Clear();
 }
-
 
 void Environment::Clear()
 {
@@ -102,7 +103,7 @@ void Environment::Initialize()
   double patientMass_g = m_Patient->GetWeight(MassUnit::g);
   double patientHeight_m = m_Patient->GetHeight(LengthUnit::m);
   double pi = 3.14159;
-  m_PatientEquivalentDiameter_m = pow(Convert(patientMass_g / patientDensity_g_Per_mL, VolumeUnit::mL, VolumeUnit::m3) / (pi*patientHeight_m), 0.5);
+  m_PatientEquivalentDiameter_m = pow(Convert(patientMass_g / patientDensity_g_Per_mL, VolumeUnit::mL, VolumeUnit::m3) / (pi * patientHeight_m), 0.5);
 }
 
 bool Environment::Load(const CDM::BioGearsEnvironmentData& in)
@@ -165,14 +166,13 @@ void Environment::SetUp()
 //--------------------------------------------------------------------------------------------------
 void Environment::StateChange()
 {
-  if (m_AmbientGases == nullptr ||m_AmbientAerosols == nullptr)
+  if (m_AmbientGases == nullptr || m_AmbientAerosols == nullptr)
     return;
 
   // Add Gases to the environment
-  //Check to make sure fractions sum to 1.0 
+  //Check to make sure fractions sum to 1.0
   double totalFraction = 0.0;
-  for (auto s : GetConditions().GetAmbientGases())
-  {
+  for (auto s : GetConditions().GetAmbientGases()) {
     SESubstance& sub = s->GetSubstance();
     totalFraction += s->GetFractionAmount().GetValue();
     m_data.GetSubstances().AddActiveSubstance(sub);
@@ -189,8 +189,7 @@ void Environment::StateChange()
     subQ->SetToZero();
   //Update the substance values on the Ambient Node based on the Action/File settings
   //We want to set an ambient volume fraction for all active gases
-  for(SESubstanceFraction* subFrac : GetConditions().GetAmbientGases())
-  {    
+  for (SESubstanceFraction* subFrac : GetConditions().GetAmbientGases()) {
     SEGasSubstanceQuantity* subQ = m_AmbientGases->GetSubstanceQuantity(subFrac->GetSubstance());
     subQ->GetVolumeFraction().Set(subFrac->GetFractionAmount());
     //Set substance volumes to be infinite when compartment/node volume is also infinite
@@ -200,11 +199,9 @@ void Environment::StateChange()
   m_AmbientGases->Balance(BalanceGasBy::VolumeFraction);
 
   // Add aerosols to the environment
-  for (auto s : GetConditions().GetAmbientAerosols())
-  {
+  for (auto s : GetConditions().GetAmbientAerosols()) {
     SESubstance& sub = s->GetSubstance();
-    if (!sub.HasAerosolization())
-    {
+    if (!sub.HasAerosolization()) {
       Error("Ignorning environment aerosol as it does not have any aerosol data : " + sub.GetName());
       continue;
     }
@@ -216,8 +213,7 @@ void Environment::StateChange()
 
 void Environment::AtSteadyState()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState)
-  {
+  if (m_data.GetState() == EngineState::AtInitialStableState) {
     if (m_data.GetConditions().HasInitialEnvironment())
       ProcessChange(*m_data.GetConditions().GetInitialEnvironment());
   }
@@ -228,13 +224,12 @@ void Environment::AtSteadyState()
 /// Preprocess prepares the cardiovascular system for the circuit solver
 ///
 /// \details
-/// This function uses feedback to calculate thermal properties and circuit element values for the 
+/// This function uses feedback to calculate thermal properties and circuit element values for the
 /// next engine state.
 //--------------------------------------------------------------------------------------------------
 void Environment::PreProcess()
 {
-  if (m_EnvironmentActions->HasChange())
-  {
+  if (m_EnvironmentActions->HasChange()) {
     ProcessChange(*m_EnvironmentActions->GetChange());
     m_EnvironmentActions->RemoveChange();
   }
@@ -246,8 +241,7 @@ void Environment::PreProcess()
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
-  if (m_SkinToClothing->HasHeatTransferRate())
-  {
+  if (m_SkinToClothing->HasHeatTransferRate()) {
     dSkinHeatLoss_W = m_SkinToClothing->GetHeatTransferRate().GetValue(PowerUnit::W);
   }
   GetSkinHeatLoss().SetValue(dSkinHeatLoss_W, PowerUnit::W);
@@ -267,7 +261,6 @@ void Environment::PreProcess()
 //--------------------------------------------------------------------------------------------------
 void Environment::Process()
 {
-  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -277,7 +270,6 @@ void Environment::Process()
 //--------------------------------------------------------------------------------------------------
 void Environment::PostProcess()
 {
-  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -285,8 +277,8 @@ void Environment::PostProcess()
 /// Apply environment specific actions.
 ///
 /// \details
-/// Handle active heating and/or cooling.  This will set the active heat flow source and/or the 
-/// active temperature source.  The applied area or fraction is used to determine the average 
+/// Handle active heating and/or cooling.  This will set the active heat flow source and/or the
+/// active temperature source.  The applied area or fraction is used to determine the average
 /// patient application, since we're using a one dimensional model.  They can be
 /// called individually or will sum together if called in combination.  Note that the action manager
 /// will handle removing the actions (i.e. will return false for has calls).
@@ -295,58 +287,48 @@ void Environment::ProcessActions()
 {
   //Begin by assuming nothing is active
   //Set the power source to zero
-  m_ActiveHeatTransferRatePath->GetNextHeatSource().SetValue(0.0, PowerUnit::W);    
+  m_ActiveHeatTransferRatePath->GetNextHeatSource().SetValue(0.0, PowerUnit::W);
   //Set the temperature source to zero
   m_ActiveTemperaturePath->GetNextTemperatureSource().SetValue(0.0, TemperatureUnit::K);
   //Open the switch
-  m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Open);   
+  m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Open);
 
-  if (!m_EnvironmentActions->HasThermalApplication())
-  {
+  if (!m_EnvironmentActions->HasThermalApplication()) {
     //No action
     return;
   }
 
   //We'll allow heating, cooling, and temperature setting to be done simultaneously
-  
+
   SEThermalApplication* ta = m_EnvironmentActions->GetThermalApplication();
   double dEffectiveAreaFraction = 0.0;
   double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
 
   //Handle active heating and cooling
   //We'll allow heating and cooling to be done simultaneously by just summing the effects
-      
+
   double dTotalEffect_W = 0.0;
 
-  if (ta->HasActiveHeating())
-  {
+  if (ta->HasActiveHeating()) {
     SEActiveHeating& ah = ta->GetActiveHeating();
-    if (ah.HasSurfaceArea() && ah.HasSurfaceAreaFraction())
-    {
+    if (ah.HasSurfaceArea() && ah.HasSurfaceAreaFraction()) {
       ///\error Warning: SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.
       Warning("SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.");
       dEffectiveAreaFraction = MAX(ah.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ah.GetSurfaceAreaFraction().GetValue());
       ah.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
       ah.GetSurfaceArea().Invalidate();
-    }
-    else if (ah.HasSurfaceAreaFraction())
-    {
+    } else if (ah.HasSurfaceAreaFraction()) {
       dEffectiveAreaFraction = ah.GetSurfaceAreaFraction().GetValue();
-    }
-    else if (ah.HasSurfaceArea())
-    {
+    } else if (ah.HasSurfaceArea()) {
       dEffectiveAreaFraction = ah.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2;
-    }
-    else
-    {
+    } else {
       ///\error Warning: Neither SurfaceArea nor SurfaceAreaFraction are set. A fraction of 1 will be used.
       Warning("Neither SurfaceArea nor SurfaceAreaFraction are set. A fraction of 1 will be used.");
       dEffectiveAreaFraction = 1.0;
       ah.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
     }
-    
-    if (dEffectiveAreaFraction > 1.0)
-    {
+
+    if (dEffectiveAreaFraction > 1.0) {
       ///\error Warning: Thermal application effective area exceeds the total skin surface area. A fraction of 1 will be used.
       Warning("Thermal application effective area exceeds the total skin surface area. A fraction of 1 will be used.");
       dEffectiveAreaFraction = 1.0;
@@ -357,35 +339,26 @@ void Environment::ProcessActions()
   }
 
   dEffectiveAreaFraction = 0.0;
-  if (ta->HasActiveCooling())
-  {
+  if (ta->HasActiveCooling()) {
     SEActiveCooling& ac = ta->GetActiveCooling();
-    if (ac.HasSurfaceArea() && ac.HasSurfaceAreaFraction())
-    {
+    if (ac.HasSurfaceArea() && ac.HasSurfaceAreaFraction()) {
       ///\error Warning: SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.
       Warning("SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.");
       dEffectiveAreaFraction = MAX(ac.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ac.GetSurfaceAreaFraction().GetValue());
       ac.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
       ac.GetSurfaceArea().Invalidate();
-    }
-    else if (ac.HasSurfaceAreaFraction())
-    {
+    } else if (ac.HasSurfaceAreaFraction()) {
       dEffectiveAreaFraction = ac.GetSurfaceAreaFraction().GetValue();
-    }
-    else if (ac.HasSurfaceArea())
-    {
+    } else if (ac.HasSurfaceArea()) {
       dEffectiveAreaFraction = ac.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2;
-    }
-    else
-    {
+    } else {
       ///\error Warning: Neither SurfaceArea nor SurfaceAreaFraction are set. A fraction of 1 will be used.
       Warning("Neither SurfaceArea nor SurfaceAreaFraction are set. A fraction of 1 will be used.");
       dEffectiveAreaFraction = 1.0;
       ac.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
     }
 
-    if (dEffectiveAreaFraction > 1.0)
-    {
+    if (dEffectiveAreaFraction > 1.0) {
       ///\error Warning: Thermal application effective area exceeds the total skin surface area. A fraction of 1 will be used.
       Warning("Thermal application effective area exceeds the total skin surface area. A fraction of 1 will be used.");
       dEffectiveAreaFraction = 1.0;
@@ -394,42 +367,33 @@ void Environment::ProcessActions()
 
     dTotalEffect_W -= ac.GetPower(PowerUnit::W) * dEffectiveAreaFraction;
   }
-    
+
   //Set the the power source
   m_ActiveHeatTransferRatePath->GetNextHeatSource().SetValue(dTotalEffect_W, PowerUnit::W);
 
   //Handle active temperature
 
   dEffectiveAreaFraction = 0.0;
-  if (ta->HasAppliedTemperature())
-  {
+  if (ta->HasAppliedTemperature()) {
     SEAppliedTemperature& ap = ta->GetAppliedTemperature();
-    if (ap.HasSurfaceArea() && ap.HasSurfaceAreaFraction())
-    {
+    if (ap.HasSurfaceArea() && ap.HasSurfaceAreaFraction()) {
       ///\error Warning: AppliedSurfaceArea and AppliedSurfaceAreaFraction are both set. The largest fraction will be used.
       Warning("AppliedSurfaceArea and AppliedSurfaceAreaFraction are both set. The largest fraction will be used.");
       dEffectiveAreaFraction = MAX(ap.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ap.GetSurfaceAreaFraction().GetValue());
       ap.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
       ap.GetSurfaceArea().Invalidate();
-    }
-    else if (ap.HasSurfaceAreaFraction())
-    {
+    } else if (ap.HasSurfaceAreaFraction()) {
       dEffectiveAreaFraction = ap.GetSurfaceAreaFraction().GetValue();
-    }
-    else if (ap.HasSurfaceArea())
-    {
+    } else if (ap.HasSurfaceArea()) {
       dEffectiveAreaFraction = ap.GetSurfaceArea().GetValue(AreaUnit::m2) / dSurfaceArea_m2;
-    }
-    else
-    {
+    } else {
       ///\error Warning: Neither AppliedSurfaceArea nor AppliedSurfaceAreaFraction are set. A fraction of 1 will be used.
       Warning("Neither AppliedSurfaceArea nor AppliedSurfaceAreaFraction are set. A fraction of 1 will be used.");
       dEffectiveAreaFraction = 1.0;
       ap.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
     }
 
-    if (dEffectiveAreaFraction > 1.0)
-    {
+    if (dEffectiveAreaFraction > 1.0) {
       ///\error Warning: Thermal application effective area exceeds the total skin surface area. A fraction of 1 will be used.
       Warning("Thermal application effective area exceeds the total skin surface area. A fraction of 1 will be used.");
       dEffectiveAreaFraction = 1.0;
@@ -462,32 +426,29 @@ void Environment::CalculateSupplementalValues()
   //It's a piecewise function
   //Ambient Air
   double dAirTemperature_C = 0.0;
-  if (!m_ThermalEnvironment->HasTemperature())
-  {
+  if (!m_ThermalEnvironment->HasTemperature()) {
     dAirTemperature_C = GetConditions().GetAmbientTemperature(TemperatureUnit::C);
-  }
-  else
-  {
+  } else {
     dAirTemperature_C = m_ThermalEnvironment->GetTemperature().GetValue(TemperatureUnit::C);
   }
-  
+
   double dWaterVaporPressureInAmbientAir_mmHg = AntoineEquation(dAirTemperature_C);
   m_dWaterVaporPressureInAmbientAir_Pa = Convert(dWaterVaporPressureInAmbientAir_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
   //Skin
   double dSkinTemperature_C = m_SkinNode->GetTemperature().GetValue(TemperatureUnit::C);
   double dWaterVaporPressureAtSkin_mmHg = AntoineEquation(dSkinTemperature_C);
-  m_dWaterVaporPressureAtSkin_Pa = Convert(dWaterVaporPressureAtSkin_mmHg, PressureUnit::mmHg, PressureUnit::Pa); 
+  m_dWaterVaporPressureAtSkin_Pa = Convert(dWaterVaporPressureAtSkin_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
 
   //Now use that to solve for the density of air
   double dUniversalGasConstant_JPerK_Mol = m_data.GetConfiguration().GetUniversalGasConstant(HeatCapacitancePerAmountUnit::J_Per_K_mol);
   double dMolarMassOfDryAir_KgPerMol = m_data.GetConfiguration().GetMolarMassOfDryAir(MassPerAmountUnit::kg_Per_mol);
   double dMolarMassOfWaterVapor_KgPerMol = m_data.GetConfiguration().GetMolarMassOfWaterVapor(MassPerAmountUnit::kg_Per_mol);
-  
+
   double dAmbientTemperature_K = GetConditions().GetAmbientTemperature().GetValue(TemperatureUnit::K);
-  
+
   double dPressureOfWaterVapor_Pa = GetConditions().GetRelativeHumidity().GetValue() * m_dWaterVaporPressureInAmbientAir_Pa;
   double dPartialPressureOfDryAir_Pa = GetConditions().GetAtmosphericPressure().GetValue(PressureUnit::Pa) - dPressureOfWaterVapor_Pa;
-  
+
   double dAirDensity_kgPerm3 = (dPartialPressureOfDryAir_Pa * dMolarMassOfDryAir_KgPerMol + dPressureOfWaterVapor_Pa * dMolarMassOfWaterVapor_KgPerMol) / (dUniversalGasConstant_JPerK_Mol * dAmbientTemperature_K);
   GetConditions().GetAirDensity().SetValue(dAirDensity_kgPerm3, MassPerVolumeUnit::kg_Per_m3);
 
@@ -502,18 +463,16 @@ void Environment::CalculateSupplementalValues()
   //Convert moles of water to kg
   m_dHeatOfVaporizationOfWater_J_Per_kg = dHeatOfVaporizationOfWater_JPerMol / 0.0180153; //1 mol of water = 0.0180153 kg
 
-
   //Water convective heat transfer properties
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water)
-  {
+  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
     double dWaterTemperature_C = GetConditions().GetAmbientTemperature(TemperatureUnit::C);
     double dT = Convert(dWaterTemperature_C, TemperatureUnit::C, TemperatureUnit::K) / 298.15;
 
-    m_WaterSpecificHeat_J_Per_kg_K = 0.001*((-1.0E-7)*pow(dWaterTemperature_C, 3.0) + (3.0E-5)*pow(dWaterTemperature_C, 2.0) - 0.0018*dWaterTemperature_C + 4.2093);
-    m_WaterViscosity_N_s_Per_m2 = 0.001*((-3.0E-6)*pow(dWaterTemperature_C, 3.0) + 0.0006*pow(dWaterTemperature_C, 2.0) - 0.0462*dWaterTemperature_C + 1.7412);
+    m_WaterSpecificHeat_J_Per_kg_K = 0.001 * ((-1.0E-7) * pow(dWaterTemperature_C, 3.0) + (3.0E-5) * pow(dWaterTemperature_C, 2.0) - 0.0018 * dWaterTemperature_C + 4.2093);
+    m_WaterViscosity_N_s_Per_m2 = 0.001 * ((-3.0E-6) * pow(dWaterTemperature_C, 3.0) + 0.0006 * pow(dWaterTemperature_C, 2.0) - 0.0462 * dWaterTemperature_C + 1.7412);
     m_WaterThermalConductivity_W_Per_m_K = 0.6065 * (-1.48446 + 4.12292 * dT + -1.63866 * pow(dT, 2));
-    m_ThermalExpansion_Per_K = (6.0E-7)*pow(dWaterTemperature_C, 3.0) - 0.0001*pow(dWaterTemperature_C, 2.0) + 0.016*dWaterTemperature_C - 0.0632;
-  }   
+    m_ThermalExpansion_Per_K = (6.0E-7) * pow(dWaterTemperature_C, 3.0) - 0.0001 * pow(dWaterTemperature_C, 2.0) + 0.016 * dWaterTemperature_C - 0.0632;
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -521,26 +480,24 @@ void Environment::CalculateSupplementalValues()
 /// Determine the effects of radiation.
 ///
 /// \details
-/// This determines the circuit element values and system data outputs associated with radiation 
+/// This determines the circuit element values and system data outputs associated with radiation
 /// heat transfer based on feedback.
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateRadiation()
-{ 
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water)
-  {
+{
+  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
     //Submerged - therefore, no radiation
-    
+
     //Invalidate the coefficient
     GetRadiativeHeatTranferCoefficient().Invalidate();
 
     //Set the resistance
     double dOpenSwitchResistance_KPerW = m_data.GetConfiguration().GetDefaultOpenHeatResistance(HeatResistanceUnit::K_Per_W);
     m_ClothingToEnclosurePath->GetNextResistance().SetValue(dOpenSwitchResistance_KPerW, HeatResistanceUnit::K_Per_W);
-    
+
     //Set the source
     m_GroundToEnclosurePath->GetNextTemperatureSource().SetValue(0.0, TemperatureUnit::K);
-  }
-  else //Air
+  } else //Air
   {
     //Calculate the coefficient
     double dEmissivity = GetConditions().GetEmissivity().GetValue();
@@ -554,13 +511,10 @@ void Environment::CalculateRadiation()
     //Calculate the resistance
     double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
     double dResistance_K_Per_W = 0.0;
-    if (dRadiativeHeatTransferCoefficient_WPerM2_K == 0)
-    {
+    if (dRadiativeHeatTransferCoefficient_WPerM2_K == 0) {
       //Infinite resistance
       dResistance_K_Per_W = m_data.GetConfiguration().GetDefaultOpenHeatResistance(HeatResistanceUnit::K_Per_W);
-    }
-    else
-    {
+    } else {
       dResistance_K_Per_W = dSurfaceArea_m2 / dRadiativeHeatTransferCoefficient_WPerM2_K;
     }
 
@@ -574,8 +528,7 @@ void Environment::CalculateRadiation()
 
   //Set the total heat lost
   double dTotalHeatLoss_W = 0.0;
-  if (m_ClothingToEnclosurePath->HasHeatTransferRate())
-  {
+  if (m_ClothingToEnclosurePath->HasHeatTransferRate()) {
     dTotalHeatLoss_W = m_ClothingToEnclosurePath->GetHeatTransferRate().GetValue(PowerUnit::W);
   }
   GetRadiativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
@@ -593,8 +546,7 @@ void Environment::CalculateConvection()
 {
   double dConvectiveHeatTransferCoefficient_WPerM2_K = 0.0;
 
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water)
-  {
+  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
     //Submerged - therefore, convection is most important
     double dClothingTemperature_K = m_ClothingNode->GetTemperature().GetValue(TemperatureUnit::K);
     double dWaterTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
@@ -604,11 +556,10 @@ void Environment::CalculateConvection()
 
     //Calculate the coefficient
     //Heat transfer coefficient for submerged water convection. C. Boutelier et al. Experimental study of convective heat transfer coefficient for the human body in water. Journal of Applied Physiology. 1977. Vol. 42. p.93-100
-    double dGrashofNumber = dGravity_m_Per_s2*m_ThermalExpansion_Per_K*(std::abs(dClothingTemperature_K - dWaterTemperature_K))*pow(m_PatientEquivalentDiameter_m, 3.0) / (m_WaterViscosity_N_s_Per_m2 / dWaterDensity.GetValue(MassPerVolumeUnit::kg_Per_m3));
-    double dPrandtlNumber = m_WaterSpecificHeat_J_Per_kg_K*m_WaterViscosity_N_s_Per_m2 / m_WaterThermalConductivity_W_Per_m_K;
-    dConvectiveHeatTransferCoefficient_WPerM2_K = 0.09*(dGrashofNumber - dPrandtlNumber)*0.275;
-  }
-  else //Air
+    double dGrashofNumber = dGravity_m_Per_s2 * m_ThermalExpansion_Per_K * (std::abs(dClothingTemperature_K - dWaterTemperature_K)) * pow(m_PatientEquivalentDiameter_m, 3.0) / (m_WaterViscosity_N_s_Per_m2 / dWaterDensity.GetValue(MassPerVolumeUnit::kg_Per_m3));
+    double dPrandtlNumber = m_WaterSpecificHeat_J_Per_kg_K * m_WaterViscosity_N_s_Per_m2 / m_WaterThermalConductivity_W_Per_m_K;
+    dConvectiveHeatTransferCoefficient_WPerM2_K = 0.09 * (dGrashofNumber - dPrandtlNumber) * 0.275;
+  } else //Air
   {
     //Calculate the coefficient
     //Velocity should take into account wind and patient movement combined
@@ -622,27 +573,23 @@ void Environment::CalculateConvection()
   //Calculate the resistance
   double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
   double dResistance_K_Per_W = 0.0;
-  if (dConvectiveHeatTransferCoefficient_WPerM2_K == 0)
-  {
+  if (dConvectiveHeatTransferCoefficient_WPerM2_K == 0) {
     //Infinite resistance
     dResistance_K_Per_W = m_data.GetConfiguration().GetDefaultOpenHeatResistance(HeatResistanceUnit::K_Per_W);
-  }
-  else
-  {
+  } else {
     dResistance_K_Per_W = dSurfaceArea_m2 / dConvectiveHeatTransferCoefficient_WPerM2_K;
   }
 
   MAX(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
   m_ClothingToEnvironmentPath->GetNextResistance().SetValue(dResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
-  
+
   //Set the source
   double dAmbientTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
   m_GroundToEnvironmentPath->GetNextTemperatureSource().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
 
   //Set the total heat lost
   double dTotalHeatLoss_W = 0.0;
-  if (m_ClothingToEnvironmentPath->HasHeatTransferRate())
-  {
+  if (m_ClothingToEnvironmentPath->HasHeatTransferRate()) {
     dTotalHeatLoss_W = m_ClothingToEnvironmentPath->GetHeatTransferRate().GetValue(PowerUnit::W);
   }
   GetConvectiveHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
@@ -653,13 +600,12 @@ void Environment::CalculateConvection()
 /// Determine the effects of evaporation.
 ///
 /// \details
-/// This determines the circuit element values and system data outputs associated with evaporation 
+/// This determines the circuit element values and system data outputs associated with evaporation
 /// heat transfer based on feedback.
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateEvaporation()
-{ 
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water)
-  {
+{
+  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
     //Submerged - therefore, no evaporation
 
     //Invalidate the coefficient
@@ -670,8 +616,7 @@ void Environment::CalculateEvaporation()
 
     //Set the total heat lost
     GetEvaporativeHeatLoss().SetValue(0.0, PowerUnit::W);
-  }
-  else //Air
+  } else //Air
   {
     //Calculate the coefficient
     double dConvectiveTransferCoefficient_WPerM2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
@@ -684,14 +629,12 @@ void Environment::CalculateEvaporation()
     double dMaxEvaporativePotential = dEvaporativeHeatTransferCoefficient_WPerM2_K * dFactorOfReduction * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa);
     double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
     double dSweatRate_kgPers = 0.0;
-    if (m_data.GetEnergy().HasSweatRate())
-    {
+    if (m_data.GetEnergy().HasSweatRate()) {
       dSweatRate_kgPers = m_data.GetEnergy().GetSweatRate(MassPerTimeUnit::kg_Per_s) / dSurfaceArea_m2;
     }
     double dSweatingControlMechanisms = dSweatRate_kgPers * m_dHeatOfVaporizationOfWater_J_Per_kg;
     double dWettedPortion = 0.0;
-    if (dMaxEvaporativePotential != 0)
-    {
+    if (dMaxEvaporativePotential != 0) {
       dWettedPortion = dSweatingControlMechanisms / dMaxEvaporativePotential;
     }
     double dDiffusionOfWater = (1.0 - dWettedPortion) * 0.06 * dMaxEvaporativePotential;
@@ -702,8 +645,7 @@ void Environment::CalculateEvaporation()
 
     //Set the total heat lost
     double dTotalHeatLoss_W = 0.0;
-    if (m_EnvironmentSkinToGroundPath->HasHeatTransferRate())
-    {
+    if (m_EnvironmentSkinToGroundPath->HasHeatTransferRate()) {
       dTotalHeatLoss_W = m_EnvironmentSkinToGroundPath->GetHeatTransferRate().GetValue(PowerUnit::W);
     }
     GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
@@ -715,7 +657,7 @@ void Environment::CalculateEvaporation()
 /// Determine the effects of respiration.
 ///
 /// \details
-/// This determines the circuit element values and system data outputs associated with respiration 
+/// This determines the circuit element values and system data outputs associated with respiration
 /// heat transfer based on feedback.
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateRespiration()
@@ -726,15 +668,14 @@ void Environment::CalculateRespiration()
   //Convection
   double dTempOfRespAir_K = GetConditions().GetRespirationAmbientTemperature(TemperatureUnit::K);
   double dTempOfRespTract_K = 310.15; // = 37C = 98.6F
-  if (m_data.GetEnergy().HasCoreTemperature())
-  {
+  if (m_data.GetEnergy().HasCoreTemperature()) {
     dTempOfRespTract_K = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::K);
-  } 
+  }
   double dPulmonaryVentilationRate_M3PerS = m_data.GetRespiratory().GetTotalPulmonaryVentilation(VolumePerTimeUnit::m3_Per_s);
   double dAirDensity_kgPerM3 = GetConditions().GetAirDensity(MassPerVolumeUnit::kg_Per_m3);
   double dAirSpecificHeat_JPerK_kg = m_data.GetConfiguration().GetAirSpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg);
   double dSensibleHeatLoss_W = dPulmonaryVentilationRate_M3PerS * dAirDensity_kgPerM3 * dAirSpecificHeat_JPerK_kg * (dTempOfRespTract_K - dTempOfRespAir_K);
-  
+
   //Evaporation
   double dTempOfRespAir_F = GetConditions().GetRespirationAmbientTemperature(TemperatureUnit::F);
   double dRelativeHumidity = GetConditions().GetRelativeHumidity().GetValue();
@@ -748,7 +689,7 @@ void Environment::CalculateRespiration()
 
   //Set the source
   m_EnvironmentCoreToGroundPath->GetNextHeatSource().SetValue(dTotalHeatLoss_W, PowerUnit::W);
-  
+
   //Set the total heat lost
   GetRespirationHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
 }
@@ -770,19 +711,14 @@ double Environment::AntoineEquation(double dTemperature_C)
   double dB = 0.0;
   double dC = 0.0;
   double dWaterVaporPressureInAmbientAir_mmHg = 0.0;
-  if (dTemperature_C < 0.0)
-  {
+  if (dTemperature_C < 0.0) {
     dWaterVaporPressureInAmbientAir_mmHg = 0.0;
-  }
-  else
-  {
-    if (dTemperature_C < 100.0)
-    {
+  } else {
+    if (dTemperature_C < 100.0) {
       dA = 8.07131;
       dB = 1730.63;
       dC = 233.426;
-    }
-    else //>100.0
+    } else //>100.0
     {
       dA = 8.14019;
       dB = 1810.94;

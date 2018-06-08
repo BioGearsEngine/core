@@ -10,20 +10,18 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitCalculator.h>
+#include <biogears/cdm/stdafx.h>
 
-
-SEThermalCircuitCalculator::SEThermalCircuitCalculator(Logger* logger) : SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode,SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit>(
-  HeatCapacitanceUnit::J_Per_K, PowerUnit::W, HeatInductanceUnit::K_s_Per_W, TemperatureUnit::K, EnergyUnit::J,HeatResistanceUnit::K_Per_W,logger)
+SEThermalCircuitCalculator::SEThermalCircuitCalculator(Logger* logger)
+  : SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit>(
+      HeatCapacitanceUnit::J_Per_K, PowerUnit::W, HeatInductanceUnit::K_s_Per_W, TemperatureUnit::K, EnergyUnit::J, HeatResistanceUnit::K_Per_W, logger)
 {
-
 }
-SEThermalCircuitCalculator::SEThermalCircuitCalculator(const HeatCapacitanceUnit& c, const PowerUnit& f, const HeatInductanceUnit& i, const TemperatureUnit& p, const EnergyUnit& q, const HeatResistanceUnit& r, Logger* logger) : SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit>(c, f, i, p, q, r, logger)
+SEThermalCircuitCalculator::SEThermalCircuitCalculator(const HeatCapacitanceUnit& c, const PowerUnit& f, const HeatInductanceUnit& i, const TemperatureUnit& p, const EnergyUnit& q, const HeatResistanceUnit& r, Logger* logger)
+  : SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit>(c, f, i, p, q, r, logger)
 {
-
 }
 SEThermalCircuitCalculator::~SEThermalCircuitCalculator()
 {
-  
 }

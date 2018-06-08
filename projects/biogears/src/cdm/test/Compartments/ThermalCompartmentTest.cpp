@@ -10,31 +10,30 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/utils/TimingProfile.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/cdm/utils/testing/SETestSuite.h>
-#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
-#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
+#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
-#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/test/CommonDataModelTest.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
 
-#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarEnergy.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
-// Maybe we want to test a couple compartements that overlap 
+// Maybe we want to test a couple compartements that overlap
 // i.e. 2 compartments containing the same node and or path
-
 
 //void CheckTemperatureAndHeat(SETestCase& testCase, SEThermalCompartment& cmpt);
 //void TestFlow(SETestCase& testCase, SEThermalCompartment& cmpt, double inflow_kcal_Per_s, double outflow_kcal_Per_s);
@@ -84,28 +83,28 @@ void CommonDataModelTest::TestThermalFlows(SETestSuite& testSuite, SESubstanceMa
 
   inflow_kcal_Per_s = largeInflow_kcal_Per_s + smallInflow_kcal_Per_s;
   outflow_kcal_Per_s = largeOutflow_kcal_Per_s + smallOutflow_kcal_Per_s;
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
 
@@ -114,28 +113,28 @@ void CommonDataModelTest::TestThermalFlows(SETestSuite& testSuite, SESubstanceMa
   right2middle->GetHeatTransferRate().SetValue(-smallInflow_kcal_Per_s, PowerUnit::kcal_Per_s);
   inflow_kcal_Per_s = largeInflow_kcal_Per_s + smallOutflow_kcal_Per_s;
   outflow_kcal_Per_s = largeOutflow_kcal_Per_s + smallInflow_kcal_Per_s;
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
 
@@ -144,28 +143,28 @@ void CommonDataModelTest::TestThermalFlows(SETestSuite& testSuite, SESubstanceMa
   middle2left->GetHeatTransferRate().SetValue(-largeOutflow_kcal_Per_s, PowerUnit::kcal_Per_s);
   inflow_kcal_Per_s = largeOutflow_kcal_Per_s + smallOutflow_kcal_Per_s;
   outflow_kcal_Per_s = largeInflow_kcal_Per_s + smallInflow_kcal_Per_s;
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
@@ -235,7 +234,7 @@ void CommonDataModelTest::TestThermalFlowHierarchy(SETestSuite& testSuite, SESub
   L1C0->AddChild(*L2C1);
   L1C1->AddChild(*L2C2);
   L1C1->AddChild(*L2C3);
-  cmptMgr.StateChange();// Call this, AFTER YOU SET UP YOUR HIERARCHY, to ensure all parent compartments have their link data
+  cmptMgr.StateChange(); // Call this, AFTER YOU SET UP YOUR HIERARCHY, to ensure all parent compartments have their link data
 
   TestCompartmentSerialization(cmptMgr, m_OutDirectory + "/TestThermalFlowHierarchy.xml");
   L0C0 = cmptMgr.GetThermalCompartment("L0C0");
@@ -244,7 +243,7 @@ void CommonDataModelTest::TestThermalFlowHierarchy(SETestSuite& testSuite, SESub
   L2C0 = cmptMgr.GetThermalCompartment("L2C0");
   L2C1 = cmptMgr.GetThermalCompartment("L2C1");
   L2C2 = cmptMgr.GetThermalCompartment("L2C2");
-  L2C3 = cmptMgr.GetThermalCompartment("L2C3"); 
+  L2C3 = cmptMgr.GetThermalCompartment("L2C3");
   L2C4 = cmptMgr.GetThermalCompartment("L2C4");
   L2C5 = cmptMgr.GetThermalCompartment("L2C5");
   L2C6 = cmptMgr.GetThermalCompartment("L2C6");
@@ -273,27 +272,27 @@ void CommonDataModelTest::TestFlow(SETestCase& testCase, SEThermalCompartment& c
     testCase.AddFailure(cmpt.GetName() + " does not have Inflow");
   if (!cmpt.HasHeatTransferRateOut())
     testCase.AddFailure(cmpt.GetName() + " does not have Outflow");
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
+  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
@@ -366,72 +365,60 @@ void CommonDataModelTest::TestThermalHierarchy(SETestSuite& testSuite, SESubstan
   L2C2 = cmptMgr.GetThermalCompartment("L2C2");
   L2C3 = cmptMgr.GetThermalCompartment("L2C3");
 
-  // Check our Heat 
+  // Check our Heat
   double L1C0_expected_kcal = L2C0_kcal + L2C1_kcal;
-  if (L1C0->GetHeat(EnergyUnit::kcal) != L1C0_expected_kcal)
-  {
+  if (L1C0->GetHeat(EnergyUnit::kcal) != L1C0_expected_kcal) {
     m_ss << L1C0->GetName() << " const Heat is not correct : " << L1C0->GetHeat(EnergyUnit::kcal) << " expected " << L1C0_expected_kcal;
     testCase.AddFailure(m_ss);
   }
-  if (L1C0->GetHeat().GetValue(EnergyUnit::kcal) != L1C0_expected_kcal)
-  {
+  if (L1C0->GetHeat().GetValue(EnergyUnit::kcal) != L1C0_expected_kcal) {
     m_ss << L1C0->GetName() << " Heat is not correct : " << L1C0->GetHeat().GetValue(EnergyUnit::kcal) << " expected " << L1C0_expected_kcal;
     testCase.AddFailure(m_ss);
   }
   double L1C1_expected_kcal = L2C2_kcal + L2C3_kcal;
-  if (L1C1->GetHeat(EnergyUnit::kcal) != L1C1_expected_kcal)
-  {
+  if (L1C1->GetHeat(EnergyUnit::kcal) != L1C1_expected_kcal) {
     m_ss << L1C1->GetName() << " const Heat is not correct : " << L1C1->GetHeat(EnergyUnit::kcal) << " expected " << L1C1_expected_kcal;
     testCase.AddFailure(m_ss);
   }
-  if (L1C1->GetHeat().GetValue(EnergyUnit::kcal) != L1C1_expected_kcal)
-  {
+  if (L1C1->GetHeat().GetValue(EnergyUnit::kcal) != L1C1_expected_kcal) {
     m_ss << L1C1->GetName() << " Heat is not correct : " << L1C1->GetHeat().GetValue(EnergyUnit::kcal) << " expected " << L1C1_expected_kcal;
     testCase.AddFailure(m_ss);
   }
   double L0C0_expected_kcal = L1C0_expected_kcal + L1C1_expected_kcal;
-  if (L0C0->GetHeat(EnergyUnit::kcal) != L0C0_expected_kcal)
-  {
+  if (L0C0->GetHeat(EnergyUnit::kcal) != L0C0_expected_kcal) {
     m_ss << L0C0->GetName() << " const Heat is not correct : " << L0C0->GetHeat(EnergyUnit::kcal) << " expected " << L0C0_expected_kcal;
     testCase.AddFailure(m_ss);
   }
-  if (L0C0->GetHeat().GetValue(EnergyUnit::kcal) != L0C0_expected_kcal)
-  {
+  if (L0C0->GetHeat().GetValue(EnergyUnit::kcal) != L0C0_expected_kcal) {
     m_ss << L0C0->GetName() << " Heat is not correct : " << L0C0->GetHeat().GetValue(EnergyUnit::kcal) << " expected " << L0C0_expected_kcal;
     testCase.AddFailure(m_ss);
   }
 
   // Check our Temperature
   double L1C0_expected_C = (L2C0_C * (L2C0_kcal / L1C0_expected_kcal)) + (L2C1_C * (L2C1_kcal / L1C0_expected_kcal));
-  if (L1C0->GetTemperature(TemperatureUnit::C) != L1C0_expected_C)
-  {
+  if (L1C0->GetTemperature(TemperatureUnit::C) != L1C0_expected_C) {
     m_ss << L1C0->GetName() << " const Temperature is not correct : " << L1C0->GetTemperature(TemperatureUnit::C) << " expected " << L1C0_expected_C;
     testCase.AddFailure(m_ss);
   }
-  if (L1C0->GetTemperature().GetValue(TemperatureUnit::C) != L1C0_expected_C)
-  {
+  if (L1C0->GetTemperature().GetValue(TemperatureUnit::C) != L1C0_expected_C) {
     m_ss << L1C0->GetName() << " Temperature is not correct : " << L1C0->GetTemperature().GetValue(TemperatureUnit::C) << " expected " << L1C0_expected_C;
     testCase.AddFailure(m_ss);
   }
   double L1C1_expected_C = (L2C2_C * (L2C2_kcal / L1C1_expected_kcal)) + (L2C3_C * (L2C3_kcal / L1C1_expected_kcal));
-  if (L1C1->GetTemperature(TemperatureUnit::C) != L1C1_expected_C)
-  {
+  if (L1C1->GetTemperature(TemperatureUnit::C) != L1C1_expected_C) {
     m_ss << L1C1->GetName() << " const Temperature is not correct : " << L1C1->GetTemperature(TemperatureUnit::C) << " expected " << L1C1_expected_C;
     testCase.AddFailure(m_ss);
   }
-  if (L1C1->GetTemperature().GetValue(TemperatureUnit::C) != L1C1_expected_C)
-  {
+  if (L1C1->GetTemperature().GetValue(TemperatureUnit::C) != L1C1_expected_C) {
     m_ss << L1C1->GetName() << " Temperature is not correct : " << L1C1->GetTemperature().GetValue(TemperatureUnit::C) << " expected " << L1C1_expected_C;
     testCase.AddFailure(m_ss);
   }
   double L0C0_expected_C = (L1C0_expected_C * (L1C0_expected_kcal / L0C0_expected_kcal)) + (L1C1_expected_C * (L1C1_expected_kcal / L0C0_expected_kcal));
-  if (L0C0->GetTemperature(TemperatureUnit::C) != L0C0_expected_C)
-  {
+  if (L0C0->GetTemperature(TemperatureUnit::C) != L0C0_expected_C) {
     m_ss << L0C0->GetName() << " const Temperature is not correct : " << L0C0->GetTemperature(TemperatureUnit::C) << " expected " << L0C0_expected_C;
     testCase.AddFailure(m_ss);
   }
-  if (L0C0->GetTemperature().GetValue(TemperatureUnit::C) != L0C0_expected_C)
-  {
+  if (L0C0->GetTemperature().GetValue(TemperatureUnit::C) != L0C0_expected_C) {
     m_ss << L0C0->GetName() << " Temperature is not correct : " << L0C0->GetTemperature().GetValue(TemperatureUnit::C) << " expected " << L0C0_expected_C;
     testCase.AddFailure(m_ss);
   }
@@ -452,7 +439,7 @@ void CommonDataModelTest::TestCircuitHeatTemperatureAndFlows(SETestSuite& testSu
   SEThermalCircuitNode& l1 = circuit.CreateNode("Left1");
   l1.GetNextTemperature().SetValue(10., TemperatureUnit::C);
   l1.GetHeatBaseline().SetValue(10., EnergyUnit::kcal);
-  SEThermalCircuitNode l2 = circuit.CreateNode("Left2");// No Heat
+  SEThermalCircuitNode l2 = circuit.CreateNode("Left2"); // No Heat
   l2.GetNextTemperature().SetValue(22., TemperatureUnit::C);
   // Middle Nodes
   SEThermalCircuitNode& m1 = circuit.CreateNode("Middle1");
@@ -475,13 +462,13 @@ void CommonDataModelTest::TestCircuitHeatTemperatureAndFlows(SETestSuite& testSu
   double smallInflow_kcal_Per_s = 2.0;
   double inflow_kcal_Per_s;
   double outflow_kcal_Per_s;
-  SEThermalCircuitPath& p1 = circuit.CreatePath(l1, m1, "l1->m1");//Large Inflow
+  SEThermalCircuitPath& p1 = circuit.CreatePath(l1, m1, "l1->m1"); //Large Inflow
   p1.GetNextHeatTransferRate().SetValue(largeInflow_kcal_Per_s, PowerUnit::kcal_Per_s);
-  SEThermalCircuitPath& p2 = circuit.CreatePath(m1, r1, "m1->r1");//Small Outflow
+  SEThermalCircuitPath& p2 = circuit.CreatePath(m1, r1, "m1->r1"); //Small Outflow
   p2.GetNextHeatTransferRate().SetValue(smallOutflow_kcal_Per_s, PowerUnit::kcal_Per_s);
-  SEThermalCircuitPath& p3 = circuit.CreatePath(m2, l2, "m2->l2");// Large Outflow
+  SEThermalCircuitPath& p3 = circuit.CreatePath(m2, l2, "m2->l2"); // Large Outflow
   p3.GetNextHeatTransferRate().SetValue(largeOutflow_kcal_Per_s, PowerUnit::kcal_Per_s);
-  SEThermalCircuitPath& p4 = circuit.CreatePath(r2, m2, "r2->m2");// Small Inflow
+  SEThermalCircuitPath& p4 = circuit.CreatePath(r2, m2, "r2->m2"); // Small Inflow
   p4.GetNextHeatTransferRate().SetValue(smallInflow_kcal_Per_s, PowerUnit::kcal_Per_s);
   circuit.SetNextAndCurrentFromBaselines();
   circuit.StateChange();
@@ -524,28 +511,28 @@ void CommonDataModelTest::TestCircuitHeatTemperatureAndFlows(SETestSuite& testSu
 
   inflow_kcal_Per_s = largeInflow_kcal_Per_s + smallInflow_kcal_Per_s;
   outflow_kcal_Per_s = largeOutflow_kcal_Per_s + smallOutflow_kcal_Per_s;
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
 
@@ -554,28 +541,28 @@ void CommonDataModelTest::TestCircuitHeatTemperatureAndFlows(SETestSuite& testSu
   p4.GetNextHeatTransferRate().SetValue(-smallInflow_kcal_Per_s, PowerUnit::kcal_Per_s);
   inflow_kcal_Per_s = largeInflow_kcal_Per_s + smallOutflow_kcal_Per_s;
   outflow_kcal_Per_s = largeOutflow_kcal_Per_s + smallInflow_kcal_Per_s;
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
 
@@ -584,28 +571,28 @@ void CommonDataModelTest::TestCircuitHeatTemperatureAndFlows(SETestSuite& testSu
   p3.GetNextHeatTransferRate().SetValue(-largeOutflow_kcal_Per_s, PowerUnit::kcal_Per_s);
   inflow_kcal_Per_s = largeOutflow_kcal_Per_s + smallOutflow_kcal_Per_s;
   outflow_kcal_Per_s = largeInflow_kcal_Per_s + smallInflow_kcal_Per_s;
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Inflow : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const InFlow is not correct : " <<middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
+  m_ss << "Middle Inflow : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const InFlow is not correct : " << middle->GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << "Middle Outflow : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s; Info(m_ss);
-  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s)>m_PercentTolerance)
-  {
-    m_ss <<middle->GetName() << " const OutFlow is not correct : " <<middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
+  m_ss << "Middle Outflow : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  Info(m_ss);
+  if (GeneralMath::PercentTolerance(middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
+    m_ss << middle->GetName() << " const OutFlow is not correct : " << middle->GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
@@ -616,22 +603,19 @@ void CommonDataModelTest::CheckTemperatureAndHeat(SETestCase& testCase, SETherma
   // Check Heat
   const std::vector<SEThermalCircuitNode*>& vNodes = cmpt.GetNodeMapping().GetNodes();
   double nHeat_kcal = 0;
-  for (SEThermalCircuitNode* n : vNodes)
-  {
+  for (SEThermalCircuitNode* n : vNodes) {
     if (n->HasNextHeat())
       nHeat_kcal += n->GetNextHeat().GetValue(EnergyUnit::kcal);
   }
   m_ss << "Cmpt Heat : " << cmpt.GetHeat(EnergyUnit::kcal) << " vs. Node Heat " << nHeat_kcal;
   Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetHeat(EnergyUnit::kcal), nHeat_kcal)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(cmpt.GetHeat(EnergyUnit::kcal), nHeat_kcal) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const Heat is not correct : " << cmpt.GetHeat(EnergyUnit::kcal) << " expected " << nHeat_kcal;
     testCase.AddFailure(m_ss);
   }
   m_ss << "Cmpt Heat : " << cmpt.GetHeat().GetValue(EnergyUnit::kcal) << " vs. Node Heat " << nHeat_kcal;
   Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetHeat().GetValue(EnergyUnit::kcal), nHeat_kcal)>m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(cmpt.GetHeat().GetValue(EnergyUnit::kcal), nHeat_kcal) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " Heat is not correct : " << cmpt.GetHeat().GetValue(EnergyUnit::kcal) << " expected " << nHeat_kcal;
     testCase.AddFailure(m_ss);
   }
@@ -644,33 +628,25 @@ void CommonDataModelTest::CheckTemperatureAndHeat(SETestCase& testCase, SETherma
   bool HeatWeightedTemperature = false;
   bool averageTemperature = false;
   int TemperatureNodes = 0;
-  for (SEThermalCircuitNode* n : cmpt.GetNodeMapping().GetNodes())
-  {
-    if (n->HasNextPotential())
-    {
+  for (SEThermalCircuitNode* n : cmpt.GetNodeMapping().GetNodes()) {
+    if (n->HasNextPotential()) {
       averageTemperature = true;
       if (n->HasNextQuantity())
         HeatWeightedTemperature = true;
     }
   }
-  if (HeatWeightedTemperature == false && averageTemperature == false)
-  {
+  if (HeatWeightedTemperature == false && averageTemperature == false) {
     Info("No Temperature values found on compartment");
     return;
   }
   const std::vector<SEThermalCircuitNode*>& pNodes = cmpt.GetNodeMapping().GetNodes();
   double nTemperature_C = 0;
-  for (SEThermalCircuitNode* n : pNodes)
-  {
-    if (HeatWeightedTemperature)
-    {
+  for (SEThermalCircuitNode* n : pNodes) {
+    if (HeatWeightedTemperature) {
       if (n->HasNextTemperature() && n->HasNextHeat())
         nTemperature_C += n->GetNextTemperature().GetValue(TemperatureUnit::C) * (n->GetNextHeat(EnergyUnit::kcal) / nHeat_kcal);
-    }
-    else
-    {
-      if (n->HasNextTemperature())
-      {
+    } else {
+      if (n->HasNextTemperature()) {
         TemperatureNodes++;
         nTemperature_C += n->GetNextTemperature().GetValue(TemperatureUnit::C);
       }
@@ -680,15 +656,13 @@ void CommonDataModelTest::CheckTemperatureAndHeat(SETestCase& testCase, SETherma
     nTemperature_C /= TemperatureNodes;
   m_ss << "Cmpt Temperature : " << cmpt.GetTemperature(TemperatureUnit::C) << " vs. Node Temperature " << nTemperature_C;
   Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetTemperature(TemperatureUnit::C), nTemperature_C) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(cmpt.GetTemperature(TemperatureUnit::C), nTemperature_C) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const Temperature is not correct : " << cmpt.GetTemperature(TemperatureUnit::C) << " expected " << nTemperature_C;
     testCase.AddFailure(m_ss);
   }
   m_ss << "Cmpt Temperature : " << cmpt.GetTemperature().GetValue(TemperatureUnit::C) << " vs. Node Temperature " << nTemperature_C;
   Info(m_ss);
-  if (GeneralMath::PercentTolerance(cmpt.GetTemperature().GetValue(TemperatureUnit::C), nTemperature_C) > m_PercentTolerance)
-  {
+  if (GeneralMath::PercentTolerance(cmpt.GetTemperature().GetValue(TemperatureUnit::C), nTemperature_C) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " Temperature Get methods are not equal! : " << cmpt.GetTemperature().GetValue(TemperatureUnit::C) << " expected " << nTemperature_C;
     testCase.AddFailure(m_ss);
   }
@@ -705,19 +679,19 @@ void CommonDataModelTest::ThermalCompartmentTest(const std::string& rptDirectory
   SESubstanceManager subMgr(m_Logger);
   subMgr.LoadSubstanceDirectory();
 
-  SETestSuite&  Flows = testReport.CreateTestSuite();
+  SETestSuite& Flows = testReport.CreateTestSuite();
   Flows.SetName("ThermalCompartmentFlows");
   TestThermalFlows(Flows, subMgr);
 
-  SETestSuite&  FlowHierarchy = testReport.CreateTestSuite();
+  SETestSuite& FlowHierarchy = testReport.CreateTestSuite();
   FlowHierarchy.SetName("ThermalCompartmentFlowHierarchy");
   TestThermalFlowHierarchy(FlowHierarchy, subMgr);
 
-  SETestSuite&  Hierarchy = testReport.CreateTestSuite();
+  SETestSuite& Hierarchy = testReport.CreateTestSuite();
   Hierarchy.SetName("ThermalCompartmentHierarchy");
   TestThermalHierarchy(Hierarchy, subMgr);
 
-  SETestSuite&  CircuitHeatTemperatureAndFlows = testReport.CreateTestSuite();
+  SETestSuite& CircuitHeatTemperatureAndFlows = testReport.CreateTestSuite();
   CircuitHeatTemperatureAndFlows.SetName("ThermalCompartmentHeatTemperatureAndFlows");
   TestCircuitHeatTemperatureAndFlows(CircuitHeatTemperatureAndFlows, subMgr);
 

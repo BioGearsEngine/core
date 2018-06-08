@@ -10,13 +10,14 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+#include <biogears/cdm/stdafx.h>
 
-SEFluidCircuit::SEFluidCircuit(const std::string& name, SECircuitManager& mgr) : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger()), m_Mgr(mgr)
+SEFluidCircuit::SEFluidCircuit(const std::string& name, SECircuitManager& mgr)
+  : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger())
+  , m_Mgr(mgr)
 {
-
 }
 SEFluidCircuit::~SEFluidCircuit()
 {
@@ -26,7 +27,7 @@ SEFluidCircuit::~SEFluidCircuit()
 SEFluidCircuitNode& SEFluidCircuit::CreateNode(const std::string& name)
 {
   SEFluidCircuitNode* node = m_Mgr.GetFluidNode(name);
-  if (node == nullptr)  
+  if (node == nullptr)
     node = &m_Mgr.CreateFluidNode(name);
   AddNode(*node);
   return *node;
@@ -35,7 +36,7 @@ SEFluidCircuitPath& SEFluidCircuit::CreatePath(SEFluidCircuitNode& src, SEFluidC
 {
   SEFluidCircuitPath* path = m_Mgr.GetFluidPath(name);
   if (path == nullptr)
-    path = &m_Mgr.CreateFluidPath(src,tgt,name);
+    path = &m_Mgr.CreateFluidPath(src, tgt, name);
   AddPath(*path);
   return *path;
 }

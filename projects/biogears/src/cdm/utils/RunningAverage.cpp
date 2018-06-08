@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/schema/RunningAverageData.hxx>
 
-
 RunningAverage::RunningAverage()
 {
   Reset();
@@ -22,7 +21,6 @@ RunningAverage::RunningAverage()
 
 RunningAverage::~RunningAverage()
 {
-
 }
 
 bool RunningAverage::Load(const CDM::RunningAverageData& in)
@@ -45,18 +43,18 @@ void RunningAverage::Unload(CDM::RunningAverageData& data) const
 
 void RunningAverage::Reset()
 {
-	m_Sum = 0.0;
-	m_NumSamples = 0;
+  m_Sum = 0.0;
+  m_NumSamples = 0;
 }
 
 double RunningAverage::Sample(double d)
 {
   m_Sum += d;
   m_NumSamples++;
-	return Value();
+  return Value();
 }
 
 double RunningAverage::Value()
 {
-	return m_Sum / double(m_NumSamples);
+  return m_Sum / double(m_NumSamples);
 }

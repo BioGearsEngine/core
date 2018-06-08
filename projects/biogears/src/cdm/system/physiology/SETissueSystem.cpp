@@ -10,26 +10,27 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/physiology/SETissueSystem.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/schema/ScalarAmountPerVolumeData.hxx>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/cdm/properties/SEScalarElectricPotential.h>
-#include <biogears/schema/ScalarElectricPotentialData.hxx>
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/physiology/SETissueSystem.h>
+#include <biogears/schema/ScalarAmountPerVolumeData.hxx>
+#include <biogears/schema/ScalarElectricPotentialData.hxx>
+#include <biogears/schema/ScalarFractionData.hxx>
+#include <biogears/schema/ScalarMassData.hxx>
+#include <biogears/schema/ScalarMassPerVolumeData.hxx>
+#include <biogears/schema/ScalarVolumeData.hxx>
+#include <biogears/schema/ScalarVolumePerTimeData.hxx>
 
-SETissueSystem::SETissueSystem(Logger* logger) : SESystem(logger)
+SETissueSystem::SETissueSystem(Logger* logger)
+  : SESystem(logger)
 {
   m_CarbonDioxideProductionRate = nullptr;
   m_DehydrationFraction = nullptr;
@@ -54,7 +55,7 @@ SETissueSystem::SETissueSystem(Logger* logger) : SESystem(logger)
 
 SETissueSystem::~SETissueSystem()
 {
-	Clear();
+  Clear();
 }
 
 void SETissueSystem::Clear()
@@ -121,12 +122,12 @@ const SEScalar* SETissueSystem::GetScalar(const std::string& name)
   if (name.compare("StoredFat") == 0)
     return &GetStoredFat();
 
-	return nullptr;
+  return nullptr;
 }
 
 bool SETissueSystem::Load(const CDM::TissueSystemData& in)
 {
-	SESystem::Load(in);
+  SESystem::Load(in);
   if (in.CarbonDioxideProductionRate().present())
     GetCarbonDioxideProductionRate().Load(in.CarbonDioxideProductionRate().get());
   if (in.DehydrationFraction().present())
@@ -166,7 +167,7 @@ bool SETissueSystem::Load(const CDM::TissueSystemData& in)
   if (in.StoredFat().present())
     GetStoredFat().Load(in.StoredFat().get());
 
-	return true;
+  return true;
 }
 
 CDM::TissueSystemData* SETissueSystem::Unload() const
@@ -177,7 +178,7 @@ CDM::TissueSystemData* SETissueSystem::Unload() const
 }
 
 void SETissueSystem::Unload(CDM::TissueSystemData& data) const
-{	
+{
   if (m_CarbonDioxideProductionRate != nullptr)
     data.CarbonDioxideProductionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CarbonDioxideProductionRate->Unload()));
   if (m_DehydrationFraction != nullptr)
@@ -217,7 +218,7 @@ void SETissueSystem::Unload(CDM::TissueSystemData& data) const
   if (m_StoredFat != nullptr)
     data.StoredFat(std::unique_ptr<CDM::ScalarMassData>(m_StoredFat->Unload()));
 
-	SESystem::Unload(data);
+  SESystem::Unload(data);
 }
 
 bool SETissueSystem::HasCarbonDioxideProductionRate() const
@@ -542,4 +543,3 @@ double SETissueSystem::GetStoredFat(const MassUnit& unit) const
     return SEScalar::dNaN();
   return m_StoredFat->GetValue(unit);
 }
-

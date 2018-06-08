@@ -10,23 +10,22 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SELiquidCompartmentDataRequest.h>
-#include <biogears/schema/LiquidCompartmentDataRequestData.hxx>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
+#include <biogears/schema/LiquidCompartmentDataRequestData.hxx>
 
-SELiquidCompartmentDataRequest::SELiquidCompartmentDataRequest(const SEDecimalFormat* dfault) : SECompartmentSubstanceDataRequest(dfault)
+SELiquidCompartmentDataRequest::SELiquidCompartmentDataRequest(const SEDecimalFormat* dfault)
+  : SECompartmentSubstanceDataRequest(dfault)
 {
-
 }
 
 SELiquidCompartmentDataRequest::~SELiquidCompartmentDataRequest()
 {
   Clear();
 }
-
 
 bool SELiquidCompartmentDataRequest::Load(const CDM::LiquidCompartmentDataRequestData& in, const SESubstanceManager& substances)
 {

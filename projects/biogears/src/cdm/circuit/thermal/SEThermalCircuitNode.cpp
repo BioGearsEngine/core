@@ -10,12 +10,12 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h> 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
+#include <biogears/cdm/stdafx.h>
 
-SEThermalCircuitNode::SEThermalCircuitNode(const std::string& name, Logger* logger) : SECircuitNode<THERMAL_CIRCUIT_NODE>(name,logger)
+SEThermalCircuitNode::SEThermalCircuitNode(const std::string& name, Logger* logger)
+  : SECircuitNode<THERMAL_CIRCUIT_NODE>(name, logger)
 {
-  
 }
 
 SEThermalCircuitNode::~SEThermalCircuitNode()

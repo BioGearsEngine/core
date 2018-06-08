@@ -9,25 +9,24 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/engine/test/BioGearsEngineTest.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/utils/TimingProfile.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/engine/test/BioGearsEngineTest.h>
 #include <numeric>
 
-std::chrono::microseconds::rep vectorAverage(std::vector<std::chrono::microseconds::rep> const&v)
+std::chrono::microseconds::rep vectorAverage(std::vector<std::chrono::microseconds::rep> const& v)
 {
-  if (v.size() > 0)
-  {
+  if (v.size() > 0) {
     std::chrono::microseconds::rep sum = 0;
-    for (auto f : v) sum += f;
-    return sum/v.size();
-  }   
-  else
+    for (auto f : v)
+      sum += f;
+    return sum / v.size();
+  } else
     return INT_MAX;
 }
 
@@ -94,8 +93,7 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
   //Direct, PartialPivLu, FullPivLu, JacobiSvd, HouseholderQr, Ldlt, Llt, SparseLU, SparseQR, BiCGSTAB, ConjugateGradient
   //Test each circuit and record solving times
   EigenCircuitSolver solver;
-  for(int i=0; i<EigenCircuitSolver::_size; i++,solver++)
-  {
+  for (int i = 0; i < EigenCircuitSolver::_size; i++, solver++) {
     bool failed = false;
 
     //Anesthesia Machine alone
@@ -107,59 +105,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     int numFails = 0;
 
     timer.Start("AnesthesiaMachineSolo");
-    try
-    {
+    try {
       fluidCalc.Process(*fCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("AnesthesiaMachineSolo");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Anesthesia circuit initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("AnesthesiaMachineSolo") << " microseconds, ";
       anesthesiaMachineInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("AnesthesiaMachineSolo"));
-    }
-    else
-    {
+    } else {
       ss << "Anesthesia circuit failed initially, ";
       anesthesiaMachineInitialTime.push_back(INT_MAX);
     }
 
     std::vector<std::chrono::microseconds::rep> times;
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("AnesthesiaMachineSolo");
-      try
-      {
+      try {
         fluidCalc.Process(*fCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -182,59 +162,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("AnesthesiaMachineWithRespiratory");
-    try
-    {
+    try {
       fluidCalc.Process(*fCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("AnesthesiaMachineWithRespiratory");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Anesthesia circuit with respiratory initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("AnesthesiaMachineWithRespiratory") << " microseconds, ";
       anesthesiaMachineWithRespInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("AnesthesiaMachineWithRespiratory"));
-    }
-    else
-    {
+    } else {
       ss << "Anesthesia circuit with respiratory failed initially, ";
       anesthesiaMachineWithRespInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("AnesthesiaMachineWithRespiratory");
-      try
-      {
+      try {
         fluidCalc.Process(*fCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -258,59 +220,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("Respiratory");
-    try
-    {
+    try {
       fluidCalc.Process(*fCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("Respiratory");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Respiratory circuit initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("Respiratory") << " microseconds, ";
       respiratoryInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("Respiratory"));
-    }
-    else
-    {
+    } else {
       ss << "Respiratory circuit failed initially, ";
       respiratoryInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("Respiratory");
-      try
-      {
+      try {
         fluidCalc.Process(*fCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -334,59 +278,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("RespiratoryWithInhaler");
-    try
-    {
+    try {
       fluidCalc.Process(*fCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("RespiratoryWithInhaler");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Respiratory circuit with inhaler initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("RespiratoryWithInhaler") << " microseconds, ";
       respiratoryWithInhalerInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("RespiratoryWithInhaler"));
-    }
-    else
-    {
+    } else {
       ss << "Respiratory circuit with inhaler failed initially, ";
       respiratoryWithInhalerInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("RespiratoryWithInhaler");
-      try
-      {
+      try {
         fluidCalc.Process(*fCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -409,59 +335,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("Cardiovascular");
-    try
-    {
+    try {
       fluidCalc.Process(*fCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("Cardiovascular");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Active CV circuit initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("Cardiovascular") << " microseconds, ";
       cardiovascularInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("Cardiovascular"));
-    }
-    else
-    {
+    } else {
       ss << "Active CV circuit failed initially, ";
       cardiovascularInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("Cardiovascular");
-      try
-      {
+      try {
         fluidCalc.Process(*fCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -484,59 +392,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("Renal");
-    try
-    {
+    try {
       fluidCalc.Process(*fCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("Renal");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Renal circuit initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("Renal") << " microseconds, ";
       renalInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("Renal"));
-    }
-    else
-    {
+    } else {
       ss << "Renal circuit failed initially, ";
       renalInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("Renal");
-      try
-      {
+      try {
         fluidCalc.Process(*fCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -560,59 +450,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("InternalTemperature");
-    try
-    {
+    try {
       thermalCalc.Process(*tCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("InternalTemperature");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Internal Temperature circuit initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("InternalTemperature") << " microseconds, ";
       internalTempInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("InternalTemperature"));
-    }
-    else
-    {
+    } else {
       ss << "Internal Temperature circuit failed initially, ";
       internalTempInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("InternalTemperature");
-      try
-      {
+      try {
         thermalCalc.Process(*tCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -635,59 +507,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("ExternalTemperature");
-    try
-    {
+    try {
       thermalCalc.Process(*tCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("ExternalTemperature");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "External Temperature circuit initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("ExternalTemperature") << " microseconds, ";
       externalTempInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("ExternalTemperature"));
-    }
-    else
-    {
+    } else {
       ss << "External Temperature circuit failed initially, ";
       externalTempInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("ExternalTemperature");
-      try
-      {
+      try {
         thermalCalc.Process(*tCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -710,59 +564,41 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
     numFails = 0;
 
     timer.Start("Temperature");
-    try
-    {
+    try {
       thermalCalc.Process(*tCircuit, deltaT_s);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
       failed = true;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
       failed = true;
     }
     timer.Stop("Temperature");
-    if (!failed)
-    {
+    if (!failed) {
       ss << "Temperature circuit initially solved in " << timer.GetElapsedTime<std::chrono::microseconds>("Temperature") << " microseconds, ";
       temperatureInitialTime.push_back(timer.GetElapsedTime<std::chrono::microseconds>("Temperature"));
-    }
-    else
-    {
+    } else {
       ss << "Temperature circuit failed initially, ";
       temperatureInitialTime.push_back(INT_MAX);
     }
 
     times.clear();
-    for (int i = 0; i < numSolves; i++)
-    {
+    for (int i = 0; i < numSolves; i++) {
       failed = false;
 
       timer.Start("Temperature");
-      try
-      {
+      try {
         thermalCalc.Process(*tCircuit, deltaT_s);
-      }
-      catch (CommonDataModelException& ex)
-      {
+      } catch (CommonDataModelException& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (std::exception& ex)
-      {
+      } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         failed = true;
-      }
-      catch (...)
-      {
+      } catch (...) {
         std::cerr << "Exception!!" << std::endl;
         failed = true;
       }
@@ -785,8 +621,7 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
   int minAnesthesiaMachineIndex, minAMWithRespIndex, minRespiratoryIndex, minRespWithInhalerIndex, minCVIndex, minRenalIndex, minInternalIndex, minExternalIndex, minTempIndex;
   minAnesthesiaMachineIndex = minAMWithRespIndex = minRespiratoryIndex = minRespWithInhalerIndex = minCVIndex = minRenalIndex = minInternalIndex = minExternalIndex = minTempIndex = 0;
 
-  for (int i = 0; i < EigenCircuitSolver::_size; i++)
-  {
+  for (int i = 0; i < EigenCircuitSolver::_size; i++) {
     minAnesthesiaMachineIndex = anesthesiaMachineTimes.at(i) < anesthesiaMachineTimes.at(minAnesthesiaMachineIndex) ? i : minAnesthesiaMachineIndex;
     minAMWithRespIndex = anesthesiaMachineWithRespTimes.at(i) < anesthesiaMachineWithRespTimes.at(minAMWithRespIndex) ? i : minAMWithRespIndex;
     minRespiratoryIndex = respiratoryTimes.at(i) < respiratoryTimes.at(minRespiratoryIndex) ? i : minRespiratoryIndex;
@@ -801,7 +636,7 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
   //Output
   //This just goes to the log for now
   ss.str("");
-  ss.clear(); 
+  ss.clear();
   ss << "The quickest solver for the Anesthesia Machine circuit was " << EigenCircuitSolver::Value(minAnesthesiaMachineIndex) << " at an average of " << anesthesiaMachineTimes.at(minAnesthesiaMachineIndex) << " microseconds and a failure rate of " << anesthesiaMachineFailureRate.at(minAnesthesiaMachineIndex) << "%.";
   Info(ss);
   ss << "The quickest solver for the Anesthesia Machine plus Respiratory circuit was " << EigenCircuitSolver::Value(minAMWithRespIndex) << " at an average of " << anesthesiaMachineWithRespTimes.at(minAMWithRespIndex) << " microseconds and a failure rate of " << anesthesiaMachineWithRespFailureRate.at(minAMWithRespIndex) << "%.";
@@ -823,5 +658,4 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
 
   //What should we write out in the report and/or Track?
   //testReport.WriteFile(rptDirectory + "/SolverSpeedTest.xml");
-
 }

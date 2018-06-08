@@ -11,9 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/schema/BioGearsNervousSystemData.hxx>
+
+class SESubstance;
+class BioGears;
 
 /**
  * @brief 
@@ -21,7 +27,7 @@ specific language governing permissions and limitations under the License.
  */  
 class BIOGEARS_API Nervous : public SENervousSystem, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	Nervous(BioGears& bg);

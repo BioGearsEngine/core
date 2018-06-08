@@ -10,76 +10,78 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/schema/Scalar0To1Data.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/Scalar0To1Data.hxx>
 #include <biogears/schema/ScalarTimeData.hxx>
 
-SEBreathHold::SEBreathHold() : SEConsciousRespirationCommand()
+SEBreathHold::SEBreathHold()
+  : SEConsciousRespirationCommand()
 {
-	m_Period = nullptr;
+  m_Period = nullptr;
 }
 
 SEBreathHold::~SEBreathHold()
 {
-	Clear();
+  Clear();
 }
 
 void SEBreathHold::Clear()
 {
-	SEConsciousRespirationCommand::Clear();
-	SAFE_DELETE(m_Period);
+  SEConsciousRespirationCommand::Clear();
+  SAFE_DELETE(m_Period);
 }
 
 bool SEBreathHold::IsValid() const
 {
-	return SEConsciousRespirationCommand::IsValid() && HasPeriod();
+  return SEConsciousRespirationCommand::IsValid() && HasPeriod();
 }
 
 bool SEBreathHold::IsActive() const
 {
-	return SEConsciousRespirationCommand::IsActive();
+  return SEConsciousRespirationCommand::IsActive();
 }
 
 bool SEBreathHold::Load(const CDM::BreathHoldData& in)
 {
-	SEConsciousRespirationCommand::Load(in);
-	GetPeriod().Load(in.Period());
-	return true;
+  SEConsciousRespirationCommand::Load(in);
+  GetPeriod().Load(in.Period());
+  return true;
 }
 
 CDM::BreathHoldData* SEBreathHold::Unload() const
 {
-	CDM::BreathHoldData*data(new CDM::BreathHoldData());
-	Unload(*data);
-	return data;
+  CDM::BreathHoldData* data(new CDM::BreathHoldData());
+  Unload(*data);
+  return data;
 }
 
 void SEBreathHold::Unload(CDM::BreathHoldData& data) const
 {
-	SEConsciousRespirationCommand::Unload(data);
-	if (m_Period != nullptr)
-		data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
+  SEConsciousRespirationCommand::Unload(data);
+  if (m_Period != nullptr)
+    data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
 }
 
 bool SEBreathHold::HasPeriod() const
 {
-	return m_Period == nullptr ? false : m_Period->IsValid();
+  return m_Period == nullptr ? false : m_Period->IsValid();
 }
 SEScalarTime& SEBreathHold::GetPeriod()
 {
-	if (m_Period == nullptr)
-		m_Period = new SEScalarTime();
-	return *m_Period;
+  if (m_Period == nullptr)
+    m_Period = new SEScalarTime();
+  return *m_Period;
 }
 
-void SEBreathHold::ToString(std::ostream &str) const
+void SEBreathHold::ToString(std::ostream& str) const
 {
-	str << "Breath Hold";
-	if (HasComment())
-		str << "\n\tComment: " << m_Comment;
-	str << "\n\tPeriod: "; HasPeriod() ? str << *m_Period : str << "NaN";
-	str << std::flush;
+  str << "Breath Hold";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tPeriod: ";
+  HasPeriod() ? str << *m_Period : str << "NaN";
+  str << std::flush;
 }

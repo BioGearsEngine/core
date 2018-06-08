@@ -11,17 +11,28 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/schema/BioGearsEnvironmentData.hxx>
 
+class SEPatient;
+class	SEPatientActionCollection;
+class	SEEnvironmentActionCollection;
+class SEGasCompartment;
+class SELiquidCompartment;
+class	SEThermalCircuit;
+class	SEThermalCircuitNode;
+class	SEThermalCircuitPath;
+class BioGears;
 /**
  * @brief The %Environment class characterizes the environment and manages interactions between the body its surroundings.
  */  
 class BIOGEARS_API Environment : public SEEnvironment, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	Environment(BioGears& bg);

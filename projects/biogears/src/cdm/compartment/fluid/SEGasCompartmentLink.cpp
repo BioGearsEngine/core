@@ -10,9 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
+#include <biogears/cdm/stdafx.h>
 
 CDM::GasCompartmentLinkData* SEGasCompartmentLink::Unload()
 {

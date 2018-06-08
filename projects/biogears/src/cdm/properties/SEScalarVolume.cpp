@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/stdafx.h>
 
 const VolumeUnit VolumeUnit::L("L");
 const VolumeUnit VolumeUnit::dL("dL");
@@ -21,11 +21,11 @@ const VolumeUnit VolumeUnit::m3("m^3");
 
 CDM::ScalarVolumeData* SEScalarVolume::Unload() const
 {
-	if(!IsValid())
-		return nullptr;
-	CDM::ScalarVolumeData* data(new CDM::ScalarVolumeData());
+  if (!IsValid())
+    return nullptr;
+  CDM::ScalarVolumeData* data(new CDM::ScalarVolumeData());
   SEScalarQuantity::Unload(*data);
-	return data;
+  return data;
 }
 
 bool VolumeUnit::IsValidUnit(const std::string& unit)
@@ -45,16 +45,16 @@ bool VolumeUnit::IsValidUnit(const std::string& unit)
 
 const VolumeUnit& VolumeUnit::GetCompoundUnit(const std::string& unit)
 {
-	if(L.GetString().compare(unit)==0)
-		return L;
-	if(mL.GetString().compare(unit)==0)
-		return mL;
-	if(m3.GetString().compare(unit)==0)
-		return m3;
-	if (dL.GetString().compare(unit) == 0)
-		return dL;
-	if (uL.GetString().compare(unit) == 0)
-		return uL;
+  if (L.GetString().compare(unit) == 0)
+    return L;
+  if (mL.GetString().compare(unit) == 0)
+    return mL;
+  if (m3.GetString().compare(unit) == 0)
+    return m3;
+  if (dL.GetString().compare(unit) == 0)
+    return dL;
+  if (uL.GetString().compare(unit) == 0)
+    return uL;
   std::stringstream err;
   err << unit << " is not a valid Volume unit";
   throw CommonDataModelException(err.str());

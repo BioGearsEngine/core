@@ -9,74 +9,76 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVaporizerFailure.h>
-#include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/Scalar0To1Data.hxx>
 
-SEVaporizerFailure::SEVaporizerFailure() : SEAnesthesiaMachineAction()
+SEVaporizerFailure::SEVaporizerFailure()
+  : SEAnesthesiaMachineAction()
 {
-	m_Severity = nullptr;
+  m_Severity = nullptr;
 }
 
 SEVaporizerFailure::~SEVaporizerFailure()
 {
-	Clear();
+  Clear();
 }
 
 void SEVaporizerFailure::Clear()
 {
-	SEAnesthesiaMachineAction::Clear();
-	SAFE_DELETE(m_Severity);
+  SEAnesthesiaMachineAction::Clear();
+  SAFE_DELETE(m_Severity);
 }
 
 bool SEVaporizerFailure::IsValid() const
 {
-	return SEAnesthesiaMachineAction::IsValid() && HasSeverity();
+  return SEAnesthesiaMachineAction::IsValid() && HasSeverity();
 }
 
 bool SEVaporizerFailure::IsActive() const
 {
-	return HasSeverity() ? !m_Severity->IsZero() : false;
+  return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 
 bool SEVaporizerFailure::Load(const CDM::VaporizerFailureData& in)
 {
-	SEAnesthesiaMachineAction::Load(in);
-	GetSeverity().Load(in.Severity());
-	return true;
+  SEAnesthesiaMachineAction::Load(in);
+  GetSeverity().Load(in.Severity());
+  return true;
 }
 
 CDM::VaporizerFailureData* SEVaporizerFailure::Unload() const
 {
-	CDM::VaporizerFailureData* data = new CDM::VaporizerFailureData();
-	Unload(*data);
-	return data;
+  CDM::VaporizerFailureData* data = new CDM::VaporizerFailureData();
+  Unload(*data);
+  return data;
 }
 
 void SEVaporizerFailure::Unload(CDM::VaporizerFailureData& data) const
 {
-	SEAnesthesiaMachineAction::Unload(data);
-	if (m_Severity != nullptr)
-		data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  SEAnesthesiaMachineAction::Unload(data);
+  if (m_Severity != nullptr)
+    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 
 bool SEVaporizerFailure::HasSeverity() const
 {
-	return m_Severity != nullptr;
+  return m_Severity != nullptr;
 }
 SEScalar0To1& SEVaporizerFailure::GetSeverity()
 {
-	if (m_Severity == nullptr)
-		m_Severity = new SEScalar0To1();
-	return *m_Severity;
+  if (m_Severity == nullptr)
+    m_Severity = new SEScalar0To1();
+  return *m_Severity;
 }
 
-void SEVaporizerFailure::ToString(std::ostream &str) const
+void SEVaporizerFailure::ToString(std::ostream& str) const
 {
-	str << "Anesthesia Machine Action : Vaporizer Failure";
-	if (HasComment())
-		str << "\n\tComment: " << m_Comment;
-	str << "\n\tSeverity :"; HasSeverity() ? str << *m_Severity : str << "NaN";
-	str << std::flush;
+  str << "Anesthesia Machine Action : Vaporizer Failure";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tSeverity :";
+  HasSeverity() ? str << *m_Severity : str << "NaN";
+  str << std::flush;
 }

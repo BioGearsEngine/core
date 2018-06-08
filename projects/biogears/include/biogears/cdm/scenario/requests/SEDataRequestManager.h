@@ -11,7 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(DataRequestsData)
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/cdm/scenario/requests/SEEnvironmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SEEquipmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SEPatientDataRequest.h>
@@ -22,6 +24,7 @@ CDM_BIND_DECL(DataRequestsData)
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 
+CDM_BIND_DECL(DataRequestsData)
 class BIOGEARS_API SEDataRequestManager : public Loggable
 {
 public:

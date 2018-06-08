@@ -10,19 +10,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/stdafx.h>
 
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
 CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
 {
-	if(!IsValid())
-		return nullptr;
-	CDM::ScalarElectricPotentialData* data(new CDM::ScalarElectricPotentialData());
+  if (!IsValid())
+    return nullptr;
+  CDM::ScalarElectricPotentialData* data(new CDM::ScalarElectricPotentialData());
   SEScalarQuantity::Unload(*data);
-	return data;
+  return data;
 }
 
 bool ElectricPotentialUnit::IsValidUnit(const std::string& unit)
@@ -36,10 +36,10 @@ bool ElectricPotentialUnit::IsValidUnit(const std::string& unit)
 
 const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const std::string& unit)
 {
-	if(V.GetString().compare(unit)==0)
-		return V;
-	if(mV.GetString().compare(unit)==0)
-		return mV;
+  if (V.GetString().compare(unit) == 0)
+    return V;
+  if (mV.GetString().compare(unit) == 0)
+    return mV;
   std::stringstream err;
   err << unit << " is not a valid Electric Potential unit";
   throw CommonDataModelException(err.str());

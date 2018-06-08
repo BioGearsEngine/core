@@ -10,75 +10,77 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
 #include <biogears/cdm/properties/SEScalarForce.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ScalarForceData.hxx>
 
-SEChestCompressionForce::SEChestCompressionForce() : SEChestCompression()
+SEChestCompressionForce::SEChestCompressionForce()
+  : SEChestCompression()
 {
-	m_Force = nullptr;
+  m_Force = nullptr;
 }
 
 SEChestCompressionForce::~SEChestCompressionForce()
 {
-	Clear();
+  Clear();
 }
 
 void SEChestCompressionForce::Clear()
 {
-	SEChestCompression::Clear();
-	SAFE_DELETE(m_Force);
+  SEChestCompression::Clear();
+  SAFE_DELETE(m_Force);
 }
 
 bool SEChestCompressionForce::IsValid() const
 {
-	return SEChestCompression::IsValid() && HasForce();
+  return SEChestCompression::IsValid() && HasForce();
 }
 
 bool SEChestCompressionForce::IsActive() const
 {
-	return IsValid() ? !m_Force->IsZero() : false;
+  return IsValid() ? !m_Force->IsZero() : false;
 }
 
 bool SEChestCompressionForce::Load(const CDM::ChestCompressionForceData& in)
 {
-	SEChestCompression::Load(in);
-	GetForce().Load(in.Force());
-	return true;
+  SEChestCompression::Load(in);
+  GetForce().Load(in.Force());
+  return true;
 }
 
 CDM::ChestCompressionForceData* SEChestCompressionForce::Unload() const
 {
-	CDM::ChestCompressionForceData*data(new CDM::ChestCompressionForceData());
-	Unload(*data);
-	return data;
+  CDM::ChestCompressionForceData* data(new CDM::ChestCompressionForceData());
+  Unload(*data);
+  return data;
 }
 
 void SEChestCompressionForce::Unload(CDM::ChestCompressionForceData& data) const
 {
-	SEChestCompression::Unload(data);
-	if (m_Force != nullptr)
-		data.Force(std::unique_ptr<CDM::ScalarForceData>(m_Force->Unload()));
+  SEChestCompression::Unload(data);
+  if (m_Force != nullptr)
+    data.Force(std::unique_ptr<CDM::ScalarForceData>(m_Force->Unload()));
 }
 
 bool SEChestCompressionForce::HasForce() const
 {
-	return m_Force == nullptr ? false : m_Force->IsValid();
+  return m_Force == nullptr ? false : m_Force->IsValid();
 }
 
 SEScalarForce& SEChestCompressionForce::GetForce()
 {
-	if (m_Force == nullptr)
-		m_Force = new SEScalarForce();
-	return *m_Force;
+  if (m_Force == nullptr)
+    m_Force = new SEScalarForce();
+  return *m_Force;
 }
 
-void SEChestCompressionForce::ToString(std::ostream &str) const
+void SEChestCompressionForce::ToString(std::ostream& str) const
 {
-	str << "Patient Action : Chest Compression";
-	if (HasComment())
-		str << "\n\tComment: " << m_Comment;
-	str << "\n\tForce: "; HasForce() ? str << *m_Force : str << "NaN";
-	str << std::flush;
+  str << "Patient Action : Chest Compression";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tForce: ";
+  HasForce() ? str << *m_Force : str << "NaN";
+  str << std::flush;
 }

@@ -10,32 +10,32 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/schema/Properties.hxx>
-#include <biogears/cdm/properties/SEScalar0To1.h>
 
-SEScalar0To1::SEScalar0To1() : SEScalar()
+SEScalar0To1::SEScalar0To1()
+  : SEScalar()
 {
-
 }
 
 CDM::Scalar0To1Data* SEScalar0To1::Unload() const
 {
-	if(!IsValid())
-		return nullptr;
-	CDM::Scalar0To1Data* data(new CDM::Scalar0To1Data());
-	SEScalar::Unload(*data);
-	return data;
+  if (!IsValid())
+    return nullptr;
+  CDM::Scalar0To1Data* data(new CDM::Scalar0To1Data());
+  SEScalar::Unload(*data);
+  return data;
 }
 
 void SEScalar0To1::SetValue(double d)
-{ 
+{
   if (d > 1 || d < 0)
     throw CommonDataModelException("SEScalar0To1 must be between [0,1]");
   SEScalar::SetValue(d);
 }
 
 void SEScalar0To1::SetValue(double d, const NoUnit& unitless)
-{ 
+{
   SEScalar0To1::SetValue(d);
 }

@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/stdafx.h>
 
 #pragma push_macro("Time")
 #undef min
@@ -22,14 +22,13 @@ const TimeUnit TimeUnit::day("day");
 const TimeUnit TimeUnit::yr("yr");
 #pragma pop_macro("Time")
 
-
 CDM::ScalarTimeData* SEScalarTime::Unload() const
 {
-	if(!IsValid())
-		return nullptr;
-	CDM::ScalarTimeData* data(new CDM::ScalarTimeData());
+  if (!IsValid())
+    return nullptr;
+  CDM::ScalarTimeData* data(new CDM::ScalarTimeData());
   SEScalarQuantity::Unload(*data);
-	return data;
+  return data;
 }
 
 bool TimeUnit::IsValidUnit(const std::string& unit)
@@ -49,16 +48,16 @@ bool TimeUnit::IsValidUnit(const std::string& unit)
 
 const TimeUnit& TimeUnit::GetCompoundUnit(const std::string& unit)
 {
-	if(s.GetString().compare(unit)==0)
-		return s;
-	if(min.GetString().compare(unit)==0)
-		return min;
-	if (hr.GetString().compare(unit) == 0)
-		return hr;
-	if (day.GetString().compare(unit) == 0)
-		return day;
-	if(yr.GetString().compare(unit)==0)
-		return yr;
+  if (s.GetString().compare(unit) == 0)
+    return s;
+  if (min.GetString().compare(unit) == 0)
+    return min;
+  if (hr.GetString().compare(unit) == 0)
+    return hr;
+  if (day.GetString().compare(unit) == 0)
+    return day;
+  if (yr.GetString().compare(unit) == 0)
+    return yr;
   std::stringstream err;
   err << unit << " is not a valid Amount unit";
   throw CommonDataModelException(err.str());

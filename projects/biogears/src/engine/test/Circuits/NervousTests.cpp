@@ -10,26 +10,26 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/test/BioGearsEngineTest.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
+#include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/engine/test/BioGearsEngineTest.h>
 
 void CalculateMultipliers(double& dsResistanceMultiplier, double& usResistanceMultiplier, const double& map_mmHg, const double& cvp_mmHg, const SEFluidCircuitPath* brainResistanceDownstream, const SEFluidCircuitPath* brainResistanceUpstream)
 {
@@ -56,7 +56,6 @@ void CalculateMultipliers(double& dsResistanceMultiplier, double& usResistanceMu
 
   dsResistanceMultiplier = newr2 / r2;
   usResistanceMultiplier = newr1 / r1;
-
 }
 
 void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
@@ -87,7 +86,7 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
   double timeStep_s = 1.0 / 90;
   double dsResistanceMultiplier = 1;
   double usResistanceMultiplier = 1;
-  double complianceMultiplier = 1;  //Can change this if we find supporting sources, but note that it will increase "spikiness" of plots
+  double complianceMultiplier = 1; //Can change this if we find supporting sources, but note that it will increase "spikiness" of plots
 
   SEFluidCircuitNode* brain = cvCircuit.GetNode(BGE::CardiovascularNode::Brain1);
   SEFluidCircuitPath* brainResistanceDownstream = cvCircuit.GetPath(BGE::CardiovascularPath::Brain1ToBrain2);
@@ -105,21 +104,19 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
 
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, bg.GetLogger());
 
-  for (unsigned int i = 0; i < (testTime_s / timeStep_s); i++)
-  {
+  for (unsigned int i = 0; i < (testTime_s / timeStep_s); i++) {
     cv.HeartDriver();
 
-    if (time_s > 1 * 60)
-    {
+    if (time_s > 1 * 60) {
       brainResistanceDownstream->GetNextResistance().SetValue(dsResistanceMultiplier * brainResistanceDownstream->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
       brainResistanceUpstream->GetNextResistance().SetValue(usResistanceMultiplier * brainResistanceUpstream->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
       brainCompliance->GetNextCompliance().SetValue(complianceMultiplier * brainCompliance->GetComplianceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg), FlowComplianceUnit::mL_Per_mmHg);
     }
 
-    calc.Process(cvCircuit, timeStep_s);//Process - Execute the circuit  
+    calc.Process(cvCircuit, timeStep_s); //Process - Execute the circuit
 
     cv.CalculateVitalSigns();
-    calc.PostProcess(cvCircuit);//convert 'Next' values to current 
+    calc.PostProcess(cvCircuit); //convert 'Next' values to current
 
     map_mmHg = cv.GetMeanArterialPressure(PressureUnit::mmHg);
     double sys_mmHg = cv.GetSystolicArterialPressure(PressureUnit::mmHg);
@@ -138,14 +135,11 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
     outTrk.Track("CerebralBloodFlow(mL_Per_s)", time_s, brainResistanceDownstream->GetFlow(VolumePerTimeUnit::mL_Per_s));
     outTrk.Track("CerebralPerfusionPressure(mmHg)", time_s, map_mmHg - brain->GetPressure(PressureUnit::mmHg));
 
-    if (i == 0)
-    {
+    if (i == 0) {
       outTrk.CreateFile(std::string(sTestDirectory + "/" + tName + ".txt").c_str(), file);
     }
 
     time_s += timeStep_s;
-
   }
   outTrk.StreamTrackToFile(file);
 }
-

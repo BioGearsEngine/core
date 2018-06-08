@@ -12,18 +12,23 @@ specific language governing permissions and limitations under the License.
 
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 #include <biogears/schema/BioGearsElectroCardioGramData.hxx>
 
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsSystem.h>
 /**
 * @brief 
 * Generic ECG machine to assess the heart rhythm.
 */
+
 class BIOGEARS_API ECG : public SEElectroCardioGram, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	ECG(BioGears& bg);

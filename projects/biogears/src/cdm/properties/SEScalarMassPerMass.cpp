@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
+#include <biogears/cdm/stdafx.h>
 
 const MassPerMassUnit MassPerMassUnit::ug_Per_kg("ug/kg");
 const MassPerMassUnit MassPerMassUnit::mg_Per_g("mg/g");

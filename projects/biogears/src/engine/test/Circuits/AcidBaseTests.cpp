@@ -9,23 +9,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/engine/test/BioGearsEngineTest.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/engine/test/BioGearsEngineTest.h>
 
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
 
 #define VERBOSE
@@ -79,7 +79,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
   double currentTotalCO2_mM;
   double normalDissolvedCO2_gPerL = 0.05526; // 0.05526;
   double normalDissolvedO2_gPerL = 0.004287; // 0.004287;
-  double normalBicarbonate_gPerL = 0.026*61.0168;
+  double normalBicarbonate_gPerL = 0.026 * 61.0168;
   double normalHgb_mM = 1.55;
   double percentNothingBound = 0.01;
   double percentO2OnlyBound = 0.73;
@@ -89,9 +89,9 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
   //double CO2ppGuess_mmHg = 1000.0*normalDissolvedCO2_gPerL/(44.01*0.0314);
   //normalDissolvedCO2_gPerL = CO2ppGuess_mmHg*(44.01*0.0314) / 1000.0;
 
-  SEScalarMassPerVolume   albuminConcentration;
-  SEScalarFraction        hematocrit;
-  SEScalarTemperature     bodyTemp;
+  SEScalarMassPerVolume albuminConcentration;
+  SEScalarFraction hematocrit;
+  SEScalarTemperature bodyTemp;
   SEScalarAmountPerVolume strongIonDifference;
   SEScalarAmountPerVolume phosphate;
 
@@ -108,39 +108,33 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
   bool compareBeforeAfter = false;
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "/AcidBaseMath.txt";
+  std::string rptFile = rptDirectory + "/AcidBaseMath.txt";
 
   unsigned int testID = 0;
 
-  for (int i = 0; i < total_O2_iterations; i++)
-  {
-    for (int j = 0; j < total_CO2_iterations; j++)
-    {
+  for (int i = 0; i < total_O2_iterations; i++) {
+    for (int j = 0; j < total_CO2_iterations; j++) {
       strongIonDifference.SetValue(28.5, AmountPerVolumeUnit::mmol_Per_L);
-      for (int k = 0; k < total_SID_iterations; k++)
-      {
+      for (int k = 0; k < total_SID_iterations; k++) {
         //normalDissolvedCO2_gPerL = 0.05526*(0.3 + 0.1*j);
         //normalDissolvedO2_gPerL = 0.004287*(0.3 + 0.1*i);
-        currentTotalO2_mM = normalTotalO2_mM * (0.3 + 0.1*j);
-        currentTotalCO2_mM = normalTotalCO2_mM * (0.3 + 0.1*i);
+        currentTotalO2_mM = normalTotalO2_mM * (0.3 + 0.1 * j);
+        currentTotalCO2_mM = normalTotalCO2_mM * (0.3 + 0.1 * i);
 
-        double dissolvedCO2_mM = 0.05*currentTotalCO2_mM;        
-        double HCO3_mM = 0.9*currentTotalCO2_mM;
-        double HbReq4CO2_mM = 0.05*currentTotalCO2_mM / 4.0; 
-        double dissolvedO2_mM = 0.01*currentTotalO2_mM;
-        double HbReq4O2_mM = 0.99*currentTotalO2_mM / 4.0;
-        if (MAX(HbReq4O2_mM, HbReq4CO2_mM) > normalHgb_mM)
-        {
+        double dissolvedCO2_mM = 0.05 * currentTotalCO2_mM;
+        double HCO3_mM = 0.9 * currentTotalCO2_mM;
+        double HbReq4CO2_mM = 0.05 * currentTotalCO2_mM / 4.0;
+        double dissolvedO2_mM = 0.01 * currentTotalO2_mM;
+        double HbReq4O2_mM = 0.99 * currentTotalO2_mM / 4.0;
+        if (MAX(HbReq4O2_mM, HbReq4CO2_mM) > normalHgb_mM) {
           double dif_mM;
-          if (HbReq4O2_mM > normalHgb_mM)
-          {
+          if (HbReq4O2_mM > normalHgb_mM) {
             // Bound all the hemoglobin and the rest will be dissolved. Error to tell the user that there is way too much O2 in the blood.
             dif_mM = HbReq4O2_mM - normalHgb_mM;
             HbReq4O2_mM = normalHgb_mM;
-            dissolvedO2_mM += dif_mM * 4.0;     // Remember 4 per site
+            dissolvedO2_mM += dif_mM * 4.0; // Remember 4 per site
           }
-          if (HbReq4CO2_mM > normalHgb_mM)
-          {
+          if (HbReq4CO2_mM > normalHgb_mM) {
             // This is just madness, but we can make it happen. Bind all CO2, then make 70% of what's left bicarb and the other 10% dissolved
             dif_mM = HbReq4CO2_mM - normalHgb_mM;
             HbReq4CO2_mM = normalHgb_mM;
@@ -150,34 +144,32 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
           continue;
         }
         double knob = 0.5;
-        double HbO2CO2_mM = knob*MIN(HbReq4O2_mM, HbReq4CO2_mM);
+        double HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
         double HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
         double HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
         double Hb_mM = normalHgb_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);
-        if (Hb_mM < 0. || HbCO2_mM < 0. || HbO2_mM < 0. || HbO2CO2_mM < 0.)
-        {
+        if (Hb_mM < 0. || HbCO2_mM < 0. || HbO2_mM < 0. || HbO2CO2_mM < 0.) {
           unsigned int itr = 0;
-          while (knob <= 1.0 && itr < 50)
-          {
+          while (knob <= 1.0 && itr < 50) {
             itr++;
-            knob += 0.2*(1.0 - knob);
-            if (itr == 50) knob = 1.0; //Last time through make sure knob is exactly 1.0
-            HbO2CO2_mM = knob*MIN(HbReq4O2_mM, HbReq4CO2_mM);
+            knob += 0.2 * (1.0 - knob);
+            if (itr == 50)
+              knob = 1.0; //Last time through make sure knob is exactly 1.0
+            HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
             HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
             HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
             Hb_mM = normalHgb_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);
             if (Hb_mM > 0. && HbCO2_mM > 0. && HbO2_mM > 0. && HbO2CO2_mM > 0.)
               itr = 50;
-          }          
+          }
         }
 
-        if (Hb_mM < 0. || HbCO2_mM < 0. || HbO2_mM < 0. || HbO2CO2_mM < 0.)
-        {
+        if (Hb_mM < 0. || HbCO2_mM < 0. || HbO2_mM < 0. || HbO2CO2_mM < 0.) {
           Fatal("Negative hemoglobin species.");
         }
 
         //Guess pH based on SID
-        cmpt.GetPH().SetValue(0.0143*strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
+        cmpt.GetPH().SetValue(0.0143 * strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
         cmpt.GetVolume().SetValue(cmptVolume_mL, VolumeUnit::mL);
         nO2->GetMolarity().SetValue(dissolvedO2_mM, AmountPerVolumeUnit::mmol_Per_L);
         nHb->GetMolarity().SetValue(Hb_mM, AmountPerVolumeUnit::mmol_Per_L);
@@ -186,7 +178,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
         nCO2->GetMolarity().SetValue(dissolvedCO2_mM, AmountPerVolumeUnit::mmol_Per_L);
         nHCO3->GetMolarity().SetValue(HCO3_mM, AmountPerVolumeUnit::mmol_Per_L);
         nHbCO2->GetMolarity().SetValue(HbCO2_mM, AmountPerVolumeUnit::mmol_Per_L);
-        cmpt.Balance(BalanceLiquidBy::Molarity);//Sets Mass and partial pressure
+        cmpt.Balance(BalanceLiquidBy::Molarity); //Sets Mass and partial pressure
 
         double hb_mM = nHb->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
         double hbO2CO2_mM = nHbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
@@ -199,8 +191,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
         double totalO2_mM = O2_mM + 4. * hbO2CO2_mM + 4. * hbO2_mM;
         double totalCO2_mM = CO2_mM + 4. * hbO2CO2_mM + 4. * hbCO2_mM + bicarb_mM;
 
-        if (compareBeforeAfter)
-        {
+        if (compareBeforeAfter) {
           trk.Probe("BeforeStrongIonDifference", strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L));
           //trk.Probe("Phosphate", Phosphate);
           trk.Probe("BeforeOxygenConcentration_g_Per_L", nO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L));
@@ -222,7 +213,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
 
         c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
-        // Run the calculations      
+        // Run the calculations
         c.CalculateBloodGasDistribution(cmpt);
 
         ///// Print results
@@ -264,12 +255,12 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
         trk.StreamProbesToFile(testID, file);
         testID++;
 
-        if(total_SID_iterations > 1)
-          strongIonDifference.IncrementValue(SID_range_mM / (total_SID_iterations-1), AmountPerVolumeUnit::mmol_Per_L);
+        if (total_SID_iterations > 1)
+          strongIonDifference.IncrementValue(SID_range_mM / (total_SID_iterations - 1), AmountPerVolumeUnit::mmol_Per_L);
 
-      }//End SID Loop
-    }//End CO2 loop
- }//End O2 loop
+      } //End SID Loop
+    } //End CO2 loop
+  } //End O2 loop
 }
 
 void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
@@ -316,21 +307,19 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
   SELiquidSubstanceQuantity* nHCO3 = cmpt.GetSubstanceQuantity(*HCO3);
   SELiquidSubstanceQuantity* nHbCO2 = cmpt.GetSubstanceQuantity(*HbCO2);
 
-
-
   double VolumeInThisHereNode = 1.0;
   double normalDissolvedCO2_gPerL = 0.05526;
   double normalDissolvedO2_gPerL = 0.004287;
-  double normalBicarbonate_gPerL = 0.026*61.0168;
+  double normalBicarbonate_gPerL = 0.026 * 61.0168;
   double normalHgb_gPerL = 150.0;
   double percentNothingBound = 0.01;
   double percentO2OnlyBound = 0.73;
   double percentO2CO2Bound = 0.25;
   double percentCO2Bound = 0.01;
 
-  SEScalarMassPerVolume   albuminConcentration;
-  SEScalarFraction        hematocrit;
-  SEScalarTemperature     bodyTemp;
+  SEScalarMassPerVolume albuminConcentration;
+  SEScalarFraction hematocrit;
+  SEScalarTemperature bodyTemp;
   SEScalarAmountPerVolume strongIonDifference;
   SEScalarAmountPerVolume phosphate;
 
@@ -341,30 +330,29 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "/AcidBaseFeedback.txt";
+  std::string rptFile = rptDirectory + "/AcidBaseFeedback.txt";
 
   c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
   normalDissolvedCO2_gPerL = 0.05526;
-  cmpt.GetPH().SetValue(0.0143*strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
+  cmpt.GetPH().SetValue(0.0143 * strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
   cmpt.GetVolume().SetValue(VolumeInThisHereNode, VolumeUnit::L);
   nO2->GetConcentration().SetValue(normalDissolvedO2_gPerL, MassPerVolumeUnit::g_Per_L);
-  nHb->GetConcentration().SetValue(normalHgb_gPerL*percentNothingBound, MassPerVolumeUnit::g_Per_L);
-  nHbO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
-  nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
+  nHb->GetConcentration().SetValue(normalHgb_gPerL * percentNothingBound, MassPerVolumeUnit::g_Per_L);
+  nHbO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
+  nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
   nCO2->GetConcentration().SetValue(normalDissolvedCO2_gPerL, MassPerVolumeUnit::g_Per_L);
   nHCO3->GetConcentration().SetValue(normalBicarbonate_gPerL, MassPerVolumeUnit::g_Per_L);
-  nHbCO2->GetConcentration().SetValue(normalHgb_gPerL*percentCO2Bound, MassPerVolumeUnit::g_Per_L);
+  nHbCO2->GetConcentration().SetValue(normalHgb_gPerL * percentCO2Bound, MassPerVolumeUnit::g_Per_L);
   cmpt.Balance(BalanceLiquidBy::Concentration);
 
-  for (int j = 0; j < 20; j++)
-  {
+  for (int j = 0; j < 20; j++) {
     c.CalculateBloodGasDistribution(cmpt);
 
     double finalDissovledCO2_gPerL = nCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
-    double finalDissovledCO2_mM = finalDissovledCO2_gPerL / CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol)*1000.0;
+    double finalDissovledCO2_mM = finalDissovledCO2_gPerL / CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0;
     double finalBicarb_gPerL = nHCO3->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
-    double finalBicarbCO2_mM = finalBicarb_gPerL / HCO3->GetMolarMass(MassPerAmountUnit::g_Per_mol)*1000.0; // Yes this should be m_CO2_g_Per_mmol because 1 mol CO2 per mol bicarb
+    double finalBicarbCO2_mM = finalBicarb_gPerL / HCO3->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0; // Yes this should be m_CO2_g_Per_mmol because 1 mol CO2 per mol bicarb
     double finalBicarbCO2_gPerL = finalBicarbCO2_mM * CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / 1000.0;
     double finalBoundCO2_mM = 4.0 * (nHbCO2->GetMass().GetValue(MassUnit::g) / cmpt.GetVolume(VolumeUnit::L) / HbCO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0 + nHbO2CO2->GetMass(MassUnit::g) / cmpt.GetVolume(VolumeUnit::L) / HbO2CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0); //4 moles CO2 per mole Hb
     double finalBoundCO2_gPerL = finalBoundCO2_mM * CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / 1000.0;
@@ -377,7 +365,7 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
     trk.Probe("CO2Concentration_g_Per_L", nCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L));
     trk.Probe("OxygenSaturation", nO2->GetSaturation().GetValue());
     trk.Probe("CarbonDioxideSaturation", nCO2->GetSaturation().GetValue());
-	  trk.Probe("Bicarbonate_mM", nHCO3->GetMolarity().GetValue(AmountPerVolumeUnit::mmol_Per_L));
+    trk.Probe("Bicarbonate_mM", nHCO3->GetMolarity().GetValue(AmountPerVolumeUnit::mmol_Per_L));
     trk.Probe("OxygenPartialPressure", nO2->GetPartialPressure().GetValue(PressureUnit::mmHg));
     trk.Probe("CarbonDioxidePartialPressure", nCO2->GetPartialPressure().GetValue(PressureUnit::mmHg));
     trk.Probe("pH", cmpt.GetPH().GetValue());
@@ -396,7 +384,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   // This is a unit test of the blood gas calculation methodology.
   // It isolates the blood gas calculations from any feedback or regulation mechanisms in BioGears.
   // This tests the solvers ability to handle all zeros and combinations of zeros as initial conditions.
-  // Did not test negatives because the engine already has checks for negative mass and concentrations. 
+  // Did not test negatives because the engine already has checks for negative mass and concentrations.
 
   DataTrack trk;
   BioGears bg(rptDirectory + "/AcidBaseLimits.log");
@@ -428,7 +416,6 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   SELiquidSubstanceQuantity* nHCO3 = cmpt.GetSubstanceQuantity(*HCO3);
   SELiquidSubstanceQuantity* nHbCO2 = cmpt.GetSubstanceQuantity(*HbCO2);
 
-
   double VolumeInThisHereNode = 1.0;
   double normalDissolvedCO2_gPerL = 0.0;
   double normalDissolvedO2_gPerL = 0.0;
@@ -439,9 +426,9 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   double percentO2CO2Bound = 0.25;
   double percentCO2Bound = 0.01;
 
-  SEScalarMassPerVolume   albuminConcentration;
-  SEScalarFraction        hematocrit;
-  SEScalarTemperature     bodyTemp;
+  SEScalarMassPerVolume albuminConcentration;
+  SEScalarFraction hematocrit;
+  SEScalarTemperature bodyTemp;
   SEScalarAmountPerVolume strongIonDifference;
   SEScalarAmountPerVolume phosphate;
 
@@ -452,37 +439,34 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "/AcidBaseLimits.txt";
+  std::string rptFile = rptDirectory + "/AcidBaseLimits.txt";
 
   c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
-  cmpt.GetPH().SetValue(0.0143*strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
+  cmpt.GetPH().SetValue(0.0143 * strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
   cmpt.GetVolume().SetValue(VolumeInThisHereNode, VolumeUnit::L);
   nO2->GetConcentration().SetValue(normalDissolvedO2_gPerL, MassPerVolumeUnit::g_Per_L);
-  nHb->GetConcentration().SetValue(normalHgb_gPerL*percentNothingBound, MassPerVolumeUnit::g_Per_L);
-  nHbO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
-  nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
+  nHb->GetConcentration().SetValue(normalHgb_gPerL * percentNothingBound, MassPerVolumeUnit::g_Per_L);
+  nHbO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
+  nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
   nCO2->GetConcentration().SetValue(normalDissolvedCO2_gPerL, MassPerVolumeUnit::g_Per_L);
   nHCO3->GetConcentration().SetValue(normalBicarbonate_gPerL, MassPerVolumeUnit::g_Per_L);
-  nHbCO2->GetConcentration().SetValue(normalHgb_gPerL*percentCO2Bound, MassPerVolumeUnit::g_Per_L);
+  nHbCO2->GetConcentration().SetValue(normalHgb_gPerL * percentCO2Bound, MassPerVolumeUnit::g_Per_L);
   cmpt.Balance(BalanceLiquidBy::Concentration);
 
   // First test all zeros
   c.CalculateBloodGasDistribution(cmpt);
 
   double finalDissovledCO2_gPerL = nCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
-  double finalDissovledCO2_mM = finalDissovledCO2_gPerL / CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol)*1000.0;
+  double finalDissovledCO2_mM = finalDissovledCO2_gPerL / CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0;
   double finalBicarb_gPerL = nHCO3->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
-  double finalBicarbCO2_mM = finalBicarb_gPerL / HCO3->GetMolarMass(MassPerAmountUnit::g_Per_mol)*1000.0; // Yes this should be m_CO2_g_Per_mmol because 1 mol CO2 per mol bicarb
+  double finalBicarbCO2_mM = finalBicarb_gPerL / HCO3->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0; // Yes this should be m_CO2_g_Per_mmol because 1 mol CO2 per mol bicarb
   double finalBicarbCO2_gPerL = finalBicarbCO2_mM * CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / 1000.0;
   double finalBoundCO2_mM = 4.0 * (nHbCO2->GetMass().GetValue(MassUnit::g) / cmpt.GetVolume(VolumeUnit::L) / HbCO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0 + nHbO2CO2->GetMass().GetValue(MassUnit::g) / cmpt.GetVolume(VolumeUnit::L) / HbO2CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0); //4 moles CO2 per mole Hb
   double finalBoundCO2_gPerL = finalBoundCO2_mM * CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / 1000.0;
   double finalTotalCO2_mM = finalDissovledCO2_mM + finalBicarbCO2_mM + finalBoundCO2_mM;
   double finalTotalCO2_gPerL = finalDissovledCO2_gPerL + finalBicarbCO2_gPerL + finalBoundCO2_gPerL;
-  double finalTotalHemoglobin_gPerL = nHb->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-    nHbO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-    nHbCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-    nHbO2CO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
+  double finalTotalHemoglobin_gPerL = nHb->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbO2CO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
 
   ///// Print results
   trk.Probe("StrongIonDifference", strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L));
@@ -509,24 +493,22 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   std::string caseName;
 
   // Now try combinations of zeros
-  for (int i = 0; i < 4; i++)
-  {
+  for (int i = 0; i < 4; i++) {
     testID = testID + 1.0;
 
-    switch (i)
-    {
+    switch (i) {
     case 0:
       caseName = "noCO2test";
       normalDissolvedCO2_gPerL = 0.0;
       normalDissolvedO2_gPerL = 0.004287;
-      normalBicarbonate_gPerL = 0.026*61.0168;
+      normalBicarbonate_gPerL = 0.026 * 61.0168;
       normalHgb_gPerL = 150.0;
       break;
     case 1:
       caseName = "noO2test";
       normalDissolvedCO2_gPerL = 0.05526;
       normalDissolvedO2_gPerL = 0.0;
-      normalBicarbonate_gPerL = 0.026*61.0168;
+      normalBicarbonate_gPerL = 0.026 * 61.0168;
       normalHgb_gPerL = 150.0;
       break;
     case 2:
@@ -540,7 +522,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
       caseName = "noHGBtest";
       normalDissolvedCO2_gPerL = 0.05526;
       normalDissolvedO2_gPerL = 0.004287;
-      normalBicarbonate_gPerL = 0.026*61.0168;
+      normalBicarbonate_gPerL = 0.026 * 61.0168;
       normalHgb_gPerL = 0.0;
       break;
     default:
@@ -548,12 +530,12 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
       break;
     }
     nO2->GetConcentration().SetValue(normalDissolvedO2_gPerL, MassPerVolumeUnit::g_Per_L);
-    nHb->GetConcentration().SetValue(normalHgb_gPerL*percentNothingBound, MassPerVolumeUnit::g_Per_L);
-    nHbO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
-    nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
+    nHb->GetConcentration().SetValue(normalHgb_gPerL * percentNothingBound, MassPerVolumeUnit::g_Per_L);
+    nHbO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
+    nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
     nCO2->GetConcentration().SetValue(normalDissolvedCO2_gPerL, MassPerVolumeUnit::g_Per_L);
     nHCO3->GetConcentration().SetValue(normalBicarbonate_gPerL, MassPerVolumeUnit::g_Per_L);
-    nHbCO2->GetConcentration().SetValue(normalHgb_gPerL*percentCO2Bound, MassPerVolumeUnit::g_Per_L);
+    nHbCO2->GetConcentration().SetValue(normalHgb_gPerL * percentCO2Bound, MassPerVolumeUnit::g_Per_L);
     cmpt.Balance(BalanceLiquidBy::Concentration);
 
     // Test
@@ -569,17 +551,14 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
     double finalBoundCO2_gPerL = finalBoundCO2_mM * CO2->GetMolarMass(MassPerAmountUnit::g_Per_mmol);
     double finalTotalCO2_mM = finalDissovledCO2_mM + finalBicarbCO2_mM + finalBoundCO2_mM;
     double finalTotalCO2_gPerL = finalDissovledCO2_gPerL + finalBicarbCO2_gPerL + finalBoundCO2_gPerL;
-    double finalTotalHemoglobin_gPerL = nHb->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-      nHbO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-      nHbCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-      nHbO2CO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
+    double finalTotalHemoglobin_gPerL = nHb->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbO2CO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
 
     trk.Probe("StrongIonDifference", strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L));
     trk.Probe("OxygenConcentration_g_Per_L", nO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L));
     trk.Probe("CO2Concentration_g_Per_L", nCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L));
     trk.Probe("OxygenSaturation", nO2->GetSaturation().GetValue());
     trk.Probe("CarbonDioxideSaturation", nCO2->GetSaturation().GetValue());
-	  trk.Probe("Bicarbonate_mM", nHCO3->GetMolarity().GetValue(AmountPerVolumeUnit::mmol_Per_L));
+    trk.Probe("Bicarbonate_mM", nHCO3->GetMolarity().GetValue(AmountPerVolumeUnit::mmol_Per_L));
     trk.Probe("OxygenPartialPressure", nO2->GetPartialPressure().GetValue(PressureUnit::mmHg));
     trk.Probe("CarbonDioxidePartialPressure", nCO2->GetPartialPressure().GetValue(PressureUnit::mmHg));
     trk.Probe("pH", cmpt.GetPH().GetValue());
@@ -600,8 +579,7 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
   SESubstanceManager& subMgr = bg.GetSubstances();
 
   std::ofstream file;
-  std::string   rptFile = rptDirectory + "/AcidBaseExtreme.txt";
-
+  std::string rptFile = rptDirectory + "/AcidBaseExtreme.txt";
 
   SESubstance* O2 = subMgr.GetSubstance("Oxygen");
   SESubstance* Hb = subMgr.GetSubstance("Hemoglobin");
@@ -649,9 +627,9 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
   double percentO2CO2Bound = 0.25;
   double percentCO2Bound = 0.01;
 
-  SEScalarMassPerVolume   albuminConcentration;
-  SEScalarFraction        hematocrit;
-  SEScalarTemperature     bodyTemp;
+  SEScalarMassPerVolume albuminConcentration;
+  SEScalarFraction hematocrit;
+  SEScalarTemperature bodyTemp;
   SEScalarAmountPerVolume strongIonDifference;
   SEScalarAmountPerVolume phosphate;
 
@@ -664,47 +642,38 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
   double phValue = 0.0;
   double testID = 1.0;
 
-  //extreme values: 
-  std::vector<double> tempValues_C = { 0.0 , 100.0 };
+  //extreme values:
+  std::vector<double> tempValues_C = { 0.0, 100.0 };
   std::vector<double> pHValues = { 5.0, 9.0 };
-  std::vector<double> saturationValues = { 0.0 , 100.0 };
+  std::vector<double> saturationValues = { 0.0, 100.0 };
   std::vector<double> strongIonValues = { 20.0, 50.0 };
-  std::vector<double> PhosphateValues = { 2.0 , 6.0 };
+  std::vector<double> PhosphateValues = { 2.0, 6.0 };
   std::vector<double> albuminValues_g_Per_L = { 30.0, 60.0 };
-  std::vector<double> normalDissolvedCO2Values_gPerL = { 0.0, (0.05526)*0.5 };
-  std::vector<double> normalDissolvedO2Values_gPerL = { 0.0, (0.004287)*0.5 };  //increase normal value by a factor of 2
-  std::vector<double> normalBicarbonateValues_gPerL = { 0.0,  2.0 };
+  std::vector<double> normalDissolvedCO2Values_gPerL = { 0.0, (0.05526) * 0.5 };
+  std::vector<double> normalDissolvedO2Values_gPerL = { 0.0, (0.004287) * 0.5 }; //increase normal value by a factor of 2
+  std::vector<double> normalBicarbonateValues_gPerL = { 0.0, 2.0 };
   std::vector<double> normalHgbValues_gPerL = { 1.0, 200.0 };
 
-  for (int s = 0; s < 2; s++)
-  {
+  for (int s = 0; s < 2; s++) {
 
-    for (int r = 0; r < 2; r++)
-    {
+    for (int r = 0; r < 2; r++) {
 
-      for (int q = 0; q < 2; q++)
-      {
+      for (int q = 0; q < 2; q++) {
 
-        for (int p = 0; p < 2; p++)
-        {
+        for (int p = 0; p < 2; p++) {
 
-          for (int n = 0; n < 2; n++)
-          {
+          for (int n = 0; n < 2; n++) {
 
-            for (int m = 0; m < 2; m++)
-            {
+            for (int m = 0; m < 2; m++) {
 
-              for (int k = 0; k < 2; k++)
-              {
+              for (int k = 0; k < 2; k++) {
 
-                for (int j = 0; j < 2; j++)
-                {
+                for (int j = 0; j < 2; j++) {
 
-                  for (int i = 0; i < 2; i++)
-                  {
-                    //report index values before each run to determine deficiencies: 
+                  for (int i = 0; i < 2; i++) {
+                  //report index values before each run to determine deficiencies:
 #ifdef VERBOSE
-                    std::cout << " i:" << i << " j:" << j << " k:" << k << " m:" << m << " n:" << n << " p:" << p << " q:" << q << " r:"<< r << " s:" << s << std::endl;
+                    std::cout << " i:" << i << " j:" << j << " k:" << k << " m:" << m << " n:" << n << " p:" << p << " q:" << q << " r:" << r << " s:" << s << std::endl;
 #endif
                     albuminConcentration.SetValue(albuminValues_g_Per_L[n], MassPerVolumeUnit::g_Per_L);
                     hematocrit.SetValue(0.42);
@@ -719,32 +688,29 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
 
                     c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
-                    cmpt.GetPH().SetValue(0.0143*strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
+                    cmpt.GetPH().SetValue(0.0143 * strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 6.7537);
                     cmpt.GetVolume().SetValue(VolumeInThisHereNode, VolumeUnit::L);
                     nO2->GetConcentration().SetValue(normalDissolvedO2_gPerL, MassPerVolumeUnit::g_Per_L);
-                    nHb->GetConcentration().SetValue(normalHgb_gPerL*percentNothingBound, MassPerVolumeUnit::g_Per_L);
-                    nHbO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
-                    nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL*percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
+                    nHb->GetConcentration().SetValue(normalHgb_gPerL * percentNothingBound, MassPerVolumeUnit::g_Per_L);
+                    nHbO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2OnlyBound, MassPerVolumeUnit::g_Per_L);
+                    nHbO2CO2->GetConcentration().SetValue(normalHgb_gPerL * percentO2CO2Bound, MassPerVolumeUnit::g_Per_L);
                     nCO2->GetConcentration().SetValue(normalDissolvedCO2_gPerL, MassPerVolumeUnit::g_Per_L);
                     nHCO3->GetConcentration().SetValue(normalBicarbonate_gPerL, MassPerVolumeUnit::g_Per_L);
-                    nHbCO2->GetConcentration().SetValue(normalHgb_gPerL*percentCO2Bound, MassPerVolumeUnit::g_Per_L);
+                    nHbCO2->GetConcentration().SetValue(normalHgb_gPerL * percentCO2Bound, MassPerVolumeUnit::g_Per_L);
                     cmpt.Balance(BalanceLiquidBy::Concentration);
-                    // 
+                    //
                     c.CalculateBloodGasDistribution(cmpt);
 
                     finalDissovledCO2_gPerL = nCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
-                    finalDissovledCO2_mM = finalDissovledCO2_gPerL / CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol)*1000.0;
+                    finalDissovledCO2_mM = finalDissovledCO2_gPerL / CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0;
                     finalBicarb_gPerL = nHCO3->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
-                    finalBicarbCO2_mM = finalBicarb_gPerL / HCO3->GetMolarMass(MassPerAmountUnit::g_Per_mol)*1000.0; // Yes this should be m_CO2_g_Per_mmol because 1 mol CO2 per mol bicarb
+                    finalBicarbCO2_mM = finalBicarb_gPerL / HCO3->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0; // Yes this should be m_CO2_g_Per_mmol because 1 mol CO2 per mol bicarb
                     finalBicarbCO2_gPerL = finalBicarbCO2_mM * CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / 1000.0;
                     finalBoundCO2_mM = 4.0 * (nHbCO2->GetMass().GetValue(MassUnit::g) / cmpt.GetVolume(VolumeUnit::L) / HbCO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0 + nHbO2CO2->GetMass().GetValue(MassUnit::g) / cmpt.GetVolume(VolumeUnit::L) / HbO2CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000.0); //4 moles CO2 per mole Hb
                     finalBoundCO2_gPerL = finalBoundCO2_mM * CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol) / 1000.0;
                     finalTotalCO2_mM = finalDissovledCO2_mM + finalBicarbCO2_mM + finalBoundCO2_mM;
                     finalTotalCO2_gPerL = finalDissovledCO2_gPerL + finalBicarbCO2_gPerL + finalBoundCO2_gPerL;
-                    finalTotalHemoglobin_gPerL = nHb->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-                      nHbO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-                      nHbCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) +
-                      nHbO2CO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
+                    finalTotalHemoglobin_gPerL = nHb->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L) + nHbO2CO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L);
 
                     ///// Print results
                     trk.Probe("StrongIonDifference", strongIonDifference.GetValue(AmountPerVolumeUnit::mmol_Per_L));
@@ -752,7 +718,7 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
                     trk.Probe("CO2Concentration_g_Per_L", nCO2->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_L));
                     trk.Probe("OxygenSaturation", nO2->GetSaturation().GetValue());
                     trk.Probe("CarbonDioxideSaturation", nCO2->GetSaturation().GetValue());
-					          trk.Probe("Bicarbonate_mM", nHCO3->GetMolarity().GetValue(AmountPerVolumeUnit::mmol_Per_L));
+                    trk.Probe("Bicarbonate_mM", nHCO3->GetMolarity().GetValue(AmountPerVolumeUnit::mmol_Per_L));
                     trk.Probe("OxygenPartialPressure", nO2->GetPartialPressure().GetValue(PressureUnit::mmHg));
                     trk.Probe("CarbonDioxidePartialPressure", nCO2->GetPartialPressure().GetValue(PressureUnit::mmHg));
                     trk.Probe("pH", cmpt.GetPH().GetValue());
@@ -769,7 +735,6 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
                     std::string caseName;
 
                     testID += 1.0;
-
                   }
                 }
               }
@@ -785,19 +750,18 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
 {
   TimingProfile timer;
   timer.Start("Test");
-  // This is a unit test of the blood gas calculation methodology. Inputs are set 
-  // within normal range specified in \cite van2013davis and outputs are expected 
+  // This is a unit test of the blood gas calculation methodology. Inputs are set
+  // within normal range specified in \cite van2013davis and outputs are expected
   // to also be within normal range.
 
-  DataTrack& trk = bg.GetDataTrack(); 
+  DataTrack& trk = bg.GetDataTrack();
   SESubstanceManager& subMgr = bg.GetSubstances();
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SECompartmentManager& cmptMgr = bg.GetCompartments();
   cmptMgr.Clear();
 
   SETestCase& testCase = testSuite.CreateTestCase();
-  switch (bloodCompartment)
-  {
+  switch (bloodCompartment) {
   case ARTERIAL:
     testCase.SetName("Arterial");
     break;
@@ -808,17 +772,17 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
     testCase.SetName("Capillary");
     break;
   case RESPIRATORY_ACIDOSIS:
-	  testCase.SetName("RespiratoryAcidosis");
-	  break;
+    testCase.SetName("RespiratoryAcidosis");
+    break;
   case METABOLIC_ALKALOSIS:
-	  testCase.SetName("MetabolicAlkalosis");
-	  break;
+    testCase.SetName("MetabolicAlkalosis");
+    break;
   case METABOLIC_ACIDOSIS:
-	  testCase.SetName("MetabolicAcidosis");
-	  break;
+    testCase.SetName("MetabolicAcidosis");
+    break;
   case RESPIRATORY_ALKALOSIS:
-	  testCase.SetName("RespiratoryAlkalosis");
-	  break;
+    testCase.SetName("RespiratoryAlkalosis");
+    break;
   };
 
   //Create the compartment
@@ -842,9 +806,9 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
   cmptMgr.AddLiquidCompartmentSubstance(*HbCO2);
   cmptMgr.StateChange();
 
-  SEScalarMassPerVolume   albuminConcentration;
-  SEScalarFraction        hematocrit;
-  SEScalarTemperature     bodyTemp;
+  SEScalarMassPerVolume albuminConcentration;
+  SEScalarFraction hematocrit;
+  SEScalarTemperature bodyTemp;
   SEScalarAmountPerVolume strongIonDifference;
   SEScalarAmountPerVolume phosphate;
 
@@ -854,7 +818,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
   strongIonDifference.SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
 
-  double Hb_total_g_Per_dL = hematocrit.GetValue()*34.0;
+  double Hb_total_g_Per_dL = hematocrit.GetValue() * 34.0;
   double Hb_total_mM = Hb_total_g_Per_dL / Hb->GetMolarMass(MassPerAmountUnit::g_Per_mmol) * 10.0;
 
   c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
@@ -868,18 +832,18 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
   SELiquidSubstanceQuantity* HCO3q = testCompartment.GetSubstanceQuantity(*HCO3);
 
   //For defining expected ranges
-  double PCO2min_mmHg = 0;       //Leeuwen
-  double PCO2max_mmHg = 0;       //Leeuwen
-  double PO2min_mmHg = 0;        //Leeuwen
-  double PO2max_mmHg = 0;        //Leeuwen
+  double PCO2min_mmHg = 0; //Leeuwen
+  double PCO2max_mmHg = 0; //Leeuwen
+  double PO2min_mmHg = 0; //Leeuwen
+  double PO2max_mmHg = 0; //Leeuwen
   double HCO3min_mmol_Per_L = 0; //Leeuwen
   double HCO3max_mmol_Per_L = 0; //Leeuwen
-  double O2sat_min = 0;          //Leeuwen
-  double O2sat_max = 0;          //Leeuwen 
-  double CO2sat_min = 0;         //Computed using Dash model
-  double CO2sat_max = 0;         //Computed using Dash model
-  double pH_min = 0;             //Leeuwen 
-  double pH_max = 0;             //Leeuwen 
+  double O2sat_min = 0; //Leeuwen
+  double O2sat_max = 0; //Leeuwen
+  double CO2sat_min = 0; //Computed using Dash model
+  double CO2sat_max = 0; //Computed using Dash model
+  double pH_min = 0; //Leeuwen
+  double pH_max = 0; //Leeuwen
   double percentTolerance = .02;
 
   double O2_sat = 0;
@@ -891,11 +855,10 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
   double volume_mL = 0;
   double testID = 1.0;
 
-  if (bloodCompartment == ARTERIAL)
-  {
+  if (bloodCompartment == ARTERIAL) {
     testID = 1.0;
-	
-	  O2_sat = .97;
+
+    O2_sat = .97;
     CO2_sat = .2224;
     CO2PartialPressure_mmHg = 40.0;
     O2PartialPressure_mmHg = 87.5;
@@ -915,10 +878,8 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
     CO2sat_max = .2752;
     pH_min = 7.35;
     pH_max = 7.45;
-  }
-  else if (bloodCompartment == VENOUS)
-  {
-	  testID = 2.0;
+  } else if (bloodCompartment == VENOUS) {
+    testID = 2.0;
 
     O2_sat = .725;
     CO2_sat = .2523;
@@ -940,10 +901,8 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
     CO2sat_max = .2933;
     pH_min = 7.32;
     pH_max = 7.43;
-  }
-  else if (bloodCompartment == CAPILLARY)
-  {
-	  testID = 3.0;
+  } else if (bloodCompartment == CAPILLARY) {
+    testID = 3.0;
 
     O2_sat = .965;
     CO2_sat = .19435;
@@ -965,117 +924,106 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
     CO2sat_max = .257;
     pH_min = 7.35;
     pH_max = 7.45;
-  }
-  else if (bloodCompartment == RESPIRATORY_ACIDOSIS)
-  {
-	  testID = 4.0;
+  } else if (bloodCompartment == RESPIRATORY_ACIDOSIS) {
+    testID = 4.0;
 
-	  O2_sat = .97;
-	  CO2_sat = .2224;
-	  CO2PartialPressure_mmHg = 120.0;
-	  O2PartialPressure_mmHg = 87.5;
-	  HCO3_mmol_Per_L = 44.0;
-	  pH = 7.2;
-	  volume_mL = 1150.0;
+    O2_sat = .97;
+    CO2_sat = .2224;
+    CO2PartialPressure_mmHg = 120.0;
+    O2PartialPressure_mmHg = 87.5;
+    HCO3_mmol_Per_L = 44.0;
+    pH = 7.2;
+    volume_mL = 1150.0;
 
-	  PCO2min_mmHg = 40;
-	  PCO2max_mmHg = 150;
-	  PO2min_mmHg = 0.0;
-	  PO2max_mmHg = 200.0;
-	  HCO3min_mmol_Per_L = 24;
-	  HCO3max_mmol_Per_L = 60;
-	  O2sat_min = 0.0;
-	  O2sat_max = 1.0;
-	  CO2sat_min = 0.0;
-	  CO2sat_max = 1.0;
-	  pH_min = 7.0;
-	  pH_max = 7.4;
-  }
-  else if (bloodCompartment == METABOLIC_ALKALOSIS)
-  {
-	  testID = 5.0;
+    PCO2min_mmHg = 40;
+    PCO2max_mmHg = 150;
+    PO2min_mmHg = 0.0;
+    PO2max_mmHg = 200.0;
+    HCO3min_mmol_Per_L = 24;
+    HCO3max_mmol_Per_L = 60;
+    O2sat_min = 0.0;
+    O2sat_max = 1.0;
+    CO2sat_min = 0.0;
+    CO2sat_max = 1.0;
+    pH_min = 7.0;
+    pH_max = 7.4;
+  } else if (bloodCompartment == METABOLIC_ALKALOSIS) {
+    testID = 5.0;
 
-	  O2_sat = .97;
-	  CO2_sat = .2224;
-	  CO2PartialPressure_mmHg = 40;
-	  O2PartialPressure_mmHg = 87.5;
-	  HCO3_mmol_Per_L = 44;
-	  pH = 7.6;
-	  volume_mL = 1150.0;
+    O2_sat = .97;
+    CO2_sat = .2224;
+    CO2PartialPressure_mmHg = 40;
+    O2PartialPressure_mmHg = 87.5;
+    HCO3_mmol_Per_L = 44;
+    pH = 7.6;
+    volume_mL = 1150.0;
 
-	  PCO2min_mmHg = 20;
-	  PCO2max_mmHg = 90;
-	  PO2min_mmHg = 0.0;
-	  PO2max_mmHg = 200.0;
-	  HCO3min_mmol_Per_L = 24;
-	  HCO3max_mmol_Per_L = 60;
-	  O2sat_min = 0.0;
-	  O2sat_max = 1.0;
-	  CO2sat_min = 0.0;
-	  CO2sat_max = 1.0;
-	  pH_min = 7.4;
-	  pH_max = 7.8;
-  }
-  else if (bloodCompartment == METABOLIC_ACIDOSIS)
-  {
-	  testID = 6.0;
+    PCO2min_mmHg = 20;
+    PCO2max_mmHg = 90;
+    PO2min_mmHg = 0.0;
+    PO2max_mmHg = 200.0;
+    HCO3min_mmol_Per_L = 24;
+    HCO3max_mmol_Per_L = 60;
+    O2sat_min = 0.0;
+    O2sat_max = 1.0;
+    CO2sat_min = 0.0;
+    CO2sat_max = 1.0;
+    pH_min = 7.4;
+    pH_max = 7.8;
+  } else if (bloodCompartment == METABOLIC_ACIDOSIS) {
+    testID = 6.0;
 
-	  O2_sat = .97;
-	  CO2_sat = .2224;
-	  CO2PartialPressure_mmHg = 30.0;
-	  O2PartialPressure_mmHg = 87.5;
-	  HCO3_mmol_Per_L = 12.0;
-	  pH = 7.2;
-	  volume_mL = 1150.0;
+    O2_sat = .97;
+    CO2_sat = .2224;
+    CO2PartialPressure_mmHg = 30.0;
+    O2PartialPressure_mmHg = 87.5;
+    HCO3_mmol_Per_L = 12.0;
+    pH = 7.2;
+    volume_mL = 1150.0;
 
-	  PCO2min_mmHg = 0;
-	  PCO2max_mmHg = 90;
-	  PO2min_mmHg = 0.0;
-	  PO2max_mmHg = 200.0;
-	  HCO3min_mmol_Per_L = 0;
-	  HCO3max_mmol_Per_L = 14;
-	  O2sat_min = 0.0;
-	  O2sat_max = 1.0;
-	  CO2sat_min = 0.0;
-	  CO2sat_max = 1.0;
-	  pH_min = 7.0;
-	  pH_max = 7.4;
-  }
-  else if (bloodCompartment == RESPIRATORY_ALKALOSIS)
-  {
-	  testID = 7.0;
+    PCO2min_mmHg = 0;
+    PCO2max_mmHg = 90;
+    PO2min_mmHg = 0.0;
+    PO2max_mmHg = 200.0;
+    HCO3min_mmol_Per_L = 0;
+    HCO3max_mmol_Per_L = 14;
+    O2sat_min = 0.0;
+    O2sat_max = 1.0;
+    CO2sat_min = 0.0;
+    CO2sat_max = 1.0;
+    pH_min = 7.0;
+    pH_max = 7.4;
+  } else if (bloodCompartment == RESPIRATORY_ALKALOSIS) {
+    testID = 7.0;
 
-	  O2_sat = .97;
-	  CO2_sat = .2224;
-	  CO2PartialPressure_mmHg = 10;
-	  O2PartialPressure_mmHg = 87.5;
-	  HCO3_mmol_Per_L = 12;
-	  pH = 7.6;
-	  volume_mL = 1150.0;
+    O2_sat = .97;
+    CO2_sat = .2224;
+    CO2PartialPressure_mmHg = 10;
+    O2PartialPressure_mmHg = 87.5;
+    HCO3_mmol_Per_L = 12;
+    pH = 7.6;
+    volume_mL = 1150.0;
 
-	  PCO2min_mmHg = 0;
-	  PCO2max_mmHg = 40;
-	  PO2min_mmHg = 0.0;
-	  PO2max_mmHg = 200.0;
-	  HCO3min_mmol_Per_L = 0;
-	  HCO3max_mmol_Per_L = 24;
-	  O2sat_min = 0.0;
-	  O2sat_max = 1.0;
-	  CO2sat_min = 0.0;
-	  CO2sat_max = 1.0;
-	  pH_min = 7.4;
-	  pH_max = 7.8;
-  }
-  else if (bloodCompartment == CUSTOM)
-  {
+    PCO2min_mmHg = 0;
+    PCO2max_mmHg = 40;
+    PO2min_mmHg = 0.0;
+    PO2max_mmHg = 200.0;
+    HCO3min_mmol_Per_L = 0;
+    HCO3max_mmol_Per_L = 24;
+    O2sat_min = 0.0;
+    O2sat_max = 1.0;
+    CO2sat_min = 0.0;
+    CO2sat_max = 1.0;
+    pH_min = 7.4;
+    pH_max = 7.8;
+  } else if (bloodCompartment == CUSTOM) {
     std::vector<std::string> strValues;
-    
+
     //You can test out the values that WriteBloodGases() spits out
     //O2 Sat, O2 Molarity, CO2 Sat, CO2 Molarity, Bicarb Molarity, pH
-    std::stringstream ss("0.784329, 0.0614627, 0.0955322, 1.82692, 26.7283, 7.26525");  
+    std::stringstream ss("0.784329, 0.0614627, 0.0955322, 1.82692, 26.7283, 7.26525");
 
-    while (ss.good())
-    {
+    while (ss.good()) {
       std::string substr;
       std::getline(ss, substr, ',');
       strValues.push_back(substr);
@@ -1083,7 +1031,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
 
     O2_sat = std::stod(strValues[0]);
     CO2_sat = std::stod(strValues[2]);
-    CO2PartialPressure_mmHg = (std::stod(strValues[3]) *44.01) / (1000 * 0.0013815);
+    CO2PartialPressure_mmHg = (std::stod(strValues[3]) * 44.01) / (1000 * 0.0013815);
     O2PartialPressure_mmHg = (std::stod(strValues[1]) * 32) / (1000 * 4.51263E-05);
     HCO3_mmol_Per_L = std::stod(strValues[4]);
     pH = std::stod(strValues[5]);
@@ -1098,17 +1046,15 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
   double HbO2CO2_mM = 0.0;
   double HbO2_mM = 0.0;
   double HbCO2_mM = 0.0;
-  if (O2_sat >= CO2_sat)
+  if (O2_sat >= CO2_sat) {
+    HbO2CO2_mM = Hb_total_mM * CO2_sat;
+    HbO2_mM = Hb_total_mM * O2_sat - HbO2CO2_mM;
+    HbCO2_mM = 0.0;
+  } else //CO2_sat greater
   {
-	  HbO2CO2_mM = Hb_total_mM * CO2_sat;
-	  HbO2_mM = Hb_total_mM * O2_sat - HbO2CO2_mM;
-	  HbCO2_mM = 0.0;	  
-  }
-  else //CO2_sat greater
-  {
-	  HbO2CO2_mM = Hb_total_mM * O2_sat;
-	  HbO2_mM = 0.0;
-	  HbCO2_mM = Hb_total_mM * CO2_sat - HbO2CO2_mM;
+    HbO2CO2_mM = Hb_total_mM * O2_sat;
+    HbO2_mM = 0.0;
+    HbCO2_mM = Hb_total_mM * CO2_sat - HbO2CO2_mM;
   }
   double Hb_mM = Hb_total_mM - HbO2CO2_mM - HbO2_mM - HbCO2_mM;
   Hbq->GetMolarity().SetValue(Hb_mM, AmountPerVolumeUnit::mmol_Per_L);
@@ -1162,68 +1108,59 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
     + (HbO2q->GetMass(MassUnit::g) / HbO2->GetMolarMass(MassPerAmountUnit::g_Per_mmol));
 
   //CO2 pp
-  if (CO2q->GetPartialPressure(PressureUnit::mmHg) < PCO2min_mmHg || CO2q->GetPartialPressure(PressureUnit::mmHg) > PCO2max_mmHg)
-  {
-	  m_ss.str(std::string());
-	  m_ss << "CO2 partial pressure (mmHg)" << CO2q->GetPartialPressure(PressureUnit::mmHg) << " is not in range [" << PCO2min_mmHg << ", " << PCO2max_mmHg << "]. Test case: " << testCase.GetName() << std::endl;
+  if (CO2q->GetPartialPressure(PressureUnit::mmHg) < PCO2min_mmHg || CO2q->GetPartialPressure(PressureUnit::mmHg) > PCO2max_mmHg) {
+    m_ss.str(std::string());
+    m_ss << "CO2 partial pressure (mmHg)" << CO2q->GetPartialPressure(PressureUnit::mmHg) << " is not in range [" << PCO2min_mmHg << ", " << PCO2max_mmHg << "]. Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //O2 pp
-  if (O2q->GetPartialPressure(PressureUnit::mmHg) < PO2min_mmHg || O2q->GetPartialPressure(PressureUnit::mmHg) > PO2max_mmHg)
-  {
-	  m_ss.str(std::string());
+  if (O2q->GetPartialPressure(PressureUnit::mmHg) < PO2min_mmHg || O2q->GetPartialPressure(PressureUnit::mmHg) > PO2max_mmHg) {
+    m_ss.str(std::string());
     m_ss << "O2 partial pressure (mmHg) " << O2q->GetPartialPressure(PressureUnit::mmHg) << " is not in range [" << PO2min_mmHg << ", " << PO2max_mmHg << "]. Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //HCO3 molarity
-  if (HCO3q->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < HCO3min_mmol_Per_L || HCO3q->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > HCO3max_mmol_Per_L)
-  {
-	  m_ss.str(std::string());
+  if (HCO3q->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < HCO3min_mmol_Per_L || HCO3q->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > HCO3max_mmol_Per_L) {
+    m_ss.str(std::string());
     m_ss << "HCO3 molarity (mmol/L) " << HCO3q->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << " is not in range [" << HCO3min_mmol_Per_L << ", " << HCO3max_mmol_Per_L << "]. Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //CO2 sat
-  if (CO2q->GetSaturation().GetValue() < CO2sat_min || CO2q->GetSaturation().GetValue() > CO2sat_max)
-  {
-	  m_ss.str(std::string());
+  if (CO2q->GetSaturation().GetValue() < CO2sat_min || CO2q->GetSaturation().GetValue() > CO2sat_max) {
+    m_ss.str(std::string());
     m_ss << "CO2 saturation " << CO2q->GetSaturation().GetValue() << " is not in range [" << CO2sat_min << ", " << CO2sat_max << "]. Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //O2 sat
-  if (O2q->GetSaturation().GetValue() < O2sat_min || O2q->GetSaturation().GetValue() > O2sat_max)
-  {
-	  m_ss.str(std::string());
+  if (O2q->GetSaturation().GetValue() < O2sat_min || O2q->GetSaturation().GetValue() > O2sat_max) {
+    m_ss.str(std::string());
     m_ss << "O2 saturation " << O2q->GetSaturation().GetValue() << " is not in range [" << O2sat_min << ", " << O2sat_max << "]. Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //pH
-  if (testCompartment.GetPH().GetValue() < pH_min || testCompartment.GetPH().GetValue() > pH_max)
-  {
-	  m_ss.str(std::string());
+  if (testCompartment.GetPH().GetValue() < pH_min || testCompartment.GetPH().GetValue() > pH_max) {
+    m_ss.str(std::string());
     m_ss << "pH " << testCompartment.GetPH().GetValue() << " is not in range [" << pH_min << ", " << pH_max << "]. Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //total CO2
   double CO2diff = ending_totalAmountCO2_mmol - starting_totalAmountCO2_mmol;
-  if (CO2diff>ZERO_APPROX)
-  {
-	  m_ss.str(std::string());
-    m_ss << "CO2 was not conserved; percentage error: " << 100* CO2diff / starting_totalAmountCO2_mmol << ". Test case: " << testCase.GetName() << std::endl;
+  if (CO2diff > ZERO_APPROX) {
+    m_ss.str(std::string());
+    m_ss << "CO2 was not conserved; percentage error: " << 100 * CO2diff / starting_totalAmountCO2_mmol << ". Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //total O2
   double O2diff = ending_totalAmountO2_mmol - starting_totalAmountO2_mmol;
-  if (O2diff > ZERO_APPROX)
-  {
-	  m_ss.str(std::string());
+  if (O2diff > ZERO_APPROX) {
+    m_ss.str(std::string());
     m_ss << "O2 was not conserved; percentage error: " << 100 * O2diff / starting_totalAmountO2_mmol << ". Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }
   //total Hb
   double Hbdiff = ending_totalAmountHb_mmol - starting_totalAmountHb_mmol;
-  if (Hbdiff > ZERO_APPROX)
-  {
-	  m_ss.str(std::string());
+  if (Hbdiff > ZERO_APPROX) {
+    m_ss.str(std::string());
     m_ss << "Hb was not conserved; percentage difference: " << 100 * Hbdiff / starting_totalAmountHb_mmol << ". Test case: " << testCase.GetName() << std::endl;
     testCase.AddFailure(m_ss.str());
   }

@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License.
 // #include <biogears/bind/biogears-cdm.hxx>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
+#include <biogears/engine/Equipment/ECG.h>
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
-
 #include <memory>
 
 class BioGearsEngineJNI : public LoggerForward, public SEScenarioCustomExec, public SEEventHandler

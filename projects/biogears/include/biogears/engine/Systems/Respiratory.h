@@ -11,15 +11,31 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
-#include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/schema/BioGearsRespiratorySystemData.hxx>
-#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitCalculator.h>
+#include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
+#include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/schema/BioGearsRespiratorySystemData.hxx>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
 
 class SEPulmonaryFunctionTest;
+class SEPatient;
+class SEPatientActionCollection;
+class SEGasCompartment;
+class SELiquidCompartment;
+class SEGasSubstanceQuantity;
+class SELiquidSubstanceQuantity;
+class SEGasSubstanceQuantity;
+class SELiquidCompartment;
+class SEGasCompartment;
+class SEFluidCircuit;
+class SEFluidCircuitNode;
+class SEConsciousRespirationCommand;
+class BioGears;
 
 /**
 * @brief The %Respiratory System class handles the analysis and storage of
@@ -32,12 +48,11 @@ class SEPulmonaryFunctionTest;
 * of gases in the lungs, and ensures the integration and flow of data between the
 * respiratory system and the anesthesia machine during mechanical ventilation.
 */
-class BIOGEARS_API Respiratory : public SERespiratorySystem, public BioGearsSystem
-{
-  friend BioGears;
+class BIOGEARS_API Respiratory : public SERespiratorySystem, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
-protected:
 
+protected:
   Respiratory(BioGears& bg);
   BioGears& m_data;
 
@@ -52,6 +67,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsRespiratorySystemData& in);
   virtual CDM::BioGearsRespiratorySystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsRespiratorySystemData& data) const;
 
@@ -65,6 +81,7 @@ public:
   void PostProcess();
 
   bool CalculatePulmonaryFunctionTest(SEPulmonaryFunctionTest& pft);
+
 private:
   //Tuning
   void TuneCircuit();
@@ -83,7 +100,7 @@ private:
   void Intubation();
   void Pneumothorax();
   void ConsciousRespiration();
-  /**/void ProcessConsciousRespiration(SEConsciousRespirationCommand& cmd);
+  /**/ void ProcessConsciousRespiration(SEConsciousRespirationCommand& cmd);
   void MechanicalVentilation();
   void Apnea();
   // Driver
@@ -91,20 +108,20 @@ private:
 
   // Shared Utility Methods for Actions/Driver
   // Asthma/COPD
-  /**/void UpdateObstructiveResistance();
-  /**/void UpdateIERatio();
+  /**/ void UpdateObstructiveResistance();
+  /**/ void UpdateIERatio();
   // LobarPneumonia/COPD
-  /**/void UpdateAlveoliCompliance(double dCompilanceScalingFactor, double dLeftLungFraction, double dRightLungFraction);
-  /**/void UpdateGasDiffusionSurfaceArea(double dFractionalArea, double dLeftLungFraction, double dRightLungFraction);
+  /**/ void UpdateAlveoliCompliance(double dCompilanceScalingFactor, double dLeftLungFraction, double dRightLungFraction);
+  /**/ void UpdateGasDiffusionSurfaceArea(double dFractionalArea, double dLeftLungFraction, double dRightLungFraction);
   // COPD
-  /**/void UpdatePulmonaryCapillaryResistance(double dResistanceScalingFactor, double dLeftLungFraction, double dRightLungFraction);
+  /**/ void UpdatePulmonaryCapillaryResistance(double dResistanceScalingFactor, double dLeftLungFraction, double dRightLungFraction);
   // Pneumothorax
   void DoLeftNeedleDecompression(double dFlowResistance);
   void DoRightNeedleDecompression(double dFlowResistance);
   // Aerosol Deposition and various Effects
   void ProcessAerosolSubstances();
   // Driver/Conscious Breath
-  /**/double VolumeToDriverPressure(double TargetVolume);
+  /**/ double VolumeToDriverPressure(double TargetVolume);
 
   //Process
   void CalculateVitalSigns();
@@ -116,7 +133,7 @@ private:
   double m_InitialInspiratoryCapacity_L;
   double m_InitialResidualVolume_L;
   //   CalculateVitalSigns()
-  bool   m_bNotBreathing;
+  bool m_bNotBreathing;
   double m_TopBreathTotalVolume_L;
   double m_TopBreathAlveoliVolume_L;
   double m_TopBreathDeadSpaceVolume_L;
@@ -125,7 +142,7 @@ private:
   double m_PreviousTotalLungVolume_L;
   RunningAverage m_BloodPHRunningAverage;
   //   Respiratory Driver
-  bool   m_BreathingCycle;
+  bool m_BreathingCycle;
   double m_ArterialO2PartialPressure_mmHg;
   double m_ArterialCO2PartialPressure_mmHg;
   double m_BreathingCycleTime_s;
@@ -136,7 +153,7 @@ private:
   double m_ElapsedBreathingCycleTime_min;
   double m_IEscaleFactor;
   double m_InstantaneousFunctionalResidualCapacity_L;
-  double m_MaxDriverPressure_cmH2O;    
+  double m_MaxDriverPressure_cmH2O;
   double m_PeakRespiratoryDrivePressure_cmH2O;
   double m_PreviousTargetAlveolarVentilation_L_Per_min;
   double m_VentilationFrequency_Per_min;
@@ -144,7 +161,7 @@ private:
   RunningAverage m_ArterialO2RunningAverage_mmHg;
   RunningAverage m_ArterialCO2RunningAverage_mmHg;
   //   Conscious Breathing
-  bool   m_ConsciousBreathing;
+  bool m_ConsciousBreathing;
   double m_ConsciousRespirationPeriod_s;
   double m_ConsciousRespirationRemainingPeriod_s;
   double m_ExpiratoryReserveVolumeFraction;
@@ -169,66 +186,66 @@ private:
   double m_AverageLocalTissueBronchodilationEffects;
 
   // Patient
-  SEPatient*                 m_Patient;
+  SEPatient* m_Patient;
   SEPatientActionCollection* m_PatientActions;
   //Compartments
-  SEGasCompartment*          m_Environment;
-  SELiquidCompartment*       m_AerosolMouth;
-  SELiquidCompartment*       m_AerosolCarina;
-  SELiquidCompartment*       m_AerosolLeftDeadSpace;
-  SELiquidCompartment*       m_AerosolLeftAlveoli;
-  SELiquidCompartment*       m_AerosolRightDeadSpace;
-  SELiquidCompartment*       m_AerosolRightAlveoli;
-  SELiquidCompartment*       m_LeftLungExtravascular;
-  SELiquidCompartment*       m_RightLungExtravascular;
-  SEGasCompartment*          m_Lungs;
-  SEGasCompartment*          m_Carina;
-  SEGasSubstanceQuantity*    m_CarinaO2;
+  SEGasCompartment* m_Environment;
+  SELiquidCompartment* m_AerosolMouth;
+  SELiquidCompartment* m_AerosolCarina;
+  SELiquidCompartment* m_AerosolLeftDeadSpace;
+  SELiquidCompartment* m_AerosolLeftAlveoli;
+  SELiquidCompartment* m_AerosolRightDeadSpace;
+  SELiquidCompartment* m_AerosolRightAlveoli;
+  SELiquidCompartment* m_LeftLungExtravascular;
+  SELiquidCompartment* m_RightLungExtravascular;
+  SEGasCompartment* m_Lungs;
+  SEGasCompartment* m_Carina;
+  SEGasSubstanceQuantity* m_CarinaO2;
   SELiquidSubstanceQuantity* m_AortaO2;
   SELiquidSubstanceQuantity* m_AortaCO2;
-  SEGasSubstanceQuantity*    m_LeftAlveoliO2;
-  SEGasSubstanceQuantity*    m_RightAlveoliO2;
+  SEGasSubstanceQuantity* m_LeftAlveoliO2;
+  SEGasSubstanceQuantity* m_RightAlveoliO2;
   std::vector<SELiquidCompartment*> m_AerosolEffects;
-  SEGasCompartment*          m_MechanicalVentilatorConnection;
+  SEGasCompartment* m_MechanicalVentilatorConnection;
   //Circuits
-  SEFluidCircuit*            m_RespiratoryCircuit;
+  SEFluidCircuit* m_RespiratoryCircuit;
   //Nodes
-  SEFluidCircuitNode*        m_LeftAlveoli;
-  SEFluidCircuitNode*        m_LeftDeadSpace;
-  SEFluidCircuitNode*        m_LeftPleural;
-  SEFluidCircuitNode*        m_RespiratoryMuscle;
-  SEFluidCircuitNode*        m_RightAlveoli;
-  SEFluidCircuitNode*        m_RightDeadSpace;
-  SEFluidCircuitNode*        m_RightPleural;
-  SEFluidCircuitNode*        m_Ambient;
-  SEFluidCircuitNode*        m_Stomach;
+  SEFluidCircuitNode* m_LeftAlveoli;
+  SEFluidCircuitNode* m_LeftDeadSpace;
+  SEFluidCircuitNode* m_LeftPleural;
+  SEFluidCircuitNode* m_RespiratoryMuscle;
+  SEFluidCircuitNode* m_RightAlveoli;
+  SEFluidCircuitNode* m_RightDeadSpace;
+  SEFluidCircuitNode* m_RightPleural;
+  SEFluidCircuitNode* m_Ambient;
+  SEFluidCircuitNode* m_Stomach;
   //Paths
-  SEFluidCircuitPath*        m_CarinaToLeftAnatomicDeadSpace;
-  SEFluidCircuitPath*        m_CarinaToRightAnatomicDeadSpace;
-  SEFluidCircuitPath*        m_LeftAnatomicDeadSpaceToLeftAlveoli;
-  SEFluidCircuitPath*        m_RightAnatomicDeadSpaceToRightAlveoli;
-  SEFluidCircuitPath*        m_RightPleuralToRespiratoryMuscle;
-  SEFluidCircuitPath*        m_LeftPleuralToRespiratoryMuscle;
-  SEFluidCircuitPath*        m_DriverPressurePath;
-  SEFluidCircuitPath*        m_LeftDriverPressurePath;
-  SEFluidCircuitPath*        m_MouthToCarina;
-  SEFluidCircuitPath*        m_MouthToStomach;
-  SEFluidCircuitPath*        m_EnvironmentToLeftChestLeak;
-  SEFluidCircuitPath*        m_EnvironmentToRightChestLeak;
-  SEFluidCircuitPath*        m_LeftAlveoliLeakToLeftPleural;
-  SEFluidCircuitPath*        m_RightAlveoliLeakToRightPleural;
-  SEFluidCircuitPath*        m_LeftPleuralToEnvironment;
-  SEFluidCircuitPath*        m_RightPleuralToEnvironment;
-  SEFluidCircuitPath*        m_RightAlveoliToRightPleuralConnection;
-  SEFluidCircuitPath*        m_LeftAlveoliToLeftPleuralConnection;
-  SEFluidCircuitPath*        m_RightAnatomicDeadSpaceToRightPleuralConnection;
-  SEFluidCircuitPath*        m_LeftAnatomicDeadSpaceToLeftPleuralConnection;
-  SEFluidCircuitPath*        m_RightPulmonaryCapillary;
-  SEFluidCircuitPath*        m_LeftPulmonaryCapillary;
-  SEFluidCircuitPath*        m_ConnectionToMouth;
-  SEFluidCircuitPath*        m_GroundToConnection;
+  SEFluidCircuitPath* m_CarinaToLeftAnatomicDeadSpace;
+  SEFluidCircuitPath* m_CarinaToRightAnatomicDeadSpace;
+  SEFluidCircuitPath* m_LeftAnatomicDeadSpaceToLeftAlveoli;
+  SEFluidCircuitPath* m_RightAnatomicDeadSpaceToRightAlveoli;
+  SEFluidCircuitPath* m_RightPleuralToRespiratoryMuscle;
+  SEFluidCircuitPath* m_LeftPleuralToRespiratoryMuscle;
+  SEFluidCircuitPath* m_DriverPressurePath;
+  SEFluidCircuitPath* m_LeftDriverPressurePath;
+  SEFluidCircuitPath* m_MouthToCarina;
+  SEFluidCircuitPath* m_MouthToStomach;
+  SEFluidCircuitPath* m_EnvironmentToLeftChestLeak;
+  SEFluidCircuitPath* m_EnvironmentToRightChestLeak;
+  SEFluidCircuitPath* m_LeftAlveoliLeakToLeftPleural;
+  SEFluidCircuitPath* m_RightAlveoliLeakToRightPleural;
+  SEFluidCircuitPath* m_LeftPleuralToEnvironment;
+  SEFluidCircuitPath* m_RightPleuralToEnvironment;
+  SEFluidCircuitPath* m_RightAlveoliToRightPleuralConnection;
+  SEFluidCircuitPath* m_LeftAlveoliToLeftPleuralConnection;
+  SEFluidCircuitPath* m_RightAnatomicDeadSpaceToRightPleuralConnection;
+  SEFluidCircuitPath* m_LeftAnatomicDeadSpaceToLeftPleuralConnection;
+  SEFluidCircuitPath* m_RightPulmonaryCapillary;
+  SEFluidCircuitPath* m_LeftPulmonaryCapillary;
+  SEFluidCircuitPath* m_ConnectionToMouth;
+  SEFluidCircuitPath* m_GroundToConnection;
 
-  SEFluidCircuitCalculator   m_Calculator;
-  SEGasTransporter           m_GasTransporter;
-  SELiquidTransporter        m_AerosolTransporter;
+  SEFluidCircuitCalculator m_Calculator;
+  SEGasTransporter m_GasTransporter;
+  SELiquidTransporter m_AerosolTransporter;
 };

@@ -10,21 +10,22 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
+#include <biogears/schema/ScalarFractionData.hxx>
 #include <biogears/schema/SubstancePharmacokineticsData.hxx>
 #include <biogears/schema/SubstancePhysicochemicalData.hxx>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/schema/ScalarFractionData.hxx>
 
-SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger) : Loggable(logger)
+SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
+  : Loggable(logger)
 {
   m_Physicochemicals = nullptr;
 }
 
 SESubstancePharmacokinetics::~SESubstancePharmacokinetics()
 {
-	Clear();
+  Clear();
 }
 
 void SESubstancePharmacokinetics::Clear()
@@ -46,38 +47,37 @@ bool SESubstancePharmacokinetics::IsValid() const
 const SEScalar* SESubstancePharmacokinetics::GetScalar(const std::string& name)
 {
   if (HasPhysicochemicals())
-    return GetPhysicochemicals().GetScalar(name);	
+    return GetPhysicochemicals().GetScalar(name);
   // I did not support for getting a specific tissue kinetic scalar due to lack of coffee
-	return nullptr;
+  return nullptr;
 }
 
 bool SESubstancePharmacokinetics::Load(const CDM::SubstancePharmacokineticsData& in)
 {
-	Clear();
+  Clear();
 
   if (in.Physicochemicals().present())
     GetPhysicochemicals().Load(in.Physicochemicals().get());
 
   SESubstanceTissuePharmacokinetics* fx;
   const CDM::SubstanceTissuePharmacokineticsData* fxData;
-  for (unsigned int i = 0; i < in.TissueKinetics().size(); i++)
-  {
+  for (unsigned int i = 0; i < in.TissueKinetics().size(); i++) {
     fxData = &in.TissueKinetics().at(i);
     fx = new SESubstanceTissuePharmacokinetics(fxData->Name(), GetLogger());
     fx->Load(*fxData);
     m_TissueKinetics[fx->GetName()] = (fx);
   }
-		
-	return true;
+
+  return true;
 }
 
-CDM::SubstancePharmacokineticsData*  SESubstancePharmacokinetics::Unload() const
+CDM::SubstancePharmacokineticsData* SESubstancePharmacokinetics::Unload() const
 {
   if (!IsValid())
     return nullptr;
-	CDM::SubstancePharmacokineticsData* data = new CDM::SubstancePharmacokineticsData();
-	Unload(*data);
-	return data;
+  CDM::SubstancePharmacokineticsData* data = new CDM::SubstancePharmacokineticsData();
+  Unload(*data);
+  return data;
 }
 
 void SESubstancePharmacokinetics::Unload(CDM::SubstancePharmacokineticsData& data) const
@@ -85,8 +85,7 @@ void SESubstancePharmacokinetics::Unload(CDM::SubstancePharmacokineticsData& dat
   if (HasPhysicochemicals())
     data.Physicochemicals(std::unique_ptr<CDM::SubstancePhysicochemicalData>(m_Physicochemicals->Unload()));
 
-  for (auto itr : m_TissueKinetics)
-  {
+  for (auto itr : m_TissueKinetics) {
     data.TissueKinetics().push_back(std::unique_ptr<CDM::SubstanceTissuePharmacokineticsData>(itr.second->Unload()));
   }
 };
@@ -105,7 +104,6 @@ const SESubstancePhysicochemicals* SESubstancePharmacokinetics::GetPhysicochemic
 {
   return m_Physicochemicals;
 }
-
 
 bool SESubstancePharmacokinetics::HasTissueKinetics() const
 {

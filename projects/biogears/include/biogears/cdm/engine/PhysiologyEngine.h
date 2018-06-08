@@ -40,6 +40,8 @@ class SECompartmentManager;
 class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration;
 
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/schema/PhysiologyEngineStateData.hxx>
 
 /** 

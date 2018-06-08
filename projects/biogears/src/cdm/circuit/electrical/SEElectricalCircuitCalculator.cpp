@@ -10,20 +10,18 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitCalculator.h>
+#include <biogears/cdm/stdafx.h>
 
-
-SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(Logger* logger) : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode,SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(
-  ElectricCapacitanceUnit::F, ElectricCurrentUnit::A, ElectricInductanceUnit::H, ElectricPotentialUnit::V, ElectricChargeUnit::C, ElectricResistanceUnit::Ohm,logger)
+SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(Logger* logger)
+  : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(
+      ElectricCapacitanceUnit::F, ElectricCurrentUnit::A, ElectricInductanceUnit::H, ElectricPotentialUnit::V, ElectricChargeUnit::C, ElectricResistanceUnit::Ohm, logger)
 {
-
 }
-SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(const ElectricCapacitanceUnit& c, const ElectricCurrentUnit& f, const ElectricInductanceUnit& i, const ElectricPotentialUnit& p, const ElectricChargeUnit& q, const ElectricResistanceUnit& r, Logger* logger) : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(c, f, i, p, q, r, logger)
+SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(const ElectricCapacitanceUnit& c, const ElectricCurrentUnit& f, const ElectricInductanceUnit& i, const ElectricPotentialUnit& p, const ElectricChargeUnit& q, const ElectricResistanceUnit& r, Logger* logger)
+  : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(c, f, i, p, q, r, logger)
 {
-
 }
 SEElectricalCircuitCalculator::~SEElectricalCircuitCalculator()
 {
-  
 }

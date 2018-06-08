@@ -9,19 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEDecimalFormat.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/DecimalFormatData.hxx>
 #include <biogears/schema/enumDecimalFormat.hxx>
 
 SEDecimalFormat::SEDecimalFormat(const SEDecimalFormat* dfault)
 {
   Reset();
-  if (dfault != nullptr) 
-    Set(*dfault); 
+  if (dfault != nullptr)
+    Set(*dfault);
 }
 
 SEDecimalFormat::~SEDecimalFormat()
@@ -44,8 +44,7 @@ void SEDecimalFormat::Set(const SEDecimalFormat& f)
 bool SEDecimalFormat::Load(const CDM::DecimalFormatData& in)
 {
   Reset();
-  if (in.DecimalFormat().present())
-  {
+  if (in.DecimalFormat().present()) {
     if (in.DecimalFormat().get() == CDM::enumDecimalFormat::FixedMantissa)
       m_Notation = DecimalNotation::Fixed;
     else if (in.DecimalFormat().get() == CDM::enumDecimalFormat::SignificantDigits)
@@ -64,19 +63,16 @@ CDM::DecimalFormatData* SEDecimalFormat::Unload()
 void SEDecimalFormat::Unload(CDM::DecimalFormatData& data) const
 {
   data.Precision(m_Precision);
-  switch (m_Notation)
-  {
-    case DecimalNotation::Default:
-    case DecimalNotation::Fixed:
-    {
-      data.DecimalFormat(CDM::enumDecimalFormat::FixedMantissa);
-      break;
-    }
-    case DecimalNotation::Scientific:
-    {
-      data.DecimalFormat(CDM::enumDecimalFormat::SignificantDigits);
-      break;
-    }
+  switch (m_Notation) {
+  case DecimalNotation::Default:
+  case DecimalNotation::Fixed: {
+    data.DecimalFormat(CDM::enumDecimalFormat::FixedMantissa);
+    break;
+  }
+  case DecimalNotation::Scientific: {
+    data.DecimalFormat(CDM::enumDecimalFormat::SignificantDigits);
+    break;
+  }
   }
 }
 
@@ -100,8 +96,7 @@ DecimalNotation SEDecimalFormat::GetNotation()
 
 void SEDecimalFormat::SetStream(std::ofstream& s)
 {
-  switch (m_Notation)
-  {
+  switch (m_Notation) {
   case DecimalNotation::Default:
     s << std::defaultfloat << std::setprecision(m_Precision);
     break;

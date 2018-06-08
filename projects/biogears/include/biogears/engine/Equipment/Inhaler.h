@@ -1,5 +1,5 @@
 /**************************************************************************************
-Copyright 2015 Applied Research Associates, Inc.
+C:opyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
 at:
@@ -12,17 +12,25 @@ specific language governing permissions and limitations under the License.
 
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/schema/BioGearsInhalerData.hxx>
-
+#include <biogears/engine/Controller/BioGearsSystem.h>
 /**
 * @brief 
 * Generic inhaler for substance administration.
 */
+
+class SEGasCompartment;
+class SELiquidCompartment;
+class SEGasCompartment;
+class SELiquidSubstanceQuantity;
+class BioGears;
 class BIOGEARS_API Inhaler : public SEInhaler, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	Inhaler(BioGears& bg);

@@ -10,51 +10,53 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/stdafx.h>
-#include <biogears/engine/Systems/Energy.h>
-#include <biogears/engine/Systems/Drugs.h>
-#include <biogears/engine/Systems/Environment.h>
-#include <biogears/engine/Systems/Cardiovascular.h>
 #include <biogears/engine/Systems/BloodChemistry.h>
+#include <biogears/engine/Systems/Cardiovascular.h>
+#include <biogears/engine/Systems/Drugs.h>
+#include <biogears/engine/Systems/Energy.h>
+#include <biogears/engine/Systems/Environment.h>
+#include <biogears/engine/stdafx.h>
 #include <biogears/schema/RunningAverageData.hxx>
 
-#include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/patient/SENutrition.h>
-#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
+#include <biogears/cdm/patient/SENutrition.h>
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalarAmountPerTime.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarEnergy.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
+#include <biogears/cdm/properties/SEScalarFlowCompliance.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
+#include <biogears/cdm/properties/SEScalarHeatConductance.h>
+#include <biogears/cdm/properties/SEScalarHeatResistance.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerTime.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarArea.h>
-#include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
-#include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarHeatResistance.h>
-#include <biogears/cdm/properties/SEScalarHeatConductance.h>
-#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
-#include <biogears/cdm/properties/SEScalarEnergy.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/properties/SEScalarAmountPerTime.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarFlowResistance.h>
-#include <biogears/cdm/properties/SEScalarFlowCompliance.h>
-#include <biogears/cdm/properties/SEScalarAmountPerTime.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
 
-Energy::Energy(BioGears& bg) : SEEnergySystem(bg.GetLogger()), m_data(bg), m_circuitCalculator(GetLogger())
+Energy::Energy(BioGears& bg)
+  : SEEnergySystem(bg.GetLogger())
+  , m_data(bg)
+  , m_circuitCalculator(GetLogger())
 {
-Clear();
+  Clear();
 }
 
 Energy::~Energy()
@@ -170,9 +172,7 @@ void Energy::SetUp()
 
 void Energy::AtSteadyState()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState)
-  {
-
+  if (m_data.GetState() == EngineState::AtInitialStableState) {
   }
 }
 
@@ -197,7 +197,7 @@ void Energy::PreProcess()
 /// The exercise function updates the patient's metabolic rate if the exercise action is present
 ///
 /// \details
-/// The exercise function adds to the body's basal metabolic rate a value that is specified by 
+/// The exercise function adds to the body's basal metabolic rate a value that is specified by
 /// the exercise action. The actual metabolic rate is ramped up to this value. The body's actual
 /// work rate is determined by the nutrients and oxygen available. Exercise-related outputs are
 /// set in Tissue::CalculateMetabolicConsumptionAndProduction().
@@ -214,25 +214,20 @@ void Energy::Exercise()
   double kcal_Per_day_Per_Watt = 20.6362855;
 
   // Only try to get intensity if the exercise action is active
-  if (m_PatientActions->HasExercise())
-  {
-    if (m_PatientActions->GetExercise()->HasIntensity())
-    {
+  if (m_PatientActions->HasExercise()) {
+    if (m_PatientActions->GetExercise()->HasIntensity()) {
       exerciseIntensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
-    }
-    else
-    {
+    } else {
       Warning("Exercise call with no severity. Action ignored.");
     }
-  }
-  else
+  } else
     return;
 
   // The MetabolicRateGain is used to ramp the metabolic rate to the value specified by the user's exercise intensity.
   double MetabolicRateGain = 1.0;
   double workRateDesired_W = exerciseIntensity * maxWorkRate_W;
   double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day + workRateDesired_W * kcal_Per_day_Per_Watt;
-  double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day)*m_dT_s;
+  double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day) * m_dT_s;
   GetTotalMetabolicRate().SetValue(TotalMetabolicRateProduced_kcal_Per_day, PowerUnit::kcal_Per_day);
 }
 
@@ -283,23 +278,20 @@ void Energy::CalculateVitalSigns()
   std::stringstream ss;
 
   //Hypothermia check
-  double coreTempIrreversible_degC = 20.0;   /// \cite Stocks2004HumanPhysiologicalResponseCold
+  double coreTempIrreversible_degC = 20.0; /// \cite Stocks2004HumanPhysiologicalResponseCold
   if (coreTemperature_degC < 35.0) /// \cite mallet2001hypothermia
   {
     /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
     m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, true, m_data.GetSimulationTime());
 
     /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
-    if (coreTemperature_degC < coreTempIrreversible_degC)
-    {
+    if (coreTemperature_degC < coreTempIrreversible_degC) {
       ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia and is in an irreversible state.";
       Warning(ss);
       m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
     }
 
-  }
-  else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hypothermia) && coreTemperature_degC>35.2)
-  {
+  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hypothermia) && coreTemperature_degC > 35.2) {
     m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, false, m_data.GetSimulationTime());
   }
   //Hyperthermia check
@@ -307,9 +299,7 @@ void Energy::CalculateVitalSigns()
   {
     /// \event Patient: Core temperature has exceeded 38.8 degrees Celsius. Patient is hyperthermic.
     m_Patient->SetEvent(CDM::enumPatientEvent::Hyperthermia, true, m_data.GetSimulationTime());
-  }
-  else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hyperthermia) && coreTemperature_degC < 38.0)
-  {
+  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hyperthermia) && coreTemperature_degC < 38.0) {
     m_Patient->SetEvent(CDM::enumPatientEvent::Hyperthermia, false, m_data.GetSimulationTime());
   }
 
@@ -319,29 +309,25 @@ void Energy::CalculateVitalSigns()
   // The hydrogen ion concentration is a property of the blood
   // The events related to blood concentrations should be detected and set in blood chemistry.
   double highPh = 8.5;
-  double lowPh = 6.5;   // \cite Edge2006AcidosisConscious
+  double lowPh = 6.5; // \cite Edge2006AcidosisConscious
   m_BloodpH.Sample(m_data.GetBloodChemistry().GetBloodPH().GetValue());
   m_BicarbonateMolarity_mmol_Per_L.Sample(m_AortaHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
-  //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle 
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-  {
+  //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
+  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     double bloodPH = m_BloodpH.Value();
     double bloodBicarbonate_mmol_Per_L = m_BicarbonateMolarity_mmol_Per_L.Value();
 
-    if (m_data.GetState() > EngineState::InitialStabilization)
-    {// Don't throw events if we are initializing
+    if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
       if (bloodPH < 7.35 && bloodBicarbonate_mmol_Per_L < 22.0)
         /// \event The patient is in a state of metabolic acidosis
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAcidosis, true, m_data.GetSimulationTime());
 
       /// \irreversible State: arterial blood pH has dropped below 6.5.
-      if (bloodPH < lowPh)
-      {
+      if (bloodPH < lowPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
         m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
-      }
-      else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0)
+      } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0)
         /// \event The patient has exited the state state of metabolic acidosis
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAcidosis, false, m_data.GetSimulationTime());
 
@@ -350,8 +336,7 @@ void Energy::CalculateVitalSigns()
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, true, m_data.GetSimulationTime());
 
       /// \irreversible State: arterial blood pH has increased above 8.5.
-      if (bloodPH > highPh)
-      {
+      if (bloodPH > highPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is above 8.5, patient is experiencing extreme metabolic Alkalosis and is in an irreversible state.";
         Warning(ss);
         m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
@@ -361,7 +346,7 @@ void Energy::CalculateVitalSigns()
         /// \event The patient has exited the state of metabolic alkalosis
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, false, m_data.GetSimulationTime());
     }
-    // Reset the running averages. Why do we need running averages here? Does the aorta pH fluctuate that much? 
+    // Reset the running averages. Why do we need running averages here? Does the aorta pH fluctuate that much?
     m_BloodpH.Reset();
     m_BicarbonateMolarity_mmol_Per_L.Reset();
   }
@@ -387,34 +372,31 @@ void Energy::CalculateMetabolicHeatGeneration()
   double totalMetabolicRateNew_Kcal_Per_day = 0.0;
   double totalMetabolicRateNew_W = 0.0;
   //The summit metabolism is the maximum amount of power the human body can generate due to shivering/response to the cold.
-  double summitMetabolism_W = 21.0*pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
+  double summitMetabolism_W = 21.0 * pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
 
   if (coreTemperature_degC < 34.0) //Hypothermic state inducing metabolic depression (decline of metabolic heat generation)
   {
     totalMetabolicRateNew_W = summitMetabolism_W * pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
-    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);		 /// \cite mallet2002hypothermia
-  }
-  else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
+    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W); /// \cite mallet2002hypothermia
+  } else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
   {
     //Todo: Add an event for shivering
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
-    totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W)*(coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
+    totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
     totalMetabolicRateNew_W = MIN(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);
-  }
-  else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) //Basic Metabolic rate
+  } else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) //Basic Metabolic rate
   {
     double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day;
-    double MetabolicRateGain = 0.0001;	//Used to ramp the metabolic rate from its current value to the basal value if the patient meets the basal criteria
+    double MetabolicRateGain = 0.0001; //Used to ramp the metabolic rate from its current value to the basal value if the patient meets the basal criteria
     double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day);
     GetTotalMetabolicRate().SetValue(TotalMetabolicRateProduced_kcal_Per_day, PowerUnit::kcal_Per_day);
-  }
-  else if (coreTemperature_degC>40.0 && !m_PatientActions->HasExercise()) //Core temperature greater than 40.0. If not exercising, then the hyperthermia leads to increased metabolism
+  } else if (coreTemperature_degC > 40.0 && !m_PatientActions->HasExercise()) //Core temperature greater than 40.0. If not exercising, then the hyperthermia leads to increased metabolism
   {
-    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day * pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC);  //The metabolic heat generated will increase by 11% for every degree above 40.0 C
-    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_Kcal_Per_day, PowerUnit::kcal_Per_day);								  /// \cite pate2001thermal								  
+    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day * pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC); //The metabolic heat generated will increase by 11% for every degree above 40.0 C
+    GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_Kcal_Per_day, PowerUnit::kcal_Per_day); /// \cite pate2001thermal
   }
 
   m_temperatureGroundToCorePath->GetNextHeatSource().SetValue(GetTotalMetabolicRate(PowerUnit::W), PowerUnit::W);
@@ -435,14 +417,12 @@ void Energy::CalculateSweatRate()
   double coreTemperatureHigh_degC = config.GetCoreTemperatureHigh(TemperatureUnit::C);
   double sweatHeatTranferCoefficient_W_Per_K = config.GetSweatHeatTransfer(HeatConductanceUnit::W_Per_K);
   double vaporizationEnergy_J_Per_kg = config.GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
-  double sweatSodiumConcentration_mM = 51.0;			/// \cite shirreffs1997whole
-  double sweatPotassiumConcentration_mM = 6.0;		/// \cite shirreffs1997whole
-  double sweatChlorideConcentration_mM = 48.0;		/// \cite shirreffs1997whole
-                                                  // static double totalSweatLost_mL = 0; --Used to figure out total sweat loss during exercise scenario during debugging
+  double sweatSodiumConcentration_mM = 51.0; /// \cite shirreffs1997whole
+  double sweatPotassiumConcentration_mM = 6.0; /// \cite shirreffs1997whole
+  double sweatChlorideConcentration_mM = 48.0; /// \cite shirreffs1997whole
+    // static double totalSweatLost_mL = 0; --Used to figure out total sweat loss during exercise scenario during debugging
 
-
-
-                                                  /// \todo Convert to sweat density once specific gravity calculation is in
+  /// \todo Convert to sweat density once specific gravity calculation is in
   SEScalarMassPerVolume sweatDensity;
   GeneralMath::CalculateWaterDensity(m_skinNode->GetTemperature(), sweatDensity);
   double dehydrationFraction = m_data.GetTissue().GetDehydrationFraction().GetValue();
@@ -456,10 +436,9 @@ void Energy::CalculateSweatRate()
   double dehydrationScalingFactor = GeneralMath::LinearInterpolator(0, .1, 1, 0, dehydrationFraction);
   BLIM(dehydrationScalingFactor, 0, 1);
 
-  double sweatRate_kg_Per_s = dehydrationScalingFactor * (0.25*sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg)*(coreTemperature_degC - coreTemperatureHigh_degC);
+  double sweatRate_kg_Per_s = dehydrationScalingFactor * (0.25 * sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg) * (coreTemperature_degC - coreTemperatureHigh_degC);
   double maxSweatRate_kg_Per_s = 12.5 * m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2) / 60.0 / 1000.0; //10 - 15 g/min/m2
   BLIM(sweatRate_kg_Per_s, 0.0, maxSweatRate_kg_Per_s);
-
 
   //Account for mass lost by subtracting from the current patient mass
   double massLost_kg = sweatRate_kg_Per_s * m_dT_s;
@@ -495,7 +474,7 @@ void Energy::CalculateSweatRate()
 /// Updates the variable core to skin heat transfer resistance
 ///
 /// \details
-/// The variable core to skin heat transfer resistance is updated here according to the  inverse 
+/// The variable core to skin heat transfer resistance is updated here according to the  inverse
 /// of the skin blood flow.
 //--------------------------------------------------------------------------------------------------
 void Energy::UpdateHeatResistance()
@@ -506,10 +485,10 @@ void Energy::UpdateHeatResistance()
 
   double alphaScale = .5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
 
-                          //The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
-                          //When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin. 
-                          //The opposite occurs for skin blood flow decrease.
-  double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale*bloodDensity_kg_Per_m3*bloodSpecificHeat_J_Per_K_kg*skinBloodFlow_m3_Per_s);
+  //The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
+  //When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.
+  //The opposite occurs for skin blood flow decrease.
+  double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
 
   coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
   //m_data.GetDataTrack().Probe("CoreToSkinResistance", coreToSkinResistance_K_Per_W);
@@ -536,13 +515,14 @@ void Energy::CalculateBasalMetabolicRate()
   /// \cite roza1984metabolic
   double patientBMR_kcal_Per_day = 0.0;
   if (patient.GetSex() == CDM::enumSex::Male)
-    patientBMR_kcal_Per_day = 88.632 + 13.397*PatientMass_kg + 4.799*PatientHeight_cm - 5.677*PatientAge_yr;
+    patientBMR_kcal_Per_day = 88.632 + 13.397 * PatientMass_kg + 4.799 * PatientHeight_cm - 5.677 * PatientAge_yr;
   else
-    patientBMR_kcal_Per_day = 447.593 + 9.247*PatientMass_kg + 3.098*PatientHeight_cm - 4.330*PatientAge_yr;
+    patientBMR_kcal_Per_day = 447.593 + 9.247 * PatientMass_kg + 3.098 * PatientHeight_cm - 4.330 * PatientAge_yr;
   // Systems do their math with MetabolicRate in Watts, so let's make these consistent
   patient.GetBasalMetabolicRate().SetValue(patientBMR_kcal_Per_day, PowerUnit::kcal_Per_day);
 
   std::stringstream ss;
-  ss << "Conditions applied homeostasis: " << "Patient basal metabolic rate = " << patientBMR_kcal_Per_day << " kcal/day";
+  ss << "Conditions applied homeostasis: "
+     << "Patient basal metabolic rate = " << patientBMR_kcal_Per_day << " kcal/day";
   Info(ss);
 }

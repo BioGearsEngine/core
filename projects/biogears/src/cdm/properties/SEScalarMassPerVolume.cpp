@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/stdafx.h>
 
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_dL("g/dL");
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_cm3("g/cm^3");
@@ -42,7 +42,7 @@ bool MassPerVolumeUnit::IsValidUnit(const std::string& unit)
   if (g_Per_dL.GetString().compare(unit) == 0)
     return true;
   if (g_Per_cm3.GetString().compare(unit) == 0)
-	  return true;
+    return true;
   if (g_Per_m3.GetString().compare(unit) == 0)
     return true;
   if (ug_Per_mL.GetString().compare(unit) == 0)
@@ -66,7 +66,7 @@ bool MassPerVolumeUnit::IsValidUnit(const std::string& unit)
   if (kg_Per_mL.GetString().compare(unit) == 0)
     return true;
   if (kg_Per_L.GetString().compare(unit) == 0)
-	  return true;
+    return true;
   return false;
 }
 
@@ -75,7 +75,7 @@ const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const std::string& u
   if (g_Per_dL.GetString().compare(unit) == 0)
     return g_Per_dL;
   if (g_Per_cm3.GetString().compare(unit) == 0)
-	  return g_Per_cm3;
+    return g_Per_cm3;
   if (g_Per_m3.GetString().compare(unit) == 0)
     return g_Per_m3;
   if (ug_Per_mL.GetString().compare(unit) == 0)
@@ -99,7 +99,7 @@ const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const std::string& u
   if (kg_Per_mL.GetString().compare(unit) == 0)
     return kg_Per_mL;
   if (kg_Per_L.GetString().compare(unit) == 0)
-	  return kg_Per_L;
+    return kg_Per_L;
   std::stringstream err;
   err << unit << " is not a valid MassPerVolume unit";
   throw CommonDataModelException(err.str());

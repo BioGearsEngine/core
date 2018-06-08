@@ -10,44 +10,40 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/PatientAssessmentData.hxx>
 
-SEPatientAssessment::SEPatientAssessment(Logger* logger) : Loggable(logger)
+SEPatientAssessment::SEPatientAssessment(Logger* logger)
+  : Loggable(logger)
 {
-	
 }
 
 SEPatientAssessment::~SEPatientAssessment()
 {
-	Clear();
+  Clear();
 }
 
 void SEPatientAssessment::Clear()
 {
-	
 }
 
 void SEPatientAssessment::Reset()
 {
-
 }
 
 bool SEPatientAssessment::Load(const CDM::PatientAssessmentData& in)
 {
-	return true;
+  return true;
 }
 
 CDM::PatientAssessmentData* SEPatientAssessment::Unload()
 {
-	CDM::PatientAssessmentData* data = new CDM::PatientAssessmentData();
-	Unload(*data);
-	return data;
+  CDM::PatientAssessmentData* data = new CDM::PatientAssessmentData();
+  Unload(*data);
+  return data;
 }
 
 void SEPatientAssessment::Unload(CDM::PatientAssessmentData& data)
 {
-
 }
-

@@ -11,28 +11,30 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 // State Actions
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
 #include <biogears/cdm/Serializer.h>
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/schema/ScalarFractionData.hxx>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/schema/ScalarMassData.hxx>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/schema/ScalarFractionData.hxx>
+#include <biogears/schema/ScalarMassData.hxx>
 #include <biogears/schema/ScalarVolumeData.hxx>
 
-SEInhaler::SEInhaler(SESubstanceManager& substances) : SESystem(substances.GetLogger()), m_Substances(substances)
+SEInhaler::SEInhaler(SESubstanceManager& substances)
+  : SESystem(substances.GetLogger())
+  , m_Substances(substances)
 {
-	m_State = CDM::enumOnOff::value(-1);
-	m_MeteredDose = nullptr;
-	m_NozzleLoss = nullptr;
-	m_SpacerVolume = nullptr;
-	m_Substance = nullptr;
+  m_State = CDM::enumOnOff::value(-1);
+  m_MeteredDose = nullptr;
+  m_NozzleLoss = nullptr;
+  m_SpacerVolume = nullptr;
+  m_Substance = nullptr;
 }
 
 SEInhaler::~SEInhaler()
@@ -44,60 +46,60 @@ void SEInhaler::Clear()
 {
   SESystem::Clear();
 
-	m_State = CDM::enumOnOff::value(-1);
-	SAFE_DELETE(m_MeteredDose);
-	SAFE_DELETE(m_NozzleLoss);
-	SAFE_DELETE(m_SpacerVolume);
-	m_Substance = nullptr;
+  m_State = CDM::enumOnOff::value(-1);
+  SAFE_DELETE(m_MeteredDose);
+  SAFE_DELETE(m_NozzleLoss);
+  SAFE_DELETE(m_SpacerVolume);
+  m_Substance = nullptr;
 }
 
 bool SEInhaler::Load(const CDM::InhalerData& in)
 {
   Clear();
-	if (in.State().present())
-		SetState(in.State().get());
-	if (in.MeteredDose().present())
-		GetMeteredDose().Load(in.MeteredDose().get());
-	if (in.NozzleLoss().present())
-		GetNozzleLoss().Load(in.NozzleLoss().get());
-	if (in.SpacerVolume().present())
-		GetSpacerVolume().Load(in.SpacerVolume().get());
-	if (in.Substance().present())
-		SetSubstance(m_Substances.GetSubstance(in.Substance().get()));
+  if (in.State().present())
+    SetState(in.State().get());
+  if (in.MeteredDose().present())
+    GetMeteredDose().Load(in.MeteredDose().get());
+  if (in.NozzleLoss().present())
+    GetNozzleLoss().Load(in.NozzleLoss().get());
+  if (in.SpacerVolume().present())
+    GetSpacerVolume().Load(in.SpacerVolume().get());
+  if (in.Substance().present())
+    SetSubstance(m_Substances.GetSubstance(in.Substance().get()));
   StateChange();
-	return true;
+  return true;
 }
 
-CDM::InhalerData*  SEInhaler::Unload() const
+CDM::InhalerData* SEInhaler::Unload() const
 {
-	CDM::InhalerData* data = new CDM::InhalerData();
-	Unload(*data);
-	return data;
+  CDM::InhalerData* data = new CDM::InhalerData();
+  Unload(*data);
+  return data;
 }
 
 void SEInhaler::Unload(CDM::InhalerData& data) const
 {
-	if (HasState())
-		data.State(m_State);
-	if (HasMeteredDose())
-		data.MeteredDose(std::unique_ptr<CDM::ScalarMassData>(m_MeteredDose->Unload()));
-	if (HasNozzleLoss())
-		data.NozzleLoss(std::unique_ptr<CDM::ScalarFractionData>(m_NozzleLoss->Unload()));
-	if (HasSpacerVolume())
-		data.SpacerVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_SpacerVolume->Unload()));
-	if (HasSubstance())
-		data.Substance(m_Substance->GetName());
+  if (HasState())
+    data.State(m_State);
+  if (HasMeteredDose())
+    data.MeteredDose(std::unique_ptr<CDM::ScalarMassData>(m_MeteredDose->Unload()));
+  if (HasNozzleLoss())
+    data.NozzleLoss(std::unique_ptr<CDM::ScalarFractionData>(m_NozzleLoss->Unload()));
+  if (HasSpacerVolume())
+    data.SpacerVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_SpacerVolume->Unload()));
+  if (HasSubstance())
+    data.Substance(m_Substance->GetName());
 }
 
 const SEScalar* SEInhaler::GetScalar(const std::string& name)
 {
-	if (name.compare("MeteredDose") == 0)
-		return &GetMeteredDose();
-	if (name.compare("NozzleLoss") == 0)
-		return &GetNozzleLoss();
-	if (name.compare("SpacerVolume") == 0)
-		return &GetSpacerVolume();
-	return nullptr;
+  if (name.compare("MeteredDose") == 0)
+    return &GetMeteredDose();
+  if (name.compare("NozzleLoss") == 0)
+    return &GetNozzleLoss();
+  if (name.compare("SpacerVolume") == 0)
+    return &GetSpacerVolume();
+  return nullptr;
 }
 
 void SEInhaler::Merge(const SEInhaler& from)
@@ -107,128 +109,123 @@ void SEInhaler::Merge(const SEInhaler& from)
   COPY_PROPERTY(MeteredDose);
   COPY_PROPERTY(NozzleLoss);
   COPY_PROPERTY(SpacerVolume);
-  if (from.m_Substance != nullptr)
-  {
-    if (&m_Substances != &from.m_Substances)
-    {
+  if (from.m_Substance != nullptr) {
+    if (&m_Substances != &from.m_Substances) {
       m_Substance = m_Substances.GetSubstance(from.m_Substance->GetName());
-      if (m_Substance == nullptr)
-      {
+      if (m_Substance == nullptr) {
         m_ss << "Do not have substance : " << from.m_Substance->GetName();
         Error(m_ss);
       }
-    }
-    else
+    } else
       m_Substance = from.m_Substance;
   }
 }
 
 void SEInhaler::ProcessConfiguration(const SEInhalerConfiguration& config)
 {
-	if (config.HasConfiguration())
-		Merge(*config.GetConfiguration());
-	else if (config.HasConfigurationFile())
-		if (!LoadFile(config.GetConfigurationFile()))// Does NOT merge file in data, Should we?
-			Error("Unable to load configuration file", "SEInhaler::ProcessConfiguration");
-	StateChange();
+  if (config.HasConfiguration())
+    Merge(*config.GetConfiguration());
+  else if (config.HasConfigurationFile())
+    if (!LoadFile(config.GetConfigurationFile())) // Does NOT merge file in data, Should we?
+      Error("Unable to load configuration file", "SEInhaler::ProcessConfiguration");
+  StateChange();
 }
 
 bool SEInhaler::LoadFile(const std::string& file)
 {
-	CDM::InhalerData* pData;
-	std::unique_ptr<CDM::ObjectData> data;
+  CDM::InhalerData* pData;
+  std::unique_ptr<CDM::ObjectData> data;
 
-	data = Serializer::ReadFile(file,GetLogger());
-	pData = dynamic_cast<CDM::InhalerData*>(data.get());
-	if (pData == nullptr)
-	{
-		std::stringstream ss;
-		ss << "Inhaler file could not be read : " << file << std::endl;
-		Error(ss);
-		return false;
-	}
-	return Load(*pData);
+  data = Serializer::ReadFile(file, GetLogger());
+  pData = dynamic_cast<CDM::InhalerData*>(data.get());
+  if (pData == nullptr) {
+    std::stringstream ss;
+    ss << "Inhaler file could not be read : " << file << std::endl;
+    Error(ss);
+    return false;
+  }
+  return Load(*pData);
 }
 
 CDM::enumOnOff::value SEInhaler::GetState() const
 {
-	return m_State;
+  return m_State;
 }
 void SEInhaler::SetState(CDM::enumOnOff::value state)
 {
-	m_State = state;
+  m_State = state;
 }
 bool SEInhaler::HasState() const
 {
-	return m_State == ((CDM::enumOnOff::value)-1) ? false : true;
+  return m_State == ((CDM::enumOnOff::value)-1) ? false : true;
 }
 void SEInhaler::InvalidateState()
 {
-	m_State = (CDM::enumOnOff::value) - 1;
+  m_State = (CDM::enumOnOff::value)-1;
 }
 
 bool SEInhaler::HasMeteredDose() const
 {
-	return m_MeteredDose == nullptr ? false : m_MeteredDose->IsValid();
+  return m_MeteredDose == nullptr ? false : m_MeteredDose->IsValid();
 }
 SEScalarMass& SEInhaler::GetMeteredDose()
 {
-	if (m_MeteredDose == nullptr)
-		m_MeteredDose = new SEScalarMass();
-	return *m_MeteredDose;
+  if (m_MeteredDose == nullptr)
+    m_MeteredDose = new SEScalarMass();
+  return *m_MeteredDose;
 }
 double SEInhaler::GetMeteredDose(const MassUnit& unit) const
 {
-	if (m_MeteredDose == nullptr)
-		return SEScalar::dNaN();
-	return m_MeteredDose->GetValue(unit);
+  if (m_MeteredDose == nullptr)
+    return SEScalar::dNaN();
+  return m_MeteredDose->GetValue(unit);
 }
 
 bool SEInhaler::HasNozzleLoss() const
 {
-	return m_NozzleLoss == nullptr ? false : m_NozzleLoss->IsValid();
+  return m_NozzleLoss == nullptr ? false : m_NozzleLoss->IsValid();
 }
 SEScalarFraction& SEInhaler::GetNozzleLoss()
 {
-	if (m_NozzleLoss == nullptr)
-		m_NozzleLoss = new SEScalarFraction();
-	return *m_NozzleLoss;
+  if (m_NozzleLoss == nullptr)
+    m_NozzleLoss = new SEScalarFraction();
+  return *m_NozzleLoss;
 }
 double SEInhaler::GetNozzleLoss() const
 {
-	if (m_NozzleLoss == nullptr)
-		return SEScalar::dNaN();
-	return m_NozzleLoss->GetValue();
+  if (m_NozzleLoss == nullptr)
+    return SEScalar::dNaN();
+  return m_NozzleLoss->GetValue();
 }
 
 bool SEInhaler::HasSpacerVolume() const
 {
-	return m_SpacerVolume == nullptr ? false : m_SpacerVolume->IsValid();
+  return m_SpacerVolume == nullptr ? false : m_SpacerVolume->IsValid();
 }
 SEScalarVolume& SEInhaler::GetSpacerVolume()
 {
-	if (m_SpacerVolume == nullptr)
-		m_SpacerVolume = new SEScalarVolume();
-	return *m_SpacerVolume;
+  if (m_SpacerVolume == nullptr)
+    m_SpacerVolume = new SEScalarVolume();
+  return *m_SpacerVolume;
 }
 double SEInhaler::GetSpacerVolume(const VolumeUnit& unit) const
 {
-	if (m_SpacerVolume == nullptr)
-		return SEScalar::dNaN();
-	return m_SpacerVolume->GetValue(unit);
+  if (m_SpacerVolume == nullptr)
+    return SEScalar::dNaN();
+  return m_SpacerVolume->GetValue(unit);
 }
 
 bool SEInhaler::HasSubstance() const
 {
-	return m_Substance != nullptr;
+  return m_Substance != nullptr;
 }
 void SEInhaler::SetSubstance(const SESubstance* sub)
 {
-	if (!sub->HasAerosolization())
-		throw CommonDataModelException("Inhaler substance must have aerosolization data");
-	m_Substance = sub;
+  if (!sub->HasAerosolization())
+    throw CommonDataModelException("Inhaler substance must have aerosolization data");
+  m_Substance = sub;
 }
 SESubstance* SEInhaler::GetSubstance() const
 {
-	return (SESubstance*)m_Substance;
+  return (SESubstance*)m_Substance;
 }

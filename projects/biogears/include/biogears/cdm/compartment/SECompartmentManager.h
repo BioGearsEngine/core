@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
 
-CDM_BIND_DECL(CompartmentManagerData)
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
@@ -20,6 +22,8 @@ CDM_BIND_DECL(CompartmentManagerData)
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/schema/enumCompartmentType.hxx>
+
+CDM_BIND_DECL(CompartmentManagerData)
 
 class BIOGEARS_API SECompartmentManager : public Loggable
 {

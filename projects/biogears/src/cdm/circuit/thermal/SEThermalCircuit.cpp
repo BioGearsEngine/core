@@ -10,13 +10,14 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
+#include <biogears/cdm/stdafx.h>
 
-SEThermalCircuit::SEThermalCircuit(const std::string& name, SECircuitManager& mgr) : SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>(name, mgr.GetLogger()), m_Mgr(mgr)
+SEThermalCircuit::SEThermalCircuit(const std::string& name, SECircuitManager& mgr)
+  : SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>(name, mgr.GetLogger())
+  , m_Mgr(mgr)
 {
-
 }
 SEThermalCircuit::~SEThermalCircuit()
 {
@@ -45,7 +46,7 @@ void SEThermalCircuit::AddCircuit(SEThermalCircuit& circuit)
   for (SEThermalCircuitNode* node : circuit.GetNodes())
     AddNode(*node);
   for (SEThermalCircuitPath* path : circuit.GetPaths())
-    AddPath(*path); 
+    AddPath(*path);
   for (SEThermalCircuitNode* node : circuit.GetReferenceNodes())
     AddReferenceNode(*node);
 }

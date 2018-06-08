@@ -10,22 +10,21 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/Logger.h>
 
-
-SEFunctionElectricPotentialVsTime::SEFunctionElectricPotentialVsTime() : SEFunction()
+SEFunctionElectricPotentialVsTime::SEFunctionElectricPotentialVsTime()
+  : SEFunction()
 {
-	
 }
 
 SEFunctionElectricPotentialVsTime::~SEFunctionElectricPotentialVsTime()
 {
-	Clear();
+  Clear();
 }
 
 void SEFunctionElectricPotentialVsTime::Clear()
@@ -44,7 +43,7 @@ bool SEFunctionElectricPotentialVsTime::Load(const CDM::FunctionElectricPotentia
   return IsValid();
 }
 
-CDM::FunctionElectricPotentialVsTimeData*  SEFunctionElectricPotentialVsTime::Unload() const
+CDM::FunctionElectricPotentialVsTimeData* SEFunctionElectricPotentialVsTime::Unload() const
 {
   if (!IsValid())
     return nullptr;
@@ -62,19 +61,19 @@ void SEFunctionElectricPotentialVsTime::Unload(CDM::FunctionElectricPotentialVsT
 
 double SEFunctionElectricPotentialVsTime::GetTimeValue(unsigned int index, const TimeUnit& unit)
 {
-  if (m_TimeUnit==nullptr)
+  if (m_TimeUnit == nullptr)
     throw CommonDataModelException("No time units have been set");
   if (index >= m_Independent.size())
     throw CommonDataModelException("Independent index out of bounds");
   return Convert(m_Independent[index], *m_TimeUnit, unit);
 }
-std::vector<double>& SEFunctionElectricPotentialVsTime::GetTime()																	
+std::vector<double>& SEFunctionElectricPotentialVsTime::GetTime()
 {
   return m_Independent;
 }
 const TimeUnit* SEFunctionElectricPotentialVsTime::GetTimeUnit()
 {
-	return m_TimeUnit;
+  return m_TimeUnit;
 }
 void SEFunctionElectricPotentialVsTime::SetTimeUnit(const TimeUnit& unit)
 {
@@ -102,7 +101,6 @@ void SEFunctionElectricPotentialVsTime::SetElectricPotentialUnit(const ElectricP
   m_ElectricPotentialUnit = &unit;
 }
 
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Interpolates the original data to match the engine time step
@@ -115,49 +113,47 @@ void SEFunctionElectricPotentialVsTime::SetElectricPotentialUnit(const ElectricP
 /// \details
 /// This function creates the new waveform data for the ECG output by interpolating the data from the
 /// original file. It inherits m_Independent and m_Dependent from the original data and calls
-/// GeneralMath::LinearInterpolator to create the new vector of voltage points that correspond to the 
+/// GeneralMath::LinearInterpolator to create the new vector of voltage points that correspond to the
 /// time points in newTime. It is then assigned the unit of the original data and output as the new
 /// waveform.
 //--------------------------------------------------------------------------------------------------
-SEFunctionElectricPotentialVsTime*  SEFunctionElectricPotentialVsTime::InterpolateToTime(std::vector<double>& newTime, const TimeUnit& unit)
+SEFunctionElectricPotentialVsTime* SEFunctionElectricPotentialVsTime::InterpolateToTime(std::vector<double>& newTime, const TimeUnit& unit)
 {
   if (!IsValid())
     return nullptr;
 
-	SEFunctionElectricPotentialVsTime* newFunction = new SEFunctionElectricPotentialVsTime();
+  SEFunctionElectricPotentialVsTime* newFunction = new SEFunctionElectricPotentialVsTime();
   std::vector<double>& fTime = newFunction->GetTime();
   std::vector<double>& fEleP = newFunction->GetElectricPotential();
 
   for (double t : newTime)
     fTime.push_back(t);
   newFunction->SetTimeUnit(unit);
-  
-	//m_Independent;// Original X (Time)
-	//m_Dependent;// Original Y (ElectricPotential)
-	double x1, x2, y1, y2, xPrime, yPrime;
-	unsigned int newTimeIterator = 0;
-  for (unsigned int i = 0; i < m_Independent.size(); i++)
-	{
-    x1 = GetTimeValue(i,unit); // get the points needed for interpolation.
-		x2 = GetTimeValue(i + 1, unit);
-		y1 = m_Dependent[i];
-		y2 = m_Dependent[i + 1];
 
-		while (newTime[newTimeIterator] >= x1 && newTime[newTimeIterator] < x2)
-		{
-			xPrime = newTime[newTimeIterator]; // new time point
-			yPrime = GeneralMath::LinearInterpolator(x1, x2, y1, y2, xPrime); // call general math function LinearInterpolator to find yPrime at xPrime, xPrime must be between x1 and x2
-			fEleP.push_back(yPrime); // populate the voltage vector
-			newTimeIterator++;
-			if (newTimeIterator >= newTime.size())
-				break;
-		}
-		if (newTimeIterator >= newTime.size())
-			break;
-	}
-	newFunction->SetElectricPotentialUnit(*m_ElectricPotentialUnit); // 
+  //m_Independent;// Original X (Time)
+  //m_Dependent;// Original Y (ElectricPotential)
+  double x1, x2, y1, y2, xPrime, yPrime;
+  unsigned int newTimeIterator = 0;
+  for (unsigned int i = 0; i < m_Independent.size(); i++) {
+    x1 = GetTimeValue(i, unit); // get the points needed for interpolation.
+    x2 = GetTimeValue(i + 1, unit);
+    y1 = m_Dependent[i];
+    y2 = m_Dependent[i + 1];
+
+    while (newTime[newTimeIterator] >= x1 && newTime[newTimeIterator] < x2) {
+      xPrime = newTime[newTimeIterator]; // new time point
+      yPrime = GeneralMath::LinearInterpolator(x1, x2, y1, y2, xPrime); // call general math function LinearInterpolator to find yPrime at xPrime, xPrime must be between x1 and x2
+      fEleP.push_back(yPrime); // populate the voltage vector
+      newTimeIterator++;
+      if (newTimeIterator >= newTime.size())
+        break;
+    }
+    if (newTimeIterator >= newTime.size())
+      break;
+  }
+  newFunction->SetElectricPotentialUnit(*m_ElectricPotentialUnit); //
 
   if (!newFunction->IsValid())
     throw new CommonDataModelException("Could not Interpolate to provided time");
-	return newFunction;
+  return newFunction;
 }

@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
+#include <biogears/cdm/stdafx.h>
 
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_Pa("L/Pa");
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_cmH2O("L/cmH2O");

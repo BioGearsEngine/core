@@ -11,36 +11,36 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include "CommonDataModelTest.h"
+#include "Serializer.h"
+#include "compartment/SECompartmentManager.h"
+#include "engine/PhysiologyEngineTrack.h"
+#include "patient/SEPatient.h"
+#include "patient/actions/SEHemorrhage.h"
+#include "properties/SEScalarTime.h"
+#include "properties/SEScalarVolumePerTime.h"
 #include "scenario/SEAdvanceTime.h"
 #include "scenario/SEScenario.h"
 #include "scenario/SEScenarioInitialParameters.h"
-#include "patient/SEPatient.h"
-#include "patient/actions/SEHemorrhage.h"
 #include "substance/SESubstanceManager.h"
-#include "properties/SEScalarTime.h"
-#include "properties/SEScalarVolumePerTime.h"
-#include "utils/testing/SETestReport.h"
-#include "utils/testing/SETestCase.h"
-#include "utils/testing/SETestSuite.h"
 #include "utils/FileUtils.h"
 #include "utils/TimingProfile.h"
-#include "Serializer.h"
-#include "engine/PhysiologyEngineTrack.h"
-#include "compartment/SECompartmentManager.h"
+#include "utils/testing/SETestCase.h"
+#include "utils/testing/SETestReport.h"
+#include "utils/testing/SETestSuite.h"
 // Systems
-#include "system/physiology/SEBloodChemistrySystem.h"
-#include "system/physiology/SECardiovascularSystem.h"
-#include "system/physiology/SEEndocrineSystem.h"
-#include "system/physiology/SEEnergySystem.h"
-#include "system/physiology/SERenalSystem.h"
-#include "system/physiology/SEGastrointestinalSystem.h"
-#include "system/physiology/SERespiratorySystem.h"
-#include "system/physiology/SEDrugSystem.h"
-#include "system/physiology/SETissueSystem.h"
+#include "system/environment/SEEnvironment.h"
 #include "system/equipment/Anesthesia/SEAnesthesiaMachine.h"
 #include "system/equipment/ElectroCardioGram/SEElectroCardioGram.h"
 #include "system/equipment/Inhaler/SEInhaler.h"
-#include "system/environment/SEEnvironment.h"
+#include "system/physiology/SEBloodChemistrySystem.h"
+#include "system/physiology/SECardiovascularSystem.h"
+#include "system/physiology/SEDrugSystem.h"
+#include "system/physiology/SEEndocrineSystem.h"
+#include "system/physiology/SEEnergySystem.h"
+#include "system/physiology/SEGastrointestinalSystem.h"
+#include "system/physiology/SERenalSystem.h"
+#include "system/physiology/SERespiratorySystem.h"
+#include "system/physiology/SETissueSystem.h"
 
 void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
 {
@@ -57,7 +57,7 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
   dir.append("verification/Scenarios");
 
   SETestReport testReport(m_Logger);
-  SETestSuite&  testSuite = testReport.CreateTestSuite();
+  SETestSuite& testSuite = testReport.CreateTestSuite();
   testSuite.SetName(testName);
 
   std::vector<SESystem*> physiology;
@@ -77,25 +77,18 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
 
   std::vector<std::string> files;
   ListFiles(dir, files, ".xml");
-  for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it)
-  {
-    if (it->find("xml") != std::string::npos)
-    {
-			if (it->find("PFT@") != std::string::npos ||
-          it->find("CBC@") != std::string::npos ||
-          it->find("MP@") != std::string::npos  ||
-          it->find("Urinalysis@") != std::string::npos)// Ignore PFT, CBC, UPanel  and MP files
-				continue;// TODO should actually peek the file and ensure it starts with a <scenario> tag
+  for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
+    if (it->find("xml") != std::string::npos) {
+      if (it->find("PFT@") != std::string::npos || it->find("CBC@") != std::string::npos || it->find("MP@") != std::string::npos || it->find("Urinalysis@") != std::string::npos) // Ignore PFT, CBC, UPanel  and MP files
+        continue; // TODO should actually peek the file and ensure it starts with a <scenario> tag
 
       pTimer.Start("Case");
       SETestCase& testCase = testSuite.CreateTestCase();
       Info(it->c_str());
-			try
-			{
-				if (scenario.LoadFile(*it))
-				{
-					if (!scenario.IsValid())
-						testCase.AddFailure(*it + " is not a valid scenario!");
+      try {
+        if (scenario.LoadFile(*it)) {
+          if (!scenario.IsValid())
+            testCase.AddFailure(*it + " is not a valid scenario!");
 
           //if (scenario.GetInitialParameters().HasPatientFile())
           //{
@@ -142,19 +135,15 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
           //  }
           //}
 
-				}
-				else
-				{
-					testCase.AddFailure(*it + " has failed to load!");
-				}
-			}
-			catch (...)
-			{
-				testCase.AddFailure(*it + " has failed to load! unknown exception.");
-			}
+        } else {
+          testCase.AddFailure(*it + " has failed to load!");
+        }
+      } catch (...) {
+        testCase.AddFailure(*it + " has failed to load! unknown exception.");
+      }
       testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Case"), TimeUnit::s);
       testCase.SetName(*it);
-		}
-	}
-  testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");	
+    }
+  }
+  testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");
 }

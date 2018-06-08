@@ -11,9 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(NutritionData)
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 class SEPatient;
 
+CDM_BIND_DECL(NutritionData)
 class BIOGEARS_API SENutrition : public Loggable
 {
 public:

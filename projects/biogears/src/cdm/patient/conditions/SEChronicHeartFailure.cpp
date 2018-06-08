@@ -10,43 +10,44 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ChronicHeartFailureData.hxx>
 
-SEChronicHeartFailure::SEChronicHeartFailure() : SEPatientCondition()
+SEChronicHeartFailure::SEChronicHeartFailure()
+  : SEPatientCondition()
 {
 }
 
 SEChronicHeartFailure::~SEChronicHeartFailure()
 {
-	Clear();
+  Clear();
 }
 
 void SEChronicHeartFailure::Clear()
 {
-	SEPatientCondition::Clear();
+  SEPatientCondition::Clear();
 }
 
 bool SEChronicHeartFailure::IsValid() const
 {
-	return SEPatientCondition::IsValid();
+  return SEPatientCondition::IsValid();
 }
 
 bool SEChronicHeartFailure::Load(const CDM::ChronicHeartFailureData& in)
 {
-	SEPatientCondition::Load(in);
-	return true;
+  SEPatientCondition::Load(in);
+  return true;
 }
 
 CDM::ChronicHeartFailureData* SEChronicHeartFailure::Unload() const
 {
-	CDM::ChronicHeartFailureData*data(new CDM::ChronicHeartFailureData());
-	Unload(*data);
-	return data;
+  CDM::ChronicHeartFailureData* data(new CDM::ChronicHeartFailureData());
+  Unload(*data);
+  return data;
 }
 
 void SEChronicHeartFailure::Unload(CDM::ChronicHeartFailureData& data) const
 {
-	SEPatientCondition::Unload(data);
+  SEPatientCondition::Unload(data);
 }

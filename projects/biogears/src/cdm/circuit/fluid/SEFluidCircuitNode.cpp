@@ -10,12 +10,12 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h> 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
+#include <biogears/cdm/stdafx.h>
 
-SEFluidCircuitNode::SEFluidCircuitNode(const std::string& name, Logger* logger) : SECircuitNode<SEScalarPressure,SEScalarVolume>(name,logger)
+SEFluidCircuitNode::SEFluidCircuitNode(const std::string& name, Logger* logger)
+  : SECircuitNode<SEScalarPressure, SEScalarVolume>(name, logger)
 {
-  
 }
 
 SEFluidCircuitNode::~SEFluidCircuitNode()

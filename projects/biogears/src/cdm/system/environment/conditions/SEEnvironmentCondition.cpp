@@ -12,14 +12,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
 
-SEEnvironmentCondition::SEEnvironmentCondition() : SECondition()
+SEEnvironmentCondition::SEEnvironmentCondition()
+  : SECondition()
 {
-
 }
 
 SEEnvironmentCondition::~SEEnvironmentCondition()
 {
-	Clear();
+  Clear();
 }
 
 void SEEnvironmentCondition::Clear()
@@ -29,23 +29,23 @@ void SEEnvironmentCondition::Clear()
 
 bool SEEnvironmentCondition::IsValid() const
 {
-	return SECondition::IsValid();
+  return SECondition::IsValid();
 }
 
 bool SEEnvironmentCondition::Load(const CDM::EnvironmentConditionData& in)
 {
-	SECondition::Load(in);
-	return true;
+  SECondition::Load(in);
+  return true;
 }
 
 CDM::EnvironmentConditionData* SEEnvironmentCondition::Unload() const
 {
   CDM::EnvironmentConditionData* data = new CDM::EnvironmentConditionData();
   Unload(*data);
-	return data;
+  return data;
 }
 
 void SEEnvironmentCondition::Unload(CDM::EnvironmentConditionData& data) const
 {
-	SECondition::Unload(data);
+  SECondition::Unload(data);
 }

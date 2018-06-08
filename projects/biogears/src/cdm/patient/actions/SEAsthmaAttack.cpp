@@ -10,75 +10,76 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/Scalar0To1Data.hxx>
 
-SEAsthmaAttack::SEAsthmaAttack() : SEPatientAction()
+SEAsthmaAttack::SEAsthmaAttack()
+  : SEPatientAction()
 {
-	m_Severity=nullptr;
+  m_Severity = nullptr;
 }
 
 SEAsthmaAttack::~SEAsthmaAttack()
 {
-	Clear();
+  Clear();
 }
 
 void SEAsthmaAttack::Clear()
 {
-	SEPatientAction::Clear();
-	SAFE_DELETE(m_Severity);
+  SEPatientAction::Clear();
+  SAFE_DELETE(m_Severity);
 }
 
 bool SEAsthmaAttack::IsValid() const
 {
-	return SEPatientAction::IsValid() && HasSeverity();
+  return SEPatientAction::IsValid() && HasSeverity();
 }
 
 bool SEAsthmaAttack::IsActive() const
 {
-	return IsValid() ? !m_Severity->IsZero() : false;
+  return IsValid() ? !m_Severity->IsZero() : false;
 }
 
 bool SEAsthmaAttack::Load(const CDM::AsthmaAttackData& in)
 {
-	SEPatientAction::Load(in);
-	GetSeverity().Load(in.Severity());
-	return true;
+  SEPatientAction::Load(in);
+  GetSeverity().Load(in.Severity());
+  return true;
 }
 
 CDM::AsthmaAttackData* SEAsthmaAttack::Unload() const
 {
-	CDM::AsthmaAttackData*data(new CDM::AsthmaAttackData());
-	Unload(*data);
-	return data;
+  CDM::AsthmaAttackData* data(new CDM::AsthmaAttackData());
+  Unload(*data);
+  return data;
 }
 
 void SEAsthmaAttack::Unload(CDM::AsthmaAttackData& data) const
 {
-	SEPatientAction::Unload(data);
-	if(m_Severity!=nullptr)
-		data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  SEPatientAction::Unload(data);
+  if (m_Severity != nullptr)
+    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
 
 bool SEAsthmaAttack::HasSeverity() const
 {
-	return m_Severity==nullptr?false:m_Severity->IsValid();
+  return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
 SEScalar0To1& SEAsthmaAttack::GetSeverity()
 {
-	if(m_Severity==nullptr)
-		m_Severity=new SEScalar0To1();
-	return *m_Severity;
+  if (m_Severity == nullptr)
+    m_Severity = new SEScalar0To1();
+  return *m_Severity;
 }
 
-void SEAsthmaAttack::ToString(std::ostream &str) const
+void SEAsthmaAttack::ToString(std::ostream& str) const
 {
-	str << "Patient Action : AsthmaAttack"; 
-	if(HasComment())
-		str<<"\n\tComment: "<<m_Comment;
-	str << "\n\tSeverity: "; HasSeverity() ? str << *m_Severity : str << "NaN";
-	str <<std::flush;
+  str << "Patient Action : AsthmaAttack";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tSeverity: ";
+  HasSeverity() ? str << *m_Severity : str << "NaN";
+  str << std::flush;
 }

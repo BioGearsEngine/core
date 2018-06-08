@@ -10,24 +10,26 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/SEInhalerActionCollection.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 
-SEInhalerActionCollection::SEInhalerActionCollection(SESubstanceManager& substances) : Loggable(substances.GetLogger()), m_Substances(substances)
+SEInhalerActionCollection::SEInhalerActionCollection(SESubstanceManager& substances)
+  : Loggable(substances.GetLogger())
+  , m_Substances(substances)
 {
-	 m_Configuration = nullptr;
+  m_Configuration = nullptr;
 }
 
 SEInhalerActionCollection::~SEInhalerActionCollection()
 {
-	Clear();
+  Clear();
 }
 
 void SEInhalerActionCollection::Clear()
 {
-	// State
-	RemoveConfiguration();
+  // State
+  RemoveConfiguration();
 }
 
 void SEInhalerActionCollection::Unload(std::vector<CDM::ActionData*>& to)
@@ -49,23 +51,21 @@ bool SEInhalerActionCollection::ProcessAction(const SEInhalerAction& action)
 bool SEInhalerActionCollection::ProcessAction(const CDM::InhalerActionData& action)
 {
   const CDM::InhalerConfigurationData* config = dynamic_cast<const CDM::InhalerConfigurationData*>(&action);
-	if (config!=nullptr)
-	{
-		if (m_Configuration == nullptr)
-			m_Configuration = new SEInhalerConfiguration(m_Substances);		
-	  m_Configuration->Load(*config);
-		return IsValid(*m_Configuration);
-	}
+  if (config != nullptr) {
+    if (m_Configuration == nullptr)
+      m_Configuration = new SEInhalerConfiguration(m_Substances);
+    m_Configuration->Load(*config);
+    return IsValid(*m_Configuration);
+  }
 
-	/// \error Unsupported Action
-	Error("Unsupported Inhaler Action");
-	return false;
+  /// \error Unsupported Action
+  Error("Unsupported Inhaler Action");
+  return false;
 }
 
 bool SEInhalerActionCollection::IsValid(const SEInhalerAction& action)
 {
-  if (!action.IsValid())
-  {
+  if (!action.IsValid()) {
     Error("Invalid Inhaler Action");
     return false;
   }
@@ -74,13 +74,13 @@ bool SEInhalerActionCollection::IsValid(const SEInhalerAction& action)
 
 bool SEInhalerActionCollection::HasConfiguration() const
 {
-	return m_Configuration == nullptr ? false : true;
+  return m_Configuration == nullptr ? false : true;
 }
 SEInhalerConfiguration* SEInhalerActionCollection::GetConfiguration() const
 {
-	return m_Configuration;
+  return m_Configuration;
 }
 void SEInhalerActionCollection::RemoveConfiguration()
 {
-	SAFE_DELETE(m_Configuration);
+  SAFE_DELETE(m_Configuration);
 }

@@ -13,46 +13,39 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/SESystem.h>
 
-SESystem::SESystem(Logger* logger) : Loggable(logger)
+SESystem::SESystem(Logger* logger)
+  : Loggable(logger)
 {
-	
 }
 
 SESystem::~SESystem()
 {
-	Clear();
+  Clear();
 }
 
 void SESystem::Clear()
 {
-
 }
 
 bool SESystem::Load(const CDM::SystemData& in)
 {
   Clear();
-	return true;
+  return true;
 }
 
 void SESystem::Unload(CDM::SystemData& data) const
 {
-
 }
 
 const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESystem*>* systems)
 {
-	const SEScalar* s;
-	for (auto itr = systems->begin(); itr != systems->end(); itr++)
-	{
-		if (*itr == nullptr)
-			continue;
-		s = (*itr)->GetScalar(name);
-		if (s != nullptr)
-			return s;
-	}	
-	return nullptr;
+  const SEScalar* s;
+  for (auto itr = systems->begin(); itr != systems->end(); itr++) {
+    if (*itr == nullptr)
+      continue;
+    s = (*itr)->GetScalar(name);
+    if (s != nullptr)
+      return s;
+  }
+  return nullptr;
 }
-
-
-
-

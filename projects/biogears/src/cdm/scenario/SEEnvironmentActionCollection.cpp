@@ -10,32 +10,34 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
-#include <biogears/cdm/system/environment/SEEnvironment.h>
-#include <biogears/cdm/substance/SESubstanceFraction.h>
-#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
+#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/substance/SESubstanceFraction.h>
+#include <biogears/cdm/system/environment/SEEnvironment.h>
 
-SEEnvironmentActionCollection::SEEnvironmentActionCollection(SESubstanceManager& substances) : Loggable(substances.GetLogger()), m_Substances(substances)
+SEEnvironmentActionCollection::SEEnvironmentActionCollection(SESubstanceManager& substances)
+  : Loggable(substances.GetLogger())
+  , m_Substances(substances)
 {
-	m_Change = nullptr;
-	m_ThermalApplication = nullptr;
+  m_Change = nullptr;
+  m_ThermalApplication = nullptr;
 }
 
 SEEnvironmentActionCollection::~SEEnvironmentActionCollection()
 {
-	Clear();
+  Clear();
 }
 
 void SEEnvironmentActionCollection::Clear()
 {
-	RemoveChange();
-	RemoveThermalApplication();
+  RemoveChange();
+  RemoveThermalApplication();
 }
 
 void SEEnvironmentActionCollection::Unload(std::vector<CDM::ActionData*>& to)
@@ -59,37 +61,33 @@ bool SEEnvironmentActionCollection::ProcessAction(const SEEnvironmentAction& act
 bool SEEnvironmentActionCollection::ProcessAction(const CDM::EnvironmentActionData& action)
 {
   const CDM::EnvironmentChangeData* change = dynamic_cast<const CDM::EnvironmentChangeData*>(&action);
-	if (change != nullptr)
-	{
-		if (m_Change == nullptr)
-			m_Change = new SEEnvironmentChange(m_Substances);
-	  m_Change->Load(*change);   
-		return IsValid(*m_Change);
-	}
+  if (change != nullptr) {
+    if (m_Change == nullptr)
+      m_Change = new SEEnvironmentChange(m_Substances);
+    m_Change->Load(*change);
+    return IsValid(*m_Change);
+  }
 
-  const CDM::ThermalApplicationData *thermal = dynamic_cast<const CDM::ThermalApplicationData*>(&action);
-	if (thermal != nullptr)
-	{    
-		if (m_ThermalApplication == nullptr)
-			m_ThermalApplication = new SEThermalApplication();		
-		m_ThermalApplication->Load(*thermal);
-    if (!m_ThermalApplication->IsActive())
-    {
+  const CDM::ThermalApplicationData* thermal = dynamic_cast<const CDM::ThermalApplicationData*>(&action);
+  if (thermal != nullptr) {
+    if (m_ThermalApplication == nullptr)
+      m_ThermalApplication = new SEThermalApplication();
+    m_ThermalApplication->Load(*thermal);
+    if (!m_ThermalApplication->IsActive()) {
       RemoveThermalApplication();
       return true;
     }
     return IsValid(*m_ThermalApplication);
-	}
+  }
 
-	/// \error Unsupported Action
-	Error("Unsupported Action");
-	return false;
+  /// \error Unsupported Action
+  Error("Unsupported Action");
+  return false;
 }
 
 bool SEEnvironmentActionCollection::IsValid(const SEEnvironmentAction& action)
 {
-  if (!action.IsValid())
-  {
+  if (!action.IsValid()) {
     Error("Invalid Inhaler Environment Action");
     return false;
   }
@@ -98,26 +96,26 @@ bool SEEnvironmentActionCollection::IsValid(const SEEnvironmentAction& action)
 
 bool SEEnvironmentActionCollection::HasChange() const
 {
-	return m_Change == nullptr ? false : true;
+  return m_Change == nullptr ? false : true;
 }
 SEEnvironmentChange* SEEnvironmentActionCollection::GetChange() const
 {
-	return m_Change;
+  return m_Change;
 }
 void SEEnvironmentActionCollection::RemoveChange()
 {
-	m_Change = nullptr;
+  m_Change = nullptr;
 }
 
 bool SEEnvironmentActionCollection::HasThermalApplication() const
 {
-	return m_ThermalApplication != nullptr;
+  return m_ThermalApplication != nullptr;
 }
 SEThermalApplication* SEEnvironmentActionCollection::GetThermalApplication() const
 {
-	return m_ThermalApplication;
+  return m_ThermalApplication;
 }
 void SEEnvironmentActionCollection::RemoveThermalApplication()
 {
-	SAFE_DELETE(m_ThermalApplication);
+  SAFE_DELETE(m_ThermalApplication);
 }

@@ -10,35 +10,34 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SEGasCompartmentDataRequest.h>
-#include <biogears/schema/GasCompartmentDataRequestData.hxx>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
+#include <biogears/schema/GasCompartmentDataRequestData.hxx>
 
-SEGasCompartmentDataRequest::SEGasCompartmentDataRequest(const SEDecimalFormat* dfault) : SECompartmentSubstanceDataRequest(dfault)
+SEGasCompartmentDataRequest::SEGasCompartmentDataRequest(const SEDecimalFormat* dfault)
+  : SECompartmentSubstanceDataRequest(dfault)
 {
-	
 }
 
 SEGasCompartmentDataRequest::~SEGasCompartmentDataRequest()
 {
-	Clear();
+  Clear();
 }
 
-
 bool SEGasCompartmentDataRequest::Load(const CDM::GasCompartmentDataRequestData& in, const SESubstanceManager& substances)
-{	
+{
   SECompartmentSubstanceDataRequest::Load(in, substances);
-	return true;
+  return true;
 }
 
 CDM::GasCompartmentDataRequestData* SEGasCompartmentDataRequest::Unload() const
 {
-	CDM::GasCompartmentDataRequestData* data = new CDM::GasCompartmentDataRequestData();
-	Unload(*data);
-	return data;
+  CDM::GasCompartmentDataRequestData* data = new CDM::GasCompartmentDataRequestData();
+  Unload(*data);
+  return data;
 }
 
 void SEGasCompartmentDataRequest::Unload(CDM::GasCompartmentDataRequestData& data) const

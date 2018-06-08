@@ -10,13 +10,13 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/stdafx.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsCompartments.h>
+#include <biogears/engine/stdafx.h>
 
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
 std::vector<std::string> BGE::Graph::_values;
 std::vector<std::string> BGE::ChymeCompartment::_values;
@@ -39,7 +39,9 @@ std::vector<std::string> BGE::InhalerLink::_values;
 std::vector<std::string> BGE::MechanicalVentilatorCompartment::_values;
 std::vector<std::string> BGE::MechanicalVentilatorLink::_values;
 
-BioGearsCompartments::BioGearsCompartments(BioGears& bg) : SECompartmentManager(bg.GetSubstances()), m_data(bg)
+BioGearsCompartments::BioGearsCompartments(BioGears& bg)
+  : SECompartmentManager(bg.GetSubstances())
+  , m_data(bg)
 {
   Clear();
 }
@@ -82,7 +84,7 @@ void BioGearsCompartments::Clear()
   m_InhalerCompartments.clear();
   m_InhalerLeafCompartments.clear();
   m_InhalerAerosolCompartments.clear();
-  m_InhalerAerosolLeafCompartments.clear(); 
+  m_InhalerAerosolLeafCompartments.clear();
   m_MechanicalVentilatorCompartments.clear();
   m_MechanicalVentilatorLeafCompartments.clear();
 
@@ -96,62 +98,52 @@ bool BioGearsCompartments::Load(const CDM::CompartmentManagerData& in, SECircuit
     return false;
 
   m_CombinedCardiovascularGraph = GetLiquidGraph(BGE::Graph::ActiveCardiovascular);
-  if (m_CombinedCardiovascularGraph == nullptr)
-  {
+  if (m_CombinedCardiovascularGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::ActiveCardiovascular));
     return false;
   }
   m_CardiovascularGraph = GetLiquidGraph(BGE::Graph::Cardiovascular);
-  if (m_CardiovascularGraph == nullptr)
-  {
+  if (m_CardiovascularGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::Cardiovascular));
     return false;
   }
   m_RenalGraph = GetLiquidGraph(BGE::Graph::Renal);
-  if (m_RenalGraph == nullptr)
-  {
+  if (m_RenalGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::Renal));
     return false;
   }
   m_RespiratoryGraph = GetGasGraph(BGE::Graph::Respiratory);
-  if (m_RespiratoryGraph == nullptr)
-  {
+  if (m_RespiratoryGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::Respiratory));
     return false;
   }
   m_AnesthesiaMachineGraph = GetGasGraph(BGE::Graph::AnesthesiaMachine);
-  if (m_AnesthesiaMachineGraph == nullptr)
-  {
+  if (m_AnesthesiaMachineGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::AnesthesiaMachine));
     return false;
   }
   m_CombinedRespiratoryAnesthesiaGraph = GetGasGraph(BGE::Graph::RespiratoryAndAnesthesiaMachine);
-  if (m_CombinedRespiratoryAnesthesiaGraph == nullptr)
-  {
+  if (m_CombinedRespiratoryAnesthesiaGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::RespiratoryAndAnesthesiaMachine));
     return false;
   }
   m_CombinedRespiratoryInhalerGraph = GetGasGraph(BGE::Graph::RespiratoryAndInhaler);
-  if (m_CombinedRespiratoryInhalerGraph == nullptr)
-  {
+  if (m_CombinedRespiratoryInhalerGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::RespiratoryAndInhaler));
     return false;
   }
   m_AerosolGraph = GetLiquidGraph(BGE::Graph::Aerosol);
-  if (m_AerosolGraph == nullptr)
-  {
+  if (m_AerosolGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::Aerosol));
     return false;
   }
   m_CombinedAerosolInhalerGraph = GetLiquidGraph(BGE::Graph::AerosolAndInhaler);
-  if (m_CombinedAerosolInhalerGraph == nullptr)
-  {
+  if (m_CombinedAerosolInhalerGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::AerosolAndInhaler));
     return false;
   }
   m_CombinedRespiratoryMechanicalVentilatorGraph = GetGasGraph(BGE::Graph::RespiratoryAndMechanicalVentilator);
-  if (m_CombinedRespiratoryMechanicalVentilatorGraph == nullptr)
-  {
+  if (m_CombinedRespiratoryMechanicalVentilatorGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::RespiratoryAndMechanicalVentilator));
     return false;
   }
@@ -159,21 +151,19 @@ bool BioGearsCompartments::Load(const CDM::CompartmentManagerData& in, SECircuit
   return true;
 }
 
-#define SORT_CMPTS(bin, type) \
-m_##bin##Compartments.clear(); \
-m_##bin##LeafCompartments.clear(); \
-for (const std::string& name : BGE::bin##Compartment::GetValues()) \
-{ \
-  SE##type##Compartment* cmpt = Get##type##Compartment(name); \
-  if (cmpt == nullptr) \
-  { \
-    Warning("Could not find expected " + std::string(#bin) + " compartment, " + name + " in compartment manager"); \
-    continue; \
-  } \
-  m_##bin##Compartments.push_back(cmpt); \
-  if (!cmpt->HasChildren()) \
-    m_##bin##LeafCompartments.push_back(cmpt); \
-} 
+#define SORT_CMPTS(bin, type)                                                                                        \
+  m_##bin##Compartments.clear();                                                                                     \
+  m_##bin##LeafCompartments.clear();                                                                                 \
+  for (const std::string& name : BGE::bin##Compartment::GetValues()) {                                               \
+    SE##type##Compartment* cmpt = Get##type##Compartment(name);                                                      \
+    if (cmpt == nullptr) {                                                                                           \
+      Warning("Could not find expected " + std::string(#bin) + " compartment, " + name + " in compartment manager"); \
+      continue;                                                                                                      \
+    }                                                                                                                \
+    m_##bin##Compartments.push_back(cmpt);                                                                           \
+    if (!cmpt->HasChildren())                                                                                        \
+      m_##bin##LeafCompartments.push_back(cmpt);                                                                     \
+  }
 void BioGearsCompartments::StateChange()
 {
   SECompartmentManager::StateChange();
@@ -183,20 +173,17 @@ void BioGearsCompartments::StateChange()
   SORT_CMPTS(Chyme, Liquid);
   SORT_CMPTS(Pulmonary, Gas);
   SORT_CMPTS(Temperature, Thermal);
-  if (m_data.GetConfiguration().IsTissueEnabled())
-  {
+  if (m_data.GetConfiguration().IsTissueEnabled()) {
     SORT_CMPTS(Tissue, Tissue);
-    for (const std::string& name : BGE::ExtravascularCompartment::GetValues())
-    {
+    for (const std::string& name : BGE::ExtravascularCompartment::GetValues()) {
       if (GetLiquidCompartment(name) == nullptr)
         Warning("Could not find expected Extravascular compartment, " + name + " in compartment manager");
     }
-    
+
     SELiquidCompartment* cmpt;
     m_ExtracellularFluid.clear();
     m_IntracellularFluid.clear();
-    for (SETissueCompartment* t : m_TissueLeafCompartments)
-    {
+    for (SETissueCompartment* t : m_TissueLeafCompartments) {
       cmpt = GetLiquidCompartment(t->GetName() + "Extracellular");
       if (cmpt == nullptr)
         Fatal("Could not find the tissue " + t->GetName() + " Extracellular compartment");
@@ -218,11 +205,9 @@ void BioGearsCompartments::StateChange()
   // so the macro does not work with us
   m_InhalerAerosolCompartments.clear();
   m_InhalerAerosolLeafCompartments.clear();
-  for (const std::string& name : BGE::InhalerCompartment::GetValues())
-  {
+  for (const std::string& name : BGE::InhalerCompartment::GetValues()) {
     SELiquidCompartment* cmpt = GetLiquidCompartment(name);
-    if (cmpt == nullptr)
-    {
+    if (cmpt == nullptr) {
       Warning("Could not find expected Aerosol compartment, " + name + " in compartment manager");
       continue;
     }
@@ -231,20 +216,18 @@ void BioGearsCompartments::StateChange()
       m_InhalerAerosolLeafCompartments.push_back(cmpt);
   }
 
-  m_AerosolCompartments.clear(); 
-  m_AerosolLeafCompartments.clear(); 
-  for (const std::string& name : BGE::PulmonaryCompartment::GetValues()) 
-  { 
-    SELiquidCompartment* cmpt = GetLiquidCompartment(name); 
-    if (cmpt == nullptr) 
-    { 
-      Warning("Could not find expected Aerosol compartment, " + name + " in compartment manager"); 
-      continue; 
-    } 
-    m_AerosolCompartments.push_back(cmpt); 
-    if (!cmpt->HasChildren()) 
-      m_AerosolLeafCompartments.push_back(cmpt); 
-  } 
+  m_AerosolCompartments.clear();
+  m_AerosolLeafCompartments.clear();
+  for (const std::string& name : BGE::PulmonaryCompartment::GetValues()) {
+    SELiquidCompartment* cmpt = GetLiquidCompartment(name);
+    if (cmpt == nullptr) {
+      Warning("Could not find expected Aerosol compartment, " + name + " in compartment manager");
+      continue;
+    }
+    m_AerosolCompartments.push_back(cmpt);
+    if (!cmpt->HasChildren())
+      m_AerosolLeafCompartments.push_back(cmpt);
+  }
 
   SORT_CMPTS(MechanicalVentilator, Gas);
 
@@ -270,10 +253,9 @@ bool BioGearsCompartments::AllowGasSubstance(SESubstance& s, SEGasCompartment& c
 }
 bool BioGearsCompartments::AllowLiquidSubstance(SESubstance& s, SELiquidCompartment& cmpt) const
 {
-  if (s.HasAerosolization())// It's ok to add it everywhere
+  if (s.HasAerosolization()) // It's ok to add it everywhere
     return true;
-  else
-  {
+  else {
     // Don't add it to the environment aerosol
     const std::vector<std::string>& e = BGE::EnvironmentCompartment::GetValues();
     if (std::find(e.begin(), e.end(), cmpt.GetName()) != e.end())
@@ -310,8 +292,7 @@ SELiquidCompartmentGraph& BioGearsCompartments::GetRenalGraph()
 }
 SEGasCompartmentGraph& BioGearsCompartments::GetActiveRespiratoryGraph()
 {
-  switch (m_data.GetAirwayMode())
-  {
+  switch (m_data.GetAirwayMode()) {
   case CDM::enumBioGearsAirwayMode::Free:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_RespiratoryGraph);
@@ -363,11 +344,10 @@ SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndInhalerGraph()
 }
 SELiquidCompartmentGraph& BioGearsCompartments::GetActiveAerosolGraph()
 {
-  switch (m_data.GetAirwayMode())
-  {
+  switch (m_data.GetAirwayMode()) {
   case CDM::enumBioGearsAirwayMode::Free:
   case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
-  case CDM::enumBioGearsAirwayMode::MechanicalVentilator:// Just use the regular graph
+  case CDM::enumBioGearsAirwayMode::MechanicalVentilator: // Just use the regular graph
     if (m_UpdateActiveAerosolGraph)
       m_data.GetCompartments().UpdateLinks(*m_AerosolGraph);
     m_UpdateActiveAerosolGraph = false;
@@ -376,7 +356,7 @@ SELiquidCompartmentGraph& BioGearsCompartments::GetActiveAerosolGraph()
     if (m_UpdateActiveAerosolGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedAerosolInhalerGraph);
     m_UpdateActiveAerosolGraph = true;
-    return *m_CombinedAerosolInhalerGraph;  
+    return *m_CombinedAerosolInhalerGraph;
   default:
     throw CommonDataModelException("Unknown airway mode");
   }

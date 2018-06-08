@@ -10,52 +10,52 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ChronicVentricularSystolicDysfunctionData.hxx>
 
-SEChronicVentricularSystolicDysfunction::SEChronicVentricularSystolicDysfunction() : SEChronicHeartFailure()
+SEChronicVentricularSystolicDysfunction::SEChronicVentricularSystolicDysfunction()
+  : SEChronicHeartFailure()
 {
 }
 
 SEChronicVentricularSystolicDysfunction::~SEChronicVentricularSystolicDysfunction()
 {
-	Clear();
+  Clear();
 }
 
 void SEChronicVentricularSystolicDysfunction::Clear()
 {
-	SEChronicHeartFailure::Clear();
+  SEChronicHeartFailure::Clear();
 }
 
 bool SEChronicVentricularSystolicDysfunction::IsValid() const
 {
-	return SEChronicHeartFailure::IsValid();
+  return SEChronicHeartFailure::IsValid();
 }
 
 bool SEChronicVentricularSystolicDysfunction::Load(const CDM::ChronicVentricularSystolicDysfunctionData& in)
 {
-	SEChronicHeartFailure::Load(in);
-	return true;
+  SEChronicHeartFailure::Load(in);
+  return true;
 }
 
 CDM::ChronicVentricularSystolicDysfunctionData* SEChronicVentricularSystolicDysfunction::Unload() const
 {
-	CDM::ChronicVentricularSystolicDysfunctionData*data(new CDM::ChronicVentricularSystolicDysfunctionData());
-	Unload(*data);
-	return data;
+  CDM::ChronicVentricularSystolicDysfunctionData* data(new CDM::ChronicVentricularSystolicDysfunctionData());
+  Unload(*data);
+  return data;
 }
 
 void SEChronicVentricularSystolicDysfunction::Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const
 {
-	SEChronicHeartFailure::Unload(data);
+  SEChronicHeartFailure::Unload(data);
 }
 
-
-void SEChronicVentricularSystolicDysfunction::ToString(std::ostream &str) const
+void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const
 {
-	str << "Patient Condition : Ventricular Systolic Dysfunction Heart Failure"; 
-	if(HasComment())
-		str<<"\n\tComment: "<<m_Comment;
-	str << std::flush;
+  str << "Patient Condition : Ventricular Systolic Dysfunction Heart Failure";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << std::flush;
 }

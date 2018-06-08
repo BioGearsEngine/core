@@ -10,39 +10,40 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
+#include <biogears/cdm/stdafx.h>
 
-SESerializeState::SESerializeState() : SEAction()
+SESerializeState::SESerializeState()
+  : SEAction()
 {
-	m_Filename="";
+  m_Filename = "";
   m_Type = (CDM::enumSerializationType::value)-1;
 }
 
 SESerializeState::~SESerializeState()
 {
-	Clear();
+  Clear();
 }
 
 void SESerializeState::Clear()
 {
-	SEAction::Clear();
+  SEAction::Clear();
   m_Filename = "";
   m_Type = (CDM::enumSerializationType::value)-1;
 }
 
 bool SESerializeState::IsValid() const
-{ 
-	return HasFilename() && HasType();
+{
+  return HasFilename() && HasType();
 }
 
 bool SESerializeState::Load(const CDM::SerializeStateData& in)
 {
 
-	SEAction::Load(in);
+  SEAction::Load(in);
   SetType(in.Type());
-	SetFilename(in.Filename());  
-	return true;
+  SetFilename(in.Filename());
+  return true;
 }
 
 CDM::SerializeStateData* SESerializeState::Unload() const
@@ -53,19 +54,19 @@ CDM::SerializeStateData* SESerializeState::Unload() const
 }
 void SESerializeState::Unload(CDM::SerializeStateData& data) const
 {
-	SEAction::Unload(data);
-	if(HasFilename())
-		data.Filename(m_Filename); 
+  SEAction::Unload(data);
+  if (HasFilename())
+    data.Filename(m_Filename);
   if (HasType())
     data.Type(m_Type);
 }
 
-void SESerializeState::ToString(std::ostream &str) const
-{	
-	if(HasComment())
-		str<<"\n\tComment : "<<m_Comment;
+void SESerializeState::ToString(std::ostream& str) const
+{
+  if (HasComment())
+    str << "\n\tComment : " << m_Comment;
   str << "Type : " << m_Type;
-	str << "Filename : " << m_Filename;
+  str << "Filename : " << m_Filename;
 }
 
 CDM::enumSerializationType::value SESerializeState::GetType() const
@@ -78,20 +79,20 @@ void SESerializeState::SetType(CDM::enumSerializationType::value Type)
 }
 bool SESerializeState::HasType() const
 {
-  return m_Type == ((CDM::enumSerializationType::value) - 1) ? false : true;
+  return m_Type == ((CDM::enumSerializationType::value)-1) ? false : true;
 }
 void SESerializeState::InvalidateType()
 {
-  m_Type = (CDM::enumSerializationType::value) - 1;
+  m_Type = (CDM::enumSerializationType::value)-1;
 }
 
 bool SESerializeState::HasFilename() const
 {
-	return !(m_Filename.empty());
+  return !(m_Filename.empty());
 }
 std::string SESerializeState::GetFilename() const
 {
-	return m_Filename;
+  return m_Filename;
 }
 void SESerializeState::SetFilename(const std::string& filename)
 {

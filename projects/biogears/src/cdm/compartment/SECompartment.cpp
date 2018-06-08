@@ -10,15 +10,15 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/compartment/SECompartment.h>
-#include <biogears/schema/CompartmentData.hxx>
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/compartment/SECompartment.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/CompartmentData.hxx>
 
-
-SECompartment::SECompartment(const std::string& name, Logger* logger) : Loggable(logger), m_Name(name)
+SECompartment::SECompartment(const std::string& name, Logger* logger)
+  : Loggable(logger)
+  , m_Name(name)
 {
-  
 }
 
 SECompartment::~SECompartment()
@@ -28,11 +28,10 @@ SECompartment::~SECompartment()
 
 void SECompartment::Clear()
 {
-  
 }
 
 bool SECompartment::Load(const CDM::CompartmentData& in, SECircuitManager* circuits)
-{  
+{
   Clear();
   return true;
 }
@@ -45,5 +44,3 @@ std::string SECompartment::GetName() const
 {
   return m_Name;
 }
-
-

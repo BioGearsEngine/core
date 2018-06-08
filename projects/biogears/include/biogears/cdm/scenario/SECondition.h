@@ -11,9 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(ConditionData);
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
+
 class SESubstanceManager;
 
+CDM_BIND_DECL(ConditionData);
 class BIOGEARS_API SECondition : public Loggable
 {
 public:

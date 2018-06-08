@@ -10,13 +10,13 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/scenario/SEScenario.h>
-#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
-#include <biogears/schema/ScenarioInitialParametersData.hxx>
-#include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
-#include <biogears/schema/ScenarioAutoSerializationData.hxx>
 #include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/scenario/SEScenario.h>
+#include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
+#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/ScenarioAutoSerializationData.hxx>
+#include <biogears/schema/ScenarioInitialParametersData.hxx>
 
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 
@@ -30,11 +30,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/ActionData.hxx>
 // Collections
-#include <biogears/cdm/scenario/SEPatientActionCollection.h>
 #include <biogears/cdm/scenario/SEAnesthesiaMachineActionCollection.h>
 #include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
+#include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
-SEScenario::SEScenario(SESubstanceManager& subMgr) : Loggable(subMgr.GetLogger()), m_SubMgr(subMgr), m_DataRequestMgr(subMgr.GetLogger())
+SEScenario::SEScenario(SESubstanceManager& subMgr)
+  : Loggable(subMgr.GetLogger())
+  , m_SubMgr(subMgr)
+  , m_DataRequestMgr(subMgr.GetLogger())
 {
   m_InitialParameters = nullptr;
   m_AutoSerialization = nullptr;
@@ -43,7 +46,7 @@ SEScenario::SEScenario(SESubstanceManager& subMgr) : Loggable(subMgr.GetLogger()
 
 SEScenario::~SEScenario()
 {
-	Clear();
+  Clear();
 }
 
 void SEScenario::Clear()
@@ -53,46 +56,42 @@ void SEScenario::Clear()
   m_EngineStateFile = "";
   SAFE_DELETE(m_InitialParameters);
   SAFE_DELETE(m_AutoSerialization);
-	DELETE_VECTOR(m_Actions);
+  DELETE_VECTOR(m_Actions);
   m_DataRequestMgr.Clear();
 }
 
 bool SEScenario::Load(const CDM::ScenarioData& in)
 {
-	Clear();
-	if(in.Name().present())
-		m_Name=in.Name().get();
-	if(in.Description().present())
-		m_Description=in.Description().get();	
+  Clear();
+  if (in.Name().present())
+    m_Name = in.Name().get();
+  if (in.Description().present())
+    m_Description = in.Description().get();
   if (in.EngineStateFile().present())
     SetEngineStateFile(in.EngineStateFile().get());
-  else if (in.InitialParameters().present())
-  {
+  else if (in.InitialParameters().present()) {
     GetInitialParameters().Load(in.InitialParameters().get());
-  }
-  else
-  {
+  } else {
     Error("No State or Initial Parameters provided");
     return false;
   }
   if (in.AutoSerialization().present())
     GetAutoSerialization().Load(in.AutoSerialization().get());
-  if(in.DataRequests().present())
+  if (in.DataRequests().present())
     m_DataRequestMgr.Load(in.DataRequests().get(), m_SubMgr);
-  for (unsigned int i = 0; i < in.Action().size(); i++)
-  {
+  for (unsigned int i = 0; i < in.Action().size(); i++) {
     SEAction* a = SEAction::newFromBind(in.Action()[i], m_SubMgr);
     if (a != nullptr)
       m_Actions.push_back(a);
   }
-	return IsValid();
+  return IsValid();
 }
 
-CDM::ScenarioData*  SEScenario::Unload() const
+CDM::ScenarioData* SEScenario::Unload() const
 {
-	CDM::ScenarioData* data = new CDM::ScenarioData();
-	Unload(*data);
-	return data;
+  CDM::ScenarioData* data = new CDM::ScenarioData();
+  Unload(*data);
+  return data;
 }
 
 void SEScenario::Unload(CDM::ScenarioData& data) const
@@ -112,65 +111,63 @@ void SEScenario::Unload(CDM::ScenarioData& data) const
 
 bool SEScenario::LoadFile(const std::string& scenarioFile)
 {
-	CDM::ScenarioData* pData;
-	std::unique_ptr<CDM::ObjectData> data;
+  CDM::ScenarioData* pData;
+  std::unique_ptr<CDM::ObjectData> data;
 
-	data=Serializer::ReadFile(scenarioFile,GetLogger());
-	pData = dynamic_cast<CDM::ScenarioData*>(data.get());
-	if(pData==nullptr)
-	{
-		std::stringstream ss;
-		ss<<"Scenario file could not be read : "<<scenarioFile<<std::endl;
-		Error(ss);
-		return false;
-	}
-	return Load(*pData);
+  data = Serializer::ReadFile(scenarioFile, GetLogger());
+  pData = dynamic_cast<CDM::ScenarioData*>(data.get());
+  if (pData == nullptr) {
+    std::stringstream ss;
+    ss << "Scenario file could not be read : " << scenarioFile << std::endl;
+    Error(ss);
+    return false;
+  }
+  return Load(*pData);
 }
 
 bool SEScenario::IsValid() const
 {
-  if (HasInitialParameters())
-  {
+  if (HasInitialParameters()) {
     if (!m_InitialParameters->IsValid())
       return false;
   }
-	if(m_Actions.size()==0)
-		return false;
-	return true;
+  if (m_Actions.size() == 0)
+    return false;
+  return true;
 }
 
 std::string SEScenario::GetName() const
 {
-	return m_Name;
+  return m_Name;
 }
 void SEScenario::SetName(const std::string& name)
 {
-	m_Name = name;
+  m_Name = name;
 }
 bool SEScenario::HasName() const
 {
-	return m_Name.empty()?false:true;
+  return m_Name.empty() ? false : true;
 }
 void SEScenario::InvalidateName()
 {
-	m_Name = "";
+  m_Name = "";
 }
 
 std::string SEScenario::GetDescription() const
 {
-	return m_Description;
+  return m_Description;
 }
 void SEScenario::SetDescription(const std::string& desc)
 {
-	m_Description = desc;
+  m_Description = desc;
 }
 bool SEScenario::HasDescription() const
 {
-	return m_Description.empty()?false:true;
+  return m_Description.empty() ? false : true;
 }
 void SEScenario::InvalidateDescription()
 {
-	m_Description = "";
+  m_Description = "";
 }
 
 std::string SEScenario::GetEngineStateFile() const
@@ -240,4 +237,3 @@ const std::vector<SEAction*>& SEScenario::GetActions() const
 {
   return m_Actions;
 }
-

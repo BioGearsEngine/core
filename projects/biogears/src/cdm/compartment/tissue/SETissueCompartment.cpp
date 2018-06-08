@@ -10,20 +10,21 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
+#include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-SETissueCompartment::SETissueCompartment(const std::string& name, Logger* logger) : SECompartment(name, logger)
+SETissueCompartment::SETissueCompartment(const std::string& name, Logger* logger)
+  : SECompartment(name, logger)
 {
   m_AcidicPhospohlipidConcentration = nullptr;
   m_MatrixVolume = nullptr;
@@ -64,7 +65,7 @@ bool SETissueCompartment::Load(const CDM::TissueCompartmentData& in, SESubstance
   if (in.MatrixVolume().present())
     GetMatrixVolume().Load(in.MatrixVolume().get());
   if (in.MembranePotential().present())
-	  GetMembranePotential().Load(in.MembranePotential().get());
+    GetMembranePotential().Load(in.MembranePotential().get());
   if (in.NeutralLipidsVolumeFraction().present())
     GetNeutralLipidsVolumeFraction().Load(in.NeutralLipidsVolumeFraction().get());
   if (in.NeutralPhospholipidsVolumeFraction().present())
@@ -92,9 +93,9 @@ void SETissueCompartment::Unload(CDM::TissueCompartmentData& data)
   if (HasAcidicPhospohlipidConcentration())
     data.AcidicPhospohlipidConcentration(std::unique_ptr<CDM::ScalarMassPerMassData>(m_AcidicPhospohlipidConcentration->Unload()));
   if (HasMatrixVolume())
-    data.MatrixVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_MatrixVolume->Unload())); 
+    data.MatrixVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_MatrixVolume->Unload()));
   if (HasMembranePotential())
-	  data.MembranePotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_MembranePotential->Unload()));
+    data.MembranePotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_MembranePotential->Unload()));
   if (HasNeutralLipidsVolumeFraction())
     data.NeutralLipidsVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_NeutralLipidsVolumeFraction->Unload()));
   if (HasNeutralPhospholipidsVolumeFraction())
@@ -116,9 +117,9 @@ const SEScalar* SETissueCompartment::GetScalar(const std::string& name)
   if (name.compare("AcidicPhospohlipidConcentration") == 0)
     return &GetAcidicPhospohlipidConcentration();
   if (name.compare("MatrixVolume") == 0)
-    return &GetMatrixVolume();  
+    return &GetMatrixVolume();
   if (name.compare("MembranePotential") == 0)
-	  return &GetMembranePotential();
+    return &GetMembranePotential();
   if (name.compare("NeutralLipidsVolumeFraction") == 0)
     return &GetNeutralLipidsVolumeFraction();
   if (name.compare("NeutralPhospholipidsVolumeFraction") == 0)
@@ -136,7 +137,6 @@ const SEScalar* SETissueCompartment::GetScalar(const std::string& name)
 
 void SETissueCompartment::StateChange()
 {
- 
 }
 
 bool SETissueCompartment::HasAcidicPhospohlipidConcentration() const
@@ -175,19 +175,19 @@ double SETissueCompartment::GetMatrixVolume(const VolumeUnit& unit) const
 
 bool SETissueCompartment::HasMembranePotential() const
 {
-	return m_MembranePotential == nullptr ? false : m_MembranePotential->IsValid();
+  return m_MembranePotential == nullptr ? false : m_MembranePotential->IsValid();
 }
 SEScalarElectricPotential& SETissueCompartment::GetMembranePotential()
 {
-	if (m_MembranePotential == nullptr)
-		m_MembranePotential = new SEScalarElectricPotential();
-	return *m_MembranePotential;
+  if (m_MembranePotential == nullptr)
+    m_MembranePotential = new SEScalarElectricPotential();
+  return *m_MembranePotential;
 }
 double SETissueCompartment::GetMembranePotential(const ElectricPotentialUnit& unit) const
 {
-	if (m_MembranePotential == nullptr)
-		return SEScalar::dNaN();
-	return m_MembranePotential->GetValue(unit);
+  if (m_MembranePotential == nullptr)
+    return SEScalar::dNaN();
+  return m_MembranePotential->GetValue(unit);
 }
 
 bool SETissueCompartment::HasNeutralLipidsVolumeFraction() const
@@ -282,7 +282,7 @@ bool SETissueCompartment::HasTotalMass() const
 SEScalarMass& SETissueCompartment::GetTotalMass()
 {
   if (m_TotalMass == nullptr)
-    m_TotalMass = new SEScalarMass();  
+    m_TotalMass = new SEScalarMass();
   return *m_TotalMass;
 }
 double SETissueCompartment::GetTotalMass(const MassUnit& unit) const

@@ -10,21 +10,20 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
-#include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/stdafx.h>
 #include <numeric>
 
-
-SEHistogramFractionVsLength::SEHistogramFractionVsLength() : SEHistogram()
+SEHistogramFractionVsLength::SEHistogramFractionVsLength()
+  : SEHistogram()
 {
-	
 }
 
 SEHistogramFractionVsLength::~SEHistogramFractionVsLength()
 {
-	Clear();
+  Clear();
 }
 
 void SEHistogramFractionVsLength::Clear()
@@ -39,10 +38,9 @@ bool SEHistogramFractionVsLength::IsVaild() const
     return false;
 
   double binned = std::accumulate(m_Dependent.begin(), m_Dependent.end(), 0.);
-  if (!SEScalar::IsValue(1, binned))
-  {
-   std::cerr << "Particle distribution histogram: Failed to correct a distribution error. Check distribution histogram." << std::endl; // todo properties need a logger
-   return false;
+  if (!SEScalar::IsValue(1, binned)) {
+    std::cerr << "Particle distribution histogram: Failed to correct a distribution error. Check distribution histogram." << std::endl; // todo properties need a logger
+    return false;
   }
   return true;
 }
@@ -55,7 +53,7 @@ bool SEHistogramFractionVsLength::Load(const CDM::HistogramFractionVsLengthData&
   return IsValid();
 }
 
-CDM::HistogramFractionVsLengthData*  SEHistogramFractionVsLength::Unload() const
+CDM::HistogramFractionVsLengthData* SEHistogramFractionVsLength::Unload() const
 {
   if (!IsValid())
     return nullptr;
@@ -67,7 +65,7 @@ CDM::HistogramFractionVsLengthData*  SEHistogramFractionVsLength::Unload() const
 void SEHistogramFractionVsLength::Unload(CDM::HistogramFractionVsLengthData& data) const
 {
   SEHistogram::Unload(data);
-  data.IndependentUnit(m_LengthUnit->GetString());  
+  data.IndependentUnit(m_LengthUnit->GetString());
 }
 
 double SEHistogramFractionVsLength::GetLengthValue(unsigned int index, const LengthUnit& unit) const
@@ -109,4 +107,3 @@ const std::vector<double>& SEHistogramFractionVsLength::GetFraction() const
 {
   return m_Dependent;
 }
-

@@ -10,28 +10,29 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/test/BioGearsEngineTest.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
+#include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/engine/test/BioGearsEngineTest.h>
 
-enum Driver { Sinusoid = 0, Heart };
+enum Driver { Sinusoid = 0,
+  Heart };
 
 // We use 1,1,1,0 to run our test without any scaling of the circuit and using the HeartRate Baseline in the standard patient file
 void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(const std::string& sTestDirectory)
@@ -80,44 +81,40 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(const std::string& sTestD
 
   //Only test the worst cases
 
-  for (unsigned int HRIter = 0; HRIter < 2; HRIter++)
-  {
-	  double HR = HRLower;
-	  if (HRIter == 1) HR = HRUpper;
-	  for (unsigned int DiaIter = 0; DiaIter < 2; DiaIter++)
-	  {
-		  double Dia = DiaLower;
-		  if (DiaIter == 1) Dia = DiaUpper;
-		  for (unsigned int SysIter = 0; SysIter < 2; SysIter++)
-		  {
-			  double Sys = SysLower;
-			  if (SysIter == 1) Sys = SysUpper;
+  for (unsigned int HRIter = 0; HRIter < 2; HRIter++) {
+    double HR = HRLower;
+    if (HRIter == 1)
+      HR = HRUpper;
+    for (unsigned int DiaIter = 0; DiaIter < 2; DiaIter++) {
+      double Dia = DiaLower;
+      if (DiaIter == 1)
+        Dia = DiaUpper;
+      for (unsigned int SysIter = 0; SysIter < 2; SysIter++) {
+        double Sys = SysLower;
+        if (SysIter == 1)
+          Sys = SysUpper;
 
-			  //Make sure the pulse pressure isn't abnormally narrow
-			  if (Dia > 0.75 * Sys)
-			  {
-				  if (Sys == SysUpper)
-				  {
-					  //Don't reduce Systolic because we're testing this upper limit
-					  //Increase Diastolic as little as we can
-					  Dia = 0.75 * Sys;
-				  }
-				  else
-				  {
-					  //Don't increase Diastolic because we're testing this lower limit
-					  //Reduce Systolic as little as we can
-					  Sys = 1 / 0.75 * Dia;
-				  }
-			  }			  
+        //Make sure the pulse pressure isn't abnormally narrow
+        if (Dia > 0.75 * Sys) {
+          if (Sys == SysUpper) {
+            //Don't reduce Systolic because we're testing this upper limit
+            //Increase Diastolic as little as we can
+            Dia = 0.75 * Sys;
+          } else {
+            //Don't increase Diastolic because we're testing this lower limit
+            //Reduce Systolic as little as we can
+            Sys = 1 / 0.75 * Dia;
+          }
+        }
 
-			  patient.GetHeartRateBaseline().SetValue(HR, FrequencyUnit::Per_min);
-			  patient.GetSystolicArterialPressureBaseline().SetValue(Sys, PressureUnit::mmHg);
-			  patient.GetDiastolicArterialPressureBaseline().SetValue(Dia, PressureUnit::mmHg);
-			  std::stringstream ss;
-			  ss << "HR=" << HR << ", Sys=" << Sys << ", Dia=" << Dia;
-			  TuneCardiovascularCircuitTest(testSuite, sTestDirectory, ss.str(), patient);
-		  }
-	  }
+        patient.GetHeartRateBaseline().SetValue(HR, FrequencyUnit::Per_min);
+        patient.GetSystolicArterialPressureBaseline().SetValue(Sys, PressureUnit::mmHg);
+        patient.GetDiastolicArterialPressureBaseline().SetValue(Dia, PressureUnit::mmHg);
+        std::stringstream ss;
+        ss << "HR=" << HR << ", Sys=" << Sys << ", Dia=" << Dia;
+        TuneCardiovascularCircuitTest(testSuite, sTestDirectory, ss.str(), patient);
+      }
+    }
   }
   testReport.WriteFile(sTestDirectory + "/TuneCardiovascularCircuitReport.xml");
 }
@@ -140,9 +137,7 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(SETestSuite& testSuite, c
   try {
     // cv.m_TuningFile = sTestDirectory + "/Tune" + sTestName + "CircuitOutput.txt";//For Debugging
     cv.Initialize();
-  }
-  catch (PhysiologyEngineException ex)
-  {
+  } catch (PhysiologyEngineException ex) {
     testCase.AddFailure("Failed test case " + sTestName);
   }
   testCase.GetDuration().SetValue(timer.GetElapsedTime_s("TestCase"), TimeUnit::s);
@@ -152,7 +147,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   double complianceScale, double resistanceScale, double volumeScale, double heartRate_bpm,
   double systemicResistanceScale, double systemicComplianceScale, double aortaResistanceScale,
   double aortaComplianceScale, double rightHeartResistanceScale, double venaCavaComplianceScale,
-  bool connectTissue, bool connectRenal, bool balanceBloodGases, const std::string& sTestDirectory, 
+  bool connectTissue, bool connectRenal, bool balanceBloodGases, const std::string& sTestDirectory,
   const std::string& sTestName, bool breakOutResults)
 {
   //breakOutResults True = seperate files for different types (i.e. volumes, flows, etc.); False = one file with everything
@@ -161,20 +156,14 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   std::stringstream tName;
   tName << sTestName;
   bool scale = false;
-  if (complianceScale != 1.0 || resistanceScale != 1.0 || volumeScale != 1.0 || heartRate_bpm > 0 ||
-    systemicResistanceScale != 1.0 || systemicComplianceScale != 1.0 || aortaResistanceScale != 1.0 ||
-    aortaComplianceScale != 1.0 || rightHeartResistanceScale != 1.0 || venaCavaComplianceScale != 1.0)
-  {
+  if (complianceScale != 1.0 || resistanceScale != 1.0 || volumeScale != 1.0 || heartRate_bpm > 0 || systemicResistanceScale != 1.0 || systemicComplianceScale != 1.0 || aortaResistanceScale != 1.0 || aortaComplianceScale != 1.0 || rightHeartResistanceScale != 1.0 || venaCavaComplianceScale != 1.0) {
     scale = true;
     tName << "_" << heartRate_bpm << "bpm";
-    if (complianceScale != 1.0 || resistanceScale != 1.0 || volumeScale != 1.0)
-    {
+    if (complianceScale != 1.0 || resistanceScale != 1.0 || volumeScale != 1.0) {
       tName << "_" << complianceScale << "c";
       tName << "_" << resistanceScale << "r";
       tName << "_" << volumeScale << "v";
-    }
-    else
-    {
+    } else {
       tName << "_" << systemicResistanceScale << "sr";
       tName << "_" << systemicComplianceScale << "sc";
       tName << "_" << aortaResistanceScale << "ar";
@@ -195,23 +184,20 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   bg.SetupPatient();
   if (heartRate_bpm <= 0)
     heartRate_bpm = bg.GetPatient().GetHeartRateBaseline().GetValue(FrequencyUnit::Per_min);
-  else
-  {
+  else {
     bg.GetPatient().GetHeartRateBaseline().SetValue(heartRate_bpm, FrequencyUnit::Per_min);
   }
 
   bg.m_Config->EnableRenal(connectRenal ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
-  bg.m_Config->EnableTissue(connectTissue? CDM::enumOnOff::On :CDM::enumOnOff::Off);
+  bg.m_Config->EnableTissue(connectTissue ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   std::vector<SESubstance*> subs2Track;
-  if (balanceBloodGases)
-  {
+  if (balanceBloodGases) {
     SEEnvironmentalConditions env(bg.GetSubstances());
     env.LoadFile("./environments/Standard.xml");
     SEGasCompartment* cEnv = bg.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient);
-    for (SESubstanceFraction* subFrac : env.GetAmbientGases())
-    {
+    for (SESubstanceFraction* subFrac : env.GetAmbientGases()) {
       bg.GetSubstances().AddActiveSubstance(subFrac->GetSubstance());
       cEnv->GetSubstanceQuantity(subFrac->GetSubstance())->GetVolumeFraction().Set(subFrac->GetFractionAmount());
     }
@@ -223,41 +209,35 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
     subs2Track.push_back(&bg.GetSubstances().GetHbCO2());
     subs2Track.push_back(&bg.GetSubstances().GetHbO2CO2());
     subs2Track.push_back(&bg.GetSubstances().GetHCO3());
-  }
-  else
-  {
+  } else {
     subs2Track.push_back(&bg.GetSubstances().GetN2());
     bg.GetSubstances().AddActiveSubstance(bg.GetSubstances().GetN2());
     SEScalarMassPerVolume N2_ug_per_mL;
     N2_ug_per_mL.SetValue(0.5, MassPerVolumeUnit::ug_Per_mL);
     bg.GetSubstances().SetSubstanceConcentration(bg.GetSubstances().GetN2(), bg.GetCompartments().GetVascularLeafCompartments(), N2_ug_per_mL);
-    if (connectRenal)
-    {
+    if (connectRenal) {
       bg.GetSubstances().SetSubstanceConcentration(bg.GetSubstances().GetN2(), bg.GetCompartments().GetUrineLeafCompartments(), N2_ug_per_mL);
     }
   }
 
   Cardiovascular& cv = (Cardiovascular&)bg.GetCardiovascular();
-  cv.m_TuneCircuit = true;// Run the circuit as constructed
+  cv.m_TuneCircuit = true; // Run the circuit as constructed
   //cv.m_TuningFile = "./UnitTests/BioGearsTests/"+ sTestName+"Tuning.txt";
 
   SEFluidCircuit& cvCircuit = bg.GetCircuits().GetActiveCardiovascularCircuit();
-  
+
   // Make a file with all the resistances and compliances
-  DataTrack     cvCompBaseTrk;
+  DataTrack cvCompBaseTrk;
   std::ofstream cvCompBaseFile;
-  DataTrack     cvResBaseTrk;
+  DataTrack cvResBaseTrk;
   std::ofstream cvResBaseFile;
-  for (SEFluidCircuitPath* p : cvCircuit.GetPaths())
-  {
-    if (p->HasComplianceBaseline())
-    {
+  for (SEFluidCircuitPath* p : cvCircuit.GetPaths()) {
+    if (p->HasComplianceBaseline()) {
       auto unit = p->GetComplianceBaseline().GetUnit();
       cvCompBaseTrk.Track(p->GetName() + "_" + unit->GetString(), 0, p->GetComplianceBaseline().GetValue(*unit));
     }
 
-    if (p->HasResistanceBaseline())
-    {
+    if (p->HasResistanceBaseline()) {
       auto unit = p->GetResistanceBaseline().GetUnit();
       cvResBaseTrk.Track(p->GetName() + "_" + unit->GetString(), 0, p->GetResistanceBaseline().GetValue(*unit));
     }
@@ -267,33 +247,33 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   if (connectRenal)
     ((Renal&)bg.GetRenal());
 
-  DataTrack     cvGraphTrk;
+  DataTrack cvGraphTrk;
   std::ofstream cvGraphFile;
-  DataTrack     cvGraphPresTrk;
+  DataTrack cvGraphPresTrk;
   std::ofstream cvGraphPresFile;
-  DataTrack     cvGraphVolTrk;
+  DataTrack cvGraphVolTrk;
   std::ofstream cvGraphVolFile;
-  DataTrack     cvGraphFlowTrk;
+  DataTrack cvGraphFlowTrk;
   std::ofstream cvGraphFlowFile;
-  DataTrack     circiutTrk;
+  DataTrack circiutTrk;
   std::ofstream circuitFile;
-  DataTrack     cvPressureTrk;
+  DataTrack cvPressureTrk;
   std::ofstream cvPressureFile;
-  DataTrack     cvVolumeTrk;
+  DataTrack cvVolumeTrk;
   std::ofstream cvVolumeFile;
-  DataTrack     cvNormVolumeTrk;
+  DataTrack cvNormVolumeTrk;
   std::ofstream cvNormVolumeFile;
-  DataTrack     cvFlowTrk;
+  DataTrack cvFlowTrk;
   std::ofstream cvFlowFile;
-  DataTrack     cvCompFlowTrk;
+  DataTrack cvCompFlowTrk;
   std::ofstream cvCompFlowFile;
-  DataTrack     cvResFlowTrk;
+  DataTrack cvResFlowTrk;
   std::ofstream cvResFlowFile;
-  DataTrack     cvHDTrk;
+  DataTrack cvHDTrk;
   std::ofstream cvHDFile;
-  DataTrack     cvCompTrk;
+  DataTrack cvCompTrk;
   std::ofstream cvCompFile;
-  DataTrack     cvResTrk;
+  DataTrack cvResTrk;
   std::ofstream cvResFile;
 
   double time_s = 0.0;
@@ -305,38 +285,31 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
 
   SELiquidCompartmentGraph& cvGraph = bg.GetCompartments().GetActiveCardiovascularGraph();
 
-  if (scale)
-  {
-    for (SEFluidCircuitPath* path : cvCircuit.GetPaths())
-    {
-      if (path->HasCapacitanceBaseline())
-      {
+  if (scale) {
+    for (SEFluidCircuitPath* path : cvCircuit.GetPaths()) {
+      if (path->HasCapacitanceBaseline()) {
         auto unit = path->GetCapacitanceBaseline().GetUnit();
         double c = path->GetCapacitanceBaseline().GetValue(*unit);
-        path->GetCapacitanceBaseline().SetValue(c*complianceScale, *unit);
+        path->GetCapacitanceBaseline().SetValue(c * complianceScale, *unit);
       }
-      if (path->HasResistanceBaseline())
-      {
+      if (path->HasResistanceBaseline()) {
         auto unit = path->GetResistanceBaseline().GetUnit();
         double c = path->GetResistanceBaseline().GetValue(*unit);
-        path->GetResistanceBaseline().SetValue(c*resistanceScale, *unit);
+        path->GetResistanceBaseline().SetValue(c * resistanceScale, *unit);
       }
-      
     }
-    for (SEFluidCircuitNode* node : cvCircuit.GetNodes())
-    {
-      if (node->HasVolumeBaseline())
-      {
+    for (SEFluidCircuitNode* node : cvCircuit.GetNodes()) {
+      if (node->HasVolumeBaseline()) {
         auto unit = node->GetVolumeBaseline().GetUnit();
         double c = node->GetVolumeBaseline().GetValue(*unit);
-        node->GetVolumeBaseline().SetValue(c*volumeScale, *unit);
+        node->GetVolumeBaseline().SetValue(c * volumeScale, *unit);
       }
     }
     // if (path->IsSystemic) // this would be in addition to the 'overall' scales, which in practice would probably be 1.0 if we had the systemic or targeted path scales
-        // if (path->HasCapacitanceBaseline
-           //auto unit = path->GetCapacitanceBaseline().GetUnit();
-           //double c = path->GetCapacitanceBaseline().GetValue(*unit);
-           //path->GetCapacitanceBaseline().SetValue(c*systemicComplianceScale, *unit);
+    // if (path->HasCapacitanceBaseline
+    //auto unit = path->GetCapacitanceBaseline().GetUnit();
+    //double c = path->GetCapacitanceBaseline().GetValue(*unit);
+    //path->GetCapacitanceBaseline().SetValue(c*systemicComplianceScale, *unit);
     // See where I'm going with this?
     // For now, here's this method
     cv.TunePaths(systemicResistanceScale, systemicComplianceScale, aortaResistanceScale, aortaComplianceScale, rightHeartResistanceScale, venaCavaComplianceScale);
@@ -344,9 +317,9 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
 
   SEFluidCircuitNode* Aorta = cvCircuit.GetNode("Aorta1");
   SEFluidCircuitNode* VenaCava = cvCircuit.GetNode("VenaCava");
-  SEFluidCircuitPath *RightCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::RightHeart1ToRightHeart3);
-  SEFluidCircuitPath *LeftCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);
-  SEFluidCircuitPath *HeartLeft = cvCircuit.GetPath(BGE::CardiovascularPath::LeftHeart1ToAorta2);
+  SEFluidCircuitPath* RightCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::RightHeart1ToRightHeart3);
+  SEFluidCircuitPath* LeftCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);
+  SEFluidCircuitPath* HeartLeft = cvCircuit.GetPath(BGE::CardiovascularPath::LeftHeart1ToAorta2);
 
   SELiquidSubstanceQuantity* venaCavaN2 = cvGraph.GetCompartment(BGE::VascularCompartment::VenaCava)->GetSubstanceQuantity(bg.GetSubstances().GetN2());
   SELiquidSubstanceQuantity* leftPulmonaryCapillariesN2 = cvGraph.GetCompartment(BGE::VascularCompartment::LeftPulmonaryCapillaries)->GetSubstanceQuantity(bg.GetSubstances().GetN2());
@@ -355,12 +328,10 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, bg.GetLogger());
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, bg.GetLogger());
 
-  for (unsigned int i = 0; i < (testTime_s / timeStep_s); i++)
-  {
+  for (unsigned int i = 0; i < (testTime_s / timeStep_s); i++) {
     aortaPressure = Aorta->GetPressure(PressureUnit::mmHg);
     venousPressure = VenaCava->GetPressure(PressureUnit::mmHg);
-    switch (driverType)
-    {
+    switch (driverType) {
     case Sinusoid:
       double rHeartElastance;
       double lHeartElastance;
@@ -372,27 +343,24 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
       cv.HeartDriver();
       break;
     }
-    
+
     tmr.Start("Circuit");
-    calc.Process(cvCircuit, timeStep_s);//Process - Execute the circuit  
+    calc.Process(cvCircuit, timeStep_s); //Process - Execute the circuit
     circuit_s += tmr.GetElapsedTime_s("Circuit");
-    if (!scale)
-    {
+    if (!scale) {
       tmr.Start("Transport");
       txpt.Transport(cvGraph, timeStep_s);
       transport_s += tmr.GetElapsedTime_s("Transport");
-      if (balanceBloodGases)
-      {
+      if (balanceBloodGases) {
         tmr.Start("Binding");
-        for (SELiquidCompartment* cmpt : bg.GetCompartments().GetVascularLeafCompartments())
-        {
-          if (!cmpt->HasVolume()) continue;
+        for (SELiquidCompartment* cmpt : bg.GetCompartments().GetVascularLeafCompartments()) {
+          if (!cmpt->HasVolume())
+            continue;
           bg.GetSaturationCalculator().CalculateBloodGasDistribution(*cmpt);
         }
         binding_s += tmr.GetElapsedTime_s("Binding");
 
-        for (SELiquidCompartment* cmpt : bg.GetCompartments().GetVascularLeafCompartments())
-        {
+        for (SELiquidCompartment* cmpt : bg.GetCompartments().GetVascularLeafCompartments()) {
           SELiquidSubstanceQuantity* O2 = cmpt->GetSubstanceQuantity(bg.GetSubstances().GetO2());
           SELiquidSubstanceQuantity* HbO2 = cmpt->GetSubstanceQuantity(bg.GetSubstances().GetHbO2());
           SELiquidSubstanceQuantity* HbO2CO2 = cmpt->GetSubstanceQuantity(bg.GetSubstances().GetHbO2CO2());
@@ -403,9 +371,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
           cvGraphTrk.Track(cmpt->GetName() + "_TotalOxygenMolarConcentration_mmol_per_L", time_s, O2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
           cvGraphTrk.Track(cmpt->GetName() + "_TotalCarbonDioxideMolarConcentration_mmol_per_L", time_s, CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbCO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
         }
-      }
-      else
-      {
+      } else {
         /*double N2_ug = venaCavaN2->GetMass(MassUnit::ug);
         venaCavaN2->GetMass().SetValue(N2_ug - 0.1, MassUnit::ug);
         venaCavaN2->Balance(BalanceLiquidBy::Mass);
@@ -423,11 +389,10 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
     circiutTrk.Track("LeftHeartElastance_mmHg_Per_mL", time_s, 1 / LeftCompliance->GetCompliance().GetValue(FlowComplianceUnit::mL_Per_mmHg));
 
     cv.CalculateVitalSigns();
-    calc.PostProcess(cvCircuit);//convert 'Next' values to current 
+    calc.PostProcess(cvCircuit); //convert 'Next' values to current
 
     double totalVolume_mL = 0.0;
-    for (SEFluidCircuitNode* n : cvCircuit.GetNodes())
-    {
+    for (SEFluidCircuitNode* n : cvCircuit.GetNodes()) {
       if (n->HasNextVolume())
         totalVolume_mL += n->GetNextVolume(VolumeUnit::mL);
     }
@@ -447,19 +412,16 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
     circiutTrk.Track("CardiacOutput_mL_per_s", time_s, co_mL_per_s);
     circiutTrk.Track("BloodVolume_mL", time_s, blood_mL);
 
-    if (!scale)
-    {
-      if (i==0)
-      {
+    if (!scale) {
+      if (i == 0) {
         circiutTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "CircuitOutput.txt").c_str(), circuitFile);
         cvGraphTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "TransportOutput.txt").c_str(), cvGraphFile);
       }
       circiutTrk.StreamTrackToFile(circuitFile);
       cvGraphTrk.StreamTrackToFile(cvGraphFile);
     }
-    
-    if(breakOutResults)
-    {
+
+    if (breakOutResults) {
       cvHDTrk.Track("MAP_mmHg", time_s, map_mmHg);
       cvHDTrk.Track("Systolic_mmHg", time_s, sys_mmHg);
       cvHDTrk.Track("Diastolilc_mmHg", time_s, dia_mmHg);
@@ -467,75 +429,56 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
       cvHDTrk.Track("BloodVolume_mL", time_s, blood_mL);
       cvHDTrk.Track("TotalVolume_mL", time_s, totalVolume_mL);
 
-      for (SELiquidCompartment* cmpt : cvGraph.GetCompartments())
-      {
-        if (cmpt->HasPressure())
-        {
+      for (SELiquidCompartment* cmpt : cvGraph.GetCompartments()) {
+        if (cmpt->HasPressure()) {
           auto unit = cmpt->GetPressure().GetUnit();
           cvGraphPresTrk.Track(cmpt->GetName() + "_Pressure_" + unit->GetString(), time_s, cmpt->GetPressure().GetValue(*unit));
         }
-        if (cmpt->HasVolume())
-        {
+        if (cmpt->HasVolume()) {
           auto unit = cmpt->GetVolume().GetUnit();
           cvGraphVolTrk.Track(cmpt->GetName() + "_Volume_" + unit->GetString(), time_s, cmpt->GetVolume().GetValue(*unit));
         }
-
       }
 
-      for (SELiquidCompartmentLink* link : cvGraph.GetLinks())
-      {
-        if (link->HasFlow())
-        {
+      for (SELiquidCompartmentLink* link : cvGraph.GetLinks()) {
+        if (link->HasFlow()) {
           auto unit = link->GetFlow().GetUnit();
           cvGraphFlowTrk.Track(link->GetName() + "_Flow_" + unit->GetString(), time_s, link->GetFlow(*unit));
         }
       }
 
-
-      for (SEFluidCircuitNode* n : cvCircuit.GetNodes())
-      {
-        if (n->HasNextPressure())
-        {
+      for (SEFluidCircuitNode* n : cvCircuit.GetNodes()) {
+        if (n->HasNextPressure()) {
           auto unit = n->GetNextPressure().GetUnit();
           cvPressureTrk.Track(n->GetName() + "_" + unit->GetString(), time_s, n->GetNextPressure().GetValue(*unit));
         }
-        if (n->HasNextVolume())
-        {
+        if (n->HasNextVolume()) {
           auto unit = n->GetNextVolume().GetUnit();
           double volume = n->GetNextVolume().GetValue(*unit);
           if (volume < 0)
             bg.GetLogger()->Error("Negative volume for : " + n->GetName());
           cvVolumeTrk.Track(n->GetName() + "_" + unit->GetString(), time_s, volume);
-          if (n->HasVolumeBaseline())
-          {
+          if (n->HasVolumeBaseline()) {
             double baseVolume = n->GetVolumeBaseline().GetValue(*unit);
             cvNormVolumeTrk.Track(n->GetName() + "_" + unit->GetString(), time_s, volume / baseVolume);
           }
         }
       }
-      for (SEFluidCircuitPath* p : cvCircuit.GetPaths())
-      {
-        if (p->HasNextFlow())
-        {
-          if (p->HasComplianceBaseline())
-          {
+      for (SEFluidCircuitPath* p : cvCircuit.GetPaths()) {
+        if (p->HasNextFlow()) {
+          if (p->HasComplianceBaseline()) {
             auto unit = p->GetNextFlow().GetUnit();
             cvCompFlowTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
-          }
-          else if (p->HasResistanceBaseline())
-          {
+          } else if (p->HasResistanceBaseline()) {
             auto unit = p->GetNextFlow().GetUnit();
             cvResFlowTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
-          }
-          else
-          {
+          } else {
             auto unit = p->GetNextFlow().GetUnit();
             cvFlowTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
-          }          
+          }
         }
       }
-      if (i == 0)
-      {
+      if (i == 0) {
         cvPressureTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_PressureOutput.txt").c_str(), cvPressureFile);
         cvVolumeTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_VolumeOutput.txt").c_str(), cvVolumeFile);
         cvNormVolumeTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_NormVolumeOutput.txt").c_str(), cvNormVolumeFile);
@@ -545,7 +488,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
         cvHDTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_HD.txt").c_str(), cvHDFile);
         cvGraphPresTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTPressureOutput.txt").c_str(), cvGraphPresFile);
         cvGraphFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTFlowOutput.txt").c_str(), cvGraphFlowFile);
-        cvGraphVolTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTVolumeOutput.txt").c_str(), cvGraphVolFile);        
+        cvGraphVolTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTVolumeOutput.txt").c_str(), cvGraphVolFile);
       }
       cvPressureTrk.StreamTrackToFile(cvPressureFile);
       cvVolumeTrk.StreamTrackToFile(cvVolumeFile);
@@ -557,11 +500,10 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
       cvGraphPresTrk.StreamTrackToFile(cvGraphPresFile);
       cvGraphFlowTrk.StreamTrackToFile(cvGraphFlowFile);
       cvGraphVolTrk.StreamTrackToFile(cvGraphVolFile);
-    }   
+    }
 
     time_s += timeStep_s;
-    if (i % 1000 == 0)
-    {
+    if (i % 1000 == 0) {
       ss << "Current time(s) " << time_s;
       bg.GetLogger()->Info(ss);
       ss << "Total Circuit time(s) so far :" << circuit_s;
@@ -573,48 +515,43 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
     }
   }
 
-  if (breakOutResults)
-  {
-	  // Make a file with the final resistances and compliances
-	  for (SEFluidCircuitPath* p : cvCircuit.GetPaths())
-	  {
-		  if (p->HasComplianceBaseline())
-		  {
-			  auto unit = p->GetComplianceBaseline().GetUnit();
-			  cvCompTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetComplianceBaseline().GetValue(*unit));
-		  }
-		  else if (p->HasResistanceBaseline())
-		  {
-			  auto unit = p->GetResistanceBaseline().GetUnit();
-			  cvResTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetResistanceBaseline().GetValue(*unit));
-		  }
-	  }
+  if (breakOutResults) {
+    // Make a file with the final resistances and compliances
+    for (SEFluidCircuitPath* p : cvCircuit.GetPaths()) {
+      if (p->HasComplianceBaseline()) {
+        auto unit = p->GetComplianceBaseline().GetUnit();
+        cvCompTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetComplianceBaseline().GetValue(*unit));
+      } else if (p->HasResistanceBaseline()) {
+        auto unit = p->GetResistanceBaseline().GetUnit();
+        cvResTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetResistanceBaseline().GetValue(*unit));
+      }
+    }
 
-	  cvCompBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "CompBase.txt").c_str(), cvCompBaseFile);
-	  cvResBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_ResBase.txt").c_str(), cvResBaseFile);
-	  cvCompTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Comp.txt").c_str(), cvCompFile);
-	  cvResTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Res.txt").c_str(), cvResFile);
+    cvCompBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "CompBase.txt").c_str(), cvCompBaseFile);
+    cvResBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_ResBase.txt").c_str(), cvResBaseFile);
+    cvCompTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Comp.txt").c_str(), cvCompFile);
+    cvResTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Res.txt").c_str(), cvResFile);
 
-	  cvCompBaseTrk.StreamTrackToFile(cvCompBaseFile);
-	  cvResBaseTrk.StreamTrackToFile(cvResBaseFile);
-	  cvCompTrk.StreamTrackToFile(cvCompFile);
-	  cvResTrk.StreamTrackToFile(cvResFile);
+    cvCompBaseTrk.StreamTrackToFile(cvCompBaseFile);
+    cvResBaseTrk.StreamTrackToFile(cvResBaseFile);
+    cvCompTrk.StreamTrackToFile(cvCompFile);
+    cvResTrk.StreamTrackToFile(cvResFile);
 
-	   cvPressureFile.close();
-	  cvVolumeFile.close();
-	  cvNormVolumeFile.close();
-	  cvCompFlowFile.close();
-	  cvResFlowFile.close();
-	  cvFlowFile.close();
+    cvPressureFile.close();
+    cvVolumeFile.close();
+    cvNormVolumeFile.close();
+    cvCompFlowFile.close();
+    cvResFlowFile.close();
+    cvFlowFile.close();
 
-	  cvHDFile.close();
-	  cvGraphPresFile.close();
-	  cvGraphFlowFile.close();
-	  cvGraphVolFile.close();
-	  cvCompBaseFile.close();
-	  cvResBaseFile.close();
-	  cvCompFile.close();
-	  cvResFile.close();
+    cvHDFile.close();
+    cvGraphPresFile.close();
+    cvGraphFlowFile.close();
+    cvGraphVolFile.close();
+    cvCompBaseFile.close();
+    cvResBaseFile.close();
+    cvCompFile.close();
+    cvResFile.close();
   }
 
   circuitFile.close();
@@ -633,7 +570,7 @@ void BioGearsEngineTest::SinusoidHeartDriver(double time_s, double heartFreq_Per
   double omega = heartFreq_Per_s * 2.0 * 3.14; // 3.14 is pi
   double RhalfAmp = (RmaxElastance - RminElastance) * 0.5;
   double LhalfAmp = (LmaxElastance - LminElastance) * 0.5;
-  double wave = cos(omega*time_s);
+  double wave = cos(omega * time_s);
   rHeartElastance = RminElastance + RhalfAmp - RhalfAmp * wave;
   lHeartElastance = LminElastance + LhalfAmp - LhalfAmp * wave;
 }
@@ -658,7 +595,7 @@ void BioGearsEngineTest::SinusoidHeartDriver(double time_s, double heartFreq_Per
 
 void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTestDirectory)
 {
-  DataTrack     cvLastMeanPressureTrk;
+  DataTrack cvLastMeanPressureTrk;
   std::ofstream cvLastMeanPressureFile;
   std::ostringstream ss;
   bool firstTest = true;
@@ -672,7 +609,7 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
 
   // You can scale the circuits: Compliances, Resistances, Volumes, and Driver Frequency/HeartRate
   // Note: You could scale the amplitude/elastance of the driver if want (We didn't at the time I wrote it, but its possible!)
-  double heartRate_bpm = 72;// Note, you should always pass in a bpm other than <=0 for a well named file
+  double heartRate_bpm = 72; // Note, you should always pass in a bpm other than <=0 for a well named file
   ss << heartRate_bpm;
   double comp = 1.0, res = 1.0, vol = 1, sysRes = 1, sysComp = 1, aortaRes = 0.7, aortaComp = 0.7, venaRes = 1, venaComp = 1;
 
@@ -683,18 +620,12 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
 
   //CardiovascularCircuitAndTransportTest(Heart, comp, res, vol, heartRate_bpm, sysRes, sysComp, aortaRes, aortaComp, venaRes, venaComp, false, false, false, sTestDirectory, "CardiovascularScale");
 
-  for (double srFactor = 1; srFactor < 1.1; srFactor += 0.25)
-  {
-    for (double scFactor = 1; scFactor < 1.1; scFactor += 0.25)
-    {
-      for (double arFactor = 1; arFactor < 1.1; arFactor += 0.25)
-      {
-        for (double acFactor = 1; acFactor < 1.1; acFactor += 0.25)
-        {
-          for (double vrFactor = 0.5; vrFactor < 1.51; vrFactor += 0.25)
-          {
-            for (double vcFactor = 0.5; vcFactor < 1.51; vcFactor += 0.25)
-            {
+  for (double srFactor = 1; srFactor < 1.1; srFactor += 0.25) {
+    for (double scFactor = 1; scFactor < 1.1; scFactor += 0.25) {
+      for (double arFactor = 1; arFactor < 1.1; arFactor += 0.25) {
+        for (double acFactor = 1; acFactor < 1.1; acFactor += 0.25) {
+          for (double vrFactor = 0.5; vrFactor < 1.51; vrFactor += 0.25) {
+            for (double vcFactor = 0.5; vcFactor < 1.51; vcFactor += 0.25) {
               CardiovascularCircuitAndTransportTest(Heart, comp, res, vol, heartRate_bpm, srFactor, scFactor, arFactor, acFactor, vrFactor, vcFactor, false, false, false, sTestDirectory, "CVScale", true);
 
               cvLastMeanPressureTrk.Track("SystemicResistanceScale", testNo, srFactor);
@@ -710,8 +641,7 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
               cvLastMeanPressureTrk.Track("Pulse_mmHg", testNo, m_Pulse);
               cvLastMeanPressureTrk.Track("CardiacOutput_mL_Per_min", testNo, m_CardiacOutput);
 
-              if (firstTest)
-              {
+              if (firstTest) {
                 firstTest = false;
                 cvLastMeanPressureTrk.CreateFile(std::string(sTestDirectory + "/" + "CVVenaScale" + ss.str() + "_LastMeanPressureOutput.txt").c_str(), cvLastMeanPressureFile);
               }
@@ -775,5 +705,4 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
   //    testNo++;
   //  }
   //}
-
 }

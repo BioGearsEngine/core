@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/engine/test/BioGearsEngineTest.h>
 #include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/engine/test/BioGearsEngineTest.h>
 
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 
@@ -21,54 +21,54 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+#include <biogears/cdm/patient/actions/SEBreathHold.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
-#include <biogears/cdm/patient/actions/SEUseInhaler.h>
-#include <biogears/cdm/patient/actions/SEBreathHold.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
+#include <biogears/cdm/patient/actions/SEUseInhaler.h>
 
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
 #include <biogears/schema/BioGearsStateData.hxx>
 
+#include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarFlowResistance.h>
 
-class HowToTracker
-{
+class HowToTracker {
 private:
-  double m_dT_s;  // Cached Engine Time Step
+  double m_dT_s; // Cached Engine Time Step
   PhysiologyEngine& m_Engine;
+
 public:
-  HowToTracker(PhysiologyEngine& engine) : m_Engine(engine)
+  HowToTracker(PhysiologyEngine& engine)
+    : m_Engine(engine)
   {
     m_dT_s = m_Engine.GetTimeStep(TimeUnit::s);
   }
-  ~HowToTracker(){}
+  ~HowToTracker() {}
 
   // This class will operate on seconds
   void AdvanceModelTime(double time_s)
   {
     int count = static_cast<int>(time_s / m_dT_s);
-    for (int i = 0; i <= count; i++)
-    {
-      m_Engine.AdvanceModelTime();  // Compute 1 time step
+    for (int i = 0; i <= count; i++) {
+      m_Engine.AdvanceModelTime(); // Compute 1 time step
 
       // Pull Track will pull data from the engine and append it to the file
       m_Engine.GetEngineTrack()->TrackData(m_Engine.GetSimulationTime(TimeUnit::s));
@@ -79,8 +79,7 @@ public:
 void BioGearsEngineTest::InhalerState(PhysiologyEngine* bg, HowToTracker& tracker)
 {
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InhalerResults.txt");
-  if (!bg->InitializeEngine("StandardMale.xml"))
-  {
+  if (!bg->InitializeEngine("StandardMale.xml")) {
     std::cerr << "Could not load initialize engine, check the error" << std::endl;
     return;
   }
@@ -94,10 +93,10 @@ void BioGearsEngineTest::InhalerState(PhysiologyEngine* bg, HowToTracker& tracke
   bg->ProcessAction(config);
 
   SEConsciousRespiration cResp;
- 
+
   SEForcedExhale& exhale = cResp.AddForcedExhale();
   exhale.GetExpiratoryReserveVolumeFraction().SetValue(1.0);
-  exhale.GetPeriod().SetValue(3.0, TimeUnit::s);  
+  exhale.GetPeriod().SetValue(3.0, TimeUnit::s);
 
   SEForcedInhale& inhale = cResp.AddForcedInhale();
   inhale.GetInspiratoryCapacityFraction().SetValue(1.0);
@@ -111,7 +110,7 @@ void BioGearsEngineTest::InhalerState(PhysiologyEngine* bg, HowToTracker& tracke
   bg->ProcessAction(cResp);
   tracker.AdvanceModelTime(5);
 
-  SEScalarTime now;// Make sure to tell the engine that we are at the same time
+  SEScalarTime now; // Make sure to tell the engine that we are at the same time
   // Save and Load the Engine State
   bg->GetLogger()->Info("Serializing");
   bg->SaveState("./MidInhalerState.xml");
@@ -129,8 +128,7 @@ void BioGearsEngineTest::InhalerState(PhysiologyEngine* bg, HowToTracker& tracke
 void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tracker, const SESubstance& succs)
 {
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InjectSuccsResults.txt");
-  if (!bg->InitializeEngine("StandardMale.xml"))
-  {
+  if (!bg->InitializeEngine("StandardMale.xml")) {
     std::cerr << "Could not load initialize engine, check the error" << std::endl;
     return;
   }
@@ -140,9 +138,9 @@ void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tr
   injection.GetConcentration().SetValue(4820, MassPerVolumeUnit::ug_Per_mL);
   injection.GetDose().SetValue(30, VolumeUnit::mL);
   bg->ProcessAction(injection);
-  bg->AdvanceModelTime(1, TimeUnit::s);// Not tracking
+  bg->AdvanceModelTime(1, TimeUnit::s); // Not tracking
 
-  SEScalarTime now;// Make sure to tell the engine that we are at the same time
+  SEScalarTime now; // Make sure to tell the engine that we are at the same time
 
   // Change our results file name
   bg->GetLogger()->ResetLogFile("InjectSuccsSerialization.log");
@@ -152,7 +150,7 @@ void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tr
   // Save and Load the Engine State
   bg->SaveState("./MidBolusState.xml");
   now.SetValue(bg->GetSimulationTime(TimeUnit::s), TimeUnit::s);
-  bg->LoadState("./MidBolusState.xml",&now);
+  bg->LoadState("./MidBolusState.xml", &now);
 
   tracker.AdvanceModelTime(15);
 
@@ -187,7 +185,7 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
 
   SESubstance* O2 = bg->GetSubstanceManager().GetSubstance("Oxygen");
   SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
-/*
+  /*
   SESubstanceDataRequest* subRequest;
   
 
@@ -275,11 +273,10 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
   tracker.m_Requests.push_back(equipRequest);
 */
 
-
-  {// Basic Standard    
+  { // Basic Standard
 
     // Gen Basic Standard Baseline
-   /* {
+    /* {
       bg->GetLogger()->ResetLogFile("BasicStandardResults.log");
       bg->GetEngineTrack()->RequestData(tracker.m_Requests, "BasicStandardResults.txt");
       if (!bg->InitializeEngine("StandardMale.xml"))
@@ -313,16 +310,13 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
   }
 
   // Several Options to choose how to set up our engine before we save and load
-  if(false)
-  {
+  if (false) {
     SESubstance* Albert = bg->GetSubstanceManager().GetSubstance("Albuterol");
     bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*Albert, "MassInBody", MassUnit::ug);
     bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*Albert, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_mL);
     bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*Albert, "RemainingSystemicMassCleared", MassUnit::ug);
     InhalerState(bg.get(), tracker);
-  }
-  else if (false)
-  {
+  } else if (false) {
     SESubstance* Succs = bg->GetSubstanceManager().GetSubstance("Succinylcholine");
     bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*Succs, "MassInBody", MassUnit::ug);
     bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*Succs, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_mL);

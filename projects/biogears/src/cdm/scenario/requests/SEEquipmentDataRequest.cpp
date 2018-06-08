@@ -10,43 +10,44 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/scenario/requests/SEEquipmentDataRequest.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/EquipmentDataRequestData.hxx>
 
-SEEquipmentDataRequest::SEEquipmentDataRequest(const SEDecimalFormat* dfault) : SEDataRequest(dfault)
+SEEquipmentDataRequest::SEEquipmentDataRequest(const SEDecimalFormat* dfault)
+  : SEDataRequest(dfault)
 {
   m_Type = "";
 }
 
 SEEquipmentDataRequest::~SEEquipmentDataRequest()
 {
-	Clear();
+  Clear();
 }
 
 void SEEquipmentDataRequest::Clear()
 {
-	SEDataRequest::Clear();
+  SEDataRequest::Clear();
   m_Type = "";
 }
 
 bool SEEquipmentDataRequest::Load(const CDM::EquipmentDataRequestData& in)
-{	
-	SEDataRequest::Load(in);
+{
+  SEDataRequest::Load(in);
   SetType(in.Type());
-	return true;
+  return true;
 }
 
 CDM::EquipmentDataRequestData* SEEquipmentDataRequest::Unload() const
 {
-	CDM::EquipmentDataRequestData* data = new CDM::EquipmentDataRequestData();
-	Unload(*data);
-	return data;
+  CDM::EquipmentDataRequestData* data = new CDM::EquipmentDataRequestData();
+  Unload(*data);
+  return data;
 }
 
 void SEEquipmentDataRequest::Unload(CDM::EquipmentDataRequestData& data) const
 {
-	SEDataRequest::Unload(data);
+  SEDataRequest::Unload(data);
   if (HasType())
     data.Type(m_Type);
 }
@@ -67,4 +68,3 @@ void SEEquipmentDataRequest::InvalidateType()
 {
   m_Type = "";
 }
-

@@ -10,14 +10,14 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/test/CommonDataModelTest.h>
+#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/TimingProfile.h>
-#include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
 
 void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory)
 {
@@ -30,17 +30,17 @@ void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory
   dir.append("/substances");
 
   SETestReport testReport(m_Logger);
-  SETestSuite&  testSuite = testReport.CreateTestSuite();
+  SETestSuite& testSuite = testReport.CreateTestSuite();
   testSuite.SetName(testName);
 
   SETestCase& testCase = testSuite.CreateTestCase();
   pTimer.Start("Case");
   SESubstanceManager subMgr(m_Logger);
-  if(!subMgr.LoadSubstanceDirectory())
+  if (!subMgr.LoadSubstanceDirectory())
     testCase.AddFailure("Unable to load substances");
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Case"), TimeUnit::s);
   testCase.SetName(obj.GetName());
   // TODO would be nice to listen to errors on the logger and add them to the testCase failures...
 
-	testReport.WriteFile(rptDirectory +"/"+testName+"Report.xml");
+  testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");
 }

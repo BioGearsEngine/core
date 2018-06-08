@@ -11,11 +11,21 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/schema/BioGearsDrugSystemData.hxx>
 
+class SETissueCompartment;
+class SEFluidCircuitPath;
+class SETissueCompartment;
+class SESubstance;
+class SESubstanceBolusState;
+class SELiquidCompartment;
+
+class BioGears;
 /**
  * @brief
  * The drug system contains the physiologically based pharmacokinetic (PBPK) model and the pharmacodynamic (PD) model.
@@ -25,7 +35,7 @@ specific language governing permissions and limitations under the License.
  */  
 class BIOGEARS_API Drugs : public SEDrugSystem, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	Drugs(BioGears& bg);

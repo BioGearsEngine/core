@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/stdafx.h>
 
 const PressureUnit PressureUnit::Pa("Pa");
 const PressureUnit PressureUnit::mmHg("mmHg");

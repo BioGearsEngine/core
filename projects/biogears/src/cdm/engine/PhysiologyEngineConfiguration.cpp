@@ -10,43 +10,43 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
-#include <biogears/schema/PhysiologyEngineConfigurationData.hxx>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
-#include <biogears/schema/PhysiologyEngineDynamicStabilizationData.hxx>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
-#include <biogears/schema/PhysiologyEngineTimedStabilizationData.hxx>
-#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/schema/ElectroCardioGramWaveformInterpolatorData.hxx>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/ScalarTimeData.hxx>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
+#include <biogears/schema/ElectroCardioGramWaveformInterpolatorData.hxx>
+#include <biogears/schema/PhysiologyEngineConfigurationData.hxx>
+#include <biogears/schema/PhysiologyEngineDynamicStabilizationData.hxx>
+#include <biogears/schema/PhysiologyEngineTimedStabilizationData.hxx>
+#include <biogears/schema/ScalarTimeData.hxx>
 
-PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger) : Loggable(logger)
+PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
+  : Loggable(logger)
 {
   m_Merge = false;
-	m_ECGInterpolator = nullptr;
-	m_StabilizationCriteria = nullptr;
+  m_ECGInterpolator = nullptr;
+  m_StabilizationCriteria = nullptr;
   m_TimedStabilizationCriteria = nullptr;
   m_DynamicStabilizationCriteria = nullptr;
-	m_TimeStep = nullptr;
+  m_TimeStep = nullptr;
   m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
-  
 }
 
 PhysiologyEngineConfiguration::~PhysiologyEngineConfiguration()
 {
-	Clear();
+  Clear();
 }
 
 void PhysiologyEngineConfiguration::Clear()
 {
-	SAFE_DELETE(m_ECGInterpolator);
+  SAFE_DELETE(m_ECGInterpolator);
   RemoveStabilizationCriteria();
   SAFE_DELETE(m_TimeStep);
 
@@ -62,45 +62,39 @@ void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& f
 
 bool PhysiologyEngineConfiguration::LoadFile(const std::string& file)
 {
-	// if file does not exist, we stick with defaults
+  // if file does not exist, we stick with defaults
 
-	CDM::PhysiologyEngineConfigurationData* pData;
-	std::unique_ptr<CDM::ObjectData> data;
+  CDM::PhysiologyEngineConfigurationData* pData;
+  std::unique_ptr<CDM::ObjectData> data;
 
-	data = Serializer::ReadFile(file,GetLogger());
-	pData = dynamic_cast<CDM::PhysiologyEngineConfigurationData*>(data.get());
-	if (pData == nullptr)
-	{
-		std::stringstream ss;
-		ss << "Configuration file : " << file << " not found, using default configuration" << std::endl;
-		Info(ss);
-		return true;
-	}
-	return Load(*pData);
+  data = Serializer::ReadFile(file, GetLogger());
+  pData = dynamic_cast<CDM::PhysiologyEngineConfigurationData*>(data.get());
+  if (pData == nullptr) {
+    std::stringstream ss;
+    ss << "Configuration file : " << file << " not found, using default configuration" << std::endl;
+    Info(ss);
+    return true;
+  }
+  return Load(*pData);
 }
 
 bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& in)
 {
   if (!m_Merge)
-	  Clear();// Reset only if we are not merging
+    Clear(); // Reset only if we are not merging
 
-	if(in.TimeStep().present())
-		GetTimeStep().Load(in.TimeStep().get());
+  if (in.TimeStep().present())
+    GetTimeStep().Load(in.TimeStep().get());
   if (in.WritePatientBaselineFile().present())
     SetWritePatientBaselineFile(in.WritePatientBaselineFile().get());
-  
-  if (in.ElectroCardioGramInterpolatorFile().present())
-  {
-    if(!GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get()))
-    {
+
+  if (in.ElectroCardioGramInterpolatorFile().present()) {
+    if (!GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get())) {
       Error("Unable to load ElectroCardioGram Waveforms file");
       return false;
     }
-  }
-  else if (in.ElectroCardioGramInterpolator().present())
-  {
-    if(!GetECGInterpolator().Load(in.ElectroCardioGramInterpolator().get()))
-    {
+  } else if (in.ElectroCardioGramInterpolator().present()) {
+    if (!GetECGInterpolator().Load(in.ElectroCardioGramInterpolator().get())) {
       Error("Unable to load ElectroCardioGram Waveforms");
       return false;
     }
@@ -109,34 +103,25 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
   std::unique_ptr<CDM::ObjectData> sData;
   const CDM::PhysiologyEngineTimedStabilizationData* tData = nullptr;
   const CDM::PhysiologyEngineDynamicStabilizationData* dData = nullptr;
-  if (in.StabilizationCriteriaFile().present())
-  {
-    sData  = Serializer::ReadFile(in.StabilizationCriteriaFile().get(), GetLogger());
-    if (sData == nullptr)
-    {
+  if (in.StabilizationCriteriaFile().present()) {
+    sData = Serializer::ReadFile(in.StabilizationCriteriaFile().get(), GetLogger());
+    if (sData == nullptr) {
       Error("Unable to load Stabilization Criteria file");
       return false;
     }
     tData = dynamic_cast<const CDM::PhysiologyEngineTimedStabilizationData*>(sData.get());
     dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(sData.get());
-  }
-  else if (in.StabilizationCriteria().present())
-  {
+  } else if (in.StabilizationCriteria().present()) {
     tData = dynamic_cast<const CDM::PhysiologyEngineTimedStabilizationData*>(&in.StabilizationCriteria().get());
     dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(&in.StabilizationCriteria().get());
   }
-  if (tData != nullptr)
-  {
-    if(!GetTimedStabilizationCriteria().Load(*tData))
-    {
+  if (tData != nullptr) {
+    if (!GetTimedStabilizationCriteria().Load(*tData)) {
       Error("Unable to load Stabilization Criteria");
       return false;
     }
-  }
-  else if (dData != nullptr)
-  {
-    if(!GetDynamicStabilizationCriteria().Load(*dData))
-    {
+  } else if (dData != nullptr) {
+    if (!GetDynamicStabilizationCriteria().Load(*dData)) {
       Error("Unable to load Stabilization Criteria");
       return false;
     }
@@ -147,9 +132,9 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
 
 CDM::PhysiologyEngineConfigurationData* PhysiologyEngineConfiguration::Unload() const
 {
-	CDM::PhysiologyEngineConfigurationData* data(new CDM::PhysiologyEngineConfigurationData());
-	Unload(*data);
-	return data;
+  CDM::PhysiologyEngineConfigurationData* data(new CDM::PhysiologyEngineConfigurationData());
+  Unload(*data);
+  return data;
 }
 
 void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationData& data) const
@@ -158,7 +143,7 @@ void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationDat
     data.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramWaveformInterpolatorData>(m_ECGInterpolator->Unload()));
   if (HasStabilizationCriteria())
     data.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(m_StabilizationCriteria->Unload()));
- if (HasTimeStep())
+  if (HasTimeStep())
     data.TimeStep(std::unique_ptr<CDM::ScalarTimeData>(m_TimeStep->Unload()));
   if (HasWritePatientBaselineFile())
     data.WritePatientBaselineFile(m_WritePatientBaselineFile);
@@ -195,7 +180,7 @@ void PhysiologyEngineConfiguration::RemoveStabilizationCriteria()
 {
   SAFE_DELETE(m_TimedStabilizationCriteria);
   SAFE_DELETE(m_DynamicStabilizationCriteria);
-  m_StabilizationCriteria = nullptr;// Generic pointer used to point to one of the above pointers
+  m_StabilizationCriteria = nullptr; // Generic pointer used to point to one of the above pointers
 }
 bool PhysiologyEngineConfiguration::HasTimedStabilizationCriteria() const
 {
@@ -204,8 +189,7 @@ bool PhysiologyEngineConfiguration::HasTimedStabilizationCriteria() const
 PhysiologyEngineTimedStabilization& PhysiologyEngineConfiguration::GetTimedStabilizationCriteria()
 {
   RemoveDynamicStabilizationCriteria();
-  if (m_TimedStabilizationCriteria == nullptr)
-  {
+  if (m_TimedStabilizationCriteria == nullptr) {
     m_TimedStabilizationCriteria = new PhysiologyEngineTimedStabilization(GetLogger());
     m_StabilizationCriteria = m_TimedStabilizationCriteria;
   }
@@ -228,8 +212,7 @@ bool PhysiologyEngineConfiguration::HasDynamicStabilizationCriteria() const
 PhysiologyEngineDynamicStabilization& PhysiologyEngineConfiguration::GetDynamicStabilizationCriteria()
 {
   RemoveTimedStabilizationCriteria();
-  if (m_DynamicStabilizationCriteria == nullptr)
-  {
+  if (m_DynamicStabilizationCriteria == nullptr) {
     m_DynamicStabilizationCriteria = new PhysiologyEngineDynamicStabilization(GetLogger());
     m_StabilizationCriteria = m_DynamicStabilizationCriteria;
   }
@@ -248,17 +231,17 @@ void PhysiologyEngineConfiguration::RemoveDynamicStabilizationCriteria()
 
 bool PhysiologyEngineConfiguration::HasTimeStep() const
 {
-	return m_TimeStep == nullptr ? false : m_TimeStep->IsValid();
+  return m_TimeStep == nullptr ? false : m_TimeStep->IsValid();
 }
 SEScalarTime& PhysiologyEngineConfiguration::GetTimeStep()
 {
-	if (m_TimeStep == nullptr)
-		m_TimeStep = new SEScalarTime();
-	return *m_TimeStep;
+  if (m_TimeStep == nullptr)
+    m_TimeStep = new SEScalarTime();
+  return *m_TimeStep;
 }
 double PhysiologyEngineConfiguration::GetTimeStep(const TimeUnit& unit) const
 {
-	if (m_TimeStep == nullptr)
-		return SEScalar::dNaN();
-	return m_TimeStep->GetValue(unit);
+  if (m_TimeStep == nullptr)
+    return SEScalar::dNaN();
+  return m_TimeStep->GetValue(unit);
 }

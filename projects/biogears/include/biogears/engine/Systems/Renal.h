@@ -11,21 +11,31 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/schema/BioGearsRenalSystemData.hxx>
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/utils/RunningAverage.h>
 
 class SEUrinalysis;
-
-
+class SEPatient;
+class SEFluidCircuit;
+class SEFluidCircuitNode;
+class SEFluidCircuitPath;
+class SESubstance;
+class SELiquidCompartment;
+class SELiquidSubstanceQuantity;
+class BioGears;
 
 /**
  * @brief @copydoc Physiology_RenalSystemData
  */  
 class BIOGEARS_API Renal : public SERenalSystem, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	Renal(BioGears& bg);

@@ -10,19 +10,18 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
+#include <biogears/cdm/stdafx.h>
 
-SEElectricalCircuitPath::SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name) :
-  SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>(src,tgt,name),
-  m_ElectricalSourceNode(src), m_ElectricalTargetNode(tgt)
+SEElectricalCircuitPath::SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name)
+  : SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>(src, tgt, name)
+  , m_ElectricalSourceNode(src)
+  , m_ElectricalTargetNode(tgt)
 {
-
 }
 
 SEElectricalCircuitPath::~SEElectricalCircuitPath()
 {
-	
 }
 
 void SEElectricalCircuitPath::Clear()
@@ -125,7 +124,7 @@ void SEElectricalCircuitPath::Unload(CDM::ElectricalCircuitPathData& data) const
 
 bool SEElectricalCircuitPath::HasResistance() const
 {
-	return SECircuitPath::HasResistance();
+  return SECircuitPath::HasResistance();
 }
 SEScalarElectricResistance& SEElectricalCircuitPath::GetResistance()
 {
@@ -219,7 +218,7 @@ double SEElectricalCircuitPath::GetCapacitanceBaseline(const ElectricCapacitance
 
 bool SEElectricalCircuitPath::HasInductance() const
 {
-	return SECircuitPath::HasInductance();
+  return SECircuitPath::HasInductance();
 }
 SEScalarElectricInductance& SEElectricalCircuitPath::GetInductance()
 {
@@ -260,7 +259,6 @@ double SEElectricalCircuitPath::GetInductanceBaseline(const ElectricInductanceUn
   return m_InductanceBaseline->GetValue(unit);
 }
 
-
 ///////////////////////////
 // Electrical Flux Types //
 ///////////////////////////
@@ -280,7 +278,7 @@ double SEElectricalCircuitPath::GetCurrent(const ElectricCurrentUnit& unit) cons
 }
 bool SEElectricalCircuitPath::HasNextCurrent() const
 {
-	return HasNextFlux();
+  return HasNextFlux();
 }
 SEScalarElectricCurrent& SEElectricalCircuitPath::GetNextCurrent()
 {
@@ -312,7 +310,7 @@ bool SEElectricalCircuitPath::HasNextCurrentSource() const
 }
 SEScalarElectricCurrent& SEElectricalCircuitPath::GetNextCurrentSource()
 {
-	return GetNextFluxSource();
+  return GetNextFluxSource();
 }
 double SEElectricalCircuitPath::GetNextCurrentSource(const ElectricCurrentUnit& unit) const
 {

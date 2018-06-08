@@ -11,20 +11,31 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/schema/BioGearsEnergySystemData.hxx>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitCalculator.h>
+
+class SEPatient;
+class SEPatientActionCollection;
+class SELiquidSubstanceQuantity;
+class SEThermalCircuitNode;
+class SEThermalCircuitPath;
+class SEFluidCircuitPath;
+class SEThermalCircuit;
 class SEThermalCircuitCalculator;
+class BioGears;
 
 /**
  * @brief @copydoc Physiology_EnergySystemData
  */  
 class BIOGEARS_API Energy : public SEEnergySystem, public BioGearsSystem
 {
-	friend BioGears;
+	friend class BioGears;
   friend class BioGearsEngineTest;
 protected:
 	Energy(BioGears& bg);

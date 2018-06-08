@@ -27,10 +27,8 @@ int main(int argc, char* argv[])
   Logger bgeLogger(bgDir + "/BioGearsTests.log");
   BioGearsEngineTest bgeTest(&bgeLogger);
 
-  if (argc == 1)
-  {
-    try
-    {
+  if (argc == 1) {
+    try {
       // Easily run various tests of your choosing
 
       ////////////////////
@@ -53,7 +51,7 @@ int main(int argc, char* argv[])
       //bgeTest.RespiratoryCircuitAndTransportTest(bgDir);
       //bgeTest.RespiratoryDriverTest(bgDir);
       //bgeTest.AnesthesiaMachineCircuitAndTransportTest(bgDir);
-      //bgeTest.RespiratoryWithAnesthesiaMachineCircuitAndTransportTest(bgDir);	
+      //bgeTest.RespiratoryWithAnesthesiaMachineCircuitAndTransportTest(bgDir);
       //bgeTest.RespiratoryWithInhalerCircuitAndTransportTest(bgDir);
 
       //bgeTest.InternalTemperatureVariableBMRCircuitTest(bgDir);
@@ -70,10 +68,10 @@ int main(int argc, char* argv[])
       //bgeTest.InstantPlusSimpleDiffusionTest(bgDir);
       //bgeTest.SimpleDiffusionTwoCompartmentTest(bgDir);
       //bgeTest.SimpleDiffusionFourCompartmentTest(bgDir);
-	  //bgeTest.ActiveTransportTest(bgDir);
+      //bgeTest.ActiveTransportTest(bgDir);
       //bgeTest.SimpleDiffusionHierarchyTest(bgDir);
       // bgeTest.FacilitatedDiffusionTest(bgDir);
-	  //bgeTest.ActiveIonTransportTest(bgDir);
+      //bgeTest.ActiveIonTransportTest(bgDir);
 
       //bgeTest.BrainInjuryTest(bgDir);
 
@@ -101,7 +99,7 @@ int main(int argc, char* argv[])
       //bgeTest.FourCompartmentTestSimple(bgDir);
       //bgeTest.AcidBaseFourCompartmentTest(bgDir);
       //bgeTest.FiveCompartmentTestWithDiffusion(bgDir);
-	  //bgeTest.FiveCompartmentTestWithActiveDiffusion(bgDir);
+      //bgeTest.FiveCompartmentTestWithActiveDiffusion(bgDir);
       //bgeTest.AcidBaseFourCompartmentTestWithProductionConsumption(bgDir);
       //bgeTest.AcidBaseFiveCompartmentTestWithDiffusion(bgDir);
       //bgeTest.AcidBaseFiveCompartmentTestWithProductionConsumptionAndDiffusion(bgDir);
@@ -303,23 +301,15 @@ int main(int argc, char* argv[])
       //cdmTest.ValidationComprehensive2SINTest(cdmDir);
       //cdmTest.ValidationComprehensive2PULSETest(cdmDir);
       //cdmTest.ValidationComprehensive2SINCenteredTest(cdmDir);
-    }
-    catch (CommonDataModelException& ex)
-    {
+    } catch (CommonDataModelException& ex) {
       std::cerr << ex.what() << std::endl;
-    }
-    catch (std::exception& ex)
-    {
+    } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
-    }
-    catch (...)
-    {
+    } catch (...) {
       std::cerr << "Exception!!" << std::endl;
     }
     return 0;
-  }
-  else
-  {
+  } else {
     if (cdmTest.RunTest(argv[1], "./UnitTests/CDMTests"))
       return 0;
     if (bgeTest.RunTest(argv[1], "./UnitTests/BioGearsTests"))
@@ -327,4 +317,3 @@ int main(int argc, char* argv[])
   }
   return 1;
 }
-

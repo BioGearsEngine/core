@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
   #pragma warning(disable : 4503)
 #endif
 
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #define SUBSTANCE_TRANSPORTER_TEMPLATE typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit
 
 #define TRANSPORT_AMOUNT_TYPES ExtensiveScalar, IntensiveScalar

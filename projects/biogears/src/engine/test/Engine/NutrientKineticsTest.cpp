@@ -9,39 +9,36 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/engine/test/BioGearsEngineTest.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/engine/test/BioGearsEngineTest.h>
 
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/utils/GeneralMath.h>
 
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
 void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDynamicHormones, bool usingGlycogen, bool usingProteinStorage, bool usingFatStorage, bool fullStores, bool useDiffusion, bool useConsumption, bool usingLipogenesis, bool usingGluconeogenesis, bool isAnaerobic, double exerciseWork_W, const std::string& rptDirectory, double testDuration_hr, MealType mealType, std::string testName)
 {
   DataTrack trk;
   std::string outputName;
-  if (testName != "Custom")
-  {
+  if (testName != "Custom") {
     outputName = "/" + testName;
-  }
-  else
-  {
+  } else {
     outputName = "/CustomNutrientKineticsTest";
   }
 
@@ -91,16 +88,16 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   double aminoAcidsBaseline_mg_Per_dL = 50;
   double glucoseBaseline_mg_Per_dL = 90;
   double ketonesBaseline_mg_Per_dL = 2.04;
-  double triacylglycerolBaseline_mg_Per_dL = 75;  //Guyton says 15 mg/dL for FFA bound to albumin, but Leeuwen says <150 mg/dL for normal blood triglycerides
+  double triacylglycerolBaseline_mg_Per_dL = 75; //Guyton says 15 mg/dL for FFA bound to albumin, but Leeuwen says <150 mg/dL for normal blood triglycerides
   double maxLiverGlycogen_g = 97.5; //Glycogen can make up 5-8% of liver's weight, and average liver is 1.5 kg, so max glycogen we'll store is 97.5 g (guyton)
-  double maxMuscleGlycogen_g = .35*patientWeight_kg*1000*.02; //Glycogen in muscles can make up 1-3% of their weight, but this glycogen can't diffuse out of the muscle (guyton); Average male has ~35% muscle mass, giving ~539g glycogen
+  double maxMuscleGlycogen_g = .35 * patientWeight_kg * 1000 * .02; //Glycogen in muscles can make up 1-3% of their weight, but this glycogen can't diffuse out of the muscle (guyton); Average male has ~35% muscle mass, giving ~539g glycogen
   //Some excess amino acids diffuse into tissues and combine into protein chains and can be broken down if needed, much like glycogen for glucose
   //Sources say this occurs in kidneys, liver, and/or visceral tissue; we'll put it in muscle since it has a large extracellular volume and so it doesn't
   //interfere with liver blood concentrations
   //"Reusable" protein stores are usually about 1% of total body protein, ~110 g (https://www.nap.edu/read/10490/chapter/12#595)
   double maxStoredProtein_g = 110;
-  double initialStoredFat_g = .21*patientWeight_kg*1000; //Standard male has 21% body fat
-  double BMR_kcal_day = 88.632 + 13.397*patientWeight_kg + 4.799 * 177 - 5.677 * 44;  //Harris Benedict formula w/ 177 cm, 44 yr old male
+  double initialStoredFat_g = .21 * patientWeight_kg * 1000; //Standard male has 21% body fat
+  double BMR_kcal_day = 88.632 + 13.397 * patientWeight_kg + 4.799 * 177 - 5.677 * 44; //Harris Benedict formula w/ 177 cm, 44 yr old male
 
   //Some cumulative values for tracking
   double totalTAGFormedByLipogenesis_g = 0;
@@ -112,11 +109,11 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
 
   //Total Masses (g) for permeability calculation (using typical male); from BioGears::SetupTissue()
   std::vector<double> tissueTotalMasses;
-  tissueTotalMasses.push_back(1800);  //liver
-  tissueTotalMasses.push_back(1405);  //brain
-  tissueTotalMasses.push_back(155*2);  //kidneys
-  tissueTotalMasses.push_back(29000);  //muscle
-  tissueTotalMasses.push_back(initialStoredFat_g);  //fat
+  tissueTotalMasses.push_back(1800); //liver
+  tissueTotalMasses.push_back(1405); //brain
+  tissueTotalMasses.push_back(155 * 2); //kidneys
+  tissueTotalMasses.push_back(29000); //muscle
+  tissueTotalMasses.push_back(initialStoredFat_g); //fat
   //tissueTotalMasses.push_back(10500 + 1020 + 250*2 + 330 + 3300 + 150);  //other
 
   SECircuitManager circuits(m_Logger);
@@ -162,7 +159,8 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   SEFluidCircuitPath& pMuscleToVenaCava = Circuit->CreatePath(nMuscle, nVenaCava, "MuscleToVenaCava");
   SEFluidCircuitPath& pFatToVenaCava = Circuit->CreatePath(nFat, nVenaCava, "FatToVenaCava");
   SEFluidCircuitPath& pBrainToVenaCava = Circuit->CreatePath(nBrain, nVenaCava, "BrainToVenaCava");
-  SEFluidCircuitPath& pVenaCavaToAorta = Circuit->CreatePath(nVenaCava, nAorta, "VenaCavaToAorta");;
+  SEFluidCircuitPath& pVenaCavaToAorta = Circuit->CreatePath(nVenaCava, nAorta, "VenaCavaToAorta");
+  ;
 
   SEFluidCircuitPath& pGroundToVenaCava = Circuit->CreatePath(nGround, nVenaCava, "GroundToVenaCava");
 
@@ -186,32 +184,32 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   cBrainVascular->MapNode(nBrain);
   SELiquidCompartment* cVenaCavaVascular = &bg.GetCompartments().CreateLiquidCompartment("cVenaCavaVascular");
   cVenaCavaVascular->MapNode(nVenaCava);
-  
+
   //Non-vascular compartments
   //Only brain and muscle will have intracellular for consumption
   SELiquidCompartment* cSmallIntestineChyme = &bg.GetCompartments().CreateLiquidCompartment("cSmallIntestineChyme");
-  double chymeVolume_mL = 287.6;  //gut extracellular expected volume (all gut, not just small intestine, but it shouldn't matter since we're using active diffusion)
+  double chymeVolume_mL = 287.6; //gut extracellular expected volume (all gut, not just small intestine, but it shouldn't matter since we're using active diffusion)
   cSmallIntestineChyme->GetVolume().SetValue(chymeVolume_mL, VolumeUnit::mL);
   SELiquidCompartment* cLiverExtracellular = &bg.GetCompartments().CreateLiquidCompartment("cLiverExtracellular");
-  double liverExtracellularVolume_mL = 289.8;  //liver extracellular expected volume
+  double liverExtracellularVolume_mL = 289.8; //liver extracellular expected volume
   cLiverExtracellular->GetVolume().SetValue(liverExtracellularVolume_mL, VolumeUnit::mL);
   SELiquidCompartment* cBrainExtracellular = &bg.GetCompartments().CreateLiquidCompartment("cBrainExtracellular");
-  double brainExtracellularVolume_mL = 234.9;  //brain extracellular expected volume
+  double brainExtracellularVolume_mL = 234.9; //brain extracellular expected volume
   cBrainExtracellular->GetVolume().SetValue(brainExtracellularVolume_mL, VolumeUnit::mL);
   SELiquidCompartment* cBrainIntracellular = &bg.GetCompartments().CreateLiquidCompartment("cBrainIntracellular");
-  double brainIntracellularVolume_mL = 899;  //brain intracellular expected volume
+  double brainIntracellularVolume_mL = 899; //brain intracellular expected volume
   cBrainIntracellular->GetVolume().SetValue(brainIntracellularVolume_mL, VolumeUnit::mL);
   SELiquidCompartment* cKidneysExtracellular = &bg.GetCompartments().CreateLiquidCompartment("cKidneysExtracellular");
-  double kidneysExtracellularVolume_mL = 42.3 * 2;  //kidneys extracellular expected volume
+  double kidneysExtracellularVolume_mL = 42.3 * 2; //kidneys extracellular expected volume
   cKidneysExtracellular->GetVolume().SetValue(kidneysExtracellularVolume_mL, VolumeUnit::mL);
   SELiquidCompartment* cMuscleExtracellular = &bg.GetCompartments().CreateLiquidCompartment("cMuscleExtracellular");
-  double muscleExtracellularVolume_mL = 3422;  //muscle extracellular expected volume
+  double muscleExtracellularVolume_mL = 3422; //muscle extracellular expected volume
   cMuscleExtracellular->GetVolume().SetValue(muscleExtracellularVolume_mL, VolumeUnit::mL);
   SELiquidCompartment* cMuscleIntracellular = &bg.GetCompartments().CreateLiquidCompartment("cMuscleIntracellular");
-  double muscleIntracellularVolume_mL = 18270;  //muscle intracellular expected volume
+  double muscleIntracellularVolume_mL = 18270; //muscle intracellular expected volume
   cMuscleIntracellular->GetVolume().SetValue(muscleIntracellularVolume_mL, VolumeUnit::mL);
   SELiquidCompartment* cFatExtracellular = &bg.GetCompartments().CreateLiquidCompartment("cFatExtracellular");
-  double fatExtracellularVolume_mL = 2127.6;  //fat extracellular expected volume
+  double fatExtracellularVolume_mL = 2127.6; //fat extracellular expected volume
   cFatExtracellular->GetVolume().SetValue(fatExtracellularVolume_mL, VolumeUnit::mL);
 
   //SELiquidCompartment* cOtherIntracellular = &bg.GetCompartments().CreateLiquidCompartment("cOtherIntracellular");
@@ -322,28 +320,26 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   bg.GetSubstances().AddActiveSubstance(urea);
 
   //Initialize vascular compartments
-  for (SELiquidCompartment* c : Graph.GetCompartments())
-  {
+  for (SELiquidCompartment* c : Graph.GetCompartments()) {
     c->GetSubstanceQuantity(aminoAcids)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * aminoAcidsBaseline_mg_Per_dL, MassUnit::mg); //guyton
-    c->GetSubstanceQuantity(glucose)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * glucoseBaseline_mg_Per_dL, MassUnit::mg);    //guyton
-    c->GetSubstanceQuantity(triacylglycerol)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * triacylglycerolBaseline_mg_Per_dL, MassUnit::mg);  //leeuwen
-    c->GetSubstanceQuantity(glucagon)->GetMass().SetValue(c->GetVolume(VolumeUnit::mL) * glucagonBaseline_pg_Per_mL * 1e-9, MassUnit::mg);  //leeuwen, claessens
-    c->GetSubstanceQuantity(lactate)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * 13, MassUnit::mg);  //leeuwen
+    c->GetSubstanceQuantity(glucose)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * glucoseBaseline_mg_Per_dL, MassUnit::mg); //guyton
+    c->GetSubstanceQuantity(triacylglycerol)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * triacylglycerolBaseline_mg_Per_dL, MassUnit::mg); //leeuwen
+    c->GetSubstanceQuantity(glucagon)->GetMass().SetValue(c->GetVolume(VolumeUnit::mL) * glucagonBaseline_pg_Per_mL * 1e-9, MassUnit::mg); //leeuwen, claessens
+    c->GetSubstanceQuantity(lactate)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * 13, MassUnit::mg); //leeuwen
     c->GetSubstanceQuantity(ketones)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * ketonesBaseline_mg_Per_dL, MassUnit::mg); //.2 mmol
-    c->GetSubstanceQuantity(creatinine)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * .91, MassUnit::mg);  //leeuwen
-    c->GetSubstanceQuantity(urea)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * 18.5, MassUnit::mg);  //leeuwen (BUN)
+    c->GetSubstanceQuantity(creatinine)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * .91, MassUnit::mg); //leeuwen
+    c->GetSubstanceQuantity(urea)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * 18.5, MassUnit::mg); //leeuwen (BUN)
     c->Balance(BalanceLiquidBy::Mass);
-    c->GetSubstanceQuantity(insulin)->GetMolarity().SetValue(insulinBaseline_pmol_Per_L*1e-9, AmountPerVolumeUnit::mmol_Per_L);  //leeuwen
+    c->GetSubstanceQuantity(insulin)->GetMolarity().SetValue(insulinBaseline_pmol_Per_L * 1e-9, AmountPerVolumeUnit::mmol_Per_L); //leeuwen
     c->Balance(BalanceLiquidBy::Molarity);
   }
 
   //Initialize tissue compartments
   //No insulin or glucagon should be in tissues
-  for (SELiquidCompartment* c : extracellularCompartments)
-  {
+  for (SELiquidCompartment* c : extracellularCompartments) {
     c->GetSubstanceQuantity(aminoAcids)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * aminoAcidsBaseline_mg_Per_dL, MassUnit::mg);
     c->GetSubstanceQuantity(glucose)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * glucoseBaseline_mg_Per_dL, MassUnit::mg);
-    if(c != cBrainExtracellular)  //TAG can't cross blood-brain barrier
+    if (c != cBrainExtracellular) //TAG can't cross blood-brain barrier
       c->GetSubstanceQuantity(triacylglycerol)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * triacylglycerolBaseline_mg_Per_dL, MassUnit::mg);
     c->GetSubstanceQuantity(glucagon)->GetMass().SetValue(0, MassUnit::mg);
     c->GetSubstanceQuantity(lactate)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * 13, MassUnit::mg);
@@ -354,8 +350,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     c->GetSubstanceQuantity(insulin)->GetMolarity().SetValue(0, AmountPerVolumeUnit::mmol_Per_L);
     c->Balance(BalanceLiquidBy::Molarity);
   }
-  for (SELiquidCompartment* c : intracellularCompartments)
-  {
+  for (SELiquidCompartment* c : intracellularCompartments) {
     c->GetSubstanceQuantity(aminoAcids)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * aminoAcidsBaseline_mg_Per_dL, MassUnit::mg);
     c->GetSubstanceQuantity(glucose)->GetMass().SetValue(c->GetVolume(VolumeUnit::dL) * glucoseBaseline_mg_Per_dL, MassUnit::mg);
     if (c != cBrainIntracellular) //TAG can't cross blood-brain barrier
@@ -374,10 +369,9 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   double liverGlycogen_g = 0;
   double muscleGlycogen_g = 0;
   double storedProtein_g = 0;
-  double storedFat_g = initialStoredFat_g;  //since fat doesn't have a max, we can keep it accurate at all times
+  double storedFat_g = initialStoredFat_g; //since fat doesn't have a max, we can keep it accurate at all times
 
-  if (fullStores)
-  {
+  if (fullStores) {
     liverGlycogen_g = maxLiverGlycogen_g;
     muscleGlycogen_g = maxMuscleGlycogen_g;
     storedProtein_g = maxStoredProtein_g;
@@ -390,19 +384,16 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   bool fed = false;
   std::stringstream ss;
 
-  for (unsigned int i = 0; i < testDuration_hr * 3600.0 / deltaT_s; i++)
-  {
+  for (unsigned int i = 0; i < testDuration_hr * 3600.0 / deltaT_s; i++) {
     //PreProcess - Absorption, Storage/Breakdown, Diffusion, Energy Consumption
 
     //Meal is eaten after 30 seconds; put nutrients in chyme
-    if (usingAbsorption && time > 30 && !fed)
-    {
+    if (usingAbsorption && time > 30 && !fed) {
       double proteinMass_g = 0;
       double carbsMass_g = 0;
       double fatMass_g = 0;
 
-      switch (mealType)
-      {
+      switch (mealType) {
       case MealType::ProteinOnly:
         proteinMass_g = 75;
         break;
@@ -429,8 +420,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       fed = true;
     }
 
-    if (usingAbsorption)
-    {
+    if (usingAbsorption) {
       //Absorb any nutrients in small intestine chyme to blood
       tsu.MoveMassByActiveTransport(*cSmallIntestineChyme, *cSmallIntestineVascular, aminoAcids, .00157, deltaT_s); //Amino acid absorption rates vary from 1.3 to 10 g/h (https://www.ncbi.nlm.nih.gov/pubmed/16779921)
       tsu.MoveMassByActiveTransport(*cSmallIntestineChyme, *cSmallIntestineVascular, triacylglycerol, .0053, deltaT_s);
@@ -440,12 +430,11 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     }
 
     //Insulin has a validated production rate and a BS clearance rate to get it stable (Note: Guyton says insulin production at 90 mg/dL glucose concentration should be
-    // 25 ng/min/kg, which is about 300 pmol/min, double what we have using this curve from Tolic; also, we won't capture insulin behavior for very high glucose concentrations, see Guyton p 991) 
+    // 25 ng/min/kg, which is about 300 pmol/min, double what we have using this curve from Tolic; also, we won't capture insulin behavior for very high glucose concentrations, see Guyton p 991)
     //Glucagon has a validated clearance rate and a BS production rate to get it stable
     //When testing response to meals, if we want faster response, increase production rates and clearance, maintaining stability
     //If response is too fast, slow them (this unit test would be good for that)
-    if (usingDynamicHormones)
-    {
+    if (usingDynamicHormones) {
       //Synthesize insulin and glucagon and release in vena cava (mimics Endocrine::SynthesizeInsulin() and Endocrine::SynthesizeGlucagon())
       double bloodGlucoseConcentration_g_Per_L = cAortaVascular->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::g_Per_L);
       // 2.0 = glucose upperConcentration_g_Per_L
@@ -454,9 +443,9 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       // 6.67 = insulinConversionToAmount_pmol_Per_mU
 
       //https://www.wolframalpha.com/input/?i=y%3D(6.67+*+65.421)+%2F+(1.0+%2B+exp((2.0+-+2.0*x)+%2F+0.3))+from+0%3Cx%3C1.5
-      double insulinSynthesisRate_pmol_Per_min = 6.67 * 65.421 / (1.0 + exp((2.0 - 2.0*bloodGlucoseConcentration_g_Per_L) / 0.3));
+      double insulinSynthesisRate_pmol_Per_min = 6.67 * 65.421 / (1.0 + exp((2.0 - 2.0 * bloodGlucoseConcentration_g_Per_L) / 0.3));
       double insulinMassDelta_g = Convert(insulinSynthesisRate_pmol_Per_min, AmountPerTimeUnit::pmol_Per_min, AmountPerTimeUnit::mol_Per_s);
-      insulinMassDelta_g *= insulin.GetMolarMass(MassPerAmountUnit::g_Per_mol)*deltaT_s;
+      insulinMassDelta_g *= insulin.GetMolarMass(MassPerAmountUnit::g_Per_mol) * deltaT_s;
 
       cVenaCavaVascular->GetSubstanceQuantity(insulin)->GetMass().IncrementValue(insulinMassDelta_g, MassUnit::g);
 
@@ -464,7 +453,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //https://www.ncbi.nlm.nih.gov/pubmed/773949
       double glucagonSynthesisRate_pmol_Per_min = 21 - (21 / (1.0 + exp((2 - 2 * bloodGlucoseConcentration_g_Per_L) / .3)));
       double glucagonMassDelta_g = Convert(glucagonSynthesisRate_pmol_Per_min, AmountPerTimeUnit::pmol_Per_min, AmountPerTimeUnit::mol_Per_s);
-      glucagonMassDelta_g *= glucagon.GetMolarMass(MassPerAmountUnit::g_Per_mol)*deltaT_s;
+      glucagonMassDelta_g *= glucagon.GetMolarMass(MassPerAmountUnit::g_Per_mol) * deltaT_s;
 
       cVenaCavaVascular->GetSubstanceQuantity(glucagon)->GetMass().IncrementValue(glucagonMassDelta_g, MassUnit::g);
 
@@ -477,17 +466,15 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //Clear Glucagon
       double glucagonVolumeCleared_mL = (9.0 / 60) * patientWeight_kg * deltaT_s;
       bg.GetSubstances().CalculateGenericClearance(glucagonVolumeCleared_mL, *cVenaCavaVascular, glucagon);
-
     }
 
     //Get hormone factor for use in other Preprocess steps
-    double hormoneFactor = 0; 
+    double hormoneFactor = 0;
 
     //Nutrient storage handling
-    if (usingGlycogen)
-    {
+    if (usingGlycogen) {
       hormoneFactor = hptc.CalculateRelativeHormoneChange(insulinBaseline_pmol_Per_L, glucagonBaseline_pg_Per_mL, cLiverVascular->GetSubstanceQuantity(insulin), cLiverVascular->GetSubstanceQuantity(glucagon), bg);
-      if(i % trackSkipper == 0)
+      if (i % trackSkipper == 0)
         trk.Track("LiverHormoneFactor", time, hormoneFactor);
       //double insulinDeviation = (cLiverVascular.GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L)*1e9 - insulinBaseline_pmol_Per_L) / insulinBaseline_pmol_Per_L;
       //double glucagonDeviation = (cLiverVascular.GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL)*1e9 - glucagonBaseline_pg_Per_mL) / glucagonBaseline_pg_Per_mL;
@@ -497,8 +484,8 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //Normally, 2% of glycogen is regenerated per hour after exercise, but can reach 5%
       //This is for muscle and liver glycogen, but we'll assume they are created at the same rates
       //http://thesportjournal.org/article/glycogen-replenishment-after-exhaustive-exercise/
-      double glycogenesisLowerRate_g_Per_s = .02*(maxLiverGlycogen_g + maxMuscleGlycogen_g) / 3600;
-      double glycogenesisUpperRate_g_Per_s = .05*(maxLiverGlycogen_g + maxMuscleGlycogen_g) / 3600;
+      double glycogenesisLowerRate_g_Per_s = .02 * (maxLiverGlycogen_g + maxMuscleGlycogen_g) / 3600;
+      double glycogenesisUpperRate_g_Per_s = .05 * (maxLiverGlycogen_g + maxMuscleGlycogen_g) / 3600;
 
       //https://www.wolframalpha.com/input/?i=y%3D.0005417%2B.0008125%2F(1%2Be%5E(-6(x-.5)))+from+0%3Cy%3C.0015+and+0%3Cx%3C2
       //Can tweak sigmoid midpoint based on ratio values observed; shape parameter should be tweaked to give appropriate refill rates for glycogen (>20 hours)
@@ -511,18 +498,14 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
 
       //https://www.wolframalpha.com/input/?i=y%3D.002257%2B.05417%2F(1%2Be%5E(-22(x-.25)))+from+0%3Cy%3C.06+and+0%3Cx%3C2
       //Need to tweak sigmoid midpoint and shape parameter to get fasting depletion in ~12 hours and exercise depletion in ~30 min
-      double glycogenolysisRate_g_Per_s = glycogenolysisLowerRate_g_Per_s + GeneralMath::LogisticFunction(glycogenolysisUpperRate_g_Per_s - glycogenolysisLowerRate_g_Per_s, .25, 22, -hormoneFactor);      
+      double glycogenolysisRate_g_Per_s = glycogenolysisLowerRate_g_Per_s + GeneralMath::LogisticFunction(glycogenolysisUpperRate_g_Per_s - glycogenolysisLowerRate_g_Per_s, .25, 22, -hormoneFactor);
 
       //remove excess glucose from blood and store in glycogen while there's room
-      if ((hormoneFactor > 0) && (liverGlycogen_g < maxLiverGlycogen_g))
-      {
-        if (cLiverVascular->GetSubstanceQuantity(glucose)->GetMass(MassUnit::g) < glycogenesisRate_g_Per_s * deltaT_s)
-        {
+      if ((hormoneFactor > 0) && (liverGlycogen_g < maxLiverGlycogen_g)) {
+        if (cLiverVascular->GetSubstanceQuantity(glucose)->GetMass(MassUnit::g) < glycogenesisRate_g_Per_s * deltaT_s) {
           //ss << "Not enough glucose in blood to store as liver glycogen!";
           //Info(ss);
-        }
-        else
-        {
+        } else {
           cLiverVascular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(-glycogenesisRate_g_Per_s * deltaT_s, MassUnit::g);
           liverGlycogen_g += (glycogenesisRate_g_Per_s * deltaT_s);
           cLiverVascular->GetSubstanceQuantity(glucose)->Balance(BalanceLiquidBy::Mass);
@@ -530,15 +513,11 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       }
 
       //remove glucose from glycogen stores and dump into blood
-      else if (hormoneFactor < 0)
-      {
-        if (liverGlycogen_g < glycogenolysisRate_g_Per_s * deltaT_s)
-        {
+      else if (hormoneFactor < 0) {
+        if (liverGlycogen_g < glycogenolysisRate_g_Per_s * deltaT_s) {
           //ss << "Not enough glycogen remaining! Glycogen: "<<liverGlycogen_g<<" Decrement: "<< glycogenolysisRate_g_Per_s * deltaT_s;
           //Info(ss);
-        }
-        else
-        {
+        } else {
           cLiverVascular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(glycogenolysisRate_g_Per_s * deltaT_s, MassUnit::g);
           liverGlycogen_g -= (glycogenolysisRate_g_Per_s * deltaT_s);
           cLiverVascular->GetSubstanceQuantity(glucose)->Balance(BalanceLiquidBy::Mass);
@@ -549,25 +528,19 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       hormoneFactor = hptc.CalculateRelativeHormoneChange(insulinBaseline_pmol_Per_L, glucagonBaseline_pg_Per_mL, cMuscleVascular->GetSubstanceQuantity(insulin), cMuscleVascular->GetSubstanceQuantity(glucagon), bg);
 
       //remove excess glucose from blood and store in muscle glycogen while there's room
-      if ((hormoneFactor > 0) && (muscleGlycogen_g < maxMuscleGlycogen_g))
-      {
-        if (cMuscleVascular->GetSubstanceQuantity(glucose)->GetMass(MassUnit::g) < glycogenesisRate_g_Per_s * deltaT_s)
-        {
+      if ((hormoneFactor > 0) && (muscleGlycogen_g < maxMuscleGlycogen_g)) {
+        if (cMuscleVascular->GetSubstanceQuantity(glucose)->GetMass(MassUnit::g) < glycogenesisRate_g_Per_s * deltaT_s) {
           //ss << "Not enough glucose in blood to store as muscle glycogen!";
           //Info(ss);
-        }
-        else
-        {
+        } else {
           cMuscleVascular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(-glycogenesisRate_g_Per_s * deltaT_s, MassUnit::g);
           muscleGlycogen_g += (glycogenesisRate_g_Per_s * deltaT_s);
           cMuscleVascular->GetSubstanceQuantity(glucose)->Balance(BalanceLiquidBy::Mass);
         }
       }
-
     }
 
-    if (usingProteinStorage)
-    {
+    if (usingProteinStorage) {
       hormoneFactor = hptc.CalculateRelativeHormoneChange(insulinBaseline_pmol_Per_L, glucagonBaseline_pg_Per_mL, cMuscleVascular->GetSubstanceQuantity(insulin), cMuscleVascular->GetSubstanceQuantity(glucagon), bg);
       if (i % trackSkipper == 0)
         trk.Track("MuscleHormoneFactor", time, hormoneFactor);
@@ -590,15 +563,11 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
 
       //remove excess amino acids from blood and store in muscle while there's room
       //Body mobilizes protein when glucagon dominates, but we'll have protein shift toward storage unless insulin drops significantly
-      if (hormoneFactor >= -.2 && storedProtein_g < maxStoredProtein_g &&  cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) > aminoAcidsBaseline_mg_Per_dL)
-      {
-        if (cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetMass(MassUnit::g) < proteinStorageRate_g_Per_s * deltaT_s)
-        {
+      if (hormoneFactor >= -.2 && storedProtein_g < maxStoredProtein_g && cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) > aminoAcidsBaseline_mg_Per_dL) {
+        if (cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetMass(MassUnit::g) < proteinStorageRate_g_Per_s * deltaT_s) {
           ss << "Not enough amino acids in blood to store!";
           Info(ss);
-        }
-        else
-        {
+        } else {
           cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetMass().IncrementValue(-proteinStorageRate_g_Per_s * deltaT_s, MassUnit::g);
           storedProtein_g += proteinStorageRate_g_Per_s * deltaT_s;
           cMuscleVascular->GetSubstanceQuantity(aminoAcids)->Balance(BalanceLiquidBy::Mass);
@@ -609,15 +578,11 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //This is not the same as muscle degradation during starvation
       //We don't dump AA into blood if blood concentration is already at basal level
       //TODO Ideally, gluconeogenesis would increase the hormone factor to regulate this, but it's not done yet
-      else if (hormoneFactor < 0 && cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) < aminoAcidsBaseline_mg_Per_dL)
-      {
-        if (storedProtein_g < proteinBreakdownRate_g_Per_s * deltaT_s)
-        {
+      else if (hormoneFactor < 0 && cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) < aminoAcidsBaseline_mg_Per_dL) {
+        if (storedProtein_g < proteinBreakdownRate_g_Per_s * deltaT_s) {
           //ss << "Not enough stored amino acids remaining!";
           //Info(ss);
-        }
-        else
-        {
+        } else {
           cMuscleVascular->GetSubstanceQuantity(aminoAcids)->GetMass().IncrementValue(proteinBreakdownRate_g_Per_s * deltaT_s, MassUnit::g);
           storedProtein_g -= proteinBreakdownRate_g_Per_s * deltaT_s;
           cMuscleVascular->GetSubstanceQuantity(aminoAcids)->Balance(BalanceLiquidBy::Mass);
@@ -625,8 +590,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       }
     }
 
-    if (usingFatStorage)
-    {
+    if (usingFatStorage) {
       hormoneFactor = hptc.CalculateRelativeHormoneChange(insulinBaseline_pmol_Per_L, glucagonBaseline_pg_Per_mL, cFatVascular->GetSubstanceQuantity(insulin), cFatVascular->GetSubstanceQuantity(glucagon), bg);
       if (i % trackSkipper == 0)
         trk.Track("FatHormoneFactor", time, hormoneFactor);
@@ -648,17 +612,12 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //https://www.wolframalpha.com/input/?i=y%3D.002546%2B.058565%2F(1%2Be%5E(-22(x-.25)))+from+0%3Cy%3C.08+and+0%3Cx%3C2
       double fatReleaseRate_g_Per_s = fatReleaseLowerRate_g_Per_s + GeneralMath::LogisticFunction(fatReleaseUpperRate_g_Per_s - fatReleaseLowerRate_g_Per_s, .25, 22, -hormoneFactor);
 
-
       //remove excess triacylglycerol from blood and store in fat tissue
-      if (hormoneFactor >= -.2 &&  cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) > triacylglycerolBaseline_mg_Per_dL)
-      {
-        if (cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetMass(MassUnit::g) < fatStorageRate_g_Per_s * deltaT_s)
-        {
+      if (hormoneFactor >= -.2 && cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) > triacylglycerolBaseline_mg_Per_dL) {
+        if (cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetMass(MassUnit::g) < fatStorageRate_g_Per_s * deltaT_s) {
           ss << "Not enough triacylglycerol in blood to store!";
           Info(ss);
-        }
-        else
-        {
+        } else {
           cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue(-fatStorageRate_g_Per_s * deltaT_s, MassUnit::g);
           storedFat_g += fatStorageRate_g_Per_s * deltaT_s;
           cFatVascular->GetSubstanceQuantity(triacylglycerol)->Balance(BalanceLiquidBy::Mass);
@@ -668,15 +627,11 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //remove triacylglycerol from fat stores and dump into blood
       //Guyton says during starvation (i.e. glucagon dominant times) triacylglycerol blood concentration can be 5-8x normal
       //We won't continue to dump TAG into blood if blood concentration is already high
-      else if (hormoneFactor < 0 && cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) < triacylglycerolBaseline_mg_Per_dL*6.5)
-      {
-        if (storedFat_g < fatReleaseRate_g_Per_s * deltaT_s)
-        {
+      else if (hormoneFactor < 0 && cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) < triacylglycerolBaseline_mg_Per_dL * 6.5) {
+        if (storedFat_g < fatReleaseRate_g_Per_s * deltaT_s) {
           //ss << "Not enough stored fat remaining!";
           //Info(ss);
-        }
-        else
-        {
+        } else {
           cFatVascular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue(fatReleaseRate_g_Per_s * deltaT_s, MassUnit::g);
           storedFat_g -= fatReleaseRate_g_Per_s * deltaT_s;
           cFatVascular->GetSubstanceQuantity(triacylglycerol)->Balance(BalanceLiquidBy::Mass);
@@ -685,15 +640,14 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     }
 
     //Diffuse to tissues
-    if(useDiffusion)
+    if (useDiffusion)
       NutrientDiffusion(vascularCompartments, extracellularCompartments, bg, tissueTotalMasses, deltaT_s, trk, time);
 
     double CO2Produced_mol = 0;
     double O2Consumed_mol = 0;
 
     //Lipogenesis (liver making new TAG from AA and glucose in times of excess)
-    if (usingLipogenesis)
-    {
+    if (usingLipogenesis) {
       hormoneFactor = hptc.CalculateRelativeHormoneChange(insulinBaseline_pmol_Per_L, glucagonBaseline_pg_Per_mL, cLiverVascular->GetSubstanceQuantity(insulin), cLiverVascular->GetSubstanceQuantity(glucagon), bg);
 
       //Get ratio of glucose to AA in liver to determine proportions that get converted to fat (will be a percentage of nutrients as glucose)
@@ -724,22 +678,20 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       double leftoverTAGDeficit_mol = 0;
 
       //If there's enough AA, convert it to triacylglycerol
-      if (cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().GetValue(MassUnit::g) > AAToBeConverted_mol * aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol))
-      {
+      if (cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().GetValue(MassUnit::g) > AAToBeConverted_mol * aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol)) {
         cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().IncrementValue(-AAToBeConverted_mol * aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         cLiverExtracellular->GetSubstanceQuantity(urea)->GetMass().IncrementValue(UreaFormed_mol * urea.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-        cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue((AAToBeConverted_mol/24) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+        cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue((AAToBeConverted_mol / 24) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         totalTAGFormedByLipogenesis_g += (AAToBeConverted_mol / 24) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol);
         cLiverExtracellular->Balance(BalanceLiquidBy::Mass);
       }
       //If there's not enough to be converted, convert what's there, shift the deficit to glucose conversion
-      else
-      {
+      else {
         double AAActuallyConsumed_mol = cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().GetValue(MassUnit::g) / aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol);
-        leftoverTAGDeficit_mol = (AAToBeConverted_mol - AAActuallyConsumed_mol)/24;
+        leftoverTAGDeficit_mol = (AAToBeConverted_mol - AAActuallyConsumed_mol) / 24;
         cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().SetValue(0, MassUnit::g);
         cLiverExtracellular->GetSubstanceQuantity(urea)->GetMass().IncrementValue(AAActuallyConsumed_mol * .5 * urea.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-        cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue((AAActuallyConsumed_mol/24) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+        cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue((AAActuallyConsumed_mol / 24) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         totalTAGFormedByLipogenesis_g += (AAActuallyConsumed_mol / 24) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol);
         cLiverExtracellular->Balance(BalanceLiquidBy::Mass);
       }
@@ -747,16 +699,14 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       glucoseToBeConverted_mol += leftoverTAGDeficit_mol * 13;
 
       //If there's enough glucose, convert it to triacylglycerol
-      if (cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().GetValue(MassUnit::g) > glucoseToBeConverted_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol))
-      {
+      if (cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().GetValue(MassUnit::g) > glucoseToBeConverted_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol)) {
         cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(-glucoseToBeConverted_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue((glucoseToBeConverted_mol / 13) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         totalTAGFormedByLipogenesis_g += (glucoseToBeConverted_mol / 13) * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol);
         cLiverExtracellular->Balance(BalanceLiquidBy::Mass);
       }
       //If there's not enough to be converted, convert what's there
-      else
-      {
+      else {
         double glucoseActuallyConsumed_mol = cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().GetValue(MassUnit::g) / glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
         leftoverTAGDeficit_mol = (glucoseToBeConverted_mol - glucoseActuallyConsumed_mol) / 13;
         cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().SetValue(0, MassUnit::g);
@@ -766,8 +716,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       }
 
       //Try one last time to convert from AA, in case glucose had a deficit
-      if (cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().GetValue(MassUnit::g) > leftoverTAGDeficit_mol * 24 * aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol))
-      {
+      if (cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().GetValue(MassUnit::g) > leftoverTAGDeficit_mol * 24 * aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol)) {
         cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().IncrementValue(-leftoverTAGDeficit_mol * 24 * aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         cLiverExtracellular->GetSubstanceQuantity(urea)->GetMass().IncrementValue(leftoverTAGDeficit_mol * 24 * .5 * urea.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue(leftoverTAGDeficit_mol * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -775,8 +724,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
         cLiverExtracellular->Balance(BalanceLiquidBy::Mass);
       }
       //If there's not enough to be converted, convert what's there, remaining deficit just means lipogenesis is limited by lack of nutrients in liver
-      else
-      {
+      else {
         double AAActuallyConsumed_mol = cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().GetValue(MassUnit::g) / aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol);
         cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().SetValue(0, MassUnit::g);
         cLiverExtracellular->GetSubstanceQuantity(urea)->GetMass().IncrementValue(AAActuallyConsumed_mol * .5 * urea.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -790,8 +738,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     //Current Renal::CalculateGluconeogenesis only converts lactate to glucose and excretes the rest (and the ratio seems to be wrong)
     //Note: Gluconeogenesis costs ATP, but I guess that is rolled up in the BMR we calculate
     //Another note: These processes consume O2, so we will skip them under anaerobic conditions
-    if (usingGluconeogenesis)
-    {
+    if (usingGluconeogenesis) {
       hormoneFactor = hptc.CalculateRelativeHormoneChange(insulinBaseline_pmol_Per_L, glucagonBaseline_pg_Per_mL, cLiverVascular->GetSubstanceQuantity(insulin), cLiverVascular->GetSubstanceQuantity(glucagon), bg);
 
       //Handle lactate conversion
@@ -807,10 +754,10 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       if (rateLimitingTuningFactor == 1)
         cLiverExtracellular->GetSubstanceQuantity(lactate)->GetMass().SetValue(0, MassUnit::g); //using IncrementValue to remove ALL lactate can result in numerical error negative masses
       else
-        cLiverExtracellular->GetSubstanceQuantity(lactate)->GetMass().IncrementValue(-rateLimitingTuningFactor*liverLactate_mol*lactate.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-      cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(rateLimitingTuningFactor*reconvertedGlucose_mol*glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+        cLiverExtracellular->GetSubstanceQuantity(lactate)->GetMass().IncrementValue(-rateLimitingTuningFactor * liverLactate_mol * lactate.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+      cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(rateLimitingTuningFactor * reconvertedGlucose_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
 
-      totalGlucoseFromLactate_g += rateLimitingTuningFactor*reconvertedGlucose_mol*glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
+      totalGlucoseFromLactate_g += rateLimitingTuningFactor * reconvertedGlucose_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
 
       //Handle fat conversion (glycerol to glucose and ketogenesis)
       //One TAG breaks down to one glycerol (which converts to glucose) and 3 palmitic acids
@@ -820,8 +767,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //A fasting person will have low levels of oxaloacetate, meaning it can't aid in converting acetyl-COA for Citric Acid Cycle
       //Thus, Acetyl-COA converts to ketones instead
       //TODO consider having TAG convert to glucose for mildly negative hormone factors and ketones for more negative ones, since ketones only generate after all oxaloactate is gone, which is presumably after a while
-      if (hormoneFactor < -.25 && !isAnaerobic)
-      {
+      if (hormoneFactor < -.25 && !isAnaerobic) {
         double TAGBreakdownRate_g_Per_s = .0015; //This is a complete guess for now; this should be tuned such that there is no brain energy deficit on a long-term no-carb diet and fat loss isn't ridiculous
         double glucosePerTAG_mol = 1; //one glycerol backbone
         double ketonesPerTAG_mol = 12; //8*3 acetyl-COAs -> 12 acetoacetate (in reality, there's also acetone and B-hydroxybutyrate)
@@ -831,8 +777,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
         double TAGBrokenDown_mol = TAGBreakdownRate_g_Per_s * deltaT_s / triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol);
 
         //If we have enough TAG in the liver
-        if (cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL)*liverExtracellularVolume_mL > TAGBrokenDown_mol)
-        {
+        if (cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL) * liverExtracellularVolume_mL > TAGBrokenDown_mol) {
           cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().IncrementValue(-TAGBrokenDown_mol * triacylglycerol.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(TAGBrokenDown_mol * glucosePerTAG_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(ketones)->GetMass().IncrementValue(TAGBrokenDown_mol * ketonesPerTAG_mol * ketones.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -841,9 +786,8 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
           totalKetonesFromTAG_g += TAGBrokenDown_mol * ketonesPerTAG_mol * ketones.GetMolarMass(MassPerAmountUnit::g_Per_mol);
         }
         //If we don't have enough TAG in the liver, break down what's there
-        else
-        {
-          double TAGActuallyBrokenDown_mol = cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL)*liverExtracellularVolume_mL;
+        else {
+          double TAGActuallyBrokenDown_mol = cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL) * liverExtracellularVolume_mL;
           cLiverExtracellular->GetSubstanceQuantity(triacylglycerol)->GetMass().SetValue(0, MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(TAGActuallyBrokenDown_mol * glucosePerTAG_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(ketones)->GetMass().IncrementValue(TAGActuallyBrokenDown_mol * ketonesPerTAG_mol * ketones.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -858,8 +802,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       //1 alanine -> 1 pyruvate + .5 urea
       //2 pyruvate -> 1 glucose
       //TODO figure out O2 consumption, if any
-      if (hormoneFactor < 0 && !isAnaerobic)
-      {
+      if (hormoneFactor < 0 && !isAnaerobic) {
         double AAConversionRate_g_Per_s = .001; //May need to be tuned to maintain brain glucose levels
         double glucosePerAA_mol = .5;
         double ureaPerAA_mol = .5;
@@ -867,17 +810,15 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
         double AAConverted_mol = AAConversionRate_g_Per_s * deltaT_s / aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol);
 
         //If we have enough AA in the liver
-        if (cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL)*liverExtracellularVolume_mL > AAConverted_mol)
-        {
+        if (cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL) * liverExtracellularVolume_mL > AAConverted_mol) {
           cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().IncrementValue(-AAConverted_mol * aminoAcids.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(AAConverted_mol * glucosePerAA_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(urea)->GetMass().IncrementValue(AAConverted_mol * ureaPerAA_mol * urea.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           totalGlucoseFromAA_g += AAConverted_mol * glucosePerAA_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
         }
         //If we don't have enough AA in the liver, break down what's there
-        else
-        {
-          double AAActuallyConverted_mol = cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL)*liverExtracellularVolume_mL;
+        else {
+          double AAActuallyConverted_mol = cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity().GetValue(AmountPerVolumeUnit::mol_Per_mL) * liverExtracellularVolume_mL;
           cLiverExtracellular->GetSubstanceQuantity(aminoAcids)->GetMass().SetValue(0, MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(AAActuallyConverted_mol * glucosePerAA_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           cLiverExtracellular->GetSubstanceQuantity(urea)->GetMass().IncrementValue(AAActuallyConverted_mol * ureaPerAA_mol * urea.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -890,12 +831,12 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     //Determine energy request and translate to glucose required (don't consider protein as of now)
     //Consume as much glucose as you can from intracellular (assume oxygen is present for now)
     //Produce CO2 and consume O2
-    double baseEnergyRequested_kcal = (BMR_kcal_day/86400)*deltaT_s;
-    double exerciseEnergyRequested_kcal = (exerciseWork_W*20.64 / 86400)*deltaT_s;
+    double baseEnergyRequested_kcal = (BMR_kcal_day / 86400) * deltaT_s;
+    double exerciseEnergyRequested_kcal = (exerciseWork_W * 20.64 / 86400) * deltaT_s;
     double brainEnergyDeficit_kcal = 0;
     double muscleEnergyDeficit_kcal = 0;
     //double brainFlowFraction = brainFlow_mL_per_min / (brainFlow_mL_per_min + muscleFlow_mL_per_min); //Try this in engine to see if we can have consumption based on flow
-    double brainFlowFraction = .2;  //Brain uses about 20% of body's energy https://www.scientificamerican.com/article/thinking-hard-calories/
+    double brainFlowFraction = .2; //Brain uses about 20% of body's energy https://www.scientificamerican.com/article/thinking-hard-calories/
     if (useConsumption)
       ProduceAndConsume(baseEnergyRequested_kcal, exerciseEnergyRequested_kcal, isAnaerobic, bg, deltaT_s, brainFlowFraction, muscleGlycogen_g, CO2Produced_mol, O2Consumed_mol, brainEnergyDeficit_kcal, muscleEnergyDeficit_kcal, totalLactateFromGlucose, trk);
 
@@ -903,20 +844,18 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     calc.Process(*Circuit, deltaT_s);
     //Execute the substance transport function
     txpt.Transport(Graph, deltaT_s);
-	  
+
     //convert 'Next' values to current
     calc.PostProcess(*Circuit);
 
     //Track everything
-    if (i % trackSkipper == 0)
-    {
-      for (SELiquidCompartment* c : Graph.GetCompartments())
-      {
+    if (i % trackSkipper == 0) {
+      for (SELiquidCompartment* c : Graph.GetCompartments()) {
         trk.Track(c->GetName() + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L)*1e9);
-        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL)*1e9);
+        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
+        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
         trk.Track(c->GetName() + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
@@ -926,25 +865,23 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
         //trk.Track(c->GetName() + "_CompartmentInFlow_mL_per_min", time, c->GetInFlow(VolumePerTimeUnit::mL_Per_min));
         //trk.Track(c->GetName() + "_CompartmentOutFlow_mL_per_min", time, c->GetOutFlow(VolumePerTimeUnit::mL_Per_min));
       }
-      for (SELiquidCompartment* c : extracellularCompartments)
-      {
+      for (SELiquidCompartment* c : extracellularCompartments) {
         trk.Track(c->GetName() + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L)*1e9);
-        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL)*1e9);
+        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
+        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
         trk.Track(c->GetName() + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_UreaConcentration_mg_per_dL", time, c->GetSubstanceQuantity(urea)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
       }
-      for (SELiquidCompartment* c : intracellularCompartments)
-      {
+      for (SELiquidCompartment* c : intracellularCompartments) {
         trk.Track(c->GetName() + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L)*1e9);
-        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL)*1e9);
+        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
+        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
         trk.Track(c->GetName() + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
         trk.Track(c->GetName() + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
@@ -962,8 +899,8 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
 
       trk.Track("BrainEnergyDeficit_kcal", time, brainEnergyDeficit_kcal);
       trk.Track("MuscleEnergyDeficit_kcal", time, muscleEnergyDeficit_kcal);
-      trk.Track("CO2Produced_ug", time, CO2Produced_mol*44.01*1000000);
-      trk.Track("O2Consumed_ug", time, O2Consumed_mol*32*1000000);
+      trk.Track("CO2Produced_ug", time, CO2Produced_mol * 44.01 * 1000000);
+      trk.Track("O2Consumed_ug", time, O2Consumed_mol * 32 * 1000000);
 
       trk.Track("totalGlucoseFromAA_g", time, totalGlucoseFromAA_g);
       trk.Track("totalGlucoseFromLactate_g", time, totalGlucoseFromLactate_g);
@@ -975,8 +912,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       trk.StreamTrackToFile(file);
     }
 
-    if (i == 0)
-    {
+    if (i == 0) {
       trk.CreateFile(std::string(rptDirectory + outputName + ".txt").c_str(), file);
     }
 
@@ -992,84 +928,77 @@ void BioGearsEngineTest::NutrientDiffusion(std::vector<SELiquidCompartment*>& va
 
   //Since this unit test only uses a subset of the tissues in BioGears, we'll keep track of which one we're dealing with
   //based on an ordered index. It's annoying, but it's better than replicating all of Tissue's SetUp.
-  for (int tissueIndex = 0; tissueIndex < extracellularCompartments.size(); tissueIndex++)
-  {
+  for (int tissueIndex = 0; tissueIndex < extracellularCompartments.size(); tissueIndex++) {
     SELiquidCompartment* ECtissueCompartment = extracellularCompartments.at(tissueIndex);
     SELiquidCompartment* vascularCompartment = vascularCompartments.at(tissueIndex);
 
     std::string ICName = ECtissueCompartment->GetName();
-    ICName.replace(ICName.find("Extracellular"), 13, "Intracellular");  //irresponsible hacky way to find a corresponding IC compartment
+    ICName.replace(ICName.find("Extracellular"), 13, "Intracellular"); //irresponsible hacky way to find a corresponding IC compartment
     SELiquidCompartment* ICtissueCompartment = bg.GetCompartments().GetLiquidCompartment(ICName);
 
-    double movedMass_ug;  //only used for possible debugging output
+    double movedMass_ug; //only used for possible debugging output
 
     //for each active substance
-    for (SESubstance* sub : bg.GetSubstances().GetActiveSubstances())
-    {
+    for (SESubstance* sub : bg.GetSubstances().GetActiveSubstances()) {
       //We have to make an exception for the brain and TAGs, since TAG can't cross blood-brain barrier
       if (sub->GetName() == "Triacylglycerol" && ECtissueCompartment->GetName().find("Brain") != std::string::npos)
         continue;
 
       //Gases get moved by instant diffusion
-      if (sub->GetState() == CDM::enumSubstanceState::Gas)
-      {
+      if (sub->GetState() == CDM::enumSubstanceState::Gas) {
         //Gases get moved by instant diffusion only
         //Note: in the current Tissue::CalculateDiffusion(), gases move by instant diffusion, and THEN
         //have a contribution by simple diffusion, causing possible overshoot. This is removed here.
         movedMass_ug = tsu.MoveMassByInstantDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, deltaT_s);
-        if(ICtissueCompartment!=nullptr)
+        if (ICtissueCompartment != nullptr)
           movedMass_ug = tsu.MoveMassByInstantDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, deltaT_s);
       }
       //Sodium is currently an oddball handled by instant diffusion, but we may want to change to simple and/or active when we do other ions
-      else if (sub->GetName() == "Sodium")
-      {
+      else if (sub->GetName() == "Sodium") {
         movedMass_ug = tsu.MoveMassByInstantDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, deltaT_s);
         if (ICtissueCompartment != nullptr)
           movedMass_ug = tsu.MoveMassByInstantDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, deltaT_s);
       }
       //All non-gas substances (besides sodium) use either simple, facilitated, or active diffusion
-      else
-      {
+      else {
         double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
 
         //Simple diffusion calculates a permeability based on molecular weight. Even large molecules will diffuse, though slowly.
-        //We want to prevent movement of large molecules like proteins completely. A gate of 1000 g/mol will filter out things like 
+        //We want to prevent movement of large molecules like proteins completely. A gate of 1000 g/mol will filter out things like
         //albumin, insulin, etc while allowing glucose, ions, and others to be governed by their molecular weight.
         //Note: it doesn't consider lipophilicity, so TAG will need to be artificially tweaked using other diffusion methods.
-        if (molarMass_g_Per_mol < 1000)
-        {
+        if (molarMass_g_Per_mol < 1000) {
           // Compute the vascular to extracellular permeability coefficient
           // This is the coefficient per gram of tissue independent of the tissue type.
           // This uses the Renkin and Curry data for capillary exchange as reported in \cite fournier2011basic
           // Divide by 100 is because the Renkin-Curry equations are in per hectogram units, and 100 g/hg
           /// \todo I believe we can optimize with a cache of these values. Also, we can cache permeabilityCoefficient_mL_Per_s_g which is not a function of the tissue properties
           double vToECpermeabilityCoefficient_mL_Per_s_g = 0;
-          double molecularRadius_nm = 0.0348*pow(molarMass_g_Per_mol, 0.4175);
+          double molecularRadius_nm = 0.0348 * pow(molarMass_g_Per_mol, 0.4175);
           if (molecularRadius_nm < 1.0)
-            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184*pow(molecularRadius_nm, -1.223) / 100.0;
+            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * pow(molecularRadius_nm, -1.223) / 100.0;
           else
-            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287*pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
+            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
 
-          // Multiply by tissue mass to get the tissue-dependent coefficient. 
+          // Multiply by tissue mass to get the tissue-dependent coefficient.
           double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissueTotalMasses.at(tissueIndex);
           // A tuning factor helps tune the dynamics - note that concentrations will ALWAYS equilibrate in steady state given enough time regardless of the permeability
           double vToECPermeabilityTuningFactor = 1.0;
           double ECToICPermeabilityTuningFactor = 1.0;
-          movedMass_ug = tsu.MoveMassBySimpleDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, vToECPermeabilityTuningFactor*vToECpermeabilityCoefficient_mL_Per_s, deltaT_s);
+          movedMass_ug = tsu.MoveMassBySimpleDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, vToECPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, deltaT_s);
           //trk.Track(ECtissueCompartment->GetName() + sub->GetName() + "_SimpleDiffusionMass", time, movedMass_ug);
 
           //Assume EC to IC permeability is the same as V to EC; can use tuning factor if desired
           if (ICtissueCompartment != nullptr)
-            movedMass_ug = tsu.MoveMassBySimpleDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, ECToICPermeabilityTuningFactor*vToECpermeabilityCoefficient_mL_Per_s, deltaT_s);
+            movedMass_ug = tsu.MoveMassBySimpleDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, ECToICPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, deltaT_s);
         }
 
         //Now facilitated diffusion
-        if (sub->HasMaximumDiffusionFlux())
-        {
+        if (sub->HasMaximumDiffusionFlux()) {
           double massToAreaCoefficient_cm2_Per_g = 1.0; /// \todo Define relationship between tissue mass and membrane area.
           double capCoverage_cm2 = massToAreaCoefficient_cm2_Per_g * tissueTotalMasses.at(tissueIndex);
           double maximumMassFlux = sub->GetMaximumDiffusionFlux(MassPerAreaTimeUnit::g_Per_cm2_s);
-          double combinedCoefficient_g_Per_s = maximumMassFlux*capCoverage_cm2;
+          double combinedCoefficient_g_Per_s = maximumMassFlux * capCoverage_cm2;
           movedMass_ug = tsu.MoveMassByFacilitatedDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, combinedCoefficient_g_Per_s, deltaT_s);
           //trk.Track(ECtissueCompartment->GetName() + sub->GetName() + "_FacilitatedDiffusionMass", time, movedMass_ug);
 
@@ -1082,7 +1011,7 @@ void BioGearsEngineTest::NutrientDiffusion(std::vector<SELiquidCompartment*>& va
         /// \todo Compute the pump rate from an empirically-determined baseline pump rate.
         //movedMass_ug = tsu.MoveMassByActiveTransport(*vascularCompartment, *ECtissueCompartment, *sub, pumpRate_g_Per_s, deltaT_s);
         //if (ICtissueCompartment != nullptr)
-          //movedMass_ug = tsu.MoveMassByActiveTransport(*ECtissueCompartment, ICtissueCompartment, *sub, pumpRate_g_Per_s, deltaT_s);
+        //movedMass_ug = tsu.MoveMassByActiveTransport(*ECtissueCompartment, ICtissueCompartment, *sub, pumpRate_g_Per_s, deltaT_s);
       }
 
       //Now that mass has been moved, balance to set concentrations and molarities
@@ -1125,11 +1054,10 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
   double CO2_Per_Glucose = 6;
   double O2_Per_Glucose = 6;
 
-  double energyAsIntracellularBrainGlucose_kcal = (brainIntracellular->GetSubstanceQuantity(glucose)->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*brainVolume_L) * ATP_Per_Glucose * energyPerMolATP_kcal;
+  double energyAsIntracellularBrainGlucose_kcal = (brainIntracellular->GetSubstanceQuantity(glucose)->GetMolarity(AmountPerVolumeUnit::mol_Per_L) * brainVolume_L) * ATP_Per_Glucose * energyPerMolATP_kcal;
 
   //If we have enough energy as glucose, consume it
-  if (energyAsIntracellularBrainGlucose_kcal >= brainNeededEnergy_kcal)
-  {
+  if (energyAsIntracellularBrainGlucose_kcal >= brainNeededEnergy_kcal) {
     double glucoseToConsume_mol = brainNeededEnergy_kcal / energyPerMolATP_kcal / ATP_Per_Glucose;
     brainIntracellular->GetSubstanceQuantity(glucose)->GetMolarity().IncrementValue(-glucoseToConsume_mol / brainVolume_L, AmountPerVolumeUnit::mol_Per_L);
     CO2Produced_mol += glucoseToConsume_mol * CO2_Per_Glucose;
@@ -1138,8 +1066,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
     brainNeededEnergy_kcal = 0;
   }
   //Otherwise, consume what intracellular glucose is there and track the deficit
-  else
-  {
+  else {
     double glucoseToConsume_mol = energyAsIntracellularBrainGlucose_kcal / energyPerMolATP_kcal / ATP_Per_Glucose;
     brainIntracellular->GetSubstanceQuantity(glucose)->GetMolarity().SetValue(0, AmountPerVolumeUnit::mol_Per_L);
     CO2Produced_mol += glucoseToConsume_mol * CO2_Per_Glucose;
@@ -1154,11 +1081,10 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
   double CO2_Per_Ketone = 6; //double check this, ketones consumed via citric acid cycle, so should be the same as glucose
   double O2_Per_Ketone = 6; //Not sure about this either
 
-  double energyAsIntracellularBrainKetones_kcal = (brainIntracellular->GetSubstanceQuantity(ketones)->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*brainVolume_L) * ATP_Per_Ketone * energyPerMolATP_kcal;
+  double energyAsIntracellularBrainKetones_kcal = (brainIntracellular->GetSubstanceQuantity(ketones)->GetMolarity(AmountPerVolumeUnit::mol_Per_L) * brainVolume_L) * ATP_Per_Ketone * energyPerMolATP_kcal;
 
   //If we still need brain energy and we have enough ketones to cover it
-  if (brainNeededEnergy_kcal > 0 && energyAsIntracellularBrainKetones_kcal >= brainNeededEnergy_kcal)
-  {
+  if (brainNeededEnergy_kcal > 0 && energyAsIntracellularBrainKetones_kcal >= brainNeededEnergy_kcal) {
     double ketonesToConsume_mol = brainNeededEnergy_kcal / energyPerMolATP_kcal / ATP_Per_Ketone;
     brainIntracellular->GetSubstanceQuantity(ketones)->GetMolarity().IncrementValue(-ketonesToConsume_mol / brainVolume_L, AmountPerVolumeUnit::mol_Per_L);
     CO2Produced_mol += ketonesToConsume_mol * CO2_Per_Ketone;
@@ -1167,8 +1093,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
     brainNeededEnergy_kcal = 0;
   }
   //Otherwise, consume the ketones in the brain and track the deficit
-  else if (brainNeededEnergy_kcal > 0)
-  {
+  else if (brainNeededEnergy_kcal > 0) {
     double ketonesToConsume_mol = energyAsIntracellularBrainKetones_kcal / energyPerMolATP_kcal / ATP_Per_Ketone;
     brainIntracellular->GetSubstanceQuantity(ketones)->GetMolarity().SetValue(0, AmountPerVolumeUnit::mol_Per_L);
     CO2Produced_mol += ketonesToConsume_mol * CO2_Per_Ketone;
@@ -1198,14 +1123,12 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
 
   //See if we actually have enough muscle AA to meet the request and carry it out
   //Note: Brain can't consume AA
-  double intracellularAA_mol = muscleIntracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*muscleVolume_L;
+  double intracellularAA_mol = muscleIntracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity(AmountPerVolumeUnit::mol_Per_L) * muscleVolume_L;
   double AADeficit_mol = intracellularAA_mol - AAToConsume_mol;
 
   //There wasn't enough; consume all intracellular AA and track deficit if desired
-  if (!isAnaerobic)
-  {
-    if (AADeficit_mol < 0)
-    {
+  if (!isAnaerobic) {
+    if (AADeficit_mol < 0) {
       // -AADeficit_mol //Track this to see if there's a problem with AA deficiency; this shouldn't be an energy deficit since muscles can still get energy from glycogen and glucose
       muscleIntracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity().SetValue(0, AmountPerVolumeUnit::mol_Per_L);
       liverExtracellular->GetSubstanceQuantity(urea)->GetMolarity().IncrementValue(intracellularAA_mol * Urea_Per_AA / muscleVolume_L, AmountPerVolumeUnit::mol_Per_L);
@@ -1214,8 +1137,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
       muscleNeededEnergy_kcal -= intracellularAA_mol * 13 * energyPerMolATP_kcal; //We'll still need to consume glycogen and glucose using this if possible
     }
     //There was enough; consume the required amount
-    else
-    {
+    else {
       muscleIntracellular->GetSubstanceQuantity(aminoAcids)->GetMolarity().IncrementValue(-AAToConsume_mol / muscleVolume_L, AmountPerVolumeUnit::mol_Per_L);
       liverExtracellular->GetSubstanceQuantity(urea)->GetMolarity().IncrementValue(AAToConsume_mol * Urea_Per_AA / muscleVolume_L, AmountPerVolumeUnit::mol_Per_L);
       CO2Produced_mol += AAToConsume_mol * CO2_Per_AA;
@@ -1236,17 +1158,15 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
   //Assuming all fatty chains are palmitate, not consumed at theoretical yield (so 106 ATP each), and 12 ATP from glycerol backbone to pyruvate to Citric Acid Cycle
   //See https://en.wikipedia.org/wiki/Beta_oxidation and try to find a better source
   double ATP_Per_TAG = 330;
-  double CO2_Per_TAG = 55;  //meerman2014when
+  double CO2_Per_TAG = 55; //meerman2014when
   double O2_Per_TAG = 78;
   double rateLimitingTuningFactor = 1;
 
-  double energyAsMuscleTAG_kcal = rateLimitingTuningFactor*(muscleIntracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*muscleVolume_L) * ATP_Per_TAG * energyPerMolATP_kcal;
+  double energyAsMuscleTAG_kcal = rateLimitingTuningFactor * (muscleIntracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity(AmountPerVolumeUnit::mol_Per_L) * muscleVolume_L) * ATP_Per_TAG * energyPerMolATP_kcal;
 
   //If we have enough usable intracellular TAG to meet the request
-  if (!isAnaerobic)
-  {
-    if (energyAsMuscleTAG_kcal >= muscleNeededEnergy_kcal)
-    {
+  if (!isAnaerobic) {
+    if (energyAsMuscleTAG_kcal >= muscleNeededEnergy_kcal) {
       double TAGToConsume_mol = muscleNeededEnergy_kcal / energyPerMolATP_kcal / ATP_Per_TAG;
       muscleIntracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity().IncrementValue(-TAGToConsume_mol / muscleVolume_L, AmountPerVolumeUnit::mol_Per_L);
       CO2Produced_mol += TAGToConsume_mol * CO2_Per_TAG;
@@ -1255,8 +1175,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
       muscleIntracellular->GetSubstanceQuantity(triacylglycerol)->Balance(BalanceLiquidBy::Molarity);
     }
     //If there's not enough, consume what we can and move on to glycogen and glucose
-    else
-    {
+    else {
       double TAGToConsume_mol = energyAsMuscleTAG_kcal / energyPerMolATP_kcal / ATP_Per_TAG;
       muscleIntracellular->GetSubstanceQuantity(triacylglycerol)->GetMolarity().SetValue(0, AmountPerVolumeUnit::mol_Per_L);
       CO2Produced_mol += TAGToConsume_mol * CO2_Per_TAG;
@@ -1267,13 +1186,11 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
   }
 
   //Consume intracellular glucose (aerobic)
-  if (!isAnaerobic)
-  {
-    double energyAsMuscleIntracellularGlucose_kcal = (muscleIntracellular->GetSubstanceQuantity(glucose)->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*muscleVolume_L) * ATP_Per_Glucose * energyPerMolATP_kcal;
+  if (!isAnaerobic) {
+    double energyAsMuscleIntracellularGlucose_kcal = (muscleIntracellular->GetSubstanceQuantity(glucose)->GetMolarity(AmountPerVolumeUnit::mol_Per_L) * muscleVolume_L) * ATP_Per_Glucose * energyPerMolATP_kcal;
 
     //If we have enough intracellular glucose to meet the request
-    if (energyAsMuscleIntracellularGlucose_kcal >= muscleNeededEnergy_kcal)
-    {
+    if (energyAsMuscleIntracellularGlucose_kcal >= muscleNeededEnergy_kcal) {
       double glucoseToConsume_mol = muscleNeededEnergy_kcal / energyPerMolATP_kcal / ATP_Per_Glucose;
       muscleIntracellular->GetSubstanceQuantity(glucose)->GetMolarity().IncrementValue(-glucoseToConsume_mol / muscleVolume_L, AmountPerVolumeUnit::mol_Per_L);
       CO2Produced_mol += glucoseToConsume_mol * CO2_Per_Glucose;
@@ -1282,8 +1199,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
       muscleIntracellular->GetSubstanceQuantity(glucose)->Balance(BalanceLiquidBy::Molarity);
     }
     //If we don't have enough
-    else
-    {
+    else {
       double glucoseToConsume_mol = energyAsMuscleIntracellularGlucose_kcal / energyPerMolATP_kcal / ATP_Per_Glucose;
       muscleIntracellular->GetSubstanceQuantity(glucose)->GetMolarity().SetValue(0, AmountPerVolumeUnit::mol_Per_L);
       CO2Produced_mol += glucoseToConsume_mol * CO2_Per_Glucose;
@@ -1293,15 +1209,13 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
     }
   }
   //Consume intracellular glucose (anaerobic)
-  else
-  {
+  else {
     double anaerobic_ATP_Per_Glucose = 2;
-    double energyAsMuscleIntracellularGlucose_kcal = (muscleIntracellular->GetSubstanceQuantity(glucose)->GetMolarity(AmountPerVolumeUnit::mol_Per_L)*muscleVolume_L) * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
+    double energyAsMuscleIntracellularGlucose_kcal = (muscleIntracellular->GetSubstanceQuantity(glucose)->GetMolarity(AmountPerVolumeUnit::mol_Per_L) * muscleVolume_L) * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
     double lactate_Per_Glucose = 2;
 
     //If we have enough intracellular glucose to meet the request
-    if (energyAsMuscleIntracellularGlucose_kcal >= muscleNeededEnergy_kcal)
-    {
+    if (energyAsMuscleIntracellularGlucose_kcal >= muscleNeededEnergy_kcal) {
       double glucoseToConsume_mol = muscleNeededEnergy_kcal / energyPerMolATP_kcal / anaerobic_ATP_Per_Glucose;
       muscleIntracellular->GetSubstanceQuantity(glucose)->GetMass().IncrementValue(-glucoseToConsume_mol * glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
       muscleIntracellular->GetSubstanceQuantity(lactate)->GetMass().IncrementValue(glucoseToConsume_mol * lactate_Per_Glucose * lactate.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -1311,8 +1225,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
       muscleIntracellular->GetSubstanceQuantity(lactate)->Balance(BalanceLiquidBy::Mass);
     }
     //If we'll end up with a deficit
-    else
-    {
+    else {
       double glucoseToConsume_mol = energyAsMuscleIntracellularGlucose_kcal / energyPerMolATP_kcal / anaerobic_ATP_Per_Glucose;
       muscleIntracellular->GetSubstanceQuantity(glucose)->GetMass().SetValue(0, MassUnit::g);
       muscleIntracellular->GetSubstanceQuantity(lactate)->GetMass().IncrementValue(glucoseToConsume_mol * lactate_Per_Glucose * lactate.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -1328,14 +1241,12 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
   double lactate_Per_Glycogen = 2;
 
   //Muscle glycogen consumption (aerobic)
-  if (!isAnaerobic)
-  {
+  if (!isAnaerobic) {
     double energyAsMuscleGlycogen_kcal = (muscleGlycogen_g / glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol)) * aerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
 
     //If we have enough energy as glycogen, consume it
     //TODO Glycogen should be consumed at a particular rate, like AA
-    if (energyAsMuscleGlycogen_kcal >= muscleNeededEnergy_kcal)
-    {
+    if (energyAsMuscleGlycogen_kcal >= muscleNeededEnergy_kcal) {
       double glycogenConsumed_g = (muscleNeededEnergy_kcal / energyAsMuscleGlycogen_kcal) * muscleGlycogen_g;
       double glycogenConsumed_mol = glycogenConsumed_g / glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
       muscleGlycogen_g -= glycogenConsumed_g; //we passed this by reference, so it will be updated for subsequent timesteps
@@ -1344,8 +1255,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
       muscleNeededEnergy_kcal = 0;
     }
     //Otherwise, consume what glycogen we can
-    else
-    {
+    else {
       double glycogenConsumed_mol = muscleGlycogen_g / glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
       muscleGlycogen_g = 0;
       CO2Produced_mol += glycogenConsumed_mol * CO2_Per_Glucose;
@@ -1355,13 +1265,11 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
   }
   //Muscle glycogen consumption (anaerobic)
   //Glycogen->Glucose->2Pyruvate->2Lactate
-  else
-  {
+  else {
     double energyAsMuscleGlycogen_kcal = (muscleGlycogen_g / glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol)) * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
 
     //If we have enough
-    if (energyAsMuscleGlycogen_kcal >= muscleNeededEnergy_kcal)
-    {
+    if (energyAsMuscleGlycogen_kcal >= muscleNeededEnergy_kcal) {
       double glycogenConsumed_g = (muscleNeededEnergy_kcal / energyAsMuscleGlycogen_kcal) * muscleGlycogen_g;
       double glycogenConsumed_mol = glycogenConsumed_g / glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
       muscleGlycogen_g -= glycogenConsumed_g; //we passed this by reference, so it will be updated for subsequent timesteps
@@ -1371,8 +1279,7 @@ void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, doub
       muscleNeededEnergy_kcal = 0;
     }
     //If we still can't meet the energy request, we have an energy deficit
-    else
-    {
+    else {
       double glycogenConsumed_mol = muscleGlycogen_g / glucose.GetMolarMass(MassPerAmountUnit::g_Per_mol);
       muscleGlycogen_g = 0;
       muscleIntracellular->GetSubstanceQuantity(lactate)->GetMass().IncrementValue(glycogenConsumed_mol * lactate_Per_Glycogen * lactate.GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
@@ -1398,11 +1305,10 @@ void BioGearsEngineTest::CustomNutrientKineticsTest(const std::string& sOutputDi
     true, //lipogenesis
     false, //gluconeogenesis
     false, //anaerobic exercise
-    0,   //Watts of additional work done anaerobically
+    0, //Watts of additional work done anaerobically
     sOutputDirectory,
     12, //simulation duration
-    MealType::Balanced
-  );
+    MealType::Balanced);
 }
 
 void BioGearsEngineTest::ProteinGluconeogenesisTest(const std::string& sOutputDirectory)
@@ -1419,11 +1325,11 @@ void BioGearsEngineTest::ProteinGluconeogenesisTest(const std::string& sOutputDi
     true, //lipogenesis
     true, //gluconeogenesis
     false, //anaerobic exercise
-    0,   //Watts of additional work done anaerobically
+    0, //Watts of additional work done anaerobically
     sOutputDirectory,
     24, //simulation duration
-    MealType::ProteinOnly,  //meal type
-    "ProteinGluconeogenesisTest"  //test name
+    MealType::ProteinOnly, //meal type
+    "ProteinGluconeogenesisTest" //test name
   );
 }
 
@@ -1441,11 +1347,11 @@ void BioGearsEngineTest::StarvingKetogenesisTest(const std::string& sOutputDirec
     true, //lipogenesis
     true, //gluconeogenesis
     false, //anaerobic exercise
-    0,   //Watts of additional work done anaerobically
+    0, //Watts of additional work done anaerobically
     sOutputDirectory,
     24, //simulation duration
-    MealType::None,  //meal type
-    "StarvingKetogenesisTest"  //test name
+    MealType::None, //meal type
+    "StarvingKetogenesisTest" //test name
   );
 }
 
@@ -1463,11 +1369,11 @@ void BioGearsEngineTest::AnaerobicExerciseTest(const std::string& sOutputDirecto
     true, //lipogenesis
     true, //gluconeogenesis
     true, //anaerobic exercise
-    50,   //Watts of additional work done anaerobically
+    50, //Watts of additional work done anaerobically
     sOutputDirectory,
     1, //simulation duration
-    MealType::None,  //meal type
-    "AnaerobicExerciseTest"  //test name
+    MealType::None, //meal type
+    "AnaerobicExerciseTest" //test name
   );
 }
 
@@ -1485,11 +1391,11 @@ void BioGearsEngineTest::HormoneStabilityTest(const std::string& sOutputDirector
     false, //lipogenesis
     false, //gluconeogenesis
     false, //anaerobic exercise
-    0,   //Watts of additional work done anaerobically
+    0, //Watts of additional work done anaerobically
     sOutputDirectory,
     24, //simulation duration
-    MealType::None,  //meal type
-    "HormoneStabilityTest"  //test name
+    MealType::None, //meal type
+    "HormoneStabilityTest" //test name
   );
 }
 
@@ -1507,11 +1413,11 @@ void BioGearsEngineTest::StorageTest(const std::string& sOutputDirectory)
     false, //lipogenesis
     false, //gluconeogenesis
     false, //anaerobic exercise
-    0,   //Watts of additional work done anaerobically
+    0, //Watts of additional work done anaerobically
     sOutputDirectory,
     12, //simulation duration
-    MealType::Balanced,  //meal type
-    "StorageTest"  //test name
+    MealType::Balanced, //meal type
+    "StorageTest" //test name
   );
 }
 
@@ -1529,11 +1435,11 @@ void BioGearsEngineTest::FullStoresFastingTest(const std::string& sOutputDirecto
     true, //lipogenesis
     true, //gluconeogenesis
     false, //anaerobic exercise
-    0,   //Watts of additional work done anaerobically
+    0, //Watts of additional work done anaerobically
     sOutputDirectory,
     12, //simulation duration
-    MealType::None,  //meal type
-    "FullStoresFastingTest"  //test name
+    MealType::None, //meal type
+    "FullStoresFastingTest" //test name
   );
 }
 
@@ -1551,10 +1457,10 @@ void BioGearsEngineTest::LipogenesisTest(const std::string& sOutputDirectory)
     true, //lipogenesis
     false, //gluconeogenesis
     false, //anaerobic exercise
-    0,   //Watts of additional work done anaerobically
+    0, //Watts of additional work done anaerobically
     sOutputDirectory,
     12, //simulation duration
-    MealType::Balanced,  //meal type
-    "LipogenesisTest"  //test name
+    MealType::Balanced, //meal type
+    "LipogenesisTest" //test name
   );
 }
