@@ -12,6 +12,7 @@ import os
 import re
 import pandas as pd
 import shutil
+import pathlib
 
 import argparse
 
@@ -41,6 +42,7 @@ def main( args):
     global _root_directory
     global _output_directory
     global _clean_directory
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', help="Adjust the log verbosity.", dest='verbosity', default=0, action='count' )
     parser.add_argument('--version', action='version', version='%(prog)s 1.1')
@@ -56,7 +58,7 @@ def main( args):
         nargs="+", action="store",
         help="One or more scenario files or directories. ")
     parser.add_argument('--skip', 
-        dest='skip_count', action="store", default=5,
+        dest='skip_count', action="store", default=10,
         help="Number of lines to skip for faster plotting")
 
     args = parser.parse_args()
@@ -67,7 +69,7 @@ def main( args):
     _root_directory = args.root
     _output_directory = args.outdir if args.outdir else args.root
     _clean_directory = args.cleanup
-
+    
     log("INPUT = {}".format(_root_directory),LOG_LEVEL_2)
     log("OUTPUT = {}".format(_output_directory),LOG_LEVEL_2)
     log("Recursive Mode = {}".format(args.recurse),LOG_LEVEL_2)
@@ -97,7 +99,13 @@ def plot(root_dir, source, skip_count):
     input_source = os.path.join(root_dir,source)
     basename,extension     = os.path.splitext(input_source)
     output_path = os.path.join(_output_directory,os.path.relpath(basename,_root_directory))
-   
+
+    #Assuming that biogears-plotter is always going to be in this location (core/share/python)
+    #If there is a better way to get to verification directory, please add it.  I was trying to use
+    #relpath without success
+    verification_dir = os.path.join(str(pathlib.PurePath(os.path.realpath(__file__)).parents[3]),'verification\Scenarios')
+    log("Verification is in: {}".format(verification_dir),LOG_LEVEL_1)
+    
     log("{}{}".format(basename,extension),LOG_LEVEL_4)
     if ( not os.path.exists(input_source)):
         log ("plot called with non exist file. This should not occur! {0}".format(input_source),LOG_LEVEL_0 )    
@@ -106,8 +114,6 @@ def plot(root_dir, source, skip_count):
     else:
         log ("{0}".format(input_source),LOG_LEVEL_1)
 
-        # verDirOut = r'D:\BioGears\verification\Plots' + '\\' + verDir
-        # targetDir = verDirOut + '\\' + fileName
         #Create directory for plots ()
         dirname   =  os.path.dirname(output_path) 
         basename, extension = os.path.splitext(os.path.basename(output_path))
@@ -122,10 +128,23 @@ def plot(root_dir, source, skip_count):
 
         #Read in results file
         dataCSV = pd.read_csv(input_source,sep=',', header=0)
+
         #Extract data calls (specified in xml)
         colNames = list(dataCSV)
         #Time = x-axis by default
         xData = dataCSV['Time(s)'].values[::skip_count]
+        
+        baseFound=False
+        #Grab the zip file with the baselines, if they exist
+        try:
+            baseline_path = os.path.join(pathlib.PurePath(source).parts[0],os.path.join('Current Baseline',basename + '.zip'))
+            baseline_source = os.path.join(verification_dir,baseline_path)
+            baseCSV = pd.read_csv(os.path.normpath(baseline_source), sep=',',header=0)
+            log("Found baseline file: {}".format(baseline_source),LOG_LEVEL_2)
+            xBase = baseCSV['Time(s)'].values[::skip_count]
+            baseFound=True
+        except FileNotFoundError:
+            err("Error: Could not find baseline file: {}".format(baseline_source),LOG_LEVEL_0)
 
         #Plot each column of data 
         for col in colNames:
@@ -140,32 +159,44 @@ def plot(root_dir, source, skip_count):
                 log("Error: Column is empty did you provide a non resonable skip_count?", LOG_LEVEL_0)
             else:
                 yRange = max(yData)-min(yData)
-                #Set plot range to +/- 10% on either side
+                #For most scenarios, set plot min to 0 and set upper boundary 25% above max value
                 if yRange > 0:
-                    plotMin = min(yData) - 0.1*yRange
-                    plotMax = max(yData) + 0.1*yRange
+                    if min(yData) >=0:
+                        plotMin = 0.0
+                        plotMax = 1.25 * max(yData)
+                    else:
+                        #We have negative values somewhere, so lets just take 25% above and below
+                        plotMin = min(yData)-0.25*abs(min(yData))
+                        plotMax = max(yData) + 0.25*abs(max(yData))
                 else:
                     #This means we're probably plotting a bunch of zeros...
                     plotMin = yData[0] - 5
                     plotMax = yData[0] + 5
-                
+            
                 #Extract unit--assuming they are specified in parentheses
                 unitIndex = col.find('(')
                 if(unitIndex == -1):
                     unit = ''
                 else:
                     unit = col[unitIndex:len(col)]
-                    col = col.replace(unit,'')
+                    plotCol = col.replace(unit,'')
                 
                 log("Plotting {}".format(col), LOG_LEVEL_2)
                 
-                plt.plot(xData,yData)
-                plt.title(col)
+                plt.plot(xData,yData,'-k',label='Scenario')
+                if baseFound:
+                    try:
+                        yBase = baseCSV[col].values[::int(skip_count)]
+                        plt.plot(xBase,yBase,'xkcd:apple green',linestyle=':',label='Baseline')
+                    except KeyError:
+                        err('No baseline information for {}'.format(plotCol),LOG_LEVEL_0)
+                plt.title(plotCol)
                 plt.ylim([plotMin,plotMax])
                 plt.xlabel('Time (s)')
-                plt.ylabel(col + unit)
+                plt.ylabel(plotCol + unit)
                 plt.grid()
-                figName = os.path.join(out_dir,"{}.png".format(col))
+                plt.legend()
+                figName = os.path.join(out_dir,"{}.png".format(plotCol))
                 log("Saving : {0}".format(figName), LOG_LEVEL_3)
                 if os.path.exists(figName):
                     os.remove(figName)
