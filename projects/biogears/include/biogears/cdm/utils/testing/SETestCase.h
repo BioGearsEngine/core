@@ -17,39 +17,40 @@ class SETestSuite;
 
 CDM_BIND_DECL(TestCase)
 
-class BIOGEARS_API SETestCase : public Loggable
-{
+class BIOGEARS_API SETestCase : public Loggable {
   friend SETestSuite;
+
 protected:
   SETestCase(Logger* logger);
   SETestCase(const std::string& name, Logger* logger);
+
 public:
-	virtual ~SETestCase();
+  virtual ~SETestCase();
 
-	virtual void Reset(); //reset values
-	virtual void Clear(); //clear memory
+  virtual void Reset(); //reset values
+  virtual void Clear(); //clear memory
 
-	bool Load(const CDM::TestCase& in);
-	std::unique_ptr<CDM::TestCase> Unload() const;
+  bool Load(const CDM::TestCase& in);
+  std::unique_ptr<CDM::TestCase> Unload() const;
+
 protected:
-	void Unload(CDM::TestCase& data) const;
+  void Unload(CDM::TestCase& data) const;
 
 public:
-
-	void								                 SetName(const std::string& name);
-	std::string							             GetName() const;
-	SEScalarTime&						             GetDuration();
-  void                                 AddFailure(std::stringstream &msg);
-  void                                 AddFailure(const std::string& err);
-	const std::vector<std::string>&			 GetFailures();
+  void SetName(const std::string& name);
+  std::string GetName() const;
+  SEScalarTime& GetDuration();
+  void AddFailure(std::stringstream& msg);
+  void AddFailure(const std::string& err);
+  const std::vector<std::string>& GetFailures();
 
   SETestErrorStatistics& CreateErrorStatistic();
-	const std::vector<SETestErrorStatistics*>& GetErrorStatistics() const;
+  const std::vector<SETestErrorStatistics*>& GetErrorStatistics() const;
 
 protected:
-	std::string  m_Name;
-	SEScalarTime m_Duration;
+  std::string m_Name;
+  SEScalarTime m_Duration;
 
-	std::vector<std::string> m_Failure;
-	std::vector<SETestErrorStatistics*> m_CaseEqualsErrors;
+  std::vector<std::string> m_Failure;
+  std::vector<SETestErrorStatistics*> m_CaseEqualsErrors;
 };

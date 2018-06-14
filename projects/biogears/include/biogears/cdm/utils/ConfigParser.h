@@ -21,33 +21,31 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 #include <map>
 
-class BIOGEARS_API ConfigSet
-{
+class BIOGEARS_API ConfigSet {
 public:
-    void SetKeyValues(const std::map<std::string, std::string>& keyValues);
-    void AddKeyValue(const std::string& key, const std::string& value);
-    const std::map<std::string, std::string>& GetKeyValues() const { return m_keyValues; }
+  void SetKeyValues(const std::map<std::string, std::string>& keyValues);
+  void AddKeyValue(const std::string& key, const std::string& value);
+  const std::map<std::string, std::string>& GetKeyValues() const { return m_keyValues; }
 
-    bool HasKey(const std::string& key) const;
-    std::string GetValue(const std::string& key) const;
+  bool HasKey(const std::string& key) const;
+  std::string GetValue(const std::string& key) const;
 
 private:
-    std::map<std::string, std::string> m_keyValues;
+  std::map<std::string, std::string> m_keyValues;
 };
 
-class BIOGEARS_API ConfigParser
-{
+class BIOGEARS_API ConfigParser {
 public:
-    ConfigParser(const std::string& configFilePath);
+  ConfigParser(const std::string& configFilePath);
 
-    const std::vector<ConfigSet>& GetConfigSets() const { return m_configSets; }
+  const std::vector<ConfigSet>& GetConfigSets() const { return m_configSets; }
 
 private:
-    void ParseConfigFile(const std::string& configFile);
-    std::tuple<std::string, std::string> ParseKeyValue(const std::string& line);
+  void ParseConfigFile(const std::string& configFile);
+  std::tuple<std::string, std::string> ParseKeyValue(const std::string& line);
 
-    std::map<std::string, std::string> m_globalKeyValues;
-    std::vector<ConfigSet> m_configSets;
+  std::map<std::string, std::string> m_globalKeyValues;
+  std::vector<ConfigSet> m_configSets;
 
-    bool m_parsingGlobalKeyValues = true;
+  bool m_parsingGlobalKeyValues = true;
 };

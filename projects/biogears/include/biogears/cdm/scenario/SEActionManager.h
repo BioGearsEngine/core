@@ -18,34 +18,31 @@ class SEAction;
 #include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
 #include <biogears/cdm/scenario/SEInhalerActionCollection.h>
 
-class BIOGEARS_API SEActionManager : public Loggable
-{
+class BIOGEARS_API SEActionManager : public Loggable {
 public:
+  SEActionManager(SESubstanceManager&);
+  ~SEActionManager();
 
-	SEActionManager(SESubstanceManager&);
-	~SEActionManager();
-
-	void Clear();
+  void Clear();
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
   bool ProcessAction(const SEAction& action);
   bool ProcessAction(const CDM::ActionData& in);
 
-	SEEnvironmentActionCollection& GetEnvironmentActions() { return m_EnvironmentActions; }
-	SEPatientActionCollection& GetPatientActions() { return m_PatientActions; }
-	SEAnesthesiaMachineActionCollection& GetAnesthesiaMachineActions() { return m_AnesthesiaMachineActions; }
-	SEInhalerActionCollection& GetInhalerActions() { return m_InhalerActions; }
+  SEEnvironmentActionCollection& GetEnvironmentActions() { return m_EnvironmentActions; }
+  SEPatientActionCollection& GetPatientActions() { return m_PatientActions; }
+  SEAnesthesiaMachineActionCollection& GetAnesthesiaMachineActions() { return m_AnesthesiaMachineActions; }
+  SEInhalerActionCollection& GetInhalerActions() { return m_InhalerActions; }
 
 protected:
+  SESubstanceManager& m_Substances;
+  SEEnvironmentActionCollection m_EnvironmentActions;
+  SEPatientActionCollection m_PatientActions;
+  SEAnesthesiaMachineActionCollection m_AnesthesiaMachineActions;
+  SEInhalerActionCollection m_InhalerActions;
 
-  SESubstanceManager&                 m_Substances;
-	SEEnvironmentActionCollection       m_EnvironmentActions;
-	SEPatientActionCollection           m_PatientActions;
-	SEAnesthesiaMachineActionCollection m_AnesthesiaMachineActions;
-	SEInhalerActionCollection           m_InhalerActions;
+  std::vector<CDM::ActionData*> m_ProcessedActions;
 
-	std::vector<CDM::ActionData*>       m_ProcessedActions;
-	
-	std::stringstream m_ss;
+  std::stringstream m_ss;
 };

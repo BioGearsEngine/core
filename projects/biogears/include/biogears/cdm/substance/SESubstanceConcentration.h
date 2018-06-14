@@ -19,32 +19,29 @@ class SESubstanceManager;
 class SEEnvironmentalConditions;
 CDM_BIND_DECL(SubstanceConcentrationData)
 
-class BIOGEARS_API SESubstanceConcentration : public Loggable
-{
+class BIOGEARS_API SESubstanceConcentration : public Loggable {
 protected:
-  friend SEEnvironmentalConditions;// So it can add substances to the manager
+  friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
-
-	SESubstanceConcentration(SESubstance& substance);
-	virtual ~SESubstanceConcentration();
+  SESubstanceConcentration(SESubstance& substance);
+  virtual ~SESubstanceConcentration();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::SubstanceConcentrationData& in);
-	virtual CDM::SubstanceConcentrationData* Unload() const;
+  virtual bool Load(const CDM::SubstanceConcentrationData& in);
+  virtual CDM::SubstanceConcentrationData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::SubstanceConcentrationData& data) const;
+  virtual void Unload(CDM::SubstanceConcentrationData& data) const;
 
 public:
-	virtual bool HasConcentration() const;
-	virtual SEScalarMassPerVolume& GetConcentration();	
+  virtual bool HasConcentration() const;
+  virtual SEScalarMassPerVolume& GetConcentration();
   virtual double GetConcentration(const MassPerVolumeUnit& unit) const;
 
-	virtual SESubstance& GetSubstance() const;
-	
-protected: 
+  virtual SESubstance& GetSubstance() const;
 
-	SESubstance&           m_Substance;
-	SEScalarMassPerVolume* m_Concentration;
-	
+protected:
+  SESubstance& m_Substance;
+  SEScalarMassPerVolume* m_Concentration;
 };

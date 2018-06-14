@@ -16,21 +16,26 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/LiquidSubstanceQuantityData.hxx>
 class SELiquidCompartment;
 
-enum class BalanceLiquidBy { Mass, Concentration, Molarity, PartialPressure };
+enum class BalanceLiquidBy { Mass,
+  Concentration,
+  Molarity,
+  PartialPressure };
 
-class BIOGEARS_API SELiquidSubstanceQuantity : public SESubstanceQuantity, public SELiquidTransportSubstance
-{
+class BIOGEARS_API SELiquidSubstanceQuantity : public SESubstanceQuantity, public SELiquidTransportSubstance {
   friend class SELiquidCompartment;
+
 protected:
   SELiquidSubstanceQuantity(SESubstance& sub, SELiquidCompartment& compartment);
-public:
-	virtual ~SELiquidSubstanceQuantity();
 
-  virtual void Clear(); 
+public:
+  virtual ~SELiquidSubstanceQuantity();
+
+  virtual void Clear();
   virtual void Invalidate();
 
   virtual bool Load(const CDM::LiquidSubstanceQuantityData& in);
   virtual CDM::LiquidSubstanceQuantityData* Unload();
+
 protected:
   virtual void Unload(CDM::LiquidSubstanceQuantityData& data);
 
@@ -38,14 +43,14 @@ public:
   virtual void SetToZero();
   virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual void Balance(BalanceLiquidBy e);// Balance Substance based on a specific property
+  virtual void Balance(BalanceLiquidBy e); // Balance Substance based on a specific property
 
-	virtual bool HasConcentration() const;
-	virtual SEScalarMassPerVolume& GetConcentration();
+  virtual bool HasConcentration() const;
+  virtual SEScalarMassPerVolume& GetConcentration();
   virtual double GetConcentration(const MassPerVolumeUnit& unit) const;
 
-	virtual bool HasMass() const;
-	virtual SEScalarMass& GetMass();
+  virtual bool HasMass() const;
+  virtual SEScalarMass& GetMass();
   virtual double GetMass(const MassUnit& unit) const;
 
   virtual bool HasMassCleared() const;
@@ -59,18 +64,18 @@ public:
   virtual bool HasMassExcreted() const;
   virtual SEScalarMass& GetMassExcreted();
   virtual double GetMassExcreted(const MassUnit& unit) const;
-	
-	virtual bool HasMolarity() const;
-	virtual SEScalarAmountPerVolume& GetMolarity();
+
+  virtual bool HasMolarity() const;
+  virtual SEScalarAmountPerVolume& GetMolarity();
   virtual double GetMolarity(const AmountPerVolumeUnit& unit) const;
-	
-	virtual bool HasPartialPressure() const;
-	virtual SEScalarPressure& GetPartialPressure();
+
+  virtual bool HasPartialPressure() const;
+  virtual SEScalarPressure& GetPartialPressure();
   virtual double GetPartialPressure(const PressureUnit& unit) const;
 
-	virtual bool HasSaturation() const;
-	virtual SEScalarFraction& GetSaturation();
-	virtual double GetSaturation() const;
+  virtual bool HasSaturation() const;
+  virtual SEScalarFraction& GetSaturation();
+  virtual double GetSaturation() const;
   virtual void SetHemoglobins(SESubstance& Hb, SESubstance& HbO2, SESubstance& HbCO2, SESubstance& HbO2CO2, SESubstance& HbCO);
 
 protected:
@@ -82,16 +87,16 @@ protected:
   virtual bool HasIntensive() const { return HasConcentration(); }
   virtual SEScalarMassPerVolume& GetIntensive() { return GetConcentration(); }
 
-  SEScalarMassPerVolume*   m_Concentration;
-  SEScalarMass*            m_Mass;
-  SEScalarMass*            m_MassCleared;
-  SEScalarMass*            m_MassDeposited;
-  SEScalarMass*            m_MassExcreted;
+  SEScalarMassPerVolume* m_Concentration;
+  SEScalarMass* m_Mass;
+  SEScalarMass* m_MassCleared;
+  SEScalarMass* m_MassDeposited;
+  SEScalarMass* m_MassExcreted;
   SEScalarAmountPerVolume* m_Molarity;
-  SEScalarPressure*        m_PartialPressure;
-  SEScalarFraction*        m_Saturation;
+  SEScalarPressure* m_PartialPressure;
+  SEScalarFraction* m_Saturation;
 
-  SELiquidCompartment&     m_Compartment;
+  SELiquidCompartment& m_Compartment;
   std::vector<SELiquidSubstanceQuantity*> m_Children;
 
   bool m_isO2;

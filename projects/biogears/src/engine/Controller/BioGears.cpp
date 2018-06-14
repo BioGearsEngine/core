@@ -190,7 +190,7 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
 }
 EngineState BioGears::GetState() { return m_State; }
 
-DataTrack& BioGears::GetDataTrack();
+
 SaturationCalculator& BioGears::GetSaturationCalculator() { return *m_SaturationCalculator; }
 
 BioGearsSubstances& BioGears::GetSubstances() { return *m_Substances; }

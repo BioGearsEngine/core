@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarPowerPerAreaTemperatureToTheFourthData.hxx>
 
-class BIOGEARS_API PowerPerAreaTemperatureToTheFourthUnit : public CCompoundUnit
-{
+class BIOGEARS_API PowerPerAreaTemperatureToTheFourthUnit : public CCompoundUnit {
 public:
-  PowerPerAreaTemperatureToTheFourthUnit(const std::string& u) : CCompoundUnit(u) {}
+  PowerPerAreaTemperatureToTheFourthUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~PowerPerAreaTemperatureToTheFourthUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -26,8 +28,7 @@ public:
   static const PowerPerAreaTemperatureToTheFourthUnit W_Per_m2_K4;
 };
 
-class BIOGEARS_API SEScalarPowerPerAreaTemperatureToTheFourth : public SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>
-{
+class BIOGEARS_API SEScalarPowerPerAreaTemperatureToTheFourth : public SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit> {
 public:
   SEScalarPowerPerAreaTemperatureToTheFourth() {}
   virtual ~SEScalarPowerPerAreaTemperatureToTheFourth() {}

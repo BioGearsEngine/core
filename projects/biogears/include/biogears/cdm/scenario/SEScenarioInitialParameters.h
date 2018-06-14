@@ -18,24 +18,24 @@ class SECondition;
 class SESubstanceManager;
 class PhysiologyEngineConfiguration;
 
-class BIOGEARS_API SEScenarioInitialParameters : public Loggable
-{
+class BIOGEARS_API SEScenarioInitialParameters : public Loggable {
 protected:
   friend SEScenario;
 
   SEScenarioInitialParameters(SESubstanceManager& subMgr);
   virtual ~SEScenarioInitialParameters();
+
 public:
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
   bool Load(const CDM::ScenarioInitialParametersData& in);
   CDM::ScenarioInitialParametersData* Unload() const;
+
 protected:
-  void Unload(CDM::ScenarioInitialParametersData& data)const;
+  void Unload(CDM::ScenarioInitialParametersData& data) const;
 
 public:
-
-  virtual bool IsValid()const;
+  virtual bool IsValid() const;
 
   virtual PhysiologyEngineConfiguration& GetConfiguration();
   virtual const PhysiologyEngineConfiguration* GetConfiguration() const;
@@ -43,10 +43,10 @@ public:
   virtual bool HasConfiguration() const;
   virtual void InvalidateConfiguration();
 
-	virtual std::string GetPatientFile() const;
-	virtual void SetPatientFile(const std::string& patientFile);
-	virtual bool HasPatientFile() const;
-	virtual void InvalidatePatientFile();
+  virtual std::string GetPatientFile() const;
+  virtual void SetPatientFile(const std::string& patientFile);
+  virtual bool HasPatientFile() const;
+  virtual void InvalidatePatientFile();
 
   virtual SEPatient& GetPatient();
   virtual const SEPatient* GetPatient() const;
@@ -58,9 +58,9 @@ public:
   virtual const std::vector<SECondition*>& GetConditions() const;
 
 protected:
-  SESubstanceManager&            m_SubMgr;
+  SESubstanceManager& m_SubMgr;
   PhysiologyEngineConfiguration* m_Configuration;
-  SEPatient*                     m_Patient;
-	std::string                    m_PatientFile;
-  std::vector<SECondition*>      m_Conditions;
+  SEPatient* m_Patient;
+  std::string m_PatientFile;
+  std::vector<SECondition*> m_Conditions;
 };

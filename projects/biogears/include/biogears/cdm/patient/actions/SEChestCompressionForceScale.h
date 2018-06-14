@@ -14,32 +14,32 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
 #include <biogears/schema/ChestCompressionForceScaleData.hxx>
 
-class BIOGEARS_API SEChestCompressionForceScale : public SEChestCompression
-{
+class BIOGEARS_API SEChestCompressionForceScale : public SEChestCompression {
 public:
-	SEChestCompressionForceScale();
-	virtual ~SEChestCompressionForceScale();
+  SEChestCompressionForceScale();
+  virtual ~SEChestCompressionForceScale();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ChestCompressionForceScaleData& in);
   virtual CDM::ChestCompressionForceScaleData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ChestCompressionForceScaleData& data) const;
+
 public:
+  virtual bool HasForceScale() const;
+  virtual SEScalar0To1& GetForceScale();
 
-	virtual bool HasForceScale() const;
-	virtual SEScalar0To1& GetForceScale();
+  virtual bool HasForcePeriod() const;
+  virtual SEScalarTime& GetForcePeriod();
 
-	virtual bool HasForcePeriod() const;
-	virtual SEScalarTime& GetForcePeriod();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*           m_ForceScale;
-	SEScalarTime*               m_ForcePeriod;
+  SEScalar0To1* m_ForceScale;
+  SEScalarTime* m_ForcePeriod;
 };

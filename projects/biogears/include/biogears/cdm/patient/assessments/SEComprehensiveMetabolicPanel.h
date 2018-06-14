@@ -15,78 +15,76 @@ specific language governing permissions and limitations under the License.
 class SEBloodChemistrySystem;
 #include <biogears/schema/ComprehensiveMetabolicPanelData.hxx>
 
-class BIOGEARS_API SEComprehensiveMetabolicPanel : public SEPatientAssessment
-{
+class BIOGEARS_API SEComprehensiveMetabolicPanel : public SEPatientAssessment {
 public:
+  SEComprehensiveMetabolicPanel(Logger* logger);
+  virtual ~SEComprehensiveMetabolicPanel();
 
-	SEComprehensiveMetabolicPanel(Logger* logger);
-	virtual ~SEComprehensiveMetabolicPanel();
-
-	virtual void Reset(); //reset values
-	virtual void Clear(); //clear memory
+  virtual void Reset(); //reset values
+  virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::ComprehensiveMetabolicPanelData& in);
   virtual CDM::ComprehensiveMetabolicPanelData* Unload();
+
 protected:
   virtual void Unload(CDM::ComprehensiveMetabolicPanelData& data);
+
 public:
-	bool HasAlbumin();
-	SEScalarMassPerVolume& GetAlbumin();
+  bool HasAlbumin();
+  SEScalarMassPerVolume& GetAlbumin();
 
-	bool HasALP();
-	SEScalarMassPerVolume& GetALP();
+  bool HasALP();
+  SEScalarMassPerVolume& GetALP();
 
-	bool HasALT();
-	SEScalarMassPerVolume& GetALT();
+  bool HasALT();
+  SEScalarMassPerVolume& GetALT();
 
-	bool HasAST();
-	SEScalarMassPerVolume& GetAST();
+  bool HasAST();
+  SEScalarMassPerVolume& GetAST();
 
-	bool HasBUN();
-	SEScalarMassPerVolume& GetBUN();
+  bool HasBUN();
+  SEScalarMassPerVolume& GetBUN();
 
-	bool HasCalcium();
-	SEScalarMassPerVolume& GetCalcium();
+  bool HasCalcium();
+  SEScalarMassPerVolume& GetCalcium();
 
-	bool HasChloride();
-	SEScalarAmountPerVolume& GetChloride();
+  bool HasChloride();
+  SEScalarAmountPerVolume& GetChloride();
 
-	bool HasCO2();
-	SEScalarAmountPerVolume& GetCO2();
+  bool HasCO2();
+  SEScalarAmountPerVolume& GetCO2();
 
-	bool HasCreatinine();
-	SEScalarMassPerVolume& GetCreatinine();
+  bool HasCreatinine();
+  SEScalarMassPerVolume& GetCreatinine();
 
-	bool HasGlucose();
-	SEScalarMassPerVolume& GetGlucose();
+  bool HasGlucose();
+  SEScalarMassPerVolume& GetGlucose();
 
-	bool HasPotassium();
-	SEScalarAmountPerVolume& GetPotassium();
+  bool HasPotassium();
+  SEScalarAmountPerVolume& GetPotassium();
 
-	bool HasSodium();
-	SEScalarAmountPerVolume& GetSodium();
+  bool HasSodium();
+  SEScalarAmountPerVolume& GetSodium();
 
-	bool HasTotalBilirubin();
-	SEScalarMassPerVolume& GetTotalBilirubin();
+  bool HasTotalBilirubin();
+  SEScalarMassPerVolume& GetTotalBilirubin();
 
-	bool HasTotalProtein();
-	SEScalarMassPerVolume& GetTotalProtein();
+  bool HasTotalProtein();
+  SEScalarMassPerVolume& GetTotalProtein();
 
 protected:
-
-	SEScalarMassPerVolume*		m_Albumin;
-	SEScalarMassPerVolume*		m_ALP;
-	SEScalarMassPerVolume*		m_ALT;
-	SEScalarMassPerVolume*	    m_AST;
-	SEScalarMassPerVolume*		m_BUN;
-	SEScalarMassPerVolume*		m_Calcium;
-	SEScalarAmountPerVolume*	m_Chloride;
-	SEScalarAmountPerVolume*	m_CO2;
-	SEScalarMassPerVolume*		m_Creatinine;
-	SEScalarMassPerVolume*		m_Glucose;
-	SEScalarAmountPerVolume*	m_Potassium;
-	SEScalarAmountPerVolume*	m_Sodium;
-	SEScalarMassPerVolume*		m_TotalBilirubin;
-	SEScalarMassPerVolume*		m_TotalProtein;
-
-};  
+  SEScalarMassPerVolume* m_Albumin;
+  SEScalarMassPerVolume* m_ALP;
+  SEScalarMassPerVolume* m_ALT;
+  SEScalarMassPerVolume* m_AST;
+  SEScalarMassPerVolume* m_BUN;
+  SEScalarMassPerVolume* m_Calcium;
+  SEScalarAmountPerVolume* m_Chloride;
+  SEScalarAmountPerVolume* m_CO2;
+  SEScalarMassPerVolume* m_Creatinine;
+  SEScalarMassPerVolume* m_Glucose;
+  SEScalarAmountPerVolume* m_Potassium;
+  SEScalarAmountPerVolume* m_Sodium;
+  SEScalarMassPerVolume* m_TotalBilirubin;
+  SEScalarMassPerVolume* m_TotalProtein;
+};

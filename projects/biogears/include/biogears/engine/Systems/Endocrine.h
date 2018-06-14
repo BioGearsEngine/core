@@ -27,14 +27,14 @@ class BioGears;
  * The BioGears® endocrine system is a rudimentary system with only one stimulus (increased carbon dioxide partial pressure in the blood stream)
  * and two hormones (epinephrine and norepinephrine). The release of the hormones in response to the stimuli to represent the response of the sympathetic nervous system.
  * In the future, additional stimuli and additional hormones will be added.
- */  
-class BIOGEARS_API Endocrine : public SEEndocrineSystem, public BioGearsSystem
-{
-	friend class BioGears;
+ */
+class BIOGEARS_API Endocrine : public SEEndocrineSystem, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	Endocrine(BioGears& bg);
-	BioGears& m_data;
+  Endocrine(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~Endocrine();
@@ -47,6 +47,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsEndocrineSystemData& in);
   virtual CDM::BioGearsEndocrineSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsEndocrineSystemData& data) const;
 
@@ -54,24 +55,24 @@ protected:
   void SetUp();
 
 public:
-	void AtSteadyState();
+  void AtSteadyState();
   void PreProcess();
-	void Process();
+  void Process();
   void PostProcess();
 
 private:
-	void SynthesizeInsulin();
+  void SynthesizeInsulin();
   void SynthesizeGlucagon();
   void ReleaseEpinephrine();
 
   // Serializable member variables (Set in Initialize and in schema)
 
   // Stateless member variable (Set in SetUp())
-	double                     m_dt_s;
-	double                     m_insulinMolarMass_g_Per_mol;
-  double                     m_glucagonMolarMass_g_Per_mol;
-	SELiquidSubstanceQuantity* m_aortaGlucose = nullptr;
-	SELiquidSubstanceQuantity* m_aortaEpinephrine = nullptr;
+  double m_dt_s;
+  double m_insulinMolarMass_g_Per_mol;
+  double m_glucagonMolarMass_g_Per_mol;
+  SELiquidSubstanceQuantity* m_aortaGlucose = nullptr;
+  SELiquidSubstanceQuantity* m_aortaEpinephrine = nullptr;
   SELiquidSubstanceQuantity* m_rKidneyEpinephrine = nullptr;
   SELiquidSubstanceQuantity* m_lKidneyEpinephrine = nullptr;
   SELiquidSubstanceQuantity* m_splanchnicInsulin = nullptr;

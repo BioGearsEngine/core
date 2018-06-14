@@ -15,36 +15,34 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/BrainInjuryData.hxx>
 #include <biogears/schema/enumBrainInjuryType.hxx>
 
-class BIOGEARS_API SEBrainInjury : public SEPatientAction
-{
+class BIOGEARS_API SEBrainInjury : public SEPatientAction {
 public:
-
   SEBrainInjury();
-	virtual ~SEBrainInjury();
+  virtual ~SEBrainInjury();
 
-	virtual void Clear();
+  virtual void Clear();
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::BrainInjuryData& in);
   virtual CDM::BrainInjuryData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BrainInjuryData& data) const;
 
 public:
-
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();	
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
   virtual CDM::enumBrainInjuryType::value GetType() const;
   virtual void SetType(CDM::enumBrainInjuryType::value t);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*                   m_Severity;
+  SEScalar0To1* m_Severity;
   CDM::enumBrainInjuryType::value m_Type;
-};      
+};

@@ -16,17 +16,18 @@ class SECircuitManager;
 
 CDM_BIND_DECL(CompartmentLinkData)
 
-class BIOGEARS_API SECompartmentLink : public Loggable
-{
+class BIOGEARS_API SECompartmentLink : public Loggable {
 protected:
   SECompartmentLink(const std::string& nam, Logger* logger);
-public: 
-	virtual ~SECompartmentLink();
+
+public:
+  virtual ~SECompartmentLink();
 
   virtual void Clear();
 
   virtual bool Load(const CDM::CompartmentLinkData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::CompartmentLinkData* Unload() = 0;
+
 protected:
   virtual void Unload(CDM::CompartmentLinkData& data);
 
@@ -36,5 +37,5 @@ public:
   virtual const SEScalar* GetScalar(const std::string& name) = 0;
 
 protected:
-  std::string	m_Name;
+  std::string m_Name;
 };

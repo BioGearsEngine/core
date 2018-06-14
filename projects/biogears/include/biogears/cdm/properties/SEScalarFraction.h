@@ -14,18 +14,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarFractionData.hxx>
 
-class BIOGEARS_API SEScalarFraction : public SEScalar
-{
+class BIOGEARS_API SEScalarFraction : public SEScalar {
 
 public:
-	SEScalarFraction();
-	virtual ~SEScalarFraction() {}
+  SEScalarFraction();
+  virtual ~SEScalarFraction() {}
 
   CDM::ScalarFractionData* Unload() const;
 
   using SEScalar::GetValue;
-  double GetValue(const NoUnit& unitless) const; 
+  double GetValue(const NoUnit& unitless) const;
   using SEScalar::SetValue;
   void SetValue(double d, const NoUnit& unitless);
 };
-

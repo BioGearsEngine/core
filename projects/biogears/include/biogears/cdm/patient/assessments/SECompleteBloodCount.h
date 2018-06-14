@@ -15,55 +15,52 @@ specific language governing permissions and limitations under the License.
 class SEBloodChemistrySystem;
 #include <biogears/schema/CompleteBloodCountData.hxx>
 
-class BIOGEARS_API SECompleteBloodCount : public SEPatientAssessment
-{
+class BIOGEARS_API SECompleteBloodCount : public SEPatientAssessment {
 public:
+  SECompleteBloodCount(Logger* logger);
+  virtual ~SECompleteBloodCount();
 
-	SECompleteBloodCount(Logger* logger);
-	virtual ~SECompleteBloodCount();
-
-	virtual void Reset(); //reset values
-	virtual void Clear(); //clear memory
+  virtual void Reset(); //reset values
+  virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::CompleteBloodCountData& in);
   virtual CDM::CompleteBloodCountData* Unload();
+
 protected:
   virtual void Unload(CDM::CompleteBloodCountData& data);
+
 public:
-	
-	virtual bool HasHematocrit();
-	virtual SEScalarFraction& GetHematocrit(); 
+  virtual bool HasHematocrit();
+  virtual SEScalarFraction& GetHematocrit();
 
-	virtual bool HasHemoglobin();
-	virtual SEScalarMassPerVolume& GetHemoglobin();
+  virtual bool HasHemoglobin();
+  virtual SEScalarMassPerVolume& GetHemoglobin();
 
-	virtual bool HasPlateletCount();
-	virtual SEScalarAmountPerVolume& GetPlateletCount();
+  virtual bool HasPlateletCount();
+  virtual SEScalarAmountPerVolume& GetPlateletCount();
 
-	virtual bool HasMeanCorpuscularHemoglobin();
-	virtual SEScalarMassPerAmount& GetMeanCorpuscularHemoglobin();
+  virtual bool HasMeanCorpuscularHemoglobin();
+  virtual SEScalarMassPerAmount& GetMeanCorpuscularHemoglobin();
 
-	virtual bool HasMeanCorpuscularHemoglobinConcentration();
-	virtual SEScalarMassPerVolume& GetMeanCorpuscularHemoglobinConcentration();
+  virtual bool HasMeanCorpuscularHemoglobinConcentration();
+  virtual SEScalarMassPerVolume& GetMeanCorpuscularHemoglobinConcentration();
 
-	virtual bool HasMeanCorpuscularVolume();
-	virtual SEScalarVolume& GetMeanCorpuscularVolume();
-	
-	virtual bool HasRedBloodCellCount();
-	virtual SEScalarAmountPerVolume& GetRedBloodCellCount();
+  virtual bool HasMeanCorpuscularVolume();
+  virtual SEScalarVolume& GetMeanCorpuscularVolume();
 
-	virtual bool HasWhiteBloodCellCount();
-	virtual SEScalarAmountPerVolume& GetWhiteBloodCellCount();
+  virtual bool HasRedBloodCellCount();
+  virtual SEScalarAmountPerVolume& GetRedBloodCellCount();
+
+  virtual bool HasWhiteBloodCellCount();
+  virtual SEScalarAmountPerVolume& GetWhiteBloodCellCount();
 
 protected:
-
-	SEScalarFraction*				m_Hematocrit;
-	SEScalarMassPerVolume*		    m_Hemoglobin;
-	SEScalarAmountPerVolume*	    m_PlateletCount;
-	SEScalarMassPerAmount*	        m_MeanCorpuscularHemoglobin;
-	SEScalarMassPerVolume*	        m_MeanCorpuscularHemoglobinConcentration;
-	SEScalarVolume*	                m_MeanCorpuscularVolume;
-	SEScalarAmountPerVolume*		m_RedBloodCellCount;
-	SEScalarAmountPerVolume*		m_WhiteBloodCellCount;
-
-};  
+  SEScalarFraction* m_Hematocrit;
+  SEScalarMassPerVolume* m_Hemoglobin;
+  SEScalarAmountPerVolume* m_PlateletCount;
+  SEScalarMassPerAmount* m_MeanCorpuscularHemoglobin;
+  SEScalarMassPerVolume* m_MeanCorpuscularHemoglobinConcentration;
+  SEScalarVolume* m_MeanCorpuscularVolume;
+  SEScalarAmountPerVolume* m_RedBloodCellCount;
+  SEScalarAmountPerVolume* m_WhiteBloodCellCount;
+};

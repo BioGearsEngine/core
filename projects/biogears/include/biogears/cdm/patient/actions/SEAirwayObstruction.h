@@ -14,30 +14,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/AirwayObstructionData.hxx>
 
-class BIOGEARS_API SEAirwayObstruction : public SEPatientAction
-{
+class BIOGEARS_API SEAirwayObstruction : public SEPatientAction {
 public:
+  SEAirwayObstruction();
+  virtual ~SEAirwayObstruction();
 
-	SEAirwayObstruction();
-	virtual ~SEAirwayObstruction();
+  virtual void Clear();
 
-	virtual void Clear();
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::AirwayObstructionData& in);
   virtual CDM::AirwayObstructionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::AirwayObstructionData& data) const;
 
 public:
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();	
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*           m_Severity;
-};      
+  SEScalar0To1* m_Severity;
+};

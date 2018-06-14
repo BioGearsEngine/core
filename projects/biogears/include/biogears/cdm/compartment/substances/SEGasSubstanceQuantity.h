@@ -16,19 +16,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/GasSubstanceQuantityData.hxx>
 class SEGasCompartment;
 
-class BIOGEARS_API SEGasSubstanceQuantity : public SESubstanceQuantity, public SEGasTransportSubstance
-{
+class BIOGEARS_API SEGasSubstanceQuantity : public SESubstanceQuantity, public SEGasTransportSubstance {
   friend class SEGasCompartment;
+
 protected:
   SEGasSubstanceQuantity(SESubstance& sub, SEGasCompartment& compartment);
+
 public:
-	virtual ~SEGasSubstanceQuantity();
+  virtual ~SEGasSubstanceQuantity();
 
   virtual void Clear();
   virtual void Invalidate();
 
   virtual bool Load(const CDM::GasSubstanceQuantityData& in);
   virtual CDM::GasSubstanceQuantityData* Unload();
+
 protected:
   virtual void Unload(CDM::GasSubstanceQuantityData& data);
 
@@ -36,17 +38,17 @@ public:
   virtual void SetToZero();
   virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual bool HasPartialPressure() const;
-	virtual SEScalarPressure& GetPartialPressure();
+  virtual bool HasPartialPressure() const;
+  virtual SEScalarPressure& GetPartialPressure();
   virtual double GetPartialPressure(const PressureUnit& unit) const;
-	
-	virtual bool HasVolume() const;
-	virtual SEScalarVolume& GetVolume();
+
+  virtual bool HasVolume() const;
+  virtual SEScalarVolume& GetVolume();
   virtual double GetVolume(const VolumeUnit& unit) const;
 
-	virtual bool HasVolumeFraction() const;
-	virtual SEScalarFraction& GetVolumeFraction();
-	virtual double GetVolumeFraction() const;
+  virtual bool HasVolumeFraction() const;
+  virtual SEScalarFraction& GetVolumeFraction();
+  virtual double GetVolumeFraction() const;
 
 protected:
   virtual void AddChild(SEGasSubstanceQuantity& subQ);
@@ -58,9 +60,9 @@ protected:
   virtual SEScalarFraction& GetIntensive() { return GetVolumeFraction(); }
 
   SEScalarPressure* m_PartialPressure;
-  SEScalarVolume*   m_Volume;
+  SEScalarVolume* m_Volume;
   SEScalarFraction* m_VolumeFraction;
 
-  SEGasCompartment&        m_Compartment;
+  SEGasCompartment& m_Compartment;
   std::vector<SEGasSubstanceQuantity*> m_Children;
 };

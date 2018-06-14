@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarForceData.hxx>
 
-class BIOGEARS_API ForceUnit : public CCompoundUnit
-{
+class BIOGEARS_API ForceUnit : public CCompoundUnit {
 public:
-  ForceUnit(const std::string& u) : CCompoundUnit(u) {}
+  ForceUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~ForceUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -28,11 +30,10 @@ public:
   static const ForceUnit dyn;
 };
 
-class BIOGEARS_API SEScalarForce : public SEScalarQuantity<ForceUnit>
-{
+class BIOGEARS_API SEScalarForce : public SEScalarQuantity<ForceUnit> {
 public:
   SEScalarForce() {}
-	virtual ~SEScalarForce() {}
+  virtual ~SEScalarForce() {}
 
   CDM::ScalarForceData* Unload() const;
 };

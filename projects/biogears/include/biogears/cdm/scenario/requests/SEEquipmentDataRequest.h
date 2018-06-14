@@ -15,28 +15,29 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/EquipmentDataRequestData.hxx>
 class SEDataRequestManager;
 
-class BIOGEARS_API SEEquipmentDataRequest : public SEDataRequest
-{
+class BIOGEARS_API SEEquipmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SEEquipmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
   virtual ~SEEquipmentDataRequest();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::EquipmentDataRequestData& in);
   virtual CDM::EquipmentDataRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::EquipmentDataRequestData& data) const;
-public:
 
+public:
   virtual std::string GetType() const;
   virtual void SetType(const std::string& t);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
 protected:
-
   std::string m_Type;
-};                  
+};

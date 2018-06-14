@@ -16,22 +16,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitPath.h>
 
 #define CIRCUIT_TEMPLATE typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType
-#define CIRCUIT_TYPES CircuitBindType,NodeType,CircuitNodeBindType,PathType,CircuitPathBindType
+#define CIRCUIT_TYPES CircuitBindType, NodeType, CircuitNodeBindType, PathType, CircuitPathBindType
 
 CDM_BIND_DECL(CircuitData)
 
-template<CIRCUIT_TEMPLATE>
-class SECircuit : public Loggable
-{
+template <CIRCUIT_TEMPLATE>
+class SECircuit : public Loggable {
 public:
+  SECircuit(const std::string& name, Logger* logger);
+  virtual ~SECircuit();
 
-	SECircuit(const std::string& name, Logger* logger);
-	virtual ~SECircuit();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-  virtual bool Load(const CircuitBindType& in, const std::map<std::string,NodeType*>& nodes, const std::map<std::string,PathType*>& paths);
+  virtual bool Load(const CircuitBindType& in, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths);
   virtual CircuitBindType* Unload() const;
+
 protected:
   virtual void Unload(CircuitBindType& data) const;
 
@@ -43,50 +42,50 @@ public:
   virtual const std::vector<NodeType*>& GetReferenceNodes() const;
   virtual void AddReferenceNode(NodeType& node);
 
-	// Nodes //
+  // Nodes //
   virtual void AddNode(NodeType& node);
   virtual bool HasNode(NodeType& node);
   virtual bool HasNode(const std::string& name);
   virtual NodeType* GetNode(const std::string& name);
-	virtual const NodeType* GetNode(const std::string& name) const;
-	virtual const std::vector<NodeType*>& GetNodes() const;
+  virtual const NodeType* GetNode(const std::string& name) const;
+  virtual const std::vector<NodeType*>& GetNodes() const;
   virtual void RemoveNode(const NodeType& node);
   virtual void RemoveNode(const std::string& name);
-  size_t GetCalculatorIndex(const NodeType& node) const;// Does not count the reference node
+  size_t GetCalculatorIndex(const NodeType& node) const; // Does not count the reference node
 
-	// Paths //
+  // Paths //
   virtual void AddPath(PathType& node);
   virtual bool HasPath(PathType& node);
   virtual bool HasPath(const std::string& name);
   virtual PathType* GetPath(const std::string& name);
-	virtual const PathType* GetPath(const std::string& name) const;
+  virtual const PathType* GetPath(const std::string& name) const;
   virtual const std::vector<PathType*>& GetPaths() const;
-	virtual void RemovePath(const PathType& path);
+  virtual void RemovePath(const PathType& path);
   virtual void RemovePath(const std::string& name);
   virtual const std::vector<PathType*>& GetValvePaths();
   virtual const std::vector<PathType*>& GetPolarizedElementPaths();
-  
+
   virtual const std::vector<PathType*>* GetTargetPaths(const NodeType& node) const;
   virtual const std::vector<PathType*>* GetSourcePaths(const NodeType& node) const;
   virtual const std::vector<PathType*>* GetConnectedPaths(const NodeType& node) const;
 
   virtual void StateChange();
   virtual void SetNextAndCurrentFromBaselines();
-	
-protected:
-  std::string  m_Name;
-	std::stringstream m_ss;
 
-  std::vector<NodeType*>               m_ReferenceNodes;
-  std::vector<NodeType*>               m_Nodes;
-  std::vector<PathType*>               m_Paths;
-   
-	std::map<const NodeType*, std::vector<PathType*>*> m_TargetPathMap;
+protected:
+  std::string m_Name;
+  std::stringstream m_ss;
+
+  std::vector<NodeType*> m_ReferenceNodes;
+  std::vector<NodeType*> m_Nodes;
+  std::vector<PathType*> m_Paths;
+
+  std::map<const NodeType*, std::vector<PathType*>*> m_TargetPathMap;
   std::map<const NodeType*, std::vector<PathType*>*> m_SourcePathMap;
   std::map<const NodeType*, std::vector<PathType*>*> m_ConnectedPathMap;
 
-  std::vector<PathType*>            m_ValvePaths;
-	std::vector<PathType*>            m_PolarizedElementPaths; 
-  std::map<const NodeType*, size_t> m_CalculatorIndex;// A unique id (starting at 0) for all nodes except the reference node
+  std::vector<PathType*> m_ValvePaths;
+  std::vector<PathType*> m_PolarizedElementPaths;
+  std::map<const NodeType*, size_t> m_CalculatorIndex; // A unique id (starting at 0) for all nodes except the reference node
 };
 #include <biogears/cdm/circuit/SECircuit.inl>

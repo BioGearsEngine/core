@@ -20,22 +20,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 
 CDM_BIND_DECL(SubstancePharmacokineticsData)
-class BIOGEARS_API SESubstancePharmacokinetics : public Loggable
-{
+class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
 public:
-
-	SESubstancePharmacokinetics(Logger* logger);
-	virtual ~SESubstancePharmacokinetics();
+  SESubstancePharmacokinetics(Logger* logger);
+  virtual ~SESubstancePharmacokinetics();
 
   virtual void Clear();
   virtual bool IsValid() const;
 
-	virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
-	virtual CDM::SubstancePharmacokineticsData* Unload() const;
+  virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
+  virtual CDM::SubstancePharmacokineticsData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
+  virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
 
 public:
   virtual bool HasPhysicochemicals() const;
@@ -48,9 +47,7 @@ public:
   virtual const SESubstanceTissuePharmacokinetics* GetTissueKinetics(const std::string& name) const;
   virtual void RemoveTissueKinetics(const std::string& name);
 
-protected: 
-
-  SESubstancePhysicochemicals*                              m_Physicochemicals;
+protected:
+  SESubstancePhysicochemicals* m_Physicochemicals;
   std::map<std::string, SESubstanceTissuePharmacokinetics*> m_TissueKinetics;
-
 };

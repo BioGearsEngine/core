@@ -14,12 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEHistogram.h>
 #include <biogears/schema/HistogramFractionVsLengthData.hxx>
 
-class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram
-{
+class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram {
 public:
-
-	SEHistogramFractionVsLength();
-	virtual ~SEHistogramFractionVsLength();
+  SEHistogramFractionVsLength();
+  virtual ~SEHistogramFractionVsLength();
 
   virtual void Clear();
 
@@ -27,19 +25,20 @@ public:
 
   virtual bool Load(const CDM::HistogramFractionVsLengthData& in);
   virtual CDM::HistogramFractionVsLengthData* Unload() const;
+
 protected:
   virtual void Unload(CDM::HistogramFractionVsLengthData& data) const;
-public:
 
-  virtual double                     GetFractionValue(unsigned int index) const;
-  virtual std::vector<double>&       GetFraction();
+public:
+  virtual double GetFractionValue(unsigned int index) const;
+  virtual std::vector<double>& GetFraction();
   virtual const std::vector<double>& GetFraction() const;
-  
-  virtual double                     GetLengthValue(unsigned int index, const LengthUnit& unit)  const;
-  virtual std::vector<double>&       GetLength();
+
+  virtual double GetLengthValue(unsigned int index, const LengthUnit& unit) const;
+  virtual std::vector<double>& GetLength();
   virtual const std::vector<double>& GetLength() const;
-  virtual const LengthUnit*          GetLengthUnit()  const;
-  virtual void                       SetLengthUnit(const LengthUnit& unit);
+  virtual const LengthUnit* GetLengthUnit() const;
+  virtual void SetLengthUnit(const LengthUnit& unit);
 
 protected:
   const LengthUnit* m_LengthUnit;

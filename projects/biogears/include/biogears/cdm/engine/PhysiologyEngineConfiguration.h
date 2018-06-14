@@ -20,24 +20,23 @@ class PhysiologyEngineDynamicStabilization;
 
 CDM_BIND_DECL(PhysiologyEngineConfigurationData)
 
-class BIOGEARS_API PhysiologyEngineConfiguration : public Loggable
-{
+class BIOGEARS_API PhysiologyEngineConfiguration : public Loggable {
 public:
+  PhysiologyEngineConfiguration(Logger* logger);
+  virtual ~PhysiologyEngineConfiguration();
 
-	PhysiologyEngineConfiguration(Logger* logger);
-	virtual ~PhysiologyEngineConfiguration();
+  virtual void Clear();
 
-	virtual void Clear();
+  virtual void Merge(const PhysiologyEngineConfiguration& from);
 
-	virtual void Merge(const PhysiologyEngineConfiguration& from);
+  virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
+  virtual CDM::PhysiologyEngineConfigurationData* Unload() const;
 
-	virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
-	virtual CDM::PhysiologyEngineConfigurationData* Unload() const;
 protected:
-	void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
+  void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
 
 public:
-	virtual bool LoadFile(const std::string& file);
+  virtual bool LoadFile(const std::string& file);
 
   virtual bool HasECGInterpolator() const;
   virtual SEElectroCardioGramInterpolator& GetECGInterpolator();
@@ -47,7 +46,7 @@ public:
   // You can have either timed or dynamic stabilization criteria
   virtual bool HasStabilizationCriteria() const;
   virtual PhysiologyEngineStabilization* GetStabilizationCriteria();
-	virtual void RemoveStabilizationCriteria();
+  virtual void RemoveStabilizationCriteria();
   // Timed Methods, If you have dynamic, calling GetTimedStabilizationCriteria will remove the dynamic object
   virtual bool HasTimedStabilizationCriteria() const;
   virtual PhysiologyEngineTimedStabilization& GetTimedStabilizationCriteria();
@@ -59,22 +58,21 @@ public:
   virtual const PhysiologyEngineDynamicStabilization* GetDynamicStabilizationCriteria() const;
   virtual void RemoveDynamicStabilizationCriteria();
 
-  
   virtual bool HasTimeStep() const;
   virtual SEScalarTime& GetTimeStep();
   virtual double GetTimeStep(const TimeUnit& unit) const;
 
-  virtual bool HasWritePatientBaselineFile() const { return m_WritePatientBaselineFile != (CDM::enumOnOff::value) - 1; }
+  virtual bool HasWritePatientBaselineFile() const { return m_WritePatientBaselineFile != (CDM::enumOnOff::value)-1; }
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
   virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
 
 protected:
-  bool                                     m_Merge;
-  SEElectroCardioGramInterpolator*         m_ECGInterpolator;
+  bool m_Merge;
+  SEElectroCardioGramInterpolator* m_ECGInterpolator;
 
-  PhysiologyEngineStabilization*           m_StabilizationCriteria;
-  PhysiologyEngineTimedStabilization*      m_TimedStabilizationCriteria;
-  PhysiologyEngineDynamicStabilization*    m_DynamicStabilizationCriteria;
-  SEScalarTime*				                     m_TimeStep;  
-  CDM::enumOnOff::value                    m_WritePatientBaselineFile;
+  PhysiologyEngineStabilization* m_StabilizationCriteria;
+  PhysiologyEngineTimedStabilization* m_TimedStabilizationCriteria;
+  PhysiologyEngineDynamicStabilization* m_DynamicStabilizationCriteria;
+  SEScalarTime* m_TimeStep;
+  CDM::enumOnOff::value m_WritePatientBaselineFile;
 };

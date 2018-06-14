@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarInversePressureData.hxx>
 
-class BIOGEARS_API InversePressureUnit : public CCompoundUnit
-{
+class BIOGEARS_API InversePressureUnit : public CCompoundUnit {
 public:
-  InversePressureUnit(const std::string& u) : CCompoundUnit(u) {}
+  InversePressureUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~InversePressureUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -29,11 +31,10 @@ public:
   static const InversePressureUnit Inverse_atm;
 };
 
-class BIOGEARS_API SEScalarInversePressure : public SEScalarQuantity<InversePressureUnit>
-{
+class BIOGEARS_API SEScalarInversePressure : public SEScalarQuantity<InversePressureUnit> {
 public:
   SEScalarInversePressure() {}
-	virtual ~SEScalarInversePressure() {}
+  virtual ~SEScalarInversePressure() {}
 
   CDM::ScalarInversePressureData* Unload() const;
 };

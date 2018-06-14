@@ -26,5 +26,5 @@ René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 */
 #include <string>
 
-std::string base64_encode(char const* , unsigned int len);
+std::string base64_encode(char const*, unsigned int len);
 std::string base64_decode(std::string const& s);

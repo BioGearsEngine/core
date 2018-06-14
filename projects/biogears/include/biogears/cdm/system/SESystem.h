@@ -17,16 +17,14 @@ specific language governing permissions and limitations under the License.
 class SESubstanceManager;
 
 CDM_BIND_DECL(SystemData)
-class BIOGEARS_API SESystem : public Loggable
-{
+class BIOGEARS_API SESystem : public Loggable {
 public:
+  SESystem(Logger* logger);
+  virtual ~SESystem();
 
-	SESystem(Logger* logger);
-	virtual ~SESystem();
+  virtual void Clear(); // Deletes all members
 
-  virtual void Clear();// Deletes all members
-  
-	/** @name GetScalar
+  /** @name GetScalar
 	*   @brief - A reflextion type call that will return the Scalar associated
 	*            with the string. ex. GetScalar("Hematocrit") will return the
 	*            SEScalarPercent object associated with Hematocrit
@@ -34,17 +32,18 @@ public:
 	*              This is best used, and intended for, you to dynamically prepopulate
 	*              a mapping data structure that will help access what you need
 	*/
-  virtual const SEScalar* GetScalar(const std::string& name) = 0; 
+  virtual const SEScalar* GetScalar(const std::string& name) = 0;
 
-	/** @name GetScalar
+  /** @name GetScalar
 	*   @brief - Look for the Scalar property in the systems contained in the provided vector
 	*/
-	static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
-	
-	virtual bool Load(const CDM::SystemData& in);
-  virtual CDM::SystemData* Unload() const = 0;
-protected:
-	virtual void Unload(CDM::SystemData& data) const;
+  static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
 
-	std::stringstream m_ss;
+  virtual bool Load(const CDM::SystemData& in);
+  virtual CDM::SystemData* Unload() const = 0;
+
+protected:
+  virtual void Unload(CDM::SystemData& data) const;
+
+  std::stringstream m_ss;
 };

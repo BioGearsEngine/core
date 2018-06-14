@@ -19,34 +19,32 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(FunctionData)
 
-class BIOGEARS_API SEFunction : public SEProperty
-{
+class BIOGEARS_API SEFunction : public SEProperty {
 public:
+  SEFunction();
+  virtual ~SEFunction();
 
-	SEFunction();
-	virtual ~SEFunction();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool Load(const CDM::FunctionData& in);
+  virtual bool Load(const CDM::FunctionData& in);
   virtual CDM::FunctionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::FunctionData& data) const;
 
 public:
-	virtual bool							            IsValid() const;
-	virtual void							            Invalidate();
+  virtual bool IsValid() const;
+  virtual void Invalidate();
 
-	virtual unsigned int					        Length();
-	
-	double                                GetDependentValue(unsigned int index);
-	std::vector<double>&	                GetDependent();			
+  virtual unsigned int Length();
 
-	double                                GetIndependentValue(unsigned int index);
-	std::vector<double>&			            GetIndependent();
-	
+  double GetDependentValue(unsigned int index);
+  std::vector<double>& GetDependent();
+
+  double GetIndependentValue(unsigned int index);
+  std::vector<double>& GetIndependent();
+
 protected:
-
-	std::vector<double> m_Dependent;
-	std::vector<double> m_Independent;
+  std::vector<double> m_Dependent;
+  std::vector<double> m_Independent;
 };

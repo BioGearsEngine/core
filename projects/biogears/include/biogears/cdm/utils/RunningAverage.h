@@ -13,30 +13,28 @@ specific language governing permissions and limitations under the License.
 #pragma once
 CDM_BIND_DECL(RunningAverageData);
 
-class BIOGEARS_API RunningAverage
-{
+class BIOGEARS_API RunningAverage {
 public:
-	
-	RunningAverage();
+  RunningAverage();
   virtual ~RunningAverage();
 
   bool Load(const CDM::RunningAverageData& in);
   CDM::RunningAverageData* Unload() const;
+
 protected:
   void Unload(CDM::RunningAverageData& data) const;
 
 public:
-	/** Reset Counter info */
-	void Reset();
-	/** Add value to Sample list and return the new average */
-	double Sample(double d);
-	/** Return the average value */
-	double Value();
+  /** Reset Counter info */
+  void Reset();
+  /** Add value to Sample list and return the new average */
+  double Sample(double d);
+  /** Return the average value */
+  double Value();
 
   unsigned int NumSamples() { return m_NumSamples; }
-	
-protected:
 
-	double          m_Sum;
-	unsigned int		m_NumSamples;
+protected:
+  double m_Sum;
+  unsigned int m_NumSamples;
 };

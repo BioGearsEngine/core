@@ -15,25 +15,23 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/SerializeStateData.hxx>
 #include <biogears/schema/enumSerializationType.hxx>
 
-class BIOGEARS_API SESerializeState : public SEAction
-{
+class BIOGEARS_API SESerializeState : public SEAction {
 public:
-
   SESerializeState();
-	virtual ~SESerializeState();
+  virtual ~SESerializeState();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::SerializeStateData& in);
   virtual CDM::SerializeStateData* Unload() const;
+
 protected:
   virtual void Unload(CDM::SerializeStateData& data) const;
 
 public:
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
   virtual CDM::enumSerializationType::value GetType() const;
   virtual void SetType(CDM::enumSerializationType::value t);
@@ -42,11 +40,10 @@ public:
 
   virtual bool HasFilename() const;
   virtual std::string GetFilename() const;
-	virtual void SetFilename(const std::string& filename);
+  virtual void SetFilename(const std::string& filename);
   virtual void InvalidateFilename();
 
 protected:
-
-	std::string                       m_Filename;
+  std::string m_Filename;
   CDM::enumSerializationType::value m_Type;
-};                  
+};

@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <string>
-#include <memory>   // std::auto_ptr
-#include <cstddef>  // std::size_t
+#include <memory> // std::auto_ptr
+#include <cstddef> // std::size_t
 #include <iostream>
 
 #include <xercesc/util/XMLUni.hpp>
@@ -31,11 +31,10 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ObjectData)
 
-class BIOGEARS_API Serializer
-{
+class BIOGEARS_API Serializer {
 public:
   static void Destroy() { SAFE_DELETE(m_me); }
-	static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
+  static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
 
 private:
   Serializer();
@@ -48,19 +47,21 @@ private:
 
   static bool m_Initialized;
   static std::unique_ptr<xercesc::XMLGrammarPool> m_GrammerPool;
-}; 
+};
 
-class ErrorHandler : public xercesc::DOMErrorHandler
-{
+class ErrorHandler : public xercesc::DOMErrorHandler {
 public:
-	ErrorHandler () : failed_ (false) {}
+  ErrorHandler()
+    : failed_(false)
+  {
+  }
 
-	bool failed () const { return failed_; }
-	std::string getError(){return error_.str();}
+  bool failed() const { return failed_; }
+  std::string getError() { return error_.str(); }
 
-	virtual bool handleError(const xercesc::DOMError& err);
+  virtual bool handleError(const xercesc::DOMError& err);
 
 private:
-	bool failed_;
-	std::stringstream error_;
+  bool failed_;
+  std::stringstream error_;
 };

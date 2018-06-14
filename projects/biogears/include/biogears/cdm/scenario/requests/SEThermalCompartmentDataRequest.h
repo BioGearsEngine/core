@@ -17,16 +17,18 @@ class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
 
-class BIOGEARS_API SEThermalCompartmentDataRequest : public SECompartmentDataRequest
-{
+class BIOGEARS_API SEThermalCompartmentDataRequest : public SECompartmentDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SEThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
   virtual ~SEThermalCompartmentDataRequest();
 
   virtual bool Load(const CDM::ThermalCompartmentDataRequestData& in);
   virtual CDM::ThermalCompartmentDataRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ThermalCompartmentDataRequestData& data) const;
 };

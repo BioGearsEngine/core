@@ -24,33 +24,32 @@ specific language governing permissions and limitations under the License.
 /// \brief
 /// This class handles concurrent execution of tasks
 //--------------------------------------------------------------------------------------------------
-class BIOGEARS_API TaskRunner : public TaskQueue
-{
+class BIOGEARS_API TaskRunner : public TaskQueue {
 public:
-    TaskRunner();
-    TaskRunner(unsigned int threadCount);
-    virtual ~TaskRunner() = default;
+  TaskRunner();
+  TaskRunner(unsigned int threadCount);
+  virtual ~TaskRunner() = default;
 
-    TaskRunner(const TaskRunner& other) = delete;
-    TaskRunner& operator=(const TaskRunner& other) = delete;
+  TaskRunner(const TaskRunner& other) = delete;
+  TaskRunner& operator=(const TaskRunner& other) = delete;
 
-    void AddTask(std::unique_ptr<Task> task);
-    void Run();
+  void AddTask(std::unique_ptr<Task> task);
+  void Run();
 
-    virtual std::unique_ptr<Task> GetNextTask() override;
+  virtual std::unique_ptr<Task> GetNextTask() override;
 
-    void EchoProgress(bool echo) { m_echoPercentComplete = echo; }
-    virtual void ReportTaskComplete() override;
+  void EchoProgress(bool echo) { m_echoPercentComplete = echo; }
+  virtual void ReportTaskComplete() override;
 
 private:
-    void PrintProgress();
+  void PrintProgress();
 
-    mutable std::recursive_mutex m_taskQueueMutex;  ///< Mutex used to synchronize concurrent access to the task queue
-    std::queue<std::unique_ptr<Task>> m_tasks;      ///< Queue of tasks to be run
+  mutable std::recursive_mutex m_taskQueueMutex; ///< Mutex used to synchronize concurrent access to the task queue
+  std::queue<std::unique_ptr<Task>> m_tasks; ///< Queue of tasks to be run
 
-    unsigned int m_threadCount = 1;                 ///< The number of threads to spawn when running tasks
+  unsigned int m_threadCount = 1; ///< The number of threads to spawn when running tasks
 
-    bool m_echoPercentComplete = false;             ///< Whether or not the task runner should output percent complete as it executes
-    unsigned int m_totalTaskCount = 0;              ///< Total number of tasks in the queue when the task running begins to execute
-    unsigned int m_tasksComplete = 0;               ///< Number of completed tasks
+  bool m_echoPercentComplete = false; ///< Whether or not the task runner should output percent complete as it executes
+  unsigned int m_totalTaskCount = 0; ///< Total number of tasks in the queue when the task running begins to execute
+  unsigned int m_tasksComplete = 0; ///< Number of completed tasks
 };

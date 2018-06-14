@@ -18,18 +18,21 @@ CDM_BIND_DECL(LiquidCompartmentGraphData)
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.h>
 class SECompartmentManager;
 
-class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink>
-{
+class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink> {
   friend class SECompartmentManager;
+
 protected:
-  SELiquidCompartmentGraph(const std::string& name, Logger* logger) : SECompartmentTransportGraph(name, logger) {};
-public:  
+  SELiquidCompartmentGraph(const std::string& name, Logger* logger)
+    : SECompartmentTransportGraph(name, logger){};
+
+public:
   virtual ~SELiquidCompartmentGraph() {}
 
   void AddGraph(SELiquidCompartmentGraph& graph);
 
   virtual bool Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr);
   virtual CDM::LiquidCompartmentGraphData* Unload();
+
 protected:
   virtual void Unload(CDM::LiquidCompartmentGraphData& data);
 

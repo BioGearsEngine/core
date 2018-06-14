@@ -21,11 +21,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/schema/ElectricalCircuitPathData.hxx>
 
-class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>
-{
+class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
+
 protected:
   SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name);
+
 public:
   virtual ~SEElectricalCircuitPath();
 
@@ -33,6 +34,7 @@ public:
 
   bool Load(const CDM::ElectricalCircuitPathData& in);
   CDM::ElectricalCircuitPathData* Unload() const;
+
 protected:
   void Unload(CDM::ElectricalCircuitPathData& data) const;
 
@@ -99,8 +101,7 @@ public:
   virtual SEScalarElectricPotential& GetValveBreakdownVoltage();
   virtual double GetValveBreakdownVoltage(const ElectricPotentialUnit& unit) const;
 
-
 protected:
-  SEElectricalCircuitNode & m_ElectricalSourceNode;
+  SEElectricalCircuitNode& m_ElectricalSourceNode;
   SEElectricalCircuitNode& m_ElectricalTargetNode;
 };

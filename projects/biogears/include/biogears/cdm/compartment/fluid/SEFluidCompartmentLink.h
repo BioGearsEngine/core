@@ -20,21 +20,22 @@ specific language governing permissions and limitations under the License.
 #define FLUID_COMPARTMENT_LINK_TEMPLATE typename EdgeType, typename VertexType, typename CompartmentType
 #define FLUID_COMPARTMENT_LINK_TYPES EdgeType, VertexType, CompartmentType
 
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
-class SEFluidCompartmentLink : public SECompartmentLink, public EdgeType
-{
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
+class SEFluidCompartmentLink : public SECompartmentLink, public EdgeType {
 protected:
-  SEFluidCompartmentLink(CompartmentType& src, CompartmentType & tgt, const std::string& name);
+  SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name);
+
 public:
   virtual ~SEFluidCompartmentLink();
 
   virtual void Clear();
-  
+
   virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::FluidCompartmentLinkData* Unload() = 0;
+
 protected:
   virtual void Unload(CDM::FluidCompartmentLinkData& data);
-  
+
 public:
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -47,10 +48,14 @@ public:
   virtual CompartmentType& GetSourceCompartment() { return m_SourceCmpt; }
   virtual CompartmentType& GetTargetCompartment() { return m_TargetCmpt; }
 
-  virtual bool HasPath() { return m_Path != nullptr; }  
+  virtual bool HasPath() { return m_Path != nullptr; }
   virtual SEFluidCircuitPath* GetPath() { return m_Path; }
   virtual void RemovePath() { m_Path = nullptr; }
-  virtual void MapPath(SEFluidCircuitPath& path) { Clear();  m_Path = &path; }
+  virtual void MapPath(SEFluidCircuitPath& path)
+  {
+    Clear();
+    m_Path = &path;
+  }
 
 protected:
   // For Transport
@@ -58,14 +63,14 @@ protected:
   virtual SEScalarVolumePerTime& GetFlux() { return GetFlow(); }
   virtual double GetFlux(const VolumePerTimeUnit& unit) const { return GetFlow(unit); }
 
-  virtual VertexType& GetSourceVertex()           { return m_SourceVertex; }
-  virtual VertexType& GetTargetVertex()           { return m_TargetVertex; }
+  virtual VertexType& GetSourceVertex() { return m_SourceVertex; }
+  virtual VertexType& GetTargetVertex() { return m_TargetVertex; }
 
   SEScalarVolumePerTime* m_Flow;
-  CompartmentType&       m_SourceCmpt;
-  CompartmentType&       m_TargetCmpt;
-  VertexType&            m_SourceVertex;
-  VertexType&            m_TargetVertex;
-  SEFluidCircuitPath*    m_Path;
+  CompartmentType& m_SourceCmpt;
+  CompartmentType& m_TargetCmpt;
+  VertexType& m_SourceVertex;
+  VertexType& m_TargetVertex;
+  SEFluidCircuitPath* m_Path;
 };
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>

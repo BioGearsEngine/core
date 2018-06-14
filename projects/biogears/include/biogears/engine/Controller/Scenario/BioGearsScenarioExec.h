@@ -16,15 +16,13 @@ specific language governing permissions and limitations under the License.
 /**
 * @brief Overloaded scenario exector to run a %BioGears specific scenario
 */
-class BIOGEARS_API BioGearsScenarioExec : public SEScenarioExec
-{
+class BIOGEARS_API BioGearsScenarioExec : public SEScenarioExec {
 public:
   BioGearsScenarioExec(PhysiologyEngine& engine);
   virtual ~BioGearsScenarioExec();
 
-	virtual bool Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
+  virtual bool Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
   virtual bool Execute(const SEScenario& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
 
 protected:
-
 };

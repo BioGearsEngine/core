@@ -29,14 +29,14 @@ class BioGears;
 
 /**
  * @copydoc Physiology_HepaticystemData
- */  
-class BIOGEARS_API Hepatic : public SEHepaticSystem, public BioGearsSystem
-{
-	friend class BioGears;
+ */
+class BIOGEARS_API Hepatic : public SEHepaticSystem, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	Hepatic(BioGears& bg);
-	BioGears& m_data;
+  Hepatic(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~Hepatic();
@@ -49,6 +49,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsHepaticSystemData& in);
   virtual CDM::BioGearsHepaticSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsHepaticSystemData& data) const;
 
@@ -57,8 +58,8 @@ protected:
 
 public:
   void AtSteadyState();
-	void PreProcess();
-	void Process();
+  void PreProcess();
+  void Process();
   void PostProcess();
   static double CalculateRelativeHormoneChange(double insulinSetPoint_pmol_Per_L, double glucagonSetPoint_pg_Per_mL, SELiquidSubstanceQuantity* currentInsulin, SELiquidSubstanceQuantity* currentGlucagon, BioGears& m_data);
 
@@ -73,7 +74,6 @@ protected:
   void Gluconeogenesis();
 
   //Post-Process methods
-  
 
   // Serializable member variables (Set in Initialize and in schema)
 
@@ -97,7 +97,7 @@ protected:
   SELiquidSubstanceQuantity* m_muscleInsulin = nullptr;
   SELiquidSubstanceQuantity* m_muscleGlucagon = nullptr;
   SELiquidSubstanceQuantity* m_muscleVascularGlucose = nullptr;
-  SELiquidSubstanceQuantity*  m_LiverTissueAlbumin = nullptr;
+  SELiquidSubstanceQuantity* m_LiverTissueAlbumin = nullptr;
   SESubstance* m_Glucagon;
   SESubstance* m_Insulin;
   SESubstance* m_Glucose;
@@ -112,5 +112,4 @@ protected:
   SETissueSystem* m_tsu;
   SEEnergySystem* m_energy;
   SEPatient* m_Patient;
-
 };

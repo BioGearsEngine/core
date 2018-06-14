@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarMassPerAmountData.hxx>
 
-class BIOGEARS_API MassPerAmountUnit : public CCompoundUnit
-{
+class BIOGEARS_API MassPerAmountUnit : public CCompoundUnit {
 public:
-  MassPerAmountUnit(const std::string& u) : CCompoundUnit(u) {}
+  MassPerAmountUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~MassPerAmountUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -36,12 +38,10 @@ public:
   static const MassPerAmountUnit pg_Per_ct;
 };
 
-class BIOGEARS_API SEScalarMassPerAmount : public SEScalarQuantity<MassPerAmountUnit>
-{
+class BIOGEARS_API SEScalarMassPerAmount : public SEScalarQuantity<MassPerAmountUnit> {
 public:
   SEScalarMassPerAmount() {}
-	virtual ~SEScalarMassPerAmount() {}
+  virtual ~SEScalarMassPerAmount() {}
 
   CDM::ScalarMassPerAmountData* Unload() const;
 };
-

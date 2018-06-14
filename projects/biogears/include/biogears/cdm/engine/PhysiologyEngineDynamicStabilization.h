@@ -18,57 +18,58 @@ specific language governing permissions and limitations under the License.
 
 class PhysiologyEngineDynamicStabilizationCriteria;
 
-class BIOGEARS_API PropertyConvergence : public Loggable
-{
-	friend PhysiologyEngineDynamicStabilizationCriteria;	
+class BIOGEARS_API PropertyConvergence : public Loggable {
+  friend PhysiologyEngineDynamicStabilizationCriteria;
+
 protected:
   PropertyConvergence(SEDataRequest& dr, Logger* logger);
+
 public:
-	virtual ~PropertyConvergence();
+  virtual ~PropertyConvergence();
 
-	bool Test(double time_s);
+  bool Test(double time_s);
 
-	double GetPercentError() const;
-	double GetLastPercentError() const;
-	double GetLastErrorTime_s() const;
+  double GetPercentError() const;
+  double GetLastPercentError() const;
+  double GetLastErrorTime_s() const;
   double GetCurrentTarget() const;
-	SEDataRequest& GetDataRequest() const;
-	bool IsOptional() const;
-	void SetOptional(bool b);
+  SEDataRequest& GetDataRequest() const;
+  bool IsOptional() const;
+  void SetOptional(bool b);
 
   void TrackScalar(const SEScalar& s);
   SEDataRequestScalar& GetDataRequestScalar();
-protected:
-	
-  SEDataRequest&       m_DataRequest;
-  SEDataRequestScalar  m_DataRequestScalar;
 
-	bool                 m_Optional;
-	double               m_Target;
-	double               m_Error;
-	double               m_LastError;
-	double               m_LastErrorTime_s;
-  std::stringstream    m_ss;
+protected:
+  SEDataRequest& m_DataRequest;
+  SEDataRequestScalar m_DataRequestScalar;
+
+  bool m_Optional;
+  double m_Target;
+  double m_Error;
+  double m_LastError;
+  double m_LastErrorTime_s;
+  std::stringstream m_ss;
 };
 
 class PhysiologyEngineDynamicStabilization;
 CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationCriteriaData)
-class BIOGEARS_API PhysiologyEngineDynamicStabilizationCriteria : public Loggable
-{
-	friend PhysiologyEngineDynamicStabilization;
-public:
+class BIOGEARS_API PhysiologyEngineDynamicStabilizationCriteria : public Loggable {
+  friend PhysiologyEngineDynamicStabilization;
 
-	PhysiologyEngineDynamicStabilizationCriteria(Logger* logger);
-	virtual ~PhysiologyEngineDynamicStabilizationCriteria();
+public:
+  PhysiologyEngineDynamicStabilizationCriteria(Logger* logger);
+  virtual ~PhysiologyEngineDynamicStabilizationCriteria();
 
   virtual void Clear();
 
   virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in);
   virtual CDM::PhysiologyEngineDynamicStabilizationCriteriaData* Unload() const;
+
 protected:
   virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationCriteriaData& data) const;
-public:
 
+public:
   virtual std::string GetName() const;
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
@@ -85,10 +86,10 @@ public:
   virtual bool HasMaximumAllowedStabilizationTime() const;
   virtual SEScalarTime& GetMaximumAllowedStabilizationTime();
   virtual double GetMaximumAllowedStabilizationTime(const TimeUnit& unit) const;
-	
+
   virtual const std::vector<PropertyConvergence*>& GetPropertyConvergence() const;
   virtual PropertyConvergence& CreateSystemPropertyConvergence(double percentError, const std::string& name);
-  
+
   virtual PropertyConvergence& CreateGasCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name);
   virtual PropertyConvergence& CreateGasCompartmentPropertyConvergence(double percentError, const std::string& cmpt, SESubstance& substance, const std::string& name);
   virtual PropertyConvergence& CreateLiquidCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name);
@@ -97,58 +98,56 @@ public:
   virtual PropertyConvergence& CreateTissueCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name);
 
 protected:
-	std::string          m_Name;
-	SEScalarTime*        m_ConvergenceTime;
-	SEScalarTime*        m_MinimumReactionTime;
-	SEScalarTime*        m_MaximumAllowedStabilizationTime;
+  std::string m_Name;
+  SEScalarTime* m_ConvergenceTime;
+  SEScalarTime* m_MinimumReactionTime;
+  SEScalarTime* m_MaximumAllowedStabilizationTime;
 
-  SEDataRequestManager              m_DataRequestMgr;
-	std::vector<PropertyConvergence*> m_PropertyConvergence;
+  SEDataRequestManager m_DataRequestMgr;
+  std::vector<PropertyConvergence*> m_PropertyConvergence;
 };
 
-class BIOGEARS_API PhysiologyEngineDynamicStabilizer : public Loggable
-{
+class BIOGEARS_API PhysiologyEngineDynamicStabilizer : public Loggable {
 public:
-	PhysiologyEngineDynamicStabilizer(double timeStep_s, const PhysiologyEngineDynamicStabilizationCriteria& criteria);
-	virtual ~PhysiologyEngineDynamicStabilizer(){};
+  PhysiologyEngineDynamicStabilizer(double timeStep_s, const PhysiologyEngineDynamicStabilizationCriteria& criteria);
+  virtual ~PhysiologyEngineDynamicStabilizer(){};
 
   virtual void Converge();
-  virtual bool HasConverged(){ return m_converged; }
-  virtual bool HasConvergedOptional(){ return m_convergedOptional; }
-  virtual bool HasExceededTime(){ return m_exceededTime; }
+  virtual bool HasConverged() { return m_converged; }
+  virtual bool HasConvergedOptional() { return m_convergedOptional; }
+  virtual bool HasExceededTime() { return m_exceededTime; }
 
 protected:
+  bool m_converged;
+  bool m_convergedOptional;
+  bool m_exceededTime;
+  bool m_hasOptionalProperties;
+  double m_dT_s;
+  double m_totTime_s; // Total time we have been converging
+  double m_covTime_s; // Convergence Window Length
+  double m_minTime_s; // Minimum amount of time to run before testing
+  double m_maxTime_s; // Maximum amount of time to run before we quit
+  double m_passTime_s;
+  double m_optsPassTime_s;
 
-	bool   m_converged;
-	bool   m_convergedOptional;
-	bool   m_exceededTime;
-	bool   m_hasOptionalProperties;
-	double m_dT_s;
-	double m_totTime_s;// Total time we have been converging
-	double m_covTime_s;// Convergence Window Length
-	double m_minTime_s;// Minimum amount of time to run before testing
-	double m_maxTime_s;// Maximum amount of time to run before we quit
-	double m_passTime_s;
-	double m_optsPassTime_s;
-
-	const std::vector<PropertyConvergence*>& m_properties;
+  const std::vector<PropertyConvergence*>& m_properties;
 };
 
 CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationData)
-class BIOGEARS_API PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization
-{
+class BIOGEARS_API PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization {
 public:
-	PhysiologyEngineDynamicStabilization(Logger* logger);
-	virtual ~PhysiologyEngineDynamicStabilization();
+  PhysiologyEngineDynamicStabilization(Logger* logger);
+  virtual ~PhysiologyEngineDynamicStabilization();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationData& in);
-	virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const;
-protected:
-	virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const;
-public:
+  virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationData& in);
+  virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const;
 
+protected:
+  virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const;
+
+public:
   virtual bool LoadFile(const std::string& file);
 
   virtual bool StabilizeRestingState(PhysiologyEngine& engine);
@@ -168,14 +167,13 @@ public:
   virtual PhysiologyEngineDynamicStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
 
 protected:
-
   virtual bool Stabilize(PhysiologyEngine& engine, const PhysiologyEngineDynamicStabilizationCriteria& criteria);
 
-	PhysiologyEngineDynamicStabilizationCriteria m_RestingCriteria;
-	PhysiologyEngineDynamicStabilizationCriteria* m_FeedbackCriteria;
-	std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ConditionCriteria;
+  PhysiologyEngineDynamicStabilizationCriteria m_RestingCriteria;
+  PhysiologyEngineDynamicStabilizationCriteria* m_FeedbackCriteria;
+  std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ConditionCriteria;
 
-	bool Merge();
-	PhysiologyEngineDynamicStabilizationCriteria m_MergedConditions;
-	std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ActiveConditions;
+  bool Merge();
+  PhysiologyEngineDynamicStabilizationCriteria m_MergedConditions;
+  std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ActiveConditions;
 };

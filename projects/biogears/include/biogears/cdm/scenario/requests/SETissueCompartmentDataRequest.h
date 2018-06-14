@@ -17,11 +17,12 @@ class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
 
-class BIOGEARS_API SETissueCompartmentDataRequest : public SECompartmentDataRequest
-{
+class BIOGEARS_API SETissueCompartmentDataRequest : public SECompartmentDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SETissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
   virtual ~SETissueCompartmentDataRequest();
 
@@ -29,10 +30,10 @@ public:
 
   virtual bool Load(const CDM::TissueCompartmentDataRequestData& in);
   virtual CDM::TissueCompartmentDataRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::TissueCompartmentDataRequestData& data) const;
 
 public:
   virtual size_t HashCode();
-
 };

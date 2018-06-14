@@ -16,37 +16,35 @@ specific language governing permissions and limitations under the License.
 class SESubstanceCompound;
 #include <biogears/schema/SubstanceCompoundInfusionData.hxx>
 
-class BIOGEARS_API SESubstanceCompoundInfusion : public SESubstanceAdministration
-{
+class BIOGEARS_API SESubstanceCompoundInfusion : public SESubstanceAdministration {
 public:
+  SESubstanceCompoundInfusion(const SESubstanceCompound& compound);
+  virtual ~SESubstanceCompoundInfusion();
 
-	SESubstanceCompoundInfusion(const SESubstanceCompound& compound);
-	virtual ~SESubstanceCompoundInfusion();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::SubstanceCompoundInfusionData& in);
   virtual CDM::SubstanceCompoundInfusionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::SubstanceCompoundInfusionData& data) const;
 
 public:
+  virtual bool HasBagVolume() const;
+  virtual SEScalarVolume& GetBagVolume();
 
-	virtual bool HasBagVolume() const;
-	virtual SEScalarVolume& GetBagVolume();
+  virtual bool HasRate() const;
+  virtual SEScalarVolumePerTime& GetRate();
 
-	virtual bool HasRate() const;
-	virtual SEScalarVolumePerTime& GetRate();	
+  virtual SESubstanceCompound& GetSubstanceCompound() const;
 
-	virtual SESubstanceCompound& GetSubstanceCompound() const;
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalarVolume*                  m_BagVolume;
-	SEScalarVolumePerTime*           m_Rate;
-	const SESubstanceCompound&       m_Compound;
+  SEScalarVolume* m_BagVolume;
+  SEScalarVolumePerTime* m_Rate;
+  const SESubstanceCompound& m_Compound;
 };

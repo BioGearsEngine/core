@@ -14,15 +14,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarAmountPerTimeData.hxx>
 
-class BIOGEARS_API AmountPerTimeUnit : public CCompoundUnit
-{
+class BIOGEARS_API AmountPerTimeUnit : public CCompoundUnit {
 public:
-  AmountPerTimeUnit(const std::string& u) : CCompoundUnit(u) {}
+  AmountPerTimeUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~AmountPerTimeUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
   static const AmountPerTimeUnit& GetCompoundUnit(const std::string& unit);
-
 
   static AmountPerTimeUnit mol_Per_day;
   static AmountPerTimeUnit mol_Per_s;
@@ -32,12 +33,11 @@ public:
   static AmountPerTimeUnit umol_Per_min;
 };
 
-class BIOGEARS_API SEScalarAmountPerTime : public SEScalarQuantity<AmountPerTimeUnit>
-{
+class BIOGEARS_API SEScalarAmountPerTime : public SEScalarQuantity<AmountPerTimeUnit> {
 
 public:
   SEScalarAmountPerTime() {}
-	virtual ~SEScalarAmountPerTime() {}
+  virtual ~SEScalarAmountPerTime() {}
 
   CDM::ScalarAmountPerTimeData* Unload() const;
 };

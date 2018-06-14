@@ -22,68 +22,70 @@ CDM_BIND_DECL(TestErrorStatisticsData)
 // Each value in the array is compared and can be tracked
 // and this provides a summary of how many values in the array
 // were wrong and some statistics to go along with all of those errors
-class BIOGEARS_API SETestErrorStatistics : public Loggable
-{
+class BIOGEARS_API SETestErrorStatistics : public Loggable {
   friend SETestCase;
   friend SETestSuite;
+
 protected:
   SETestErrorStatistics(Logger* logger);
-public:
-	virtual ~SETestErrorStatistics();
-
-	virtual void Reset(); //reset values
-	virtual void Clear(); //clear memory
-
-	bool Load(const CDM::TestErrorStatisticsData& in);
-	std::unique_ptr<CDM::TestErrorStatisticsData> Unload() const;
-protected:
-	void Unload(CDM::TestErrorStatisticsData& data) const;
 
 public:
-	bool IsValid();
+  virtual ~SETestErrorStatistics();
 
-	void						SetPropertyName(const std::string& PropertyName);							
-	std::string			GetPropertyName() const;
+  virtual void Reset(); //reset values
+  virtual void Clear(); //clear memory
 
-	void						SetComputedPropertyID(const std::string& ComputedPropertyID);				
-	std::string			GetComputedPropertyID() const;
-
-	void						SetExpectedPropertyID(const std::string& ExpectedPropertyID);				
-	std::string			GetExpectedPropertyID() const;
-
-	void						SetNumberOfErrors(int NumberOfErrors);											
-	int							GetNumberOfErrors() const;
-
-	void						SetMinimumError(double MinimumError);										
-	double				  GetMinimumError() const;
-
-	void						SetMaximumError(double MaximumError);										
-	double					GetMaximumError() const;
-
-	void						SetAverageError(double AverageError);										
-	double					GetAverageError() const;
-
-	void						SetStandardDeviation(double StandardDeviation);								
-	double					GetStandardDeviation() const;
-
-	void						AddDifference(const std::string& difference);						
-  const std::vector<std::string>*	GetDifferences()  const;
-
-	// This a histogram that shows a percent tolerance and how many errors fall with in each bin
-	bool						HasPercentTolerancevsNumErrorsHistogram() const;
-	SEFunction&			GetPercentToleranceVsNumErrorsHistogram();		
-	void						SetPercentToleranceVsNumErrorsHistogram(SEFunction* PercentToleranceVsNumErrors);
+  bool Load(const CDM::TestErrorStatisticsData& in);
+  std::unique_ptr<CDM::TestErrorStatisticsData> Unload() const;
 
 protected:
-	int m_NumberOfErrors;
-	double m_MinimumError;
-	double m_MaximumError;
-	double m_AverageError;
-	double m_StandardDeviation;
-	double m_PercentTolerance;
-	std::string m_PropertyName;
-	std::string m_ComputedPropertyID;
-	std::string m_ExpectedPropertyID;
-	SEFunction* m_PercentToleranceVsNumErrorsHistogram;
-	std::vector<std::string> m_Differences;	
+  void Unload(CDM::TestErrorStatisticsData& data) const;
+
+public:
+  bool IsValid();
+
+  void SetPropertyName(const std::string& PropertyName);
+  std::string GetPropertyName() const;
+
+  void SetComputedPropertyID(const std::string& ComputedPropertyID);
+  std::string GetComputedPropertyID() const;
+
+  void SetExpectedPropertyID(const std::string& ExpectedPropertyID);
+  std::string GetExpectedPropertyID() const;
+
+  void SetNumberOfErrors(int NumberOfErrors);
+  int GetNumberOfErrors() const;
+
+  void SetMinimumError(double MinimumError);
+  double GetMinimumError() const;
+
+  void SetMaximumError(double MaximumError);
+  double GetMaximumError() const;
+
+  void SetAverageError(double AverageError);
+  double GetAverageError() const;
+
+  void SetStandardDeviation(double StandardDeviation);
+  double GetStandardDeviation() const;
+
+  void AddDifference(const std::string& difference);
+  const std::vector<std::string>* GetDifferences() const;
+
+  // This a histogram that shows a percent tolerance and how many errors fall with in each bin
+  bool HasPercentTolerancevsNumErrorsHistogram() const;
+  SEFunction& GetPercentToleranceVsNumErrorsHistogram();
+  void SetPercentToleranceVsNumErrorsHistogram(SEFunction* PercentToleranceVsNumErrors);
+
+protected:
+  int m_NumberOfErrors;
+  double m_MinimumError;
+  double m_MaximumError;
+  double m_AverageError;
+  double m_StandardDeviation;
+  double m_PercentTolerance;
+  std::string m_PropertyName;
+  std::string m_ComputedPropertyID;
+  std::string m_ExpectedPropertyID;
+  SEFunction* m_PercentToleranceVsNumErrorsHistogram;
+  std::vector<std::string> m_Differences;
 };

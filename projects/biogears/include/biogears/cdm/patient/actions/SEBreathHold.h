@@ -14,31 +14,31 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/schema/BreathHoldData.hxx>
 
-class BIOGEARS_API SEBreathHold : public SEConsciousRespirationCommand
-{
+class BIOGEARS_API SEBreathHold : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
   SEBreathHold();
+
 public:
+  virtual ~SEBreathHold();
 
-	virtual ~SEBreathHold();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::BreathHoldData& in);
   virtual CDM::BreathHoldData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BreathHoldData& data) const;
 
 public:
+  virtual bool HasPeriod() const;
+  virtual SEScalarTime& GetPeriod();
 
-	virtual bool HasPeriod() const;
-	virtual SEScalarTime& GetPeriod();
+  virtual void ToString(std::ostream& str) const;
 
-	virtual void ToString(std::ostream &str) const;
 protected:
-	SEScalar0To1* m_InspiratoryCapacity0To1;
-	SEScalarTime*     m_Period;
-};  
+  SEScalar0To1* m_InspiratoryCapacity0To1;
+  SEScalarTime* m_Period;
+};

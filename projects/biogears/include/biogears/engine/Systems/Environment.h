@@ -19,24 +19,24 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/BioGearsEnvironmentData.hxx>
 
 class SEPatient;
-class	SEPatientActionCollection;
-class	SEEnvironmentActionCollection;
+class SEPatientActionCollection;
+class SEEnvironmentActionCollection;
 class SEGasCompartment;
 class SELiquidCompartment;
-class	SEThermalCircuit;
-class	SEThermalCircuitNode;
-class	SEThermalCircuitPath;
+class SEThermalCircuit;
+class SEThermalCircuitNode;
+class SEThermalCircuitPath;
 class BioGears;
 /**
  * @brief The %Environment class characterizes the environment and manages interactions between the body its surroundings.
- */  
-class BIOGEARS_API Environment : public SEEnvironment, public BioGearsSystem
-{
-	friend class BioGears;
+ */
+class BIOGEARS_API Environment : public SEEnvironment, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	Environment(BioGears& bg);
-	BioGears& m_data;
+  Environment(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~Environment();
@@ -49,6 +49,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsEnvironmentData& in);
   virtual CDM::BioGearsEnvironmentData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsEnvironmentData& data) const;
 
@@ -57,23 +58,22 @@ protected:
 
 public:
   void AtSteadyState();
-	void PreProcess();
-	void Process();
-	void PostProcess();
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
   void StateChange();
+
 protected:
-	
-	void ProcessActions();
-	void CalculateSupplementalValues();
-  /**/double AntoineEquation(double dTemperature_C);
-	void CalculateRadiation();
-	void CalculateConvection();
-	void CalculateEvaporation();
-	void CalculateRespiration();
+  void ProcessActions();
+  void CalculateSupplementalValues();
+  /**/ double AntoineEquation(double dTemperature_C);
+  void CalculateRadiation();
+  void CalculateConvection();
+  void CalculateEvaporation();
+  void CalculateRespiration();
 
   // Serializable member variables (Set in Initialize and in schema)
-	
 
   // Stateless member variable (Calculated in Supplemental Method and used in other methods)
   double m_dLewisRelation;
@@ -91,28 +91,28 @@ protected:
 
   // Stateless member variable (Set in SetUp())
   // Patient and Actions
-  SEPatient*                     m_Patient;	
-	SEPatientActionCollection*     m_PatientActions;
-	SEEnvironmentActionCollection* m_EnvironmentActions;
+  SEPatient* m_Patient;
+  SEPatientActionCollection* m_PatientActions;
+  SEEnvironmentActionCollection* m_EnvironmentActions;
   // Compartments
-  SEGasCompartment*              m_AmbientGases;
-  SELiquidCompartment*           m_AmbientAerosols;
-	//Circuits                     
-	SEThermalCircuit*              m_EnvironmentCircuit;
-	//Nodes                        
-	SEThermalCircuitNode*          m_ThermalEnvironment;
-	SEThermalCircuitNode*          m_SkinNode;
-	SEThermalCircuitNode*          m_ClothingNode;
-	SEThermalCircuitNode*          m_EnclosureNode;
-	//Paths                        
-	SEThermalCircuitPath*          m_SkinToClothing;
-	SEThermalCircuitPath*          m_ActiveHeatTransferRatePath;
-	SEThermalCircuitPath*          m_ActiveTemperaturePath;
-	SEThermalCircuitPath*          m_ActiveSwitchPath;
-	SEThermalCircuitPath*          m_ClothingToEnclosurePath;
-	SEThermalCircuitPath*          m_GroundToEnclosurePath;
-	SEThermalCircuitPath*          m_ClothingToEnvironmentPath;
-	SEThermalCircuitPath*          m_GroundToEnvironmentPath;
-	SEThermalCircuitPath*          m_EnvironmentSkinToGroundPath;
-	SEThermalCircuitPath*          m_EnvironmentCoreToGroundPath;
+  SEGasCompartment* m_AmbientGases;
+  SELiquidCompartment* m_AmbientAerosols;
+  //Circuits
+  SEThermalCircuit* m_EnvironmentCircuit;
+  //Nodes
+  SEThermalCircuitNode* m_ThermalEnvironment;
+  SEThermalCircuitNode* m_SkinNode;
+  SEThermalCircuitNode* m_ClothingNode;
+  SEThermalCircuitNode* m_EnclosureNode;
+  //Paths
+  SEThermalCircuitPath* m_SkinToClothing;
+  SEThermalCircuitPath* m_ActiveHeatTransferRatePath;
+  SEThermalCircuitPath* m_ActiveTemperaturePath;
+  SEThermalCircuitPath* m_ActiveSwitchPath;
+  SEThermalCircuitPath* m_ClothingToEnclosurePath;
+  SEThermalCircuitPath* m_GroundToEnclosurePath;
+  SEThermalCircuitPath* m_ClothingToEnvironmentPath;
+  SEThermalCircuitPath* m_GroundToEnvironmentPath;
+  SEThermalCircuitPath* m_EnvironmentSkinToGroundPath;
+  SEThermalCircuitPath* m_EnvironmentCoreToGroundPath;
 };

@@ -16,25 +16,23 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(SubstanceAerosolizationData)
 
-class BIOGEARS_API SESubstanceAerosolization : public Loggable
-{
+class BIOGEARS_API SESubstanceAerosolization : public Loggable {
 public:
-
-	SESubstanceAerosolization(Logger* logger);
-	virtual ~SESubstanceAerosolization();
+  SESubstanceAerosolization(Logger* logger);
+  virtual ~SESubstanceAerosolization();
 
   virtual void Clear();
   virtual bool IsValid() const;
 
-	virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual bool Load(const CDM::SubstanceAerosolizationData& in);
-	virtual CDM::SubstanceAerosolizationData* Unload() const;
+  virtual bool Load(const CDM::SubstanceAerosolizationData& in);
+  virtual CDM::SubstanceAerosolizationData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::SubstanceAerosolizationData& data) const;
+  virtual void Unload(CDM::SubstanceAerosolizationData& data) const;
 
 public:
-
   virtual bool HasBronchioleModifier() const;
   virtual SEScalarNeg1To1& GetBronchioleModifier();
   virtual double GetBronchioleModifier() const;
@@ -46,10 +44,9 @@ public:
   virtual bool HasParticulateSizeDistribution() const;
   virtual SEHistogramFractionVsLength& GetParticulateSizeDistribution();
   virtual const SEHistogramFractionVsLength* GetParticulateSizeDistribution() const;
-	
-protected: 
 
-  SEScalarNeg1To1*               m_BronchioleModifier;
-  SEScalar0To1*                  m_InflammationCoefficient;
-  SEHistogramFractionVsLength*   m_ParticulateSizeDistribution;
+protected:
+  SEScalarNeg1To1* m_BronchioleModifier;
+  SEScalar0To1* m_InflammationCoefficient;
+  SEHistogramFractionVsLength* m_ParticulateSizeDistribution;
 };

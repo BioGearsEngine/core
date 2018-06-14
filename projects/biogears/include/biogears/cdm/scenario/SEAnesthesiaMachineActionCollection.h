@@ -28,96 +28,94 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 
-class BIOGEARS_API SEAnesthesiaMachineActionCollection : public Loggable
-{
+class BIOGEARS_API SEAnesthesiaMachineActionCollection : public Loggable {
 public:
+  SEAnesthesiaMachineActionCollection(SESubstanceManager&);
+  ~SEAnesthesiaMachineActionCollection();
 
-	SEAnesthesiaMachineActionCollection(SESubstanceManager&);
-	~SEAnesthesiaMachineActionCollection();
-
-	void Clear();
+  void Clear();
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
   bool ProcessAction(const SEAnesthesiaMachineAction& action);
   bool ProcessAction(const CDM::AnesthesiaMachineActionData& action);
 
-	// STATE ACTION
-	bool HasConfiguration() const;
-	SEAnesthesiaMachineConfiguration* GetConfiguration() const;
-	void RemoveConfiguration();
-	
-	// INCIDENT ACTIONS
+  // STATE ACTION
+  bool HasConfiguration() const;
+  SEAnesthesiaMachineConfiguration* GetConfiguration() const;
+  void RemoveConfiguration();
 
-	bool HasOxygenTankPressureLoss() const;
-	SEOxygenTankPressureLoss* GetOxygenTankPressureLoss() const;
-	void RemoveOxygenTankPressureLoss();
+  // INCIDENT ACTIONS
 
-	bool HasOxygenWallPortPressureLoss();
-	SEOxygenWallPortPressureLoss* GetOxygenWallPortPressureLoss();
-	void RemoveOxygenWallPortPressureLoss();
+  bool HasOxygenTankPressureLoss() const;
+  SEOxygenTankPressureLoss* GetOxygenTankPressureLoss() const;
+  void RemoveOxygenTankPressureLoss();
 
-	// FAILURE ACTIONS
+  bool HasOxygenWallPortPressureLoss();
+  SEOxygenWallPortPressureLoss* GetOxygenWallPortPressureLoss();
+  void RemoveOxygenWallPortPressureLoss();
 
-	bool HasExpiratoryValveLeak() const;
-	SEExpiratoryValveLeak* GetExpiratoryValveLeak() const;
-	void RemoveExpiratoryValveLeak();	
+  // FAILURE ACTIONS
 
-	bool HasExpiratoryValveObstruction() const;
-	SEExpiratoryValveObstruction* GetExpiratoryValveObstruction() const;
-	void RemoveExpiratoryValveObstruction();
+  bool HasExpiratoryValveLeak() const;
+  SEExpiratoryValveLeak* GetExpiratoryValveLeak() const;
+  void RemoveExpiratoryValveLeak();
 
-	bool HasInspiratoryValveLeak() const;
-	SEInspiratoryValveLeak* GetInspiratoryValveLeak() const;
-	void RemoveInspiratoryValveLeak();
+  bool HasExpiratoryValveObstruction() const;
+  SEExpiratoryValveObstruction* GetExpiratoryValveObstruction() const;
+  void RemoveExpiratoryValveObstruction();
 
-	bool HasInspiratoryValveObstruction() const;
-	SEInspiratoryValveObstruction* GetInspiratoryValveObstruction() const;
-	void RemoveInspiratoryValveObstruction();
+  bool HasInspiratoryValveLeak() const;
+  SEInspiratoryValveLeak* GetInspiratoryValveLeak() const;
+  void RemoveInspiratoryValveLeak();
 
-	bool HasMaskLeak() const;
-	SEMaskLeak* GetMaskLeak() const;
-	void RemoveMaskLeak();
+  bool HasInspiratoryValveObstruction() const;
+  SEInspiratoryValveObstruction* GetInspiratoryValveObstruction() const;
+  void RemoveInspiratoryValveObstruction();
 
-	bool HasSodaLimeFailure() const;
-	SESodaLimeFailure* GetSodaLimeFailure() const;
-	void RemoveSodaLimeFailure();
+  bool HasMaskLeak() const;
+  SEMaskLeak* GetMaskLeak() const;
+  void RemoveMaskLeak();
 
-	bool HasTubeCuffLeak() const;
-	SETubeCuffLeak* GetTubeCuffLeak() const;
-	void RemoveTubeCuffLeak();
+  bool HasSodaLimeFailure() const;
+  SESodaLimeFailure* GetSodaLimeFailure() const;
+  void RemoveSodaLimeFailure();
 
-	bool HasVaporizerFailure() const;
-	SEVaporizerFailure* GetVaporizerFailure() const;
-	void RemoveVaporizerFailure();
+  bool HasTubeCuffLeak() const;
+  SETubeCuffLeak* GetTubeCuffLeak() const;
+  void RemoveTubeCuffLeak();
 
-	bool HasVentilatorPressureLoss() const;
-	SEVentilatorPressureLoss* GetVentilatorPressureLoss() const;
-	void RemoveVentilatorPressureLoss();
+  bool HasVaporizerFailure() const;
+  SEVaporizerFailure* GetVaporizerFailure() const;
+  void RemoveVaporizerFailure();
 
-	bool HasYPieceDisconnect() const;
-	SEYPieceDisconnect* GetYPieceDisconnect() const;
-	void RemoveYPieceDisconnect();
-	
+  bool HasVentilatorPressureLoss() const;
+  SEVentilatorPressureLoss* GetVentilatorPressureLoss() const;
+  void RemoveVentilatorPressureLoss();
+
+  bool HasYPieceDisconnect() const;
+  SEYPieceDisconnect* GetYPieceDisconnect() const;
+  void RemoveYPieceDisconnect();
+
 protected:
   bool IsValid(const SEAnesthesiaMachineAction& action);
 
-	SEAnesthesiaMachineConfiguration*           m_Configuration;
-	//Anesthesia Machine Incidents
-	SEOxygenTankPressureLoss*                   m_OxygenTankPressureLoss;
-	SEOxygenWallPortPressureLoss*               m_OxygenWallPortPressureLoss;
-	//Anesthesia Machine Failures
-	SEExpiratoryValveLeak*                      m_ExpiratoryValveLeak;
-	SEExpiratoryValveObstruction*               m_ExpiratoryValveObstruction;
-	SEInspiratoryValveLeak*                     m_InspiratoryValveLeak;
-	SEInspiratoryValveObstruction*              m_InspiratoryValveObstruction;
-	SEMaskLeak*                                 m_MaskLeak;
-	SESodaLimeFailure*                          m_SodaLimeFailure;
-	SETubeCuffLeak*                             m_TubeCuffLeak;
-	SEVaporizerFailure*                         m_VaporizerFailure;
-	SEVentilatorPressureLoss*                   m_VentilatorPressureLoss;
-	SEYPieceDisconnect*                         m_YPieceDisconnect;
-	// General
-	SESubstanceManager& m_Substances;
-	std::stringstream m_ss;
+  SEAnesthesiaMachineConfiguration* m_Configuration;
+  //Anesthesia Machine Incidents
+  SEOxygenTankPressureLoss* m_OxygenTankPressureLoss;
+  SEOxygenWallPortPressureLoss* m_OxygenWallPortPressureLoss;
+  //Anesthesia Machine Failures
+  SEExpiratoryValveLeak* m_ExpiratoryValveLeak;
+  SEExpiratoryValveObstruction* m_ExpiratoryValveObstruction;
+  SEInspiratoryValveLeak* m_InspiratoryValveLeak;
+  SEInspiratoryValveObstruction* m_InspiratoryValveObstruction;
+  SEMaskLeak* m_MaskLeak;
+  SESodaLimeFailure* m_SodaLimeFailure;
+  SETubeCuffLeak* m_TubeCuffLeak;
+  SEVaporizerFailure* m_VaporizerFailure;
+  SEVentilatorPressureLoss* m_VentilatorPressureLoss;
+  SEYPieceDisconnect* m_YPieceDisconnect;
+  // General
+  SESubstanceManager& m_Substances;
+  std::stringstream m_ss;
 };

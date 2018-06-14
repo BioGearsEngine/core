@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 class SELiquidCompartment;
 class SETissueCompartment;
 
-class BIOGEARS_API SizeIndependentDepositionEfficencyCoefficient
-{
+class BIOGEARS_API SizeIndependentDepositionEfficencyCoefficient {
   friend class BioGearsSubstances;
- public:
-   SizeIndependentDepositionEfficencyCoefficient() {};
+
+public:
+  SizeIndependentDepositionEfficencyCoefficient(){};
   ~SizeIndependentDepositionEfficencyCoefficient() {}
 
   double GetMouth() const { return m_mouth; }
@@ -29,58 +29,58 @@ class BIOGEARS_API SizeIndependentDepositionEfficencyCoefficient
   double GetAlveoli() const { return m_alveoli; }
 
 protected:
-  double m_mouth=0;
-  double m_carina=0;
-  double m_deadSpace=0;
-  double m_alveoli=0;
+  double m_mouth = 0;
+  double m_carina = 0;
+  double m_deadSpace = 0;
+  double m_alveoli = 0;
 };
 
 /**
 * @brief Manages and initializes all systems with substances needed by %BioGears
 */
-class BIOGEARS_API BioGearsSubstances : public SESubstanceManager
-{
+class BIOGEARS_API BioGearsSubstances : public SESubstanceManager {
   friend class BioGearsEngineTest;
+
 public:
-	BioGearsSubstances(BioGears& data);
-	virtual ~BioGearsSubstances() = default;
+  BioGearsSubstances(BioGears& data);
+  virtual ~BioGearsSubstances() = default;
 
-	virtual void Clear();
+  virtual void Clear();
 
-	virtual bool LoadSubstanceDirectory();
-	virtual void InitializeSubstances();
+  virtual bool LoadSubstanceDirectory();
+  virtual void InitializeSubstances();
 
-	virtual void AddActiveSubstance(SESubstance& substance);
+  virtual void AddActiveSubstance(SESubstance& substance);
   virtual bool IsActive(const SESubstance& sub) const;
 
-	inline SESubstance&	GetO2()      { return *m_O2; }
-  inline SESubstance&	GetCO()      { return *m_CO; }
-	inline SESubstance&	GetCO2()     { return *m_CO2; }
-	inline SESubstance&	GetN2()      { return *m_N2; }
-	inline SESubstance&	GetHb()      { return *m_Hb; }
-	inline SESubstance&	GetHbO2()    { return *m_HbO2; }
-	inline SESubstance&	GetHbCO2()   { return *m_HbCO2; }
-  inline SESubstance&	GetHbCO()    { return *m_HbCO; }
-	inline SESubstance&	GetHbO2CO2() { return *m_HbO2CO2; }
-	inline SESubstance&	GetHCO3()    { return *m_HCO3; }
-	inline SESubstance&	GetEpi()     { return *m_epi; }
+  inline SESubstance& GetO2() { return *m_O2; }
+  inline SESubstance& GetCO() { return *m_CO; }
+  inline SESubstance& GetCO2() { return *m_CO2; }
+  inline SESubstance& GetN2() { return *m_N2; }
+  inline SESubstance& GetHb() { return *m_Hb; }
+  inline SESubstance& GetHbO2() { return *m_HbO2; }
+  inline SESubstance& GetHbCO2() { return *m_HbCO2; }
+  inline SESubstance& GetHbCO() { return *m_HbCO; }
+  inline SESubstance& GetHbO2CO2() { return *m_HbO2CO2; }
+  inline SESubstance& GetHCO3() { return *m_HCO3; }
+  inline SESubstance& GetEpi() { return *m_epi; }
 
-	inline SESubstance&	GetAlbumin()          { return *m_albumin; }
-  inline SESubstance&	GetAminoAcids()       { return *m_aminoAcids; }
-	inline SESubstance&	GetBicarbonate()      { return *m_HCO3; }
-	inline SESubstance&	GetCalcium()          { return *m_calcium; }
-	inline SESubstance&	GetChloride()         { return *m_chloride; }
-	inline SESubstance&	GetCreatinine()       { return *m_creatinine; }
-  inline SESubstance&	GetGlobulin()         { return *m_globulin; }
-  inline SESubstance&	GetGlucagon()         { return *m_glucagon; }
-	inline SESubstance&	GetGlucose()          { return *m_glucose; }
-	inline SESubstance&	GetInsulin()          { return *m_insulin; }
-  inline SESubstance&	GetKetones()          { return *m_ketones; }
-	inline SESubstance&	GetLactate()          { return *m_lactate; }
-	inline SESubstance&	GetPotassium()        { return *m_potassium; }
-	inline SESubstance&	GetTriacylglycerol()  { return *m_triacylglycerol; }
-	inline SESubstance&	GetSodium()           { return *m_sodium; }
-	inline SESubstance&	GetUrea()             { return *m_urea; }
+  inline SESubstance& GetAlbumin() { return *m_albumin; }
+  inline SESubstance& GetAminoAcids() { return *m_aminoAcids; }
+  inline SESubstance& GetBicarbonate() { return *m_HCO3; }
+  inline SESubstance& GetCalcium() { return *m_calcium; }
+  inline SESubstance& GetChloride() { return *m_chloride; }
+  inline SESubstance& GetCreatinine() { return *m_creatinine; }
+  inline SESubstance& GetGlobulin() { return *m_globulin; }
+  inline SESubstance& GetGlucagon() { return *m_glucagon; }
+  inline SESubstance& GetGlucose() { return *m_glucose; }
+  inline SESubstance& GetInsulin() { return *m_insulin; }
+  inline SESubstance& GetKetones() { return *m_ketones; }
+  inline SESubstance& GetLactate() { return *m_lactate; }
+  inline SESubstance& GetPotassium() { return *m_potassium; }
+  inline SESubstance& GetTriacylglycerol() { return *m_triacylglycerol; }
+  inline SESubstance& GetSodium() { return *m_sodium; }
+  inline SESubstance& GetUrea() { return *m_urea; }
 
   void CalculateGenericClearance(double volumeCleared_mL, SELiquidCompartment& cmpt, SESubstance& sub, SEScalarMass* cleared = nullptr);
   void CalculateGenericClearance(double volumeCleared_mL, SETissueCompartment& cmpt, SESubstance& sub, SEScalarMass* cleared = nullptr);
@@ -94,60 +94,58 @@ public:
 
   void WriteBloodGases();
   void WritePulmonaryGases();
-  void ProbeBloodGases(SELiquidCompartment& cmpt, const std::string& prefix="");
-protected:
+  void ProbeBloodGases(SELiquidCompartment& cmpt, const std::string& prefix = "");
 
+protected:
   virtual void InitializeGasCompartments();
   virtual void InitializeLiquidCompartmentGases();
   virtual void InitializeLiquidCompartmentNonGases();
 
-  virtual void InitializeBloodGases(SETissueCompartment& tissue, SELiquidCompartment& vascular);  
+  virtual void InitializeBloodGases(SETissueCompartment& tissue, SELiquidCompartment& vascular);
   virtual void InitializeBloodGases(SELiquidCompartment& cmpt, double Hb_total_mM, double O2_sat, double O2_mmol_Per_L, double CO2_sat, double CO2_mmol_Per_L, double HCO3_mmol_Per_L, double pH, bool distribute = true);
 
-  void   SetSubstanceMolarity(SESubstance&, const std::vector<SELiquidCompartment*>&, const SEScalarAmountPerVolume& molarity);  
-  void   SetSubstanceMolarity(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarAmountPerVolume& molarity);
-  void   SetSubstanceMolarity(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarAmountPerVolume& extracellular, const SEScalarAmountPerVolume& intracellular);
-  void   SetSubstanceMolarity(SESubstance&, const SEScalarAmountPerVolume& extracellular, const SEScalarAmountPerVolume& intracellular);
-  
-  void   SetSubstanceConcentration(SESubstance&, const std::vector<SELiquidCompartment*>&, const SEScalarMassPerVolume& concentration);
-  void   SetSubstanceConcentration(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarMassPerVolume& concentration);
-  void   SetSubstanceConcentration(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarMassPerVolume& extracellular, const SEScalarMassPerVolume& intracellular);
+  void SetSubstanceMolarity(SESubstance&, const std::vector<SELiquidCompartment*>&, const SEScalarAmountPerVolume& molarity);
+  void SetSubstanceMolarity(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarAmountPerVolume& molarity);
+  void SetSubstanceMolarity(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarAmountPerVolume& extracellular, const SEScalarAmountPerVolume& intracellular);
+  void SetSubstanceMolarity(SESubstance&, const SEScalarAmountPerVolume& extracellular, const SEScalarAmountPerVolume& intracellular);
 
-	// Common Substances
-	//Substances
-	SESubstance*	m_O2;
-	SESubstance*	m_CO;
-  SESubstance*	m_CO2;
-	SESubstance*  m_N2;
-	SESubstance*	m_Hb;
-	SESubstance*	m_HbO2;
-	SESubstance*	m_HbCO2;
-  SESubstance*	m_HbCO;
-	SESubstance*	m_HbO2CO2;
-	SESubstance*  m_HCO3;
-	SESubstance*	m_epi;
+  void SetSubstanceConcentration(SESubstance&, const std::vector<SELiquidCompartment*>&, const SEScalarMassPerVolume& concentration);
+  void SetSubstanceConcentration(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarMassPerVolume& concentration);
+  void SetSubstanceConcentration(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarMassPerVolume& extracellular, const SEScalarMassPerVolume& intracellular);
 
-	
-	SESubstance*  m_albumin;
-  SESubstance*  m_aminoAcids;
-	SESubstance*  m_calcium;
-	SESubstance*	m_chloride;
-	SESubstance*  m_creatinine;
-  SESubstance*  m_globulin;
-  SESubstance*  m_glucagon;
-	SESubstance*  m_glucose;
-	SESubstance*  m_insulin;
-  SESubstance*  m_ketones;
-	SESubstance*  m_lactate;
-	SESubstance*  m_triacylglycerol;
-	SESubstance*  m_potassium;
-	SESubstance*  m_sodium;
-	SESubstance*  m_urea;
+  // Common Substances
+  //Substances
+  SESubstance* m_O2;
+  SESubstance* m_CO;
+  SESubstance* m_CO2;
+  SESubstance* m_N2;
+  SESubstance* m_Hb;
+  SESubstance* m_HbO2;
+  SESubstance* m_HbCO2;
+  SESubstance* m_HbCO;
+  SESubstance* m_HbO2CO2;
+  SESubstance* m_HCO3;
+  SESubstance* m_epi;
 
-  bool          m_isCOActive;
+  SESubstance* m_albumin;
+  SESubstance* m_aminoAcids;
+  SESubstance* m_calcium;
+  SESubstance* m_chloride;
+  SESubstance* m_creatinine;
+  SESubstance* m_globulin;
+  SESubstance* m_glucagon;
+  SESubstance* m_glucose;
+  SESubstance* m_insulin;
+  SESubstance* m_ketones;
+  SESubstance* m_lactate;
+  SESubstance* m_triacylglycerol;
+  SESubstance* m_potassium;
+  SESubstance* m_sodium;
+  SESubstance* m_urea;
+
+  bool m_isCOActive;
 
   std::map<SESubstance*, SizeIndependentDepositionEfficencyCoefficient*> m_SIDECoefficients;
 
-	BioGears&     m_data;
+  BioGears& m_data;
 };
-

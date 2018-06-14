@@ -14,22 +14,23 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 CDM_BIND_DECL(SubstanceQuantityData)
 
-class BIOGEARS_API SESubstanceQuantity : public Loggable
-{
+class BIOGEARS_API SESubstanceQuantity : public Loggable {
 public:
-  SESubstanceQuantity(SESubstance& sub) : Loggable(sub.GetLogger()), m_Substance(sub) {};
-	virtual ~SESubstanceQuantity(){};
+  SESubstanceQuantity(SESubstance& sub)
+    : Loggable(sub.GetLogger())
+    , m_Substance(sub){};
+  virtual ~SESubstanceQuantity(){};
 
-	virtual void Clear() = 0; //clear memory
+  virtual void Clear() = 0; //clear memory
   virtual void Invalidate() = 0;
 
   virtual bool Load(const CDM::SubstanceQuantityData& in);
   virtual CDM::SubstanceQuantityData* Unload() = 0;
+
 protected:
   virtual void Unload(CDM::SubstanceQuantityData& data);
 
 public:
-	
   virtual SESubstance& GetSubstance() const { return m_Substance; }
 
   virtual void SetToZero() = 0;

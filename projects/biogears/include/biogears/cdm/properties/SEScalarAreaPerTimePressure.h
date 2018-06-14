@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarAreaPerTimePressureData.hxx>
 
-class BIOGEARS_API AreaPerTimePressureUnit : public CCompoundUnit
-{
+class BIOGEARS_API AreaPerTimePressureUnit : public CCompoundUnit {
 public:
-  AreaPerTimePressureUnit(const std::string& u) : CCompoundUnit(u) {}
+  AreaPerTimePressureUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~AreaPerTimePressureUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -29,11 +31,10 @@ public:
   static const AreaPerTimePressureUnit cm2_Per_min_mmHg;
 };
 
-class BIOGEARS_API SEScalarAreaPerTimePressure : public SEScalarQuantity<AreaPerTimePressureUnit>
-{
+class BIOGEARS_API SEScalarAreaPerTimePressure : public SEScalarQuantity<AreaPerTimePressureUnit> {
 public:
   SEScalarAreaPerTimePressure() {}
-	virtual ~SEScalarAreaPerTimePressure() {}
+  virtual ~SEScalarAreaPerTimePressure() {}
 
   CDM::ScalarAreaPerTimePressureData* Unload() const;
 };

@@ -20,11 +20,10 @@ class SELiquidCompartmentGraph;
 /**
 * @brief Manages all compartments and graphs associated with all %BioGears systems/equipement
 */
-class BIOGEARS_API BioGearsCompartments : public SECompartmentManager
-{
+class BIOGEARS_API BioGearsCompartments : public SECompartmentManager {
   friend class BioGearsSubstances;
-public:
 
+public:
   BioGearsCompartments(BioGears& data);
   virtual ~BioGearsCompartments();
 
@@ -33,25 +32,29 @@ public:
   virtual bool Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits = nullptr);
 
   void StateChange();
-  void UpdateAirwayGraph() { m_UpdateActiveAirwayGraph = true; m_UpdateActiveAerosolGraph = true; }
+  void UpdateAirwayGraph()
+  {
+    m_UpdateActiveAirwayGraph = true;
+    m_UpdateActiveAerosolGraph = true;
+  }
 
   SELiquidCompartmentGraph& GetActiveCardiovascularGraph();
   SELiquidCompartmentGraph& GetCardiovascularGraph();
   SELiquidCompartmentGraph& GetRenalGraph();
 
-  SEGasCompartmentGraph&    GetActiveRespiratoryGraph();
-  SEGasCompartmentGraph&    GetRespiratoryGraph();
-  SEGasCompartmentGraph&    GetRespiratoryAndAnesthesiaMachineGraph();
-  SEGasCompartmentGraph&    GetRespiratoryAndInhalerGraph();
-  SEGasCompartmentGraph&    GetRespiratoryAndMechanicalVentilatorGraph();
+  SEGasCompartmentGraph& GetActiveRespiratoryGraph();
+  SEGasCompartmentGraph& GetRespiratoryGraph();
+  SEGasCompartmentGraph& GetRespiratoryAndAnesthesiaMachineGraph();
+  SEGasCompartmentGraph& GetRespiratoryAndInhalerGraph();
+  SEGasCompartmentGraph& GetRespiratoryAndMechanicalVentilatorGraph();
 
-  SEGasCompartmentGraph&    GetAnesthesiaMachineGraph();
+  SEGasCompartmentGraph& GetAnesthesiaMachineGraph();
 
   SELiquidCompartmentGraph& GetActiveAerosolGraph();
   SELiquidCompartmentGraph& GetAerosolGraph();
   SELiquidCompartmentGraph& GetAerosolAndInhalerGraph();
 
-  // Compartment Helpers  
+  // Compartment Helpers
   const std::vector<SELiquidCompartment*>& GetAerosolCompartments() { return m_AerosolCompartments; }
   const std::vector<SELiquidCompartment*>& GetAerosolLeafCompartments() { return m_AerosolLeafCompartments; }
 
@@ -94,7 +97,7 @@ protected:
   // I don't want these exposed in BioGears, you should be calling the Substance manager
   virtual void AddGasCompartmentSubstance(SESubstance& sub);
   virtual void AddLiquidCompartmentSubstance(SESubstance& sub);
-  
+
   virtual bool AllowGasSubstance(SESubstance& s, SEGasCompartment& cmpt) const;
   virtual bool AllowLiquidSubstance(SESubstance& s, SELiquidCompartment& cmpt) const;
 
@@ -103,42 +106,41 @@ protected:
   bool m_UpdateActiveAirwayGraph;
   bool m_UpdateActiveAerosolGraph;
 
-  SELiquidCompartmentGraph*	 m_CombinedCardiovascularGraph;
-  SELiquidCompartmentGraph*	 m_CardiovascularGraph;
-  SELiquidCompartmentGraph*  m_RenalGraph;
+  SELiquidCompartmentGraph* m_CombinedCardiovascularGraph;
+  SELiquidCompartmentGraph* m_CardiovascularGraph;
+  SELiquidCompartmentGraph* m_RenalGraph;
 
-  SEGasCompartmentGraph*     m_RespiratoryGraph;
-  SEGasCompartmentGraph*     m_CombinedRespiratoryAnesthesiaGraph;
-  SEGasCompartmentGraph*     m_CombinedRespiratoryInhalerGraph;
-  SEGasCompartmentGraph*     m_CombinedRespiratoryMechanicalVentilatorGraph;
-  SEGasCompartmentGraph*     m_AnesthesiaMachineGraph;
+  SEGasCompartmentGraph* m_RespiratoryGraph;
+  SEGasCompartmentGraph* m_CombinedRespiratoryAnesthesiaGraph;
+  SEGasCompartmentGraph* m_CombinedRespiratoryInhalerGraph;
+  SEGasCompartmentGraph* m_CombinedRespiratoryMechanicalVentilatorGraph;
+  SEGasCompartmentGraph* m_AnesthesiaMachineGraph;
 
-  SELiquidCompartmentGraph*  m_AerosolGraph;
-  SELiquidCompartmentGraph*  m_CombinedAerosolInhalerGraph;
+  SELiquidCompartmentGraph* m_AerosolGraph;
+  SELiquidCompartmentGraph* m_CombinedAerosolInhalerGraph;
 
-
-  std::vector<SELiquidCompartment*>  m_AerosolCompartments;
-  std::vector<SELiquidCompartment*>  m_AerosolLeafCompartments;
-  std::vector<SELiquidCompartment*>  m_ChymeCompartments;
-  std::vector<SELiquidCompartment*>  m_ChymeLeafCompartments;
-  std::vector<SEGasCompartment*>     m_PulmonaryCompartments;
-  std::vector<SEGasCompartment*>     m_PulmonaryLeafCompartments;
+  std::vector<SELiquidCompartment*> m_AerosolCompartments;
+  std::vector<SELiquidCompartment*> m_AerosolLeafCompartments;
+  std::vector<SELiquidCompartment*> m_ChymeCompartments;
+  std::vector<SELiquidCompartment*> m_ChymeLeafCompartments;
+  std::vector<SEGasCompartment*> m_PulmonaryCompartments;
+  std::vector<SEGasCompartment*> m_PulmonaryLeafCompartments;
   std::vector<SEThermalCompartment*> m_TemperatureCompartments;
   std::vector<SEThermalCompartment*> m_TemperatureLeafCompartments;
-  std::vector<SETissueCompartment*>  m_TissueCompartments;
-  std::vector<SETissueCompartment*>  m_TissueLeafCompartments;
-  std::vector<SELiquidCompartment*>  m_UrineCompartments;
-  std::vector<SELiquidCompartment*>  m_UrineLeafCompartments;
-  std::vector<SELiquidCompartment*>  m_VascularCompartments;
-  std::vector<SELiquidCompartment*>  m_VascularLeafCompartments;
-  std::vector<SEGasCompartment*>     m_AnesthesiaMachineCompartments;
-  std::vector<SEGasCompartment*>     m_AnesthesiaMachineLeafCompartments;
-  std::vector<SEGasCompartment*>     m_InhalerCompartments;
-  std::vector<SEGasCompartment*>     m_InhalerLeafCompartments;
-  std::vector<SELiquidCompartment*>  m_InhalerAerosolCompartments;
-  std::vector<SELiquidCompartment*>  m_InhalerAerosolLeafCompartments;
-  std::vector<SEGasCompartment*>     m_MechanicalVentilatorCompartments;
-  std::vector<SEGasCompartment*>     m_MechanicalVentilatorLeafCompartments;
+  std::vector<SETissueCompartment*> m_TissueCompartments;
+  std::vector<SETissueCompartment*> m_TissueLeafCompartments;
+  std::vector<SELiquidCompartment*> m_UrineCompartments;
+  std::vector<SELiquidCompartment*> m_UrineLeafCompartments;
+  std::vector<SELiquidCompartment*> m_VascularCompartments;
+  std::vector<SELiquidCompartment*> m_VascularLeafCompartments;
+  std::vector<SEGasCompartment*> m_AnesthesiaMachineCompartments;
+  std::vector<SEGasCompartment*> m_AnesthesiaMachineLeafCompartments;
+  std::vector<SEGasCompartment*> m_InhalerCompartments;
+  std::vector<SEGasCompartment*> m_InhalerLeafCompartments;
+  std::vector<SELiquidCompartment*> m_InhalerAerosolCompartments;
+  std::vector<SELiquidCompartment*> m_InhalerAerosolLeafCompartments;
+  std::vector<SEGasCompartment*> m_MechanicalVentilatorCompartments;
+  std::vector<SEGasCompartment*> m_MechanicalVentilatorLeafCompartments;
 
   std::map<SETissueCompartment*, SELiquidCompartment*> m_ExtracellularFluid;
   std::map<SETissueCompartment*, SELiquidCompartment*> m_IntracellularFluid;

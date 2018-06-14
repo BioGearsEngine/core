@@ -15,23 +15,22 @@ CDM_BIND_DECL(ElectroCardioGramInterpolationWaveformData)
 #include <biogears/schema/enumHeartRhythm.hxx>
 #include <biogears/schema/ElectroCardioGramWaveformLeadNumber.hxx>
 
-class BIOGEARS_API SEElectroCardioGramInterpolatorWaveform : public Loggable
-{
+class BIOGEARS_API SEElectroCardioGramInterpolatorWaveform : public Loggable {
 public:
-
   SEElectroCardioGramInterpolatorWaveform(Logger* logger);
   virtual ~SEElectroCardioGramInterpolatorWaveform();
 
-  virtual void Clear();// Deletes all members
+  virtual void Clear(); // Deletes all members
 
   virtual bool Load(const CDM::ElectroCardioGramInterpolationWaveformData& in);
   virtual CDM::ElectroCardioGramInterpolationWaveformData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const;
 
-public:	
+public:
   virtual bool HasLeadNumber() const;
-  virtual CDM::ElectroCardioGramWaveformLeadNumber  GetLeadNumber() const;
+  virtual CDM::ElectroCardioGramWaveformLeadNumber GetLeadNumber() const;
   virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumber n);
   virtual void InvalidateLeadNumber();
 
@@ -51,10 +50,9 @@ public:
   virtual std::vector<unsigned int>& GetActiveIndicies() { return m_ActiveIndicies; }
 
 protected:
-
   CDM::ElectroCardioGramWaveformLeadNumber m_LeadNumber;
-  CDM::enumHeartRhythm::value              m_Rhythm;
-  SEScalarTime*                            m_TimeStep;
-  SEFunctionElectricPotentialVsTime*       m_Data;
+  CDM::enumHeartRhythm::value m_Rhythm;
+  SEScalarTime* m_TimeStep;
+  SEFunctionElectricPotentialVsTime* m_Data;
   std::vector<unsigned int> m_ActiveIndicies;
 };

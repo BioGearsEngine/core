@@ -15,25 +15,23 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/enumOnOff.hxx>
 #include <biogears/schema/ChestCompressionData.hxx>
 
-class BIOGEARS_API SEChestCompression : public SEPatientAction
-{
+class BIOGEARS_API SEChestCompression : public SEPatientAction {
 public:
+  SEChestCompression();
+  virtual ~SEChestCompression();
 
-	SEChestCompression();
-	virtual ~SEChestCompression();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
-
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ChestCompressionData& in);
+
 protected:
   virtual void Unload(CDM::ChestCompressionData& data) const;
 
 public:
+  virtual void ToString(std::ostream& str) const = 0;
 
-	virtual void ToString(std::ostream &str) const = 0;
 protected:
 };

@@ -17,44 +17,41 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(ActionData);
 class SESubstanceManager;
 
-class BIOGEARS_API SEAction : public Loggable
-{
+class BIOGEARS_API SEAction : public Loggable {
 public:
+  SEAction();
+  virtual ~SEAction();
 
-	SEAction();
-	virtual ~SEAction();
+  virtual void Clear(); // Deletes all members
 
-  virtual void Clear();// Deletes all members
-  
-	/** Test if the action has all data it needs */
-	virtual bool IsValid() const { return true; }
-	/** Actions can be turned off or on with various data combinations
+  /** Test if the action has all data it needs */
+  virtual bool IsValid() const { return true; }
+  /** Actions can be turned off or on with various data combinations
 	*  This method will encapsulate that logic in a single function */
-	virtual bool IsActive() const { return IsValid(); }
+  virtual bool IsActive() const { return IsValid(); }
 
-	static SEAction* newFromBind(const CDM::ActionData& action, SESubstanceManager& substances);
+  static SEAction* newFromBind(const CDM::ActionData& action, SESubstanceManager& substances);
 
-	virtual bool Load(const CDM::ActionData& in);
-	virtual CDM::ActionData* Unload() const;
+  virtual bool Load(const CDM::ActionData& in);
+  virtual CDM::ActionData* Unload() const;
+
 protected:
-	void Unload(CDM::ActionData& data) const;
+  void Unload(CDM::ActionData& data) const;
 
 public:
+  virtual std::string GetComment() const;
+  virtual void SetComment(const std::string& comment);
+  virtual bool HasComment() const;
+  virtual void InvalidateComment();
 
-	virtual std::string GetComment() const;
-	virtual void SetComment(const std::string& comment);
-	virtual bool HasComment() const;
-	virtual void InvalidateComment();
-
-	virtual void ToString(std::ostream &str)const=0;
+  virtual void ToString(std::ostream& str) const = 0;
 
 protected:
+  std::string m_Comment;
+};
 
-	std::string           m_Comment;
-};  
-
-inline std::ostream& operator<< (std::ostream& out, const SEAction& a) 
+inline std::ostream& operator<<(std::ostream& out, const SEAction& a)
 {
-    a.ToString(out);
-    return out;
+  a.ToString(out);
+  return out;
 }

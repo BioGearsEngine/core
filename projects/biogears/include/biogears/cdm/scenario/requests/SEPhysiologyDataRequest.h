@@ -15,22 +15,23 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/PhysiologyDataRequestData.hxx>
 class SEDataRequestManager;
 
-class BIOGEARS_API SEPhysiologyDataRequest : public SEDataRequest
-{
+class BIOGEARS_API SEPhysiologyDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SEPhysiologyDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
   virtual ~SEPhysiologyDataRequest();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::PhysiologyDataRequestData& in);
   virtual CDM::PhysiologyDataRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::PhysiologyDataRequestData& data) const;
+
 public:
-
 protected:
-
-};                  
+};

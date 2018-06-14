@@ -14,34 +14,33 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/ChronicObstructivePulmonaryDiseaseData.hxx>
 
-class BIOGEARS_API SEChronicObstructivePulmonaryDisease : public SEPatientCondition
-{
+class BIOGEARS_API SEChronicObstructivePulmonaryDisease : public SEPatientCondition {
 public:
+  SEChronicObstructivePulmonaryDisease();
+  virtual ~SEChronicObstructivePulmonaryDisease();
 
-	SEChronicObstructivePulmonaryDisease();
-	virtual ~SEChronicObstructivePulmonaryDisease();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::ChronicObstructivePulmonaryDiseaseData& in);
   virtual CDM::ChronicObstructivePulmonaryDiseaseData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const;
 
 public:
-	virtual std::string GetName() const { return "ChronicObstructivePulmonaryDisease"; }
+  virtual std::string GetName() const { return "ChronicObstructivePulmonaryDisease"; }
 
-	virtual bool HasBronchitisSeverity() const;
-	virtual SEScalar0To1& GetBronchitisSeverity();
+  virtual bool HasBronchitisSeverity() const;
+  virtual SEScalar0To1& GetBronchitisSeverity();
 
-	virtual bool HasEmphysemaSeverity() const;
-	virtual SEScalar0To1& GetEmphysemaSeverity();
+  virtual bool HasEmphysemaSeverity() const;
+  virtual SEScalar0To1& GetEmphysemaSeverity();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*     m_BronchitisSeverity;
-	SEScalar0To1*     m_EmphysemaSeverity;
+  SEScalar0To1* m_BronchitisSeverity;
+  SEScalar0To1* m_EmphysemaSeverity;
 };

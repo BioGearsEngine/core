@@ -17,48 +17,47 @@ class SEAnesthesiaMachine;
 CDM_BIND_DECL(AnesthesiaMachineChamberData)
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SEAnesthesiaMachineChamber : Loggable
-{
+class BIOGEARS_API SEAnesthesiaMachineChamber : Loggable {
 protected:
-	friend SEAnesthesiaMachine;
-public:
+  friend SEAnesthesiaMachine;
 
+public:
   SEAnesthesiaMachineChamber(SESubstanceManager& substances);
-	virtual ~SEAnesthesiaMachineChamber();
+  virtual ~SEAnesthesiaMachineChamber();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::AnesthesiaMachineChamberData& in);
-	virtual CDM::AnesthesiaMachineChamberData* Unload() const;
+  virtual bool Load(const CDM::AnesthesiaMachineChamberData& in);
+  virtual CDM::AnesthesiaMachineChamberData* Unload() const;
+
 protected:
   virtual void Unload(CDM::AnesthesiaMachineChamberData& data) const;
 
   virtual void Merge(const SEAnesthesiaMachineChamber& from);
-public:
 
+public:
   virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual CDM::enumOnOff::value GetState() const;
-	virtual void SetState(CDM::enumOnOff::value name);
-	virtual bool HasState() const;
-	virtual void InvalidateState();
+  virtual CDM::enumOnOff::value GetState() const;
+  virtual void SetState(CDM::enumOnOff::value name);
+  virtual bool HasState() const;
+  virtual void InvalidateState();
 
-	virtual bool HasSubstanceFraction() const;
-	virtual SEScalarFraction& GetSubstanceFraction();
-	virtual double GetSubstanceFraction() const;
+  virtual bool HasSubstanceFraction() const;
+  virtual SEScalarFraction& GetSubstanceFraction();
+  virtual double GetSubstanceFraction() const;
 
-	virtual bool HasSubstance() const;
-	virtual SESubstance* GetSubstance() const;
-	virtual void SetSubstance(const SESubstance& substance);
-	virtual void RemoveSubstance();
+  virtual bool HasSubstance() const;
+  virtual SESubstance* GetSubstance() const;
+  virtual void SetSubstance(const SESubstance& substance);
+  virtual void RemoveSubstance();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
+  CDM::enumOnOff::value m_State;
+  const SESubstance* m_Substance;
+  SEScalarFraction* m_SubstanceFraction;
 
-	CDM::enumOnOff::value m_State;
-	const SESubstance*    m_Substance;
-	SEScalarFraction*     m_SubstanceFraction;
-
-  SESubstanceManager&   m_Substances;
+  SESubstanceManager& m_Substances;
 };

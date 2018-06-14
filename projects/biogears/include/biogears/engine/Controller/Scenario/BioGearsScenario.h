@@ -17,13 +17,11 @@ specific language governing permissions and limitations under the License.
 /**
 * @brief A BioGears specific scenario (i.e. holds a %BioGears configuration object)
 */
-class BIOGEARS_API BioGearsScenario : public SEScenario
-{
+class BIOGEARS_API BioGearsScenario : public SEScenario {
 public:
-
   BioGearsScenario(SESubstanceManager& subMgr);
   virtual ~BioGearsScenario();
-	
+
   virtual BioGearsScenarioInitialParameters& GetInitialParameters();
   virtual const BioGearsScenarioInitialParameters* GetInitialParameters() const;
 };

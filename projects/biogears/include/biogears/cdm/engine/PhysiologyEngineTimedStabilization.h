@@ -17,21 +17,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/PhysiologyEngineTimedStabilizationData.hxx>
 
 CDM_BIND_DECL(PhysiologyEngineTimedConditionStabilizationData)
-class BIOGEARS_API PhysiologyEngineTimedStabilizationCriteria : public Loggable
-{
+class BIOGEARS_API PhysiologyEngineTimedStabilizationCriteria : public Loggable {
 public:
-
-	PhysiologyEngineTimedStabilizationCriteria(Logger* logger);
-	virtual ~PhysiologyEngineTimedStabilizationCriteria();
+  PhysiologyEngineTimedStabilizationCriteria(Logger* logger);
+  virtual ~PhysiologyEngineTimedStabilizationCriteria();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in);
+  virtual bool Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in);
   virtual CDM::PhysiologyEngineTimedConditionStabilizationData* Unload() const;
-protected:
-	virtual void Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const;
-public:
 
+protected:
+  virtual void Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const;
+
+public:
   virtual std::string GetName() const;
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
@@ -41,28 +40,26 @@ public:
   virtual SEScalarTime& GetTime();
   virtual const SEScalarTime& GetTime() const;
 
-
 protected:
-	std::string    m_Name;
-	SEScalarTime   m_Time;
-	
+  std::string m_Name;
+  SEScalarTime m_Time;
 };
 
 CDM_BIND_DECL(PhysiologyEngineTimedStabilizationData)
-class BIOGEARS_API PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization
-{
+class BIOGEARS_API PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
 public:
-	PhysiologyEngineTimedStabilization(Logger* logger);
-	virtual ~PhysiologyEngineTimedStabilization();
+  PhysiologyEngineTimedStabilization(Logger* logger);
+  virtual ~PhysiologyEngineTimedStabilization();
 
   virtual void Clear();
 
   virtual bool Load(const CDM::PhysiologyEngineTimedStabilizationData& in);
   virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const;
-public:
 
+public:
   virtual bool LoadFile(const std::string& file);
 
   virtual bool StabilizeRestingState(PhysiologyEngine& engine);
@@ -83,10 +80,9 @@ public:
   virtual PhysiologyEngineTimedStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
 
 protected:
-
   virtual bool Stabilize(PhysiologyEngine& engine, const SEScalarTime& time);
 
-	SEScalarTime m_RestingStabilizationTime;
-	SEScalarTime* m_FeedbackStabilizationTime;
-	std::vector<PhysiologyEngineTimedStabilizationCriteria*> m_ConditionCriteria;
+  SEScalarTime m_RestingStabilizationTime;
+  SEScalarTime* m_FeedbackStabilizationTime;
+  std::vector<PhysiologyEngineTimedStabilizationCriteria*> m_ConditionCriteria;
 };

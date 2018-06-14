@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 /// @file QuantityTypeDescriptor.h
 /// @author Chris Volpe
-/// 
+///
 /// This class contains a representation of a quantity type, which can be either
 /// a fundamental quantity or a derived quantity
 //----------------------------------------------------------------------------
@@ -22,73 +22,70 @@ specific language governing permissions and limitations under the License.
 class CCompoundUnit;
 class CUnitDimension;
 
-class CQuantityTypeDescriptor
-{
+class CQuantityTypeDescriptor {
 public:
-	// Ctor for a fundamental quantity
-	CQuantityTypeDescriptor(const std::string &name, int fundIdx, bool twentyLog);
+  // Ctor for a fundamental quantity
+  CQuantityTypeDescriptor(const std::string& name, int fundIdx, bool twentyLog);
 
-	// Ctor for a derived quantity
-	CQuantityTypeDescriptor(const std::string &name, CCompoundUnit *expansion, bool twentyLog);
+  // Ctor for a derived quantity
+  CQuantityTypeDescriptor(const std::string& name, CCompoundUnit* expansion, bool twentyLog);
 
-	// Need dtor to free the expansion
-	~CQuantityTypeDescriptor();
+  // Need dtor to free the expansion
+  ~CQuantityTypeDescriptor();
 
-	// Return the name of this quantity type
-	const std::string & GetName() const
-	{
-		return m_sName;
-	}
+  // Return the name of this quantity type
+  const std::string& GetName() const
+  {
+    return m_sName;
+  }
 
-	// Return the "fundamental index". This value is a unique monotonically-increasing
-	// numeric identifier given to each quantity type that designates a fundamental
-	// (such as time or mass), rather than derived (such as force or energy), quantity.
-	// For derived quantities, the value is -1. 
-	int GetFundIdx() const
-	{
-		return m_iFundIdx;
-	}
+  // Return the "fundamental index". This value is a unique monotonically-increasing
+  // numeric identifier given to each quantity type that designates a fundamental
+  // (such as time or mass), rather than derived (such as force or energy), quantity.
+  // For derived quantities, the value is -1.
+  int GetFundIdx() const
+  {
+    return m_iFundIdx;
+  }
 
-	// Return the expansion of a derived quantity type as a compound unit. The expansion
-	// defines the "base unit" (whether or not it has an explicit name) of this quantity
-	// in terms of a composition of units of other quantities. 
-	const CCompoundUnit *GetExpansion() const
-	{
-		return m_CUExpansion;
-	};
+  // Return the expansion of a derived quantity type as a compound unit. The expansion
+  // defines the "base unit" (whether or not it has an explicit name) of this quantity
+  // in terms of a composition of units of other quantities.
+  const CCompoundUnit* GetExpansion() const
+  {
+    return m_CUExpansion;
+  };
 
-	const CUnitDimension *GetDimension() const
-	{
-		return m_CUD;
-	}
+  const CUnitDimension* GetDimension() const
+  {
+    return m_CUD;
+  }
 
-	double GetBigness() const
-	{
-		return m_dBigness;
-	};
+  double GetBigness() const
+  {
+    return m_dBigness;
+  };
 
-	bool Is20LogRuleQuantity() const
-	{
-		return m_bTwentyLogRule;
-	}
+  bool Is20LogRuleQuantity() const
+  {
+    return m_bTwentyLogRule;
+  }
 
-
-
-	// disable the copy constructor so that I don't accidentally copy a descriptor
-	// when I really intended to initialize a reference to one. I made this mistake
-	// leaving off the '&' on a ref that was initialized with the result of
-	// UnitConversionEngine::GetQuantityTypeDescriptor(), thereby invoking the
-	// copy constructor with bitwise copies on our internal pointer objects, and later
-	// called out dtor when my would-be ref went out of scope, which freed objects that
-	// were still in use. Ugh.
+  // disable the copy constructor so that I don't accidentally copy a descriptor
+  // when I really intended to initialize a reference to one. I made this mistake
+  // leaving off the '&' on a ref that was initialized with the result of
+  // UnitConversionEngine::GetQuantityTypeDescriptor(), thereby invoking the
+  // copy constructor with bitwise copies on our internal pointer objects, and later
+  // called out dtor when my would-be ref went out of scope, which freed objects that
+  // were still in use. Ugh.
 private:
-	CQuantityTypeDescriptor(const CQuantityTypeDescriptor&);
+  CQuantityTypeDescriptor(const CQuantityTypeDescriptor&);
 
 private:
-	double m_dBigness;
-	std::string m_sName;
-	int m_iFundIdx;
-	CCompoundUnit *m_CUExpansion;
-	CUnitDimension *m_CUD;
-	bool m_bTwentyLogRule;
+  double m_dBigness;
+  std::string m_sName;
+  int m_iFundIdx;
+  CCompoundUnit* m_CUExpansion;
+  CUnitDimension* m_CUD;
+  bool m_bTwentyLogRule;
 };

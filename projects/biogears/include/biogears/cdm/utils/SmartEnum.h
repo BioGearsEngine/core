@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 // I really want to be able to have a compartment manager be populated with
 // a set of compartments defined in a custom enum definition
 // and have the compartment manager getCompartment method take in the custom type
-// And allow for support of multiple custom types.. 
+// And allow for support of multiple custom types..
 // At anyrate, I am only using this in unit testing
 // Found these articles that helped come up with this junk
 // http://www.cprogramming.com/c++11/c++11-nullptr-strongly-typed-enum-class.html
@@ -40,15 +40,13 @@ specific language governing permissions and limitations under the License.
 // Any enum that does not have a specialization will generate a compiler error
 // indicating that there is no definition of this variable (as there should be
 // be no definition of a generic version).
-template<typename T>
-struct enumStrings
-{
+template <typename T>
+struct enumStrings {
   static char const* values[];
 };
 
 // Here is a base class that works via an index and string
-struct SmartEnum
-{
+struct SmartEnum {
   virtual int index() const = 0;
   virtual const std::string& string() const = 0;
 };
@@ -57,25 +55,40 @@ struct SmartEnum
 // You only need to provide the struct, the enum associated (and how many)
 // and the strings mapped to those enums
 
-#define SMART_ENUM(Clazz, Type, Length) \
- static constexpr std::size_t _size = Length; \
-\
-  Clazz() : _idx(0) {} \
-  Clazz(Type t) { _idx = static_cast<Type>(t); } \
-  virtual ~Clazz() {} \
-\
-  int index() const { return _idx; } \
-  const Type value() const { return Type(_idx); } \
-  const char* string() const { return Clazz::Value(_idx); } \
-  void set(const Type& t) { _idx = static_cast<int>(t); } \
-\
-  Type        operator++() { if (_idx != (_size - 1)) _idx++;  return Type(_idx); } \
-  Type        operator++(int) { if (_idx != (_size - 1)) _idx++;  return Type(_idx); } \
-  bool        operator==(Clazz const& rhs) { return _idx == rhs._idx; } \
-  bool        operator!=(Clazz const& rhs) { return _idx != rhs._idx; } \
-protected: \
-  int    _idx; \
-public:   
+#define SMART_ENUM(Clazz, Type, Length)                          \
+  static constexpr std::size_t _size = Length;                   \
+                                                                 \
+  Clazz()                                                        \
+    : _idx(0)                                                    \
+  {                                                              \
+  }                                                              \
+  Clazz(Type t) { _idx = static_cast<Type>(t); }                 \
+  virtual ~Clazz() {}                                            \
+                                                                 \
+  int index() const { return _idx; }                             \
+  const Type value() const { return Type(_idx); }                \
+  const char* string() const { return Clazz::Value(_idx); }      \
+  void set(const Type& t) { _idx = static_cast<int>(t); }        \
+                                                                 \
+  Type operator++()                                              \
+  {                                                              \
+    if (_idx != (_size - 1))                                     \
+      _idx++;                                                    \
+    return Type(_idx);                                           \
+  }                                                              \
+  Type operator++(int)                                           \
+  {                                                              \
+    if (_idx != (_size - 1))                                     \
+      _idx++;                                                    \
+    return Type(_idx);                                           \
+  }                                                              \
+  bool operator==(Clazz const& rhs) { return _idx == rhs._idx; } \
+  bool operator!=(Clazz const& rhs) { return _idx != rhs._idx; } \
+                                                                 \
+protected:                                                       \
+  int _idx;                                                      \
+                                                                 \
+public:
 
 // Here is an example (You don't need to derive from SmartEnum if you don't want to)
 //struct ExampleEnum : public SmartEnum
@@ -93,4 +106,3 @@ public:
 //}
 //NOTE: You can also templitize this class with the enum type if you want, but how to you set the size?
 //I will figure that out when/if I need it
-

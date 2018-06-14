@@ -14,23 +14,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/InhalerData.hxx>
 #include <biogears/schema/enumOnOff.hxx>
-class Serializer; 
+class Serializer;
 class SESubstance;
 class SESubstanceManager;
 class SEInhalerConfiguration;
 
-class BIOGEARS_API SEInhaler : public SESystem
-{
+class BIOGEARS_API SEInhaler : public SESystem {
 protected:
-
 public:
-
-	SEInhaler(SESubstanceManager& substances);
+  SEInhaler(SESubstanceManager& substances);
   virtual ~SEInhaler();
 
   virtual void Clear();
 
-	/** @name GetScalar
+  /** @name GetScalar
 	*   @brief - A reflextion type call that will return the Scalar associated
 	*            with the string. ex. GetScalar("Hematocrit") will return the
 	*            SEScalarPercent object associated with Hematocrit
@@ -38,57 +35,55 @@ public:
 	*              This is best used, and intended for, you to dynamically prepopulate
 	*              a mapping data structure that will help access what you need
 	*/
-	virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual bool Load(const CDM::InhalerData& in);
+  virtual bool Load(const CDM::InhalerData& in);
   virtual CDM::InhalerData* Unload() const;
+
 protected:
   virtual void Unload(CDM::InhalerData& data) const;
 
-	
-	/** @name StateChange
+  /** @name StateChange
 	*   @brief - This method is called when ever there is a state change
 	*            Specically a new file has been loaded, configuration action, or the system reset
 	*            Engine specific methodology can then update their logic.
 	*/
-	virtual void StateChange(){};
+  virtual void StateChange(){};
   virtual void Merge(const SEInhaler& from);
-	virtual void ProcessConfiguration(const SEInhalerConfiguration& config);
+  virtual void ProcessConfiguration(const SEInhalerConfiguration& config);
 
 public:
-
   bool LoadFile(const std::string& file);
 
-	virtual CDM::enumOnOff::value GetState() const;
-	virtual void SetState(CDM::enumOnOff::value name);
-	virtual bool HasState() const;
-	virtual void InvalidateState();
+  virtual CDM::enumOnOff::value GetState() const;
+  virtual void SetState(CDM::enumOnOff::value name);
+  virtual bool HasState() const;
+  virtual void InvalidateState();
 
-	virtual bool HasMeteredDose() const;
-	virtual SEScalarMass& GetMeteredDose();
+  virtual bool HasMeteredDose() const;
+  virtual SEScalarMass& GetMeteredDose();
   virtual double GetMeteredDose(const MassUnit& unit) const;
 
-	virtual bool HasNozzleLoss() const;
-	virtual SEScalarFraction& GetNozzleLoss();
-	virtual double GetNozzleLoss() const;
+  virtual bool HasNozzleLoss() const;
+  virtual SEScalarFraction& GetNozzleLoss();
+  virtual double GetNozzleLoss() const;
 
-	virtual bool HasSpacerVolume() const;
-	virtual SEScalarVolume& GetSpacerVolume();
+  virtual bool HasSpacerVolume() const;
+  virtual SEScalarVolume& GetSpacerVolume();
   virtual double GetSpacerVolume(const VolumeUnit& unit) const;
 
-	virtual bool HasSubstance() const;
-	virtual void SetSubstance(const SESubstance* sub);
-	virtual SESubstance* GetSubstance() const;
+  virtual bool HasSubstance() const;
+  virtual void SetSubstance(const SESubstance* sub);
+  virtual SESubstance* GetSubstance() const;
 
 protected:
+  std::stringstream m_ss;
 
-	std::stringstream	  m_ss;
+  CDM::enumOnOff::value m_State;
+  SEScalarMass* m_MeteredDose;
+  SEScalarFraction* m_NozzleLoss;
+  SEScalarVolume* m_SpacerVolume;
+  const SESubstance* m_Substance;
 
-	CDM::enumOnOff::value m_State;
-	SEScalarMass*         m_MeteredDose;
-	SEScalarFraction*     m_NozzleLoss;
-	SEScalarVolume*       m_SpacerVolume;
-	const SESubstance*    m_Substance;
-
-	SESubstanceManager&   m_Substances;
+  SESubstanceManager& m_Substances;
 };

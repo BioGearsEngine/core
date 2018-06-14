@@ -14,37 +14,35 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/ConsciousRespirationCommandData.hxx>
 
-class BIOGEARS_API SEConsciousRespirationCommand
-{
+class BIOGEARS_API SEConsciousRespirationCommand {
 public:
+  SEConsciousRespirationCommand();
+  virtual ~SEConsciousRespirationCommand();
 
-	SEConsciousRespirationCommand();
-	virtual ~SEConsciousRespirationCommand();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ConsciousRespirationCommandData& in);
   virtual CDM::ConsciousRespirationCommandData* Unload() const = 0;
+
 protected:
   virtual void Unload(CDM::ConsciousRespirationCommandData& data) const;
+
 public:
+  virtual std::string GetComment() const;
+  virtual void SetComment(const std::string& comment);
+  virtual bool HasComment() const;
+  virtual void InvalidateComment();
 
-	virtual std::string GetComment() const;
-	virtual void SetComment(const std::string& comment);
-	virtual bool HasComment() const;
-	virtual void InvalidateComment();
+  virtual void ToString(std::ostream& str) const = 0;
 
-
-	virtual void ToString(std::ostream &str) const = 0;
 protected:
+  std::string m_Comment;
+};
 
-	std::string                               m_Comment;
-};  
-
-inline std::ostream& operator<< (std::ostream& out, const SEConsciousRespirationCommand& c)
+inline std::ostream& operator<<(std::ostream& out, const SEConsciousRespirationCommand& c)
 {
   c.ToString(out);
   return out;

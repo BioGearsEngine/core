@@ -14,12 +14,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/Scalar0To1Data.hxx>
 
-class BIOGEARS_API SEScalar0To1 : public SEScalar
-{
+class BIOGEARS_API SEScalar0To1 : public SEScalar {
 
 public:
-	SEScalar0To1();
-	virtual ~SEScalar0To1() {}
+  SEScalar0To1();
+  virtual ~SEScalar0To1() {}
 
   CDM::Scalar0To1Data* Unload() const;
 
@@ -28,4 +27,3 @@ public:
   void SetValue(double d);
   void SetValue(double d, const NoUnit& unitless);
 };
-

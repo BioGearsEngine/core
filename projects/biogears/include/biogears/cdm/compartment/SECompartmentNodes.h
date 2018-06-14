@@ -20,21 +20,19 @@ specific language governing permissions and limitations under the License.
 #define FLUID_COMPARTMENT_NODE SEFluidCircuitNode, SEScalarPressure, PressureUnit, SEScalarVolume, VolumeUnit
 #define THERMAL_COMPARTMENT_NODE SEThermalCircuitNode, SEScalarTemperature, TemperatureUnit, SEScalarEnergy, EnergyUnit
 
-template<COMPARTMENT_NODE_TEMPLATE>
-class SECompartmentNodes : public Loggable
-{
+template <COMPARTMENT_NODE_TEMPLATE>
+class SECompartmentNodes : public Loggable {
 public:
-	
   SECompartmentNodes(Logger* logger);
-	virtual ~SECompartmentNodes();
+  virtual ~SECompartmentNodes();
 
-	virtual void Clear();
-	virtual void StateChange(); //analyze and cache for optimization
+  virtual void Clear();
+  virtual void StateChange(); //analyze and cache for optimization
 
   virtual bool HasMapping() const { return !m_AllNodes.empty(); }
   virtual std::vector<NodeType*>& GetNodes() { return m_AllNodes; }
   virtual void RemoveNode(NodeType& node);
-	virtual void MapNode(NodeType& node);
+  virtual void MapNode(NodeType& node);
 
   virtual bool HasQuantity() const { return !m_QuantityNodes.empty(); }
   virtual QuantityScalar& GetQuantity();
@@ -51,10 +49,9 @@ protected:
 
   // I assume all nodes will have a pressure
   std::vector<NodeType*> m_QuantityNodes;
-  std::vector<NodeType*> m_AllNodes;//Even nodes without quantity (ex. volume)
+  std::vector<NodeType*> m_AllNodes; //Even nodes without quantity (ex. volume)
 
-  QuantityScalar*  m_Quantity;
+  QuantityScalar* m_Quantity;
   PotentialScalar* m_Potential;
 };
 #include <biogears/cdm/compartment/SECompartmentNodes.inl>
-

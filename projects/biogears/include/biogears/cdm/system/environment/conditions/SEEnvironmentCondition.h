@@ -13,22 +13,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/schema/EnvironmentConditionData.hxx>
 
-class BIOGEARS_API SEEnvironmentCondition : public SECondition
-{
+class BIOGEARS_API SEEnvironmentCondition : public SECondition {
 public:
-
-	SEEnvironmentCondition();
-	virtual ~SEEnvironmentCondition();
+  SEEnvironmentCondition();
+  virtual ~SEEnvironmentCondition();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
-	virtual bool Load(const CDM::EnvironmentConditionData& in);
+  virtual bool Load(const CDM::EnvironmentConditionData& in);
   virtual CDM::EnvironmentConditionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::EnvironmentConditionData& data) const;
 
 public:
-	virtual void ToString(std::ostream &str) const = 0;
-};  
+  virtual void ToString(std::ostream& str) const = 0;
+};

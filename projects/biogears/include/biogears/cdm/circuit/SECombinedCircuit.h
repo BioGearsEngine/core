@@ -13,11 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #define COMBINED_CIRCUIT_TEMPLATE typename CombinedCircuitBindType, typename CircuitType, typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType
-#define COMBINED_CIRCUIT_TYPES CombinedCircuitBindType,CircuitType,CircuitBindType,NodeType,CircuitNodeBindType,PathType,CircuitPathBindType
+#define COMBINED_CIRCUIT_TYPES CombinedCircuitBindType, CircuitType, CircuitBindType, NodeType, CircuitNodeBindType, PathType, CircuitPathBindType
 
-template<COMBINED_CIRCUIT_TEMPLATE>
-class SECombinedCircuit : public CircuitType
-{
+template <COMBINED_CIRCUIT_TEMPLATE>
+class SECombinedCircuit : public CircuitType {
 public:
   SECombinedCircuit(const std::string& name, Logger* logger);
   virtual ~SECombinedCircuit();
@@ -26,6 +25,7 @@ public:
 
   bool Load(const CombinedCircuitBindType& in);
   CombinedCircuitBindType* Unload() const;
+
 protected:
   void Unload(CombinedCircuitBindType& data) const;
 
@@ -49,11 +49,10 @@ public:
   virtual void RemovePath(const std::string& name);
 
 protected:
-
-  std::vector<NodeType*>              m_LinkNodes;
-  std::vector<PathType*>              m_LinkPaths;
-  std::vector<std::string>            m_RemovedNodes;
-  std::vector<std::string>            m_RemovedPaths;
+  std::vector<NodeType*> m_LinkNodes;
+  std::vector<PathType*> m_LinkPaths;
+  std::vector<std::string> m_RemovedNodes;
+  std::vector<std::string> m_RemovedPaths;
   std::map<std::string, CircuitType*> m_Circuits;
 };
 #include <biogears/cdm/circuit/SECombinedCircuit.inl>

@@ -14,30 +14,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/TubeCuffLeakData.hxx>
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SETubeCuffLeak : public SEAnesthesiaMachineAction
-{
+class BIOGEARS_API SETubeCuffLeak : public SEAnesthesiaMachineAction {
 public:
-
   SETubeCuffLeak();
   virtual ~SETubeCuffLeak();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::TubeCuffLeakData& in);
   virtual CDM::TubeCuffLeakData* Unload() const;
+
 protected:
   virtual void Unload(CDM::TubeCuffLeakData& data) const;
-public:
-	
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();
 
-	virtual void ToString(std::ostream &str) const;
+public:
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
+
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-
-	SEScalar0To1*     m_Severity;
-};  
+  SEScalar0To1* m_Severity;
+};

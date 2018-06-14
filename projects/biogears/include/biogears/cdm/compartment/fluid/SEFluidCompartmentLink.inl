@@ -17,46 +17,45 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
-SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::SEFluidCompartmentLink(CompartmentType& src, CompartmentType & tgt, const std::string& name) : SECompartmentLink(name, src.GetLogger()), m_SourceCmpt(src), m_TargetCmpt(tgt), m_SourceVertex(src), m_TargetVertex(tgt)
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
+SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name)
+  : SECompartmentLink(name, src.GetLogger())
+  , m_SourceCmpt(src)
+  , m_TargetCmpt(tgt)
+  , m_SourceVertex(src)
+  , m_TargetVertex(tgt)
 {
   m_Flow = nullptr;
   m_Path = nullptr;
 }
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::~SEFluidCompartmentLink()
 {
-
 }
 
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits)
 {
-  if (!SECompartmentLink::Load(in,circuits))
+  if (!SECompartmentLink::Load(in, circuits))
     return false;
-  if (in.Path().present())
-  {
-    if (circuits == nullptr)
-    {
-      Error("Link is mapped to circuit path, "+in.Path().get()+", but no circuit manager was provided, cannot load");
+  if (in.Path().present()) {
+    if (circuits == nullptr) {
+      Error("Link is mapped to circuit path, " + in.Path().get() + ", but no circuit manager was provided, cannot load");
       return false;
     }
     SEFluidCircuitPath* path = circuits->GetFluidPath(in.Path().get());
-    if (path == nullptr)
-    {
+    if (path == nullptr) {
       Error("Link is mapped to circuit path, " + in.Path().get() + ", but provided circuit manager did not have that path");
       return false;
     }
     MapPath(*path);
-  }
-  else
-  {
+  } else {
     if (in.Flow().present())
       const_cast<SEScalarVolumePerTime&>(GetFlow()).Load(in.Flow().get());
   }
   return true;
 }
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 void SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Unload(CDM::FluidCompartmentLinkData& data)
 {
   SECompartmentLink::Unload(data);
@@ -66,17 +65,17 @@ void SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Unload(CDM::FluidComp
     data.Path(m_Path->GetName());
   // Even if you have a path, I am unloading everything, this makes the xml actually usefull...
   if (HasFlow())
-    data.Flow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(GetFlow().Unload()));  
+    data.Flow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(GetFlow().Unload()));
 }
 
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 void SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Clear()
 {
   m_Path = nullptr;
   SAFE_DELETE(m_Flow);
 }
 
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 const SEScalar* SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetScalar(const std::string& name)
 {
   if (name.compare("Flow") == 0)
@@ -84,14 +83,14 @@ const SEScalar* SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetScalar(
   return nullptr;
 }
 
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::HasFlow() const
 {
   if (m_Path != nullptr)
     return m_Path->HasNextFlow();
   return m_Flow == nullptr ? false : m_Flow->IsValid();
 }
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 SEScalarVolumePerTime& SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetFlow()
 {
   if (m_Path != nullptr)
@@ -100,7 +99,7 @@ SEScalarVolumePerTime& SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Get
     m_Flow = new SEScalarVolumePerTime();
   return *m_Flow;
 }
-template<FLUID_COMPARTMENT_LINK_TEMPLATE>
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 double SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetFlow(const VolumePerTimeUnit& unit) const
 {
   if (m_Path != nullptr)

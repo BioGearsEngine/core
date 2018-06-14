@@ -17,11 +17,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/FluidCircuitData.hxx>
 class SECircuitManager;
 
-class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>
-{
+class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
   friend class SECircuitManager;
+
 protected:
   SEFluidCircuit(const std::string& name, SECircuitManager& mgr);
+
 public:
   virtual ~SEFluidCircuit();
 

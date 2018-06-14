@@ -17,36 +17,35 @@ class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
 
-class BIOGEARS_API SECompartmentSubstanceDataRequest : public SECompartmentDataRequest
-{
+class BIOGEARS_API SECompartmentSubstanceDataRequest : public SECompartmentDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
   virtual ~SECompartmentSubstanceDataRequest();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances);
   virtual CDM::CompartmentSubstanceDataRequestData* Unload() const = 0;
+
 protected:
   virtual void Unload(CDM::CompartmentSubstanceDataRequestData& data) const;
 
 public:
+  virtual size_t HashCode();
 
-	virtual size_t HashCode();
-
-	virtual SESubstance* GetSubstance() const;
-	virtual void SetSubstance(SESubstance* sub);
-	virtual bool HasSubstance() const;
-	virtual void InvalidateSubstance();
+  virtual SESubstance* GetSubstance() const;
+  virtual void SetSubstance(SESubstance* sub);
+  virtual bool HasSubstance() const;
+  virtual void InvalidateSubstance();
 
   using SECompartmentDataRequest::Set;
-	virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string&unit = "");
-	virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
-
+  virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit = "");
+  virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
 
 protected:
-	SESubstance*                    m_Substance;
-
-};                  
+  SESubstance* m_Substance;
+};

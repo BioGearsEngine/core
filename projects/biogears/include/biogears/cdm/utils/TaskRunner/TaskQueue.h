@@ -19,9 +19,8 @@ specific language governing permissions and limitations under the License.
 /// \brief
 /// Interface through which TaskProcessors retrieve Tasks from the TaskRunner
 //--------------------------------------------------------------------------------------------------
-class TaskQueue
-{
+class TaskQueue {
 public:
-    virtual std::unique_ptr<Task> GetNextTask() = 0;
-    virtual void ReportTaskComplete() = 0;
+  virtual std::unique_ptr<Task> GetNextTask() = 0;
+  virtual void ReportTaskComplete() = 0;
 };

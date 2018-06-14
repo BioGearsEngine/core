@@ -17,43 +17,41 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/enumSide.hxx>
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SETensionPneumothorax : public SEPatientAction
-{
+class BIOGEARS_API SETensionPneumothorax : public SEPatientAction {
 public:
+  SETensionPneumothorax();
+  virtual ~SETensionPneumothorax();
 
-	SETensionPneumothorax();
-	virtual ~SETensionPneumothorax();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::TensionPneumothoraxData& in);
   virtual CDM::TensionPneumothoraxData* Unload() const;
+
 protected:
   virtual void Unload(CDM::TensionPneumothoraxData& data) const;
+
 public:
+  virtual CDM::enumPneumothoraxType::value GetType() const;
+  virtual void SetType(CDM::enumPneumothoraxType::value name);
+  virtual bool HasType() const;
+  virtual void InvalidateType();
 
-	virtual CDM::enumPneumothoraxType::value GetType() const;
-	virtual void SetType(CDM::enumPneumothoraxType::value name);
-	virtual bool HasType() const;
-	virtual void InvalidateType();
-	
-	virtual CDM::enumSide::value GetSide() const;
-	virtual void SetSide(CDM::enumSide::value name);
-	virtual bool HasSide() const;
-	virtual void InvalidateSide();
+  virtual CDM::enumSide::value GetSide() const;
+  virtual void SetSide(CDM::enumSide::value name);
+  virtual bool HasSide() const;
+  virtual void InvalidateSide();
 
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	CDM::enumPneumothoraxType::value m_Type;
-	CDM::enumSide::value m_Side;
-	SEScalar0To1*    m_Severity;
-	CDM::enumOnOff::value m_State;
-	
-};    
+  CDM::enumPneumothoraxType::value m_Type;
+  CDM::enumSide::value m_Side;
+  SEScalar0To1* m_Severity;
+  CDM::enumOnOff::value m_State;
+};

@@ -17,42 +17,40 @@ specific language governing permissions and limitations under the License.
 class SESubstanceManager;
 
 CDM_BIND_DECL(ConditionData);
-class BIOGEARS_API SECondition : public Loggable
-{
+class BIOGEARS_API SECondition : public Loggable {
 public:
+  SECondition();
+  virtual ~SECondition();
 
-	SECondition();
-	virtual ~SECondition();
-  
-  virtual void Clear();// Deletes all members
- 
-	static SECondition* newFromBind(const CDM::ConditionData& condition, SESubstanceManager& substances);
+  virtual void Clear(); // Deletes all members
 
-	virtual bool Load(const CDM::ConditionData& in);
-	virtual CDM::ConditionData* Unload() const;
-protected:
-	void Unload(CDM::ConditionData& data) const;
+  static SECondition* newFromBind(const CDM::ConditionData& condition, SESubstanceManager& substances);
 
-public:
-	/** Test if the action has all data it needs */
-	virtual bool IsValid() const { return true; }
-
-	virtual std::string GetName() const = 0;
-
-	virtual std::string GetComment() const;
-	virtual void SetComment(const std::string& comment);
-	virtual bool HasComment()const;
-	virtual void InvalidateComment();
-
-	virtual void ToString(std::ostream &str) const=0;
+  virtual bool Load(const CDM::ConditionData& in);
+  virtual CDM::ConditionData* Unload() const;
 
 protected:
+  void Unload(CDM::ConditionData& data) const;
 
-	std::string  m_Comment;
-};  
+public:
+  /** Test if the action has all data it needs */
+  virtual bool IsValid() const { return true; }
 
-inline std::ostream& operator<< (std::ostream& out, const SECondition& a) 
+  virtual std::string GetName() const = 0;
+
+  virtual std::string GetComment() const;
+  virtual void SetComment(const std::string& comment);
+  virtual bool HasComment() const;
+  virtual void InvalidateComment();
+
+  virtual void ToString(std::ostream& str) const = 0;
+
+protected:
+  std::string m_Comment;
+};
+
+inline std::ostream& operator<<(std::ostream& out, const SECondition& a)
 {
-    a.ToString(out);
-    return out;
+  a.ToString(out);
+  return out;
 }

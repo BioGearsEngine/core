@@ -15,29 +15,26 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/CardiacArrestData.hxx>
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SECardiacArrest : public SEPatientAction
-{
+class BIOGEARS_API SECardiacArrest : public SEPatientAction {
 public:
+  SECardiacArrest();
+  virtual ~SECardiacArrest();
 
-	SECardiacArrest();
-	virtual ~SECardiacArrest();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
-	virtual void SetActive(bool b);
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
+  virtual void SetActive(bool b);
 
   virtual bool Load(const CDM::CardiacArrestData& in);
   virtual CDM::CardiacArrestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::CardiacArrestData& data) const;
 
 public:
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	CDM::enumOnOff::value m_State;
-
+  CDM::enumOnOff::value m_State;
 };

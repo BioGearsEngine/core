@@ -14,23 +14,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/SubstanceAdministrationData.hxx>
 
-class BIOGEARS_API SESubstanceAdministration : public SEPatientAction
-{
+class BIOGEARS_API SESubstanceAdministration : public SEPatientAction {
 public:
+  SESubstanceAdministration();
+  virtual ~SESubstanceAdministration();
 
-	SESubstanceAdministration();
-	virtual ~SESubstanceAdministration();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::SubstanceAdministrationData& in);
+
 protected:
   virtual void Unload(CDM::SubstanceAdministrationData& data) const;
 
 public:
-
 protected:
-};               
+};

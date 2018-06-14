@@ -17,12 +17,14 @@ CDM_BIND_DECL(ThermalCompartmentData)
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 class SEThermalCompartmentLink;
 
-class BIOGEARS_API SEThermalCompartment : public SECompartment
-{
+class BIOGEARS_API SEThermalCompartment : public SECompartment {
   friend class SECompartmentManager;
-  template<typename CompartmentType, typename CompartmentLinkType> friend class SECompartmentGraph;
+  template <typename CompartmentType, typename CompartmentLinkType>
+  friend class SECompartmentGraph;
+
 protected:
   SEThermalCompartment(const std::string& name, Logger* logger);
+
 public:
   virtual ~SEThermalCompartment();
 
@@ -30,6 +32,7 @@ public:
 
   virtual bool Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::ThermalCompartmentData* Unload();
+
 protected:
   virtual void Unload(CDM::ThermalCompartmentData& data);
 
@@ -41,25 +44,25 @@ public:
   virtual const std::vector<SEThermalCompartment*>& GetLeaves() { return m_Leaves; }
 
   virtual bool HasNodeMapping() const { return m_Nodes.HasMapping(); }
-  virtual  SECompartmentNodes<THERMAL_COMPARTMENT_NODE>& GetNodeMapping() { return m_Nodes; }
+  virtual SECompartmentNodes<THERMAL_COMPARTMENT_NODE>& GetNodeMapping() { return m_Nodes; }
   virtual void MapNode(SEThermalCircuitNode& node);
 
   virtual void StateChange();
 
-	virtual bool HasHeatTransferRateIn() const;
-	virtual const SEScalarPower& GetHeatTransferRateIn();
+  virtual bool HasHeatTransferRateIn() const;
+  virtual const SEScalarPower& GetHeatTransferRateIn();
   virtual double GetHeatTransferRateIn(const PowerUnit& unit) const;
 
-	virtual bool HasHeatTransferRateOut() const;
-	virtual const SEScalarPower& GetHeatTransferRateOut();
+  virtual bool HasHeatTransferRateOut() const;
+  virtual const SEScalarPower& GetHeatTransferRateOut();
   virtual double GetHeatTransferRateOut(const PowerUnit& unit) const;
 
   virtual bool HasHeat() const;
   virtual SEScalarEnergy& GetHeat();
   virtual double GetHeat(const EnergyUnit& unit) const;
 
-	virtual bool HasTemperature() const;
-	virtual SEScalarTemperature& GetTemperature();
+  virtual bool HasTemperature() const;
+  virtual SEScalarTemperature& GetTemperature();
   virtual double GetTemperature(const TemperatureUnit& unit) const;
 
   virtual void AddLink(SEThermalCompartmentLink& link);
@@ -74,9 +77,9 @@ protected:
   virtual double CalculateInFlow_W() const;
   virtual double CalculateOutFlow_W() const;
 
-  SEScalarPower*       m_HeatTransferRateIn;
-  SEScalarPower*       m_HeatTransferRateOut;
-  SEScalarEnergy*      m_Heat;
+  SEScalarPower* m_HeatTransferRateIn;
+  SEScalarPower* m_HeatTransferRateOut;
+  SEScalarEnergy* m_Heat;
   SEScalarTemperature* m_Temperature;
 
   std::vector<SEThermalCompartmentLink*> m_Links;
@@ -85,5 +88,5 @@ protected:
 
   std::vector<SEThermalCompartment*> m_Children;
   std::vector<SEThermalCompartment*> m_Leaves;
-  SECompartmentNodes<THERMAL_COMPARTMENT_NODE>  m_Nodes;
+  SECompartmentNodes<THERMAL_COMPARTMENT_NODE> m_Nodes;
 };

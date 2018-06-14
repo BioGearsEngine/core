@@ -32,14 +32,14 @@ class BioGears;
  * @details 
  * Drug transvascular transport is modeled with a physiologically-based pharmacokinetic (PBPK) model,
  * and the physiologic effects on the body are modeled with a low-fidelity pharmacodynamic (PD) model.
- */  
-class BIOGEARS_API Drugs : public SEDrugSystem, public BioGearsSystem
-{
-	friend class BioGears;
+ */
+class BIOGEARS_API Drugs : public SEDrugSystem, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	Drugs(BioGears& bg);
-	BioGears& m_data;
+  Drugs(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~Drugs();
@@ -52,6 +52,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsDrugSystemData& in);
   virtual CDM::BioGearsDrugSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsDrugSystemData& data) const;
 
@@ -60,21 +61,20 @@ protected:
 
 public:
   void AtSteadyState();
-	void PreProcess();
-	void Process();
-	void PostProcess(){}
+  void PreProcess();
+  void Process();
+  void PostProcess() {}
 
 protected:
+  void AdministerSubstanceBolus();
+  void AdministerSubstanceInfusion();
+  void AdministerSubstanceCompoundInfusion();
 
-	void AdministerSubstanceBolus();
-	void AdministerSubstanceInfusion();
-	void AdministerSubstanceCompoundInfusion();
-
-	void CalculatePartitionCoefficients();
-	void CalculateSubstanceClearance();
-	void CalculatePlasmaSubstanceConcentration();
-	void CalculateDrugEffects();
-	void SarinKinetics();
+  void CalculatePartitionCoefficients();
+  void CalculateSubstanceClearance();
+  void CalculatePlasmaSubstanceConcentration();
+  void CalculateDrugEffects();
+  void SarinKinetics();
 
   // Serializable member variables (Set in Initialize and in schema)
   std::map<const SESubstance*, SESubstanceBolusState*> m_BolusAdministrations;
@@ -82,15 +82,15 @@ protected:
   double m_AgedRbcAcetylcholinesterase_nM;
 
   // Stateless member variable (Set in SetUp())
-	double m_dt_s;
-	double m_RbcAcetylcholinesteraseFractionInhibited;
-  SELiquidCompartment*  m_aortaVascular;
-	SELiquidCompartment*  m_venaCavaVascular;
-  SELiquidCompartment*  m_muscleIntracellular;
-	SELiquidCompartment*  m_liverVascular;
-	SETissueCompartment*  m_liverTissue;
-  SEFluidCircuitPath*   m_IVToVenaCava;
-  SETissueCompartment*  m_fatTissue;
-  SESubstance*		m_Sarin;
-  SESubstance*		m_Pralidoxime;
+  double m_dt_s;
+  double m_RbcAcetylcholinesteraseFractionInhibited;
+  SELiquidCompartment* m_aortaVascular;
+  SELiquidCompartment* m_venaCavaVascular;
+  SELiquidCompartment* m_muscleIntracellular;
+  SELiquidCompartment* m_liverVascular;
+  SETissueCompartment* m_liverTissue;
+  SEFluidCircuitPath* m_IVToVenaCava;
+  SETissueCompartment* m_fatTissue;
+  SESubstance* m_Sarin;
+  SESubstance* m_Pralidoxime;
 };

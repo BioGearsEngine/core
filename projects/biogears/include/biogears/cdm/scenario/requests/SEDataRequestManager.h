@@ -25,8 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 
 CDM_BIND_DECL(DataRequestsData)
-class BIOGEARS_API SEDataRequestManager : public Loggable
-{
+class BIOGEARS_API SEDataRequestManager : public Loggable {
 public:
   SEDataRequestManager(Logger* logger);
   ~SEDataRequestManager();
@@ -35,8 +34,9 @@ public:
 
   bool Load(const CDM::DataRequestsData& in, SESubstanceManager& subMgr);
   CDM::DataRequestsData* Unload() const;
+
 protected:
-  void Unload(CDM::DataRequestsData& data)const;
+  void Unload(CDM::DataRequestsData& data) const;
 
 public:
   bool HasResultsFilename() const { return !m_ResultsFile.empty(); }
@@ -57,25 +57,24 @@ public:
   virtual SEDecimalFormat& GetOverrideDecimalFormatting();
   virtual void RemoveOverrideDecimalFormatting();
 
-  SEEnvironmentDataRequest&        CreateEnvironmentDataRequest(const SEDecimalFormat* dfault = nullptr);
-  SEEquipmentDataRequest&          CreateEquipmentDataRequest(const SEDecimalFormat* dfault = nullptr);
-  SEPatientDataRequest&            CreatePatientDataRequest(const SEDecimalFormat* dfault = nullptr);
-  SEPhysiologyDataRequest&         CreatePhysiologyDataRequest(const SEDecimalFormat* dfault = nullptr);
-  SESubstanceDataRequest&          CreateSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
+  SEEnvironmentDataRequest& CreateEnvironmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+  SEEquipmentDataRequest& CreateEquipmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+  SEPatientDataRequest& CreatePatientDataRequest(const SEDecimalFormat* dfault = nullptr);
+  SEPhysiologyDataRequest& CreatePhysiologyDataRequest(const SEDecimalFormat* dfault = nullptr);
+  SESubstanceDataRequest& CreateSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
 
-  SEGasCompartmentDataRequest&     CreateGasCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
-  SELiquidCompartmentDataRequest&  CreateLiquidCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+  SEGasCompartmentDataRequest& CreateGasCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+  SELiquidCompartmentDataRequest& CreateLiquidCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   SEThermalCompartmentDataRequest& CreateThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
-  SETissueCompartmentDataRequest&  CreateTissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
-  
+  SETissueCompartmentDataRequest& CreateTissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 protected:
+  double m_SamplesPerSecond;
+  std::vector<SEDataRequest*> m_Requests;
+  std::string m_ResultsFile;
 
-  double                       m_SamplesPerSecond;
-  std::vector<SEDataRequest*>  m_Requests;
-  std::string                  m_ResultsFile;
-
-  SEDecimalFormat*             m_DefaultDecimalFormatting;
-  SEDecimalFormat*             m_OverrideDecimalFormatting;
+  SEDecimalFormat* m_DefaultDecimalFormatting;
+  SEDecimalFormat* m_OverrideDecimalFormatting;
 
   static SEDataRequest* newFromBind(const CDM::DataRequestData& dataRequest, SESubstanceManager& substances, const SEDecimalFormat* dfault = nullptr);
 };

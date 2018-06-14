@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarMassPerVolumeData.hxx>
 
-class BIOGEARS_API MassPerVolumeUnit : public CCompoundUnit
-{
+class BIOGEARS_API MassPerVolumeUnit : public CCompoundUnit {
 public:
-  MassPerVolumeUnit(const std::string& u) : CCompoundUnit(u) {}
+  MassPerVolumeUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~MassPerVolumeUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -31,7 +33,7 @@ public:
   static const MassPerVolumeUnit g_Per_L;
   static const MassPerVolumeUnit g_Per_mL;
   static const MassPerVolumeUnit g_Per_cm3;
-  static const MassPerVolumeUnit g_Per_m3;  
+  static const MassPerVolumeUnit g_Per_m3;
   static const MassPerVolumeUnit mg_Per_mL;
   static const MassPerVolumeUnit mg_Per_L;
   static const MassPerVolumeUnit mg_Per_dL;
@@ -39,11 +41,10 @@ public:
   static const MassPerVolumeUnit kg_Per_L;
 };
 
-class BIOGEARS_API SEScalarMassPerVolume : public SEScalarQuantity<MassPerVolumeUnit>
-{
+class BIOGEARS_API SEScalarMassPerVolume : public SEScalarQuantity<MassPerVolumeUnit> {
 public:
-  SEScalarMassPerVolume() {};
-	virtual ~SEScalarMassPerVolume() {}
+  SEScalarMassPerVolume(){};
+  virtual ~SEScalarMassPerVolume() {}
 
   CDM::ScalarMassPerVolumeData* Unload() const;
 };

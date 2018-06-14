@@ -19,17 +19,18 @@ class SESubstance;
 class SECircuitManager;
 
 CDM_BIND_DECL(CompartmentData)
-class BIOGEARS_API SECompartment : public Loggable
-{
+class BIOGEARS_API SECompartment : public Loggable {
 protected:
   SECompartment(const std::string& name, Logger* logger);
-public: 
-	virtual ~SECompartment();
+
+public:
+  virtual ~SECompartment();
 
   virtual void Clear();
 
   virtual bool Load(const CDM::CompartmentData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::CompartmentData* Unload() = 0;
+
 protected:
   virtual void Unload(CDM::CompartmentData& data);
 
@@ -43,15 +44,13 @@ public:
   virtual void StateChange() = 0;
 
 protected:
-  std::string	m_Name;
+  std::string m_Name;
 
 public:
-
-  template<typename CompartmentType>
+  template <typename CompartmentType>
   static void FindLeaves(CompartmentType& cmpt, std::vector<CompartmentType*>& leaves)
   {
-    for (CompartmentType* child : cmpt.GetChildren())
-    {
+    for (CompartmentType* child : cmpt.GetChildren()) {
       if (!child->HasChildren())
         leaves.push_back(child);
       else

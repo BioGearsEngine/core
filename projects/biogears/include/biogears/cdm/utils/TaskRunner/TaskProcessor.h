@@ -22,14 +22,13 @@ class TaskQueue;
 /// This class is a functor used in threads launched by the TaskRunner.  It's responsibility is to
 /// pull and run Tasks from the TaskRunner until the Task queue is empty.
 //--------------------------------------------------------------------------------------------------
-class TaskProcessor
-{
+class TaskProcessor {
 public:
-    TaskProcessor(TaskQueue* pTaskQueue);
-    ~TaskProcessor() = default;
+  TaskProcessor(TaskQueue* pTaskQueue);
+  ~TaskProcessor() = default;
 
-    void operator()();
+  void operator()();
 
 private:
-    TaskQueue* m_pTaskQueue = nullptr;  ///< Pointer to the TaskQueue to draw Tasks from
+  TaskQueue* m_pTaskQueue = nullptr; ///< Pointer to the TaskQueue to draw Tasks from
 };

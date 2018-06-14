@@ -16,11 +16,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/FluidCircuitNodeData.hxx>
 
-class BIOGEARS_API SEFluidCircuitNode : public SECircuitNode<FLUID_CIRCUIT_NODE>
-{
-  friend class SECircuitManager;  
+class BIOGEARS_API SEFluidCircuitNode : public SECircuitNode<FLUID_CIRCUIT_NODE> {
+  friend class SECircuitManager;
+
 protected:
   SEFluidCircuitNode(const std::string& name, Logger* logger);
+
 public:
   virtual ~SEFluidCircuitNode();
 
@@ -28,6 +29,7 @@ public:
 
   virtual bool Load(const CDM::FluidCircuitNodeData& in);
   virtual CDM::FluidCircuitNodeData* Unload() const;
+
 protected:
   virtual void Unload(CDM::FluidCircuitNodeData& data) const;
 

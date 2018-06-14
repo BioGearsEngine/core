@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarFlowComplianceData.hxx>
 
-class BIOGEARS_API FlowComplianceUnit : public CCompoundUnit
-{
+class BIOGEARS_API FlowComplianceUnit : public CCompoundUnit {
 public:
-  FlowComplianceUnit(const std::string& u) : CCompoundUnit(u) {}
+  FlowComplianceUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~FlowComplianceUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -29,11 +31,10 @@ public:
   static const FlowComplianceUnit m3_Per_Pa;
 };
 
-class BIOGEARS_API SEScalarFlowCompliance : public SEScalarQuantity<FlowComplianceUnit>
-{
+class BIOGEARS_API SEScalarFlowCompliance : public SEScalarQuantity<FlowComplianceUnit> {
 public:
   SEScalarFlowCompliance() {}
-	virtual ~SEScalarFlowCompliance() {}
+  virtual ~SEScalarFlowCompliance() {}
 
   CDM::ScalarFlowComplianceData* Unload() const;
 };

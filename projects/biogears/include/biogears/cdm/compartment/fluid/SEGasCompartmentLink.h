@@ -17,11 +17,15 @@ specific language governing permissions and limitations under the License.
 
 class SEGasCompartment;
 
-class BIOGEARS_API SEGasCompartmentLink : public SEFluidCompartmentLink<SEGasTransportEdge, SEGasTransportVertex, SEGasCompartment>
-{
+class BIOGEARS_API SEGasCompartmentLink : public SEFluidCompartmentLink<SEGasTransportEdge, SEGasTransportVertex, SEGasCompartment> {
   friend class SECompartmentManager;
+
 protected:
-  SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment & tgt, const std::string& name) : SEFluidCompartmentLink(src,tgt,name) {}
+  SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment& tgt, const std::string& name)
+    : SEFluidCompartmentLink(src, tgt, name)
+  {
+  }
+
 public:
   ~SEGasCompartmentLink() {}
 

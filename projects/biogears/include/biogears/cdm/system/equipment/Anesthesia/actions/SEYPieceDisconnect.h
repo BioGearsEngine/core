@@ -14,30 +14,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/YPieceDisconnectData.hxx>
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SEYPieceDisconnect : public SEAnesthesiaMachineAction
-{
+class BIOGEARS_API SEYPieceDisconnect : public SEAnesthesiaMachineAction {
 public:
-
   SEYPieceDisconnect();
   virtual ~SEYPieceDisconnect();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::YPieceDisconnectData& in);
   virtual CDM::YPieceDisconnectData* Unload() const;
+
 protected:
   virtual void Unload(CDM::YPieceDisconnectData& data) const;
+
 public:
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-
-	SEScalar0To1*     m_Severity;
-};  
+  SEScalar0To1* m_Severity;
+};

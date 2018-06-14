@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarTemperatureData.hxx>
 
-class BIOGEARS_API TemperatureUnit : public CCompoundUnit
-{
+class BIOGEARS_API TemperatureUnit : public CCompoundUnit {
 public:
-  TemperatureUnit(const std::string& u) : CCompoundUnit(u) {}
+  TemperatureUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~TemperatureUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -29,13 +31,12 @@ public:
   static const TemperatureUnit R;
 };
 
-class BIOGEARS_API SEScalarTemperature : public SEScalarQuantity<TemperatureUnit>
-{
+class BIOGEARS_API SEScalarTemperature : public SEScalarQuantity<TemperatureUnit> {
 public:
   SEScalarTemperature() {}
-	virtual ~SEScalarTemperature() {}
+  virtual ~SEScalarTemperature() {}
 
   CDM::ScalarTemperatureData* Unload() const;
 
-  double GetValue(const TemperatureUnit& unit) const;// Zero is not Zero for all units, gotta remove that logic for this scalar type
+  double GetValue(const TemperatureUnit& unit) const; // Zero is not Zero for all units, gotta remove that logic for this scalar type
 };

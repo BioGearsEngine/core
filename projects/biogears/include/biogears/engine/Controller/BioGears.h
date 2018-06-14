@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSubstances.h>
 
 #include <biogears/schema/enumBioGearsAirwayMode.hxx>
-// CDM 
+// CDM
 #include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/scenario/SEConditionManager.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
@@ -48,7 +48,13 @@ specific language governing permissions and limitations under the License.
 
 class SEPatientAssessment;
 class BioGearsScenarioExec;
-enum class EngineState { NotReady=0, Initialization, InitialStabilization, AtInitialStableState, SecondaryStabilization, AtSecondaryStableState, Active };
+enum class EngineState { NotReady = 0,
+  Initialization,
+  InitialStabilization,
+  AtInitialStableState,
+  SecondaryStabilization,
+  AtSecondaryStableState,
+  Active };
 
 class ECG;
 class DataTrack;
@@ -80,72 +86,70 @@ class SEScalarTime;
 /**
 * @brief Manages and controls execution of all data/systems in %BioGears
 */
-class BIOGEARS_API BioGears : public Loggable, protected LoggerForward
-{
+class BIOGEARS_API BioGears : public Loggable, protected LoggerForward {
   friend class BioGearsEngineTest;
   friend class BioGearsScenarioExec;
+
 protected:
   EngineState m_State;
-public:
-  
 
+public:
   BioGears(Logger* logger);
   BioGears(const std::string& logfileName);
   virtual ~BioGears();
 
- 
-  EngineState                             GetState();
+  EngineState GetState();
 
-  DataTrack&                              GetDataTrack();
-  SaturationCalculator&                   GetSaturationCalculator();
+  DataTrack& GetDataTrack();
+  SaturationCalculator& GetSaturationCalculator();
 
-  BioGearsSubstances&                     GetSubstances();
+  BioGearsSubstances& GetSubstances();
 
-  SEPatient&                              GetPatient();
-  bool                                    GetPatientAssessment(SEPatientAssessment& assessment);
+  SEPatient& GetPatient();
+  bool GetPatientAssessment(SEPatientAssessment& assessment);
 
-  SEBloodChemistrySystem&                 GetBloodChemistry();
-  SECardiovascularSystem&                 GetCardiovascular();
-  SEDrugSystem&                           GetDrugs();
-  SEEndocrineSystem&                      GetEndocrine();
-  SEEnergySystem&                         GetEnergy();
-  SEGastrointestinalSystem&               GetGastrointestinal();
-  SEHepaticSystem&                        GetHepatic();
-  SENervousSystem&                        GetNervous();
-  SERenalSystem&                          GetRenal();
-  SERespiratorySystem&                    GetRespiratory();
-  SETissueSystem&                         GetTissue();
+  SEBloodChemistrySystem& GetBloodChemistry();
+  SECardiovascularSystem& GetCardiovascular();
+  SEDrugSystem& GetDrugs();
+  SEEndocrineSystem& GetEndocrine();
+  SEEnergySystem& GetEnergy();
+  SEGastrointestinalSystem& GetGastrointestinal();
+  SEHepaticSystem& GetHepatic();
+  SENervousSystem& GetNervous();
+  SERenalSystem& GetRenal();
+  SERespiratorySystem& GetRespiratory();
+  SETissueSystem& GetTissue();
 
-  SEEnvironment&                          GetEnvironment();
+  SEEnvironment& GetEnvironment();
 
-  SEAnesthesiaMachine&                    GetAnesthesiaMachine();
+  SEAnesthesiaMachine& GetAnesthesiaMachine();
 
-  SEElectroCardioGram&                    GetECG();
+  SEElectroCardioGram& GetECG();
 
-  SEInhaler&                              GetInhaler();
+  SEInhaler& GetInhaler();
 
-  SEActionManager&                        GetActions();
+  SEActionManager& GetActions();
 
-  SEConditionManager&                     GetConditions();
+  SEConditionManager& GetConditions();
 
-  BioGearsCircuits&                       GetCircuits();
+  BioGearsCircuits& GetCircuits();
 
+  BioGearsCompartments& GetCompartments();
 
-  BioGearsCompartments&                   GetCompartments();
+  const BioGearsConfiguration& GetConfiguration();
 
-  const BioGearsConfiguration&            GetConfiguration();
+  const SEScalarTime& GetEngineTime();
+  const SEScalarTime& GetSimulationTime();
+  const SEScalarTime& GetTimeStep();
 
-  const SEScalarTime&                     GetEngineTime();
-  const SEScalarTime&                     GetSimulationTime();
-  const SEScalarTime&                     GetTimeStep();
+  CDM::enumBioGearsAirwayMode::value GetAirwayMode();
+  void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
 
-  CDM::enumBioGearsAirwayMode::value      GetAirwayMode();
-  void                                    SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
-
-  CDM::enumOnOff::value                   GetIntubation();
-  void                                    SetIntubation(CDM::enumOnOff::value s);
+  CDM::enumOnOff::value GetIntubation();
+  void SetIntubation(CDM::enumOnOff::value s);
 
   bool CreateCircuitsAndCompartments();
+
 protected:
   void SetupCardiovascular();
   void SetupRenal();
@@ -167,48 +171,47 @@ protected:
   void Process();
   void PostProcess();
 
-  void ForwardFatal(const std::string&  msg, const std::string&  origin);
+  void ForwardFatal(const std::string& msg, const std::string& origin);
 
-  DataTrack*                                                    m_DataTrack;
+  DataTrack* m_DataTrack;
 
-  std::unique_ptr<SEScalarTime>                                 m_CurrentTime;
-  std::unique_ptr<SEScalarTime>                                 m_SimulationTime;
-  CDM::enumBioGearsAirwayMode::value                            m_AirwayMode;
-  CDM::enumOnOff::value                                         m_Intubation;
+  std::unique_ptr<SEScalarTime> m_CurrentTime;
+  std::unique_ptr<SEScalarTime> m_SimulationTime;
+  CDM::enumBioGearsAirwayMode::value m_AirwayMode;
+  CDM::enumOnOff::value m_Intubation;
 
-  std::unique_ptr<BioGearsConfiguration>                        m_Config;
-  std::unique_ptr<SaturationCalculator>                         m_SaturationCalculator;
+  std::unique_ptr<BioGearsConfiguration> m_Config;
+  std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
 
-  std::unique_ptr<BioGearsSubstances>                           m_Substances;
+  std::unique_ptr<BioGearsSubstances> m_Substances;
 
-  std::unique_ptr<SEActionManager>                              m_Actions;
-  std::unique_ptr<SEConditionManager>                           m_Conditions;
-  std::unique_ptr<BioGearsCircuits>                             m_Circuits;
-  std::unique_ptr<BioGearsCompartments>                         m_Compartments;
+  std::unique_ptr<SEActionManager> m_Actions;
+  std::unique_ptr<SEConditionManager> m_Conditions;
+  std::unique_ptr<BioGearsCircuits> m_Circuits;
+  std::unique_ptr<BioGearsCompartments> m_Compartments;
 
-  std::unique_ptr<Environment>                                  m_Environment;
+  std::unique_ptr<Environment> m_Environment;
 
-  std::unique_ptr<BloodChemistry>                               m_BloodChemistrySystem;
-  std::unique_ptr<Cardiovascular>                               m_CardiovascularSystem;
-  std::unique_ptr<Endocrine>                                    m_EndocrineSystem;
-  std::unique_ptr<Energy>                                       m_EnergySystem;
-  std::unique_ptr<Gastrointestinal>                             m_GastrointestinalSystem;
-  std::unique_ptr<Hepatic>                                      m_HepaticSystem;
-  std::unique_ptr<Nervous>                                      m_NervousSystem;
-  std::unique_ptr<Renal>                                        m_RenalSystem;
-  std::unique_ptr<Respiratory>                                  m_RespiratorySystem;
-  std::unique_ptr<Drugs>                                        m_DrugSystem;
-  std::unique_ptr<Tissue>                                       m_TissueSystem;
+  std::unique_ptr<BloodChemistry> m_BloodChemistrySystem;
+  std::unique_ptr<Cardiovascular> m_CardiovascularSystem;
+  std::unique_ptr<Endocrine> m_EndocrineSystem;
+  std::unique_ptr<Energy> m_EnergySystem;
+  std::unique_ptr<Gastrointestinal> m_GastrointestinalSystem;
+  std::unique_ptr<Hepatic> m_HepaticSystem;
+  std::unique_ptr<Nervous> m_NervousSystem;
+  std::unique_ptr<Renal> m_RenalSystem;
+  std::unique_ptr<Respiratory> m_RespiratorySystem;
+  std::unique_ptr<Drugs> m_DrugSystem;
+  std::unique_ptr<Tissue> m_TissueSystem;
 
-  std::unique_ptr<ECG>                                          m_ECG;
+  std::unique_ptr<ECG> m_ECG;
 
-  std::unique_ptr<AnesthesiaMachine>                            m_AnesthesiaMachine;
+  std::unique_ptr<AnesthesiaMachine> m_AnesthesiaMachine;
 
-  std::unique_ptr<Inhaler>                                      m_Inhaler;
+  std::unique_ptr<Inhaler> m_Inhaler;
 
-  std::unique_ptr<SEPatient>                                    m_Patient;
+  std::unique_ptr<SEPatient> m_Patient;
 
-  // Flag to destroy the logger or not                          
-  bool                                                          myLogger;
+  // Flag to destroy the logger or not
+  bool myLogger;
 };
-

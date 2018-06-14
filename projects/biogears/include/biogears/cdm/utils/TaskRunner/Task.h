@@ -16,8 +16,7 @@ specific language governing permissions and limitations under the License.
 /// \brief
 /// Interface from which tasks used in the TaskRunner should derive
 //--------------------------------------------------------------------------------------------------
-class Task
-{
+class Task {
 public:
-    virtual void Run() = 0;
+  virtual void Run() = 0;
 };

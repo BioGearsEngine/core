@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarPressurePerVolumeData.hxx>
 
-class BIOGEARS_API PressurePerVolumeUnit : public CCompoundUnit
-{
+class BIOGEARS_API PressurePerVolumeUnit : public CCompoundUnit {
 public:
-  PressurePerVolumeUnit(const std::string& u) : CCompoundUnit(u) {}
+  PressurePerVolumeUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~PressurePerVolumeUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -27,11 +29,10 @@ public:
   static const PressurePerVolumeUnit cmH2O_Per_mL;
 };
 
-class BIOGEARS_API SEScalarPressurePerVolume : public SEScalarQuantity<PressurePerVolumeUnit>
-{
+class BIOGEARS_API SEScalarPressurePerVolume : public SEScalarQuantity<PressurePerVolumeUnit> {
 public:
   SEScalarPressurePerVolume() {}
-	virtual ~SEScalarPressurePerVolume() {}
+  virtual ~SEScalarPressurePerVolume() {}
 
   CDM::ScalarPressurePerVolumeData* Unload() const;
 };

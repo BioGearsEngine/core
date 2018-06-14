@@ -16,30 +16,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
-class BIOGEARS_API SEInhalerActionCollection : public Loggable
-{
+class BIOGEARS_API SEInhalerActionCollection : public Loggable {
 public:
+  SEInhalerActionCollection(SESubstanceManager&);
+  ~SEInhalerActionCollection();
 
-	SEInhalerActionCollection(SESubstanceManager&);
-	~SEInhalerActionCollection();
-
-	void Clear();
+  void Clear();
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
-	bool ProcessAction(const SEInhalerAction& action);
+  bool ProcessAction(const SEInhalerAction& action);
   bool ProcessAction(const CDM::InhalerActionData& action);
 
-	// STATE ACTION
-	bool HasConfiguration() const;
-	SEInhalerConfiguration* GetConfiguration() const;
-	void RemoveConfiguration();
-	
+  // STATE ACTION
+  bool HasConfiguration() const;
+  SEInhalerConfiguration* GetConfiguration() const;
+  void RemoveConfiguration();
+
 protected:
   bool IsValid(const SEInhalerAction& action);
 
-	SEInhalerConfiguration*   m_Configuration;
-	// General
-	SESubstanceManager& m_Substances;
-	std::stringstream m_ss;
+  SEInhalerConfiguration* m_Configuration;
+  // General
+  SESubstanceManager& m_Substances;
+  std::stringstream m_ss;
 };

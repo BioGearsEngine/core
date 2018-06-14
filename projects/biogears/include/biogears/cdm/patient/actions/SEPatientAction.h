@@ -14,23 +14,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/PatientActionData.hxx>
 
-class BIOGEARS_API SEPatientAction : public SEAction
-{
+class BIOGEARS_API SEPatientAction : public SEAction {
 public:
+  SEPatientAction();
+  virtual ~SEPatientAction();
 
-	SEPatientAction();
-	virtual ~SEPatientAction();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::PatientActionData& in);
   virtual CDM::PatientActionData* Unload() const = 0;
+
 protected:
   virtual void Unload(CDM::PatientActionData& data) const;
 
 public:
-	virtual void ToString(std::ostream &str) const = 0;
-	
-};  
+  virtual void ToString(std::ostream& str) const = 0;
+};

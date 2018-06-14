@@ -46,21 +46,20 @@ bool BIOGEARS_API CreateFilePath(const std::string&);
 std::string BIOGEARS_API Replace(const std::string& original, const std::string& replace, const std::string& withThis);
 void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "");
 std::string BIOGEARS_API GetCurrentWorkingDirectory();
-void BIOGEARS_API DeleteDirectory(const std::string &dir, bool bDeleteSubdirectories=true);
+void BIOGEARS_API DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories = true);
 
 BIOGEARS_API extern std::recursive_mutex g_fileSystemMutex;
 
-class BIOGEARS_API ScopedFileSystemLock
-{
+class BIOGEARS_API ScopedFileSystemLock {
 public:
-    ScopedFileSystemLock();
-    ~ScopedFileSystemLock();
+  ScopedFileSystemLock();
+  ~ScopedFileSystemLock();
 
-    ScopedFileSystemLock(const ScopedFileSystemLock& other) = delete;
-    ScopedFileSystemLock& operator=(const ScopedFileSystemLock& other) = delete;
+  ScopedFileSystemLock(const ScopedFileSystemLock& other) = delete;
+  ScopedFileSystemLock& operator=(const ScopedFileSystemLock& other) = delete;
 
-    ScopedFileSystemLock(ScopedFileSystemLock&& other) = delete;
-    ScopedFileSystemLock& operator=(ScopedFileSystemLock&& other) = delete;
+  ScopedFileSystemLock(ScopedFileSystemLock&& other) = delete;
+  ScopedFileSystemLock& operator=(ScopedFileSystemLock&& other) = delete;
 };
 
 bool BIOGEARS_API IsDirectory(struct dirent* ent);

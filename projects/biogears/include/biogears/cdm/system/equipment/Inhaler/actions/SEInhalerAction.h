@@ -13,22 +13,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/InhalerActionData.hxx>
 
-class BIOGEARS_API SEInhalerAction : public SEAction
-{
+class BIOGEARS_API SEInhalerAction : public SEAction {
 public:
+  SEInhalerAction();
+  virtual ~SEInhalerAction();
 
-	SEInhalerAction();
-	virtual ~SEInhalerAction();
+  virtual void Clear(); // Deletes all members
 
-  virtual void Clear();// Deletes all members
-  
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
-	virtual bool Load(const CDM::InhalerActionData& in);
+  virtual bool Load(const CDM::InhalerActionData& in);
   virtual CDM::InhalerActionData* Unload() const;
 
 protected:
   virtual void Unload(CDM::InhalerActionData& data) const;
+
 public:
-	virtual void ToString(std::ostream &str) const = 0;
-};  
+  virtual void ToString(std::ostream& str) const = 0;
+};

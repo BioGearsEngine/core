@@ -27,8 +27,7 @@ class BioGears;
 * @brief
 * The %SaturationCalculator class holds the blood gas distribution model.
 */
-class BIOGEARS_API SaturationCalculator : public Loggable
-{
+class BIOGEARS_API SaturationCalculator : public Loggable {
 protected:
   friend struct error_functor;
   friend class BioGears;
@@ -36,6 +35,7 @@ protected:
 
   SaturationCalculator(BioGears& bg);
   BioGears& m_data;
+
 public:
   virtual ~SaturationCalculator();
 
@@ -45,8 +45,8 @@ public:
   void CalculateBloodGasDistribution(SELiquidCompartment& cmpt);
   void CalculateCarbonMonoxideSpeciesDistribution(SELiquidCompartment& cmpt);
 
-protected:// Stewart Model + Dash-Bassingthwaighte Model + Henderson-Hasselbach Model
-  void CalculateHemoglobinSaturations(double O2PartialPressureGuess_mmHg, double CO2PartialPressureGuess_mmHg, double pH, double temperature_C, double  hematocrit, double& OxygenSaturation, double& CarbonDioxideSaturation, double CO2_scaling_factor);
+protected: // Stewart Model + Dash-Bassingthwaighte Model + Henderson-Hasselbach Model
+  void CalculateHemoglobinSaturations(double O2PartialPressureGuess_mmHg, double CO2PartialPressureGuess_mmHg, double pH, double temperature_C, double hematocrit, double& OxygenSaturation, double& CarbonDioxideSaturation, double CO2_scaling_factor);
   bool DistributeHemoglobinBySaturation();
 
   // All properties are stateless and are set by either the Initialize method or SetBodyState method
@@ -55,7 +55,7 @@ protected:// Stewart Model + Dash-Bassingthwaighte Model + Henderson-Hasselbach 
   SESubstance* m_HbO2;
   SESubstance* m_HbO2CO2;
   SESubstance* m_CO2;
-  SESubstance* m_CO;    //Remember to tell amb I added these CO members
+  SESubstance* m_CO; //Remember to tell amb I added these CO members
   SESubstance* m_HbCO;
   SESubstance* m_HCO3;
   SESubstance* m_HbCO2;
@@ -68,10 +68,10 @@ protected:// Stewart Model + Dash-Bassingthwaighte Model + Henderson-Hasselbach 
   double m_HbCO2_g_Per_mol;
   double m_HbO2CO2_g_Per_mol;
   // This is the current compartment and the quantities we are balancing
-  SELiquidCompartment*       m_cmpt;
+  SELiquidCompartment* m_cmpt;
   SELiquidSubstanceQuantity* m_subO2Q;
   SELiquidSubstanceQuantity* m_subCO2Q;
-  SELiquidSubstanceQuantity* m_subCOQ;    //Remember to tell amb I added these CO members
+  SELiquidSubstanceQuantity* m_subCOQ; //Remember to tell amb I added these CO members
   SELiquidSubstanceQuantity* m_subHbCOQ;
   SELiquidSubstanceQuantity* m_subHCO3Q;
   SELiquidSubstanceQuantity* m_subHbQ;

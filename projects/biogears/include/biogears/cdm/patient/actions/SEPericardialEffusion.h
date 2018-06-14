@@ -15,30 +15,28 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/PericardialEffusionData.hxx>
 
-class BIOGEARS_API SEPericardialEffusion : public SEPatientAction
-{
+class BIOGEARS_API SEPericardialEffusion : public SEPatientAction {
 public:
+  SEPericardialEffusion();
+  virtual ~SEPericardialEffusion();
 
-	SEPericardialEffusion();
-	virtual ~SEPericardialEffusion();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::PericardialEffusionData& in);
   virtual CDM::PericardialEffusionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::PericardialEffusionData& data) const;
 
 public:
+  virtual bool HasEffusionRate() const;
+  virtual SEScalarVolumePerTime& GetEffusionRate();
 
-	virtual bool HasEffusionRate() const;
-	virtual SEScalarVolumePerTime& GetEffusionRate();
-	
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalarVolumePerTime* m_EffusionRate;
-};      
+  SEScalarVolumePerTime* m_EffusionRate;
+};

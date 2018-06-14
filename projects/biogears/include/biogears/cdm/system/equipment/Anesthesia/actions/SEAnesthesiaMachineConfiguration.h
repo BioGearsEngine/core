@@ -15,38 +15,36 @@ specific language governing permissions and limitations under the License.
 class SEAnesthesiaMachine;
 class SESubstanceManager;
 
-class BIOGEARS_API SEAnesthesiaMachineConfiguration : public SEAnesthesiaMachineAction
-{
+class BIOGEARS_API SEAnesthesiaMachineConfiguration : public SEAnesthesiaMachineAction {
 public:
-
   SEAnesthesiaMachineConfiguration(SESubstanceManager& substances);
-	virtual ~SEAnesthesiaMachineConfiguration();
+  virtual ~SEAnesthesiaMachineConfiguration();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::AnesthesiaMachineConfigurationData& in);
   virtual CDM::AnesthesiaMachineConfigurationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::AnesthesiaMachineConfigurationData& data) const;
 
 public:
+  bool HasConfiguration() const;
+  SEAnesthesiaMachine& GetConfiguration();
+  const SEAnesthesiaMachine* GetConfiguration() const;
 
-	bool HasConfiguration() const;
-	SEAnesthesiaMachine& GetConfiguration();
-	const SEAnesthesiaMachine* GetConfiguration() const;
+  virtual std::string GetConfigurationFile() const;
+  virtual void SetConfigurationFile(const std::string& fileName);
+  virtual bool HasConfigurationFile() const;
+  virtual void InvalidateConfigurationFile();
 
-	virtual std::string GetConfigurationFile() const;
-	virtual void SetConfigurationFile(const std::string& fileName);
-	virtual bool HasConfigurationFile() const;
-	virtual void InvalidateConfigurationFile();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SESubstanceManager&  m_Substances;
+  SESubstanceManager& m_Substances;
 
-	std::string          m_ConfigurationFile;
-	SEAnesthesiaMachine* m_Configuration;
+  std::string m_ConfigurationFile;
+  SEAnesthesiaMachine* m_Configuration;
 };

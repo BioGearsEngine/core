@@ -16,37 +16,35 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(HistogramData)
 
-class BIOGEARS_API SEHistogram : public SEProperty
-{
+class BIOGEARS_API SEHistogram : public SEProperty {
 public:
+  SEHistogram();
+  virtual ~SEHistogram();
 
-	SEHistogram();
-	virtual ~SEHistogram();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool Load(const CDM::HistogramData& in);
+  virtual bool Load(const CDM::HistogramData& in);
   virtual CDM::HistogramData* Unload() const;
+
 protected:
   virtual void Unload(CDM::HistogramData& data) const;
 
 public:
-	virtual bool							            IsValid() const;
-	virtual void							            Invalidate();
+  virtual bool IsValid() const;
+  virtual void Invalidate();
 
-	virtual unsigned int					        NumberOfBins() const;
-  virtual unsigned int					        NumberOfBoundaries() const;
-	
-	double                                GetDependentValue(unsigned int index) const;
-	std::vector<double>&	                GetDependent();			
-  const std::vector<double>&	          GetDependent() const;
+  virtual unsigned int NumberOfBins() const;
+  virtual unsigned int NumberOfBoundaries() const;
 
-	double                                GetIndependentValue(unsigned int index) const;
-	std::vector<double>&			            GetIndependent();
-  const std::vector<double>&			      GetIndependent() const;
-	
+  double GetDependentValue(unsigned int index) const;
+  std::vector<double>& GetDependent();
+  const std::vector<double>& GetDependent() const;
+
+  double GetIndependentValue(unsigned int index) const;
+  std::vector<double>& GetIndependent();
+  const std::vector<double>& GetIndependent() const;
+
 protected:
-
-	std::vector<double> m_Dependent;
-	std::vector<double> m_Independent;
+  std::vector<double> m_Dependent;
+  std::vector<double> m_Independent;
 };

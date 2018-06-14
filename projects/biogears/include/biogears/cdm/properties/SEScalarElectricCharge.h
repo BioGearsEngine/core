@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarElectricChargeData.hxx>
 
-class BIOGEARS_API ElectricChargeUnit : public CCompoundUnit
-{
+class BIOGEARS_API ElectricChargeUnit : public CCompoundUnit {
 public:
-  ElectricChargeUnit(const std::string& u) : CCompoundUnit(u) {}
+  ElectricChargeUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~ElectricChargeUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -26,11 +28,10 @@ public:
   static const ElectricChargeUnit C;
 };
 
-class BIOGEARS_API SEScalarElectricCharge : public SEScalarQuantity<ElectricChargeUnit>
-{
+class BIOGEARS_API SEScalarElectricCharge : public SEScalarQuantity<ElectricChargeUnit> {
 public:
   SEScalarElectricCharge() {}
-	virtual ~SEScalarElectricCharge() {}
+  virtual ~SEScalarElectricCharge() {}
 
   CDM::ScalarElectricChargeData* Unload() const;
 };

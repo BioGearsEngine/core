@@ -16,42 +16,40 @@ class SEActiveHeating;
 class SEActiveCooling;
 class SEAppliedTemperature;
 
-class BIOGEARS_API SEThermalApplication : public SEEnvironmentAction
-{
+class BIOGEARS_API SEThermalApplication : public SEEnvironmentAction {
 public:
-
-	SEThermalApplication();
-	virtual ~SEThermalApplication();
+  SEThermalApplication();
+  virtual ~SEThermalApplication();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
-	virtual bool Load(const CDM::ThermalApplicationData& in);
+  virtual bool Load(const CDM::ThermalApplicationData& in);
   virtual CDM::ThermalApplicationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ThermalApplicationData& data) const;
 
 public:
+  virtual bool HasActiveHeating() const;
+  virtual SEActiveHeating& GetActiveHeating();
+  virtual void RemoveActiveHeating();
 
-	virtual bool HasActiveHeating() const;
-	virtual SEActiveHeating& GetActiveHeating();
-	virtual void RemoveActiveHeating();
+  virtual bool HasActiveCooling() const;
+  virtual SEActiveCooling& GetActiveCooling();
+  virtual void RemoveActiveCooling();
 
-	virtual bool HasActiveCooling() const;
-	virtual SEActiveCooling& GetActiveCooling();
-	virtual void RemoveActiveCooling();
+  virtual bool HasAppliedTemperature() const;
+  virtual SEAppliedTemperature& GetAppliedTemperature();
+  virtual void RemoveAppliedTemperature();
 
-	virtual bool HasAppliedTemperature() const;
-	virtual SEAppliedTemperature& GetAppliedTemperature();
-	virtual void RemoveAppliedTemperature();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-  bool                   m_ClearContents;
-	SEActiveHeating*	     m_ActiveHeating;
-	SEActiveCooling*	     m_ActiveCooling;
-	SEAppliedTemperature*  m_AppliedTemperature;
+  bool m_ClearContents;
+  SEActiveHeating* m_ActiveHeating;
+  SEActiveCooling* m_ActiveCooling;
+  SEAppliedTemperature* m_AppliedTemperature;
 };

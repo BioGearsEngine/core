@@ -10,14 +10,13 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #pragma once
 
 #if defined(__clang__)
 #define BIOGEARS_API
 #define BG_EXT
 #elif defined(__gnu_linux__)
-#define BIOGEARS_API __attribute__ ((visibility ("default")))
+#define BIOGEARS_API __attribute__((visibility("default")))
 #define BG_EXT extern
 #else
 #ifdef biogears_EXPORTS

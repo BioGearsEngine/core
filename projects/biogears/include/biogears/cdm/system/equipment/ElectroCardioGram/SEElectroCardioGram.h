@@ -14,27 +14,25 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/ElectroCardioGramData.hxx>
 
-class BIOGEARS_API SEElectroCardioGram : public SESystem
-{
+class BIOGEARS_API SEElectroCardioGram : public SESystem {
 protected:
-
 public:
-
-	SEElectroCardioGram(Logger* logger);
-	virtual ~SEElectroCardioGram();
+  SEElectroCardioGram(Logger* logger);
+  virtual ~SEElectroCardioGram();
 
   virtual void Clear();
 
-	virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool Load(const CDM::ElectroCardioGramData& in);
   virtual CDM::ElectroCardioGramData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ElectroCardioGramData& data) const;
 
 public:
-	virtual bool HasLead1ElectricPotential() const;
-	virtual SEScalarElectricPotential& GetLead1ElectricPotential();
+  virtual bool HasLead1ElectricPotential() const;
+  virtual SEScalarElectricPotential& GetLead1ElectricPotential();
   virtual double GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const;
 
   virtual bool HasLead2ElectricPotential() const;
@@ -82,7 +80,7 @@ public:
   virtual double GetLead12ElectricPotential(const ElectricPotentialUnit& unit) const;
 
 protected:
-	SEScalarElectricPotential* m_Lead1ElectricPotential;
+  SEScalarElectricPotential* m_Lead1ElectricPotential;
   SEScalarElectricPotential* m_Lead2ElectricPotential;
   SEScalarElectricPotential* m_Lead3ElectricPotential;
   SEScalarElectricPotential* m_Lead4ElectricPotential;
@@ -95,5 +93,5 @@ protected:
   SEScalarElectricPotential* m_Lead11ElectricPotential;
   SEScalarElectricPotential* m_Lead12ElectricPotential;
 
-	std::stringstream		   m_ss;
+  std::stringstream m_ss;
 };

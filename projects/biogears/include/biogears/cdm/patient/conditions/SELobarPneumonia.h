@@ -15,39 +15,37 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/LobarPneumoniaData.hxx>
 #include <biogears/schema/enumSide.hxx>
 
-class BIOGEARS_API SELobarPneumonia : public SEPatientCondition
-{
+class BIOGEARS_API SELobarPneumonia : public SEPatientCondition {
 public:
+  SELobarPneumonia();
+  virtual ~SELobarPneumonia();
 
-	SELobarPneumonia();
-	virtual ~SELobarPneumonia();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::LobarPneumoniaData& in);
   virtual CDM::LobarPneumoniaData* Unload() const;
+
 protected:
   virtual void Unload(CDM::LobarPneumoniaData& data) const;
 
 public:
-	virtual std::string GetName() const { return "LobarPneumonia"; }
+  virtual std::string GetName() const { return "LobarPneumonia"; }
 
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();	
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
-	virtual bool HasLeftLungAffected() const;
-	virtual SEScalar0To1& GetLeftLungAffected();
+  virtual bool HasLeftLungAffected() const;
+  virtual SEScalar0To1& GetLeftLungAffected();
 
-	virtual bool HasRightLungAffected() const;
-	virtual SEScalar0To1& GetRightLungAffected();
+  virtual bool HasRightLungAffected() const;
+  virtual SEScalar0To1& GetRightLungAffected();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-
-	SEScalar0To1*     m_Severity;
-	SEScalar0To1*     m_LeftLungAffected;
-	SEScalar0To1*     m_RightLungAffected;
-};      
+  SEScalar0To1* m_Severity;
+  SEScalar0To1* m_LeftLungAffected;
+  SEScalar0To1* m_RightLungAffected;
+};

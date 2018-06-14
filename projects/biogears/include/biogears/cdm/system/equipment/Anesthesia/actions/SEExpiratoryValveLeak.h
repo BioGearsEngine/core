@@ -13,30 +13,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 #include <biogears/schema/ExpiratoryValveLeakData.hxx>
 
-class BIOGEARS_API SEExpiratoryValveLeak : public SEAnesthesiaMachineAction
-{
+class BIOGEARS_API SEExpiratoryValveLeak : public SEAnesthesiaMachineAction {
 public:
-
   SEExpiratoryValveLeak();
-	virtual ~SEExpiratoryValveLeak();
+  virtual ~SEExpiratoryValveLeak();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ExpiratoryValveLeakData& in);
   virtual CDM::ExpiratoryValveLeakData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ExpiratoryValveLeakData& data) const;
+
 public:
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-
-	SEScalar0To1*     m_Severity;
-};  
+  SEScalar0To1* m_Severity;
+};

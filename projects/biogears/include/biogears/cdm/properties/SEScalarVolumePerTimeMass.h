@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarVolumePerTimeMassData.hxx>
 
-class BIOGEARS_API VolumePerTimeMassUnit : public CCompoundUnit
-{
+class BIOGEARS_API VolumePerTimeMassUnit : public CCompoundUnit {
 public:
-  VolumePerTimeMassUnit(const std::string& u) : CCompoundUnit(u) {}
+  VolumePerTimeMassUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~VolumePerTimeMassUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -30,11 +32,10 @@ public:
   static const VolumePerTimeMassUnit uL_Per_min_kg;
 };
 
-class BIOGEARS_API SEScalarVolumePerTimeMass : public SEScalarQuantity<VolumePerTimeMassUnit>
-{
+class BIOGEARS_API SEScalarVolumePerTimeMass : public SEScalarQuantity<VolumePerTimeMassUnit> {
 public:
   SEScalarVolumePerTimeMass() {}
-	virtual ~SEScalarVolumePerTimeMass() {}
+  virtual ~SEScalarVolumePerTimeMass() {}
 
   CDM::ScalarVolumePerTimeMassData* Unload() const;
 };

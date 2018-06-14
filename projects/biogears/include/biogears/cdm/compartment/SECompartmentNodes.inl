@@ -14,20 +14,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
 #include <biogears/cdm/properties/SEScalar.h>
 
-template<COMPARTMENT_NODE_TEMPLATE>
-SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SECompartmentNodes(Logger* logger) : Loggable(logger)
+template <COMPARTMENT_NODE_TEMPLATE>
+SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SECompartmentNodes(Logger* logger)
+  : Loggable(logger)
 {
   m_Quantity = nullptr;
   m_Potential = nullptr;
 }
 
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 SECompartmentNodes<COMPARTMENT_NODE_TYPES>::~SECompartmentNodes()
 {
   Clear();
 }
 
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::Clear()
 {
   m_QuantityNodes.clear();
@@ -36,21 +37,21 @@ void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::Clear()
   SAFE_DELETE(m_Potential);
 }
 
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::MapNode(NodeType& node)
 {
   if (std::find(m_AllNodes.begin(), m_AllNodes.end(), &node) == m_AllNodes.end())
     m_AllNodes.push_back(&node);
   SortNode(node);
 }
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::RemoveNode(NodeType& node)
 {
   Remove(m_AllNodes, &node);
   StateChange();
 }
 
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 QuantityScalar& SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetQuantity()
 {
   if (m_QuantityNodes.size() == 1)
@@ -64,7 +65,7 @@ QuantityScalar& SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetQuantity()
   m_Quantity->SetReadOnly(true);
   return *m_Quantity;
 }
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 double SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetQuantity(const QuantityUnit& unit) const
 {
   if (m_QuantityNodes.empty())
@@ -77,7 +78,7 @@ double SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetQuantity(const QuantityUni
   return d;
 }
 
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 bool SECompartmentNodes<COMPARTMENT_NODE_TYPES>::HasPotential() const
 {
   for (NodeType* n : m_AllNodes)
@@ -85,7 +86,7 @@ bool SECompartmentNodes<COMPARTMENT_NODE_TYPES>::HasPotential() const
       return true;
   return false;
 }
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 PotentialScalar& SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetPotential()
 {
   if (m_AllNodes.size() == 1)
@@ -102,7 +103,7 @@ PotentialScalar& SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetPotential()
   m_Potential->SetReadOnly(true);
   return *m_Potential;
 }
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 double SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetPotential(const PotentialUnit& punit) const
 {
   if (!HasPotential())
@@ -112,26 +113,22 @@ double SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetPotential(const PotentialU
 
   // Every node will have a potential after its calculated
   // But in case your nodes are not calculated, i need to see if you have a pressure
-  
+
   double t = 0;
-  if (!m_QuantityNodes.empty())
-  {
+  if (!m_QuantityNodes.empty()) {
     // Volume weight by only the nodes with volume and pressure
     const QuantityUnit* qunit = m_QuantityNodes[0]->GetNextQuantity().GetUnit();
     double totalQuantity = 0;
     for (NodeType* n : m_QuantityNodes)
-      if(n->HasNextPotential())
+      if (n->HasNextPotential())
         totalQuantity += n->GetNextQuantity().GetValue(*qunit);
     for (NodeType* n : m_QuantityNodes)
       if (n->HasNextPotential())
         t += n->GetNextPotential().GetValue(punit) * (n->GetNextQuantity().GetValue(*qunit) / totalQuantity);
-  }
-  else
-  {
+  } else {
     int num = 0;
     for (NodeType* n : m_AllNodes)
-      if (n->HasNextPotential())
-      {
+      if (n->HasNextPotential()) {
         num++;
         t += n->GetNextPotential().GetValue(punit);
       }
@@ -140,21 +137,18 @@ double SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetPotential(const PotentialU
   return t;
 }
 
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SortNode(NodeType& node)
 {
-  if (!Contains(m_QuantityNodes, node))
-  {
+  if (!Contains(m_QuantityNodes, node)) {
     if (node.HasQuantityBaseline())
       m_QuantityNodes.push_back(&node);
-  }
-  else
-  {
+  } else {
     if (!node.HasQuantityBaseline())
-      Remove(m_QuantityNodes,&node);
-  }  
+      Remove(m_QuantityNodes, &node);
+  }
 }
-template<COMPARTMENT_NODE_TEMPLATE>
+template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::StateChange()
 {
   m_QuantityNodes.clear();

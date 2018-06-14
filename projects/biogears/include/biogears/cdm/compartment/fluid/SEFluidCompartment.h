@@ -18,17 +18,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/FluidCompartmentData.hxx>
 
 class SESubstance;
-template<typename EdgeType, typename VertexType, typename CompartmentType> class SEFluidCompartmentLink;
+template <typename EdgeType, typename VertexType, typename CompartmentType>
+class SEFluidCompartmentLink;
 
 #define FLUID_COMPARTMENT_TEMPLATE typename LinkType, typename VertexType, typename TransportSubstanceType, typename SubstanceQuantityType
 #define FLUID_COMPARTMENT_TYPES LinkType, VertexType, TransportSubstanceType, SubstanceQuantityType
 
-template<FLUID_COMPARTMENT_TEMPLATE>
-class SEFluidCompartment : public SECompartment, public VertexType
-{
-  template<typename CompartmentType, typename CompartmentLinkType> friend class SECompartmentGraph;
+template <FLUID_COMPARTMENT_TEMPLATE>
+class SEFluidCompartment : public SECompartment, public VertexType {
+  template <typename CompartmentType, typename CompartmentLinkType>
+  friend class SECompartmentGraph;
+
 protected:
   SEFluidCompartment(const std::string& name, Logger* logger);
+
 public:
   virtual ~SEFluidCompartment();
 
@@ -36,6 +39,7 @@ public:
 
   virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::FluidCompartmentData* Unload() = 0;
+
 protected:
   virtual void Unload(CDM::FluidCompartmentData& data);
 
@@ -47,23 +51,23 @@ public:
   virtual bool HasChildren() const { return !m_FluidChildren.empty(); }
 
   virtual bool HasNodeMapping() const { return m_Nodes.HasMapping(); }
-  virtual  SECompartmentNodes<FLUID_COMPARTMENT_NODE>& GetNodeMapping() { return m_Nodes; }
+  virtual SECompartmentNodes<FLUID_COMPARTMENT_NODE>& GetNodeMapping() { return m_Nodes; }
   virtual void MapNode(SEFluidCircuitNode& node);
 
-	virtual bool HasInFlow() const;
-	virtual const SEScalarVolumePerTime& GetInFlow();
+  virtual bool HasInFlow() const;
+  virtual const SEScalarVolumePerTime& GetInFlow();
   virtual double GetInFlow(const VolumePerTimeUnit& unit) const;
 
-	virtual bool HasOutFlow() const;
-	virtual const SEScalarVolumePerTime& GetOutFlow();
+  virtual bool HasOutFlow() const;
+  virtual const SEScalarVolumePerTime& GetOutFlow();
   virtual double GetOutFlow(const VolumePerTimeUnit& unit) const;
 
-	virtual bool HasPressure() const;
-	virtual SEScalarPressure& GetPressure();
+  virtual bool HasPressure() const;
+  virtual SEScalarPressure& GetPressure();
   virtual double GetPressure(const PressureUnit& unit) const;
 
-	virtual bool HasVolume() const;
-	virtual SEScalarVolume& GetVolume();
+  virtual bool HasVolume() const;
+  virtual SEScalarVolume& GetVolume();
   virtual double GetVolume(const VolumeUnit& unit) const;
 
   virtual bool HasSubstanceQuantities() const;
@@ -92,16 +96,16 @@ protected:
 
   SEScalarVolumePerTime* m_InFlow;
   SEScalarVolumePerTime* m_OutFlow;
-  SEScalarPressure*      m_Pressure;
-  SEScalarVolume*        m_Volume;
+  SEScalarPressure* m_Pressure;
+  SEScalarVolume* m_Volume;
 
-  std::vector<SubstanceQuantityType*>  m_SubstanceQuantities;
+  std::vector<SubstanceQuantityType*> m_SubstanceQuantities;
   std::vector<TransportSubstanceType*> m_TransportSubstances;
 
   std::vector<LinkType*> m_Links;
   std::vector<LinkType*> m_IncomingLinks;
   std::vector<LinkType*> m_OutgoingLinks;
   std::vector<SEFluidCompartment*> m_FluidChildren;
-  SECompartmentNodes<FLUID_COMPARTMENT_NODE>  m_Nodes;
+  SECompartmentNodes<FLUID_COMPARTMENT_NODE> m_Nodes;
 };
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>

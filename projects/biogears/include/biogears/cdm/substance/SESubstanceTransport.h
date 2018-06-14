@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #ifdef MSVC
-  #pragma warning(disable : 4503)
+#pragma warning(disable : 4503)
 #endif
 
 #include <biogears/exports.h>
@@ -21,10 +21,11 @@ specific language governing permissions and limitations under the License.
 #define SUBSTANCE_TRANSPORTER_TEMPLATE typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit
 
 #define TRANSPORT_AMOUNT_TYPES ExtensiveScalar, IntensiveScalar
-template<typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportAmount
-{
-  template<SUBSTANCE_TRANSPORTER_TEMPLATE> friend class SESubstanceTransporter;
+template <typename ExtensiveScalar, typename IntensiveScalar>
+class SESubstanceTransportAmount {
+  template <SUBSTANCE_TRANSPORTER_TEMPLATE>
+  friend class SESubstanceTransporter;
+
 public:
   virtual ~SESubstanceTransportAmount() {}
 
@@ -41,9 +42,10 @@ using SELiquidTransportSubstance = SESubstanceTransportAmount<SEScalarMass, SESc
 
 #define TRANSPORT_VERTEX_TYPES QuantityScalar, ExtensiveScalar, IntensiveScalar
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportVertex
-{
-  template<SUBSTANCE_TRANSPORTER_TEMPLATE> friend class SESubstanceTransporter;
+class SESubstanceTransportVertex {
+  template <SUBSTANCE_TRANSPORTER_TEMPLATE>
+  friend class SESubstanceTransporter;
+
 public:
   virtual ~SESubstanceTransportVertex() {}
 
@@ -60,9 +62,10 @@ using SELiquidTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SESca
 
 #define TRANSPORT_EDGE_TYPES FluxScalar, QuantityScalar, ExtensiveScalar, IntensiveScalar
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportEdge
-{
-  template<SUBSTANCE_TRANSPORTER_TEMPLATE> friend class SESubstanceTransporter;
+class SESubstanceTransportEdge {
+  template <SUBSTANCE_TRANSPORTER_TEMPLATE>
+  friend class SESubstanceTransporter;
+
 public:
   virtual ~SESubstanceTransportEdge() {}
 
@@ -79,14 +82,15 @@ using SEGasTransportEdge = SESubstanceTransportEdge<SEScalarVolumePerTime, SESca
 using SELiquidTransportEdge = SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportGraph
-{
-  template<SUBSTANCE_TRANSPORTER_TEMPLATE> friend class SESubstanceTransporter;
+class SESubstanceTransportGraph {
+  template <SUBSTANCE_TRANSPORTER_TEMPLATE>
+  friend class SESubstanceTransporter;
+
 public:
   virtual ~SESubstanceTransportGraph() {}
 
 protected:
-  virtual void BalanceByIntensive() = 0;// Transporter calculates the new concentration
+  virtual void BalanceByIntensive() = 0; // Transporter calculates the new concentration
   virtual size_t GetVertexIndex(const SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& v) const = 0;
   virtual const std::vector<SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>*>& GetVerticies() const = 0;
   virtual const std::vector<SESubstanceTransportEdge<TRANSPORT_EDGE_TYPES>*>* GetSourceEdges(const SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& v) const = 0;
@@ -96,8 +100,7 @@ using SEGasTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SES
 using SELiquidTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
 template <SUBSTANCE_TRANSPORTER_TEMPLATE>
-class SESubstanceTransporter : public Loggable
-{
+class SESubstanceTransporter : public Loggable {
 public:
   SESubstanceTransporter(const FluxUnit& fUnit, const QuantityUnit& qUnit, const ExtensiveUnit& eUnit, const IntensiveUnit& iUnit, Logger* logger);
   virtual ~SESubstanceTransporter() {}
@@ -105,10 +108,10 @@ public:
   void Transport(GraphType& graph, double timeStep_s);
 
 protected:
-  const FluxUnit      &m_FluxUnit;
-  const QuantityUnit  &m_QuantityUnit;
-  const ExtensiveUnit &m_ExtensiveUnit;
-  const IntensiveUnit &m_IntensiveUnit;
+  const FluxUnit& m_FluxUnit;
+  const QuantityUnit& m_QuantityUnit;
+  const ExtensiveUnit& m_ExtensiveUnit;
+  const IntensiveUnit& m_IntensiveUnit;
 };
 
 using SEGasTransporter = SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;

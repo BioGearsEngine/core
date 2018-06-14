@@ -17,21 +17,23 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
 
-class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink
-{
+class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink {
   friend class SECompartmentManager;
+
 protected:
-  SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment & tgt, const std::string& name);
+  SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const std::string& name);
+
 public:
   virtual ~SEThermalCompartmentLink();
 
   virtual void Clear();
-  
+
   virtual bool Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::ThermalCompartmentLinkData* Unload();
+
 protected:
   virtual void Unload(CDM::ThermalCompartmentLinkData& data);
-  
+
 public:
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -45,19 +47,23 @@ public:
   virtual bool HasPath() { return m_Path != nullptr; }
   virtual SEThermalCircuitPath* GetPath() { return m_Path; }
   virtual void RemovePath() { m_Path = nullptr; }
-  virtual void MapPath(SEThermalCircuitPath& path) { Clear();  m_Path = &path; }
+  virtual void MapPath(SEThermalCircuitPath& path)
+  {
+    Clear();
+    m_Path = &path;
+  }
 
 protected:
-  SEScalarPower*         m_HeatTransferRate;
-  SEThermalCompartment&  m_SourceCmpt;
-  SEThermalCompartment&  m_TargetCmpt;
-  SEThermalCircuitPath*  m_Path;
+  SEScalarPower* m_HeatTransferRate;
+  SEThermalCompartment& m_SourceCmpt;
+  SEThermalCompartment& m_TargetCmpt;
+  SEThermalCircuitPath* m_Path;
 };
 
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
-class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment, SEThermalCompartmentLink>
-{
+class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment, SEThermalCompartmentLink> {
 public:
-  SEThermalCompartmentGraph(const std::string& name, Logger* logger) : SECompartmentGraph(name, logger) {};
+  SEThermalCompartmentGraph(const std::string& name, Logger* logger)
+    : SECompartmentGraph(name, logger){};
   virtual ~SEThermalCompartmentGraph() {}
 };

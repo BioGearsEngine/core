@@ -14,56 +14,67 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-namespace mil { namespace tatrc { namespace physiology { namespace datamodel { class CircuitNodeData; } } } }
+namespace mil {
+namespace tatrc {
+  namespace physiology {
+    namespace datamodel {
+      class CircuitNodeData;
+    }
+  }
+}
+}
 
 #define CIRCUIT_NODE_TEMPLATE typename PotentialScalar, typename QuantityScalar
-#define CIRCUIT_NODE_TYPES PotentialScalar,QuantityScalar
+#define CIRCUIT_NODE_TYPES PotentialScalar, QuantityScalar
 #define ELECTRICAL_CIRCUIT_NODE SEScalarElectricPotential, SEScalarElectricCharge
 #define FLUID_CIRCUIT_NODE SEScalarPressure, SEScalarVolume
 #define THERMAL_CIRCUIT_NODE SEScalarTemperature, SEScalarEnergy
 
-template<CIRCUIT_NODE_TEMPLATE>
-class SECircuitNode : public Loggable
-{
-  template< typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType> friend class SECircuit;
+template <CIRCUIT_NODE_TEMPLATE>
+class SECircuitNode : public Loggable {
+  template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
+  friend class SECircuit;
+
 protected:
   SECircuitNode(const std::string& name, Logger* logger);
+
 public:
-	virtual ~SECircuitNode();
+  virtual ~SECircuitNode();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
-	virtual bool Load(const CDM::CircuitNodeData& in);
-	virtual CDM::CircuitNodeData* Unload() const = 0;
+  virtual bool Load(const CDM::CircuitNodeData& in);
+  virtual CDM::CircuitNodeData* Unload() const = 0;
+
 protected:
-	virtual void Unload(CDM::CircuitNodeData& data) const;
+  virtual void Unload(CDM::CircuitNodeData& data) const;
 
 public:
   virtual std::string GetName() const;
 
-	virtual bool HasPotential() const;
+  virtual bool HasPotential() const;
   virtual PotentialScalar& GetPotential();
-	virtual bool HasNextPotential() const;
+  virtual bool HasNextPotential() const;
   virtual PotentialScalar& GetNextPotential();
 
-	virtual bool HasQuantity() const;
+  virtual bool HasQuantity() const;
   virtual QuantityScalar& GetQuantity();
-	virtual bool HasNextQuantity() const;
+  virtual bool HasNextQuantity() const;
   virtual QuantityScalar& GetNextQuantity();
-	virtual bool HasQuantityBaseline() const;
+  virtual bool HasQuantityBaseline() const;
   virtual QuantityScalar& GetQuantityBaseline();
 
 protected:
-	std::string				     m_Name;
+  std::string m_Name;
 
-  PotentialScalar*		   m_Potential;
-  PotentialScalar*		   m_NextPotential;
+  PotentialScalar* m_Potential;
+  PotentialScalar* m_NextPotential;
 
-	////////////////////
-	// Quantity Types //
-	////////////////////
-  QuantityScalar*			   m_Quantity;
-  QuantityScalar*			   m_NextQuantity;
-  QuantityScalar*			   m_QuantityBaseline;
+  ////////////////////
+  // Quantity Types //
+  ////////////////////
+  QuantityScalar* m_Quantity;
+  QuantityScalar* m_NextQuantity;
+  QuantityScalar* m_QuantityBaseline;
 };
 #include <biogears/cdm/circuit/SECircuitNode.inl>

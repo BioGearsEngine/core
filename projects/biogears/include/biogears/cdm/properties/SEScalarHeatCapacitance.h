@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarHeatCapacitanceData.hxx>
 
-class BIOGEARS_API HeatCapacitanceUnit : public CCompoundUnit
-{
+class BIOGEARS_API HeatCapacitanceUnit : public CCompoundUnit {
 public:
-  HeatCapacitanceUnit(const std::string& u) : CCompoundUnit(u) {}
+  HeatCapacitanceUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~HeatCapacitanceUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -29,11 +31,10 @@ public:
   static const HeatCapacitanceUnit kcal_Per_C;
 };
 
-class BIOGEARS_API SEScalarHeatCapacitance : public SEScalarQuantity<HeatCapacitanceUnit>
-{
+class BIOGEARS_API SEScalarHeatCapacitance : public SEScalarQuantity<HeatCapacitanceUnit> {
 public:
   SEScalarHeatCapacitance() {}
-	virtual ~SEScalarHeatCapacitance() {}
+  virtual ~SEScalarHeatCapacitance() {}
 
   CDM::ScalarHeatCapacitanceData* Unload() const;
 };

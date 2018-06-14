@@ -17,13 +17,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/LiquidCompartmentData.hxx>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
-class BIOGEARS_API SELiquidCompartment : public SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>
-{
+class BIOGEARS_API SELiquidCompartment : public SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> {
   friend class SETissueCompartment;
   friend class SECompartmentManager;
   friend class SELiquidSubstanceQuantity;
+
 protected:
   SELiquidCompartment(const std::string& name, Logger* logger);
+
 public:
   virtual ~SELiquidCompartment();
 
@@ -31,6 +32,7 @@ public:
 
   virtual bool Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
   virtual CDM::LiquidCompartmentData* Unload();
+
 protected:
   virtual void Unload(CDM::LiquidCompartmentData& data);
 
@@ -39,11 +41,11 @@ public:
 
   virtual void StateChange();
 
-  virtual void Balance(BalanceLiquidBy e);// Balance all substances based on a specific property
+  virtual void Balance(BalanceLiquidBy e); // Balance all substances based on a specific property
 
-	virtual bool HasPH() const;
-	virtual SEScalar& GetPH();
-	virtual double GetPH() const;
+  virtual bool HasPH() const;
+  virtual SEScalar& GetPH();
+  virtual double GetPH() const;
 
   virtual bool HasWaterVolumeFraction() const;
   virtual SEScalarFraction& GetWaterVolumeFraction();

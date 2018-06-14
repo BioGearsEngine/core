@@ -15,27 +15,24 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/UrinateData.hxx>
 
-class BIOGEARS_API SEUrinate : public SEPatientAction
-{
+class BIOGEARS_API SEUrinate : public SEPatientAction {
 public:
+  SEUrinate();
+  virtual ~SEUrinate();
 
-	SEUrinate();
-	virtual ~SEUrinate();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::UrinateData& in);
   virtual CDM::UrinateData* Unload() const;
+
 protected:
   virtual void Unload(CDM::UrinateData& data) const;
 
-public:	
-	
-	virtual void ToString(std::ostream &str) const;
+public:
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	
-};      
+};

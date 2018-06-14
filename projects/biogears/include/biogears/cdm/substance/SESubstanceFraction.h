@@ -19,31 +19,29 @@ class SESubstanceManager;
 class SEEnvironmentalConditions;
 CDM_BIND_DECL(SubstanceFractionData)
 
-class BIOGEARS_API SESubstanceFraction : public Loggable
-{
+class BIOGEARS_API SESubstanceFraction : public Loggable {
 protected:
-	friend SEEnvironmentalConditions;// So it can add substances to the manager
+  friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
-
-	SESubstanceFraction(SESubstance&);
-	virtual ~SESubstanceFraction();
+  SESubstanceFraction(SESubstance&);
+  virtual ~SESubstanceFraction();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::SubstanceFractionData& in);
-	virtual CDM::SubstanceFractionData* Unload() const;
+  virtual bool Load(const CDM::SubstanceFractionData& in);
+  virtual CDM::SubstanceFractionData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::SubstanceFractionData& data) const;
+  virtual void Unload(CDM::SubstanceFractionData& data) const;
+
 public:
+  virtual bool HasFractionAmount() const;
+  virtual SEScalarFraction& GetFractionAmount();
+  virtual double GetFractionAmount() const;
 
-	virtual bool HasFractionAmount() const;
-	virtual SEScalarFraction& GetFractionAmount();
-	virtual double GetFractionAmount() const;
-
-	virtual SESubstance& GetSubstance() const;
+  virtual SESubstance& GetSubstance() const;
 
 protected:
-
-	SESubstance&       m_Substance;
-	SEScalarFraction*  m_FractionAmount;
-};  
+  SESubstance& m_Substance;
+  SEScalarFraction* m_FractionAmount;
+};

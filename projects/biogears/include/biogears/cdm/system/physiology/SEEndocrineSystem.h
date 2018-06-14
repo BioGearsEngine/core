@@ -14,26 +14,24 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/EndocrineSystemData.hxx>
 
-class BIOGEARS_API SEEndocrineSystem : public SESystem
-{
+class BIOGEARS_API SEEndocrineSystem : public SESystem {
 public:
+  SEEndocrineSystem(Logger* logger);
+  virtual ~SEEndocrineSystem();
 
-	SEEndocrineSystem(Logger* logger);
-	virtual ~SEEndocrineSystem();
+  virtual void Clear(); // Deletes all members
 
-  virtual void Clear();// Deletes all members
-  
-	virtual const SEScalar* GetScalar(const std::string& name);
-	
+  virtual const SEScalar* GetScalar(const std::string& name);
+
   virtual bool Load(const CDM::EndocrineSystemData& in);
   virtual CDM::EndocrineSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::EndocrineSystemData& data) const;
 
 public:
-
-	virtual bool HasInsulinSynthesisRate() const;
-	virtual SEScalarAmountPerTime& GetInsulinSynthesisRate();
+  virtual bool HasInsulinSynthesisRate() const;
+  virtual SEScalarAmountPerTime& GetInsulinSynthesisRate();
   virtual double GetInsulinSynthesisRate(const AmountPerTimeUnit& unit) const;
 
   virtual bool HasGlucagonSynthesisRate() const;
@@ -41,8 +39,6 @@ public:
   virtual double GetGlucagonSynthesisRate(const AmountPerTimeUnit& unit) const;
 
 protected:
-
-	SEScalarAmountPerTime* m_InsulinSynthesisRate;
+  SEScalarAmountPerTime* m_InsulinSynthesisRate;
   SEScalarAmountPerTime* m_GlucagonSynthesisRate;
-
 };

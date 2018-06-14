@@ -15,33 +15,30 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/PatientAssessmentRequestData.hxx>
 #include <biogears/schema/enumPatientAssessment.hxx>
 
-class BIOGEARS_API SEPatientAssessmentRequest : public SEPatientAction
-{
+class BIOGEARS_API SEPatientAssessmentRequest : public SEPatientAction {
 public:
+  SEPatientAssessmentRequest();
+  virtual ~SEPatientAssessmentRequest();
 
-	SEPatientAssessmentRequest();
-	virtual ~SEPatientAssessmentRequest();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::PatientAssessmentRequestData& in);
   virtual CDM::PatientAssessmentRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::PatientAssessmentRequestData& data) const;
 
 public:
+  virtual CDM::enumPatientAssessment::value GetType() const;
+  virtual void SetType(CDM::enumPatientAssessment::value type);
+  virtual bool HasType() const;
+  virtual void InvalidateType();
 
-	virtual CDM::enumPatientAssessment::value GetType() const;
-	virtual void SetType(CDM::enumPatientAssessment::value type);
-	virtual bool HasType() const;
-	virtual void InvalidateType();
+  virtual void ToString(std::ostream& str) const;
 
-	virtual void ToString(std::ostream &str) const;
-	
 protected:
-
-	CDM::enumPatientAssessment::value m_Type;
-}; 
+  CDM::enumPatientAssessment::value m_Type;
+};

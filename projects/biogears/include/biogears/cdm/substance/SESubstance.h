@@ -23,45 +23,43 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 
 CDM_BIND_DECL(SubstanceData)
-class BIOGEARS_API SESubstance : public Loggable
-{
+class BIOGEARS_API SESubstance : public Loggable {
 public:
-
-	SESubstance(Logger* logger);
-	virtual ~SESubstance();
+  SESubstance(Logger* logger);
+  virtual ~SESubstance();
 
   virtual void Clear();
 
-	virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual bool Load(const CDM::SubstanceData& in);
-	virtual CDM::SubstanceData* Unload() const;
+  virtual bool Load(const CDM::SubstanceData& in);
+  virtual CDM::SubstanceData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::SubstanceData& data) const;
+  virtual void Unload(CDM::SubstanceData& data) const;
 
 public:
-	
-	virtual std::string GetName() const;
-	virtual void SetName(const std::string& name);
-	virtual bool HasName() const;
-	virtual void InvalidateName();
+  virtual std::string GetName() const;
+  virtual void SetName(const std::string& name);
+  virtual bool HasName() const;
+  virtual void InvalidateName();
 
-	virtual CDM::enumSubstanceState::value GetState() const;
-	virtual void SetState(CDM::enumSubstanceState::value state);
-	virtual bool HasState() const;
-	virtual void InvalidateState();
+  virtual CDM::enumSubstanceState::value GetState() const;
+  virtual void SetState(CDM::enumSubstanceState::value state);
+  virtual bool HasState() const;
+  virtual void InvalidateState();
 
-	virtual CDM::enumSubstanceClass::value GetClassification() const;
-	virtual void SetClassification(CDM::enumSubstanceClass::value subClass);
-	virtual bool HasClassification() const;
-	virtual void InvalidateClassification();
+  virtual CDM::enumSubstanceClass::value GetClassification() const;
+  virtual void SetClassification(CDM::enumSubstanceClass::value subClass);
+  virtual bool HasClassification() const;
+  virtual void InvalidateClassification();
 
-	virtual bool HasDensity() const;
-	virtual SEScalarMassPerVolume& GetDensity();
+  virtual bool HasDensity() const;
+  virtual SEScalarMassPerVolume& GetDensity();
   virtual double GetDensity(const MassPerVolumeUnit& unit) const;
 
-	virtual bool HasMolarMass() const;
-	virtual SEScalarMassPerAmount& GetMolarMass();
+  virtual bool HasMolarMass() const;
+  virtual SEScalarMassPerAmount& GetMolarMass();
   virtual double GetMolarMass(const MassPerAmountUnit& unit) const;
 
   // Diffusion-ish
@@ -77,115 +75,113 @@ public:
   virtual SEScalarElectricResistance& GetMembraneResistance();
   virtual double GetMembraneResistance(const ElectricResistanceUnit& unit) const;
 
-	// Liquid-ish
-	virtual bool HasAerosolization() const;
-	virtual SESubstanceAerosolization& GetAerosolization();
-	virtual const SESubstanceAerosolization* GetAerosolization() const;
-	virtual void RemoveAerosolization();
+  // Liquid-ish
+  virtual bool HasAerosolization() const;
+  virtual SESubstanceAerosolization& GetAerosolization();
+  virtual const SESubstanceAerosolization* GetAerosolization() const;
+  virtual void RemoveAerosolization();
 
   virtual bool HasBloodConcentration() const;
   virtual SEScalarMassPerVolume& GetBloodConcentration();
   virtual double GetBloodConcentration(const MassPerVolumeUnit& unit) const;
 
-	virtual bool HasMassInBody() const;
-	virtual SEScalarMass& GetMassInBody();
+  virtual bool HasMassInBody() const;
+  virtual SEScalarMass& GetMassInBody();
   virtual double GetMassInBody(const MassUnit& unit) const;
 
-	virtual bool HasMassInBlood() const;
-	virtual SEScalarMass& GetMassInBlood();
+  virtual bool HasMassInBlood() const;
+  virtual SEScalarMass& GetMassInBlood();
   virtual double GetMassInBlood(const MassUnit& unit) const;
 
-	virtual bool HasMassInTissue() const;
-	virtual SEScalarMass& GetMassInTissue();
+  virtual bool HasMassInTissue() const;
+  virtual SEScalarMass& GetMassInTissue();
   virtual double GetMassInTissue(const MassUnit& unit) const;
 
-	virtual bool HasPlasmaConcentration() const;
-	virtual SEScalarMassPerVolume& GetPlasmaConcentration();
+  virtual bool HasPlasmaConcentration() const;
+  virtual SEScalarMassPerVolume& GetPlasmaConcentration();
   virtual double GetPlasmaConcentration(const MassPerVolumeUnit& unit) const;
 
   virtual bool HasEffectSiteConcentration() const;
   virtual SEScalarMassPerVolume& GetEffectSiteConcentration();
   virtual double GetEffectSiteConcentration(const MassPerVolumeUnit& unit) const;
 
-	virtual bool HasSystemicMassCleared() const;
-	virtual SEScalarMass& GetSystemicMassCleared();
+  virtual bool HasSystemicMassCleared() const;
+  virtual SEScalarMass& GetSystemicMassCleared();
   virtual double GetSystemicMassCleared(const MassUnit& unit) const;
 
   virtual bool HasTissueConcentration() const;
   virtual SEScalarMassPerVolume& GetTissueConcentration();
   virtual double GetTissueConcentration(const MassPerVolumeUnit& unit) const;
 
-	// Gas-ish
-	virtual bool HasAlveolarTransfer() const;
-	virtual SEScalarVolumePerTime& GetAlveolarTransfer();
+  // Gas-ish
+  virtual bool HasAlveolarTransfer() const;
+  virtual SEScalarVolumePerTime& GetAlveolarTransfer();
   virtual double GetAlveolarTransfer(const VolumePerTimeUnit& unit) const;
 
-	virtual bool HasDiffusingCapacity() const;
-	virtual SEScalarVolumePerTimePressure& GetDiffusingCapacity();
+  virtual bool HasDiffusingCapacity() const;
+  virtual SEScalarVolumePerTimePressure& GetDiffusingCapacity();
   virtual double GetDiffusingCapacity(const VolumePerTimePressureUnit& unit) const;
 
-	virtual bool HasEndTidalFraction() const;
-	virtual SEScalarFraction& GetEndTidalFraction();
-	virtual double GetEndTidalFraction() const;
+  virtual bool HasEndTidalFraction() const;
+  virtual SEScalarFraction& GetEndTidalFraction();
+  virtual double GetEndTidalFraction() const;
 
   virtual bool HasEndTidalPressure() const;
   virtual SEScalarPressure& GetEndTidalPressure();
   virtual double GetEndTidalPressure(const PressureUnit& unit) const;
 
-	virtual bool HasRelativeDiffusionCoefficient() const;
-	virtual SEScalar& GetRelativeDiffusionCoefficient();
-	virtual double GetRelativeDiffusionCoefficient() const;
+  virtual bool HasRelativeDiffusionCoefficient() const;
+  virtual SEScalar& GetRelativeDiffusionCoefficient();
+  virtual double GetRelativeDiffusionCoefficient() const;
 
-	virtual bool HasSolubilityCoefficient() const;
-	virtual SEScalarInversePressure& GetSolubilityCoefficient();
+  virtual bool HasSolubilityCoefficient() const;
+  virtual SEScalarInversePressure& GetSolubilityCoefficient();
   virtual double GetSolubilityCoefficient(const InversePressureUnit& unit) const;
 
-	virtual bool HasClearance() const;
-	virtual SESubstanceClearance& GetClearance();
-	virtual const SESubstanceClearance* GetClearance() const;
-	virtual void RemoveClearance();
+  virtual bool HasClearance() const;
+  virtual SESubstanceClearance& GetClearance();
+  virtual const SESubstanceClearance* GetClearance() const;
+  virtual void RemoveClearance();
 
-	virtual bool HasPK() const;
-	virtual SESubstancePharmacokinetics& GetPK();
-	virtual const SESubstancePharmacokinetics* GetPK() const;
-	virtual void RemovePK();
+  virtual bool HasPK() const;
+  virtual SESubstancePharmacokinetics& GetPK();
+  virtual const SESubstancePharmacokinetics* GetPK() const;
+  virtual void RemovePK();
 
-	virtual bool HasPD() const;
-	virtual SESubstancePharmacodynamics& GetPD();
-	virtual const SESubstancePharmacodynamics* GetPD() const;
-	virtual void RemovePD();
+  virtual bool HasPD() const;
+  virtual SESubstancePharmacodynamics& GetPD();
+  virtual const SESubstancePharmacodynamics* GetPD() const;
+  virtual void RemovePD();
 
-	
-protected: 
+protected:
+  std::string m_Name;
+  CDM::enumSubstanceClass::value m_Classification;
+  CDM::enumSubstanceState::value m_State;
+  SEScalarMassPerVolume* m_Density;
+  SEScalarMassPerAmount* m_MolarMass;
 
-	std::string                       m_Name;
-	CDM::enumSubstanceClass::value	 m_Classification;
-	CDM::enumSubstanceState::value    m_State;
-	SEScalarMassPerVolume*            m_Density;
-	SEScalarMassPerAmount*            m_MolarMass;
+  SEScalarMassPerAreaTime* m_MaximumDiffusionFlux;
+  SEScalar* m_MichaelisCoefficient;
+  SEScalarElectricResistance* m_MembraneResistance;
 
-  SEScalarMassPerAreaTime*          m_MaximumDiffusionFlux;
-  SEScalar*                         m_MichaelisCoefficient;
-  SEScalarElectricResistance*		m_MembraneResistance;
+  SESubstanceAerosolization* m_Aerosolization;
+  SEScalarMassPerVolume* m_BloodConcentration;
+  SEScalarMass* m_MassInBody;
+  SEScalarMass* m_MassInBlood;
+  SEScalarMass* m_MassInTissue;
+  SEScalarMassPerVolume* m_PlasmaConcentration;
+  SEScalarMassPerVolume* m_EffectSiteConcentration;
+  SEScalarMass* m_SystemicMassCleared;
+  SEScalarMassPerVolume* m_TissueConcentration;
 
-	SESubstanceAerosolization*        m_Aerosolization;
-  SEScalarMassPerVolume*   	        m_BloodConcentration;
-	SEScalarMass*				              m_MassInBody;
-	SEScalarMass*				              m_MassInBlood;
-	SEScalarMass*				              m_MassInTissue;
-	SEScalarMassPerVolume*   	        m_PlasmaConcentration;
-	SEScalarMassPerVolume*				m_EffectSiteConcentration;
-	SEScalarMass*				              m_SystemicMassCleared;
-  SEScalarMassPerVolume*   	        m_TissueConcentration;
+  SEScalarVolumePerTime* m_AlveolarTransfer;
+  SEScalarVolumePerTimePressure* m_DiffusingCapacity;
+  SEScalarFraction* m_EndTidalFraction;
+  SEScalarPressure* m_EndTidalPressure;
+  SEScalar* m_RelativeDiffusionCoefficient;
+  SEScalarInversePressure* m_SolubilityCoefficient;
 
-	SEScalarVolumePerTime*            m_AlveolarTransfer;
-	SEScalarVolumePerTimePressure*    m_DiffusingCapacity;
-	SEScalarFraction*			            m_EndTidalFraction;
-  SEScalarPressure*                 m_EndTidalPressure;
-	SEScalar*					                m_RelativeDiffusionCoefficient;
-	SEScalarInversePressure*          m_SolubilityCoefficient;
-
-	SESubstanceClearance*             m_Clearance;
-	SESubstancePharmacokinetics*      m_PK;
-	SESubstancePharmacodynamics*      m_PD;
+  SESubstanceClearance* m_Clearance;
+  SESubstancePharmacokinetics* m_PK;
+  SESubstancePharmacodynamics* m_PD;
 };

@@ -17,21 +17,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ScenarioAutoSerializationData.hxx>
 
 CDM_BIND_DECL(ScenarioAutoSerializationData)
-class BIOGEARS_API SEScenarioAutoSerialization : public Loggable
-{
+class BIOGEARS_API SEScenarioAutoSerialization : public Loggable {
 public:
-	SEScenarioAutoSerialization(Logger* logger);
-	virtual ~SEScenarioAutoSerialization();
+  SEScenarioAutoSerialization(Logger* logger);
+  virtual ~SEScenarioAutoSerialization();
 
   virtual void Clear();
   virtual bool IsValid() const;
 
   virtual bool Load(const CDM::ScenarioAutoSerializationData& in);
   virtual CDM::ScenarioAutoSerializationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ScenarioAutoSerializationData& data) const;
-public:
 
+public:
   virtual bool HasPeriod() const;
   virtual SEScalarTime& GetPeriod();
   virtual double GetPeriod(const TimeUnit& unit) const;
@@ -61,13 +61,11 @@ public:
   virtual void SetFileName(const std::string& dir);
   virtual void InvalidateFileName();
 
-
 protected:
-
-	SEScalarTime*         m_Period;
+  SEScalarTime* m_Period;
   CDM::enumOnOff::value m_PeriodTimeStamps;
   CDM::enumOnOff::value m_AfterActions;
   CDM::enumOnOff::value m_ReloadState;
-  std::string           m_Directory;
-  std::string           m_FileName;
+  std::string m_Directory;
+  std::string m_FileName;
 };

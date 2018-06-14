@@ -21,39 +21,38 @@ class SEScenarioAutoSerialization;
 class SEDecimalFormat;
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 
-class BIOGEARS_API SEScenario : public Loggable
-{
+class BIOGEARS_API SEScenario : public Loggable {
 public:
-
   SEScenario(SESubstanceManager& subMgr);
-	virtual ~SEScenario();
-	
-	virtual void Clear(); //clear memory
+  virtual ~SEScenario();
+
+  virtual void Clear(); //clear memory
 
   bool Load(const CDM::ScenarioData& in);
-	CDM::ScenarioData* Unload() const;
+  CDM::ScenarioData* Unload() const;
+
 protected:
-	void Unload(CDM::ScenarioData& data)const;
+  void Unload(CDM::ScenarioData& data) const;
 
 public:
   bool LoadFile(const std::string& scenarioFile);
-	bool IsValid() const;
+  bool IsValid() const;
 
-	virtual std::string GetName() const;
-	virtual void SetName(const std::string& name);
-	virtual bool HasName() const;
-	virtual void InvalidateName();
+  virtual std::string GetName() const;
+  virtual void SetName(const std::string& name);
+  virtual bool HasName() const;
+  virtual void InvalidateName();
 
-	virtual std::string GetDescription() const;
-	virtual void SetDescription(const std::string& desc);
-	virtual bool HasDescription() const;
-	virtual void InvalidateDescription();
+  virtual std::string GetDescription() const;
+  virtual void SetDescription(const std::string& desc);
+  virtual bool HasDescription() const;
+  virtual void InvalidateDescription();
 
   virtual std::string GetEngineStateFile() const;
   virtual void SetEngineStateFile(const std::string& file);
   virtual bool HasEngineStateFile() const;
   virtual void InvalidateEngineStateFile();
-	
+
   virtual SEScenarioInitialParameters& GetInitialParameters();
   virtual const SEScenarioInitialParameters* GetInitialParameters() const;
   virtual bool HasInitialParameters() const;
@@ -70,15 +69,13 @@ public:
   virtual SEDataRequestManager& GetDataRequestManager() { return m_DataRequestMgr; }
   virtual const SEDataRequestManager& GetDataRequestManager() const { return m_DataRequestMgr; }
 
-
 protected:
-  SESubstanceManager&                         m_SubMgr;
-	std::string                                 m_Name;
-	std::string                                 m_Description;
-  std::string                                 m_EngineStateFile;
-  SEScenarioInitialParameters*                m_InitialParameters;
-  SEScenarioAutoSerialization*                m_AutoSerialization;
-  SEDataRequestManager                        m_DataRequestMgr;
-  std::vector<SEAction*>                      m_Actions;
-
+  SESubstanceManager& m_SubMgr;
+  std::string m_Name;
+  std::string m_Description;
+  std::string m_EngineStateFile;
+  SEScenarioInitialParameters* m_InitialParameters;
+  SEScenarioAutoSerialization* m_AutoSerialization;
+  SEDataRequestManager m_DataRequestMgr;
+  std::vector<SEAction*> m_Actions;
 };

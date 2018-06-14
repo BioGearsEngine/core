@@ -32,17 +32,17 @@ class BioGears;
 
 /**
  * @brief @copydoc Physiology_RenalSystemData
- */  
-class BIOGEARS_API Renal : public SERenalSystem, public BioGearsSystem
-{
-	friend class BioGears;
+ */
+class BIOGEARS_API Renal : public SERenalSystem, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
-protected:
-	Renal(BioGears& bg);
-	BioGears& m_data;
 
-	double m_dt;
-	
+protected:
+  Renal(BioGears& bg);
+  BioGears& m_data;
+
+  double m_dt;
+
 public:
   virtual ~Renal();
 
@@ -63,17 +63,15 @@ protected:
 
 public:
   void AtSteadyState();
-	void PreProcess();	
-	void Process();	
-	void PostProcess();
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
-	// Assessments
-	bool CalculateUrinalysis(SEUrinalysis& u);
+  // Assessments
+  bool CalculateUrinalysis(SEUrinalysis& u);
 
 protected:
-
-  struct ActiveTransport
-  {
+  struct ActiveTransport {
   public:
     double leftGlucoseReabsorptionMass_mg;
     double rightGlucoseReabsorptionMass_mg;
@@ -81,35 +79,34 @@ protected:
     double rightLactateExcretedMass_mg;
   };
 
-
   // Initialization
-	void CalculateFilterability(SESubstance& sub);
+  void CalculateFilterability(SESubstance& sub);
   //Conditions
   void ConsumeMeal(double elapsedTime_s);
 
-	//Preprocess
-	void CalculateUltrafiltrationFeedback();
-  void   CalculateColloidOsmoticPressure(SEScalarMassPerVolume& albuminConcentration, SEScalarPressure& osmoticPressure);
+  //Preprocess
+  void CalculateUltrafiltrationFeedback();
+  void CalculateColloidOsmoticPressure(SEScalarMassPerVolume& albuminConcentration, SEScalarPressure& osmoticPressure);
   void CalculateReabsorptionFeedback();
-  void   CalculateOsmoreceptorFeedback();
-  void   CalculateFluidPermeability();
-	void CalculateTubuloglomerularFeedback();	
-	void UpdateBladderVolume();
-	void ProcessActions();
-  void   Urinate();
+  void CalculateOsmoreceptorFeedback();
+  void CalculateFluidPermeability();
+  void CalculateTubuloglomerularFeedback();
+  void UpdateBladderVolume();
+  void ProcessActions();
+  void Urinate();
 
-	//Process
-	void CalculateActiveTransport();	
-	void   CalculateGlomerularTransport(SESubstance& sub);
-	void   CalculateReabsorptionTransport(SESubstance& sub);
-	void   CalculateSecretion();
-	void   CalculateExcretion(SESubstance& sub);
-	void   CalculateAutomaticClearance(SESubstance& sub);
-  void   CalculateGluconeogenesis();
+  //Process
+  void CalculateActiveTransport();
+  void CalculateGlomerularTransport(SESubstance& sub);
+  void CalculateReabsorptionTransport(SESubstance& sub);
+  void CalculateSecretion();
+  void CalculateExcretion(SESubstance& sub);
+  void CalculateAutomaticClearance(SESubstance& sub);
+  void CalculateGluconeogenesis();
   void CalculateVitalSigns();
 
   // Serializable member variables (Set in Initialize and in schema)
-  bool   m_Urinating;
+  bool m_Urinating;
   //Tubuloglomerular Feedback
   double m_leftAfferentResistance_mmHg_s_Per_mL;
   double m_rightAfferentResistance_mmHg_s_Per_mL;
@@ -124,77 +121,77 @@ protected:
   RunningAverage m_rightSodiumFlow_mg_Per_s_runningAvg;
   RunningAverage m_leftRenalArterialPressure_mmHg_runningAvg;
   RunningAverage m_rightRenalArterialPressure_mmHg_runningAvg;
-	
+
   // Stateless member variable (Set in SetUp())
-  SEPatient*          m_patient;
-	//Circuits
-	SEFluidCircuit*     m_RenalCircuit;
-	//Nodes
-	SEFluidCircuitNode* m_leftGlomerularNode;
-	SEFluidCircuitNode* m_leftBowmansNode;
-	SEFluidCircuitNode* m_leftPeritubularNode;
-	SEFluidCircuitNode* m_leftTubulesNode;
-	SEFluidCircuitNode* m_leftRenalArteryNode;
-	SEFluidCircuitNode* m_rightGlomerularNode;
-	SEFluidCircuitNode* m_rightBowmansNode;
-	SEFluidCircuitNode* m_rightPeritubularNode;
-	SEFluidCircuitNode* m_rightTubulesNode;
-	SEFluidCircuitNode* m_rightRenalArteryNode;
-	SEFluidCircuitNode* m_bladderNode;
-	SEFluidCircuitNode* m_leftNetGlomerularCapillariesNode;
-	SEFluidCircuitNode* m_leftNetBowmansCapsulesNode;
-	SEFluidCircuitNode* m_leftNetPeritubularCapillariesNode;
-	SEFluidCircuitNode* m_leftNetTubulesNode;
-	SEFluidCircuitNode* m_rightNetGlomerularCapillariesNode;
-	SEFluidCircuitNode* m_rightNetBowmansCapsulesNode;
-	SEFluidCircuitNode* m_rightNetPeritubularCapillariesNode;
-	SEFluidCircuitNode* m_rightNetTubulesNode;
-	//Paths
-	SEFluidCircuitPath* m_leftGlomerularOsmoticSourcePath;
-	SEFluidCircuitPath* m_leftBowmansOsmoticSourcePath;
-	SEFluidCircuitPath* m_leftReabsorptionResistancePath;
-	SEFluidCircuitPath* m_leftTubulesOsmoticSourcePath;
-	SEFluidCircuitPath* m_leftPeritubularOsmoticSourcePath;
-	SEFluidCircuitPath* m_leftUreterPath;
-	SEFluidCircuitPath* m_leftGlomerularFilterResistancePath;
-	SEFluidCircuitPath* m_leftAfferentArteriolePath;
-	SEFluidCircuitPath* m_rightReabsorptionResistancePath;
-	SEFluidCircuitPath* m_rightGlomerularOsmoticSourcePath;
-	SEFluidCircuitPath* m_rightBowmansOsmoticSourcePath;
-	SEFluidCircuitPath* m_rightTubulesOsmoticSourcePath;
-	SEFluidCircuitPath* m_rightPeritubularOsmoticSourcePath;
-	SEFluidCircuitPath* m_rightUreterPath;
-	SEFluidCircuitPath* m_rightGlomerularFilterResistancePath;
-	SEFluidCircuitPath* m_rightAfferentArteriolePath;
-	SEFluidCircuitPath* m_bladderToGroundPressurePath;
-	SEFluidCircuitPath* m_urethraPath;
-	SEFluidCircuitPath* m_leftTubulesPath;
-	SEFluidCircuitPath* m_rightTubulesPath;
-	SEFluidCircuitPath* m_leftEfferentArteriolePath;
-	SEFluidCircuitPath* m_rightEfferentArteriolePath;
- 
-	//Substances
-	SESubstance* m_sodium;
-	SESubstance* m_urea;
-	SESubstance* m_glucose;
-	SESubstance* m_lactate;
-	SESubstance* m_potassium;
-	//Compartments
+  SEPatient* m_patient;
+  //Circuits
+  SEFluidCircuit* m_RenalCircuit;
+  //Nodes
+  SEFluidCircuitNode* m_leftGlomerularNode;
+  SEFluidCircuitNode* m_leftBowmansNode;
+  SEFluidCircuitNode* m_leftPeritubularNode;
+  SEFluidCircuitNode* m_leftTubulesNode;
+  SEFluidCircuitNode* m_leftRenalArteryNode;
+  SEFluidCircuitNode* m_rightGlomerularNode;
+  SEFluidCircuitNode* m_rightBowmansNode;
+  SEFluidCircuitNode* m_rightPeritubularNode;
+  SEFluidCircuitNode* m_rightTubulesNode;
+  SEFluidCircuitNode* m_rightRenalArteryNode;
+  SEFluidCircuitNode* m_bladderNode;
+  SEFluidCircuitNode* m_leftNetGlomerularCapillariesNode;
+  SEFluidCircuitNode* m_leftNetBowmansCapsulesNode;
+  SEFluidCircuitNode* m_leftNetPeritubularCapillariesNode;
+  SEFluidCircuitNode* m_leftNetTubulesNode;
+  SEFluidCircuitNode* m_rightNetGlomerularCapillariesNode;
+  SEFluidCircuitNode* m_rightNetBowmansCapsulesNode;
+  SEFluidCircuitNode* m_rightNetPeritubularCapillariesNode;
+  SEFluidCircuitNode* m_rightNetTubulesNode;
+  //Paths
+  SEFluidCircuitPath* m_leftGlomerularOsmoticSourcePath;
+  SEFluidCircuitPath* m_leftBowmansOsmoticSourcePath;
+  SEFluidCircuitPath* m_leftReabsorptionResistancePath;
+  SEFluidCircuitPath* m_leftTubulesOsmoticSourcePath;
+  SEFluidCircuitPath* m_leftPeritubularOsmoticSourcePath;
+  SEFluidCircuitPath* m_leftUreterPath;
+  SEFluidCircuitPath* m_leftGlomerularFilterResistancePath;
+  SEFluidCircuitPath* m_leftAfferentArteriolePath;
+  SEFluidCircuitPath* m_rightReabsorptionResistancePath;
+  SEFluidCircuitPath* m_rightGlomerularOsmoticSourcePath;
+  SEFluidCircuitPath* m_rightBowmansOsmoticSourcePath;
+  SEFluidCircuitPath* m_rightTubulesOsmoticSourcePath;
+  SEFluidCircuitPath* m_rightPeritubularOsmoticSourcePath;
+  SEFluidCircuitPath* m_rightUreterPath;
+  SEFluidCircuitPath* m_rightGlomerularFilterResistancePath;
+  SEFluidCircuitPath* m_rightAfferentArteriolePath;
+  SEFluidCircuitPath* m_bladderToGroundPressurePath;
+  SEFluidCircuitPath* m_urethraPath;
+  SEFluidCircuitPath* m_leftTubulesPath;
+  SEFluidCircuitPath* m_rightTubulesPath;
+  SEFluidCircuitPath* m_leftEfferentArteriolePath;
+  SEFluidCircuitPath* m_rightEfferentArteriolePath;
+
+  //Substances
+  SESubstance* m_sodium;
+  SESubstance* m_urea;
+  SESubstance* m_glucose;
+  SESubstance* m_lactate;
+  SESubstance* m_potassium;
+  //Compartments
   SELiquidCompartment* m_aorta;
   SELiquidCompartment* m_venaCava;
   SELiquidCompartment* m_bladder;
-	SETissueCompartment* m_rightKidneyTissue;
-	SETissueCompartment* m_leftKidneyTissue;	
-	SELiquidCompartment* m_leftUreter;
-	SELiquidCompartment* m_leftPeritubular;
-	SELiquidCompartment* m_rightUreter;
-	SELiquidCompartment* m_rightPeritubular;	
-	SELiquidCompartment* m_leftGlomerular;
-	SELiquidCompartment* m_leftBowmans;
-	SELiquidCompartment* m_rightGlomerular;
-	SELiquidCompartment* m_rightBowmans;
-	SELiquidCompartment* m_leftTubules;
-	SELiquidCompartment* m_rightTubules;
+  SETissueCompartment* m_rightKidneyTissue;
+  SETissueCompartment* m_leftKidneyTissue;
+  SELiquidCompartment* m_leftUreter;
+  SELiquidCompartment* m_leftPeritubular;
+  SELiquidCompartment* m_rightUreter;
+  SELiquidCompartment* m_rightPeritubular;
+  SELiquidCompartment* m_leftGlomerular;
+  SELiquidCompartment* m_leftBowmans;
+  SELiquidCompartment* m_rightGlomerular;
+  SELiquidCompartment* m_rightBowmans;
+  SELiquidCompartment* m_leftTubules;
+  SELiquidCompartment* m_rightTubules;
   SELiquidCompartment* m_ground;
   // Compartment Substance Quantites
   SELiquidSubstanceQuantity* m_aortaLactate;
@@ -219,7 +216,7 @@ protected:
   SELiquidSubstanceQuantity* m_leftKidneyIntracellularLactate;
   SELiquidSubstanceQuantity* m_rightKidneyIntracellularLactate;
 
-  // Configuration 
+  // Configuration
   double m_defaultOpenResistance_mmHg_s_Per_mL;
   double m_defaultClosedResistance_mmHg_s_Per_mL;
   //   Ultrafiltration

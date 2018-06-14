@@ -14,46 +14,44 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/HemorrhageData.hxx>
 
-class BIOGEARS_API SEHemorrhage : public SEPatientAction
-{
+class BIOGEARS_API SEHemorrhage : public SEPatientAction {
 public:
+  SEHemorrhage();
+  virtual ~SEHemorrhage();
 
-	SEHemorrhage();
-	virtual ~SEHemorrhage();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::HemorrhageData& in);
-  virtual CDM::HemorrhageData* Unload()const;
+  virtual CDM::HemorrhageData* Unload() const;
+
 protected:
   virtual void Unload(CDM::HemorrhageData& data) const;
 
 public:
+  virtual std::string GetCompartment() const;
+  virtual bool HasCompartment() const;
+  virtual void SetCompartment(const std::string& name);
+  virtual void InvalidateCompartment();
 
-	virtual std::string GetCompartment() const;
-	virtual bool HasCompartment() const;
-	virtual void SetCompartment(const std::string& name);
-	virtual void InvalidateCompartment();
-	
-	virtual bool HasMCIS() const;
-	virtual std::vector<unsigned int>& GetMCIS() { return m_MCIS; }
-	virtual void SetBleedPath();
+  virtual bool HasMCIS() const;
+  virtual std::vector<unsigned int>& GetMCIS() { return m_MCIS; }
+  virtual void SetBleedPath();
 
-	virtual bool HasBleedName() const;
-	virtual std::string GetBleedName() const;
+  virtual bool HasBleedName() const;
+  virtual std::string GetBleedName() const;
 
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();
-	
-	virtual void ToString(std::ostream &str) const;
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
+
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	std::string             m_Compartment;
-	std::vector<unsigned int>		m_MCIS;
-	std::string				m_BleedName;
-	SEScalar0To1*			m_Severity;
-	std::map < std::string, std::pair<std::string, std::vector<unsigned int>>> organMap;
-};    
+  std::string m_Compartment;
+  std::vector<unsigned int> m_MCIS;
+  std::string m_BleedName;
+  SEScalar0To1* m_Severity;
+  std::map<std::string, std::pair<std::string, std::vector<unsigned int>>> organMap;
+};

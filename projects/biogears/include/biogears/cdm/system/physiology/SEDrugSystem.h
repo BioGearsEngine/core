@@ -16,41 +16,40 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/enumOnOff.hxx>
 #include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
 
-class BIOGEARS_API SEDrugSystem : public SESystem
-{
+class BIOGEARS_API SEDrugSystem : public SESystem {
 public:
+  SEDrugSystem(Logger* logger);
+  virtual ~SEDrugSystem();
 
-	SEDrugSystem(Logger* logger);
-	virtual ~SEDrugSystem();
+  virtual void Clear(); // Deletes all members
 
-  virtual void Clear();// Deletes all members
-  
-	virtual const SEScalar* GetScalar(const std::string& name);
-	
+  virtual const SEScalar* GetScalar(const std::string& name);
+
   virtual bool Load(const CDM::DrugSystemData& in);
   virtual CDM::DrugSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::DrugSystemData& data) const;
+
 public:
+  virtual bool HasBronchodilationLevel() const;
+  virtual SEScalarFraction& GetBronchodilationLevel();
+  virtual double GetBronchodilationLevel() const;
 
-	virtual bool HasBronchodilationLevel() const;
-	virtual SEScalarFraction& GetBronchodilationLevel();
-	virtual double GetBronchodilationLevel() const;
-
-	virtual bool HasHeartRateChange() const;
-	virtual SEScalarFrequency& GetHeartRateChange();
+  virtual bool HasHeartRateChange() const;
+  virtual SEScalarFrequency& GetHeartRateChange();
   virtual double GetHeartRateChange(const FrequencyUnit& unit) const;
 
-	virtual bool HasMeanBloodPressureChange() const;
-	virtual SEScalarPressure& GetMeanBloodPressureChange();
+  virtual bool HasMeanBloodPressureChange() const;
+  virtual SEScalarPressure& GetMeanBloodPressureChange();
   virtual double GetMeanBloodPressureChange(const PressureUnit& unit) const;
 
-	virtual bool HasNeuromuscularBlockLevel() const;
-	virtual SEScalarFraction& GetNeuromuscularBlockLevel();
-	virtual double GetNeuromuscularBlockLevel() const;
+  virtual bool HasNeuromuscularBlockLevel() const;
+  virtual SEScalarFraction& GetNeuromuscularBlockLevel();
+  virtual double GetNeuromuscularBlockLevel() const;
 
-	virtual bool HasPulsePressureChange() const;
-	virtual SEScalarPressure& GetPulsePressureChange();
+  virtual bool HasPulsePressureChange() const;
+  virtual SEScalarPressure& GetPulsePressureChange();
   virtual double GetPulsePressureChange(const PressureUnit& unit) const;
 
   virtual bool HasPupillaryResponse() const;
@@ -58,16 +57,16 @@ public:
   virtual const SEPupillaryResponse* GetPupillaryResponse() const;
   virtual void RemovePupillaryResponse();
 
-	virtual bool HasRespirationRateChange() const;
-	virtual SEScalarFrequency& GetRespirationRateChange();
+  virtual bool HasRespirationRateChange() const;
+  virtual SEScalarFrequency& GetRespirationRateChange();
   virtual double GetRespirationRateChange(const FrequencyUnit& unit) const;
 
-	virtual bool HasSedationLevel() const;
-	virtual SEScalarFraction& GetSedationLevel();
-	virtual double GetSedationLevel() const;
+  virtual bool HasSedationLevel() const;
+  virtual SEScalarFraction& GetSedationLevel();
+  virtual double GetSedationLevel() const;
 
-	virtual bool HasTidalVolumeChange() const;
-	virtual SEScalarVolume& GetTidalVolumeChange();
+  virtual bool HasTidalVolumeChange() const;
+  virtual SEScalarVolume& GetTidalVolumeChange();
   virtual double GetTidalVolumeChange(const VolumeUnit& unit) const;
 
   virtual bool HasTubularPermeabilityChange() const;
@@ -78,19 +77,16 @@ public:
   virtual SEScalarFraction& GetCentralNervousResponse();
   virtual double GetCentralNervousResponse() const;
 
-
-
 protected:
-
-	SEScalarFraction*          m_BronchodilationLevel;
-	SEScalarFrequency*         m_HeartRateChange;
-	SEScalarPressure*          m_MeanBloodPressureChange;
-	SEScalarFraction*          m_NeuromuscularBlockLevel;
-	SEScalarPressure*          m_PulsePressureChange;
-  SEPupillaryResponse*       m_PupillaryResponse;
-	SEScalarFrequency*         m_RespirationRateChange;
-	SEScalarFraction*          m_SedationLevel;
-	SEScalarVolume*            m_TidalVolumeChange;
-  SEScalarFraction*          m_TubularPermeabilityChange;
-  SEScalarFraction*			   m_CentralNervousResponse;
+  SEScalarFraction* m_BronchodilationLevel;
+  SEScalarFrequency* m_HeartRateChange;
+  SEScalarPressure* m_MeanBloodPressureChange;
+  SEScalarFraction* m_NeuromuscularBlockLevel;
+  SEScalarPressure* m_PulsePressureChange;
+  SEPupillaryResponse* m_PupillaryResponse;
+  SEScalarFrequency* m_RespirationRateChange;
+  SEScalarFraction* m_SedationLevel;
+  SEScalarVolume* m_TidalVolumeChange;
+  SEScalarFraction* m_TubularPermeabilityChange;
+  SEScalarFraction* m_CentralNervousResponse;
 };

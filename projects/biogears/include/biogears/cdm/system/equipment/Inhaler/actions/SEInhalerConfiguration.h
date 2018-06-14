@@ -18,37 +18,36 @@ specific language governing permissions and limitations under the License.
 class SEInhaler;
 class SESubstanceManager;
 
-class BIOGEARS_API SEInhalerConfiguration : public SEInhalerAction
-{
+class BIOGEARS_API SEInhalerConfiguration : public SEInhalerAction {
 public:
-
   SEInhalerConfiguration(SESubstanceManager& substances);
-	virtual ~SEInhalerConfiguration();
+  virtual ~SEInhalerConfiguration();
 
   virtual void Clear();
-  
-	virtual bool IsValid() const;
 
-	virtual bool Load(const CDM::InhalerConfigurationData& in);
+  virtual bool IsValid() const;
+
+  virtual bool Load(const CDM::InhalerConfigurationData& in);
   virtual CDM::InhalerConfigurationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::InhalerConfigurationData& data) const;
+
 public:
+  bool HasConfiguration() const;
+  SEInhaler& GetConfiguration();
+  const SEInhaler* GetConfiguration() const;
 
-	bool HasConfiguration() const;
-	SEInhaler& GetConfiguration();
-	const SEInhaler* GetConfiguration() const;
+  virtual std::string GetConfigurationFile() const;
+  virtual void SetConfigurationFile(const std::string& fileName);
+  virtual bool HasConfigurationFile() const;
+  virtual void InvalidateConfigurationFile();
 
-	virtual std::string GetConfigurationFile() const;
-	virtual void SetConfigurationFile(const std::string& fileName);
-	virtual bool HasConfigurationFile() const;
-	virtual void InvalidateConfigurationFile();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SESubstanceManager&  m_Substances;
+  SESubstanceManager& m_Substances;
 
-	std::string m_ConfigurationFile;
-	SEInhaler*  m_Configuration;
+  std::string m_ConfigurationFile;
+  SEInhaler* m_Configuration;
 };

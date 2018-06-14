@@ -18,12 +18,10 @@ specific language governing permissions and limitations under the License.
  *
  * Note: I wrote this for finding peaks on well behaved sinusoidal data. 
  *       I have some Ideas in the comments if the data is not as well behaved.
- */ 
-class BIOGEARS_API DataPeak
-{
+ */
+class BIOGEARS_API DataPeak {
 public:
-	
-	/**
+  /**
 	 * -- Number of Samples - This is how many values the peak is compared too,
 	 *                        that the current peak must be greater than.
 	 *					      When the this many samples are smaller than the peak,
@@ -38,35 +36,34 @@ public:
 	 *  By default this class will look for max peak only
 	 *  By default this class assumes data coming in is trening in the positive/up direction
 	 */
-	DataPeak(unsigned int samples, double epsilon);
+  DataPeak(unsigned int samples, double epsilon);
 
-	/** Reset Counter info */
-	void Reset();
+  /** Reset Counter info */
+  void Reset();
 
-	/** 
+  /** 
 	 * Get the last top peak value
 	 */
-	double LastTopPeak();
+  double LastTopPeak();
 
-	/** 
+  /** 
 	 * Get the last bottom peak value
 	 */
-	double LastBottomPeak();
+  double LastBottomPeak();
 
-	/** Check to see if we have peaked 
+  /** Check to see if we have peaked 
 	 *  value is the next point of data we will check against.
 	 */
-	bool Peaked(double value);
+  bool Peaked(double value);
 
 protected:
-
-	bool         m_PositiveTrend;
-	bool         m_FindMax;
-	bool         m_FindMin;
-	unsigned int m_Samples;
-	unsigned int m_PeakCount;
-	double       m_Epsilon;
-	double       m_SamplePeak;
-	double       m_LastTopPeak;
-	double       m_LastBottomPeak;
+  bool m_PositiveTrend;
+  bool m_FindMax;
+  bool m_FindMin;
+  unsigned int m_Samples;
+  unsigned int m_PeakCount;
+  double m_Epsilon;
+  double m_SamplePeak;
+  double m_LastTopPeak;
+  double m_LastBottomPeak;
 };

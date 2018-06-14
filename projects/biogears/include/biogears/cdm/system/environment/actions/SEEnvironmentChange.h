@@ -14,38 +14,36 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/schema/EnvironmentChangeData.hxx>
 
-class BIOGEARS_API SEEnvironmentChange : public SEEnvironmentAction
-{
+class BIOGEARS_API SEEnvironmentChange : public SEEnvironmentAction {
 public:
-
-	SEEnvironmentChange(SESubstanceManager& substances);
-	virtual ~SEEnvironmentChange();
+  SEEnvironmentChange(SESubstanceManager& substances);
+  virtual ~SEEnvironmentChange();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
-	virtual bool Load(const CDM::EnvironmentChangeData& in);
+  virtual bool Load(const CDM::EnvironmentChangeData& in);
   virtual CDM::EnvironmentChangeData* Unload() const;
+
 protected:
   virtual void Unload(CDM::EnvironmentChangeData& data) const;
 
 public:
-	
-	virtual bool HasConditions() const;
-	virtual SEEnvironmentalConditions& GetConditions();
-	virtual const SEEnvironmentalConditions* GetConditions() const;
+  virtual bool HasConditions() const;
+  virtual SEEnvironmentalConditions& GetConditions();
+  virtual const SEEnvironmentalConditions* GetConditions() const;
 
-	virtual std::string GetConditionsFile() const;
-	virtual void SetConditionsFile(const std::string& fileName);
-	virtual bool HasConditionsFile() const;
-	virtual void InvalidateConditionsFile();
-	
-	virtual void ToString(std::ostream &str) const;
+  virtual std::string GetConditionsFile() const;
+  virtual void SetConditionsFile(const std::string& fileName);
+  virtual bool HasConditionsFile() const;
+  virtual void InvalidateConditionsFile();
+
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SESubstanceManager&  m_Substances;
+  SESubstanceManager& m_Substances;
 
-	std::string                m_ConditionsFile;
-	SEEnvironmentalConditions* m_Conditions;
-};  
+  std::string m_ConditionsFile;
+  SEEnvironmentalConditions* m_Conditions;
+};

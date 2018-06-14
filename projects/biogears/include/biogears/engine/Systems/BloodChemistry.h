@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
-class	SELiquidCompartment;
+class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class BioGears;
 /**
@@ -31,14 +31,14 @@ class BioGears;
  * The goal of the blood chemistry system in the BioGears engine is complete analysis on the blood at any given point during the simulation.
  * The blood chemistry system houses all of the blood concentrations and compositions needed to assess a patient's health. This system is under development
  * and will be improved in future releases to include more substances that can provide clinician level details and assessments, such as a CBC and blood panel.
- */           
-class BIOGEARS_API BloodChemistry : public SEBloodChemistrySystem, public BioGearsSystem
-{
-	friend BioGears;
+ */
+class BIOGEARS_API BloodChemistry : public SEBloodChemistrySystem, public BioGearsSystem {
+  friend BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	BloodChemistry(BioGears& bg);
-	BioGears& m_data;
+  BloodChemistry(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~BloodChemistry();
@@ -49,8 +49,9 @@ public:
   void Initialize();
 
   // Load a state
-  bool Load(const CDM::BioGearsBloodChemistrySystemData& in);                                  
+  bool Load(const CDM::BioGearsBloodChemistrySystemData& in);
   CDM::BioGearsBloodChemistrySystemData* Unload() const;
+
 protected:
   void Unload(CDM::BioGearsBloodChemistrySystemData& data) const;
 
@@ -58,52 +59,52 @@ protected:
   void SetUp();
 
 public:
-	void AtSteadyState();
-	void PreProcess();
-	void Process();
-	void PostProcess();
+  void AtSteadyState();
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
-	bool CalculateCompleteBloodCount(SECompleteBloodCount& cbc);
-	bool CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp);
+  bool CalculateCompleteBloodCount(SECompleteBloodCount& cbc);
+  bool CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp);
 
 protected:
   void CheckBloodSubstanceLevels();
-	
+
   // Serializable member variables (Set in Initialize and in schema)
   RunningAverage m_ArterialOxygen_mmHg;
   RunningAverage m_ArterialCarbonDioxide_mmHg;
 
   // Stateless member variable (Set in SetUp())
-	double m_redBloodCellVolume_mL;
-	double m_HbPerRedBloodCell_ug_Per_ct;
-	SELiquidCompartment*       m_aorta;
-	SELiquidSubstanceQuantity* m_aortaO2;
-	SELiquidSubstanceQuantity* m_aortaCO2;
+  double m_redBloodCellVolume_mL;
+  double m_HbPerRedBloodCell_ug_Per_ct;
+  SELiquidCompartment* m_aorta;
+  SELiquidSubstanceQuantity* m_aortaO2;
+  SELiquidSubstanceQuantity* m_aortaCO2;
   SELiquidSubstanceQuantity* m_aortaCO;
-	SELiquidSubstanceQuantity* m_aortaBicarbonate;
-	SELiquidSubstanceQuantity* m_brainO2;
-	SELiquidSubstanceQuantity* m_myocardiumO2;
+  SELiquidSubstanceQuantity* m_aortaBicarbonate;
+  SELiquidSubstanceQuantity* m_brainO2;
+  SELiquidSubstanceQuantity* m_myocardiumO2;
   SELiquidSubstanceQuantity* m_pulmonaryArteriesO2;
   SELiquidSubstanceQuantity* m_pulmonaryArteriesCO2;
   SELiquidSubstanceQuantity* m_pulmonaryVeinsO2;
   SELiquidSubstanceQuantity* m_pulmonaryVeinsCO2;
-	SELiquidCompartment*       m_venaCava;
-	SELiquidSubstanceQuantity* m_venaCavaO2;
-	SELiquidSubstanceQuantity* m_venaCavaCO2;
-	SELiquidSubstanceQuantity* m_venaCavaAlbumin;
+  SELiquidCompartment* m_venaCava;
+  SELiquidSubstanceQuantity* m_venaCavaO2;
+  SELiquidSubstanceQuantity* m_venaCavaCO2;
+  SELiquidSubstanceQuantity* m_venaCavaAlbumin;
   SELiquidSubstanceQuantity* m_venaCavaAminoAcids;
-	SELiquidSubstanceQuantity* m_venaCavaBicarbonate;
-	SELiquidSubstanceQuantity* m_venaCavaCalcium;
-	SELiquidSubstanceQuantity* m_venaCavaChloride;
-	SELiquidSubstanceQuantity* m_venaCavaCreatinine;
+  SELiquidSubstanceQuantity* m_venaCavaBicarbonate;
+  SELiquidSubstanceQuantity* m_venaCavaCalcium;
+  SELiquidSubstanceQuantity* m_venaCavaChloride;
+  SELiquidSubstanceQuantity* m_venaCavaCreatinine;
   SELiquidSubstanceQuantity* m_venaCavaEpinephrine;
   SELiquidSubstanceQuantity* m_venaCavaGlucagon;
-	SELiquidSubstanceQuantity* m_venaCavaGlucose;
-	SELiquidSubstanceQuantity* m_venaCavaInsulin;
+  SELiquidSubstanceQuantity* m_venaCavaGlucose;
+  SELiquidSubstanceQuantity* m_venaCavaInsulin;
   SELiquidSubstanceQuantity* m_venaCavaKetones;
-	SELiquidSubstanceQuantity* m_venaCavaLactate;
-	SELiquidSubstanceQuantity* m_venaCavaPotassium;
-	SELiquidSubstanceQuantity* m_venaCavaSodium;
-	SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
-	SELiquidSubstanceQuantity* m_venaCavaUrea;  
+  SELiquidSubstanceQuantity* m_venaCavaLactate;
+  SELiquidSubstanceQuantity* m_venaCavaPotassium;
+  SELiquidSubstanceQuantity* m_venaCavaSodium;
+  SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
+  SELiquidSubstanceQuantity* m_venaCavaUrea;
 };

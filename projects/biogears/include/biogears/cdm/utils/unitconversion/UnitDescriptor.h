@@ -18,56 +18,57 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 #pragma once
 
-class CUnitDescriptor
-{
+class CUnitDescriptor {
 public:
-	// Defines what kind of constraint we impose on prefixes for this unit.
-	typedef enum {NONE, SOME, ALLBUT, ALL} PrefixModeType;
+  // Defines what kind of constraint we impose on prefixes for this unit.
+  typedef enum { NONE,
+    SOME,
+    ALLBUT,
+    ALL } PrefixModeType;
 
-	// ctor
-	CUnitDescriptor(const std::string &name, const std::string &symbol, unsigned int quantityTypeId, const std::string &targetUnit,
-		const double &convFac, const double &bias, PrefixModeType mode, const std::string &prefixSet);
-	
-	bool IsPrefixAllowed(char prefix) const;
+  // ctor
+  CUnitDescriptor(const std::string& name, const std::string& symbol, unsigned int quantityTypeId, const std::string& targetUnit,
+    const double& convFac, const double& bias, PrefixModeType mode, const std::string& prefixSet);
 
-	const double & GetConvFac() const
-	{
-		return m_dConvFac;
-	}
+  bool IsPrefixAllowed(char prefix) const;
 
-	const double & GetBias() const
-	{
-		return m_dBias;
-	}
+  const double& GetConvFac() const
+  {
+    return m_dConvFac;
+  }
 
-	const std::string &GetName() const
-	{
-		return m_strName;
-	}
+  const double& GetBias() const
+  {
+    return m_dBias;
+  }
 
-	const std::string &GetSymbol() const
-	{
-		return m_strSymbol;
-	}
+  const std::string& GetName() const
+  {
+    return m_strName;
+  }
 
-	unsigned int GetQuantityTypeID() const
-	{
-		return m_uiQuantityTypeId;
-	}
+  const std::string& GetSymbol() const
+  {
+    return m_strSymbol;
+  }
 
-	bool IsDecibel() const
-	{
-		return m_bDBFlag;
-	}
+  unsigned int GetQuantityTypeID() const
+  {
+    return m_uiQuantityTypeId;
+  }
+
+  bool IsDecibel() const
+  {
+    return m_bDBFlag;
+  }
 
 private:
-	double m_dConvFac;
-	double m_dBias;
-	std::string m_strName;
-	std::string m_strSymbol;
-	unsigned int m_uiQuantityTypeId;
-	PrefixModeType m_uiPrefixMode;
-	std::string m_strPrefixSet;
-	bool m_bDBFlag;
-
+  double m_dConvFac;
+  double m_dBias;
+  std::string m_strName;
+  std::string m_strSymbol;
+  unsigned int m_uiQuantityTypeId;
+  PrefixModeType m_uiPrefixMode;
+  std::string m_strPrefixSet;
+  bool m_bDBFlag;
 };

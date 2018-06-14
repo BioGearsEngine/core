@@ -16,37 +16,35 @@ class SESubstance;
 #include <biogears/schema/SubstanceInfusionData.hxx>
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SESubstanceInfusion : public SESubstanceAdministration
-{
+class BIOGEARS_API SESubstanceInfusion : public SESubstanceAdministration {
 public:
+  SESubstanceInfusion(const SESubstance& substance);
+  virtual ~SESubstanceInfusion();
 
-	SESubstanceInfusion(const SESubstance& substance);
-	virtual ~SESubstanceInfusion();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::SubstanceInfusionData& in);
   virtual CDM::SubstanceInfusionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::SubstanceInfusionData& data) const;
 
 public:
+  virtual bool HasConcentration() const;
+  virtual SEScalarMassPerVolume& GetConcentration();
 
-	virtual bool HasConcentration() const;
-	virtual SEScalarMassPerVolume& GetConcentration();
+  virtual bool HasRate() const;
+  virtual SEScalarVolumePerTime& GetRate();
 
-	virtual bool HasRate() const;
-	virtual SEScalarVolumePerTime& GetRate();	
+  virtual SESubstance& GetSubstance() const;
 
-	virtual SESubstance& GetSubstance() const;
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalarMassPerVolume*                  m_Concentration;
-	SEScalarVolumePerTime*                  m_Rate;
-	const SESubstance&                      m_Substance;
+  SEScalarMassPerVolume* m_Concentration;
+  SEScalarVolumePerTime* m_Rate;
+  const SESubstance& m_Substance;
 };

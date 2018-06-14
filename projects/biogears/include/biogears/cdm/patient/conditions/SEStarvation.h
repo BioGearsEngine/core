@@ -14,31 +14,29 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/StarvationData.hxx>
 
-class BIOGEARS_API SEStarvation : public SEPatientCondition
-{
+class BIOGEARS_API SEStarvation : public SEPatientCondition {
 public:
+  SEStarvation();
+  virtual ~SEStarvation();
 
-	SEStarvation();
-	virtual ~SEStarvation();
+  virtual void Clear();
 
-	virtual void Clear();
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::StarvationData& in);
   virtual CDM::StarvationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::StarvationData& data) const;
 
 public:
-	virtual std::string GetName() const { return "Starvation"; }
+  virtual std::string GetName() const { return "Starvation"; }
 
-	virtual bool HasTimeSinceMeal() const;
-	virtual SEScalarTime& GetTimeSinceMeal();
+  virtual bool HasTimeSinceMeal() const;
+  virtual SEScalarTime& GetTimeSinceMeal();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-
-	SEScalarTime* m_TimeSinceMeal;
+  SEScalarTime* m_TimeSinceMeal;
 };

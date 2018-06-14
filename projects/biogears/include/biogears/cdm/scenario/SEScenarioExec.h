@@ -17,36 +17,33 @@ class SEScenario;
 class PhysiologyEngine;
 CDM_BIND_DECL(ScenarioData)
 
-class BIOGEARS_API SEScenarioCustomExec
-{
+class BIOGEARS_API SEScenarioCustomExec {
 public:
-	virtual void CustomExec(double time_s, PhysiologyEngine* engine)=0;
+  virtual void CustomExec(double time_s, PhysiologyEngine* engine) = 0;
 };
 
-class BIOGEARS_API SEScenarioExec : public Loggable
-{
+class BIOGEARS_API SEScenarioExec : public Loggable {
 public:
-	SEScenarioExec(PhysiologyEngine& engine);
-	virtual ~SEScenarioExec();
+  SEScenarioExec(PhysiologyEngine& engine);
+  virtual ~SEScenarioExec();
 
-	virtual PhysiologyEngine& GetEngine(){ return m_Engine; }
+  virtual PhysiologyEngine& GetEngine() { return m_Engine; }
 
-	virtual void Cancel();
+  virtual void Cancel();
 
-	virtual bool Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
-	virtual bool Execute(const SEScenario& scenario,      const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
-	
+  virtual bool Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
+  virtual bool Execute(const SEScenario& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
+
 protected:
+  virtual bool ProcessActions(const SEScenario& scenario);
+  /// This does not include advance time actions
+  /// To override default functionality with those
+  /// actions override the ProcessActions method
+  virtual bool ProcessAction(const SEAction& action);
 
-	virtual bool ProcessActions(const SEScenario& scenario);
-	/// This does not include advance time actions
-	/// To override default functionality with those 
-	/// actions override the ProcessActions method
-	virtual bool ProcessAction(const SEAction& action);
+  bool m_Cancel;
+  SEScenarioCustomExec* m_CustomExec;
+  PhysiologyEngine& m_Engine;
 
-	bool                  m_Cancel;
-	SEScenarioCustomExec* m_CustomExec;
-	PhysiologyEngine&     m_Engine;
-
-	std::stringstream     m_ss;
+  std::stringstream m_ss;
 };

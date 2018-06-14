@@ -14,30 +14,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/AcuteStressData.hxx>
 
-class BIOGEARS_API SEAcuteStress : public SEPatientAction
-{
+class BIOGEARS_API SEAcuteStress : public SEPatientAction {
 public:
+  SEAcuteStress();
+  virtual ~SEAcuteStress();
 
-	SEAcuteStress();
-	virtual ~SEAcuteStress();
+  virtual void Clear();
 
-	virtual void Clear();
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::AcuteStressData& in);
   virtual CDM::AcuteStressData* Unload() const;
+
 protected:
   virtual void Unload(CDM::AcuteStressData& data) const;
 
 public:
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();	
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*           m_Severity;
-};      
+  SEScalar0To1* m_Severity;
+};

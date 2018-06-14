@@ -32,14 +32,14 @@ class BioGears;
 
 /**
  * @brief @copydoc Physiology_EnergySystemData
- */  
-class BIOGEARS_API Energy : public SEEnergySystem, public BioGearsSystem
-{
-	friend class BioGears;
+ */
+class BIOGEARS_API Energy : public SEEnergySystem, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	Energy(BioGears& bg);
-	BioGears& m_data;
+  Energy(BioGears& bg);
+  BioGears& m_data;
 
 public:
   ~Energy(void);
@@ -52,6 +52,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsEnergySystemData& in);
   virtual CDM::BioGearsEnergySystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsEnergySystemData& data) const;
 
@@ -60,12 +61,11 @@ protected:
 
 public:
   void AtSteadyState();
-	void PreProcess();
-	void Process();
-	void PostProcess();
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
 private:
-
   // Preprocess Methods
   void CalculateMetabolicHeatGeneration();
   void CalculateSweatRate();
@@ -87,24 +87,23 @@ private:
   RunningAverage m_BicarbonateMolarity_mmol_Per_L;
 
   // Stateless member variable (Set in SetUp())
-  double                      m_dT_s;
-  SEPatient*                  m_Patient;
-  SEPatientActionCollection*  m_PatientActions;
+  double m_dT_s;
+  SEPatient* m_Patient;
+  SEPatientActionCollection* m_PatientActions;
   // Cmpts,Substance, and nodes
-  SELiquidSubstanceQuantity*  m_AortaHCO3;
+  SELiquidSubstanceQuantity* m_AortaHCO3;
   SELiquidSubstanceQuantity* m_SkinSodium;
   SELiquidSubstanceQuantity* m_SkinChloride;
   SELiquidSubstanceQuantity* m_SkinPotassium;
-	//Nodes
-	SEThermalCircuitNode*       m_coreNode;
-  SEThermalCircuitNode*       m_skinNode;
-	//Paths
-	SEThermalCircuitPath*       m_temperatureGroundToCorePath;
-  SEThermalCircuitPath*       m_coreToSkinPath;
-  SEFluidCircuitPath*         m_skinExtravascularToSweatingGroundPath;	 
+  //Nodes
+  SEThermalCircuitNode* m_coreNode;
+  SEThermalCircuitNode* m_skinNode;
+  //Paths
+  SEThermalCircuitPath* m_temperatureGroundToCorePath;
+  SEThermalCircuitPath* m_coreToSkinPath;
+  SEFluidCircuitPath* m_skinExtravascularToSweatingGroundPath;
   //Circuits
-  SEThermalCircuit*           m_InternalTemperatureCircuit;
-  SEThermalCircuit*           m_TemperatureCircuit;
-  SEThermalCircuitCalculator  m_circuitCalculator;
+  SEThermalCircuit* m_InternalTemperatureCircuit;
+  SEThermalCircuit* m_TemperatureCircuit;
+  SEThermalCircuitCalculator m_circuitCalculator;
 };
-

@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarHeatResistanceAreaData.hxx>
 
-class BIOGEARS_API HeatResistanceAreaUnit : public CCompoundUnit
-{
+class BIOGEARS_API HeatResistanceAreaUnit : public CCompoundUnit {
 public:
-  HeatResistanceAreaUnit(const std::string& u) : CCompoundUnit(u) {}
+  HeatResistanceAreaUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~HeatResistanceAreaUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -29,11 +31,10 @@ public:
   static const HeatResistanceAreaUnit tog;
 };
 
-class BIOGEARS_API SEScalarHeatResistanceArea : public SEScalarQuantity<HeatResistanceAreaUnit>
-{
+class BIOGEARS_API SEScalarHeatResistanceArea : public SEScalarQuantity<HeatResistanceAreaUnit> {
 public:
   SEScalarHeatResistanceArea() {}
-	virtual ~SEScalarHeatResistanceArea() {}
+  virtual ~SEScalarHeatResistanceArea() {}
 
   CDM::ScalarHeatResistanceAreaData* Unload() const;
 };

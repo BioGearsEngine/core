@@ -28,14 +28,14 @@ class BioGears;
 /**
 * @brief @copydoc Physiology_GastrointestinalSystemData
 */
-class BIOGEARS_API Gastrointestinal : public SEGastrointestinalSystem, public BioGearsSystem
-{
+class BIOGEARS_API Gastrointestinal : public SEGastrointestinalSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
   Gastrointestinal(BioGears& bg);
   BioGears& m_data;
-  
+
 public:
   virtual ~Gastrointestinal();
 
@@ -47,6 +47,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsGastrointestinalSystemData& in);
   virtual CDM::BioGearsGastrointestinalSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsGastrointestinalSystemData& data) const;
 
@@ -60,50 +61,48 @@ public:
   void PostProcess();
 
 protected:
-
-  void   GastricSecretion(double duration_s);
-  void   DefaultNutritionRates(SENutrition& n);
-  void   AbsorbNutrients();
+  void GastricSecretion(double duration_s);
+  void DefaultNutritionRates(SENutrition& n);
+  void AbsorbNutrients();
   double DigestNutrient(SEUnitScalar& totalAmt, SEUnitScalar& rate, bool mass, double duration_s);
   void DigestNutrient();
-  void   AbsorbMeal(double duration_s);
-  void   AbsorbNutrients(double duration_s);
+  void AbsorbMeal(double duration_s);
+  void AbsorbNutrients(double duration_s);
 
   void ChymeSecretion();
-  // Serializable member variables (Set in Initialize and in schema)  
+  // Serializable member variables (Set in Initialize and in schema)
 
   // Stateless member variable (Set in SetUp())
-  SELiquidCompartment*         m_SmallIntestineChyme;
-  SELiquidCompartment*         m_vSmallIntestine;
-  SELiquidCompartment*         m_Lymph;
-  SELiquidSubstanceQuantity*   m_SmallIntestineChymeAlbumin;
-  SELiquidSubstanceQuantity*   m_SmallIntestineChymeAminoAcids;
-  SELiquidSubstanceQuantity*   m_SmallIntestineChymeGlucose;
-  SELiquidSubstanceQuantity*   m_SmallIntestineChymeTriacylglycerol;
-  SELiquidSubstanceQuantity*   m_SmallIntestineChymeCalcium;
-  SELiquidSubstanceQuantity*   m_SmallIntestineChymeSodium;
-  SELiquidSubstanceQuantity*   m_SmallIntestineChymeUrea;
-  SELiquidSubstanceQuantity*   m_SmallIntestineVascularSodium;
-  SELiquidSubstanceQuantity*   m_smallIntestineVascularGlucose;
-  SELiquidSubstanceQuantity*   m_smallIntestineVascularAminoAcids;
-  SELiquidSubstanceQuantity*   m_SmallIntestineVascularCalcium;
-  SELiquidSubstanceQuantity*   m_LymphTriacylglycerol;
-  SELiquidSubstanceQuantity*   m_smallintestineVAscularTriacylglycerol;
+  SELiquidCompartment* m_SmallIntestineChyme;
+  SELiquidCompartment* m_vSmallIntestine;
+  SELiquidCompartment* m_Lymph;
+  SELiquidSubstanceQuantity* m_SmallIntestineChymeAlbumin;
+  SELiquidSubstanceQuantity* m_SmallIntestineChymeAminoAcids;
+  SELiquidSubstanceQuantity* m_SmallIntestineChymeGlucose;
+  SELiquidSubstanceQuantity* m_SmallIntestineChymeTriacylglycerol;
+  SELiquidSubstanceQuantity* m_SmallIntestineChymeCalcium;
+  SELiquidSubstanceQuantity* m_SmallIntestineChymeSodium;
+  SELiquidSubstanceQuantity* m_SmallIntestineChymeUrea;
+  SELiquidSubstanceQuantity* m_SmallIntestineVascularSodium;
+  SELiquidSubstanceQuantity* m_smallIntestineVascularGlucose;
+  SELiquidSubstanceQuantity* m_smallIntestineVascularAminoAcids;
+  SELiquidSubstanceQuantity* m_SmallIntestineVascularCalcium;
+  SELiquidSubstanceQuantity* m_LymphTriacylglycerol;
+  SELiquidSubstanceQuantity* m_smallintestineVAscularTriacylglycerol;
 
-  SEFluidCircuitPath*          m_GItoCVPath;
-  SEFluidCircuitPath*          m_GutE3ToGroundPath;
-  SEScalarMassPerTime          m_CalciumDigestionRate;
-  SEScalarVolumePerTime        m_WaterDigestionRate;
+  SEFluidCircuitPath* m_GItoCVPath;
+  SEFluidCircuitPath* m_GutE3ToGroundPath;
+  SEScalarMassPerTime m_CalciumDigestionRate;
+  SEScalarVolumePerTime m_WaterDigestionRate;
 
   // We want to start simulation time 0 (after stabilization) with the initial gut mass from the meal specified in the config file
-  std::map<SELiquidSubstanceQuantity*, double> m_InitialSubstanceMasses_ug;// Used only during the final AtSteadyState
+  std::map<SELiquidSubstanceQuantity*, double> m_InitialSubstanceMasses_ug; // Used only during the final AtSteadyState
 
-  bool   m_ConsumeRate; // Some substance digestion rates are specified by the user, some by configuration,
+  bool m_ConsumeRate; // Some substance digestion rates are specified by the user, some by configuration,
   //if the stomach runs out of a substance with a user provided rate, we invalidate the rate (true)
   //if the rate is a configuration rate, we don't want to invalidate it if we run out of the substance (false)
-  bool   m_DecrementNutrients; // True  Signals that we decrement stomach nutrients when we digest them
+  bool m_DecrementNutrients; // True  Signals that we decrement stomach nutrients when we digest them
   // We do not decrement stomach contents during stabilization
   double m_secretionRate_mL_Per_s;
   double m_dT_s;
-
 };

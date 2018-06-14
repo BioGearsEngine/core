@@ -14,46 +14,43 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(AppliedTemperatureData)
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SEAppliedTemperature : public Loggable
-{
+class BIOGEARS_API SEAppliedTemperature : public Loggable {
 public:
-
-	SEAppliedTemperature(Logger* logger);
+  SEAppliedTemperature(Logger* logger);
   SEAppliedTemperature(const SEAppliedTemperature& other);
-	virtual ~SEAppliedTemperature();
-	
+  virtual ~SEAppliedTemperature();
+
   virtual void Clear();
 
   virtual bool Load(const CDM::AppliedTemperatureData& in);
   virtual CDM::AppliedTemperatureData* Unload() const;
+
 protected:
   virtual void Unload(CDM::AppliedTemperatureData& data) const;
 
 public:
+  virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual const SEScalar* GetScalar(const std::string& name);
-
-	virtual bool HasTemperature() const;
-	virtual SEScalarTemperature& GetTemperature();
+  virtual bool HasTemperature() const;
+  virtual SEScalarTemperature& GetTemperature();
   virtual double GetTemperature(const TemperatureUnit& unit) const;
 
-	virtual bool HasSurfaceArea() const;
-	virtual SEScalarArea& GetSurfaceArea();
+  virtual bool HasSurfaceArea() const;
+  virtual SEScalarArea& GetSurfaceArea();
   virtual double GetSurfaceArea(const AreaUnit& unit) const;
 
-	virtual bool HasSurfaceAreaFraction() const;
-	virtual SEScalarFraction& GetSurfaceAreaFraction();
-	virtual double GetSurfaceAreaFraction() const;
+  virtual bool HasSurfaceAreaFraction() const;
+  virtual SEScalarFraction& GetSurfaceAreaFraction();
+  virtual double GetSurfaceAreaFraction() const;
 
-	virtual CDM::enumOnOff::value GetState() const;
-	virtual void SetState(CDM::enumOnOff::value onOff);
+  virtual CDM::enumOnOff::value GetState() const;
+  virtual void SetState(CDM::enumOnOff::value onOff);
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	
-	SEScalarTemperature*   m_Temperature;
-	SEScalarArea*	         m_SurfaceArea;
-	SEScalarFraction*      m_SurfaceAreaFraction;
-	CDM::enumOnOff::value  m_State;
+  SEScalarTemperature* m_Temperature;
+  SEScalarArea* m_SurfaceArea;
+  SEScalarFraction* m_SurfaceAreaFraction;
+  CDM::enumOnOff::value m_State;
 };

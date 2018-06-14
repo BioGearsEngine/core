@@ -17,43 +17,42 @@ class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
 
-class BIOGEARS_API SESubstanceDataRequest : public SEDataRequest
-{
+class BIOGEARS_API SESubstanceDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SESubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
   virtual ~SESubstanceDataRequest();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::SubstanceDataRequestData& in, const SESubstanceManager& substances);
   virtual CDM::SubstanceDataRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::SubstanceDataRequestData& data) const;
 
 public:
+  virtual size_t HashCode() const;
 
-	virtual size_t HashCode() const;
+  virtual std::string GetCompartment() const;
+  virtual void SetCompartment(const std::string& name);
+  virtual bool HasCompartment() const;
+  virtual void InvalidateCompartment();
 
-	virtual std::string GetCompartment() const;
-	virtual void SetCompartment(const std::string& name);
-	virtual bool HasCompartment() const;
-	virtual void InvalidateCompartment();
-
-	virtual const SESubstance* GetSubstance() const;
-	virtual void SetSubstance(SESubstance* name);
-	virtual bool HasSubstance() const;
-	virtual void InvalidateSubstance(); 
+  virtual const SESubstance* GetSubstance() const;
+  virtual void SetSubstance(SESubstance* name);
+  virtual bool HasSubstance() const;
+  virtual void InvalidateSubstance();
 
   virtual void Set(const SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
-  virtual void Set(const SESubstance& substance, const std::string& name, const std::string&unit = "");
-	virtual void Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
-  virtual void Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const std::string&unit = "");
+  virtual void Set(const SESubstance& substance, const std::string& name, const std::string& unit = "");
+  virtual void Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
+  virtual void Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const std::string& unit = "");
 
 protected:
-
-	std::string        m_Compartment;
-	const SESubstance* m_Substance;
-
-};                  
+  std::string m_Compartment;
+  const SESubstance* m_Substance;
+};

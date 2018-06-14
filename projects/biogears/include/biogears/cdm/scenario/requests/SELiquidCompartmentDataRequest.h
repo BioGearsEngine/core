@@ -17,17 +17,18 @@ class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
 
-class BIOGEARS_API SELiquidCompartmentDataRequest : public SECompartmentSubstanceDataRequest
-{
+class BIOGEARS_API SELiquidCompartmentDataRequest : public SECompartmentSubstanceDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SELiquidCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
-  
   virtual ~SELiquidCompartmentDataRequest();
 
   virtual bool Load(const CDM::LiquidCompartmentDataRequestData& in, const SESubstanceManager& substances);
   virtual CDM::LiquidCompartmentDataRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::LiquidCompartmentDataRequestData& data) const;
 };

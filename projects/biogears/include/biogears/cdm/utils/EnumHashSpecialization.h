@@ -14,14 +14,13 @@ specific language governing permissions and limitations under the License.
 
 #include <functional>
 
-template<typename E>
-class enum_hash
-{
+template <typename E>
+class enum_hash {
 public:
-    size_t operator()(const E& e) const
-    {
-        using UnderlyingType = typename std::underlying_type<E>::type;
+  size_t operator()(const E& e) const
+  {
+    using UnderlyingType = typename std::underlying_type<E>::type;
 
-        return std::hash<UnderlyingType>()(static_cast<UnderlyingType>(e));
-    }
+    return std::hash<UnderlyingType>()(static_cast<UnderlyingType>(e));
+  }
 };

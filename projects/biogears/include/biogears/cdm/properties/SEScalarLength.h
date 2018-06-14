@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarLengthData.hxx>
 
-class BIOGEARS_API LengthUnit : public CCompoundUnit
-{
+class BIOGEARS_API LengthUnit : public CCompoundUnit {
 public:
-  LengthUnit(const std::string& u) : CCompoundUnit(u) {}
+  LengthUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~LengthUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -31,11 +33,10 @@ public:
   static const LengthUnit ft;
 };
 
-class BIOGEARS_API SEScalarLength : public SEScalarQuantity<LengthUnit>
-{
+class BIOGEARS_API SEScalarLength : public SEScalarQuantity<LengthUnit> {
 public:
   SEScalarLength() {}
-	virtual ~SEScalarLength() {}
+  virtual ~SEScalarLength() {}
 
   CDM::ScalarLengthData* Unload() const;
 };

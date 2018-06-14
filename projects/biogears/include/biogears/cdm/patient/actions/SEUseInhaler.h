@@ -15,26 +15,26 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/UseInhalerData.hxx>
 class SESubstance;
 
-class BIOGEARS_API SEUseInhaler : public SEConsciousRespirationCommand
-{
+class BIOGEARS_API SEUseInhaler : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
   SEUseInhaler();
+
 public:
-	virtual ~SEUseInhaler();
+  virtual ~SEUseInhaler();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::UseInhalerData& in);
   virtual CDM::UseInhalerData* Unload() const;
+
 protected:
   virtual void Unload(CDM::UseInhalerData& data) const;
 
 public:
+  virtual void ToString(std::ostream& str) const;
 
-	virtual void ToString(std::ostream &str) const;
 protected:
-
-};  
+};

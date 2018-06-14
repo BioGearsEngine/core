@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarOsmolalityData.hxx>
 
-class BIOGEARS_API OsmolalityUnit : public CCompoundUnit
-{
+class BIOGEARS_API OsmolalityUnit : public CCompoundUnit {
 public:
-  OsmolalityUnit(const std::string& u) : CCompoundUnit(u) {}
+  OsmolalityUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {
+  }
   virtual ~OsmolalityUnit() {}
 
   static bool IsValidUnit(const std::string& unit);
@@ -27,11 +29,10 @@ public:
   static const OsmolalityUnit mOsm_Per_kg;
 };
 
-class BIOGEARS_API SEScalarOsmolality : public SEScalarQuantity<OsmolalityUnit>
-{
+class BIOGEARS_API SEScalarOsmolality : public SEScalarQuantity<OsmolalityUnit> {
 public:
   SEScalarOsmolality() {}
-	virtual ~SEScalarOsmolality() {}
+  virtual ~SEScalarOsmolality() {}
 
   CDM::ScalarOsmolalityData* Unload() const;
 };

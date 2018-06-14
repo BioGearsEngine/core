@@ -15,23 +15,19 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 CDM_BIND_DECL(PropertyData)
 
-class BIOGEARS_API SEProperty
-{
+class BIOGEARS_API SEProperty {
 protected:
-
 public:
-
-	SEProperty();
-	virtual ~SEProperty();
+  SEProperty();
+  virtual ~SEProperty();
 
   virtual void Clear(); //clear memory
 
-	virtual void Invalidate()=0;
-	virtual bool IsValid() const=0;
+  virtual void Invalidate() = 0;
+  virtual bool IsValid() const = 0;
 
-	virtual bool Load(const CDM::PropertyData& in);
+  virtual bool Load(const CDM::PropertyData& in);
 
 protected:
-	virtual void Unload(CDM::PropertyData& data) const;
-	
+  virtual void Unload(CDM::PropertyData& data) const;
 };

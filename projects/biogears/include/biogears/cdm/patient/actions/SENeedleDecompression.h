@@ -16,35 +16,32 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/enumSide.hxx>
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SENeedleDecompression : public SEPatientAction
-{
+class BIOGEARS_API SENeedleDecompression : public SEPatientAction {
 public:
+  SENeedleDecompression();
+  virtual ~SENeedleDecompression();
 
-	SENeedleDecompression();
-	virtual ~SENeedleDecompression();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
-	virtual void SetActive(bool b);
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
+  virtual void SetActive(bool b);
 
   virtual bool Load(const CDM::NeedleDecompressionData& in);
   virtual CDM::NeedleDecompressionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::NeedleDecompressionData& data) const;
 
 public:
+  virtual CDM::enumSide::value GetSide() const;
+  virtual void SetSide(CDM::enumSide::value LeftOrRight);
+  virtual bool HasSide() const;
+  virtual void InvalidateSide();
 
-	virtual CDM::enumSide::value GetSide() const;
-	virtual void SetSide(CDM::enumSide::value LeftOrRight);
-	virtual bool HasSide() const;
-	virtual void InvalidateSide();
-	
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	CDM::enumSide::value m_Side;
-	CDM::enumOnOff::value m_State;
-	
-};    
+  CDM::enumSide::value m_Side;
+  CDM::enumOnOff::value m_State;
+};

@@ -21,11 +21,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/schema/FluidCircuitPathData.hxx>
 
-class BIOGEARS_API SEFluidCircuitPath : public SECircuitPath<FLUID_CIRCUIT_PATH>
-{
-  friend class SECircuitManager;  
+class BIOGEARS_API SEFluidCircuitPath : public SECircuitPath<FLUID_CIRCUIT_PATH> {
+  friend class SECircuitManager;
+
 protected:
   SEFluidCircuitPath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name);
+
 public:
   virtual ~SEFluidCircuitPath();
 
@@ -33,6 +34,7 @@ public:
 
   bool Load(const CDM::FluidCircuitPathData& in);
   CDM::FluidCircuitPathData* Unload() const;
+
 protected:
   void Unload(CDM::FluidCircuitPathData& data) const;
 
@@ -75,7 +77,7 @@ public:
   virtual double GetFlow(const VolumePerTimeUnit& unit) const;
   virtual bool HasNextFlow() const;
   virtual SEScalarVolumePerTime& GetNextFlow();
-  virtual double GetNextFlow(const VolumePerTimeUnit& unit) const; 
+  virtual double GetNextFlow(const VolumePerTimeUnit& unit) const;
   virtual bool HasFlowSource() const;
   virtual SEScalarVolumePerTime& GetFlowSource();
   virtual double GetFlowSource(const VolumePerTimeUnit& unit) const;

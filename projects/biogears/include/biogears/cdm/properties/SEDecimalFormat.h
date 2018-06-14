@@ -16,9 +16,10 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(DecimalFormatData)
 
-enum class DecimalNotation{ Default, Fixed, Scientific };
-class BIOGEARS_API SEDecimalFormat
-{
+enum class DecimalNotation { Default,
+  Fixed,
+  Scientific };
+class BIOGEARS_API SEDecimalFormat {
 public:
   SEDecimalFormat(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEDecimalFormat();
@@ -28,11 +29,11 @@ public:
 
   virtual bool Load(const CDM::DecimalFormatData& in);
   virtual CDM::DecimalFormatData* Unload();
+
 protected:
   virtual void Unload(CDM::DecimalFormatData& to) const;
 
 public:
-
   void SetPrecision(std::streamsize p);
   std::streamsize GetPrecision();
 
@@ -44,5 +45,4 @@ public:
 protected:
   std::streamsize m_Precision;
   DecimalNotation m_Notation;
-
 };

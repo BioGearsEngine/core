@@ -13,35 +13,34 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 /// @file QuantityConversionDescriptor.h
 /// @author Chris Volpe
-/// 
+///
 /// This class contains a representation of the formula for converting values
-/// of one quantity type to values of another quantity type. 
+/// of one quantity type to values of another quantity type.
 //----------------------------------------------------------------------------
 #pragma once
 
-class CQuantityConversionDescriptor
-{
+class CQuantityConversionDescriptor {
 public:
-	CQuantityConversionDescriptor(double fromExp, const std::string & mappingUnit);
+  CQuantityConversionDescriptor(double fromExp, const std::string& mappingUnit);
 
-	~CQuantityConversionDescriptor();
+  ~CQuantityConversionDescriptor();
 
-	void Validate(int fromQTID, int toQTID);
-	
-	const double &GetFromExponent() const
-	{
-		return m_dFromExponent;
-	}
+  void Validate(int fromQTID, int toQTID);
 
-	const CCompoundUnit *GetMappingUnit() const
-	{
-		return m_CUMappingUnit;
-	}
+  const double& GetFromExponent() const
+  {
+    return m_dFromExponent;
+  }
+
+  const CCompoundUnit* GetMappingUnit() const
+  {
+    return m_CUMappingUnit;
+  }
 
 private:
-	// What we raise the original quantity to
-	double m_dFromExponent;
+  // What we raise the original quantity to
+  double m_dFromExponent;
 
-	// Mapping Unit Identifier
-	CCompoundUnit *m_CUMappingUnit;
+  // Mapping Unit Identifier
+  CCompoundUnit* m_CUMappingUnit;
 };

@@ -19,13 +19,10 @@ class SESubstance;
 class SESubstanceFraction;
 class SEMechanicalVentilationConfiguration;
 
-class BIOGEARS_API SEMechanicalVentilation : public SEPatientAction
-{
+class BIOGEARS_API SEMechanicalVentilation : public SEPatientAction {
 protected:
-
 public:
-
-	SEMechanicalVentilation();
+  SEMechanicalVentilation();
   virtual ~SEMechanicalVentilation();
 
   virtual void Clear();
@@ -33,25 +30,25 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-	virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr);
+  virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr);
   virtual CDM::MechanicalVentilationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::MechanicalVentilationData& data) const;
 
 public:
+  virtual CDM::enumOnOff::value GetState() const;
+  virtual void SetState(CDM::enumOnOff::value name);
+  virtual bool HasState() const;
+  virtual void InvalidateState();
 
-	virtual CDM::enumOnOff::value GetState() const;
-	virtual void SetState(CDM::enumOnOff::value name);
-	virtual bool HasState() const;
-	virtual void InvalidateState();
-
-	virtual bool HasFlow() const;
-	virtual SEScalarVolumePerTime& GetFlow();
+  virtual bool HasFlow() const;
+  virtual SEScalarVolumePerTime& GetFlow();
   virtual double GetFlow(const VolumePerTimeUnit& unit) const;
 
-	virtual bool HasPressure() const;
-	virtual SEScalarPressure& GetPressure();
-	virtual double GetPressure(const PressureUnit& unit) const;
+  virtual bool HasPressure() const;
+  virtual SEScalarPressure& GetPressure();
+  virtual double GetPressure(const PressureUnit& unit) const;
 
   bool HasGasFraction() const;
   bool HasGasFraction(const SESubstance& substance) const;
@@ -62,15 +59,15 @@ public:
   void RemoveGasFraction(const SESubstance& substance);
   void RemoveGasFractions();
 
-  virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
+
 protected:
+  std::stringstream m_ss;
 
-	std::stringstream	  m_ss;
+  CDM::enumOnOff::value m_State;
+  SEScalarVolumePerTime* m_Flow;
+  SEScalarPressure* m_Pressure;
 
-	CDM::enumOnOff::value   m_State;
-  SEScalarVolumePerTime*  m_Flow;
-  SEScalarPressure*       m_Pressure;
-
-  std::vector<SESubstanceFraction*>       m_GasFractions;
+  std::vector<SESubstanceFraction*> m_GasFractions;
   std::vector<const SESubstanceFraction*> m_cGasFractions;
 };

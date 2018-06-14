@@ -13,41 +13,39 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 CDM_BIND_DECL(ActiveHeatingData)
 
-class BIOGEARS_API SEActiveHeating : public Loggable
-{
+class BIOGEARS_API SEActiveHeating : public Loggable {
 public:
-
-	SEActiveHeating(Logger* logger);
-	virtual ~SEActiveHeating();
+  SEActiveHeating(Logger* logger);
+  virtual ~SEActiveHeating();
 
   virtual void Clear();
   virtual void Reset();
 
   virtual bool Load(const CDM::ActiveHeatingData& in);
   virtual CDM::ActiveHeatingData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ActiveHeatingData& data) const;
 
 public:
+  virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual const SEScalar* GetScalar(const std::string& name);
-
-	virtual bool HasPower() const;
-	virtual SEScalarPower& GetPower();
+  virtual bool HasPower() const;
+  virtual SEScalarPower& GetPower();
   virtual double GetPower(const PowerUnit& unit) const;
 
-	virtual bool HasSurfaceArea() const;
-	virtual SEScalarArea& GetSurfaceArea();
+  virtual bool HasSurfaceArea() const;
+  virtual SEScalarArea& GetSurfaceArea();
   virtual double GetSurfaceArea(const AreaUnit& unit) const;
 
-	virtual bool HasSurfaceAreaFraction() const;
-	virtual SEScalarFraction& GetSurfaceAreaFraction();
-	virtual double GetSurfaceAreaFraction() const;
+  virtual bool HasSurfaceAreaFraction() const;
+  virtual SEScalarFraction& GetSurfaceAreaFraction();
+  virtual double GetSurfaceAreaFraction() const;
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalarPower*	       m_Power;
-	SEScalarArea*	         m_SurfaceArea;
-	SEScalarFraction*      m_SurfaceAreaFraction;
+  SEScalarPower* m_Power;
+  SEScalarArea* m_SurfaceArea;
+  SEScalarFraction* m_SurfaceAreaFraction;
 };

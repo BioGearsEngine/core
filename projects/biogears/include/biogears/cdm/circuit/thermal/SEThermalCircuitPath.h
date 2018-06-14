@@ -21,18 +21,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/schema/ThermalCircuitPathData.hxx>
 
-class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH>
-{
-  friend class SECircuitManager;  
+class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH> {
+  friend class SECircuitManager;
+
 protected:
   SEThermalCircuitPath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name);
-public:  
+
+public:
   virtual ~SEThermalCircuitPath();
 
   virtual void Clear(); //clear memory
 
   bool Load(const CDM::ThermalCircuitPathData& in);
   CDM::ThermalCircuitPathData* Unload() const;
+
 protected:
   void Unload(CDM::ThermalCircuitPathData& data) const;
 
@@ -75,7 +77,7 @@ public:
   virtual double GetHeatTransferRate(const PowerUnit& unit) const;
   virtual bool HasNextHeatTransferRate() const;
   virtual SEScalarPower& GetNextHeatTransferRate();
-  virtual double GetNextHeatTransferRate(const PowerUnit& unit) const; 
+  virtual double GetNextHeatTransferRate(const PowerUnit& unit) const;
   virtual bool HasHeatSource() const;
   virtual SEScalarPower& GetHeatSource();
   virtual double GetHeatSource(const PowerUnit& unit) const;

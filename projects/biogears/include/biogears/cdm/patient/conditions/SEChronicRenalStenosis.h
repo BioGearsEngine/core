@@ -14,35 +14,33 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/ChronicRenalStenosisData.hxx>
 
-class BIOGEARS_API SEChronicRenalStenosis : public SEPatientCondition
-{
+class BIOGEARS_API SEChronicRenalStenosis : public SEPatientCondition {
 public:
+  SEChronicRenalStenosis();
+  virtual ~SEChronicRenalStenosis();
 
-	SEChronicRenalStenosis();
-	virtual ~SEChronicRenalStenosis();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::ChronicRenalStenosisData& in);
   virtual CDM::ChronicRenalStenosisData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ChronicRenalStenosisData& data) const;
 
 public:
-	virtual std::string GetName() const { return "ChronicRenalStenosis"; }
+  virtual std::string GetName() const { return "ChronicRenalStenosis"; }
 
-	virtual bool HasLeftKidneySeverity() const;
-	virtual SEScalar0To1& GetLeftKidneySeverity();
+  virtual bool HasLeftKidneySeverity() const;
+  virtual SEScalar0To1& GetLeftKidneySeverity();
 
-	virtual bool HasRightKidneySeverity() const;
-	virtual SEScalar0To1& GetRightKidneySeverity();
+  virtual bool HasRightKidneySeverity() const;
+  virtual SEScalar0To1& GetRightKidneySeverity();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-
-	SEScalar0To1*           m_LeftKidneySeverity;
-	SEScalar0To1*           m_RightKidneySeverity;
+  SEScalar0To1* m_LeftKidneySeverity;
+  SEScalar0To1* m_RightKidneySeverity;
 };

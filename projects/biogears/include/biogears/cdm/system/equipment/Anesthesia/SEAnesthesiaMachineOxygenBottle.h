@@ -15,35 +15,33 @@ class SEAnesthesiaMachine;
 class SESubstanceManager;
 CDM_BIND_DECL(AnesthesiaMachineOxygenBottleData)
 
-class BIOGEARS_API SEAnesthesiaMachineOxygenBottle : Loggable
-{
+class BIOGEARS_API SEAnesthesiaMachineOxygenBottle : Loggable {
 protected:
-	friend SEAnesthesiaMachine;
-public:
+  friend SEAnesthesiaMachine;
 
-	SEAnesthesiaMachineOxygenBottle(Logger* logger);
-	virtual ~SEAnesthesiaMachineOxygenBottle();
+public:
+  SEAnesthesiaMachineOxygenBottle(Logger* logger);
+  virtual ~SEAnesthesiaMachineOxygenBottle();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::AnesthesiaMachineOxygenBottleData& in);
-	virtual CDM::AnesthesiaMachineOxygenBottleData* Unload() const;
+  virtual bool Load(const CDM::AnesthesiaMachineOxygenBottleData& in);
+  virtual CDM::AnesthesiaMachineOxygenBottleData* Unload() const;
+
 protected:
   virtual void Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const;
 
   virtual void Merge(const SEAnesthesiaMachineOxygenBottle& from);
-public:
 
+public:
   virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual bool HasVolume() const;
-	virtual SEScalarVolume& GetVolume();
+  virtual bool HasVolume() const;
+  virtual SEScalarVolume& GetVolume();
   virtual double GetVolume(const VolumeUnit& unit) const;
 
-	virtual void ToString(std::ostream &str);
+  virtual void ToString(std::ostream& str);
 
 protected:
-
-	SEScalarVolume*     m_Volume;
-
+  SEScalarVolume* m_Volume;
 };

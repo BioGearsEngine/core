@@ -17,11 +17,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ThermalCircuitData.hxx>
 class SECircuitManager;
 
-class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData,SEThermalCircuitNode, CDM::ThermalCircuitNodeData,SEThermalCircuitPath, CDM::ThermalCircuitPathData>
-{
+class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData> {
   friend class SECircuitManager;
+
 protected:
   SEThermalCircuit(const std::string& name, SECircuitManager& mgr);
+
 public:
   virtual ~SEThermalCircuit();
 

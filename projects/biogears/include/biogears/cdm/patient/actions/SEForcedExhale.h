@@ -14,34 +14,34 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/schema/ForcedExhaleData.hxx>
 
-class BIOGEARS_API SEForcedExhale : public SEConsciousRespirationCommand
-{
+class BIOGEARS_API SEForcedExhale : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
   SEForcedExhale();
+
 public:
+  virtual ~SEForcedExhale();
 
-	virtual ~SEForcedExhale();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ForcedExhaleData& in);
   virtual CDM::ForcedExhaleData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ForcedExhaleData& data) const;
 
 public:
+  virtual void ToString(std::ostream& str) const;
 
-	virtual void ToString(std::ostream &str) const;
+  virtual bool HasExpiratoryReserveVolumeFraction() const;
+  virtual SEScalar0To1& GetExpiratoryReserveVolumeFraction();
 
-	virtual bool HasExpiratoryReserveVolumeFraction() const;
-	virtual SEScalar0To1& GetExpiratoryReserveVolumeFraction();
+  virtual bool HasPeriod() const;
+  virtual SEScalarTime& GetPeriod();
 
-	virtual bool HasPeriod() const;
-	virtual SEScalarTime& GetPeriod();
 protected:
-	SEScalar0To1* m_ExpiratoryReserveVolumeFraction;
-	SEScalarTime* m_Period;
-};  
+  SEScalar0To1* m_ExpiratoryReserveVolumeFraction;
+  SEScalarTime* m_Period;
+};

@@ -14,24 +14,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/TissueSystemData.hxx>
 
-class BIOGEARS_API SETissueSystem : public SESystem
-{
+class BIOGEARS_API SETissueSystem : public SESystem {
 public:
-
   SETissueSystem(Logger* logger);
   virtual ~SETissueSystem();
 
-  virtual void Clear();// Deletes all members
+  virtual void Clear(); // Deletes all members
 
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool Load(const CDM::TissueSystemData& in);
   virtual CDM::TissueSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::TissueSystemData& data) const;
 
 public:
-
   virtual bool HasCarbonDioxideProductionRate() const;
   virtual SEScalarVolumePerTime& GetCarbonDioxideProductionRate();
   virtual double GetCarbonDioxideProductionRate(const VolumePerTimeUnit& unit) const;
@@ -108,26 +106,24 @@ public:
   virtual SEScalarMass& GetStoredFat();
   virtual double GetStoredFat(const MassUnit& unit) const;
 
-
 protected:
-  SEScalarVolumePerTime * m_CarbonDioxideProductionRate;
-  SEScalar0To1*				m_DehydrationFraction;
-  SEScalarVolume*           m_ExtracellularFluidVolume;
-  SEScalarVolume*           m_ExtravascularFluidVolume;
-  SEScalarVolume*           m_IntracellularFluidVolume;
-  SEScalarVolume*           m_TotalBodyFluidVolume;
-  SEScalar*                 m_IntracellularFluidPH;
-  SEScalarVolumePerTime*	  m_OxygenConsumptionRate;
-  SEScalar*				          m_RespiratoryExchangeRatio;
-  SEScalarAmountPerVolume*  m_LiverInsulinSetPoint;
-  SEScalarMassPerVolume*    m_LiverGlucagonSetPoint;
-  SEScalarAmountPerVolume*  m_MuscleInsulinSetPoint;
-  SEScalarMassPerVolume*    m_MuscleGlucagonSetPoint;
-  SEScalarAmountPerVolume*  m_FatInsulinSetPoint;
-  SEScalarMassPerVolume*    m_FatGlucagonSetPoint;
-  SEScalarMass*             m_LiverGlycogen;
-  SEScalarMass*             m_MuscleGlycogen;
-  SEScalarMass*             m_StoredProtein;
-  SEScalarMass*             m_StoredFat;
-
+  SEScalarVolumePerTime* m_CarbonDioxideProductionRate;
+  SEScalar0To1* m_DehydrationFraction;
+  SEScalarVolume* m_ExtracellularFluidVolume;
+  SEScalarVolume* m_ExtravascularFluidVolume;
+  SEScalarVolume* m_IntracellularFluidVolume;
+  SEScalarVolume* m_TotalBodyFluidVolume;
+  SEScalar* m_IntracellularFluidPH;
+  SEScalarVolumePerTime* m_OxygenConsumptionRate;
+  SEScalar* m_RespiratoryExchangeRatio;
+  SEScalarAmountPerVolume* m_LiverInsulinSetPoint;
+  SEScalarMassPerVolume* m_LiverGlucagonSetPoint;
+  SEScalarAmountPerVolume* m_MuscleInsulinSetPoint;
+  SEScalarMassPerVolume* m_MuscleGlucagonSetPoint;
+  SEScalarAmountPerVolume* m_FatInsulinSetPoint;
+  SEScalarMassPerVolume* m_FatGlucagonSetPoint;
+  SEScalarMass* m_LiverGlycogen;
+  SEScalarMass* m_MuscleGlycogen;
+  SEScalarMass* m_StoredProtein;
+  SEScalarMass* m_StoredFat;
 };

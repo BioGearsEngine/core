@@ -19,8 +19,7 @@ class BioGearsScenario;
 /**
 * @brief Overloaded scenario that creates a %BioGears configuration as its configuration object
 */
-class BIOGEARS_API BioGearsScenarioInitialParameters : public SEScenarioInitialParameters
-{
+class BIOGEARS_API BioGearsScenarioInitialParameters : public SEScenarioInitialParameters {
 protected:
   friend BioGearsScenario;
 
@@ -30,5 +29,6 @@ protected:
   virtual BioGearsConfiguration& GetConfiguration();
   virtual const BioGearsConfiguration* GetConfiguration() const;
   virtual void SetConfiguration(const BioGearsConfiguration& config);
+
 protected:
 };

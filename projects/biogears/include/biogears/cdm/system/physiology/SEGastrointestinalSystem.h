@@ -15,19 +15,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/schema/GastrointestinalSystemData.hxx>
 
-class BIOGEARS_API SEGastrointestinalSystem : public SESystem
-{
+class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
 public:
+  SEGastrointestinalSystem(Logger* logger);
+  virtual ~SEGastrointestinalSystem();
 
-	SEGastrointestinalSystem(Logger* logger);
-	virtual ~SEGastrointestinalSystem();
+  virtual void Clear(); // Deletes all members
 
-  virtual void Clear();// Deletes all members
-  
-	virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name);
 
-	virtual bool HasChymeAbsorptionRate() const;
-	virtual SEScalarVolumePerTime& GetChymeAbsorptionRate();
+  virtual bool HasChymeAbsorptionRate() const;
+  virtual SEScalarVolumePerTime& GetChymeAbsorptionRate();
   virtual double GetChymeAbsorptionRate(const VolumePerTimeUnit& unit) const;
 
   virtual bool HasStomachContents() const;
@@ -37,11 +35,11 @@ public:
 
   virtual bool Load(const CDM::GastrointestinalSystemData& in);
   virtual CDM::GastrointestinalSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::GastrointestinalSystemData& data) const;
 
 protected:
-
-	SEScalarVolumePerTime* m_ChymeAbsorptionRate;
-	SENutrition* m_StomachContents;
+  SEScalarVolumePerTime* m_ChymeAbsorptionRate;
+  SENutrition* m_StomachContents;
 };

@@ -14,31 +14,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
 #include <biogears/schema/ChestCompressionForceData.hxx>
 
-class BIOGEARS_API SEChestCompressionForce : public SEChestCompression
-{
+class BIOGEARS_API SEChestCompressionForce : public SEChestCompression {
 public:
+  SEChestCompressionForce();
+  virtual ~SEChestCompressionForce();
 
-	SEChestCompressionForce();
-	virtual ~SEChestCompressionForce();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
-
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ChestCompressionForceData& in);
   virtual CDM::ChestCompressionForceData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ChestCompressionForceData& data) const;
 
 public:
+  virtual bool HasForce() const;
+  virtual SEScalarForce& GetForce();
 
-	virtual bool HasForce() const;
-	virtual SEScalarForce& GetForce();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalarForce*           m_Force;
+  SEScalarForce* m_Force;
 };

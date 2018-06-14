@@ -12,16 +12,19 @@
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
-enum enumCDMTestSourceType { DC, SIN, PULSE, ZEROCENTEREDSIN };
+enum enumCDMTestSourceType { DC,
+  SIN,
+  PULSE,
+  ZEROCENTEREDSIN };
 
 class BIOGEARS_API CommonDataModelTest : public Loggable {
 public:
   CommonDataModelTest();
-  CommonDataModelTest(Logger *logger);
+  CommonDataModelTest(Logger* logger);
   virtual ~CommonDataModelTest();
 
-  bool RunTest(const std::string &testName,
-               const std::string &sOutputDirectory);
+  bool RunTest(const std::string& testName,
+    const std::string& sOutputDirectory);
   void FillFunctionMap();
 
 protected:
@@ -30,7 +33,7 @@ protected:
   std::string m_OutDirectory;
   std::stringstream m_ss;
 
-  typedef void (CommonDataModelTest::*testFunction)(const std::string &);
+  typedef void (CommonDataModelTest::*testFunction)(const std::string&);
   typedef std::map<std::string, testFunction> testMap;
   testMap cdmMap;
 
@@ -39,194 +42,192 @@ protected:
   //////////////
 public:
   // Basic Circuit Tests
-  void BasicCircuitTest(const std::string &sOutputDirectory);
+  void BasicCircuitTest(const std::string& sOutputDirectory);
 
-  void SeriesRCDCTest(const std::string &sOutputDirectory);
-  void SeriesRCSINTest(const std::string &sOutputDirectory);
-  void SeriesRCPULSETest(const std::string &sOutputDirectory);
+  void SeriesRCDCTest(const std::string& sOutputDirectory);
+  void SeriesRCSINTest(const std::string& sOutputDirectory);
+  void SeriesRCPULSETest(const std::string& sOutputDirectory);
 
-  void SeriesRDCTest(const std::string &sOutputDirectory);
-  void SeriesRSINTest(const std::string &sOutputDirectory);
-  void SeriesRPULSETest(const std::string &sOutputDirectory);
+  void SeriesRDCTest(const std::string& sOutputDirectory);
+  void SeriesRSINTest(const std::string& sOutputDirectory);
+  void SeriesRPULSETest(const std::string& sOutputDirectory);
 
-  void SeriesRLDCTest(const std::string &sOutputDirectory);
-  void SeriesRLSINTest(const std::string &sOutputDirectory);
-  void SeriesRLPULSETest(const std::string &sOutputDirectory);
+  void SeriesRLDCTest(const std::string& sOutputDirectory);
+  void SeriesRLSINTest(const std::string& sOutputDirectory);
+  void SeriesRLPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelRDCTest(const std::string &sOutputDirectory);
-  void ParallelRSINTest(const std::string &sOutputDirectory);
-  void ParallelRPULSETest(const std::string &sOutputDirectory);
+  void ParallelRDCTest(const std::string& sOutputDirectory);
+  void ParallelRSINTest(const std::string& sOutputDirectory);
+  void ParallelRPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelRCDCTest(const std::string &sOutputDirectory);
-  void ParallelRCSINTest(const std::string &sOutputDirectory);
-  void ParallelRCPULSETest(const std::string &sOutputDirectory);
+  void ParallelRCDCTest(const std::string& sOutputDirectory);
+  void ParallelRCSINTest(const std::string& sOutputDirectory);
+  void ParallelRCPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelRLDCTest(const std::string &sOutputDirectory);
-  void ParallelRLSINTest(const std::string &sOutputDirectory);
-  void ParallelRLPULSETest(const std::string &sOutputDirectory);
-  void ParallelRLSINCenteredTest(const std::string &sOutputDirectory);
+  void ParallelRLDCTest(const std::string& sOutputDirectory);
+  void ParallelRLSINTest(const std::string& sOutputDirectory);
+  void ParallelRLPULSETest(const std::string& sOutputDirectory);
+  void ParallelRLSINCenteredTest(const std::string& sOutputDirectory);
 
-  void SeriesRLCDCTest(const std::string &sOutputDirectory);
-  void SeriesRLCSINTest(const std::string &sOutputDirectory);
-  void SeriesRLCPULSETest(const std::string &sOutputDirectory);
+  void SeriesRLCDCTest(const std::string& sOutputDirectory);
+  void SeriesRLCSINTest(const std::string& sOutputDirectory);
+  void SeriesRLCPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelRLCDCTest(const std::string &sOutputDirectory);
-  void ParallelRLCSINTest(const std::string &sOutputDirectory);
-  void ParallelRLCPULSETest(const std::string &sOutputDirectory);
+  void ParallelRLCDCTest(const std::string& sOutputDirectory);
+  void ParallelRLCSINTest(const std::string& sOutputDirectory);
+  void ParallelRLCPULSETest(const std::string& sOutputDirectory);
 
-  void SwitchRCDCTest(const std::string &sOutputDirectory);
-  void SwitchRCSINTest(const std::string &sOutputDirectory);
-  void SwitchRCPULSETest(const std::string &sOutputDirectory);
+  void SwitchRCDCTest(const std::string& sOutputDirectory);
+  void SwitchRCSINTest(const std::string& sOutputDirectory);
+  void SwitchRCPULSETest(const std::string& sOutputDirectory);
 
-  void Comprehensive1DCTest(const std::string &sOutputDirectory);
-  void Comprehensive1SINTest(const std::string &sOutputDirectory);
-  void Comprehensive1PULSETest(const std::string &sOutputDirectory);
+  void Comprehensive1DCTest(const std::string& sOutputDirectory);
+  void Comprehensive1SINTest(const std::string& sOutputDirectory);
+  void Comprehensive1PULSETest(const std::string& sOutputDirectory);
 
-  void SimpleDiodeDCTest(const std::string &sOutputDirectory);
-  void SimpleDiodeSINTest(const std::string &sOutputDirectory);
-  void SimpleDiodePULSETest(const std::string &sOutputDirectory);
+  void SimpleDiodeDCTest(const std::string& sOutputDirectory);
+  void SimpleDiodeSINTest(const std::string& sOutputDirectory);
+  void SimpleDiodePULSETest(const std::string& sOutputDirectory);
 
-  void SeriesRCDCCurrentTest(const std::string &sOutputDirectory);
-  void SeriesRCSINCurrentTest(const std::string &sOutputDirectory);
-  void SeriesRCPULSECurrentTest(const std::string &sOutputDirectory);
+  void SeriesRCDCCurrentTest(const std::string& sOutputDirectory);
+  void SeriesRCSINCurrentTest(const std::string& sOutputDirectory);
+  void SeriesRCPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void ParallelRCDCCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRCSINCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRCPULSECurrentTest(const std::string &sOutputDirectory);
+  void ParallelRCDCCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRCSINCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRCPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void SeriesCapDCTest(const std::string &sOutputDirectory);
-  void SeriesCapSINTest(const std::string &sOutputDirectory);
-  void SeriesCapPULSETest(const std::string &sOutputDirectory);
+  void SeriesCapDCTest(const std::string& sOutputDirectory);
+  void SeriesCapSINTest(const std::string& sOutputDirectory);
+  void SeriesCapPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelRDCCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRSINCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRPULSECurrentTest(const std::string &sOutputDirectory);
+  void ParallelRDCCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRSINCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void CurrentCompDCTest(const std::string &sOutputDirectory);
-  void CurrentCompSINTest(const std::string &sOutputDirectory);
-  void CurrentCompPULSETest(const std::string &sOutputDirectory);
+  void CurrentCompDCTest(const std::string& sOutputDirectory);
+  void CurrentCompSINTest(const std::string& sOutputDirectory);
+  void CurrentCompPULSETest(const std::string& sOutputDirectory);
 
-  void SeriesRLDCCurrentTest(const std::string &sOutputDirectory);
-  void SeriesRLSINCurrentTest(const std::string &sOutputDirectory);
-  void SeriesRLPULSECurrentTest(const std::string &sOutputDirectory);
+  void SeriesRLDCCurrentTest(const std::string& sOutputDirectory);
+  void SeriesRLSINCurrentTest(const std::string& sOutputDirectory);
+  void SeriesRLPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void ParallelRLDCCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRLSINCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRLPULSECurrentTest(const std::string &sOutputDirectory);
+  void ParallelRLDCCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRLSINCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRLPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void BasicDiodeDCCurrentTest(const std::string &sOutputDirectory);
-  void BasicDiodeSINCurrentTest(const std::string &sOutputDirectory);
-  void BasicDiodePULSECurrentTest(const std::string &sOutputDirectory);
+  void BasicDiodeDCCurrentTest(const std::string& sOutputDirectory);
+  void BasicDiodeSINCurrentTest(const std::string& sOutputDirectory);
+  void BasicDiodePULSECurrentTest(const std::string& sOutputDirectory);
 
   // NOTE: These next three tests seem to give errors while running, but they
   // produce output...
-  void SwitchRCDCCurrentTest(const std::string &sOutputDirectory);
-  void SwitchRCSINCurrentTest(const std::string &sOutputDirectory);
-  void SwitchRCPULSECurrentTest(const std::string &sOutputDirectory);
+  void SwitchRCDCCurrentTest(const std::string& sOutputDirectory);
+  void SwitchRCSINCurrentTest(const std::string& sOutputDirectory);
+  void SwitchRCPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void SeriesRLCDCCurrentTest(const std::string &sOutputDirectory);
-  void SeriesRLCSINCurrentTest(const std::string &sOutputDirectory);
-  void SeriesRLCPULSECurrentTest(const std::string &sOutputDirectory);
+  void SeriesRLCDCCurrentTest(const std::string& sOutputDirectory);
+  void SeriesRLCSINCurrentTest(const std::string& sOutputDirectory);
+  void SeriesRLCPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void ParallelRLCDCCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRLCSINCurrentTest(const std::string &sOutputDirectory);
-  void ParallelRLCPULSECurrentTest(const std::string &sOutputDirectory);
+  void ParallelRLCDCCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRLCSINCurrentTest(const std::string& sOutputDirectory);
+  void ParallelRLCPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void SeriesPressureSourceAdditionDCTest(const std::string &sOutputDirectory);
-  void SeriesPressureSourceAdditionSINTest(const std::string &sOutputDirectory);
+  void SeriesPressureSourceAdditionDCTest(const std::string& sOutputDirectory);
+  void SeriesPressureSourceAdditionSINTest(const std::string& sOutputDirectory);
   void
-  SeriesPressureSourceAdditionPULSETest(const std::string &sOutputDirectory);
+  SeriesPressureSourceAdditionPULSETest(const std::string& sOutputDirectory);
 
   // NOTE: These next six tests seem to give errors while running, but it's
   // intentional
-  void SeriesCurrentSourceAdditionDCTest(const std::string &sOutputDirectory);
-  void SeriesCurrentSourceAdditionSINTest(const std::string &sOutputDirectory);
+  void SeriesCurrentSourceAdditionDCTest(const std::string& sOutputDirectory);
+  void SeriesCurrentSourceAdditionSINTest(const std::string& sOutputDirectory);
   void
-  SeriesCurrentSourceAdditionPULSETest(const std::string &sOutputDirectory);
+  SeriesCurrentSourceAdditionPULSETest(const std::string& sOutputDirectory);
 
   void
-  ParallelPressureSourceAdditionDCTest(const std::string &sOutputDirectory);
+  ParallelPressureSourceAdditionDCTest(const std::string& sOutputDirectory);
   void
-  ParallelPressureSourceAdditionSINTest(const std::string &sOutputDirectory);
+  ParallelPressureSourceAdditionSINTest(const std::string& sOutputDirectory);
   void
-  ParallelPressureSourceAdditionPULSETest(const std::string &sOutputDirectory);
+  ParallelPressureSourceAdditionPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelCurrentSourceAdditionDCTest(const std::string &sOutputDirectory);
+  void ParallelCurrentSourceAdditionDCTest(const std::string& sOutputDirectory);
   void
-  ParallelCurrentSourceAdditionSINTest(const std::string &sOutputDirectory);
+  ParallelCurrentSourceAdditionSINTest(const std::string& sOutputDirectory);
   void
-  ParallelCurrentSourceAdditionPULSETest(const std::string &sOutputDirectory);
+  ParallelCurrentSourceAdditionPULSETest(const std::string& sOutputDirectory);
 
-  void SeriesCapDCCurrentTest(const std::string &sOutputDirectory);
-  void SeriesCapSINCurrentTest(const std::string &sOutputDirectory);
-  void SeriesCapPULSECurrentTest(const std::string &sOutputDirectory);
+  void SeriesCapDCCurrentTest(const std::string& sOutputDirectory);
+  void SeriesCapSINCurrentTest(const std::string& sOutputDirectory);
+  void SeriesCapPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void ParallelCapDCTest(const std::string &sOutputDirectory);
-  void ParallelCapSINTest(const std::string &sOutputDirectory);
-  void ParallelCapPULSETest(const std::string &sOutputDirectory);
+  void ParallelCapDCTest(const std::string& sOutputDirectory);
+  void ParallelCapSINTest(const std::string& sOutputDirectory);
+  void ParallelCapPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelCapDCCurrentTest(const std::string &sOutputDirectory);
-  void ParallelCapSINCurrentTest(const std::string &sOutputDirectory);
-  void ParallelCapPULSECurrentTest(const std::string &sOutputDirectory);
+  void ParallelCapDCCurrentTest(const std::string& sOutputDirectory);
+  void ParallelCapSINCurrentTest(const std::string& sOutputDirectory);
+  void ParallelCapPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void SeriesIndDCTest(const std::string &sOutputDirectory);
-  void SeriesIndSINTest(const std::string &sOutputDirectory);
-  void SeriesIndPULSETest(const std::string &sOutputDirectory);
+  void SeriesIndDCTest(const std::string& sOutputDirectory);
+  void SeriesIndSINTest(const std::string& sOutputDirectory);
+  void SeriesIndPULSETest(const std::string& sOutputDirectory);
 
-  void SeriesIndDCCurrentTest(const std::string &sOutputDirectory);
-  void SeriesIndSINCurrentTest(const std::string &sOutputDirectory);
-  void SeriesIndPULSECurrentTest(const std::string &sOutputDirectory);
+  void SeriesIndDCCurrentTest(const std::string& sOutputDirectory);
+  void SeriesIndSINCurrentTest(const std::string& sOutputDirectory);
+  void SeriesIndPULSECurrentTest(const std::string& sOutputDirectory);
 
-  void ParallelIndDCTest(const std::string &sOutputDirectory);
-  void ParallelIndSINTest(const std::string &sOutputDirectory);
-  void ParallelIndPULSETest(const std::string &sOutputDirectory);
+  void ParallelIndDCTest(const std::string& sOutputDirectory);
+  void ParallelIndSINTest(const std::string& sOutputDirectory);
+  void ParallelIndPULSETest(const std::string& sOutputDirectory);
 
-  void ParallelIndDCCurrentTest(const std::string &sOutputDirectory);
-  void ParallelIndSINCurrentTest(const std::string &sOutputDirectory);
-  void ParallelIndPULSECurrentTest(const std::string &sOutputDirectory);
+  void ParallelIndDCCurrentTest(const std::string& sOutputDirectory);
+  void ParallelIndSINCurrentTest(const std::string& sOutputDirectory);
+  void ParallelIndPULSECurrentTest(const std::string& sOutputDirectory);
 
   // These next three tests intentionally fail
-  void BadDiodeDCTest(const std::string &sOutputDirectory);
-  void BadDiodeSINTest(const std::string &sOutputDirectory);
-  void BadDiodePULSETest(const std::string &sOutputDirectory);
+  void BadDiodeDCTest(const std::string& sOutputDirectory);
+  void BadDiodeSINTest(const std::string& sOutputDirectory);
+  void BadDiodePULSETest(const std::string& sOutputDirectory);
 
-  void ValidationComprehensive1DCTest(const std::string &sOutputDirectory);
-  void ValidationComprehensive1SINTest(const std::string &sOutputDirectory);
-  void ValidationComprehensive1PULSETest(const std::string &sOutputDirectory);
+  void ValidationComprehensive1DCTest(const std::string& sOutputDirectory);
+  void ValidationComprehensive1SINTest(const std::string& sOutputDirectory);
+  void ValidationComprehensive1PULSETest(const std::string& sOutputDirectory);
   void
-  ValidationComprehensive1SINCenteredTest(const std::string &sOutputDirectory);
+  ValidationComprehensive1SINCenteredTest(const std::string& sOutputDirectory);
 
-  void ValidationComprehensive2DCTest(const std::string &sOutputDirectory);
-  void ValidationComprehensive2SINTest(const std::string &sOutputDirectory);
-  void ValidationComprehensive2PULSETest(const std::string &sOutputDirectory);
+  void ValidationComprehensive2DCTest(const std::string& sOutputDirectory);
+  void ValidationComprehensive2SINTest(const std::string& sOutputDirectory);
+  void ValidationComprehensive2PULSETest(const std::string& sOutputDirectory);
   void
-  ValidationComprehensive2SINCenteredTest(const std::string &sOutputDirectory);
+  ValidationComprehensive2SINCenteredTest(const std::string& sOutputDirectory);
 
   // Advanced Circuit Tests
-  void ElectricalCircuitTest(const std::string &sOutputDirectory);
-  void FluidCircuitTest(const std::string &sOutputDirectory);
-  void ThermalCircuitTest(const std::string &sOutputDirectory);
-  void CombinedCircuitTest(const std::string &sOutputDirectory);
-  void InterCircuitComparisonTest(const std::string &sOutputDirectory);
+  void ElectricalCircuitTest(const std::string& sOutputDirectory);
+  void FluidCircuitTest(const std::string& sOutputDirectory);
+  void ThermalCircuitTest(const std::string& sOutputDirectory);
+  void CombinedCircuitTest(const std::string& sOutputDirectory);
+  void InterCircuitComparisonTest(const std::string& sOutputDirectory);
   void InterCircuitIndividualTest(
-      const std::string &sOutputDirectory); // This one outputs two files
+    const std::string& sOutputDirectory); // This one outputs two files
   void CircuitErrorTest(
-      const std::string
-          &sOutputDirectory); // This one doesn't output anything right now
+    const std::string& sOutputDirectory); // This one doesn't output anything right now
   void DynamicallyChangingCircuitTest(
-      const std::string
-          &sOutputDirectory); // This one has some really strange output (-1.$)
-  void NonZeroReferencePositive(const std::string &sOutputDirectory);
-  void NonZeroReferenceNegative(const std::string &sOutputDirectory);
-  void PolarizedCapacitorTest(const std::string &sOutputDirectory);
-  void PreChargeComplianceZeroVolume(const std::string &sOutputDirectory);
-  void PreChargeComplianceNonZeroVolume(const std::string &sOutputDirectory);
-  void CircuitLockingTest(const std::string &sOutputDirectory);
+    const std::string& sOutputDirectory); // This one has some really strange output (-1.$)
+  void NonZeroReferencePositive(const std::string& sOutputDirectory);
+  void NonZeroReferenceNegative(const std::string& sOutputDirectory);
+  void PolarizedCapacitorTest(const std::string& sOutputDirectory);
+  void PreChargeComplianceZeroVolume(const std::string& sOutputDirectory);
+  void PreChargeComplianceNonZeroVolume(const std::string& sOutputDirectory);
+  void CircuitLockingTest(const std::string& sOutputDirectory);
 
 protected:
   // Used to generalize Basic Tests
-  void RunTest(const std::string &sOutputDirectory, const std::string &testName,
-               enumCDMTestSourceType sourceType, int testIndex);
+  void RunTest(const std::string& sOutputDirectory, const std::string& testName,
+    enumCDMTestSourceType sourceType, int testIndex);
 
   // Setup and preprocess methods for Basic Tests
   void TestSetup7SeriesRCDC();
@@ -347,8 +348,8 @@ protected:
   void TestPreProcess4(double dT, int i);
   void BasicCircuitPreProcess(double dT);
   // Advanced pre-process
-  void FluidPreProcess(SEFluidCircuit &c, double dT);
-  void TestCircuitSerialization(const std::string &fileName);
+  void FluidPreProcess(SEFluidCircuit& c, double dT);
+  void TestCircuitSerialization(const std::string& fileName);
 
   SECircuitManager m_Circuits;
 
@@ -356,84 +357,83 @@ protected:
   // Compartments //
   //////////////////
 public:
-  void GasCompartmentTest(const std::string &sOutputDirectory);
-  void LiquidCompartmentTest(const std::string &sOutputDirectory);
-  void ThermalCompartmentTest(const std::string &sOutputDirectory);
+  void GasCompartmentTest(const std::string& sOutputDirectory);
+  void LiquidCompartmentTest(const std::string& sOutputDirectory);
+  void ThermalCompartmentTest(const std::string& sOutputDirectory);
   void TissueCompartmentTest(
-      const std::string
-          &sOutputDirectory); // there is nothing being tested here
+    const std::string& sOutputDirectory); // there is nothing being tested here
 
 protected:
-  void TestCompartmentSerialization(SECompartmentManager &mgr,
-                                    const std::string &fileName);
+  void TestCompartmentSerialization(SECompartmentManager& mgr,
+    const std::string& fileName);
   // Gas Compartments
-  void TestGasFlows(SETestSuite &testSuite, SESubstanceManager &subMgr);
-  void TestGasHierarchyFlows(SETestSuite &testSuite,
-                             SESubstanceManager &subMgr);
-  void TestFlow(SETestCase &testCase, SEGasCompartment &cmpt,
-                double inflow_mL_Per_s, double outflow_mL_Per_s);
-  void TestGasHierarchy(SETestSuite &testSuite, SESubstanceManager &subMgr);
-  void TestGasCircuitVolumesPressuresAndFlows(SETestSuite &testSuite,
-                                              SESubstanceManager &subMgr);
-  void CheckGasPressureAndVolume(SETestCase &testCase, SEGasCompartment &cmpt);
-  void TestGasSubstanceQuantity(SETestCase &testCase, SEGasCompartment &cmpt,
-                                SEGasSubstanceQuantity &subQ,
-                                double totalSubVolume_mL,
-                                double totalVolume_mL);
-  void TestUpdateGasLinks(SETestSuite &testSuite, SESubstanceManager &subMgr);
+  void TestGasFlows(SETestSuite& testSuite, SESubstanceManager& subMgr);
+  void TestGasHierarchyFlows(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
+  void TestFlow(SETestCase& testCase, SEGasCompartment& cmpt,
+    double inflow_mL_Per_s, double outflow_mL_Per_s);
+  void TestGasHierarchy(SETestSuite& testSuite, SESubstanceManager& subMgr);
+  void TestGasCircuitVolumesPressuresAndFlows(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
+  void CheckGasPressureAndVolume(SETestCase& testCase, SEGasCompartment& cmpt);
+  void TestGasSubstanceQuantity(SETestCase& testCase, SEGasCompartment& cmpt,
+    SEGasSubstanceQuantity& subQ,
+    double totalSubVolume_mL,
+    double totalVolume_mL);
+  void TestUpdateGasLinks(SETestSuite& testSuite, SESubstanceManager& subMgr);
   // Liquid Compartments
-  void TestLiquidFlows(SETestSuite &testSuite, SESubstanceManager &subMgr);
-  void TestLiquidHierarchyFlows(SETestSuite &testSuite,
-                                SESubstanceManager &subMgr);
-  void TestFlow(SETestCase &testCase, SELiquidCompartment &cmpt,
-                double inflow_mL_Per_s, double outflow_mL_Per_s);
-  void TestLiquidHierarchy(SETestSuite &testSuite, SESubstanceManager &subMgr);
-  void TestLiquidCircuitVolumesPressuresAndFlows(SETestSuite &testSuite,
-                                                 SESubstanceManager &subMgr);
-  void TestLiquidHierarchySaturation(SETestSuite &testSuite,
-                                     SESubstanceManager &subMgr);
-  void CheckLiquidPressureAndVolume(SETestCase &testCase,
-                                    SELiquidCompartment &cmpt);
-  void TestLiquidSubstanceQuantity(SETestCase &testCase,
-                                   SELiquidCompartment &cmpt,
-                                   SELiquidSubstanceQuantity &subQ,
-                                   double totalMass_mg, double totalVolume_mL);
-  void TestUpdateLiquidLinks(SETestSuite &testSuite,
-                             SESubstanceManager &subMgr);
+  void TestLiquidFlows(SETestSuite& testSuite, SESubstanceManager& subMgr);
+  void TestLiquidHierarchyFlows(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
+  void TestFlow(SETestCase& testCase, SELiquidCompartment& cmpt,
+    double inflow_mL_Per_s, double outflow_mL_Per_s);
+  void TestLiquidHierarchy(SETestSuite& testSuite, SESubstanceManager& subMgr);
+  void TestLiquidCircuitVolumesPressuresAndFlows(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
+  void TestLiquidHierarchySaturation(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
+  void CheckLiquidPressureAndVolume(SETestCase& testCase,
+    SELiquidCompartment& cmpt);
+  void TestLiquidSubstanceQuantity(SETestCase& testCase,
+    SELiquidCompartment& cmpt,
+    SELiquidSubstanceQuantity& subQ,
+    double totalMass_mg, double totalVolume_mL);
+  void TestUpdateLiquidLinks(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
   // Thermal Compartments
-  void TestThermalFlows(SETestSuite &testSuite, SESubstanceManager &subMgr);
-  void TestThermalFlowHierarchy(SETestSuite &testSuite,
-                                SESubstanceManager &subMgr);
-  void TestFlow(SETestCase &testCase, SEThermalCompartment &cmpt,
-                double inflow_kcal_Per_s, double outflow_kcal_Per_s);
-  void TestThermalHierarchy(SETestSuite &testSuite, SESubstanceManager &subMgr);
-  void TestCircuitHeatTemperatureAndFlows(SETestSuite &testSuite,
-                                          SESubstanceManager &subMgr);
-  void CheckTemperatureAndHeat(SETestCase &testCase,
-                               SEThermalCompartment &cmpt);
+  void TestThermalFlows(SETestSuite& testSuite, SESubstanceManager& subMgr);
+  void TestThermalFlowHierarchy(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
+  void TestFlow(SETestCase& testCase, SEThermalCompartment& cmpt,
+    double inflow_kcal_Per_s, double outflow_kcal_Per_s);
+  void TestThermalHierarchy(SETestSuite& testSuite, SESubstanceManager& subMgr);
+  void TestCircuitHeatTemperatureAndFlows(SETestSuite& testSuite,
+    SESubstanceManager& subMgr);
+  void CheckTemperatureAndHeat(SETestCase& testCase,
+    SEThermalCompartment& cmpt);
 
   ///////////////
   // Transport //
   ///////////////
 public:
-  void LargeFlowTransportTest(const std::string &sOutputDirectory);
-  void LiquidTransportTest(const std::string &sOutputDirectory);
-  void GasTransportTest(const std::string &sOutputDirectory);
+  void LargeFlowTransportTest(const std::string& sOutputDirectory);
+  void LiquidTransportTest(const std::string& sOutputDirectory);
+  void GasTransportTest(const std::string& sOutputDirectory);
 
   ///////////////
   // I/O Tests //
   ///////////////
 public:
-  void ReadPatientDirectory(const std::string &sOutputDirectory);
-  void ReadScenarios(const std::string &sOutputDirectory);
-  void ReadSubstanceDirectory(const std::string &sOutputDirectory);
+  void ReadPatientDirectory(const std::string& sOutputDirectory);
+  void ReadScenarios(const std::string& sOutputDirectory);
+  void ReadSubstanceDirectory(const std::string& sOutputDirectory);
 
   //////////////////////
   // Properties Tests //
   //////////////////////
 public:
-  void ScalarTest(const std::string &sOutputDirectory);
-  void UnitsTest(const std::string &sOutputDirectory);
+  void ScalarTest(const std::string& sOutputDirectory);
+  void UnitsTest(const std::string& sOutputDirectory);
 
 protected:
   void ConvertList(std::vector<std::string> stringList);

@@ -14,31 +14,29 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/ChronicPericardialEffusionData.hxx>
 
-class BIOGEARS_API SEChronicPericardialEffusion : public SEPatientCondition
-{
+class BIOGEARS_API SEChronicPericardialEffusion : public SEPatientCondition {
 public:
+  SEChronicPericardialEffusion();
+  virtual ~SEChronicPericardialEffusion();
 
-	SEChronicPericardialEffusion();
-	virtual ~SEChronicPericardialEffusion();
+  virtual void Clear();
 
-	virtual void Clear();
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::ChronicPericardialEffusionData& in);
   virtual CDM::ChronicPericardialEffusionData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ChronicPericardialEffusionData& data) const;
 
 public:
-	virtual std::string GetName() const { return "ChronicPericardialEffusion"; }
+  virtual std::string GetName() const { return "ChronicPericardialEffusion"; }
 
-	virtual bool HasAccumulatedVolume() const;
-	virtual SEScalarVolume& GetAccumulatedVolume();
+  virtual bool HasAccumulatedVolume() const;
+  virtual SEScalarVolume& GetAccumulatedVolume();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-
-	SEScalarVolume* m_AccumulatedVolume;
+  SEScalarVolume* m_AccumulatedVolume;
 };

@@ -15,31 +15,30 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/enumIntubationType.hxx>
 #include <biogears/schema/IntubationData.hxx>
 
-class BIOGEARS_API SEIntubation : public SEPatientAction
-{
+class BIOGEARS_API SEIntubation : public SEPatientAction {
 public:
+  SEIntubation();
+  virtual ~SEIntubation();
 
-	SEIntubation();
-	virtual ~SEIntubation();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::IntubationData& in);
   virtual CDM::IntubationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::IntubationData& data) const;
 
 public:
-
   virtual CDM::enumIntubationType::value GetType() const;
   virtual void SetType(CDM::enumIntubationType::value t);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
+
 protected:
   CDM::enumIntubationType::value m_Type;
-};  
+};

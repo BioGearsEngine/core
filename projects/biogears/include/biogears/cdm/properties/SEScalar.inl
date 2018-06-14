@@ -14,33 +14,33 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/Properties.hxx>
 #include <biogears/cdm/utils/GeneralMath.h>
 
-template<typename Unit>
-SEScalarQuantity<Unit>::SEScalarQuantity() : SEUnitScalar()
+template <typename Unit>
+SEScalarQuantity<Unit>::SEScalarQuantity()
+  : SEUnitScalar()
 {
-
 }
 
-template<typename Unit>
+template <typename Unit>
 SEScalarQuantity<Unit>::~SEScalarQuantity()
 {
   this->Clear();
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::Clear()
 {
   SEScalar::Clear();
   m_unit = nullptr;
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::Invalidate()
 {
   SEScalar::Invalidate();
   m_unit = nullptr;
 }
 
-template<typename Unit>
+template <typename Unit>
 bool SEScalarQuantity<Unit>::IsValid() const
 {
   if (!SEScalar::IsValid())
@@ -50,7 +50,7 @@ bool SEScalarQuantity<Unit>::IsValid() const
   return true;
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in)
 {
   this->Clear();
@@ -58,11 +58,11 @@ void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in)
   if (in.unit().present())
     this->SetValue(in.value(), Unit::GetCompoundUnit(in.unit().get()));
   else
-    throw CommonDataModelException("ScalarQuantity attempted to load a ScalarData with no unit, must have a unit.");  
+    throw CommonDataModelException("ScalarQuantity attempted to load a ScalarData with no unit, must have a unit.");
   m_readOnly = in.readOnly();
 }
 
-template<typename Unit>
+template <typename Unit>
 CDM::ScalarData* SEScalarQuantity<Unit>::Unload() const
 {
   if (!IsValid())
@@ -72,7 +72,7 @@ CDM::ScalarData* SEScalarQuantity<Unit>::Unload() const
   return data;
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::Unload(CDM::ScalarData& data) const
 {
   SEProperty::Unload(data);
@@ -81,7 +81,7 @@ void SEScalarQuantity<Unit>::Unload(CDM::ScalarData& data) const
   data.readOnly(m_readOnly);
 }
 
-template<typename Unit>
+template <typename Unit>
 bool SEScalarQuantity<Unit>::Set(const SEScalar& s)
 {
   const SEScalarQuantity<Unit>* q = dynamic_cast<const SEScalarQuantity<Unit>*>(&s);
@@ -90,7 +90,7 @@ bool SEScalarQuantity<Unit>::Set(const SEScalar& s)
   return this->Set(*q);
 }
 
-template<typename Unit>
+template <typename Unit>
 bool SEScalarQuantity<Unit>::Set(const SEScalarQuantity<Unit>& s)
 {
   if (m_readOnly)
@@ -104,7 +104,7 @@ bool SEScalarQuantity<Unit>::Set(const SEScalarQuantity<Unit>& s)
   return true;
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::Copy(const SEScalar& s)
 {
   const SEScalarQuantity<Unit>* q = dynamic_cast<const SEScalarQuantity<Unit>*>(&s);
@@ -113,14 +113,14 @@ void SEScalarQuantity<Unit>::Copy(const SEScalar& s)
   this->Copy(*q);
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::Copy(const SEScalarQuantity<Unit>& s)
 {
   SEScalar::Copy(s);
   m_unit = s.m_unit;
 }
 
-template<typename Unit>
+template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 {
   if (m_isnan)
@@ -134,7 +134,7 @@ double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
   return Convert(m_value, *m_unit, unit);
 }
 
-template<typename Unit>
+template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const CCompoundUnit& unit) const
 {
   const Unit* u = dynamic_cast<const Unit*>(&unit);
@@ -143,13 +143,13 @@ double SEScalarQuantity<Unit>::GetValue(const CCompoundUnit& unit) const
   return this->GetValue(*u);
 }
 
-template<typename Unit>
+template <typename Unit>
 const Unit* SEScalarQuantity<Unit>::GetUnit() const
 {
   return m_unit;
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::SetValue(double d, const Unit& unit)
 {
   if (m_readOnly)
@@ -160,7 +160,7 @@ void SEScalarQuantity<Unit>::SetValue(double d, const Unit& unit)
   m_unit = &unit;
 }
 
-template<typename Unit>
+template <typename Unit>
 void SEScalarQuantity<Unit>::SetValue(double d, const CCompoundUnit& unit)
 {
   const Unit* u = dynamic_cast<const Unit*>(&unit);
@@ -169,7 +169,7 @@ void SEScalarQuantity<Unit>::SetValue(double d, const CCompoundUnit& unit)
   this->SetValue(d, *u);
 }
 
-template<typename Unit>
+template <typename Unit>
 double SEScalarQuantity<Unit>::Increment(const SEScalarQuantity<Unit>& s)
 {
   if (!s.IsValid())
@@ -179,11 +179,10 @@ double SEScalarQuantity<Unit>::Increment(const SEScalarQuantity<Unit>& s)
   return m_value;
 }
 
-template<typename Unit>
+template <typename Unit>
 double SEScalarQuantity<Unit>::IncrementValue(double d, const Unit& unit)
 {
-  if (!IsValid())
-  {
+  if (!IsValid()) {
     this->SetValue(d, unit);
     return d;
   }
@@ -191,7 +190,7 @@ double SEScalarQuantity<Unit>::IncrementValue(double d, const Unit& unit)
   return Convert(m_value, *m_unit, unit);
 }
 
-template<typename Unit>
+template <typename Unit>
 double SEScalarQuantity<Unit>::IncrementValue(double d, const CCompoundUnit& unit)
 {
   const Unit* u = dynamic_cast<const Unit*>(&unit);
@@ -200,7 +199,7 @@ double SEScalarQuantity<Unit>::IncrementValue(double d, const CCompoundUnit& uni
   return this->IncrementValue(d, *u);
 }
 
-template<typename Unit>
+template <typename Unit>
 bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& to) const
 {
   if (m_unit == nullptr)
@@ -209,7 +208,7 @@ bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& to) const
     return true;
   if (m_isnan || to.m_isnan)
     return false;
-  if (m_isinf&&to.m_isinf)
+  if (m_isinf && to.m_isinf)
     return true;
   if (m_isinf || to.m_isinf)
     return false;
@@ -217,16 +216,16 @@ bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& to) const
   return std::abs(GeneralMath::PercentDifference(m_value, t)) <= 1e-15;
 }
 
-template<typename Unit>
+template <typename Unit>
 const CCompoundUnit* SEScalarQuantity<Unit>::GetCompoundUnit(const std::string& unit) const
 {
   return &Unit::GetCompoundUnit(unit);
 }
 
-template<typename Unit>
-void SEScalarQuantity<Unit>::ToString(std::ostream &str) const
+template <typename Unit>
+void SEScalarQuantity<Unit>::ToString(std::ostream& str) const
 {
-  if(m_isnan || m_isinf)
+  if (m_isnan || m_isinf)
     str << m_value << std::flush;
   else
     str << m_value << "(" << *m_unit << ")" << std::flush;

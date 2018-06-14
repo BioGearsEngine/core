@@ -19,38 +19,36 @@ class SESubstanceManager;
 class SESubstanceConcentration;
 CDM_BIND_DECL(SubstanceCompoundData)
 
-class BIOGEARS_API SESubstanceCompound : public Loggable
-{
+class BIOGEARS_API SESubstanceCompound : public Loggable {
 public:
-
-	SESubstanceCompound(Logger* logger);
-	virtual ~SESubstanceCompound();
+  SESubstanceCompound(Logger* logger);
+  virtual ~SESubstanceCompound();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr);
-	virtual CDM::SubstanceCompoundData* Unload() const;
+  virtual bool Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr);
+  virtual CDM::SubstanceCompoundData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::SubstanceCompoundData& data) const;
+  virtual void Unload(CDM::SubstanceCompoundData& data) const;
 
 public:
-	virtual std::string GetName() const;
-	virtual void SetName(const std::string& name);
-	virtual bool HasName() const;
-	virtual void InvalidateName();
+  virtual std::string GetName() const;
+  virtual void SetName(const std::string& name);
+  virtual bool HasName() const;
+  virtual void InvalidateName();
 
-	bool HasComponent() const;
-	bool HasComponent(const SESubstance& substance) const;
-	const std::vector<SESubstanceConcentration*>& GetComponents();	
-	const std::vector<const SESubstanceConcentration*>& GetComponents() const;
-	const SESubstanceConcentration& GetComponent(SESubstance& substance);
-	const SESubstanceConcentration* GetComponent(SESubstance& substance) const;
-	void RemoveComponent(const SESubstance& substance);
+  bool HasComponent() const;
+  bool HasComponent(const SESubstance& substance) const;
+  const std::vector<SESubstanceConcentration*>& GetComponents();
+  const std::vector<const SESubstanceConcentration*>& GetComponents() const;
+  const SESubstanceConcentration& GetComponent(SESubstance& substance);
+  const SESubstanceConcentration* GetComponent(SESubstance& substance) const;
+  void RemoveComponent(const SESubstance& substance);
 
-protected: 
+protected:
+  std::string m_Name;
 
-	std::string m_Name;
-
-	std::vector<SESubstanceConcentration*>       m_Components;
-	std::vector<const SESubstanceConcentration*> m_cComponents;
+  std::vector<SESubstanceConcentration*> m_Components;
+  std::vector<const SESubstanceConcentration*> m_cComponents;
 };

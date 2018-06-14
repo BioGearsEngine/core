@@ -16,19 +16,18 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/SubstanceTissuePharmacokineticsData.hxx>
 
-class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable
-{
+class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable {
 public:
-
-	SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger);
-	virtual ~SESubstanceTissuePharmacokinetics();
+  SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger);
+  virtual ~SESubstanceTissuePharmacokinetics();
 
   virtual void Clear();
 
-	virtual bool Load(const CDM::SubstanceTissuePharmacokineticsData& in);
-	virtual CDM::SubstanceTissuePharmacokineticsData* Unload() const;
+  virtual bool Load(const CDM::SubstanceTissuePharmacokineticsData& in);
+  virtual CDM::SubstanceTissuePharmacokineticsData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::SubstanceTissuePharmacokineticsData& data) const;
+  virtual void Unload(CDM::SubstanceTissuePharmacokineticsData& data) const;
 
 public:
   const SEScalar* GetScalar(const std::string& name);
@@ -39,8 +38,7 @@ public:
   virtual SEScalar& GetPartitionCoefficient();
   virtual double GetPartitionCoefficient() const;
 
-
 protected:
-  std::string		m_Name;
-  SEScalar*     m_PartitionCoefficient;
+  std::string m_Name;
+  SEScalar* m_PartitionCoefficient;
 };

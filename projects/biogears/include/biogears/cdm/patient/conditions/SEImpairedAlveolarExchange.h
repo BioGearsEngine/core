@@ -13,37 +13,35 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/ImpairedAlveolarExchangeData.hxx>
 
-class BIOGEARS_API SEImpairedAlveolarExchange : public SEPatientCondition
-{
+class BIOGEARS_API SEImpairedAlveolarExchange : public SEPatientCondition {
 public:
+  SEImpairedAlveolarExchange();
+  virtual ~SEImpairedAlveolarExchange();
 
-	SEImpairedAlveolarExchange();
-	virtual ~SEImpairedAlveolarExchange();
-	
   virtual void Clear();
 
   virtual bool IsValid() const;
 
   virtual bool Load(const CDM::ImpairedAlveolarExchangeData& in);
   virtual CDM::ImpairedAlveolarExchangeData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ImpairedAlveolarExchangeData& data) const;
 
 public:
   virtual std::string GetName() const { return "ImpairedAlveolarExchange"; }
 
-	virtual bool HasImpairedSurfaceArea() const;
-	virtual SEScalarArea& GetImpairedSurfaceArea();
+  virtual bool HasImpairedSurfaceArea() const;
+  virtual SEScalarArea& GetImpairedSurfaceArea();
   virtual double GetImpairedSurfaceArea(const AreaUnit& unit) const;
 
-	virtual bool HasImpairedFraction() const;
-	virtual SEScalar0To1& GetImpairedFraction();
-	virtual double GetImpairedFraction() const;
+  virtual bool HasImpairedFraction() const;
+  virtual SEScalar0To1& GetImpairedFraction();
+  virtual double GetImpairedFraction() const;
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	
-	SEScalarArea*	     m_ImpairedSurfaceArea;
-	SEScalar0To1*      m_ImpairedFraction;	
+  SEScalarArea* m_ImpairedSurfaceArea;
+  SEScalar0To1* m_ImpairedFraction;
 };

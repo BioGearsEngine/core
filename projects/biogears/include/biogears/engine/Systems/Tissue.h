@@ -35,11 +35,11 @@ class BioGears;
  * however, several processes extend between two systems, i.e., alveoli transfer links the %Respiratory and %Anesthesia Machine Systems. 
  * To capture this behavior, the System Interactions methodology was introduced. 
  * The primary function of this system is to capture the substance transport that occurs between systems.
- */  
-class BIOGEARS_API Tissue : public SETissueSystem, public BioGearsSystem
-{
+ */
+class BIOGEARS_API Tissue : public SETissueSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
   Tissue(BioGears& bg);
   BioGears& m_data;
@@ -55,6 +55,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsTissueSystemData& in);
   virtual CDM::BioGearsTissueSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsTissueSystemData& data) const;
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
@@ -71,7 +72,6 @@ public:
   static double m_hepaticCO2Produced_mol;
 
 protected:
-
   // Preprocess Methods
   void ProteinStorageAndRelease();
   void FatStorageAndRelease();
@@ -84,7 +84,6 @@ protected:
   void ManageSubstancesAndSaturation();
 
   // Postprocess Methods
-
 
   //conditions
   void Dehydrate();
@@ -112,7 +111,6 @@ protected:
   double SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double extraK_mM, double potential_V);
   double CalciumPump(double intraCa_M);
 
-
   // Serializable member variables (Set in Initialize and in schema)
   double m_RestingPatientMass_kg;
   double m_RestingFluidMass_kg;
@@ -121,74 +119,73 @@ protected:
   RunningAverage m_RespiratoryQuotientRunningAverage;
   RunningAverage m_FatigueRunningAverage;
 
-
   // Stateless member variable (Set in SetUp())
   double m_Dt_s;
   double m_maxProteinStorage_g;
   double m_lastFatigueTime;
 
-  std::stringstream           m_ss;
-  SESubstance*                m_Albumin;
-  SESubstance*                m_AminoAcids;
-  SESubstance*                m_Glucagon;
-  SESubstance*                m_Glucose;
-  SESubstance*                m_Triacylglycerol;
-  SESubstance*                m_O2;
-  SESubstance*                m_CO2;
-  SESubstance*                m_CO;
-  SESubstance*                m_Lactate;
-  SESubstance*                m_Ketones;
-  SESubstance*                m_Creatinine;
-  SESubstance*                m_Sodium;
-  SESubstance*				  m_Potassium;
-  SESubstance*                m_Calcium;
-  SESubstance*				  m_Chloride;
-  SESubstance*                m_Insulin;
-  SESubstance*                m_Urea;
+  std::stringstream m_ss;
+  SESubstance* m_Albumin;
+  SESubstance* m_AminoAcids;
+  SESubstance* m_Glucagon;
+  SESubstance* m_Glucose;
+  SESubstance* m_Triacylglycerol;
+  SESubstance* m_O2;
+  SESubstance* m_CO2;
+  SESubstance* m_CO;
+  SESubstance* m_Lactate;
+  SESubstance* m_Ketones;
+  SESubstance* m_Creatinine;
+  SESubstance* m_Sodium;
+  SESubstance* m_Potassium;
+  SESubstance* m_Calcium;
+  SESubstance* m_Chloride;
+  SESubstance* m_Insulin;
+  SESubstance* m_Urea;
 
-  SEFluidCircuitNode*         m_GutE3;
-  SEFluidCircuitPath*         m_GutE3ToGround;
-  SEFluidCircuitPath*		  m_SmallIntestineToGut;
-  SEFluidCircuitPath*		  m_SplanchnicToGut;
+  SEFluidCircuitNode* m_GutE3;
+  SEFluidCircuitPath* m_GutE3ToGround;
+  SEFluidCircuitPath* m_SmallIntestineToGut;
+  SEFluidCircuitPath* m_SplanchnicToGut;
 
-  SELiquidSubstanceQuantity*  m_MuscleInsulin;
-  SELiquidSubstanceQuantity*  m_MuscleGlucagon;
-  SELiquidSubstanceQuantity*  m_MuscleAA;
-  SELiquidSubstanceQuantity*  m_FatInsulin;
-  SELiquidSubstanceQuantity*  m_FatGlucagon;
-  SELiquidSubstanceQuantity*  m_FatTAG;
-  SETissueCompartment*        m_LeftLungTissue;
-  SETissueCompartment*        m_RightLungTissue;
-  SETissueCompartment*        m_MuscleTissue;
-  SELiquidCompartment*        m_MuscleIntracellular;
-  SETissueCompartment*        m_LiverTissue;
-  SELiquidCompartment*        m_LiverIntracellular;
-  SELiquidCompartment*        m_LiverExtracellular;
-  SETissueCompartment*        m_FatTissue;
-  SELiquidCompartment*        m_FatIntracellular;
-  SETissueCompartment*        m_BrainTissue;
+  SELiquidSubstanceQuantity* m_MuscleInsulin;
+  SELiquidSubstanceQuantity* m_MuscleGlucagon;
+  SELiquidSubstanceQuantity* m_MuscleAA;
+  SELiquidSubstanceQuantity* m_FatInsulin;
+  SELiquidSubstanceQuantity* m_FatGlucagon;
+  SELiquidSubstanceQuantity* m_FatTAG;
+  SETissueCompartment* m_LeftLungTissue;
+  SETissueCompartment* m_RightLungTissue;
+  SETissueCompartment* m_MuscleTissue;
+  SELiquidCompartment* m_MuscleIntracellular;
+  SETissueCompartment* m_LiverTissue;
+  SELiquidCompartment* m_LiverIntracellular;
+  SELiquidCompartment* m_LiverExtracellular;
+  SETissueCompartment* m_FatTissue;
+  SELiquidCompartment* m_FatIntracellular;
+  SETissueCompartment* m_BrainTissue;
 
-  SELiquidCompartment*        m_FatVascular;
-  SELiquidSubstanceQuantity*  m_FatVascularLipid;
-  SELiquidSubstanceQuantity*  m_LiverVascularGlucose;
-  SELiquidCompartment*        m_MuscleVascular;
-  SELiquidSubstanceQuantity*  m_MuscleVascularGlucose;
+  SELiquidCompartment* m_FatVascular;
+  SELiquidSubstanceQuantity* m_FatVascularLipid;
+  SELiquidSubstanceQuantity* m_LiverVascularGlucose;
+  SELiquidCompartment* m_MuscleVascular;
+  SELiquidSubstanceQuantity* m_MuscleVascularGlucose;
 
-  SEGasCompartment*           m_LeftAlveoli;
-  SEGasCompartment*           m_RightAlveoli;
-  SELiquidCompartment*        m_LeftPulmonaryCapillaries;
-  SELiquidCompartment*        m_RightPulmonaryCapillaries;
+  SEGasCompartment* m_LeftAlveoli;
+  SEGasCompartment* m_RightAlveoli;
+  SELiquidCompartment* m_LeftPulmonaryCapillaries;
+  SELiquidCompartment* m_RightPulmonaryCapillaries;
 
-  SEPatientActionCollection*  m_PatientActions;
-  SEPatient*                  m_Patient;
-  SEEnergySystem*             m_energy;
+  SEPatientActionCollection* m_PatientActions;
+  SEPatient* m_Patient;
+  SEEnergySystem* m_energy;
 
   std::map<SETissueCompartment*, SELiquidCompartment*> m_TissueToVascular;
-  std::map < SELiquidCompartment*, SEFluidCircuitPath*>  m_VascularCopPaths;
-  std::map < SETissueCompartment*, SEFluidCircuitPath*>  m_InterstitialCopPaths;
-  std::map < SETissueCompartment*, SEFluidCircuitPath*>  m_ExtraToIntraPaths;
-  std::map< SETissueCompartment*, double> m_ExtracellularVolumeBaselines;
-  std::map< SELiquidCompartment*, double> m_VascularVolumeBaselines;
-  std::vector<SETissueCompartment*>                    m_ConsumptionProdutionTissues;
-  std::string                 m_AnaerobicTissues;
+  std::map<SELiquidCompartment*, SEFluidCircuitPath*> m_VascularCopPaths;
+  std::map<SETissueCompartment*, SEFluidCircuitPath*> m_InterstitialCopPaths;
+  std::map<SETissueCompartment*, SEFluidCircuitPath*> m_ExtraToIntraPaths;
+  std::map<SETissueCompartment*, double> m_ExtracellularVolumeBaselines;
+  std::map<SELiquidCompartment*, double> m_VascularVolumeBaselines;
+  std::vector<SETissueCompartment*> m_ConsumptionProdutionTissues;
+  std::string m_AnaerobicTissues;
 };

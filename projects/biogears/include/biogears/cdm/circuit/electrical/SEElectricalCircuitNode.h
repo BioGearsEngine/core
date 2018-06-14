@@ -16,11 +16,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/schema/ElectricalCircuitNodeData.hxx>
 
-class BIOGEARS_API SEElectricalCircuitNode : public SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>
-{
+class BIOGEARS_API SEElectricalCircuitNode : public SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
+
 protected:
   SEElectricalCircuitNode(const std::string& name, Logger* logger);
+
 public:
   virtual ~SEElectricalCircuitNode();
 
@@ -28,6 +29,7 @@ public:
 
   virtual bool Load(const CDM::ElectricalCircuitNodeData& in);
   virtual CDM::ElectricalCircuitNodeData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ElectricalCircuitNodeData& data) const;
 
@@ -39,7 +41,6 @@ public:
   virtual bool HasNextVoltage() const;
   virtual SEScalarElectricPotential& GetNextVoltage();
   virtual double GetNextVoltage(const ElectricPotentialUnit& unit) const;
-
 
   virtual bool HasCharge() const;
   virtual SEScalarElectricCharge& GetCharge();

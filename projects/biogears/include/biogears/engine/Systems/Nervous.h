@@ -24,14 +24,14 @@ class BioGears;
 /**
  * @brief 
  * The nervous class holds models of the peripheral and central nervous system. Currently, on the baroreceptor reflex is modeled.
- */  
-class BIOGEARS_API Nervous : public SENervousSystem, public BioGearsSystem
-{
-	friend class BioGears;
+ */
+class BIOGEARS_API Nervous : public SENervousSystem, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	Nervous(BioGears& bg);
-	BioGears& m_data;
+  Nervous(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~Nervous();
@@ -44,6 +44,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsNervousSystemData& in);
   virtual CDM::BioGearsNervousSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsNervousSystemData& data) const;
 
@@ -51,10 +52,10 @@ protected:
   void SetUp();
 
 public:
-  void AtSteadyState();	
-	void PreProcess();
-	void Process();
-	void PostProcess();
+  void AtSteadyState();
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
 protected:
   void BaroreceptorFeedback();
@@ -62,25 +63,24 @@ protected:
   void ChemoreceptorFeedback();
   void SetPupilEffects();
 
-  // Serializable member variables (Set in Initialize and in schema)    
+  // Serializable member variables (Set in Initialize and in schema)
   double m_ArterialOxygenSetPoint_mmHg; /// \todo Aaron these should be baselines.
   double m_ArterialCarbonDioxideSetPoint_mmHg;
 
   // Stateless member variable (Set in SetUp())
-	bool m_FeedbackActive;
-	double m_dt_s;
-	SESubstance* m_Succinylcholine;
-	SESubstance* m_Sarin;
-	bool m_blockActive;
-	// Configuration fractions representing the amount by which each quantity can change due to baroreceptors;
-	double m_normalizedGammaHeartRate;
-	double m_normalizedGammaElastance;
-	double m_normalizedGammaCompliance;
-	double m_normalizedGammaResistance;
-	double m_normalizedAlphaHeartRate;
-	double m_normalizedAlphaElastance;
-	double m_normalizedAlphaCompliance;
-	double m_normalizedAlphaResistance;
-	double m_normalizedBetaHeartRate;
-
+  bool m_FeedbackActive;
+  double m_dt_s;
+  SESubstance* m_Succinylcholine;
+  SESubstance* m_Sarin;
+  bool m_blockActive;
+  // Configuration fractions representing the amount by which each quantity can change due to baroreceptors;
+  double m_normalizedGammaHeartRate;
+  double m_normalizedGammaElastance;
+  double m_normalizedGammaCompliance;
+  double m_normalizedGammaResistance;
+  double m_normalizedAlphaHeartRate;
+  double m_normalizedAlphaElastance;
+  double m_normalizedAlphaCompliance;
+  double m_normalizedAlphaResistance;
+  double m_normalizedBetaHeartRate;
 };

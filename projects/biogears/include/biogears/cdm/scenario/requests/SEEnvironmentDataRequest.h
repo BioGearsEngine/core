@@ -15,22 +15,23 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/EnvironmentDataRequestData.hxx>
 class SEDataRequestManager;
 
-class BIOGEARS_API SEEnvironmentDataRequest : public SEDataRequest
-{
+class BIOGEARS_API SEEnvironmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
+
 protected:
   SEEnvironmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+
 public:
   virtual ~SEEnvironmentDataRequest();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::EnvironmentDataRequestData& in);
   virtual CDM::EnvironmentDataRequestData* Unload() const;
+
 protected:
   virtual void Unload(CDM::EnvironmentDataRequestData& data) const;
+
 public:
-
 protected:
-
-};                  
+};

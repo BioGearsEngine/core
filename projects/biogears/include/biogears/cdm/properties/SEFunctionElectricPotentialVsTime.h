@@ -14,37 +14,35 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEFunction.h>
 #include <biogears/schema/FunctionElectricPotentialVsTimeData.hxx>
 
-class BIOGEARS_API SEFunctionElectricPotentialVsTime : public SEFunction
-{
+class BIOGEARS_API SEFunctionElectricPotentialVsTime : public SEFunction {
 public:
-
-	SEFunctionElectricPotentialVsTime();
-	virtual ~SEFunctionElectricPotentialVsTime();
+  SEFunctionElectricPotentialVsTime();
+  virtual ~SEFunctionElectricPotentialVsTime();
 
   virtual void Clear();
 
   virtual bool Load(const CDM::FunctionElectricPotentialVsTimeData& in);
   virtual CDM::FunctionElectricPotentialVsTimeData* Unload() const;
+
 protected:
   virtual void Unload(CDM::FunctionElectricPotentialVsTimeData& data) const;
+
 public:
+  double GetIndependentValue(unsigned int index) = delete;
+  virtual double GetTimeValue(unsigned int index, const TimeUnit& unit);
+  virtual std::vector<double>& GetTime();
+  virtual const TimeUnit* GetTimeUnit();
+  virtual void SetTimeUnit(const TimeUnit& unit);
 
-  double                               GetIndependentValue(unsigned int index) = delete;
-	virtual double                       GetTimeValue(unsigned int index, const TimeUnit& unit);
-	virtual std::vector<double>&			   GetTime();
-  virtual const TimeUnit*              GetTimeUnit();
-  virtual void                         SetTimeUnit(const TimeUnit& unit);
-
-  double                               GetDependentValue(unsigned int index) = delete;
-  virtual double                       GetElectricPotentialValue(unsigned int index, const ElectricPotentialUnit& unit);
-	virtual std::vector<double>&			   GetElectricPotential();
+  double GetDependentValue(unsigned int index) = delete;
+  virtual double GetElectricPotentialValue(unsigned int index, const ElectricPotentialUnit& unit);
+  virtual std::vector<double>& GetElectricPotential();
   virtual const ElectricPotentialUnit* GetElectricPotentialUnit();
-  virtual void                         SetElectricPotentialUnit(const ElectricPotentialUnit& unit);
+  virtual void SetElectricPotentialUnit(const ElectricPotentialUnit& unit);
 
   virtual SEFunctionElectricPotentialVsTime* InterpolateToTime(std::vector<double>& Independent, const TimeUnit& unit);
 
 protected:
-
-  const TimeUnit*              m_TimeUnit;
+  const TimeUnit* m_TimeUnit;
   const ElectricPotentialUnit* m_ElectricPotentialUnit;
 };

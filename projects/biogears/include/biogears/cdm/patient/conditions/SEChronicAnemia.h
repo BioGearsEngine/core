@@ -14,30 +14,29 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/ChronicAnemiaData.hxx>
 
-class BIOGEARS_API SEChronicAnemia : public SEPatientCondition
-{
+class BIOGEARS_API SEChronicAnemia : public SEPatientCondition {
 public:
+  SEChronicAnemia();
+  virtual ~SEChronicAnemia();
 
-	SEChronicAnemia();
-	virtual ~SEChronicAnemia();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::ChronicAnemiaData& in);
   virtual CDM::ChronicAnemiaData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ChronicAnemiaData& data) const;
 
 public:
-	virtual std::string GetName() const{ return "ChronicAnemia"; }
+  virtual std::string GetName() const { return "ChronicAnemia"; }
 
-	virtual bool HasReductionFactor() const;
-	virtual SEScalar0To1& GetReductionFactor();
+  virtual bool HasReductionFactor() const;
+  virtual SEScalar0To1& GetReductionFactor();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*           m_ReductionFactor;
-};      
+  SEScalar0To1* m_ReductionFactor;
+};

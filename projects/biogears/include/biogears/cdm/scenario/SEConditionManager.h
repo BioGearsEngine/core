@@ -22,53 +22,51 @@ class SEStarvation;
 class SEDehydration;
 class SEDiabetesType1;
 class SEDiabetesType2;
-class SEFasting; 
+class SEFasting;
 class SEImpairedAlveolarExchange;
 class SELobarPneumonia;
 class SEInitialEnvironment;
 class SESubstanceManager;
 CDM_BIND_DECL(ConditionData);
 
-class BIOGEARS_API SEConditionManager : public Loggable
-{
+class BIOGEARS_API SEConditionManager : public Loggable {
 public:
-
   SEConditionManager(SESubstanceManager&);
-	~SEConditionManager();
+  ~SEConditionManager();
 
-	void Clear();
+  void Clear();
 
   void Unload(std::vector<CDM::ConditionData*>& to);
 
-	bool ProcessCondition(const SECondition& condition);
+  bool ProcessCondition(const SECondition& condition);
   bool ProcessCondition(const CDM::ConditionData& condition);
 
-	// Not too many conditions, so just have one manager
-	// If we start getting alot, I will make patient/environment/equipment condition managers, like the action managers
+  // Not too many conditions, so just have one manager
+  // If we start getting alot, I will make patient/environment/equipment condition managers, like the action managers
 
-	// Patient Conditions
+  // Patient Conditions
 
-	bool HasChronicAnemia() const;
-	SEChronicAnemia* GetChronicAnemia() const;
+  bool HasChronicAnemia() const;
+  SEChronicAnemia* GetChronicAnemia() const;
 
-	bool HasChronicObstructivePulmonaryDisease() const;
-	SEChronicObstructivePulmonaryDisease* GetChronicObstructivePulmonaryDisease() const;
+  bool HasChronicObstructivePulmonaryDisease() const;
+  SEChronicObstructivePulmonaryDisease* GetChronicObstructivePulmonaryDisease() const;
 
-	bool HasChronicHeartFailure() const;
-	bool HasChronicVentricularSystolicDysfunction() const;
-	SEChronicVentricularSystolicDysfunction* GetChronicVentricularSystolicDysfunction() const;
+  bool HasChronicHeartFailure() const;
+  bool HasChronicVentricularSystolicDysfunction() const;
+  SEChronicVentricularSystolicDysfunction* GetChronicVentricularSystolicDysfunction() const;
 
-	bool HasChronicPericardialEffusion() const;
-	SEChronicPericardialEffusion* GetChronicPericardialEffusion() const;
+  bool HasChronicPericardialEffusion() const;
+  SEChronicPericardialEffusion* GetChronicPericardialEffusion() const;
 
-	bool HasChronicRenalStenosis() const;
-	SEChronicRenalStenosis* GetChronicRenalStenosis() const;
+  bool HasChronicRenalStenosis() const;
+  SEChronicRenalStenosis* GetChronicRenalStenosis() const;
 
-	bool HasStarvation() const;
-	SEStarvation* GetStarvation() const;
+  bool HasStarvation() const;
+  SEStarvation* GetStarvation() const;
 
-	bool HasDehydration() const;
-	SEDehydration* GetDehydration() const;
+  bool HasDehydration() const;
+  SEDehydration* GetDehydration() const;
 
   bool HasDiabetesType1() const;
   SEDiabetesType1* GetDiabetesType1() const;
@@ -79,32 +77,30 @@ public:
   bool HasImpairedAlveolarExchange() const;
   SEImpairedAlveolarExchange* GetImpairedAlveolarExchange() const;
 
-	bool HasLobarPneumonia() const;
-	SELobarPneumonia* GetLobarPneumonia() const;
+  bool HasLobarPneumonia() const;
+  SELobarPneumonia* GetLobarPneumonia() const;
 
-	// Environment Conditions
+  // Environment Conditions
 
-	bool HasInitialEnvironment() const;
-	SEInitialEnvironment* GetInitialEnvironment() const;
-	
+  bool HasInitialEnvironment() const;
+  SEInitialEnvironment* GetInitialEnvironment() const;
 
 protected:
+  SESubstanceManager& m_Substances;
+  SEChronicAnemia* m_Anemia;
+  SEStarvation* m_Starvation;
+  SEChronicObstructivePulmonaryDisease* m_COPD;
+  SEDehydration* m_Dehydration;
+  SEDiabetesType1* m_DiabetesType1;
+  SEDiabetesType2* m_DiabetesType2;
+  SEChronicHeartFailure* m_HeartFailure;
+  SEImpairedAlveolarExchange* m_ImpairedAlveolarExchange;
+  SEChronicPericardialEffusion* m_PericardialEffusion;
+  SELobarPneumonia* m_LobarPneumonia;
+  SEChronicRenalStenosis* m_RenalStenosis;
 
-  SESubstanceManager&                   m_Substances;
-	SEChronicAnemia*                      m_Anemia;
-	SEStarvation*                        m_Starvation;
-	SEChronicObstructivePulmonaryDisease* m_COPD;
-	SEDehydration*                        m_Dehydration;
-  SEDiabetesType1*                      m_DiabetesType1;
-  SEDiabetesType2*                      m_DiabetesType2;
-	SEChronicHeartFailure*                m_HeartFailure;
-  SEImpairedAlveolarExchange*	          m_ImpairedAlveolarExchange;
-	SEChronicPericardialEffusion*         m_PericardialEffusion;
-	SELobarPneumonia*                     m_LobarPneumonia;
-	SEChronicRenalStenosis*               m_RenalStenosis;
+  SEInitialEnvironment* m_InitialEnvironment;
 
-	SEInitialEnvironment*                 m_InitialEnvironment;
-
-	std::vector<SECondition*>             m_Conditions;
-	std::stringstream m_ss;
+  std::vector<SECondition*> m_Conditions;
+  std::stringstream m_ss;
 };

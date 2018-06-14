@@ -19,37 +19,36 @@ class SEForcedInhale;
 class SEBreathHold;
 class SEUseInhaler;
 
-class BIOGEARS_API SEConsciousRespiration : public SEPatientAction
-{
+class BIOGEARS_API SEConsciousRespiration : public SEPatientAction {
 public:
+  SEConsciousRespiration();
+  virtual ~SEConsciousRespiration();
 
-	SEConsciousRespiration();
-	virtual ~SEConsciousRespiration();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances);
   virtual CDM::ConsciousRespirationData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ConsciousRespirationData& data) const;
-public:
 
-	// Get the active command
-	virtual SEConsciousRespirationCommand* GetActiveCommand();
-	/// When the active command has been processed, remove it
-	virtual void RemoveActiveCommand();
+public:
+  // Get the active command
+  virtual SEConsciousRespirationCommand* GetActiveCommand();
+  /// When the active command has been processed, remove it
+  virtual void RemoveActiveCommand();
 
   virtual SEForcedExhale& AddForcedExhale();
   virtual SEForcedInhale& AddForcedInhale();
-  virtual SEBreathHold&   AddBreathHold();
-  virtual SEUseInhaler&   AddUseInhaler();
+  virtual SEBreathHold& AddBreathHold();
+  virtual SEUseInhaler& AddUseInhaler();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
+
 protected:
-
   bool m_ClearCommands;
-	std::vector<SEConsciousRespirationCommand*> m_Commands;
-};  
+  std::vector<SEConsciousRespirationCommand*> m_Commands;
+};

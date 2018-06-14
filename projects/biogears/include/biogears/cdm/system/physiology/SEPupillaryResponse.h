@@ -13,26 +13,24 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/schema/PupillaryResponseData.hxx>
 
-class BIOGEARS_API SEPupillaryResponse
-{
+class BIOGEARS_API SEPupillaryResponse {
 public:
+  SEPupillaryResponse(Logger* logger);
+  virtual ~SEPupillaryResponse();
 
-	SEPupillaryResponse(Logger* logger);
-	virtual ~SEPupillaryResponse();
+  virtual void Clear(); // Deletes all members
 
-  virtual void Clear();// Deletes all members
-  
-	virtual const SEScalar* GetScalar(const std::string& name);
-	
+  virtual const SEScalar* GetScalar(const std::string& name);
+
   virtual bool Load(const CDM::PupillaryResponseData& in);
   virtual CDM::PupillaryResponseData* Unload() const;
+
 protected:
   virtual void Unload(CDM::PupillaryResponseData& data) const;
 
 public:
-
-	virtual bool HasReactivityModifier() const;
-	virtual SEScalarNeg1To1& GetReactivityModifier();
+  virtual bool HasReactivityModifier() const;
+  virtual SEScalarNeg1To1& GetReactivityModifier();
   virtual double GetReactivityModifier() const;
 
   virtual bool HasShapeModifier() const;
@@ -44,9 +42,7 @@ public:
   virtual double GetSizeModifier() const;
 
 protected:
-
-	SEScalarNeg1To1* m_ReactivityModifier;
+  SEScalarNeg1To1* m_ReactivityModifier;
   SEScalarNeg1To1* m_ShapeModifier;
   SEScalarNeg1To1* m_SizeModifier;
-
 };

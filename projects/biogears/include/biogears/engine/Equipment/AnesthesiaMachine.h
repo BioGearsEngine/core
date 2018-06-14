@@ -31,14 +31,14 @@ class SEFluidCircuitPath;
 /**
  * @brief 
  * Generic anesthesia machine for positive pressure ventilation.
- */    
-class BIOGEARS_API AnesthesiaMachine : public SEAnesthesiaMachine, public BioGearsSystem
-{
-	friend BioGears;
+ */
+class BIOGEARS_API AnesthesiaMachine : public SEAnesthesiaMachine, public BioGearsSystem {
+  friend BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	AnesthesiaMachine(BioGears& bg);
-	BioGears& m_data;
+  AnesthesiaMachine(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~AnesthesiaMachine();
@@ -51,6 +51,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsAnesthesiaMachineData& in);
   virtual CDM::BioGearsAnesthesiaMachineData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsAnesthesiaMachineData& data) const;
 
@@ -58,68 +59,63 @@ protected:
   void SetUp();
 
 public:
-	void StateChange();
+  void StateChange();
 
-	void PreProcess();
-	void Process();
-	void PostProcess();
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
-	void CalculateScrubber();
+  void CalculateScrubber();
 
-	// Extending some functionality to these base class methods
-	// We will update the BioGears Airway mode when these are called
-	virtual void SetConnection(CDM::enumAnesthesiaMachineConnection::value c);
-	virtual void InvalidateConnection();
+  // Extending some functionality to these base class methods
+  // We will update the BioGears Airway mode when these are called
+  virtual void SetConnection(CDM::enumAnesthesiaMachineConnection::value c);
+  virtual void InvalidateConnection();
 
 private:
-	void CalculateSourceStatus();
-	void CalculateEquipmentLeak();
-	void SetConnection();
-	void CalculateValveResistances();
-	void CalculateVentilator();
-	void CalculateGasSource();
-	void CalculateCyclePhase();
-	void CheckReliefValve();
+  void CalculateSourceStatus();
+  void CalculateEquipmentLeak();
+  void SetConnection();
+  void CalculateValveResistances();
+  void CalculateVentilator();
+  void CalculateGasSource();
+  void CalculateCyclePhase();
+  void CheckReliefValve();
 
   // Serializable member variables (Set in Initialize and in schema)
-  bool         m_inhaling; 
+  bool m_inhaling;
   SEScalarTime m_inspirationTime;
-  SEScalar     m_O2InletVolumeFraction;
+  SEScalar m_O2InletVolumeFraction;
   SEScalarTime m_currentbreathingCycleTime;
   SEScalarTime m_totalBreathingCycleTime;
 
   // Stateless member variable (Set in SetUp())
-	double m_dt_s;
+  double m_dt_s;
   double m_dValveOpenResistance_cmH2O_s_Per_L;
   double m_dValveClosedResistance_cmH2O_s_Per_L;
   double m_dSwitchOpenResistance_cmH2O_s_Per_L;
   double m_dSwitchClosedResistance_cmH2O_s_Per_L;
   SEAnesthesiaMachineActionCollection* m_actions;
-  SEGasCompartment*                    m_ambient;
-  SEGasSubstanceQuantity*              m_ambientCO2;
-  SEGasSubstanceQuantity*              m_ambientN2;
-  SEGasSubstanceQuantity*              m_ambientO2;
-  SEGasCompartment*                    m_gasSource;
-  SEGasSubstanceQuantity*              m_gasSourceCO2;
-  SEGasSubstanceQuantity*              m_gasSourceN2;
-  SEGasSubstanceQuantity*              m_gasSourceO2;
-  SEGasCompartment*                    m_scrubber;
-  SEGasSubstanceQuantity*              m_scubberCO2;
-  SEGasSubstanceQuantity*              m_scrubberN2;
-  SEFluidCircuitNode*                  m_nVentilator;
-  SEFluidCircuitPath*                  m_pAnesthesiaConnectionToEnvironment;
-  SEFluidCircuitPath*                  m_pYPieceToExpiratoryLimb;
-  SEFluidCircuitPath*                  m_pGasSourceToGasInlet;
-  SEFluidCircuitPath*                  m_pInspiratoryLimbToYPiece;
-  SEFluidCircuitPath*                  m_pSelectorToReliefValve;
-  SEFluidCircuitPath*                  m_pEnvironmentToReliefValve;
-  SEFluidCircuitPath*                  m_pSelectorToEnvironment;
-  SEFluidCircuitPath*                  m_pEnvironmentToVentilator;
-  SEFluidCircuitPath*                  m_pExpiratoryLimbToSelector;
-  SEFluidCircuitPath*                  m_pSelectorToScrubber;
+  SEGasCompartment* m_ambient;
+  SEGasSubstanceQuantity* m_ambientCO2;
+  SEGasSubstanceQuantity* m_ambientN2;
+  SEGasSubstanceQuantity* m_ambientO2;
+  SEGasCompartment* m_gasSource;
+  SEGasSubstanceQuantity* m_gasSourceCO2;
+  SEGasSubstanceQuantity* m_gasSourceN2;
+  SEGasSubstanceQuantity* m_gasSourceO2;
+  SEGasCompartment* m_scrubber;
+  SEGasSubstanceQuantity* m_scubberCO2;
+  SEGasSubstanceQuantity* m_scrubberN2;
+  SEFluidCircuitNode* m_nVentilator;
+  SEFluidCircuitPath* m_pAnesthesiaConnectionToEnvironment;
+  SEFluidCircuitPath* m_pYPieceToExpiratoryLimb;
+  SEFluidCircuitPath* m_pGasSourceToGasInlet;
+  SEFluidCircuitPath* m_pInspiratoryLimbToYPiece;
+  SEFluidCircuitPath* m_pSelectorToReliefValve;
+  SEFluidCircuitPath* m_pEnvironmentToReliefValve;
+  SEFluidCircuitPath* m_pSelectorToEnvironment;
+  SEFluidCircuitPath* m_pEnvironmentToVentilator;
+  SEFluidCircuitPath* m_pExpiratoryLimbToSelector;
+  SEFluidCircuitPath* m_pSelectorToScrubber;
 };
-
-
-
-
-

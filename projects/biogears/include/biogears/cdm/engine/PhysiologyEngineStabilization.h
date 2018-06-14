@@ -19,48 +19,47 @@ specific language governing permissions and limitations under the License.
 
 class PhysiologyEngine;
 class PhysiologyEngineTrack;
-class PhysiologyEngineConfiguration; 
+class PhysiologyEngineConfiguration;
 class SECondition;
 
 CDM_BIND_DECL(PhysiologyEngineStabilizationData)
 
-class BIOGEARS_API PhysiologyEngineStabilization : public Loggable
-{
+class BIOGEARS_API PhysiologyEngineStabilization : public Loggable {
 public:
-	PhysiologyEngineStabilization(Logger* logger);
-	virtual ~PhysiologyEngineStabilization();
+  PhysiologyEngineStabilization(Logger* logger);
+  virtual ~PhysiologyEngineStabilization();
 
-	virtual void Clear();
+  virtual void Clear();
 
-	virtual bool Load(const CDM::PhysiologyEngineStabilizationData& in);
-	virtual CDM::PhysiologyEngineStabilizationData* Unload() const;
+  virtual bool Load(const CDM::PhysiologyEngineStabilizationData& in);
+  virtual CDM::PhysiologyEngineStabilizationData* Unload() const;
+
 protected:
-	virtual void Unload(CDM::PhysiologyEngineStabilizationData& data) const;
-public:
+  virtual void Unload(CDM::PhysiologyEngineStabilizationData& data) const;
 
+public:
   virtual bool LoadFile(const std::string& file) = 0;
 
-	virtual bool StabilizeRestingState(PhysiologyEngine& engine)=0;
-	virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) = 0;
-	virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions)=0;
-	
-	virtual void LogProgress(bool b);
+  virtual bool StabilizeRestingState(PhysiologyEngine& engine) = 0;
+  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) = 0;
+  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) = 0;
 
-	virtual void CancelStabilization();
+  virtual void LogProgress(bool b);
 
-	virtual void TrackStabilization(CDM::enumOnOff::value state);
-	virtual bool IsTrackingStabilization();
+  virtual void CancelStabilization();
 
-	virtual bool HasStabilizationDuration();
-	virtual SEScalarTime& GetStabilizationDuration();
+  virtual void TrackStabilization(CDM::enumOnOff::value state);
+  virtual bool IsTrackingStabilization();
+
+  virtual bool HasStabilizationDuration();
+  virtual SEScalarTime& GetStabilizationDuration();
 
 protected:
+  bool m_Cancelled;
+  bool m_LogProgress;
+  CDM::enumOnOff::value m_TrackingStabilization;
+  double m_currentTime_s;
+  std::stringstream m_ss;
 
-	bool m_Cancelled;
-	bool m_LogProgress;
-	CDM::enumOnOff::value m_TrackingStabilization;
-	double m_currentTime_s;
-	std::stringstream m_ss;
-
-	SEScalarTime* m_StabilizationDuration;
+  SEScalarTime* m_StabilizationDuration;
 };

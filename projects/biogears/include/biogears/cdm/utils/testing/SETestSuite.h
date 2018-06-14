@@ -15,47 +15,47 @@ specific language governing permissions and limitations under the License.
 class SETestReport;
 
 CDM_BIND_DECL(TestSuite)
-class BIOGEARS_API SETestSuite : public Loggable
-{
+class BIOGEARS_API SETestSuite : public Loggable {
   friend SETestReport;
+
 protected:
   SETestSuite(Logger* logger);
+
 public:
-	virtual ~SETestSuite();
+  virtual ~SETestSuite();
 
-	virtual void Reset(); //reset values
-	virtual void Clear(); //clear memory
+  virtual void Reset(); //reset values
+  virtual void Clear(); //clear memory
 
-	bool Load(const CDM::TestSuite& in);
-	std::unique_ptr<CDM::TestSuite> Unload() const;
+  bool Load(const CDM::TestSuite& in);
+  std::unique_ptr<CDM::TestSuite> Unload() const;
+
 protected:
-	void Unload(CDM::TestSuite& data) const;
+  void Unload(CDM::TestSuite& data) const;
 
 public:
+  void SetName(const std::string& Name);
+  std::string GetName() const;
 
-	void								SetName(const std::string& Name);												
-	std::string					GetName() const;	
+  void PerformSuite(bool Performed);
+  bool PerformedSuite();
 
-	void								PerformSuite(bool Performed);											
-	bool								PerformedSuite();	
-	
-	const SEScalarTime&	GetDuration() const;
-					
-	std::vector<std::string>&	GetRequirements();	
+  const SEScalarTime& GetDuration() const;
+
+  std::vector<std::string>& GetRequirements();
 
   SETestCase& CreateTestCase();
-	const std::vector<SETestCase*>&	GetTestCases() const;
-	
-	int                 GetNumberOfErrors() const;
+  const std::vector<SETestCase*>& GetTestCases() const;
 
-	int									GetNumberOfTests() const;
-								
+  int GetNumberOfErrors() const;
+
+  int GetNumberOfTests() const;
+
 protected:
-
-	bool m_Performed;
-	std::string m_Name;
-	std::vector<std::string> m_Requirements;
-	std::vector<SETestErrorStatistics*> m_SuiteEqualError;
-	std::vector<SETestCase*> m_TestCase;
-	mutable SEScalarTime m_Time;
+  bool m_Performed;
+  std::string m_Name;
+  std::vector<std::string> m_Requirements;
+  std::vector<SETestErrorStatistics*> m_SuiteEqualError;
+  std::vector<SETestCase*> m_TestCase;
+  mutable SEScalarTime m_Time;
 };

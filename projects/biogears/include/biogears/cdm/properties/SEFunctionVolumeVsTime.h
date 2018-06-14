@@ -14,35 +14,33 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEFunction.h>
 #include <biogears/schema/FunctionVolumeVsTimeData.hxx>
 
-class BIOGEARS_API SEFunctionVolumeVsTime : public SEFunction
-{
+class BIOGEARS_API SEFunctionVolumeVsTime : public SEFunction {
 public:
-
-	SEFunctionVolumeVsTime();
-	virtual ~SEFunctionVolumeVsTime();
+  SEFunctionVolumeVsTime();
+  virtual ~SEFunctionVolumeVsTime();
 
   virtual void Clear();
 
   virtual bool Load(const CDM::FunctionVolumeVsTimeData& in);
   virtual CDM::FunctionVolumeVsTimeData* Unload() const;
+
 protected:
   virtual void Unload(CDM::FunctionVolumeVsTimeData& data) const;
+
 public:
-
-  double                       GetIndependentValue(unsigned int index) = delete;
-  virtual double               GetTimeValue(unsigned int index, const TimeUnit& unit);
+  double GetIndependentValue(unsigned int index) = delete;
+  virtual double GetTimeValue(unsigned int index, const TimeUnit& unit);
   virtual std::vector<double>& GetTime();
-  virtual const TimeUnit*      GetTimeUnit();
-  virtual void                 SetTimeUnit(const TimeUnit& unit);
+  virtual const TimeUnit* GetTimeUnit();
+  virtual void SetTimeUnit(const TimeUnit& unit);
 
-  double                       GetDependentValue(unsigned int index) = delete;
-  virtual double               GetVolumeValue(unsigned int index, const VolumeUnit& unit);
+  double GetDependentValue(unsigned int index) = delete;
+  virtual double GetVolumeValue(unsigned int index, const VolumeUnit& unit);
   virtual std::vector<double>& GetVolume();
-  virtual const VolumeUnit*    GetVolumeUnit();
-  virtual void                 SetVolumeUnit(const VolumeUnit& unit);
+  virtual const VolumeUnit* GetVolumeUnit();
+  virtual void SetVolumeUnit(const VolumeUnit& unit);
 
 protected:
-
-  const TimeUnit*   m_TimeUnit;
+  const TimeUnit* m_TimeUnit;
   const VolumeUnit* m_VolumeUnit;
 };

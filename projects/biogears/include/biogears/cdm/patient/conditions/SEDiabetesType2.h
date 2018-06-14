@@ -14,33 +14,32 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/DiabetesType2Data.hxx>
 
-class BIOGEARS_API SEDiabetesType2 : public SEPatientCondition
-{
+class BIOGEARS_API SEDiabetesType2 : public SEPatientCondition {
 public:
-
   SEDiabetesType2();
-	virtual ~SEDiabetesType2();
+  virtual ~SEDiabetesType2();
 
-	virtual void Clear(); //clear memory
+  virtual void Clear(); //clear memory
 
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::DiabetesType2Data& in);
   virtual CDM::DiabetesType2Data* Unload() const;
+
 protected:
   virtual void Unload(CDM::DiabetesType2Data& data) const;
 
 public:
-	virtual std::string GetName() const{ return "DiabetesType2"; }
+  virtual std::string GetName() const { return "DiabetesType2"; }
 
-	virtual bool HasInsulinProductionSeverity() const;
-	virtual SEScalar0To1& GetInsulinProductionSeverity();
+  virtual bool HasInsulinProductionSeverity() const;
+  virtual SEScalar0To1& GetInsulinProductionSeverity();
   virtual bool HasInsulinResistanceSeverity() const;
   virtual SEScalar0To1& GetInsulinResistanceSeverity();
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*           m_InsulinProductionSeverity;
-  SEScalar0To1*           m_InsulinResistanceSeverity;
-};      
+  SEScalar0To1* m_InsulinProductionSeverity;
+  SEScalar0To1* m_InsulinResistanceSeverity;
+};

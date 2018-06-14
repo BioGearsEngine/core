@@ -17,35 +17,33 @@ class SEEnvironment;
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
 
-class BIOGEARS_API SEEnvironmentActionCollection : public Loggable
-{
+class BIOGEARS_API SEEnvironmentActionCollection : public Loggable {
 public:
+  SEEnvironmentActionCollection(SESubstanceManager&);
+  ~SEEnvironmentActionCollection();
 
-	SEEnvironmentActionCollection(SESubstanceManager&);
-	~SEEnvironmentActionCollection();
-
-	void Clear();
+  void Clear();
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
-	bool ProcessAction(const SEEnvironmentAction& action);
+  bool ProcessAction(const SEEnvironmentAction& action);
   bool ProcessAction(const CDM::EnvironmentActionData& action);
 
-	// STATE ACTION
-	bool HasChange() const;
-	SEEnvironmentChange* GetChange() const;
-	void RemoveChange();
+  // STATE ACTION
+  bool HasChange() const;
+  SEEnvironmentChange* GetChange() const;
+  void RemoveChange();
 
-	bool HasThermalApplication() const;
-	SEThermalApplication* GetThermalApplication() const;
-	void RemoveThermalApplication();
+  bool HasThermalApplication() const;
+  SEThermalApplication* GetThermalApplication() const;
+  void RemoveThermalApplication();
 
 protected:
   bool IsValid(const SEEnvironmentAction& action);
-	
-	SEEnvironmentChange*  m_Change;
-	SEThermalApplication* m_ThermalApplication;
-	// General
-	SESubstanceManager&   m_Substances;
-	std::stringstream     m_ss;
+
+  SEEnvironmentChange* m_Change;
+  SEThermalApplication* m_ThermalApplication;
+  // General
+  SESubstanceManager& m_Substances;
+  std::stringstream m_ss;
 };

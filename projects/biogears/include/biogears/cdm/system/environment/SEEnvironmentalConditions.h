@@ -22,81 +22,80 @@ class SESubstanceManager;
 class SEEnvironmentChange;
 class SEInitialEnvironment;
 
-class BIOGEARS_API SEEnvironmentalConditions : public Loggable
-{
+class BIOGEARS_API SEEnvironmentalConditions : public Loggable {
 protected:
   friend SEEnvironment;
-	friend SEEnvironmentChange;
-	friend SEInitialEnvironment;
-public:
+  friend SEEnvironmentChange;
+  friend SEInitialEnvironment;
 
-	SEEnvironmentalConditions(SESubstanceManager& substances);
-	virtual ~SEEnvironmentalConditions();
+public:
+  SEEnvironmentalConditions(SESubstanceManager& substances);
+  virtual ~SEEnvironmentalConditions();
 
   virtual void Clear();
 
   virtual bool Load(const CDM::EnvironmentalConditionsData& in);
   virtual CDM::EnvironmentalConditionsData* Unload() const;
+
 protected:
   virtual void Unload(CDM::EnvironmentalConditionsData& data) const;
 
-   virtual void Merge(const SEEnvironmentalConditions& from);
-public:
+  virtual void Merge(const SEEnvironmentalConditions& from);
 
+public:
   virtual bool LoadFile(const std::string& environmentFile);
 
-	virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name);
 
+  virtual CDM::enumSurroundingType::value GetSurroundingType() const;
+  virtual void SetSurroundingType(CDM::enumSurroundingType::value name);
+  virtual bool HasSurroundingType() const;
+  virtual void InvalidateSurroundingType();
 
-	virtual CDM::enumSurroundingType::value GetSurroundingType() const;
-	virtual void SetSurroundingType(CDM::enumSurroundingType::value name);
-	virtual bool HasSurroundingType() const;
-	virtual void InvalidateSurroundingType();
-
-	virtual bool HasAirDensity() const;
-	virtual SEScalarMassPerVolume& GetAirDensity();
+  virtual bool HasAirDensity() const;
+  virtual SEScalarMassPerVolume& GetAirDensity();
   virtual double GetAirDensity(const MassPerVolumeUnit& unit) const;
 
-	virtual bool HasAirVelocity() const;
-	virtual SEScalarLengthPerTime& GetAirVelocity();
+  virtual bool HasAirVelocity() const;
+  virtual SEScalarLengthPerTime& GetAirVelocity();
   virtual double GetAirVelocity(const LengthPerTimeUnit& unit) const;
 
-	virtual bool HasAmbientTemperature() const;
-	virtual SEScalarTemperature& GetAmbientTemperature();
+  virtual bool HasAmbientTemperature() const;
+  virtual SEScalarTemperature& GetAmbientTemperature();
   virtual double GetAmbientTemperature(const TemperatureUnit& unit) const;
 
-	virtual bool HasAtmosphericPressure() const;
-	virtual SEScalarPressure& GetAtmosphericPressure();
+  virtual bool HasAtmosphericPressure() const;
+  virtual SEScalarPressure& GetAtmosphericPressure();
   virtual double GetAtmosphericPressure(const PressureUnit& unit) const;
 
-	virtual bool HasClothingResistance() const;
-	virtual SEScalarHeatResistanceArea& GetClothingResistance();
+  virtual bool HasClothingResistance() const;
+  virtual SEScalarHeatResistanceArea& GetClothingResistance();
   virtual double GetClothingResistance(const HeatResistanceAreaUnit& unit) const;
 
-	virtual bool HasEmissivity() const;
-	virtual SEScalarFraction& GetEmissivity();
-	virtual double GetEmissivity() const;
+  virtual bool HasEmissivity() const;
+  virtual SEScalarFraction& GetEmissivity();
+  virtual double GetEmissivity() const;
 
-	virtual bool HasMeanRadiantTemperature() const;
-	virtual SEScalarTemperature& GetMeanRadiantTemperature();
+  virtual bool HasMeanRadiantTemperature() const;
+  virtual SEScalarTemperature& GetMeanRadiantTemperature();
   virtual double GetMeanRadiantTemperature(const TemperatureUnit& unit) const;
 
-	virtual bool HasRelativeHumidity() const;
-	virtual SEScalarFraction& GetRelativeHumidity();
-	virtual double GetRelativeHumidity() const;
+  virtual bool HasRelativeHumidity() const;
+  virtual SEScalarFraction& GetRelativeHumidity();
+  virtual double GetRelativeHumidity() const;
 
-	virtual bool HasRespirationAmbientTemperature() const;
-	virtual SEScalarTemperature& GetRespirationAmbientTemperature();
+  virtual bool HasRespirationAmbientTemperature() const;
+  virtual SEScalarTemperature& GetRespirationAmbientTemperature();
   virtual double GetRespirationAmbientTemperature(const TemperatureUnit& unit) const;
 
-	bool HasAmbientGas() const;
-	bool HasAmbientGas(const SESubstance& substance) const;
-	const std::vector<SESubstanceFraction*>& GetAmbientGases();
-	const std::vector<const SESubstanceFraction*>& GetAmbientGases() const;
-	SESubstanceFraction& GetAmbientGas(SESubstance& substance);
-	const SESubstanceFraction* GetAmbientGas(const SESubstance& substance) const;
-	void RemoveAmbientGas(const SESubstance& substance);
-	void RemoveAmbientGases();
+  bool HasAmbientGas() const;
+  bool HasAmbientGas(const SESubstance& substance) const;
+  const std::vector<SESubstanceFraction*>& GetAmbientGases();
+  const std::vector<const SESubstanceFraction*>& GetAmbientGases() const;
+  SESubstanceFraction& GetAmbientGas(SESubstance& substance);
+  const SESubstanceFraction* GetAmbientGas(const SESubstance& substance) const;
+  void RemoveAmbientGas(const SESubstance& substance);
+  void RemoveAmbientGases();
 
   bool HasAmbientAerosol() const;
   bool HasAmbientAerosol(const SESubstance& substance) const;
@@ -108,24 +107,23 @@ public:
   void RemoveAmbientAerosols();
 
 protected:
+  CDM::enumSurroundingType::value m_SurroundingType;
 
-	CDM::enumSurroundingType::value   m_SurroundingType;
-	
-	SEScalarMassPerVolume*	          m_AirDensity;
-	SEScalarLengthPerTime*	          m_AirVelocity;
-	SEScalarTemperature*              m_AmbientTemperature;
-	SEScalarPressure*	                m_AtmosphericPressure;
-	SEScalarHeatResistanceArea*	      m_ClothingResistance;
-	SEScalarFraction*	                m_Emissivity;
-	SEScalarTemperature*	            m_MeanRadiantTemperature;
-	SEScalarFraction*                 m_RelativeHumidity;
-	SEScalarTemperature*	            m_RespirationAmbientTemperature;
+  SEScalarMassPerVolume* m_AirDensity;
+  SEScalarLengthPerTime* m_AirVelocity;
+  SEScalarTemperature* m_AmbientTemperature;
+  SEScalarPressure* m_AtmosphericPressure;
+  SEScalarHeatResistanceArea* m_ClothingResistance;
+  SEScalarFraction* m_Emissivity;
+  SEScalarTemperature* m_MeanRadiantTemperature;
+  SEScalarFraction* m_RelativeHumidity;
+  SEScalarTemperature* m_RespirationAmbientTemperature;
 
-	std::vector<SESubstanceFraction*>       m_AmbientGases;
-	std::vector<const SESubstanceFraction*> m_cAmbientGases;
+  std::vector<SESubstanceFraction*> m_AmbientGases;
+  std::vector<const SESubstanceFraction*> m_cAmbientGases;
 
-  std::vector<SESubstanceConcentration*>       m_AmbientAerosols;
+  std::vector<SESubstanceConcentration*> m_AmbientAerosols;
   std::vector<const SESubstanceConcentration*> m_cAmbientAerosols;
 
-	SESubstanceManager&               m_Substances;
-};                  
+  SESubstanceManager& m_Substances;
+};

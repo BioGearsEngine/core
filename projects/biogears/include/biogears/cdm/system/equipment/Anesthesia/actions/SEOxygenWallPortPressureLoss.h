@@ -14,27 +14,26 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/OxygenWallPortPressureLossData.hxx>
 #include <biogears/schema/enumOnOff.hxx>
 
-class BIOGEARS_API SEOxygenWallPortPressureLoss : public SEAnesthesiaMachineAction
-{
+class BIOGEARS_API SEOxygenWallPortPressureLoss : public SEAnesthesiaMachineAction {
 public:
   SEOxygenWallPortPressureLoss();
   virtual ~SEOxygenWallPortPressureLoss();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
-	virtual void SetActive(bool b);
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
+  virtual void SetActive(bool b);
 
   virtual bool Load(const CDM::OxygenWallPortPressureLossData& in);
   virtual CDM::OxygenWallPortPressureLossData* Unload() const;
+
 protected:
   virtual void Unload(CDM::OxygenWallPortPressureLossData& data) const;
-public:
 
-	virtual void ToString(std::ostream &str) const;
+public:
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	
-	CDM::enumOnOff::value m_State;
-};  
+  CDM::enumOnOff::value m_State;
+};

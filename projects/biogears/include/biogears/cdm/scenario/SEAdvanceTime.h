@@ -14,31 +14,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/AdvanceTimeData.hxx>
 
-class BIOGEARS_API SEAdvanceTime : public SEAction
-{
+class BIOGEARS_API SEAdvanceTime : public SEAction {
 public:
+  SEAdvanceTime();
+  virtual ~SEAdvanceTime();
 
-	SEAdvanceTime();
-	virtual ~SEAdvanceTime();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
   virtual bool Load(const CDM::AdvanceTimeData& in);
   virtual CDM::AdvanceTimeData* Unload() const;
+
 protected:
   virtual void Unload(CDM::AdvanceTimeData& data) const;
 
 public:
+  virtual void ToString(std::ostream& str) const;
 
-	virtual void ToString(std::ostream &str) const;
-
-	virtual bool HasTime() const;
-	virtual SEScalarTime& GetTime();
+  virtual bool HasTime() const;
+  virtual SEScalarTime& GetTime();
   virtual double GetTime(const TimeUnit& unit) const;
 
 protected:
-
-	SEScalarTime *m_Time;
-};                  
+  SEScalarTime* m_Time;
+};

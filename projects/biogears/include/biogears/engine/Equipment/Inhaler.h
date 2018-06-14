@@ -10,7 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #pragma once
 #include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
@@ -28,13 +27,13 @@ class SELiquidCompartment;
 class SEGasCompartment;
 class SELiquidSubstanceQuantity;
 class BioGears;
-class BIOGEARS_API Inhaler : public SEInhaler, public BioGearsSystem
-{
-	friend class BioGears;
+class BIOGEARS_API Inhaler : public SEInhaler, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	Inhaler(BioGears& bg);
-	BioGears& m_data;
+  Inhaler(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~Inhaler();
@@ -47,29 +46,29 @@ public:
   // Load a state
   bool Load(const CDM::BioGearsInhalerData& in);
   CDM::BioGearsInhalerData* Unload() const;
+
 protected:
   void Unload(CDM::BioGearsInhalerData& data) const;
 
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   void SetUp();
- 
-public:
 
-	// main driver function responsible for calling the various ECG functions:
-	void PreProcess();
-	void Process();
-	void PostProcess();
+public:
+  // main driver function responsible for calling the various ECG functions:
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
 protected:
   void StateChange();
-	void Administer();
+  void Administer();
 
   // Serializable member variables (Set in Initialize and in schema)
 
   // Stateless member variable (Set in SetUp())
-	double                     m_dt_s;
-  SEGasCompartment          *m_Mouthpiece;
-  SELiquidCompartment       *m_AerosolMouthpiece;
-  SEGasCompartment          *m_AmbientEnv;
-  SELiquidSubstanceQuantity *m_InhalerDrug;
+  double m_dt_s;
+  SEGasCompartment* m_Mouthpiece;
+  SELiquidCompartment* m_AerosolMouthpiece;
+  SEGasCompartment* m_AmbientEnv;
+  SELiquidSubstanceQuantity* m_InhalerDrug;
 };

@@ -10,7 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #pragma once
 #include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
@@ -26,13 +25,13 @@ specific language governing permissions and limitations under the License.
 * Generic ECG machine to assess the heart rhythm.
 */
 
-class BIOGEARS_API ECG : public SEElectroCardioGram, public BioGearsSystem
-{
-	friend class BioGears;
+class BIOGEARS_API ECG : public SEElectroCardioGram, public BioGearsSystem {
+  friend class BioGears;
   friend class BioGearsEngineTest;
+
 protected:
-	ECG(BioGears& bg);
-	BioGears& m_data;
+  ECG(BioGears& bg);
+  BioGears& m_data;
 
 public:
   virtual ~ECG();
@@ -45,6 +44,7 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsElectroCardioGramData& in);
   virtual CDM::BioGearsElectroCardioGramData* Unload() const;
+
 protected:
   virtual void Unload(CDM::BioGearsElectroCardioGramData& data) const;
 
@@ -52,11 +52,10 @@ protected:
   void SetUp();
 
 public:
-
-	// main driver function responsible for calling the various ECG functions:
-	void PreProcess();
-	void Process();
-	void PostProcess();
+  // main driver function responsible for calling the various ECG functions:
+  void PreProcess();
+  void Process();
+  void PostProcess();
 
 protected:
   // Serializable member variables (Set in Initialize and in schema)
@@ -65,5 +64,5 @@ protected:
   SEElectroCardioGramInterpolator m_interpolator;
 
   // Stateless member variable (Set in SetUp())
-	double m_dt_s;
+  double m_dt_s;
 };

@@ -17,37 +17,35 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/ConsumeNutrientsData.hxx>
 
-class BIOGEARS_API SEConsumeNutrients : public SEPatientAction
-{
+class BIOGEARS_API SEConsumeNutrients : public SEPatientAction {
 public:
+  SEConsumeNutrients();
+  virtual ~SEConsumeNutrients();
 
-	SEConsumeNutrients();
-	virtual ~SEConsumeNutrients();
+  virtual void Clear(); //clear memory
 
-	virtual void Clear(); //clear memory
-
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::ConsumeNutrientsData& in);
   virtual CDM::ConsumeNutrientsData* Unload() const;
+
 protected:
   virtual void Unload(CDM::ConsumeNutrientsData& data) const;
 
 public:
+  bool HasNutrition() const;
+  SENutrition& GetNutrition();
+  const SENutrition* GetNutrition() const;
 
-	bool HasNutrition() const;
-	SENutrition& GetNutrition();
-	const SENutrition* GetNutrition() const;
+  virtual std::string GetNutritionFile() const;
+  virtual void SetNutritionFile(const std::string& fileName);
+  virtual bool HasNutritionFile() const;
+  virtual void InvalidateNutritionFile();
 
-	virtual std::string GetNutritionFile() const;
-	virtual void SetNutritionFile(const std::string& fileName);
-	virtual bool HasNutritionFile() const;
-	virtual void InvalidateNutritionFile();
-
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SENutrition* m_Nutrition;
-	std::string  m_NutritionFile;
-};      
+  SENutrition* m_Nutrition;
+  std::string m_NutritionFile;
+};

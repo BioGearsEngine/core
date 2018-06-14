@@ -15,28 +15,26 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(TestReportData)
 
-class BIOGEARS_API SETestReport : public Loggable
-{
+class BIOGEARS_API SETestReport : public Loggable {
 public:
+  SETestReport(Logger* logger);
+  virtual ~SETestReport();
 
-	SETestReport(Logger* logger);
-	virtual ~SETestReport();
-	
-	virtual void Reset(); //reset values
-	virtual void Clear(); //clear memory
+  virtual void Reset(); //reset values
+  virtual void Clear(); //clear memory
 
-	bool Load(const CDM::TestReportData& in);
-	std::unique_ptr<CDM::TestReportData> Unload() const;
+  bool Load(const CDM::TestReportData& in);
+  std::unique_ptr<CDM::TestReportData> Unload() const;
+
 protected:
-	void Unload(CDM::TestReportData& data) const;
+  void Unload(CDM::TestReportData& data) const;
 
 public:
-
-	bool WriteFile(const std::string& filename);
+  bool WriteFile(const std::string& filename);
 
   SETestSuite& CreateTestSuite();
-	const std::vector<SETestSuite*>&	GetTestSuites() const;
+  const std::vector<SETestSuite*>& GetTestSuites() const;
 
-protected: 
-	std::vector<SETestSuite*> m_testSuite;
+protected:
+  std::vector<SETestSuite*> m_testSuite;
 };

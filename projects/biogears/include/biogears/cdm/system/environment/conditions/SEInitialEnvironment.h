@@ -14,39 +14,38 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
 
-class BIOGEARS_API SEInitialEnvironment : public SEEnvironmentCondition
-{
+class BIOGEARS_API SEInitialEnvironment : public SEEnvironmentCondition {
 public:
-
-	SEInitialEnvironment(SESubstanceManager& substances);
-	virtual ~SEInitialEnvironment();
+  SEInitialEnvironment(SESubstanceManager& substances);
+  virtual ~SEInitialEnvironment();
 
   virtual void Clear();
 
-	virtual bool IsValid() const;
+  virtual bool IsValid() const;
 
-	virtual bool Load(const CDM::InitialEnvironmentData& in);
+  virtual bool Load(const CDM::InitialEnvironmentData& in);
   virtual CDM::InitialEnvironmentData* Unload() const;
+
 protected:
   virtual void Unload(CDM::InitialEnvironmentData& data) const;
 
 public:
-	virtual std::string GetName() const{ return "InitialEnvironment"; }
+  virtual std::string GetName() const { return "InitialEnvironment"; }
 
-	virtual bool HasConditions() const;
-	virtual SEEnvironmentalConditions& GetConditions();
-	virtual const SEEnvironmentalConditions* GetConditions() const;
+  virtual bool HasConditions() const;
+  virtual SEEnvironmentalConditions& GetConditions();
+  virtual const SEEnvironmentalConditions* GetConditions() const;
 
-	virtual std::string GetConditionsFile() const;
-	virtual void SetConditionsFile(const std::string& fileName);
-	virtual bool HasConditionsFile() const;
-	virtual void InvalidateConditionsFile();
-	
-	virtual void ToString(std::ostream &str) const;
+  virtual std::string GetConditionsFile() const;
+  virtual void SetConditionsFile(const std::string& fileName);
+  virtual bool HasConditionsFile() const;
+  virtual void InvalidateConditionsFile();
+
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SESubstanceManager&  m_Substances;
+  SESubstanceManager& m_Substances;
 
-	std::string                m_ConditionsFile;
-	SEEnvironmentalConditions* m_Conditions;
-};  
+  std::string m_ConditionsFile;
+  SEEnvironmentalConditions* m_Conditions;
+};
