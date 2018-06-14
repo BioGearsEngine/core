@@ -10,14 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+
 #include "TestDriver.h"
-
 #include "Verification.h"
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
 
 int main(int argc, char* argv[])
