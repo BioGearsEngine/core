@@ -917,8 +917,8 @@ void Respiratory::RespiratoryDriver()
 
       //Calculate the target Alveolar Ventilation based on the Arterial O2 and CO2 concentrations.  Lower target as a function of central nervous
       //depressant effects of any drugs (currently only morphine has this effect)
-      double dTargetAlveolarVentilation_L_Per_min = m_PeripheralControlGainConstant * exp(-0.05 * m_ArterialO2PartialPressure_mmHg) * MAX(0., m_ArterialCO2PartialPressure_mmHg - PeripheralCO2PartialPressureSetPoint); //Peripheral portion
-      dTargetAlveolarVentilation_L_Per_min += m_CentralControlGainConstant * MAX(0., m_ArterialCO2PartialPressure_mmHg - CentralCO2PartialPressureSetPoint); //Central portion
+      double dTargetAlveolarVentilation_L_Per_min = m_PeripheralControlGainConstant * exp(-0.05 * m_ArterialO2PartialPressure_mmHg) * std::max(0., m_ArterialCO2PartialPressure_mmHg - PeripheralCO2PartialPressureSetPoint); //Peripheral portion
+      dTargetAlveolarVentilation_L_Per_min += m_CentralControlGainConstant * std::max(0., m_ArterialCO2PartialPressure_mmHg - CentralCO2PartialPressureSetPoint); //Central portion
       dTargetAlveolarVentilation_L_Per_min *= (1 - CNSChange);
 
       //Metabolic modifier is used to drive the system to reasonable levels achievable during increased metabolic exertion
@@ -941,7 +941,7 @@ void Respiratory::RespiratoryDriver()
         changeFraction = std::abs(m_ArterialCO2PartialPressure_mmHg - targetCO2PP_mmHg) / targetCO2PP_mmHg * 0.5;
       }
 
-      changeFraction = MIN(changeFraction, 1.0);
+      changeFraction = std::min(changeFraction, 1.0);
 
       dTargetAlveolarVentilation_L_Per_min = m_PreviousTargetAlveolarVentilation_L_Per_min + (dTargetAlveolarVentilation_L_Per_min - m_PreviousTargetAlveolarVentilation_L_Per_min) * changeFraction;
       m_PreviousTargetAlveolarVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min;
@@ -973,13 +973,13 @@ void Respiratory::RespiratoryDriver()
       //This is a piecewise function that plateaus at the Tidal Volume equal to 1/2 * Vital Capacity
       //The Respiration Rate will make up for the Alveoli Ventilation difference
       double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
-      dTargetTidalVolume_L = MIN(dTargetTidalVolume_L, dHalfVitalCapacity_L);
+      dTargetTidalVolume_L = std::min(dTargetTidalVolume_L, dHalfVitalCapacity_L);
 
       //Map the Target Tidal Volume to the Driver
       double TargetVolume_L = m_InitialFunctionalResidualCapacity_L + dTargetTidalVolume_L;
       m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(TargetVolume_L);
       //There's a maximum force the driver can try to achieve
-      m_PeakRespiratoryDrivePressure_cmH2O = MAX(m_PeakRespiratoryDrivePressure_cmH2O, m_MaxDriverPressure_cmH2O);
+      m_PeakRespiratoryDrivePressure_cmH2O = std::max(m_PeakRespiratoryDrivePressure_cmH2O, m_MaxDriverPressure_cmH2O);
       //The peak driver pressure is the pressure above the default pressure.  Therefore, we subtract it from the base pressure.
       m_PeakRespiratoryDrivePressure_cmH2O -= m_DefaultDrivePressure_cmH2O;
 
@@ -1128,12 +1128,12 @@ void Respiratory::BronchoDilation()
     double dRightBronchiResistance = m_CarinaToRightAnatomicDeadSpace->GetNextResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
     if (bronchoDilationEffect >= 0.0) // positive, therefore dilation
     {
-      bronchoDilationEffect = MIN(bronchoDilationEffect, 1.0);
+      bronchoDilationEffect = std::min(bronchoDilationEffect, 1.0);
       dLeftBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespClosedResistance_cmH2O_s_Per_L, dLeftBronchiResistance, bronchoDilationEffect);
       dRightBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespClosedResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
     } else //negative, therefore constriction
     {
-      bronchoDilationEffect = MIN(-bronchoDilationEffect, 1.0);
+      bronchoDilationEffect = std::min(-bronchoDilationEffect, 1.0);
       dLeftBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dLeftBronchiResistance, bronchoDilationEffect);
       dRightBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
       resTrack = dRightBronchiResistance;
@@ -1229,7 +1229,7 @@ void Respiratory::Pneumothorax()
       if (severity > 0.0 && !m_PatientActions->HasLeftChestOcclusiveDressing()) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
       }
-      resistance_cmH2O_s_Per_L = MIN(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
+      resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToLeftChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
       if (m_PatientActions->HasLeftNeedleDecompression()) {
@@ -1244,7 +1244,7 @@ void Respiratory::Pneumothorax()
       if (severity > 0.0 && !m_PatientActions->HasRightChestOcclusiveDressing()) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
       }
-      resistance_cmH2O_s_Per_L = MIN(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
+      resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
       if (m_PatientActions->HasRightNeedleDecompression()) {
@@ -1260,7 +1260,7 @@ void Respiratory::Pneumothorax()
       if (severity > 0.0) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
       }
-      resistance_cmH2O_s_Per_L = MIN(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
+      resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_LeftAlveoliLeakToLeftPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
       if (m_PatientActions->HasLeftNeedleDecompression()) {
@@ -1275,7 +1275,7 @@ void Respiratory::Pneumothorax()
       if (severity > 0.0) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
       }
-      resistance_cmH2O_s_Per_L = MIN(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
+      resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
       if (m_PatientActions->HasRightNeedleDecompression()) {
@@ -1474,7 +1474,7 @@ void Respiratory::COPD()
     double dRightLungFraction = 1.0;
 
     // Calculate Pulmonary Capillary Resistance Multiplier based on severities
-    double dMaxSeverity = MAX(dBronchitisSeverity, dEmphysemaSeverity);
+    double dMaxSeverity = std::max(dBronchitisSeverity, dEmphysemaSeverity);
     // Resistance is based on a a simple line fit where severity = 0 is resistance multiplier = 1.0
     // and severity = 0.6 is resistance multiplier = 2.0.
     double dSlopePulResist = 1.66666; // hard-coded slope for line
@@ -1857,7 +1857,7 @@ void Respiratory::UpdateObstructiveResistance()
     double dSeverity = m_data.GetConditions().GetChronicObstructivePulmonaryDisease()->GetBronchitisSeverity().GetValue();
     // Resistance function: Base = 10, Min = 1.0, Max = 100.0 (increasing with severity)
     double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 90, 1, dSeverity);
-    combinedResistanceScalingFactor = MAX(combinedResistanceScalingFactor, dResistanceScalingFactor);
+    combinedResistanceScalingFactor = std::max(combinedResistanceScalingFactor, dResistanceScalingFactor);
   }
 
   // Get the path resistances
@@ -1892,8 +1892,8 @@ void Respiratory::UpdateIERatio()
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     double dBronchitisSeverity = m_data.GetConditions().GetChronicObstructivePulmonaryDisease()->GetBronchitisSeverity().GetValue();
     double dEmphysemaSeverity = m_data.GetConditions().GetChronicObstructivePulmonaryDisease()->GetEmphysemaSeverity().GetValue();
-    combinedSeverity = MAX(combinedSeverity, dEmphysemaSeverity);
-    combinedSeverity = MAX(combinedSeverity, dBronchitisSeverity);
+    combinedSeverity = std::max(combinedSeverity, dEmphysemaSeverity);
+    combinedSeverity = std::max(combinedSeverity, dBronchitisSeverity);
   }
   if (m_data.GetConditions().HasLobarPneumonia()) {
     double severity = m_data.GetConditions().GetLobarPneumonia()->GetSeverity().GetValue();
@@ -1906,7 +1906,7 @@ void Respiratory::UpdateIERatio()
     double dLeftLungRatio = 1.0 - dRightLungRatio;
 
     double dLP_ScaledSeverity = (0.75 * severity) + (severity * dLeftLungFraction * dLeftLungRatio) + (severity * dRightLungFraction * dRightLungRatio);
-    combinedSeverity = MAX(combinedSeverity, dLP_ScaledSeverity);
+    combinedSeverity = std::max(combinedSeverity, dLP_ScaledSeverity);
   }
 
   if (combinedSeverity > 0.0) {

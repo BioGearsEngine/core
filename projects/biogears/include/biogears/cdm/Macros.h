@@ -12,8 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#define MIN(A, B) (((A) < (B)) ? (A) : (B))
-#define MAX(A, B) (((A) > (B)) ? (A) : (B))
 #define BLIM(input, min, max) (input = (input > max) ? max : ((input < min) ? min : input))
 #define LLIM(input, min) (input = (input < min) ? min : input)
 #define ULIM(input, max) (input = (input > max) ? max : input)

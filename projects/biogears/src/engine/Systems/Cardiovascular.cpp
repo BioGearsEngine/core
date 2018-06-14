@@ -1434,13 +1434,13 @@ void Cardiovascular::MetabolicToneResponse()
 
   double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::C); //Resting: 37.0 degC
   double coreTempSet_degC = m_data.GetConfiguration().GetCoreTemperatureHigh(TemperatureUnit::C); //37.1 degC
-  double coreTempDelta_degC = MAX(coreTemp_degC - coreTempSet_degC, 0.0);
-  coreTempDelta_degC = MIN(coreTempDelta_degC, 1.0); //A 1 degree increase in core temperature is the where the cardiovascular response on resistances is capped
+  double coreTempDelta_degC = std::max(coreTemp_degC - coreTempSet_degC, 0.0);
+  coreTempDelta_degC = std::min(coreTempDelta_degC, 1.0); //A 1 degree increase in core temperature is the where the cardiovascular response on resistances is capped
   //The skin multiplier is used to increase the skin blood flow resistance, effectively reducing the skin blood flow leading to less heat transfered from core to skin.
-  double skinMultiplier = 1.0 / MAX((coreTemp_degC - 35.0), 0.001);
+  double skinMultiplier = 1.0 / std::max((coreTemp_degC - 35.0), 0.001);
   double coreTempLow_degC = m_data.GetConfiguration().GetCoreTemperatureLow(TemperatureUnit::C); //36.8 degC
   /// \cite talebipour2006sauna
-  double tempMultiplier = 1.0 - 0.4 * MIN(coreTempDelta_degC, 1.0); //Approximate 40% reduction in peripheral resistance due to core temperature rise of 1 degree.
+  double tempMultiplier = 1.0 - 0.4 * std::min(coreTempDelta_degC, 1.0); //Approximate 40% reduction in peripheral resistance due to core temperature rise of 1 degree.
   double metabolicModifier = 1.0;
   //The metabolic multiplier is used as a tuned response to represent cardiovascular resistance effects during exercise
   double sp0 = 1.5;

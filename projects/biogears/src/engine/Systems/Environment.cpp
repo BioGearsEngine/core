@@ -237,7 +237,7 @@ void Environment::PreProcess()
   //Set clothing resistor
   double dClothingResistance_rsi = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::rsi); //1 rsi = 1 m^2-K/W
   double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
-  m_SkinToClothing->GetNextResistance().SetValue(MAX((dClothingResistance_rsi / dSurfaceArea_m2), m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W)), HeatResistanceUnit::K_Per_W);
+  m_SkinToClothing->GetNextResistance().SetValue(std::max((dClothingResistance_rsi / dSurfaceArea_m2), m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W)), HeatResistanceUnit::K_Per_W);
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
@@ -314,7 +314,7 @@ void Environment::ProcessActions()
     if (ah.HasSurfaceArea() && ah.HasSurfaceAreaFraction()) {
       ///\error Warning: SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.
       Warning("SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.");
-      dEffectiveAreaFraction = MAX(ah.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ah.GetSurfaceAreaFraction().GetValue());
+      dEffectiveAreaFraction = std::max(ah.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ah.GetSurfaceAreaFraction().GetValue());
       ah.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
       ah.GetSurfaceArea().Invalidate();
     } else if (ah.HasSurfaceAreaFraction()) {
@@ -344,7 +344,7 @@ void Environment::ProcessActions()
     if (ac.HasSurfaceArea() && ac.HasSurfaceAreaFraction()) {
       ///\error Warning: SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.
       Warning("SurfaceArea and SurfaceAreaFraction are both set. The largest fraction will be used.");
-      dEffectiveAreaFraction = MAX(ac.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ac.GetSurfaceAreaFraction().GetValue());
+      dEffectiveAreaFraction = std::max(ac.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ac.GetSurfaceAreaFraction().GetValue());
       ac.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
       ac.GetSurfaceArea().Invalidate();
     } else if (ac.HasSurfaceAreaFraction()) {
@@ -379,7 +379,7 @@ void Environment::ProcessActions()
     if (ap.HasSurfaceArea() && ap.HasSurfaceAreaFraction()) {
       ///\error Warning: AppliedSurfaceArea and AppliedSurfaceAreaFraction are both set. The largest fraction will be used.
       Warning("AppliedSurfaceArea and AppliedSurfaceAreaFraction are both set. The largest fraction will be used.");
-      dEffectiveAreaFraction = MAX(ap.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ap.GetSurfaceAreaFraction().GetValue());
+      dEffectiveAreaFraction = std::max(ap.GetSurfaceArea(AreaUnit::m2) / dSurfaceArea_m2, ap.GetSurfaceAreaFraction().GetValue());
       ap.GetSurfaceAreaFraction().SetValue(dEffectiveAreaFraction);
       ap.GetSurfaceArea().Invalidate();
     } else if (ap.HasSurfaceAreaFraction()) {
@@ -518,7 +518,7 @@ void Environment::CalculateRadiation()
       dResistance_K_Per_W = dSurfaceArea_m2 / dRadiativeHeatTransferCoefficient_WPerM2_K;
     }
 
-    MAX(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
+    std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
     m_ClothingToEnclosurePath->GetNextResistance().SetValue(dResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
 
     //Set the source
@@ -580,7 +580,7 @@ void Environment::CalculateConvection()
     dResistance_K_Per_W = dSurfaceArea_m2 / dConvectiveHeatTransferCoefficient_WPerM2_K;
   }
 
-  MAX(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
+  std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
   m_ClothingToEnvironmentPath->GetNextResistance().SetValue(dResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
 
   //Set the source

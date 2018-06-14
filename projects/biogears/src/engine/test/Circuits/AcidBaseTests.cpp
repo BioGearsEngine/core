@@ -126,7 +126,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
         double HbReq4CO2_mM = 0.05 * currentTotalCO2_mM / 4.0;
         double dissolvedO2_mM = 0.01 * currentTotalO2_mM;
         double HbReq4O2_mM = 0.99 * currentTotalO2_mM / 4.0;
-        if (MAX(HbReq4O2_mM, HbReq4CO2_mM) > normalHgb_mM) {
+        if (std::max(HbReq4O2_mM, HbReq4CO2_mM) > normalHgb_mM) {
           double dif_mM;
           if (HbReq4O2_mM > normalHgb_mM) {
             // Bound all the hemoglobin and the rest will be dissolved. Error to tell the user that there is way too much O2 in the blood.
@@ -144,7 +144,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
           continue;
         }
         double knob = 0.5;
-        double HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
+        double HbO2CO2_mM = knob * std::min(HbReq4O2_mM, HbReq4CO2_mM);
         double HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
         double HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
         double Hb_mM = normalHgb_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);
@@ -155,7 +155,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
             knob += 0.2 * (1.0 - knob);
             if (itr == 50)
               knob = 1.0; //Last time through make sure knob is exactly 1.0
-            HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
+            HbO2CO2_mM = knob * std::min(HbReq4O2_mM, HbReq4CO2_mM);
             HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
             HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
             Hb_mM = normalHgb_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);

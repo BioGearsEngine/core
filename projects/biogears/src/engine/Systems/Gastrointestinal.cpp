@@ -371,7 +371,7 @@ void Gastrointestinal::DigestNutrient()
       m_SmallIntestineChymeGlucose->GetMass().IncrementValue(carbMassDepleted_mg, MassUnit::mg);
     } else {
       //otherwise just empty the remaining contents
-      temp_mg = MAX(m_StomachContents->GetCarbohydrate(MassUnit::mg), 0.0);
+      temp_mg = std::max(m_StomachContents->GetCarbohydrate(MassUnit::mg), 0.0);
       m_StomachContents->GetCarbohydrate().IncrementValue(-temp_mg, MassUnit::mg);
       m_SmallIntestineChymeGlucose->GetMass().IncrementValue(temp_mg, MassUnit::mg);
     }
@@ -384,7 +384,7 @@ void Gastrointestinal::DigestNutrient()
       m_StomachContents->GetProtein().IncrementValue(-proteinMassDepleted_mg, MassUnit::mg);
       m_SmallIntestineChymeAminoAcids->GetMass().IncrementValue(proteinMassDepleted_mg, MassUnit::mg);
     } else {
-      temp_mg = MAX(m_StomachContents->GetProtein(MassUnit::mg), 0.0);
+      temp_mg = std::max(m_StomachContents->GetProtein(MassUnit::mg), 0.0);
       m_StomachContents->GetProtein().IncrementValue(-temp_mg, MassUnit::mg);
       m_SmallIntestineChymeAminoAcids->GetMass().IncrementValue(temp_mg, MassUnit::mg);
     }
@@ -397,7 +397,7 @@ void Gastrointestinal::DigestNutrient()
       m_StomachContents->GetFat().IncrementValue(-fatMassDepleted_mg, MassUnit::mg);
       m_SmallIntestineChymeTriacylglycerol->GetMass().IncrementValue(fatMassDepleted_mg, MassUnit::mg);
     } else {
-      temp_mg = MAX(m_StomachContents->GetFat(MassUnit::mg), 0.0);
+      temp_mg = std::max(m_StomachContents->GetFat(MassUnit::mg), 0.0);
       m_StomachContents->GetFat().IncrementValue(-temp_mg, MassUnit::mg);
       m_SmallIntestineChymeTriacylglycerol->GetMass().IncrementValue(temp_mg, MassUnit::mg);
     }
@@ -530,8 +530,8 @@ void Gastrointestinal::AbsorbNutrients()
   double triacylglycerolAbsorbed_mg = intestineFatAbsorption_mg_Per_s * m_dT_s;
 
   //access the chyme mass of our nutrients:
-  double massNutrients_g = MAX(MAX(m_SmallIntestineChymeAminoAcids->GetMass().GetValue(MassUnit::g), m_SmallIntestineChymeGlucose->GetMass().GetValue(MassUnit::g)),
-    MAX(m_SmallIntestineChymeAminoAcids->GetMass().GetValue(MassUnit::g), m_SmallIntestineChymeTriacylglycerol->GetMass().GetValue(MassUnit::g)));
+  double massNutrients_g = std::max(std::max(m_SmallIntestineChymeAminoAcids->GetMass().GetValue(MassUnit::g), m_SmallIntestineChymeGlucose->GetMass().GetValue(MassUnit::g)),
+    std::max(m_SmallIntestineChymeAminoAcids->GetMass().GetValue(MassUnit::g), m_SmallIntestineChymeTriacylglycerol->GetMass().GetValue(MassUnit::g)));
 
   //compute the hill function sodium absorption
   sodiumAbsorption_g_Per_h = sodiumAbsorptionVmax_g_Per_h * (massNutrients_g / (sodiumAbsorptionKm_g + massNutrients_g));
@@ -681,7 +681,7 @@ void Gastrointestinal::ChymeSecretion()
   double temp_g = 0.0;
 
   //access the chyme mass of our nutrients:
-  double massNutrients_g = MAX(MAX(m_SmallIntestineChymeAminoAcids->GetMass().GetValue(MassUnit::g), m_SmallIntestineChymeGlucose->GetMass().GetValue(MassUnit::g)),
+  double massNutrients_g = std::max(std::max(m_SmallIntestineChymeAminoAcids->GetMass().GetValue(MassUnit::g), m_SmallIntestineChymeGlucose->GetMass().GetValue(MassUnit::g)),
     m_SmallIntestineChymeAminoAcids->GetMass().GetValue(MassUnit::g));
 
   //compute the secretion of salt into the intestine:

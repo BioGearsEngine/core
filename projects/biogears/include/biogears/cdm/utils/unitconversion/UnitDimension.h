@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 /// that is used for purposes of dimensional analysis
 //----------------------------------------------------------------------------
 #pragma once
+#include <algorithm>
 
 #include <biogears/cdm/utils/unitconversion/CompoundUnitElement.h>
 
@@ -83,8 +84,8 @@ public:
     if (m_EList.size() == rhs.m_EList.size()) {
       return (m_EList == rhs.m_EList);
     } else {
-      size_t shorter = MIN(m_EList.size(), rhs.m_EList.size());
-      size_t longer = MAX(m_EList.size(), rhs.m_EList.size());
+      size_t shorter = std::min<size_t>(m_EList.size(), rhs.m_EList.size());
+      size_t longer = std::max<size_t>(m_EList.size(), rhs.m_EList.size());
       // First compare over elements they have in common
       for (size_t i = 0; i < shorter; ++i) {
         if (m_EList[i] != rhs.m_EList[i]) {
@@ -114,8 +115,8 @@ public:
   // objects have already been built
   CUnitDimension& operator+=(const CUnitDimension& rhs)
   {
-    size_t shorter = MIN(m_EList.size(), rhs.m_EList.size());
-    size_t longer = MAX(m_EList.size(), rhs.m_EList.size());
+    size_t shorter = std::min<size_t>(m_EList.size(), rhs.m_EList.size());
+    size_t longer = std::max<size_t>(m_EList.size(), rhs.m_EList.size());
     // First combine over elements they have in common
     for (size_t i = 0; i < shorter; ++i) {
       m_EList[i] += rhs.m_EList[i];
@@ -134,8 +135,8 @@ public:
 
   CUnitDimension& operator-=(const CUnitDimension& rhs)
   {
-    size_t shorter = MIN(m_EList.size(), rhs.m_EList.size());
-    size_t longer = MAX(m_EList.size(), rhs.m_EList.size());
+    size_t shorter = std::min<size_t>(m_EList.size(), rhs.m_EList.size());
+    size_t longer = std::max<size_t>(m_EList.size(), rhs.m_EList.size());
     // First combine over elements they have in common
     for (size_t i = 0; i < shorter; ++i) {
       m_EList[i] -= rhs.m_EList[i];
@@ -222,8 +223,8 @@ public:
 
   bool operator<(const CUnitDimension& rhs) const
   {
-    size_t shorter = MIN(m_EList.size(), rhs.m_EList.size());
-    size_t longer = MAX(m_EList.size(), rhs.m_EList.size());
+    size_t shorter = std::min<size_t>(m_EList.size(), rhs.m_EList.size());
+    size_t longer = std::max<size_t>(m_EList.size(), rhs.m_EList.size());
     // First compare over elements they have in common
     for (size_t i = 0; i < shorter; ++i) {
       if (m_EList[i] > rhs.m_EList[i]) {

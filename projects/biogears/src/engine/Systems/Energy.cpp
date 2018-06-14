@@ -385,7 +385,7 @@ void Energy::CalculateMetabolicHeatGeneration()
     //Todo: Add an event for shivering
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
     totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
-    totalMetabolicRateNew_W = MIN(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
+    totalMetabolicRateNew_W = std::min(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);
   } else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) //Basic Metabolic rate
   {

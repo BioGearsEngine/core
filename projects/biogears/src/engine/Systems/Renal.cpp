@@ -559,7 +559,7 @@ void Renal::CalculateUltrafiltrationFeedback()
       filterResistance_mmHg_s_Per_mL = m_CVOpenResistance_mmHg_s_Per_mL;
 
     // Bounding the resistance in case the math starts to shoot the value above feasible resistances.
-    filterResistance_mmHg_s_Per_mL = MIN(filterResistance_mmHg_s_Per_mL, m_CVOpenResistance_mmHg_s_Per_mL);
+    filterResistance_mmHg_s_Per_mL = std::min(filterResistance_mmHg_s_Per_mL, m_CVOpenResistance_mmHg_s_Per_mL);
 
     filterResistancePath->GetNextResistance().SetValue(filterResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
 
@@ -689,11 +689,11 @@ void Renal::CalculateGluconeogenesis()
     //If Converted Glucose + Reabsorbed Glucose > TM, the difference is excreted as Lactate
     if (!m_glucose->GetClearance().GetRenalTransportMaximum().IsInfinity()) {
       double transportMaximum_mg_Per_s = m_glucose->GetClearance().GetRenalTransportMaximum(MassPerTimeUnit::mg_Per_s);
-      reabsorptionRate_mg_Per_s = MIN(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
+      reabsorptionRate_mg_Per_s = std::min(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
     }
 
     double massToMove_mg = reabsorptionRate_mg_Per_s * m_dt;
-    massToMove_mg = MAX(massToMove_mg, 0.0);
+    massToMove_mg = std::max(massToMove_mg, 0.0);
     double lactateConverted_mg = massToMove_mg - glucoseReabsorptionMass_mg;
     lactateExcreted_mg = massToMove_mg - (lactateExcreted_mg + glucoseReabsorptionMass_mg);
 
@@ -842,7 +842,7 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
     double massToMove_mg = concentration_mg_Per_mL * flow_mL_Per_s * m_dt * filterability * fractionUnbound;
 
     //Make sure we don't try to move too much
-    massToMove_mg = MIN(massToMove_mg, glomerularSubQ->GetMass().GetValue(MassUnit::mg));
+    massToMove_mg = std::min(massToMove_mg, glomerularSubQ->GetMass().GetValue(MassUnit::mg));
 
     //Increment & decrement
     glomerularSubQ->GetMass().IncrementValue(-massToMove_mg, MassUnit::mg);
@@ -1039,18 +1039,18 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
       double reabsorptionRatio = sub.GetClearance().GetRenalReabsorptionRatio().GetValue();
       double massModification = 1.0 / permeabilityModificationFactor;
       //limit the ratio to 1 to allow for concentrated urine
-      massModification = MIN(massModification, 1.0);
+      massModification = std::min(massModification, 1.0);
       massToMove_mg = concentration_mg_Per_mL * flow_mL_Per_s * m_dt * reabsorptionRatio * massModification;
     }
 
     //Make sure we don't try to move too much
-    massToMove_mg = MIN(massToMove_mg, tubulesSubQ->GetMass().GetValue(MassUnit::mg));
+    massToMove_mg = std::min(massToMove_mg, tubulesSubQ->GetMass().GetValue(MassUnit::mg));
 
     double reabsorptionRate_mg_Per_s = massToMove_mg / m_dt;
     //Stay below the maximum allowable transport
     if (!sub.GetClearance().GetRenalTransportMaximum().IsInfinity()) {
       double transportMaximum_mg_Per_s = sub.GetClearance().GetRenalTransportMaximum().GetValue(MassPerTimeUnit::mg_Per_s);
-      reabsorptionRate_mg_Per_s = MIN(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
+      reabsorptionRate_mg_Per_s = std::min(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
     }
 
     massToMove_mg = reabsorptionRate_mg_Per_s * m_dt;
@@ -1122,7 +1122,7 @@ void Renal::CalculateExcretion(SESubstance& sub)
     double excretionFlow_mL_Per_s = excretionPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
     double excretionRate_mg_Per_s = tubulesConcentration_mg_Per_mL * excretionFlow_mL_Per_s;
     //Make sure it's not a super small negative number
-    totalExcretionRate_mg_Per_s += MAX(excretionRate_mg_Per_s, 0.0);
+    totalExcretionRate_mg_Per_s += std::max(excretionRate_mg_Per_s, 0.0);
 
     if (&sub == m_lactate) {
       if (kidney == 0) {
@@ -1535,7 +1535,7 @@ void Renal::UpdateBladderVolume()
 
   //Don't let this get below zero during urination
   //The urination action will catch it next time around, so this shouldn't be hit more than once (and likely never)
-  bladderVolume_mL = MAX(bladderVolume_mL, 0.0);
+  bladderVolume_mL = std::max(bladderVolume_mL, 0.0);
   m_bladderNode->GetNextVolume().SetValue(bladderVolume_mL, VolumeUnit::mL);
 }
 

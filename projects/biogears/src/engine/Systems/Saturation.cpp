@@ -116,9 +116,9 @@ public:
     double f3 = pH - 6.1 - logTerm;
 
     // Huge penalty for negative numbers
-    double negativePenaltyO2 = MIN(0.0, o2_mM);
-    double negativePenaltyCO2 = (MIN(0.0, bicarb_mM) + MIN(0.0, co2_mM));
-    double pHpenalty = MAX((pH - 8.0), 0.0);
+    double negativePenaltyO2 = std::min(0.0, o2_mM);
+    double negativePenaltyCO2 = (std::min(0.0, bicarb_mM) + std::min(0.0, co2_mM));
+    double pHpenalty = std::max((pH - 8.0), 0.0);
 
     fvec(0) = f0;
     fvec(1) = f1 - negativePenaltyCO2 * 100.0;
@@ -601,11 +601,11 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
     double currentBoundCO2Percent = ((HbCO2_mM + HbO2CO2_mM) * 4.0) / InputAmountTotalCO2_mM;
     // Move towards the above listed percents
     double dampingFactor = 0.1;
-    double targetDissolvedO2Percent = MAX(currentDissolvedO2Percent + dampingFactor * (0.01 - currentDissolvedO2Percent), 0.0);
-    double targetBoundO2Percent = MAX(currentBoundO2Percent + dampingFactor * (0.99 - currentBoundO2Percent), 0.0);
-    double targetDissolvedCO2Percent = MAX(currentDissolvedCO2Percent + dampingFactor * (0.05 - currentDissolvedCO2Percent), 0.0);
-    double targetBicarbCO2Percent = MAX(currentBicarbCO2Percent + dampingFactor * (0.9 - currentBicarbCO2Percent), 0.0);
-    double targetBoundCO2Percent = MAX(currentBoundCO2Percent + dampingFactor * (0.05 - currentBoundCO2Percent), 0.0);
+    double targetDissolvedO2Percent = std::max(currentDissolvedO2Percent + dampingFactor * (0.01 - currentDissolvedO2Percent), 0.0);
+    double targetBoundO2Percent = std::max(currentBoundO2Percent + dampingFactor * (0.99 - currentBoundO2Percent), 0.0);
+    double targetDissolvedCO2Percent = std::max(currentDissolvedCO2Percent + dampingFactor * (0.05 - currentDissolvedCO2Percent), 0.0);
+    double targetBicarbCO2Percent = std::max(currentBicarbCO2Percent + dampingFactor * (0.9 - currentBicarbCO2Percent), 0.0);
+    double targetBoundCO2Percent = std::max(currentBoundCO2Percent + dampingFactor * (0.05 - currentBoundCO2Percent), 0.0);
 
     // Distribute the total amount of gas
     resultantDissolvedO2_mM = targetDissolvedO2Percent * InputAmountTotalO2_mM;
@@ -614,7 +614,7 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
     resultantHCO3_mM = targetBicarbCO2Percent * InputAmountTotalCO2_mM;
     double HbReq4CO2_mM = (targetBoundCO2Percent * InputAmountTotalCO2_mM) / 4.0;
 
-    if (MAX(HbReq4O2_mM, HbReq4CO2_mM) > InputAmountTotalHb_mM) {
+    if (std::max(HbReq4O2_mM, HbReq4CO2_mM) > InputAmountTotalHb_mM) {
       double dif_mM;
       if (HbReq4O2_mM > InputAmountTotalHb_mM) {
         // Bound all the hemoglobin and the rest will be dissolved. Error to tell the user that there is way too much O2 in the blood.
@@ -632,7 +632,7 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
     }
     // Try half
     double knob = 0.5;
-    HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
+    HbO2CO2_mM = knob * std::min(HbReq4O2_mM, HbReq4CO2_mM);
     HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
     HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
     Hb_mM = InputAmountTotalHb_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);
@@ -644,7 +644,7 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
         knob += 0.2 * (1.0 - knob);
         if (itr == 50)
           knob = 1.0; //Last time through make sure knob is exactly 1.0
-        HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
+        HbO2CO2_mM = knob * std::min(HbReq4O2_mM, HbReq4CO2_mM);
         HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
         HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
         Hb_mM = InputAmountTotalHb_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);
@@ -1051,7 +1051,7 @@ bool SaturationCalculator::DistributeHemoglobinBySaturation()
   double HbReq4O2_mM = O2_sat * Hb_total_mM;
   // Start with the assumption that half of the smaller bound Hb is HbO2CO2
   double knob = 0.5;
-  HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
+  HbO2CO2_mM = knob * std::min(HbReq4O2_mM, HbReq4CO2_mM);
   HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
   HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
   Hb_mM = Hb_total_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);
@@ -1063,7 +1063,7 @@ bool SaturationCalculator::DistributeHemoglobinBySaturation()
       knob += 0.2 * (1.0 - knob);
       if (itr == 50)
         knob = 1.0; //Last time through make sure knob is exactly 1.0
-      HbO2CO2_mM = knob * MIN(HbReq4O2_mM, HbReq4CO2_mM);
+      HbO2CO2_mM = knob * std::min(HbReq4O2_mM, HbReq4CO2_mM);
       HbCO2_mM = HbReq4CO2_mM - HbO2CO2_mM;
       HbO2_mM = HbReq4O2_mM - HbO2CO2_mM;
       Hb_mM = Hb_total_mM - (HbO2CO2_mM + HbCO2_mM + HbO2_mM);

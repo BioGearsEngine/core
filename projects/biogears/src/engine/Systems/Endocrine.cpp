@@ -235,7 +235,7 @@ void Endocrine::SynthesizeGlucagon()
     double minimumGlucagonRate_pmol_Per_min = 0;
     if (m_data.GetConditions().GetDiabetesType1()->HasInsulinProductionSeverity())
       minimumGlucagonRate_pmol_Per_min = GeneralMath::LinearInterpolator(0, 1, 0, .57 * 14.07, m_data.GetConditions().GetDiabetesType1()->GetInsulinProductionSeverity().GetValue());
-    glucagonSynthesisRate_pmol_Per_min = MAX(glucagonSynthesisRate_pmol_Per_min, minimumGlucagonRate_pmol_Per_min);
+    glucagonSynthesisRate_pmol_Per_min = std::max(glucagonSynthesisRate_pmol_Per_min, minimumGlucagonRate_pmol_Per_min);
   } else if (m_data.GetConditions().HasDiabetesType2()) {
     double minimumGlucagonRate_pmol_Per_min = 0;
     double totalEffect = 0;
@@ -247,7 +247,7 @@ void Endocrine::SynthesizeGlucagon()
     BLIM(totalEffect, 0, 1);
 
     minimumGlucagonRate_pmol_Per_min = GeneralMath::LinearInterpolator(0, 1, 0, .57 * 14.07, totalEffect);
-    glucagonSynthesisRate_pmol_Per_min = MAX(glucagonSynthesisRate_pmol_Per_min, minimumGlucagonRate_pmol_Per_min);
+    glucagonSynthesisRate_pmol_Per_min = std::max(glucagonSynthesisRate_pmol_Per_min, minimumGlucagonRate_pmol_Per_min);
   }
 
   GetGlucagonSynthesisRate().SetValue(glucagonSynthesisRate_pmol_Per_min, AmountPerTimeUnit::pmol_Per_min);
