@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
 class BIOGEARS_API SEFluidCircuitCalculator : public SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit> {
 public:

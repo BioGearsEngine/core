@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/schema/LiquidCompartmentData.hxx>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
+#include <biogears/schema/LiquidCompartmentData.hxx>
 #include <biogears/schema/LiquidCompartmentLinkData.hxx>
 
 class SELiquidCompartment;

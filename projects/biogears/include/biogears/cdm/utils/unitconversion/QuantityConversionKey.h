@@ -20,6 +20,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#include <biogears/exports.h>
+
+#include <biogears/cdm/CommonDataModel.h>
+
+class CUnitDimension;
+class CQuantityConversionKey;
+
 class CQuantityConversionKey {
 public:
   // Construct from two Quantity Type IDs

@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 CDM_BIND_DECL(ElectroCardioGramWaveformInterpolatorData)
-#include <biogears/schema/enumHeartRhythm.hxx>
 #include <biogears/schema/ElectroCardioGramWaveformLeadNumber.hxx>
+#include <biogears/schema/enumHeartRhythm.hxx>
 class SEElectroCardioGramInterpolatorWaveform;
 
 class BIOGEARS_API SEElectroCardioGramInterpolator : public Loggable {

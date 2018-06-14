@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/patient/SENutrition.h>
+#include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/GastrointestinalSystemData.hxx>
 
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {

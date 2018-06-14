@@ -11,9 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // The following tests will be exported and runnable
-#include <math.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
+#include <math.h>
 
 class SETestSuite;
 class HowToTracker;

@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
-#include <biogears/schema/PhysiologyEngineDynamicStabilizationData.hxx>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/schema/PhysiologyEngineDynamicStabilizationData.hxx>
 
 class PhysiologyEngineDynamicStabilizationCriteria;
 

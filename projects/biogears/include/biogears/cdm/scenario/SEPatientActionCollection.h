@@ -15,10 +15,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
+#include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
 #include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
-#include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForceScale.h>
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
@@ -29,13 +29,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
+#include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
-#include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
-#include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
 

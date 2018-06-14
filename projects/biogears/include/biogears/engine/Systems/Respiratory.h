@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitCalculator.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/BioGearsRespiratorySystemData.hxx>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
 
 class SEPulmonaryFunctionTest;
 class SEPatient;

@@ -10,9 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
+#include <biogears/cdm/circuit/SECircuitPath.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/CircuitPathData.hxx>
 
 template <CIRCUIT_PATH_TEMPLATE>

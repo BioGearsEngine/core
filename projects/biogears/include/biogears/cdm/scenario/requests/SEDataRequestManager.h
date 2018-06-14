@@ -11,16 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
 #include <biogears/cdm/scenario/requests/SEEnvironmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SEEquipmentDataRequest.h>
+#include <biogears/cdm/scenario/requests/SEGasCompartmentDataRequest.h>
+#include <biogears/cdm/scenario/requests/SELiquidCompartmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SEPatientDataRequest.h>
 #include <biogears/cdm/scenario/requests/SEPhysiologyDataRequest.h>
 #include <biogears/cdm/scenario/requests/SESubstanceDataRequest.h>
-#include <biogears/cdm/scenario/requests/SEGasCompartmentDataRequest.h>
-#include <biogears/cdm/scenario/requests/SELiquidCompartmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 

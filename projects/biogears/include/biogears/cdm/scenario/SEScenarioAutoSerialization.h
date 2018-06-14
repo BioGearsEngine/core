@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/enumOnOff.hxx>
 #include <biogears/schema/ScenarioAutoSerializationData.hxx>
+#include <biogears/schema/enumOnOff.hxx>
 
 CDM_BIND_DECL(ScenarioAutoSerializationData)
 class BIOGEARS_API SEScenarioAutoSerialization : public Loggable {

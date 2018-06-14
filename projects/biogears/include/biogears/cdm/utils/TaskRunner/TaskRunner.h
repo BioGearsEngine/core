@@ -16,9 +16,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-#include <queue>
 #include <memory>
 #include <mutex>
+#include <queue>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief

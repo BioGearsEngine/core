@@ -12,22 +12,22 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include <string>
-#include <memory> // std::auto_ptr
 #include <cstddef> // std::size_t
 #include <iostream>
+#include <memory> // std::auto_ptr
+#include <string>
 
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUni.hpp>
 
 #include <xercesc/dom/DOM.hpp>
 
-#include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/framework/XMLGrammarPoolImpl.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
 
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
 CDM_BIND_DECL(ObjectData)
 

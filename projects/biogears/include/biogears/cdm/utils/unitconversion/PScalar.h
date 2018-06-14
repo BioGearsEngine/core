@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 
 #pragma once
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
 class CPScalar {
 public:

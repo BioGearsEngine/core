@@ -12,12 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
+#include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 
 #include <biogears/cdm/utils/DataTrack.h>

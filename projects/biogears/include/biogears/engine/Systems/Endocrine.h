@@ -11,13 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
-#include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/cdm/system/physiology/SEEndocrineSystem.h>
-#include <biogears/schema/BioGearsEndocrineSystemData.hxx>
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/system/physiology/SEEndocrineSystem.h>
+#include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/schema/BioGearsEndocrineSystemData.hxx>
 
 class SELiquidSubstanceQuantity;
 class BioGears;

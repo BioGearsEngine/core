@@ -11,14 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
-#include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/cdm/system/physiology/SETissueSystem.h>
-#include <biogears/schema/BioGearsTissueSystemData.hxx>
-#include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
+#include <biogears/cdm/system/physiology/SETissueSystem.h>
+#include <biogears/cdm/utils/RunningAverage.h>
+#include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/schema/BioGearsTissueSystemData.hxx>
 
 class SESubstance;
 class SEGasCompartment;

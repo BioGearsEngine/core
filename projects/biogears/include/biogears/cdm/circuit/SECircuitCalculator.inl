@@ -10,23 +10,23 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/circuit/SECircuitCalculator.h>
 #include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/circuit/SECircuitCalculator.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
 #include <Eigen/Dense>
-#include <Eigen/SparseLU>
 #include <Eigen/SparseCore>
+#include <Eigen/SparseLU>
 //#include <Eigen/SparseCholesky>
 #include <Eigen/IterativeLinearSolvers>
 #include <Eigen/SparseQR>
 
-#include <numeric>
 #include <bitset>
+#include <numeric>
 
 //#define VERBOSE
 //#define TIMING

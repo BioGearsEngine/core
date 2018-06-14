@@ -11,17 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
 #include <biogears/cdm/system/SESystem.h>
 
 #include <biogears/schema/AnesthesiaMachineData.hxx>
-#include <biogears/schema/enumOnOff.hxx>
-#include <biogears/schema/enumAnesthesiaMachineEvent.hxx>
 #include <biogears/schema/enumAnesthesiaMachineConnection.hxx>
+#include <biogears/schema/enumAnesthesiaMachineEvent.hxx>
 #include <biogears/schema/enumAnesthesiaMachineOxygenSource.hxx>
 #include <biogears/schema/enumAnesthesiaMachinePrimaryGas.hxx>
+#include <biogears/schema/enumOnOff.hxx>
 
 class SEEventHandler;
 class SESubstanceManager;

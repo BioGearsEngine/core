@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/schema/DataRequestData.hxx>
 #include <biogears/cdm/properties/SEDecimalFormat.h>
+#include <biogears/schema/DataRequestData.hxx>
 class SESubstanceManager;
 class CCompoundUnit;
 class SEDecimalFormat;

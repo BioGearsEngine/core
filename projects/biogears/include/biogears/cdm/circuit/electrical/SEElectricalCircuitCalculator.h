@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 
 #include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
-#include <biogears/cdm/properties/SEScalarElectricCurrent.h>
 #include <biogears/cdm/properties/SEScalarElectricCharge.h>
+#include <biogears/cdm/properties/SEScalarElectricCurrent.h>
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>

@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/stdafx.h>
-#include <biogears/schema/Properties.hxx>
 #include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/schema/Properties.hxx>
 
 template <typename Unit>
 SEScalarQuantity<Unit>::SEScalarQuantity()

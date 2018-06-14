@@ -12,9 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
 #include <biogears/schema/DrugSystemData.hxx>
 #include <biogears/schema/enumOnOff.hxx>
-#include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
 
 class BIOGEARS_API SEDrugSystem : public SESystem {
 public:

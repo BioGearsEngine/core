@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 // CDM Features in use
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/utils/FileUtils.h>

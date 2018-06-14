@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/schema/enumPatientEvent.hxx>
 #include <biogears/schema/enumAnesthesiaMachineEvent.hxx>
+#include <biogears/schema/enumPatientEvent.hxx>
 
 class BIOGEARS_API SEEventHandler : public Loggable {
 public:

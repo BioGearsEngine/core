@@ -12,13 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/circuit/SECircuitPath.h>
-#include <biogears/cdm/properties/SEScalarHeatResistance.h>
+#include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
+#include <biogears/cdm/properties/SEScalarEnergy.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
 #include <biogears/cdm/properties/SEScalarHeatInductance.h>
+#include <biogears/cdm/properties/SEScalarHeatResistance.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarEnergy.h>
-#include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/schema/ThermalCircuitPathData.hxx>
 
 class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH> {

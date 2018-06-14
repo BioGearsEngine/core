@@ -11,10 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
+#include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/FluidCompartmentData.hxx>
 
 class SESubstance;

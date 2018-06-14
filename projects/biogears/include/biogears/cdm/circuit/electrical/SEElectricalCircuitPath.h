@@ -12,13 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/circuit/SECircuitPath.h>
-#include <biogears/cdm/properties/SEScalarElectricResistance.h>
-#include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
-#include <biogears/cdm/properties/SEScalarElectricInductance.h>
-#include <biogears/cdm/properties/SEScalarElectricCurrent.h>
-#include <biogears/cdm/properties/SEScalarElectricPotential.h>
-#include <biogears/cdm/properties/SEScalarElectricCharge.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
+#include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
+#include <biogears/cdm/properties/SEScalarElectricCharge.h>
+#include <biogears/cdm/properties/SEScalarElectricCurrent.h>
+#include <biogears/cdm/properties/SEScalarElectricInductance.h>
+#include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarElectricResistance.h>
 #include <biogears/schema/ElectricalCircuitPathData.hxx>
 
 class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge> {

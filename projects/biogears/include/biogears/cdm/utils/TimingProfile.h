@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/utils/Logger.h>
 
 #include <chrono>
 

@@ -12,13 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/circuit/SECircuitPath.h>
-#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/FluidCircuitPathData.hxx>
 
 class BIOGEARS_API SEFluidCircuitPath : public SECircuitPath<FLUID_CIRCUIT_PATH> {

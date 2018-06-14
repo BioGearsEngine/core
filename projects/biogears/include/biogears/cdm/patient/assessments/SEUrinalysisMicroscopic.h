@@ -12,10 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-#include <biogears/schema/enumPresenceIndicator.hxx>
+#include <biogears/schema/UrinalysisMicroscopicData.hxx>
 #include <biogears/schema/enumMicroscopicObservationAmount.hxx>
 #include <biogears/schema/enumMicroscopicObservationType.hxx>
-#include <biogears/schema/UrinalysisMicroscopicData.hxx>
+#include <biogears/schema/enumPresenceIndicator.hxx>
 
 class BIOGEARS_API SEUrinalysisMicroscopic : public SEPatientAssessment {
 public:

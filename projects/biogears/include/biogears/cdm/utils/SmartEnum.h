@@ -12,12 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <sstream>
 #include <string>
-#include <algorithm>
 #include <vector>
-#include <iterator>
 
 // Not sure why I have such a facination with enums, but..
 // This is a bit of a pet project, I have been curious to see how one can make

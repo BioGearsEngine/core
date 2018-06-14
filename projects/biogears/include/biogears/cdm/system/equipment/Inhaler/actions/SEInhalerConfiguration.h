@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
-#include <biogears/schema/InhalerData.hxx>
 #include <biogears/schema/InhalerConfigurationData.hxx>
+#include <biogears/schema/InhalerData.hxx>
 
 class SEInhaler;
 class SESubstanceManager;

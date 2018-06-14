@@ -11,13 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
+#include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
-#include <biogears/schema/enumUrineColor.hxx>
 #include <biogears/schema/enumClarityIndicator.hxx>
 #include <biogears/schema/enumPresenceIndicator.hxx>
+#include <biogears/schema/enumUrineColor.hxx>
 class SEPatient;
 class SERenalSystem;
 class SEAnatomy;

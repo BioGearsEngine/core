@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/NeedleDecompressionData.hxx>
-#include <biogears/schema/enumSide.hxx>
 #include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/enumSide.hxx>
 
 class BIOGEARS_API SENeedleDecompression : public SEPatientAction {
 public:

@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/circuit/SECombinedCircuit.h>
+#include <biogears/cdm/stdafx.h>
 
 template <COMBINED_CIRCUIT_TEMPLATE>
 SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::SECombinedCircuit(const std::string& name, Logger* logger)

@@ -10,9 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-#include <biogears/schema/InitialEnvironmentData.hxx>
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
+#include <biogears/schema/InitialEnvironmentData.hxx>
 
 class BIOGEARS_API SEInitialEnvironment : public SEEnvironmentCondition {
 public:

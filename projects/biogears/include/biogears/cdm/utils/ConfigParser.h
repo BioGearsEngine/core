@@ -17,9 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #endif
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 class BIOGEARS_API ConfigSet {
 public:

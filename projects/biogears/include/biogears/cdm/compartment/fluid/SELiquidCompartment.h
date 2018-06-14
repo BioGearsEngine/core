@@ -11,11 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
-#include <biogears/schema/LiquidCompartmentData.hxx>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
+#include <biogears/schema/LiquidCompartmentData.hxx>
 
 class BIOGEARS_API SELiquidCompartment : public SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> {
   friend class SETissueCompartment;

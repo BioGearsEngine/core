@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/substance/SESubstance.h>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 class SEElectricalCircuit;
 class SEFluidCircuit;
 class SEThermalCircuit;

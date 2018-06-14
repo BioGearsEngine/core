@@ -11,12 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
-#include <biogears/schema/BioGearsInhalerData.hxx>
 #include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/schema/BioGearsInhalerData.hxx>
 /**
 * @brief 
 * Generic inhaler for substance administration.

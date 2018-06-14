@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/enumOpenClosed.hxx>
 #include <biogears/cdm/circuit/SECircuitNode.h>
+#include <biogears/schema/enumOpenClosed.hxx>
 
 #define CIRCUIT_PATH_TEMPLATE typename FluxScalar, typename ResistanceScalar, typename CapacitanceScalar, typename InductanceScalar, typename PotentialScalar, typename QuantityScalar
 #define CIRCUIT_PATH_TYPES FluxScalar, ResistanceScalar, CapacitanceScalar, InductanceScalar, PotentialScalar, QuantityScalar

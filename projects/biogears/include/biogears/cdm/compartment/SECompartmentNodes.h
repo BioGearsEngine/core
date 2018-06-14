@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/compartment/SECompartment.h>
 
 #define COMPARTMENT_NODE_TEMPLATE typename NodeType, typename PotentialScalar, typename PotentialUnit, typename QuantityScalar, typename QuantityUnit
 #define COMPARTMENT_NODE_TYPES NodeType, PotentialScalar, PotentialUnit, QuantityScalar, QuantityUnit

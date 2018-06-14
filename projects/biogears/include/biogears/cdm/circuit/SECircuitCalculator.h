@@ -12,10 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <Eigen/Core>
-#include <biogears/cdm/utils/TimingProfile.h>
-#include <biogears/schema/enumOpenClosed.hxx>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/utils/SmartEnum.h>
+#include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/schema/enumOpenClosed.hxx>
 
 #define CIRCUIT_CALCULATOR_TEMPLATE typename CircuitType, typename NodeType, typename PathType, typename CapacitanceUnit, typename FluxUnit, typename InductanceUnit, typename PotentialUnit, typename QuantityUnit, typename ResistanceUnit
 #define CIRCUIT_CALCULATOR_TYPES CircuitType, NodeType, PathType, CapacitanceUnit, FluxUnit, InductanceUnit, PotentialUnit, QuantityUnit, ResistanceUnit

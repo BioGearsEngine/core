@@ -45,6 +45,9 @@ specific language governing permissions and limitations under the License.
 // a circular dependency that manifests itself as different error messages depending
 // on which thing you export first. So, on a hunch, I reversed the order, and voila!
 
+#include <biogears/cdm/utils/unitconversion/CompoundUnitElement.h>
+#include <biogears/cdm/utils/unitconversion/UnitDimension.h>
+
 class BIOGEARS_API CCompoundUnit {
   // Define the vector type that holds our individual components of a CompoundUnit
   typedef std::vector<CCompoundUnitElement> CUEVecType;

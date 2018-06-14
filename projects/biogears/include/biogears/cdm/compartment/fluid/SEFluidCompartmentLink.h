@@ -11,10 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/compartment/SECompartmentLink.h>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
+#include <biogears/cdm/compartment/SECompartmentLink.h>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/FluidCompartmentLinkData.hxx>
 
 #define FLUID_COMPARTMENT_LINK_TEMPLATE typename EdgeType, typename VertexType, typename CompartmentType

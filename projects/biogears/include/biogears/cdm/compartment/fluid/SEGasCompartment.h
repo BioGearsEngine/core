@@ -11,12 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/schema/Properties.hxx>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
-#include <biogears/schema/GasCompartmentData.hxx>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
+#include <biogears/schema/GasCompartmentData.hxx>
+#include <biogears/schema/Properties.hxx>
 
 enum class BalanceGasBy { Volume,
   VolumeFraction };

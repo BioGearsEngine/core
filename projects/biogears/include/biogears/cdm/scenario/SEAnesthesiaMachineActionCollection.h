@@ -14,19 +14,19 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenTankPressureLoss.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenWallPortPressureLoss.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveLeak.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveObstruction.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveLeak.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveObstruction.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEMaskLeak.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenTankPressureLoss.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenWallPortPressureLoss.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SESodaLimeFailure.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SETubeCuffLeak.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVaporizerFailure.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 
 class BIOGEARS_API SEAnesthesiaMachineActionCollection : public Loggable {
 public:

@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include <biogears/engine/Controller/BioGearsConfiguration.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
+#include <biogears/engine/Controller/BioGearsConfiguration.h>
 class BioGearsScenario;
 
 /**

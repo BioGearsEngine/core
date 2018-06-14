@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 class SENutrition;
-#include <biogears/schema/BioGearsConfigurationData.hxx>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
+#include <biogears/schema/BioGearsConfigurationData.hxx>
 class SEEnvironmentalConditions;
 
 /**

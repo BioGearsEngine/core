@@ -11,15 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
+#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/enumBioGearsAirwayMode.hxx>
-#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/schema/BioGearsAnesthesiaMachineData.hxx>
-#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/schema/enumBioGearsAirwayMode.hxx>
 
 class BioGears;
 class SEAnesthesiaMachineActionCollection;

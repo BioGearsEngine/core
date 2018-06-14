@@ -11,14 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
-#include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
-#include <biogears/schema/BioGearsGastrointestinalSystemData.hxx>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
+#include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/schema/BioGearsGastrointestinalSystemData.hxx>
 
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;

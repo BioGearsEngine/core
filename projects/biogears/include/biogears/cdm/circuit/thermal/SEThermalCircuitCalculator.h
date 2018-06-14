@@ -15,12 +15,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 
-#include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarHeatInductance.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarEnergy.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
+#include <biogears/cdm/properties/SEScalarHeatInductance.h>
 #include <biogears/cdm/properties/SEScalarHeatResistance.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
 
 class BIOGEARS_API SEThermalCircuitCalculator : public SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit> {
 public:

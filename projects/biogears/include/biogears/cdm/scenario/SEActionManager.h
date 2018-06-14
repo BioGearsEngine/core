@@ -13,10 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 class SESubstanceManager;
 class SEAction;
-#include <biogears/cdm/scenario/SEPatientActionCollection.h>
 #include <biogears/cdm/scenario/SEAnesthesiaMachineActionCollection.h>
 #include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
 #include <biogears/cdm/scenario/SEInhalerActionCollection.h>
+#include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
 class BIOGEARS_API SEActionManager : public Loggable {
 public:

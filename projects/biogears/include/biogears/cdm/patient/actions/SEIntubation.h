@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/enumIntubationType.hxx>
 #include <biogears/schema/IntubationData.hxx>
+#include <biogears/schema/enumIntubationType.hxx>
 
 class BIOGEARS_API SEIntubation : public SEPatientAction {
 public:
