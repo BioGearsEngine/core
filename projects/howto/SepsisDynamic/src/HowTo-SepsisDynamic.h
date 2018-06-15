@@ -11,17 +11,28 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
+#include "HowToTracker.h"
+#include "HowTo-ThreadedBioGears.h"
 
-#include <biogears/schema/enumAnesthesiaMachineEvent.hxx>
-#include <biogears/schema/enumPatientEvent.hxx>
+class SESepsis;
+class SESubstance;
+class SESubstanceInfusion;
 
-class BIOGEARS_API SEEventHandler : public Loggable {
+void HowToDynamicSepsis();
+
+class DynamicSepsis : public BioGearsThread
+{
 public:
-  SEEventHandler(Logger* logger)
-    : Loggable(logger){};
-  virtual ~SEEventHandler(){};
+	DynamicSepsis(const std::string& logfile);
+	virtual ~DynamicSepsis();
 
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
+	void SetAntibiotic();
+	void SetNorepinephrine(double& concentration);
+	void Status();
+	void SetSepsis(std::string& location, double& severity);
+	
+protected:
+	SESepsis*							m_sepsis;
+	SESubstanceInfusion*				m_pressor;
+	SESubstanceCompoundInfusion*		m_antibiotic;
 };
