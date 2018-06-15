@@ -39,6 +39,7 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   protected SEScalarFraction               volumeFractionNeutralPhospholipidInPlasma;
   protected SEScalarAmountPerVolume        whiteBloodCellCount;
   protected SEScalarAmountPerVolume				redBloodCellAcetylcholinesterase;
+  protected SEScalarMassPerVolume					totalBilirubin;
 
   protected SEScalarPressure               arterialCarbonDioxidePressure;
   protected SEScalarPressure               arterialOxygenPressure;
@@ -67,6 +68,7 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
     redBloodCellCount = null;
     shuntFraction = null;
     strongIonDifference = null;
+    totalBilirubin = null;
     totalProteinConcentration = null;
     volumeFractionNeutralLipidInPlasma = null;
     volumeFractionNeutralPhospholipidInPlasma = null;
@@ -117,6 +119,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
       shuntFraction.invalidate();
     if (strongIonDifference != null)
     	strongIonDifference.invalidate();
+    if(totalBilirubin != null)
+    	totalBilirubin.invalidate();
     if (totalProteinConcentration != null)
       totalProteinConcentration.invalidate();
     if (volumeFractionNeutralLipidInPlasma != null)
@@ -179,6 +183,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
       getShuntFraction().load(in.getShuntFraction());
     if (in.getStrongIonDifference() != null)
     	getStrongIonDifference().load(in.getStrongIonDifference());
+    if(in.getTotalBilirubin() != null)
+    	getTotalBilirubin().load(in.getTotalBilirubin());
     if (in.getTotalProteinConcentration() != null)
       getTotalProteinConcentration().load(in.getTotalProteinConcentration());
     if (in.getVolumeFractionNeutralLipidInPlasma() != null)
@@ -250,6 +256,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
       data.setShuntFraction(shuntFraction.unload());
     if (strongIonDifference != null)
       data.setStrongIonDifference(strongIonDifference.unload());
+    if (totalBilirubin != null)
+    	data.setTotalBilirubin(totalBilirubin.unload());
     if (totalProteinConcentration != null)
       data.setTotalProteinConcentration(totalProteinConcentration.unload());
     if (volumeFractionNeutralLipidInPlasma != null)
@@ -458,6 +466,17 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
     return totalProteinConcentration;
   }
 
+  public boolean hasTotalBilirubin()
+  {
+  	return totalBilirubin == null ? false : totalBilirubin.isValid();
+  }
+  public SEScalarMassPerVolume getTotalBilirubin()
+  {
+  	if (totalBilirubin == null)
+  		totalBilirubin = new SEScalarMassPerVolume();
+  	return totalBilirubin;
+  }
+  
   public boolean hasVolumeFractionNeutralLipidInPlasma()
   {
     return volumeFractionNeutralLipidInPlasma == null ? false : volumeFractionNeutralLipidInPlasma.isValid();

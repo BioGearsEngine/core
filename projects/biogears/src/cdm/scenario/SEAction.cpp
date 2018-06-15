@@ -9,9 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/stdafx.h>
 
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/ActionData.hxx>
 
@@ -77,6 +77,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
+#include <biogears/cdm/patient/actions/SESepsis.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
@@ -310,6 +311,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SEPericardialEffusion* a = new SEPericardialEffusion();
       a->Load(*pericData);
       return a;
+    }
+
+    CDM::SepsisData* sepData = dynamic_cast<CDM::SepsisData*>(action);
+    if (sepData != nullptr) {
+      SESepsis* sep = new SESepsis();
+      sep->Load(*sepData);
+      return sep;
     }
 
     CDM::TensionPneumothoraxData* pneumoData = dynamic_cast<CDM::TensionPneumothoraxData*>(action);

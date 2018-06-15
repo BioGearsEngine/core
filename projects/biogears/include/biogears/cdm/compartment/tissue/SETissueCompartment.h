@@ -10,6 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/schema/TissueCompartmentData.hxx>
 class SESubstance;
@@ -62,6 +65,10 @@ public:
   virtual SEScalarFraction& GetNeutralPhospholipidsVolumeFraction();
   virtual double GetNeutralPhospholipidsVolumeFraction() const;
 
+  virtual bool HasReflectionCoefficient() const;
+  virtual SEScalar0To1& GetReflectionCoefficient();
+  virtual double GetReflectionCoefficient() const;
+
   virtual bool HasTissueToPlasmaAlbuminRatio() const;
   virtual SEScalar& GetTissueToPlasmaAlbuminRatio();
   virtual double GetTissueToPlasmaAlbuminRatio() const;
@@ -84,6 +91,7 @@ protected:
   SEScalarElectricPotential* m_MembranePotential;
   SEScalarFraction* m_NeutralLipidsVolumeFraction;
   SEScalarFraction* m_NeutralPhospholipidsVolumeFraction;
+  SEScalar0To1*			 m_ReflectionCoefficient;
   SEScalar* m_TissueToPlasmaAlbuminRatio;
   SEScalar* m_TissueToPlasmaAlphaAcidGlycoproteinRatio;
   SEScalar* m_TissueToPlasmaLipoproteinRatio;

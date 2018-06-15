@@ -764,10 +764,10 @@ void Cardiovascular::CalculateVitalSigns()
     if (GetBloodVolume().GetValue(VolumeUnit::mL) <= (m_data.GetConfiguration().GetMinimumBloodVolumeFraction() * m_patient->GetBloodVolumeBaseline(VolumeUnit::mL))) {
       m_patient->SetEvent(CDM::enumPatientEvent::HypovolemicShock, true, m_data.GetSimulationTime());
 
-      /// \event Patient: blood loss below 50%, state enacted
-      // @cite Gutierrez2004HemorrhagicShock, champion2003profile
-      double hypovolemicShock = 0.5 * m_patient->GetBloodVolumeBaseline(VolumeUnit::mL);
-      if (GetBloodVolume().GetValue(VolumeUnit::mL) <= hypovolemicShock) {
+      /// \event Patient: blood loss below 60%, irreversible state enacted 
+      // @cite champion2003profile
+      if (GetBloodVolume().GetValue(VolumeUnit::mL) <= 0.4 * m_patient->GetBloodVolumeBaseline(VolumeUnit::mL))
+      {
         m_ss << "50% of the patient's blood volume has been lost. The patient is now in an irreversible state.";
         Warning(m_ss);
         /// \irreversible Over half the patients blood volume has been lost.
@@ -990,7 +990,8 @@ void Cardiovascular::Hemorrhage()
   double severity = 0;
   //Values for tracking physiological metrics
   double resistance = 0.0;
-  double TotalLossRate_mL_Per_s = 0.0;
+  double locationPressure_mmHg = 0.0;
+  double TotalLossRate_mL_Per_s=0.0;
   double TotalLoss_mL = 0;
   double probabilitySurvival = 0.0;
   double bleedoutTime = 0.0;
@@ -1001,23 +1002,13 @@ void Cardiovascular::Hemorrhage()
   const std::map<std::string, SEHemorrhage*>& hems = m_data.GetActions().GetPatientActions().GetHemorrhages();
   for (auto hem : hems) {
     h = hem.second;
-    severity = h->GetSeverity().GetValue();
-    targetPath = m_CirculatoryCircuit->GetPath(h->GetBleedName());
+	  targetPath = m_CirculatoryCircuit->GetPath(h->GetCompartment()+"Bleed");
+	  locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg);
+	  if (!h->HasBleedResistance())
+	  {
+		  h->GetBleedResistance().SetValue(locationPressure_mmHg / h->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
+	  }
 
-    //We need to adjust the resistance functions for main aorta and vena cava because they have very high/low pressures relative to other compartments
-    if (h->GetCompartment() == "Vena Cava") {
-      resistanceFunMin = 0.5;
-      resistanceFunMax = 50.0;
-    }
-    if (h->GetCompartment() == "Major Artery") {
-      resistanceFunMin = 12.5;
-      resistanceFunMax = 1500.0;
-    }
-
-    //The values for this function were chosen empirically to produce following severity->resistance map with flow rates that seem reasonable
-    //with data in @cite lawnick2013combat and @cite guitierrez2004clinical.  Values can be adjusted as needed to incorporate more data
-    //Severity->Resistance:  0.2->383, 0.4->122, 0.6->39, 0.8->12.5, 1.0->4 (not for aorta or vena cava)
-    resistance = GeneralMath::ResistanceFunction(10.0, resistanceFunMin, resistanceFunMax, severity);
 
     targetPath->GetNextResistance().SetValue(resistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
@@ -1654,16 +1645,22 @@ void Cardiovascular::TuneCircuit()
     m_ss << "Successfully tuned circuit. Final values : HeartRate(bpm):" << GetHeartRate(FrequencyUnit::Per_min) << " Systolic(mmHg):" << GetSystolicArterialPressure(PressureUnit::mmHg) << " Diastolic(mmHg):" << GetDiastolicArterialPressure(PressureUnit::mmHg) << " Cardiac Output(mL/min):" << GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << " Mean CVP(mmHg):" << GetMeanCentralVenousPressure(PressureUnit::mmHg) << " MAP(mmHg):" << GetMeanArterialPressure(PressureUnit::mmHg) << " BloodVolume(mL): " << blood_mL;
     Info(m_ss);
     // Reset our substance masses to the new volumes
-    for (SELiquidCompartment* c : m_data.GetCompartments().GetVascularLeafCompartments()) {
+	  double bloodVolumeBaseline_mL = 0.0;
+    for (SELiquidCompartment* c : m_data.GetCompartments().GetVascularLeafCompartments())
+    {
       if (!c->HasVolume())
         continue;
+	    bloodVolumeBaseline_mL += c->GetVolume(VolumeUnit::mL);
       c->Balance(BalanceLiquidBy::Concentration);
       if (m_CirculatoryGraph->GetCompartment(c->GetName()) == nullptr)
         Info("Cardiovascular Graph does not have cmpt " + c->GetName());
       if (c->HasSubstanceQuantity(m_data.GetSubstances().GetHb())) // Unit testing does not have any Hb
         m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*c); //so don't do this if we don't have Hb
     }
-    for (SELiquidCompartment* c : m_data.GetCompartments().GetUrineLeafCompartments()) {
+	  //We need to reset the blood volume baseline because it might have changed during circuit stabilization
+	  m_data.GetPatient().GetBloodVolumeBaseline().SetValue(bloodVolumeBaseline_mL, VolumeUnit::mL);
+    for (SELiquidCompartment* c : m_data.GetCompartments().GetUrineLeafCompartments())
+    {
       if (!c->HasVolume())
         continue;
       c->Balance(BalanceLiquidBy::Concentration);

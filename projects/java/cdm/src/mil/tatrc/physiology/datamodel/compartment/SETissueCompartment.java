@@ -33,6 +33,7 @@ import mil.tatrc.physiology.datamodel.properties.SEScalarFraction;
 import mil.tatrc.physiology.datamodel.properties.SEScalarMass;
 import mil.tatrc.physiology.datamodel.properties.SEScalarMassPerMass;
 import mil.tatrc.physiology.datamodel.properties.SEScalarVolume;
+import mil.tatrc.physiology.datamodel.properties.SEScalar0To1;
 
 public class SETissueCompartment extends SECompartment
 {
@@ -41,6 +42,7 @@ public class SETissueCompartment extends SECompartment
   protected SEScalarElectricPotential		membranePotential;
   protected SEScalarFraction    neutralLipidsVolumeFraction;
   protected SEScalarFraction    neutralPhospholipidsVolumeFraction;  
+  protected SEScalar0To1				reflectionCoefficient;
   protected SEScalar            tissueToPlasmaAlbuminRatio;
   protected SEScalar            tissueToPlasmaAlphaAcidGlycoproteinRatio;
   protected SEScalar            tissueToPlasmaLipoproteinRatio;
@@ -53,6 +55,7 @@ public class SETissueCompartment extends SECompartment
     membranePotential = null;
 		neutralLipidsVolumeFraction = null;
 		neutralPhospholipidsVolumeFraction = null;    
+		reflectionCoefficient = null;
 		tissueToPlasmaAlbuminRatio = null;
 		tissueToPlasmaAlphaAcidGlycoproteinRatio = null;
 		tissueToPlasmaLipoproteinRatio = null;
@@ -72,6 +75,8 @@ public class SETissueCompartment extends SECompartment
 			neutralLipidsVolumeFraction.invalidate();
 		if (neutralPhospholipidsVolumeFraction != null)
 			neutralPhospholipidsVolumeFraction.invalidate();
+		if (reflectionCoefficient != null)
+			reflectionCoefficient.invalidate();
 		if (tissueToPlasmaAlbuminRatio != null)
 			tissueToPlasmaAlbuminRatio.invalidate();
 		if (tissueToPlasmaAlphaAcidGlycoproteinRatio != null)
@@ -95,6 +100,8 @@ public class SETissueCompartment extends SECompartment
 			getNeutralLipidsVolumeFraction().load(in.getNeutralLipidsVolumeFraction());
 		if(in.getNeutralPhospholipidsVolumeFraction()!=null)
 			getNeutralPhospholipidsVolumeFraction().load(in.getNeutralPhospholipidsVolumeFraction());
+		if (in.getReflectionCoefficient()!=null)
+			getReflectionCoefficient().load(in.getReflectionCoefficient());
 		if(in.getTissueToPlasmaAlbuminRatio()!=null)
 			getTissueToPlasmaAlbuminRatio().load(in.getTissueToPlasmaAlbuminRatio());
 		if(in.getTissueToPlasmaAlphaAcidGlycoproteinRatio()!=null)
@@ -127,6 +134,8 @@ public class SETissueCompartment extends SECompartment
 	  	data.setNeutralLipidsVolumeFraction(this.neutralLipidsVolumeFraction.unload());
 	  if(hasNeutralPhospholipidsVolumeFraction())
 	  	data.setNeutralPhospholipidsVolumeFraction(this.neutralPhospholipidsVolumeFraction.unload());
+	  if(hasReflectionCoefficient())
+	  	data.setReflectionCoefficient(this.reflectionCoefficient.unload());
 	  if(hasTissueToPlasmaAlbuminRatio())
 	  	data.setTissueToPlasmaAlbuminRatio(this.tissueToPlasmaAlbuminRatio.unload());
 	  if(hasTissueToPlasmaAlphaAcidGlycoproteinRatio())
@@ -190,6 +199,17 @@ public class SETissueCompartment extends SECompartment
   public boolean hasNeutralPhospholipidsVolumeFraction()
   {
     return neutralPhospholipidsVolumeFraction == null ? false : neutralPhospholipidsVolumeFraction.isValid();
+  }
+  
+  public SEScalar0To1 getReflectionCoefficient()
+  {
+  	if (reflectionCoefficient == null)
+  		reflectionCoefficient = new SEScalar0To1();
+  	return reflectionCoefficient;
+  }
+  public boolean hasReflectionCoefficient()
+  {
+  	return reflectionCoefficient == null ? false : reflectionCoefficient.isValid();
   }
   
   public SEScalar getTissueToPlasmaAlbuminRatio() 

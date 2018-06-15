@@ -38,7 +38,6 @@ void HowToThreadedBioGears()
   // When it comes back, the engine will be running, waiting for your input
 
   int action;
-  double severity;
   double rate;
   std::string location;
   bool active = true;
@@ -56,14 +55,14 @@ void HowToThreadedBioGears()
     case 2:
 		bgThread.GetLogger()->Info("Type a location, then hit ENTER: ");
 		std::cin >> location;
-		bgThread.GetLogger()->Info("Type a severity (0-1 scale, 0 stops hemorrhage), then hit ENTER: ");
-		std::cin >> severity;
-		if (severity <= ZERO_APPROX)
+		bgThread.GetLogger()->Info("Type an initial bleeding rate (in mL/min), then hit ENTER: ");
+		std::cin >> rate;
+		if (rate <= ZERO_APPROX)
 			out = "Stop hemorrhage in " + location;
 		else
-			out = "Hemorrhage in " + location + " with severity = " + std::to_string(severity);
+			out = "Hemorrhage in " + location + " with initial bleeding rate = " + std::to_string(rate) + " mL/min";
 		bgThread.GetLogger()->Info(out);
-	  bgThread.SetHemorrhage(location,severity);
+	  bgThread.SetHemorrhage(location,rate);
       break;
     case 3:
       bgThread.GetLogger()->Info("Enter IV Fluids Rate in mL/min : ");
@@ -106,11 +105,11 @@ BioGearsThread::~BioGearsThread()
   SAFE_DELETE(m_hemorrhage);
 }
 
-void BioGearsThread::SetHemorrhage(std::string& location, double& severity)
+void BioGearsThread::SetHemorrhage(std::string& location, double& rate)
 {
   m_hemorrhage->SetCompartment(location);
-  m_hemorrhage->GetSeverity().SetValue(severity);
-  m_hemorrhage->SetBleedPath();
+  m_hemorrhage->GetInitialRate().SetValue(rate,VolumePerTimeUnit::mL_Per_min);
+  m_hemorrhage->SetMCIS();
   m_mutex.lock();
   m_bg->ProcessAction(*m_hemorrhage);
   m_mutex.unlock();

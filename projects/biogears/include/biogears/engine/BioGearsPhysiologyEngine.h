@@ -11,9 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
 // CDM Features in use
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/utils/FileUtils.h>
@@ -32,7 +32,7 @@ namespace tatrc {
   namespace physiology {
     namespace biogears {
 
-      DEFINE_STATIC_STRING_EX(Version, BioGears_6 .1.1_beta);
+        DEFINE_STATIC_STRING_EX(Version, BioGears_6.1.1_beta);
 
       class Graph {
       public:
@@ -517,15 +517,19 @@ namespace tatrc {
         DEFINE_STATIC_STRING(AortaHemorrhage);
         DEFINE_STATIC_STRING(BrainHemorrhage);
         DEFINE_STATIC_STRING(HeartHemorrhage);
-        DEFINE_STATIC_STRING(LungHemorrhage);
-        DEFINE_STATIC_STRING(ArmHemorrhage);
+		  DEFINE_STATIC_STRING(LeftLungHemorrhage);
+		  DEFINE_STATIC_STRING(RightLungHemorrhage);
+		    DEFINE_STATIC_STRING(LeftArmHemorrhage);
+		    DEFINE_STATIC_STRING(RightArmHemorrhage);
         DEFINE_STATIC_STRING(SpleenHemorrhage);
         DEFINE_STATIC_STRING(SmallIntestineHemorrhage);
         DEFINE_STATIC_STRING(LargeIntestineHemorrhage);
         DEFINE_STATIC_STRING(SplanchnicHemorrhage);
-        DEFINE_STATIC_STRING(KidneyHemorrhage);
+		    DEFINE_STATIC_STRING(LeftKidneyHemorrhage);
+		    DEFINE_STATIC_STRING(RightKidneyHemorrhage);
         DEFINE_STATIC_STRING(LiverHemorrhage);
-        DEFINE_STATIC_STRING(LegHemorrhage);
+		  DEFINE_STATIC_STRING(LeftLegHemorrhage);
+		  DEFINE_STATIC_STRING(RightLegHemorrhage);
 
         // Vascular To Tissue Links
         DEFINE_STATIC_STRING(BoneVascularToTissue);

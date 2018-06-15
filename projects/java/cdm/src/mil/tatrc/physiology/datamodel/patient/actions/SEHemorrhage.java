@@ -16,22 +16,25 @@ package mil.tatrc.physiology.datamodel.patient.actions;
 import java.util.*;
 import mil.tatrc.physiology.datamodel.CDMSerializer;
 import mil.tatrc.physiology.datamodel.bind.HemorrhageData;
-import mil.tatrc.physiology.datamodel.properties.SEScalar0To1;
+import mil.tatrc.physiology.datamodel.properties.SEScalarVolumePerTime;
+import mil.tatrc.physiology.datamodel.properties.SEScalarFlowResistance;
 
 public class SEHemorrhage extends SEPatientAction
 {
 	//Required to specify a hemorrhage action
 	protected String compartment;
-	protected SEScalar0To1 severity;
 	protected List<Integer> mcis;
+	protected SEScalarVolumePerTime initialRate;
+	protected SEScalarFlowResistance bleedResistance;
 	Map<String,List<Integer>> organMap = new HashMap<String,List<Integer>>();
 
 	
 	public SEHemorrhage()
 	{
 		compartment = null;
+		initialRate = null;
+		bleedResistance = null;
 		mcis = null;
-		severity = null;
 		makeOrganMap(organMap);
 	}
 	
@@ -40,31 +43,35 @@ public class SEHemorrhage extends SEPatientAction
 		if(this==other)
 			return;
 		super.copy(other);
+		initialRate = other.initialRate;
+		bleedResistance = other.bleedResistance;
 		mcis = other.mcis;
 		compartment = other.compartment;
-		severity = other.severity;
 	}
 	
 	public void reset()
 	{
 		super.reset();
-		if(severity!=null)
-			this.severity.invalidate();
+		if(initialRate!=null)
+			this.initialRate.invalidate();
+		if(bleedResistance!=null)
+			this.bleedResistance.invalidate();
 		this.compartment=null;
+
 		this.mcis = null;
 	}
 	
 	public boolean isValid()
 	{
-		return hasCompartment() && hasSeverity();
+		return hasCompartment() && hasInitialRate();
 	}
 	
 	public boolean load(HemorrhageData in)
 	{
 		super.load(in);
+    this.getInitialRate().load(in.getInitialRate());
     this.compartment=in.getCompartment();
-    this.getSeverity().load(in.getSeverity());
-    
+    this.getBleedResistance();
     this.setMCIS();
 		
     return isValid();
@@ -80,8 +87,8 @@ public class SEHemorrhage extends SEPatientAction
 	protected void unload(HemorrhageData data)
 	{
 		super.unload(data);
-		if(this.severity!=null)
-			data.setSeverity(severity.unload());
+		if(this.initialRate!=null)
+			data.setInitialRate(initialRate.unload());
 		if(this.compartment!=null)
 			data.setCompartment(compartment);
 	}
@@ -101,39 +108,62 @@ public class SEHemorrhage extends SEPatientAction
 		this.setMCIS();
 	}
 	
-	public SEScalar0To1 getSeverity()
+	public SEScalarVolumePerTime getInitialRate()
 	{
-		if (severity==null)
+		if (initialRate==null)
 			{
-				severity = new SEScalar0To1();
+				initialRate = new SEScalarVolumePerTime();
 			}
-		return severity;
+		return initialRate;
 	}
-	public boolean hasSeverity()
+	public boolean hasInitialRate()
 	{
-		return severity==null?false:true;
+		return initialRate==null?false:true;
 	}
 
-	
+	public SEScalarFlowResistance getBleedResistance()
+	{
+		if (bleedResistance==null)
+			{
+				bleedResistance = new SEScalarFlowResistance();
+			}
+		return bleedResistance;
+	}
+	public boolean hasBleedResistance()
+	{
+		return bleedResistance==null?false:true;
+	}
 
 	private void setMCIS()
 	{
-		int sev = (int)Math.ceil(5.0*this.severity.getValue());
+		int sev = 0;
+		//We're scaling flow rate by a value that will cause irreversible shock in 10 minutes, assuming blood volume = 5L
+		double flowScale_mL_Per_min = 250.0;
+		if(this.initialRate.getValue("mL/min") >= flowScale_mL_Per_min)
+		{
+			sev = 5;
+		}
+		else
+		{
+			sev = (int)Math.ceil(5.0*this.initialRate.getValue("mL/min") / flowScale_mL_Per_min);
+		}
 	
 		this.mcis = new ArrayList<Integer>();
 		this.mcis.add(0,sev);
 		
 		switch(compartment){
-			case "Arm":
+			case "LeftArm":
+			case "RightArm":
 				this.mcis.addAll(new ArrayList<Integer>(Arrays.asList(3,0,0,0)));
 				break;
-			case "Leg":
+			case "LeftLeg":
+			case "RightLeg":
 				this.mcis.addAll(new ArrayList<Integer>(Arrays.asList(4,0,0,0)));
 				break;
-			case "Major Artery":
+			case "Aorta":
 				this.mcis.addAll(new ArrayList<Integer>(Arrays.asList(2,6,4,0)));
 				break;
-			case "Head":
+			case "Brain":
 				this.mcis.addAll(new ArrayList<Integer>(Arrays.asList(2,6,1,0)));
 				break;
 			default:
@@ -152,15 +182,17 @@ public class SEHemorrhage extends SEPatientAction
 	
 	private void makeOrganMap(Map<String,List<Integer>> organs)
 	{
-		organs.put("Vena Cava", new ArrayList<Integer>(Arrays.asList(6,6)));
-		organs.put("Lung", new ArrayList<Integer>(Arrays.asList(7,1)));
-		organs.put("Heart", new ArrayList<Integer>(Arrays.asList(7,2)));
+		organs.put("VenaCava", new ArrayList<Integer>(Arrays.asList(6,6)));
+		organs.put("LeftLung", new ArrayList<Integer>(Arrays.asList(7,1)));
+		organs.put("RightLung", new ArrayList<Integer>(Arrays.asList(7,1)));
+		organs.put("Myocardium", new ArrayList<Integer>(Arrays.asList(7,2)));
 		organs.put("Liver", new ArrayList<Integer>(Arrays.asList(8,1)));
 		organs.put("Spleen", new ArrayList<Integer>(Arrays.asList(8,2)));
 		organs.put("Splanchnic", new ArrayList<Integer>(Arrays.asList(8,3)));
-		organs.put("Kidney", new ArrayList<Integer>(Arrays.asList(8,4)));
-		organs.put("Small Intestine", new ArrayList<Integer>(Arrays.asList(8,5)));
-		organs.put("Large Intestine", new ArrayList<Integer>(Arrays.asList(8,6)));
+		organs.put("LeftKidney", new ArrayList<Integer>(Arrays.asList(8,4)));
+		organs.put("RightKidney", new ArrayList<Integer>(Arrays.asList(8,4)));
+		organs.put("SmallIntestine", new ArrayList<Integer>(Arrays.asList(8,5)));
+		organs.put("LargeIntestine", new ArrayList<Integer>(Arrays.asList(8,6)));
 	}
 	
 	private String mcisToString()
@@ -177,7 +209,7 @@ public class SEHemorrhage extends SEPatientAction
 	{
 		if (mcis != null)
 			{
-					if(severity.getValue()==0.0)
+					if(initialRate.getValue("mL/min")==0.0)
 					{
 							return "Stop Hemorrhage"
 									+"\n\tCompartment: " + getCompartment();
@@ -186,7 +218,7 @@ public class SEHemorrhage extends SEPatientAction
 					{
 						return "Hemorrhage"
 								+"\n\tCompartment: " + getCompartment()
-								+"\n\tSeverity: " + Double.toString(severity.getValue())
+								+"\n\tInitial Bleeding Rate: " + Double.toString(initialRate.getValue())
 								+"\n\tInjury Code: " + mcisToString();
 								
 					}

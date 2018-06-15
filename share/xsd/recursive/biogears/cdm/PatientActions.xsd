@@ -252,13 +252,24 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-						<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief The severity of a hemorrhage on a scale of 1-5 (to match mcis code) -->
+						<xs:element name="InitialRate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/> <!--<< @brief The initial bleeding rate of the hemorrhage used to set circuit resistance change-->
 				</xs:sequence>
 				<xs:attribute name="Compartment" type="xs:string" use="required"/><!--<<@brief The compartment in which the hemorrhage occurs, maps to specific circuit path -->               
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<xs:complexType name="SepsisData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attribute name="Compartment" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
 	<!-- @brief -->
 	<xs:simpleType name="enumIntubationType">
 		<xs:restriction base="xs:string">
@@ -269,6 +280,7 @@ specific language governing permissions and limitations under the License.
 			<xs:enumeration value="Tracheal"/>
 		</xs:restriction>
 	</xs:simpleType>
+	
 	<!-- @brief Insertion of tube. -->
 	<xs:complexType name="IntubationData">
 		<xs:complexContent>

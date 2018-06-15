@@ -408,8 +408,15 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
       subQ->Balance(BalanceLiquidBy::Mass);
     }
+		if ((compound->GetName().compare("Antibiotic") == 0) && m_data.GetActions().GetPatientActions().HasSepsis())
+		{
+			//Our antibiotic currently is Piperacillin/Tazobactam and is specifically included for managing Sepsis
+			//Thus we are not going to allow administration to happen unless Sepsis is active
+			//Working on the assumption that drug is in concentration of 4.5 g per 150 mL, as indicated by FDA data 
+			GetAntibioticMassInBody().IncrementValue(volumeToAdminister_mL* (4.5 / 150.0), MassUnit::g);
+		}
 
-    if ((compound->GetName().compare("Saline") == 0) || (compound->GetName().compare("RingersLactate") == 0)) //Note: Saline and ringers lactate have different densities than pure water
+    if ((compound->GetName().compare("Saline") == 0) || (compound->GetName().compare("RingersLactate") == 0) || (compound->GetName().compare("Antibiotic")==0)) //Note: Saline and ringers lactate have different densities than pure water
     {
       SEScalarTemperature& ambientTemp = m_data.GetEnvironment().GetConditions().GetAmbientTemperature();
       SEScalarMassPerVolume densityFluid;
@@ -522,7 +529,9 @@ void Drugs::CalculatePartitionCoefficients()
         EquationPartA = IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
         EquationPartB = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue())
           / PlasmaPHEffects;
-        EquationPartC = ((1 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
+				EquationPartC = ((1 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction)
+					/ PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
+
       }
       //Calculate the partition coefficient and set it on the substance compartment effects
       PartitionCoefficient = EquationPartA + ExtracellularFluid.GetWaterVolumeFraction().GetValue() + EquationPartB + EquationPartC;
@@ -627,10 +636,9 @@ void Drugs::CalculateDrugEffects()
     neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
 
     bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
+		pupilSizeResponseLevel += pd.GetPupillaryResponse().GetSizeModifier().GetValue() * concentrationEffects_unitless;
+		pupilReactivityResponseLevel += pd.GetPupillaryResponse().GetReactivityModifier().GetValue() * concentrationEffects_unitless;
 
-    auto& pupillaryResponse = pd.GetPupillaryResponse();
-    pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier().GetValue() * concentrationEffects_unitless;
-    pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier().GetValue() * concentrationEffects_unitless;
   }
 
   //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
@@ -769,6 +777,16 @@ void Drugs::CalculateSubstanceClearance()
     //Hepatic Excretion
     m_data.GetSubstances().CalculateGenericExcretion(LiverVascularFlow_mL_Per_s, *m_liverTissue, *sub, clearance.GetFractionExcretedInFeces().GetValue(), m_dt_s);
   }
+
+	//Clear out antibiotic using plasma half-life reported by FDA (only applies to Sepsis scenarios)
+	if (GetAntibioticMassInBody(MassUnit::g) >= ZERO_APPROX)
+	{
+		//Assuming that this rate doesn't change even though blood volume is going bonkers during sepsis
+		double rateConstant_Per_s = (1.0 / 0.7) * log(2.0) / 3600.0;		//From FDA data, 1/2 life about 0.7 hrs, convert to /s basis
+		double antibioticMassCleared_g = rateConstant_Per_s * GetAntibioticMassInBody(MassUnit::g) * m_dt_s;
+		GetAntibioticMassInBody().IncrementValue(-antibioticMassCleared_g, MassUnit::g);
+	}
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -816,10 +834,15 @@ void Drugs::SarinKinetics()
 
   //Kinetic model equations adapted from
   ///\cite rodriguez2015model and \cite gupta2009handbook
-  RbcAche_nM += m_dt_s * (-RateRbcAcheInhibition_per_nM_s * SarinConcentration_nM * RbcAcetylcholinesterase_nM - RateRbcAcheDegredation_per_s * RbcAcetylcholinesterase_nM + RateRbcAcheSynthesis_nM_per_s + PralidoximeReversal);
-  SarinRbcAche_nM += m_dt_s * (RateRbcAcheInhibition_per_nM_s * SarinConcentration_nM * RbcAcetylcholinesterase_nM - RateRbcAcheAging_per_s * m_SarinRbcAcetylcholinesteraseComplex_nM - PralidoximeReversal);
-  AgedSarin_nM += m_dt_s * (RateRbcAcheAging_per_s * m_SarinRbcAcetylcholinesteraseComplex_nM);
-  SarinConcentration_nM += m_dt_s * (-RateRbcAcheInhibition_per_nM_s * SarinConcentration_nM * RbcAcetylcholinesterase_nM);
+	RbcAche_nM += m_dt_s*(-RateRbcAcheInhibition_per_nM_s*SarinConcentration_nM*RbcAcetylcholinesterase_nM
+		- RateRbcAcheDegredation_per_s*RbcAcetylcholinesterase_nM
+		+ RateRbcAcheSynthesis_nM_per_s
+		+ PralidoximeReversal);
+	SarinRbcAche_nM += m_dt_s*(RateRbcAcheInhibition_per_nM_s*SarinConcentration_nM*RbcAcetylcholinesterase_nM
+		- RateRbcAcheAging_per_s*m_SarinRbcAcetylcholinesteraseComplex_nM
+		- PralidoximeReversal);
+	AgedSarin_nM += m_dt_s*(RateRbcAcheAging_per_s*m_SarinRbcAcetylcholinesteraseComplex_nM);
+	SarinConcentration_nM += m_dt_s*(-RateRbcAcheInhibition_per_nM_s*SarinConcentration_nM*RbcAcetylcholinesterase_nM);
   PralidoximeConcentration_nM = -PralidoximeReversal;
   m_RbcAcetylcholinesteraseFractionInhibited = 1 - RbcAche_nM / BaselineRbcAcetylcholinesterase_nM;
 

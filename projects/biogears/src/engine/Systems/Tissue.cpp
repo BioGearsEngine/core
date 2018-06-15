@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <math.h>
 
 #include <biogears/engine/Systems/Cardiovascular.h>
 #include <biogears/engine/Systems/Drugs.h>
@@ -16,7 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Respiratory.h>
 #include <biogears/engine/Systems/Tissue.h>
 #include <biogears/engine/stdafx.h>
-#include <math.h>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
@@ -308,8 +308,8 @@ void Tissue::SetUp()
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LargeIntestine)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LargeIntestineVToGutE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::SmallIntestine)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SmallIntestineVToGutE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SplanchnicVToGutE1);
-  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftKidney)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftKidneyVToLeftKidneyE1);
-  m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightKidney)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightKidneyVToRightKidneyE1);
+	m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftRenalArtery)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftKidneyVToLeftKidneyE1);
+	m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightKidneyVToRightKidneyE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LiverVToLiverE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftLung)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1);
   m_VascularCopPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightLung)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightLungVToRightLungE1);
@@ -351,6 +351,8 @@ void Tissue::SetUp()
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MyocardiumE3ToMyocardiumI);
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Skin)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinE3ToSkinI);
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Spleen)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SpleenE3ToSpleenI);
+
+	
 
   m_ConsumptionProdutionTissues.clear();
   m_ConsumptionProdutionTissues.push_back(m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Fat));
@@ -1917,7 +1919,8 @@ void Tissue::AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonar
   //Get special diffused volume if sub is CO
   if (PressureGradient_mmHg > 0 && &sub == m_CO) // Wants to come into the blood
   {
-    DiffusedVolume_mL = PressureGradient_mmHg * DiffusingCapacityO2_mL_Per_s_mmHg * sub.GetRelativeDiffusionCoefficient().GetValue() * (1 / (5.404e-05 * vascular.GetSubstanceQuantity(*m_O2)->GetPartialPressure(PressureUnit::mmHg) + 0.02885)) * timestep_s; //Modify the relative diffusion coefficient
+    DiffusedVolume_mL = PressureGradient_mmHg * DiffusingCapacityO2_mL_Per_s_mmHg * sub.GetRelativeDiffusionCoefficient().GetValue() *
+      (1 / (5.404e-05*vascular.GetSubstanceQuantity(*m_O2)->GetPartialPressure(PressureUnit::mmHg) + 0.02885)) * timestep_s; //Modify the relative diffusion coefficient
   }
   double DiffusedMass_ug = DiffusedVolume_mL * sub.GetDensity(MassPerVolumeUnit::ug_Per_mL);
 
@@ -2183,10 +2186,11 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
   //double calciumConductance_S_Per_mL = 1.0 / (m_Calcium->GetMembraneResistance(ElectricResistanceUnit::Ohm));
 
   //Calculate current Nernst potentials for each ion (Faradays constant is multiplied by the charge of the ion--1 for Na and K, -1 for Cl)
-  double naNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, m_Sodium);
-  double kNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, m_Potassium);
-  double clNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, m_Chloride);
-  //double calciumNernst_V = CalculateNernstPotential(extra, intra, m_Calcium);
+	double coreTemp_K = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::K);
+	double naNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, m_Sodium, coreTemp_K);
+	double kNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, m_Potassium, coreTemp_K);
+	double clNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, m_Chloride, coreTemp_K);
+	//double calciumNernst_V = CalculateNernstPotential(extra, intra, m_Calcium, coreTemp_K);
 
   //Calculate pump rate using information from previous time step--this will lag a time step behind everything but it
   //shouldn't make a huge difference
@@ -2381,6 +2385,7 @@ void Tissue::CalculateOncoticPressure()
     return;
   }
   SETissueCompartment* tissue;
+	SELiquidCompartment* vascular;
   SEFluidCircuitPath* vascularCOP;
   SEFluidCircuitPath* interstitialCOP;
   double albuminMassInBlood_g = m_Albumin->GetMassInBlood(MassUnit::g);
@@ -2394,31 +2399,55 @@ void Tissue::CalculateOncoticPressure()
     interstitialVolume_dL += m_data.GetCompartments().GetExtracellularFluid(*tissue).GetVolume(VolumeUnit::dL);
   }
 
-  double albuminVascular_g_Per_dL = albuminMassInBlood_g / vascularVolume_dL;
-  double albuminInterstitial_g_Per_dL = albuminMassInTissue_g / interstitialVolume_dL;
+	double albuminVascularAvg_g_Per_dL = albuminMassInBlood_g / vascularVolume_dL;
+	double albuminInterstitialAvg_g_Per_dL = albuminMassInTissue_g / interstitialVolume_dL;
+	double albuminTotalAvg_g_Per_dL = (albuminMassInTissue_g + albuminMassInBlood_g) / (vascularVolume_dL + interstitialVolume_dL);
 
-  //In calculating oncotic pressure, we assume a linear relationship between plasma albumin concentration and total plasma protein
-  //concentration.  We then use the Landis-Pappenheimer (LP) Equation for total protein.  In the interstitial space, we assume that
-  //albumin is the only large protein present in significant quantities and use the correlation between albumin concentration and
-  //oncotic pressure reported by LP.  This assumes a healthy state where no other proteins are leaking across membrane.  Thus, these
-  //assumptions should change in hemorrhage and sepsis.
-  /// \ToDo:  Adjust protein concentration calculations to consider effect of damaged microvasculature
-  double totalProteinVascular_g_Per_dL = 1.6 * albuminVascular_g_Per_dL;
-  double vascularOncoticPressure_mmHg = 2.1 * totalProteinVascular_g_Per_dL + 0.16 * pow(totalProteinVascular_g_Per_dL, 2) + 0.009 * pow(totalProteinVascular_g_Per_dL, 3);
-  double interstitialOncoticPressure_mmHg = 2.8 * albuminInterstitial_g_Per_dL + 0.18 * pow(albuminInterstitial_g_Per_dL, 2) + 0.012 * pow(albuminInterstitial_g_Per_dL, 3);
+	////In calculating oncotic pressure, we assume a linear relationship between plasma albumin concentration and total plasma protein
+	////concentration.  We then use the Landis-Pappenheimer (LP) Equation for total protein.  In the interstitial space, we assume that 
+	////albumin is the only large protein present in significant quantities and use the correlation between albumin concentration and 
+	////oncotic pressure reported by LP.  This assumes a healthy state where no other proteins are leaking across membrane.  Thus, these
+	////assumptions should change in hemorrhage and sepsis.
+	///// \ToDo:  Adjust protein concentration calculations to consider effect of damaged microvasculature
+	double reflectionCoefficient = 0.0;
+	double vascularOncoticPressure_mmHg = 0.0;
+	double interstitialOncoticPressure_mmHg = 0.0;
+	double effectiveVascular_g_Per_dL = 0.0;
+	double effectiveInterstitial_g_Per_dL = 0.0;
 
-  //Set plasma oncotic pressure on all vascular COP paths.  We don't use the vascular compartment also stored in this map, but we might
-  //use it in the future if we set pressure compartment by compartment rather than globally.
-  for (auto vascularPair : m_VascularCopPaths) {
-    vascularCOP = vascularPair.second;
-    //Set negative pressure because path is defined Vascular -> Interstitial, but vascular oncotic pressure acts in the opposite direction
+	
+	for (auto tissueVascular : m_TissueToVascular)
+	{
+		tissue = tissueVascular.first;
+		vascular = tissueVascular.second;
+		if (tissue->GetName() == BGE::TissueCompartment::Brain)
+			continue;
+		if (vascular->GetName() == BGE::VascularCompartment::LeftKidney)
+			vascular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftRenalArtery);
+		if (vascular->GetName() == BGE::VascularCompartment::RightKidney)
+			vascular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
+
+		reflectionCoefficient = m_data.GetCompartments().GetTissueCompartment(tissue->GetName())->GetReflectionCoefficient().GetValue();
+		LLIM(reflectionCoefficient, 0.05);
+		effectiveVascular_g_Per_dL = 1.6 * GeneralMath::LinearInterpolator(0.0, 1.0, albuminTotalAvg_g_Per_dL, albuminVascularAvg_g_Per_dL, reflectionCoefficient);
+		vascularOncoticPressure_mmHg = 2.1 * effectiveVascular_g_Per_dL + 0.16 * pow(effectiveVascular_g_Per_dL, 2) + 0.009 * pow(effectiveVascular_g_Per_dL, 3);
+		if (vascular->GetName() == BGE::VascularCompartment::Gut)
+		{
+			for (auto c : vascular->GetChildren())
+			{
+				vascularCOP = m_VascularCopPaths[c];
+				vascularCOP->GetNextPressureSource().SetValue(-vascularOncoticPressure_mmHg, PressureUnit::mmHg);
+			}
+		}
+		else
+		{
+			vascularCOP = m_VascularCopPaths[vascular];
     vascularCOP->GetNextPressureSource().SetValue(-vascularOncoticPressure_mmHg, PressureUnit::mmHg);
   }
 
-  //Set interstitial oncotic pressure on all extracellular COP paths.  We don't use the extracellular compartment also stored in this map,
-  //but we might use it in the future if we set pressure compartment by compartment rather than globally.
-  for (auto interstitialPair : m_InterstitialCopPaths) {
-    interstitialCOP = interstitialPair.second;
+		effectiveInterstitial_g_Per_dL = 1.6 * GeneralMath::LinearInterpolator(0.0, 1.0, albuminTotalAvg_g_Per_dL, albuminInterstitialAvg_g_Per_dL, reflectionCoefficient);
+		interstitialOncoticPressure_mmHg = 2.1 * effectiveInterstitial_g_Per_dL + 0.16* pow(effectiveInterstitial_g_Per_dL, 2) + 0.009 * pow(effectiveInterstitial_g_Per_dL, 3);
+		interstitialCOP = m_InterstitialCopPaths[tissue];
     interstitialCOP->GetNextPressureSource().SetValue(interstitialOncoticPressure_mmHg, PressureUnit::mmHg);
   }
 }

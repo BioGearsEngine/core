@@ -33,8 +33,7 @@ public:
 
   void SetHemorrhage(std::string& location, double& severity);
   void SetIVFluidsFlow_mL_Per_min(double rate);
-
-  void Status();
+  virtual void Status();
 
   Logger* GetLogger() { return m_bg->GetLogger(); }
 

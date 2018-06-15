@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/stdafx.h>
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
@@ -42,7 +43,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
-#include <biogears/engine/stdafx.h>
 
 #include <biogears/schema/BaroreceptorConfigurationData.hxx>
 #include <biogears/schema/BioGearsConfigurationData.hxx>
@@ -366,7 +366,7 @@ void BioGearsConfiguration::Initialize()
   // Cardiovascular
   GetLeftHeartElastanceMaximum().SetValue(2.49, FlowElastanceUnit::mmHg_Per_mL);
   GetLeftHeartElastanceMinimum().SetValue(0.049, FlowElastanceUnit::mmHg_Per_mL);
-  GetMinimumBloodVolumeFraction().SetValue(0.65); // \cite Guyton 11th ed p.279
+	GetMinimumBloodVolumeFraction().SetValue(0.70); // \Boron2017Medical p583  This is fraction which triggers hypovolemic shock
   GetRightHeartElastanceMaximum().SetValue(0.523, FlowElastanceUnit::mmHg_Per_mL);
   GetRightHeartElastanceMinimum().SetValue(0.0243, FlowElastanceUnit::mmHg_Per_mL);
   GetStandardPulmonaryCapillaryCoverage().SetValue(0.70);

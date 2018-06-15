@@ -9,13 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/stdafx.h>
 
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-
+#include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
@@ -31,6 +31,7 @@ SETissueCompartment::SETissueCompartment(const std::string& name, Logger* logger
   m_MembranePotential = nullptr;
   m_NeutralLipidsVolumeFraction = nullptr;
   m_NeutralPhospholipidsVolumeFraction = nullptr;
+  m_ReflectionCoefficient = nullptr;
   m_TissueToPlasmaAlbuminRatio = nullptr;
   m_TissueToPlasmaAlphaAcidGlycoproteinRatio = nullptr;
   m_TissueToPlasmaLipoproteinRatio = nullptr;
@@ -50,6 +51,7 @@ void SETissueCompartment::Clear()
   SAFE_DELETE(m_MembranePotential);
   SAFE_DELETE(m_NeutralLipidsVolumeFraction);
   SAFE_DELETE(m_NeutralPhospholipidsVolumeFraction);
+  SAFE_DELETE(m_ReflectionCoefficient);
   SAFE_DELETE(m_TissueToPlasmaAlbuminRatio);
   SAFE_DELETE(m_TissueToPlasmaAlphaAcidGlycoproteinRatio);
   SAFE_DELETE(m_TissueToPlasmaLipoproteinRatio);
@@ -70,6 +72,8 @@ bool SETissueCompartment::Load(const CDM::TissueCompartmentData& in, SESubstance
     GetNeutralLipidsVolumeFraction().Load(in.NeutralLipidsVolumeFraction().get());
   if (in.NeutralPhospholipidsVolumeFraction().present())
     GetNeutralPhospholipidsVolumeFraction().Load(in.NeutralPhospholipidsVolumeFraction().get());
+  if (in.ReflectionCoefficient().present())
+	  GetReflectionCoefficient().Load(in.ReflectionCoefficient().get());
   if (in.TissueToPlasmaAlbuminRatio().present())
     GetTissueToPlasmaAlbuminRatio().Load(in.TissueToPlasmaAlbuminRatio().get());
   if (in.TissueToPlasmaAlphaAcidGlycoproteinRatio().present())
@@ -100,6 +104,8 @@ void SETissueCompartment::Unload(CDM::TissueCompartmentData& data)
     data.NeutralLipidsVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_NeutralLipidsVolumeFraction->Unload()));
   if (HasNeutralPhospholipidsVolumeFraction())
     data.NeutralPhospholipidsVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_NeutralPhospholipidsVolumeFraction->Unload()));
+  if (HasReflectionCoefficient())
+	  data.ReflectionCoefficient(std::unique_ptr<CDM::Scalar0To1Data>(m_ReflectionCoefficient->Unload()));
   if (HasTissueToPlasmaAlbuminRatio())
     data.TissueToPlasmaAlbuminRatio(std::unique_ptr<CDM::ScalarData>(m_TissueToPlasmaAlbuminRatio->Unload()));
   if (HasTissueToPlasmaAlbuminRatio())
@@ -124,6 +130,8 @@ const SEScalar* SETissueCompartment::GetScalar(const std::string& name)
     return &GetNeutralLipidsVolumeFraction();
   if (name.compare("NeutralPhospholipidsVolumeFraction") == 0)
     return &GetNeutralPhospholipidsVolumeFraction();
+  if (name.compare("ReflectionCoefficient") == 0)
+	  return &GetReflectionCoefficient();
   if (name.compare("TissueToPlasmaAlbuminRatio") == 0)
     return &GetTissueToPlasmaAlbuminRatio();
   if (name.compare("TissueToPlasmaAlphaAcidGlycoproteinRatio") == 0)
@@ -205,6 +213,23 @@ double SETissueCompartment::GetNeutralLipidsVolumeFraction() const
   if (m_NeutralLipidsVolumeFraction == nullptr)
     return SEScalar::dNaN();
   return m_NeutralLipidsVolumeFraction->GetValue();
+}
+
+bool SETissueCompartment::HasReflectionCoefficient() const
+{
+	return m_ReflectionCoefficient == nullptr ? false : m_ReflectionCoefficient->IsValid();
+}
+SEScalar0To1& SETissueCompartment::GetReflectionCoefficient()
+{
+	if (m_ReflectionCoefficient == nullptr)
+		m_ReflectionCoefficient = new SEScalar0To1();
+	return *m_ReflectionCoefficient;
+}
+double SETissueCompartment::GetReflectionCoefficient() const
+{
+	if (m_ReflectionCoefficient == nullptr)
+		return SEScalar::dNaN();
+	return m_ReflectionCoefficient->GetValue();
 }
 
 bool SETissueCompartment::HasNeutralPhospholipidsVolumeFraction() const

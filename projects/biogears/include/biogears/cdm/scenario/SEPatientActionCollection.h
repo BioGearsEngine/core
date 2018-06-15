@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
@@ -31,14 +33,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
+#include <biogears/cdm/patient/actions/SESepsis.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
-
 #include <biogears/cdm/substance/SESubstanceManager.h>
-
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
@@ -152,6 +153,10 @@ public:
   SETensionPneumothorax* GetRightOpenTensionPneumothorax() const;
   void RemoveRightOpenTensionPneumothorax();
 
+	bool HasSepsis() const;
+	SESepsis* GetSepsis() const;
+	void RemoveSepsis();
+
   const std::map<const SESubstance*, SESubstanceBolus*>& GetSubstanceBoluses() const;
   void RemoveSubstanceBolus(const SESubstance& sub);
 
@@ -186,6 +191,7 @@ protected:
   SENeedleDecompression* m_LeftNeedleDecompression;
   SENeedleDecompression* m_RightNeedleDecompression;
   SEPericardialEffusion* m_PericardialEffusion;
+	SESepsis*							  m_Sepsis;
   SETensionPneumothorax* m_LeftClosedTensionPneumothorax;
   SETensionPneumothorax* m_LeftOpenTensionPneumothorax;
   SETensionPneumothorax* m_RightClosedTensionPneumothorax;

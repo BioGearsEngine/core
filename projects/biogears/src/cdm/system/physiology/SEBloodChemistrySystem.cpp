@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/stdafx.h>
 
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -17,7 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/schema/ScalarAmountPerVolumeData.hxx>
@@ -48,6 +48,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_RedBloodCellCount = nullptr;
   m_ShuntFraction = nullptr;
   m_StrongIonDifference = nullptr;
+  m_TotalBilirubin = nullptr;
   m_TotalProteinConcentration = nullptr;
   m_VolumeFractionNeutralPhospholipidInPlasma = nullptr;
   m_VolumeFractionNeutralLipidInPlasma = nullptr;
@@ -88,6 +89,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_RedBloodCellCount);
   SAFE_DELETE(m_ShuntFraction);
   SAFE_DELETE(m_StrongIonDifference);
+  SAFE_DELETE(m_TotalBilirubin);
   SAFE_DELETE(m_TotalProteinConcentration);
   SAFE_DELETE(m_VolumeFractionNeutralPhospholipidInPlasma);
   SAFE_DELETE(m_VolumeFractionNeutralLipidInPlasma);
@@ -137,6 +139,8 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     return &GetShuntFraction();
   if (name.compare("StrongIonDifference") == 0)
     return &GetStrongIonDifference();
+  if (name.compare("TotalBilirubin") == 0)
+	  return &GetTotalBilirubin();
   if (name.compare("TotalProteinConcentration") == 0)
     return &GetTotalProteinConcentration();
   if (name.compare("VolumeFractionNeutralPhospholipidInPlasma") == 0)
@@ -202,6 +206,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetShuntFraction().Load(in.ShuntFraction().get());
   if (in.StrongIonDifference().present())
     GetStrongIonDifference().Load(in.StrongIonDifference().get());
+  if (in.TotalBilirubin().present())
+	  GetTotalBilirubin().Load(in.TotalBilirubin().get());
   if (in.TotalProteinConcentration().present())
     GetTotalProteinConcentration().Load(in.TotalProteinConcentration().get());
   if (in.VolumeFractionNeutralPhospholipidInPlasma().present())
@@ -274,6 +280,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.ShuntFraction(std::unique_ptr<CDM::ScalarFractionData>(m_ShuntFraction->Unload()));
   if (m_StrongIonDifference != nullptr)
     data.StrongIonDifference(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_StrongIonDifference->Unload()));
+  if (m_TotalBilirubin != nullptr)
+	  data.TotalBilirubin(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalBilirubin->Unload()));
   if (m_TotalProteinConcentration != nullptr)
     data.TotalProteinConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalProteinConcentration->Unload()));
   if (m_VolumeFractionNeutralPhospholipidInPlasma != nullptr)
@@ -571,6 +579,23 @@ double SEBloodChemistrySystem::GetStrongIonDifference(const AmountPerVolumeUnit&
   if (m_StrongIonDifference == nullptr)
     return SEScalar::dNaN();
   return m_StrongIonDifference->GetValue(unit);
+}
+
+bool SEBloodChemistrySystem::HasTotalBilirubin() const
+{
+	return m_TotalBilirubin == nullptr ? false : m_TotalBilirubin->IsValid();
+}
+SEScalarMassPerVolume& SEBloodChemistrySystem::GetTotalBilirubin()
+{
+	if (m_TotalBilirubin == nullptr)
+		m_TotalBilirubin = new SEScalarMassPerVolume();
+	return *m_TotalBilirubin;
+}
+double SEBloodChemistrySystem::GetTotalBilirubin(const MassPerVolumeUnit& unit) const
+{
+	if (m_TotalBilirubin == nullptr)
+		return SEScalar::dNaN();
+	return m_TotalBilirubin->GetValue(unit);
 }
 
 bool SEBloodChemistrySystem::HasTotalProteinConcentration() const

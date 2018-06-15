@@ -9,21 +9,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/stdafx.h>
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/schema/ScalarData.hxx>
 #include <biogears/schema/ScalarFractionData.hxx>
 #include <biogears/schema/ScalarFrequencyData.hxx>
 #include <biogears/schema/ScalarLengthData.hxx>
+#include <biogears/schema/ScalarMassData.hxx>
 #include <biogears/schema/ScalarMassPerVolumeData.hxx>
 #include <biogears/schema/ScalarPressureData.hxx>
 #include <biogears/schema/ScalarVolumeData.hxx>
@@ -70,6 +72,8 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
 {
   SESystem::Load(in);
 
+	if (in.AntibioticMassInBody().present())
+		GetAntibioticMassInBody().Load(in.AntibioticMassInBody().get());
   if (in.BronchodilationLevel().present())
     GetBronchodilationLevel().Load(in.BronchodilationLevel().get());
   if (in.HeartRateChange().present())
@@ -93,11 +97,14 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
   if (in.CentralNervousResponse().present())
     GetCentralNervousResponse().Load(in.CentralNervousResponse().get());
 
+
   return true;
 }
 
 const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
 {
+	if (name.compare("AntibioticMassInBody") == 0)
+		return &GetAntibioticMassInBody();
   if (name.compare("BronchodilationLevel") == 0)
     return &GetBronchodilationLevel();
   if (name.compare("HeartRateChange") == 0)
@@ -118,6 +125,7 @@ const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
     return &GetTubularPermeabilityChange();
   if (name.compare("CentralNervousResponse") == 0)
     return &GetCentralNervousResponse();
+
 
   size_t split = name.find('-');
   if (split != name.npos) {
@@ -141,6 +149,8 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
 {
   SESystem::Unload(data);
 
+	if (m_AntibioticMassInBody != nullptr)
+		data.AntibioticMassInBody(std::unique_ptr<CDM::ScalarMassData>(m_AntibioticMassInBody->Unload()));
   if (m_BronchodilationLevel != nullptr)
     data.BronchodilationLevel(std::unique_ptr<CDM::ScalarFractionData>(m_BronchodilationLevel->Unload()));
   if (m_HeartRateChange != nullptr)
@@ -163,6 +173,23 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
     data.TubularPermeabilityChange(std::unique_ptr<CDM::ScalarFractionData>(m_TubularPermeabilityChange->Unload()));
   if (m_CentralNervousResponse != nullptr)
     data.CentralNervousResponse(std::unique_ptr<CDM::ScalarFractionData>(m_CentralNervousResponse->Unload()));
+}
+
+bool SEDrugSystem::HasAntibioticMassInBody() const
+{
+	return m_AntibioticMassInBody == nullptr ? false : m_AntibioticMassInBody->IsValid();
+}
+SEScalarMass& SEDrugSystem::GetAntibioticMassInBody()
+{
+	if (m_AntibioticMassInBody == nullptr)
+		m_AntibioticMassInBody = new SEScalarMass();
+	return *m_AntibioticMassInBody;
+}
+double SEDrugSystem::GetAntibioticMassInBody(const MassUnit& unit) const 
+{
+	if (m_AntibioticMassInBody == nullptr)
+		return SEScalar::dNaN();
+	return m_AntibioticMassInBody->GetValue(unit);
 }
 
 bool SEDrugSystem::HasBronchodilationLevel() const
@@ -355,3 +382,4 @@ double SEDrugSystem::GetCentralNervousResponse() const
     return SEScalar::dNaN();
   return m_CentralNervousResponse->GetValue();
 }
+

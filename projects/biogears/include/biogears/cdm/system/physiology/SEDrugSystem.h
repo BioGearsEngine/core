@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
 #include <biogears/schema/DrugSystemData.hxx>
@@ -30,8 +32,12 @@ public:
 
 protected:
   virtual void Unload(CDM::DrugSystemData& data) const;
-
 public:
+
+	virtual bool HasAntibioticMassInBody() const;
+	virtual SEScalarMass& GetAntibioticMassInBody();
+	virtual double GetAntibioticMassInBody(const MassUnit& unit) const;
+
   virtual bool HasBronchodilationLevel() const;
   virtual SEScalarFraction& GetBronchodilationLevel();
   virtual double GetBronchodilationLevel() const;
@@ -77,7 +83,11 @@ public:
   virtual SEScalarFraction& GetCentralNervousResponse();
   virtual double GetCentralNervousResponse() const;
 
+
+
 protected:
+
+	SEScalarMass*				m_AntibioticMassInBody;
   SEScalarFraction* m_BronchodilationLevel;
   SEScalarFrequency* m_HeartRateChange;
   SEScalarPressure* m_MeanBloodPressureChange;

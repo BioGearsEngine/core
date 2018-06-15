@@ -144,19 +144,23 @@ public class ScenarioEditor extends JPanel implements ActionListener
 		actionPropertyOptions = new HashMap<Class<? extends SEAction>,Map<String,List<String>>>();
 		// Hemorrhage--this was already hacky with a list of "Left Arm, Right Arm, etc".  I extended the hackiness with more detailed compartments.
 		List<String> hCmpts = new ArrayList<String>();	
-		hCmpts.add("Head");
-		hCmpts.add("Lung");
+		hCmpts.add("Brain");
+		hCmpts.add("LeftLung");
+		hCmpts.add("RightLung");
 		hCmpts.add("Myocardium");
 		hCmpts.add("Liver");
 		hCmpts.add("Spleen");
 		hCmpts.add("Splanchnic");
-		hCmpts.add("Kidney");
-		hCmpts.add("Small Intestine");
-		hCmpts.add("Large Intestine");
-		hCmpts.add("Major Artery");
-		hCmpts.add("Vena Cava");
-		hCmpts.add("Arm");
-		hCmpts.add("Leg");
+		hCmpts.add("LeftKidney");
+		hCmpts.add("RightKidney");
+		hCmpts.add("SmallIntestine");
+		hCmpts.add("LargeIntestine");
+		hCmpts.add("Aorta");
+		hCmpts.add("VenaCava");
+		hCmpts.add("LeftArm");
+		hCmpts.add("RightArm");
+		hCmpts.add("LeftLeg");
+		hCmpts.add("RightLeg");
 		Map<String, List<String>> hMap = new HashMap<String, List<String>>();
 		hMap.put("Compartment", hCmpts);
 		actionPropertyOptions.put(SEHemorrhage.class, hMap);
@@ -169,12 +173,12 @@ public class ScenarioEditor extends JPanel implements ActionListener
 		liqDrugs.add("Midazolam");
 		liqDrugs.add("Morphine");
 		liqDrugs.add("Naloxone");
-		liqDrugs.add("Norepinephrine");	
 		liqDrugs.add("Pralidoxime");
 		liqDrugs.add("Prednisone");
 		liqDrugs.add("Propofol");
 		liqDrugs.add("Rocuronium");
 		liqDrugs.add("Succinylcholine");
+		liqDrugs.add("Vasopressin");
 		Map<String, List<String>> saMap = new HashMap<String, List<String>>();
 		saMap.put("Substance", liqDrugs);
 		actionPropertyOptions.put(SESubstanceBolus.class, saMap);
@@ -187,7 +191,6 @@ public class ScenarioEditor extends JPanel implements ActionListener
 		actionPropertyOptions.put(SESubstanceCompoundInfusion.class, caMap);
 		// Anesthesia Machine Substances
 		List<String> anesDrugs = new ArrayList<String>();
-		anesDrugs.add("Cortexiphan");
 		anesDrugs.add("Desflurane");
 		Map<String, List<String>> anesMap = new HashMap<String, List<String>>();
 		anesMap.put("Substance", anesDrugs);

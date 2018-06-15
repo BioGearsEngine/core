@@ -531,17 +531,21 @@ namespace tatrc {
         //Hemorrhage
         DEFINE_STATIC_STRING(AortaBleed);
         DEFINE_STATIC_STRING(BrainBleed);
-        DEFINE_STATIC_STRING(HeartBleed);
-        DEFINE_STATIC_STRING(LungBleed);
-        DEFINE_STATIC_STRING(ArmBleed);
+        DEFINE_STATIC_STRING(MyocardiumBleed);
+        DEFINE_STATIC_STRING(LeftLungBleed);
+        DEFINE_STATIC_STRING(RightLungBleed);
+        DEFINE_STATIC_STRING(LeftArmBleed);
+        DEFINE_STATIC_STRING(RightArmBleed);
         DEFINE_STATIC_STRING(SpleenBleed);
         DEFINE_STATIC_STRING(SmallIntestineBleed);
         DEFINE_STATIC_STRING(LargeIntestineBleed);
         DEFINE_STATIC_STRING(SplanchnicBleed);
-        DEFINE_STATIC_STRING(KidneyBleed);
+        DEFINE_STATIC_STRING(RightKidneyBleed);
+        DEFINE_STATIC_STRING(LeftKidneyBleed);
         DEFINE_STATIC_STRING(LiverBleed);
         DEFINE_STATIC_STRING(PortalBleed);
-        DEFINE_STATIC_STRING(LegBleed);
+        DEFINE_STATIC_STRING(LeftLegBleed);
+        DEFINE_STATIC_STRING(RightLegBleed);
       };
 
       class TissueNode {

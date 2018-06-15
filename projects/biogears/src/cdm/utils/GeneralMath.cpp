@@ -9,6 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/utils/GeneralMath.h>
+
+#include <sstream>
+
+#include <biogears/cdm/stdafx.h>
 
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
@@ -22,11 +27,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/utils/GeneralMath.h>
-#include <sstream>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -363,11 +365,23 @@ double GeneralMath::LogisticFunction(double a, double x50, double k, double x)
   return y;
 }
 
-double GeneralMath::CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion)
+// --------------------------------------------------------------------------------------------------
+/// \brief
+/// Calculates Nernst Potential.
+/// 
+/// \param  extra		extracellular tissue compartment
+/// \param  intra		intracellular tissue compartment
+/// \param  ion		    ion being considered (Na, K, Cl)
+///
+/// \return E_nernst
+///
+/// \details
+/// Calculates the Nernst potential of an ion based on its concentration gradient.  The difference
+/// between this value and the current cell potential dictates the rate and direction of ion movement
+//--------------------------------------------------------------------------------------------------
+double GeneralMath::CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion, double &coreTemp_K)
 {
   double gasConstant_J_Per_mol = 8.314;
-  //double coreTemperature_degK = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::C) + 273.15;
-  double coreTemperature_degK = 310.0; //Use this while unit testing
   double faradaysConstant_C_Per_mol = 96485;
   double intraIon_M = intra.GetSubstanceQuantity(*ion)->GetMolarity(AmountPerVolumeUnit::mol_Per_L);
   double extraIon_M = extra.GetSubstanceQuantity(*ion)->GetMolarity(AmountPerVolumeUnit::mol_Per_L);
@@ -377,6 +391,6 @@ double GeneralMath::CalculateNernstPotential(SELiquidCompartment& extra, SELiqui
   if (ion->GetName() == "Calcium")
     z = 2.0;
 
-  double nernst_V = (gasConstant_J_Per_mol * coreTemperature_degK) / (faradaysConstant_C_Per_mol * z) * log(extraIon_M / intraIon_M);
+	double nernst_V = (gasConstant_J_Per_mol*coreTemp_K) / (faradaysConstant_C_Per_mol * z)*log(extraIon_M / intraIon_M);
   return nernst_V;
 }

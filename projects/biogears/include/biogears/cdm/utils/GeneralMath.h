@@ -11,12 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
+#include <biogears/cdm/circuit/SECircuitNode.h>
+
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
-#include <biogears/cdm/circuit/SECircuitNode.h>
-
 class BIOGEARS_API GeneralMath {
 public:
   static void CalculateConcentration(const SEScalarMass& mass, const SEScalarVolume& volume, SEScalarMassPerVolume& concentration, Logger* logger = nullptr);
@@ -35,5 +37,6 @@ public:
   static double PercentTolerance(double expected, double calculated, double epsilon = 1e-20);
   static double ResistanceFunction(double dbase, double dmin, double dmax, double dx);
   static double LogisticFunction(double a, double x50, double k, double x);
-  static double CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion);
+  static double CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion, double &coreTemp_K);
 };
+

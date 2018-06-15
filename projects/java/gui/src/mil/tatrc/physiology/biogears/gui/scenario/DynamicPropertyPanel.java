@@ -360,6 +360,7 @@ public class DynamicPropertyPanel extends JPanel implements ActionListener
 		skipProperties.add("ConditionsFile");
 		skipProperties.add("ConfigurationFile");
 		skipProperties.add("MCIS");
+		skipProperties.add("BleedResistance");
 		
 		List<String> order = new ArrayList<String>();
 		Map<String,Row> rowMap = new HashMap<String,Row>();

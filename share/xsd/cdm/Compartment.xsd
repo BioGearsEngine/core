@@ -152,6 +152,7 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="MembranePotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="NeutralLipidsVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
 					<xs:element name="NeutralPhospholipidsVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+					<xs:element name="ReflectionCoefficient" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="TissueToPlasmaAlbuminRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
 					<xs:element name="TissueToPlasmaAlphaAcidGlycoproteinRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
 					<xs:element name="TissueToPlasmaLipoproteinRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>

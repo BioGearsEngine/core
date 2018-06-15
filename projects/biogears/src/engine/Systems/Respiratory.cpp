@@ -914,6 +914,16 @@ void Respiratory::RespiratoryDriver()
         DrugRRChange_Per_min = 0.0;
         DrugsTVChange_L = 0.0;
       }
+	  //Make changes to respiration rate if Sepsis is present
+	  //Yes, this is hijacking the drug response variable.  Seemed like the best option on short notice
+	  if (m_PatientActions->HasSepsis())
+	  {
+		  double baselineWBCFraction = 0.05;	//Initial value of white blood cells in model
+		  double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
+		  double sigmoidInput = m_PatientActions->GetSepsis()->GetEarlyMediator().GetValue() - baselineWBCFraction;
+		  DrugRRChange_Per_min += baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
+	  }
+
 
       //Calculate the target Alveolar Ventilation based on the Arterial O2 and CO2 concentrations.  Lower target as a function of central nervous
       //depressant effects of any drugs (currently only morphine has this effect)

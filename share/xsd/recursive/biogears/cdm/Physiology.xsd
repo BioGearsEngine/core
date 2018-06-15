@@ -58,6 +58,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="VolumeFractionNeutralPhospholipidInPlasma" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the plasma that is made up of neutral phospholipids.-->
                     <xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
                     <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
+                    <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
                     <!-- Substance Pressures -->
                     <xs:element name="ArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the aorta.-->
                     <xs:element name="ArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the aorta.-->
@@ -147,6 +148,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="TidalVolumeChange" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="TubularPermeabilityChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="CentralNervousResponse" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
+                    <xs:element name="AntibioticMassInBody" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<<@brief Track amount of antibiotic given in response to Sepsis-->
                 </xs:sequence>  
             </xs:extension>
         </xs:complexContent>
@@ -358,7 +360,7 @@ specific language governing permissions and limitations under the License.
             <xs:extension base="SystemData">
                 <xs:sequence>
                     <xs:element name="CarbonDioxideProductionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The carbon dioxide generated on the tissue level from aerobic metabolism-->
-                    <xs:element name="DehydrationFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The fraction of body weight lost as fluid since initialization -->
+                    <xs:element name="DehydrationFraction" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/> <!--<< @brief The fraction of body weight lost as fluid since initialization -->
                     <xs:element name="ExtracellularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of fluid outside of cells AND outside of the blood vessels-->
                     <xs:element name="ExtravascularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total fluid volume outside of the blood vessels. -->
                     <xs:element name="IntracellularFluidPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The acidity or alkalinity of the extravascular intercellular fluid.-->

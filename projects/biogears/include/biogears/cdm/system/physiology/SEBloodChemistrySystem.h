@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/BloodChemistrySystemData.hxx>
 
@@ -186,6 +188,11 @@ public:
   virtual double GetShuntFraction() const;
   //@}
 
+	virtual bool HasTotalBilirubin() const;
+	virtual SEScalarMassPerVolume& GetTotalBilirubin();
+	virtual double GetTotalBilirubin(const MassPerVolumeUnit& unit) const;
+
+
   /** @name TotalProteinConcentration
   *  @brief @copybrief Physiology_BloodChemistrySystemData_TotalProteinConcentration
   *  @{*/
@@ -322,6 +329,7 @@ protected:
   SEScalarAmountPerVolume* m_RedBloodCellCount;
   SEScalarFraction* m_ShuntFraction;
   SEScalarAmountPerVolume* m_StrongIonDifference;
+  SEScalarMassPerVolume*		  m_TotalBilirubin;
   SEScalarMassPerVolume* m_TotalProteinConcentration;
   SEScalarFraction* m_VolumeFractionNeutralPhospholipidInPlasma;
   SEScalarFraction* m_VolumeFractionNeutralLipidInPlasma;

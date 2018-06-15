@@ -23,6 +23,7 @@ class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
+class SEPatientActionCollection;
 class BioGears;
 /**
  * @brief @copydoc Physiology_BloodChemistrySystemData
@@ -69,6 +70,7 @@ public:
 
 protected:
   void CheckBloodSubstanceLevels();
+  void Sepsis();
 
   // Serializable member variables (Set in Initialize and in schema)
   RunningAverage m_ArterialOxygen_mmHg;
@@ -107,4 +109,6 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaSodium;
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;
+
+	SEPatientActionCollection* m_PatientActions;
 };
