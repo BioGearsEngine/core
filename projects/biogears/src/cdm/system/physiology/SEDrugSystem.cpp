@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 SEDrugSystem::SEDrugSystem(Logger* logger)
   : SESystem(logger)
 {
+  m_AntibioticMassInBody = nullptr;
   m_BronchodilationLevel = nullptr;
   m_HeartRateChange = nullptr;
   m_MeanBloodPressureChange = nullptr;
@@ -54,7 +55,7 @@ SEDrugSystem::~SEDrugSystem()
 void SEDrugSystem::Clear()
 {
   SESystem::Clear();
-
+  SAFE_DELETE(m_AntibioticMassInBody);
   SAFE_DELETE(m_BronchodilationLevel);
   SAFE_DELETE(m_HeartRateChange);
   SAFE_DELETE(m_MeanBloodPressureChange);
