@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 
 class BIOGEARS_API SEHemorrhage : public SEPatientAction {
 public:
-
   SEHemorrhage();
   virtual ~SEHemorrhage();
 
@@ -30,17 +29,17 @@ public:
   virtual bool IsActive() const;
 
   virtual bool Load(const CDM::HemorrhageData& in);
-  virtual CDM::HemorrhageData* Unload()const;
+  virtual CDM::HemorrhageData* Unload() const;
+
 protected:
   virtual void Unload(CDM::HemorrhageData& data) const;
 
 public:
-
   virtual std::string GetCompartment() const;
   virtual bool HasCompartment() const;
   virtual void SetCompartment(const std::string& name);
   virtual void InvalidateCompartment();
-  
+
   virtual bool HasMCIS() const;
   virtual std::vector<unsigned int>& GetMCIS() { return m_MCIS; }
   virtual void SetMCIS();
@@ -50,13 +49,13 @@ public:
 
   virtual bool HasBleedResistance() const;
   virtual SEScalarFlowResistance& GetBleedResistance();
-  
-  virtual void ToString(std::ostream &str) const;
+
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-  std::string             m_Compartment;
-  std::vector<unsigned int>   m_MCIS;
-  SEScalarVolumePerTime*   m_InitialRate;
-  SEScalarFlowResistance*  m_BleedResistance;
-  std::map < std::string, std::vector<unsigned int>> organMap;
-};    
+  std::string m_Compartment;
+  std::vector<unsigned int> m_MCIS;
+  SEScalarVolumePerTime* m_InitialRate;
+  SEScalarFlowResistance* m_BleedResistance;
+  std::map<std::string, std::vector<unsigned int>> organMap;
+};

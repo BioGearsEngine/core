@@ -671,7 +671,7 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
                 for (int j = 0; j < 2; j++) {
 
                   for (int i = 0; i < 2; i++) {
-                  //report index values before each run to determine deficiencies:
+                    //report index values before each run to determine deficiencies:
 #ifdef VERBOSE
                     std::cout << " i:" << i << " j:" << j << " k:" << k << " m:" << m << " n:" << n << " p:" << p << " q:" << q << " r:" << r << " s:" << s << std::endl;
 #endif

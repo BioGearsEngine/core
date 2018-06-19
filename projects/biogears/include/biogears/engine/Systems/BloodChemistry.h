@@ -33,10 +33,10 @@ class BioGears;
  * The blood chemistry system houses all of the blood concentrations and compositions needed to assess a patient's health. This system is under development
  * and will be improved in future releases to include more substances that can provide clinician level details and assessments, such as a CBC and blood panel.
  */
-class BIOGEARS_API BloodChemistry : public SEBloodChemistrySystem, public BioGearsSystem
-{
+class BIOGEARS_API BloodChemistry : public SEBloodChemistrySystem, public BioGearsSystem {
   friend BioGears;
   friend class BioGearsEngineTest;
+
 protected:
   BloodChemistry(BioGears& bg);
   BioGears& m_data;
@@ -50,8 +50,9 @@ public:
   void Initialize();
 
   // Load a state
-  bool Load(const CDM::BioGearsBloodChemistrySystemData& in);                                  
+  bool Load(const CDM::BioGearsBloodChemistrySystemData& in);
   CDM::BioGearsBloodChemistrySystemData* Unload() const;
+
 protected:
   void Unload(CDM::BioGearsBloodChemistrySystemData& data) const;
 
@@ -70,7 +71,7 @@ public:
 protected:
   void CheckBloodSubstanceLevels();
   void Sepsis();
-  
+
   // Serializable member variables (Set in Initialize and in schema)
   RunningAverage m_ArterialOxygen_mmHg;
   RunningAverage m_ArterialCarbonDioxide_mmHg;
@@ -78,7 +79,7 @@ protected:
   // Stateless member variable (Set in SetUp())
   double m_redBloodCellVolume_mL;
   double m_HbPerRedBloodCell_ug_Per_ct;
-  SELiquidCompartment*       m_aorta;
+  SELiquidCompartment* m_aorta;
   SELiquidSubstanceQuantity* m_aortaO2;
   SELiquidSubstanceQuantity* m_aortaCO2;
   SELiquidSubstanceQuantity* m_aortaCO;
@@ -89,7 +90,7 @@ protected:
   SELiquidSubstanceQuantity* m_pulmonaryArteriesCO2;
   SELiquidSubstanceQuantity* m_pulmonaryVeinsO2;
   SELiquidSubstanceQuantity* m_pulmonaryVeinsCO2;
-  SELiquidCompartment*       m_venaCava;
+  SELiquidCompartment* m_venaCava;
   SELiquidSubstanceQuantity* m_venaCavaO2;
   SELiquidSubstanceQuantity* m_venaCavaCO2;
   SELiquidSubstanceQuantity* m_venaCavaAlbumin;
@@ -107,7 +108,7 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaPotassium;
   SELiquidSubstanceQuantity* m_venaCavaSodium;
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
-  SELiquidSubstanceQuantity* m_venaCavaUrea;  
+  SELiquidSubstanceQuantity* m_venaCavaUrea;
 
   SEPatientActionCollection* m_PatientActions;
 };

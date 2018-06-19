@@ -43,7 +43,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
-
 #include <biogears/schema/BaroreceptorConfigurationData.hxx>
 #include <biogears/schema/BioGearsConfigurationData.hxx>
 #include <biogears/schema/BloodChemistryConfigurationData.hxx>
@@ -86,7 +85,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ScalarVolumePerTimePressureAreaData.hxx>
 #include <biogears/schema/TissueConfigurationData.hxx>
 
-BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances) : PhysiologyEngineConfiguration(substances.GetLogger()), m_Substances(substances)
+BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
+  : PhysiologyEngineConfiguration(substances.GetLogger())
+  , m_Substances(substances)
 {
   // Barorecptors
   m_ResponseSlope = nullptr;
@@ -136,7 +137,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances) : P
   m_StefanBoltzmann = nullptr;
   m_UniversalGasConstant = nullptr;
 
-  // Drugs 
+  // Drugs
   m_PDEnabled = CDM::enumOnOff::value(-1);
 
   // Energy
@@ -172,7 +173,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances) : P
 
   // Nervous
   m_PupilDiameterBaseline = nullptr;
-  
+
   // Renal
   m_RenalEnabled = CDM::enumOnOff::value(-1);
   m_PlasmaSodiumConcentrationSetPoint = nullptr;
@@ -188,7 +189,6 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances) : P
   m_RightTubularReabsorptionFluidPermeabilityBaseline = nullptr;
   m_RightTubularReabsorptionFilteringSurfaceAreaBaseline = nullptr;
   m_TargetSodiumDelivery = nullptr;
-  
 
   // Respiratory
   m_CentralControllerCO2PressureSetPoint = nullptr;
@@ -228,7 +228,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_NormalizedResistanceSympatheticSlope);
   SAFE_DELETE(m_NormalizedComplianceIntercept);
   SAFE_DELETE(m_NormalizedComplianceParasympatheticSlope);
-  
+
   // Blood Chemistry
   SAFE_DELETE(m_MeanCorpuscularHemoglobin);
   SAFE_DELETE(m_MeanCorpuscularVolume);
@@ -285,7 +285,7 @@ void BioGearsConfiguration::Clear()
 
   // Gastrointestinal
   SAFE_DELETE(m_CalciumDigestionRate);
-  SAFE_DELETE(m_CalciumAbsorptionFraction); 
+  SAFE_DELETE(m_CalciumAbsorptionFraction);
   SAFE_DELETE(m_CarbohydrateAbsorptionFraction);
   SAFE_DELETE(m_DefaultCarbohydrateDigestionRate);
   SAFE_DELETE(m_DefaultFatDigestionRate);
@@ -328,7 +328,6 @@ void BioGearsConfiguration::Clear()
   m_TissueEnabled = CDM::enumOnOff::value(-1);
 }
 
-
 void BioGearsConfiguration::Initialize()
 {
   Clear();
@@ -339,8 +338,8 @@ void BioGearsConfiguration::Initialize()
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
   GetDynamicStabilizationCriteria().LoadFile("./config/DynamicStabilization.xml");
   //GetTimedStabilizationCriteria().LoadFile("./config/TimedStabilization.xml");
-  m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off);// Turn on to include stabilization tracking for debugging
-  
+  m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off); // Turn on to include stabilization tracking for debugging
+
   // Baroreceptors
   GetResponseSlope().SetValue(12.0); //nu
   GetHeartRateDistributedTimeDelay().SetValue(20.0, TimeUnit::s);
@@ -358,7 +357,7 @@ void BioGearsConfiguration::Initialize()
   GetNormalizedComplianceParasympatheticSlope().SetValue(0.6); //Alpha Compliance
 
   //Blood Chemistry
-  GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL);// Guyton p419
+  GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
   GetMeanCorpuscularHemoglobin().SetValue(29, MassPerAmountUnit::pg_Per_ct);
   GetStandardDiffusionDistance().SetValue(0.0006, LengthUnit::mm);
   GetStandardOxygenDiffusionCoefficient().SetValue(0.00000000246, AreaPerTimePressureUnit::cm2_Per_min_mmHg);
@@ -386,10 +385,10 @@ void BioGearsConfiguration::Initialize()
 
   // Constants
   GetOxygenMetabolicConstant().SetValue(9.0);
-  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4);//http://physics.nist.gov/cuu/Constants/
+  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); //http://physics.nist.gov/cuu/Constants/
   GetUniversalGasConstant().SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); //http://physics.nist.gov/cuu/Constants/
 
-  // Drugs 
+  // Drugs
   m_PDEnabled = CDM::enumOnOff::On;
 
   // Energy
@@ -398,7 +397,7 @@ void BioGearsConfiguration::Initialize()
   GetCoreTemperatureLow().SetValue(36.8, TemperatureUnit::C);
   GetCoreTemperatureHigh().SetValue(37.1, TemperatureUnit::C);
   GetDeltaCoreTemperatureLow().SetValue(1.8, TemperatureUnit::C);
-  GetEnergyPerATP().SetValue(11.5, EnergyPerAmountUnit::kcal_Per_mol);  //Under standard conditions, it's 7.3 kcal/mol, but under intracellular conditions, it should be around 11.5
+  GetEnergyPerATP().SetValue(11.5, EnergyPerAmountUnit::kcal_Per_mol); //Under standard conditions, it's 7.3 kcal/mol, but under intracellular conditions, it should be around 11.5
   GetSweatHeatTransfer().SetValue(0.20833, HeatConductanceUnit::kcal_Per_K_s);
   GetVaporizationEnergy().SetValue(2260.0, EnergyPerMassUnit::kJ_Per_kg);
   GetVaporSpecificHeat().SetValue(1.890, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
@@ -412,18 +411,18 @@ void BioGearsConfiguration::Initialize()
   GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
 
   // Gastrointestinal
-  GetCalciumAbsorptionFraction().SetValue(0.25);// Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
-  GetCalciumDigestionRate().SetValue(2.7, MassPerTimeUnit::mg_Per_min);// Wasserman1992Intestinal
-  GetCarbohydrateAbsorptionFraction().SetValue(0.80);// Guyton p790
-  GetDefaultCarbohydrateDigestionRate().SetValue(0.5, MassPerTimeUnit::g_Per_min);// Guyton (About 4.25hr to digest the carbs in default meal)
-  GetDefaultFatDigestionRate().SetValue(0.055, MassPerTimeUnit::g_Per_min);// Guyton (About 8hr to digest the fat in the default meal)
-  GetDefaultProteinDigestionRate().SetValue(0.071, MassPerTimeUnit::g_Per_min);// Dangin2001Digestion (About 5hr to digest the protein in the default meal)
-  GetDefaultStomachContents().LoadFile("./nutrition/NoMacros.xml");// Refs are in the data spreadsheet
-  GetFatAbsorptionFraction().SetValue(0.248);// Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
+  GetCalciumAbsorptionFraction().SetValue(0.25); // Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
+  GetCalciumDigestionRate().SetValue(2.7, MassPerTimeUnit::mg_Per_min); // Wasserman1992Intestinal
+  GetCarbohydrateAbsorptionFraction().SetValue(0.80); // Guyton p790
+  GetDefaultCarbohydrateDigestionRate().SetValue(0.5, MassPerTimeUnit::g_Per_min); // Guyton (About 4.25hr to digest the carbs in default meal)
+  GetDefaultFatDigestionRate().SetValue(0.055, MassPerTimeUnit::g_Per_min); // Guyton (About 8hr to digest the fat in the default meal)
+  GetDefaultProteinDigestionRate().SetValue(0.071, MassPerTimeUnit::g_Per_min); // Dangin2001Digestion (About 5hr to digest the protein in the default meal)
+  GetDefaultStomachContents().LoadFile("./nutrition/NoMacros.xml"); // Refs are in the data spreadsheet
+  GetFatAbsorptionFraction().SetValue(0.248); // Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
   // We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
-  GetProteinToUreaFraction().SetValue(0.405);// BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%. 
-  GetWaterDigestionRate().SetValue(0.417, VolumePerTimeUnit::mL_Per_s);// Peronnet2012Pharmacokinetic, Estimated from 300mL H20 being absorbed in 9.5-12m
-  
+  GetProteinToUreaFraction().SetValue(0.405); // BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%.
+  GetWaterDigestionRate().SetValue(0.417, VolumePerTimeUnit::mL_Per_s); // Peronnet2012Pharmacokinetic, Estimated from 300mL H20 being absorbed in 9.5-12m
+
   // Nervous
   GetPupilDiameterBaseline().SetValue(4, LengthUnit::mm);
 
@@ -435,8 +434,8 @@ void BioGearsConfiguration::Initialize()
   GetLeftGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
   GetLeftTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
-  GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL);  //11.2
-  GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL);  //2.1 
+  GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL); //11.2
+  GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL); //2.1
   GetRightGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   GetRightGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
   GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
@@ -469,9 +468,9 @@ void BioGearsConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 
 void BioGearsConfiguration::Merge(const BioGearsConfiguration& from)
 {
-    m_Merge = true;
-    CDM_COPY((&from), this);
-    m_Merge = false;
+  m_Merge = true;
+  CDM_COPY((&from), this);
+  m_Merge = false;
 }
 
 bool BioGearsConfiguration::LoadFile(const std::string& file)
@@ -481,10 +480,9 @@ bool BioGearsConfiguration::LoadFile(const std::string& file)
   CDM::BioGearsConfigurationData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(file,GetLogger());
+  data = Serializer::ReadFile(file, GetLogger());
   pData = dynamic_cast<CDM::BioGearsConfigurationData*>(data.get());
-  if (pData == nullptr)
-  {
+  if (pData == nullptr) {
     std::stringstream ss;
     ss << "Configuration file : " << file << " not found, using default configuration" << std::endl;
     Info(ss);
@@ -507,8 +505,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   PhysiologyEngineConfiguration::Load(in);
 
   //Barorecptors
-  if (in.BaroreceptorConfiguration().present())
-  {
+  if (in.BaroreceptorConfiguration().present()) {
     const CDM::BaroreceptorConfigurationData& config = in.BaroreceptorConfiguration().get();
     if (config.ResponseSlope().present())
       GetResponseSlope().Load(config.ResponseSlope().get());
@@ -541,8 +538,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Blood Chemistry
-  if (in.BloodChemistryConfiguration().present())
-  {
+  if (in.BloodChemistryConfiguration().present()) {
     const CDM::BloodChemistryConfigurationData& config = in.BloodChemistryConfiguration().get();
     if (config.MeanCorpuscularVolume().present())
       GetMeanCorpuscularVolume().Load(config.MeanCorpuscularVolume().get());
@@ -555,8 +551,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Cardiovascular
-  if (in.CardiovascularConfiguration().present())
-  {
+  if (in.CardiovascularConfiguration().present()) {
     const CDM::CardiovascularConfigurationData& config = in.CardiovascularConfiguration().get();
     if (config.LeftHeartElastanceMaximum().present())
       GetLeftHeartElastanceMaximum().Load(config.LeftHeartElastanceMaximum().get());
@@ -573,8 +568,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Circuit
-  if (in.CircuitConfiguration().present())
-  {
+  if (in.CircuitConfiguration().present()) {
     const CDM::CircuitConfigurationData& config = in.CircuitConfiguration().get();
     if (config.CardiovascularOpenResistance().present())
       GetCardiovascularOpenResistance().Load(config.CardiovascularOpenResistance().get());
@@ -601,8 +595,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Constants
-  if (in.ConstantsConfiguration().present())
-  {
+  if (in.ConstantsConfiguration().present()) {
     const CDM::ConstantsConfigurationData& config = in.ConstantsConfiguration().get();
     if (config.OxygenMetabolicConstant().present())
       GetOxygenMetabolicConstant().Load(config.OxygenMetabolicConstant().get());
@@ -613,16 +606,14 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Drugs
-  if (in.DrugsConfiguration().present())
-  {
+  if (in.DrugsConfiguration().present()) {
     const CDM::DrugsConfigurationData& config = in.DrugsConfiguration().get();
-    if(config.PDModel().present())
+    if (config.PDModel().present())
       UsePDModel(config.PDModel().get());
   }
-  
+
   // Energy
-  if (in.EnergyConfiguration().present())
-  {
+  if (in.EnergyConfiguration().present()) {
     const CDM::EnergyConfigurationData& config = in.EnergyConfiguration().get();
     if (config.BodySpecificHeat().present())
       GetBodySpecificHeat().Load(config.BodySpecificHeat().get());
@@ -643,8 +634,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Environment
-  if (in.EnvironmentConfiguration().present())
-  {
+  if (in.EnvironmentConfiguration().present()) {
     const CDM::EnvironmentConfigurationData& config = in.EnvironmentConfiguration().get();
     if (config.AirDensity().present())
       GetAirDensity().Load(config.AirDensity().get());
@@ -654,18 +644,13 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
       GetMolarMassOfDryAir().Load(config.MolarMassOfDryAir().get());
     if (config.MolarMassOfWaterVapor().present())
       GetMolarMassOfWaterVapor().Load(config.MolarMassOfWaterVapor().get());
-    if (config.InitialEnvironmentalConditionsFile().present())
-    {
-      if (!GetInitialEnvironmentalConditions().LoadFile(config.InitialEnvironmentalConditionsFile().get()))
-      {
+    if (config.InitialEnvironmentalConditionsFile().present()) {
+      if (!GetInitialEnvironmentalConditions().LoadFile(config.InitialEnvironmentalConditionsFile().get())) {
         Error("Unable to load InitialEnvironmentalConditions file");
         return false;
       }
-    }
-    else if (config.InitialEnvironmentalConditions().present())
-    {
-      if (!GetInitialEnvironmentalConditions().Load(config.InitialEnvironmentalConditions().get()))
-      {
+    } else if (config.InitialEnvironmentalConditions().present()) {
+      if (!GetInitialEnvironmentalConditions().Load(config.InitialEnvironmentalConditions().get())) {
         Error("Unable to load InitialEnvironmentalConditions");
         return false;
       }
@@ -675,8 +660,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Gastrointestinal
-  if (in.GastrointestinalConfiguration().present())
-  {
+  if (in.GastrointestinalConfiguration().present()) {
     const CDM::GastrointestinalConfigurationData& config = in.GastrointestinalConfiguration().get();
     if (config.CalciumAbsorptionFraction().present())
       GetCalciumAbsorptionFraction().Load(config.CalciumAbsorptionFraction().get());
@@ -690,18 +674,13 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
       GetDefaultFatDigestionRate().Load(config.DefaultFatDigestionRate().get());
     if (config.DefaultProteinDigestionRate().present())
       GetDefaultProteinDigestionRate().Load(config.DefaultProteinDigestionRate().get());
-    if (config.DefaultStomachContentsFile().present())
-    {
-      if(!GetDefaultStomachContents().LoadFile(config.DefaultStomachContentsFile().get()))
-      {
+    if (config.DefaultStomachContentsFile().present()) {
+      if (!GetDefaultStomachContents().LoadFile(config.DefaultStomachContentsFile().get())) {
         Error("Unable to load Standard Stomach Contents file");
         return false;
       }
-    }
-    else if (config.DefaultStomachContents().present())
-    {
-      if(!GetDefaultStomachContents().Load(config.DefaultStomachContents().get()))
-      {
+    } else if (config.DefaultStomachContents().present()) {
+      if (!GetDefaultStomachContents().Load(config.DefaultStomachContents().get())) {
         Error("Unable to load Standard Stomach Contents");
         return false;
       }
@@ -724,20 +703,18 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Nervous
-  if (in.NervousConfiguration().present())
-  {
+  if (in.NervousConfiguration().present()) {
     const CDM::NervousConfigurationData& config = in.NervousConfiguration().get();
     if (config.PupilDiameterBaseline().present())
       GetPupilDiameterBaseline().Load(config.PupilDiameterBaseline().get());
   }
 
   // Renal
-  if (in.RenalConfiguration().present())
-  {
+  if (in.RenalConfiguration().present()) {
     const CDM::RenalConfigurationData& config = in.RenalConfiguration().get();
 
     if (config.EnableRenal().present())
-      EnableRenal(config.EnableRenal().get());    
+      EnableRenal(config.EnableRenal().get());
 
     if (config.PlasmaSodiumConcentrationSetPoint().present())
       GetPlasmaSodiumConcentrationSetPoint().Load(config.PlasmaSodiumConcentrationSetPoint().get());
@@ -750,12 +727,12 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
       GetLeftTubularReabsorptionFluidPermeabilityBaseline().Load(config.LeftTubularReabsorptionFluidPermeabilityBaseline().get());
     if (config.LeftTubularReabsorptionFilteringSurfaceAreaBaseline().present())
       GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().Load(config.LeftTubularReabsorptionFilteringSurfaceAreaBaseline().get());
-    
+
     if (config.MaximumAfferentResistance().present())
       GetMaximumAfferentResistance().Load(config.MaximumAfferentResistance().get());
     if (config.MinimumAfferentResistance().present())
       GetMinimumAfferentResistance().Load(config.MinimumAfferentResistance().get());
-      
+
     if (config.RightGlomerularFluidPermeabilityBaseline().present())
       GetRightGlomerularFluidPermeabilityBaseline().Load(config.RightGlomerularFluidPermeabilityBaseline().get());
     if (config.RightGlomerularFilteringSurfaceAreaBaseline().present())
@@ -766,12 +743,10 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
       GetRightTubularReabsorptionFilteringSurfaceAreaBaseline().Load(config.RightTubularReabsorptionFilteringSurfaceAreaBaseline().get());
     if (config.TargetSodiumDelivery().present())
       GetTargetSodiumDelivery().Load(config.TargetSodiumDelivery().get());
-
   }
-  
+
   // Respiratory
-  if (in.RespiratoryConfiguration().present())
-  {
+  if (in.RespiratoryConfiguration().present()) {
     const CDM::RespiratoryConfigurationData& config = in.RespiratoryConfiguration().get();
     if (config.CentralControllerCO2PressureSetPoint().present())
       GetCentralControllerCO2PressureSetPoint().Load(config.CentralControllerCO2PressureSetPoint().get());
@@ -792,8 +767,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   }
 
   // Tissue
-  if (in.TissueConfiguration().present())
-  {
+  if (in.TissueConfiguration().present()) {
     const CDM::TissueConfigurationData& config = in.TissueConfiguration().get();
 
     if (config.EnableTissue().present())
@@ -843,7 +817,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   if (HasNormalizedComplianceIntercept())
     baro->NormalizedComplianceIntercept(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceIntercept->Unload()));
   if (HasNormalizedComplianceParasympatheticSlope())
-    baro->NormalizedComplianceParasympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceParasympatheticSlope->Unload()));  
+    baro->NormalizedComplianceParasympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceParasympatheticSlope->Unload()));
   data.BaroreceptorConfiguration(std::unique_ptr<CDM::BaroreceptorConfigurationData>(baro));
 
   // Blood Chemistry
@@ -912,7 +886,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
 
   // Drugs
   CDM::DrugsConfigurationData* drugs(new CDM::DrugsConfigurationData());
-  if(HasUsePDModel())
+  if (HasUsePDModel())
     drugs->PDModel(m_PDEnabled);
   data.DrugsConfiguration(std::unique_ptr<CDM::DrugsConfigurationData>(drugs));
 
@@ -1001,7 +975,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
     renal->MaximumAfferentResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MaximumAfferentResistance->Unload()));
   if (HasMinimumAfferentResistance())
     renal->MinimumAfferentResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MinimumAfferentResistance->Unload()));
-  
+
   if (HasRightGlomerularFilteringSurfaceAreaBaseline())
     renal->RightGlomerularFilteringSurfaceAreaBaseline(std::unique_ptr<CDM::ScalarAreaData>(m_RightGlomerularFilteringSurfaceAreaBaseline->Unload()));
   if (HasRightGlomerularFluidPermeabilityBaseline())
@@ -1072,7 +1046,7 @@ SEScalarTime& BioGearsConfiguration::GetHeartRateDistributedTimeDelay()
 double BioGearsConfiguration::GetHeartRateDistributedTimeDelay(const TimeUnit& unit) const
 {
   if (m_HeartRateDistributedTimeDelay == nullptr)
-    return SEScalar::dNaN();    
+    return SEScalar::dNaN();
   return m_HeartRateDistributedTimeDelay->GetValue(unit);
 }
 
@@ -1109,7 +1083,6 @@ double BioGearsConfiguration::GetSystemicResistanceDistributedTimeDelay(const Ti
     return SEScalar::dNaN();
   return m_SystemicResistanceDistributedTimeDelay->GetValue(unit);
 }
-
 
 bool BioGearsConfiguration::HasVenousComplianceDistributedTimeDelay() const
 {

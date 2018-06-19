@@ -12,26 +12,23 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 class BioGears;
-#include "circuit/SECircuitContainer.h"
 #include "Serializer.h"
+#include "circuit/SECircuitContainer.h"
 
-class BIOGEARS_API BioGearsInterCircuitConnections : public SECircuitContainer
-{
+class BIOGEARS_API BioGearsInterCircuitConnections : public SECircuitContainer {
 public:
+  BioGearsInterCircuitConnections(BioGears& data);
+  virtual ~BioGearsInterCircuitConnections();
 
-	BioGearsInterCircuitConnections(BioGears& data);
-	virtual ~BioGearsInterCircuitConnections();
+  void Reset();
+  void Clear();
+  bool IsValid();
 
-	void Reset();
-	void Clear();
-	bool IsValid();
+  bool LoadInterCircuitConnections(const std::string& circuitFile, Serializer& serlializer);
 
-	bool LoadInterCircuitConnections(const std::string& circuitFile, Serializer& serlializer);
-
-	SEInterCircuitConnection*  GetRespiratoryAnesthesiaMachineInterCircuitConnection();
+  SEInterCircuitConnection* GetRespiratoryAnesthesiaMachineInterCircuitConnection();
 
 protected:
-
-	BioGears*   m_Data;
-	SEInterCircuitConnection*	m_RespiratoryAnesthesiaMachineInterCircuitConnection;
+  BioGears* m_Data;
+  SEInterCircuitConnection* m_RespiratoryAnesthesiaMachineInterCircuitConnection;
 };

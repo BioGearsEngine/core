@@ -20,20 +20,20 @@ specific language governing permissions and limitations under the License.
 
 class BIOGEARS_API SEDrugSystem : public SESystem {
 public:
-
   SEDrugSystem(Logger* logger);
   virtual ~SEDrugSystem();
 
-  virtual void Clear();// Deletes all members
-  
+  virtual void Clear(); // Deletes all members
+
   virtual const SEScalar* GetScalar(const std::string& name);
-  
+
   virtual bool Load(const CDM::DrugSystemData& in);
   virtual CDM::DrugSystemData* Unload() const;
+
 protected:
   virtual void Unload(CDM::DrugSystemData& data) const;
-public:
 
+public:
   virtual bool HasAntibioticMassInBody() const;
   virtual SEScalarMass& GetAntibioticMassInBody();
   virtual double GetAntibioticMassInBody(const MassUnit& unit) const;
@@ -83,20 +83,17 @@ public:
   virtual SEScalarFraction& GetCentralNervousResponse();
   virtual double GetCentralNervousResponse() const;
 
-
-
 protected:
-
-  SEScalarMass*       m_AntibioticMassInBody;
-  SEScalarFraction*          m_BronchodilationLevel;
-  SEScalarFrequency*         m_HeartRateChange;
-  SEScalarPressure*          m_MeanBloodPressureChange;
-  SEScalarFraction*          m_NeuromuscularBlockLevel;
-  SEScalarPressure*          m_PulsePressureChange;
-  SEPupillaryResponse*       m_PupillaryResponse;
-  SEScalarFrequency*         m_RespirationRateChange;
-  SEScalarFraction*          m_SedationLevel;
-  SEScalarVolume*            m_TidalVolumeChange;
-  SEScalarFraction*          m_TubularPermeabilityChange;
-  SEScalarFraction*        m_CentralNervousResponse;
+  SEScalarMass* m_AntibioticMassInBody;
+  SEScalarFraction* m_BronchodilationLevel;
+  SEScalarFrequency* m_HeartRateChange;
+  SEScalarPressure* m_MeanBloodPressureChange;
+  SEScalarFraction* m_NeuromuscularBlockLevel;
+  SEScalarPressure* m_PulsePressureChange;
+  SEPupillaryResponse* m_PupillaryResponse;
+  SEScalarFrequency* m_RespirationRateChange;
+  SEScalarFraction* m_SedationLevel;
+  SEScalarVolume* m_TidalVolumeChange;
+  SEScalarFraction* m_TubularPermeabilityChange;
+  SEScalarFraction* m_CentralNervousResponse;
 };

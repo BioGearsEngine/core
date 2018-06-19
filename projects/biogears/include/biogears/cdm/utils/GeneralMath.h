@@ -31,11 +31,11 @@ public:
   static void CalculateSpecificGravity(const SEScalarMass& mass, const SEScalarVolume& volume, SEScalar& specificGravity, Logger* logger = nullptr);
   static void CalculateWaterDensity(const SEScalarTemperature& temp, SEScalarMassPerVolume& density);
 
-  static void   Combinations(std::vector<int> maxValues, std::vector<std::vector<int>>& permutations);
+  static void Combinations(std::vector<int> maxValues, std::vector<std::vector<int>>& permutations);
   static double LinearInterpolator(double x1, double x2, double y1, double y2, double xPrime);
   static double PercentDifference(double expected, double calculated);
   static double PercentTolerance(double expected, double calculated, double epsilon = 1e-20);
   static double ResistanceFunction(double dbase, double dmin, double dmax, double dx);
   static double LogisticFunction(double a, double x50, double k, double x);
-  static double CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion, double &coreTemp_K);
+  static double CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion, double& coreTemp_K);
 };
