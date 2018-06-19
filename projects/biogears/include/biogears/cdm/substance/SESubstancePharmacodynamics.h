@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-CDM_BIND_DECL(SubstancePharmacodynamicsData)
-#include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
+#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
+CDM_BIND_DECL(SubstancePharmacodynamicsData)
 class BIOGEARS_API SESubstancePharmacodynamics : Loggable {
 public:
   SESubstancePharmacodynamics(Logger* logger);

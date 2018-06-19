@@ -11,7 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
 #include <biogears/schema/PupillaryResponseData.hxx>
+#include <biogears/cdm/utils/Logger.h>
 
 class BIOGEARS_API SEPupillaryResponse {
 public:

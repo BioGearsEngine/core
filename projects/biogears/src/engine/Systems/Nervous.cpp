@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
@@ -27,7 +28,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
-#include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
 #include <biogears/engine/Systems/Nervous.h>
 #include <biogears/engine/stdafx.h>
 #include <biogears/schema/BioGearsNervousSystemData.hxx>

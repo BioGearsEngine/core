@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
+#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/cdm/system/physiology/SEPupillaryResponse.h>
 #include <biogears/schema/NervousSystemData.hxx>
 
 class BIOGEARS_API SENervousSystem : public SESystem {
