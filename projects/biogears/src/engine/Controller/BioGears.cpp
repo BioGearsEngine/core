@@ -767,6 +767,37 @@ BioGears::~BioGears()
     m_Logger->SetForward(nullptr);
 }
 
+EngineState BioGears::GetState() { return m_State; }
+SaturationCalculator& BioGears::GetSaturationCalculator() { return *m_SaturationCalculator; }
+BioGearsSubstances& BioGears::GetSubstances() { return *m_Substances; }
+SEPatient& BioGears::GetPatient() { return *m_Patient; }
+SEBloodChemistrySystem& BioGears::GetBloodChemistry() { return *m_BloodChemistrySystem; }
+SECardiovascularSystem& BioGears::GetCardiovascular() { return *m_CardiovascularSystem; }
+SEDrugSystem& BioGears::GetDrugs() { return *m_DrugSystem; }
+SEEndocrineSystem& BioGears::GetEndocrine() { return *m_EndocrineSystem; }
+SEEnergySystem& BioGears::GetEnergy() { return *m_EnergySystem; }
+SEGastrointestinalSystem& BioGears::GetGastrointestinal() { return *m_GastrointestinalSystem; }
+SEHepaticSystem& BioGears::GetHepatic() { return *m_HepaticSystem; }
+SENervousSystem& BioGears::GetNervous() { return *m_NervousSystem; }
+SERenalSystem& BioGears::GetRenal() { return *m_RenalSystem; }
+SERespiratorySystem& BioGears::GetRespiratory() { return *m_RespiratorySystem; }
+SETissueSystem& BioGears::GetTissue() { return *m_TissueSystem; }
+SEEnvironment& BioGears::GetEnvironment() { return *m_Environment; }
+
+SEAnesthesiaMachine& BioGears::GetAnesthesiaMachine() { return *m_AnesthesiaMachine; }
+SEElectroCardioGram& BioGears::GetECG() { return *m_ECG; }
+SEInhaler& BioGears::GetInhaler() { return *m_Inhaler; }
+SEActionManager& BioGears::GetActions() { return *m_Actions; }
+SEConditionManager& BioGears::GetConditions() { return *m_Conditions; }
+BioGearsCircuits& BioGears::GetCircuits() { return *m_Circuits; }
+BioGearsCompartments& BioGears::GetCompartments() { return *m_Compartments; }
+const BioGearsConfiguration& BioGears::GetConfiguration() { return *m_Config; }
+const SEScalarTime& BioGears::GetEngineTime() { return *m_CurrentTime; }
+const SEScalarTime& BioGears::GetSimulationTime() { return *m_SimulationTime; }
+const SEScalarTime& BioGears::GetTimeStep() { return m_Config->GetTimeStep(); }
+CDM::enumBioGearsAirwayMode::value BioGears::GetAirwayMode() { return m_AirwayMode; }
+CDM::enumOnOff::value BioGears::GetIntubation() { return m_Intubation; }
+
 void BioGears::AtSteadyState(EngineState state)
 {
   m_State = state;

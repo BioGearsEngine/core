@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 BIOGEARS_API std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string& logfile = "");
 BIOGEARS_API std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger = nullptr);
 
-namespace mill {
+namespace mil {
 namespace tatrc {
   namespace physiology {
     namespace biogears {
@@ -31,7 +31,8 @@ namespace tatrc {
   }
 }
 }
-using namespace BGE = mil::tatrc::physiology::biogears;
+
+namespace BGE = mil::tatrc::physiology::biogears;
 
 // I bet there is a way cool macro you could do for these enums...
 
