@@ -30,8 +30,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ScalarPressureData.hxx>
 #include <biogears/schema/ScalarVolumeData.hxx>
 
-SEDrugSystem::SEDrugSystem(Logger* logger)
-  : SESystem(logger)
+SEDrugSystem::SEDrugSystem(Logger* logger) : SESystem(logger)
 {
   m_AntibioticMassInBody = nullptr;
   m_BronchodilationLevel = nullptr;
@@ -55,6 +54,7 @@ SEDrugSystem::~SEDrugSystem()
 void SEDrugSystem::Clear()
 {
   SESystem::Clear();
+
   SAFE_DELETE(m_AntibioticMassInBody);
   SAFE_DELETE(m_BronchodilationLevel);
   SAFE_DELETE(m_HeartRateChange);
@@ -67,6 +67,7 @@ void SEDrugSystem::Clear()
   SAFE_DELETE(m_TidalVolumeChange);
   SAFE_DELETE(m_TubularPermeabilityChange);
   SAFE_DELETE(m_CentralNervousResponse);
+  
 }
 
 bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
@@ -129,7 +130,8 @@ const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
 
 
   size_t split = name.find('-');
-  if (split != name.npos) {
+  if (split != name.npos)
+  {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
     if (child == "PupillaryResponse")

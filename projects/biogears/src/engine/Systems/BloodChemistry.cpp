@@ -34,12 +34,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 
-#pragma warning(disable : 4786)
-#pragma warning(disable : 4275)
+#pragma warning(disable:4786)
+#pragma warning(disable:4275)
 
-BloodChemistry::BloodChemistry(BioGears& bg)
-  : SEBloodChemistrySystem(bg.GetLogger())
-  , m_data(bg)
+BloodChemistry::BloodChemistry(BioGears& bg) : SEBloodChemistrySystem(bg.GetLogger()), m_data(bg)
 {
   Clear();
 }
@@ -98,13 +96,13 @@ void BloodChemistry::Initialize()
   GetWhiteBloodCellCount().SetValue(7000, AmountPerVolumeUnit::ct_Per_uL);
   GetPhosphate().SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
-  //Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
+  GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL);   //Reference range is 0.2-1.0
+ //Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
 
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
-
   GetCarbonMonoxideSaturation().SetValue(0);
-  Process(); // Calculate the initial system values
+  Process();// Calculate the initial system values
 }
 
 bool BloodChemistry::Load(const CDM::BioGearsBloodChemistrySystemData& in)
@@ -113,7 +111,7 @@ bool BloodChemistry::Load(const CDM::BioGearsBloodChemistrySystemData& in)
     return false;
   m_ArterialOxygen_mmHg.Load(in.ArterialOxygenAverage_mmHg());
   m_ArterialCarbonDioxide_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
-  BioGearsSystem::LoadState();
+  BioGearsSystem::LoadState(); 
   return true;
 }
 CDM::BioGearsBloodChemistrySystemData* BloodChemistry::Unload() const
@@ -134,7 +132,7 @@ void BloodChemistry::Unload(CDM::BioGearsBloodChemistrySystemData& data) const
 /// Initializes parameters for BloodChemistry Class
 ///
 ///  \details
-///	 Initializes member variables and system level values on the common data model.
+///  Initializes member variables and system level values on the common data model.
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::SetUp()
 {
@@ -197,10 +195,12 @@ void BloodChemistry::SetUp()
   m_pulmonaryVeinsCO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
 
   double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
+  m_PatientActions = &m_data.GetActions().GetPatientActions();
 }
 
 void BloodChemistry::AtSteadyState()
 {
+ 
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -208,10 +208,11 @@ void BloodChemistry::AtSteadyState()
 /// Blood Chemistry Preprocess method
 ///
 /// \details
-/// The current BioGears implementation has no functionality in the preprocess function for blood chemistry.
+/// The current BioGears implementation only checks for active Sepsis event.
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::PreProcess()
 {
+  Sepsis();   //Need this here because "next" values are set on circuit
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -220,7 +221,7 @@ void BloodChemistry::PreProcess()
 ///
 /// \details
 /// The system data (blood concentrations, blood gases, and other blood properties) that are calculated
-/// or changed by other systems are set on the blood chemistry system data objects. Events
+/// or changed by other systems are set on the blood chemistry system data objects. Events 
 /// are triggered at specific blood concentrations of certain substances in CheckBloodGasLevels().
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::Process()
@@ -230,10 +231,13 @@ void BloodChemistry::Process()
   GetCarbonDioxideSaturation().Set(m_aortaCO2->GetSaturation());
   if (m_aortaCO == nullptr && m_data.GetSubstances().IsActive(m_data.GetSubstances().GetCO()))
     m_aortaCO = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO());
-  if (m_aortaCO != nullptr) {
+  if (m_aortaCO != nullptr)
+  {
     GetCarbonMonoxideSaturation().Set(m_aortaCO->GetSaturation());
     GetPulseOximetry().SetValue(GetOxygenSaturation().GetValue() + GetCarbonMonoxideSaturation().GetValue());
-  } else {
+  }
+  else
+  {
     GetPulseOximetry().Set(GetOxygenSaturation());
   }
 
@@ -250,13 +254,13 @@ void BloodChemistry::Process()
   double totalHBCO_g = 0.0;
   if (m_aortaCO != nullptr)
     totalHBCO_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbCO(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbCO().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
-
+  
   double totalHemoglobinO2Hemoglobin_g = totalHb_g + totalHbO2_g + totalHbCO2_g + totalHBO2CO2_g + totalHBCO_g;
   GetHemoglobinContent().SetValue(totalHemoglobinO2Hemoglobin_g, MassUnit::g);
 
   // Calculate Blood Cell Counts
   double RedBloodCellCount_ct = GetHemoglobinContent(MassUnit::ug) / m_HbPerRedBloodCell_ug_Per_ct;
-  double RedBloodCellVolume_mL = RedBloodCellCount_ct * m_redBloodCellVolume_mL;
+  double RedBloodCellVolume_mL = RedBloodCellCount_ct*m_redBloodCellVolume_mL;
   double TotalBloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
   GetHematocrit().SetValue((RedBloodCellVolume_mL / TotalBloodVolume_mL));
   // Yes, we are giving GetRedBloodCellCount a concentration, because that is what it is, but clinically, it is known as RedBloodCellCount
@@ -273,7 +277,7 @@ void BloodChemistry::Process()
   m_data.GetSubstances().GetChloride().GetBloodConcentration().Set(m_venaCavaChloride->GetConcentration());
   m_data.GetSubstances().GetCreatinine().GetBloodConcentration().Set(m_venaCavaCreatinine->GetConcentration());
   m_data.GetSubstances().GetEpi().GetBloodConcentration().Set(m_venaCavaEpinephrine->GetConcentration());
-  m_data.GetSubstances().GetGlobulin().GetBloodConcentration().SetValue(albuminConcentration_ug_Per_mL * 1.6 - albuminConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL); // 1.6 comes from reading http://www.drkaslow.com/html/proteins_-_albumin-_globulins-_etc.html
+  m_data.GetSubstances().GetGlobulin().GetBloodConcentration().SetValue(albuminConcentration_ug_Per_mL*1.6 - albuminConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL); // 1.6 comes from reading http://www.drkaslow.com/html/proteins_-_albumin-_globulins-_etc.html
   m_data.GetSubstances().GetGlucagon().GetBloodConcentration().Set(m_venaCavaGlucagon->GetConcentration());
   m_data.GetSubstances().GetGlucose().GetBloodConcentration().Set(m_venaCavaGlucose->GetConcentration());
   double HemoglobinConcentration = totalHemoglobinO2Hemoglobin_g / TotalBloodVolume_mL;
@@ -283,16 +287,16 @@ void BloodChemistry::Process()
   m_data.GetSubstances().GetLactate().GetBloodConcentration().Set(m_venaCavaLactate->GetConcentration());
   m_data.GetSubstances().GetPotassium().GetBloodConcentration().Set(m_venaCavaPotassium->GetConcentration());
   m_data.GetSubstances().GetSodium().GetBloodConcentration().Set(m_venaCavaSodium->GetConcentration());
-  GetTotalProteinConcentration().SetValue(albuminConcentration_ug_Per_mL * 1.6, MassPerVolumeUnit::ug_Per_mL);
+  GetTotalProteinConcentration().SetValue(albuminConcentration_ug_Per_mL*1.6, MassPerVolumeUnit::ug_Per_mL);
   m_data.GetSubstances().GetTriacylglycerol().GetBloodConcentration().Set(m_venaCavaTriacylglycerol->GetConcentration());
   m_data.GetSubstances().GetUrea().GetBloodConcentration().Set(m_venaCavaUrea->GetConcentration());
 
-  // Calculate pH
+  // Calculate pH 
   /// \todo Change system data so that we have ArterialBloodPH (from aorta) and VenousBloodPH (from vena cava)
   GetBloodPH().Set(m_aorta->GetPH());
 
   // Pressures
-  // arterial gas partial pressures -
+  // arterial gas partial pressures -  
   GetArterialOxygenPressure().Set(m_aortaO2->GetPartialPressure());
   GetArterialCarbonDioxidePressure().Set(m_aortaCO2->GetPartialPressure());
   // pulmonary arteries
@@ -316,7 +320,8 @@ void BloodChemistry::Process()
   // Total up all active substances
   double bloodMass_ug;
   double tissueMass_ug;
-  for (SESubstance* sub : m_data.GetSubstances().GetActiveSubstances()) {
+  for (SESubstance* sub : m_data.GetSubstances().GetActiveSubstances())
+  {
     bloodMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
     tissueMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetTissueLeafCompartments(), MassUnit::ug);
     sub->GetMassInBody().SetValue(bloodMass_ug + tissueMass_ug, MassUnit::ug);
@@ -334,6 +339,7 @@ void BloodChemistry::Process()
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::PostProcess()
 {
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -341,7 +347,7 @@ void BloodChemistry::PostProcess()
 /// Checks the blood substance (oxygen, carbon dioxide, glucose, etc.) levels and sets events.
 ///
 /// \details
-/// Checks the oxygen, carbon dioxide, glucose, ketones, and lactate levels in specific compartments of the body.
+/// Checks the oxygen, carbon dioxide, glucose, ketones, and lactate levels in specific compartments of the body. 
 /// Set events for Hypercapnia, Hypoxia, Brain and MyoCardium Oxygen Deficit, Hypo/hyperglycemia and related events,
 /// ketoacidosis, and lactic acidosis based on the levels.
 //--------------------------------------------------------------------------------------------------
@@ -359,43 +365,53 @@ void BloodChemistry::CheckBloodSubstanceLevels()
 
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
-  //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
-  if (patient.IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle 
+  if (patient.IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
+  {
     double arterialOxygen_mmHg = m_ArterialOxygen_mmHg.Value();
     double arterialCarbonDioxide_mmHg = m_ArterialCarbonDioxide_mmHg.Value();
 
-    if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+    if (m_data.GetState() > EngineState::InitialStabilization)
+    {// Don't throw events if we are initializing
       // hypercapnia check
-      double hypercapniaFlag = 60.0; // \cite Guyton11thEd p.531
-      double carbonDioxideToxicity = 80.0; // \cite labertsen1971CarbonDioxideToxicity
-      if (arterialCarbonDioxide_mmHg >= hypercapniaFlag) {
+      double hypercapniaFlag = 60.0; // \cite Guyton11thEd p.531 
+      double carbonDioxideToxicity = 80.0;  // \cite labertsen1971CarbonDioxideToxicity
+      if (arterialCarbonDioxide_mmHg >= hypercapniaFlag)
+      {
         /// \event Patient: Hypercapnia. The carbon dioxide partial pressure has risen above 60 mmHg. The patient is now hypercapnic.
         patient.SetEvent(CDM::enumPatientEvent::Hypercapnia, true, m_data.GetSimulationTime());
 
-        if (arterialCarbonDioxide_mmHg > carbonDioxideToxicity) {
+        if (arterialCarbonDioxide_mmHg > carbonDioxideToxicity)
+        {
           m_ss << "Arterial Carbon Dioxide partial pressure is " << arterialCarbonDioxide_mmHg << ". This is beyond 80 mmHg triggering extreme Hypercapnia, patient is in an irreversible state.";
           Warning(m_ss);
-          /// \irreversible The carbon dioxide partial pressure is greater than 80 mmHg.
+          /// \irreversible The carbon dioxide partial pressure is greater than 80 mmHg. 
           patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
         }
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Hypercapnia) && arterialCarbonDioxide_mmHg < (hypercapniaFlag - 3)) {
+      }
+      else if (patient.IsEventActive(CDM::enumPatientEvent::Hypercapnia) && arterialCarbonDioxide_mmHg < (hypercapniaFlag - 3))
+      {
         /// \event Patient: End Hypercapnia. The carbon dioxide partial pressure has fallen below 57 mmHg. The patient is no longer considered to be hypercapnic.
         /// This event is triggered if the patient was hypercapnic and is now considered to be recovered.
         patient.SetEvent(CDM::enumPatientEvent::Hypercapnia, false, m_data.GetSimulationTime());
       }
 
       // hypoxia check
-      if (arterialOxygen_mmHg <= hypoxiaFlag) {
+      if (arterialOxygen_mmHg <= hypoxiaFlag)
+      {
         /// \event Patient: Hypoxia Event. The oxygen partial pressure has fallen below 65 mmHg, indicating that the patient is hypoxic.
         patient.SetEvent(CDM::enumPatientEvent::Hypoxia, true, m_data.GetSimulationTime());
 
-        if (arterialOxygen_mmHg < hypoxiaIrreversible) {
+        if (arterialOxygen_mmHg < hypoxiaIrreversible)
+        {
           m_ss << "Arterial Oxygen partial pressure is " << arterialOxygen_mmHg << ". This is below 15 mmHg triggering extreme Hypoxia, patient is in an irreversible state.";
           Warning(m_ss);
           /// \irreversible Arterial oxygen partial pressure has been critically reduced to below 15 mmHg.
           patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
         }
-      } else if (arterialOxygen_mmHg > (hypoxiaFlag + 3)) {
+      }
+      else if (arterialOxygen_mmHg > (hypoxiaFlag + 3))
+      {
         /// \event Patient: End Hypoxia Event. The oxygen partial pressure has rise above 68 mmHg. If this occurs when the patient is hypoxic, it will reverse the hypoxic event.
         /// The patient is no longer considered to be hypoxic.
         patient.SetEvent(CDM::enumPatientEvent::Hypoxia, false, m_data.GetSimulationTime());
@@ -404,137 +420,194 @@ void BloodChemistry::CheckBloodSubstanceLevels()
       //glucose checks
 
       //hypoglycemia
-      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemiaLevel_mg_Per_dL) {
+      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemiaLevel_mg_Per_dL)
+      {
         patient.SetEvent(CDM::enumPatientEvent::Hypoglycemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Hypoglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemiaLevel_mg_Per_dL + 5) {
+      }
+      else if (patient.IsEventActive(CDM::enumPatientEvent::Hypoglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemiaLevel_mg_Per_dL + 5)
+      {
         patient.SetEvent(CDM::enumPatientEvent::Hypoglycemia, false, m_data.GetSimulationTime());
       }
 
       //hypoglycemic shock
-      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicShockLevel_mg_Per_dL) {
+      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicShockLevel_mg_Per_dL)
+      {
         patient.SetEvent(CDM::enumPatientEvent::HypoglycemicShock, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::HypoglycemicShock) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicShockLevel_mg_Per_dL + 5) {
+      }
+      else if (patient.IsEventActive(CDM::enumPatientEvent::HypoglycemicShock) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicShockLevel_mg_Per_dL + 5)
+      {
         patient.SetEvent(CDM::enumPatientEvent::HypoglycemicShock, false, m_data.GetSimulationTime());
       }
 
       //hypoglycemic coma
-      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicComaLevel_mg_Per_dL) {
+      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicComaLevel_mg_Per_dL)
+      {
         patient.SetEvent(CDM::enumPatientEvent::HypoglycemicComa, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::HypoglycemicComa) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicComaLevel_mg_Per_dL + 3) {
+      }
+      else if (patient.IsEventActive(CDM::enumPatientEvent::HypoglycemicComa) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicComaLevel_mg_Per_dL + 3)
+      {
         patient.SetEvent(CDM::enumPatientEvent::HypoglycemicComa, false, m_data.GetSimulationTime());
       }
 
       //hyperglycemia
-      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hyperglycemiaLevel_mg_Per_dL) {
+      if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hyperglycemiaLevel_mg_Per_dL)
+      {
         patient.SetEvent(CDM::enumPatientEvent::Hyperglycemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Hyperglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicShockLevel_mg_Per_dL - 10) {
+      }
+      else if (patient.IsEventActive(CDM::enumPatientEvent::Hyperglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicShockLevel_mg_Per_dL - 10)
+      {
         patient.SetEvent(CDM::enumPatientEvent::Hyperglycemia, false, m_data.GetSimulationTime());
       }
 
       //lactate check
-      if (m_venaCavaLactate->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > lacticAcidosisLevel_mg_Per_dL) {
+      if (m_venaCavaLactate->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > lacticAcidosisLevel_mg_Per_dL)
+      {
         patient.SetEvent(CDM::enumPatientEvent::LacticAcidosis, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::LacticAcidosis) && m_venaCavaLactate->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < lacticAcidosisLevel_mg_Per_dL - 5) {
+      }
+      else if (patient.IsEventActive(CDM::enumPatientEvent::LacticAcidosis) && m_venaCavaLactate->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < lacticAcidosisLevel_mg_Per_dL - 5)
+      {
         patient.SetEvent(CDM::enumPatientEvent::LacticAcidosis, false, m_data.GetSimulationTime());
       }
 
       //ketones check
-      if (m_venaCavaKetones->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > ketoacidosisLevel_mg_Per_dL) {
+      if (m_venaCavaKetones->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > ketoacidosisLevel_mg_Per_dL)
+      {
         patient.SetEvent(CDM::enumPatientEvent::Ketoacidosis, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Ketoacidosis) && m_venaCavaKetones->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < ketoacidosisLevel_mg_Per_dL - 5) {
+      }
+      else if (patient.IsEventActive(CDM::enumPatientEvent::Ketoacidosis) && m_venaCavaKetones->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < ketoacidosisLevel_mg_Per_dL - 5)
+      {
         patient.SetEvent(CDM::enumPatientEvent::Ketoacidosis, false, m_data.GetSimulationTime());
       }
 
-      //sodium check
-      //Mild and severe hyponatremia
-      if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 136.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyponatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 137.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyponatremia, false, m_data.GetSimulationTime());
-      }
+    //sodium check
+    //Mild and severe hyponatremia
+    if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 136.0)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHyponatremia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::MildHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 137.0)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHyponatremia, false, m_data.GetSimulationTime());
+    }
 
-      if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 120.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyponatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 121.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyponatremia, false, m_data.GetSimulationTime());
-      }
-      //Mild and severe hypernatremia
-      if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 148.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypernatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 147.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypernatremia, false, m_data.GetSimulationTime());
-      }
-      if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 160.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypernatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 159.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypernatremia, false, m_data.GetSimulationTime());
-      }
+    if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 120.0)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHyponatremia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 121.0)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHyponatremia, false, m_data.GetSimulationTime());
+    }
+    //Mild and severe hypernatremia
+    if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 148.0 )
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHypernatremia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::MildHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 147.0)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHypernatremia, false, m_data.GetSimulationTime());
+    }
+    if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 160.0)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHypernatremia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 159.0)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHypernatremia, false, m_data.GetSimulationTime());
+    }
 
-      //potassium check
-      //mild and severe hypokalemia
-      if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 3.2) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypokalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 3.3) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypokalemia, false, m_data.GetSimulationTime());
-      }
-      if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 2.5) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypokalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 2.6) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypokalemia, false, m_data.GetSimulationTime());
-      }
-      //mild and severe hyperkalemia
-      if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 5.5) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyperkalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 5.6) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyperkalemia, false, m_data.GetSimulationTime());
-      }
-      if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 6.2) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyperkalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 6.1) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyperkalemia, false, m_data.GetSimulationTime());
-      }
+
+    //potassium check
+    //mild and severe hypokalemia
+    if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 3.2)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHypokalemia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::MildHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 3.3)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHypokalemia, false, m_data.GetSimulationTime());
+    }
+    if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 2.5)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHypokalemia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 2.6)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHypokalemia, false, m_data.GetSimulationTime());
+    }
+  //mild and severe hyperkalemia
+    if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 5.5)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHyperkalemia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::MildHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 5.6)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::MildHyperkalemia, false, m_data.GetSimulationTime());
+    }
+    if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 6.2)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHyperkalemia, true, m_data.GetSimulationTime());
+    }
+    else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 6.1)
+    {
+      patient.SetEvent(CDM::enumPatientEvent::SevereHyperkalemia, false, m_data.GetSimulationTime());
+    }
+
     }
 
     m_ArterialOxygen_mmHg.Reset();
     m_ArterialCarbonDioxide_mmHg.Reset();
+
   }
 
-  if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+
+  if (m_data.GetState() > EngineState::InitialStabilization)
+  {// Don't throw events if we are initializing
 
     // When the brain oxygen partial pressure is too low, events are triggered and event duration is tracked.
     // If the oxygen tension in the brain remains below the thresholds for the specified amount of time, the body
-    // will go into an irreversible state. The threshold values are chosen based on empirical data reviewed in summary in @cite dhawan2011neurointensive
+    // will go into an irreversible state. The threshold values are chosen based on empirical data reviewed in summary in @cite dhawan2011neurointensive 
     // and from data presented in @cite purins2012brain and @cite doppenberg1998determination.
-    if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 21.0) {
+    if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 21.0)
+    {     
       /// \event Patient: Brain Oxygen Deficit Event. The oxygen partial pressure in the brain has dropped to a dangerously low level.
       patient.SetEvent(CDM::enumPatientEvent::BrainOxygenDeficit, true, m_data.GetSimulationTime());
 
       // Irreversible damage occurs if the deficit has gone on too long
-      if (patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) > 1800) {
-        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the danger threshold for " << patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
+      if (patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) > 1800)
+      {
+        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the danger threshold for " <<
+          patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
         Warning(m_ss);
         /// \irreversible Brain oxygen pressure has been dangerously low for more than 30 minutes.
         patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
 
       // If the O2 tension is below a critical threshold, the irreversible damage occurs more quickly
-      if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 10.0) {
+      if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 10.0)
+      {
         /// \event Patient: Critical Brain Oxygen Deficit Event. The oxygen partial pressure in the brain has dropped to a critically low level.
         patient.SetEvent(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, true, m_data.GetSimulationTime());
-      } else if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 12.0) {
+      }
+      else if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 12.0)
+      {
         /// \event Patient: End Brain Oxygen Deficit Event. The oxygen partial pressure has risen above 12 mmHg in the brain. If this occurs when the patient has a critical brain oxygen deficit event, it will reverse the event.
         /// The brain is not in a critical oxygen deficit.
         patient.SetEvent(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, false, m_data.GetSimulationTime());
       }
 
       // Irreversible damage occurs if the critical deficit has gone on too long
-      if (patient.GetEventDuration(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, TimeUnit::s) > 600) {
-        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the critical threshold for " << patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
+      if (patient.GetEventDuration(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, TimeUnit::s) > 600)
+      {
+        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the critical threshold for " <<
+          patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
         Warning(m_ss);
         /// \irreversible Brain oxygen pressure has been critically low for more than 10 minutes.
         patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
-    } else if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 25.0) {
+    }
+    else if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 25.0)
+    {
       /// \event Patient: End Brain Oxygen Deficit Event. The oxygen partial pressure has risen above 25 mmHg in the brain. If this occurs when the patient has a brain oxygen deficit event, it will reverse the event.
       /// The brain is getting oxygen.
       patient.SetEvent(CDM::enumPatientEvent::BrainOxygenDeficit, false, m_data.GetSimulationTime());
@@ -543,18 +616,22 @@ void BloodChemistry::CheckBloodSubstanceLevels()
     }
 
     //Myocardium Oxygen Check
-    if (m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) < 5) {
+    if (m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) < 5)
+    {
       /// \event Patient: The heart is not receiving enough oxygen. Coronary arteries should dilate to increase blood flow to the heart.
       patient.SetEvent(CDM::enumPatientEvent::MyocardiumOxygenDeficit, true, m_data.GetSimulationTime());
 
-      if (patient.GetEventDuration(CDM::enumPatientEvent::MyocardiumOxygenDeficit, TimeUnit::s) > 2400) // \cite murry1986preconditioning
+      if (patient.GetEventDuration(CDM::enumPatientEvent::MyocardiumOxygenDeficit, TimeUnit::s) > 2400)  // \cite murry1986preconditioning
       {
-        m_ss << "Myocardium oxygen partial pressure is  " << m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) << " and has been sustained for " << patient.GetEventDuration(CDM::enumPatientEvent::MyocardiumOxygenDeficit, TimeUnit::s) << "patient heart muscle has experienced necrosis and is in an irreversible state.";
+        m_ss << "Myocardium oxygen partial pressure is  " << m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) << " and has been sustained for " << patient.GetEventDuration(CDM::enumPatientEvent::MyocardiumOxygenDeficit, TimeUnit::s) <<
+          "patient heart muscle has experienced necrosis and is in an irreversible state.";
         Warning(m_ss);
         /// \irreversible Heart has not been receiving enough oxygen for more than 40 min.
         patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
-    } else if (m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) > 8) {
+    }
+    else if (m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) > 8)
+    {
       /// \event Patient: End Myocardium Oxygen Event. The heart is now receiving enough oxygen. If this occurs when the patient has a heart oxygen deficit event, it will reverse the event.
       /// The brain is getting oxygen.
       patient.SetEvent(CDM::enumPatientEvent::MyocardiumOxygenDeficit, false, m_data.GetSimulationTime());
@@ -567,7 +644,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
 /// Sets data on the metabolic panel object.
 ///
 /// \details
-/// Sets data on the metabolic panel object to create the metabolic panel.
+/// Sets data on the metabolic panel object to create the metabolic panel.  
 /// Uses information from the chem 14 substances that are in %BioGears (see @ref bloodchemistry-assessments)
 //--------------------------------------------------------------------------------------------------
 bool BloodChemistry::CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp)
@@ -579,16 +656,20 @@ bool BloodChemistry::CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabol
   //cmp.GetAST().SetValue();
   cmp.GetBUN().Set(GetBloodUreaNitrogenConcentration());
   cmp.GetCalcium().Set(m_data.GetSubstances().GetCalcium().GetBloodConcentration());
-  double CL_mmol_Per_L = m_data.GetSubstances().GetChloride().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetChloride().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double CL_mmol_Per_L = m_data.GetSubstances().GetChloride().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) /
+    m_data.GetSubstances().GetChloride().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetChloride().SetValue(CL_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   // CO2 is predominantly Bicarbonate, so going to put that in this slot
-  double HCO3_mmol_Per_L = m_data.GetSubstances().GetBicarbonate().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double HCO3_mmol_Per_L = m_data.GetSubstances().GetBicarbonate().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) /
+    m_data.GetSubstances().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetCO2().SetValue(HCO3_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   cmp.GetCreatinine().Set(m_data.GetSubstances().GetCreatinine().GetBloodConcentration());
   cmp.GetGlucose().Set(m_data.GetSubstances().GetGlucose().GetBloodConcentration());
-  double K_mmol_Per_L = m_data.GetSubstances().GetPotassium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetPotassium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double K_mmol_Per_L = m_data.GetSubstances().GetPotassium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) /
+    m_data.GetSubstances().GetPotassium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetPotassium().SetValue(K_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
-  double Sodium_mmol_Per_L = m_data.GetSubstances().GetSodium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetSodium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double Sodium_mmol_Per_L = m_data.GetSubstances().GetSodium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) /
+    m_data.GetSubstances().GetSodium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetSodium().SetValue(Sodium_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   //cmp.GetTotalBelirubin().SetValue();
   cmp.GetTotalProtein().Set(GetTotalProteinConcentration());
@@ -607,9 +688,9 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
   cbc.Reset();
   cbc.GetHematocrit().Set(GetHematocrit());
   cbc.GetHemoglobin().Set(m_data.GetSubstances().GetHb().GetBloodConcentration());
-  cbc.GetPlateletCount().SetValue(325000, AmountPerVolumeUnit::ct_Per_uL); // Hardcoded for now, don't support PlateletCount yet
+  cbc.GetPlateletCount().SetValue(325000, AmountPerVolumeUnit::ct_Per_uL);  // Hardcoded for now, don't support PlateletCount yet
   cbc.GetMeanCorpuscularHemoglobin().SetValue(m_data.GetConfiguration().GetMeanCorpuscularHemoglobin(MassPerAmountUnit::pg_Per_ct), MassPerAmountUnit::pg_Per_ct);
-  cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstances().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL); //Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
+  cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstances().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL);//Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
   cbc.GetMeanCorpuscularVolume().SetValue(m_data.GetConfiguration().GetMeanCorpuscularVolume(VolumeUnit::uL), VolumeUnit::uL);
   cbc.GetRedBloodCellCount().Set(GetRedBloodCellCount());
   cbc.GetWhiteBloodCellCount().Set(GetWhiteBloodCellCount());
@@ -618,144 +699,144 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 
 void BloodChemistry::Sepsis()
 {
-	if (!m_PatientActions->HasSepsis())
-		return;
-	
-	SESepsis* sep = m_PatientActions->GetSepsis();
-	std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
-	std::string sepComp = sep->GetCompartment() + "Tissue";
-	SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
-	
-	
-	//Get state parameter values
-	double pathogen = sep->GetPathogen().GetValue();
-	double whiteBloodCell = sep->GetEarlyMediator().GetValue();
-	double lateMediator = sep->GetLateMediator().GetValue();
-	double antibiotic_g = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
+  if (!m_PatientActions->HasSepsis())
+    return;
+  
+  SESepsis* sep = m_PatientActions->GetSepsis();
+  std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
+  std::string sepComp = sep->GetCompartment() + "Tissue";
+  SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
+  
+  
+  //Get state parameter values
+  double pathogen = sep->GetPathogen().GetValue();
+  double whiteBloodCell = sep->GetEarlyMediator().GetValue();
+  double lateMediator = sep->GetLateMediator().GetValue();
+  double antibiotic_g = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
 
-	
-	//Calculate pathogen activation of early immune response from severity (totally empirical relationship)
-	double logKmp = 0.4618 * exp(2.4525 * sep->GetSeverity().GetValue());
-	double wbcFractionMax = 0.0387 * logKmp + 0.7418;		//We need to scale response as function of maximum possible white blood cell value
-	double kmp_Per_hr = exp(logKmp);
+  
+  //Calculate pathogen activation of early immune response from severity (totally empirical relationship)
+  double logKmp = 0.4618 * exp(2.4525 * sep->GetSeverity().GetValue());
+  double wbcFractionMax = 0.0387 * logKmp + 0.7418;   //We need to scale response as function of maximum possible white blood cell value
+  double kmp_Per_hr = exp(logKmp);
 
-	//Constants needed for Kumar Model
-	double kp_Per_hr = 3.0;					//Pathogen growth rate
-	double minimumInhibitory_g = 0.75;		//Antibiotic threshold mass to have an effect on pathogen
-	double kpm_Per_hr = 3.0;				//Pathogen susceptibility to immune response
-	double klm_Per_hr = 15.0;				//Activation rate of late immune response
-	double kl_Per_hr = 1.0;					//Immune response decay rate
-	double activationWidth = 0.5;			//Attenuates coupling function between early and late immune response
-	double activationThreshold = 1.25;		//Level of initial immune response that triggers late immune response
-	double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
-	double wbcBaseline_ct_Per_uL = 7000.0;
-	double wbcFractionInitial = 0.05;
+  //Constants needed for Kumar Model
+  double kp_Per_hr = 3.0;         //Pathogen growth rate
+  double minimumInhibitory_g = 0.75;    //Antibiotic threshold mass to have an effect on pathogen
+  double kpm_Per_hr = 3.0;        //Pathogen susceptibility to immune response
+  double klm_Per_hr = 15.0;       //Activation rate of late immune response
+  double kl_Per_hr = 1.0;         //Immune response decay rate
+  double activationWidth = 0.5;     //Attenuates coupling function between early and late immune response
+  double activationThreshold = 1.25;    //Level of initial immune response that triggers late immune response
+  double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
+  double wbcBaseline_ct_Per_uL = 7000.0;
+  double wbcFractionInitial = 0.05;
 
-	//Other values we need to evaluate the system
-	double couplingFunction = 1.0 + tanh((whiteBloodCell - activationThreshold) / activationWidth);
-	double effectiveAntibiotic_g = 0;
-	if (antibiotic_g > minimumInhibitory_g)
-		effectiveAntibiotic_g = (antibiotic_g - minimumInhibitory_g) / sep->GetSeverity().GetValue();
+  //Other values we need to evaluate the system
+  double couplingFunction = 1.0 + tanh((whiteBloodCell - activationThreshold) / activationWidth);
+  double effectiveAntibiotic_g = 0;
+  if (antibiotic_g > minimumInhibitory_g)
+    effectiveAntibiotic_g = (antibiotic_g - minimumInhibitory_g) / sep->GetSeverity().GetValue();
 
-	//Calculate rates of change using Kumar model (@ cite Kumar2004Dynamics)
-	double dPathogen_Per_hr = kp_Per_hr * pathogen * (1.0 - pathogen) / (1 + effectiveAntibiotic_g) - kpm_Per_hr * whiteBloodCell * pathogen;
-	double dWhiteBloodCell_Per_hr = (kmp_Per_hr * pathogen + lateMediator) * whiteBloodCell * (1.0 - whiteBloodCell) - whiteBloodCell;
-	double dLateMediator_Per_hr = klm_Per_hr * couplingFunction - kl_Per_hr * lateMediator;
+  //Calculate rates of change using Kumar model (@ cite Kumar2004Dynamics)
+  double dPathogen_Per_hr = kp_Per_hr * pathogen * (1.0 - pathogen) / (1 + effectiveAntibiotic_g) - kpm_Per_hr * whiteBloodCell * pathogen;
+  double dWhiteBloodCell_Per_hr = (kmp_Per_hr * pathogen + lateMediator) * whiteBloodCell * (1.0 - whiteBloodCell) - whiteBloodCell;
+  double dLateMediator_Per_hr = klm_Per_hr * couplingFunction - kl_Per_hr * lateMediator;
 
-	/*Adjust model to account for presence of antibiotics.  This is very hand-wavy to get behavior desired by AMM.  If for some reason they (or someone
-	else) want to increase/decrease amount of time for return to normal function, first adjust the minimum inhibitory concentration (higher for longer
-	recovery, lower for shorter recovery). If still not satisfactory, adjust decay of late mediator in presence of antibiotic (below).  But this 
-	second knob is pretty sensitive.
-	*/
-	double nextPathogen = pathogen + dPathogen_Per_hr;
-	if ((nextPathogen > pathogen) && antibiotic_g > 0)
-	{
-		//This means that we're getting into some oscillatory behavior after antibiotic administration (i.e. we hit a minimum pathogen concentration)
-		//Stop pathogen growth and allow late mediators to decay.  This will start to bring white blood cells back to normal
-		dPathogen_Per_hr = 0.0;
-		dLateMediator_Per_hr = -0.25 * sep->GetSeverity().GetValue();  //Scale with severity because low-severity scenarios have lower max wbc count
-	}
-	if (lateMediator <= 0)
-	{
-		//Because of monkeying around above we might get a negative late mediator value.  Don't let this happen
-		dLateMediator_Per_hr = 0.0;
-	}
-
-
-	sep->GetPathogen().IncrementValue(dPathogen_Per_hr * dt_hr);
-	sep->GetEarlyMediator().IncrementValue(dWhiteBloodCell_Per_hr * dt_hr);
-	sep->GetLateMediator().IncrementValue(dLateMediator_Per_hr * dt_hr);
+  /*Adjust model to account for presence of antibiotics.  This is very hand-wavy to get behavior desired by AMM.  If for some reason they (or someone
+  else) want to increase/decrease amount of time for return to normal function, first adjust the minimum inhibitory concentration (higher for longer
+  recovery, lower for shorter recovery). If still not satisfactory, adjust decay of late mediator in presence of antibiotic (below).  But this 
+  second knob is pretty sensitive.
+  */
+  double nextPathogen = pathogen + dPathogen_Per_hr;
+  if ((nextPathogen > pathogen) && antibiotic_g > 0)
+  {
+    //This means that we're getting into some oscillatory behavior after antibiotic administration (i.e. we hit a minimum pathogen concentration)
+    //Stop pathogen growth and allow late mediators to decay.  This will start to bring white blood cells back to normal
+    dPathogen_Per_hr = 0.0;
+    dLateMediator_Per_hr = -0.25 * sep->GetSeverity().GetValue();  //Scale with severity because low-severity scenarios have lower max wbc count
+  }
+  if (lateMediator <= 0)
+  {
+    //Because of monkeying around above we might get a negative late mediator value.  Don't let this happen
+    dLateMediator_Per_hr = 0.0;
+  }
 
 
-	if (sep->GetEarlyMediator().GetValue() < wbcFractionInitial)
-		sep->GetSeverity().SetValue(0.0);	//Our White blood cell count has return to normal.  This will cause the Sepsis action to be inactivated
+  sep->GetPathogen().IncrementValue(dPathogen_Per_hr * dt_hr);
+  sep->GetEarlyMediator().IncrementValue(dWhiteBloodCell_Per_hr * dt_hr);
+  sep->GetLateMediator().IncrementValue(dLateMediator_Per_hr * dt_hr);
 
-	
-	//Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
-	//The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
-	//sources) to arbitrary values.  Thus we use the linear interpolator to move coefficients from initial value of 1.0 as function of 
-	//white blood cell fraction.
-	SEFluidCircuitPath* vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
-	double resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-	double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - wbcFractionInitial));
-	vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-	double nextReflectionCoefficient = GeneralMath::LinearInterpolator(wbcFractionInitial, wbcFractionMax, 1.0, 0.05, whiteBloodCell);
-	BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
-	m_data.GetCompartments().GetTissueCompartment(sep->GetCompartment()+"Tissue")->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
-	
-	//Adjust the other tissue resistances and permeabilities as sepsis worsens
-	//Do this in two stages so that blood volume loss doesn't drop off all at once but is more of a progression
-	double severeThreshold = 0.35 * wbcFractionMax;
-	double modsThreshold = 0.85 * wbcFractionMax;
 
-	for (auto comp : m_data.GetCompartments().GetTissueLeafCompartments())
-	{
-		if (comp->GetName().compare(BGE::TissueCompartment::Brain)==0 || comp->GetName().compare(sepComp)==0)
-			continue; //Don't mess with the brain and don't repeat the compartment the infection started in
-		if (whiteBloodCell > severeThreshold && whiteBloodCell <= modsThreshold)
-		{
-			nextReflectionCoefficient = GeneralMath::LinearInterpolator(severeThreshold, modsThreshold, 1.0, 0.5, whiteBloodCell);
-			BLIM(nextReflectionCoefficient, 0.0, 1.0);
-			comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
-			vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
-			resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-			nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
-		}
-		else if(whiteBloodCell > modsThreshold)
-		{
-			nextReflectionCoefficient = GeneralMath::LinearInterpolator(modsThreshold, wbcFractionMax, 0.5, 0.05, whiteBloodCell);
-			BLIM(nextReflectionCoefficient, 0.0, 1.0);
-			comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
-			vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
-			resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-			nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
-		}
-	}
-	
-	//Set pathological effects, starting with updating white blood cell count
-	GetWhiteBloodCellCount().SetValue(sep->GetEarlyMediator().GetValue() / wbcFractionInitial * wbcBaseline_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+  if (sep->GetEarlyMediator().GetValue() < wbcFractionInitial)
+    sep->GetSeverity().SetValue(0.0); //Our White blood cell count has return to normal.  This will cause the Sepsis action to be inactivated
 
-	//Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
-	//empirically determined to time symptom onset (i.e. temperature > 38 degC) with the appropriate stage of sepsis
-	double sigmoidInput = whiteBloodCell - wbcFractionInitial;
+  
+  //Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
+  //The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
+  //sources) to arbitrary values.  Thus we use the linear interpolator to move coefficients from initial value of 1.0 as function of 
+  //white blood cell fraction.
+  SEFluidCircuitPath* vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
+  double resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - wbcFractionInitial));
+  vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+  double nextReflectionCoefficient = GeneralMath::LinearInterpolator(wbcFractionInitial, wbcFractionMax, 1.0, 0.05, whiteBloodCell);
+  BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
+  m_data.GetCompartments().GetTissueCompartment(sep->GetCompartment()+"Tissue")->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
+  
+  //Adjust the other tissue resistances and permeabilities as sepsis worsens
+  //Do this in two stages so that blood volume loss doesn't drop off all at once but is more of a progression
+  double severeThreshold = 0.35 * wbcFractionMax;
+  double modsThreshold = 0.85 * wbcFractionMax;
 
-	//Respiration effects--Done in Respiratory system
+  for (auto comp : m_data.GetCompartments().GetTissueLeafCompartments())
+  {
+    if (comp->GetName().compare(BGE::TissueCompartment::Brain)==0 || comp->GetName().compare(sepComp)==0)
+      continue; //Don't mess with the brain and don't repeat the compartment the infection started in
+    if (whiteBloodCell > severeThreshold && whiteBloodCell <= modsThreshold)
+    {
+      nextReflectionCoefficient = GeneralMath::LinearInterpolator(severeThreshold, modsThreshold, 1.0, 0.5, whiteBloodCell);
+      BLIM(nextReflectionCoefficient, 0.0, 1.0);
+      comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
+      vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
+      resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+    }
+    else if(whiteBloodCell > modsThreshold)
+    {
+      nextReflectionCoefficient = GeneralMath::LinearInterpolator(modsThreshold, wbcFractionMax, 0.5, 0.05, whiteBloodCell);
+      BLIM(nextReflectionCoefficient, 0.0, 1.0);
+      comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
+      vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
+      resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+    }
+  }
+  
+  //Set pathological effects, starting with updating white blood cell count
+  GetWhiteBloodCellCount().SetValue(sep->GetEarlyMediator().GetValue() / wbcFractionInitial * wbcBaseline_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
-	//Temperature (fever) effects
-	double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
-	double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.15); //was *0.75, then *0.85 for max value
-	coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
+  //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
+  //empirically determined to time symptom onset (i.e. temperature > 38 degC) with the appropriate stage of sepsis
+  double sigmoidInput = whiteBloodCell - wbcFractionInitial;
 
-	//Blood pressure effects (accomplish by dulling baroreceptor resistance scale)
-	double baroreceptorScaleDelta = 0.6 * sigmoidInput / (sigmoidInput + 0.25);
-	m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(1.0 - baroreceptorScaleDelta);
-	
-	//Bilirubin counts (measure of liver perfusion)
-	double baselineBilirubin_mg_Per_dL = 0.70;
-	double maxBilirubin_mg_Per_dL = 20.0;  //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
-	double halfMaxWBC = 0.75 * wbcFractionMax;		  //White blood cell fraction that causes half-max bilirubin concentration.  Set above 0.5 because bilirubin is a later sign of shock
-	double shapeParam = 2.0;			//Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
-	double totalBilirubin_mg_Per_dL = maxBilirubin_mg_Per_dL * pow(sigmoidInput, shapeParam) / (pow(sigmoidInput, shapeParam) + pow(halfMaxWBC, shapeParam)) + baselineBilirubin_mg_Per_dL;
-	GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
+  //Respiration effects--Done in Respiratory system
+
+  //Temperature (fever) effects
+  double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
+  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.15); //was *0.75, then *0.85 for max value
+  coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
+
+  //Blood pressure effects (accomplish by dulling baroreceptor resistance scale)
+  double baroreceptorScaleDelta = 0.6 * sigmoidInput / (sigmoidInput + 0.25);
+  m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(1.0 - baroreceptorScaleDelta);
+  
+  //Bilirubin counts (measure of liver perfusion)
+  double baselineBilirubin_mg_Per_dL = 0.70;
+  double maxBilirubin_mg_Per_dL = 20.0;  //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
+  double halfMaxWBC = 0.75 * wbcFractionMax;      //White blood cell fraction that causes half-max bilirubin concentration.  Set above 0.5 because bilirubin is a later sign of shock
+  double shapeParam = 2.0;      //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
+  double totalBilirubin_mg_Per_dL = maxBilirubin_mg_Per_dL * pow(sigmoidInput, shapeParam) / (pow(sigmoidInput, shapeParam) + pow(halfMaxWBC, shapeParam)) + baselineBilirubin_mg_Per_dL;
+  GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
 
 }

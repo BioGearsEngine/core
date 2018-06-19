@@ -38,15 +38,17 @@ void GeneralMath::CalculateConcentration(const SEScalarMass& mass, const SEScala
 {
   //concentration = mass/volume
   double mass_ug = mass.GetValue(MassUnit::ug);
-  double volume_mL = volume.GetValue(VolumeUnit::mL);
+  double  volume_mL = volume.GetValue(VolumeUnit::mL);
   //Can't have a negative mass or volume
-  if (mass_ug < 0.0) {
+  if (mass_ug < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Mass is negative:" << mass_ug << " ug. Setting concentration to 0.";
     logger->Error(ss);
     mass_ug = 0.0;
   }
-  if (volume_mL < 0.0) {
+  if (volume_mL < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
     logger->Error(ss);
@@ -67,19 +69,21 @@ void GeneralMath::CalculateMass(const SEScalarVolume& volume, const SEScalarMass
   // mass = concentration*volume
   double volume_mL = volume.GetValue(VolumeUnit::mL);
   double concentration_ug_Per_mL = concentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
-  if (concentration_ug_Per_mL < 0.0) {
+  if (concentration_ug_Per_mL < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateMass: Mass is negative:" << concentration_ug_Per_mL << " ug/mL. Setting it to 0.";
     logger->Error(ss);
     concentration_ug_Per_mL = 0.0;
   }
-  if (volume_mL < 0.0) {
+  if (volume_mL < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateMass: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
     logger->Error(ss);
     volume_mL = 0.0;
   }
-  mass.SetValue(volume_mL * concentration_ug_Per_mL, MassUnit::ug);
+  mass.SetValue(volume_mL*concentration_ug_Per_mL, MassUnit::ug);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -91,7 +95,8 @@ void GeneralMath::CalculateHenrysLawConcentration(const SESubstance& substance, 
   double pp_mmHg = partialPressure.GetValue(PressureUnit::mmHg);
   if (substance.GetState() != CDM::enumSubstanceState::Gas)
     throw CommonDataModelException("Cannot calculate a molarity by Henry's law from partial pressure of a non gaseous substance in a liquid");
-  if (pp_mmHg < 0.0) {
+  if (pp_mmHg < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateHenrysLawConcentration: Pressure is negative:" << pp_mmHg << " mmHg. Setting it to 0.";
     logger->Error(ss);
@@ -102,6 +107,7 @@ void GeneralMath::CalculateHenrysLawConcentration(const SESubstance& substance, 
   double concentration_ug_Per_mL = pp_mmHg * density_ug_Per_mL * solubilityCoefficient_Per_mmHg;
   concentration.SetValue(concentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
 }
+
 
 ///\cite Bhagat1984CalculatedOsmolality
 void GeneralMath::CalculateOsmolarity(const SEScalarAmountPerVolume& sodiumMolarity, const SEScalarAmountPerVolume& potassiumMolarity, const SEScalarAmountPerVolume& glucoseMolarity, const SEScalarAmountPerVolume& ureaMolarity, SEScalarOsmolarity& fluidOsmolarity)
@@ -114,13 +120,14 @@ void GeneralMath::CalculateOsmolarity(const SEScalarAmountPerVolume& sodiumMolar
 void GeneralMath::CalculateOsmolality(const SEScalarAmountPerVolume& sodiumMolarity, const SEScalarAmountPerVolume& potassiumMolarity, const SEScalarAmountPerVolume& glucoseMolarity, const SEScalarAmountPerVolume& ureaMolarity, const SEScalar& specificGravity, SEScalarOsmolality& fluidOsmolality)
 {
   double waterDensity_g_mL = 0.993;
-  double fluidDensity_kg_L = specificGravity.GetValue() * waterDensity_g_mL;
+  double fluidDensity_kg_L = specificGravity.GetValue() * waterDensity_g_mL ;
   double osmolarity_mOsm_Per_L = (1.89 * sodiumMolarity.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 1.38 * potassiumMolarity.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 1.08 * glucoseMolarity.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 1.03 * ureaMolarity.GetValue(AmountPerVolumeUnit::mmol_Per_L) + 7.45);
 
   // Convert to kilograms by dividing by density of the fluid:
   double osmolality_mOsm_Per_kg = osmolarity_mOsm_Per_L / fluidDensity_kg_L;
   fluidOsmolality.SetValue(osmolality_mOsm_Per_kg, OsmolalityUnit::mOsm_Per_kg);
 }
+
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -130,13 +137,14 @@ void GeneralMath::CalculatePartialPressureInGas(const SEScalarFraction& volumeFr
 {
   double VolumeFraction = volumeFraction.GetValue();
   double pressure_cmH2O = pressure.GetValue(PressureUnit::cmH2O);
-  if (VolumeFraction < 0.0) {
+  if (VolumeFraction < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Volume Fraction is negative:" << VolumeFraction << ". Setting it to 0.";
     logger->Error(ss);
     VolumeFraction = 0.0;
   }
-  partialPressure.SetValue(VolumeFraction * pressure_cmH2O, PressureUnit::cmH2O);
+  partialPressure.SetValue(VolumeFraction*pressure_cmH2O, PressureUnit::cmH2O);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -148,7 +156,8 @@ void GeneralMath::CalculatePartialPressureInLiquid(const SESubstance& substance,
   if (substance.GetState() != CDM::enumSubstanceState::Gas)
     throw CommonDataModelException("Cannot calculate a partial pressure of a non gaseous substance in a liquid");
   double concentration_ug_Per_mL = concentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
-  if (concentration_ug_Per_mL < 0.0) {
+  if (concentration_ug_Per_mL < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Concentration is negative:" << concentration_ug_Per_mL << " ug/mL. Setting it to 0.";
     logger->Error(ss);
@@ -162,23 +171,25 @@ void GeneralMath::CalculatePartialPressureInLiquid(const SESubstance& substance,
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
-// This function makes the assumption that the fluid medium is water to extrapolate that the fluid volume in mL is equivalent to the fluid weight in g
+// This function makes the assumption that the fluid medium is water to extrapolate that the fluid volume in mL is equivalent to the fluid weight in g  
 //--------------------------------------------------------------------------------------------------
 void GeneralMath::CalculateSpecificGravity(const SEScalarMass& mass, const SEScalarVolume& volume, SEScalar& specificGravity, Logger* logger)
 {
   // compute density of given substance then divide by water density in g/mL (assuming 37 degrees C, body internal temp):
   double mass_g = mass.GetValue(MassUnit::g);
-  double volume_mL = volume.GetValue(VolumeUnit::mL);
+  double  volume_mL = volume.GetValue(VolumeUnit::mL);
   double totalmass_g = mass_g + volume_mL;
   double waterDensity_g_mL = 0.993;
   //Can't have a negative mass or volume
-  if (totalmass_g < 0.0) {
+  if (totalmass_g < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateSpecificGravity: Mass is negative:" << totalmass_g << " ug. Setting it to 0.";
     logger->Error(ss);
     totalmass_g = 0.0;
   }
-  if (volume_mL < 0.0) {
+  if (volume_mL < 0.0)
+  {
     std::stringstream ss;
     ss << "GeneralMath::CalculateSpecificGravity: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
     logger->Error(ss);
@@ -192,7 +203,7 @@ void GeneralMath::CalculateSpecificGravity(const SEScalarMass& mass, const SESca
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
-// Calculates the density of water at a given temperature using DIPPR105 equation, valid from 32-707F
+// Calculates the density of water at a given temperature using DIPPR105 equation, valid from 32-707F  
 //--------------------------------------------------------------------------------------------------
 void GeneralMath::CalculateWaterDensity(const SEScalarTemperature& temp, SEScalarMassPerVolume& density)
 {
@@ -202,21 +213,23 @@ void GeneralMath::CalculateWaterDensity(const SEScalarTemperature& temp, SEScala
   double C = 649.727;
   double D = .05107;
   double temp_K = temp.GetValue(TemperatureUnit::K);
-
+  
   double density_kg_Per_m3 = A / (pow(B, 1 + pow(1 - (temp_K / C), D)));
 
   density.SetValue(density_kg_Per_m3, MassPerVolumeUnit::kg_Per_m3);
+
 }
 
 double GeneralMath::PercentDifference(double expected, double calculated)
 {
-  if (calculated == 0.0 && expected == 0.0)
+  if (calculated == 0.0&&expected == 0.0)
     return 0.0;
 
   double difference = (calculated - expected);
   double average = (calculated + expected) / 2.0;
 
-  if (average == 0.0) {
+  if (average == 0.0)
+  {
     return SEScalar::dNaN();
   }
   return std::abs(difference / average) * 100.0;
@@ -224,10 +237,12 @@ double GeneralMath::PercentDifference(double expected, double calculated)
 
 double GeneralMath::PercentTolerance(double expected, double calculated, double epsilon)
 {
-  if (expected == 0.0) {
+  if (expected == 0.0)
+  {
     if (calculated == 0.0)
       return 0.0;
-    else {
+    else
+    {
       if (std::abs(calculated) > epsilon)
         throw CommonDataModelException("Percent Tolerance is NaN");
       else
@@ -235,7 +250,8 @@ double GeneralMath::PercentTolerance(double expected, double calculated, double 
     }
   }
   double err = std::abs(calculated - expected) / expected * 100.0;
-  if (std::isnan(err)) {
+  if (std::isnan(err))
+  {
     if (std::isnan(expected))
       throw CommonDataModelException("Provided Expected value is NaN");
     if (std::isnan(calculated))
@@ -250,7 +266,7 @@ void GeneralMath::Combinations(std::vector<int> maxValues, std::vector<std::vect
   int Oidx = 0;
   int numVals = 1;
   int Olength = maxValues.size();
-  std::vector<int>*current, *next;
+  std::vector<int> *current, *next;
 
   for (int i = 0; i < Olength; i++)
     numVals *= maxValues[Oidx] + 1;
@@ -261,14 +277,19 @@ void GeneralMath::Combinations(std::vector<int> maxValues, std::vector<std::vect
   current = &permutations[perm++];
   current->resize(Olength, 0);
 
-  for (int iter = 0; iter < numVals - 1; iter++) {
+  for (int iter = 0; iter < numVals - 1; iter++)
+  {
     next = &permutations[perm++];
     Copy(*current, *next);
     current = next;
-    for (int i = 0; i <= Olength; i++) {
-      if (++(*current)[i] > maxValues[i]) {
+    for (int i = 0; i <= Olength; i++)
+    {
+      if (++(*current)[i] > maxValues[i])
+      {
         (*current)[i] = 0;
-      } else {
+      }
+      else
+      {
         break;
       }
     }
@@ -292,20 +313,20 @@ void GeneralMath::Combinations(std::vector<int> maxValues, std::vector<std::vect
 ///
 /// \details
 /// Linear Interpolator finds the y value at xPrime. The slope
-/// and Y intercept of the line connecting (x1,y1) and (x2,y2) are then found so y = mx + b can be used
+/// and Y intercept of the line connecting (x1,y1) and (x2,y2) are then found so y = mx + b can be used 
 /// to find yPrime by inputting xPrime.
 //--------------------------------------------------------------------------------------------------
 double GeneralMath::LinearInterpolator(double x1, double x2, double y1, double y2, double xPrime)
 {
   double yPrime; // Initialize the output variable
-  double slope; // Initialize the variable used to determine the slope between x1 and x2
-  double yInt; // Initialize the variable used to determine the y intercept
+  double slope;  // Initialize the variable used to determine the slope between x1 and x2
+  double yInt;   // Initialize the variable used to determine the y intercept
 
   slope = (y2 - y1) / (x2 - x1); // linear slope equals dy/dx
 
-  yInt = y1 - slope * x1; // Y = mx + b -> b = Y - mx
+  yInt = y1 - slope*x1;      // Y = mx + b -> b = Y - mx
 
-  yPrime = slope * xPrime + yInt; // Interpolate yPrime from the created line
+  yPrime = slope*xPrime + yInt;  // Interpolate yPrime from the created line
 
   return yPrime;
 }
@@ -315,30 +336,31 @@ double GeneralMath::LinearInterpolator(double x1, double x2, double y1, double y
 /// Returns y value for the specified exponential function given a normalized x value (0.0 to 1.0).
 ///
 ///   y = dbase ^ [(Log10(dmin/dmax) * x) + Log10(dmax)]
-///
+/// 
 /// \param  dbase    base value
-/// \param  dmin     minimum
+/// \param  dmin     minimum 
 /// \param  dmax     maximum
 /// \param  x   normalized x, 0.0 to 1.0
 ///
 /// \return y
 ///
 /// \details
-/// Exponential function used to model airflow resistance. Requires a base value for the function, a minimum y value
-/// (x = 0), and maximum y value (x = 1).  Return the y value that maps to x.
+/// Exponential function used to model airflow resistance. Requires a base value for the function, a minimum y value 
+/// (x = 0), and maximum y value (x = 1).  Return the y value that maps to x.  
 ///
 /// Limitations:
 ///  - dmin > 0
-///  - dmax > 0
+///  - dmax > 0 
 ///  - 0.0 <= dx <= 1.0
-///
+///  
 /// If any of the input variables fall outside the above bounds, the function returns NaN
 ///
 //--------------------------------------------------------------------------------------------------
 double GeneralMath::ResistanceFunction(double dbase, double dmin, double dmax, double dx)
 {
-  double dy = SEScalar::dNaN(); // Resistance value
-  if (dmin > 0.0 && dmax > 0.0 && dx >= 0.0 && dx <= 1.0) {
+  double dy = SEScalar::dNaN();     // Resistance value
+  if (dmin > 0.0 && dmax > 0.0 && dx >= 0.0 && dx <= 1.0)
+  {
     dy = pow(dbase, ((log10(dmin / dmax) * dx) + log10(dmax)));
   }
   return dy;
@@ -347,9 +369,9 @@ double GeneralMath::ResistanceFunction(double dbase, double dmin, double dmax, d
 // --------------------------------------------------------------------------------------------------
 /// \brief
 /// A logistic function.
-///
+/// 
 /// \param  a    asymptote
-/// \param  x50  x-value at sigmoid midpoint
+/// \param  x50  x-value at sigmoid midpoint 
 /// \param  k    curve steepness and direction parameter
 /// \param  x    input value
 ///
@@ -360,7 +382,7 @@ double GeneralMath::ResistanceFunction(double dbase, double dmin, double dmax, d
 //--------------------------------------------------------------------------------------------------
 double GeneralMath::LogisticFunction(double a, double x50, double k, double x)
 {
-  double y = a / (1 + exp(-k * (x - x50)));
+  double y = a / (1 + exp(-k*(x - x50)));
 
   return y;
 }
@@ -369,9 +391,9 @@ double GeneralMath::LogisticFunction(double a, double x50, double k, double x)
 /// \brief
 /// Calculates Nernst Potential.
 /// 
-/// \param  extra		extracellular tissue compartment
-/// \param  intra		intracellular tissue compartment
-/// \param  ion		    ion being considered (Na, K, Cl)
+/// \param  extra   extracellular tissue compartment
+/// \param  intra   intracellular tissue compartment
+/// \param  ion       ion being considered (Na, K, Cl)
 ///
 /// \return E_nernst
 ///
@@ -391,6 +413,6 @@ double GeneralMath::CalculateNernstPotential(SELiquidCompartment& extra, SELiqui
   if (ion->GetName() == "Calcium")
     z = 2.0;
 
-	double nernst_V = (gasConstant_J_Per_mol*coreTemp_K) / (faradaysConstant_C_Per_mol * z)*log(extraIon_M / intraIon_M);
+  double nernst_V = (gasConstant_J_Per_mol*coreTemp_K) / (faradaysConstant_C_Per_mol * z)*log(extraIon_M / intraIon_M);
   return nernst_V;
 }

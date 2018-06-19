@@ -23,8 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-SETissueCompartment::SETissueCompartment(const std::string& name, Logger* logger)
-  : SECompartment(name, logger)
+SETissueCompartment::SETissueCompartment(const std::string& name, Logger* logger) : SECompartment(name, logger)
 {
   m_AcidicPhospohlipidConcentration = nullptr;
   m_MatrixVolume = nullptr;
@@ -73,7 +72,7 @@ bool SETissueCompartment::Load(const CDM::TissueCompartmentData& in, SESubstance
   if (in.NeutralPhospholipidsVolumeFraction().present())
     GetNeutralPhospholipidsVolumeFraction().Load(in.NeutralPhospholipidsVolumeFraction().get());
   if (in.ReflectionCoefficient().present())
-	  GetReflectionCoefficient().Load(in.ReflectionCoefficient().get());
+    GetReflectionCoefficient().Load(in.ReflectionCoefficient().get());
   if (in.TissueToPlasmaAlbuminRatio().present())
     GetTissueToPlasmaAlbuminRatio().Load(in.TissueToPlasmaAlbuminRatio().get());
   if (in.TissueToPlasmaAlphaAcidGlycoproteinRatio().present())
@@ -97,7 +96,7 @@ void SETissueCompartment::Unload(CDM::TissueCompartmentData& data)
   if (HasAcidicPhospohlipidConcentration())
     data.AcidicPhospohlipidConcentration(std::unique_ptr<CDM::ScalarMassPerMassData>(m_AcidicPhospohlipidConcentration->Unload()));
   if (HasMatrixVolume())
-    data.MatrixVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_MatrixVolume->Unload()));
+    data.MatrixVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_MatrixVolume->Unload())); 
   if (HasMembranePotential())
     data.MembranePotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_MembranePotential->Unload()));
   if (HasNeutralLipidsVolumeFraction())
@@ -105,7 +104,7 @@ void SETissueCompartment::Unload(CDM::TissueCompartmentData& data)
   if (HasNeutralPhospholipidsVolumeFraction())
     data.NeutralPhospholipidsVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_NeutralPhospholipidsVolumeFraction->Unload()));
   if (HasReflectionCoefficient())
-	  data.ReflectionCoefficient(std::unique_ptr<CDM::Scalar0To1Data>(m_ReflectionCoefficient->Unload()));
+    data.ReflectionCoefficient(std::unique_ptr<CDM::Scalar0To1Data>(m_ReflectionCoefficient->Unload()));
   if (HasTissueToPlasmaAlbuminRatio())
     data.TissueToPlasmaAlbuminRatio(std::unique_ptr<CDM::ScalarData>(m_TissueToPlasmaAlbuminRatio->Unload()));
   if (HasTissueToPlasmaAlbuminRatio())
@@ -123,7 +122,7 @@ const SEScalar* SETissueCompartment::GetScalar(const std::string& name)
   if (name.compare("AcidicPhospohlipidConcentration") == 0)
     return &GetAcidicPhospohlipidConcentration();
   if (name.compare("MatrixVolume") == 0)
-    return &GetMatrixVolume();
+    return &GetMatrixVolume();  
   if (name.compare("MembranePotential") == 0)
     return &GetMembranePotential();
   if (name.compare("NeutralLipidsVolumeFraction") == 0)
@@ -131,7 +130,7 @@ const SEScalar* SETissueCompartment::GetScalar(const std::string& name)
   if (name.compare("NeutralPhospholipidsVolumeFraction") == 0)
     return &GetNeutralPhospholipidsVolumeFraction();
   if (name.compare("ReflectionCoefficient") == 0)
-	  return &GetReflectionCoefficient();
+    return &GetReflectionCoefficient();
   if (name.compare("TissueToPlasmaAlbuminRatio") == 0)
     return &GetTissueToPlasmaAlbuminRatio();
   if (name.compare("TissueToPlasmaAlphaAcidGlycoproteinRatio") == 0)
@@ -145,6 +144,7 @@ const SEScalar* SETissueCompartment::GetScalar(const std::string& name)
 
 void SETissueCompartment::StateChange()
 {
+ 
 }
 
 bool SETissueCompartment::HasAcidicPhospohlipidConcentration() const
@@ -217,19 +217,19 @@ double SETissueCompartment::GetNeutralLipidsVolumeFraction() const
 
 bool SETissueCompartment::HasReflectionCoefficient() const
 {
-	return m_ReflectionCoefficient == nullptr ? false : m_ReflectionCoefficient->IsValid();
+  return m_ReflectionCoefficient == nullptr ? false : m_ReflectionCoefficient->IsValid();
 }
 SEScalar0To1& SETissueCompartment::GetReflectionCoefficient()
 {
-	if (m_ReflectionCoefficient == nullptr)
-		m_ReflectionCoefficient = new SEScalar0To1();
-	return *m_ReflectionCoefficient;
+  if (m_ReflectionCoefficient == nullptr)
+    m_ReflectionCoefficient = new SEScalar0To1();
+  return *m_ReflectionCoefficient;
 }
 double SETissueCompartment::GetReflectionCoefficient() const
 {
-	if (m_ReflectionCoefficient == nullptr)
-		return SEScalar::dNaN();
-	return m_ReflectionCoefficient->GetValue();
+  if (m_ReflectionCoefficient == nullptr)
+    return SEScalar::dNaN();
+  return m_ReflectionCoefficient->GetValue();
 }
 
 bool SETissueCompartment::HasNeutralPhospholipidsVolumeFraction() const
@@ -307,7 +307,7 @@ bool SETissueCompartment::HasTotalMass() const
 SEScalarMass& SETissueCompartment::GetTotalMass()
 {
   if (m_TotalMass == nullptr)
-    m_TotalMass = new SEScalarMass();
+    m_TotalMass = new SEScalarMass();  
   return *m_TotalMass;
 }
 double SETissueCompartment::GetTotalMass(const MassUnit& unit) const

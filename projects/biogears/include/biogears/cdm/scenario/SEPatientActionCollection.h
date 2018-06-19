@@ -44,6 +44,7 @@ specific language governing permissions and limitations under the License.
 
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
 public:
+
   SEPatientActionCollection(SESubstanceManager&);
   ~SEPatientActionCollection();
 
@@ -110,7 +111,7 @@ public:
   void RemoveExercise();
 
   bool HasHemorrhage() const;
-  const std::map<std::string, SEHemorrhage*>& GetHemorrhages() const;
+  const std::map<std::string,SEHemorrhage*>& GetHemorrhages() const;
   void RemoveHemorrhage(const std::string& cmpt);
 
   bool HasIntubation() const;
@@ -153,17 +154,17 @@ public:
   SETensionPneumothorax* GetRightOpenTensionPneumothorax() const;
   void RemoveRightOpenTensionPneumothorax();
 
-	bool HasSepsis() const;
-	SESepsis* GetSepsis() const;
-	void RemoveSepsis();
+  bool HasSepsis() const;
+  SESepsis* GetSepsis() const;
+  void RemoveSepsis();
 
-  const std::map<const SESubstance*, SESubstanceBolus*>& GetSubstanceBoluses() const;
+  const std::map<const SESubstance*, SESubstanceBolus*>&  GetSubstanceBoluses() const;
   void RemoveSubstanceBolus(const SESubstance& sub);
 
   const std::map<const SESubstance*, SESubstanceInfusion*>& GetSubstanceInfusions() const;
   void RemoveSubstanceInfusion(const SESubstance& sub);
 
-  const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& GetSubstanceCompoundInfusions() const;
+  const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>&  GetSubstanceCompoundInfusions() const;
   void RemoveSubstanceCompoundInfusion(const SESubstanceCompound& sub);
 
   bool HasUrinate() const;
@@ -173,35 +174,35 @@ public:
 protected:
   bool IsValid(const SEPatientAction& action);
 
-  SEAcuteStress* m_AcuteStress;
-  SEAirwayObstruction* m_AirwayObstruction;
-  SEApnea* m_Apnea;
-  SEAsthmaAttack* m_AsthmaAttack;
-  SEBrainInjury* m_BrainInjury;
-  SEBronchoconstriction* m_Bronchoconstriction;
-  SECardiacArrest* m_CardiacArrest;
-  SEChestCompression* m_ChestCompression;
-  SEChestOcclusiveDressing* m_LeftChestOcclusiveDressing;
-  SEChestOcclusiveDressing* m_RightChestOcclusiveDressing;
-  SEConsciousRespiration* m_ConsciousRespiration;
-  SEConsumeNutrients* m_ConsumeNutrients;
-  SEExercise* m_Exercise;
-  SEIntubation* m_Intubation;
-  SEMechanicalVentilation* m_MechanicalVentilation;
-  SENeedleDecompression* m_LeftNeedleDecompression;
-  SENeedleDecompression* m_RightNeedleDecompression;
-  SEPericardialEffusion* m_PericardialEffusion;
-	SESepsis*							  m_Sepsis;
-  SETensionPneumothorax* m_LeftClosedTensionPneumothorax;
-  SETensionPneumothorax* m_LeftOpenTensionPneumothorax;
-  SETensionPneumothorax* m_RightClosedTensionPneumothorax;
-  SETensionPneumothorax* m_RightOpenTensionPneumothorax;
-  SEUrinate* m_Urinate;
+  SEAcuteStress*              m_AcuteStress;
+  SEAirwayObstruction*          m_AirwayObstruction;
+    SEApnea*                      m_Apnea;
+  SEAsthmaAttack*             m_AsthmaAttack;
+    SEBrainInjury*              m_BrainInjury;
+  SEBronchoconstriction*          m_Bronchoconstriction;
+  SECardiacArrest*            m_CardiacArrest;
+  SEChestCompression*           m_ChestCompression;
+  SEChestOcclusiveDressing*       m_LeftChestOcclusiveDressing;
+  SEChestOcclusiveDressing*       m_RightChestOcclusiveDressing;
+  SEConsciousRespiration*         m_ConsciousRespiration;
+  SEConsumeNutrients*           m_ConsumeNutrients;
+  SEExercise*                   m_Exercise;
+  SEIntubation*               m_Intubation;
+    SEMechanicalVentilation*        m_MechanicalVentilation;
+  SENeedleDecompression*          m_LeftNeedleDecompression;
+  SENeedleDecompression*          m_RightNeedleDecompression;
+  SEPericardialEffusion*          m_PericardialEffusion;
+  SESepsis*               m_Sepsis;
+  SETensionPneumothorax*          m_LeftClosedTensionPneumothorax;
+  SETensionPneumothorax*          m_LeftOpenTensionPneumothorax;
+  SETensionPneumothorax*          m_RightClosedTensionPneumothorax;
+  SETensionPneumothorax*          m_RightOpenTensionPneumothorax;
+  SEUrinate*                m_Urinate;
 
-  std::map<std::string, SEHemorrhage*> m_Hemorrhages;
-  std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
-  std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;
-  std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
+  std::map<std::string, SEHemorrhage*>                              m_Hemorrhages;
+  std::map<const SESubstance*,SESubstanceBolus*>                    m_SubstanceBolus;
+  std::map<const SESubstance*,SESubstanceInfusion*>                 m_SubstanceInfusions;
+  std::map<const SESubstanceCompound*,SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
 
   bool AdministerSubstance(const CDM::SubstanceAdministrationData& subAdmin);
 

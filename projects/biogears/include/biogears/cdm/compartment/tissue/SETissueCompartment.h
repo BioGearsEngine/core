@@ -20,11 +20,9 @@ class SESubstanceManager;
 class SELiquidCompartment;
 
 class BIOGEARS_API SETissueCompartment : public SECompartment {
-  friend class SECompartmentManager;
-
+ friend class SECompartmentManager;
 protected:
   SETissueCompartment(const std::string& name, Logger* logger);
-
 public:
   virtual ~SETissueCompartment();
 
@@ -32,16 +30,15 @@ public:
 
   virtual bool Load(const CDM::TissueCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
   virtual CDM::TissueCompartmentData* Unload();
-
 protected:
   virtual void Unload(CDM::TissueCompartmentData& data);
 
 public:
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool HasChildren() const { return !m_Children.empty(); } // Children on tissue is not supported at this time
-  virtual const std::vector<SETissueCompartment*>& GetChildren() { return m_Children; } // Children on tissue is not supported at this time
-  virtual const std::vector<SETissueCompartment*>& GetLeaves() { return m_Leaves; } // Children on tissue is not supported at this time
+  virtual bool HasChildren() const { return !m_Children.empty(); }// Children on tissue is not supported at this time
+  virtual const std::vector<SETissueCompartment*>& GetChildren() { return m_Children; }// Children on tissue is not supported at this time
+  virtual const std::vector<SETissueCompartment*>& GetLeaves() { return m_Leaves; }// Children on tissue is not supported at this time
 
   virtual void StateChange();
 
@@ -86,16 +83,17 @@ public:
   virtual double GetTotalMass(const MassUnit& unit) const;
 
 protected:
-  SEScalarMassPerMass* m_AcidicPhospohlipidConcentration;
-  SEScalarVolume* m_MatrixVolume;
-  SEScalarElectricPotential* m_MembranePotential;
-  SEScalarFraction* m_NeutralLipidsVolumeFraction;
-  SEScalarFraction* m_NeutralPhospholipidsVolumeFraction;
-  SEScalar0To1*			 m_ReflectionCoefficient;
-  SEScalar* m_TissueToPlasmaAlbuminRatio;
-  SEScalar* m_TissueToPlasmaAlphaAcidGlycoproteinRatio;
-  SEScalar* m_TissueToPlasmaLipoproteinRatio;
-  SEScalarMass* m_TotalMass;
+  
+  SEScalarMassPerMass*   m_AcidicPhospohlipidConcentration;
+  SEScalarVolume*        m_MatrixVolume;
+  SEScalarElectricPotential*    m_MembranePotential;
+  SEScalarFraction*      m_NeutralLipidsVolumeFraction;
+  SEScalarFraction*      m_NeutralPhospholipidsVolumeFraction;
+  SEScalar0To1*      m_ReflectionCoefficient;
+  SEScalar*              m_TissueToPlasmaAlbuminRatio;
+  SEScalar*              m_TissueToPlasmaAlphaAcidGlycoproteinRatio;
+  SEScalar*              m_TissueToPlasmaLipoproteinRatio;
+  SEScalarMass*          m_TotalMass;
 
   std::vector<SETissueCompartment*> m_Children;
   std::vector<SETissueCompartment*> m_Leaves;

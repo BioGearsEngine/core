@@ -20,28 +20,29 @@ specific language governing permissions and limitations under the License.
 	@nosubgrouping */
 class BIOGEARS_API SEBloodChemistrySystem : public SESystem {
 public:
+
   SEBloodChemistrySystem(Logger* logger);
   virtual ~SEBloodChemistrySystem();
 
-  virtual void Clear(); /**< @copydoc DOXY_CDM_CLEAR */
+  virtual void Clear();                                                                               /**< @copydoc DOXY_CDM_CLEAR */
 
-  virtual const SEScalar* GetScalar(const std::string& name); /**< @copydoc DOXY_CDM_GET_SCALAR */
+  virtual const SEScalar* GetScalar(const std::string& name);                                         /**< @copydoc DOXY_CDM_GET_SCALAR */
 
-  /**  @name Serialization */ //@{
-  virtual bool Load(const CDM::BloodChemistrySystemData& in); /**< @copydoc DOXY_CDM_LOAD */
-  virtual CDM::BloodChemistrySystemData* Unload() const; /**< @copydoc DOXY_CDM_UNLOAD */
+                                                                                                      /**  @name Serialization *///@{
+  virtual bool Load(const CDM::BloodChemistrySystemData& in);                                         /**< @copydoc DOXY_CDM_LOAD */
+  virtual CDM::BloodChemistrySystemData* Unload() const;                                              /**< @copydoc DOXY_CDM_UNLOAD */
 protected:
-  virtual void Unload(CDM::BloodChemistrySystemData& data) const; /**< @copydoc DOXY_CDM_UNLOAD_TO */ //@}
+  virtual void Unload(CDM::BloodChemistrySystemData& data) const;                                     /**< @copydoc DOXY_CDM_UNLOAD_TO *///@}
 public:
-  /**  @name BloodDensity */ //@{ @copybrief Physiology_BloodChemistrySystemData_BloodDensity
-  virtual bool HasBloodDensity() const; /**< @copydoc DOXY_CDM_HAS */
-  virtual SEScalarMassPerVolume& GetBloodDensity(); /**< @copydoc DOXY_CDM_GET */
-  virtual double GetBloodDensity(const MassPerVolumeUnit& unit) const; /**< @copydoc DOXY_CDM_GET_VALUE */ //@}
+  /**  @name BloodDensity *///@{ @copybrief Physiology_BloodChemistrySystemData_BloodDensity
+  virtual bool HasBloodDensity() const;                                                               /**< @copydoc DOXY_CDM_HAS */
+  virtual SEScalarMassPerVolume& GetBloodDensity();                                                   /**< @copydoc DOXY_CDM_GET */
+  virtual double GetBloodDensity(const MassPerVolumeUnit& unit) const;                                /**< @copydoc DOXY_CDM_GET_VALUE *///@}
 
-  /** @name BloodPH
-	  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodPH
-	  *  @{*/
-  /// %Test if member has been allocated
+    /** @name BloodPH
+    *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodPH
+    *  @{*/
+    /// %Test if member has been allocated
   virtual bool HasBloodPH() const;
   /// Get member class, allocate if nullptr
   virtual SEScalar& GetBloodPH();
@@ -49,8 +50,8 @@ public:
   //@}
 
   /** @name BloodSpecificHeat
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_BloodSpecificHeat
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodSpecificHeat
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasBloodSpecificHeat() const;
   /// Get member class, allocate if nullptr
@@ -69,8 +70,8 @@ public:
   //@}
 
   /** @name CarbonDioxideSaturation
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_CarbonDioxideSaturation
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_CarbonDioxideSaturation
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasCarbonDioxideSaturation() const;
   /// Get member class, allocate if nullptr
@@ -89,8 +90,8 @@ public:
   //@}
 
   /** @name Hematocrit
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_Hematocrit
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_Hematocrit
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasHematocrit() const;
   /// Get member class, allocate if nullptr
@@ -99,8 +100,8 @@ public:
   //@}
 
   /** @name HemoglobinContent
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_HemoglobinContent
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_HemoglobinContent
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasHemoglobinContent() const;
   /// Get member class, allocate if nullptr
@@ -109,9 +110,9 @@ public:
   //@}
 
   /** @name OxygenSaturation
-	 *  @brief @copybrief Physiology_BloodChemistrySystemData_OxygenSaturation
-	 *  @{*/
-  /// %Test if member has been allocated
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_OxygenSaturation
+   *  @{*/
+   /// %Test if member has been allocated
   virtual bool HasOxygenSaturation() const;
   /// Get member class, allocate if nullptr
   virtual SEScalarFraction& GetOxygenSaturation();
@@ -129,8 +130,8 @@ public:
   //@}
 
   /** @name PlasmaVolume
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_PlasmaVolume
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_PlasmaVolume
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasPlasmaVolume() const;
   /// Get member class, allocate if nullptr
@@ -159,9 +160,9 @@ public:
   //@}
 
   /** @name RedBloodCellCount
-	 *  @brief @copybrief Physiology_BloodChemistrySystemData_RedBloodCellCount
-	 *  @{*/
-  /// %Test if member has been allocated
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_RedBloodCellCount
+   *  @{*/
+   /// %Test if member has been allocated
   virtual bool HasRedBloodCellCount() const;
   /// Get member class, allocate if nullptr
   virtual SEScalarAmountPerVolume& GetRedBloodCellCount();
@@ -179,18 +180,18 @@ public:
   //@}
 
   /** @name ShuntFraction
-	 *  @brief @copybrief Physiology_BloodChemistrySystemData_ShuntFraction
-	 *  @{*/
-  /// %Test if member has been allocated
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_ShuntFraction
+   *  @{*/
+   /// %Test if member has been allocated
   virtual bool HasShuntFraction() const;
   /// Get member class, allocate if nullptr
   virtual SEScalarFraction& GetShuntFraction();
   virtual double GetShuntFraction() const;
   //@}
 
-	virtual bool HasTotalBilirubin() const;
-	virtual SEScalarMassPerVolume& GetTotalBilirubin();
-	virtual double GetTotalBilirubin(const MassPerVolumeUnit& unit) const;
+  virtual bool HasTotalBilirubin() const;
+  virtual SEScalarMassPerVolume& GetTotalBilirubin();
+  virtual double GetTotalBilirubin(const MassPerVolumeUnit& unit) const;
 
 
   /** @name TotalProteinConcentration
@@ -204,8 +205,8 @@ public:
   //@}
 
   /** @name VolumeFractionNeutralPhospholipidInPlasma
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralPhospholipidInPlasma
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralPhospholipidInPlasma
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasVolumeFractionNeutralPhospholipidInPlasma() const;
   /// Get member class, allocate if nullptr
@@ -214,8 +215,8 @@ public:
   //@}
 
   /** @name VolumeFractionNeutralLipidInPlasma
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralLipidInPlasma
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralLipidInPlasma
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasVolumeFractionNeutralLipidInPlasma() const;
   /// Get member class, allocate if nullptr
@@ -224,8 +225,8 @@ public:
   //@}
 
   /** @name WhiteBloodCellCount
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_WhiteBloodCellCount
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_WhiteBloodCellCount
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasWhiteBloodCellCount() const;
   /// Get member class, allocate if nullptr
@@ -234,8 +235,8 @@ public:
   //@}
 
   /** @name ArterialCarbonDioxidePressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialCarbonDioxidePressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialCarbonDioxidePressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasArterialCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -244,8 +245,8 @@ public:
   //@}
 
   /** @name ArterialOxygenPressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialOxygenPressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialOxygenPressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasArterialOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -254,8 +255,8 @@ public:
   //@}
 
   /** @name PulmonaryArterialCarbonDioxidePressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialCarbonDioxidePressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialCarbonDioxidePressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasPulmonaryArterialCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -264,8 +265,8 @@ public:
   //@}
 
   /** @name PulmonaryArterialOxygenPressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialOxygenPressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialOxygenPressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasPulmonaryArterialOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -274,8 +275,8 @@ public:
   //@}
 
   /** @name PulmonaryVenousCarbonDioxidePressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousCarbonDioxidePressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousCarbonDioxidePressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasPulmonaryVenousCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -284,8 +285,8 @@ public:
   //@}
 
   /** @name PulmonaryVenousOxygenPressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousOxygenPressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousOxygenPressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasPulmonaryVenousOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -294,8 +295,8 @@ public:
   //@}
 
   /** @name VenousCarbonDioxidePressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_VenousCarbonDioxidePressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousCarbonDioxidePressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasVenousCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -303,8 +304,8 @@ public:
   virtual double GetVenousCarbonDioxidePressure(const PressureUnit& unit) const;
   //@}
   /** @name VenousOxygenPressure
-	*  @brief @copybrief Physiology_BloodChemistrySystemData_VenousOxygenPressure
-	*  @{*/
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousOxygenPressure
+  *  @{*/
   /// %Test if member has been allocated
   virtual bool HasVenousOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -312,35 +313,37 @@ public:
   virtual double GetVenousOxygenPressure(const PressureUnit& unit) const;
   //@}
 
-protected:
-  SEScalarMassPerVolume* m_BloodDensity;
-  SEScalar* m_BloodPH;
-  SEScalarHeatCapacitancePerMass* m_BloodSpecificHeat;
-  SEScalarMassPerVolume* m_BloodUreaNitrogenConcentration;
-  SEScalarFraction* m_CarbonDioxideSaturation;
-  SEScalarFraction* m_CarbonMonoxideSaturation;
-  SEScalarFraction* m_Hematocrit;
-  SEScalarMass* m_HemoglobinContent;
-  SEScalarFraction* m_OxygenSaturation;
-  SEScalarAmountPerVolume* m_Phosphate;
-  SEScalarVolume* m_PlasmaVolume;
-  SEScalarFraction* m_PulseOximetry;
-  SEScalarAmountPerVolume* m_RedBloodCellAcetylcholinesterase;
-  SEScalarAmountPerVolume* m_RedBloodCellCount;
-  SEScalarFraction* m_ShuntFraction;
-  SEScalarAmountPerVolume* m_StrongIonDifference;
-  SEScalarMassPerVolume*		  m_TotalBilirubin;
-  SEScalarMassPerVolume* m_TotalProteinConcentration;
-  SEScalarFraction* m_VolumeFractionNeutralPhospholipidInPlasma;
-  SEScalarFraction* m_VolumeFractionNeutralLipidInPlasma;
-  SEScalarAmountPerVolume* m_WhiteBloodCellCount;
 
-  SEScalarPressure* m_ArterialCarbonDioxidePressure;
-  SEScalarPressure* m_ArterialOxygenPressure;
-  SEScalarPressure* m_PulmonaryArterialCarbonDioxidePressure;
-  SEScalarPressure* m_PulmonaryArterialOxygenPressure;
-  SEScalarPressure* m_PulmonaryVenousCarbonDioxidePressure;
-  SEScalarPressure* m_PulmonaryVenousOxygenPressure;
-  SEScalarPressure* m_VenousCarbonDioxidePressure;
-  SEScalarPressure* m_VenousOxygenPressure;
+protected:
+
+  SEScalarMassPerVolume*          m_BloodDensity;
+  SEScalar*                       m_BloodPH;
+  SEScalarHeatCapacitancePerMass* m_BloodSpecificHeat;
+  SEScalarMassPerVolume*          m_BloodUreaNitrogenConcentration;
+  SEScalarFraction*               m_CarbonDioxideSaturation;
+  SEScalarFraction*               m_CarbonMonoxideSaturation;
+  SEScalarFraction*               m_Hematocrit;
+  SEScalarMass*                   m_HemoglobinContent;
+  SEScalarFraction*               m_OxygenSaturation;
+  SEScalarAmountPerVolume*        m_Phosphate;
+  SEScalarVolume*                 m_PlasmaVolume;
+  SEScalarFraction*               m_PulseOximetry;
+  SEScalarAmountPerVolume*      m_RedBloodCellAcetylcholinesterase;
+  SEScalarAmountPerVolume*        m_RedBloodCellCount;
+  SEScalarFraction*               m_ShuntFraction;
+  SEScalarAmountPerVolume*        m_StrongIonDifference;
+  SEScalarMassPerVolume*      m_TotalBilirubin;
+  SEScalarMassPerVolume*          m_TotalProteinConcentration;
+  SEScalarFraction*               m_VolumeFractionNeutralPhospholipidInPlasma;
+  SEScalarFraction*               m_VolumeFractionNeutralLipidInPlasma;
+  SEScalarAmountPerVolume*        m_WhiteBloodCellCount;
+  
+  SEScalarPressure*               m_ArterialCarbonDioxidePressure;
+  SEScalarPressure*               m_ArterialOxygenPressure;
+  SEScalarPressure*               m_PulmonaryArterialCarbonDioxidePressure;
+  SEScalarPressure*               m_PulmonaryArterialOxygenPressure;
+  SEScalarPressure*               m_PulmonaryVenousCarbonDioxidePressure;
+  SEScalarPressure*               m_PulmonaryVenousOxygenPressure;
+  SEScalarPressure*               m_VenousCarbonDioxidePressure;
+  SEScalarPressure*               m_VenousOxygenPressure;
 };
