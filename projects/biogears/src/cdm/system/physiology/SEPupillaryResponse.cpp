@@ -16,10 +16,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ScalarNeg1To1Data.hxx>
 
 SEPupillaryResponse::SEPupillaryResponse(Logger* logger)
+  :  m_ReactivityModifier (nullptr)
+  ,m_ShapeModifier(nullptr)
+  ,m_SizeModifier(nullptr)
 {
-  m_ReactivityModifier = nullptr;
-  m_ShapeModifier = nullptr;
-  m_SizeModifier = nullptr;
 }
 
 SEPupillaryResponse::~SEPupillaryResponse()
