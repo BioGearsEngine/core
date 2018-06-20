@@ -211,7 +211,8 @@ void Energy::Exercise()
   double exerciseIntensity = 0.0;
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
-  double maxWorkRate_W = 1200.0;
+  //double maxWorkRate_W = 1200.0;
+  double maxWorkRate_W = m_Patient->GetmaxWorkRate().GetValue(PowerUnit::W);
   double kcal_Per_day_Per_Watt = 20.6362855;
 
   // Only try to get intensity if the exercise action is active
@@ -224,7 +225,7 @@ void Energy::Exercise()
   } else {
     return;
   }
-
+  
   // The MetabolicRateGain is used to ramp the metabolic rate to the value specified by the user's exercise intensity.
   double MetabolicRateGain = 1.0;
   double workRateDesired_W = exerciseIntensity * maxWorkRate_W;

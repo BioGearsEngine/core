@@ -104,7 +104,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="Height" type="ScalarLengthData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Patient height. -->         
           <xs:element name="BodyDensity" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief  The mass of the body divided by the volume of the body. -->
           <xs:element name="BodyFatFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief Total mass of fat divided by total body mass; body fat includes essential body fat and storage body fat. -->
-          <xs:element name="LeanBodyMass" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief Component of body composition after subtracting body fat weight. -->     
+          <xs:element name="LeanBodyMass" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief Component of body composition after subtracting body fat weight. -->
+          <xs:element name="maxWorkRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<< @brief The maximal work rate. -->
           <xs:element name="MuscleMass" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief The mass of muscle only. --> 
           <!-- Physical Characteristics that can change and should be change due to a condition -->
           <xs:element name="AlveoliSurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief The surface area of the alveoli for gas diffusion-->  

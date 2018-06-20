@@ -754,6 +754,40 @@ bool BioGears::SetupPatient()
     Warning(ss);
   }
 
+  //Maximum Work Rate ---------------------------------------------------------------
+  //The max work rate is determined from linear regressions of research by Plowman et al., with differences dependent on sex and age
+  /// \cite plowman2013exercise
+  double maxWorkRate_W;
+  double computmaxWorkRate_W;
+
+    if (m_Patient->GetSex() == CDM::enumSex::Male) {
+      if (age_yr >= 60.) {
+        computmaxWorkRate_W = ((-24.3 * 60.) + 2070.);
+      } else {
+        computmaxWorkRate_W = ((-24.3 * age_yr) + 2070.);
+      }
+    } 
+    else {
+      if (age_yr >= 60.) {
+        computmaxWorkRate_W = ((-20.7 * 60.) + 1673.);
+      } else {
+        computmaxWorkRate_W = ((-20.7 * age_yr) + 1673.);
+      }
+    }
+
+  if (!m_Patient->HasmaxWorkRate()) {
+      maxWorkRate_W = computmaxWorkRate_W;
+      m_Patient->GetmaxWorkRate().SetValue(maxWorkRate_W, PowerUnit::W);
+
+      ss << "No patient maximum work rate set. Using a computed value of " << computmaxWorkRate_W << " Watts.";
+      Info(ss);
+    }
+    maxWorkRate_W = m_Patient->GetmaxWorkRate(PowerUnit::W);
+    if (maxWorkRate_W != computmaxWorkRate_W) {
+      ss << "Specified maximum work rate of " << maxWorkRate_W << " Watts differs from computed value of " << computmaxWorkRate_W << " Watts. No guarantees of model validity.";
+      Warning(ss);
+    }
+
   if (err)
     return false;
   return true;
@@ -1031,7 +1065,7 @@ void BioGears::SetupCardiovascular()
   double ResistanceArmLeft = (systolicPressureTarget_mmHg - VascularPressureTargetArmLeft) / VascularFlowTargetArmLeft, ResistanceArmLeftVenous = (VascularPressureTargetArmLeft - VascularPressureTargetVenaCava) / VascularFlowTargetArmLeft;
   double ResistanceArmRight = ResistanceArmLeft, ResistanceArmRightVenous = ResistanceArmLeftVenous;
   double ResistanceBone = (systolicPressureTarget_mmHg - VascularPressureTargetBone) / VascularFlowTargetBone, ResistanceBoneVenous = (VascularPressureTargetBone - VascularPressureTargetVenaCava) / VascularFlowTargetBone;
-  double ResistanceBrain = (systolicPressureTarget_mmHg - VascularPressureTargetBrain) / VascularFlowTargetBrain, ResistanceBrainVenous = (VascularPressureTargetBrain - VascularPressureTargetVenaCava) / VascularFlowTargetBrain;
+  double ResistanceBrain = 0.94*((systolicPressureTarget_mmHg - VascularPressureTargetBrain) / VascularFlowTargetBrain), ResistanceBrainVenous = (VascularPressureTargetBrain - VascularPressureTargetVenaCava) / VascularFlowTargetBrain;
   double ResistanceFat = (systolicPressureTarget_mmHg - VascularPressureTargetFat) / VascularFlowTargetFat, ResistanceFatVenous = (VascularPressureTargetFat - VascularPressureTargetVenaCava) / VascularFlowTargetFat;
   double ResistanceHeartLeft = 0.000002; /*No Downstream Resistance HeartLeft*/
   double ResistanceHeartRight = (0.04225 * systolicPressureTarget_mmHg - VascularPressureTargetVenaCava) / cardiacOutputTarget_mL_Per_s; // Describes the flow resistance between the systemic vasculature and the right atrium    /*No Downstream Resistance Heart Right*/

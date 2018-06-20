@@ -71,6 +71,7 @@ SEPatient::SEPatient(Logger* logger)
   m_InspiratoryCapacity = nullptr;
   m_InspiratoryReserveVolume = nullptr;
   m_LeanBodyMass = nullptr;
+  m_maxWorkRate = nullptr;
   m_MuscleMass = nullptr;
   m_MeanArterialPressureBaseline = nullptr;
   m_ResidualVolume = nullptr;
@@ -129,6 +130,7 @@ void SEPatient::Clear()
   SAFE_DELETE(m_InspiratoryCapacity);
   SAFE_DELETE(m_InspiratoryReserveVolume);
   SAFE_DELETE(m_LeanBodyMass);
+  SAFE_DELETE(m_maxWorkRate);
   SAFE_DELETE(m_MuscleMass);
   SAFE_DELETE(m_MeanArterialPressureBaseline);
   SAFE_DELETE(m_ResidualVolume);
@@ -178,6 +180,8 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
     return &GetInspiratoryReserveVolume();
   if (name.compare("LeanBodyMass") == 0)
     return &GetLeanBodyMass();
+  if (name.compare("maxWorkRate") == 0)
+    return &GetmaxWorkRate();
   if (name.compare("MuscleMass") == 0)
     return &GetMuscleMass();
   if (name.compare("MeanArterialPressureBaseline") == 0)
@@ -244,6 +248,8 @@ bool SEPatient::Load(const CDM::PatientData& in)
     GetInspiratoryReserveVolume().Load(in.InspiratoryReserveVolume().get());
   if (in.LeanBodyMass().present())
     GetLeanBodyMass().Load(in.LeanBodyMass().get());
+  if (in.maxWorkRate().present())
+    GetmaxWorkRate().Load(in.maxWorkRate().get());
   if (in.MuscleMass().present())
     GetMuscleMass().Load(in.MuscleMass().get());
   if (in.MeanArterialPressureBaseline().present())
@@ -323,6 +329,8 @@ void SEPatient::Unload(CDM::PatientData& data) const
     data.InspiratoryReserveVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryReserveVolume->Unload()));
   if (m_LeanBodyMass != nullptr)
     data.LeanBodyMass(std::unique_ptr<CDM::ScalarMassData>(m_LeanBodyMass->Unload()));
+  if (m_maxWorkRate != nullptr)
+    data.maxWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_maxWorkRate->Unload()));
   if (m_MuscleMass != nullptr)
     data.MuscleMass(std::unique_ptr<CDM::ScalarMassData>(m_MuscleMass->Unload()));
   if (m_MeanArterialPressureBaseline != nullptr)
@@ -1005,6 +1013,23 @@ double SEPatient::GetLeanBodyMass(const MassUnit& unit) const
   if (m_LeanBodyMass == nullptr)
     return SEScalar::dNaN();
   return m_LeanBodyMass->GetValue(unit);
+}
+
+bool SEPatient::HasmaxWorkRate() const
+{
+  return m_maxWorkRate == nullptr ? false : m_maxWorkRate->IsValid();
+}
+SEScalarPower& SEPatient::GetmaxWorkRate()
+{
+  if (m_maxWorkRate == nullptr)
+    m_maxWorkRate = new SEScalarPower();
+  return *m_maxWorkRate;
+}
+double SEPatient::GetmaxWorkRate(const PowerUnit& unit) const
+{
+  if (m_maxWorkRate == nullptr)
+    return SEScalar::dNaN();
+  return m_maxWorkRate->GetValue(unit);
 }
 
 bool SEPatient::HasMuscleMass() const

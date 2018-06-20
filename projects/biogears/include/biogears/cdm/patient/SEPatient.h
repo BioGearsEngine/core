@@ -139,6 +139,10 @@ public:
   virtual SEScalarMass& GetLeanBodyMass();
   virtual double GetLeanBodyMass(const MassUnit& unit) const;
 
+  virtual bool HasmaxWorkRate() const;
+  virtual SEScalarPower& GetmaxWorkRate();
+  virtual double GetmaxWorkRate(const PowerUnit& unit) const;
+
   virtual bool HasMuscleMass() const;
   virtual SEScalarMass& GetMuscleMass();
   virtual double GetMuscleMass(const MassUnit& unit) const;
@@ -193,6 +197,7 @@ protected:
   SEScalarMassPerVolume* m_BodyDensity;
   SEScalarFraction* m_BodyFatFraction;
   SEScalarMass* m_LeanBodyMass;
+  SEScalarPower* m_maxWorkRate;
   SEScalarMass* m_MuscleMass;
 
   SEScalarArea* m_AlveoliSurfaceArea;
