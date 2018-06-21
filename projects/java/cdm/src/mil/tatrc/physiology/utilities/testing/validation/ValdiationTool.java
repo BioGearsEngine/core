@@ -19,6 +19,10 @@ import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.net.InetAddress;
 import java.util.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import mil.tatrc.physiology.datamodel.CDMSerializer;
 import mil.tatrc.physiology.datamodel.bind.PatientAssessmentData;
@@ -156,8 +160,15 @@ public abstract class ValdiationTool
       if(hostname.equals(config.get("buildhost")))
       {
         Log.info("Emailling all recipients " + subj);
-        for(String recipient : config.getProperty("recipients").split(","))
-          email.addRecipient(recipient.trim());
+       // for(String recipient : config.getProperty("recipients").split(","))
+       //   email.addRecipient(recipient.trim());
+	   	try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+			for (String str : stream.toArray(String[]::new) ) {	
+				email.addRecipient(str);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
       }
       else
       {// Running on your own machine, just send it to yourself
