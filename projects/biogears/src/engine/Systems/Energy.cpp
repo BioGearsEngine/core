@@ -115,8 +115,9 @@ void Energy::Initialize()
 
 bool Energy::Load(const CDM::BioGearsEnergySystemData& in)
 {
-  if (!SEEnergySystem::Load(in))
+  if (!SEEnergySystem::Load(in)) {
     return false;
+  }
 
   m_BloodpH.Load(in.BloodpH());
   m_BicarbonateMolarity_mmol_Per_L.Load(in.BicarbonateMolarity_mmol_Per_L());
@@ -220,8 +221,9 @@ void Energy::Exercise()
     } else {
       Warning("Exercise call with no severity. Action ignored.");
     }
-  } else
+  } else {
     return;
+  }
 
   // The MetabolicRateGain is used to ramp the metabolic rate to the value specified by the user's exercise intensity.
   double MetabolicRateGain = 1.0;
@@ -318,22 +320,24 @@ void Energy::CalculateVitalSigns()
     double bloodBicarbonate_mmol_Per_L = m_BicarbonateMolarity_mmol_Per_L.Value();
 
     if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
-      if (bloodPH < 7.35 && bloodBicarbonate_mmol_Per_L < 22.0)
+      if (bloodPH < 7.35 && bloodBicarbonate_mmol_Per_L < 22.0) {
         /// \event The patient is in a state of metabolic acidosis
-        m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAcidosis, true, m_data.GetSimulationTime());
+      }
 
       /// \irreversible State: arterial blood pH has dropped below 6.5.
       if (bloodPH < lowPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
         m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
-      } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0)
+      } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0) {
         /// \event The patient has exited the state state of metabolic acidosis
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAcidosis, false, m_data.GetSimulationTime());
+      }
 
-      if (bloodPH > 7.45 && bloodBicarbonate_mmol_Per_L > 26.0)
+      if (bloodPH > 7.45 && bloodBicarbonate_mmol_Per_L > 26.0) {
         /// \event The patient is in a state of metabolic alkalosis
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, true, m_data.GetSimulationTime());
+      }
 
       /// \irreversible State: arterial blood pH has increased above 8.5.
       if (bloodPH > highPh) {
@@ -342,9 +346,10 @@ void Energy::CalculateVitalSigns()
         m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
 
-      else if (bloodPH < 7.42 && bloodBicarbonate_mmol_Per_L < 25.0)
+      else if (bloodPH < 7.42 && bloodBicarbonate_mmol_Per_L < 25.0) {
         /// \event The patient has exited the state of metabolic alkalosis
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, false, m_data.GetSimulationTime());
+      }
     }
     // Reset the running averages. Why do we need running averages here? Does the aorta pH fluctuate that much?
     m_BloodpH.Reset();
@@ -514,10 +519,11 @@ void Energy::CalculateBasalMetabolicRate()
   //The basal metabolic rate is determined from the Harris-Benedict formula, with differences dependent on sex, age, height and mass
   /// \cite roza1984metabolic
   double patientBMR_kcal_Per_day = 0.0;
-  if (patient.GetSex() == CDM::enumSex::Male)
+  if (patient.GetSex() == CDM::enumSex::Male) {
     patientBMR_kcal_Per_day = 88.632 + 13.397 * PatientMass_kg + 4.799 * PatientHeight_cm - 5.677 * PatientAge_yr;
-  else
+  } else {
     patientBMR_kcal_Per_day = 447.593 + 9.247 * PatientMass_kg + 3.098 * PatientHeight_cm - 4.330 * PatientAge_yr;
+  }
   // Systems do their math with MetabolicRate in Watts, so let's make these consistent
   patient.GetBasalMetabolicRate().SetValue(patientBMR_kcal_Per_day, PowerUnit::kcal_Per_day);
 
