@@ -524,7 +524,7 @@ public class TestDriver
     if( Files.exists(possiblePath) ) {
             job.baselineFiles.add(possiblePath.toString() );
     }
-    //example : verification\Scenarios\Validation\baselines\Patient-ValidationResults.zip
+    //example : Scenarios\Validation\baselines\Patient-ValidationResults.zip
     String output = job.computedDirectory;
     for(int i=0; i<dirs.length; i++)
       output+="/"+dirs[i];

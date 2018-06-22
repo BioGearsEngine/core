@@ -104,9 +104,9 @@ public class HowTo_RunScenario
     Resources resources = new Resources();
     String xml = "";
     try {
-      FileUtils.readFile( resources.findResource("verification/Scenarios/Basic/Basic1.xml") );
+      FileUtils.readFile( resources.findResource("Scenarios/Basic/Basic1.xml") );
     } catch ( FileNotFoundException e ) {
-      Log.error("Unable to find verification/Scenarios/Basic/Basic1.xml"); 
+      Log.error("Unable to find Scenarios/Basic/Basic1.xml"); 
       return;
     }
 

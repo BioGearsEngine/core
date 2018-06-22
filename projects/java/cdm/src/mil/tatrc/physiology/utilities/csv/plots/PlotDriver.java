@@ -118,7 +118,7 @@ public class PlotDriver
 		public String					X1Label = null;
 		public String					Y1Label = null;
 		public String					experimentalData = null;
-		public String					outputDir = "verification/Plots/";
+		public String					outputDir = "Plots/";
 		public Integer				imageWidth = null;
 		public Integer				imageHeight = null;
 		public Integer				fontSize = 22;

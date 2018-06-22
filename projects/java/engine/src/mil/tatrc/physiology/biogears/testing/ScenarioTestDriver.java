@@ -34,9 +34,9 @@ public class ScenarioTestDriver implements TestDriver.Executor
 		String results;
 		String xml = "";
 		try {
-			xml = FileUtils.readFile(m_resources.findResource("verification/Scenarios/"+job.name));
+			xml = FileUtils.readFile(m_resources.findResource("Scenarios/"+job.name));
 		} catch (FileNotFoundException e) {
-			Log.error("Could not find : verification/Scenarios/"+job.name);
+			Log.error("Could not find : Scenarios/"+job.name);
 			return false;
 		}
 		
