@@ -6,16 +6,13 @@
 @date:   2018-06-19
 @brief:  Archives scenario runs to create new rebases
 """
-import matplotlib.pyplot as plt
 import sys
 import os
 import re
-import pandas as pd
-import shutil
 import zipfile
 import zlib
 import argparse
-
+import subprocess
 """
 Arguments:
   --root    -- <Path to the root of a biogears run>
@@ -31,8 +28,10 @@ LOG_LEVEL_2 = 2
 LOG_LEVEL_3 = 3
 LOG_LEVEL_4 = 4
 
-_output_directory = None
-_root_directory   = None
+_output_directory  = None
+_root_directory    = None
+_runtime_directory = None
+_scenario_driver    = None
 _clean_directory  = False
 archive_extension    = ".zip"
 _baseline_dir     = "baselines"
@@ -41,6 +40,7 @@ def main( args):
     global _root_directory
     global _output_directory
     global _clean_directory
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', help="Adjust the log verbosity.", dest='verbosity', default=0, action='count' )
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
@@ -56,12 +56,15 @@ def main( args):
     common_flags = argparse.ArgumentParser(add_help=False)
     common_flags.add_argument('-r', '--recursive', dest='recurse', action='store_true' ,help='Activates recursive mode')
     common_flags.add_argument('-c', '--cleanup', dest='clean',  action='store_true' ,help='Activates recursive mode')
-    common_flags.add_argument('path', type=str, help='Source to be archived')
-
+    
     archive = subparsers.add_parser('archive',  parents=[common_flags], help='Archives existing runs to a base_line directory.')
+    archive.add_argument('path', type=str, help='Source to be archived')    
     archive.set_defaults(func=archive_command)
     
     rebase = subparsers.add_parser('rebase', parents=[common_flags], help='runs scenarios and archives the results')
+    rebase.add_argument('--workdir', type=str, help="directory which the given driver will be run. Assumed to be Root unless given")
+    rebase.add_argument('driver', type=str, help="Path to an executable biogears scenario driver")
+    rebase.add_argument('path', type=str, help='Scenario file to run')
     rebase.set_defaults(func=rebase_command)
     args = parser.parse_args()
 
@@ -101,11 +104,16 @@ def archive (root, path, recurse, clean):
         err("{0} is not a valid results file".format(absolute_path),LOG_LEVEL_0)
 
 def rebase_command(args):
-    log( "cleanup: {1}\nrecursive: {2}\npath= {1}\n".format(args.clean, args.path, args.recurse), LOG_LEVEL_2 )
-    rebase(args.root, args.path, args.recurse)
+    global _runtime_directory
+    global _scenario_driver
+    _runtime_directory = args.workdir if args.workdir else _root_directory
+    _scenario_driver = args.driver if args.driver else scenario-driver
+    if(args.clean):
+        cleanup(_output_directory)
+    rebase(args.root, args.path, args.recurse, False)
 
 def rebase (root, path, recurse, clean):
-    log( "archive(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_2 )
+    log( "rebase(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_2 )
     valid_regex = '[.](xml)'
     absolute_path = os.path.join(root ,path)
     basename,extension     = os.path.splitext(absolute_path)
@@ -113,9 +121,9 @@ def rebase (root, path, recurse, clean):
     if( os.path.isfile(absolute_path) ):
         if ( re.match( valid_regex, extension) ):
             #Execute Rebase Utility
-
+            p = subprocess.Popen([_scenario_driver,absolute_path], stderr=subprocess.STDOUT, cwd=_runtime_directory)
             destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
-            compress_and_store(absolute_path, destination)
+            compress_and_store(basename+"Results.csv", destination)
     elif(os.path.isdir(absolute_path)):
         if(recurse):
             for file in os.listdir(absolute_path):
