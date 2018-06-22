@@ -783,7 +783,7 @@ public class TestDriver
   static void DeleteTestResults(String hint, boolean executeJobs, boolean plotResults)
   {// Try and delete all files related to this test
     // There are lots of various naming conventions, and this should support all of them
-
+    System.out.println( " Deleting " + hint );
     // Get rid of any extensions
     hint = hint.replaceAll(".xml", "");
     hint = hint.replaceAll(".txt", "");
@@ -793,7 +793,7 @@ public class TestDriver
       FileUtils.delete(hint+".log");
       FileUtils.delete(hint+"Test.log");
       FileUtils.delete(hint+".txt");
-      FileUtils.delete(hint+".xml");
+      //FileUtils.delete(hint+".xml");
       FileUtils.delete(hint+"Test.xml");
       FileUtils.delete(hint+"Report.xml");
       FileUtils.delete(hint+"Results.txt");
