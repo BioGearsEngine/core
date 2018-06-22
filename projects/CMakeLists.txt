@@ -101,18 +101,54 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/share/doc/html DESTINATION share/doc/kalei
 endif()
 
 add_custom_command(
-    OUTPUT  ${PROJECT_BINARY_DIR}/runtime
+    OUTPUT  ${PROJECT_BINARY_DIR}/runtime 
     COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/verification ${PROJECT_BINARY_DIR}/runtime/verification
+)
+
+add_custom_command(
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/xsd
+	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/xsd  ${PROJECT_BINARY_DIR}/runtime/xsd
+)
+add_custom_command(
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/jar
+	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/jar  ${PROJECT_BINARY_DIR}/runtime/jar
+)
+add_custom_command(
+	OUTPUT 
+	${PROJECT_BINARY_DIR}/runtime/BGEUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugPlots.config            ${PROJECT_BINARY_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_BINARY_DIR}/runtime/ValidationPatients.config  ${PROJECT_BINARY_DIR}/runtime/VerificationScenarios.config
+	${PROJECT_BINARY_DIR}/runtime/CDMUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugRun.config              ${PROJECT_BINARY_DIR}/runtime/PlotRun.config                    ${PROJECT_BINARY_DIR}/runtime/ValidationSystems.config
+	${PROJECT_BINARY_DIR}/runtime/Characterize.config  ${PROJECT_BINARY_DIR}/runtime/InitialPatientStates.config  ${PROJECT_BINARY_DIR}/runtime/ValidationDrugs.config            ${PROJECT_BINARY_DIR}/runtime/ValidationTables.config
+	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/etc  ${PROJECT_BINARY_DIR}/runtime
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/doc  ${PROJECT_BINARY_DIR}/runtime/doc
-    COMMENT "Generating runtime folder"
+)
+add_custom_command(
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
+	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/etc  ${PROJECT_BINARY_DIR}/runtime
+)
+add_custom_command(
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/doc
+	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/doc  ${PROJECT_BINARY_DIR}/runtime/doc
+)
+add_custom_command(
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/Scenarios
+	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/Scenarios ${PROJECT_BINARY_DIR}/runtime/Scenarios
 )
 
 add_custom_target( stage_runtime ALL
-    DEPENDS "${PROJECT_BINARY_DIR}/runtime"
+    DEPENDS 
+	${PROJECT_BINARY_DIR}/runtime
+	${PROJECT_BINARY_DIR}/runtime/Scenarios
+	${PROJECT_BINARY_DIR}/runtime/xsd 
+	${PROJECT_BINARY_DIR}/runtime/jar
+	${PROJECT_BINARY_DIR}/runtime/doc
+	${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
+	${PROJECT_BINARY_DIR}/runtime/BGEUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugPlots.config            ${PROJECT_BINARY_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_BINARY_DIR}/runtime/ValidationPatients.config  ${PROJECT_BINARY_DIR}/runtime/VerificationScenarios.config
+	${PROJECT_BINARY_DIR}/runtime/CDMUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugRun.config              ${PROJECT_BINARY_DIR}/runtime/PlotRun.config                    ${PROJECT_BINARY_DIR}/runtime/ValidationSystems.config
+	${PROJECT_BINARY_DIR}/runtime/Characterize.config  ${PROJECT_BINARY_DIR}/runtime/InitialPatientStates.config  ${PROJECT_BINARY_DIR}/runtime/ValidationDrugs.config            ${PROJECT_BINARY_DIR}/runtime/ValidationTables.config
     COMMENT "Scanning for need to stage runtime dir"
 )
