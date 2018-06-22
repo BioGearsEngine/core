@@ -211,65 +211,93 @@ bool SEPatient::Load(const CDM::PatientData& in)
   Clear();
 
   m_Name = in.Name();
-  if (in.Sex().present())
+  if (in.Sex().present()) {
     m_Sex = in.Sex().get();
-  if (in.Age().present())
+  }
+  if (in.Age().present()) {
     GetAge().Load(in.Age().get());
-  if (in.Weight().present())
+  }
+  if (in.Weight().present()) {
     GetWeight().Load(in.Weight().get());
-  if (in.Height().present())
+  }
+  if (in.Height().present()) {
     GetHeight().Load(in.Height().get());
-
-  if (in.AlveoliSurfaceArea().present())
+  }
+  if (in.AlveoliSurfaceArea().present()) {
     GetAlveoliSurfaceArea().Load(in.AlveoliSurfaceArea().get());
-  if (in.BasalMetabolicRate().present())
+  }
+  if (in.BasalMetabolicRate().present()) {
     GetBasalMetabolicRate().Load(in.BasalMetabolicRate().get());
-  if (in.BloodVolumeBaseline().present())
+  }
+  if (in.BloodVolumeBaseline().present()) {
     GetBloodVolumeBaseline().Load(in.BloodVolumeBaseline().get());
-  if (in.BodyDensity().present())
+  }
+  if (in.BodyDensity().present()) {
     GetBodyDensity().Load(in.BodyDensity().get());
-  if (in.BodyFatFraction().present())
+  }
+  if (in.BodyFatFraction().present()) {
     GetBodyFatFraction().Load(in.BodyFatFraction().get());
-  if (in.DiastolicArterialPressureBaseline().present())
+  }
+  if (in.DiastolicArterialPressureBaseline().present()) {
     GetDiastolicArterialPressureBaseline().Load(in.DiastolicArterialPressureBaseline().get());
-  if (in.ExpiratoryReserveVolume().present())
+  }
+  if (in.ExpiratoryReserveVolume().present()) {
     GetExpiratoryReserveVolume().Load(in.ExpiratoryReserveVolume().get());
-  if (in.FunctionalResidualCapacity().present())
+  }
+  if (in.FunctionalResidualCapacity().present()) {
     GetFunctionalResidualCapacity().Load(in.FunctionalResidualCapacity().get());
-  if (in.HeartRateBaseline().present())
+  }
+  if (in.HeartRateBaseline().present()) {
     GetHeartRateBaseline().Load(in.HeartRateBaseline().get());
-  if (in.HeartRateMaximum().present())
+  }
+  if (in.HeartRateMaximum().present()) {
     GetHeartRateMaximum().Load(in.HeartRateMaximum().get());
-  if (in.HeartRateMinimum().present())
+  }
+  if (in.HeartRateMinimum().present()) {
     GetHeartRateMinimum().Load(in.HeartRateMinimum().get());
-  if (in.InspiratoryCapacity().present())
+  }
+  if (in.InspiratoryCapacity().present()) {
     GetInspiratoryCapacity().Load(in.InspiratoryCapacity().get());
-  if (in.InspiratoryReserveVolume().present())
+  }
+  if (in.InspiratoryReserveVolume().present()) {
     GetInspiratoryReserveVolume().Load(in.InspiratoryReserveVolume().get());
-  if (in.LeanBodyMass().present())
+  }
+  if (in.LeanBodyMass().present()) {
     GetLeanBodyMass().Load(in.LeanBodyMass().get());
-  if (in.maxWorkRate().present())
+  }
+  if (in.maxWorkRate().present()) {
     GetmaxWorkRate().Load(in.maxWorkRate().get());
-  if (in.MuscleMass().present())
+  }
+  if (in.MuscleMass().present()) {
     GetMuscleMass().Load(in.MuscleMass().get());
-  if (in.MeanArterialPressureBaseline().present())
+  }
+  if (in.MeanArterialPressureBaseline().present()) {
     GetMeanArterialPressureBaseline().Load(in.MeanArterialPressureBaseline().get());
-  if (in.ResidualVolume().present())
+  }
+  if (in.ResidualVolume().present()) {
     GetResidualVolume().Load(in.ResidualVolume().get());
-  if (in.RespirationRateBaseline().present())
+  }
+  if (in.RespirationRateBaseline().present()) {
     GetRespirationRateBaseline().Load(in.RespirationRateBaseline().get());
-  if (in.RightLungRatio().present())
+  }
+  if (in.RightLungRatio().present()) {
     GetRightLungRatio().Load(in.RightLungRatio().get());
-  if (in.SkinSurfaceArea().present())
+  }
+  if (in.SkinSurfaceArea().present()) {
     GetSkinSurfaceArea().Load(in.SkinSurfaceArea().get());
-  if (in.SystolicArterialPressureBaseline().present())
+  }
+  if (in.SystolicArterialPressureBaseline().present()) {
     GetSystolicArterialPressureBaseline().Load(in.SystolicArterialPressureBaseline().get());
-  if (in.TidalVolumeBaseline().present())
+  }
+  if (in.TidalVolumeBaseline().present()) {
     GetTidalVolumeBaseline().Load(in.TidalVolumeBaseline().get());
-  if (in.TotalLungCapacity().present())
+  }
+  if (in.TotalLungCapacity().present()) {
     GetTotalLungCapacity().Load(in.TotalLungCapacity().get());
-  if (in.VitalCapacity().present())
+  }
+  if (in.VitalCapacity().present()) {
     GetVitalCapacity().Load(in.VitalCapacity().get());
+  }
 
   SEScalarTime time;
   for (auto e : in.ActiveEvent()) {
@@ -290,79 +318,110 @@ CDM::PatientData* SEPatient::Unload() const
 
 void SEPatient::Unload(CDM::PatientData& data) const
 {
-  if (HasName())
+  if (HasName()) {
     data.Name(m_Name);
-  if (HasSex())
+  }
+  if (HasSex()) {
     data.Sex(m_Sex);
-  if (m_Age != nullptr)
+  }
+  if (m_Age != nullptr) {
     data.Age(std::unique_ptr<CDM::ScalarTimeData>(m_Age->Unload()));
-  if (m_Weight != nullptr)
+  }
+  if (m_Weight != nullptr) {
     data.Weight(std::unique_ptr<CDM::ScalarMassData>(m_Weight->Unload()));
-  if (m_Height != nullptr)
+  }
+  if (m_Height != nullptr) {
     data.Height(std::unique_ptr<CDM::ScalarLengthData>(m_Height->Unload()));
-
-  if (m_AlveoliSurfaceArea != nullptr)
+  }
+  if (m_AlveoliSurfaceArea != nullptr) {
     data.AlveoliSurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_AlveoliSurfaceArea->Unload()));
-  if (m_BasalMetabolicRate != nullptr)
+  }
+  if (m_BasalMetabolicRate != nullptr) {
     data.BasalMetabolicRate(std::unique_ptr<CDM::ScalarPowerData>(m_BasalMetabolicRate->Unload()));
-  if (m_BloodVolumeBaseline != nullptr)
+  }
+  if (m_BloodVolumeBaseline != nullptr) {
     data.BloodVolumeBaseline(std::unique_ptr<CDM::ScalarVolumeData>(m_BloodVolumeBaseline->Unload()));
-  if (m_BodyDensity != nullptr)
+  }
+  if (m_BodyDensity != nullptr) {
     data.BodyDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BodyDensity->Unload()));
-  if (m_BodyFatFraction != nullptr)
+  }
+  if (m_BodyFatFraction != nullptr) {
     data.BodyFatFraction(std::unique_ptr<CDM::ScalarFractionData>(m_BodyFatFraction->Unload()));
-  if (m_DiastolicArterialPressureBaseline != nullptr)
+  }
+  if (m_DiastolicArterialPressureBaseline != nullptr) {
     data.DiastolicArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_DiastolicArterialPressureBaseline->Unload()));
-  if (m_ExpiratoryReserveVolume != nullptr)
+  }
+  if (m_ExpiratoryReserveVolume != nullptr) {
     data.ExpiratoryReserveVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ExpiratoryReserveVolume->Unload()));
-  if (m_FunctionalResidualCapacity != nullptr)
+  }
+  if (m_FunctionalResidualCapacity != nullptr) {
     data.FunctionalResidualCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_FunctionalResidualCapacity->Unload()));
-  if (m_HeartRateBaseline != nullptr)
+  }
+  if (m_HeartRateBaseline != nullptr) {
     data.HeartRateBaseline(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateBaseline->Unload()));
-  if (m_HeartRateMaximum != nullptr)
+  }
+  if (m_HeartRateMaximum != nullptr) {
     data.HeartRateMaximum(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateMaximum->Unload()));
-  if (m_HeartRateMinimum != nullptr)
+  }
+  if (m_HeartRateMinimum != nullptr) {
     data.HeartRateMinimum(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateMinimum->Unload()));
-  if (m_InspiratoryCapacity != nullptr)
+  }
+  if (m_InspiratoryCapacity != nullptr) {
     data.InspiratoryCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryCapacity->Unload()));
-  if (m_InspiratoryReserveVolume != nullptr)
+  }
+  if (m_InspiratoryReserveVolume != nullptr) {
     data.InspiratoryReserveVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryReserveVolume->Unload()));
-  if (m_LeanBodyMass != nullptr)
+  }
+  if (m_LeanBodyMass != nullptr) {
     data.LeanBodyMass(std::unique_ptr<CDM::ScalarMassData>(m_LeanBodyMass->Unload()));
-  if (m_maxWorkRate != nullptr)
+  }
+  if (m_maxWorkRate != nullptr) {
     data.maxWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_maxWorkRate->Unload()));
-  if (m_MuscleMass != nullptr)
+  }
+  if (m_MuscleMass != nullptr) {
     data.MuscleMass(std::unique_ptr<CDM::ScalarMassData>(m_MuscleMass->Unload()));
-  if (m_MeanArterialPressureBaseline != nullptr)
+  }
+  if (m_MeanArterialPressureBaseline != nullptr) {
     data.MeanArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureBaseline->Unload()));
-  if (m_ResidualVolume != nullptr)
+  }
+  if (m_ResidualVolume != nullptr) {
     data.ResidualVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ResidualVolume->Unload()));
-  if (m_RespirationRateBaseline != nullptr)
+  }
+  if (m_RespirationRateBaseline != nullptr) {
     data.RespirationRateBaseline(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateBaseline->Unload()));
-  if (m_RightLungRatio != nullptr)
+  }
+  if (m_RightLungRatio != nullptr) {
     data.RightLungRatio(std::unique_ptr<CDM::ScalarFractionData>(m_RightLungRatio->Unload()));
-  if (m_SkinSurfaceArea != nullptr)
+  }
+  if (m_SkinSurfaceArea != nullptr) {
     data.SkinSurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SkinSurfaceArea->Unload()));
-  if (m_SystolicArterialPressureBaseline != nullptr)
+  }
+  if (m_SystolicArterialPressureBaseline != nullptr) {
     data.SystolicArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArterialPressureBaseline->Unload()));
-  if (m_TidalVolumeBaseline != nullptr)
+  }
+  if (m_TidalVolumeBaseline != nullptr) {
     data.TidalVolumeBaseline(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeBaseline->Unload()));
-  if (m_TotalLungCapacity != nullptr)
+  }
+  if (m_TotalLungCapacity != nullptr) {
     data.TotalLungCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalLungCapacity->Unload()));
-  if (m_VitalCapacity != nullptr)
+  }
+  if (m_VitalCapacity != nullptr) {
     data.VitalCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_VitalCapacity->Unload()));
+  }
 
   SEScalarTime time;
   for (auto itr : m_EventState) {
-    if (!itr.second)
+    if (!itr.second) {
       continue;
+      }
 
     auto it2 = m_EventDuration_s.find(itr.first);
     if (it2 == m_EventDuration_s.end()) // This should not happen...
+    {
       time.SetValue(0, TimeUnit::s);
-    else
+    } else {
       time.SetValue(it2->second, TimeUnit::s);
-
+    }
     CDM::ActivePatientEventData* eData = new CDM::ActivePatientEventData();
     eData->Event(itr.first);
     eData->Duration(std::unique_ptr<CDM::ScalarTimeData>(time.Unload()));
@@ -373,10 +432,12 @@ void SEPatient::Unload(CDM::PatientData& data) const
 void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
 {
   bool b = false; // Default is off
-  if (m_EventState.find(type) != m_EventState.end())
+  if (m_EventState.find(type) != m_EventState.end()) {
     b = m_EventState[type];
-  if (b == active)
+  }
+  if (b == active) {
     return; //No Change
+  }
   if (active != b) {
     m_ss.str("");
     m_ss << "[Event] " << time << ", ";
@@ -661,23 +722,26 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
   }
   m_EventState[type] = active;
   m_EventDuration_s[type] = 0;
-  if (m_EventHandler != nullptr)
-    m_EventHandler->HandlePatientEvent(type, active, &time);
+  if (m_EventHandler != nullptr) {
+      m_EventHandler->HandlePatientEvent(type, active, &time);
+      }
 }
 
 bool SEPatient::IsEventActive(CDM::enumPatientEvent::value type) const
 {
   auto i = m_EventState.find(type);
-  if (i == m_EventState.end())
-    return false;
+  if (i == m_EventState.end()) {
+      return false;
+      }
   return i->second;
 }
 
 double SEPatient::GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const
 {
   auto i = m_EventDuration_s.find(type);
-  if (i == m_EventDuration_s.end())
-    return 0;
+  if (i == m_EventDuration_s.end()) {
+      return 0;
+  }
   return Convert(i->second, TimeUnit::s, unit);
 }
 
@@ -732,14 +796,16 @@ bool SEPatient::HasAge() const
 }
 SEScalarTime& SEPatient::GetAge()
 {
-  if (m_Age == nullptr)
-    m_Age = new SEScalarTime();
+  if (m_Age == nullptr) {
+      m_Age = new SEScalarTime();
+      }
   return *m_Age;
 }
 double SEPatient::GetAge(const TimeUnit& unit) const
 {
-  if (m_Age == nullptr)
-    return SEScalar::dNaN();
+  if (m_Age == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_Age->GetValue(unit);
 }
 
@@ -749,14 +815,16 @@ bool SEPatient::HasWeight() const
 }
 SEScalarMass& SEPatient::GetWeight()
 {
-  if (m_Weight == nullptr)
-    m_Weight = new SEScalarMass();
+  if (m_Weight == nullptr) {
+      m_Weight = new SEScalarMass();
+      }
   return *m_Weight;
 }
 double SEPatient::GetWeight(const MassUnit& unit) const
 {
-  if (m_Weight == nullptr)
-    return SEScalar::dNaN();
+  if (m_Weight == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_Weight->GetValue(unit);
 }
 
@@ -766,14 +834,16 @@ bool SEPatient::HasHeight() const
 }
 SEScalarLength& SEPatient::GetHeight()
 {
-  if (m_Height == nullptr)
-    m_Height = new SEScalarLength();
+  if (m_Height == nullptr) {
+      m_Height = new SEScalarLength();
+      }
   return *m_Height;
 }
 double SEPatient::GetHeight(const LengthUnit& unit) const
 {
-  if (m_Height == nullptr)
-    return SEScalar::dNaN();
+  if (m_Height == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_Height->GetValue(unit);
 }
 
@@ -783,14 +853,16 @@ bool SEPatient::HasAlveoliSurfaceArea() const
 }
 SEScalarArea& SEPatient::GetAlveoliSurfaceArea()
 {
-  if (m_AlveoliSurfaceArea == nullptr)
-    m_AlveoliSurfaceArea = new SEScalarArea();
+  if (m_AlveoliSurfaceArea == nullptr) {
+      m_AlveoliSurfaceArea = new SEScalarArea();
+      }
   return *m_AlveoliSurfaceArea;
 }
 double SEPatient::GetAlveoliSurfaceArea(const AreaUnit& unit) const
 {
-  if (m_AlveoliSurfaceArea == nullptr)
-    return SEScalar::dNaN();
+  if (m_AlveoliSurfaceArea == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_AlveoliSurfaceArea->GetValue(unit);
 }
 
@@ -800,14 +872,16 @@ bool SEPatient::HasBasalMetabolicRate() const
 }
 SEScalarPower& SEPatient::GetBasalMetabolicRate()
 {
-  if (m_BasalMetabolicRate == nullptr)
-    m_BasalMetabolicRate = new SEScalarPower();
+  if (m_BasalMetabolicRate == nullptr) {
+      m_BasalMetabolicRate = new SEScalarPower();
+      }
   return *m_BasalMetabolicRate;
 }
 double SEPatient::GetBasalMetabolicRate(const PowerUnit& unit) const
 {
-  if (m_BasalMetabolicRate == nullptr)
-    return SEScalar::dNaN();
+  if (m_BasalMetabolicRate == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_BasalMetabolicRate->GetValue(unit);
 }
 
@@ -817,14 +891,16 @@ bool SEPatient::HasBloodVolumeBaseline() const
 }
 SEScalarVolume& SEPatient::GetBloodVolumeBaseline()
 {
-  if (m_BloodVolumeBaseline == nullptr)
-    m_BloodVolumeBaseline = new SEScalarVolume();
+  if (m_BloodVolumeBaseline == nullptr) {
+      m_BloodVolumeBaseline = new SEScalarVolume();
+      }
   return *m_BloodVolumeBaseline;
 }
 double SEPatient::GetBloodVolumeBaseline(const VolumeUnit& unit) const
 {
-  if (m_BloodVolumeBaseline == nullptr)
-    return SEScalar::dNaN();
+  if (m_BloodVolumeBaseline == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_BloodVolumeBaseline->GetValue(unit);
 }
 
@@ -834,14 +910,16 @@ bool SEPatient::HasBodyDensity() const
 }
 SEScalarMassPerVolume& SEPatient::GetBodyDensity()
 {
-  if (m_BodyDensity == nullptr)
-    m_BodyDensity = new SEScalarMassPerVolume();
+  if (m_BodyDensity == nullptr) {
+      m_BodyDensity = new SEScalarMassPerVolume();
+      }
   return *m_BodyDensity;
 }
 double SEPatient::GetBodyDensity(const MassPerVolumeUnit& unit) const
 {
-  if (m_BodyDensity == nullptr)
-    return SEScalar::dNaN();
+  if (m_BodyDensity == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_BodyDensity->GetValue(unit);
 }
 
@@ -851,14 +929,16 @@ bool SEPatient::HasBodyFatFraction() const
 }
 SEScalarFraction& SEPatient::GetBodyFatFraction()
 {
-  if (m_BodyFatFraction == nullptr)
-    m_BodyFatFraction = new SEScalarFraction();
+  if (m_BodyFatFraction == nullptr) {
+      m_BodyFatFraction = new SEScalarFraction();
+      }
   return *m_BodyFatFraction;
 }
 double SEPatient::GetBodyFatFraction() const
 {
-  if (m_BodyFatFraction == nullptr)
-    return SEScalar::dNaN();
+  if (m_BodyFatFraction == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_BodyFatFraction->GetValue();
 }
 
@@ -868,14 +948,16 @@ bool SEPatient::HasDiastolicArterialPressureBaseline() const
 }
 SEScalarPressure& SEPatient::GetDiastolicArterialPressureBaseline()
 {
-  if (m_DiastolicArterialPressureBaseline == nullptr)
-    m_DiastolicArterialPressureBaseline = new SEScalarPressure();
+  if (m_DiastolicArterialPressureBaseline == nullptr) {
+      m_DiastolicArterialPressureBaseline = new SEScalarPressure();
+      }
   return *m_DiastolicArterialPressureBaseline;
 }
 double SEPatient::GetDiastolicArterialPressureBaseline(const PressureUnit& unit) const
 {
-  if (m_DiastolicArterialPressureBaseline == nullptr)
-    return SEScalar::dNaN();
+  if (m_DiastolicArterialPressureBaseline == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_DiastolicArterialPressureBaseline->GetValue(unit);
 }
 
@@ -885,14 +967,16 @@ bool SEPatient::HasExpiratoryReserveVolume() const
 }
 SEScalarVolume& SEPatient::GetExpiratoryReserveVolume()
 {
-  if (m_ExpiratoryReserveVolume == nullptr)
-    m_ExpiratoryReserveVolume = new SEScalarVolume();
+  if (m_ExpiratoryReserveVolume == nullptr) {
+      m_ExpiratoryReserveVolume = new SEScalarVolume();
+      }
   return *m_ExpiratoryReserveVolume;
 }
 double SEPatient::GetExpiratoryReserveVolume(const VolumeUnit& unit) const
 {
-  if (m_ExpiratoryReserveVolume == nullptr)
-    return SEScalar::dNaN();
+  if (m_ExpiratoryReserveVolume == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_ExpiratoryReserveVolume->GetValue(unit);
 }
 
@@ -902,14 +986,16 @@ bool SEPatient::HasFunctionalResidualCapacity() const
 }
 SEScalarVolume& SEPatient::GetFunctionalResidualCapacity()
 {
-  if (m_FunctionalResidualCapacity == nullptr)
-    m_FunctionalResidualCapacity = new SEScalarVolume();
+  if (m_FunctionalResidualCapacity == nullptr) {
+      m_FunctionalResidualCapacity = new SEScalarVolume();
+      }
   return *m_FunctionalResidualCapacity;
 }
 double SEPatient::GetFunctionalResidualCapacity(const VolumeUnit& unit) const
 {
-  if (m_FunctionalResidualCapacity == nullptr)
-    return SEScalar::dNaN();
+  if (m_FunctionalResidualCapacity == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_FunctionalResidualCapacity->GetValue(unit);
 }
 
@@ -919,14 +1005,16 @@ bool SEPatient::HasHeartRateBaseline() const
 }
 SEScalarFrequency& SEPatient::GetHeartRateBaseline()
 {
-  if (m_HeartRateBaseline == nullptr)
-    m_HeartRateBaseline = new SEScalarFrequency();
+  if (m_HeartRateBaseline == nullptr) {
+      m_HeartRateBaseline = new SEScalarFrequency();
+      }
   return *m_HeartRateBaseline;
 }
 double SEPatient::GetHeartRateBaseline(const FrequencyUnit& unit) const
 {
-  if (m_HeartRateBaseline == nullptr)
-    return SEScalar::dNaN();
+  if (m_HeartRateBaseline == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_HeartRateBaseline->GetValue(unit);
 }
 
@@ -936,14 +1024,16 @@ bool SEPatient::HasHeartRateMaximum() const
 }
 SEScalarFrequency& SEPatient::GetHeartRateMaximum()
 {
-  if (m_HeartRateMaximum == nullptr)
-    m_HeartRateMaximum = new SEScalarFrequency();
+  if (m_HeartRateMaximum == nullptr) {
+      m_HeartRateMaximum = new SEScalarFrequency();
+      }
   return *m_HeartRateMaximum;
 }
 double SEPatient::GetHeartRateMaximum(const FrequencyUnit& unit) const
 {
-  if (m_HeartRateMaximum == nullptr)
-    return SEScalar::dNaN();
+  if (m_HeartRateMaximum == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_HeartRateMaximum->GetValue(unit);
 }
 
@@ -953,14 +1043,16 @@ bool SEPatient::HasHeartRateMinimum() const
 }
 SEScalarFrequency& SEPatient::GetHeartRateMinimum()
 {
-  if (m_HeartRateMinimum == nullptr)
-    m_HeartRateMinimum = new SEScalarFrequency();
+  if (m_HeartRateMinimum == nullptr) {
+      m_HeartRateMinimum = new SEScalarFrequency();
+      }
   return *m_HeartRateMinimum;
 }
 double SEPatient::GetHeartRateMinimum(const FrequencyUnit& unit) const
 {
-  if (m_HeartRateMinimum == nullptr)
-    return SEScalar::dNaN();
+  if (m_HeartRateMinimum == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_HeartRateMinimum->GetValue(unit);
 }
 
@@ -970,14 +1062,16 @@ bool SEPatient::HasInspiratoryCapacity() const
 }
 SEScalarVolume& SEPatient::GetInspiratoryCapacity()
 {
-  if (m_InspiratoryCapacity == nullptr)
-    m_InspiratoryCapacity = new SEScalarVolume();
+  if (m_InspiratoryCapacity == nullptr) {
+      m_InspiratoryCapacity = new SEScalarVolume();
+      }
   return *m_InspiratoryCapacity;
 }
 double SEPatient::GetInspiratoryCapacity(const VolumeUnit& unit) const
 {
-  if (m_InspiratoryCapacity == nullptr)
-    return SEScalar::dNaN();
+  if (m_InspiratoryCapacity == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_InspiratoryCapacity->GetValue(unit);
 }
 
@@ -987,14 +1081,16 @@ bool SEPatient::HasInspiratoryReserveVolume() const
 }
 SEScalarVolume& SEPatient::GetInspiratoryReserveVolume()
 {
-  if (m_InspiratoryReserveVolume == nullptr)
-    m_InspiratoryReserveVolume = new SEScalarVolume();
+  if (m_InspiratoryReserveVolume == nullptr) {
+      m_InspiratoryReserveVolume = new SEScalarVolume();
+      }
   return *m_InspiratoryReserveVolume;
 }
 double SEPatient::GetInspiratoryReserveVolume(const VolumeUnit& unit) const
 {
-  if (m_InspiratoryReserveVolume == nullptr)
-    return SEScalar::dNaN();
+  if (m_InspiratoryReserveVolume == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_InspiratoryReserveVolume->GetValue(unit);
 }
 
@@ -1004,14 +1100,16 @@ bool SEPatient::HasLeanBodyMass() const
 }
 SEScalarMass& SEPatient::GetLeanBodyMass()
 {
-  if (m_LeanBodyMass == nullptr)
-    m_LeanBodyMass = new SEScalarMass();
+  if (m_LeanBodyMass == nullptr) {
+      m_LeanBodyMass = new SEScalarMass();
+      }
   return *m_LeanBodyMass;
 }
 double SEPatient::GetLeanBodyMass(const MassUnit& unit) const
 {
-  if (m_LeanBodyMass == nullptr)
-    return SEScalar::dNaN();
+  if (m_LeanBodyMass == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_LeanBodyMass->GetValue(unit);
 }
 
@@ -1021,14 +1119,16 @@ bool SEPatient::HasmaxWorkRate() const
 }
 SEScalarPower& SEPatient::GetmaxWorkRate()
 {
-  if (m_maxWorkRate == nullptr)
-    m_maxWorkRate = new SEScalarPower();
+  if (m_maxWorkRate == nullptr) {
+      m_maxWorkRate = new SEScalarPower();
+      }
   return *m_maxWorkRate;
 }
 double SEPatient::GetmaxWorkRate(const PowerUnit& unit) const
 {
-  if (m_maxWorkRate == nullptr)
-    return SEScalar::dNaN();
+  if (m_maxWorkRate == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_maxWorkRate->GetValue(unit);
 }
 
@@ -1038,14 +1138,16 @@ bool SEPatient::HasMuscleMass() const
 }
 SEScalarMass& SEPatient::GetMuscleMass()
 {
-  if (m_MuscleMass == nullptr)
-    m_MuscleMass = new SEScalarMass();
+  if (m_MuscleMass == nullptr) {
+      m_MuscleMass = new SEScalarMass();
+      }
   return *m_MuscleMass;
 }
 double SEPatient::GetMuscleMass(const MassUnit& unit) const
 {
-  if (m_MuscleMass == nullptr)
-    return SEScalar::dNaN();
+  if (m_MuscleMass == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_MuscleMass->GetValue(unit);
 }
 
@@ -1055,14 +1157,16 @@ bool SEPatient::HasMeanArterialPressureBaseline() const
 }
 SEScalarPressure& SEPatient::GetMeanArterialPressureBaseline()
 {
-  if (m_MeanArterialPressureBaseline == nullptr)
-    m_MeanArterialPressureBaseline = new SEScalarPressure();
+  if (m_MeanArterialPressureBaseline == nullptr) {
+      m_MeanArterialPressureBaseline = new SEScalarPressure();
+      }
   return *m_MeanArterialPressureBaseline;
 }
 double SEPatient::GetMeanArterialPressureBaseline(const PressureUnit& unit) const
 {
-  if (m_MeanArterialPressureBaseline == nullptr)
-    return SEScalar::dNaN();
+  if (m_MeanArterialPressureBaseline == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_MeanArterialPressureBaseline->GetValue(unit);
 }
 
@@ -1072,14 +1176,16 @@ bool SEPatient::HasResidualVolume() const
 }
 SEScalarVolume& SEPatient::GetResidualVolume()
 {
-  if (m_ResidualVolume == nullptr)
-    m_ResidualVolume = new SEScalarVolume();
+  if (m_ResidualVolume == nullptr) {
+      m_ResidualVolume = new SEScalarVolume();
+      }
   return *m_ResidualVolume;
 }
 double SEPatient::GetResidualVolume(const VolumeUnit& unit) const
 {
-  if (m_ResidualVolume == nullptr)
-    return SEScalar::dNaN();
+  if (m_ResidualVolume == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_ResidualVolume->GetValue(unit);
 }
 
@@ -1089,14 +1195,16 @@ bool SEPatient::HasRespirationRateBaseline() const
 }
 SEScalarFrequency& SEPatient::GetRespirationRateBaseline()
 {
-  if (m_RespirationRateBaseline == nullptr)
-    m_RespirationRateBaseline = new SEScalarFrequency();
+  if (m_RespirationRateBaseline == nullptr) {
+      m_RespirationRateBaseline = new SEScalarFrequency();
+      }
   return *m_RespirationRateBaseline;
 }
 double SEPatient::GetRespirationRateBaseline(const FrequencyUnit& unit) const
 {
-  if (m_RespirationRateBaseline == nullptr)
-    return SEScalar::dNaN();
+  if (m_RespirationRateBaseline == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_RespirationRateBaseline->GetValue(unit);
 }
 
@@ -1106,14 +1214,16 @@ bool SEPatient::HasRightLungRatio() const
 }
 SEScalarFraction& SEPatient::GetRightLungRatio()
 {
-  if (m_RightLungRatio == nullptr)
-    m_RightLungRatio = new SEScalarFraction();
+  if (m_RightLungRatio == nullptr) {
+      m_RightLungRatio = new SEScalarFraction();
+      }
   return *m_RightLungRatio;
 }
 double SEPatient::GetRightLungRatio() const
 {
-  if (m_RightLungRatio == nullptr)
-    return SEScalar::dNaN();
+  if (m_RightLungRatio == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_RightLungRatio->GetValue();
 }
 
@@ -1123,14 +1233,16 @@ bool SEPatient::HasSkinSurfaceArea() const
 }
 SEScalarArea& SEPatient::GetSkinSurfaceArea()
 {
-  if (m_SkinSurfaceArea == nullptr)
-    m_SkinSurfaceArea = new SEScalarArea();
+  if (m_SkinSurfaceArea == nullptr) {
+      m_SkinSurfaceArea = new SEScalarArea();
+      }
   return *m_SkinSurfaceArea;
 }
 double SEPatient::GetSkinSurfaceArea(const AreaUnit& unit) const
 {
-  if (m_SkinSurfaceArea == nullptr)
-    return SEScalar::dNaN();
+  if (m_SkinSurfaceArea == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_SkinSurfaceArea->GetValue(unit);
 }
 
@@ -1140,14 +1252,16 @@ bool SEPatient::HasSystolicArterialPressureBaseline() const
 }
 SEScalarPressure& SEPatient::GetSystolicArterialPressureBaseline()
 {
-  if (m_SystolicArterialPressureBaseline == nullptr)
-    m_SystolicArterialPressureBaseline = new SEScalarPressure();
+  if (m_SystolicArterialPressureBaseline == nullptr) {
+      m_SystolicArterialPressureBaseline = new SEScalarPressure();
+      }
   return *m_SystolicArterialPressureBaseline;
 }
 double SEPatient::GetSystolicArterialPressureBaseline(const PressureUnit& unit) const
 {
-  if (m_SystolicArterialPressureBaseline == nullptr)
-    return SEScalar::dNaN();
+  if (m_SystolicArterialPressureBaseline == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_SystolicArterialPressureBaseline->GetValue(unit);
 }
 
@@ -1157,14 +1271,16 @@ bool SEPatient::HasTidalVolumeBaseline() const
 }
 SEScalarVolume& SEPatient::GetTidalVolumeBaseline()
 {
-  if (m_TidalVolumeBaseline == nullptr)
-    m_TidalVolumeBaseline = new SEScalarVolume();
+  if (m_TidalVolumeBaseline == nullptr) {
+      m_TidalVolumeBaseline = new SEScalarVolume();
+      }
   return *m_TidalVolumeBaseline;
 }
 double SEPatient::GetTidalVolumeBaseline(const VolumeUnit& unit) const
 {
-  if (m_TidalVolumeBaseline == nullptr)
-    return SEScalar::dNaN();
+  if (m_TidalVolumeBaseline == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_TidalVolumeBaseline->GetValue(unit);
 }
 
@@ -1174,14 +1290,16 @@ bool SEPatient::HasTotalLungCapacity() const
 }
 SEScalarVolume& SEPatient::GetTotalLungCapacity()
 {
-  if (m_TotalLungCapacity == nullptr)
-    m_TotalLungCapacity = new SEScalarVolume();
+  if (m_TotalLungCapacity == nullptr) {
+      m_TotalLungCapacity = new SEScalarVolume();
+      }
   return *m_TotalLungCapacity;
 }
 double SEPatient::GetTotalLungCapacity(const VolumeUnit& unit) const
 {
-  if (m_TotalLungCapacity == nullptr)
-    return SEScalar::dNaN();
+  if (m_TotalLungCapacity == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_TotalLungCapacity->GetValue(unit);
 }
 
@@ -1191,13 +1309,15 @@ bool SEPatient::HasVitalCapacity() const
 }
 SEScalarVolume& SEPatient::GetVitalCapacity()
 {
-  if (m_VitalCapacity == nullptr)
-    m_VitalCapacity = new SEScalarVolume();
+  if (m_VitalCapacity == nullptr) {
+      m_VitalCapacity = new SEScalarVolume();
+      }
   return *m_VitalCapacity;
 }
 double SEPatient::GetVitalCapacity(const VolumeUnit& unit) const
 {
-  if (m_VitalCapacity == nullptr)
-    return SEScalar::dNaN();
+  if (m_VitalCapacity == nullptr) {
+      return SEScalar::dNaN();
+      }
   return m_VitalCapacity->GetValue(unit);
 }
