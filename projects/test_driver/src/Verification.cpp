@@ -124,7 +124,7 @@ void Verification::Verify()
                     (m_mode == RunMode::KnownFailing &&  runType == ScenarioRunType::RunRed) ||
                     (m_mode == RunMode::Default      && (runType == ScenarioRunType::Run)))
                 {
-                    scenarioFilePath = "verification/Scenarios/" + scenarioFilePath;
+                    scenarioFilePath = "Scenarios/" + scenarioFilePath;
 
                     runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask(scenarioFilePath)));
                 }

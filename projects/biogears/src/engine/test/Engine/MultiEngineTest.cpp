@@ -91,17 +91,17 @@ void BioGearsEngineTest::MultiEngineTest(const std::string& sTestDirectory)
   {
     TaskRunner runner(1);
 
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/Basic1.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/Basic2.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/Basic3.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicCynthia.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicGus.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicHassan.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicJoel.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicNathan.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicSoldier.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicStandardHeavy.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicStandardLight.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/Basic1.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/Basic2.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/Basic3.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicCynthia.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicGus.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicHassan.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicJoel.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicNathan.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicSoldier.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicStandardHeavy.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicStandardLight.xml")));
 
     std::cout << " *** Running single-threaded ***"
               << "\n";
@@ -123,17 +123,17 @@ void BioGearsEngineTest::MultiEngineTest(const std::string& sTestDirectory)
     std::cout << " *** Running multithreaded ***"
               << "\n";
 
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/Basic1.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/Basic2.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/Basic3.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicCynthia.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicGus.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicHassan.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicJoel.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicNathan.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicSoldier.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicStandardHeavy.xml")));
-    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("verification/Scenarios/Basic/BasicStandardLight.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/Basic1.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/Basic2.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/Basic3.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicCynthia.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicGus.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicHassan.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicJoel.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicNathan.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicSoldier.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicStandardHeavy.xml")));
+    runner.AddTask(std::unique_ptr<RunScenarioTask>(new RunScenarioTask("Scenarios/Basic/BasicStandardLight.xml")));
 
     TimingProfile timer;
     timer.Start("timer");
