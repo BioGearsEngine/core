@@ -32,6 +32,7 @@ endif()
 set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
 set(CMAKE_STATIC_LIBRARY_SUFFIX "_st")
 set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
+
   
 set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
 if(UNIX)
@@ -98,3 +99,20 @@ if(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/share/doc/html DESTINATION share/doc/kaleidoscppe/)
 endif()
+
+add_custom_command(
+    OUTPUT  ${PROJECT_BINARY_DIR}/runtime
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/verification ${PROJECT_BINARY_DIR}/runtime/verification
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/xsd  ${PROJECT_BINARY_DIR}/runtime/xsd
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/jar  ${PROJECT_BINARY_DIR}/runtime/jar
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/etc  ${PROJECT_BINARY_DIR}/runtime
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/doc  ${PROJECT_BINARY_DIR}/runtime/doc
+    COMMENT "Generating runtime folder"
+)
+
+add_custom_target( stage_runtime ALL
+    DEPENDS "${PROJECT_BINARY_DIR}/runtime"
+    COMMENT "Scanning for need to stage runtime dir"
+)

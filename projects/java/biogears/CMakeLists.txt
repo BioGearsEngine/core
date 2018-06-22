@@ -114,22 +114,6 @@ genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/runtime/jar/jdom-2.0.2.jar
         ${PROJECT_BINARY_DIR}/runtime/jar/javax.mail-1.6.1.jar
     )
-add_custom_command(
-    OUTPUT  ${PROJECT_BINARY_DIR}/runtime
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/verification ${PROJECT_BINARY_DIR}/runtime/verification
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/xsd  ${PROJECT_BINARY_DIR}/runtime/xsd
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/jar  ${PROJECT_BINARY_DIR}/runtime/jar
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/etc  ${PROJECT_BINARY_DIR}/runtime
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/doc  ${PROJECT_BINARY_DIR}/runtime/doc
-    COMMENT "Generating runtime folder"
-)
-
-add_custom_target( stage_runtime ALL
-    DEPENDS "${PROJECT_BINARY_DIR}/runtime"
-    COMMENT "Scanning for need to stage runtime dir"
-)
 
 set (args "")
 add_custom_target(gen-data
