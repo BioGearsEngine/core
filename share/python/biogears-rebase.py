@@ -122,8 +122,13 @@ def rebase (root, path, recurse, clean):
         if ( re.match( valid_regex, extension) ):
             #Execute Rebase Utility
             p = subprocess.Popen([_scenario_driver,absolute_path], stderr=subprocess.STDOUT, cwd=_runtime_directory)
+            p.wait()
             destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
-            compress_and_store(basename+"Results.csv", destination)
+            results = basename+"Results.csv";
+            if( os.path.exists(results)):
+                compress_and_store(results, destination)
+            else:
+                err("Unable to locate {0}".format(results), LOG_LEVEL_0)
     elif(os.path.isdir(absolute_path)):
         if(recurse):
             for file in os.listdir(absolute_path):
@@ -150,14 +155,16 @@ def compress_and_store(source,destination):
             os.remove(archive)
         except OSError:
             err("Unable to remove {0}".format(archive), LOG_LEVEL_0)
-
-    log("{0} -> {1}".format(source,archive),LOG_LEVEL_1)
-    zip = zipfile.ZipFile( archive , mode='w' )
-    try:
-        log( "Archiving {0} in {1}".format(source,archive), LOG_LEVEL_2)
-        zip.write( source, source_name )
-    except ValueError:
-        err("Unable to write to {0}".format(archive), LOG_LEVEL_0)
+    if ( os.path.exists(source) ):
+        log("{0} -> {1}".format(source,archive),LOG_LEVEL_1)
+        zip = zipfile.ZipFile( archive , mode='w' )
+        try:
+            log( "Archiving {0} in {1}".format(source,archive), LOG_LEVEL_2)
+            zip.write( source, source_name )
+        except ValueError:
+            err("Unable to write to {0}".format(archive), LOG_LEVEL_0)
+    else:
+        err("{} does not exists".format(source),LOG_LEVEL_0)
     zip.close()
 
 """
