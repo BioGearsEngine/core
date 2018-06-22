@@ -101,7 +101,7 @@ void HowToEnvironmentChange()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalMetabolicRate", PowerUnit::W);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", FlowResistanceUnit::mmHg_s_Per_mL);
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEnvironmentChange.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEnvironmentChange.csv");
 
 	// Advance some time to get some resting data
 	tracker.AdvanceModelTime(50);

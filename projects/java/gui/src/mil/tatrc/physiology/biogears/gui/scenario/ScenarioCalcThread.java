@@ -53,7 +53,7 @@ public class ScenarioCalcThread extends Thread
 		Log.addAppender(this.listener);
 		this.exec.setListener(this.listener);
 		// Put the results file in the same place as the sceFile
-		String logFile = resultsFile.replaceAll(".txt", ".log");
+		String logFile = resultsFile.replaceAll(".csv", ".log");
 		this.engineRunning=true;
 		this.exec.runScenario(logFile, scenario, resultsFile, this.callback);
 		this.engineRunning=false;

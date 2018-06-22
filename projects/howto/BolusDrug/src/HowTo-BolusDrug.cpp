@@ -66,7 +66,7 @@ void HowToBolusDrug()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("NeuromuscularBlockLevel");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToBolusDrug.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToBolusDrug.csv");
 
 	bg->GetLogger()->Info("The patient is nice and healthy");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

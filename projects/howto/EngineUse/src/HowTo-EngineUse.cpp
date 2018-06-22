@@ -184,7 +184,7 @@ void HowToEngineUse()
   bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Lungs, "Volume");
   bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Carina, "InFlow");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEngineUse.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEngineUse.csv");
 
 	// We are ready to execute the engine
 	// simply tell the engine how long you would like it to execute

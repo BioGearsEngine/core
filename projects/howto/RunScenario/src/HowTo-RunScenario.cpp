@@ -85,7 +85,7 @@ void HowToRunScenario()
   sce.GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
   sce.GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
   // you can specify where the file goes 
-  sce.GetDataRequestManager().SetResultsFilename("./HowTo-RunScenarioResults.txt");
+  sce.GetDataRequestManager().SetResultsFilename("./HowTo-RunScenarioResults.csv");
   // If you don't set the file name it will try to make a place for the results in a bin/Scenarios/ folder
 	// Let's just run for 2 minutes
   // NOTE: the scenario will make it's own copy of this action
@@ -95,5 +95,5 @@ void HowToRunScenario()
 	adv.GetTime().SetValue(2, TimeUnit::min);
 	sce.AddAction(adv);
 
-	executor.Execute(sce, "./HowTo-RunScenarioResults.txt", new MyCustomExec());
+	executor.Execute(sce, "./HowTo-RunScenarioResults.csv", new MyCustomExec());
 }

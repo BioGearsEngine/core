@@ -105,7 +105,7 @@ void HowToSarinExposure()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RedBloodCellAcetylcholinesterase", AmountPerVolumeUnit::mol_Per_L);
 
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSarinExposure.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSarinExposure.csv");
 
 	// Advance some time to get some resting data
 	tracker.AdvanceModelTime(60);

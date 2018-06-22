@@ -32,8 +32,8 @@ public class UnitConverter
   /** Loads Unit Conversion DLL */
   static
   {
-    //String UCEDefsPath = System.getProperty("user.dir") + "/UCEDefs.txt";
-    //String UCEDefsHomePath = System.getProperty("user.home") + "/UCEDefs.txt";
+    //String UCEDefsPath = System.getProperty("user.dir") + "/UCEDefs.conf";
+    //String UCEDefsHomePath = System.getProperty("user.home") + "/UCEDefs.conf";
     //
     //try{
     //        Files.copy(
@@ -43,7 +43,7 @@ public class UnitConverter
     //}
     //catch (IOException e)
     //{
-    //  System.err.println("[JAVA] Unable to locate UCEDefs.txt");
+    //  System.err.println("[JAVA] Unable to locate UCEDefs.conf");
     //}
 
     Resources resources = new Resources();
@@ -68,11 +68,11 @@ public class UnitConverter
   public static boolean initialize(String workingDirectory)
   {
     File workingDirectoryFile = new File(workingDirectory).getAbsoluteFile();
-    File f = new File(workingDirectoryFile.getAbsolutePath() + "/UCEDefs.txt").getAbsoluteFile();
+    File f = new File(workingDirectoryFile.getAbsolutePath() + "/UCEDefs.conf").getAbsoluteFile();
     
     if(!f.exists())
     {
-      //fLog.error("Unable to find "+workingDirectory+"/UCEDefs.txt");
+      //fLog.error("Unable to find "+workingDirectory+"/UCEDefs.conf");
       return false;
     }
 

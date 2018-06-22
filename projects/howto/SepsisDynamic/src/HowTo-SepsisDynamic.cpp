@@ -40,7 +40,7 @@ void HowToDynamicSepsis()
 {
   // Create the engine and have it run in it's own thread
   // This call will block while the engine stabilizes
-  DynamicSepsis sepThread("./DynamicSepsis.txt");
+  DynamicSepsis sepThread("./DynamicSepsis.csv");
   // When it comes back, the engine will be running, waiting for your input
 
   int action;

@@ -489,7 +489,7 @@ public class ScenarioEditor extends JPanel implements ActionListener
 		SEDataRequestManager drs = this.scenario.getDataRequests();
 		if(!drs.hasFilename())
 		{
-			String resultsFile = file.getAbsolutePath().replaceAll(".xml", "Results.txt");
+			String resultsFile = file.getAbsolutePath().replaceAll(".xml", "Results.csv");
 			drs.setFilename(resultsFile);
 		}
 		
@@ -826,7 +826,7 @@ public class ScenarioEditor extends JPanel implements ActionListener
 			this.scenario.setDescription(scenarioDescription.getText());
 			SEDataRequestManager drs = this.scenario.getDataRequests();
 			if(!drs.hasFilename())
-				drs.setFilename("./"+this.scenario.getName()+"Results.txt");
+				drs.setFilename("./"+this.scenario.getName()+"Results.csv");
 			ScenarioCalcDialog dlg = new ScenarioCalcDialog(this.scenario);
 			dlg.setVisible(true);
 			return;

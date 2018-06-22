@@ -237,14 +237,14 @@ public class MutliResultTool
   public void summarize(ResultSet rs)
   {
     new File(rs.resultDir+"Summary").mkdir();
-    boolean tableOnly = true;// Just create a markdown table, not plots or summary txt files (Quick running)
+    boolean tableOnly = true;// Just create a markdown table, not plots or summary csv files (Quick running)
     try
     {
       Map<String,List<ResultSummary>> baselineSummaries = null;
       if(rs.baseline!=null)
       {
         baselineSummaries = new HashMap<String,List<ResultSummary>>();
-        processResultsFile(rs.resultDir,rs.baseline+"Results.txt",baselineSummaries,null,null);
+        processResultsFile(rs.resultDir,rs.baseline+"Results.csv",baselineSummaries,null,null);
       }
       
       CSVPlotTool plotter = new CSVPlotTool();
@@ -255,7 +255,7 @@ public class MutliResultTool
       String[] cFiles = vdir.list();         
       for(String cFile : cFiles)
       {
-        if(!cFile.endsWith("Results.txt"))
+        if(!cFile.endsWith("Results.csv"))
           continue;
         String xUnit = processResultsFile(rs.resultDir, cFile, resultSummaries, baselineSummaries, tableOnly?null:plotter);
         if(resultUnit == null)
@@ -327,7 +327,7 @@ public class MutliResultTool
     String xValue = null;
     String xUnit  = null;
     
-    if(resultsFile.endsWith("Results.txt"))
+    if(resultsFile.endsWith("Results.csv"))
     {            
       Log.info("Reading file "+resultsFile);
       CSVContents sceResults = new CSVContents(resultsDir+resultsFile);
@@ -431,7 +431,7 @@ public class MutliResultTool
         String key_no_units = key;
         if(key.indexOf("(")>-1)
           key_no_units = key.substring(0, key_no_units.indexOf("("));
-        PrintWriter writer = new PrintWriter(toDir+"/"+key_no_units+"vs"+xAxisLabel+"Summary.txt", "UTF-8");
+        PrintWriter writer = new PrintWriter(toDir+"/"+key_no_units+"vs"+xAxisLabel+"Summary.csv", "UTF-8");
         writer.println(xAxisLabel+"\t"+key+"_Mean\t"+key+"_MeanError\t"+key+"_Max\t"+key+"_MaxError\t"+key+"_Min\t"+key+"_MinError\t"+key+"_MaxMean\t"+key+"_MaxMeanError\t"+key+"_MinMean"+key+"_MinMeanError\t");
         for(ResultSummary rs : resultSummaries.get(key))
         {
@@ -455,7 +455,7 @@ public class MutliResultTool
       }
       catch(Exception ex)
       {
-        Log.error("Problem writing summary txt file",ex);
+        Log.error("Problem writing summary csv file",ex);
       }
         plotter.createGraph(toDir+"plots", Color.white, key+"Mean", xAxisLabel, key, mean);
         plotter.createGraph(toDir+"plots", Color.white, key+"MeanError", xAxisLabel, key, meanError);

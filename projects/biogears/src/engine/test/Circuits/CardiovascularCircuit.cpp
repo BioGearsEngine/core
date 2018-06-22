@@ -135,7 +135,7 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(SETestSuite& testSuite, c
 
   Cardiovascular& cv = (Cardiovascular&)bg.GetCardiovascular();
   try {
-    // cv.m_TuningFile = sTestDirectory + "/Tune" + sTestName + "CircuitOutput.txt";//For Debugging
+    // cv.m_TuningFile = sTestDirectory + "/Tune" + sTestName + "CircuitOutput.csv";//For Debugging
     cv.Initialize();
   } catch (PhysiologyEngineException ex) {
     testCase.AddFailure("Failed test case " + sTestName);
@@ -222,7 +222,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
 
   Cardiovascular& cv = (Cardiovascular&)bg.GetCardiovascular();
   cv.m_TuneCircuit = true; // Run the circuit as constructed
-  //cv.m_TuningFile = "./UnitTests/BioGearsTests/"+ sTestName+"Tuning.txt";
+  //cv.m_TuningFile = "./UnitTests/BioGearsTests/"+ sTestName+"Tuning.csv";
 
   SEFluidCircuit& cvCircuit = bg.GetCircuits().GetActiveCardiovascularCircuit();
 
@@ -414,8 +414,8 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
 
     if (!scale) {
       if (i == 0) {
-        circiutTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "CircuitOutput.txt").c_str(), circuitFile);
-        cvGraphTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "TransportOutput.txt").c_str(), cvGraphFile);
+        circiutTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "CircuitOutput.csv").c_str(), circuitFile);
+        cvGraphTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "TransportOutput.csv").c_str(), cvGraphFile);
       }
       circiutTrk.StreamTrackToFile(circuitFile);
       cvGraphTrk.StreamTrackToFile(cvGraphFile);
@@ -479,16 +479,16 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
         }
       }
       if (i == 0) {
-        cvPressureTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_PressureOutput.txt").c_str(), cvPressureFile);
-        cvVolumeTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_VolumeOutput.txt").c_str(), cvVolumeFile);
-        cvNormVolumeTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_NormVolumeOutput.txt").c_str(), cvNormVolumeFile);
-        cvCompFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CompFlowOutput.txt").c_str(), cvCompFlowFile);
-        cvResFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_ResFlowOutput.txt").c_str(), cvResFlowFile);
-        cvFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_FlowOutput.txt").c_str(), cvFlowFile);
-        cvHDTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_HD.txt").c_str(), cvHDFile);
-        cvGraphPresTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTPressureOutput.txt").c_str(), cvGraphPresFile);
-        cvGraphFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTFlowOutput.txt").c_str(), cvGraphFlowFile);
-        cvGraphVolTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTVolumeOutput.txt").c_str(), cvGraphVolFile);
+        cvPressureTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_PressureOutput.csv").c_str(), cvPressureFile);
+        cvVolumeTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_VolumeOutput.csv").c_str(), cvVolumeFile);
+        cvNormVolumeTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_NormVolumeOutput.csv").c_str(), cvNormVolumeFile);
+        cvCompFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CompFlowOutput.csv").c_str(), cvCompFlowFile);
+        cvResFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_ResFlowOutput.csv").c_str(), cvResFlowFile);
+        cvFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_FlowOutput.csv").c_str(), cvFlowFile);
+        cvHDTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_HD.csv").c_str(), cvHDFile);
+        cvGraphPresTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTPressureOutput.csv").c_str(), cvGraphPresFile);
+        cvGraphFlowTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTFlowOutput.csv").c_str(), cvGraphFlowFile);
+        cvGraphVolTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_CPMTVolumeOutput.csv").c_str(), cvGraphVolFile);
       }
       cvPressureTrk.StreamTrackToFile(cvPressureFile);
       cvVolumeTrk.StreamTrackToFile(cvVolumeFile);
@@ -527,10 +527,10 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
       }
     }
 
-    cvCompBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "CompBase.txt").c_str(), cvCompBaseFile);
-    cvResBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_ResBase.txt").c_str(), cvResBaseFile);
-    cvCompTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Comp.txt").c_str(), cvCompFile);
-    cvResTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Res.txt").c_str(), cvResFile);
+    cvCompBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "CompBase.csv").c_str(), cvCompBaseFile);
+    cvResBaseTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_ResBase.csv").c_str(), cvResBaseFile);
+    cvCompTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Comp.csv").c_str(), cvCompFile);
+    cvResTrk.CreateFile(std::string(sTestDirectory + "/" + tName.str() + "_Res.csv").c_str(), cvResFile);
 
     cvCompBaseTrk.StreamTrackToFile(cvCompBaseFile);
     cvResBaseTrk.StreamTrackToFile(cvResBaseFile);
@@ -643,7 +643,7 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
 
               if (firstTest) {
                 firstTest = false;
-                cvLastMeanPressureTrk.CreateFile(std::string(sTestDirectory + "/" + "CVVenaScale" + ss.str() + "_LastMeanPressureOutput.txt").c_str(), cvLastMeanPressureFile);
+                cvLastMeanPressureTrk.CreateFile(std::string(sTestDirectory + "/" + "CVVenaScale" + ss.str() + "_LastMeanPressureOutput.csv").c_str(), cvLastMeanPressureFile);
               }
               cvLastMeanPressureTrk.StreamTrackToFile(cvLastMeanPressureFile);
               testNo++;
@@ -673,7 +673,7 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
   //    if (firstTest)
   //    {
   //      firstTest = false;
-  //      cvLastMeanPressureTrk.CreateFile(std::string(sTestDirectory + "/" + "CardiovascularScale" + ss.str() + "_LastMeanPressureOutput.txt").c_str(), cvLastMeanPressureFile);
+  //      cvLastMeanPressureTrk.CreateFile(std::string(sTestDirectory + "/" + "CardiovascularScale" + ss.str() + "_LastMeanPressureOutput.csv").c_str(), cvLastMeanPressureFile);
   //    }
   //    cvLastMeanPressureTrk.StreamTrackToFile(cvLastMeanPressureFile);
   //    testNo++;
@@ -699,7 +699,7 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
   //    if (firstTest)
   //    {
   //      firstTest = false;
-  //      cvLastMeanPressureTrk.CreateFile(std::string(sTestDirectory + "/" + "CardiovascularScale" + ss.str() + "_LastMeanPressureOutput.txt").c_str(), cvLastMeanPressureFile);
+  //      cvLastMeanPressureTrk.CreateFile(std::string(sTestDirectory + "/" + "CardiovascularScale" + ss.str() + "_LastMeanPressureOutput.csv").c_str(), cvLastMeanPressureFile);
   //    }
   //    cvLastMeanPressureTrk.StreamTrackToFile(cvLastMeanPressureFile);
   //    testNo++;

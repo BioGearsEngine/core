@@ -50,7 +50,7 @@ public:
   {
     if (uce == nullptr) {
       uce = new CUnitConversionEngine();
-      uce->LoadDefinitionsFlatFile("UCEDefs.txt");
+      uce->LoadDefinitionsFlatFile("UCEDefs.conf");
     }
     return *uce;
   }

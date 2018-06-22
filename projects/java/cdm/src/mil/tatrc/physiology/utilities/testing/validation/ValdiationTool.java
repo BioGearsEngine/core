@@ -188,13 +188,13 @@ public abstract class ValdiationTool
         String sheetName = xlSheet.getSheetName().trim().replaceAll(" ", "");
         
         List<String> sheetFiles = new ArrayList<String>();
-        String rSheetName = sheetName+"ValidationResults.txt";
+        String rSheetName = sheetName+"ValidationResults.csv";
         File rFile = new File(rSheetName);
         if(!rFile.exists())
         {
           // Search for any file starting with the sheet name
           for(String f : vFiles)
-            if(f.startsWith(sheetName) && f.endsWith(".txt"))
+            if(f.startsWith(sheetName) && f.endsWith(".csv"))
               sheetFiles.add(f);
         }
         else

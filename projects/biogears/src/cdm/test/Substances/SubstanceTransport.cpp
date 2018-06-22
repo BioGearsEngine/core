@@ -116,7 +116,7 @@ void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirecto
     }
     outTrk.Probe("TotalMass(g)", totalMass);
     if (time == 0)
-      outTrk.CreateFile(std::string(sTestDirectory + "/LargeFlowTransport.txt").c_str(), file);
+      outTrk.CreateFile(std::string(sTestDirectory + "/LargeFlowTransport.csv").c_str(), file);
     outTrk.StreamProbesToFile(time, file);
 
     CircuitCalculator.Process(circuit, deltaT);
@@ -300,7 +300,7 @@ void CommonDataModelTest::LiquidTransportTest(const std::string& rptDirectory)
     }
 
     if (time == 0)
-      outTrk.CreateFile(std::string(rptDirectory + "/LiquidTransport.txt").c_str(), file);
+      outTrk.CreateFile(std::string(rptDirectory + "/LiquidTransport.csv").c_str(), file);
     outTrk.StreamProbesToFile(time, file);
     time += deltaT_s;
   }
@@ -474,7 +474,7 @@ void CommonDataModelTest::GasTransportTest(const std::string& rptDirectory)
     }
 
     if (time == 0)
-      outTrk.CreateFile(std::string(rptDirectory + "/GasTransport.txt").c_str(), file);
+      outTrk.CreateFile(std::string(rptDirectory + "/GasTransport.csv").c_str(), file);
     outTrk.StreamProbesToFile(time, file);
     time += deltaT_s;
   }

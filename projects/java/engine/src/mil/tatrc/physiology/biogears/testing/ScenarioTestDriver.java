@@ -43,13 +43,13 @@ public class ScenarioTestDriver implements TestDriver.Executor
 		if(job.patientFile==null)
 		{
 			log = outputFile.replaceAll("xml", "log");
-			results = outputFile.replaceAll(".xml", "Results.txt");
+			results = outputFile.replaceAll(".xml", "Results.csv");
 		}
 		else
 		{
 			String patientName = job.patientFile.substring(0,job.patientFile.length()-4);
 			log = outputFile.replaceAll(".xml", "-"+patientName+".log");
-			results = outputFile.replaceAll(".xml", "-"+patientName+"Results.txt");
+			results = outputFile.replaceAll(".xml", "-"+patientName+"Results.csv");
 			
 			int startTag = xml.indexOf("<PatientFile>");
 			if(startTag == -1)

@@ -77,7 +77,7 @@ void HowToInfusionDrug()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineProductionRate", VolumePerTimeUnit::mL_Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineOsmolarity", OsmolalityUnit::mOsm_Per_kg);
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("VasopressinPD.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("VasopressinPD.csv");
 
   bg->GetLogger()->Info("Beginning PD Scenario");
 

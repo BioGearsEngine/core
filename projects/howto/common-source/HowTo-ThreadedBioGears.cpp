@@ -30,7 +30,7 @@ void HowToThreadedBioGears()
 {
   // Create the engine and have it run in it's own thread
   // This call will block while the engine stabilizes
-  BioGearsThread bgThread("./ThreadedDriver.txt");
+  BioGearsThread bgThread("./ThreadedDriver.log");
   // When it comes back, the engine will be running, waiting for your input
 
   int action;

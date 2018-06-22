@@ -75,7 +75,7 @@ void HowToLobarPneumonia()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InspiratoryExpiratoryRatio");
   bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Carina, "InFlow");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToLobarPneumonia.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToLobarPneumonia.csv");
 
 	// Advance some time to get some data
 	tracker.AdvanceModelTime(500);

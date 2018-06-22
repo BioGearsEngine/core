@@ -78,7 +78,7 @@ void HowToFaciculation()
 	bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Cl, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
 	bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Ca, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
 
-	bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToFasciculation.txt");
+	bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToFasciculation.csv");
 
 	// Advance some time to get some resting data
 	tracker.AdvanceModelTime(60);

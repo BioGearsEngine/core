@@ -324,7 +324,7 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
     }
 
     if (j == 0)
-      trk.CreateFile(std::string(rptDirectory + outputName + ".txt").c_str(), file);
+      trk.CreateFile(std::string(rptDirectory + outputName + ".csv").c_str(), file);
     trk.StreamTrackToFile(file);
   }
   file.close();
@@ -698,7 +698,7 @@ void BioGearsEngineTest::AbsorptionTest(const std::string& rptDirectory, MealTyp
       trk.Track("TriacylglyceroleMassSmallIntestine_mg", timer_s, SmallIntestineChymeTriacylglycerol->GetMass().GetValue(MassUnit::mg));
     }
     if (j == 0)
-      trk.CreateFile(std::string(rptDirectory + outputName + ".txt").c_str(), file);
+      trk.CreateFile(std::string(rptDirectory + outputName + ".csv").c_str(), file);
     trk.StreamTrackToFile(file);
 
     //update timer s

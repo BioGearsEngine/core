@@ -74,7 +74,7 @@ void HowToCOPD()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InspiratoryExpiratoryRatio");
   bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Carina, "InFlow");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToCOPD.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToCOPD.csv");
 
 	// Advance some time to get some data
 	tracker.AdvanceModelTime(500);

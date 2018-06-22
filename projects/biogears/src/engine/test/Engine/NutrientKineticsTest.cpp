@@ -913,7 +913,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     }
 
     if (i == 0) {
-      trk.CreateFile(std::string(rptDirectory + outputName + ".txt").c_str(), file);
+      trk.CreateFile(std::string(rptDirectory + outputName + ".csv").c_str(), file);
     }
 
     time += deltaT_s;

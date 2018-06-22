@@ -214,7 +214,7 @@ void HowToMechanicalVentialtion()
   SESubstance* Lactate = bg->GetSubstanceManager().GetSubstance("Lactate");
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*Lactate, "BloodConcentration", MassPerVolumeUnit::ug_Per_mL);
   
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToMechanicalVentilation.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToMechanicalVentilation.csv");
 
 	//Output some random stuff to the log
   bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

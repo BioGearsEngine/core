@@ -78,7 +78,7 @@ public:
 
 void BioGearsEngineTest::InhalerState(PhysiologyEngine* bg, HowToTracker& tracker)
 {
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InhalerResults.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InhalerResults.csv");
   if (!bg->InitializeEngine("StandardMale.xml")) {
     std::cerr << "Could not load initialize engine, check the error" << std::endl;
     return;
@@ -119,15 +119,15 @@ void BioGearsEngineTest::InhalerState(PhysiologyEngine* bg, HowToTracker& tracke
 
   // Change the results file
   bg->GetLogger()->ResetLogFile("InhalerSerialization.log");
-  std::remove("InhalerSerializationResults.txt");
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InhalerSerializationResults.txt");
+  std::remove("InhalerSerializationResults.csv");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InhalerSerializationResults.csv");
 
   tracker.AdvanceModelTime(145);
 }
 
 void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tracker, const SESubstance& succs)
 {
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InjectSuccsResults.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InjectSuccsResults.csv");
   if (!bg->InitializeEngine("StandardMale.xml")) {
     std::cerr << "Could not load initialize engine, check the error" << std::endl;
     return;
@@ -144,8 +144,8 @@ void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tr
 
   // Change our results file name
   bg->GetLogger()->ResetLogFile("InjectSuccsSerialization.log");
-  std::remove("InjectSuccsSerialization.txt");
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InjectSuccsSerialization.txt");
+  std::remove("InjectSuccsSerialization.csv");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InjectSuccsSerialization.csv");
 
   // Save and Load the Engine State
   bg->SaveState("./MidBolusState.xml");
@@ -278,7 +278,7 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
     // Gen Basic Standard Baseline
     /* {
       bg->GetLogger()->ResetLogFile("BasicStandardResults.log");
-      bg->GetEngineTrack()->RequestData(tracker.m_Requests, "BasicStandardResults.txt");
+      bg->GetEngineTrack()->RequestData(tracker.m_Requests, "BasicStandardResults.csv");
       if (!bg->InitializeEngine("StandardMale.xml"))
       {
         std::cerr << "Could not load initialize engine, check the error" << std::endl;
@@ -290,7 +290,7 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
     // Gen Basic Standard State
     /*{
       bg->GetLogger()->ResetLogFile("BasicStandardStateSetupResults.log");
-      bg->GetEngineTrack()->RequestData(tracker.m_Requests, "BasicStandardStateSetupResults.txt");
+      bg->GetEngineTrack()->RequestData(tracker.m_Requests, "BasicStandardStateSetupResults.csv");
       if (!bg->InitializeEngine("StandardMale.xml"))
       {
         std::cerr << "Could not load initialize engine, check the error" << std::endl;
@@ -303,7 +303,7 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
     // Run Basic Standard State
     {
       bg->GetLogger()->ResetLogFile("BasicStandardStateResults.log");
-      bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("BasicStandardStateResults.txt");
+      bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("BasicStandardStateResults.csv");
       bg->LoadState("./BasicStandardState@60s.xml");
       tracker.AdvanceModelTime(60);
     }

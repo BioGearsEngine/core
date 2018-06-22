@@ -4388,7 +4388,7 @@ void CommonDataModelTest::BasicCircuitTest(const std::string& outputDirectory)
   }
 
   m_Circuits.Clear();
-  std::string sOutputFile = outputDirectory + "/BasicCircuit.txt";
+  std::string sOutputFile = outputDirectory + "/BasicCircuit.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
 }
 
@@ -5119,7 +5119,7 @@ void CommonDataModelTest::RunTest(const std::string& outputDirectory, const std:
     if (outputTime_s >= 10) // outputs every 10 secs
     {
       outputTime_s = 0;
-      std::string sOutputFile = outputDirectory + "/" + testName + ".txt";
+      std::string sOutputFile = outputDirectory + "/" + testName + ".csv";
       trk1.WriteTrackToFile(sOutputFile.c_str());
     }
   }

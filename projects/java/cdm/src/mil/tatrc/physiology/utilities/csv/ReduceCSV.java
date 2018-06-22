@@ -20,7 +20,7 @@ public class ReduceCSV
 	{    
 		Log.setFileName("ReduceHeaders.log");
 
-		String filename = "\\\\sed-hatteras.us.ara.com\\Projects\\Biogears\\BasicStandard12hrResults.txt";
+		String filename = "\\\\sed-hatteras.us.ara.com\\Projects\\Biogears\\BasicStandard12hrResults.csv";
 
 		Log.info("Looking at file: " + filename);
 		File fIn = new File(filename);

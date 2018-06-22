@@ -108,7 +108,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
   bool compareBeforeAfter = false;
 
   std::ofstream file;
-  std::string rptFile = rptDirectory + "/AcidBaseMath.txt";
+  std::string rptFile = rptDirectory + "/AcidBaseMath.csv";
 
   unsigned int testID = 0;
 
@@ -330,7 +330,7 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
 
   std::ofstream file;
-  std::string rptFile = rptDirectory + "/AcidBaseFeedback.txt";
+  std::string rptFile = rptDirectory + "/AcidBaseFeedback.csv";
 
   c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
@@ -439,7 +439,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
 
   std::ofstream file;
-  std::string rptFile = rptDirectory + "/AcidBaseLimits.txt";
+  std::string rptFile = rptDirectory + "/AcidBaseLimits.csv";
 
   c.SetBodyState(albuminConcentration, hematocrit, bodyTemp, strongIonDifference, phosphate);
 
@@ -579,7 +579,7 @@ void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
   SESubstanceManager& subMgr = bg.GetSubstances();
 
   std::ofstream file;
-  std::string rptFile = rptDirectory + "/AcidBaseExtreme.txt";
+  std::string rptFile = rptDirectory + "/AcidBaseExtreme.csv";
 
   SESubstance* O2 = subMgr.GetSubstance("Oxygen");
   SESubstance* Hb = subMgr.GetSubstance("Hemoglobin");
@@ -1204,7 +1204,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTests(const std::string& sOutputDirecto
   //AcidBaseBloodGasTest(bg, METABOLIC_ACIDOSIS, testSuite, sOutputDirectory);
   //AcidBaseBloodGasTest(bg, RESPIRATORY_ALKALOSIS, testSuite, sOutputDirectory);
 
-  std::string results = sOutputDirectory + "/AcidBaseBloodGasTests.txt";
+  std::string results = sOutputDirectory + "/AcidBaseBloodGasTests.csv";
   bg.GetDataTrack().WriteTrackToFile(results.c_str());
 
   testReport.WriteFile(sOutputDirectory + "/AcidBaseBloodGasTestsReport.xml");

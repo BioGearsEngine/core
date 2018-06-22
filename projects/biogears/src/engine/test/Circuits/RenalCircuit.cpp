@@ -142,8 +142,8 @@ void BioGearsEngineTest::RenalCircuitAndTransportTest(const std::string& sTestDi
     time_s += deltaT_s;
 
     if (i == 0) {
-      graphTrk.CreateFile(std::string(sTestDirectory + "/RenalTransportOutput.txt").c_str(), graphFile);
-      circiutTrk.CreateFile(std::string(sTestDirectory + "/RenalCircuitOutput.txt").c_str(), circuitFile);
+      graphTrk.CreateFile(std::string(sTestDirectory + "/RenalTransportOutput.csv").c_str(), graphFile);
+      circiutTrk.CreateFile(std::string(sTestDirectory + "/RenalCircuitOutput.csv").c_str(), circuitFile);
     }
     graphTrk.StreamTrackToFile(graphFile);
     circiutTrk.StreamTrackToFile(circuitFile);
@@ -434,7 +434,7 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
     }
     }
   }
-  trk.WriteTrackToFile(std::string(sTestDirectory + "/" + sTestName + ".txt").c_str());
+  trk.WriteTrackToFile(std::string(sTestDirectory + "/" + sTestName + ".csv").c_str());
   std::stringstream ss;
   ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run " << sTestName << "CircuitAndTransportTest";
   bg.GetLogger()->Info(ss.str(), "RenalFeedbackTest");
@@ -656,7 +656,7 @@ void BioGearsEngineTest::RenalSystemTest(RenalSystems systemtest, const std::str
     }
     }
   }
-  trk.WriteTrackToFile(std::string(sTestDirectory + "/" + sTestName + ".txt").c_str());
+  trk.WriteTrackToFile(std::string(sTestDirectory + "/" + sTestName + ".csv").c_str());
   std::stringstream ss;
   ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run " << sTestName << "SecretionandUrinatingTest";
   bg.GetLogger()->Info(ss.str(), "RenalSystemTest");

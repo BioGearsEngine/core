@@ -89,7 +89,7 @@ void HowToScenarioBase()
   delete drData;
 
   if (!bg->GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
-    bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("./ResultsFileName.txt");
+    bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("./ResultsFileName.csv");
 
   // Let's request data do be tracked that is in the scenario	
   HowToTracker tracker(*bg);

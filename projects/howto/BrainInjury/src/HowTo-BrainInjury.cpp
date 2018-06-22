@@ -70,7 +70,7 @@ void HowToBrainInjury()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToBrainInjury.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToBrainInjury.csv");
 
   bg->GetLogger()->Info("The patient is nice and healthy");
   bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);

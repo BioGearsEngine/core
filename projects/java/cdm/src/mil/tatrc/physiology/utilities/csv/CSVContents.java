@@ -40,14 +40,14 @@ public class CSVContents
   
   public static void main(String[] args) throws IOException
   {
-  	CSVContents regular = new CSVContents("./scenarios/showcase/CombatMultitraumaResults.txt");
+  	CSVContents regular = new CSVContents("./scenarios/showcase/CombatMultitraumaResults.csv");
   	List<Double> regularData = new ArrayList<Double>();
   	regular.readHeader("Lead3ElectricPotential(mV)", regularData);
   	double regularMax = DoubleUtils.getMax(regularData);
   	double regularMin = DoubleUtils.getMin(regularData);
   	System.out.println("Regular : Max : "+regularMax+" Min : "+regularMin);
   	
-  	CSVContents nonInterp = new CSVContents("./scenarios/showcase/CombatMultitraumaResults-NoInterp.txt");
+  	CSVContents nonInterp = new CSVContents("./scenarios/showcase/CombatMultitraumaResults-NoInterp.csv");
   	List<Double> nonInterpData = new ArrayList<Double>();
   	nonInterp.readHeader("Lead3ElectricPotential(mV)", nonInterpData);
   	double nonInterpMax = DoubleUtils.getMax(nonInterpData);
@@ -105,7 +105,7 @@ public class CSVContents
         List<FileHeader> headers = zipFile.getFileHeaders();
         for(FileHeader header : headers)
         {
-          if(header.getFileName().endsWith(".txt"))
+          if(header.getFileName().endsWith(".csv"))
           {
             buff = new BufferedReader(new InputStreamReader(zipFile.getInputStream(header)));
             break;// We expect results zips to only contain 1 text file

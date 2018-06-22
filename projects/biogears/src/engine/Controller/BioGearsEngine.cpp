@@ -588,7 +588,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
         pftFile = "PulmonaryFunctionTest";
       m_ss << "PFT@" << GetSimulationTime(TimeUnit::s) << "s";
       pftFile = Replace(pftFile, "Results", m_ss.str());
-      pftFile = Replace(pftFile, ".txt", ".xml");
+      pftFile = Replace(pftFile, ".csv", ".xml");
       m_ss << "PulmonaryFunctionTest@" << GetSimulationTime(TimeUnit::s) << "s.xml";
       std::ofstream stream(pftFile);
       m_ss.str("");
@@ -612,7 +612,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
         upanFile = "Urinalysis";
       m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s";
       upanFile = Replace(upanFile, "Results", m_ss.str());
-      upanFile = Replace(upanFile, ".txt", ".xml");
+      upanFile = Replace(upanFile, ".csv", ".xml");
       m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s.xml";
       std::ofstream stream(upanFile);
       m_ss.str("");
@@ -635,7 +635,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
         cbcFile = "CompleteBloodCount";
       m_ss << "CBC@" << GetSimulationTime(TimeUnit::s) << "s";
       cbcFile = Replace(cbcFile, "Results", m_ss.str());
-      cbcFile = Replace(cbcFile, ".txt", ".xml");
+      cbcFile = Replace(cbcFile, ".csv", ".xml");
       m_ss << "CompleteBloodCount@" << GetSimulationTime(TimeUnit::s) << "s.xml";
       std::ofstream stream(cbcFile);
       m_ss.str("");
@@ -658,7 +658,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
         mpFile = "ComprehensiveMetabolicPanel";
       m_ss << "CMP@" << GetSimulationTime(TimeUnit::s) << "s";
       mpFile = Replace(mpFile, "Results", m_ss.str());
-      mpFile = Replace(mpFile, ".txt", ".xml");
+      mpFile = Replace(mpFile, ".csv", ".xml");
       m_ss << "ComprehensiveMetabolicPanel@" << GetSimulationTime(TimeUnit::s) << "s.xml";
       std::ofstream stream(mpFile);
       m_ss.str("");

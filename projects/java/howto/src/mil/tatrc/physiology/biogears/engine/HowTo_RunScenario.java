@@ -110,7 +110,7 @@ public class HowTo_RunScenario
       return;
     }
 
-    bge.runScenarioXML("./Scenarios/Basic/Basic1.log", xml,"./Scenarios/Basic/Basic1Results.txt", null);// No Callback, just write out the file
+    bge.runScenarioXML("./Scenarios/Basic/Basic1.log", xml,"./Scenarios/Basic/Basic1Results.csv", null);// No Callback, just write out the file
     
     // You could create and provide an SEScenario object as well
     SEScenario sce = new SEScenario(bge.substanceManager);

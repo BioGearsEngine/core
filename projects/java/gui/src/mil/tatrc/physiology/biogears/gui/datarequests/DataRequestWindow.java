@@ -151,7 +151,7 @@ public class DataRequestWindow extends JFrame implements ActionListener
 		}
 		else if (src == resultFileBtn)
 		{			
-			fileChooser.setFileFilter(new FileNameExtensionFilter("txt File", "txt"));
+			fileChooser.setFileFilter(new FileNameExtensionFilter("csv File", "csv"));
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);	
 			fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
 			if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)

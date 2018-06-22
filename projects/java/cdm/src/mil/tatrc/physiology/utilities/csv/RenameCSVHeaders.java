@@ -27,7 +27,7 @@ public class RenameCSVHeaders
     boolean convertToCSV = true;
     
     
-    List<String> baselines = FileUtils.findFiles("..\\verification\\UnitTests\\", ".txt", true);
+    List<String> baselines = FileUtils.findFiles("..\\verification\\UnitTests\\", ".csv", true);
     for(String filename : baselines)
     {
       Log.info("Looking at file: " + filename);

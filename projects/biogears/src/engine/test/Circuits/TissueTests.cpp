@@ -291,7 +291,7 @@ void BioGearsEngineTest::AlveolarOxygenDiffusionTest(const std::string& rptDirec
   SEGasCompartment& gcmpt = bg.GetCompartments().CreateGasCompartment("gcmpt");
 
   DataTrack trk1;
-  std::string rptFile = rptDirectory + "/AlveolarOxygenDiffusionTest.txt";
+  std::string rptFile = rptDirectory + "/AlveolarOxygenDiffusionTest.csv";
   double time = 0.0;
 
   double liquidVol_mL = 1000.0;
@@ -346,7 +346,7 @@ void BioGearsEngineTest::AlveolarCarbonDioxideDiffusionTest(const std::string& r
   Tissue& tsu = (Tissue&)bg.GetTissue();
 
   DataTrack trk2;
-  std::string rptFile = rptDirectory + "/AlveolarCarbonDioxideDiffusionTest.txt";
+  std::string rptFile = rptDirectory + "/AlveolarCarbonDioxideDiffusionTest.csv";
 
   double timestep_s = 1.0 / 90;
 
@@ -421,7 +421,7 @@ void BioGearsEngineTest::InstantPlusSimpleDiffusionTest(const std::string& rptDi
   SELiquidCompartment& cmpt4 = bg.GetCompartments().CreateLiquidCompartment("cmpt4");
 
   DataTrack trk;
-  std::string rptFile = rptDirectory + "/InstantPlusSimpleDiffusionTest.txt";
+  std::string rptFile = rptDirectory + "/InstantPlusSimpleDiffusionTest.csv";
   double time = 0.0;
 
   double permeabilityCoefficient21_mL_Per_s = 5.0;
@@ -528,7 +528,7 @@ void BioGearsEngineTest::SimpleDiffusionTwoCompartmentTest(const std::string& rp
   SELiquidCompartment& cmpt2_EC = bg.GetCompartments().CreateLiquidCompartment("cmpt2_EC");
 
   DataTrack trk2;
-  std::string rptFile = rptDirectory + "/SimpleDiffusionTwoCompartmentTest.txt";
+  std::string rptFile = rptDirectory + "/SimpleDiffusionTwoCompartmentTest.csv";
   double time = 0.0;
 
   double ecVol_mL = 40.0;
@@ -607,7 +607,7 @@ void BioGearsEngineTest::SimpleDiffusionFourCompartmentTest(const std::string& r
   SELiquidCompartment& cmpt4_LQ = bg.GetCompartments().CreateLiquidCompartment("cmpt4_LQ");
 
   DataTrack trk3;
-  std::string rptFile = rptDirectory + "/SimpleDiffusionFourCompartmentTest.txt";
+  std::string rptFile = rptDirectory + "/SimpleDiffusionFourCompartmentTest.csv";
   double time = 0.0;
 
   // Initialize
@@ -698,7 +698,7 @@ void BioGearsEngineTest::SimpleDiffusionHierarchyTest(const std::string& rptDire
   bg.GetSubstances().AddActiveSubstance(*sub);
 
   DataTrack trk4;
-  std::string rptFile = rptDirectory + "/SimpleDiffusionHierarchyTest.txt";
+  std::string rptFile = rptDirectory + "/SimpleDiffusionHierarchyTest.csv";
   double time = 0.0;
 
   SELiquidCompartment& L0C0 = bg.GetCompartments().CreateLiquidCompartment("L0C0");
@@ -828,7 +828,7 @@ void BioGearsEngineTest::FacilitatedDiffusionTest(const std::string& rptDirector
   SELiquidCompartment& vascular = bg.GetCompartments().CreateLiquidCompartment("Vascular");
 
   DataTrack trk1;
-  std::string rptFile = rptDirectory + "/FacilitatedDiffusionTest.txt";
+  std::string rptFile = rptDirectory + "/FacilitatedDiffusionTest.csv";
   double time = 0.0;
 
   tissueExtracellular.GetVolume().SetValue(45.0, VolumeUnit::mL);
@@ -946,8 +946,8 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
     Combined = 2 };
   int testRun = Combined;
   m_Logger->ResetLogFile(rptDirectory + "/TissueCombinedTransportTest.log");
-  std::string circuitFile = rptDirectory + "/TissueTransportCircuit.txt";
-  std::string testFile = rptDirectory + "/TissueCombinedTransportTest.txt";
+  std::string circuitFile = rptDirectory + "/TissueTransportCircuit.csv";
+  std::string testFile = rptDirectory + "/TissueCombinedTransportTest.csv";
   BioGears bg(m_Logger);
   SECircuitManager circuits(m_Logger);
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);

@@ -40,8 +40,8 @@ public class CSVComparison extends TestReport
       if(args.length==1&&args[0].equals("default"))
       {
         args = new String[10];
-        args[0] = "./Scenario1Results_1.txt";// Expected
-        args[1] = "./Scenario1Results_1.txt";// Computed   
+        args[0] = "./Scenario1Results_1.csv";// Expected
+        args[1] = "./Scenario1Results_1.csv";// Computed   
         args[2] = "2.0";// Percent Difference Allowed       
         args[3] = "false";// Report Differences in the error report, turn off if you are expecting a LOT of error
       }
@@ -85,7 +85,7 @@ public class CSVComparison extends TestReport
     if(!expectedFile.exists())
     {
       // Check to see if there is a zip available
-      String eZip = expectedFilePath.replaceAll(".txt", ".zip");
+      String eZip = expectedFilePath.replaceAll(".csv", ".zip");
       expectedFile = new File(eZip);
       if(!expectedFile.exists())
       {

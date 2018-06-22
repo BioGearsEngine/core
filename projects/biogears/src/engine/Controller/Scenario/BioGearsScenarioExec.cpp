@@ -63,7 +63,7 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     std::string rFile = resultsFile;
     if (rFile.empty()) {
       rFile = scenarioFile;
-      rFile += ".txt";
+      rFile += ".csv";
     }
     bool success = SEScenarioExec::Execute(scenario, rFile, cExec);
     return success;

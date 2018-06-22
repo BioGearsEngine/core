@@ -94,7 +94,7 @@ void HowToVasopressinShockTherapy()
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Ground", "InFlow", VolumePerTimeUnit::mL_Per_min);
 
   //Create the text file to output results with all of the data requests called above
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HemorrhageScenario_Control.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HemorrhageScenario_Control.csv");
 
   bool control = true; //Use to flag which variation you want to run
 

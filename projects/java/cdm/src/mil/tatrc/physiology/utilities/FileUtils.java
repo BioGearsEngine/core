@@ -53,8 +53,8 @@ public class FileUtils
 
   public static void main(String[] args)
   {
-    for(String file : FileUtils.findFiles("./new_baselines", ".txt", false))
-      FileUtils.zipFiles(new String[]{file}, file.replaceAll(".txt", ".zip"));  	
+    for(String file : FileUtils.findFiles("./new_baselines", ".csv", false))
+      FileUtils.zipFiles(new String[]{file}, file.replaceAll(".csv", ".zip"));  	
   }
   
   public static boolean loadLibraries(ArrayList<Path>  libraries)

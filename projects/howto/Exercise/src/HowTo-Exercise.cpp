@@ -71,7 +71,7 @@ void HowToExercise()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalMetabolicRate", PowerUnit::W);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalWorkRateLevel");
 	
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToExercise.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToExercise.csv");
 
 	// Advance some time to get some resting data
 	tracker.AdvanceModelTime(20);

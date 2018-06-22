@@ -136,7 +136,7 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
     outTrk.Track("CerebralPerfusionPressure(mmHg)", time_s, map_mmHg - brain->GetPressure(PressureUnit::mmHg));
 
     if (i == 0) {
-      outTrk.CreateFile(std::string(sTestDirectory + "/" + tName + ".txt").c_str(), file);
+      outTrk.CreateFile(std::string(sTestDirectory + "/" + tName + ".csv").c_str(), file);
     }
 
     time_s += timeStep_s;

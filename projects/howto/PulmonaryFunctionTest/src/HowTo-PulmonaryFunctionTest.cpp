@@ -67,7 +67,7 @@ void HowToPulmonaryFunction()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToPulmonaryFunctionTest.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToPulmonaryFunctionTest.csv");
 
 	tracker.AdvanceModelTime(5);
 

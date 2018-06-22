@@ -67,7 +67,7 @@ void RunScenarioTask::Run()
   // Set up the verification output file
   std::string dataFile = m_scenarioFile;
   dataFile = Replace(dataFile, "verification", "bin");
-  dataFile = Replace(dataFile, ".xml", "Results.txt");
+  dataFile = Replace(dataFile, ".xml", "Results.csv");
   // Delete any results file that may be there
   remove(dataFile.c_str());
 

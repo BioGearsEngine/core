@@ -63,7 +63,7 @@ void HowToAsthma()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InspiratoryExpiratoryRatio");
   bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Carina, "InFlow");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToAsthma.txt");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToAsthma.csv");
 
 	// Advance some time to get some healthy data
 	tracker.AdvanceModelTime(50);

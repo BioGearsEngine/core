@@ -94,7 +94,7 @@ public class Rebase
     }
     List<String> resultsFiles;
     if(configFile.isEmpty() || configFile.equalsIgnoreCase("ALL"))
-      resultsFiles = FileUtils.findFiles(fromDir, ".txt", true);
+      resultsFiles = FileUtils.findFiles(fromDir, ".csv", true);
     else
     {
       // Read the config file and find the files
@@ -114,7 +114,7 @@ public class Rebase
         if(f.endsWith(".xml"))
         {
           String resultFile = fromDir+f;
-          resultsFiles.add(resultFile.replaceAll(".xml","Results.txt"));
+          resultsFiles.add(resultFile.replaceAll(".xml","Results.csv"));
         }
       }
     }
@@ -122,8 +122,8 @@ public class Rebase
     {
       String srcLog = "";
       if(scenarios)
-        srcLog = rFile.replaceAll("Results.txt", ".log");
-      String prepend = rFile.substring(rFile.indexOf(fromDir)+fromDir.length(),rFile.indexOf(".txt"));
+        srcLog = rFile.replaceAll("Results.csv", ".log");
+      String prepend = rFile.substring(rFile.indexOf(fromDir)+fromDir.length(),rFile.indexOf(".csv"));
       if(scenarios)
       {
         String[] dirs = prepend.split("[/\\\\]");
