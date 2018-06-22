@@ -35,6 +35,8 @@ _scenario_driver    = None
 _clean_directory  = False
 archive_extension    = ".zip"
 _baseline_dir     = "baselines"
+_compression_format = 'zlib'
+
 def main( args):
     global _log_verbose
     global _root_directory
@@ -56,6 +58,7 @@ def main( args):
     common_flags = argparse.ArgumentParser(add_help=False)
     common_flags.add_argument('-r', '--recursive', dest='recurse', action='store_true' ,help='Activates recursive mode')
     common_flags.add_argument('-c', '--cleanup', dest='clean',  action='store_true' ,help='Activates recursive mode')
+    common_flags.add_argument('-z', '--compression', type=str, choices=['zlib','bzip','lzma'], default='zlib' )
     
     archive = subparsers.add_parser('archive',  parents=[common_flags], help='Archives existing runs to a base_line directory.')
     archive.add_argument('path', type=str, help='Source to be archived')    
@@ -79,6 +82,8 @@ def main( args):
         args.func(args)
 
 def archive_command(args):
+    global _compression_format
+    _compression_format = args.compression
     if(args.clean):
         cleanup(_output_directory)
     archive(args.root, args.path, args.recurse, False)
@@ -106,8 +111,10 @@ def archive (root, path, recurse, clean):
 def rebase_command(args):
     global _runtime_directory
     global _scenario_driver
+    global _compression_format
     _runtime_directory = args.workdir if args.workdir else _root_directory
     _scenario_driver = args.driver if args.driver else scenario-driver
+    _compression_format = args.compression
     if(args.clean):
         cleanup(_output_directory)
     rebase(args.root, args.path, args.recurse, False)
@@ -145,7 +152,7 @@ def compress_and_store(source,destination):
     archive_name = name + archive_extension
 
     if ( not os.path.exists( destination )):
-        os.mkdir( destination )
+        os.makedirs( destination )
 
     archive = os.path.join(destination, archive_name)
     
@@ -157,7 +164,14 @@ def compress_and_store(source,destination):
             err("Unable to remove {0}".format(archive), LOG_LEVEL_0)
     if ( os.path.exists(source) ):
         log("{0} -> {1}".format(source,archive),LOG_LEVEL_1)
-        zip = zipfile.ZipFile( archive , mode='w' )
+
+        format = zipfile.ZIP_DEFLATED
+        if _compression_format == 'lzma':
+            format = zipfile.ZIP_LZMA
+        elif _compression_format == 'bzip':
+            format = zipfile.ZIP_BZIP2
+        
+        zip = zipfile.ZipFile( archive , mode='w', compression=format )
         try:
             log( "Archiving {0} in {1}".format(source,archive), LOG_LEVEL_2)
             zip.write( source, source_name )
