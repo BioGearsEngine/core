@@ -420,7 +420,10 @@ public class TestDriver
             possiblePath = Paths.get(verificationDirectory+"/"+result+".zip");
             if(Files.exists(possiblePath))
             {  job.baselineFiles.add(possiblePath.toString());  }
-            job.computedFiles.add(job.computedDirectory+"/"+result+".txt");
+            possiblePath = Paths.get(verificationDirectory+"/baselines/"+result+".zip");
+            if(Files.exists(possiblePath))
+            {  job.baselineFiles.add(possiblePath.toString());  }
+            job.computedFiles.add(job.computedDirectory+"/"+result+".csv");
           }
         }
         else
@@ -432,13 +435,15 @@ public class TestDriver
           else
           {
             Path possiblePath = Paths.get(job.baselineDirectory+"/"+job.name+".zip");
-            System.out.println("Possible Path = " + job.baselineDirectory+" , "+job.name+".zip" );
             if(Files.exists(possiblePath))
             { job.baselineFiles.add(possiblePath.toString()); }
             possiblePath = Paths.get(verificationDirectory+"/"+job.name+".zip");
             if(Files.exists(possiblePath))
             { job.baselineFiles.add(possiblePath.toString()); }
-            job.computedFiles.add(job.computedDirectory+"/"+job.name+".txt");
+            possiblePath = Paths.get(verificationDirectory+"/baselines/"+job.name+".zip");
+            if(Files.exists(possiblePath))
+            {  job.baselineFiles.add(possiblePath.toString());  }
+            job.computedFiles.add(job.computedDirectory+"/"+job.name+".csv");
           }
         }
       }
@@ -528,9 +533,8 @@ public class TestDriver
     String output = job.computedDirectory;
     for(int i=0; i<dirs.length; i++)
       output+="/"+dirs[i];
-    output+="Results.txt";
-    //example : Scenarios/Validation/Patient-ValidationResults.txt
-    System.out.println("538: " + output);
+    output+="Results.csv";
+    //example : Scenarios/Validation/Patient-ValidationResults.csv
     job.computedFiles.add(output);
   }
 
@@ -545,20 +549,30 @@ public class TestDriver
         {
           if(job.name.endsWith(".xml"))//This should be a scenario file, different naming convention
           {
-            String[] dirs = toCompute.substring(0,toCompute.indexOf(".txt")).split("[/\\\\]");
-            String report = toCompute.substring(0,toCompute.indexOf(".txt"))+"/"+dirs[dirs.length-1]+"Report.xml";
-            System.out.println("549:"+report);
+            String[] dirs = toCompute.substring(0,toCompute.indexOf(".csv")).split("[/\\\\]");
+            String report = toCompute.substring(0,toCompute.indexOf(".csv"))+"/"+dirs[dirs.length-1]+"Report.xml";
+            report = report.replace("baselines/","");
+            report= report.replace("//","/");
+            System.out.println("555: Adding " + report);
             job.reportFiles.add(report);
           }
           else
           {
             String path = toCompute.substring(0, toCompute.lastIndexOf("."));
             path = path + path.substring(path.lastIndexOf("/")) + "Report.xml";
+            path = path.replace("baselines/","");
+            path = path.replace("//","/");
+            System.out.println("562: Adding " + path);
             job.reportFiles.add(path);
           }
         }
-        else
-          job.reportFiles.add(toCompute.substring(0, toCompute.lastIndexOf("."))+"Report.xml");
+        else {
+          String path = toCompute.substring(0, toCompute.lastIndexOf("."))+"Report.xml";
+          path = path.replace("baselines/","");
+          path = path.replace("//","/");
+          System.out.println("568: Adding " + path);
+          job.reportFiles.add(path);
+        }
       }
 
       if(!job.skipExecution)
@@ -687,8 +701,9 @@ public class TestDriver
   {
     List<String> currentGroup;
     TestReport report = new TestReport();    
-    report.setFullReportPath(this.name+"Report.xml");    
-    System.out.println("549:"+this.name+":"+"Report.xml");
+    String path = this.name + "Report.xml"; 
+    path = path.replace("baselines/","").replace("//","/");
+    report.setFullReportPath(path);
     for(TestJob job : this.jobs)
     {
       String group = job2groups.get(job);
@@ -783,20 +798,19 @@ public class TestDriver
   static void DeleteTestResults(String hint, boolean executeJobs, boolean plotResults)
   {// Try and delete all files related to this test
     // There are lots of various naming conventions, and this should support all of them
-    System.out.println( " Deleting " + hint );
     // Get rid of any extensions
     hint = hint.replaceAll(".xml", "");
-    hint = hint.replaceAll(".txt", "");
+    hint = hint.replaceAll(".csv", "");
 
     if(executeJobs)
     {
       FileUtils.delete(hint+".log");
       FileUtils.delete(hint+"Test.log");
-      FileUtils.delete(hint+".txt");
+      FileUtils.delete(hint+".csv");
       //FileUtils.delete(hint+".xml");
       FileUtils.delete(hint+"Test.xml");
       FileUtils.delete(hint+"Report.xml");
-      FileUtils.delete(hint+"Results.txt");
+      FileUtils.delete(hint+"Results.csv");
     }
     
     if(plotResults)
