@@ -516,15 +516,15 @@ public class TestDriver
     {
       path += "/" + dirs[i];
     }
-    Path possiblePath = Paths.get(dir , path , "/Current Baseline/"+dirs[dirs.length-1]+"Results.zip");
+    Path possiblePath = Paths.get(dir , path , "/baselines/"+dirs[dirs.length-1]+"Results.zip");
     if( Files.exists(possiblePath) ){
             job.baselineFiles.add( possiblePath.toString() );
     }
-    possiblePath = Paths.get(job.verificationDirectory,  job.computedDirectory, path, "/Current Baseline/"+dirs[dirs.length-1]+"Results.zip");
+    possiblePath = Paths.get(job.verificationDirectory,  job.computedDirectory, path, "/baselines/"+dirs[dirs.length-1]+"Results.zip");
     if( Files.exists(possiblePath) ) {
             job.baselineFiles.add(possiblePath.toString() );
     }
-    //example : verification\Scenarios\Validation\Current Baseline\Patient-ValidationResults.zip
+    //example : verification\Scenarios\Validation\baselines\Patient-ValidationResults.zip
     String output = job.computedDirectory;
     for(int i=0; i<dirs.length; i++)
       output+="/"+dirs[i];

@@ -129,7 +129,7 @@ public class Rebase
         String[] dirs = prepend.split("[/\\\\]");
         if(dirs.length==1)
         	continue;//We ignore anything in the Scenario\root folder, those are not verifiable runs, (like runs to make initial state files)
-        prepend = dirs[0] +"\\\\Current Baseline\\\\" + dirs[1];
+        prepend = dirs[0] +"\\\\baselines\\\\" + dirs[1];
       }
       String newFile = toDir + prepend + ".zip";
       Log.info("Creating new file "+newFile);

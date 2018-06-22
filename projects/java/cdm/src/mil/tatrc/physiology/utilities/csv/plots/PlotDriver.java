@@ -555,7 +555,7 @@ public class PlotDriver
       	{
       	//If this is a scenario test, remove "Results" from name and don't add "Test"
       		job.logFile = job.name.substring(0,job.name.indexOf("Results"))+".log";
-      		job.scenarioPath = expectedPath.substring(0,expectedPath.indexOf("Current Baseline"));
+      		job.scenarioPath = expectedPath.substring(0,expectedPath.indexOf("baselines"));
       		job.scenarioFile = job.name.substring(0,job.name.indexOf("Results"))+".xml";
       		job.hideAELegend = true;
       	}
@@ -645,7 +645,7 @@ public class PlotDriver
     	{
     		//If this is a scenario test, remove "Results" from name and don't add "Test"
     		job.logFile = job.name.substring(0,job.name.indexOf("Results"))+".log";
-    		job.scenarioPath = expectedPath.substring(0,expectedPath.indexOf("Current Baseline"));
+    		job.scenarioPath = expectedPath.substring(0,expectedPath.indexOf("baseline"));
     		job.scenarioFile = job.name.substring(0,job.name.indexOf("Results"))+".xml";
     		job.hideAELegend = true;
     	}
