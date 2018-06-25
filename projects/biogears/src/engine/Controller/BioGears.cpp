@@ -769,32 +769,32 @@ bool BioGears::SetupPatient()
   //The max work rate is determined from linear regressions of research by Plowman et al., with differences dependent on sex and age
   /// \cite plowman2013exercise
   double maxWorkRate_W;
-  double computmaxWorkRate_W;
+  double computedMaxWorkRate_W;
 
     if (m_Patient->GetSex() == CDM::enumSex::Male) {
       if (age_yr >= 60.) {
-        computmaxWorkRate_W = ((-24.3 * 60.) + 2070.);
+        computedMaxWorkRate_W = ((-24.3 * 60.) + 2070.);
       } else {
-        computmaxWorkRate_W = ((-24.3 * age_yr) + 2070.);
+        computedMaxWorkRate_W = ((-24.3 * age_yr) + 2070.);
       }
   } else {
       if (age_yr >= 60.) {
-        computmaxWorkRate_W = ((-20.7 * 60.) + 1673.);
+        computedMaxWorkRate_W = ((-20.7 * 60.) + 1673.);
       } else {
-        computmaxWorkRate_W = ((-20.7 * age_yr) + 1673.);
+        computedMaxWorkRate_W = ((-20.7 * age_yr) + 1673.);
       }
     }
 
-  if (!m_Patient->HasmaxWorkRate()) {
-      maxWorkRate_W = computmaxWorkRate_W;
-      m_Patient->GetmaxWorkRate().SetValue(maxWorkRate_W, PowerUnit::W);
+  if (!m_Patient->HasMaxWorkRate()) {
+      maxWorkRate_W = computedMaxWorkRate_W;
+      m_Patient->GetMaxWorkRate().SetValue(maxWorkRate_W, PowerUnit::W);
 
-      ss << "No patient maximum work rate set. Using a computed value of " << computmaxWorkRate_W << " Watts.";
+      ss << "No patient maximum work rate set. Using a computed value of " << computedMaxWorkRate_W << " Watts.";
       Info(ss);
     }
-    maxWorkRate_W = m_Patient->GetmaxWorkRate(PowerUnit::W);
-    if (maxWorkRate_W != computmaxWorkRate_W) {
-      ss << "Specified maximum work rate of " << maxWorkRate_W << " Watts differs from computed value of " << computmaxWorkRate_W << " Watts. No guarantees of model validity.";
+    maxWorkRate_W = m_Patient->GetMaxWorkRate(PowerUnit::W);
+    if (maxWorkRate_W != computedMaxWorkRate_W) {
+      ss << "Specified maximum work rate of " << maxWorkRate_W << " Watts differs from computed value of " << computedMaxWorkRate_W << " Watts. No guarantees of model validity.";
       Warning(ss);
     }
 
