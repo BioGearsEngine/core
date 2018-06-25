@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<p1:Urinalysis xmlns:p1="uri:/mil/tatrc/physiology/datamodel" contentVersion="BioGears_6.1.1_beta" xmlns="uri:/mil/tatrc/phsyiology/datamodel">
-  <p1:Color>Yellow</p1:Color>
-  <p1:Glucose>Negative</p1:Glucose>
-  <p1:Ketone>Negative</p1:Ketone>
-  <p1:SpecificGravity readOnly="false" value="1.03158869592264"/>
-  <p1:Blood>Positive</p1:Blood>
-  <p1:Protein>Negative</p1:Protein>
-</p1:Urinalysis>
