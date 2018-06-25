@@ -105,31 +105,31 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
 )
 
-file(GLOB_RECURSE runtime_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
+file(GLOB_RECURSE source_xsd_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
+string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_xsd_list "${source_xsd_list}" )
+
 add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/xsd
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/xsd ${runtime_xsd_list}
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${runtime_xsd_list}
+	${source_xsd_list}
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/xsd  ${PROJECT_BINARY_DIR}/runtime/xsd
 )
 
-file(GLOB_RECURSE runtime_jar_list "${PROJECT_SOURCE_DIR}/share/jar/*.jar")
+file(GLOB_RECURSE source_jar_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/jar/*.jar")
+string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_jar_list "${source_jar_list}" )
 add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/jar
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/jar ${runtime_jar_list}
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${runtime_jar_list}
+	${source_jar_list}
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/jar  ${PROJECT_BINARY_DIR}/runtime/jar
 )
 
-file(GLOB_RECURSE runtime_data_list "${PROJECT_SOURCE_DIR}/share/data/*")
+file(GLOB_RECURSE source_data_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
+string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${PROJECT_BINARY_DIR}/runtime" runtime_data_list "${source_data_list}" )
 add_custom_command(
-	OUTPUT 
-	${PROJECT_BINARY_DIR}/runtime/BGEUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugPlots.config            ${PROJECT_BINARY_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_BINARY_DIR}/runtime/ValidationPatients.config  ${PROJECT_BINARY_DIR}/runtime/VerificationScenarios.config
-	${PROJECT_BINARY_DIR}/runtime/CDMUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugRun.config              ${PROJECT_BINARY_DIR}/runtime/PlotRun.config                    ${PROJECT_BINARY_DIR}/runtime/ValidationSystems.config
-	${PROJECT_BINARY_DIR}/runtime/Characterize.config  ${PROJECT_BINARY_DIR}/runtime/InitialPatientStates.config  ${PROJECT_BINARY_DIR}/runtime/ValidationDrugs.config            ${PROJECT_BINARY_DIR}/runtime/ValidationTables.config
-	${PROJECT_BINARY_DIR}/runtime/ConfigEmailList.txt
+	OUTPUT ${runtime_data_list}
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-    ${runtime_data_list}
+    ${source_data_list}
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
 )
 
@@ -139,28 +139,26 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/etc  ${PROJECT_BINARY_DIR}/runtime
 )
 
-file(GLOB_RECURSE runtime_doc_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
+file(GLOB_RECURSE source_doc_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
+string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_doc_list "${source_doc_list}" )
 add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/doc
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/doc ${runtime_doc_list}
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${runtime_doc_list}
+	${source_doc_list}
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/doc  ${PROJECT_BINARY_DIR}/runtime/doc
 )
 
-file(GLOB_RECURSE runtime_scenario_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
+file(GLOB_RECURSE source_scenario_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
+string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_scenario_list "${source_scenario_list}" )
 add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/Scenarios
+	OUTPUT ${PROJECT_BINARY_DIR}/runtime/Scenarios ${runtime_scenario_list}
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${runtime_scenario_list}
+	${source_scenario_list}
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/Scenarios ${PROJECT_BINARY_DIR}/runtime/Scenarios
 )
 
-list(APPEND source_glob_list 	"${runtime_xsd_list}"	"${runtime_jar_list}" 	"${runtime_data_list}" 	"${runtime_doc_list}" 	"${runtime_scenario_list}")
-string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${PROJECT_BINARY_DIR}/runtime" runtime_glob_list "${source_glob_list}" )
-string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_glob_list "${runtime_glob_list}" )
+list(APPEND runtime_glob_list 	"${runtime_xsd_list}"	"${runtime_jar_list}" 	"${runtime_data_list}" 	"${runtime_doc_list}" 	"${runtime_scenario_list}")
 
-
-message(STATUS "\${runtime_glob_list}=${runtime_glob_list}")
 add_custom_target( stage_runtime ALL
     DEPENDS 
 	${PROJECT_BINARY_DIR}/runtime
