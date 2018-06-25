@@ -120,6 +120,7 @@ add_custom_command(
 	${PROJECT_BINARY_DIR}/runtime/BGEUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugPlots.config            ${PROJECT_BINARY_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_BINARY_DIR}/runtime/ValidationPatients.config  ${PROJECT_BINARY_DIR}/runtime/VerificationScenarios.config
 	${PROJECT_BINARY_DIR}/runtime/CDMUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugRun.config              ${PROJECT_BINARY_DIR}/runtime/PlotRun.config                    ${PROJECT_BINARY_DIR}/runtime/ValidationSystems.config
 	${PROJECT_BINARY_DIR}/runtime/Characterize.config  ${PROJECT_BINARY_DIR}/runtime/InitialPatientStates.config  ${PROJECT_BINARY_DIR}/runtime/ValidationDrugs.config            ${PROJECT_BINARY_DIR}/runtime/ValidationTables.config
+	${PROJECT_BINARY_DIR}/runtime/ConfigEmailList.txt
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
 )
