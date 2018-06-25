@@ -105,31 +105,23 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
 )
 
+file(GLOB_RECURSE runtime_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/xsd
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.xsd ${PROJECT_SOURCE_DIR}/share/xsd/CommonDataModel.xsd
-	${PROJECT_SOURCE_DIR}/share/xsd/BioGearsConfiguration.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/BioGearsEnvironment.xsd    ${PROJECT_SOURCE_DIR}/share/xsd/BioGearsEquipment.xsd   ${PROJECT_SOURCE_DIR}/share/xsd/BioGearsPhysiology.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/BioGears.xsd
-	${PROJECT_SOURCE_DIR}/share/xsd/cAnesthesiaActions.xsd     ${PROJECT_SOURCE_DIR}/share/xsd/EngineConfiguration.xsd    ${PROJECT_SOURCE_DIR}/share/xsd/InhalerActions.xsd      ${PROJECT_SOURCE_DIR}/share/xsd/PatientNutrition.xsd    ${PROJECT_SOURCE_DIR}/share/xsd/SubstanceQuantity.xsd
-	${PROJECT_SOURCE_DIR}/share/xsd/Anesthesia.xsd             ${PROJECT_SOURCE_DIR}/share/xsd/EngineState.xsd            ${PROJECT_SOURCE_DIR}/share/xsd/Inhaler.xsd             ${PROJECT_SOURCE_DIR}/share/xsd/Patient.xsd             ${PROJECT_SOURCE_DIR}/share/xsd/Substance.xsd
-	${PROJECT_SOURCE_DIR}/share/xsd/Circuit.xsd                ${PROJECT_SOURCE_DIR}/share/xsd/EnvironmentActions.xsd     ${PROJECT_SOURCE_DIR}/share/xsd/PatientActions.xsd      ${PROJECT_SOURCE_DIR}/share/xsd/Physiology.xsd          ${PROJECT_SOURCE_DIR}/share/xsd/System.xsd
-	${PROJECT_SOURCE_DIR}/share/xsd/Compartment.xsd            ${PROJECT_SOURCE_DIR}/share/xsd/EnvironmentConditions.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/PatientAssessments.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/Properties.xsd          ${PROJECT_SOURCE_DIR}/share/xsd/TestReport.xsd
-	${PROJECT_SOURCE_DIR}/share/xsd/ElectroCardioGram.xsd      ${PROJECT_SOURCE_DIR}/share/xsd/Environment.xsd            ${PROJECT_SOURCE_DIR}/share/xsd/PatientConditions.xsd   ${PROJECT_SOURCE_DIR}/share/xsd/Scenario.xsd
+	${runtime_xsd_list}
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/xsd  ${PROJECT_BINARY_DIR}/runtime/xsd
 )
+
+file(GLOB_RECURSE runtime_jar_list "${PROJECT_SOURCE_DIR}/share/jar/*.jar")
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/jar
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${PROJECT_SOURCE_DIR}/share/jar/commons-logging-1.2.jar  ${PROJECT_SOURCE_DIR}/share/jar/javassist-3.16.1-GA.jar  ${PROJECT_SOURCE_DIR}/share/jar/jsr305-1.3.9.jar                     ${PROJECT_SOURCE_DIR}/share/jar/slf4j-api-1.6.1.jar
-    ${PROJECT_SOURCE_DIR}/share/jar/dom4j-1.6.1.jar          ${PROJECT_SOURCE_DIR}/share/jar/javax.mail-1.6.1.jar     ${PROJECT_SOURCE_DIR}/share/jar/log4j-1.2.17.jar                     ${PROJECT_SOURCE_DIR}/share/jar/slf4j-simple-1.6.1.jar
-    ${PROJECT_SOURCE_DIR}/share/jar/dsn.jar                  ${PROJECT_SOURCE_DIR}/share/jar/jchart2d-3.2.2.jar       ${PROJECT_SOURCE_DIR}/share/jar/pdfbox-2.0.0-RC3.jar                 ${PROJECT_SOURCE_DIR}/share/jar/smtp.jar
-    ${PROJECT_SOURCE_DIR}/share/jar/fontbox-2.0.0-RC3.jar    ${PROJECT_SOURCE_DIR}/share/jar/jcommon-1.0.16.jar       ${PROJECT_SOURCE_DIR}/share/jar/poi-3.13-20150929.jar                ${PROJECT_SOURCE_DIR}/share/jar/swtgraphics2d.jar
-    ${PROJECT_SOURCE_DIR}/share/jar/gson-1.4.jar             ${PROJECT_SOURCE_DIR}/share/jar/jdom-1.1.2.jar           ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-3.13-20150929.jar          ${PROJECT_SOURCE_DIR}/share/jar/xml-apis-1.0.b2.jar
-    ${PROJECT_SOURCE_DIR}/share/jar/guava-11.0.2.jar         ${PROJECT_SOURCE_DIR}/share/jar/jdom-2.0.2.jar           ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-schemas-3.13-20150929.jar  ${PROJECT_SOURCE_DIR}/share/jar/xmlbeans-2.6.0.jar
-    ${PROJECT_SOURCE_DIR}/share/jar/imap.jar                 ${PROJECT_SOURCE_DIR}/share/jar/jfreechart-1.0.13.jar    ${PROJECT_SOURCE_DIR}/share/jar/pop3.jar                             ${PROJECT_SOURCE_DIR}/share/jar/xmlgraphics-commons-1.3.1.jar
-    ${PROJECT_SOURCE_DIR}/share/jar/iText-2.1.5.jar          ${PROJECT_SOURCE_DIR}/share/jar/jide-oss-2.9.7.jar       ${PROJECT_SOURCE_DIR}/share/jar/reflections-0.9.9-RC1-uberjar.jar    ${PROJECT_SOURCE_DIR}/share/jar/zip4j-1.3.1.jar
+	${runtime_jar_list}
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/jar  ${PROJECT_BINARY_DIR}/runtime/jar
 )
+
+file(GLOB_RECURSE runtime_data_list "${PROJECT_SOURCE_DIR}/share/data/*")
 add_custom_command(
 	OUTPUT 
 	${PROJECT_BINARY_DIR}/runtime/BGEUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugPlots.config            ${PROJECT_BINARY_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_BINARY_DIR}/runtime/ValidationPatients.config  ${PROJECT_BINARY_DIR}/runtime/VerificationScenarios.config
@@ -137,38 +129,43 @@ add_custom_command(
 	${PROJECT_BINARY_DIR}/runtime/Characterize.config  ${PROJECT_BINARY_DIR}/runtime/InitialPatientStates.config  ${PROJECT_BINARY_DIR}/runtime/ValidationDrugs.config            ${PROJECT_BINARY_DIR}/runtime/ValidationTables.config
 	${PROJECT_BINARY_DIR}/runtime/ConfigEmailList.txt
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-    ${PROJECT_SOURCE_DIR}/runtime/BGEUnitTests.config  ${PROJECT_SOURCE_DIR}/runtime/DebugPlots.config            ${PROJECT_SOURCE_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_SOURCE_DIR}/runtime/ValidationPatients.config  ${PROJECT_SOURCE_DIR}/runtime/VerificationScenarios.config
-	${PROJECT_SOURCE_DIR}/runtime/CDMUnitTests.config  ${PROJECT_SOURCE_DIR}/runtime/DebugRun.config              ${PROJECT_SOURCE_DIR}/runtime/PlotRun.config                    ${PROJECT_SOURCE_DIR}/runtime/ValidationSystems.config
-	${PROJECT_SOURCE_DIR}/runtime/Characterize.config  ${PROJECT_SOURCE_DIR}/runtime/InitialPatientStates.config  ${PROJECT_SOURCE_DIR}/runtime/ValidationDrugs.config            ${PROJECT_SOURCE_DIR}/runtime/ValidationTables.config
-	${PROJECT_SOURCE_DIR}/runtime/ConfigEmailList.txt
+    ${runtime_data_list}
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
 )
+
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/etc  ${PROJECT_BINARY_DIR}/runtime
 )
+
+file(GLOB_RECURSE runtime_doc_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/doc
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+	${runtime_doc_list}
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/doc  ${PROJECT_BINARY_DIR}/runtime/doc
 )
+
+file(GLOB_RECURSE runtime_scenario_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/Scenarios
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+	${runtime_scenario_list}
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/Scenarios ${PROJECT_BINARY_DIR}/runtime/Scenarios
 )
 
+list(APPEND source_glob_list 	"${runtime_xsd_list}"	"${runtime_jar_list}" 	"${runtime_data_list}" 	"${runtime_doc_list}" 	"${runtime_scenario_list}")
+string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${PROJECT_BINARY_DIR}/runtime" runtime_glob_list "${source_glob_list}" )
+string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_glob_list "${runtime_glob_list}" )
+
+
+message(STATUS "\${runtime_glob_list}=${runtime_glob_list}")
 add_custom_target( stage_runtime ALL
     DEPENDS 
 	${PROJECT_BINARY_DIR}/runtime
-	${PROJECT_BINARY_DIR}/runtime/Scenarios
-	${PROJECT_BINARY_DIR}/runtime/xsd 
-	${PROJECT_BINARY_DIR}/runtime/jar
-	${PROJECT_BINARY_DIR}/runtime/doc
 	${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
-	${PROJECT_BINARY_DIR}/runtime/BGEUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugPlots.config            ${PROJECT_BINARY_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_BINARY_DIR}/runtime/ValidationPatients.config  ${PROJECT_BINARY_DIR}/runtime/VerificationScenarios.config
-	${PROJECT_BINARY_DIR}/runtime/CDMUnitTests.config  ${PROJECT_BINARY_DIR}/runtime/DebugRun.config              ${PROJECT_BINARY_DIR}/runtime/PlotRun.config                    ${PROJECT_BINARY_DIR}/runtime/ValidationSystems.config
-	${PROJECT_BINARY_DIR}/runtime/Characterize.config  ${PROJECT_BINARY_DIR}/runtime/InitialPatientStates.config  ${PROJECT_BINARY_DIR}/runtime/ValidationDrugs.config            ${PROJECT_BINARY_DIR}/runtime/ValidationTables.config
-    COMMENT "Scanning for need to stage runtime dir"
-)
+	${runtime_glob_list}
+	
+	COMMENT "Scanning for need to stage runtime dir"
+)	
