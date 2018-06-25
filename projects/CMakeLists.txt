@@ -108,11 +108,26 @@ add_custom_command(
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/xsd
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+	${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.xsd ${PROJECT_SOURCE_DIR}/share/xsd/CommonDataModel.xsd
+	${PROJECT_SOURCE_DIR}/share/xsd/BioGearsConfiguration.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/BioGearsEnvironment.xsd    ${PROJECT_SOURCE_DIR}/share/xsd/BioGearsEquipment.xsd   ${PROJECT_SOURCE_DIR}/share/xsd/BioGearsPhysiology.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/BioGears.xsd
+	${PROJECT_SOURCE_DIR}/share/xsd/cAnesthesiaActions.xsd     ${PROJECT_SOURCE_DIR}/share/xsd/EngineConfiguration.xsd    ${PROJECT_SOURCE_DIR}/share/xsd/InhalerActions.xsd      ${PROJECT_SOURCE_DIR}/share/xsd/PatientNutrition.xsd    ${PROJECT_SOURCE_DIR}/share/xsd/SubstanceQuantity.xsd
+	${PROJECT_SOURCE_DIR}/share/xsd/Anesthesia.xsd             ${PROJECT_SOURCE_DIR}/share/xsd/EngineState.xsd            ${PROJECT_SOURCE_DIR}/share/xsd/Inhaler.xsd             ${PROJECT_SOURCE_DIR}/share/xsd/Patient.xsd             ${PROJECT_SOURCE_DIR}/share/xsd/Substance.xsd
+	${PROJECT_SOURCE_DIR}/share/xsd/Circuit.xsd                ${PROJECT_SOURCE_DIR}/share/xsd/EnvironmentActions.xsd     ${PROJECT_SOURCE_DIR}/share/xsd/PatientActions.xsd      ${PROJECT_SOURCE_DIR}/share/xsd/Physiology.xsd          ${PROJECT_SOURCE_DIR}/share/xsd/System.xsd
+	${PROJECT_SOURCE_DIR}/share/xsd/Compartment.xsd            ${PROJECT_SOURCE_DIR}/share/xsd/EnvironmentConditions.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/PatientAssessments.xsd  ${PROJECT_SOURCE_DIR}/share/xsd/Properties.xsd          ${PROJECT_SOURCE_DIR}/share/xsd/TestReport.xsd
+	${PROJECT_SOURCE_DIR}/share/xsd/ElectroCardioGram.xsd      ${PROJECT_SOURCE_DIR}/share/xsd/Environment.xsd            ${PROJECT_SOURCE_DIR}/share/xsd/PatientConditions.xsd   ${PROJECT_SOURCE_DIR}/share/xsd/Scenario.xsd
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/xsd  ${PROJECT_BINARY_DIR}/runtime/xsd
 )
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/jar
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+	${PROJECT_SOURCE_DIR}/share/jar/commons-logging-1.2.jar  ${PROJECT_SOURCE_DIR}/share/jar/javassist-3.16.1-GA.jar  ${PROJECT_SOURCE_DIR}/share/jar/jsr305-1.3.9.jar                     ${PROJECT_SOURCE_DIR}/share/jar/slf4j-api-1.6.1.jar
+    ${PROJECT_SOURCE_DIR}/share/jar/dom4j-1.6.1.jar          ${PROJECT_SOURCE_DIR}/share/jar/javax.mail-1.6.1.jar     ${PROJECT_SOURCE_DIR}/share/jar/log4j-1.2.17.jar                     ${PROJECT_SOURCE_DIR}/share/jar/slf4j-simple-1.6.1.jar
+    ${PROJECT_SOURCE_DIR}/share/jar/dsn.jar                  ${PROJECT_SOURCE_DIR}/share/jar/jchart2d-3.2.2.jar       ${PROJECT_SOURCE_DIR}/share/jar/pdfbox-2.0.0-RC3.jar                 ${PROJECT_SOURCE_DIR}/share/jar/smtp.jar
+    ${PROJECT_SOURCE_DIR}/share/jar/fontbox-2.0.0-RC3.jar    ${PROJECT_SOURCE_DIR}/share/jar/jcommon-1.0.16.jar       ${PROJECT_SOURCE_DIR}/share/jar/poi-3.13-20150929.jar                ${PROJECT_SOURCE_DIR}/share/jar/swtgraphics2d.jar
+    ${PROJECT_SOURCE_DIR}/share/jar/gson-1.4.jar             ${PROJECT_SOURCE_DIR}/share/jar/jdom-1.1.2.jar           ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-3.13-20150929.jar          ${PROJECT_SOURCE_DIR}/share/jar/xml-apis-1.0.b2.jar
+    ${PROJECT_SOURCE_DIR}/share/jar/guava-11.0.2.jar         ${PROJECT_SOURCE_DIR}/share/jar/jdom-2.0.2.jar           ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-schemas-3.13-20150929.jar  ${PROJECT_SOURCE_DIR}/share/jar/xmlbeans-2.6.0.jar
+    ${PROJECT_SOURCE_DIR}/share/jar/imap.jar                 ${PROJECT_SOURCE_DIR}/share/jar/jfreechart-1.0.13.jar    ${PROJECT_SOURCE_DIR}/share/jar/pop3.jar                             ${PROJECT_SOURCE_DIR}/share/jar/xmlgraphics-commons-1.3.1.jar
+    ${PROJECT_SOURCE_DIR}/share/jar/iText-2.1.5.jar          ${PROJECT_SOURCE_DIR}/share/jar/jide-oss-2.9.7.jar       ${PROJECT_SOURCE_DIR}/share/jar/reflections-0.9.9-RC1-uberjar.jar    ${PROJECT_SOURCE_DIR}/share/jar/zip4j-1.3.1.jar
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/jar  ${PROJECT_BINARY_DIR}/runtime/jar
 )
 add_custom_command(
@@ -122,7 +137,11 @@ add_custom_command(
 	${PROJECT_BINARY_DIR}/runtime/Characterize.config  ${PROJECT_BINARY_DIR}/runtime/InitialPatientStates.config  ${PROJECT_BINARY_DIR}/runtime/ValidationDrugs.config            ${PROJECT_BINARY_DIR}/runtime/ValidationTables.config
 	${PROJECT_BINARY_DIR}/runtime/ConfigEmailList.txt
 	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
+    ${PROJECT_SOURCE_DIR}/runtime/BGEUnitTests.config  ${PROJECT_SOURCE_DIR}/runtime/DebugPlots.config            ${PROJECT_SOURCE_DIR}/runtime/LongVerificationScenarios.config  ${PROJECT_SOURCE_DIR}/runtime/ValidationPatients.config  ${PROJECT_SOURCE_DIR}/runtime/VerificationScenarios.config
+	${PROJECT_SOURCE_DIR}/runtime/CDMUnitTests.config  ${PROJECT_SOURCE_DIR}/runtime/DebugRun.config              ${PROJECT_SOURCE_DIR}/runtime/PlotRun.config                    ${PROJECT_SOURCE_DIR}/runtime/ValidationSystems.config
+	${PROJECT_SOURCE_DIR}/runtime/Characterize.config  ${PROJECT_SOURCE_DIR}/runtime/InitialPatientStates.config  ${PROJECT_SOURCE_DIR}/runtime/ValidationDrugs.config            ${PROJECT_SOURCE_DIR}/runtime/ValidationTables.config
+	${PROJECT_SOURCE_DIR}/runtime/ConfigEmailList.txt
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
 )
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
