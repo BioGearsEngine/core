@@ -86,37 +86,40 @@
 
     
 <!--Read me:
-	-To start a hemorrhage: provide the compartment and a severity (scale 0.0-1.0)
+	-To start a hemorrhage: provide the compartment and an initial bleeding rate
 	-Valid Compartments
-		-Head
-		-Major Artery
+		-Brain
+		-Aorta
 		-Lung
 		-Myocardium
 		-Spleen
 		-Liver
-		-Kidney
+		-LeftKidney
+		-RightKidney
 		-Splanchnic
-		-Small Intestine
-		-Large Intestine
-		-Arm
-		-Leg
-		-Vena Cava
-	-To stop a hemorrhage: enter compartment a severity of 0 
+		-SmallIntestine
+		-LargeIntestine
+		-LeftArm
+		-RightArm
+		-LeftLeg
+		-RightLeg
+		-VenaCava
+	-To stop a hemorrhage: enter target compartment with initial bleeding rate = 0
 -->    
 
 	<Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
-    <Action xsi:type="HemorrhageData" Compartment="Lung">
-		<Severity value="0.6"/>
+    <Action xsi:type="HemorrhageData" Compartment="RightLung">
+		<InitialRate value="25" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="min"/>       
     </Action>
-    <Action xsi:type="HemorrhageData" Compartment="Lung">
-		<Severity value="0"/>
+    <Action xsi:type="HemorrhageData" Compartment="RightLung">
+		<InitialRate value="0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="60" unit="s"/>       
+        <Time value="5" unit="min"/>       
     </Action>
 </Scenario>

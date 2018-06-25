@@ -35,15 +35,15 @@
         <Comment>Insult</Comment>
         <Severity value="0.75"/>
     </Action>
-    <Action xsi:type="HemorrhageData" Compartment="Leg">
-		<Severity value="1"/>
-    </Action>	
+    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+		<InitialRate value="250" unit="mL/min"/>
+    </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="min"/>
     </Action>
     <!-- Segment 3: Non-tourniquet bleeding control -->
-    <Action xsi:type="HemorrhageData" Compartment="Leg">
-		<Severity value="0.6"/>
+    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+		<InitialRate value="50" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="min"/>
@@ -56,8 +56,8 @@
         <Time value="4" unit="min"/>
     </Action>
     <!-- Segment 5: Tourniquet Application -->
-    <Action xsi:type="HemorrhageData" Compartment="Leg">
-		<Severity value="0"/>
+    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+		<InitialRate value="0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="0.5" unit="min"/>

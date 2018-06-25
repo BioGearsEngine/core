@@ -20,34 +20,35 @@
 
     
 <!--Read me:
-	-To start a hemorrhage: provide the compartment and a severity (scale 0.0-1.0)
+	-To start a hemorrhage: provide the compartment and an initial bleeding rate
 	-Valid Compartments
-		-Head
-		-Major Artery
+		-Brain
+		-Aorta
 		-Lung
 		-Myocardium
 		-Spleen
 		-Liver
-		-Kidney
+		-LeftKidney
+		-RightKidney
 		-Splanchnic
-		-Small Intestine
-		-Large Intestine
-		-Arm
-		-Leg
-		-Vena Cava
-	-To stop a hemorrhage: enter compartment a severity of 0 
--->    
-	<!--AMM team has a flat bleed rate of 500 mL/min.  This is almost impossible in the leg in BioGears because of resistance in leg compartments.
-		Maybe for leg/arm bleeds (which don't seem to bleed as much as they should), we automatically take blood from both arm/leg compartments (whichever
-		is relevant) to get a better flow.-->
-    <Action xsi:type="HemorrhageData" Compartment="Leg">
-        <Severity value="0.8"/>
+		-SmallIntestine
+		-LargeIntestine
+		-LeftArm
+		-RightArm
+		-LeftLeg
+		-RightLeg
+		-VenaCava
+	-To stop a hemorrhage: enter target compartment with initial bleeding rate = 0
+-->         
+	<!--AMM team has a flat bleed rate of 100 mL/min.  While possible initially, this value will drop off a lot in BioGears due to flow in leg-->
+    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+        <InitialRate value="100.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="3.0" unit="min"/>
     </Action>
-    <Action xsi:type="HemorrhageData" Compartment="Leg">
-        <Severity value="0.0"/>
+    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+        <InitialRate value="0.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="3.0" unit="min"/>

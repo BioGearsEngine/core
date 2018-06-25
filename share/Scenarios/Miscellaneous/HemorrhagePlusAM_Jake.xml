@@ -23,9 +23,9 @@
         <Comment>start w/ 1800 mL blood loss (30%)</Comment>
         <Rate value="600.0" unit="mL/min"/>
     </Action>-->
-	<Action xsi:type="HemorrhageData" Compartment="Major Artery">
-		<Severity value="1.0"/>
-	</Action>
+    <Action xsi:type="HemorrhageData" Compartment="LeftLeg">
+        <InitialRate value="600.0" unit="mL/min"/>
+    </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="3.0" unit="min"/>
     </Action>
@@ -36,15 +36,15 @@
         <Comment>w/ tourniquete</Comment>
         <Rate value="0.167" unit="mL/min"/>
     </Action>-->
-	<Action xsi:type="HemorrhageData" Compartment="Major Artery">
-		<Severity value="0.2"/>
-	</Action>
+    <Action xsi:type="HemorrhageData" Compartment="LeftLeg">
+        <InitialRate value="0.167" unit="mL/min"/>
+    </Action>
     <!--<Action xsi:type="HemorrhageData" Compartment="LeftArm">
         <Comment>intraabdominal</Comment>
         <Rate value="8.33" unit="mL/min"/>
     </Action>-->
-	<Action xsi:type="HemorrhageData" Compartment="Small Intestine">
-		<Severity value="0.4"/>
+	<Action xsi:type="HemorrhageData" Compartment="SmallIntestine">
+		<InitialRate value="8.33" unit="mL/min"/>
 	</Action>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>
@@ -191,11 +191,11 @@
     <Action xsi:type="HemorrhageData" Compartment="LeftArm">
         <Rate value="0.0" unit="L/s"/>
     </Action>-->
-	<Action xsi:type="HemorrhageData" Compartment="Leg">
-		<Severity value="0.0"/>
+	<Action xsi:type="HemorrhageData" Compartment="LeftLeg">
+        <InitialRate value="0.0" unit="mL/min"/>
 	</Action>
-	<Action xsi:type="HemorrhageData" Compartment="Small Intestine">
-		<Severity value="0.0"/>
+	<Action xsi:type="HemorrhageData" Compartment="SmallIntestine">
+        <InitialRate value="0.0" unit="mL/min"/>
 	</Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="3.0" unit="min"/>

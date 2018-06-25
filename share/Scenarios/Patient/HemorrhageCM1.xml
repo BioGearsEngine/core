@@ -88,53 +88,59 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Bladder" Substance="Sodium" Name="Concentration"  Unit="g/L" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                Name="InFlow"   Unit="mL/min" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                 Name="InFlow"   Unit="mL/min" Precision="2"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="BloodConcentration" Unit="mg/dL" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature" Substance="Lactate" Name="Concentration" Unit="mg/dL" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Lactate" Name="Concentration" Unit="mg/dL" Precision="3"/>
 	
   </DataRequests>
     
 <!--Read me:
-	-To start a hemorrhage: provide the compartment and a severity (scale 0.0-1.0)
+	-To start a hemorrhage: provide the compartment and an initial bleeding rate
 	-Valid Compartments
-		-Head
-		-Major Artery
+		-Brain
+		-Aorta
 		-Lung
 		-Myocardium
 		-Spleen
 		-Liver
-		-Kidney
+		-LeftKidney
+		-RightKidney
 		-Splanchnic
-		-Small Intestine
-		-Large Intestine
-		-Arm
-		-Leg
-		-Vena Cava
-	-To stop a hemorrhage: enter compartment a severity of 0 
--->     		
+		-SmallIntestine
+		-LargeIntestine
+		-LeftArm
+		-RightArm
+		-LeftLeg
+		-RightLeg
+		-VenaCava
+	-To stop a hemorrhage: enter target compartment with initial bleeding rate = 0
+-->  
 	<Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
     <Action xsi:type="HemorrhageData" Compartment="Spleen">
-		<Severity value="0.8"/>
+		<InitialRate value="150" unit="mL/min"/>
     </Action>
-    <Action xsi:type="HemorrhageData" Compartment="Leg">
-		<Severity value="0.8"/>
+    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+		<InitialRate value="125" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="500" unit="s"/>       
     </Action>
     <Action xsi:type="HemorrhageData" Compartment="Spleen">
-		<Severity value="0.6"/>
+		<InitialRate value="40" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="s"/>       
     </Action>
-    <Action xsi:type="HemorrhageData" Compartment="Leg">
-		<Severity value="0"/>
+    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+		<InitialRate value="0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="240" unit="s"/>       
     </Action>
     <Action xsi:type="HemorrhageData" Compartment="Spleen">
-		<Severity value="0"/>
+		<InitialRate value="0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="240" unit="s"/>       

@@ -37,13 +37,13 @@
 	
 	
 	<Action xsi:type="HemorrhageData" Compartment="Vena Cava">
-        <Severity value="1.0"/>
+        <InitialRate value="350" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="8" unit="min"/>       
     </Action>
 	<Action xsi:type="HemorrhageData" Compartment="Vena Cava">
-        <Severity value="0.0"/>
+        <InitialRate value="0.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="SubstanceCompoundInfusionData">
         <SubstanceCompound>Saline</SubstanceCompound>
