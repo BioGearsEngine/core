@@ -77,8 +77,7 @@ def main( args):
     _baseline_directory = args.baselines if args.baselines else _output_directory
     _clean_directory = args.cleanup
     
-    
-    log('INPUT = {}'.format(_root_directory),LOG_LEVEL_2)
+    log("INPUT = {}".format(_root_directory),LOG_LEVEL_2)
     log("OUTPUT = {}".format(_output_directory),LOG_LEVEL_2)
     log("Baselines = {}".format(_baseline_directory),LOG_LEVEL_2)
     log("Recursive Mode = {}".format(args.recurse),LOG_LEVEL_2)
