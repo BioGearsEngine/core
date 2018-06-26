@@ -36,13 +36,13 @@
   </DataRequests>
 	
 	
-	<Action xsi:type="HemorrhageData" Compartment="Vena Cava">
+	<Action xsi:type="HemorrhageData" Compartment="VenaCava">
         <InitialRate value="350" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="8" unit="min"/>       
     </Action>
-	<Action xsi:type="HemorrhageData" Compartment="Vena Cava">
+	<Action xsi:type="HemorrhageData" Compartment="VenaCava">
         <InitialRate value="0.0" unit="mL/min"/>
     </Action>
 	<!-- 1 Unit/min of Vasopressin infused at 200 mL/hr (2 uU = 5 pg)-->
