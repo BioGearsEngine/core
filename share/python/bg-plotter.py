@@ -36,10 +36,12 @@ LOG_LEVEL_4 = 4
 
 _output_directory = None
 _root_directory   = None
+_baseline_directory = None
 _clean_directory  = False
 def main( args):
     global _log_verbose
     global _root_directory
+    global _baseline_directory
     global _output_directory
     global _clean_directory
 
@@ -51,6 +53,9 @@ def main( args):
     parser.add_argument('--root',
         dest='root', action="store", 
         help="Set an alternative root dir", default="")
+    parser.add_argument('--baselines',
+        dest='baselines', action="store", 
+        help="Set an alternative verification root dir", default="")
     parser.add_argument('--outdir',
         dest='outdir', action="store", 
         help="Optional Output directory instead of inlinline layout ")
@@ -67,11 +72,13 @@ def main( args):
     log("Log level set to {0}".format(_log_verbose), LOG_LEVEL_1)
 
     _root_directory = args.root
-    _output_directory = args.outdir if args.outdir else args.root
+    _output_directory = args.outdir if args.outdir else _root_directory
+    _baseline_directory = args.baselines if args.baselines else _output_directory
     _clean_directory = args.cleanup
     
     log("INPUT = {}".format(_root_directory),LOG_LEVEL_2)
     log("OUTPUT = {}".format(_output_directory),LOG_LEVEL_2)
+    log("Baslines = {}".format(_baseline_directory),LOG_LEVEL_2)
     log("Recursive Mode = {}".format(args.recurse),LOG_LEVEL_2)
     
     log ("Processing",LOG_LEVEL_1)
@@ -99,21 +106,15 @@ def plot(root_dir, source, skip_count):
     input_source = os.path.join(root_dir,source)
     basename,extension     = os.path.splitext(input_source)
     output_path = os.path.join(_output_directory,os.path.relpath(basename,_root_directory))
+    baseline_path = os.path.join(_baseline_directory,os.path.relpath(basename,_root_directory))
 
-    #Assuming that biogears-plotter is always going to be in this location (core/share/python)
-    #If there is a better way to get to verification directory, please add it.  I was trying to use
-    #relpath without success
-    verification_dir = os.path.join(str(pathlib.PurePath(os.path.realpath(__file__)).parents[3]),'verification\Scenarios')
-    log("Using Verification Directory: {}".format(verification_dir),LOG_LEVEL_1)
-
-    
     log("{}{}".format(basename,extension),LOG_LEVEL_4)
     if ( not os.path.exists(input_source)):
-        log ("plot called with non exist file. This should not occur! {0}".format(input_source),LOG_LEVEL_0 )    
+        err ("plot called with non exist file. This should not occur! {0}".format(input_source),LOG_LEVEL_0 )    
     if ( not re.match( valid_regex, extension) ):
         log ("Skipping {0}".format(os.path.basename(input_source)),LOG_LEVEL_3 )
     else:
-        log ("Results File: ".format(input_source),LOG_LEVEL_1)
+        log ("Source File: {0}".format(input_source),LOG_LEVEL_1)
 
         #Create directory for plots ()
         dirname   =  os.path.dirname(output_path) 
@@ -138,8 +139,8 @@ def plot(root_dir, source, skip_count):
         baseFound=False
         #Grab the zip file with the baselines, if they exist
         try:
-            baseline_path = os.path.join(pathlib.PurePath(dirname).parts[-1],os.path.join('baselines',basename + '.zip'))
-            baseline_source = os.path.join(verification_dir,baseline_path)
+            baseline_source = os.path.join( os.path.dirname(baseline_path),'baselines',basename+'.zip')
+            log("Trying to find baseline file: {}".format(baseline_source),LOG_LEVEL_3)
             baseCSV = pd.read_csv(os.path.normpath(baseline_source), sep=',',header=0)
             log("Found baseline file: {}".format(baseline_source),LOG_LEVEL_2)
             xBase = baseCSV['Time(s)'].values[::skip_count]
