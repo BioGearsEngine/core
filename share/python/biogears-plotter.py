@@ -177,6 +177,7 @@ def plot(root_dir, source, skip_count):
                 unitIndex = col.find('(')
                 if(unitIndex == -1):
                     unit = ''
+                    plotCol = col
                 else:
                     unit = col[unitIndex:len(col)]
                     plotCol = col.replace(unit,'')
