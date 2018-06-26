@@ -99,8 +99,8 @@
      <Action xsi:type="AsthmaAttackData">
         <Severity value="0.2"/>       
     </Action>
-	<Action xsi:type="HemorrhageData" Compartment="Vena Cava">
-		<Severity value="0.8"/>
+	<Action xsi:type="HemorrhageData" Compartment="VenaCava">
+		<InitialRate value="150" unit="mL/min"/>
 	</Action>
 	<Action xsi:type="BronchoconstrictionData">
         <Severity value="0.1"/>       
@@ -309,8 +309,8 @@
      <Action xsi:type="AsthmaAttackData">
         <Severity value="0.0"/>       
     </Action>
-	<Action xsi:type="HemorrhageData" Compartment="Vena Cava">
-		<Severity value="0"/>
+	<Action xsi:type="HemorrhageData" Compartment="VenaCava">
+		<InitialRate value="0" unit="mL/min"/>
 	</Action>
     <Action xsi:type="BronchoconstrictionData">
         <Severity value="0.0"/>       
