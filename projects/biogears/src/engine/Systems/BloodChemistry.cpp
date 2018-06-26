@@ -713,6 +713,8 @@ void BloodChemistry::Sepsis()
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
       nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+      vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    
     } else if (whiteBloodCell > modsThreshold) {
       nextReflectionCoefficient = GeneralMath::LinearInterpolator(modsThreshold, wbcFractionMax, 0.5, 0.05, whiteBloodCell);
       BLIM(nextReflectionCoefficient, 0.0, 1.0);
@@ -720,11 +722,13 @@ void BloodChemistry::Sepsis()
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
       nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+      vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
   }
 
-  //Set pathological effects, starting with updating white blood cell count
-  GetWhiteBloodCellCount().SetValue(sep->GetEarlyMediator().GetValue() / wbcFractionInitial * wbcBaseline_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+	//Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
+  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + (sep->GetEarlyMediator().GetValue() - wbcFractionInitial) / (5.0 * wbcFractionInitial));
+  GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
   //empirically determined to time symptom onset (i.e. temperature > 38 degC) with the appropriate stage of sepsis
