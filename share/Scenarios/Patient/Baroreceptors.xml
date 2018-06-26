@@ -75,15 +75,15 @@
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="30" unit="s"/>       
 	</Action>
-	<Action xsi:type="HemorrhageData" Compartment="Major Artery">
-		<Severity value="1"/>
-	</Action>
+    <Action xsi:type="HemorrhageData" Compartment="Aorta">
+		<InitialRate value="300" unit="mL/min"/>
+    </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="300" unit="s"/>       
     </Action>
-	<Action xsi:type="HemorrhageData" Compartment="Major Artery">
-		<Severity value="0"/>
-	</Action>
+    <Action xsi:type="HemorrhageData" Compartment="Aorta">
+		<InitialRate value="0" unit="mL/min"/>
+    </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="200" unit="s"/>       
     </Action>
