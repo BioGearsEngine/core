@@ -104,7 +104,8 @@ def plot(root_dir, source, skip_count):
     #If there is a better way to get to verification directory, please add it.  I was trying to use
     #relpath without success
     verification_dir = os.path.join(str(pathlib.PurePath(os.path.realpath(__file__)).parents[3]),'verification\Scenarios')
-    log("Verification is in: {}".format(verification_dir),LOG_LEVEL_1)
+    log("Using Verification Directory: {}".format(verification_dir),LOG_LEVEL_1)
+
     
     log("{}{}".format(basename,extension),LOG_LEVEL_4)
     if ( not os.path.exists(input_source)):
@@ -112,7 +113,7 @@ def plot(root_dir, source, skip_count):
     if ( not re.match( valid_regex, extension) ):
         log ("Skipping {0}".format(os.path.basename(input_source)),LOG_LEVEL_3 )
     else:
-        log ("{0}".format(input_source),LOG_LEVEL_1)
+        log ("Results File: ".format(input_source),LOG_LEVEL_1)
 
         #Create directory for plots ()
         dirname   =  os.path.dirname(output_path) 
@@ -137,7 +138,7 @@ def plot(root_dir, source, skip_count):
         baseFound=False
         #Grab the zip file with the baselines, if they exist
         try:
-            baseline_path = os.path.join(pathlib.PurePath(source).parts[0],os.path.join('Current Baseline',basename + '.zip'))
+            baseline_path = os.path.join(pathlib.PurePath(dirname).parts[-1],os.path.join('baselines',basename + '.zip'))
             baseline_source = os.path.join(verification_dir,baseline_path)
             baseCSV = pd.read_csv(os.path.normpath(baseline_source), sep=',',header=0)
             log("Found baseline file: {}".format(baseline_source),LOG_LEVEL_2)
