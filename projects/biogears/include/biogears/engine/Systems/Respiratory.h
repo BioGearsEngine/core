@@ -155,11 +155,10 @@ private:
   double m_InstantaneousFunctionalResidualCapacity_L;
   double m_MaxDriverPressure_cmH2O;
   double m_PeakRespiratoryDrivePressure_cmH2O;
-  double m_PreviousTargetAlveolarVentilation_L_Per_min;
+ // double m_PreviousTargetAlveolarVentilation_L_Per_min;
   double m_VentilationFrequency_Per_min;
   double m_VentilationToTidalVolumeSlope;
-  RunningAverage m_ArterialO2RunningAverage_mmHg;
-  RunningAverage m_ArterialCO2RunningAverage_mmHg;
+
   //   Conscious Breathing
   bool m_ConsciousBreathing;
   double m_ConsciousRespirationPeriod_s;

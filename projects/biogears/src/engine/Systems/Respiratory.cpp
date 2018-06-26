@@ -131,8 +131,8 @@ void Respiratory::Clear()
   m_GroundToConnection = nullptr;
 
   m_BloodPHRunningAverage.Reset();
-  m_ArterialO2RunningAverage_mmHg.Reset();
-  m_ArterialCO2RunningAverage_mmHg.Reset();
+ // m_ArterialO2RunningAverage_mmHg.Reset();
+ // m_ArterialCO2RunningAverage_mmHg.Reset();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ void Respiratory::Initialize()
   m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(m_Patient->GetTotalLungCapacity(VolumeUnit::L) - m_Patient->GetInspiratoryReserveVolume(VolumeUnit::L)) - m_DefaultDrivePressure_cmH2O;
   m_ArterialO2PartialPressure_mmHg = m_AortaO2->GetPartialPressure(PressureUnit::mmHg);
   m_ArterialCO2PartialPressure_mmHg = m_AortaCO2->GetPartialPressure(PressureUnit::mmHg);
-  m_PreviousTargetAlveolarVentilation_L_Per_min = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L) * m_VentilationFrequency_Per_min;
+  //m_PreviousTargetAlveolarVentilation_L_Per_min = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L) * m_VentilationFrequency_Per_min;
   m_AverageLocalTissueBronchodilationEffects = 0.0;
 
   //Asthma
@@ -194,6 +194,7 @@ void Respiratory::Initialize()
   double TidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   double RespirationRate_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   GetTidalVolume().SetValue(TidalVolume_L, VolumeUnit::L);
+  GetTargetAlveolarVentilation().SetValue(m_Patient->GetTidalVolumeBaseline(VolumeUnit::L) * m_VentilationFrequency_Per_min, VolumePerTimeUnit::L_Per_min);
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetCarricoIndex().SetValue(452.0, PressureUnit::mmHg);
 
@@ -242,11 +243,11 @@ bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
   m_InstantaneousFunctionalResidualCapacity_L = in.InstantaneousFunctionalResidualCapacity_L();
   m_MaxDriverPressure_cmH2O = in.MaxDriverPressure_cmH2O();
   m_PeakRespiratoryDrivePressure_cmH2O = in.PeakRespiratoryDrivePressure_cmH2O();
-  m_PreviousTargetAlveolarVentilation_L_Per_min = in.PreviousTargetAlveolarVentilation_L_Per_min();
+  //m_PreviousTargetAlveolarVentilation_L_Per_min = in.PreviousTargetAlveolarVentilation_L_Per_min();
   m_VentilationFrequency_Per_min = in.VentilationFrequency_Per_min();
   m_VentilationToTidalVolumeSlope = in.VentilationToTidalVolumeSlope();
-  m_ArterialO2RunningAverage_mmHg.Load(in.ArterialO2RunningAverage_mmHg());
-  m_ArterialCO2RunningAverage_mmHg.Load(in.ArterialCO2RunningAverage_mmHg());
+ // m_ArterialO2RunningAverage_mmHg.Load(in.ArterialO2RunningAverage_mmHg());
+  //m_ArterialCO2RunningAverage_mmHg.Load(in.ArterialCO2RunningAverage_mmHg());
 
   m_ConsciousBreathing = in.ConsciousBreathing();
   m_ConsciousRespirationPeriod_s = in.ConsciousRespirationPeriod_s();
@@ -296,11 +297,11 @@ void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
   data.InstantaneousFunctionalResidualCapacity_L(m_InstantaneousFunctionalResidualCapacity_L);
   data.MaxDriverPressure_cmH2O(m_MaxDriverPressure_cmH2O);
   data.PeakRespiratoryDrivePressure_cmH2O(m_PeakRespiratoryDrivePressure_cmH2O);
-  data.PreviousTargetAlveolarVentilation_L_Per_min(m_PreviousTargetAlveolarVentilation_L_Per_min);
+ // data.PreviousTargetAlveolarVentilation_L_Per_min(m_PreviousTargetAlveolarVentilation_L_Per_min);
   data.VentilationFrequency_Per_min(m_VentilationFrequency_Per_min);
   data.VentilationToTidalVolumeSlope(m_VentilationToTidalVolumeSlope);
-  data.ArterialO2RunningAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2RunningAverage_mmHg.Unload()));
-  data.ArterialCO2RunningAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2RunningAverage_mmHg.Unload()));
+ // data.ArterialO2RunningAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2RunningAverage_mmHg.Unload()));
+ // data.ArterialCO2RunningAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2RunningAverage_mmHg.Unload()));
 
   data.ConsciousBreathing(m_ConsciousBreathing);
   data.ConsciousRespirationPeriod_s(m_ConsciousRespirationPeriod_s);
@@ -824,16 +825,15 @@ void Respiratory::RespiratoryDriver()
 
   m_BreathingCycleTime_s += m_dt_s;
   //Keep a running average of the Arterial Partial Pressures
-  m_ArterialO2RunningAverage_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
-  m_ArterialCO2RunningAverage_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
+ // m_ArterialO2RunningAverage_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
+ // m_ArterialCO2RunningAverage_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
   //Reset at start of cardiac cycle
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  /* if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     m_ArterialO2PartialPressure_mmHg = m_ArterialO2RunningAverage_mmHg.Value();
     m_ArterialCO2PartialPressure_mmHg = m_ArterialCO2RunningAverage_mmHg.Value();
-
     m_ArterialO2RunningAverage_mmHg.Reset();
     m_ArterialCO2RunningAverage_mmHg.Reset();
-  }
+  }*/
 
 #ifdef TUNING
   m_ArterialO2PartialPressure_mmHg = 95.0;
@@ -888,10 +888,10 @@ void Respiratory::RespiratoryDriver()
       double PeripheralCO2PartialPressureSetPoint = m_data.GetConfiguration().GetPeripheralControllerCO2PressureSetPoint(PressureUnit::mmHg);
       double CentralCO2PartialPressureSetPoint = m_data.GetConfiguration().GetCentralControllerCO2PressureSetPoint(PressureUnit::mmHg);
 
-      double metabolicModifier = 1.0;
+     /* double metabolicModifier = 1.0;
       double TMR_W = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W);
       double BMR_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
-      double metabolicFraction = TMR_W / BMR_W;
+      double metabolicFraction = TMR_W / BMR_W;*/
 
       //Get Drug Effects
       SEDrugSystem& Drugs = m_data.GetDrugs();
@@ -928,37 +928,43 @@ void Respiratory::RespiratoryDriver()
         DrugRRChange_Per_min += baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
       }
 
-      //Calculate the target Alveolar Ventilation based on the Arterial O2 and CO2 concentrations.  Lower target as a function of central nervous
-      //depressant effects of any drugs (currently only morphine has this effect)
-      double dTargetAlveolarVentilation_L_Per_min = m_PeripheralControlGainConstant * exp(-0.05 * m_ArterialO2PartialPressure_mmHg) * std::max(0., m_ArterialCO2PartialPressure_mmHg - PeripheralCO2PartialPressureSetPoint); //Peripheral portion
-      dTargetAlveolarVentilation_L_Per_min += m_CentralControlGainConstant * std::max(0., m_ArterialCO2PartialPressure_mmHg - CentralCO2PartialPressureSetPoint); //Central portion
-      dTargetAlveolarVentilation_L_Per_min *= (1 - CNSChange);
+      ////Calculate the target Alveolar Ventilation based on the Arterial O2 and CO2 concentrations.  Lower target as a function of central nervous
+      ////depressant effects of any drugs (currently only morphine has this effect)
+      //double dTargetAlveolarVentilation_L_Per_min = m_PeripheralControlGainConstant * exp(-0.05 * m_ArterialO2PartialPressure_mmHg) * std::max(0., m_ArterialCO2PartialPressure_mmHg - PeripheralCO2PartialPressureSetPoint); //Peripheral portion
+      //dTargetAlveolarVentilation_L_Per_min += m_CentralControlGainConstant * std::max(0., m_ArterialCO2PartialPressure_mmHg - CentralCO2PartialPressureSetPoint); //Central portion
+      //dTargetAlveolarVentilation_L_Per_min *= (1 - CNSChange);
 
-      //Metabolic modifier is used to drive the system to reasonable levels achievable during increased metabolic exertion
-      //The modifier is tuned to achieve the correct respiratory response for near maximal exercise. A linear relationship is assumed
-      // for the respiratory effects due to increased metabolic exertion
-      double tunedVolumeMetabolicSlope = 0.2; //Tuned fractional increase of the tidal volume due to increased metabolic rate
-      metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
-      dTargetAlveolarVentilation_L_Per_min *= metabolicModifier;
 
-      //Only move it part way to where it wants to be.
-      //If you stays there, it will get there, just more controlled/slowly.
-      //This is needed so we don't overshoot and introduce low frequency oscillations into the system (i.e. overdamped).
-      double targetCO2PP_mmHg = 40.0;
-      double changeFraction = 1.0;
-      if (m_data.GetState() <= EngineState::InitialStabilization) {
-        //This gets it nice and stable
-        changeFraction = 0.1;
-      } else {
-        //This keeps it from going crazy with modifiers applied
-        changeFraction = std::abs(m_ArterialCO2PartialPressure_mmHg - targetCO2PP_mmHg) / targetCO2PP_mmHg * 0.5;
-      }
 
-      changeFraction = std::min(changeFraction, 1.0);
 
-      dTargetAlveolarVentilation_L_Per_min = m_PreviousTargetAlveolarVentilation_L_Per_min + (dTargetAlveolarVentilation_L_Per_min - m_PreviousTargetAlveolarVentilation_L_Per_min) * changeFraction;
-      m_PreviousTargetAlveolarVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min;
+      ////Metabolic modifier is used to drive the system to reasonable levels achievable during increased metabolic exertion
+      ////The modifier is tuned to achieve the correct respiratory response for near maximal exercise. A linear relationship is assumed
+      //// for the respiratory effects due to increased metabolic exertion
+      //double tunedVolumeMetabolicSlope = 0.2; //Tuned fractional increase of the tidal volume due to increased metabolic rate
+      //metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
+      //dTargetAlveolarVentilation_L_Per_min *= metabolicModifier;
 
+      ////Only move it part way to where it wants to be.
+      ////If you stays there, it will get there, just more controlled/slowly.
+      ////This is needed so we don't overshoot and introduce low frequency oscillations into the system (i.e. overdamped).
+      //double targetCO2PP_mmHg = 40.0;
+      //double changeFraction = 1.0;
+      //if (m_data.GetState() <= EngineState::InitialStabilization) {
+      //  //This gets it nice and stable
+      //  changeFraction = 0.1;
+      //} else {
+      //  //This keeps it from going crazy with modifiers applied
+      //  changeFraction = std::abs(m_ArterialCO2PartialPressure_mmHg - targetCO2PP_mmHg) / targetCO2PP_mmHg * 0.5;
+      //}
+
+      //changeFraction = std::min(changeFraction, 1.0);
+
+      //dTargetAlveolarVentilation_L_Per_min = m_PreviousTargetAlveolarVentilation_L_Per_min + (dTargetAlveolarVentilation_L_Per_min - m_PreviousTargetAlveolarVentilation_L_Per_min) * changeFraction;
+      //m_PreviousTargetAlveolarVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min;
+      //
+      
+      
+      double dTargetAlveolarVentilation_L_Per_min = GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
       //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
       //Calculate the target Tidal Volume based on the Alveolar Ventilation
       double dTargetPulmonaryVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min + GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min);

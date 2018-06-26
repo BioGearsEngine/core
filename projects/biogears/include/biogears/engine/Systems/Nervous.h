@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/BioGearsNervousSystemData.hxx>
+#include "biogears/cdm/utils/RunningAverage.h"
 
 class SESubstance;
 class BioGears;
@@ -67,6 +68,9 @@ protected:
   // Serializable member variables (Set in Initialize and in schema)
   double m_ArterialOxygenSetPoint_mmHg; /// \todo Aaron these should be baselines.
   double m_ArterialCarbonDioxideSetPoint_mmHg;
+  RunningAverage m_ArterialO2RunningAverage_mmHg;
+  RunningAverage m_ArterialCO2RunningAverage_mmHg;
+  double m_PreviousTargetAlveolarVentilation_L_Per_min;
 
   // Stateless member variable (Set in SetUp())
   bool m_FeedbackActive;
