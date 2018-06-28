@@ -1,5 +1,4 @@
-<!--
-Copyright 2015 Applied Research Associates, Inc.
+<!--Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
 at:
@@ -130,6 +129,11 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="ArterialOxygenSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ArterialOxygenPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ArterialCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="PreviousTargetAlveolarVentilation_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -178,8 +182,10 @@ specific language governing permissions and limitations under the License.
           <xs:element name="BloodPHRunningAverage" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <!-- Driver -->
           <xs:element name="BreathingCycle" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="ArterialO2PartialPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="ArterialCO2PartialPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ArterialOxygenPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ArterialCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BreathingCycleTime_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BreathTimeExhale_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="DefaultDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -190,11 +196,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="InstantaneousFunctionalResidualCapacity_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="MaxDriverPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PeakRespiratoryDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="PreviousTargetAlveolarVentilation_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationFrequency_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationToTidalVolumeSlope" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="ArterialO2RunningAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="ArterialCO2RunningAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <!-- Conscious Breathing -->
           <xs:element name="ConsciousBreathing" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ConsciousRespirationPeriod_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -224,3 +227,4 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
 
 </xs:schema>
+>>>>>>> Finalized chemoreceptor relocation for now.  Target ventilation is calculated in Nervous and passed to Respiratory.

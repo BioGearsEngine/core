@@ -52,9 +52,12 @@ Nervous::~Nervous()
 void Nervous::Clear()
 {
   SENervousSystem::Clear();
+
   m_Patient = nullptr;
   m_Succinylcholine = nullptr;
   m_Sarin = nullptr;
+  m_ArterialO2Average_mmHg.Reset();
+  m_ArterialCO2Average_mmHg.Reset();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -66,6 +69,9 @@ void Nervous::Initialize()
   BioGearsSystem::Initialize();
   m_FeedbackActive = false;
   m_blockActive = false;
+  m_ArterialO2Pressure_mmHg = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetPartialPressure(PressureUnit::mmHg);
+  m_ArterialCO2Pressure_mmHg = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetPartialPressure(PressureUnit::mmHg);
+  m_PreviousTargetAlveolarVentilation_L_Per_min = m_data.GetRespiratory().GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
   GetBaroreceptorHeartRateScale().SetValue(1.0);
   GetBaroreceptorHeartElastanceScale().SetValue(1.0);
   GetBaroreceptorResistanceScale().SetValue(1.0);
@@ -86,9 +92,12 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_FeedbackActive = true;
   m_ArterialOxygenSetPoint_mmHg = in.ArterialOxygenSetPoint_mmHg();
   m_ArterialCarbonDioxideSetPoint_mmHg = in.ArterialCarbonDioxideSetPoint_mmHg();
-  m_ArterialO2RunningAverage_mmHg.Load(in.ArterialO2RunningAverage_mmHg());
-  m_ArterialCO2RunningAverage_mmHg.Load(in.ArterialCO2RunningAverage_mmHg());
+  m_ArterialO2Average_mmHg.Load(in.ArterialOxygenAverage_mmHg());
+  m_ArterialCO2Average_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
+  m_ArterialO2Pressure_mmHg = in.ArterialOxygenPressure_mmHg();
+  m_ArterialCO2Pressure_mmHg = in.ArterialCarbonDioxidePressure_mmHg();
   m_PreviousTargetAlveolarVentilation_L_Per_min = in.PreviousTargetAlveolarVentilation_L_Per_min();
+ 
   return true;
 }
 CDM::BioGearsNervousSystemData* Nervous::Unload() const
@@ -102,8 +111,10 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   SENervousSystem::Unload(data);
   data.ArterialOxygenSetPoint_mmHg(m_ArterialOxygenSetPoint_mmHg);
   data.ArterialCarbonDioxideSetPoint_mmHg(m_ArterialCarbonDioxideSetPoint_mmHg);
-  data.ArterialO2RunningAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2RunningAverage_mmHg.Unload()));
-  data.ArterialCO2RunningAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2RunningAverage_mmHg.Unload()));
+  data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2Average_mmHg.Unload()));
+  data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2Average_mmHg.Unload()));
+  data.ArterialOxygenPressure_mmHg(m_ArterialO2Pressure_mmHg);
+  data.ArterialCarbonDioxidePressure_mmHg(m_ArterialCO2Pressure_mmHg);
   data.PreviousTargetAlveolarVentilation_L_Per_min(m_PreviousTargetAlveolarVentilation_L_Per_min);
 }
 
@@ -438,12 +449,22 @@ void Nervous::ChemoreceptorFeedback()
   if (!m_FeedbackActive)
     return;
 
-  double arterialO2PartialPressure_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
-  double arterialCO2PartialPressure_mmHg = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
+  
+  //Keep a running average of the Arterial Partial Pressures
+  m_ArterialO2Average_mmHg.Sample(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg));
+  m_ArterialCO2Average_mmHg.Sample(m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg));
+
+  //Record and reset at start of cardiac cycle
+  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+    m_ArterialO2Pressure_mmHg = m_ArterialO2Average_mmHg.Value();
+    m_ArterialCO2Pressure_mmHg = m_ArterialCO2Average_mmHg.Value();
+    m_ArterialO2Average_mmHg.Reset();
+    m_ArterialCO2Average_mmHg.Reset();
+  }
 
   //Heart Rate modifications
-  double normalized_pO2 = arterialO2PartialPressure_mmHg / m_ArterialOxygenSetPoint_mmHg;
-  double normalized_pCO2 = arterialCO2PartialPressure_mmHg / m_ArterialCarbonDioxideSetPoint_mmHg;
+  double normalized_pO2 = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_ArterialOxygenSetPoint_mmHg;
+  double normalized_pCO2 = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg) / m_ArterialCarbonDioxideSetPoint_mmHg;
 
   // The chemoreceptor heart rate modification function shape parameters.
   // See NervousMethodology documentation for details.
@@ -488,33 +509,15 @@ void Nervous::ChemoreceptorFeedback()
   GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
 
   //Respiration Driver modifications
-
-  //Keep a running average of the Arterial Partial Pressures
-  ///\ToDo:  Should these running averages be used with HR modifications above?
-
-  ///\ToDo:  Member variables for partial pressures?
-  arterialO2PartialPressure_mmHg = m_ArterialO2RunningAverage_mmHg.Sample(arterialO2PartialPressure_mmHg);
-  arterialCO2PartialPressure_mmHg = m_ArterialCO2RunningAverage_mmHg.Sample(arterialCO2PartialPressure_mmHg);
-  
-  //Reset at start of cardiac cycle
-  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
-
-    m_ArterialO2RunningAverage_mmHg.Reset();
-    m_ArterialCO2RunningAverage_mmHg.Reset();
-  }
- 
-
   double peripheralCO2PartialPressureSetPoint = m_data.GetConfiguration().GetPeripheralControllerCO2PressureSetPoint(PressureUnit::mmHg);
   double centralCO2PartialPressureSetPoint = m_data.GetConfiguration().GetCentralControllerCO2PressureSetPoint(PressureUnit::mmHg);
   double peripheralControlGainConstant = m_data.GetConfiguration().GetPeripheralVentilatoryControllerGain();
   double centralControlGainConstant = m_data.GetConfiguration().GetCentralVentilatoryControllerGain();
 
-  double dTargetAlveolarVentilation_L_Per_min = peripheralControlGainConstant * exp(-0.05 * arterialO2PartialPressure_mmHg) * std::max(0., arterialCO2PartialPressure_mmHg - peripheralCO2PartialPressureSetPoint); //Peripheral portion
-  dTargetAlveolarVentilation_L_Per_min += centralControlGainConstant * std::max(0., arterialCO2PartialPressure_mmHg - centralCO2PartialPressureSetPoint); //Central portion
+  double dTargetAlveolarVentilation_L_Per_min = peripheralControlGainConstant * exp(-0.05 * m_ArterialO2Pressure_mmHg) * std::max(0., m_ArterialCO2Pressure_mmHg - peripheralCO2PartialPressureSetPoint); //Peripheral portion
+  dTargetAlveolarVentilation_L_Per_min += centralControlGainConstant * std::max(0., m_ArterialCO2Pressure_mmHg - centralCO2PartialPressureSetPoint); //Central portion
   dTargetAlveolarVentilation_L_Per_min *= (1 - CNSChange);
 
-  
-  double metabolicModifier = 1.0;
   double TMR_W = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W);
   double BMR_W = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
   double metabolicFraction = TMR_W / BMR_W;
@@ -523,30 +526,28 @@ void Nervous::ChemoreceptorFeedback()
   //The modifier is tuned to achieve the correct respiratory response for near maximal exercise. A linear relationship is assumed
   // for the respiratory effects due to increased metabolic exertion
   double tunedVolumeMetabolicSlope = 0.2; //Tuned fractional increase of the tidal volume due to increased metabolic rate
-  metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
+  double metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
   dTargetAlveolarVentilation_L_Per_min *= metabolicModifier;
 
   //Only move it part way to where it wants to be.
   //If you stays there, it will get there, just more controlled/slowly.
   //This is needed so we don't overshoot and introduce low frequency oscillations into the system (i.e. overdamped).
   double targetCO2PP_mmHg = 40.0;
-  double changeFraction = 1.0;
+  double changeFraction;
   if (m_data.GetState() <= EngineState::InitialStabilization) {
     //This gets it nice and stable
     changeFraction = 0.1;
   } else {
     //This keeps it from going crazy with modifiers applied
-    changeFraction = std::abs(arterialCO2PartialPressure_mmHg - targetCO2PP_mmHg) / targetCO2PP_mmHg * 0.5;
+    changeFraction = std::abs(m_ArterialCO2Pressure_mmHg - targetCO2PP_mmHg) / targetCO2PP_mmHg * 0.5;
   }
-
   changeFraction = std::min(changeFraction, 1.0);
 
   dTargetAlveolarVentilation_L_Per_min = m_PreviousTargetAlveolarVentilation_L_Per_min + (dTargetAlveolarVentilation_L_Per_min - m_PreviousTargetAlveolarVentilation_L_Per_min) * changeFraction;
-  m_PreviousTargetAlveolarVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min;
-
+  m_PreviousTargetAlveolarVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min;   
 
   m_data.GetRespiratory().GetTargetAlveolarVentilation().SetValue(dTargetAlveolarVentilation_L_Per_min, VolumePerTimeUnit::L_Per_min);
-
+  
 }
 
 //--------------------------------------------------------------------------------------------------

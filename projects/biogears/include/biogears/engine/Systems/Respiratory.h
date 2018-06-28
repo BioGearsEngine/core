@@ -145,6 +145,8 @@ private:
   bool m_BreathingCycle;
   double m_ArterialO2PartialPressure_mmHg;
   double m_ArterialCO2PartialPressure_mmHg;
+  RunningAverage m_ArterialO2Average_mmHg;
+  RunningAverage m_ArterialCO2Average_mmHg;
   double m_BreathingCycleTime_s;
   double m_BreathTimeExhale_min;
   double m_DefaultDrivePressure_cmH2O;
@@ -155,7 +157,6 @@ private:
   double m_InstantaneousFunctionalResidualCapacity_L;
   double m_MaxDriverPressure_cmH2O;
   double m_PeakRespiratoryDrivePressure_cmH2O;
- // double m_PreviousTargetAlveolarVentilation_L_Per_min;
   double m_VentilationFrequency_Per_min;
   double m_VentilationToTidalVolumeSlope;
 
