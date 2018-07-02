@@ -72,7 +72,7 @@ add_jar(${PROJECT_NAME}
 ###############################################################################
 set_target_properties(${PROJECT_NAME}
     PROPERTIES
-    FOLDER "Java"
+    FOLDER "Java/jar"
     OUTPUT_NAME ${SHORT_NAME}
     PROJECT_LABEL "${PROJECT_NAME}"
     )

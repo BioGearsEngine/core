@@ -107,23 +107,29 @@ add_custom_command(
 )
 
 file(GLOB_RECURSE source_xsd_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
-string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_xsd_list "${source_xsd_list}" )
-
-add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/xsd ${runtime_xsd_list}
-	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${source_xsd_list}
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/xsd  ${PROJECT_BINARY_DIR}/runtime/xsd
-)
+foreach(_file IN LISTS  source_xsd_list)
+	string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+	list(APPEND runtime_xsd_list ${runtime_file})
+	add_custom_command(
+		OUTPUT  ${runtime_file}
+		DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+		${source_xsd_list}
+		COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
+	)
+endforeach()
 
 file(GLOB_RECURSE source_jar_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/jar/*.jar")
-string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_jar_list "${source_jar_list}" )
-add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/jar ${runtime_jar_list}
-	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${source_jar_list}
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/jar  ${PROJECT_BINARY_DIR}/runtime/jar
-)
+
+foreach(_file IN LISTS  source_jar_list)
+	string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+	list(APPEND runtime_xsd_list ${runtime_file})
+	add_custom_command(
+		OUTPUT  ${runtime_file}
+		DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+		${source_xsd_list}
+		COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
+	)
+endforeach()
 
 file(GLOB_RECURSE source_data_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
 string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${PROJECT_BINARY_DIR}/runtime" runtime_data_list "${source_data_list}" )

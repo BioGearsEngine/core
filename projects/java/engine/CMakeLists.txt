@@ -1,8 +1,7 @@
 ###############################################################################
 # Policy adjustments
 ###############################################################################
-cmake_minimum_required(VERSION 3.8.0)
-cmake_policy(VERSION 3.8.0)
+
 ###############################################################################
 # Options
 ###############################################################################
@@ -13,11 +12,8 @@ cmake_policy(VERSION 3.8.0)
 set(PROJECT_NAME Java_BioGearsEngine)
 set(PREFIX engine_jar)
 
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
 set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" PARENT_SCOPE)
 set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
 set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
@@ -53,7 +49,7 @@ add_jar(${PROJECT_NAME}
 ###############################################################################
 set_target_properties(${PROJECT_NAME}
     PROPERTIES
-    FOLDER "Java"
+    FOLDER "Java/jar"
     OUTPUT_NAME ${SHORT_NAME}
     PROJECT_LABEL "${PROJECT_NAME}"
     )
