@@ -82,12 +82,6 @@ public class DataSetReader
   {
     try
     {
-      // Delete current dir contents
-      FileUtils.delete(new File("./substances/"));
-      FileUtils.delete(new File("./patients/"));
-      FileUtils.delete(new File("./environments/"));
-      FileUtils.delete(new File("./nutrition/"));
-      FileUtils.delete(new File("./config/"));
       // Ok, let's make them again
       FileUtils.createDirectory("./substances/");
       FileUtils.createDirectory("./patients/");
@@ -97,7 +91,7 @@ public class DataSetReader
     }
     catch(Exception ex)
     {
-      Log.error("Unable to clean directories");
+      Log.error("Unable to create directories");
       return;
     }
     try
@@ -112,13 +106,15 @@ public class DataSetReader
       FileInputStream xlFile = null;
       XSSFWorkbook xlWBook = null;
       try {
+        Log.info(path.toString());
         xlFile = new FileInputStream(path.toString());		
         xlWBook =  new XSSFWorkbook (xlFile);     
       } catch (java.lang.NoClassDefFoundError e) {
         Log.error(e.toString());
         return;
       } catch (Exception e){
-       Log.error(e.toString());
+        Log.error(e.toString());
+        e.printStackTrace();
         return;
       }
       evaluator = xlWBook.getCreationHelper().createFormulaEvaluator();

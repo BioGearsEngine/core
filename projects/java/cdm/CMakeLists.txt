@@ -49,22 +49,25 @@ add_jar(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/share/jar/zip4j-1.3.1.jar
         ${PROJECT_SOURCE_DIR}/share/jar/javax.mail-1.6.1.jar
         ${PROJECT_SOURCE_DIR}/share/jar/log4j-1.2.17.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/xmlbeans-2.6.0.jar
         ${PROJECT_SOURCE_DIR}/share/jar/jdom-2.0.2.jar
         ${PROJECT_SOURCE_DIR}/share/jar/reflections-0.9.9-RC1-uberjar.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/dom4j-1.6.1.jar
         ${PROJECT_SOURCE_DIR}/share/jar/gson-1.4.jar
         ${PROJECT_SOURCE_DIR}/share/jar/guava-11.0.2.jar
         ${PROJECT_SOURCE_DIR}/share/jar/javassist-3.16.1-GA.jar
         ${PROJECT_SOURCE_DIR}/share/jar/jsr305-1.3.9.jar
         ${PROJECT_SOURCE_DIR}/share/jar/slf4j-api-1.6.1.jar
         ${PROJECT_SOURCE_DIR}/share/jar/slf4j-simple-1.6.1.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/xmlbeans-2.6.0.jar
         ${PROJECT_SOURCE_DIR}/share/jar/xml-apis-1.0.b2.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/poi-3.13-20150929.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-3.13-20150929.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-schemas-3.13-20150929.jar
-        ${PROJECT_SOURCE_DIR}/share/jar/pdfbox-2.0.0-RC3.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/poi-3.17.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-3.17.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/poi-ooxml-schemas-3.17.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/dom4j-1.6.1.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/commons-collections4-4.1.jar
         ${PROJECT_SOURCE_DIR}/share/jar/commons-logging-1.2.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/commons-math3-3.6.1.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/commons-codec-1.11.jar
+        ${PROJECT_SOURCE_DIR}/share/jar/pdfbox-2.0.0-RC3.jar
         ${PROJECT_SOURCE_DIR}/share/jar/fontbox-2.0.0-RC3.jar
         )
 ###############################################################################
