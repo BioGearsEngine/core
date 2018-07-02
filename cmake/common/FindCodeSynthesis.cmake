@@ -36,15 +36,27 @@
 # root_dir : install dir of your public include fodlers example: boost opencv2 
 # component :path to the generated header with respect to root_dir. This will be the location of the generated file in your build_dir
 # resource_path : place where the xml and xsd should be copied to for use in runtime.
+
 if(NOT CodeSynthesis_FOUND)
-function(REGISTER_XSD schema root_dir component resource_path)
+function(REGISTER_XSD schema)
+    cmake_parse_arguments( "_l" 
+                        "STAGE"
+                        "ROOT;SUBPATH;RESOURCE_FOLDER"
+                        "DEPENDS"
+                        ${ARGN}
+                        )
+
+  set(root_dir ${_l_ROOT} )
+  set(component ${_l_SUBPATH} )
+  set(resource_path ${_l_RESOURCE_FOLDER} )
+
   set(CodeSynthesis_FLAGS --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.cfg ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd)
 
   if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx 
       OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml      OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd 
     )
     message(STATUS "Generating ${schema}.hxx and ${schema}.cxx")
-    execute_process( WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    execute_process( WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
                      COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
                      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xml ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml
@@ -63,11 +75,12 @@ function(REGISTER_XSD schema root_dir component resource_path)
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
-                      DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd
+                      DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.cfg 
+                      DEPENDS ${_l_DEPENDS}
                       COMMENT "Generating source code from XML" )
 
-  add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${CMAKE_BINARY_DIR}/${schema}.xsd ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml     
+  add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${schema}.xsd ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml     
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd ${CMAKE_BINARY_DIR}/${resource_path}/   
                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xml ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml     
@@ -115,31 +128,58 @@ endfunction()
 # root_dir : install dir of your public include fodlers example: boost opencv2 
 # component :path to the generated header with respect to root_dir. This will be the location of the generated file in your build_dir
 # resource_path : place where the xml and xsd should be copied to for use in runtime.
-function(REGISTER_XSD_DIR dir root_dir component resource_path)
+function(REGISTER_XSD_DIR dir)
+    cmake_parse_arguments( "_l" 
+                          "STAGE"
+                          "ROOT;SUBPATH;RESOURCE_FOLDER"
+                          "DEPENDS"
+                          ${ARGN}
+                          )
+
+  set(cfg_file ${_l_CONFIG})
+  set(root_dir ${_l_ROOT} )
+  set(component ${_l_SUBPATH} )
+  set(resource_path ${_l_RESOURCE_FOLDER} )
+
   list_directory( files ${PROJECT_SOURCE_DIR}/share/xsd/${dir})
   foreach( item IN LISTS files)
-    set (extra_macro_args ${ARGN})
-
-    # Did we get any optional args?
-    list(LENGTH extra_macro_args num_extra_args)
-    if (${num_extra_args} GREATER 0)
-        list(GET extra_macro_args 0 cfg_file)
+    if ( IS_DIRECTORY ${PROJECT_SOURCE_DIR}/share/xsd/${dir}/${item} )  
+      if(_l_STAGE)
+        REGISTER_XSD_DIR(  ${dir}/${item}  CONFIG ${cfg_file} 
+              ROOT ${root_dir} SUBPATH ${component}/${item} 
+              RESOURCE_PATH ${resource_path}/${item} )
+      else()
+        REGISTER_XSD_DIR(  ${dir}/${item}  CONFIG ${cfg_file} 
+              ROOT ${root_dir} SUBPATH ${component}/${item} 
+              RESOURCE_PATH ${resource_path}/${item} STAGE)
+      endif()
     else()
-      set(cfg_file ${dir})
-    endif ()
-
-    if ( IS_DIRECTORY ${PROJECT_SOURCE_DIR}/share/xsd/${dir}/${item} )
-      # message(STATUS "REGISTER_XSD_DIR( ${dir}/${item} ${root_dir} ${component}/${item} ${resource_path}/${item} ${cfg_file}.xsd)")
-      REGISTER_XSD_DIR(  ${dir}/${item} ${root_dir} ${component}/${item} ${resource_path}/${item} ${cfg_file} )
-    else()
-      # message(STATUS "REGISTER_XSD_FILE( ${dir}/${item} ${cfg_file} ${root_dir} ${component}/ ${resource_path}/ )")
-      REGISTER_XSD_FILE(  ${dir}/${item} ${cfg_file}.cfg ${root_dir} ${component}/ ${resource_path}/ )
+      if(_l_STAGE)
+        REGISTER_XSD_FILE(  ${dir}/${item} CONFIG ${cfg_file}.cfg 
+          ROOT ${root_dir} SUBPATH ${component}/ 
+          RESOURCE_PATH ${resource_path}/ )
+      else()
+        REGISTER_XSD_FILE(  ${dir}/${item} CONFIG ${cfg_file}.cfg 
+          ROOT ${root_dir} SUBPATH ${component}/ 
+          RESOURCE_PATH ${resource_path}/ STAGE)
+      endif()
     endif()
   endforeach()
 endfunction(REGISTER_XSD_DIR)
 
-function(REGISTER_XSD_FILE file cfg_file root_dir component resource_path)
-  
+function(REGISTER_XSD_FILE file )
+  cmake_parse_arguments( "_l" 
+                          "STAGE"
+                          "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER"
+                          "DEPENDS"
+                          ${ARGN}
+                          )
+
+  set(cfg_file ${_l_CONFIG} )
+  set(root_dir ${_l_ROOT} )
+  set(component ${_l_SUBPATH} )
+  set(resource_path ${_l_RESOURCE_FOLDER} )
+
   set(CodeSynthesis_FLAGS --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file} ${PROJECT_SOURCE_DIR}/share/xsd/${file})
   
   get_filename_component(schema ${file} NAME_WE)
@@ -174,11 +214,12 @@ function(REGISTER_XSD_FILE file cfg_file root_dir component resource_path)
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
-                      DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${file}
+                      DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${file}
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}
+                      DEPENDS ${_l_DEPENDS}
                       COMMENT "Generating source code from XML" )
 
-  add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CURRENT_BINARY_DIR}/${schema}.xsd    
+  add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${schema}.xsd    
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/   
                       DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${file}
@@ -207,14 +248,23 @@ function(REGISTER_XSD_FILE file cfg_file root_dir component resource_path)
       FOLDER "Code Generators"
       PROJECT_LABEL "XSD_Move_${safe_unique_name}")
 endfunction(REGISTER_XSD_FILE)
-function(GENERATE_XSD_SCHEMA file cfg_file root_dir component resource_path)
-  
+function(GENERATE_XSD_SCHEMA file)
+    cmake_parse_arguments( "_l" 
+                          "STAGE"
+                          "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER"
+                          "DEPENDS"
+                          ${ARGN})
+
+  set(cfg_file ${_l_CONFIG} )
+  set(root_dir ${_l_ROOT} )
+  set(component ${_l_SUBPATH} )
+  set(resource_path ${_l_RESOURCE_FOLDER} )
+
   set(CodeSynthesis_FLAGS --generate-xml-schema --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file} ${PROJECT_SOURCE_DIR}/share/xsd/${file})
  
   
   get_filename_component(schema ${file} NAME_WE)
-  if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx 
-    )
+  if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx )
     message(STATUS "Generating Schema ${file}" )
 
     execute_process( 
@@ -242,9 +292,10 @@ function(GENERATE_XSD_SCHEMA file cfg_file root_dir component resource_path)
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}
+                      DEPENDS ${_l_DEPENDS}
                       COMMENT "Generating source code from XML" )
 
-  add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${CMAKE_BINARY_DIR}/${schema}.xsd    
+  add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${schema}.xsd    
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/   
                       DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}

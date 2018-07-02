@@ -35,8 +35,15 @@ verify_package(CodeSynthesis REQUIRED)
 #Code Generation
 ###############################################################################
 #REGISTER_XSD_DIR("recursive/biogears" "biogears" "schema" "schema")
-REGISTER_XSD_FILE( BioGearsDataModel.xsd BioGearsDataModel.cfg biogears schema resources/schema )
-GENERATE_XSD_SCHEMA( data-model-schema.xsd data-model-schema.cfg biogears schema resources/schema )
+file(GLOB_RECURSE xsd_list "${PROJECT_SOURCE_DIR}/share/*.xsd")
+
+REGISTER_XSD_FILE  ( BioGearsDataModel.xsd CONFIG BioGearsDataModel.cfg 
+                     ROOT biogears SUBPATH schema RESOURCE_FOLDER resources/schema 
+                     DEPENDS ${xsd_list}
+                     STAGE)
+GENERATE_XSD_SCHEMA( data-model-schema.xsd CONFIG data-model-schema.cfg 
+                     ROOT biogears SUBPATH schema RESOURCE_FOLDER resources/schema 
+                     STAGE)
 
 ###############################################################################
 #Sorce and Header Defines
