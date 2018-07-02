@@ -1,8 +1,7 @@
 ###############################################################################
 # Policy adjustments
 ###############################################################################
-cmake_minimum_required(VERSION 3.8.0)
-cmake_policy(VERSION 3.8.0)
+cmake_policy(SET CMP0070 NEW)
 ###############################################################################
 # Options
 ###############################################################################
@@ -13,11 +12,8 @@ cmake_policy(VERSION 3.8.0)
 set(PROJECT_NAME Java_CommonDataModel)
 set(PREFIX cdm_jar)
 
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
 set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" PARENT_SCOPE)
 set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
 set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
@@ -33,48 +29,13 @@ message(STATUS "Configuring ${PROJECT_NAME}")
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-
-#We are going to try and figure out the name of the Windows DLL which for reasons unknown to me
-#is not required to match the link lib. No right way to do this, so for now I'm assuming the DLL is always
-#more specific then the lib (e.g Library-3.lib Library-3.2.dll)
-if(Xerces-c_LIBRARY_RELEASE_STATIC)
-   get_filename_component(Xerces-c_DLL_PATH ${Xerces-c_LIBRARY_RELEASE_STATIC} DIRECTORY )
-   get_filename_component(Xerces-c_RELEASE_DLL ${Xerces-c_LIBRARY_RELEASE_STATIC} NAME_WE)
-   get_filename_component(Xerces-c_DEBUG_DLL   ${Xerces-c_LIBRARY_DEBUG_STATIC} NAME_WE)
-
-   set(_xerces_release_dll ${Xerces-c_LIBRARY_RELEASE_STATIC})
-   set(_xerces_debug_dll ${Xerces-c_LIBRARY_DEBUG_STATIC})
-else()
-   get_filename_component(Xerces-c_DLL_PATH ${Xerces-c_LIBRARY_RELEASE_DYNAMIC} DIRECTORY)
-   get_filename_component(Xerces-c_RELEASE_DLL ${Xerces-c_LIBRARY_RELEASE_DYNAMIC} NAME_WE)
-   get_filename_component(Xerces-c_DEBUG_DLL   ${Xerces-c_LIBRARY_DEBUG_DYNAMIC} NAME_WE)
-
-   set(_xerces_release_dll ${Xerces-c_LIBRARY_RELEASE_DYNAMIC})
-   set(_xerces_debug_dll ${Xerces-c_LIBRARY_DEBUG_DYNAMIC})
-endif()
-   
-if(WIN32)
-   file(GLOB _release_canidates "${Xerces-c_DLL_PATH}/../bin/*${Xerces-c_RELEASE_DLL}*${CMAKE_SHARED_LIBRARY_SUFFIX}")
-   file(GLOB _debug_canidates   "${Xerces-c_DLL_PATH}/../bin/*${Xerces-c_DEBUG_DLL}*${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
-   list(GET _release_canidates 0 _tmp_release)
-   list(GET _debug_canidates   0 _tmp_debug)
-
-   get_filename_component(_xerces_release_dll "${_tmp_release}" ABSOLUTE)
-   get_filename_component(_xerces_debug_dll    "${_tmp_debug}"   ABSOLUTE)
-endif()
-
-if(WIN32)  
-    configure_file(src/mil/tatrc/physiology/utilities/Resources.java.win.in src/mil/tatrc/physiology/utilities/Resources.java )
-else()
-    configure_file(src/mil/tatrc/physiology/utilities/Resources.java.nix.in src/mil/tatrc/physiology/utilities/Resources.java )
-endif()
-    configure_file(src/mil/tatrc/physiology/utilities/testing/TestDriver.java.in src/mil/tatrc/physiology/utilities/testing/TestDriver.java )
+file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/Resources.java INPUT src/mil/tatrc/physiology/utilities/Resources.java.in)
+file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/testing/TestDriver.java INPUT src/mil/tatrc/physiology/utilities/testing/TestDriver.java.in )
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.java"   "Sources\\")
 add_source_files(SRCS ${CMAKE_CURRENT_BINARY_DIR}/src "*.java"   "Sources\\")
 
 set(${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
-set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
+set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/src/mil/tatrc/physiology/utilities/Resources.java $<CONFIG>/ ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/src/mil/tatrc/physiology/utilities/testing/TestDriver.java)
 string(REGEX REPLACE "Java_" "" SHORT_NAME ${PROJECT_NAME})
 
 add_jar(${PROJECT_NAME}
@@ -114,7 +75,7 @@ set_target_properties(${PROJECT_NAME}
     OUTPUT_NAME ${SHORT_NAME}
     PROJECT_LABEL "${PROJECT_NAME}"
     )
-add_dependencies(${PROJECT_NAME} libbiogears_jni)
+add_dependencies(${PROJECT_NAME} Java_DataModelBindings libbiogears_jni)
 ###############################################################################
 # COMPILATION & LINKAGE MODIFICATIONS
 ###############################################################################

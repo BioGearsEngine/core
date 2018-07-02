@@ -36,7 +36,7 @@
 # root_dir : install dir of your public include fodlers example: boost opencv2 
 # component :path to the generated header with respect to root_dir. This will be the location of the generated file in your build_dir
 # resource_path : place where the xml and xsd should be copied to for use in runtime.
-
+if(NOT CodeSynthesis_FOUND)
 function(REGISTER_XSD schema root_dir component resource_path)
   set(CodeSynthesis_FLAGS --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.cfg ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd)
 
@@ -277,7 +277,7 @@ endfunction(GENERATE_XSD_SCHEMA)
 #################################################################################################################
 
 # Look for the header file.
-find_path(  CodeSynthesis_INCLUDE_DIR 
+find_path(CodeSynthesis_INCLUDE_DIR 
       NAMES xsd/cxx/version.hxx
       ENV XSD_ROOTDIR 
       PATH_SUFFIXES 
@@ -287,22 +287,22 @@ find_path(  CodeSynthesis_INCLUDE_DIR
 )
 
 if( CMAKE_HOST_WIN32 )
+  message(STATUS "Looking for bin/xsd in ${CodeSynthesis_INCLUDE_DIR}/..")
   find_file(CodeSynthesis_EXECUTABLE
             NAMES "xsd.exe"
             ENV XSD_ROOTDIR 
-            HINTS ${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}
+            HINTS "${CodeSynthesis_INCLUDE_DIR}/../.."
             PATH_SUFFIXES "bin" )
 else()
-  message(STATUS "Looking for bin/xsd in ${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}")
   find_file(CodeSynthesis_EXECUTABLE
             NAMES "bin/xsd"
-            HINTS "${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}"
+            HINTS "${CodeSynthesis_INCLUDE_DIR}/../.."
             NO_DEFAULT_PATH
             )
 endif()
 
-
-find_package(Xerces-c REQUIRED)
+include(CMakeFindDependencyMacro)
+find_dependency(Xerces-c)
 
 # handle the QUIETLY and REQUIRED arguments and set CodeSynthesis_FOUND to TRUE if
 # all listed variables are TRUE
@@ -314,9 +314,15 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(CodeSynthesis
                                   VERSION_VAR CodeSynthesis_VERSION_STRING)
 
 if(CodeSynthesis_FOUND)
-  set(CodeSynthesis_LIBRARIES ${Xerces-c_LIBRARIES})
-  set(CodeSynthesis_INCLUDE_DIRS ${CodeSynthesis_INCLUDE_DIR} ${Xerces-c_INCLUDE_DIRS})
-  set(CodeSynthesis_CPPFLAGS ${Xerces-c_CPPFLAGS})
+  add_library(CodeSynthesis::XSD INTERFACE IMPORTED GLOBAL)
+  set_target_properties(CodeSynthesis::XSD
+    PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES
+    ${CodeSynthesis_INCLUDE_DIR}
+    )
+  target_link_libraries(CodeSynthesis::XSD INTERFACE Xerces::xerces)
+
   mark_as_advanced(CodeSynthesis_INCLUDE_DIR)
   mark_as_advanced(CodeSynthesis_EXECUTABLE)
+endif()
 endif()

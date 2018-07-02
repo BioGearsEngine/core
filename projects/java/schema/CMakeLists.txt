@@ -48,6 +48,7 @@ string(REGEX REPLACE "Java_" "" SHORT_NAME ${PROJECT_NAME})
 add_jar(${PROJECT_NAME}
         ${${PREFIX}_SOURCES}
         OUTPUT_NAME ${SHORT_NAME}
+
         )
 add_dependencies(${PROJECT_NAME} libbiogears_jni)
 ###############################################################################

@@ -1,7 +1,3 @@
-cmake_minimum_required(VERSION 3.8.0 )
-cmake_policy(VERSION 3.8.0)
-
-
 if( NOT CMAKE_DEBUG_POSTFIX )
   set( CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "This string is appended to target names in debug mode." FORCE )
 endif()
@@ -31,30 +27,24 @@ set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_INCLUDES 1)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY AUTOGEN_TARGETS_FOLDER "Code Generators" )
 set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP  "Generated")
-########################################################################################################
-# 
-# Include Macros
-# 
-########################################################################################################
-function(ENSURE_PATHS_SET PATH_LIST TARGET_PROJECT)
-    foreach(INCL ${${PATH_LIST}})
-        if((DEFINED ${INCL}) AND (NOT "${${INCL}}" STREQUAL ""))
-            list(APPEND INCLUDES ${${INCL}})
-        else()
-            message(FATAL_ERROR "External include variable " ${INCL} " not defined (Circular includes in headers?)")
-        endif()
-    endforeach(INCL)
-    list(REMOVE_DUPLICATES INCLUDES) 
-    foreach(ITEM IN LISTS INCLUDES)
-      target_include_directories(${TARGET_PROJECT}
-        PRIVATE PUBLIC "${ITEM}"
-      )
-    endforeach()
-endfunction(ENSURE_PATHS_SET)
 
 ####
 #
+#  A simple macro to check for PACKAGE_FOUND and warn the user to 
 #
+####
+function(verify_package package)
+  find_package(${package})
+  if(NOT ${package}_FOUND)
+      message(WARNING "The following packages ${package} were not found."
+        " If this continues you may need to set your CMAKE_FIND_ROOT_PATH to include any non standard system directories where your third party deps might be found"
+        "")
+  endif()
+  find_package(${package} ${ARGN})
+endfunction(verify_package)
+####
+#
+#  Simple macro for taking a list of header files and asking them to be included
 #
 ####
 function(install_headers header_list out_dir)
@@ -82,7 +72,7 @@ function(CHILDLIST result curdir)
 endfunction()
 
 function(add_source_files var prefix regex source_group)
-    # message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
+    message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
     file(GLOB TEMP "${prefix}/${regex}")
 
     source_group("${source_group}" FILES ${TEMP})
@@ -148,10 +138,8 @@ function(create_cache_file)
   set(CacheForScript ${CMAKE_BINARY_DIR}/cmake-common_cache.cmake)
   set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
   file(WRITE ${CacheForScript} "")
-  file(APPEND ${CacheForScript} "set(PROJECT_NAME ${PROJECT_NAME})\n")
   file(APPEND ${CacheForScript} "set(PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})\n")
   file(APPEND ${CacheForScript} "set(CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR})\n")
-  file(APPEND ${CacheForScript} "set(ARA_${PROJECT_NAME}_EXTERNAL ${ARA_${PROJECT_NAME}_EXTERNAL})\n")
   file(APPEND ${CacheForScript} "set(${PROJECT_NAME}_THIRD_PARTY ${ARA_${PROJECT_NAME}_EXTERNAL})\n")
   file(APPEND ${CacheForScript} "set(${PROJECT_NAME}_THIRD_PARTY_BIN ${ARA_${PROJECT_NAME}_EXTERNAL}/bin)\n")
   file(APPEND ${CacheForScript} "set(${PROJECT_NAME}_THIRD_PARTY_LIB ${ARA_${PROJECT_NAME}_EXTERNAL}/lib)\n")

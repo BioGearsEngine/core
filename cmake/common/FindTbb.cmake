@@ -50,9 +50,23 @@ if(Tbb_FOUND)
   mark_as_advanced(Tbb_LIBRARY_DEBUG)
   mark_as_advanced(Tbb_LIBRARY)
 
-  set (Tbb_LIBRARIES  debug ${Tbb_MALLOC_LIBRARY_DEBUG} 
-                      optimized ${Tbb_MALLOC_LIBRARY} 
-                      debug ${Tbb_LIBRARY_DEBUG} 
-                      optimized ${Tbb_LIBRARY} )
-  set (Tbb_INCLUDE_DIRS ${Tbb_INCLUDE_DIR})
+      add_library(Tbb::malloc IMPORTED GLOBAL)
+      set_target_properties(Tbb::malloc
+        PROPERTIES
+        IMPORTED_IMPLIB_DEBUG   ${Tbb_MALLOC_LIBRARY_DEBUG}
+        IMPORTED_IMPLIB ${Tbb_MALLOC_LIBRARY}
+        INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
+        ${Tbb_INCLUDE_DIR}
+        )
+
+      add_library(Tbb::Tbb IMPORTED GLOBAL)
+      set_target_properties(Tbb::Tbb
+        PROPERTIES
+        IMPORTED_IMPLIB_DEBUG   ${Tbb_LIBRARY_DEBUG}
+        IMPORTED_IMPLIB ${Tbb_LIBRARY_RELEASE}
+
+        INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
+        ${Tbb_INCLUDE_DIR}
+        )
+
 endif(Tbb_FOUND)

@@ -38,10 +38,10 @@ if (CMAKE_JAVA_CLASS_OUTPUT_PATH)
         endforeach()
 
         # write to file
-        file(WRITE ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/../java_class_filelist ${_JAVA_CLASS_FILES} )
+        file(WRITE ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_class_filelist ${_JAVA_CLASS_FILES})
 
     else ()
-        message(SEND_ERROR "FATAL: CMAKE_JAVA_CLASS_OUTPUT_PATH:${CMAKE_JAVA_CLASS_OUTPUT_PATH} doesn't exist")
+        message(SEND_ERROR "FATAL: Java class output path doesn't exist")
     endif ()
 else ()
     message(SEND_ERROR "FATAL: Can't find CMAKE_JAVA_CLASS_OUTPUT_PATH")

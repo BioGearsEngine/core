@@ -1,8 +1,7 @@
 ###############################################################################
 # Policy adjustments
 ###############################################################################
-cmake_minimum_required(VERSION 3.8.0)
-cmake_policy(VERSION 3.8.0)
+
 ###############################################################################
 # Options
 ###############################################################################
@@ -13,11 +12,8 @@ cmake_policy(VERSION 3.8.0)
 set(PROJECT_NAME biogears)
 set(PREFIX bio)
 
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
 set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" PARENT_SCOPE)
 set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
 set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
@@ -31,14 +27,10 @@ endif()
 find_package(Threads REQUIRED)
 
 #find_package(Boost 1.60.0 COMPONENTS system REQUIRED)
-find_package(Eigen3 REQUIRED)
-find_package(Log4cpp REQUIRED)
-find_package(CodeSynthesis REQUIRED)
+verify_package(Log4cpp REQUIRED)
+find_package(Eigen3 REQUIRED HINTS ${Log4cpp_INCLUDE_DIR}../../share/eigen3/cmake/)
+verify_package(CodeSynthesis REQUIRED)
 
-if (ARA_${PREFIX}_BUILD_STATIC)
-  add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
-  add_definitions("-DARACORE_BUILT_AS_STATIC")
-endif()
 ###############################################################################
 #Code Generation
 ###############################################################################
@@ -56,16 +48,14 @@ message(STATUS "Configuring ${PROJECT_NAME}")
 add_source_files(PUBLIC_STRING_HDRS  ${CMAKE_CURRENT_SOURCE_DIR}/string/include "*.h"   "Headers\\Public\\")
 add_source_files(STRING_SRCS  ${CMAKE_CURRENT_SOURCE_DIR}/string/src "*.cpp"   "Sources\\")
 #Biogears CDM
-add_source_files(GEN_CDM_HDRS ${CMAKE_CURRENT_BINARY_DIR}/biogears "*.hxx"  "Headers\\Public\\")
 add_source_files(PUBLIC_CDM_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/cdm "*.h"  "Headers\\Public\\")
+add_source_files(GEN_CDM_HDRS ${CMAKE_CURRENT_BINARY_DIR}/biogears "*.hxx"  "Headers\\Public\\")
 add_source_files(GEN_CDM_SRCS ${CMAKE_CURRENT_BINARY_DIR}/biogears "*.cxx" "Sources\\")
 #Biogears Core
 add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.h"   "Headers\\Private\\")
-add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.hpp"   "Headers\\Private\\")
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.c" "Sources\\")
+
 add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.h"  "Headers\\Public\\")
-add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.hpp"  "Headers\\Public\\")
 #Biogears JNI
 add_source_files(PUBLIC_JNI_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/jni/include "*.h"  "Headers\\Public\\")
 add_source_files(JNI_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/jni/src "*cpp" "Sources\\")
@@ -112,50 +102,40 @@ if(ARA_${PREFIX}_BUILD_STATIC)
     CXX_STANDARD 14
     )
 
+  if (ARA_${PREFIX}_BUILD_STATIC)
+    target_compile_definitions(lib${PROJECT_NAME} PUBLIC "${PREFIX}_BUILT_AS_STATIC" "DARACORE_BUILT_AS_STATIC")
+  endif()
   ###############################################################################
   # COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  foreach(MY_ITEM ${${PREFIX}_CPPFLAGS_EXPORT})
-      TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}
-          PUBLIC ${MY_ITEM}
-      )
-  endforeach(MY_ITEM)
-  foreach(MY_ITEM ${${PREFIX}_CPPFLAGS})
-      TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}
-          PRIVATE ${MY_ITEM}
-      )
-  endforeach(MY_ITEM)
-
-  list(APPEND ${PREFIX}_INCLUDES
-        ${PREFIX}_INCLUDE_DIR
-        ${PREFIX}_PRIVATE_INCLUDE_DIR
-        ${PREFIX}_GENERATED_INCLUDE_DIR
-#        Boost_INCLUDE_DIRS
-        Eigen3_INCLUDE_DIRS
-        Log4cpp_INCLUDE_DIRS
+  target_compile_definitions(lib${PROJECT_NAME} PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
+  target_compile_definitions(lib${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS})
+  
+  target_include_directories(lib${PROJECT_NAME}
+      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR}
+      INTERFACE $<BUILD_INTERFACE:${${PREFIX}_GENERATED_INCLUDE_DIR}> 
+                $<BUILD_INTERFACE:${${PREFIX}_INCLUDE_DIR}>
+                $<INSTALL_INTERFACE:include>
   )
+  
   if(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
-	  list(APPEND ${PREFIX}_INCLUDES   Java_INCLUDE_DIRS)
+	  target_include_directories(lib${PROJECT_NAME} PRIVATE ${Java_INCLUDE_DIRS})
   endif()
-  list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
-  ensure_paths_set(${PREFIX}_INCLUDES lib${PROJECT_NAME})
 
-  foreach( ITEM IN LISTS ${PREFIX}_INCLUDES)
-    message(STATUS "  ${${ITEM}}")
-  endforeach()
   set(${PREFIX}_LIBS
-        ${CMAKE_THREAD_LIBS_INIT}
+        Threads::Threads
+        Eigen3::Eigen
+        Log4cpp::Log4cpp
+        CodeSynthesis::XSD
         ${CMAKE_DL_LIBS}
- #       ${Boost_LIBRARIES}
-        ${EIGEN_LIBRARIES}
-        ${Log4cpp_LIBRARIES}
-        ${CodeSynthesis_LIBRARIES}
   )
-  set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
   target_link_libraries(lib${PROJECT_NAME}  ${${PREFIX}_LIBS} )
 
 else()
   if (WIN32)
+    ###############################################################################
+    # libBiogears_String 
+    ###############################################################################
     add_library(lib${PROJECT_NAME}_string SHARED ${LIB${PREFIX}_STRING_SOURCES} ${LIB${PREFIX}_STRING_HEADERS})
 
 	  set_target_properties(lib${PROJECT_NAME}_string
@@ -170,39 +150,30 @@ else()
       )
 
     ###############################################################################
-    # libBiogears_String 
+    # libBiogears_String OMPILATION & LINKAGE MODIFICATIONS
     ###############################################################################
-    foreach(MY_ITEM ${${PREFIX}_CPPFLAGS_EXPORT})
-        TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}_string
-            PUBLIC ${MY_ITEM}
-        )
-    endforeach(MY_ITEM)
-    foreach(MY_ITEM ${${PREFIX}_CPPFLAGS})
-        TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}_string
-            PRIVATE ${MY_ITEM}
-        )
-    endforeach(MY_ITEM)
-
-    list(APPEND ${PREFIX}_string_INCLUDES
-          ${${PREFIX}_INCLUDE_DIR}
-          ${${PREFIX}_PRIVATE_INCLUDE_DIR}
-          ${${PREFIX}_GENERATED_INCLUDE_DIR}
-          ${CMAKE_CURRENT_SOURCE_DIR}/string/include
+    target_compile_definitions(lib${PROJECT_NAME}_string  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
+    target_compile_definitions(lib${PROJECT_NAME}_string  PRIVATE ${${PREFIX}_CPPFLAGS})
+    
+    target_include_directories(lib${PROJECT_NAME}_string 
+        PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/string/include
+        INTERFACE 
+                  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/string/include>
+                  $<INSTALL_INTERFACE:include>
     )
-
-
+    
     set(${PREFIX}_string_LIBS
-          ${CMAKE_THREAD_LIBS_INIT}
+          Threads::Threads
           ${CMAKE_DL_LIBS}
     )
+    target_link_libraries(lib${PROJECT_NAME}_string PUBLIC  ${${PREFIX}_string_LIBS} )
 
-    target_include_directories(lib${PROJECT_NAME}_string  PUBLIC ${${PREFIX}_string_INCLUDES} )
-    target_link_libraries(lib${PROJECT_NAME}_string  ${${PREFIX}_string_LIBS} )
-    install(TARGETS lib${PROJECT_NAME}_string
+    install(TARGETS lib${PROJECT_NAME}_string EXPORT libBiogears
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
         ARCHIVE DESTINATION lib
      )
+
   endif(WIN32)
    ###############################################################################
   # libBiogears_cdm
@@ -219,38 +190,28 @@ else()
     CXX_STANDARD 14
     )
 
-  foreach(MY_ITEM ${${PREFIX}_CPPFLAGS_EXPORT})
-      TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}_cdm
-          PUBLIC ${MY_ITEM}
-      )
-  endforeach(MY_ITEM)
-  foreach(MY_ITEM ${${PREFIX}_CPPFLAGS})
-      TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}_cdm
-          PRIVATE ${MY_ITEM}
-      )
-  endforeach(MY_ITEM)
-  list(APPEND ${PREFIX}_cdm_INCLUDES
-          ${${PREFIX}_INCLUDE_DIR}
-          ${${PREFIX}_PRIVATE_INCLUDE_DIR}
-          ${${PREFIX}_GENERATED_INCLUDE_DIR}
-          ${CMAKE_CURRENT_SOURCE_DIR}/string/include
-          ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
-          ${CodeSynthesis_INCLUDE_DIRS}
-          ${Eigen3_INCLUDE_DIRS}
+  ###############################################################################
+  # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS
+  ###############################################################################
+  target_compile_definitions(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
+  target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS})
+  
+  target_include_directories(lib${PROJECT_NAME}_cdm 
+      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
+      INTERFACE 
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cdm/include>
+                $<INSTALL_INTERFACE:include>
   )
-
-
+  
   set(${PREFIX}_cdm_LIBS
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${CMAKE_DL_LIBS}
-        ${CodeSynthesis_LIBRARIES}
+            CodeSynthesis::XSD
+            Eigen3::Eigen
   )
 	message(STATUS "${PREFIX}_cdm_LIBS=${${PREFIX}_cdm_LIBS}")
-  target_include_directories(lib${PROJECT_NAME}_cdm PUBLIC ${${PREFIX}_cdm_INCLUDES} )
   if(WIN32)
-    target_link_libraries(lib${PROJECT_NAME}_cdm  lib${PROJECT_NAME}_string ${${PREFIX}_cdm_LIBS} )
+    target_link_libraries(lib${PROJECT_NAME}_cdm  PUBLIC lib${PROJECT_NAME}_string ${${PREFIX}_cdm_LIBS} )
   else()
-    target_link_libraries(lib${PROJECT_NAME}_cdm  ${${PREFIX}_cdm_LIBS} )
+    target_link_libraries(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_cdm_LIBS} )
   endif()
   install(TARGETS lib${PROJECT_NAME}_cdm
       RUNTIME DESTINATION bin
@@ -272,46 +233,37 @@ else()
     CXX_STANDARD 14
     )
 
-    foreach(MY_ITEM ${${PREFIX}_CPPFLAGS_EXPORT})
-      TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}
-          PUBLIC ${MY_ITEM}
-      )
-  endforeach(MY_ITEM)
-  foreach(MY_ITEM ${${PREFIX}_CPPFLAGS})
-      TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}
-          PRIVATE ${MY_ITEM}
-      )
-  endforeach(MY_ITEM)
-
-  list(APPEND ${PREFIX}_INCLUDES
-          ${${PREFIX}_INCLUDE_DIR}
-          ${${PREFIX}_PRIVATE_INCLUDE_DIR}
-          ${${PREFIX}_GENERATED_INCLUDE_DIR}
-          ${CMAKE_CURRENT_SOURCE_DIR}/string/include
-          ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
-#          ${Boost_INCLUDE_DIRS}
-          ${Eigen3_INCLUDE_DIRS}
-          ${Log4cpp_INCLUDE_DIRS}
+  ###############################################################################
+  # libBiogears COMPILATION & LINKAGE MODIFICATIONS
+  ###############################################################################
+  target_compile_definitions(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
+  target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS})
+  
+  target_include_directories(lib${PROJECT_NAME} 
+      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} 
+      INTERFACE 
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+				$<BUILD_INTERFACE:${${PREFIX}_GENERATED_INCLUDE_DIR}>
+                $<INSTALL_INTERFACE:include>
   )
-
-
+  
   set(${PREFIX}_LIBS
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${CMAKE_DL_LIBS}
-#        ${Boost_LIBRARIES}
-        ${EIGEN_LIBRARIES}
-        ${Log4cpp_LIBRARIES}
+            Eigen3::Eigen
+            Log4cpp::Log4cpp
+            lib${PROJECT_NAME}_cdm
   )
-
-  target_include_directories(lib${PROJECT_NAME} PUBLIC ${${PREFIX}_INCLUDES} )
-  target_link_libraries(lib${PROJECT_NAME}  lib${PROJECT_NAME}_cdm ${${PREFIX}_LIBS} )
-
+  message(STATUS "${PREFIX}_LIBS=${${PREFIX}_LIBS}")
+  target_link_libraries(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_LIBS} )
+  install(TARGETS lib${PROJECT_NAME}_cdm EXPORT libBiogears
+      RUNTIME DESTINATION bin
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+      ARCHIVE DESTINATION lib
+   )
 
   ###############################################################################
   # libBiogears_jni
   ###############################################################################
   if(Java_FOUND AND ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
-  message(STATUS "JAVA STUFF")
      add_library(lib${PROJECT_NAME}_jni  SHARED ${LIB${PREFIX}_JNI_SOURCES} ${LIB${PREFIX}_JNI_HEADERS})
   	   set_target_properties(lib${PROJECT_NAME}_jni
        PROPERTIES
@@ -323,36 +275,30 @@ else()
        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
        CXX_STANDARD 14
        )
+  ###############################################################################
+  # libBiogears_jni COMPILATION & LINKAGE MODIFICATIONS
+  ###############################################################################
+  target_include_directories(lib${PROJECT_NAME}_jni 
+      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/jni/include
+	  PUBLIC   ${JNI_INCLUDE_DIRS}
+      INTERFACE 
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/jni/include>
+                $<INSTALL_INTERFACE:include>
+  )
+  
+  set(${PREFIX}_jni_LIBS
+            CodeSynthesis::XSD
+            Eigen3::Eigen
+            lib${PROJECT_NAME}
+  )
+	message(STATUS "${PREFIX}_jni_LIBS=${${PREFIX}_jni_LIBS}")
+  if(WIN32)
+    target_link_libraries(lib${PROJECT_NAME}_jni  PUBLIC lib${PROJECT_NAME}_string ${${PREFIX}_jni_LIBS} )
+  else()
+    target_link_libraries(lib${PROJECT_NAME}_jni  PUBLIC ${${PREFIX}_jni_LIBS} )
+  endif()
 
-       foreach(MY_ITEM ${${PREFIX}_CPPFLAGS_EXPORT})
-         TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}_jni
-             PUBLIC ${MY_ITEM}
-         )
-     endforeach(MY_ITEM)
-     foreach(MY_ITEM ${${PREFIX}_CPPFLAGS})
-         TARGET_COMPILE_OPTIONS(lib${PROJECT_NAME}_jni
-             PRIVATE ${MY_ITEM}
-         )
-     endforeach(MY_ITEM)
-
-     list(APPEND ${PREFIX}_jni_INCLUDES
-             ${${PREFIX}_INCLUDE_DIR}
-             ${${PREFIX}_PRIVATE_INCLUDE_DIR}
-             ${${PREFIX}_GENERATED_INCLUDE_DIR}
-             ${CMAKE_CURRENT_SOURCE_DIR}/string/include
-             ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
-             ${CMAKE_CURRENT_SOURCE_DIR}/jni/include
-             ${Java_INCLUDE_DIRS}
-     )
-
-     set(${PREFIX}_jni_LIBS
-           ${CMAKE_THREAD_LIBS_INIT}
-           ${CMAKE_DL_LIBS}
-     )
-
-     target_include_directories(lib${PROJECT_NAME}_jni  PUBLIC ${${PREFIX}_jni_INCLUDES} )
-     target_link_libraries(lib${PROJECT_NAME}_jni  lib${PROJECT_NAME} ${${PREFIX}_jni_LIBS} )
-     install(TARGETS lib${PROJECT_NAME}_jni
+     install(TARGETS lib${PROJECT_NAME}_jni EXPORT libBiogears
          RUNTIME DESTINATION bin
          LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
          ARCHIVE DESTINATION lib
@@ -365,7 +311,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set_target_properties(lib${PROJECT_NAME} PROPERTIES LINK_FLAGS ${${PREFIX}_LDFLAGS})
 endif()
 
- install(TARGETS lib${PROJECT_NAME}
+ install(TARGETS lib${PROJECT_NAME} EXPORT libBiogears
      RUNTIME DESTINATION bin
      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
      ARCHIVE DESTINATION lib

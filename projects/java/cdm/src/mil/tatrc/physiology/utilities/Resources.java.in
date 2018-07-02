@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 package mil.tatrc.physiology.utilities;
 
+import java.lang.String;
+
 import java.util.ArrayList;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +24,6 @@ import java.io.FileNotFoundException;
 
 public class Resources
 {
-  private ArrayList<Path> libraries_d = new ArrayList<Path>();
   private ArrayList<Path> libraries = new ArrayList<Path>();
 
   private ArrayList<Path> binPath = new ArrayList<Path>();
@@ -41,19 +42,13 @@ public class Resources
 
   private void initialize(String sysroot) 
   {
-    libraries_d.add(Paths.get("@Log4cpp_LIBRARY_DEBUG@"));
-    libraries_d.add(Paths.get("@_xerces_debug_dll@"));
-    libraries_d.add(Paths.get("@CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG@/libbiogears_cdm@CMAKE_DEBUG_POSTFIX@@CMAKE_SHARED_LIBRARY_SUFFIX@"));
-    libraries_d.add(Paths.get("@CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG@/libbiogears@CMAKE_DEBUG_POSTFIX@@CMAKE_SHARED_LIBRARY_SUFFIX@"));
-    libraries_d.add(Paths.get("@CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG@/libbiogears_jni@CMAKE_DEBUG_POSTFIX@@CMAKE_SHARED_LIBRARY_SUFFIX@"));
-    
+    libraries.add(Paths.get(String.valueOf("$<TARGET_FILE:Log4cpp::Log4cpp>").replaceFirst("lib/","bin/").replace("@CMAKE_LINK_LIBRARY_SUFFIX@","@CMAKE_SHARED_LIBRARY_SUFFIX@")));
+    libraries.add(Paths.get(String.valueOf("$<TARGET_FILE:Xerces::xerces>").replaceFirst("lib/","bin/").replace("@CMAKE_LINK_LIBRARY_SUFFIX@","@CMAKE_SHARED_LIBRARY_SUFFIX@")));
+    $<$<PLATFORM_ID:Windows>:libraries.add(Paths.get("$<TARGET_FILE:libbiogears_string>"));>
+    libraries.add(Paths.get("$<TARGET_FILE:libbiogears_cdm>"));
+    libraries.add(Paths.get("$<TARGET_FILE:libbiogears>"));
+    libraries.add(Paths.get("$<TARGET_FILE:libbiogears_jni>"));
 
-    libraries.add(Paths.get("@Log4cpp_LIBRARY_RELEASE@"));
-    libraries.add(Paths.get("@_xerces_release_dll@"));
-    libraries.add(Paths.get("@CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE@/libbiogears_cdm@CMAKE_RELEASE_POSTFIX@@CMAKE_SHARED_LIBRARY_SUFFIX@"));
-    libraries.add(Paths.get("@CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE@/libbiogears@CMAKE_RELEASE_POSTFIX@@CMAKE_SHARED_LIBRARY_SUFFIX@"));
-    libraries.add(Paths.get("@CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE@/libbiogears_jni@CMAKE_RELEASE_POSTFIX@@CMAKE_SHARED_LIBRARY_SUFFIX@"));
-    
     if ( !sysroot.isEmpty() ) {  
       binPath.add( Paths.get(sysroot).toAbsolutePath().resolve("bin") );
       libPath.add( Paths.get(sysroot).toAbsolutePath().resolve("lib") );
@@ -94,10 +89,6 @@ public class Resources
     classPath.add(Paths.get(System.getProperty("user.home")).resolve("jar"));
     classPath.add(Paths.get(System.getProperty("user.dir")).resolve("usr/jar"));
     classPath.add(Paths.get(System.getProperty("user.home")).resolve("usr/jar"));
-  }
-
-  public final ArrayList<Path> getDebugLibraries() {
-    return libraries_d;
   }
 
   public final ArrayList<Path> getLibraries() {

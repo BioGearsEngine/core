@@ -1,32 +1,11 @@
-#.rst:
-# FindXerces-c
-# --------
-#
 # Find Xerces-c
 #
 # Find the native Xerces-c headers and libraries.
 #
-# ::
-#
-#   Xerces-c_INCLUDE_DIRS   - where to find Xerces-c/Xerces-c.h, etc.
-#   Xerces-c_LIBRARIES      - List of libraries when using Xerces-c.
-#   Xerces-c_FOUND          - True if Xerces-c found.
+#...Defines an Import Target Xerces::Xerces-c
+#...Xerces-c_FOUND          - True if Xerces-c found.
 #   Xerces-c_VERSION_STRING - the version of Xerces-c found (since CMake 2.8.8)
-
-#=============================================================================
-# Copyright 2006-2009 Kitware, Inc.
-# Copyright 2012 Rolf Eike Beer <eike@sf-mail.de>
-#
-# Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file Copyright.txt for details.
-#
-# This software is distributed WITHOUT ANY WARRANTY; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the License for more information.
-#=============================================================================
-# (To distribute this file outside of CMake, substitute the full
-#  License text for the above reference.)
-
+if(NOT Xerces-c_FOUND)
 # Look for the header file.
 find_path(Xerces-c_INCLUDE_DIR 
       NAMES dom/DOM.hpp
@@ -118,95 +97,43 @@ if( Xerces-c_LIBRARY_RELEASE_STATIC  AND NOT Xerces-c_LIBRARY_RELEASE_DYNAMIC)
   set(Xerces-c_LIBRARY_RELEASE ${Xerces-c_LIBRARY_RELEASE_STATIC} )
   set(Xerces-c_LIBRARY_DEBUG   ${Xerces-c_LIBRARY_DEBUG_STATIC}   )
   set(Xerces-c_CPPFLAGS "-DXERCES_STATIC_LIBRARY")
+  set(LIBRARY_TYPE STATIC)
 elseif(Xerces-c_LIBRARY_RELEASE_DYNAMIC) 
   set(Xerces-c_LIBRARY_RELEASE ${Xerces-c_LIBRARY_RELEASE_DYNAMIC} )
   set(Xerces-c_LIBRARY_DEBUG   ${Xerces-c_LIBRARY_DEBUG_DYNAMIC}  )
+  set(LIBRARY_TYPE SHARED)
 else()
   set(Xerces-c_LIBRARY_RELEASE Xerces-c_LIBRARY_RELEASE-NOTFOUND )
   set(Xerces-c_LIBRARY_DEBUG   Xerces-c_LIBRARY_DEBUG-NOTFOUND   )
 endif()
 
 
-
-#if(ANDROID_ABI)
-#    find_library(ICU_DATA_LIBRARY_RELEASE NAMES
-#      icudata 
-#      libicudata  
-#      PATH_SUFFIX release
-#      
-#      DOC "ICU data Library needed on Android and Linux"
-#    )
-#    find_library(ICU_DATA_LIBRARY_DEBUG NAMES
-#      icudata_d 
-#      libicudata_d 
-#      icudatad 
-#      libicudatad  
-#      icudata 
-#      libicudata  
-#      PATH_SUFFIX debug
-#      DOC "ICU data Library needed on Android and Linux"
-#    )
-#    find_library(ICU_LIBRARY_RELEASE NAMES
-#      icuuc 
-#      libicuuc  
-#      PATH_SUFFIX release
-#      
-#      DOC "LIbrary ICU needed on Android and Linux"
-#    )
-#    find_library(ICU_LIBRARY_DEBUG NAMES
-#      icuuc_d 
-#      libicuuc_d 
-#      icuucd 
-#      libicuucd  
-#      icuuc 
-#      libicuuc  
-#      PATH_SUFFIX debug
-#      DOC "ICU Library needed on Android and Linux"
-#    )
-#endif()
-
 # handle the QUIETLY and REQUIRED arguments and set Xerces-c_FOUND to TRUE if
 # all listed variables are TRUE
 include(FindPackageHandleStandardArgs)
-
-if(ANDROID_ABI)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(Xerces-c
-                                  REQUIRED_VARS Xerces-c_LIBRARY_DEBUG 
-                                                Xerces-c_LIBRARY_RELEASE 
-#                                                ICU_LIBRARY_RELEASE
-#                                                ICU_LIBRARY_DEBUG
-#                                                ICU_DATA_LIBRARY_RELEASE
-#                                                ICU_DATA_LIBRARY_DEBUG
-                                                Xerces-c_INCLUDE_DIR
-                                  )
-else()
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Xerces-c
-                                  REQUIRED_VARS Xerces-c_LIBRARY_DEBUG 
-                                                Xerces-c_LIBRARY_RELEASE 
-                                                Xerces-c_INCLUDE_DIR
-                                  )
-
-endif()
-
+                                  REQUIRED_VARS Xerces-c_INCLUDE_DIR 
+                                                Xerces-c_LIBRARY_RELEASE
+                                                Xerces-c_LIBRARY_DEBUG
+                                  VERSION_VAR Xerces-c_VERSION_STRING)
 
 if(Xerces-c_FOUND)
-  if(ANDROID_ABI)
-    set(Xerces-c_LIBRARIES 
-             optimized ${Xerces-c_LIBRARY_RELEASE} debug ${Xerces-c_LIBRARY_DEBUG}
-             #optimized ${ICU_LIBRARY_RELEASE}      debug ${ICU_LIBRARY_DEBUG}
-             #optimized ${ICU_DATA_LIBRARY_RELEASE} debug ${ICU_DATA_LIBRARY_DEBUG}
-       )
-  else()
-    set(Xerces-c_LIBRARIES optimized ${Xerces-c_LIBRARY_RELEASE} debug ${Xerces-c_LIBRARY_DEBUG})
-    message(STATUS "set(Xerces-c_LIBRARIES optimized ${Xerces-c_LIBRARY_RELEASE} debug ${Xerces-c_LIBRARY_DEBUG})")
-  endif()
+  add_library(Xerces::xerces ${LIBRARY_TYPE} IMPORTED GLOBAL)
+  set_target_properties(Xerces::xerces
+    PROPERTIES
+    IMPORTED_IMPLIB_DEBUG   ${Xerces-c_LIBRARY_DEBUG}
+	IMPORTED_IMPLIB ${Xerces-c_LIBRARY_RELEASE}
+	INTERFACE_INCLUDE_DIRECTORIES
+    ${Xerces-c_INCLUDE_DIR}
+    )
+   target_compile_definitions(Xerces::xerces INTERFACE ${Xerces-c_CPPFLAGS})
   
-  set(Xerces-c_INCLUDE_DIRS ${Xerces-c_INCLUDE_DIR})
+
+
   mark_as_advanced(Xerces-c_LIBRARY_DEBUG_STATIC)
   mark_as_advanced(Xerces-c_LIBRARY_RELEASE_STATIC)
   mark_as_advanced(Xerces-c_LIBRARY_DEBUG_DYNAMIC) 
   mark_as_advanced(Xerces-c_LIBRARY_RELEASE_DYNAMIC)
-  mark_as_advanced(ICU_LIBRARY_RELEASE)
-  mark_as_advanced(ICU_LIBRARY_DEBUG)
   mark_as_advanced(Xerces-c_INCLUDE_DIR)
+endif()
 endif()

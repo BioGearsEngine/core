@@ -1,8 +1,12 @@
-cmake_minimum_required(VERSION 3.8.0)
-
-enable_language(CXX)
-
+cmake_policy(SET CMP0070 NEW)
 include(UseJava)
+
+find_program(Java_XML_EXECUTABLE
+  NAMES xjc
+  HINTS ${_JAVA_HINTS}
+  PATHS ${_JAVA_PATHS}
+)
+
 
 function(xjc_generate_java _xjc_schema SRCS)
   #Assumes a file of ${XML_SCHEMA}.XJC exist that must be compiled using xjc

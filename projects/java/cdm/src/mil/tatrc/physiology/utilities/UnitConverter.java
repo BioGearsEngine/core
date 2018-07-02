@@ -51,12 +51,6 @@ public class UnitConverter
     if (!FileUtils.loadLibraries(resources.getLibraries()))
     {
       System.err.println("Unable to find the following JNI Libraries." + resources.getLibraries().toString());
-      System.out.println("Attempting to load debug libraries");
-      if (!FileUtils.loadLibraries(resources.getDebugLibraries()))
-      { 
-        System.err.println("Unable to find the following Debug JNI Libraries." + resources.getDebugLibraries().toString());
-
-      }
     }
   }
   

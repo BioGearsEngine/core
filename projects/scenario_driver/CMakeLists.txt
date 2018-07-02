@@ -96,7 +96,6 @@ list(APPEND ${PREFIX}_INCLUDES
       bio_INCLUDE_DIR
 )
 list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
-ensure_paths_set(${PREFIX}_INCLUDES ${PROJECT_NAME})
 
 foreach( ITEM IN LISTS ${PREFIX}_INCLUDES)
   message(STATUS "  ${${ITEM}}")

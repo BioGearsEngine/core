@@ -20,6 +20,7 @@
 #          [VERSION version]
 #          [OUTPUT_NAME name]
 #          [OUTPUT_DIR dir]
+#          [GENERATE_NATIVE_HEADERS target [DESTINATION dir]]
 #          )
 #
 # This command creates a <target_name>.jar.  It compiles the given
@@ -34,6 +35,14 @@
 #
 # The default OUTPUT_DIR can also be changed by setting the variable
 # CMAKE_JAVA_TARGET_OUTPUT_DIR.
+#
+# Optionally, using option GENERATE_NATIVE_HEADERS, native header files can be generated
+# for methods declared as native. These files provide the connective glue that allow your
+# Java and C code to interact. An INTERFACE target will be created for an easy usage
+# of generated files. Sub-option DESTINATION can be used to specify output directory for
+# generated header files.
+#
+# GENERATE_NATIVE_HEADERS option requires, at least, version 1.8 of the JDK.
 #
 # Additional instructions:
 #
@@ -168,6 +177,22 @@
 #
 #
 #
+# ::
+#
+#     For an optimum usage of option GENERATE_NATIVE_HEADERS, it is recommended to
+#     include module JNI before any call to add_jar. The produced target for native
+#     headers can then be used to compile C/C++ sources with command
+#     target_link_libraries.
+#
+#
+# ::
+#
+#        find_package(JNI)
+#        add_jar(foo foo.java GENERATE_NATIVE_HEADERS foo-native)
+#        add_library(bar bar.cpp)
+#        target_link_libraries(bar PRIVATE foo-native)
+#
+#
 # Target Properties:
 #
 # ::
@@ -286,7 +311,7 @@
 #
 #    Example:
 #    create_javadoc(my_example_doc
-#      PACKAGES com.exmaple.foo com.example.bar
+#      PACKAGES com.example.foo com.example.bar
 #      SOURCEPATH "${CMAKE_CURRENT_SOURCE_DIR}"
 #      CLASSPATH ${CMAKE_JAVA_INCLUDE_PATH}
 #      WINDOWTITLE "My example"
@@ -358,6 +383,10 @@
 #
 # Create C header files from java classes. These files provide the connective glue
 # that allow your Java and C code to interact.
+#
+# This command will no longer be supported starting with version 10 of the JDK due
+# to the `suppression of javah tool <http://openjdk.java.net/jeps/313>`_.
+# Command ``add_jar(GENERATE_NATIVE_HEADERS)`` must be used instead.
 #
 # There are two main signatures for create_javah.  The first signature
 # returns generated files through variable specified by GENERATED_FILES option:
@@ -448,7 +477,7 @@ function(add_jar _TARGET_NAME)
     cmake_parse_arguments(_add_jar
       "JARS_AS_SOURCES"
       "VERSION;OUTPUT_DIR;OUTPUT_NAME;ENTRY_POINT;MANIFEST"
-      "SOURCES;INCLUDE_JARS"
+      "SOURCES;INCLUDE_JARS;GENERATE_NATIVE_HEADERS"
       ${ARGN}
     )
 
@@ -481,6 +510,8 @@ function(add_jar _TARGET_NAME)
     else()
         get_filename_component(_add_jar_OUTPUT_DIR ${_add_jar_OUTPUT_DIR} ABSOLUTE)
     endif()
+    # ensure output directory exists
+    file (MAKE_DIRECTORY "${_add_jar_OUTPUT_DIR}")
 
     if (_add_jar_ENTRY_POINT)
         set(_ENTRY_POINT_OPTION e)
@@ -491,6 +522,31 @@ function(add_jar _TARGET_NAME)
         set(_MANIFEST_OPTION m)
         get_filename_component (_MANIFEST_VALUE "${_add_jar_MANIFEST}" ABSOLUTE)
     endif ()
+
+    unset (_GENERATE_NATIVE_HEADERS)
+    if (_add_jar_GENERATE_NATIVE_HEADERS)
+      # Raise an error if JDK version is less than 1.8 because javac -h is not supported
+      # by earlier versions.
+      if (Java_VERSION VERSION_LESS 1.8)
+        message (FATAL_ERROR "ADD_JAR: GENERATE_NATIVE_HEADERS is not supported with this version of Java.")
+      endif()
+      cmake_parse_arguments (_add_jar_GENERATE_NATIVE_HEADERS "" "DESTINATION" "" ${_add_jar_GENERATE_NATIVE_HEADERS})
+      if (NOT _add_jar_GENERATE_NATIVE_HEADERS_UNPARSED_ARGUMENTS)
+        message (FATAL_ERROR "ADD_JAR: GENERATE_NATIVE_HEADERS: missing required argument.")
+      endif()
+      list (LENGTH _add_jar_GENERATE_NATIVE_HEADERS_UNPARSED_ARGUMENTS length)
+      if (length GREATER 1)
+        list (REMOVE_AT _add_jar_GENERATE_NATIVE_HEADERS_UNPARSED_ARGUMENTS 0)
+        message (FATAL_ERROR "ADD_JAR: GENERATE_NATIVE_HEADERS: ${_add_jar_GENERATE_NATIVE_HEADERS_UNPARSED_ARGUMENTS}: unexpected argument(s).")
+      endif()
+      if (NOT _add_jar_GENERATE_NATIVE_HEADERS_DESTINATION)
+        set (_add_jar_GENERATE_NATIVE_HEADERS_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${_TARGET_NAME}.dir/native_headers")
+      endif()
+
+      set (_GENERATE_NATIVE_HEADERS_TARGET ${_add_jar_GENERATE_NATIVE_HEADERS_UNPARSED_ARGUMENTS})
+      set (_GENERATE_NATIVE_HEADERS_OUTPUT_DIR "${_add_jar_GENERATE_NATIVE_HEADERS_DESTINATION}")
+      set (_GENERATE_NATIVE_HEADERS -h "${_GENERATE_NATIVE_HEADERS_OUTPUT_DIR}")
+    endif()
 
     if (LIBRARY_OUTPUT_PATH)
         set(CMAKE_JAVA_LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH})
@@ -515,12 +571,8 @@ function(add_jar _TARGET_NAME)
        string(APPEND CMAKE_JAVA_INCLUDE_PATH_FINAL "${CMAKE_JAVA_INCLUDE_FLAG_SEP}${JAVA_INCLUDE_DIR}")
     endforeach()
 
-    set(WORK_DIRECTORY "${_add_jar_OUTPUT_DIR}${CMAKE_FILES_DIRECTORY}/${_TARGET_NAME}.dir")
-    set(WORK_DIRECTORY_BUNDLE_DIR ${WORK_DIRECTORY}/build)
-    execute_process(
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${WORK_DIRECTORY}
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${WORK_DIRECTORY_BUNDLE_DIR}
-    )
+    set(CMAKE_JAVA_CLASS_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${_TARGET_NAME}.dir")
+
     set(_JAVA_TARGET_OUTPUT_NAME "${_TARGET_NAME}.jar")
     if (_add_jar_OUTPUT_NAME AND _add_jar_VERSION)
         set(_JAVA_TARGET_OUTPUT_NAME "${_add_jar_OUTPUT_NAME}-${_add_jar_VERSION}.jar")
@@ -549,8 +601,8 @@ function(add_jar _TARGET_NAME)
             get_filename_component(_JAVA_FULL ${CMAKE_MATCH_1} ABSOLUTE)
             list(APPEND _JAVA_COMPILE_FILELISTS ${_JAVA_FULL})
 
-        elseif (_JAVA_EXT MATCHES ".java" )
-            file(RELATIVE_PATH _JAVA_REL_BINARY_PATH ${_add_jar_OUTPUT_DIR} ${_JAVA_FULL})
+        elseif (_JAVA_EXT MATCHES ".java")
+            file(RELATIVE_PATH _JAVA_REL_BINARY_PATH ${CMAKE_CURRENT_BINARY_DIR} ${_JAVA_FULL})
             file(RELATIVE_PATH _JAVA_REL_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${_JAVA_FULL})
             string(LENGTH ${_JAVA_REL_BINARY_PATH} _BIN_LEN)
             string(LENGTH ${_JAVA_REL_SOURCE_PATH} _SRC_LEN)
@@ -562,19 +614,18 @@ function(add_jar _TARGET_NAME)
             get_filename_component(_JAVA_REL_PATH ${_JAVA_REL_PATH} PATH)
 
             list(APPEND _JAVA_COMPILE_FILES ${_JAVA_SOURCE_FILE})
-            set(_JAVA_CLASS_FILE "${WORK_DIRECTORY_BUNDLE_DIR}/${_JAVA_REL_PATH}/${_JAVA_FILE}.class")
+            set(_JAVA_CLASS_FILE "${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${_JAVA_REL_PATH}/${_JAVA_FILE}.class")
             set(_JAVA_CLASS_FILES ${_JAVA_CLASS_FILES} ${_JAVA_CLASS_FILE})
 
-        elseif (_add_jar_JARS_AS_SOURCES AND (_JAVA_EXT MATCHES ".jar"
-                                             OR _JAVA_EXT MATCHES ".war"
-                                             OR _JAVA_EXT MATCHES ".ear"
-                                             OR _JAVA_EXT MATCHES ".sar"))
+        elseif (_JAVA_EXT MATCHES ".jar"
+                OR _JAVA_EXT MATCHES ".war"
+                OR _JAVA_EXT MATCHES ".ear"
+                OR _JAVA_EXT MATCHES ".sar")
             if(_add_jar_JARS_AS_SOURCES)
-              #Maybe this could be upgraded to a cmake policy
-              list(APPEND _JAVA_SOURCE_JAR_FILES ${_JAVA_FULL})
+                #Maybe this could be upgraded to a cmake policy
+                list(APPEND _JAVA_SOURCE_JAR_FILES ${_JAVA_FULL})
             else()
-              #Ignore for Backwards Compatibility
-
+            # Ignored for backward compatibility
             endif()
         elseif (_JAVA_EXT STREQUAL "")
             list(APPEND CMAKE_JAVA_INCLUDE_PATH ${JAVA_JAR_TARGET_${_JAVA_SOURCE_FILE}} ${JAVA_JAR_TARGET_${_JAVA_SOURCE_FILE}_CLASSPATH})
@@ -582,9 +633,9 @@ function(add_jar _TARGET_NAME)
 
         else ()
             __java_copy_file(${CMAKE_CURRENT_SOURCE_DIR}/${_JAVA_SOURCE_FILE}
-                             ${WORK_DIRECTORY_BUNDLE_DIR}/${_JAVA_SOURCE_FILE}
+                             ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${_JAVA_SOURCE_FILE}
                              "Copying ${_JAVA_SOURCE_FILE} to the build directory")
-            list(APPEND _JAVA_RESOURCE_FILES ${WORK_DIRECTORY_BUNDLE_DIR}/${_JAVA_SOURCE_FILE})
+            list(APPEND _JAVA_RESOURCE_FILES ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${_JAVA_SOURCE_FILE})
             list(APPEND _JAVA_RESOURCE_FILES_RELATIVE ${_JAVA_SOURCE_FILE})
         endif ()
     endforeach()
@@ -607,13 +658,15 @@ function(add_jar _TARGET_NAME)
             list(APPEND _JAVA_COMPILE_DEPENDS "${_JAVA_INCLUDE_JAR}")
         endif ()
     endforeach()
-    if (_JAVA_COMPILE_FILES OR _JAVA_COMPILE_FILELISTS )
+
+    if (_JAVA_COMPILE_FILES OR _JAVA_COMPILE_FILELISTS)
         set (_JAVA_SOURCES_FILELISTS)
+
         if (_JAVA_COMPILE_FILES)
             # Create the list of files to compile.
-            set(_JAVA_SOURCES_FILE ${WORK_DIRECTORY}/java_sources)
+            set(_JAVA_SOURCES_FILE ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/$<CONFIG>_java_sources)
             string(REPLACE ";" "\"\n\"" _JAVA_COMPILE_STRING "\"${_JAVA_COMPILE_FILES}\"")
-            file(WRITE ${_JAVA_SOURCES_FILE} ${_JAVA_COMPILE_STRING})
+            file(GENERATE OUTPUT ${_JAVA_SOURCES_FILE} CONTENT ${_JAVA_COMPILE_STRING})
             list (APPEND _JAVA_SOURCES_FILELISTS "@${_JAVA_SOURCES_FILE}")
         endif()
         if (_JAVA_COMPILE_FILELISTS)
@@ -623,54 +676,63 @@ function(add_jar _TARGET_NAME)
         endif()
 
         # Compile the java files and create a list of class files
-        
         add_custom_command(
             # NOTE: this command generates an artificial dependency file
-            OUTPUT ${WORK_DIRECTORY}/java_compiled_${_TARGET_NAME}
+            OUTPUT ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_compiled_${_TARGET_NAME}
             COMMAND ${Java_JAVAC_EXECUTABLE}
                 ${CMAKE_JAVA_COMPILE_FLAGS}
                 -classpath "${CMAKE_JAVA_INCLUDE_PATH_FINAL}"
-                -d ${WORK_DIRECTORY_BUNDLE_DIR}
+                -d ${CMAKE_JAVA_CLASS_OUTPUT_PATH}
+                ${_GENERATE_NATIVE_HEADERS}
                 ${_JAVA_SOURCES_FILELISTS}
-           COMMAND ${CMAKE_COMMAND} -E touch ${WORK_DIRECTORY}/java_compiled_${_TARGET_NAME}
+            COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_compiled_${_TARGET_NAME}
             DEPENDS ${_JAVA_COMPILE_FILES} ${_JAVA_COMPILE_FILELISTS} ${_JAVA_COMPILE_DEPENDS}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             COMMENT "Building Java objects for ${_TARGET_NAME}.jar"
         )
-
         add_custom_command(
-            OUTPUT ${WORK_DIRECTORY}/java_class_filelist
+            OUTPUT ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_class_filelist
             COMMAND ${CMAKE_COMMAND}
-                -DCMAKE_JAVA_CLASS_OUTPUT_PATH=${WORK_DIRECTORY_BUNDLE_DIR}
+                -DCMAKE_JAVA_CLASS_OUTPUT_PATH=${CMAKE_JAVA_CLASS_OUTPUT_PATH}
                 -DCMAKE_JAR_CLASSES_PREFIX="${CMAKE_JAR_CLASSES_PREFIX}"
-                -DCMAKE_JAR_SOURCE_LIST="${_JAVA_SOURCE_JAR_FILES}"
                 -P ${_JAVA_CLASS_FILELIST_SCRIPT}
-            DEPENDS ${WORK_DIRECTORY}/java_compiled_${_TARGET_NAME}
+            DEPENDS ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_compiled_${_TARGET_NAME}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMENT "Second Step For  ${_TARGET_NAME}.jar"
         )
-        list(APPEND full_path_arg_file_list ${WORK_DIRECTORY}/java_class_filelist)
-        list(APPEND arg_file_list @java_class_filelist)
     endif ()
     if (_JAVA_SOURCE_JAR_FILES)
-      #Extract each JAR file in the working directroy
-      #Delete meta data that will conflict with other projects
-      #I leave it up to the user to bundle all required NOTICES manually
-
-      foreach (archive IN LISTS _JAVA_SOURCE_JAR_FILES)
+    #   #Extract each JAR file in the working directroy
+    #   #Delete meta data that will conflict with other projects
+    #   #I leave it up to the user to bundle all required NOTICES manually
+       foreach (archive IN LISTS _JAVA_SOURCE_JAR_FILES)
          get_filename_component(basename ${archive} NAME)
          add_custom_command(
-          OUTPUT  ${WORK_DIRECTORY}/${basename}.txt
-          COMMAND ${CMAKE_COMMAND} -E tar -x ${archive}
-          COMMAND ${CMAKE_COMMAND} -E remove_directory ${WORK_DIRECTORY_BUNDLE_DIR}/META-INF
-          COMMAND ${CMAKE_COMMAND} -E touch ${WORK_DIRECTORY}/${basename}.txt
-          DEPENDS ${archive} ${_previous_jars}
-          WORKING_DIRECTORY ${WORK_DIRECTORY_BUNDLE_DIR} 
-          COMMENT 
+           OUTPUT  ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${basename}.txt
+           COMMAND ${CMAKE_COMMAND} -E tar -x ${archive}
+           COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/META-INF
+           COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${basename}.txt
+           DEPENDS ${archive} ${_previous_jars}
+           WORKING_DIRECTORY ${CMAKE_JAVA_CLASS_OUTPUT_PATH}
+           COMMENT
         )
-        list(APPEND _previous_jars ${WORK_DIRECTORY}/${basename}.txt )
-        list(APPEND _JAVA_SOURCE_JAR_DEPENDS ${WORK_DIRECTORY}/${basename}.txt)
-      endforeach()
+        list(APPEND _previous_jars ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${basename}.txt )
+        list(APPEND _JAVA_SOURCE_JAR_DEPENDS ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${basename}.txt)
+       endforeach()
+
+       add_custom_command(
+            OUTPUT ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_class_filelist
+            COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_COMMAND} -E
+                -DCMAKE_JAVA_CLASS_OUTPUT_PATH=${CMAKE_JAVA_CLASS_OUTPUT_PATH}
+                -DCMAKE_JAR_CLASSES_PREFIX="${CMAKE_JAR_CLASSES_PREFIX}"
+                -P ${_JAVA_CLASS_FILELIST_SCRIPT}
+            COMMAND ${CMAKE_COMMAND}
+                -DCMAKE_JAVA_CLASS_OUTPUT_PATH=${CMAKE_JAVA_CLASS_OUTPUT_PATH}
+                -DCMAKE_JAR_CLASSES_PREFIX="${CMAKE_JAR_CLASSES_PREFIX}"
+                -P ${_JAVA_CLASS_FILELIST_SCRIPT}
+            DEPENDS ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_compiled_${_TARGET_NAME} ${_previous_jars}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "WORKING IT"
+       )
     endif()
     # create the jar file
     set(_JAVA_JAR_OUTPUT_PATH
@@ -678,10 +740,9 @@ function(add_jar _TARGET_NAME)
     if (CMAKE_JNI_TARGET)
         add_custom_command(
             OUTPUT ${_JAVA_JAR_OUTPUT_PATH}
-            COMMAND echo ${Java_JAR_EXECUTABLE} -cf${_ENTRY_POINT_OPTION}${_MANIFEST_OPTION} ${_JAVA_JAR_OUTPUT_PATH} ${_ENTRY_POINT_VALUE} ${_MANIFEST_VALUE} ${_JAVA_RESOURCE_FILES_RELATIVE} ${arg_file_list} 
             COMMAND ${Java_JAR_EXECUTABLE}
                 -cf${_ENTRY_POINT_OPTION}${_MANIFEST_OPTION} ${_JAVA_JAR_OUTPUT_PATH} ${_ENTRY_POINT_VALUE} ${_MANIFEST_VALUE}
-                ${_JAVA_RESOURCE_FILES_RELATIVE} *
+                ${_JAVA_RESOURCE_FILES_RELATIVE} @java_class_filelist
             COMMAND ${CMAKE_COMMAND}
                 -D_JAVA_TARGET_DIR=${_add_jar_OUTPUT_DIR}
                 -D_JAVA_TARGET_OUTPUT_NAME=${_JAVA_TARGET_OUTPUT_NAME}
@@ -692,24 +753,23 @@ function(add_jar _TARGET_NAME)
                 -D_JAVA_TARGET_OUTPUT_NAME=${_JAVA_JAR_OUTPUT_PATH}
                 -D_JAVA_TARGET_OUTPUT_LINK=${_JAVA_TARGET_OUTPUT_LINK}
                 -P ${_JAVA_SYMLINK_SCRIPT}
-            DEPENDS ${_JAVA_RESOURCE_FILES} ${_JAVA_DEPENDS} ${full_path_arg_file_list} ${_JAVA_SOURCE_JAR_DEPENDS}
-            WORKING_DIRECTORY ${WORK_DIRECTORY_BUNDLE_DIR}
+            DEPENDS ${_JAVA_RESOURCE_FILES} ${_JAVA_DEPENDS} ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_class_filelist
+            WORKING_DIRECTORY ${CMAKE_JAVA_CLASS_OUTPUT_PATH}
             COMMENT "Creating Java archive ${_JAVA_TARGET_OUTPUT_NAME}"
         )
     else ()
         add_custom_command(
             OUTPUT ${_JAVA_JAR_OUTPUT_PATH}
-            COMMAND echo ${Java_JAR_EXECUTABLE} -cf${_ENTRY_POINT_OPTION}${_MANIFEST_OPTION} ${_JAVA_JAR_OUTPUT_PATH} ${_ENTRY_POINT_VALUE} ${_MANIFEST_VALUE} ${_JAVA_RESOURCE_FILES_RELATIVE} ${arg_file_list}
             COMMAND ${Java_JAR_EXECUTABLE}
                 -cf${_ENTRY_POINT_OPTION}${_MANIFEST_OPTION} ${_JAVA_JAR_OUTPUT_PATH} ${_ENTRY_POINT_VALUE} ${_MANIFEST_VALUE}
-                ${_JAVA_RESOURCE_FILES_RELATIVE}  *
+                ${_JAVA_RESOURCE_FILES_RELATIVE} @java_class_filelist
             COMMAND ${CMAKE_COMMAND}
                 -D_JAVA_TARGET_DIR=${_add_jar_OUTPUT_DIR}
                 -D_JAVA_TARGET_OUTPUT_NAME=${_JAVA_TARGET_OUTPUT_NAME}
                 -D_JAVA_TARGET_OUTPUT_LINK=${_JAVA_TARGET_OUTPUT_LINK}
                 -P ${_JAVA_SYMLINK_SCRIPT}
-            WORKING_DIRECTORY ${WORK_DIRECTORY_BUNDLE_DIR}
-            DEPENDS ${_JAVA_RESOURCE_FILES} ${_JAVA_DEPENDS} ${full_path_arg_file_list} ${_JAVA_SOURCE_JAR_DEPENDS}
+            WORKING_DIRECTORY ${CMAKE_JAVA_CLASS_OUTPUT_PATH}
+            DEPENDS ${_JAVA_RESOURCE_FILES} ${_JAVA_DEPENDS} ${_JAVA_SOURCE_JAR_DEPENDS} ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_class_filelist
             COMMENT "Creating Java archive ${_JAVA_TARGET_OUTPUT_NAME}"
         )
     endif ()
@@ -759,9 +819,20 @@ function(add_jar _TARGET_NAME)
             ${_TARGET_NAME}
         PROPERTY
             CLASSDIR
-                ${WORK_DIRECTORY_BUNDLE_DIR}
+                ${CMAKE_JAVA_CLASS_OUTPUT_PATH}
     )
 
+  if (_GENERATE_NATIVE_HEADERS)
+    # create an INTERFACE library encapsulating include directory for generated headers
+    add_library (${_GENERATE_NATIVE_HEADERS_TARGET} INTERFACE)
+    target_include_directories (${_GENERATE_NATIVE_HEADERS_TARGET} INTERFACE
+      "${_GENERATE_NATIVE_HEADERS_OUTPUT_DIR}"
+      ${JNI_INCLUDE_DIRS})
+    # this INTERFACE library depends on jar generation
+    add_dependencies (${_GENERATE_NATIVE_HEADERS_TARGET} ${_TARGET_NAME})
+
+    set_property (DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${_GENERATE_NATIVE_HEADERS_OUTPUT_DIR}")
+  endif()
 endfunction()
 
 function(INSTALL_JAR _TARGET_NAME)
@@ -1273,6 +1344,12 @@ function(create_javadoc _target)
 endfunction()
 
 function (create_javah)
+  if (Java_VERSION VERSION_GREATER_EQUAL 10)
+    message (FATAL_ERROR "create_javah: not supported with this Java version. Use add_jar(GENERATE_NATIVE_HEADERS) instead.")
+  elseif (Java_VERSION VERSION_GREATER_EQUAL 1.8)
+    message (DEPRECATION "create_javah: this command will no longer be supported starting with version 10 of JDK. Update your project by using command add_jar(GENERATE_NATIVE_HEADERS) instead.")
+  endif()
+
     cmake_parse_arguments(_create_javah
       ""
       "TARGET;GENERATED_FILES;OUTPUT_NAME;OUTPUT_DIR"
