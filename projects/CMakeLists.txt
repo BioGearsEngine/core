@@ -119,7 +119,6 @@ foreach(_file IN LISTS  source_xsd_list)
 endforeach()
 
 file(GLOB_RECURSE source_jar_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/jar/*.jar")
-
 foreach(_file IN LISTS  source_jar_list)
 	string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
 	list(APPEND runtime_xsd_list ${runtime_file})
@@ -132,13 +131,16 @@ foreach(_file IN LISTS  source_jar_list)
 endforeach()
 
 file(GLOB_RECURSE source_data_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
-string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${PROJECT_BINARY_DIR}/runtime" runtime_data_list "${source_data_list}" )
-add_custom_command(
-	OUTPUT ${runtime_data_list}
-	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-    ${source_data_list}
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/data ${PROJECT_BINARY_DIR}/runtime
-)
+foreach(_file IN LISTS  source_data_list)
+	string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+	list(APPEND runtime_data_list ${runtime_file})
+	add_custom_command(
+		OUTPUT  ${runtime_file}
+		DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+		${source_xsd_list}
+		COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
+	)
+endforeach()
 
 add_custom_command(
 	OUTPUT ${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
@@ -146,24 +148,29 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/etc  ${PROJECT_BINARY_DIR}/runtime
 )
 
-file(GLOB_RECURSE source_doc_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
-string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_doc_list "${source_doc_list}" )
-add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/doc ${runtime_doc_list}
-	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${source_doc_list}
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/doc  ${PROJECT_BINARY_DIR}/runtime/doc
-)
+file(GLOB_RECURSE source_doc_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/doc/*")
+foreach(_file IN LISTS  source_doc_list)
+	string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+	list(APPEND runtime_doc_list ${runtime_file})
+	add_custom_command(
+		OUTPUT  ${runtime_file}
+		DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+		${source_xsd_list}
+		COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
+	)
+endforeach()
 
 file(GLOB_RECURSE source_scenario_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
-string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_scenario_list "${source_scenario_list}" )
-add_custom_command(
-	OUTPUT ${PROJECT_BINARY_DIR}/runtime/Scenarios ${runtime_scenario_list}
-	DEPENDS ${PROJECT_BINARY_DIR}/runtime 
-	${source_scenario_list}
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/share/Scenarios ${PROJECT_BINARY_DIR}/runtime/Scenarios
-)
-
+foreach(_file IN LISTS  source_scenario_list)
+	string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+	list(APPEND runtime_scenario_list ${runtime_file})
+	add_custom_command(
+		OUTPUT  ${runtime_file}
+		DEPENDS ${PROJECT_BINARY_DIR}/runtime 
+		${source_xsd_list}
+		COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
+	)
+endforeach()
 list(APPEND runtime_glob_list 	"${runtime_xsd_list}"	"${runtime_jar_list}" 	"${runtime_data_list}" 	"${runtime_doc_list}" 	"${runtime_scenario_list}")
 
 add_custom_target( stage_runtime ALL
