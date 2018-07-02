@@ -630,6 +630,11 @@ function(add_jar _TARGET_NAME)
         elseif (_JAVA_EXT STREQUAL "")
             list(APPEND CMAKE_JAVA_INCLUDE_PATH ${JAVA_JAR_TARGET_${_JAVA_SOURCE_FILE}} ${JAVA_JAR_TARGET_${_JAVA_SOURCE_FILE}_CLASSPATH})
             list(APPEND _JAVA_DEPENDS ${JAVA_JAR_TARGET_${_JAVA_SOURCE_FILE}})
+            #Add Custom Command can't not take an output file wit a generator statment in it maybe we can hash the dep file names
+            # if(_add_jar_JARS_AS_SOURCES)
+            #     #Maybe this could be upgraded to a cmake policy
+            #     list(APPEND _JAVA_SOURCE_JAR_FILES $<TARGET_FILE:${_JAVA_SOURCE_FILE}>) )
+            # endif()
 
         else ()
             __java_copy_file(${CMAKE_CURRENT_SOURCE_DIR}/${_JAVA_SOURCE_FILE}

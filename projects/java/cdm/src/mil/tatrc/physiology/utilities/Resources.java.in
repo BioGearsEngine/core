@@ -42,8 +42,8 @@ public class Resources
 
   private void initialize(String sysroot) 
   {
-    libraries.add(Paths.get(String.valueOf("$<TARGET_FILE:Log4cpp::Log4cpp>").replaceFirst("lib/","bin/").replace("@CMAKE_LINK_LIBRARY_SUFFIX@","@CMAKE_SHARED_LIBRARY_SUFFIX@")));
-    libraries.add(Paths.get(String.valueOf("$<TARGET_FILE:Xerces::xerces>").replaceFirst("lib/","bin/").replace("@CMAKE_LINK_LIBRARY_SUFFIX@","@CMAKE_SHARED_LIBRARY_SUFFIX@")));
+    libraries.add(Paths.get(String.valueOf("$<TARGET_LINKER_FILE:Log4cpp::Log4cpp>").replaceFirst("lib/","bin/").replace("@CMAKE_LINK_LIBRARY_SUFFIX@","@CMAKE_SHARED_LIBRARY_SUFFIX@")));
+    libraries.add(Paths.get(String.valueOf("$<TARGET_LINKER_FILE:Xerces::xerces>").replaceFirst("lib/","bin/").replace("@CMAKE_LINK_LIBRARY_SUFFIX@","@CMAKE_SHARED_LIBRARY_SUFFIX@")));
     $<$<PLATFORM_ID:Windows>:libraries.add(Paths.get("$<TARGET_FILE:libbiogears_string>"));>
     libraries.add(Paths.get("$<TARGET_FILE:libbiogears_cdm>"));
     libraries.add(Paths.get("$<TARGET_FILE:libbiogears>"));
