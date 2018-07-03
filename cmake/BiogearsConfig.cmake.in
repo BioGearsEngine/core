@@ -1,5 +1,9 @@
 @PACKAGE_INIT@
 
+include(CMakeFindDependencyMacro)
+
 find_dependency(Eigen3)
+find_dependency(Log4cpp)
+find_dependency(CodeSynthesis)
 
 include ( "${CMAKE_CURRENT_LIST_DIR}/@ROOT_PROJECT_NAME@.cmake" )
