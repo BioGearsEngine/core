@@ -700,6 +700,7 @@ function(add_jar _TARGET_NAME)
             COMMAND ${CMAKE_COMMAND}
                 -DCMAKE_JAVA_CLASS_OUTPUT_PATH=${CMAKE_JAVA_CLASS_OUTPUT_PATH}
                 -DCMAKE_JAR_CLASSES_PREFIX="${CMAKE_JAR_CLASSES_PREFIX}"
+                -DJARS_AS_SOURCES="${_add_jar_JARS_AS_SOURCES}"
                 -P ${_JAVA_CLASS_FILELIST_SCRIPT}
             DEPENDS ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_compiled_${_TARGET_NAME}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -726,17 +727,14 @@ function(add_jar _TARGET_NAME)
 
        add_custom_command(
             OUTPUT ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_class_filelist
-            COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_COMMAND} -E
-                -DCMAKE_JAVA_CLASS_OUTPUT_PATH=${CMAKE_JAVA_CLASS_OUTPUT_PATH}
-                -DCMAKE_JAR_CLASSES_PREFIX="${CMAKE_JAR_CLASSES_PREFIX}"
-                -P ${_JAVA_CLASS_FILELIST_SCRIPT}
             COMMAND ${CMAKE_COMMAND}
                 -DCMAKE_JAVA_CLASS_OUTPUT_PATH=${CMAKE_JAVA_CLASS_OUTPUT_PATH}
                 -DCMAKE_JAR_CLASSES_PREFIX="${CMAKE_JAR_CLASSES_PREFIX}"
+                -DJARS_AS_SOURCES="${_add_jar_JARS_AS_SOURCES}"
                 -P ${_JAVA_CLASS_FILELIST_SCRIPT}
             DEPENDS ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_compiled_${_TARGET_NAME} ${_previous_jars}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMENT "WORKING IT"
+            COMMENT "Creating Jar manifest"
        )
     endif()
     # create the jar file

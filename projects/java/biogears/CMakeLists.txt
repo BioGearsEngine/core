@@ -265,6 +265,7 @@ add_dependencies(rebase-debug stage_runtime ${PROJECT_NAME})
 add_dependencies(rebase-tests stage_runtime ${PROJECT_NAME})
 add_dependencies(biogears-gui stage_runtime ${PROJECT_NAME})
 
+set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
 
 set_target_properties(gen-states PROPERTIES FOLDER "Java/Generate" )
 set_target_properties(gen-data   PROPERTIES FOLDER "Java/Generate" )

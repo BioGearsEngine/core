@@ -12,7 +12,6 @@
 # This script create a list of compiled Java class files to be added to
 # a jar file.  This avoids including cmake files which get created in
 # the binary directory.
-
 if (CMAKE_JAVA_CLASS_OUTPUT_PATH)
     if (EXISTS "${CMAKE_JAVA_CLASS_OUTPUT_PATH}")
 
@@ -20,14 +19,21 @@ if (CMAKE_JAVA_CLASS_OUTPUT_PATH)
         if (CMAKE_JAR_CLASSES_PREFIX)
             foreach(JAR_CLASS_PREFIX ${CMAKE_JAR_CLASSES_PREFIX})
                 message(STATUS "JAR_CLASS_PREFIX: ${JAR_CLASS_PREFIX}")
-
-                file(GLOB_RECURSE _JAVA_GLOBBED_TMP_FILES "${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${JAR_CLASS_PREFIX}/*.class")
+                if(JARS_AS_SOURCES)
+                  file(GLOB_RECURSE _JAVA_GLOBBED_CLASS_FILES "${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${JAR_CLASS_PREFIX}/*")
+                else()
+                  file(GLOB_RECURSE _JAVA_GLOBBED_CLASS_FILES "${CMAKE_JAVA_CLASS_OUTPUT_PATH}/${JAR_CLASS_PREFIX}/*.class")
+                endif()
                 if (_JAVA_GLOBBED_TMP_FILES)
-                    list(APPEND _JAVA_GLOBBED_FILES ${_JAVA_GLOBBED_TMP_FILES})
+                    list(APPEND _JAVA_GLOBBED_FILES ${_JAVA_GLOBBED_CLASS_FILES} )
                 endif ()
             endforeach()
         else()
-            file(GLOB_RECURSE _JAVA_GLOBBED_FILES "${CMAKE_JAVA_CLASS_OUTPUT_PATH}/*.class")
+            if(JARS_AS_SOURCES)
+                file(GLOB_RECURSE _JAVA_GLOBBED_FILES "${CMAKE_JAVA_CLASS_OUTPUT_PATH}/*")
+            else()
+                file(GLOB_RECURSE _JAVA_GLOBBED_FILES "${CMAKE_JAVA_CLASS_OUTPUT_PATH}/*.class")
+            endif()
         endif ()
 
         set(_JAVA_CLASS_FILES)
@@ -40,9 +46,9 @@ if (CMAKE_JAVA_CLASS_OUTPUT_PATH)
         # write to file
         file(WRITE ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_class_filelist ${_JAVA_CLASS_FILES})
 
-    else ()
+    else()
         message(SEND_ERROR "FATAL: Java class output path doesn't exist")
-    endif ()
+    endif()
 else ()
     message(SEND_ERROR "FATAL: Can't find CMAKE_JAVA_CLASS_OUTPUT_PATH")
 endif ()
