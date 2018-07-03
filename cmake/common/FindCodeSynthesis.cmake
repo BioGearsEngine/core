@@ -337,20 +337,12 @@ find_path(CodeSynthesis_INCLUDE_DIR
             include/
 )
 
-if( CMAKE_HOST_WIN32 )
   message(STATUS "Looking for bin/xsd in ${CodeSynthesis_INCLUDE_DIR}/..")
-  find_file(CodeSynthesis_EXECUTABLE
-            NAMES "xsd.exe"
+  find_program(CodeSynthesis_EXECUTABLE
+            NAMES "xsd"
             ENV XSD_ROOTDIR 
-            HINTS "${CodeSynthesis_INCLUDE_DIR}/../.."
+            HINTS "${CodeSynthesis_INCLUDE_DIR}/../bin"
             PATH_SUFFIXES "bin" )
-else()
-  find_file(CodeSynthesis_EXECUTABLE
-            NAMES "bin/xsd"
-            HINTS "${CodeSynthesis_INCLUDE_DIR}/../.."
-            NO_DEFAULT_PATH
-            )
-endif()
 
 include(CMakeFindDependencyMacro)
 find_dependency(Xerces-c)

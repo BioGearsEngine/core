@@ -55,6 +55,8 @@ if(NOT Log4cpp_FOUND)
     add_library(Log4cpp::Log4cpp SHARED IMPORTED GLOBAL)
     set_target_properties(Log4cpp::Log4cpp
           PROPERTIES
+          IMPORTED_LOCATION ${Log4cpp_LIBRARY_RELEASE}
+          IMPORTED_LOCATION_DEBUG ${Log4cpp_LIBRARY_DEBUG}
           IMPORTED_IMPLIB_DEBUG   ${Log4cpp_LIBRARY_DEBUG}
           IMPORTED_IMPLIB         ${Log4cpp_LIBRARY_RELEASE}
           INTERFACE_INCLUDE_DIRECTORIES

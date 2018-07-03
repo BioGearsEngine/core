@@ -707,9 +707,9 @@ function(add_jar _TARGET_NAME)
         )
     endif ()
     if (_JAVA_SOURCE_JAR_FILES)
-    #   #Extract each JAR file in the working directroy
-    #   #Delete meta data that will conflict with other projects
-    #   #I leave it up to the user to bundle all required NOTICES manually
+        #   #Extract each JAR file in the working directroy
+        #   #Delete meta data that will conflict with other projects
+        #   #I leave it up to the user to bundle all required NOTICES manually
        foreach (archive IN LISTS _JAVA_SOURCE_JAR_FILES)
          get_filename_component(basename ${archive} NAME)
          add_custom_command(
@@ -732,7 +732,7 @@ function(add_jar _TARGET_NAME)
                 -DCMAKE_JAR_CLASSES_PREFIX="${CMAKE_JAR_CLASSES_PREFIX}"
                 -DJARS_AS_SOURCES="${_add_jar_JARS_AS_SOURCES}"
                 -P ${_JAVA_CLASS_FILELIST_SCRIPT}
-            DEPENDS ${CMAKE_JAVA_CLASS_OUTPUT_PATH}/java_compiled_${_TARGET_NAME} ${_previous_jars}
+            DEPENDS ${_previous_jars}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             COMMENT "Creating Jar manifest"
        )

@@ -121,9 +121,11 @@ if(Xerces-c_FOUND)
   add_library(Xerces::xerces ${LIBRARY_TYPE} IMPORTED GLOBAL)
   set_target_properties(Xerces::xerces
     PROPERTIES
+    IMPORTED_LOCATION       ${Xerces-c_LIBRARY_RELEASE}   
+    IMPORTED_LOCATION_DEBUG ${Xerces-c_LIBRARY_DEBUG}
     IMPORTED_IMPLIB_DEBUG   ${Xerces-c_LIBRARY_DEBUG}
-	IMPORTED_IMPLIB ${Xerces-c_LIBRARY_RELEASE}
-	INTERFACE_INCLUDE_DIRECTORIES
+    IMPORTED_IMPLIB ${Xerces-c_LIBRARY_RELEASE}
+    INTERFACE_INCLUDE_DIRECTORIES
     ${Xerces-c_INCLUDE_DIR}
     )
    target_compile_definitions(Xerces::xerces INTERFACE ${Xerces-c_CPPFLAGS})

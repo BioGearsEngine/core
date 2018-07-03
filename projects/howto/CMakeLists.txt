@@ -56,8 +56,8 @@ function(add_howto name)
     if(WIN32)
       target_compile_definitions(${TARGET_NAME}  PRIVATE "_CRT_SECURE_NO_WARNINGS"  ${TARGET_NAME})
     elseif(CMAKE_COMPILER_IS_GNUCXX)
-      target_link_options(${TARGET_NAME} "LINKER:--no-as-needed" )
-      set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS ${${EXAMPLE_NAME}_LDFLAGS})
+      #target_link_options(${TARGET_NAME} "LINKER:--no-as-needed" )
+      #set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS ${${EXAMPLE_NAME}_LDFLAGS})
     endif()
   
     ###############################################################################
@@ -79,6 +79,7 @@ function(add_howto name)
     list(APPEND ${EXAMPLE_NAME}_LIBS
       libbiogears
       ${CMAKE_THREAD_LIBS_INIT}
+      Threads::Threads
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
@@ -107,6 +108,8 @@ endif()
 ############################################################################
 if(ARA_${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   include ( ${PROJECT_SOURCE_DIR}/cmake/cmake-common_logic.cmake )
+  
+  find_package(Threads REQUIRED)
 
   childlist( dir_list ${CMAKE_CURRENT_SOURCE_DIR} )
   foreach( dir IN LISTS dir_list )

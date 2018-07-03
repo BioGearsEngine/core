@@ -7,7 +7,9 @@ find_program(Java_XML_EXECUTABLE
   PATHS ${_JAVA_PATHS}
 )
 
-
+if(NOT CMAKE_LINK_LIBRARY_SUFFIX)
+  set(CMAKE_LINK_LIBRARY_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+endif()
 function(xjc_generate_java _xjc_schema SRCS)
   #Assumes a file of ${XML_SCHEMA}.XJC exist that must be compiled using xjc
   #
