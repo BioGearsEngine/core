@@ -106,6 +106,7 @@ if(ARA_${PREFIX}_BUILD_STATIC)
   elseif(CMAKE_COMPILER_IS_GNUCXX)
     list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
     list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
+    set_target_properties(lib${PROJECT_NAME} PROPERTIES LINK_FLAGS ${${PREFIX}_LDFLAGS})
 endif()
   ###############################################################################
   # COMPILATION & LINKAGE MODIFICATIONS
@@ -313,9 +314,6 @@ else()
 endif()
 
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-    set_target_properties(lib${PROJECT_NAME} PROPERTIES LINK_FLAGS ${${PREFIX}_LDFLAGS})
-endif()
 
  install(TARGETS lib${PROJECT_NAME} EXPORT libBiogears
      RUNTIME DESTINATION bin
