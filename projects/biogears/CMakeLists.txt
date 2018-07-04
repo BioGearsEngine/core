@@ -157,7 +157,7 @@ else()
     # libBiogears_String OMPILATION & LINKAGE MODIFICATIONS
     ###############################################################################
     target_compile_definitions(lib${PROJECT_NAME}_string  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
-    target_compile_definitions(lib${PROJECT_NAME}_string  PRIVATE ${${PREFIX}_CPPFLAGS} )
+    target_compile_definitions(lib${PROJECT_NAME}_string  PRIVATE ${${PREFIX}_CPPFLAGS} $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX">)
     target_compile_options(lib${PROJECT_NAME}_string PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
     
     target_include_directories(lib${PROJECT_NAME}_string 
@@ -199,7 +199,7 @@ else()
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
-  target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS} $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX">)
   target_compile_options(lib${PROJECT_NAME}_cdm PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
   
   target_include_directories(lib${PROJECT_NAME}_cdm 
@@ -243,7 +243,7 @@ else()
   # libBiogears COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
   target_compile_definitions(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
-  target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS} $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX">)
   target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
   target_include_directories(lib${PROJECT_NAME} 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} 
@@ -284,6 +284,7 @@ else()
   ###############################################################################
   # libBiogears_jni COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
+  target_compile_definitions(lib${PROJECT_NAME}_jni PRIVATE $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX">)
   target_compile_options(lib${PROJECT_NAME}_jni PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
   target_include_directories(lib${PROJECT_NAME}_jni 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/jni/include
