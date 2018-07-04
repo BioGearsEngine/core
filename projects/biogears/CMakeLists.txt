@@ -83,14 +83,6 @@ set(LIB${PREFIX}_JNI_SOURCES ${JNI_SRCS} ${GEN_JNI_SRCS})
 ###############################################################################
 #Define Logic
 ###############################################################################
-if(WIN32)
-  list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
-  list(APPEND ${PREFIX}_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX" bigobj  $ENV{PARALLEL_COMPILE} )
-elseif(CMAKE_COMPILER_IS_GNUCXX)
-list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
-  list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
-  list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
-endif()
 
 if (ARA_${PREFIX}_BUILD_STATIC)
   add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
@@ -109,14 +101,18 @@ if(ARA_${PREFIX}_BUILD_STATIC)
     CXX_STANDARD 14
     )
 
-  if (ARA_${PREFIX}_BUILD_STATIC)
-    target_compile_definitions(lib${PROJECT_NAME} PUBLIC "${PREFIX}_BUILT_AS_STATIC" "DARACORE_BUILT_AS_STATIC")
-  endif()
+  if(WIN32)
+    list(APPEND ${PREFIX}_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX" /bigobj  $ENV{PARALLEL_COMPILE} )
+  elseif(CMAKE_COMPILER_IS_GNUCXX)
+    list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
+    list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
+endif()
   ###############################################################################
   # COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
   target_compile_definitions(lib${PROJECT_NAME} PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
-  target_compile_definitions(lib${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS})
+  target_compile_definitions(lib${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
   
   target_include_directories(lib${PROJECT_NAME}
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR}
@@ -160,7 +156,8 @@ else()
     # libBiogears_String OMPILATION & LINKAGE MODIFICATIONS
     ###############################################################################
     target_compile_definitions(lib${PROJECT_NAME}_string  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
-    target_compile_definitions(lib${PROJECT_NAME}_string  PRIVATE ${${PREFIX}_CPPFLAGS})
+    target_compile_definitions(lib${PROJECT_NAME}_string  PRIVATE ${${PREFIX}_CPPFLAGS} )
+    target_compile_options(lib${PROJECT_NAME}_string PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
     
     target_include_directories(lib${PROJECT_NAME}_string 
         PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/string/include
@@ -201,7 +198,8 @@ else()
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
-  target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS})
+  target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_options(lib${PROJECT_NAME}_cdm PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
   
   target_include_directories(lib${PROJECT_NAME}_cdm 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
@@ -244,8 +242,8 @@ else()
   # libBiogears COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
   target_compile_definitions(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
-  target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS})
-  
+  target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
   target_include_directories(lib${PROJECT_NAME} 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} 
       INTERFACE 
@@ -285,9 +283,10 @@ else()
   ###############################################################################
   # libBiogears_jni COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
+  target_compile_options(lib${PROJECT_NAME}_jni PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> )
   target_include_directories(lib${PROJECT_NAME}_jni 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/jni/include
-	  PUBLIC   ${JNI_INCLUDE_DIRS}
+	    PUBLIC   ${JNI_INCLUDE_DIRS}
       INTERFACE 
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/jni/include>
                 $<INSTALL_INTERFACE:include>
