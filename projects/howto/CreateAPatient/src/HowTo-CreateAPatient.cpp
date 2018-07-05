@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #include "HowToTracker.h"
 
 // Include the various types you will be using in your code
+#include <biogears/schema/PatientData.hxx>
+
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>

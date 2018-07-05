@@ -111,8 +111,10 @@ if(WIN32)
 endif()
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )
-
-
+ 
+if(ARA_STAGE_RUNTIME) 
+add_dependencies(${PROJECT_NAME} stage_runtime)
+endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS ${${PREFIX}_LDFLAGS})

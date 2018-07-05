@@ -4,6 +4,8 @@ enable_language(CXX)
 
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
+option(ARA_STAGE_RUNTIME "Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
+
 find_path (
   ARA_${ROOT_PROJECT_NAME}_Verification_DIR
   NAME Scenarios
@@ -168,7 +170,7 @@ foreach(_file IN LISTS  source_scenario_list)
 endforeach()
 list(APPEND runtime_glob_list 	"${runtime_xsd_list}"	"${runtime_jar_list}" 	"${runtime_data_list}" 	"${runtime_doc_list}" 	"${runtime_scenario_list}")
 
-add_custom_target( stage_runtime ALL
+add_custom_target( stage_runtime 
     DEPENDS 
 	${PROJECT_BINARY_DIR}/runtime
 	${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf

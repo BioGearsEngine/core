@@ -83,6 +83,9 @@ function(add_howto name)
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
+    if(ARA_STAGE_RUNTIME) 
+      add_dependencies(${TARGET_NAME} stage_runtime)
+    endif()
     
   endif(BUILD_EX_${EXAMPLE_NAME})
 endfunction(add_howto)
