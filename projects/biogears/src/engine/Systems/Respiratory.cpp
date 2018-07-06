@@ -1766,11 +1766,11 @@ void Respiratory::CalculateVitalSigns()
   if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
 
     //Bradypnea
-    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 10) {
+    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 8) {
       /// \event Patient: Bradypnea: Respiration rate is below 10 breaths per minute
       /// The patient has bradypnea.
       m_Patient->SetEvent(CDM::enumPatientEvent::Bradypnea, true, m_data.GetSimulationTime()); /// \cite overdyk2007continuous
-    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) >= 10.5) // offset by .5
+    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) >= 10) // offset by .5
     {
       /// \event Patient: End Bradypnea Event. The respiration rate has risen above 10.
       /// The patient is no longer considered to have bradypnea.
@@ -1782,7 +1782,7 @@ void Respiratory::CalculateVitalSigns()
       /// \event Patient: Tachypnea: Respiration rate is above 20 breaths per minute.
       /// The patient has tachypnea.
       m_Patient->SetEvent(CDM::enumPatientEvent::Tachypnea, true, m_data.GetSimulationTime()); /// \cite
-    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) <= 19.5) // offset by .5
+    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) <= 18) // offset by .5
     {
       /// \event Patient: End Tachypnea Event. The respiration rate has fallen below 19.5.
       /// The patient is no longer considered to have tachypnea.
