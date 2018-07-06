@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #if defined(__clang__)
   #define BIOGEARS_CDM_API
 #elif defined(__gnu_linux__)
-  #define BIOGEARS_CDM_API 
+  #define BIOGEARS_CDM_API __attribute__ ((visibility ("default")))
 #else
   #include <biogears/string-exports.h>
   #ifdef biogears_cdm_EXPORTS
