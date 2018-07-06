@@ -97,7 +97,10 @@ def archive (root, path, recurse, clean):
     if( os.path.isfile(absolute_path) ):
         if ( re.match( valid_regex, extension) ):
             destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
-            compress_and_store(absolute_path, destination)
+                if compress_and_store(absolute_path, destination):
+                  log = absolute-path.replace("Results.csv", "")
+                  shutil.copy(log,destination)
+            
     elif(os.path.isdir(absolute_path)):
         if(recurse):
             for file in os.listdir(absolute_path):
@@ -133,7 +136,8 @@ def rebase (root, path, recurse, clean):
             destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
             results = basename+"Results.csv";
             if( os.path.exists(results)):
-                compress_and_store(results, destination)
+                if compress_and_store(results, destination):
+                  shutil.copy(basename+".log",destination)
             else:
                 err("Unable to locate {0}".format(results), LOG_LEVEL_0)
     elif(os.path.isdir(absolute_path)):
@@ -147,10 +151,12 @@ def rebase (root, path, recurse, clean):
         err("{0} is not a valid results file".format(absolute_path),LOG_LEVEL_0)
 
 def compress_and_store(source,destination):
+    source_dir  =  os.path.dirname(source)
     source_name =  os.path.basename(source)
     name, ext   =  os.path.splitext(source_name)
     archive_name = name + archive_extension
 
+    rcode = True
     if ( not os.path.exists( destination )):
         os.makedirs( destination )
 
@@ -161,7 +167,7 @@ def compress_and_store(source,destination):
             log("removing {0}".format(archive),LOG_LEVEL_2)
             os.remove(archive)
         except OSError:
-            err("Unable to remove {0}".format(archive), LOG_LEVEL_0)
+            err("Unable to remove {0}".format(archive), LOG_LEVEL_0A
     if ( os.path.exists(source) ):
         log("{0} -> {1}".format(source,archive),LOG_LEVEL_1)
 
@@ -177,9 +183,12 @@ def compress_and_store(source,destination):
             zip.write( source, source_name )
         except ValueError:
             err("Unable to write to {0}".format(archive), LOG_LEVEL_0)
+            rcode = False
+        zip.close()
     else:
         err("{} does not exists".format(source),LOG_LEVEL_0)
-    zip.close()
+        rcode = False
+    return rcode
 
 """
 This function is very dangerous.
