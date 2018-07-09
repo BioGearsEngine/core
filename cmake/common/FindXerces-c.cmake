@@ -20,76 +20,79 @@ find_path(Xerces-c_INCLUDE_DIR
 #CMAKE is really bad at this so lookout for bugs
 
 set(OLD_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
-set(CMAKE_FIND_LIBRARY_SUFFIXES .a .lib)
-find_library(Xerces-c_LIBRARY_RELEASE_STATIC NAMES
-      xerces-c_static_3
-      libxerces-c_static_3
-      xerces-c_static_3_2
-      libxerces-c_static_3_2
-      xerces-c
-      libxerces-c
-  DOC "Xerces Release Library. Prefered over DLL"
-)
-# Look for the library (sorted from most current/relevant entry to least).
-find_library(Xerces-c_LIBRARY_DEBUG_STATIC NAMES
-      xerces-c_static_3D
-      libxerces-c_static_3D
-      xerces-c_3_static_d
-      libxerces-c_static_3_d
-      xerces-c_static_3
-      libxerces-c_static_3
-      libxerces-c_static_3_2D
-      xerces-c_3_2_static_d
-      libxerces-c_static_3_2_d
-      xerces-c_static_3_2
-      libxerces-c_static_3_2
-      xerces-c_static_d
-      libxerces-c_static_D
-      xerces-c
-      libxerces-c
-  PATH_SUFFIX  debug
-               lib
-               lib/debug
-  DOC "Xerces Debug Library. Prefered over DLL"
-)
-set(CMAKE_FIND_LIBRARY_SUFFIXES .so .lib .dylib)
-if(NOT Xerces-c_LIBRARY_RELEASE_STATIC ) 
-    # Look for the library (sorted from most current/relevant entry to least).
-  find_library(Xerces-c_LIBRARY_RELEASE_DYNAMIC NAMES
-      xerces-c_3
-      libxerces-c_3
-      xerces-c_3_2
-      libxerces-c_3_2
-      xerces-c
-      libxerces-c
-    PATH_SUFFIX  release
-                 lib
-                 lib/release
-    DOC "Xerces DLL Based Release Library. Only searched if Static does not exist"
+if(Xerces-c_USE_STATIC_LIBRARY)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES .a .lib)
+  find_library(Xerces-c_LIBRARY_RELEASE_STATIC NAMES
+        xerces-c_static_3
+        libxerces-c_static_3
+        xerces-c_static_3_2
+        libxerces-c_static_3_2
+        xerces-c
+        libxerces-c
+    DOC "Xerces Release Library. Prefered over DLL"
   )
   # Look for the library (sorted from most current/relevant entry to least).
-  find_library(Xerces-c_LIBRARY_DEBUG_DYNAMIC NAMES
-      xerces-c_3D
-      libxerces-c_3D
-      xerces-c_3_d
-      libxerces-c_3_d
-      xerces-c_3
-      libxerces-c_3
-      xerces-c_d
-      libxerces-c_D
-      xerces-c
-      libxerces-c
-      xerces-c_3_2D
-      libxerces-c_3_2D
-      xerces-c_3_2_d
-      libxerces-c_3_2_d
-      xerces-c_3_2
-      libxerces-c_3_2
+  find_library(Xerces-c_LIBRARY_DEBUG_STATIC NAMES
+        xerces-c_static_3D
+        libxerces-c_static_3D
+        xerces-c_3_static_d
+        libxerces-c_static_3_d
+        xerces-c_static_3
+        libxerces-c_static_3
+        libxerces-c_static_3_2D
+        xerces-c_3_2_static_d
+        libxerces-c_static_3_2_d
+        xerces-c_static_3_2
+        libxerces-c_static_3_2
+        xerces-c_static_d
+        libxerces-c_static_D
+        xerces-c
+        libxerces-c
     PATH_SUFFIX  debug
                  lib
                  lib/debug
-    DOC "Xerces DLL Based Debug Library. Only searched if Static does not exist"
+    DOC "Xerces Debug Library. Prefered over DLL"
   )
+else()
+  set(CMAKE_FIND_LIBRARY_SUFFIXES .so .lib .dylib)
+  if(NOT Xerces-c_LIBRARY_RELEASE_STATIC ) 
+      # Look for the library (sorted from most current/relevant entry to least).
+    find_library(Xerces-c_LIBRARY_RELEASE_DYNAMIC NAMES
+        xerces-c_3
+        libxerces-c_3
+        xerces-c_3_2
+        libxerces-c_3_2
+        xerces-c
+        libxerces-c
+      PATH_SUFFIX  release
+                   lib
+                   lib/release
+      DOC "Xerces DLL Based Release Library. Only searched if Static does not exist"
+    )
+    # Look for the library (sorted from most current/relevant entry to least).
+    find_library(Xerces-c_LIBRARY_DEBUG_DYNAMIC NAMES
+        xerces-c_3D
+        libxerces-c_3D
+        xerces-c_3_d
+        libxerces-c_3_d
+        xerces-c_3
+        libxerces-c_3
+        xerces-c_d
+        libxerces-c_D
+        xerces-c
+        libxerces-c
+        xerces-c_3_2D
+        libxerces-c_3_2D
+        xerces-c_3_2_d
+        libxerces-c_3_2_d
+        xerces-c_3_2
+        libxerces-c_3_2
+      PATH_SUFFIX  debug
+                   lib
+                   lib/debug
+      DOC "Xerces DLL Based Debug Library. Only searched if Static does not exist"
+    )
+  endif()
 endif()
 set(CMAKE_FIND_LIBRARY_SUFFIXES ${OLD_CMAKE_FIND_LIBRARY_SUFFIXES})
 
