@@ -58,6 +58,7 @@ void Nervous::Clear()
   m_Sarin = nullptr;
   m_ArterialO2Average_mmHg.Reset();
   m_ArterialCO2Average_mmHg.Reset();
+  m_ChemoreceptorAverageRate_Hz.Reset();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -71,6 +72,9 @@ void Nervous::Initialize()
   m_blockActive = false;
   m_ArterialO2Pressure_mmHg = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetPartialPressure(PressureUnit::mmHg);
   m_ArterialCO2Pressure_mmHg = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetPartialPressure(PressureUnit::mmHg);
+  m_CentralVentilationChange_L_Per_min = 0.0;
+  m_ChemoreceptorFiringRate_Hz = 3.6;
+  m_PeripheralVentilationChange_L_Per_min = 0.0;
   m_PreviousTargetAlveolarVentilation_L_Per_min = m_data.GetRespiratory().GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
   GetBaroreceptorHeartRateScale().SetValue(1.0);
   GetBaroreceptorHeartElastanceScale().SetValue(1.0);
@@ -96,8 +100,12 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_ArterialCO2Average_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
   m_ArterialO2Pressure_mmHg = in.ArterialOxygenPressure_mmHg();
   m_ArterialCO2Pressure_mmHg = in.ArterialCarbonDioxidePressure_mmHg();
+  m_CentralVentilationChange_L_Per_min = in.CentralVentilationChange_L_Per_min();
+  m_ChemoreceptorAverageRate_Hz.Load(in.ChemoreceptorAverageFiringRate_Hz());
+  m_ChemoreceptorFiringRate_Hz = in.ChemoreceptorFiringRate_Hz(); 
+  m_PeripheralVentilationChange_L_Per_min = in.PeripheralVentilationChange_L_Per_min();
   m_PreviousTargetAlveolarVentilation_L_Per_min = in.PreviousTargetAlveolarVentilation_L_Per_min();
- 
+
   return true;
 }
 CDM::BioGearsNervousSystemData* Nervous::Unload() const
@@ -115,6 +123,10 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2Average_mmHg.Unload()));
   data.ArterialOxygenPressure_mmHg(m_ArterialO2Pressure_mmHg);
   data.ArterialCarbonDioxidePressure_mmHg(m_ArterialCO2Pressure_mmHg);
+  data.CentralVentilationChange_L_Per_min(m_CentralVentilationChange_L_Per_min);
+  data.ChemoreceptorAverageFiringRate_Hz(std::unique_ptr<CDM::RunningAverageData>(m_ChemoreceptorAverageRate_Hz.Unload()));
+  data.ChemoreceptorFiringRate_Hz(m_ChemoreceptorFiringRate_Hz);
+  data.PeripheralVentilationChange_L_Per_min(m_PeripheralVentilationChange_L_Per_min);
   data.PreviousTargetAlveolarVentilation_L_Per_min(m_PreviousTargetAlveolarVentilation_L_Per_min);
 }
 
@@ -175,9 +187,16 @@ void Nervous::AtSteadyState()
 //--------------------------------------------------------------------------------------------------
 void Nervous::PreProcess()
 {
-  CheckPainStimulus();
+  bool testChemoreceptor = false;
   BaroreceptorFeedback();
-  ChemoreceptorFeedback();
+  CheckPainStimulus();
+  if (testChemoreceptor) {
+    ChemoreceptorNew();
+   } 
+  else
+   {
+    ChemoreceptorFeedback();
+   }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -501,8 +520,8 @@ void Nervous::ChemoreceptorFeedback()
     m_PreviousTargetAlveolarVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min;
 
     m_data.GetRespiratory().GetTargetAlveolarVentilation().SetValue(dTargetAlveolarVentilation_L_Per_min, VolumePerTimeUnit::L_Per_min);
-    }
-  
+  }
+
   if (!m_FeedbackActive)
     return;
 
@@ -550,9 +569,6 @@ void Nervous::ChemoreceptorFeedback()
   double normalizedHeartElastance = 1.0;
   /// \todo Compute and apply chemoreceptor-mediated contractility changes
   GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
-
-
-  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -604,4 +620,31 @@ void Nervous::SetPupilEffects()
   GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
+}
+
+void Nervous::ChemoreceptorNew()
+{
+
+
+  //Model Parameters
+  double arterialCO2SetPoint_mmHg = 40.0;
+  double oxygenHalfMax_mmHg = 45.0;
+  double oxygenSlopeParameter_mmHg = 29.27;
+  double centralTimeConstant_s = 180.0;
+  double centralDelay_s = 8.0;
+  double centralGainConstant_L_Per_min_mmHg = 1.8;
+  double peripheralTimeConstant_s = 13.0;
+  double peripheralGainConstant_L_Per_min_mmHg = 3.6;
+  double peripheralDelay_s = 7.0;
+  double peripheralTuningParam = 1.4;
+  double chemoreceptorTimeConstant_s = 2.0;
+  double firingRateBaseline_Hz = 3.6;
+  double firingRateMinimum_Hz = 0.835;
+  double firingRateMaximum_Hz = 12.3;
+
+  double gasInteractionConstant = 3.0;
+
+  //Try w/o blood gas running averages initially
+
+  //Adjust some parameters as a function of blood gas state
 }

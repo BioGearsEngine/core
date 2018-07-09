@@ -136,6 +136,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ArterialCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="CentralVentilationChange_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorAverageFiringRate_Hz" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorFiringRate_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="PeripheralVentilationChange_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="PreviousTargetAlveolarVentilation_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
