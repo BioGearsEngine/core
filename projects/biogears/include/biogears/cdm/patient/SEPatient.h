@@ -151,6 +151,10 @@ public:
   virtual SEScalarPressure& GetMeanArterialPressureBaseline();
   virtual double GetMeanArterialPressureBaseline(const PressureUnit& unit) const;
 
+  virtual bool HasPainSusceptibility() const;
+  virtual SEScalarNeg1To1& GetPainSusceptibility();
+  virtual double GetPainSusceptibility() const;
+
   virtual bool HasResidualVolume() const;
   virtual SEScalarVolume& GetResidualVolume();
   virtual double GetResidualVolume(const VolumeUnit& unit) const;
@@ -209,6 +213,7 @@ protected:
   SEScalarPressure* m_DiastolicArterialPressureBaseline;
   SEScalarFrequency* m_HeartRateBaseline;
   SEScalarPressure* m_MeanArterialPressureBaseline;
+  SEScalarNeg1To1* m_PainSusceptibility;
   SEScalarFrequency* m_RespirationRateBaseline;
   SEScalarPressure* m_SystolicArterialPressureBaseline;
   SEScalarVolume* m_TidalVolumeBaseline;

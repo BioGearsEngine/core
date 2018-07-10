@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
@@ -39,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ScalarLengthData.hxx>
 #include <biogears/schema/ScalarMassData.hxx>
 #include <biogears/schema/ScalarMassPerVolumeData.hxx>
+#include <biogears/schema/ScalarNeg1To1Data.hxx>
 #include <biogears/schema/ScalarPowerData.hxx>
 #include <biogears/schema/ScalarPressureData.hxx>
 #include <biogears/schema/ScalarPressurePerVolumeData.hxx>
@@ -74,6 +76,7 @@ SEPatient::SEPatient(Logger* logger)
   m_MaxWorkRate = nullptr;
   m_MuscleMass = nullptr;
   m_MeanArterialPressureBaseline = nullptr;
+  m_PainSusceptibility = nullptr;
   m_ResidualVolume = nullptr;
   m_RespirationRateBaseline = nullptr;
   m_RightLungRatio = nullptr;
@@ -133,6 +136,7 @@ void SEPatient::Clear()
   SAFE_DELETE(m_MaxWorkRate);
   SAFE_DELETE(m_MuscleMass);
   SAFE_DELETE(m_MeanArterialPressureBaseline);
+  SAFE_DELETE(m_PainSusceptibility);
   SAFE_DELETE(m_ResidualVolume);
   SAFE_DELETE(m_RespirationRateBaseline);
   SAFE_DELETE(m_RightLungRatio);
@@ -186,6 +190,8 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
     return &GetMuscleMass();
   if (name.compare("MeanArterialPressureBaseline") == 0)
     return &GetMeanArterialPressureBaseline();
+  if (name.compare("PainSusceptibility") == 0)
+    return &GetPainSusceptibility();
   if (name.compare("ResidualVolume") == 0)
     return &GetResidualVolume();
   if (name.compare("RespirationRateBaseline") == 0)
@@ -273,6 +279,9 @@ bool SEPatient::Load(const CDM::PatientData& in)
   }
   if (in.MeanArterialPressureBaseline().present()) {
     GetMeanArterialPressureBaseline().Load(in.MeanArterialPressureBaseline().get());
+  }
+  if (in.PainSusceptibility().present()) {
+    GetPainSusceptibility().Load(in.PainSusceptibility().get());
   }
   if (in.ResidualVolume().present()) {
     GetResidualVolume().Load(in.ResidualVolume().get());
@@ -383,6 +392,9 @@ void SEPatient::Unload(CDM::PatientData& data) const
   }
   if (m_MeanArterialPressureBaseline != nullptr) {
     data.MeanArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureBaseline->Unload()));
+  }
+  if (m_PainSusceptibility != nullptr) {
+    data.PainSusceptibility(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_PainSusceptibility->Unload()));
   }
   if (m_ResidualVolume != nullptr) {
     data.ResidualVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ResidualVolume->Unload()));
@@ -1168,6 +1180,23 @@ double SEPatient::GetMeanArterialPressureBaseline(const PressureUnit& unit) cons
       return SEScalar::dNaN();
       }
   return m_MeanArterialPressureBaseline->GetValue(unit);
+}
+
+bool SEPatient::HasPainSusceptibility() const
+{
+  return m_PainSusceptibility == nullptr ? false : m_PainSusceptibility->IsValid();
+}
+SEScalarNeg1To1& SEPatient::GetPainSusceptibility()
+{
+  if (m_PainSusceptibility == nullptr)
+    m_PainSusceptibility = new SEScalarNeg1To1();
+  return *m_PainSusceptibility;
+}
+double SEPatient::GetPainSusceptibility() const
+{
+  if (m_PainSusceptibility == nullptr)
+    return SEScalar::dNaN();
+  return m_PainSusceptibility->GetValue();
 }
 
 bool SEPatient::HasResidualVolume() const
