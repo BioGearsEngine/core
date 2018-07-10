@@ -179,6 +179,10 @@ public:
   virtual SEScalarPressure& GetSystolicArterialPressureBaseline();
   virtual double GetSystolicArterialPressureBaseline(const PressureUnit& unit) const;
 
+  virtual bool HasTargetVentilationBaseline() const;
+  virtual SEScalarVolumePerTime& GetTargetVentilationBaseline();
+  virtual double GetTargetVentilationBaseline(const VolumePerTimeUnit& unit) const;
+
   virtual bool HasTidalVolumeBaseline() const;
   virtual SEScalarVolume& GetTidalVolumeBaseline();
   virtual double GetTidalVolumeBaseline(const VolumeUnit& unit) const;
@@ -221,6 +225,7 @@ protected:
   SEScalarNeg1To1* m_PainSusceptibility;
   SEScalarFrequency* m_RespirationRateBaseline;
   SEScalarPressure* m_SystolicArterialPressureBaseline;
+  SEScalarVolumePerTime* m_TargetVentilationBaseline;
   SEScalarVolume* m_TidalVolumeBaseline;
 
   SEScalarFrequency* m_HeartRateMaximum;

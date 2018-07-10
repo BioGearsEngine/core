@@ -591,7 +591,9 @@ bool BioGears::SetupPatient()
     ss << "No patient respiration rate baseline set. Using the standard value of " << respirationRate_bpm << " bpm.";
     Info(ss);
   }
+
   respirationRate_bpm = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
+
   if (respirationRate_bpm > respirationRateMax_bpm) {
     ss << "Patient respiration rate baseline of " << respirationRate_bpm << " bpm is too high. Non-healthy values must be modeled by adding/using a condition. Maximum respiration rate baseline allowed is " << respirationRateMax_bpm << " bpm.";
     Error(ss);
@@ -601,6 +603,10 @@ bool BioGears::SetupPatient()
     Error(ss);
     err = true;
   }
+
+  //Set target ventilation baseline to constant value
+  ///\ToDo:  Make target ventilation baseline a function of patient characteristics
+  m_Patient->GetTargetVentilationBaseline().SetValue(7.0, VolumePerTimeUnit::L_Per_min);
 
   //Right Lung Ratio ---------------------------------------------------------------
   double rightLungRatio;
