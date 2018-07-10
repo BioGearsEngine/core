@@ -79,6 +79,7 @@ void SEPatientActionCollection::Clear()
   RemoveUrinate();
 
   DELETE_MAP_SECOND(m_Hemorrhages);
+  DELETE_MAP_SECOND(m_PainStimuli);
   DELETE_MAP_SECOND(m_SubstanceBolus);
   DELETE_MAP_SECOND(m_SubstanceInfusions);
   DELETE_MAP_SECOND(m_SubstanceCompoundInfusions);
@@ -126,6 +127,10 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     to.push_back(GetLeftNeedleDecompression()->Unload());
   if (HasRightNeedleDecompression())
     to.push_back(GetRightNeedleDecompression()->Unload());
+  if (HasPainStimulus()) {
+    for (auto itr : GetPainStimuli())
+      to.push_back(itr.second->Unload());
+  }
   if (HasPericardialEffusion())
     to.push_back(GetPericardialEffusion()->Unload());
   if (HasLeftClosedTensionPneumothorax())
@@ -419,6 +424,22 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return IsValid(*m_RightNeedleDecompression);
     } else
       return false;
+  }
+
+  const CDM::PainStimulusData* pain = dynamic_cast<const CDM::PainStimulusData*>(&action);
+  if (pain != nullptr) {
+    SEPainStimulus* mypain = m_PainStimuli[pain->Location()];
+    if (mypain == nullptr) {
+      mypain = new SEPainStimulus();
+      m_PainStimuli[pain->Location()] = mypain;
+    }
+    mypain->Load(*pain);
+
+    if (!mypain->IsActive()) {
+      RemovePainStimulus(mypain->GetLocation());
+      return true;
+    }
+    return IsValid(*mypain);
   }
 
   const CDM::PericardialEffusionData* pericardialEff = dynamic_cast<const CDM::PericardialEffusionData*>(&action);
@@ -770,6 +791,21 @@ SENeedleDecompression* SEPatientActionCollection::GetRightNeedleDecompression() 
 void SEPatientActionCollection::RemoveRightNeedleDecompression()
 {
   SAFE_DELETE(m_RightNeedleDecompression);
+}
+
+bool SEPatientActionCollection::HasPainStimulus() const
+{
+  return m_PainStimuli.empty() ? false : true;
+}
+const std::map<std::string, SEPainStimulus*>& SEPatientActionCollection::GetPainStimuli() const
+{
+  return m_PainStimuli;
+}
+void SEPatientActionCollection::RemovePainStimulus(const std::string& cmpt)
+{
+  SEPainStimulus* p = m_PainStimuli[cmpt];
+  m_PainStimuli.erase(cmpt);
+  SAFE_DELETE(p);
 }
 
 bool SEPatientActionCollection::HasPericardialEffusion() const

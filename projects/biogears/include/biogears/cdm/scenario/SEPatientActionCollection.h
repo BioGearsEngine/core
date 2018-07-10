@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
+#include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SESepsis.h>
@@ -131,6 +132,10 @@ public:
   SENeedleDecompression* GetRightNeedleDecompression() const;
   void RemoveRightNeedleDecompression();
 
+  bool HasPainStimulus() const;
+  const std::map<std::string, SEPainStimulus*>& GetPainStimuli() const;
+  void RemovePainStimulus(const std::string& loc);
+
   bool HasPericardialEffusion() const;
   SEPericardialEffusion* GetPericardialEffusion() const;
   void RemovePericardialEffusion();
@@ -199,6 +204,7 @@ protected:
   SEUrinate* m_Urinate;
 
   std::map<std::string, SEHemorrhage*> m_Hemorrhages;
+  std::map<std::string, SEPainStimulus*> m_PainStimuli;
   std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
   std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;
   std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
