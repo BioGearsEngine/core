@@ -314,6 +314,18 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+		<!-- @brief Pain response. -->
+	<xs:complexType name="PainStimulusData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+						<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief The severity of a hemorrhage on a scale of 1-5 (to match mcis code) -->
+				</xs:sequence>
+				<xs:attribute name="Location" type="xs:string" use="required"/><!--<<@brief The compartment in which the hemorrhage occurs, maps to specific circuit path -->               
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<!-- @brief Pericardial effusion ("fluid around the heart") is an abnormal accumulation of fluid in the pericardial cavity. Because of the limited amount of space in the pericardial cavity, fluid accumulation leads to an increased intrapericardial pressure which can negatively affect heart function. A pericardial effusion with enough pressure to adversely affect heart function is called cardiac tamponade. Pericardial effusion usually results from a disturbed equilibrium between the production andre-absorption of pericardial fluid, or from a structural abnormality that allows fluid to enter the pericardial cavity. Normal levels of pericardial fluid are from 15 to 50 mL. -->
 	<xs:complexType name="PericardialEffusionData">
 		<xs:complexContent>

@@ -110,7 +110,8 @@ specific language governing permissions and limitations under the License.
           <!-- Physical Characteristics that can change and should be change due to a condition -->
           <xs:element name="AlveoliSurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief The surface area of the alveoli for gas diffusion-->  
           <xs:element name="RightLungRatio" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The ratio of total lung surface area that is associated with the right lung. -->  
-          <xs:element name="SkinSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief --> 
+          <xs:element name="SkinSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief -->
+		  <xs:element name="PainSusceptibility" type="ScalarNeg1To1Data" minOccurs="0" maxOccurs="1"/><!--<< @brief The patients’ qualitative pain susceptibility. -->		  
           
           <!-- Systemic Targets to tune the engine to -->
           <xs:element name="BasalMetabolicRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<< @brief The life-sustaining metabolic rate. -->
