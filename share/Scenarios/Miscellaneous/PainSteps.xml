@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>PainStimulusModerate</Name>
     <Description>A patient given pain stimulus to the leg.</Description>
-    <InitialParameters><PatientFile>ToughGuy.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests>
