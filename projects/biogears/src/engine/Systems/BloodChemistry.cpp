@@ -620,8 +620,9 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 
 void BloodChemistry::Sepsis()
 {
-  if (!m_PatientActions->HasSepsis())
+  if (!m_PatientActions->HasSepsis()) {
     return;
+  }
 
   SESepsis* sep = m_PatientActions->GetSepsis();
   std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
@@ -683,8 +684,11 @@ void BloodChemistry::Sepsis()
   sep->GetEarlyMediator().IncrementValue(dWhiteBloodCell_Per_hr * dt_hr);
   sep->GetLateMediator().IncrementValue(dLateMediator_Per_hr * dt_hr);
 
-  if (sep->GetEarlyMediator().GetValue() < wbcFractionInitial)
+
+  if (sep->GetEarlyMediator().GetValue() < wbcFractionInitial) {
     sep->GetSeverity().SetValue(0.0); //Our White blood cell count has return to normal.  This will cause the Sepsis action to be inactivated
+  }
+      
 
   //Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
   //The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
@@ -714,7 +718,7 @@ void BloodChemistry::Sepsis()
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
       nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
       vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    
+
     } else if (whiteBloodCell > modsThreshold) {
       nextReflectionCoefficient = GeneralMath::LinearInterpolator(modsThreshold, wbcFractionMax, 0.5, 0.05, whiteBloodCell);
       BLIM(nextReflectionCoefficient, 0.0, 1.0);
@@ -726,7 +730,7 @@ void BloodChemistry::Sepsis()
     }
   }
 
-	//Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
+  //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
   double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + (sep->GetEarlyMediator().GetValue() - wbcFractionInitial) / (5.0 * wbcFractionInitial));
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 

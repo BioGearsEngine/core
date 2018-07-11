@@ -1006,7 +1006,7 @@ void Respiratory::RespiratoryDriver()
         m_VentilationFrequency_Per_min = dTargetPulmonaryVentilation_L_Per_min / dTargetTidalVolume_L; //breaths/min
         m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
         m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
-        m_VentilationFrequency_Per_min *= (1 + 0.3 * painVAS); //scale with pain response
+        m_VentilationFrequency_Per_min *= (1 + 0.65 * painVAS); //scale with pain response
         m_bNotBreathing = false;
       }
 

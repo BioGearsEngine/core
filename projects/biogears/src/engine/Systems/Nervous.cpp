@@ -225,7 +225,7 @@ void Nervous::BaroreceptorFeedback()
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
     double painVAS = GetPainVisualAnalogueScale().GetValue();
     painVAS *= 0.1;
-    meanArterialPressureSetPoint_mmHg *= (1 + 0.4 * painVAS);
+    meanArterialPressureSetPoint_mmHg *= (1 + 0.65 * painVAS);
   }
 
   double sympatheticFraction = 1.0 / (1.0 + pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
