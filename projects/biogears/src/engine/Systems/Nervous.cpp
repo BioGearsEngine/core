@@ -160,6 +160,7 @@ void Nervous::PreProcess()
 {
   BaroreceptorFeedback();
   ChemoreceptorFeedback();
+  CheckPainStimulus();
 }
 
 //--------------------------------------------------------------------------------------------------

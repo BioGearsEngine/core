@@ -75,6 +75,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
+#include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SESepsis.h>
@@ -101,6 +102,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/IntubationData.hxx>
 #include <biogears/schema/MechanicalVentilationData.hxx>
 #include <biogears/schema/NeedleDecompressionData.hxx>
+#include <biogears/schema/PainStimulusData.hxx>
 #include <biogears/schema/PatientActionData.hxx>
 #include <biogears/schema/PatientAssessmentRequestData.hxx>
 #include <biogears/schema/PericardialEffusionData.hxx>
@@ -303,6 +305,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
     if (hemData != nullptr) {
       SEHemorrhage* a = new SEHemorrhage();
       a->Load(*hemData);
+      return a;
+    }
+
+    CDM::PainStimulusData* painData = dynamic_cast<CDM::PainStimulusData*>(action);
+    if (painData != nullptr) {
+      SEPainStimulus* a = new SEPainStimulus();
+      a->Load(*painData);
       return a;
     }
 
