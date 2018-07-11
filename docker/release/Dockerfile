@@ -1,4 +1,4 @@
-FROM timhoer/biogears-external:latest
+FROM biogears/engine:external
 WORKDIR /opt
 RUN git clone https://github.com/BioGearsEngine/core.git && mkdir core/build
 WORKDIR /opt/core/build
