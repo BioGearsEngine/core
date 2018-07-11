@@ -900,6 +900,11 @@ void Respiratory::RespiratoryDriver()
       double CNSChange = Drugs.GetCentralNervousResponse().GetValue(); //central nervous response
       double NMBModifier = 1.0;
       double SedationModifier = 1.0;
+
+      //Get pain action effects
+      double painVAS = m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
+      painVAS *= 0.1; //scale to a fractional value
+
       //Make changes to Respiration Rate change based on the neuromuscular block level
       if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
         NMBModifier = 0.0;
@@ -1001,6 +1006,7 @@ void Respiratory::RespiratoryDriver()
         m_VentilationFrequency_Per_min = dTargetPulmonaryVentilation_L_Per_min / dTargetTidalVolume_L; //breaths/min
         m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
         m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
+        m_VentilationFrequency_Per_min *= (1 + 0.3 * painVAS); //scale with pain response
         m_bNotBreathing = false;
       }
 

@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/EnvironmentalConditionsData.hxx>
 
+#include <biogears/cdm/properties/SEScalarNeg1to1.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -41,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+
 
 BioGears::BioGears(const std::string& logFileName)
   : BioGears(new Logger(logFileName))
@@ -256,6 +258,14 @@ bool BioGears::SetupPatient()
     ss << "Patient age of " << age_yr << " years is too old. We do not model geriatrics. Maximum age allowed is " << ageMax_yr << " years.";
     Error(ss);
     err = true;
+  }
+
+  //PAIN SUSCEPTIBILITY -----------------------------------------------------------------------------------
+  double painStandard = 0.0;
+  if (!m_Patient->HasPainSusceptibility()) {
+    m_Patient->GetPainSusceptibility().SetValue(painStandard);
+    ss << "No patient pain susceptibility set " << painStandard << " being used.";
+    Info(ss);
   }
 
   //HEIGHT ---------------------------------------------------------------
@@ -771,32 +781,32 @@ bool BioGears::SetupPatient()
   double maxWorkRate_W;
   double computedMaxWorkRate_W;
 
-    if (m_Patient->GetSex() == CDM::enumSex::Male) {
-      if (age_yr >= 60.) {
-        computedMaxWorkRate_W = ((-24.3 * 60.) + 2070.);
-      } else {
-        computedMaxWorkRate_W = ((-24.3 * age_yr) + 2070.);
-      }
-  } else {
-      if (age_yr >= 60.) {
-        computedMaxWorkRate_W = ((-20.7 * 60.) + 1673.);
-      } else {
-        computedMaxWorkRate_W = ((-20.7 * age_yr) + 1673.);
-      }
+  if (m_Patient->GetSex() == CDM::enumSex::Male) {
+    if (age_yr >= 60.) {
+      computedMaxWorkRate_W = ((-24.3 * 60.) + 2070.);
+    } else {
+      computedMaxWorkRate_W = ((-24.3 * age_yr) + 2070.);
     }
+  } else {
+    if (age_yr >= 60.) {
+      computedMaxWorkRate_W = ((-20.7 * 60.) + 1673.);
+    } else {
+      computedMaxWorkRate_W = ((-20.7 * age_yr) + 1673.);
+    }
+  }
 
   if (!m_Patient->HasMaxWorkRate()) {
-      maxWorkRate_W = computedMaxWorkRate_W;
-      m_Patient->GetMaxWorkRate().SetValue(maxWorkRate_W, PowerUnit::W);
+    maxWorkRate_W = computedMaxWorkRate_W;
+    m_Patient->GetMaxWorkRate().SetValue(maxWorkRate_W, PowerUnit::W);
 
-      ss << "No patient maximum work rate set. Using a computed value of " << computedMaxWorkRate_W << " Watts.";
-      Info(ss);
-    }
-    maxWorkRate_W = m_Patient->GetMaxWorkRate(PowerUnit::W);
-    if (maxWorkRate_W != computedMaxWorkRate_W) {
-      ss << "Specified maximum work rate of " << maxWorkRate_W << " Watts differs from computed value of " << computedMaxWorkRate_W << " Watts. No guarantees of model validity.";
-      Warning(ss);
-    }
+    ss << "No patient maximum work rate set. Using a computed value of " << computedMaxWorkRate_W << " Watts.";
+    Info(ss);
+  }
+  maxWorkRate_W = m_Patient->GetMaxWorkRate(PowerUnit::W);
+  if (maxWorkRate_W != computedMaxWorkRate_W) {
+    ss << "Specified maximum work rate of " << maxWorkRate_W << " Watts differs from computed value of " << computedMaxWorkRate_W << " Watts. No guarantees of model validity.";
+    Warning(ss);
+  }
 
   if (err) {
     return false;
@@ -810,7 +820,7 @@ BioGears::~BioGears()
     SAFE_DELETE(m_Logger);
   } else { //Turn off forwarding for this logger
     m_Logger->SetForward(nullptr);
-}
+  }
 }
 
 EngineState BioGears::GetState() { return m_State; }
@@ -1082,7 +1092,7 @@ void BioGears::SetupCardiovascular()
   double ResistanceArmLeft = (systolicPressureTarget_mmHg - VascularPressureTargetArmLeft) / VascularFlowTargetArmLeft, ResistanceArmLeftVenous = (VascularPressureTargetArmLeft - VascularPressureTargetVenaCava) / VascularFlowTargetArmLeft;
   double ResistanceArmRight = ResistanceArmLeft, ResistanceArmRightVenous = ResistanceArmLeftVenous;
   double ResistanceBone = (systolicPressureTarget_mmHg - VascularPressureTargetBone) / VascularFlowTargetBone, ResistanceBoneVenous = (VascularPressureTargetBone - VascularPressureTargetVenaCava) / VascularFlowTargetBone;
-  double ResistanceBrain = 0.94*((systolicPressureTarget_mmHg - VascularPressureTargetBrain) / VascularFlowTargetBrain), ResistanceBrainVenous = (VascularPressureTargetBrain - VascularPressureTargetVenaCava) / VascularFlowTargetBrain;
+  double ResistanceBrain = 0.94 * ((systolicPressureTarget_mmHg - VascularPressureTargetBrain) / VascularFlowTargetBrain), ResistanceBrainVenous = (VascularPressureTargetBrain - VascularPressureTargetVenaCava) / VascularFlowTargetBrain;
   double ResistanceFat = (systolicPressureTarget_mmHg - VascularPressureTargetFat) / VascularFlowTargetFat, ResistanceFatVenous = (VascularPressureTargetFat - VascularPressureTargetVenaCava) / VascularFlowTargetFat;
   double ResistanceHeartLeft = 0.000002; /*No Downstream Resistance HeartLeft*/
   double ResistanceHeartRight = (0.04225 * systolicPressureTarget_mmHg - VascularPressureTargetVenaCava) / cardiacOutputTarget_mL_Per_s; // Describes the flow resistance between the systemic vasculature and the right atrium    /*No Downstream Resistance Heart Right*/
@@ -1259,7 +1269,7 @@ void BioGears::SetupCardiovascular()
   for (SEFluidCircuitNode* n : cCardiovascular.GetNodes()) {
     if (n->HasVolumeBaseline()) {
       blood_mL += n->GetVolumeBaseline(VolumeUnit::mL);
-  }
+    }
   }
   if (blood_mL > bloodVolume_mL) {
     Error("Blood volume greater than total blood volume");
@@ -4219,8 +4229,8 @@ void BioGears::SetupRespiratory()
     if (gasCmpt->HasNodeMapping()) {
       for (auto node : gasCmpt->GetNodeMapping().GetNodes()) {
         liquidCmpt.MapNode(*node);
+      }
     }
-  }
   }
   // Hook up any hierarchies
   for (auto name : BGE::PulmonaryCompartment::GetValues()) {
@@ -4229,15 +4239,15 @@ void BioGears::SetupRespiratory()
     if (gasCmpt->HasChildren()) {
       for (auto child : gasCmpt->GetChildren()) {
         liquidCmpt->AddChild(*m_Compartments->GetLiquidCompartment(child->GetName()));
+      }
     }
-  }
   }
   // Add leaf compartments to the graph
   for (auto name : BGE::PulmonaryCompartment::GetValues()) {
     SELiquidCompartment* liquidCmpt = m_Compartments->GetLiquidCompartment(name);
     if (!liquidCmpt->HasChildren()) {
       lAerosol.AddCompartment(*liquidCmpt);
-  }
+    }
   }
   // Create Links
   for (auto name : BGE::PulmonaryLink::GetValues()) {

@@ -59,6 +59,7 @@ public:
 
 protected:
   void BaroreceptorFeedback();
+  void CheckPainStimulus();
   void CheckNervousStatus();
   void ChemoreceptorFeedback();
   void SetPupilEffects();
@@ -72,7 +73,13 @@ protected:
   double m_dt_s;
   SESubstance* m_Succinylcholine;
   SESubstance* m_Sarin;
+  SEPatient* m_Patient;
   bool m_blockActive;
+  double m_painStimulusDuration_s;
+  double m_painVASDuration_s;
+  double m_painVAS;
+  double m_painStimulus;
+
   // Configuration fractions representing the amount by which each quantity can change due to baroreceptors;
   double m_normalizedGammaHeartRate;
   double m_normalizedGammaElastance;
@@ -83,4 +90,5 @@ protected:
   double m_normalizedAlphaCompliance;
   double m_normalizedAlphaResistance;
   double m_normalizedBetaHeartRate;
+
 };

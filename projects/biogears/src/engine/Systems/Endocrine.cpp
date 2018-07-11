@@ -298,6 +298,14 @@ void Endocrine::ReleaseEpinephrine()
     releaseMultiplier += GeneralMath::LinearInterpolator(0, 1, 0, 30, severity);
   }
 
+  // If we have a pain response, release more epi
+  if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
+    double patientPainVAS = m_data.GetNervous().GetPainVisualAnalogueScale().GetValue();
+
+    //The highest stress multiplier we currently support is 30
+    releaseMultiplier += GeneralMath::LinearInterpolator(0, 1, 0, 5, patientPainVAS);
+  }
+
   epinephrineRelease_ug *= releaseMultiplier;
 
   m_rKidneyEpinephrine->GetMass().IncrementValue(0.5 * epinephrineRelease_ug, MassUnit::ug);

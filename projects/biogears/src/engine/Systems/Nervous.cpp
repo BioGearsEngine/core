@@ -52,6 +52,9 @@ Nervous::~Nervous()
 void Nervous::Clear()
 {
   SENervousSystem::Clear();
+  m_Patient = nullptr;
+  m_Succinylcholine = nullptr;
+  m_Sarin = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -71,6 +74,7 @@ void Nervous::Initialize()
   GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(0);
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(0);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(0);
+  GetPainVisualAnalogueScale().SetValue(0.0);
 }
 
 bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
@@ -118,6 +122,11 @@ void Nervous::SetUp()
   m_normalizedBetaHeartRate = m_data.GetConfiguration().GetNormalizedHeartRateParasympatheticSlope();
   m_Succinylcholine = m_data.GetSubstances().GetSubstance("Succinylcholine");
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
+  m_Patient = &m_data.GetPatient();
+
+  m_painStimulusDuration_s = 0.0;
+  m_painVASDuration_s = 0.0;
+  m_painVAS = 0.0;
 
   // Set when feedback is turned on
   m_ArterialOxygenSetPoint_mmHg = 0;
@@ -211,6 +220,13 @@ void Nervous::BaroreceptorFeedback()
     }
   }
 
+  //Neurological effects of pain action
+  if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
+    double painVAS = GetPainVisualAnalogueScale().GetValue();
+    painVAS *= 0.1;
+    meanArterialPressureSetPoint_mmHg *= (1 + 0.4 * painVAS);
+  }
+
   double sympatheticFraction = 1.0 / (1.0 + pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
   double parasympatheticFraction = 1.0 / (1.0 + pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
 
@@ -248,6 +264,69 @@ void Nervous::BaroreceptorFeedback()
   m_data.GetDataTrack().Probe("normalizedCompliance", normalizedCompliance);
   m_data.GetDataTrack().Probe("meanArterialPressureSetPoint_mmHg", meanArterialPressureSetPoint_mmHg);
 #endif
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Calculates the patient pain response due to stimulus, susceptibility and drugs
+///
+/// \details
+/// A patient reacts to a noxious stimulus in a certain way. Generally this is reported as a VAS
+/// scale value. This value is generally reported by the patient after the nervous system has already parsed
+/// the stimulus. For a robotic manikin trainer we need to determine the nervous system and systemic responses
+/// related to that stimulus
+//--------------------------------------------------------------------------------------------------
+void Nervous::CheckPainStimulus()
+{
+  if (!m_data.GetActions().GetPatientActions().HasPainStimulus()) {
+    GetPainVisualAnalogueScale().SetValue(0.0);
+    return;
+  }
+
+  //initialize:
+  SEPainStimulus* p;
+  const std::map<std::string, SEPainStimulus*>& pains = m_data.GetActions().GetPatientActions().GetPainStimuli();
+  double patientSusceptability = m_Patient->GetPainSusceptibility().GetValue();
+  double susceptabilityMapping = GeneralMath::LinearInterpolator(-1.0, 1.0, 0.0, 2.0, patientSusceptability); //mapping [-1,1] -> [0, 2] for scaling the pain stimulus
+  double severity = 0.0;
+  double painVASMapping = 0.0; //for each location map the [0,1] severity to the [0,10] VAS scale
+  double tempPainVAS = 0.0; //sum, scale and store the patient score
+  double CNSPainBuffer = 1.0;
+
+  m_painVAS = GetPainVisualAnalogueScale().GetValue();
+
+  //reset duration if VAS falls below approx zero
+  if (m_painVAS == 0.0)
+    m_painStimulusDuration_s = 0.0;
+
+  //grab drug effects if there are in the body
+  if (m_data.GetDrugs().HasCentralNervousResponse()) {
+    double NervousScalar = 10.0;
+    double CNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
+    CNSPainBuffer = exp(-CNSModifier * NervousScalar);
+  }
+
+  //iterate over all locations to get a cumulative stimulus and buffer them
+  for (auto pain : pains) {
+    p = pain.second;
+    severity = p->GetSeverity().GetValue();
+    painVASMapping = 10.0 * severity;
+
+    tempPainVAS += (painVASMapping * susceptabilityMapping * CNSPainBuffer) / (1 + exp(-20 * m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
+  }
+
+  //advance time over the duration of the stimulus
+
+  if (severity < ZERO_APPROX)
+    m_painVASDuration_s += m_dt_s;
+
+  m_painStimulusDuration_s += m_dt_s;
+
+  //set the VAS data:
+  if (tempPainVAS > 10)
+    tempPainVAS = 10.0;
+
+  GetPainVisualAnalogueScale().SetValue(tempPainVAS);
 }
 
 //--------------------------------------------------------------------------------------------------
