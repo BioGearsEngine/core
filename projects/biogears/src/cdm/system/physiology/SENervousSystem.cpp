@@ -31,6 +31,7 @@ SENervousSystem::SENervousSystem(Logger* logger)
   m_ChemoreceptorHeartElastanceScale = nullptr;
   m_LeftEyePupillaryResponse = nullptr;
   m_RightEyePupillaryResponse = nullptr;
+  m_PainVisualAnalogueScale = nullptr;
 }
 
 SENervousSystem::~SENervousSystem()
@@ -49,6 +50,7 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_ChemoreceptorHeartElastanceScale);
   SAFE_DELETE(m_LeftEyePupillaryResponse);
   SAFE_DELETE(m_RightEyePupillaryResponse);
+  SAFE_DELETE(m_PainVisualAnalogueScale);
 }
 
 const SEScalar* SENervousSystem::GetScalar(const std::string& name)
@@ -65,6 +67,8 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
     return &GetChemoreceptorHeartRateScale();
   if (name.compare("ChemoreceptorHeartElastanceScale") == 0)
     return &GetChemoreceptorHeartElastanceScale();
+  if (name.compare("PainVisualAnalogueScale") == 0)
+    return &GetPainVisualAnalogueScale();
 
   size_t split = name.find('-');
   if (split != name.npos) {
@@ -93,6 +97,8 @@ bool SENervousSystem::Load(const CDM::NervousSystemData& in)
     GetChemoreceptorHeartRateScale().Load(in.ChemoreceptorHeartRateScale().get());
   if (in.ChemoreceptorHeartElastanceScale().present())
     GetChemoreceptorHeartElastanceScale().Load(in.ChemoreceptorHeartElastanceScale().get());
+  if (in.PainVisualAnalogueScale().present())
+    GetPainVisualAnalogueScale().Load(in.PainVisualAnalogueScale().get());
   if (in.LeftEyePupillaryResponse().present())
     GetLeftEyePupillaryResponse().Load(in.LeftEyePupillaryResponse().get());
   if (in.RightEyePupillaryResponse().present())
@@ -122,6 +128,8 @@ void SENervousSystem::Unload(CDM::NervousSystemData& data) const
     data.ChemoreceptorHeartRateScale(std::unique_ptr<CDM::ScalarData>(m_ChemoreceptorHeartRateScale->Unload()));
   if (m_ChemoreceptorHeartElastanceScale != nullptr)
     data.ChemoreceptorHeartElastanceScale(std::unique_ptr<CDM::ScalarData>(m_ChemoreceptorHeartElastanceScale->Unload()));
+  if (m_PainVisualAnalogueScale != nullptr)
+    data.PainVisualAnalogueScale(std::unique_ptr<CDM::ScalarData>(m_PainVisualAnalogueScale->Unload()));
   if (m_LeftEyePupillaryResponse != nullptr)
     data.LeftEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_LeftEyePupillaryResponse->Unload()));
   if (m_RightEyePupillaryResponse != nullptr)
@@ -229,6 +237,24 @@ double SENervousSystem::GetChemoreceptorHeartElastanceScale() const
     return SEScalar::dNaN();
   return m_ChemoreceptorHeartElastanceScale->GetValue();
 }
+
+bool SENervousSystem::HasPainVisualAnalogueScale() const
+{
+  return m_PainVisualAnalogueScale == nullptr ? false : m_PainVisualAnalogueScale->IsValid();
+}
+SEScalar& SENervousSystem::GetPainVisualAnalogueScale()
+{
+  if (m_PainVisualAnalogueScale == nullptr)
+    m_PainVisualAnalogueScale = new SEScalar();
+  return *m_PainVisualAnalogueScale;
+}
+double SENervousSystem::GetPainVisualAnalogueScale() const
+{
+  if (m_PainVisualAnalogueScale == nullptr)
+    return SEScalar::dNaN();
+  return m_PainVisualAnalogueScale->GetValue();
+}
+
 bool SENervousSystem::HasLeftEyePupillaryResponse() const
 {
   return (m_LeftEyePupillaryResponse != nullptr);

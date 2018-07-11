@@ -62,6 +62,10 @@ public:
   virtual const SEPupillaryResponse* GetLeftEyePupillaryResponse() const;
   virtual void RemoveLeftEyePupillaryResponse();
 
+  virtual bool HasPainVisualAnalogueScale() const;
+  virtual SEScalar& GetPainVisualAnalogueScale();
+  virtual double GetPainVisualAnalogueScale() const;
+
   virtual bool HasRightEyePupillaryResponse() const;
   virtual SEPupillaryResponse& GetRightEyePupillaryResponse();
   virtual const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
@@ -74,6 +78,7 @@ protected:
   SEScalar* m_BaroreceptorComplianceScale;
   SEPupillaryResponse* m_LeftEyePupillaryResponse;
   SEPupillaryResponse* m_RightEyePupillaryResponse;
+  SEScalar* m_PainVisualAnalogueScale;
   SEScalar* m_ChemoreceptorHeartRateScale;
   SEScalar* m_ChemoreceptorHeartElastanceScale;
 };

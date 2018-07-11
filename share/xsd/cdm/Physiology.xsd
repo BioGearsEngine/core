@@ -242,6 +242,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="RightEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->                                      
 					<xs:element name="ChemoreceptorHeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
 					<xs:element name="ChemoreceptorHeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
+                    <xs:element name="PainVisualAnalogueScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Computed visual analogue scale due to stimulus and patient susceptibility-->
                 </xs:sequence>  
             </xs:extension>
         </xs:complexContent>
