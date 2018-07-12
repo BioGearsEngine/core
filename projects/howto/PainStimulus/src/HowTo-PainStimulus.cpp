@@ -11,10 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include "HowTo-PainStimulus.h"
+#include "HowToTracker.h"
+
 #include <iostream>
 // Include the various types you will be using in your code
-#include<biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
@@ -28,23 +31,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/substance/SESubstanceCompound.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/substance/SESubstanceCompound.h>
-
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// Usage for applying a Hemorrhage insult to the patient and also demonstrate how injury code can be used to initiate a hemorrhage if desired
+///
 ///
 /// \details
-/// Refer to the SEHemorrhage class
-/// Refer to the SESubstanceManager class
-/// Refer to the SESubstanceIVFluids class for applying an IV to the patient
+///
 //--------------------------------------------------------------------------------------------------
 void HowToPainStimulus()
 {
