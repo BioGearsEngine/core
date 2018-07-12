@@ -33,6 +33,8 @@ if(NOT Log4cpp_FOUND)
   find_library(Log4cpp_LIBRARY_DEBUG NAMES
       log4cpp_d
       liblog4cpp_d
+      log4cppD
+      liblog4cppD
       log4cpp
       liblog4cpp
     PATH_SUFFIX  debug

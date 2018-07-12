@@ -28,14 +28,15 @@ function(add_howto name)
     ###############################################################################
     message(STATUS "Configuring ${EXAMPLE_NAME}")
     
-    add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.h"   "Headers\\Private\\")
-    add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.cpp" "Sources\\")
+    add_source_files(COMMON_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.h"   "Headers\\Private\\")
+    add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src/ "*.h"   "Headers\\Private\\")
+    add_source_files(COMMON_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.cpp" "Sources\\")
     add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src "*.cpp" "Sources\\")
+    add_source_files(COMMON_PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source/include "*.h"  "Headers\\Public\\")
     add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include "*.h"  "Headers\\Public\\")
-    add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include "*.hpp"  "Headers\\Public\\")
     
-    set(${EXAMPLE_NAME}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
-    set(${EXAMPLE_NAME}_SOURCES ${SRCS} ${GEN_SRCS})
+    set(${EXAMPLE_NAME}_HEADERS ${COMMON_HDRS} ${HDRS} ${COMMON_PUBLIC_HDRS} ${PUBLIC_HDRS} )
+    set(${EXAMPLE_NAME}_SOURCES ${COMMON_SRCS} ${SRCS} ) 
     
     ###############################################################################
     #Define Logic
