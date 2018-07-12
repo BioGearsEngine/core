@@ -654,21 +654,22 @@ void Nervous::ChemoreceptorNew()
   double arterialCO2Pressure_mmHg = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
 
   //Adjust some parameters as a function of blood gas state
-  if (arterialO2Pressure_mmHg < 90) {
-    if (arterialO2Pressure_mmHg >= 40) {
-      peripheralInteractionConstant -= 1.2 * (90.0-arterialO2Pressure_mmHg) / 40.7;
-    } else {
-      peripheralInteractionConstant = 1.4;
-    }
-  }
-  if (arterialCO2Pressure_mmHg < m_ArterialCarbonDioxideSetPoint_mmHg) {
+  //if (arterialO2Pressure_mmHg < 90) {
+  //  if (arterialO2Pressure_mmHg >= 40) {
+  //    peripheralInteractionConstant -= 1.2 * (90.0-arterialO2Pressure_mmHg) / 40.7;
+  //  } else {
+  //    peripheralInteractionConstant = 1.4;
+  //  }
+  //}
+  if (m_ArterialCO2Pressure_mmHg< m_ArterialCarbonDioxideSetPoint_mmHg) {
     centralGainConstant_L_Per_min_mmHg = 0.12;
+    peripheralInteractionConstant = 1.0;
   }
 
   //Evaluate intermediate function psi(PO2, PCO2)
-  double psi_numerator = firingRateMaximum_Hz + firingRateMinimum_Hz * exp((arterialO2Pressure_mmHg - oxygenHalfMax_mmHg) / oxygenSlopeParameter_mmHg);
-  double psi_denominator = 1.0 + exp((arterialO2Pressure_mmHg - oxygenHalfMax_mmHg) / oxygenSlopeParameter_mmHg);
-  double psi_multiplier = peripheralInteractionConstant * log(arterialCO2Pressure_mmHg / m_ArterialCarbonDioxideSetPoint_mmHg) + peripheralTuningParam;
+  double psi_numerator = firingRateMaximum_Hz + firingRateMinimum_Hz * exp((m_ArterialO2Pressure_mmHg - oxygenHalfMax_mmHg) / oxygenSlopeParameter_mmHg);
+  double psi_denominator = 1.0 + exp((m_ArterialO2Pressure_mmHg - oxygenHalfMax_mmHg) / oxygenSlopeParameter_mmHg);
+  double psi_multiplier = peripheralInteractionConstant * log(m_ArterialCO2Pressure_mmHg / m_ArterialCarbonDioxideSetPoint_mmHg) + peripheralTuningParam;
   double psi = (psi_numerator / psi_denominator) * psi_multiplier;
 
   //Change in firing rate

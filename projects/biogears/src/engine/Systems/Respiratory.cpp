@@ -242,7 +242,7 @@ bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
   m_InstantaneousFunctionalResidualCapacity_L = in.InstantaneousFunctionalResidualCapacity_L();
   m_MaxDriverPressure_cmH2O = in.MaxDriverPressure_cmH2O();
   m_PeakRespiratoryDrivePressure_cmH2O = in.PeakRespiratoryDrivePressure_cmH2O();
-  
+
   m_VentilationFrequency_Per_min = in.VentilationFrequency_Per_min();
   m_VentilationToTidalVolumeSlope = in.VentilationToTidalVolumeSlope();
   m_ArterialO2Average_mmHg.Load(in.ArterialOxygenAverage_mmHg());
@@ -296,7 +296,7 @@ void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
   data.InstantaneousFunctionalResidualCapacity_L(m_InstantaneousFunctionalResidualCapacity_L);
   data.MaxDriverPressure_cmH2O(m_MaxDriverPressure_cmH2O);
   data.PeakRespiratoryDrivePressure_cmH2O(m_PeakRespiratoryDrivePressure_cmH2O);
-  
+
   data.VentilationFrequency_Per_min(m_VentilationFrequency_Per_min);
   data.VentilationToTidalVolumeSlope(m_VentilationToTidalVolumeSlope);
   data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2Average_mmHg.Unload()));
@@ -426,6 +426,7 @@ void Respiratory::AtSteadyState()
   double inspiratoryCapacity_L = totalLungCapacity_L - m_InstantaneousFunctionalResidualCapacity_L;
   m_Patient->GetRespirationRateBaseline().SetValue(respirationRate_Per_min, FrequencyUnit::Per_min);
   m_Patient->GetTidalVolumeBaseline().SetValue(tidalVolume_L, VolumeUnit::L);
+  m_Patient->GetTargetVentilationBaseline().SetValue(tidalVolume_L * respirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
   m_Patient->GetFunctionalResidualCapacity().SetValue(m_InstantaneousFunctionalResidualCapacity_L, VolumeUnit::L);
   m_Patient->GetVitalCapacity().SetValue(vitalCapacity_L, VolumeUnit::L);
   m_Patient->GetExpiratoryReserveVolume().SetValue(expiratoryReserveVolume_L, VolumeUnit::L);
@@ -921,7 +922,7 @@ void Respiratory::RespiratoryDriver()
 
       //Get Target Alveolar Ventilation calculated by chemoreceptors in Nervous
       double dTargetAlveolarVentilation_L_Per_min = GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
-      
+
       //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
       //Calculate the target Tidal Volume based on the Alveolar Ventilation
       double dTargetPulmonaryVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min + GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min);

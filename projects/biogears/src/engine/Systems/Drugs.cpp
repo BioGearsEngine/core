@@ -376,16 +376,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
   double patientMass_kg = m_data.GetPatient().GetWeight(MassUnit::kg);
   double densityFluid_kg_Per_mL = 0.0;
 
-  //The maximum rate of IV fluid administration is not well defined.  Guidelines in cases of hypovolemic shock suggest that
-  //resuscitation should begin with 4.0 mL/kg bolus administered over 10-15 minutes.  Boluses of 1-2 L are referenced in extreme
-  //cases, but the time over which they are administered is not firm.  If we take a worse case bolus of 1.5 L delivered over
-  //15 minutes, we get a max suggested rate of 100 mL/min.  This causes O2 partial pressure in BioGears to drop somewhat, but
-  //does not change O2 saturation.  Physically, it is possible to exceed this rate up to the flow limitations imposed by the IV tubing
-  //(suggested to be 1000 mL/3.5 min ~= 285 mL/min from http://emedsa.org.au/EDHandbook/resuscitation/IVCannula.htm
-  //Thus we will allow a rate up to 285 mL/min but will issue a warning if provided rate exceeds recommended level (this is done
-  //in the SESubstanceCompoundInfusion file).  In case of septic shock, the recommended fluid administration changes and will need to be revisited.
-  ///\@cite malbrain2014fluid, @cite wise2017strategies
-  ///\ToDo:  We should consider a variable maxRate when septic shock is introduced to BioGears.   ///\@cite malbrain2014fluid, @cite wise2017strategies
+  ///\ToDo: Re. Sepsis - How does rate compare to that cited in literature?   ///\@cite malbrain2014fluid, @cite wise2017strategies
 
   std::vector<const SESubstanceCompound*> emptyBags;
 

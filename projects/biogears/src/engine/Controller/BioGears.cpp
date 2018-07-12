@@ -604,9 +604,6 @@ bool BioGears::SetupPatient()
     err = true;
   }
 
-  //Set target ventilation baseline to constant value
-  ///\ToDo:  Make target ventilation baseline a function of patient characteristics
-  m_Patient->GetTargetVentilationBaseline().SetValue(7.0, VolumePerTimeUnit::L_Per_min);
 
   //Right Lung Ratio ---------------------------------------------------------------
   double rightLungRatio;
@@ -702,6 +699,7 @@ bool BioGears::SetupPatient()
   }
 
   double tidalVolume_L = 37.0 * weight_kg / 1000.0 - functionalResidualCapacity_L;
+  m_Patient->GetTargetVentilationBaseline().SetValue(tidalVolume_L * respirationRate_bpm, VolumePerTimeUnit::L_Per_min);
   double vitalCapacity = totalLungCapacity_L - residualVolume_L;
   double expiratoryReserveVolume = functionalResidualCapacity_L - residualVolume_L;
   double inspiratoryReserveVolume = totalLungCapacity_L - functionalResidualCapacity_L - tidalVolume_L;

@@ -43,15 +43,6 @@ bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData&
 {
   SESubstanceAdministration::Load(in);
   GetRate().Load(in.Rate());
-  if (m_Rate->GetValue(VolumePerTimeUnit::mL_Per_min) > 285.0) {
-    std::string msg = "Infusion rate of " + std::to_string(m_Rate->GetValue(VolumePerTimeUnit::mL_Per_min)) + " mL/min is greater than the maximum allowable rate of 285.0 mL/min.  Setting to maximum rate of 285.0 mL/min";
-    m_Rate->SetValue(285.0, VolumePerTimeUnit::mL_Per_min);
-    SetComment(msg);
-  }
-  if (m_Rate->GetValue(VolumePerTimeUnit::mL_Per_min) > 100) {
-    std::string msg = "Infusion rate of " + std::to_string(m_Rate->GetValue(VolumePerTimeUnit::mL_Per_min)) + " mL/min is greater than the advised maximum of 100.0 mL/min.  Undesirable side effects issues may arise";
-    SetComment(msg);
-  }
   GetBagVolume().Load(in.BagVolume());
   return true;
 }
