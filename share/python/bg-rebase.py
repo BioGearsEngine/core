@@ -6,7 +6,7 @@
 @date:   2018-06-19
 @brief:  Archives scenario runs to create new rebases
 """
-import sys
+import sys, shutil
 import os
 import re
 import zipfile
@@ -97,9 +97,7 @@ def archive (root, path, recurse, clean):
     if( os.path.isfile(absolute_path) ):
         if ( re.match( valid_regex, extension) ):
             destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
-                if compress_and_store(absolute_path, destination):
-                  log = absolute-path.replace("Results.csv", "")
-                  shutil.copy(log,destination)
+            compress_and_store(absolute_path, destination)
             
     elif(os.path.isdir(absolute_path)):
         if(recurse):
@@ -136,8 +134,7 @@ def rebase (root, path, recurse, clean):
             destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
             results = basename+"Results.csv";
             if( os.path.exists(results)):
-                if compress_and_store(results, destination):
-                  shutil.copy(basename+".log",destination)
+                compress_and_store(results, destination)
             else:
                 err("Unable to locate {0}".format(results), LOG_LEVEL_0)
     elif(os.path.isdir(absolute_path)):
@@ -167,8 +164,8 @@ def compress_and_store(source,destination):
             log("removing {0}".format(archive),LOG_LEVEL_2)
             os.remove(archive)
         except OSError:
-            err("Unable to remove {0}".format(archive), LOG_LEVEL_0A
-    if ( os.path.exists(source) ):
+            err("Unable to remove {0}".format(archive), LOG_LEVEL_0A)
+    if os.path.exists(source):
         log("{0} -> {1}".format(source,archive),LOG_LEVEL_1)
 
         format = zipfile.ZIP_DEFLATED
@@ -181,6 +178,14 @@ def compress_and_store(source,destination):
         try:
             log( "Archiving {0} in {1}".format(source,archive), LOG_LEVEL_2)
             zip.write( source, source_name )
+
+            result_log_name = source_name.replace('Results.csv','.csv').replace('.csv','.log')
+            if( os.path.exists(result_log_name) ):
+              zip.write( os.path.join(source_dir,result_log_name) , result_log_name )
+            test_log_name = source_name.replace('.csv','Test.log')
+            if( os.path.exists(test_log_name) ):
+              zip.write( os.path.join(source_dir,test_log_name) , test_log_name )
+
         except ValueError:
             err("Unable to write to {0}".format(archive), LOG_LEVEL_0)
             rcode = False
