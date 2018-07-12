@@ -26,7 +26,7 @@ set(${ROOT_PROJECT_NAME}_VERSION_TAG  "-beta")
 ################################################################################
 project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
 
- list(APPEND CMAKE_MODULE_PATH  ${PROJECT_SOURCE_DIR}/cmake  ${PROJECT_SOURCE_DIR}/cmake/common )
+ list(APPEND CMAKE_MODULE_PATH   ${PROJECT_SOURCE_DIR}/cmake  ${PROJECT_SOURCE_DIR}/cmake/common )
  list(APPEND CMAKE_PREFIX_PATH   ${ARA_${ROOT_PROJECT_NAME}_EXTERNAL} )
  list(APPEND CMAKE_LIBRARY_PATH  ${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib )
  list(APPEND CMAKE_INCLUDE_PATH  ${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/include )

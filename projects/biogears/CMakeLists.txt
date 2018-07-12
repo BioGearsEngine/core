@@ -27,8 +27,12 @@ endif()
 find_package(Threads REQUIRED)
 
 #find_package(Boost 1.60.0 COMPONENTS system REQUIRED)
+find_package(Log4cpp CONFIG)
 verify_package(Log4cpp REQUIRED)
-find_package(Eigen3 REQUIRED HINTS ${Log4cpp_INCLUDE_DIR}../../share/eigen3/cmake/)
+
+find_package(Eigen3 CONFIG)
+verify_package(Eigen3 REQUIRED)
+
 verify_package(CodeSynthesis REQUIRED)
 
 ###############################################################################

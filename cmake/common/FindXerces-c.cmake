@@ -8,10 +8,10 @@
 if(NOT Xerces-c_FOUND)
 # Look for the header file.
 find_path(Xerces-c_INCLUDE_DIR 
-      NAMES dom/DOM.hpp
+      NAMES xercesc/dom/DOM.hpp
       PATH_SUFFIXES
        xercesc
-       include/xercesc
+       include
        DOC "Xerces Include Path"
 )
 # Look for the library (sorted from most current/relevant entry to least).

@@ -37,7 +37,8 @@ function(verify_package package)
   find_package(${package})
   if(NOT ${package}_FOUND)
       message(WARNING "The following packages ${package} were not found."
-        " If this continues you may need to set your CMAKE_FIND_ROOT_PATH to include any non standard system directories where your third party deps might be found"
+        "For native compilations setting CMAKE_PREFIX_PATH can solve this problem"
+		"For cross complilation try expanding your CMAKE_FIND_ROOT_PATH"
         "")
   endif()
   find_package(${package} ${ARGN})
