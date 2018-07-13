@@ -17,41 +17,8 @@ BioGears high-level objectives
 
 Building Source
 ======
-Dependancies 
--------------
-Biogears® engine relies on the following dependancies: 
+Refer to our github wiki for build requirments [here](https://github.com/BioGearsEngine/core/wiki)
 
-* Cmake 3.5 or greater (3.11 On Windows)
-* JDK 1.7 or greater
-
-Please make sure that all dependancies are installed and linked properly to your PATH before building. 
-
-Tested Platforms
-----------------
-The BioGears CI server test against the following platforms. Supported platforms are subject to change over time, but our goal is maintain support for x86_64 (windows,linux,osx) in addition to arm8_64 support for linux.
-
- - windows-vc15-md-x64
- - windows-vc14-md-x64
- - linux-gcc5.4-core2_64
- - linux-gcc5.4-arm8
- - macos-llvm-yosemite
-
-If you are trying to build BioGears on a non tested platform. You can contact us on our [forums](https://www.biogearsengine.com/forums/) for assistance.
-
-## Dependency list
-Biogears has a light dep list.  You will need a copy of cmake 3.11 or higher to generate the build files and 
-installed version of log4cpp xerces-c xsd-4.0 and eigen3.  For Eigen you mus thave a version of eigen which includes the modern Eigen3Config.cmake file witch exported target Eigen::eigen3. We currently suggest eigen 3.3.4
-
-|Library|Version|Date|Source|
-|-------|-------|----|------|
-|log4cpp| 1.1   |2017-07-13  |https://sourceforge.net/projects/log4cpp/|
-|xerces-c| 3.2.0   |2017-08-28  |https://xerces.apache.org/xerces-c/
-|xsd| 4.0   |2017-07-13  |https://www.codesynthesis.com/products/xsd/
-|eigen3|  3.3.4.   |2017-06-25  |  http://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz/
-|cmake | > 3.11     |2018-03-17  |  https://github.com/Kitware/CMake/releases 
-
-
-##Build Instructions
 
 Structure 
 ------------
