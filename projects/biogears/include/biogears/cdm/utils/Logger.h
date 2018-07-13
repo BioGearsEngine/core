@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <sstream>
 
 #pragma warning(push)
 #pragma warning(disable : 4512) // assignment operator could not be generated
