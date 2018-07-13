@@ -171,7 +171,7 @@ function(REGISTER_XSD_FILE file )
   cmake_parse_arguments( "_l" 
                           "STAGE"
                           "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER"
-                          "DEPENDS"
+			  "DEPENDS;OUTPUTS"
                           ${ARGN}
                           )
 
@@ -188,14 +188,13 @@ function(REGISTER_XSD_FILE file )
       OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd 
     )
     message(STATUS "Generating ${root_dir}/${component}${schema}{.hxx,.cxx}")
-    message(STATUS "COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS}")
     execute_process( 
                      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
                      COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
                      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd   
                      ERROR_VARIABLE XSD_ERROR
-                    )
+                   )
     if(XSD_ERROR )
       if (XSD_ERROR MATCHES "[Ee][Rr][Rr][Oo][Rr]")
       message(FATAL_ERROR "XSD Generation Failed? Check the value of CodeSynthesis_EXECUTABLE\n"
@@ -211,7 +210,7 @@ function(REGISTER_XSD_FILE file )
     endif(XSD_ERROR)
   endif()
 
-  add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx
+  add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx ${_l_OUTPUTS}
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
                       DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${file}
@@ -252,7 +251,7 @@ function(GENERATE_XSD_SCHEMA file)
     cmake_parse_arguments( "_l" 
                           "STAGE"
                           "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER"
-                          "DEPENDS"
+			  "DEPENDS;OUTPUTS"
                           ${ARGN})
 
   set(cfg_file ${_l_CONFIG} )
@@ -270,7 +269,6 @@ function(GENERATE_XSD_SCHEMA file)
     execute_process( 
                      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
-                     COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
                      ERROR_VARIABLE XSD_ERROR
                     )
     if(XSD_ERROR )
@@ -288,7 +286,7 @@ function(GENERATE_XSD_SCHEMA file)
     endif(XSD_ERROR)
   endif()
 
-  add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx
+  add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${_l_OUTPUTS}
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}
