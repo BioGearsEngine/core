@@ -28,6 +28,9 @@ if (ARA_${PREFIX}_BUILD_STATIC)
   add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
   add_definitions("-DARACORE_BUILT_AS_STATIC")
 endif()
+
+verify_package(Threads REQUIRED)
+verify_package(Log4cpp REQUIRED)
 ###############################################################################
 #Code Generation
 ###############################################################################

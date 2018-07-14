@@ -24,15 +24,9 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 if(WIN32)
   set(Boost_USE_STATIC_LIBS ON) 
 endif()
-find_package(Threads REQUIRED)
-
-#find_package(Boost 1.60.0 COMPONENTS system REQUIRED)
-find_package(Log4cpp CONFIG)
+verify_package(Threads REQUIRED)
 verify_package(Log4cpp REQUIRED)
-
-find_package(Eigen3 CONFIG)
 verify_package(Eigen3 REQUIRED)
-
 verify_package(CodeSynthesis REQUIRED)
 
 ###############################################################################

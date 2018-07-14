@@ -34,14 +34,26 @@ set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP  "Generated")
 #
 ####
 function(verify_package package)
-  find_package(${package})
+  cmake_parse_arguments("_l_" 
+    "REQUIRED" 
+    ""
+    ""
+     ${ARGN})
+  find_package(${package} CONFIG ${_l_UNPARSE_ARGUMENTS} )
   if(NOT ${package}_FOUND)
+    find_package(${package} ${_l_UNPARSE_ARGUMENTS} )
+    if(NOT ${package}_FOUND)
       message(WARNING "The following packages ${package} were not found."
         "For native compilations setting CMAKE_PREFIX_PATH can solve this problem"
-		"For cross complilation try expanding your CMAKE_FIND_ROOT_PATH"
+        "For cross complilation try expanding your CMAKE_FIND_ROOT_PATH"
         "")
+      if(_l_REQUIRED)
+        message(SEND_ERROR "Unable to find ${package} which is marked REQUIRED")
+      endif()
+    endif()
+    set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)
+    message(STATUS "set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)")
   endif()
-  find_package(${package} ${ARGN})
 endfunction(verify_package)
 ####
 #
