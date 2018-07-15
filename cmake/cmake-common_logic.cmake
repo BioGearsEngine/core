@@ -48,7 +48,7 @@ function(verify_package package)
         "For cross complilation try expanding your CMAKE_FIND_ROOT_PATH"
         "")
       if(_l_REQUIRED)
-        message(SEND_ERROR "Unable to find ${package} which is marked REQUIRED")
+        message(FATAL_ERROR "Unable to find ${package} which is marked REQUIRED")
       endif()
     endif()
     set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)

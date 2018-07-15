@@ -12,7 +12,6 @@
 #   Log4cpp_LIBRARIES      - List of libraries when using Log4cpp.
 #   Log4cpp_FOUND          - True if Log4cpp found.
 #   Log4cpp_VERSION_STRING - the version of Log4cpp found (since CMake 2.8.8)
-message(STATUS "Modular Log4cpp")
 if(NOT Log4cpp_FOUND)
   # Look for the header file.
   find_path(Log4cpp_INCLUDE_DIR 

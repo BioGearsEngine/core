@@ -25,7 +25,6 @@ if(WIN32)
   set(Boost_USE_STATIC_LIBS ON) 
 endif()
 verify_package(Threads REQUIRED)
-verify_package(Log4cpp REQUIRED)
 verify_package(Eigen3 REQUIRED)
 verify_package(CodeSynthesis REQUIRED)
 

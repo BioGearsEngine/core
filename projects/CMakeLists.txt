@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.8.0)
-
 enable_language(CXX)
 
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
@@ -60,7 +58,7 @@ endif()
 
 find_package(Java)
 find_package(JNI)
-
+verify_package(Log4cpp REQUIRED)
 option(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
 
 add_subdirectory(biogears)

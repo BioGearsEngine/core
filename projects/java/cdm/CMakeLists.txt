@@ -17,9 +17,6 @@ set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
 set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
-verify_package(Threads REQUIRED)
-verify_package(Log4cpp REQUIRED)
-
 message(STATUS "Configuring ${PROJECT_NAME}")
 ###############################################################################
 # Requirments
