@@ -51,9 +51,9 @@ function(verify_package package)
         message(FATAL_ERROR "Unable to find ${package} which is marked REQUIRED")
       endif()
     endif()
-    set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)
-    message(STATUS "set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)")
   endif()
+  set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)
+  message(STATUS "set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)")
 endfunction(verify_package)
 ####
 #
