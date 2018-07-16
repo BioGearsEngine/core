@@ -134,7 +134,7 @@ def plot(root_dir, source, skip_count):
         #Extract data calls (specified in xml)
         colNames = list(dataCSV)
         #Time = x-axis by default
-        xData = dataCSV['Time(s)'].values[::skip_count]
+        xData = dataCSV['Time(s)'].values[::int(skip_count)]
         
         baseFound=False
         #Grab the zip file with the baselines, if they exist
@@ -143,7 +143,7 @@ def plot(root_dir, source, skip_count):
             log("Trying to find baseline file: {}".format(baseline_source),LOG_LEVEL_3)
             baseCSV = pd.read_csv(os.path.normpath(baseline_source), sep=',',header=0)
             log("Found baseline file: {}".format(baseline_source),LOG_LEVEL_2)
-            xBase = baseCSV['Time(s)'].values[::skip_count]
+            xBase = baseCSV['Time(s)'].values[::int(skip_count)]
             baseFound=True
         except FileNotFoundError:
             err("Error: Could not find baseline file: {}".format(baseline_source),LOG_LEVEL_0)
@@ -155,7 +155,7 @@ def plot(root_dir, source, skip_count):
             
             #Get all of the values we need
             
-            yData = dataCSV[col].values[::skip_count]
+            yData = dataCSV[col].values[::int(skip_count)]
             log("{0},{1}".format(skip_count, yData), LOG_LEVEL_3)
             if( not yData.size ):
                 log("Error: Column is empty did you provide a non resonable skip_count?", LOG_LEVEL_0)
