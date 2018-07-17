@@ -1,7 +1,6 @@
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 						
-						This is a test change
 
    TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
