@@ -44,9 +44,11 @@ if( NOT UNIX )
 endif()
 
 set(CONFIG_SUFFIX ${CMAKE_${CONFIG}_POSTFIX})
-set(THIRD_PARTY ${cmake-common_THIRD_PARTY})
-set(THIRD_PARTY_LIB ${cmake-common_THIRD_PARTY_LIB})
-set(THIRD_PARTY_BIN ${cmake-common_THIRD_PARTY_BIN})
+foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
+    list(APPEND THIRD_PARTY  ${_dir})
+    list(APPEND THIRD_PARTY_LIB ${_dir}/lib)
+    list(APPEND THIRD_PARTY_BIN ${_dir}/bin)
+endforeach()
 
 CHILDLIST(projects ${PROJECT_SOURCE_DIR}/projects )
 

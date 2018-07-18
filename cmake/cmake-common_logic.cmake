@@ -39,9 +39,9 @@ function(verify_package package)
     ""
     ""
      ${ARGN})
-  find_package(${package} CONFIG ${_l_UNPARSE_ARGUMENTS} )
+  find_package(${package} CONFIG ${_l_UNPARSE_ARGUMENTS} QUIET)
   if(NOT ${package}_FOUND)
-    find_package(${package} ${_l_UNPARSE_ARGUMENTS} )
+    find_package(${package} ${_l_UNPARSE_ARGUMENTS} QUIET)
     if(NOT ${package}_FOUND)
       message(WARNING "The following packages ${package} were not found."
         "For native compilations setting CMAKE_PREFIX_PATH can solve this problem"
@@ -53,7 +53,6 @@ function(verify_package package)
     endif()
   endif()
   set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)
-  message(STATUS "set(${package}_FOUND ${${package}_FOUND} PARENT_SCOPE)")
 endfunction(verify_package)
 ####
 #
@@ -151,11 +150,10 @@ function(create_cache_file)
   set(CacheForScript ${CMAKE_BINARY_DIR}/cmake-common_cache.cmake)
   set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
   file(WRITE ${CacheForScript} "")
+  file(APPEND ${CacheForScript} "set(ROOT_PROJECT_NAME ${ROOT_PROJECT_NAME})\n")
   file(APPEND ${CacheForScript} "set(PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})\n")
   file(APPEND ${CacheForScript} "set(CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR})\n")
-  file(APPEND ${CacheForScript} "set(${PROJECT_NAME}_THIRD_PARTY ${ARA_${PROJECT_NAME}_EXTERNAL})\n")
-  file(APPEND ${CacheForScript} "set(${PROJECT_NAME}_THIRD_PARTY_BIN ${ARA_${PROJECT_NAME}_EXTERNAL}/bin)\n")
-  file(APPEND ${CacheForScript} "set(${PROJECT_NAME}_THIRD_PARTY_LIB ${ARA_${PROJECT_NAME}_EXTERNAL}/lib)\n")
+  file(APPEND ${CacheForScript} "set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH})\n")
   file(APPEND ${CacheForScript} "set(CMAKE_EXECUTABLE_SUFFIX ${CMAKE_EXECUTABLE_SUFFIX})\n")
   file(APPEND ${CacheForScript} "set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/lib)\n")
   file(APPEND ${CacheForScript} "set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/lib)\n")

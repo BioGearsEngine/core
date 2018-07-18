@@ -334,8 +334,6 @@ find_path(CodeSynthesis_INCLUDE_DIR
             include/xsd/
             include/
 )
-
-  message(STATUS "Looking for bin/xsd in ${CodeSynthesis_INCLUDE_DIR}/..")
   find_program(CodeSynthesis_EXECUTABLE
             NAMES "xsd"
             ENV XSD_ROOTDIR 
