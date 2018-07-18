@@ -20,6 +20,7 @@ SEExercise::SEExercise()
   : SEPatientAction()
 {
   m_Intensity = nullptr;
+  m_DesiredWorkRate = nullptr;
 }
 
 SEExercise::~SEExercise()
@@ -31,24 +32,38 @@ void SEExercise::Clear()
 {
   SEPatientAction::Clear();
   SAFE_DELETE(m_Intensity);
+  SAFE_DELETE(m_DesiredWorkRate)
 }
 
 bool SEExercise::IsValid() const
 {
-  return SEPatientAction::IsValid() && HasIntensity();
+  return SEPatientAction::(IsValid() && HasIntensity()) || (IsValid() && HasDesiredWorkRate());
 }
 
 bool SEExercise::IsActive() const
 {
-  if (HasIntensity())
+  if (HasIntensity()) {
     return m_Intensity->IsPositive();
-  return false;
+  } else if (HasDesiredWorkRate()) {
+    return m_DesiredWorkRate->IsPositive();
+  } else {
+      return false;
+  }
 }
 
 bool SEExercise::Load(const CDM::ExerciseData& in)
 {
   SEPatientAction::Load(in);
-  GetIntensity().Load(in.Intensity());
+  if (HasIntensity()) {
+    GetIntensity().Load(in.Intensity());
+  } else {
+    GetIntensity().Invalidate();  
+  }
+  if (HasDesiredWorkRate()) {
+    GetDesiredWorkRate().Load(in.DesiredWorkRate());
+  } else {
+    GetDesiredWorkRate().Invalidate();
+  }
   return true;
 }
 
@@ -62,8 +77,12 @@ CDM::ExerciseData* SEExercise::Unload() const
 void SEExercise::Unload(CDM::ExerciseData& data) const
 {
   SEPatientAction::Unload(data);
-  if (m_Intensity != nullptr)
+  if (m_Intensity != nullptr) {
     data.Intensity(std::unique_ptr<CDM::Scalar0To1Data>(m_Intensity->Unload()));
+  }
+  if (m_DesiredWorkRate != nullptr) {
+    data.DesiredWorkRate(std::unique_ptr<CDM::ScalarData>(m_DesiredWorkRate->Unload()));
+  }
 }
 
 bool SEExercise::HasIntensity() const
@@ -75,6 +94,17 @@ SEScalar0To1& SEExercise::GetIntensity()
   if (m_Intensity == nullptr)
     m_Intensity = new SEScalar0To1();
   return *m_Intensity;
+}
+
+bool SEExercise::HasDesiredWorkRate() const
+{
+  return m_DesiredWorkRate == nullptr ? false : m_DesiredWorkRate->IsValid();
+}
+SEScalar& SEExercise::GetDesiredWorkRate()
+{
+  if (m_DesiredWorkRate == nullptr)
+    m_DesiredWorkRate = new SEScalar();
+  return *m_DesiredWorkRate;
 }
 
 void SEExercise::ToString(std::ostream& str) const

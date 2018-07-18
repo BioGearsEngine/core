@@ -219,6 +219,8 @@ void Energy::Exercise()
   if (m_PatientActions->HasExercise()) {
     if (m_PatientActions->GetExercise()->HasIntensity()) {
       exerciseIntensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
+    } else if ((m_PatientActions->GetExercise()->HasDesiredWorkRate())) {
+      exerciseIntensity = (m_PatientActions->GetExercise()->GetDesiredWorkRate().GetValue()) / maxWorkRate_W;
     } else {
       Warning("Exercise call with no severity. Action ignored.");
     }
