@@ -751,9 +751,9 @@ void BloodChemistry::Sepsis()
 
   //Bilirubin counts (measure of liver perfusion)
   double baselineBilirubin_mg_Per_dL = 0.70;
-  double maxBilirubin_mg_Per_dL = 20.0; //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
-  double halfMaxWBC = 0.75 * wbcFractionMax; //White blood cell fraction that causes half-max bilirubin concentration.  Set above 0.5 because bilirubin is a later sign of shock
-  double shapeParam = 2.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
-  double totalBilirubin_mg_Per_dL = maxBilirubin_mg_Per_dL * pow(sigmoidInput, shapeParam) / (pow(sigmoidInput, shapeParam) + pow(halfMaxWBC, shapeParam)) + baselineBilirubin_mg_Per_dL;
+  double maxBilirubin_mg_Per_dL = 26.0; //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
+  double halfMaxWBC = wbcFractionMax; //White blood cell fraction that causes half-max bilirubin concentration.  Set above 0.5 because bilirubin is a later sign of shock
+  double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
+  double totalBilirubin_mg_Per_dL =GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput)  + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
 }

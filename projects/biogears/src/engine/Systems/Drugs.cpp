@@ -409,9 +409,9 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
       subQ->Balance(BalanceLiquidBy::Mass);
     }
-    if ((compound->GetName().compare("Antibiotic") == 0) && m_data.GetActions().GetPatientActions().HasSepsis()) {
+    if ((compound->GetName().compare("Antibiotic") == 0)) {
       //Our antibiotic currently is Piperacillin/Tazobactam and is specifically included for managing Sepsis
-      //Thus we are not going to allow administration to happen unless Sepsis is active
+      //Thus administering it in isolation will not have any pharmacodynamic effects
       //Working on the assumption that drug is in concentration of 4.5 g per 150 mL, as indicated by FDA data
       GetAntibioticMassInBody().IncrementValue(volumeToAdminister_mL * (4.5 / 150.0), MassUnit::g);
     }
@@ -780,7 +780,7 @@ void Drugs::CalculateSubstanceClearance()
   //Clear out antibiotic using plasma half-life reported by FDA (only applies to Sepsis scenarios)
   if (GetAntibioticMassInBody(MassUnit::g) >= ZERO_APPROX) {
     //Assuming that this rate doesn't change even though blood volume is going bonkers during sepsis
-    double rateConstant_Per_s = (1.0 / 0.7) * log(2.0) / 3600.0; //From FDA data, 1/2 life about 0.7 hrs, convert to /s basis
+    double rateConstant_Per_s = log(2.0) / 3600.0; //From FDA data, 1/2 life about 0.7-1 hr hrs (choose 1 so we don't get to 0 between doses), convert to /s basis
     double antibioticMassCleared_g = rateConstant_Per_s * GetAntibioticMassInBody(MassUnit::g) * m_dt_s;
     GetAntibioticMassInBody().IncrementValue(-antibioticMassCleared_g, MassUnit::g);
   }
