@@ -343,6 +343,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="RespirationRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The frequency of the respiratory cycle.-->	
                     <xs:element name="SpecificVentilation" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The ratio of the volume of gas entering a region of the lung following an inspiration and the end-expiratory volume of that same lung region.-->
                     <xs:element name="TidalVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of air moved into or out of the lungs during normal respiration.-->
+					<xs:element name="TargetAlveolarVentilation" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief The target ventilation determined by the chemoreceptor method in the Nervous system, used by Respiratory to drive Respiration-->
                     <xs:element name="TotalAlveolarVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The air flow to the alveoli.-->
                     <xs:element name="TotalDeadSpaceVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The air flow to the dead space.-->
                     <xs:element name="TotalLungVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total volume of air within the lungs at any given time.-->
