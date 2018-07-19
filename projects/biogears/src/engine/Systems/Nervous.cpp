@@ -190,6 +190,7 @@ void Nervous::AtSteadyState()
 //--------------------------------------------------------------------------------------------------
 void Nervous::PreProcess()
 {
+  bool testChemoreceptor = true;
   BaroreceptorFeedback();
   CheckPainStimulus();
   if (testChemoreceptor) {
