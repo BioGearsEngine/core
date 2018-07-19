@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/EnvironmentalConditionsData.hxx>
 
-#include <biogears/cdm/properties/SEScalarNeg1to1.h>
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
