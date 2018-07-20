@@ -42,11 +42,7 @@ void SEExercise::Clear()
 
 bool SEExercise::IsValid() const
 {
-  if (HasIntensity()) {
-    return SEPatientAction::IsValid() && HasDesiredWorkRate();
-  } else {
-    return SEPatientAction::IsValid() && HasIntensity();
-  }
+    return SEPatientAction::IsValid() && (HasDesiredWorkRate() || HasIntensity());
 }
 
 bool SEExercise::IsActive() const

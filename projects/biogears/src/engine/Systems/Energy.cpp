@@ -209,6 +209,7 @@ void Energy::Exercise()
   //return;
 
   double exerciseIntensity = 0.0;
+  double DesiredWorkRate = 0.0;
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   //double maxWorkRate_W = 1200.0;
@@ -220,7 +221,8 @@ void Energy::Exercise()
     if (m_PatientActions->GetExercise()->HasIntensity()) {
       exerciseIntensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
     } else if ((m_PatientActions->GetExercise()->HasDesiredWorkRate())) {
-      exerciseIntensity = (m_PatientActions->GetExercise()->GetDesiredWorkRate().GetValue()) / maxWorkRate_W;
+      DesiredWorkRate = m_PatientActions->GetExercise()->GetDesiredWorkRate().GetValue();
+      exerciseIntensity = DesiredWorkRate / maxWorkRate_W;
     } else {
       Warning("Exercise call with no severity. Action ignored.");
     }
