@@ -12,15 +12,20 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ExerciseData.hxx>
 #include <biogears/schema/Scalar0To1Data.hxx>
+#include <biogears/schema/ScalarData.hxx>
+
 
 SEExercise::SEExercise()
   : SEPatientAction()
 {
   m_Intensity = nullptr;
   m_DesiredWorkRate = nullptr;
+  // m_Intensity = -1;
+  // m_DesiredWorkRate = -1;
 }
 
 SEExercise::~SEExercise()
@@ -37,7 +42,11 @@ void SEExercise::Clear()
 
 bool SEExercise::IsValid() const
 {
-  return SEPatientAction::(IsValid() && HasIntensity()) || (IsValid() && HasDesiredWorkRate());
+  if (HasIntensity()) {
+    return SEPatientAction::IsValid() && HasDesiredWorkRate();
+  } else {
+    return SEPatientAction::IsValid() && HasIntensity();
+  }
 }
 
 bool SEExercise::IsActive() const
@@ -54,16 +63,10 @@ bool SEExercise::IsActive() const
 bool SEExercise::Load(const CDM::ExerciseData& in)
 {
   SEPatientAction::Load(in);
-  if (HasIntensity()) {
-    GetIntensity().Load(in.Intensity());
-  } else {
-    GetIntensity().Invalidate();  
-  }
-  if (HasDesiredWorkRate()) {
-    GetDesiredWorkRate().Load(in.DesiredWorkRate());
-  } else {
-    GetDesiredWorkRate().Invalidate();
-  }
+  if (in.Intensity().present())
+    GetIntensity().Load(in.Intensity().get());
+  else if (in.DesiredWorkRate().present()) 
+    GetDesiredWorkRate().Load(in.DesiredWorkRate().get());
   return true;
 }
 

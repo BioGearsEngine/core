@@ -240,9 +240,9 @@ specific language governing permissions and limitations under the License.
 	<xs:complexType name="ExerciseData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
-				<xs:choice>
+				<xs:choice minOccurs = "1" maxOccurs="1" >
 					<xs:element name="Intensity" type="Scalar0To1Data"/><!--<< @brief Fractional representation of the maximum patient exertion -->
-					<xs:element name="DesiredWorkRate" type="ScalarFractionData"/><!--<< @brief Fractional representation of the maximum patient exertion -->
+					<xs:element name="DesiredWorkRate" type="ScalarData"/><!--<< @brief Fractional representation of the maximum patient exertion -->
 				</xs:choice>               
 			</xs:extension>
 		</xs:complexContent>
