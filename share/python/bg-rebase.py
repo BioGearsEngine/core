@@ -180,11 +180,18 @@ def compress_and_store(source,destination):
             zip.write( source, source_name )
 
             result_log_name = source_name.replace('Results.csv','.csv').replace('.csv','.log')
-            if( os.path.exists(result_log_name) ):
-              zip.write( os.path.join(source_dir,result_log_name) , result_log_name )
-            test_log_name = source_name.replace('.csv','Test.log')
-            if( os.path.exists(test_log_name) ):
-              zip.write( os.path.join(source_dir,test_log_name) , test_log_name )
+            result_log_path = os.path.join(source_dir,result_log_name)
+            if( os.path.exists( result_log_path) ):
+              zip.write( result_log_path, result_log_name )
+            else:
+              log("No file {} found".format(result_log_path),LOG_LEVEL_2)
+            
+              test_log_name = source_name.replace('.csv','Test.log')
+              test_log_path = os.path.join(source_dir,test_log_name)
+              if( os.path.exists(test_log_path) ): 
+                zip.write( test_log_path, test_log_name )
+              else:
+                log("No file {} found".format(test_log_path),LOG_LEVEL_2)
 
         except ValueError:
             err("Unable to write to {0}".format(archive), LOG_LEVEL_0)
