@@ -162,7 +162,7 @@ void Respiratory::Initialize()
   m_VentilationFrequency_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
   m_DriverPressureMin_cmH2O = m_DefaultDrivePressure_cmH2O;
-  m_VentilationToTidalVolumeSlope = 30.0;
+  m_VentilationToTidalVolumeSlope = 28.0; //Was 30, changing to line up with new chemoreceptor method
   //The peak driver pressure is the pressure above the default pressure
   m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(m_Patient->GetTotalLungCapacity(VolumeUnit::L) - m_Patient->GetInspiratoryReserveVolume(VolumeUnit::L)) - m_DefaultDrivePressure_cmH2O;
   m_ArterialO2PartialPressure_mmHg = m_AortaO2->GetPartialPressure(PressureUnit::mmHg);
@@ -426,7 +426,6 @@ void Respiratory::AtSteadyState()
   double inspiratoryCapacity_L = totalLungCapacity_L - m_InstantaneousFunctionalResidualCapacity_L;
   m_Patient->GetRespirationRateBaseline().SetValue(respirationRate_Per_min, FrequencyUnit::Per_min);
   m_Patient->GetTidalVolumeBaseline().SetValue(tidalVolume_L, VolumeUnit::L);
-  m_Patient->GetTargetVentilationBaseline().SetValue(tidalVolume_L * respirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
   m_Patient->GetFunctionalResidualCapacity().SetValue(m_InstantaneousFunctionalResidualCapacity_L, VolumeUnit::L);
   m_Patient->GetVitalCapacity().SetValue(vitalCapacity_L, VolumeUnit::L);
   m_Patient->GetExpiratoryReserveVolume().SetValue(expiratoryReserveVolume_L, VolumeUnit::L);
@@ -822,6 +821,9 @@ void Respiratory::MechanicalVentilation()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::RespiratoryDriver()
 {
+  double tvTrack = 0.0;
+  double targetVent = 0.0;
+  double totalVolume = 0.0;
 
   m_BreathingCycleTime_s += m_dt_s;
   ///\ToDo:  Running averages were mostly used for chemoreceptors that have been moved to Nervous.
@@ -877,7 +879,6 @@ void Respiratory::RespiratoryDriver()
     if (m_BreathingCycleTime_s > TotalBreathingCycleTime_s) //End of the cycle or currently not breathing
     {
       UpdateIERatio();
-
       // Make a cardicArrestEffect that is 1.0 unless cardiac arrest is true
       double cardiacArrestEffect = 1.0;
       // If the cv system parameter is true, then make the cardicArrestEffect = 0
@@ -921,12 +922,15 @@ void Respiratory::RespiratoryDriver()
       }
 
       //Get Target Alveolar Ventilation calculated by chemoreceptors in Nervous
-      double dTargetAlveolarVentilation_L_Per_min = GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
+      // double dTargetAlveolarVentilation_L_Per_min = GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
 
       //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
       //Calculate the target Tidal Volume based on the Alveolar Ventilation
-      double dTargetPulmonaryVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min + GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min);
 
+      //New chemoreceptor method estimates total pulmonary ventilation, not just alveolar
+      //double dTargetPulmonaryVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min + GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min);
+      double dTargetPulmonaryVentilation_L_Per_min = GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
+      targetVent = dTargetPulmonaryVentilation_L_Per_min;
       double dMaximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);
       /// \event Patient: Maximum Pulmonary Ventilation Rate : Pulmonary ventilation exceeds maximum value
       if (dTargetPulmonaryVentilation_L_Per_min > dMaximumPulmonaryVentilationRate) {
@@ -952,8 +956,11 @@ void Respiratory::RespiratoryDriver()
       double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
       dTargetTidalVolume_L = std::min(dTargetTidalVolume_L, dHalfVitalCapacity_L);
 
+      tvTrack = dTargetTidalVolume_L;
+
       //Map the Target Tidal Volume to the Driver
       double TargetVolume_L = m_InitialFunctionalResidualCapacity_L + dTargetTidalVolume_L;
+      totalVolume = TargetVolume_L;
       m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(TargetVolume_L);
       //There's a maximum force the driver can try to achieve
       m_PeakRespiratoryDrivePressure_cmH2O = std::max(m_PeakRespiratoryDrivePressure_cmH2O, m_MaxDriverPressure_cmH2O);
@@ -1031,6 +1038,11 @@ void Respiratory::RespiratoryDriver()
 
   //Push Driving Data to the Circuit -------------------------------------------------------------------------------
   m_DriverPressurePath->GetNextPressureSource().SetValue(m_DriverPressure_cmH2O, PressureUnit::cmH2O);
+  m_data.GetDataTrack().Probe("debug_TargetTV", tvTrack);
+  m_data.GetDataTrack().Probe("debug_TargetVent", targetVent);
+  m_data.GetDataTrack().Probe("debug_DriverPressure", m_DriverPressure_cmH2O);
+  m_data.GetDataTrack().Probe("debug_TotalLungVolume", totalVolume);
+
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -1593,6 +1605,11 @@ void Respiratory::Apnea()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::CalculateVitalSigns()
 {
+  //Debug
+  m_data.GetDataTrack().Probe("debug_VentilationSlope", m_VentilationToTidalVolumeSlope);
+  m_data.GetDataTrack().Probe("debug_VentilationFrequency", m_VentilationFrequency_Per_min);
+  m_data.GetDataTrack().Probe("debug_Pmax", m_PeakRespiratoryDrivePressure_cmH2O);
+
   std::stringstream ss;
   //Total Respiratory Volume - this should not include the Pleural Space
   GetTotalLungVolume().Set(m_Lungs->GetVolume());

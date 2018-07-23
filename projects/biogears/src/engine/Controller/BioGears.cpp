@@ -699,7 +699,8 @@ bool BioGears::SetupPatient()
   }
 
   double tidalVolume_L = 37.0 * weight_kg / 1000.0 - functionalResidualCapacity_L;
-  m_Patient->GetTargetVentilationBaseline().SetValue(tidalVolume_L * respirationRate_bpm, VolumePerTimeUnit::L_Per_min);
+ // m_Patient->GetTargetVentilationBaseline().SetValue(tidalVolume_L * respirationRate_bpm, VolumePerTimeUnit::L_Per_min);
+  m_Patient->GetTargetVentilationBaseline().SetValue(10.75, VolumePerTimeUnit::L_Per_min);
   double vitalCapacity = totalLungCapacity_L - residualVolume_L;
   double expiratoryReserveVolume = functionalResidualCapacity_L - residualVolume_L;
   double inspiratoryReserveVolume = totalLungCapacity_L - functionalResidualCapacity_L - tidalVolume_L;
@@ -870,6 +871,7 @@ void BioGears::AtSteadyState(EngineState state)
 {
   m_State = state;
   m_Environment->AtSteadyState();
+  m_NervousSystem->AtSteadyState();
   m_CardiovascularSystem->AtSteadyState();
   m_Inhaler->AtSteadyState();
   m_RespiratorySystem->AtSteadyState();
@@ -877,7 +879,7 @@ void BioGears::AtSteadyState(EngineState state)
   m_GastrointestinalSystem->AtSteadyState();
   m_HepaticSystem->AtSteadyState();
   m_RenalSystem->AtSteadyState();
-  m_NervousSystem->AtSteadyState();
+ // m_NervousSystem->AtSteadyState();
   m_EnergySystem->AtSteadyState();
   m_EndocrineSystem->AtSteadyState();
   m_DrugSystem->AtSteadyState();
@@ -889,6 +891,7 @@ void BioGears::AtSteadyState(EngineState state)
 void BioGears::PreProcess()
 {
   m_Environment->PreProcess();
+  m_NervousSystem->PreProcess();
   m_CardiovascularSystem->PreProcess();
   m_Inhaler->PreProcess();
   m_RespiratorySystem->PreProcess();
@@ -896,7 +899,7 @@ void BioGears::PreProcess()
   m_GastrointestinalSystem->PreProcess();
   m_HepaticSystem->PreProcess();
   m_RenalSystem->PreProcess();
-  m_NervousSystem->PreProcess();
+  //m_NervousSystem->PreProcess();
   m_EnergySystem->PreProcess();
   m_EndocrineSystem->PreProcess();
   m_DrugSystem->PreProcess();
@@ -907,6 +910,7 @@ void BioGears::PreProcess()
 void BioGears::Process()
 {
   m_Environment->Process();
+  m_NervousSystem->Process();
   m_CardiovascularSystem->Process();
   m_Inhaler->Process();
   m_RespiratorySystem->Process();
@@ -914,7 +918,7 @@ void BioGears::Process()
   m_GastrointestinalSystem->Process();
   m_HepaticSystem->Process();
   m_RenalSystem->Process();
-  m_NervousSystem->Process();
+ // m_NervousSystem->Process();
   m_EnergySystem->Process();
   m_EndocrineSystem->Process();
   m_DrugSystem->Process();
@@ -925,6 +929,7 @@ void BioGears::Process()
 void BioGears::PostProcess()
 {
   m_Environment->PostProcess();
+  m_NervousSystem->PostProcess();
   m_CardiovascularSystem->PostProcess();
   m_Inhaler->PostProcess();
   m_RespiratorySystem->PostProcess();
@@ -932,7 +937,7 @@ void BioGears::PostProcess()
   m_GastrointestinalSystem->PostProcess();
   m_HepaticSystem->PostProcess();
   m_RenalSystem->PostProcess();
-  m_NervousSystem->PostProcess();
+ // m_NervousSystem->PostProcess();
   m_EnergySystem->PostProcess();
   m_EndocrineSystem->PostProcess();
   m_DrugSystem->PostProcess();

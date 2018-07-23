@@ -76,6 +76,8 @@ protected:
   double m_CentralVentilationChange_L_Per_min;
   RunningAverage m_ChemoreceptorAverageRate_Hz;
   double m_ChemoreceptorFiringRate_Hz;
+  double m_DynamicChemoreceptorResponse_Hz;
+  double m_LastArterialCarbonDioxidePressure_mmHg;
   double m_PeripheralVentilationChange_L_Per_min;
   double m_PreviousTargetAlveolarVentilation_L_Per_min;
 
