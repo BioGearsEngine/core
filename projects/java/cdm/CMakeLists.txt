@@ -29,9 +29,10 @@ message(STATUS "Configuring ${PROJECT_NAME}")
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-configure_file(src/mil/tatrc/physiology/utilities/Resources.java.in src/Resources.java.in )
-file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/Resources.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/src/Resources.java.in)
-file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/testing/TestDriver.java INPUT src/mil/tatrc/physiology/utilities/testing/TestDriver.java.in )
+configure_file(src/mil/tatrc/physiology/utilities/Resources.java.in conf/Resources.java.in )
+configure_file(src/mil/tatrc/physiology/utilities/testing/TestDriver.java.in conf/TestDriver.java.in )
+file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/Resources.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/Resources.java.in)
+file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/testing/TestDriver.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/TestDriver.java.in )
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.java"   "Sources\\")
 add_source_files(SRCS ${CMAKE_CURRENT_BINARY_DIR}/src "*.java"   "Sources\\")
 
