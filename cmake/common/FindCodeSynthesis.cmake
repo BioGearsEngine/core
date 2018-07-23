@@ -330,7 +330,8 @@ find_path(CodeSynthesis_INCLUDE_DIR
       NAMES xsd/cxx/version.hxx
       ENV XSD_ROOTDIR 
       PATH_SUFFIXES 
-            xsd
+            libxsd/
+            xsd/
             include/xsd/
             include/
 )
