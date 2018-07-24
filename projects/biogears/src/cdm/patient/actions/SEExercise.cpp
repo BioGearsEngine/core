@@ -111,7 +111,13 @@ void SEExercise::ToString(std::ostream& str) const
   str << "Patient Action : Exercise";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
-  str << "\n\tIntensity: ";
-  HasIntensity() ? str << *m_Intensity : str << "NaN";
-  str << std::flush;
+  if (HasIntensity()) {
+    str << "\n\tIntensity: ";
+    HasIntensity() ? str << *m_Intensity : str << "NaN";
+  } else if (HasDesiredWorkRate()) {
+    str << "\n\tDesired Work Rate: ";
+    HasDesiredWorkRate() ? str << *m_DesiredWorkRate : str << "NaN";
+  } else {
+    str << "No input for intensity or desired work rate";
+  }
 }
