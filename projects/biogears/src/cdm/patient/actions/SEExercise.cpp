@@ -120,4 +120,5 @@ void SEExercise::ToString(std::ostream& str) const
   } else {
     str << "No input for intensity or desired work rate";
   }
+  str << std::flush;
 }
