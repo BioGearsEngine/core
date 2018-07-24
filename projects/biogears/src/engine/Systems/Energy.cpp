@@ -225,6 +225,7 @@ void Energy::Exercise()
       exerciseIntensity = DesiredWorkRate / maxWorkRate_W;
       if (exerciseIntensity > 1) {
         exerciseIntensity = 1;
+        Warning("Desired work rate over max work rate. Proceeding with max work rate.");
       }
       m_PatientActions->GetExercise()->GetIntensity().SetValue(exerciseIntensity);
     } else {
