@@ -18,6 +18,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/stdafx.h>
 #include <biogears/schema/RunningAverageData.hxx>
 
+#include <biogears/schema/EnvironmentalConditionsData.hxx>
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
@@ -39,6 +41,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarHeatConductance.h>
 #include <biogears/cdm/properties/SEScalarHeatResistance.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
@@ -432,6 +435,8 @@ void Energy::CalculateSweatRate()
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
   double coreTemperatureHigh_degC = config.GetCoreTemperatureHigh(TemperatureUnit::C);
   double sweatHeatTranferCoefficient_W_Per_K = config.GetSweatHeatTransfer(HeatConductanceUnit::W_Per_K);
+  // double effectiveClothingEvaporation_im_Per_clo = (GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)) ^ 0.29;
+  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * ((10 ^ (8.1076 - (1750.286 / (235 + (m_skinNode->GetTemperature()))))) - (GetConditions().GetAtmosphericPressure(PressureUnit::Pa))); //Still needs effective clothing evaporation
   double vaporizationEnergy_J_Per_kg = config.GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
   double sweatSodiumConcentration_mM = 51.0; /// \cite shirreffs1997whole
   double sweatPotassiumConcentration_mM = 6.0; /// \cite shirreffs1997whole
