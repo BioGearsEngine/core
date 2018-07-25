@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
+#include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/NervousSystemData.hxx>
@@ -57,6 +58,14 @@ public:
   virtual SEScalar& GetChemoreceptorHeartElastanceScale();
   virtual double GetChemoreceptorHeartElastanceScale() const;
 
+  virtual bool HasChemoreceptorRespirationDrivePressure() const;
+  virtual SEScalarPressure& GetChemoreceptorRespirationDrivePressure();
+  virtual double GetChemoreceptorRespirationDrivePressure(const PressureUnit& unit);
+
+  virtual bool HasChemoreceptorRespirationFrequency() const;
+  virtual SEScalarFrequency& GetChemoreceptorRespirationFrequency();
+  virtual double GetChemoreceptorRespirationFrequency(const FrequencyUnit& unit);
+
   virtual bool HasLeftEyePupillaryResponse() const;
   virtual SEPupillaryResponse& GetLeftEyePupillaryResponse();
   virtual const SEPupillaryResponse* GetLeftEyePupillaryResponse() const;
@@ -81,4 +90,6 @@ protected:
   SEScalar* m_PainVisualAnalogueScale;
   SEScalar* m_ChemoreceptorHeartRateScale;
   SEScalar* m_ChemoreceptorHeartElastanceScale;
+  SEScalarPressure* m_ChemoreceptorRespirationDrivePressure;
+  SEScalarFrequency* m_ChemoreceptorRespirationFrequency;
 };

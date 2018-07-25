@@ -39,7 +39,7 @@ SERespiratorySystem::SERespiratorySystem(Logger* logger)
   m_RespirationMusclePressure = nullptr;
   m_RespirationRate = nullptr;
   m_SpecificVentilation = nullptr;
-  m_TargetAlveolarVentilation = nullptr;
+  m_TargetPulmonaryVentilation = nullptr;
   m_TidalVolume = nullptr;
   m_TotalAlveolarVentilation = nullptr;
   m_TotalDeadSpaceVentilation = nullptr;
@@ -69,7 +69,7 @@ void SERespiratorySystem::Clear()
   SAFE_DELETE(m_RespirationDriverPressure);
   SAFE_DELETE(m_RespirationMusclePressure);
   SAFE_DELETE(m_RespirationRate);
-  SAFE_DELETE(m_TargetAlveolarVentilation);
+  SAFE_DELETE(m_TargetPulmonaryVentilation);
   SAFE_DELETE(m_TidalVolume);
   SAFE_DELETE(m_TotalAlveolarVentilation);
   SAFE_DELETE(m_TotalDeadSpaceVentilation);
@@ -106,8 +106,8 @@ const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
     return &GetRespirationRate();
   if (name.compare("SpecificVentilation") == 0)
     return &GetSpecificVentilation();
-  if (name.compare("TargetAlveolarVentilation") == 0)
-    return &GetTargetAlveolarVentilation();
+  if (name.compare("TargetPulmonaryVentilation") == 0)
+    return &GetTargetPulmonaryVentilation();
   if (name.compare("TidalVolume") == 0)
     return &GetTidalVolume();
   if (name.compare("TotalAlveolarVentilation") == 0)
@@ -153,8 +153,8 @@ bool SERespiratorySystem::Load(const CDM::RespiratorySystemData& in)
     GetRespirationRate().Load(in.RespirationRate().get());
   if (in.SpecificVentilation().present())
     GetSpecificVentilation().Load(in.SpecificVentilation().get());
-  if (in.TargetAlveolarVentilation().present())
-    GetTargetAlveolarVentilation().Load(in.TargetAlveolarVentilation().get());
+  if (in.TargetPulmonaryVentilation().present())
+    GetTargetPulmonaryVentilation().Load(in.TargetPulmonaryVentilation().get());
   if (in.TidalVolume().present())
     GetTidalVolume().Load(in.TidalVolume().get());
   if (in.TotalAlveolarVentilation().present())
@@ -208,8 +208,8 @@ void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
     data.RespirationRate(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRate->Unload()));
   if (m_SpecificVentilation != nullptr)
     data.SpecificVentilation(std::unique_ptr<CDM::ScalarData>(m_SpecificVentilation->Unload()));
-  if (m_TargetAlveolarVentilation != nullptr)
-    data.TargetAlveolarVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TargetAlveolarVentilation->Unload()));
+  if (m_TargetPulmonaryVentilation != nullptr)
+    data.TargetPulmonaryVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TargetPulmonaryVentilation->Unload()));
   if (m_TidalVolume != nullptr)
     data.TidalVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolume->Unload()));
   if (m_TotalAlveolarVentilation != nullptr)
@@ -445,21 +445,21 @@ double SERespiratorySystem::GetSpecificVentilation() const
   return m_SpecificVentilation->GetValue();
 }
 
-bool SERespiratorySystem::HasTargetAlveolarVentilation() const
+bool SERespiratorySystem::HasTargetPulmonaryVentilation() const
 {
-  return m_TargetAlveolarVentilation == nullptr ? false : m_TargetAlveolarVentilation->IsValid();
+  return m_TargetPulmonaryVentilation == nullptr ? false : m_TargetPulmonaryVentilation->IsValid();
 }
-SEScalarVolumePerTime& SERespiratorySystem::GetTargetAlveolarVentilation()
+SEScalarVolumePerTime& SERespiratorySystem::GetTargetPulmonaryVentilation()
 {
-  if (m_TargetAlveolarVentilation == nullptr)
-    m_TargetAlveolarVentilation = new SEScalarVolumePerTime();
-  return *m_TargetAlveolarVentilation;
+  if (m_TargetPulmonaryVentilation == nullptr)
+    m_TargetPulmonaryVentilation = new SEScalarVolumePerTime();
+  return *m_TargetPulmonaryVentilation;
 }
-double SERespiratorySystem::GetTargetAlveolarVentilation(const VolumePerTimeUnit& unit) const
+double SERespiratorySystem::GetTargetPulmonaryVentilation(const VolumePerTimeUnit& unit) const
 {
-  if (m_TargetAlveolarVentilation == nullptr)
+  if (m_TargetPulmonaryVentilation == nullptr)
     return SEScalar::dNaN();
-  return m_TargetAlveolarVentilation->GetValue(unit);
+  return m_TargetPulmonaryVentilation->GetValue(unit);
 }
 
 bool SERespiratorySystem::HasTidalVolume() const
