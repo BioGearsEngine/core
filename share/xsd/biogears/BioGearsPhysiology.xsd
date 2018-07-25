@@ -134,12 +134,14 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ArterialOxygenPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="CentralVentilationChange_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorAverageFiringRate_Hz" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorCentralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorCentralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorDynamicResponse_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorPeripheralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorPeripheralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorFiringRate_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="DynamicChemoreceptorResponse_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="LastArterialCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="PeripheralVentilationChange_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="PreviousArterialCarbonDioxideVolumeFraction" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="PreviousTargetAlveolarVentilation_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
