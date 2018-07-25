@@ -28,4 +28,10 @@
     <Component Name="Creatinine">
         <Concentration value="0.001" unit="g/dL"/>
     </Component>
+    <Component Name="Oxygen">
+      <Concentration value="0.0314" unit="g/L"/>
+    </Component>
+    <Component Name="CarbonDioxide">
+      <Concentration value="0.715" unit="g/L"/>
+    </Component>
 </SubstanceCompound>

@@ -7,4 +7,10 @@
     <Component Name="Chloride">
         <Concentration value="0.546" unit="g/dL"/>
     </Component>
+    <Component Name="Oxygen">
+      <Concentration value="0.0329" unit="g/L"/>
+    </Component>
+    <Component Name="CarbonDioxide">
+      <Concentration value="0.786" unit="g/L"/>
+    </Component>
 </SubstanceCompound>
