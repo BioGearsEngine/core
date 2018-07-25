@@ -24,8 +24,6 @@ SEExercise::SEExercise()
 {
   m_Intensity = nullptr;
   m_DesiredWorkRate = nullptr;
-  // m_Intensity = -1;
-  // m_DesiredWorkRate = -1;
 }
 
 SEExercise::~SEExercise()
@@ -48,9 +46,9 @@ bool SEExercise::IsValid() const
 bool SEExercise::IsActive() const
 {
   if (HasIntensity()) {
-    return m_Intensity->IsPositive();
+    return !m_Intensity->IsZero();
   } else if (HasDesiredWorkRate()) {
-    return m_DesiredWorkRate->IsPositive();
+    return !m_DesiredWorkRate->IsZero();
   } else {
       return false;
   }

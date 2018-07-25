@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>ExerciseStages</Name>
     <Description>Tests exercise physiology by increasing intensity.</Description>
-    <InitialParameters><PatientFile>GarminPatient.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
  
 	<!-- Base system data required for all scenario verification -->
   <DataRequests>
@@ -124,7 +124,7 @@
 	
 	<!-- Stage 1 -->
     <Action xsi:type="ExerciseData">
-        <Intensity value="0.5"/>
+        <DesiredWorkRate value="500"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="min"/>       

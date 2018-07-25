@@ -5,7 +5,7 @@
 	<InitialParameters>
 		<PatientFile>GarminPatient.xml</PatientFile>
 		<Condition xsi:type="InitialEnvironmentData">
-			<ConditionsFile>GarminEnvironment.xml</ConditionsFile>
+			<ConditionsFile>StandardMale.xml</ConditionsFile>
 		</Condition>
 	</InitialParameters>
  
