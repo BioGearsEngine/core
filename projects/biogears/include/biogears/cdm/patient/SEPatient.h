@@ -191,6 +191,10 @@ public:
   virtual SEScalarVolume& GetTotalLungCapacity();
   virtual double GetTotalLungCapacity(const VolumeUnit& unit) const;
 
+  virtual bool HasUnstressedRespiratoryDrivePressure() const;
+  virtual SEScalarPressure& GetUnstressedRespiratoryDrivePressure();
+  virtual double GetUnstressedRespiratoryDrivePressure(const PressureUnit& unit) const;
+
   virtual bool HasVitalCapacity() const;
   virtual SEScalarVolume& GetVitalCapacity();
   virtual double GetVitalCapacity(const VolumeUnit& unit) const;
@@ -236,5 +240,6 @@ protected:
   SEScalarVolume* m_InspiratoryReserveVolume;
   SEScalarVolume* m_ResidualVolume;
   SEScalarVolume* m_TotalLungCapacity;
+  SEScalarPressure* m_UnstressedRespiratoryDrivePressure;
   SEScalarVolume* m_VitalCapacity;
 };

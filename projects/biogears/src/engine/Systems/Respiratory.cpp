@@ -927,14 +927,9 @@ void Respiratory::RespiratoryDriver()
         DrugRRChange_Per_min += baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
       }
 
-      //Get Target Alveolar Ventilation calculated by chemoreceptors in Nervous
-      // double dTargetAlveolarVentilation_L_Per_min = GetTargetAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
-
       //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
-      //Calculate the target Tidal Volume based on the Alveolar Ventilation
 
-      //New chemoreceptor method estimates total pulmonary ventilation, not just alveolar
-      //double dTargetPulmonaryVentilation_L_Per_min = dTargetAlveolarVentilation_L_Per_min + GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min);
+     
       double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
       targetVent = dTargetPulmonaryVentilation_L_Per_min;
       double dMaximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);

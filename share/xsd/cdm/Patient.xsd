@@ -135,7 +135,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ResidualVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of air remaining in the lungs after a maximal exhalation. -->
           <xs:element name="TotalLungCapacity" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The volume of air in the lungs at maximal inflation. -->
 		  <xs:element name="TargetVentilationBaseline" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief The patient's normal target ventilation in the absence of disruptions to arterial oxygen and carbon dioxide partial pressures-->
-          <xs:element name="VitalCapacity" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The maximum amount of air a person can expel from their lungs after a maximum inhalation. -->
+          <xs:element name="UnstressedRespiratoryDrivePressure" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="VitalCapacity" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The maximum amount of air a person can expel from their lungs after a maximum inhalation. -->
           
           <xs:element name="ActiveEvent" type="ActivePatientEventData" minOccurs="0"  maxOccurs="unbounded"/><!--<< @brief Active Patient Events and their duration. -->          
         </xs:sequence>        
