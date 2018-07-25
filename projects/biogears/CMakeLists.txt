@@ -349,7 +349,7 @@ install(DIRECTORY
     cdm/include/biogears
     jni/include/biogears
     string/include/biogears
-	${CMAKE_CURRENT_BINARY_DIR}/biogears/
+	  ${CMAKE_CURRENT_BINARY_DIR}/biogears
     DESTINATION include/
     FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
     )
