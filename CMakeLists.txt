@@ -87,5 +87,8 @@ write_basic_package_version_file(
 # install the configuration file
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${ROOT_PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindLog4cpp.cmake
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindXerces-c.cmake
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindCodeSynthesis.cmake
   DESTINATION lib/cmake/${ROOT_PROJECT_NAME}
 )
