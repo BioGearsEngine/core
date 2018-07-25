@@ -32,6 +32,7 @@ public:
   static void CalculateWaterDensity(const SEScalarTemperature& temp, SEScalarMassPerVolume& density);
 
   static void Combinations(std::vector<int> maxValues, std::vector<std::vector<int>>& permutations);
+  static double AntoineEquation(double dTemperature_C);
   static double LinearInterpolator(double x1, double x2, double y1, double y2, double xPrime);
   static double PercentDifference(double expected, double calculated);
   static double PercentTolerance(double expected, double calculated, double epsilon = 1e-20);

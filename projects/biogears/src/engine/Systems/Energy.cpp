@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Energy.h>
 #include <biogears/engine/Systems/Environment.h>
 #include <biogears/engine/stdafx.h>
+#include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/schema/RunningAverageData.hxx>
 
 #include <biogears/schema/EnvironmentalConditionsData.hxx>
@@ -436,13 +437,22 @@ void Energy::CalculateSweatRate()
   double coreTemperatureHigh_degC = config.GetCoreTemperatureHigh(TemperatureUnit::C);
   double sweatHeatTranferCoefficient_W_Per_K = config.GetSweatHeatTransfer(HeatConductanceUnit::W_Per_K);
   double effectiveClothingEvaporation_im_Per_clo = pow((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)),0.29);
-  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::K)))))) - (0.00750062 * (m_data.GetEnvironment().GetConditions().GetAtmosphericPressure(PressureUnit::Pa)))); //Still needs effective clothing evaporation
+  double dAirTemperature_C = m_data.GetEnvironment().GetConditions().GetAmbientTemperature(TemperatureUnit::C);
+  double dWaterVaporPressureInAmbientAir_mmHg = GeneralMath::AntoineEquation(dAirTemperature_C);
+  double m_dWaterVaporPressureInAmbientAir_Pa = Convert(dWaterVaporPressureInAmbientAir_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
+  // double ambientAtmosphericPressure_Pa = m_data.GetEnvironment().GetConditions().GetAtmosphericPressure().GetValue(PressureUnit::Pa);
+  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322*(pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); //Still needs effective clothing evaporation
   double vaporizationEnergy_J_Per_kg = config.GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
   double sweatSodiumConcentration_mM = 51.0; /// \cite shirreffs1997whole
   double sweatPotassiumConcentration_mM = 6.0; /// \cite shirreffs1997whole
   double sweatChlorideConcentration_mM = 48.0; /// \cite shirreffs1997whole
     // static double totalSweatLost_mL = 0; --Used to figure out total sweat loss during exercise scenario during debugging
-
+  
+  double currentEvaporativeCapacity_W = sweatHeatTranferCoefficient_W_Per_K * (m_skinNode->GetTemperature(TemperatureUnit::K));
+  if (currentEvaporativeCapacity_W > maximumEvaporativeCapacity_W) {
+    sweatHeatTranferCoefficient_W_Per_K = maximumEvaporativeCapacity_W / (m_skinNode->GetTemperature(TemperatureUnit::K));
+  }
+  
   /// \todo Convert to sweat density once specific gravity calculation is in
   SEScalarMassPerVolume sweatDensity;
   GeneralMath::CalculateWaterDensity(m_skinNode->GetTemperature(), sweatDensity);

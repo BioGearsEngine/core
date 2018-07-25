@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/engine/stdafx.h>
-
+#include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/engine/Systems/Environment.h>
@@ -202,7 +202,7 @@ void Environment::StateChange()
   for (auto s : GetConditions().GetAmbientAerosols()) {
     SESubstance& sub = s->GetSubstance();
     if (!sub.HasAerosolization()) {
-      Error("Ignorning environment aerosol as it does not have any aerosol data : " + sub.GetName());
+      Error("Ignoring environment aerosol as it does not have any aerosol data : " + sub.GetName());
       continue;
     }
     m_data.GetSubstances().AddActiveSubstance(sub);
@@ -432,11 +432,11 @@ void Environment::CalculateSupplementalValues()
     dAirTemperature_C = m_ThermalEnvironment->GetTemperature().GetValue(TemperatureUnit::C);
   }
 
-  double dWaterVaporPressureInAmbientAir_mmHg = AntoineEquation(dAirTemperature_C);
+  double dWaterVaporPressureInAmbientAir_mmHg = GeneralMath::AntoineEquation(dAirTemperature_C);
   m_dWaterVaporPressureInAmbientAir_Pa = Convert(dWaterVaporPressureInAmbientAir_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
   //Skin
   double dSkinTemperature_C = m_SkinNode->GetTemperature().GetValue(TemperatureUnit::C);
-  double dWaterVaporPressureAtSkin_mmHg = AntoineEquation(dSkinTemperature_C);
+  double dWaterVaporPressureAtSkin_mmHg = GeneralMath::AntoineEquation(dSkinTemperature_C);
   m_dWaterVaporPressureAtSkin_Pa = Convert(dWaterVaporPressureAtSkin_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
 
   //Now use that to solve for the density of air
@@ -705,6 +705,7 @@ void Environment::CalculateRespiration()
 /// \details
 /// The water vapor pressure at the skin and in ambient air is determined using the piecewise Antoine Equation.
 //--------------------------------------------------------------------------------------------------
+/*
 double Environment::AntoineEquation(double dTemperature_C)
 {
   double dA = 0.0;
@@ -729,3 +730,4 @@ double Environment::AntoineEquation(double dTemperature_C)
 
   return dWaterVaporPressureInAmbientAir_mmHg;
 }
+*/

@@ -30,6 +30,31 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+double GeneralMath::AntoineEquation(double dTemperature_C)
+{
+  double dA = 0.0;
+  double dB = 0.0;
+  double dC = 0.0;
+  double dWaterVaporPressureInAmbientAir_mmHg = 0.0;
+  if (dTemperature_C < 0.0) {
+    dWaterVaporPressureInAmbientAir_mmHg = 0.0;
+  } else {
+    if (dTemperature_C < 100.0) {
+      dA = 8.07131;
+      dB = 1730.63;
+      dC = 233.426;
+    } else //>100.0
+    {
+      dA = 8.14019;
+      dB = 1810.94;
+      dC = 244.485;
+    }
+    dWaterVaporPressureInAmbientAir_mmHg = pow(10.0, dA - (dB / (dC + dTemperature_C)));
+  }
+
+  return dWaterVaporPressureInAmbientAir_mmHg;
+}
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Calculates the concentration of a substance given mass and volume. concentration = mass / volume

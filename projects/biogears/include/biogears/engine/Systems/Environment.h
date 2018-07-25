@@ -67,7 +67,7 @@ public:
 protected:
   void ProcessActions();
   void CalculateSupplementalValues();
-  /**/ double AntoineEquation(double dTemperature_C);
+  // double AntoineEquation(double dTemperature_C);
   void CalculateRadiation();
   void CalculateConvection();
   void CalculateEvaporation();
