@@ -12,6 +12,7 @@ import os
 import re
 import pandas as pd
 import shutil
+import zipfile
 import pathlib
 
 import argparse
@@ -78,7 +79,7 @@ def main( args):
     
     log("INPUT = {}".format(_root_directory),LOG_LEVEL_2)
     log("OUTPUT = {}".format(_output_directory),LOG_LEVEL_2)
-    log("Baslines = {}".format(_baseline_directory),LOG_LEVEL_2)
+    log("Baselines = {}".format(_baseline_directory),LOG_LEVEL_2)
     log("Recursive Mode = {}".format(args.recurse),LOG_LEVEL_2)
     
     log ("Processing",LOG_LEVEL_1)
@@ -140,13 +141,15 @@ def plot(root_dir, source, skip_count):
         #Grab the zip file with the baselines, if they exist
         try:
             baseline_source = os.path.join( os.path.dirname(baseline_path),'baselines',basename+'.zip')
+            baseZip = zipfile.ZipFile(baseline_source)
             log("Trying to find baseline file: {}".format(baseline_source),LOG_LEVEL_3)
-            baseCSV = pd.read_csv(os.path.normpath(baseline_source), sep=',',header=0)
-            log("Found baseline file: {}".format(baseline_source),LOG_LEVEL_2)
+            baseCSV = pd.read_csv(baseZip.open(basename+'.csv'), sep=',',header=0)
+            log("Found baseline file in {}".format(baseline_source),LOG_LEVEL_2)
             xBase = baseCSV['Time(s)'].values[::int(skip_count)]
             baseFound=True
         except FileNotFoundError:
-            err("Error: Could not find baseline file: {}".format(baseline_source),LOG_LEVEL_0)
+            err("Error: Could not find baseline location: {}".format(baseline_source),LOG_LEVEL_0)
+
 
         #Plot each column of data 
         for col in colNames:
