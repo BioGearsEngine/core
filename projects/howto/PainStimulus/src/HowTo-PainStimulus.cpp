@@ -56,6 +56,7 @@ void HowToPainStimulus()
     return;
   }
 
+
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
   HowToTracker tracker(*bg);
 
@@ -98,16 +99,14 @@ void HowToPainStimulus()
   //lets start the pain
   bg->ProcessAction(PainStimulus);
 
-  // Advance some time to let the body bleed out a bit
   tracker.AdvanceModelTime(300);
 
-  bg->GetLogger()->Info("The patient has been in moderate pain for 300s");
+  bg->GetLogger()->Info("The patient is in pain");
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  ;
-
+  
   //administer morphine
   bg->ProcessAction(bolus);
   bg->GetLogger()->Info("Giving the patient Morphine.");
@@ -117,14 +116,14 @@ void HowToPainStimulus()
   double dt = bg->GetTimeStep(TimeUnit::s);
 
   // Advance some time until patient is comfortable
-  while (pain > 2.0) {
+  while (pain > 1.0) {
     //update value
     pain = bg->GetNervousSystem()->GetPainVisualAnalogueScale();
     tracker.AdvanceModelTime(dt);
   }
 
   //after we get out of the while loop patient should be happy now
-  bg->GetLogger()->Info("The patient is comfortable");
+  bg->GetLogger()->Info("The patient is comfortable, morphine administration buffered effects");
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Hemoglobin Content : " << bg->GetBloodChemistrySystem()->GetHemoglobinContent(MassUnit::g) << MassUnit::g);
