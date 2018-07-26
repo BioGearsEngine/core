@@ -3,9 +3,9 @@
     <Name>ExerciseStages</Name>
     <Description>Tests exercise physiology by increasing intensity.</Description>
 	<InitialParameters>
-		<PatientFile>GarminPatient.xml</PatientFile>
+		<PatientFile>StandardMale.xml</PatientFile>
 		<Condition xsi:type="InitialEnvironmentData">
-			<ConditionsFile>StandardMale.xml</ConditionsFile>
+			<ConditionsFile>Standard.xml</ConditionsFile>
 		</Condition>
 	</InitialParameters>
  
