@@ -146,10 +146,10 @@ Actions
 -------
 @anchor energy-exercise
 ### Exercise
-The exercise action is initiated by specifying the exercise intensity. The exercise intensity is a number between 0 and 1 that defines the requested fraction of the body's maximal work rate. For instance, the average adult male has a maximal work rate of approximately 1200 Watts @cite hall2011guyton; therefore, a user-specified exercise intensity of 0.5 would request a work rate of 600 Watts from the body. Table 1 shows the approximate exercise intensity for some common activities executed by an average adult male. The approximate mechanical power produced by an adult male is also included in the table.
+The exercise action is initiated by specifying the exercise intensity or the desired work rate for the patient to achieve. The exercise intensity is a number between 0 and 1 that defines the requested fraction of the body's maximal work rate, which if not specified in the patient file is calculated using the patient's age and gender @cite plowman2013exercise. For instance, the average adult male has a maximal work rate of approximately 1200 Watts @cite hall2011guyton; therefore, a user-specified exercise intensity of 0.5 would request a work rate of 600 Watts from the body. Table 1 shows the approximate exercise intensity for some common activities executed by an average adult male. The approximate mechanical power produced by an adult male is also included in the table.
 
 <br><center>
-*Table 1. The approximate exercise intensity for some common activities and the corresponding approximate mechanical power. Note that the values in the table correspond to a body with a 1200 Watt maximum work rate capability.*
+*Table 1. The approximate exercise intensity for some common activities and the corresponding approximate mechanical power (desired work rate). Note that the values in the table correspond to a body with a 1200 Watt maximum work rate capability.*
 </center>
 |Activity |Exercise Intensity | Mechanical Power (W) |
 |-------- |----------------- |--------------------- |
