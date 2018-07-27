@@ -268,9 +268,17 @@ bool BioGears::SetupPatient()
     Info(ss);
   }
 
+  //SWEAT SUSCEPTIBILITY -----------------------------------------------------------------------------------
+  double sweatStandard = 0.0;
+  if (!m_Patient->HasHyperhidrosis()) {
+    m_Patient->GetHyperhidrosis().SetValue(sweatStandard);
+    ss << "No patient sweat susceptibility set " << sweatStandard << " being used.";
+    Info(ss);
+  }
+
   //HEIGHT ---------------------------------------------------------------
   //From CDC values for 20 year olds
-  //Mins are 3rd percentile, Maxs are 97th percentile, and standard is 50th percentile
+  //Minimums are 3rd percentile, Maximums are 97th percentile, and standard is 50th percentile
   /// \cite Centers2016clinical
   double heightMinMale_cm = 163.0;
   double heightMaxMale_cm = 190.0;

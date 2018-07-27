@@ -47,6 +47,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
@@ -468,6 +469,17 @@ void Energy::CalculateSweatRate()
   BLIM(dehydrationScalingFactor, 0, 1);
 
   double sweatRate_kg_Per_s = dehydrationScalingFactor * (0.25 * sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg) * (coreTemperature_degC - coreTemperatureHigh_degC);
+  
+  double sweatScalingFactor = 0.0;
+  if (m_Patient->HasHyperhidrosis()) {
+    sweatScalingFactor = m_Patient->GetHyperhidrosis().GetValue();
+    if (sweatScalingFactor >= 0) {
+      sweatRate_kg_Per_s = (1 + sweatScalingFactor) * sweatRate_kg_Per_s;
+    } else {
+      sweatRate_kg_Per_s = (1 - sweatScalingFactor) * sweatRate_kg_Per_s;
+    }
+  }
+
   double maxSweatRate_kg_Per_s = 12.5 * m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2) / 60.0 / 1000.0; //10 - 15 g/min/m2
   BLIM(sweatRate_kg_Per_s, 0.0, maxSweatRate_kg_Per_s);
 

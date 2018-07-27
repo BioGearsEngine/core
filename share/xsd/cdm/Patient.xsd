@@ -108,7 +108,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="MaxWorkRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<< @brief The maximal work rate. -->
           <xs:element name="MuscleMass" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief The mass of muscle only. --> 
           <!-- Physical Characteristics that can change and should be change due to a condition -->
-          <xs:element name="AlveoliSurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief The surface area of the alveoli for gas diffusion-->  
+          <xs:element name="AlveoliSurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief The surface area of the alveoli for gas diffusion--> 
+		  <xs:element name="Hyperhidrosis" type="ScalarNeg1To1Data" minOccurs="0" maxOccurs="1"/><!--<< @brief The patients’ susceptibility to sweating with negative indicating lack of sweat and positive showing excess. -->		  		  
           <xs:element name="RightLungRatio" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The ratio of total lung surface area that is associated with the right lung. -->  
           <xs:element name="SkinSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief -->
 		  <xs:element name="PainSusceptibility" type="ScalarNeg1To1Data" minOccurs="0" maxOccurs="1"/><!--<< @brief The patients’ qualitative pain susceptibility. -->		  

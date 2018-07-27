@@ -70,6 +70,7 @@ SEPatient::SEPatient(Logger* logger)
   m_HeartRateBaseline = nullptr;
   m_HeartRateMaximum = nullptr;
   m_HeartRateMinimum = nullptr;
+  m_Hyperhidrosis = nullptr;
   m_InspiratoryCapacity = nullptr;
   m_InspiratoryReserveVolume = nullptr;
   m_LeanBodyMass = nullptr;
@@ -1066,6 +1067,23 @@ double SEPatient::GetHeartRateMinimum(const FrequencyUnit& unit) const
       return SEScalar::dNaN();
       }
   return m_HeartRateMinimum->GetValue(unit);
+}
+
+bool SEPatient::HasHyperhidrosis() const
+{
+  return m_Hyperhidrosis == nullptr ? false : m_Hyperhidrosis->IsValid();
+}
+SEScalarNeg1To1& SEPatient::GetHyperhidrosis()
+{
+  if (m_Hyperhidrosis == nullptr)
+    m_Hyperhidrosis = new SEScalarNeg1To1();
+  return *m_Hyperhidrosis;
+}
+double SEPatient::GetHyperhidrosis() const
+{
+  if (m_Hyperhidrosis == nullptr)
+    return SEScalar::dNaN();
+  return m_Hyperhidrosis->GetValue();
 }
 
 bool SEPatient::HasInspiratoryCapacity() const

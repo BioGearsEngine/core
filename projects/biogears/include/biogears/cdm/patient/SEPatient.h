@@ -127,6 +127,10 @@ public:
   virtual SEScalarFrequency& GetHeartRateMinimum();
   virtual double GetHeartRateMinimum(const FrequencyUnit& unit) const;
 
+  virtual bool HasHyperhidrosis() const;
+  virtual SEScalarNeg1To1& GetHyperhidrosis();
+  virtual double GetHyperhidrosis() const;
+
   virtual bool HasInspiratoryCapacity() const;
   virtual SEScalarVolume& GetInspiratoryCapacity();
   virtual double GetInspiratoryCapacity(const VolumeUnit& unit) const;
@@ -212,6 +216,7 @@ protected:
   SEScalarVolume* m_BloodVolumeBaseline;
   SEScalarPressure* m_DiastolicArterialPressureBaseline;
   SEScalarFrequency* m_HeartRateBaseline;
+  SEScalarNeg1To1* m_Hyperhidrosis;
   SEScalarPressure* m_MeanArterialPressureBaseline;
   SEScalarNeg1To1* m_PainSusceptibility;
   SEScalarFrequency* m_RespirationRateBaseline;
