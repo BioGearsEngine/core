@@ -131,6 +131,7 @@ void SEPatient::Clear()
   SAFE_DELETE(m_HeartRateBaseline);
   SAFE_DELETE(m_HeartRateMaximum);
   SAFE_DELETE(m_HeartRateMinimum);
+  SAFE_DELETE(m_Hyperhidrosis);
   SAFE_DELETE(m_InspiratoryCapacity);
   SAFE_DELETE(m_InspiratoryReserveVolume);
   SAFE_DELETE(m_LeanBodyMass);
@@ -179,6 +180,8 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
     return &GetHeartRateMaximum();
   if (name.compare("HeartRateMinimum") == 0)
     return &GetHeartRateMinimum();
+  if (name.compare("Hyperhidrosis") == 0)
+    return &GetHyperhidrosis();
   if (name.compare("InspiratoryCapacity") == 0)
     return &GetInspiratoryCapacity();
   if (name.compare("InspiratoryReserveVolume") == 0)
@@ -262,6 +265,9 @@ bool SEPatient::Load(const CDM::PatientData& in)
   }
   if (in.HeartRateMinimum().present()) {
     GetHeartRateMinimum().Load(in.HeartRateMinimum().get());
+  }
+  if (in.Hyperhidrosis().present()) {
+    GetHyperhidrosis().Load(in.Hyperhidrosis().get());
   }
   if (in.InspiratoryCapacity().present()) {
     GetInspiratoryCapacity().Load(in.InspiratoryCapacity().get());
@@ -375,6 +381,9 @@ void SEPatient::Unload(CDM::PatientData& data) const
   }
   if (m_HeartRateMinimum != nullptr) {
     data.HeartRateMinimum(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateMinimum->Unload()));
+  }
+  if (m_Hyperhidrosis != nullptr) {
+    data.Hyperhidrosis(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_Hyperhidrosis->Unload()));
   }
   if (m_InspiratoryCapacity != nullptr) {
     data.InspiratoryCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryCapacity->Unload()));
