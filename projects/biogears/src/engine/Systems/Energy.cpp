@@ -473,11 +473,12 @@ void Energy::CalculateSweatRate()
   double sweatScalingFactor = 0.0;
   if (m_Patient->HasHyperhidrosis()) {
     sweatScalingFactor = m_Patient->GetHyperhidrosis().GetValue();
-    if (sweatScalingFactor >= 0) {
+    sweatRate_kg_Per_s = (1 + sweatScalingFactor) * sweatRate_kg_Per_s;
+    /* if (sweatScalingFactor >= 0) {
       sweatRate_kg_Per_s = (1 + sweatScalingFactor) * sweatRate_kg_Per_s;
     } else {
       sweatRate_kg_Per_s = (1 - sweatScalingFactor) * sweatRate_kg_Per_s;
-    }
+    } */
   }
 
   double maxSweatRate_kg_Per_s = 12.5 * m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2) / 60.0 / 1000.0; //10 - 15 g/min/m2
