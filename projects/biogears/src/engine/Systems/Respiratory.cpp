@@ -162,7 +162,7 @@ void Respiratory::Initialize()
   m_VentilationFrequency_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
   m_DriverPressureMin_cmH2O = m_DefaultDrivePressure_cmH2O;
-  m_VentilationToTidalVolumeSlope = 0.15; //Was 30, changing to line up with new chemoreceptor method
+  m_VentilationToTidalVolumeSlope = 1.0; //0.15;
   //The peak driver pressure is the pressure above the default pressure
   m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(m_Patient->GetTotalLungCapacity(VolumeUnit::L) - m_Patient->GetInspiratoryReserveVolume(VolumeUnit::L)) - m_DefaultDrivePressure_cmH2O;
   m_ArterialO2PartialPressure_mmHg = m_AortaO2->GetPartialPressure(PressureUnit::mmHg);
@@ -193,7 +193,7 @@ void Respiratory::Initialize()
   double TidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   double RespirationRate_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   GetTidalVolume().SetValue(TidalVolume_L, VolumeUnit::L);
-  GetTargetPulmonaryVentilation().SetValue(m_Patient->GetTargetVentilationBaseline(VolumePerTimeUnit::L_Per_min),VolumePerTimeUnit::L_Per_min);
+  GetTargetPulmonaryVentilation().SetValue(m_Patient->GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min),VolumePerTimeUnit::L_Per_min);
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetCarricoIndex().SetValue(452.0, PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
@@ -427,7 +427,7 @@ void Respiratory::AtSteadyState()
   double inspiratoryCapacity_L = totalLungCapacity_L - m_InstantaneousFunctionalResidualCapacity_L;
   m_Patient->GetRespirationRateBaseline().SetValue(respirationRate_Per_min, FrequencyUnit::Per_min);
   m_Patient->GetTidalVolumeBaseline().SetValue(tidalVolume_L, VolumeUnit::L);
-  m_Patient->GetTargetVentilationBaseline().SetValue(GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
+  m_Patient->GetTotalVentilationBaseline().SetValue(GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min),VolumePerTimeUnit::L_Per_min);
   m_Patient->GetFunctionalResidualCapacity().SetValue(m_InstantaneousFunctionalResidualCapacity_L, VolumeUnit::L);
   m_Patient->GetVitalCapacity().SetValue(vitalCapacity_L, VolumeUnit::L);
   m_Patient->GetExpiratoryReserveVolume().SetValue(expiratoryReserveVolume_L, VolumeUnit::L);
@@ -442,6 +442,8 @@ void Respiratory::AtSteadyState()
   ss << typeString << "Patient respiration rate = " << respirationRate_Per_min << " bpm.";
   Info(ss);
   ss << typeString << "Patient tidal volume = " << tidalVolume_L << " L.";
+  Info(ss);
+  ss << typeString << "Patient pulmonary ventilation baseline = " << m_Patient->GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min);
   Info(ss);
   ss << typeString << "Patient functional residual capacity = " << m_InstantaneousFunctionalResidualCapacity_L << " L.";
   Info(ss);
@@ -943,10 +945,10 @@ void Respiratory::RespiratoryDriver()
         m_Patient->SetEvent(CDM::enumPatientEvent::MaximumPulmonaryVentilationRate, false, m_data.GetSimulationTime());
       }
 
-      //Calculate the target Tidal Volume based on the calculated target pulmonary ventilation, plot slope (determined during initialization), and x-intercept
-     // double dTargetTidalVolume_L = dTargetPulmonaryVentilation_L_Per_min / m_VentilationToTidalVolumeSlope + m_VentilationTidalVolumeIntercept;
+
       double dTargetTidalVolume_L = m_VentilationToTidalVolumeSlope * pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
-      //Modify the target tidal volume due to other external effects - probably eventually replaced by the Nervous system
+       //double dTargetTidalVolume_L = m_VentilationToTidalVolumeSlope * dTargetPulmonaryVentilation_L_Per_min * TotalBreathingCycleTime_s / 60.0;
+      
       dTargetTidalVolume_L *= cardiacArrestEffect * NMBModifier;
 
       //Apply Drug Effects to the target tidal volume
@@ -1000,7 +1002,6 @@ void Respiratory::RespiratoryDriver()
         double dGain = - m_VentilationToTidalVolumeSlope  / dRespirationRateBaseline_Per_min;
         //Amplitude set-point - this will set the Tidal Volume baseline when O2 and CO2 are at the correct/balanced level
         m_VentilationToTidalVolumeSlope = m_VentilationToTidalVolumeSlope + dError * dGain;
-
         //Put bounds on this
         m_VentilationToTidalVolumeSlope = LIMIT(m_VentilationToTidalVolumeSlope, 0.0, 10.0);
       }
@@ -1046,15 +1047,15 @@ void Respiratory::RespiratoryDriver()
 
   //Push Driving Data to the Circuit -------------------------------------------------------------------------------
   m_DriverPressurePath->GetNextPressureSource().SetValue(m_DriverPressure_cmH2O, PressureUnit::cmH2O);
-  //m_data.GetDataTrack().Probe("Debug_TargetTV", tvTrack);
-  //m_data.GetDataTrack().Probe("Debug_TargetVent", targetVent);
-  //m_data.GetDataTrack().Probe("Debug_DriverPressureNew", m_DriverPressure_cmH2O);
-  //m_data.GetDataTrack().Probe("Debug_TimeTotal", totalTime);
-  //m_data.GetDataTrack().Probe("Debug_TimeInspiration", inTime);
-  //m_data.GetDataTrack().Probe("Debug_TimeExpiration", exTime);
-  //m_data.GetDataTrack().Probe("debug_VentilationSlope", m_VentilationToTidalVolumeSlope);
-  //m_data.GetDataTrack().Probe("debug_VentilationFrequency", m_VentilationFrequency_Per_min);
-  //m_data.GetDataTrack().Probe("debug_Pmax", m_PeakRespiratoryDrivePressure_cmH2O);
+  m_data.GetDataTrack().Probe("Debug_TargetTV", tvTrack);
+  m_data.GetDataTrack().Probe("Debug_TargetVent", targetVent);
+  m_data.GetDataTrack().Probe("Debug_DriverPressureNew", m_DriverPressure_cmH2O);
+  m_data.GetDataTrack().Probe("Debug_TimeTotal", totalTime);
+  m_data.GetDataTrack().Probe("Debug_TimeInspiration", inTime);
+  m_data.GetDataTrack().Probe("Debug_TimeExpiration", exTime);
+  m_data.GetDataTrack().Probe("debug_VentilationSlope", m_VentilationToTidalVolumeSlope);
+  m_data.GetDataTrack().Probe("debug_VentilationFrequency", m_VentilationFrequency_Per_min);
+  m_data.GetDataTrack().Probe("debug_Pmax", m_PeakRespiratoryDrivePressure_cmH2O);
   //m_data.GetDataTrack().Probe("debug_Pdefault", m_DefaultDrivePressure_cmH2O);
 }
 //--------------------------------------------------------------------------------------------------

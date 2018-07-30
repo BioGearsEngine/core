@@ -700,7 +700,8 @@ bool BioGears::SetupPatient()
  
   double tidalVolume_L = 37.0 * weight_kg / 1000.0 - functionalResidualCapacity_L;
   double targetVent_L_Per_min = tidalVolume_L * respirationRate_bpm;
-  m_Patient->GetTargetVentilationBaseline().SetValue(targetVent_L_Per_min, VolumePerTimeUnit::L_Per_min);
+  m_Patient->GetTotalVentilationBaseline().SetValue(targetVent_L_Per_min, VolumePerTimeUnit::L_Per_min);
+  
   //m_Patient->GetTargetVentilationBaseline().SetValue(10.75, VolumePerTimeUnit::L_Per_min);
   double vitalCapacity = totalLungCapacity_L - residualVolume_L;
   double expiratoryReserveVolume = functionalResidualCapacity_L - residualVolume_L;
