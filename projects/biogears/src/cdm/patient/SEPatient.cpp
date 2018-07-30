@@ -83,10 +83,9 @@ SEPatient::SEPatient(Logger* logger)
   m_RightLungRatio = nullptr;
   m_SkinSurfaceArea = nullptr;
   m_SystolicArterialPressureBaseline = nullptr;
-  m_TargetVentilationBaseline = nullptr;
+  m_TotalVentilationBaseline = nullptr;
   m_TidalVolumeBaseline = nullptr;
   m_TotalLungCapacity = nullptr;
-  m_UnstressedRespiratoryDrivePressure = nullptr;
   m_VitalCapacity = nullptr;
 }
 
@@ -146,10 +145,9 @@ void SEPatient::Clear()
   SAFE_DELETE(m_RightLungRatio);
   SAFE_DELETE(m_SkinSurfaceArea);
   SAFE_DELETE(m_SystolicArterialPressureBaseline);
-  SAFE_DELETE(m_TargetVentilationBaseline);
+  SAFE_DELETE(m_TotalVentilationBaseline);
   SAFE_DELETE(m_TidalVolumeBaseline);
   SAFE_DELETE(m_TotalLungCapacity);
-  SAFE_DELETE(m_UnstressedRespiratoryDrivePressure);
   SAFE_DELETE(m_VitalCapacity);
 }
 
@@ -210,14 +208,12 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
     return &GetSkinSurfaceArea();
   if (name.compare("SystolicArterialPressureBaseline") == 0)
     return &GetSystolicArterialPressureBaseline();
-  if (name.compare("TargetVentilationBaseline") == 0)
-    return &GetTargetVentilationBaseline();
+  if (name.compare("TotalVentilationBaseline") == 0)
+    return &GetTotalVentilationBaseline();
   if (name.compare("TidalVolumeBaseline") == 0)
     return &GetTidalVolumeBaseline();
   if (name.compare("TotalLungCapacity") == 0)
     return &GetTotalLungCapacity();
-  if (name.compare("UnstressedRespiratoryDrivePressure") == 0)
-    return &GetUnstressedRespiratoryDrivePressure();
   if (name.compare("VitalCapacity") == 0)
     return &GetVitalCapacity();
 
@@ -313,17 +309,14 @@ bool SEPatient::Load(const CDM::PatientData& in)
   if (in.SystolicArterialPressureBaseline().present()) {
     GetSystolicArterialPressureBaseline().Load(in.SystolicArterialPressureBaseline().get());
   }
-  if (in.TargetVentilationBaseline().present()) {
-    GetTargetVentilationBaseline().Load(in.TargetVentilationBaseline().get());
+  if (in.TotalVentilationBaseline().present()) {
+    GetTotalVentilationBaseline().Load(in.TotalVentilationBaseline().get());
   }
   if (in.TidalVolumeBaseline().present()) {
     GetTidalVolumeBaseline().Load(in.TidalVolumeBaseline().get());
   }
   if (in.TotalLungCapacity().present()) {
     GetTotalLungCapacity().Load(in.TotalLungCapacity().get());
-  }
-  if (in.UnstressedRespiratoryDrivePressure().present()) {
-    GetUnstressedRespiratoryDrivePressure().Load(in.UnstressedRespiratoryDrivePressure().get());
   }
   if (in.VitalCapacity().present()) {
     GetVitalCapacity().Load(in.VitalCapacity().get());
@@ -435,8 +428,8 @@ void SEPatient::Unload(CDM::PatientData& data) const
   if (m_SystolicArterialPressureBaseline != nullptr) {
     data.SystolicArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArterialPressureBaseline->Unload()));
   }
-  if (m_TargetVentilationBaseline != nullptr) {
-    data.TargetVentilationBaseline(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TargetVentilationBaseline->Unload()));
+  if (m_TotalVentilationBaseline != nullptr) {
+    data.TotalVentilationBaseline(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalVentilationBaseline->Unload()));
   }
   if (m_TidalVolumeBaseline != nullptr) {
     data.TidalVolumeBaseline(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeBaseline->Unload()));
@@ -444,10 +437,6 @@ void SEPatient::Unload(CDM::PatientData& data) const
   if (m_TotalLungCapacity != nullptr) {
     data.TotalLungCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalLungCapacity->Unload()));
   }
-  if (m_UnstressedRespiratoryDrivePressure != nullptr) {
-    data.UnstressedRespiratoryDrivePressure(std::unique_ptr<CDM::ScalarPressureData>(m_UnstressedRespiratoryDrivePressure->Unload()));
-  }
-
   if (m_VitalCapacity != nullptr) {
     data.VitalCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_VitalCapacity->Unload()));
   }
@@ -1342,23 +1331,23 @@ double SEPatient::GetSystolicArterialPressureBaseline(const PressureUnit& unit) 
   return m_SystolicArterialPressureBaseline->GetValue(unit);
 }
 
-bool SEPatient::HasTargetVentilationBaseline() const
+bool SEPatient::HasTotalVentilationBaseline() const
 {
-  return m_TargetVentilationBaseline == nullptr ? false : m_TargetVentilationBaseline->IsValid();
+  return m_TotalVentilationBaseline == nullptr ? false : m_TotalVentilationBaseline->IsValid();
 }
-SEScalarVolumePerTime& SEPatient::GetTargetVentilationBaseline()
+SEScalarVolumePerTime& SEPatient::GetTotalVentilationBaseline()
 {
-  if (m_TargetVentilationBaseline == nullptr) {
-    m_TargetVentilationBaseline = new SEScalarVolumePerTime();
+  if (m_TotalVentilationBaseline == nullptr) {
+    m_TotalVentilationBaseline = new SEScalarVolumePerTime();
   }
-  return *m_TargetVentilationBaseline;
+  return *m_TotalVentilationBaseline;
 }
-double SEPatient::GetTargetVentilationBaseline(const VolumePerTimeUnit& unit) const
+double SEPatient::GetTotalVentilationBaseline(const VolumePerTimeUnit& unit) const
 {
-  if (m_TargetVentilationBaseline == nullptr) {
+  if (m_TotalVentilationBaseline == nullptr) {
     return SEScalar::dNaN();
   }
-  return m_TargetVentilationBaseline->GetValue(unit);
+  return m_TotalVentilationBaseline->GetValue(unit);
 }
 
 bool SEPatient::HasTidalVolumeBaseline() const
@@ -1397,25 +1386,6 @@ double SEPatient::GetTotalLungCapacity(const VolumeUnit& unit) const
     return SEScalar::dNaN();
   }
   return m_TotalLungCapacity->GetValue(unit);
-}
-
-bool SEPatient::HasUnstressedRespiratoryDrivePressure() const
-{
-  return m_UnstressedRespiratoryDrivePressure == nullptr ? false : m_UnstressedRespiratoryDrivePressure->IsValid();
-}
-SEScalarPressure& SEPatient::GetUnstressedRespiratoryDrivePressure()
-{
-  if (m_UnstressedRespiratoryDrivePressure == nullptr) {
-    m_UnstressedRespiratoryDrivePressure = new SEScalarPressure();
-  }
-  return *m_UnstressedRespiratoryDrivePressure;
-}
-double SEPatient::GetUnstressedRespiratoryDrivePressure(const PressureUnit& unit) const
-{
-  if (m_UnstressedRespiratoryDrivePressure == nullptr) {
-    return SEScalar::dNaN();
-  }
-  return m_UnstressedRespiratoryDrivePressure->GetValue(unit);
 }
 
 bool SEPatient::HasVitalCapacity() const

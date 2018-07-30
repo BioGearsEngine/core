@@ -179,9 +179,9 @@ public:
   virtual SEScalarPressure& GetSystolicArterialPressureBaseline();
   virtual double GetSystolicArterialPressureBaseline(const PressureUnit& unit) const;
 
-  virtual bool HasTargetVentilationBaseline() const;
-  virtual SEScalarVolumePerTime& GetTargetVentilationBaseline();
-  virtual double GetTargetVentilationBaseline(const VolumePerTimeUnit& unit) const;
+  virtual bool HasTotalVentilationBaseline() const;
+  virtual SEScalarVolumePerTime& GetTotalVentilationBaseline();
+  virtual double GetTotalVentilationBaseline(const VolumePerTimeUnit& unit) const;
 
   virtual bool HasTidalVolumeBaseline() const;
   virtual SEScalarVolume& GetTidalVolumeBaseline();
@@ -190,10 +190,6 @@ public:
   virtual bool HasTotalLungCapacity() const;
   virtual SEScalarVolume& GetTotalLungCapacity();
   virtual double GetTotalLungCapacity(const VolumeUnit& unit) const;
-
-  virtual bool HasUnstressedRespiratoryDrivePressure() const;
-  virtual SEScalarPressure& GetUnstressedRespiratoryDrivePressure();
-  virtual double GetUnstressedRespiratoryDrivePressure(const PressureUnit& unit) const;
 
   virtual bool HasVitalCapacity() const;
   virtual SEScalarVolume& GetVitalCapacity();
@@ -229,7 +225,7 @@ protected:
   SEScalarNeg1To1* m_PainSusceptibility;
   SEScalarFrequency* m_RespirationRateBaseline;
   SEScalarPressure* m_SystolicArterialPressureBaseline;
-  SEScalarVolumePerTime* m_TargetVentilationBaseline;
+  SEScalarVolumePerTime* m_TotalVentilationBaseline;
   SEScalarVolume* m_TidalVolumeBaseline;
 
   SEScalarFrequency* m_HeartRateMaximum;
@@ -240,6 +236,5 @@ protected:
   SEScalarVolume* m_InspiratoryReserveVolume;
   SEScalarVolume* m_ResidualVolume;
   SEScalarVolume* m_TotalLungCapacity;
-  SEScalarPressure* m_UnstressedRespiratoryDrivePressure;
   SEScalarVolume* m_VitalCapacity;
 };

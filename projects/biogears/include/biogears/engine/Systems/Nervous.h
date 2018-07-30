@@ -73,15 +73,13 @@ protected:
   RunningAverage m_ArterialCO2Average_mmHg;
   double m_ArterialO2Pressure_mmHg;
   double m_ArterialCO2Pressure_mmHg;
-  double m_CentralPressureDelta_cmH2O;
-  double m_CentralFrequencyDelta_Per_min;
-  RunningAverage m_ChemoreceptorAverageRate_Hz;
+  double m_BrainCO2Pressure_mmHg;
+  double m_CentralVentilationDelta_L_Per_min;
   double m_ChemoreceptorFiringRate_Hz;
+  double m_ChemoreceptorFiringRateSetPoint_Hz;
   double m_ChemoreceptorDynamicResponse_Hz;
   double m_PreviousArterialCO2VolumeFraction;
-  double m_PeripheralPressureDelta_cmH2O;
-  double m_PeripheralFrequencyDelta_Per_min;
-  double m_PreviousTargetAlveolarVentilation_L_Per_min;
+  double m_PeripheralVentilationDelta_L_Per_min;
 
   // Stateless member variable (Set in SetUp())
   bool m_FeedbackActive;

@@ -29,8 +29,6 @@ SENervousSystem::SENervousSystem(Logger* logger)
   m_BaroreceptorComplianceScale = nullptr;
   m_ChemoreceptorHeartRateScale = nullptr;
   m_ChemoreceptorHeartElastanceScale = nullptr;
-  m_ChemoreceptorRespirationDrivePressure = nullptr;
-  m_ChemoreceptorRespirationFrequency = nullptr;
   m_LeftEyePupillaryResponse = nullptr;
   m_RightEyePupillaryResponse = nullptr;
   m_PainVisualAnalogueScale = nullptr;
@@ -50,8 +48,6 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_BaroreceptorComplianceScale);
   SAFE_DELETE(m_ChemoreceptorHeartRateScale);
   SAFE_DELETE(m_ChemoreceptorHeartElastanceScale);
-  SAFE_DELETE(m_ChemoreceptorRespirationDrivePressure);
-  SAFE_DELETE(m_ChemoreceptorRespirationFrequency);
   SAFE_DELETE(m_LeftEyePupillaryResponse);
   SAFE_DELETE(m_RightEyePupillaryResponse);
   SAFE_DELETE(m_PainVisualAnalogueScale);
@@ -71,10 +67,6 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
     return &GetChemoreceptorHeartRateScale();
   if (name.compare("ChemoreceptorHeartElastanceScale") == 0)
     return &GetChemoreceptorHeartElastanceScale();
-  if (name.compare("ChemoreceptorRespirationDrivePressure") == 0)
-    return &GetChemoreceptorRespirationDrivePressure();
-  if (name.compare("ChemoreceptorRespirationFrequency") == 0)
-    return &GetChemoreceptorRespirationFrequency();
   if (name.compare("PainVisualAnalogueScale") == 0)
     return &GetPainVisualAnalogueScale();
 
@@ -105,10 +97,6 @@ bool SENervousSystem::Load(const CDM::NervousSystemData& in)
     GetChemoreceptorHeartRateScale().Load(in.ChemoreceptorHeartRateScale().get());
   if (in.ChemoreceptorHeartElastanceScale().present())
     GetChemoreceptorHeartElastanceScale().Load(in.ChemoreceptorHeartElastanceScale().get());
-  if (in.ChemoreceptorRespirationDrivePressure().present())
-    GetChemoreceptorRespirationDrivePressure().Load(in.ChemoreceptorRespirationDrivePressure().get());
-  if (in.ChemoreceptorRespirationFrequency().present())
-    GetChemoreceptorRespirationFrequency().Load(in.ChemoreceptorRespirationFrequency().get());
   if (in.PainVisualAnalogueScale().present())
     GetPainVisualAnalogueScale().Load(in.PainVisualAnalogueScale().get());
   if (in.LeftEyePupillaryResponse().present())
@@ -140,10 +128,6 @@ void SENervousSystem::Unload(CDM::NervousSystemData& data) const
     data.ChemoreceptorHeartRateScale(std::unique_ptr<CDM::ScalarData>(m_ChemoreceptorHeartRateScale->Unload()));
   if (m_ChemoreceptorHeartElastanceScale != nullptr)
     data.ChemoreceptorHeartElastanceScale(std::unique_ptr<CDM::ScalarData>(m_ChemoreceptorHeartElastanceScale->Unload()));
-  if (m_ChemoreceptorRespirationDrivePressure != nullptr)
-    data.ChemoreceptorRespirationDrivePressure(std::unique_ptr<CDM::ScalarPressureData>(m_ChemoreceptorRespirationDrivePressure->Unload()));
-  if (m_ChemoreceptorRespirationFrequency != nullptr)
-    data.ChemoreceptorRespirationFrequency(std::unique_ptr<CDM::ScalarFrequencyData>(m_ChemoreceptorRespirationFrequency->Unload()));
   if (m_PainVisualAnalogueScale != nullptr)
     data.PainVisualAnalogueScale(std::unique_ptr<CDM::ScalarData>(m_PainVisualAnalogueScale->Unload()));
   if (m_LeftEyePupillaryResponse != nullptr)
@@ -252,40 +236,6 @@ double SENervousSystem::GetChemoreceptorHeartElastanceScale() const
   if (m_ChemoreceptorHeartElastanceScale == nullptr)
     return SEScalar::dNaN();
   return m_ChemoreceptorHeartElastanceScale->GetValue();
-}
-
-bool SENervousSystem::HasChemoreceptorRespirationDrivePressure() const
-{
-  return m_ChemoreceptorRespirationDrivePressure == nullptr ? false : m_ChemoreceptorRespirationDrivePressure->IsValid();
-}
-SEScalarPressure& SENervousSystem::GetChemoreceptorRespirationDrivePressure()
-{
-  if (m_ChemoreceptorRespirationDrivePressure == nullptr)
-    m_ChemoreceptorRespirationDrivePressure = new SEScalarPressure();
-  return *m_ChemoreceptorRespirationDrivePressure;
-}
-double SENervousSystem::GetChemoreceptorRespirationDrivePressure(const PressureUnit& unit)
-{
-  if (m_ChemoreceptorRespirationDrivePressure == nullptr)
-    return SEScalar::dNaN();
-  return m_ChemoreceptorRespirationDrivePressure->GetValue(unit);
-}
-
-bool SENervousSystem::HasChemoreceptorRespirationFrequency() const
-{
-  return m_ChemoreceptorRespirationFrequency == nullptr ? false : m_ChemoreceptorRespirationFrequency->IsValid();
-}
-SEScalarFrequency& SENervousSystem::GetChemoreceptorRespirationFrequency()
-{
-  if (m_ChemoreceptorRespirationFrequency == nullptr)
-    m_ChemoreceptorRespirationFrequency = new SEScalarFrequency();
-  return *m_ChemoreceptorRespirationFrequency;
-}
-double SENervousSystem::GetChemoreceptorRespirationFrequency(const FrequencyUnit& unit)
-{
-  if (m_ChemoreceptorRespirationFrequency == nullptr)
-    return SEScalar::dNaN();
-  return m_ChemoreceptorRespirationFrequency->GetValue(unit);
 }
 
 bool SENervousSystem::HasPainVisualAnalogueScale() const
