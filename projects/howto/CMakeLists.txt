@@ -55,7 +55,7 @@ function(add_howto name)
         )
 
     if(WIN32)
-      target_compile_definitions(${TARGET_NAME}  PRIVATE "_CRT_SECURE_NO_WARNINGS"  ${TARGET_NAME})
+      target_compile_definitions(${TARGET_NAME}  PRIVATE "_CRT_SECURE_NO_WARNINGS"  )
     elseif(CMAKE_COMPILER_IS_GNUCXX)
       #target_link_options(${TARGET_NAME} "LINKER:--no-as-needed" )
       #set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS ${${EXAMPLE_NAME}_LDFLAGS})
