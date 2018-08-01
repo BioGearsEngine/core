@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Cardiovascular Validation</Name>
+    <Description>Validation of chemoreceptors to various hypercapnic insults</Description>
+    <InitialParameters><PatientFile>Roy.xml</PatientFile></InitialParameters> <!--Using Roy because he has baseline respiration rate of 12 like validation data-->
+    
+  <DataRequests>
+	<!--Cardiovascular Data-->		
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure" Unit="mmHg" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput" Unit="mL/min" Precision="0"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure" Unit="mmHg" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CerebralBloodFlow" Unit="mL/min" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CerebralPerfusionPressure" Unit="mmHg" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure" Unit="mmHg" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate" Unit="1/min" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracranialPressure" Unit="mmHg" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg" Precision="2"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialCarbonDioxidePartialPressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialCarbonDioxidePartialPressureDelta" Unit="mmHg" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanCentralVenousPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulsePressure" Unit="mmHg" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure" Unit="mmHg" Precision="2"/>
+	
+	<!--Respiratory Data-->  
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="AlveolarArterialGradient"       Unit="mmHg"      Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CarricoIndex"                   Unit="mmHg"      Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"  Unit="unitless"  Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxidePressure"  Unit="cmH2O"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExpiratoryFlow"                 Unit="L/s"       Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="InspiratoryExpiratoryRatio"     Unit="unitless"  Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="InspiratoryFlow"                Unit="L/s"       Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryCompliance"            Unit="L/cmH2O"   Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryResistance"            Unit="cmH2O s/L" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationDriverPressure"      Unit="cmH2O"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationMusclePressure"      Unit="cmH2O"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                Unit="1/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SpecificVentilation"            Unit="unitless"  Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                    Unit="mL"        Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"       Unit="L/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalDeadSpaceVentilation"      Unit="L/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                Unit="mL"        Precision="4"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalPulmonaryVentilation"      Unit="L/min"     Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"         Unit="cmH2O"     Precision="4"/>
+	
+	<!--Blood Gas Data-->
+	<DataRequest Name="ArterialCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="ArterialOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="PulmonaryArterialCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/> 
+	<DataRequest Name="PulmonaryArterialOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="PulmonaryVenousCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="PulmonaryVenousOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/> 
+	<DataRequest Name="VenousCarbonDioxidePressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+	<DataRequest Name="VenousOxygenPressure" xsi:type="PhysiologyDataRequestData" Unit="mmHg" Precision="0"/>
+  </DataRequests>
+
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="2.5" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.76"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="0.03"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="25" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.7896"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="4.0E-4"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="17.5" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.74"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="0.05"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="25" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.7896"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="4.0E-4"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="17.5" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.73"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="0.06"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="25" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.7896"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="4.0E-4"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="17.5" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.72"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="0.07"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="25" unit="min"/>	
+    </Action>
+	<Action xsi:type="EnvironmentChangeData">
+		<Conditions>
+			<AmbientGas Name="Nitrogen">
+				<FractionAmount value="0.7896"/>
+			</AmbientGas>
+			<AmbientGas Name="Oxygen">
+				<FractionAmount value="0.21"/>
+			</AmbientGas>
+			<AmbientGas Name="CarbonDioxide">
+				<FractionAmount value="4.0E-4"/>
+			</AmbientGas>
+		</Conditions>
+	</Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="15" unit="min"/>	
+    </Action>
+</Scenario>
