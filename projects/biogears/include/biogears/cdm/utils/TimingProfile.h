@@ -17,8 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <chrono>
 
-namespace {
-using Clock = std::chrono::high_resolution_clock;
+namespace biogears{
 
 enum class State {
   Ready, // Timer has no data and is not running
@@ -27,8 +26,8 @@ enum class State {
 };
 
 struct Timer {
-  Clock::time_point start;
-  Clock::time_point end;
+  std::chrono::high_resolution_clock::time_point start;
+  std::chrono::high_resolution_clock::time_point end;
   State state = State::Ready;
 };
 }
@@ -83,11 +82,11 @@ public:
   template <typename Duration>
   typename Duration::rep GetElapsedTime(const std::string& label)
   {
-    State state = m_timers[label].state;
+    biogears::State state = m_timers[label].state;
 
-    if (state == State::Running) {
-      return std::chrono::duration_cast<Duration>(Clock::now() - m_timers[label].start).count();
-    } else if (state == State::Ran) {
+    if (state == biogears::State::Running) {
+      return std::chrono::duration_cast<Duration>(std::chrono::high_resolution_clock::now() - m_timers[label].start).count();
+    } else if (state == biogears::State::Ran) {
       return std::chrono::duration_cast<Duration>(m_timers[label].end - m_timers[label].start).count();
     } else {
       return typename Duration::rep(0);
@@ -95,7 +94,7 @@ public:
   }
 
 private:
-  std::map<std::string, Timer> m_timers;
+  std::map<std::string, biogears::Timer> m_timers;
 
   std::stringstream m_ss;
 };

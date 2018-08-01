@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 
+using State = biogears::State;
+using Timer = biogears::Timer;
 void TimingProfile::Clear()
 {
   m_timers.clear();
@@ -24,7 +26,7 @@ void TimingProfile::Reset(const std::string& label)
     return;
   }
   if (m_timers[label].state == State::Running) {
-    m_timers[label].start = Clock::now();
+    m_timers[label].start = std::chrono::high_resolution_clock::now();
   } else if (m_timers[label].state == State::Ran) {
     m_timers[label].state = State::Ready;
   }
@@ -39,7 +41,7 @@ void TimingProfile::Start(const std::string& label)
     return;
   }
 
-  m_timers[label].start = Clock::now();
+  m_timers[label].start = std::chrono::high_resolution_clock::now();
   m_timers[label].state = State::Running;
 
   m_ss << "TimingProfile:Start:" << label << std::ends;
@@ -53,7 +55,7 @@ void TimingProfile::Stop(const std::string& label)
   }
 
   if (m_timers[label].state == State::Running) {
-    m_timers[label].end = Clock::now();
+    m_timers[label].end = std::chrono::high_resolution_clock::now();
     m_timers[label].state = State::Ran;
   }
 
