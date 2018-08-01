@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <sstream>
 #include <algorithm>
-#include <cstdint>
+#include <cctype>
 
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
