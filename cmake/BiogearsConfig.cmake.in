@@ -3,9 +3,11 @@
 include(CMakeFindDependencyMacro)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+set(Biogears_XSD_SCHEMA_DIR ${PACKAGE_PREFIX_DIR}/share/biogears/xsd/ CACHE PATH "Directory containing all of the CDM XSD Schema files") 
+file(GLOB_RECURSE Biogears_XSD_SCHEMA_LIST ${PACKAGE_PREFIX_DIR}/share/biogears/xsd/*.xsd "Exsact list of XSD files for the current Biogears Release") 
+
+include ( "${CMAKE_CURRENT_LIST_DIR}/@ROOT_PROJECT_NAME@.cmake" )
 
 find_dependency(Eigen3)
 find_dependency(Log4cpp)
 find_dependency(CodeSynthesis)
-
-include ( "${CMAKE_CURRENT_LIST_DIR}/@ROOT_PROJECT_NAME@.cmake" )
