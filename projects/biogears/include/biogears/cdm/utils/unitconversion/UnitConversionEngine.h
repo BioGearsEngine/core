@@ -46,14 +46,7 @@ public:
   typedef std::unordered_map<CQuantityConversionKey, unsigned int> QuantityConversionMap;
   typedef std::unordered_map<CUnitDimension, unsigned int> DimensionToQuantityMap;
 
-  static CUnitConversionEngine& GetEngine(void)
-  {
-    if (uce == nullptr) {
-      uce = new CUnitConversionEngine();
-      uce->LoadDefinitionsFlatFile("UCEDefs.conf");
-    }
-    return *uce;
-  }
+  static CUnitConversionEngine& GetEngine(void);
 
   static void DestroyEngine()
   {
@@ -164,7 +157,7 @@ public:
     return m_iNumFundamentalQuantities;
   }
 
-  void LoadDefinitionsFlatFile(const std::string& FileNamne);
+  void LoadDefinitionsFlatFile();
 
   // These are the methods that the LoadDefinitions methods call to build up the
   // internal database of units information

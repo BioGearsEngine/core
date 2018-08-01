@@ -15,12 +15,14 @@ specific language governing permissions and limitations under the License.
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
 
+#include <sstream>
+#include <algorithm>
+#include <cstdint>
+
 #include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
-#include <algorithm>
-#include <cctype>
-
+#include "UCEDefs.h"
 CUnitConversionEngine* CUnitConversionEngine::uce = nullptr;
 
 class InitializeUnitConversionEngine {
@@ -87,6 +89,14 @@ CUnitConversionEngine::~CUnitConversionEngine()
   delete m_D2QMap;
 }
 
+CUnitConversionEngine& CUnitConversionEngine::GetEngine(void)
+{
+  if (uce == nullptr) {
+    uce = new CUnitConversionEngine();
+    uce->LoadDefinitionsFlatFile();
+  }
+  return *uce;
+}
 //----------------------------------------------------------------------------
 // Convenience method to tell if a string instance and c-string pointer are
 // equivalent in a Case-Insensitive manner
@@ -103,14 +113,13 @@ inline bool CIEQUAL(std::string strA, std::string strB)
 }
 
 //----------------------------------------------------------------------------
-void CUnitConversionEngine::LoadDefinitionsFlatFile(const std::string& FileName)
+void CUnitConversionEngine::LoadDefinitionsFlatFile()
 {
-  std::ifstream defs;
+  std::stringstream defs;
+  defs << biogears::UCEDEFS_TEXT;
+
   DEBUGOUT(cerr << "Loading definitions...\n";)
-  defs.open(FileName.c_str());
-  if (!defs.is_open()) {
-    std::cerr << "Could not open " << FileName << std::endl;
-  }
+  
   std::string curLine;
   CQuantityTypeDescriptor* qtd = nullptr;
 
@@ -257,7 +266,6 @@ void CUnitConversionEngine::LoadDefinitionsFlatFile(const std::string& FileName)
       NewQuantityConversion(FromType, fromExponent, ToType, MappingUnit);
     }
   } // while not EOF
-  defs.close();
 }
 
 //----------------------------------------------------------------------------
