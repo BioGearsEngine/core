@@ -684,11 +684,9 @@ void BloodChemistry::Sepsis()
   sep->GetEarlyMediator().IncrementValue(dWhiteBloodCell_Per_hr * dt_hr);
   sep->GetLateMediator().IncrementValue(dLateMediator_Per_hr * dt_hr);
 
-
   if (sep->GetEarlyMediator().GetValue() < wbcFractionInitial) {
     sep->GetSeverity().SetValue(0.0); //Our White blood cell count has return to normal.  This will cause the Sepsis action to be inactivated
   }
-      
 
   //Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
   //The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
@@ -754,6 +752,6 @@ void BloodChemistry::Sepsis()
   double maxBilirubin_mg_Per_dL = 26.0; //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
   double halfMaxWBC = wbcFractionMax; //White blood cell fraction that causes half-max bilirubin concentration.  Set above 0.5 because bilirubin is a later sign of shock
   double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
-  double totalBilirubin_mg_Per_dL =GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput)  + baselineBilirubin_mg_Per_dL;
+  double totalBilirubin_mg_Per_dL = GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput) + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
 }

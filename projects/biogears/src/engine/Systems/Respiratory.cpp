@@ -159,10 +159,12 @@ void Respiratory::Initialize()
   m_BreathTimeExhale_min = 0.0;
   m_BreathingCycle = false;
   m_BreathingCycleTime_s = 0.0;
+  m_TargetTidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   m_VentilationFrequency_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
   m_DriverPressureMin_cmH2O = m_DefaultDrivePressure_cmH2O;
-  m_VentilationToTidalVolumeSlope = 1.0; //0.15;
+  m_VentilationToTidalVolumeSlope = m_TargetTidalVolume_L / pow(m_Patient->GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min) + 1.0, 0.65);
+
   //The peak driver pressure is the pressure above the default pressure
   m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(m_Patient->GetTotalLungCapacity(VolumeUnit::L) - m_Patient->GetInspiratoryReserveVolume(VolumeUnit::L)) - m_DefaultDrivePressure_cmH2O;
   m_ArterialO2PartialPressure_mmHg = m_AortaO2->GetPartialPressure(PressureUnit::mmHg);
@@ -193,7 +195,7 @@ void Respiratory::Initialize()
   double TidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   double RespirationRate_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   GetTidalVolume().SetValue(TidalVolume_L, VolumeUnit::L);
-  GetTargetPulmonaryVentilation().SetValue(m_Patient->GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min),VolumePerTimeUnit::L_Per_min);
+  GetTargetPulmonaryVentilation().SetValue(m_Patient->GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetCarricoIndex().SetValue(452.0, PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
@@ -244,6 +246,7 @@ bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
   m_MaxDriverPressure_cmH2O = in.MaxDriverPressure_cmH2O();
   m_PeakRespiratoryDrivePressure_cmH2O = in.PeakRespiratoryDrivePressure_cmH2O();
 
+  m_TargetTidalVolume_L = in.TargetTidalVolume_L();
   m_VentilationFrequency_Per_min = in.VentilationFrequency_Per_min();
   m_VentilationToTidalVolumeSlope = in.VentilationToTidalVolumeSlope();
   m_ArterialO2Average_mmHg.Load(in.ArterialOxygenAverage_mmHg());
@@ -298,6 +301,7 @@ void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
   data.MaxDriverPressure_cmH2O(m_MaxDriverPressure_cmH2O);
   data.PeakRespiratoryDrivePressure_cmH2O(m_PeakRespiratoryDrivePressure_cmH2O);
 
+  data.TargetTidalVolume_L(m_TargetTidalVolume_L);
   data.VentilationFrequency_Per_min(m_VentilationFrequency_Per_min);
   data.VentilationToTidalVolumeSlope(m_VentilationToTidalVolumeSlope);
   data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2Average_mmHg.Unload()));
@@ -427,7 +431,7 @@ void Respiratory::AtSteadyState()
   double inspiratoryCapacity_L = totalLungCapacity_L - m_InstantaneousFunctionalResidualCapacity_L;
   m_Patient->GetRespirationRateBaseline().SetValue(respirationRate_Per_min, FrequencyUnit::Per_min);
   m_Patient->GetTidalVolumeBaseline().SetValue(tidalVolume_L, VolumeUnit::L);
-  m_Patient->GetTotalVentilationBaseline().SetValue(GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min),VolumePerTimeUnit::L_Per_min);
+  m_Patient->GetTotalVentilationBaseline().SetValue(GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
   m_Patient->GetFunctionalResidualCapacity().SetValue(m_InstantaneousFunctionalResidualCapacity_L, VolumeUnit::L);
   m_Patient->GetVitalCapacity().SetValue(vitalCapacity_L, VolumeUnit::L);
   m_Patient->GetExpiratoryReserveVolume().SetValue(expiratoryReserveVolume_L, VolumeUnit::L);
@@ -825,14 +829,6 @@ void Respiratory::MechanicalVentilation()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::RespiratoryDriver()
 {
-  double tvTrack = 0.0;
-  double targetVent = 0.0;
-  double oldDriverPressure_cmH2O = 0.0;
-  double minPressure_cmH2O = 0.0;
-  double inTime = 0.0;
-  double exTime = 0.0;
-  double totalTime = 0.0;
-
   m_BreathingCycleTime_s += m_dt_s;
   ///\ToDo:  Running averages were mostly used for chemoreceptors that have been moved to Nervous.
   /// ToDo:  However, they are still used in some calculations in CalculateVitals.  Should we move/consolidate these?
@@ -886,112 +882,23 @@ void Respiratory::RespiratoryDriver()
     //Prepare for the next cycle -------------------------------------------------------------------------------
     if (m_BreathingCycleTime_s > TotalBreathingCycleTime_s) //End of the cycle or currently not breathing
     {
-      UpdateIERatio();
-      // Make a cardicArrestEffect that is 1.0 unless cardiac arrest is true
-      double cardiacArrestEffect = 1.0;
-      // If the cv system parameter is true, then make the cardicArrestEffect = 0
-      if (m_Patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
-        cardiacArrestEffect = 0.0;
-      }
-
-      //Get Drug Effects
-      SEDrugSystem& Drugs = m_data.GetDrugs();
-      double DrugRRChange_Per_min = Drugs.GetRespirationRateChange(FrequencyUnit::Per_min);
-      double DrugsTVChange_L = Drugs.GetTidalVolumeChange(VolumeUnit::L);
-      double CNSChange = Drugs.GetCentralNervousResponse().GetValue(); //central nervous response
-      double NMBModifier = 1.0;
-      double SedationModifier = 1.0;
-
-      //Get pain action effects
-      double painVAS = m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
-      painVAS *= 0.1; //scale to a fractional value
-
-      //Make changes to Respiration Rate change based on the neuromuscular block level
-      if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
-        NMBModifier = 0.0;
-        DrugRRChange_Per_min = 0.0;
-        DrugsTVChange_L = 0.0;
-      } else if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.11) {
-        NMBModifier = 0.5;
-        DrugRRChange_Per_min = 0.0;
-        DrugsTVChange_L = 0.0;
-      } else if (Drugs.GetSedationLevel().GetValue() > 0.15 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0) {
-        SedationModifier = 0.0;
-        DrugRRChange_Per_min = 0.0;
-        DrugsTVChange_L = 0.0;
-      }
-      //Make changes to respiration rate if Sepsis is present
-      //Yes, this is hijacking the drug response variable.  Seemed like the best option on short notice
-      if (m_PatientActions->HasSepsis()) {
-        double baselineWBCFraction = 0.05; //Initial value of white blood cells in model
-        double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
-        double sigmoidInput = m_PatientActions->GetSepsis()->GetEarlyMediator().GetValue() - baselineWBCFraction;
-        DrugRRChange_Per_min += baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
-      }
-
-      //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
-
-     
-      double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
-      targetVent = dTargetPulmonaryVentilation_L_Per_min;
-      double dMaximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);
-      /// \event Patient: Maximum Pulmonary Ventilation Rate : Pulmonary ventilation exceeds maximum value
-      if (dTargetPulmonaryVentilation_L_Per_min > dMaximumPulmonaryVentilationRate) {
-        dTargetPulmonaryVentilation_L_Per_min = dMaximumPulmonaryVentilationRate;
-        m_Patient->SetEvent(CDM::enumPatientEvent::MaximumPulmonaryVentilationRate, true, m_data.GetSimulationTime());
-      }
-
-      if (dTargetPulmonaryVentilation_L_Per_min < dMaximumPulmonaryVentilationRate && m_Patient->IsEventActive(CDM::enumPatientEvent::MaximumPulmonaryVentilationRate)) {
-        m_Patient->SetEvent(CDM::enumPatientEvent::MaximumPulmonaryVentilationRate, false, m_data.GetSimulationTime());
-      }
-
-
-      double dTargetTidalVolume_L = m_VentilationToTidalVolumeSlope * pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
-       //double dTargetTidalVolume_L = m_VentilationToTidalVolumeSlope * dTargetPulmonaryVentilation_L_Per_min * TotalBreathingCycleTime_s / 60.0;
       
-      dTargetTidalVolume_L *= cardiacArrestEffect * NMBModifier;
+      //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
+      double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
+      m_TargetTidalVolume_L = m_VentilationToTidalVolumeSlope * pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
 
-      //Apply Drug Effects to the target tidal volume
-      dTargetTidalVolume_L += DrugsTVChange_L;
-
-      //This is a piecewise function that plateaus at the Tidal Volume equal to 1/2 * Vital Capacity
-      //The Respiration Rate will make up for the Alveoli Ventilation difference
-      double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
-      dTargetTidalVolume_L = std::min(dTargetTidalVolume_L, dHalfVitalCapacity_L);
-
-      tvTrack = dTargetTidalVolume_L;
+      //All actions that effect the target tidal volume and respiration rate are processed in the function below.  The
+      //ventilation frequency (m_VentilationFrequency_Per_min) is calculated in this function.
+      ProcessDriverActions();
 
       //Map the Target Tidal Volume to the Driver
-      double TargetVolume_L = m_InitialFunctionalResidualCapacity_L + dTargetTidalVolume_L;
-
+      double TargetVolume_L = m_InitialFunctionalResidualCapacity_L + m_TargetTidalVolume_L;
       m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(TargetVolume_L);
+
       //There's a maximum force the driver can try to achieve
       m_PeakRespiratoryDrivePressure_cmH2O = std::max(m_PeakRespiratoryDrivePressure_cmH2O, m_MaxDriverPressure_cmH2O);
       //The peak driver pressure is the pressure above the default pressure.  Therefore, we subtract it from the base pressure.
       m_PeakRespiratoryDrivePressure_cmH2O -= m_DefaultDrivePressure_cmH2O;
-
-      //Respiration Rate (i.e. Driver frequency) *************************************************************************
-      //Calculate the Respiration Rate given the Alveolar Ventilation and the Target Tidal Volume
-      if (dTargetTidalVolume_L == 0.0) //Can't divide by zero
-      {
-        m_VentilationFrequency_Per_min = 0.0;
-        m_bNotBreathing = true;
-      } else {
-        m_VentilationFrequency_Per_min = dTargetPulmonaryVentilation_L_Per_min / dTargetTidalVolume_L;
-        m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
-        m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
-        m_VentilationFrequency_Per_min *= (1 + 0.65 * painVAS); //scale with pain response
-        m_bNotBreathing = false;
-      }
-
-      //Target respiration from Magosso
-     // m_VentilationFrequency_Per_min = dTargetPulmonaryVentilation_L_Per_min / (0.15 * pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65));
-
-      if (m_VentilationFrequency_Per_min > dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L)
-        m_VentilationFrequency_Per_min = dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L;
-
-      if (m_VentilationFrequency_Per_min < 0.0)
-        m_VentilationFrequency_Per_min = 0.0;
 
       //Patient Definition *************************************************************************
       //We need to hit the patient's defined Respiration Rate Baseline, no matter what,
@@ -999,7 +906,7 @@ void Respiratory::RespiratoryDriver()
       if (m_data.GetState() <= EngineState::InitialStabilization) {
         double dRespirationRateBaseline_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
         double dError = dRespirationRateBaseline_Per_min - m_VentilationFrequency_Per_min;
-        double dGain = - m_VentilationToTidalVolumeSlope  / dRespirationRateBaseline_Per_min;
+        double dGain = -m_VentilationToTidalVolumeSlope / dRespirationRateBaseline_Per_min;
         //Amplitude set-point - this will set the Tidal Volume baseline when O2 and CO2 are at the correct/balanced level
         m_VentilationToTidalVolumeSlope = m_VentilationToTidalVolumeSlope + dError * dGain;
         //Put bounds on this
@@ -1023,21 +930,18 @@ void Respiratory::RespiratoryDriver()
     double driverInspirationTime_s = IERatio / (1.0 + IERatio) * TotalBreathingCycleTime_s;
     double driverExpirationTime_s = TotalBreathingCycleTime_s - driverInspirationTime_s;
     double tauExpiration_s = driverExpirationTime_s / 5.0;
-    totalTime = TotalBreathingCycleTime_s;
-    inTime = driverInspirationTime_s;
-    exTime = driverExpirationTime_s;
 
     ////New driver
     if (m_BreathingCycleTime_s <= driverInspirationTime_s) {
       //Inspiration
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + (-m_PeakRespiratoryDrivePressure_cmH2O * pow(m_BreathingCycleTime_s, 2) / (driverInspirationTime_s * driverExpirationTime_s) + (m_PeakRespiratoryDrivePressure_cmH2O * TotalBreathingCycleTime_s * m_BreathingCycleTime_s / (driverInspirationTime_s * driverExpirationTime_s)));
-    } else if (m_BreathingCycleTime_s <TotalBreathingCycleTime_s ){
+    } else if (m_BreathingCycleTime_s < TotalBreathingCycleTime_s) {
       //Expiration
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + m_PeakRespiratoryDrivePressure_cmH2O / (1.0 - exp(-driverExpirationTime_s / tauExpiration_s)) * (exp(-(m_BreathingCycleTime_s - driverInspirationTime_s) / tauExpiration_s) - exp(-driverExpirationTime_s / tauExpiration_s));
     } else {
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
     }
-   
+
     Apnea();
 
     if (m_bNotBreathing) {
@@ -1047,17 +951,97 @@ void Respiratory::RespiratoryDriver()
 
   //Push Driving Data to the Circuit -------------------------------------------------------------------------------
   m_DriverPressurePath->GetNextPressureSource().SetValue(m_DriverPressure_cmH2O, PressureUnit::cmH2O);
-  m_data.GetDataTrack().Probe("Debug_TargetTV", tvTrack);
-  m_data.GetDataTrack().Probe("Debug_TargetVent", targetVent);
-  m_data.GetDataTrack().Probe("Debug_DriverPressureNew", m_DriverPressure_cmH2O);
-  m_data.GetDataTrack().Probe("Debug_TimeTotal", totalTime);
-  m_data.GetDataTrack().Probe("Debug_TimeInspiration", inTime);
-  m_data.GetDataTrack().Probe("Debug_TimeExpiration", exTime);
-  m_data.GetDataTrack().Probe("debug_VentilationSlope", m_VentilationToTidalVolumeSlope);
-  m_data.GetDataTrack().Probe("debug_VentilationFrequency", m_VentilationFrequency_Per_min);
-  m_data.GetDataTrack().Probe("debug_Pmax", m_PeakRespiratoryDrivePressure_cmH2O);
-  //m_data.GetDataTrack().Probe("debug_Pdefault", m_DefaultDrivePressure_cmH2O);
 }
+//-------------------------------------------------------------------------------------------------
+///\brief
+/// Process actions that affect respiratory driver
+///
+///\details
+/// The tidal volume calculated from the target ventilation returned by the Chemoreceptor feedback can attenuated by many
+/// factors.  Currently, we have a cardiac arrest effect, drug effects in the form of neuromuscular blockers and sedatives,
+/// sepsis effects, and pain effects.  Process these actions here instead of in the RespiratoryDriver to clean up the code
+/// and have a dedicated place for future actions that change driver output.
+//--------------------------------------------------------------------------------------------------
+void Respiratory::ProcessDriverActions()
+{
+  // Process Cardiac Arrest action
+  double cardiacArrestEffect = 1.0;
+  if (m_Patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+    cardiacArrestEffect = 0.0;
+  }
+ 
+  //Process drug effects--adjust them based on neuromuscular block level
+  SEDrugSystem& Drugs = m_data.GetDrugs();
+  double DrugRRChange_Per_min = Drugs.GetRespirationRateChange(FrequencyUnit::Per_min);
+  double DrugsTVChange_L = Drugs.GetTidalVolumeChange(VolumeUnit::L);
+  double NMBModifier = 1.0;
+  double SedationModifier = 1.0;
+
+  if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
+    NMBModifier = 0.0;
+    DrugRRChange_Per_min = 0.0;
+    DrugsTVChange_L = 0.0;
+  } else if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.11) {
+    NMBModifier = 0.5;
+    DrugRRChange_Per_min = 0.0;
+    DrugsTVChange_L = 0.0;
+  } else if (Drugs.GetSedationLevel().GetValue() > 0.15 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0) {
+    SedationModifier = 0.0;
+    DrugRRChange_Per_min = 0.0;
+    DrugsTVChange_L = 0.0;
+  }
+
+  //Process Pain effects
+  double painVAS = m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
+  painVAS *= 0.1; //scale to a fractional value
+
+  //Process Sepsis effects
+  double sepsisModifier = 0.0;
+  if (m_PatientActions->HasSepsis()) {
+    double baselineWBCFraction = 0.05; //Initial value of white blood cells in model
+    double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
+    double sigmoidInput = m_PatientActions->GetSepsis()->GetEarlyMediator().GetValue() - baselineWBCFraction;
+    sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
+  }
+
+  //Apply modifiers to tidal volume.  Cardiac arrest and neuromuscular block are multiplicative while drug change is additive
+  m_TargetTidalVolume_L *= cardiacArrestEffect;
+  m_TargetTidalVolume_L *= NMBModifier;
+  m_TargetTidalVolume_L += DrugsTVChange_L;
+
+  //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications.  The Respiration Rate will make up for the Alveoli Ventilation difference
+  double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
+  double dMaximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);
+  m_TargetTidalVolume_L = std::min(m_TargetTidalVolume_L, dHalfVitalCapacity_L);
+
+  //Calculate ventilation based on target tidal volume and apply action effects
+  if (m_TargetTidalVolume_L == 0.0) //Can't divide by zero
+  {
+    m_VentilationFrequency_Per_min = 0.0;
+    m_bNotBreathing = true;
+  } else {
+    m_VentilationFrequency_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min) / m_TargetTidalVolume_L;
+    m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
+    m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
+    m_VentilationFrequency_Per_min += sepsisModifier;
+    m_VentilationFrequency_Per_min *= (1.0 + 0.65 * painVAS); //scale with pain response
+    m_bNotBreathing = false;
+  }
+
+  //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
+  m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
+  //if (m_VentilationFrequency_Per_min > dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L) {
+  //  m_VentilationFrequency_Per_min = dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L;
+  //}
+  //  
+
+  //if (m_VentilationFrequency_Per_min < 0.0) {
+  //  m_VentilationFrequency_Per_min = 0.0;
+  //}
+  //  
+
+}
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Airway obstruction

@@ -63,22 +63,15 @@ protected:
   void CheckPainStimulus();
   void CheckNervousStatus();
   void ChemoreceptorFeedback();
-  void ChemoreceptorNew();
   void SetPupilEffects();
 
   // Serializable member variables (Set in Initialize and in schema)
   double m_ArterialOxygenSetPoint_mmHg; /// \todo Aaron these should be baselines.
   double m_ArterialCarbonDioxideSetPoint_mmHg;
-  RunningAverage m_ArterialO2Average_mmHg;
-  RunningAverage m_ArterialCO2Average_mmHg;
-  double m_ArterialO2Pressure_mmHg;
-  double m_ArterialCO2Pressure_mmHg;
-  double m_BrainCO2Pressure_mmHg;
   double m_CentralVentilationDelta_L_Per_min;
   double m_ChemoreceptorFiringRate_Hz;
   double m_ChemoreceptorFiringRateSetPoint_Hz;
-  double m_ChemoreceptorDynamicResponse_Hz;
-  double m_PreviousArterialCO2VolumeFraction;
+  double m_PeripheralBloodGasInteractionBaseline_Hz;
   double m_PeripheralVentilationDelta_L_Per_min;
 
   // Stateless member variable (Set in SetUp())

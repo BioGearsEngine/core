@@ -105,6 +105,7 @@ private:
   void Apnea();
   // Driver
   void RespiratoryDriver();
+  void ProcessDriverActions();
 
   // Shared Utility Methods for Actions/Driver
   // Asthma/COPD
@@ -157,6 +158,7 @@ private:
   double m_InstantaneousFunctionalResidualCapacity_L;
   double m_MaxDriverPressure_cmH2O;
   double m_PeakRespiratoryDrivePressure_cmH2O;
+  double m_TargetTidalVolume_L;
   double m_VentilationFrequency_Per_min;
   double m_VentilationToTidalVolumeSlope;
 
