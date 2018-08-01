@@ -130,17 +130,11 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="ArterialOxygenSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ArterialOxygenPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="ArterialCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="BrainCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorCentralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorDynamicResponse_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorPeripheralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorFiringRate_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorFiringRateSetPoint_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="PreviousArterialCarbonDioxideVolumeFraction" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -204,6 +198,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="MaxDriverPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PeakRespiratoryDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationFrequency_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="TargetTidalVolume_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationToTidalVolumeSlope" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <!-- Conscious Breathing -->
           <xs:element name="ConsciousBreathing" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
