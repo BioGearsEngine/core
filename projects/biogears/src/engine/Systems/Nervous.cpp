@@ -68,7 +68,7 @@ void Nervous::Initialize()
   m_FeedbackActive = false;
   m_blockActive = false;
   m_CentralVentilationDelta_L_Per_min = 0.0;
-  m_ChemoreceptorFiringRate_Hz = 3.65;          //2.52;
+  m_ChemoreceptorFiringRate_Hz = 3.65;
   m_ChemoreceptorFiringRateSetPoint_Hz = m_ChemoreceptorFiringRate_Hz;
   m_PeripheralBloodGasInteractionBaseline_Hz = 0.0;
   m_PeripheralVentilationDelta_L_Per_min = 0.0;
