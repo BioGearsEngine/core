@@ -227,6 +227,7 @@ void Energy::Exercise()
         exerciseIntensity = 1;
         Warning("Desired work rate over max work rate. Desired work rate can be a value between 0 and 1200 W. Proceeding with max work rate.");
       }
+	  m_PatientActions->GetExercise()->GetDesiredWorkRate().Clear();
       m_PatientActions->GetExercise()->GetIntensity().SetValue(exerciseIntensity);
     } else {
       Warning("Exercise call with no severity. Action ignored.");
