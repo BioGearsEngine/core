@@ -87,13 +87,13 @@ if(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
 
     configure_file(${doxyfile_in} ${doxyfile} @ONLY)
 
-    add_custom_target(doc
+    add_custom_target(doxygen
         COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/share/doc/
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
 
-   set_target_properties( doc PROPERTIES
+   set_target_properties(doxygen PROPERTIES
                           DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
                           CXX_STANDARD 11
                           FOLDER "Other"

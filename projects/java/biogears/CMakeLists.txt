@@ -133,13 +133,14 @@ add_custom_target(gen-states
     VERBATIM
     USES_TERMINAL
 )
-add_custom_target(gen-docs
+add_custom_target(gen-website-docs
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen schema/xsd/BioGearsDataModel.xsd docs/doxygen/process_md/xsd.ixx
+    # COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen schema/xsd/BioGearsDataModel.xsd docs/doxygen/process_md/xsd.ixx
+    # COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRun.con
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -249,7 +250,7 @@ add_custom_target(biogears-gui
 
 add_dependencies(gen-states  ${PROJECT_NAME})
 add_dependencies(gen-data  ${PROJECT_NAME})
-add_dependencies(gen-docs  ${PROJECT_NAME})
+add_dependencies(gen-website-docs  ${PROJECT_NAME})
 add_dependencies(run-system-validation  ${PROJECT_NAME})
 add_dependencies(report-system-validation  ${PROJECT_NAME})
 add_dependencies(run-patient-validation  ${PROJECT_NAME})
@@ -268,7 +269,7 @@ add_dependencies(biogears-gui  ${PROJECT_NAME})
 if(ARA_STAGE_RUNTIME)
  add_dependencies(gen-states stage_runtime )
  add_dependencies(gen-data stage_runtime )
- add_dependencies(gen-docs stage_runtime )
+ add_dependencies(gen-website-docs stage_runtime )
  add_dependencies(run-system-validation stage_runtime )
  add_dependencies(report-system-validation stage_runtime )
  add_dependencies(run-patient-validation stage_runtime )
@@ -287,7 +288,7 @@ set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
 
 set_target_properties(gen-states PROPERTIES FOLDER "Java/Generate" )
 set_target_properties(gen-data   PROPERTIES FOLDER "Java/Generate" )
-set_target_properties(gen-docs   PROPERTIES FOLDER "Java/Generate" )
+set_target_properties(gen-website-docs   PROPERTIES FOLDER "Java/Generate" )
 
 
 set_target_properties(run-system-validation    PROPERTIES FOLDER "Java/Validation" )
