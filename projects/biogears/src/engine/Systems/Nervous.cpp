@@ -458,7 +458,8 @@ void Nervous::CheckNervousStatus()
 void Nervous::ChemoreceptorFeedback()
 {
   //-------Respiratory Feedback:  This is active throughtout the simulation (including stabilization)------------------------------
-  //Model Parameters from Magosso2001Mathematical
+  //Model Parameters from 
+  ///\@cite Magosso2001Mathematical
   double centralTimeConstant_s = 180.0;
   double centralGainConstant_L_Per_min_mmHg = 1.8;
   double peripheralTimeConstant_s = 13.0;

@@ -882,8 +882,9 @@ void Respiratory::RespiratoryDriver()
     //Prepare for the next cycle -------------------------------------------------------------------------------
     if (m_BreathingCycleTime_s > TotalBreathingCycleTime_s) //End of the cycle or currently not breathing
     {
-      
+ 
       //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
+      ///\@cite Magasso2001Mathematical
       double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
       m_TargetTidalVolume_L = m_VentilationToTidalVolumeSlope * pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
 
@@ -925,14 +926,18 @@ void Respiratory::RespiratoryDriver()
       //m_PeakRespiratoryDrivePressure = -11.3;
     }
 
-    //Run the driver based on the waveform used in Albanese2015Integrated-----------------------------------------------------------------------------
+    //Run the driver based on the waveform used in
+    ///\@cite Albanese2015Integrated-----------------------------------------------------------------------------
+    UpdateIERatio();
     double IERatio = GetInspiratoryExpiratoryRatio().GetValue();
-    double driverInspirationTime_s = IERatio / (1.0 + IERatio) * TotalBreathingCycleTime_s;
+    //The IEScaleFactor was actually an inspiration time scaling factor in previous implementation.  That is why
+    //it's not being factored into the IERatio multiple times below.
+    double driverInspirationTime_s = m_IEscaleFactor * (IERatio / (1.0 + IERatio) * TotalBreathingCycleTime_s);
     double driverExpirationTime_s = TotalBreathingCycleTime_s - driverInspirationTime_s;
-    double tauExpiration_s = driverExpirationTime_s / 5.0;
+    double tauExpiration_s = driverExpirationTime_s / 10.0;  //This gets our steady state IE ratio ~0.5
 
     ////New driver
-    if (m_BreathingCycleTime_s <= driverInspirationTime_s) {
+    if (m_BreathingCycleTime_s < driverInspirationTime_s) {
       //Inspiration
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + (-m_PeakRespiratoryDrivePressure_cmH2O * pow(m_BreathingCycleTime_s, 2) / (driverInspirationTime_s * driverExpirationTime_s) + (m_PeakRespiratoryDrivePressure_cmH2O * TotalBreathingCycleTime_s * m_BreathingCycleTime_s / (driverInspirationTime_s * driverExpirationTime_s)));
     } else if (m_BreathingCycleTime_s < TotalBreathingCycleTime_s) {
@@ -969,7 +974,7 @@ void Respiratory::ProcessDriverActions()
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
     cardiacArrestEffect = 0.0;
   }
- 
+
   //Process drug effects--adjust them based on neuromuscular block level
   SEDrugSystem& Drugs = m_data.GetDrugs();
   double DrugRRChange_Per_min = Drugs.GetRespirationRateChange(FrequencyUnit::Per_min);
@@ -1018,19 +1023,20 @@ void Respiratory::ProcessDriverActions()
   if (m_TargetTidalVolume_L == 0.0) //Can't divide by zero
   {
     m_VentilationFrequency_Per_min = 0.0;
-    m_bNotBreathing = true;
   } else {
     m_VentilationFrequency_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min) / m_TargetTidalVolume_L;
-    m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
-    m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
     m_VentilationFrequency_Per_min += sepsisModifier;
     m_VentilationFrequency_Per_min *= (1.0 + 0.65 * painVAS); //scale with pain response
-    m_bNotBreathing = false;
+    m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
+    m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
+  }
+
+  if (m_VentilationFrequency_Per_min == 0.0) {
+    m_bNotBreathing = true;
   }
 
   //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
   m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1195,7 +1201,7 @@ void Respiratory::Pneumothorax()
 {
   if (m_PatientActions->HasTensionPneumothorax()) {
     // Minimum flow resistance for the chest cavity or alveoli leak
-    double dPneumoMinFlowResistance_cmH2O_s_Per_L = 30.0;
+    double dPneumoMinFlowResistance_cmH2O_s_Per_L = 20.0;
     // Maximum flow resistance for the chest cavity or alveoli leak
     double dPneumoMaxFlowResistance_cmH2O_s_Per_L = m_dDefaultOpenResistance_cmH2O_s_Per_L;
     // Flow resistance for the decompression needle, if used
@@ -1827,15 +1833,15 @@ void Respiratory::UpdateObstructiveResistance()
   //Asthma attack on
   if (m_PatientActions->HasAsthmaAttack()) {
     double dSeverity = m_PatientActions->GetAsthmaAttack()->GetSeverity().GetValue();
-    // Resistance function: Base = 10, Min = 1.0, Max = 90.0 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 110, 1, dSeverity);
+    // Resistance function: Base = 10, Min = 1.0, Max = 110 (increasing with severity)
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1100, 1, dSeverity);
     combinedResistanceScalingFactor = dResistanceScalingFactor;
   }
   //COPD on
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     double dSeverity = m_data.GetConditions().GetChronicObstructivePulmonaryDisease()->GetBronchitisSeverity().GetValue();
     // Resistance function: Base = 10, Min = 1.0, Max = 100.0 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 90, 1, dSeverity);
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1100, 1, dSeverity);
     combinedResistanceScalingFactor = std::max(combinedResistanceScalingFactor, dResistanceScalingFactor);
   }
 
