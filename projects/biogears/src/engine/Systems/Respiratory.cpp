@@ -929,12 +929,12 @@ void Respiratory::RespiratoryDriver()
     //Run the driver based on the waveform used in
     ///\@cite Albanese2015Integrated-----------------------------------------------------------------------------
     UpdateIERatio();
-    double IERatio = GetInspiratoryExpiratoryRatio().GetValue();
+    double IERatio = m_IEscaleFactor * GetInspiratoryExpiratoryRatio().GetValue();
     //The IEScaleFactor was actually an inspiration time scaling factor in previous implementation.  That is why
     //it's not being factored into the IERatio multiple times below.
-    double driverInspirationTime_s = m_IEscaleFactor * (IERatio / (1.0 + IERatio) * TotalBreathingCycleTime_s);
+    double driverInspirationTime_s = (IERatio / (1.0 + IERatio) * TotalBreathingCycleTime_s);
     double driverExpirationTime_s = TotalBreathingCycleTime_s - driverInspirationTime_s;
-    double tauExpiration_s = driverExpirationTime_s / 10.0;  //This gets our steady state IE ratio ~0.5
+    double tauExpiration_s = driverExpirationTime_s / 5.0;  //This gets our steady state IE ratio ~0.5
 
     ////New driver
     if (m_BreathingCycleTime_s < driverInspirationTime_s) {
@@ -1462,7 +1462,7 @@ void Respiratory::COPD()
     double dMaxSeverity = std::max(dBronchitisSeverity, dEmphysemaSeverity);
     // Resistance is based on a a simple line fit where severity = 0 is resistance multiplier = 1.0
     // and severity = 0.6 is resistance multiplier = 2.0.
-    double dSlopePulResist = 1.66666; // hard-coded slope for line
+    double dSlopePulResist = 2.5; // hard-coded slope for line
     double dPulmonaryResistanceMultiplier = 1.0 + (dMaxSeverity * dSlopePulResist);
     // Call UpdatePulmonaryCapillaryResistance
     UpdatePulmonaryCapillaryResistance(dPulmonaryResistanceMultiplier, dLeftLungFraction, dRightLungFraction);
@@ -1547,7 +1547,7 @@ void Respiratory::LobarPneumonia()
     // Compliance is based on a exponential fit where severity = 0 is compliance multiplier = 1.0
     // and severity = 1.0 is compliance multiplier = 0.01.
     // Compliance function: Base = 10, Min = 0.01, Max = 1.0 (decreasing with severity)
-    double dCompilanceScalingFactor = GeneralMath::ResistanceFunction(10, 1.000, 0.010, (1 - dLobarPneumoniaSeverity));
+    double dCompilanceScalingFactor = GeneralMath::ResistanceFunction(10, 1.000, 0.001, (1 - dLobarPneumoniaSeverity));
     // Call UpdateAlveoliCompliance
     UpdateAlveoliCompliance(dCompilanceScalingFactor, dLeftLungFraction, dRightLungFraction);
 
