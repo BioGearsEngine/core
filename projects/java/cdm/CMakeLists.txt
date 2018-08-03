@@ -34,11 +34,13 @@ configure_file(src/mil/tatrc/physiology/utilities/testing/TestDriver.java.in con
 configure_file(src/mil/tatrc/physiology/utilities/csv/plots/ActionEventPlotter.java.in conf/ActionEventPlotter.java.in )
 configure_file(src/mil/tatrc/physiology/utilities/csv/plots/MultiPlotter.java.in conf/MultiPlotter.java.in )
 configure_file(src/mil/tatrc/physiology/utilities/csv/plots/ConvexHullPlotter.java.in conf/ConvexHullPlotter.java.in )
+configure_file(src/mil/tatrc/physiology/utilities/csv/plots/RespiratoryPFTPlotter.java.in conf/RespiratoryPFTPlotter.java.in )
 file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/Resources.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/Resources.java.in)
 file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/testing/TestDriver.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/TestDriver.java.in )
 file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/ActionEventPlotter.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/ActionEventPlotter.java.in )
 file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/MultiPlotter.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/MultiPlotter.java.in )
 file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/ConvexHullPlotter.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/ConvexHullPlotter.java.in )
+file(GENERATE OUTPUT $<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/RespiratoryPFTPlotter.java INPUT ${CMAKE_CURRENT_BINARY_DIR}/conf/RespiratoryPFTPlotter.java.in )
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.java"   "Sources\\")
 add_source_files(SRCS ${CMAKE_CURRENT_BINARY_DIR}/src "*.java"   "Sources\\")
 
@@ -49,6 +51,7 @@ set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS}
   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/ActionEventPlotter.java
   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/MultiPlotter.java
   ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/ConvexHullPlotter.java
+  ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/src/mil/tatrc/physiology/utilities/csv/plots/RespiratoryPFTPlotter.java
 )
 string(REGEX REPLACE "Java_" "" SHORT_NAME ${PROJECT_NAME})
 

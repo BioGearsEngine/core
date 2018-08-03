@@ -61,6 +61,10 @@ import mil.tatrc.physiology.utilities.LogListener;
 import mil.tatrc.physiology.utilities.csv.CSVContents;
 import mil.tatrc.physiology.utilities.csv.plots.PlotDriver.PlotJob;
 
+import java.io.InputStreamReader;
+import java.nio.file.*;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
 public class RespiratoryPFTPlotter implements Plotter
 {
 	protected List<LogEvent> events = new ArrayList<LogEvent>();
@@ -69,6 +73,7 @@ public class RespiratoryPFTPlotter implements Plotter
 	protected List<SEAction> actions = new ArrayList<SEAction>();
 	protected SEScenario scenario;
 	protected SEPulmonaryFunctionTest pft;
+  public String       verificationDirectory = "@ARA_Biogears_Verification_DIR@";
 
 	public static void main(String[] args)
 	{
@@ -81,8 +86,12 @@ public class RespiratoryPFTPlotter implements Plotter
 		PlotJob job = (PlotJob)listener;
 		if(job.dataPath == null || job.dataPath.isEmpty())
 		{job.dataPath = "Scenarios/"+job.verificationDirectory+"/baselines/";}
+    if(! Files.exists(Paths.get(job.dataPath)))
+    { job.dataPath = Paths.get(verificationDirectory,job.dataPath).toString();  }
 		if(job.logPath == null || job.logPath.isEmpty())
 		{job.logPath = "Scenarios/"+job.verificationDirectory+"/baselines/";}
+		if(job.logPath == null || job.logPath.isEmpty())
+		{ job.logPath ="Scenarios/"+job.verificationDirectory+"/baselines/"; }
 		if(job.scenarioPath == null || job.scenarioPath.isEmpty())
 		{job.scenarioPath = "Scenarios/"+job.verificationDirectory+"/";}
 		if(job.dataFile == null || job.dataFile.isEmpty())
@@ -95,7 +104,7 @@ public class RespiratoryPFTPlotter implements Plotter
 		//get all events from Log file
 		if(!job.skipAllEvents)
 		{
-	    events = getEventsFromLog(job.logPath + job.logFile);
+	    events = getEventsFromLog(Paths.get(job.logPath , job.logFile).toString()); 
 		}
 		
 		if (!job.skipAllActions)
@@ -157,7 +166,7 @@ public class RespiratoryPFTPlotter implements Plotter
 	    //Get data contents for desired header(s)
 	    try
 	    {
-		    CSVContents csv = new CSVContents(job.dataPath + job.dataFile);
+		    CSVContents csv = new CSVContents(Paths.get(job.dataPath , job.dataFile).toString());
 		    csv.abbreviateContents = job.resultsSkipNum;
 		    for (int i = 0; i < job.headers.size(); i++)
 		    {
@@ -170,7 +179,7 @@ public class RespiratoryPFTPlotter implements Plotter
 		    data.put("Time(s)", timeHeaderData);
 	    } catch (IOException e)
 	    {
-		    Log.error("Could not analyze file " + job.dataPath + job.dataFile);
+		    Log.error("Could not analyze file " + Paths.get(job.dataPath , job.dataFile).toString());
 	    }
     }
 		
@@ -185,6 +194,19 @@ public class RespiratoryPFTPlotter implements Plotter
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(file));
+      if(file.endsWith(".zip"))
+      {
+        ZipFile zipFile = new ZipFile(file);
+        List<FileHeader> headers = zipFile.getFileHeaders();
+        for(FileHeader header : headers)
+        {
+          if(header.getFileName().endsWith(".log"))
+          {
+            br = new BufferedReader(new InputStreamReader(zipFile.getInputStream(header)));
+            break;// We expect results zips to only contain 1 text file
+          }
+        } 
+      }
 			String line;
 			while ((line = br.readLine()) != null)
 			{
