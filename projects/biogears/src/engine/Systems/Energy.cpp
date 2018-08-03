@@ -221,7 +221,7 @@ void Energy::Exercise()
   double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
   double kcal_Per_day_Per_Watt = 20.6362855;
 
-  // Only try to get intensity if the exercise action is active
+  // Check for exercise call and only try to get intensity/desired work rate if the exercise action is active.
   if (m_PatientActions->HasExercise()) {
     if (m_PatientActions->GetExercise()->HasIntensity()) {
       exerciseIntensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
@@ -437,6 +437,8 @@ void Energy::CalculateSweatRate()
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
   double coreTemperatureHigh_degC = config.GetCoreTemperatureHigh(TemperatureUnit::C);
   double sweatHeatTranferCoefficient_W_Per_K = config.GetSweatHeatTransfer(HeatConductanceUnit::W_Per_K);
+  /// Determine the maximum evaporative capacity to limit the amount of cooling due to sweat on the patient
+  ///\@cite potter2017mathematical
   double effectiveClothingEvaporation_im_Per_clo = pow((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)),0.29);
   double dAirTemperature_C = m_data.GetEnvironment().GetConditions().GetAmbientTemperature(TemperatureUnit::C);
   double dWaterVaporPressureInAmbientAir_mmHg = GeneralMath::AntoineEquation(dAirTemperature_C);
@@ -469,7 +471,9 @@ void Energy::CalculateSweatRate()
   BLIM(dehydrationScalingFactor, 0, 1);
 
   double sweatRate_kg_Per_s = dehydrationScalingFactor * (0.25 * sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg) * (coreTemperature_degC - coreTemperatureHigh_degC);
-  
+
+  //The Sweat Scaling Factor is caused by changes in the Hyperhidrosis patient parameter to invoke either hyperhidrosis or hypohidrosis
+  ///\@cite shih1983autonomic
   double sweatScalingFactor = 0.0;
   if (m_Patient->HasHyperhidrosis()) {
     sweatScalingFactor = m_Patient->GetHyperhidrosis().GetValue();

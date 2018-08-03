@@ -242,7 +242,7 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="PatientActionData">
 				<xs:choice minOccurs = "1" maxOccurs="1" >
 					<xs:element name="Intensity" type="Scalar0To1Data"/><!--<< @brief Fractional representation of the maximum patient exertion -->
-					<xs:element name="DesiredWorkRate" type="ScalarData"/><!--<< @brief Fractional representation of the maximum patient exertion -->
+					<xs:element name="DesiredWorkRate" type="ScalarData"/><!--<< @brief Desired achieved work rate up to the maximum patient exertion -->
 				</xs:choice>               
 			</xs:extension>
 		</xs:complexContent>
