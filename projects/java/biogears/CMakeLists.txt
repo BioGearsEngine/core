@@ -24,7 +24,9 @@ set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 ###############################################################################
 # Requirments
 ###############################################################################
-
+if(ARA_Biogears_BUILD_DOCUMENTATION)
+    find_package(Perl REQUIRED)
+endif()
 ###############################################################################
 #Code Generation
 ###############################################################################
@@ -33,6 +35,10 @@ set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 #Sorce and Header Defines
 ###############################################################################
 message(STATUS "Configuring ${PROJECT_NAME}")
+
+configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/nocode.doxy.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/NoCode.doxy @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/validationtables.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/ValidationTables.config @ONLY)
 
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.java"   "Sources\\")
 
@@ -133,18 +139,20 @@ add_custom_target(gen-states
     VERBATIM
     USES_TERMINAL
 )
-add_custom_target(gen-website-docs
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
-    # COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen schema/xsd/BioGearsDataModel.xsd docs/doxygen/process_md/xsd.ixx
-    # COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRun.con
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    VERBATIM
-    USES_TERMINAL
-)
+if(ARA_Biogears_BUILD_DOCUMENTATION)
+    add_custom_target(gen-website-docs
+        #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
+        #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
+        #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
+        #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
+        #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
+        #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx
+        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRun.config
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        VERBATIM
+        USES_TERMINAL
+  )
+endif()
 set (args "ValidationSystems.config" )
 add_custom_target(run-system-validation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}

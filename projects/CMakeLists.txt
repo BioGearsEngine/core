@@ -10,6 +10,12 @@ find_path (
   PATHS ${PROJECT_SOURCE_DIR}/../verification
   DOC "Optional directory path to a hiarchial verification filetree of baseline archives. This will be used by Java Utilities to find Baselines"
 )
+find_path (
+  ARA_${ROOT_PROJECT_NAME}_Reference_DIR
+  NAME BioGears.bib
+  PATHS ${PROJECT_SOURCE_DIR}/../references
+  DOC "Optional directory path to a hiarchial references filetree of publication articles for documentation building"
+)
 ###############################################################################
 # Step 1: Some packages need to be configured globally to ensure they find the 
 #         right library all others should be called in the respective projects

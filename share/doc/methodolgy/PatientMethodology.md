@@ -141,115 +141,115 @@ Values that are colored green are within 10% of the original set or calculated/e
 *Table 4. StandardMale patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\StandardMalePatientValidationTable.md
+@insert validation\StandardMalePatientValidationTable.md
 
 <center>
 *Table 5. StandardFemale patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\StandardFemalePatientValidationTable.md
+@insert validation\StandardFemalePatientValidationTable.md
 
 <center>
 *Table 6. DefaultMale patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\DefaultMalePatientValidationTable.md
+@insert validation\DefaultMalePatientValidationTable.md
 
 <center>
 *Table 7. DefaultFemale patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\DefaultFemalePatientValidationTable.md
+@insert validation\DefaultFemalePatientValidationTable.md
 
 <center>
 *Table 8. Overweight patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\OverweightPatientValidationTable.md
+@insert validation\OverweightPatientValidationTable.md
 
 <center>
 *Table 9. Underweight patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\UnderweightPatientValidationTable.md
+@insert validation\UnderweightPatientValidationTable.md
 
 <center>
 *Table 10. Tachycardic patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\TachycardicPatientValidationTable.md
+@insert validation\TachycardicPatientValidationTable.md
 
 <center>
 *Table 11. Bradycardic patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\BradycardicPatientValidationTable.md
+@insert validation\BradycardicPatientValidationTable.md
 
 <center>
 *Table 12. Cynthia patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\CynthiaPatientValidationTable.md
+@insert validation\CynthiaPatientValidationTable.md
 
 <center>
 *Table 13. Gus patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\GusPatientValidationTable.md
+@insert validation\GusPatientValidationTable.md
 
 <center>
 *Table 14. Joel patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\JoelPatientValidationTable.md
+@insert validation\JoelPatientValidationTable.md
 
 <center>
 *Table 15. Nathan patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\NathanPatientValidationTable.md
+@insert validation\NathanPatientValidationTable.md
 
 <center>
 *Table 16. Hassan patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\HassanPatientValidationTable.md
+@insert validation\HassanPatientValidationTable.md
 
 <center>
 *Table 17. Soldier patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\SoldierPatientValidationTable.md
+@insert validation\SoldierPatientValidationTable.md
 
 <center>
 *Table 18. Jeff patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\JeffPatientValidationTable.md
+@insert validation\JeffPatientValidationTable.md
 
 <center>
 *Table 19. Carol patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\CarolPatientValidationTable.md
+@insert validation\CarolPatientValidationTable.md
 
 <center>
 *Table 20. Jane patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\JanePatientValidationTable.md
+@insert validation\JanePatientValidationTable.md
 
 <center>
 *Table 21. ExtremeFemale patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\ExtremeFemalePatientValidationTable.md
+@insert validation\ExtremeFemalePatientValidationTable.md
 
 <center>
 *Table 22. ExtremeMale patient values with expected and %BioGears Engine output.*
 </center><br>
 
-@insert ..\..\bin\validation\ExtremeMalePatientValidationTable.md
+@insert validation\ExtremeMalePatientValidationTable.md
 
 Conclusions
 -----------

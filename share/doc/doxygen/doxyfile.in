@@ -32,7 +32,9 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = BioGears
+INPUT                  =  @CMAKE_BINARY_DIR@/projects/biogears/biogears @CMAKE_SOURCE_DIR@/projects/biogears/
+USE_MDFILE_AS_MAINPAGE =  @doxy_main_page@
+PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -699,7 +701,7 @@ LAYOUT_FILE            =
 # LATEX_BIB_STYLE. To use this feature you need bibtex and perl available in the
 # search path. See also \cite for info how to create references.
 
-CITE_BIB_FILES         = ..\References\BioGears.bib
+CITE_BIB_FILES         = @ARA_Biogears_Rerference_DIR@ 
 
 #---------------------------------------------------------------------------
 # Configuration options related to warning and progress messages
@@ -764,15 +766,6 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 
-# The INPUT tag is used to specify the files and/or directories that contain
-# documented source files. You may enter file names like myfile.cpp or
-# directories like /usr/src/myproject. Separate the files or directories with
-# spaces.
-# Note: If this tag is empty the current directory is searched.
-
-INPUT                  = ./processed_md \
-                         ../../src/cdm/cpp \
-                         ../../src/engine/cpp
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -1134,10 +1127,10 @@ HTML_EXTRA_STYLESHEET  = customdoxygen.css
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = ../Validation/Scenarios/Showcases/AsthmaAttackValidation.pdf \
-                         ../Validation/Scenarios/Showcases/CombatMultitraumaValidation.pdf \
-						 ../Validation/Scenarios/Showcases/HeatStrokeValidation.pdf \
-                         ../Validation/Scenarios/Showcases/EnvironmentExposureValidation.pdf
+HTML_EXTRA_FILES       = doc/validation/Scenarios/Showcases/AsthmaAttackValidation.pdf \
+                         doc/validation/Scenarios/Showcases/CombatMultitraumaValidation.pdf \
+						             doc/validation/Scenarios/Showcases/HeatStrokeValidation.pdf \
+                         doc/validation/Scenarios/Showcases/EnvironmentExposureValidation.pdf
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
@@ -2093,7 +2086,7 @@ EXTERNAL_PAGES         = NO
 # interpreter (i.e. the result of 'which perl').
 # The default file (with absolute path) is: /usr/bin/perl.
 
-PERL_PATH              = ../../lib/strawberry/perl/bin/perl.exe
+PERL_PATH              = @PERL_EXECUTABLE@ 
 
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool

@@ -203,7 +203,7 @@ Validation - Resting Physiologic State
 <br><center>
 *Table 2. The %Energy system properties consist of core and skin temperature, as well as metabolic production rates. The properties show good agreement with the validation values.*
 </center>
-@insert ..\..\bin\validation\EnergyValidationTable.md
+@insert validation\EnergyValidationTable.md
 
 The resting system properties for the energy system are temperatures and metabolic production rates. From Table 2, it is shown that the temperatures meet the validation criteria extremely well for resting conditions. Ketone production rate is currently low because only the brain uses ketones, and then only during starved states. Because ketone behavior is most important during starved states, it was tuned to perform at better long-term timescales, where this validation occurs only over a few minutes. Lactate production is low likely due to its clearance not being tied to gluconeogenesis. This will be addressed in an upcoming release. Resting state temperatures are good.
 

@@ -233,7 +233,7 @@ Published values from the literature were compared to the %BioGears Engine outpu
 *Table 1. Results of the resting physiology validation of the %BioGears Blood Chemistry System.*
 </center>
 
-@insert ..\..\bin\validation\BloodChemistryValidationTable.md
+@insert validation\BloodChemistryValidationTable.md
 
 Overall, the %BioGears Engine meets validation, with 37 of the 44 validation parameters having less than a 10% error when compared to published values.  An additional two parameters have less than a 30% error. The parameters with greater than 30% error are all related to carbon dioxide saturation and binding in the blood stream.  A detailed explanation of how these values are calculated can be found @ref bloodchemistry-approach "above", with additional information in @ref tissue-diffusion "Tissue". This binding calculation will be reviewed to correct errors in the future.
 
@@ -260,13 +260,13 @@ The two assessments in the blood chemistry system provide the outputs associated
 *Table 2. Results of the metabolic panel as compiled during the healthy resting physiology.*
 </center>
 
-@insert ..\..\bin\validation\CompleteMetabolicPanelValidationTable.md
+@insert validation\CompleteMetabolicPanelValidationTable.md
 
 <center>
 *Table 3. Results of the complete blood count as compiled during the healthy resting physiology.*
 </center>
 
-@insert ..\..\bin\validation\CompleteBloodCountValidationTable.md
+@insert validation\CompleteBloodCountValidationTable.md
 
 All of the measures in the two Blood Chemistry assessments meet validation. 
 
