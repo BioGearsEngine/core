@@ -105,7 +105,7 @@ if(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
                           FOLDER "Other"
                           PROJECT_LABEL "Doxygen")
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/share/doc/html DESTINATION share/doc/kaleidoscppe/)
+install(DIRECTORY ${PROJECT_BINARY_DIR}/outputs/docs/html DESTINATION share/doc/kaleidoscppe/)
 endif()
 
 add_custom_command(
