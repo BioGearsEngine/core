@@ -648,7 +648,10 @@ void Environment::CalculateEvaporation()
     if (m_EnvironmentSkinToGroundPath->HasHeatTransferRate()) {
       dTotalHeatLoss_W = m_EnvironmentSkinToGroundPath->GetHeatTransferRate().GetValue(PowerUnit::W);
     }
+    
     GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
+
+    // m_data.GetDataTrack().Probe("EvapHeatLoss", GetEvaporativeHeatLoss().GetValue(PowerUnit::W));
   }
 }
 
