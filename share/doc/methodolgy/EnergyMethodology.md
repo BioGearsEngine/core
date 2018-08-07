@@ -179,6 +179,9 @@ The starvation functionality simulates an extended time period without nutrient 
 **The dehydration condition is disabled in the current release. An improved dehydration condition will be included with the next release.**
 Dehydration functionality is simulated completely in the %Energy system. Similar to starvation, dehydration assumes a coarse timestep over which the fluid loss would occur. According to the Journal of Sports Medicine and Physical Fitness @cite shirreffs2000hydration , the average loss rate on the first day without liquid intake is 2600 milliliters. This rate decreases to 1600 milliliters for each subsequent day. The %Energy system uses these average rates and the time since last liquid consumption to calculate volume lost. The volume decrement is distributed via volume weighting instantaneously to all vascular and tissue compartments. 
 
+### Hyperhidrosis
+**Excessive sweating and a lack of sweating are conditions that can be modified by the "Hyperhidrosis" parameter in the patient file. Using a scalar from -1 to 1, a more negative value will scale down the patient's sweat rate more in order to simulate hypohidrosis while a more positive value increases sweat rate to demonstrate hyperhidrosis @cite shih1983autonomic. The default value of zero refers to the standard sweat rate of a person, while a value of -1 can simulate the rare condition in which a person is unable to sweat at all.
+
 @anchor energy-events
 Events
 ------
@@ -203,7 +206,7 @@ Validation - Resting Physiologic State
 <br><center>
 *Table 2. The %Energy system properties consist of core and skin temperature, as well as metabolic production rates. The properties show good agreement with the validation values.*
 </center>
-@insert validation\EnergyValidationTable.md
+@insert ..\..\bin\validation\EnergyValidationTable.md
 
 The resting system properties for the energy system are temperatures and metabolic production rates. From Table 2, it is shown that the temperatures meet the validation criteria extremely well for resting conditions. Ketone production rate is currently low because only the brain uses ketones, and then only during starved states. Because ketone behavior is most important during starved states, it was tuned to perform at better long-term timescales, where this validation occurs only over a few minutes. Lactate production is low likely due to its clearance not being tied to gluconeogenesis. This will be addressed in an upcoming release. Resting state temperatures are good.
 
