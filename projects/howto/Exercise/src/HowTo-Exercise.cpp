@@ -88,7 +88,6 @@ void HowToExercise()
   //bg->GetLogger()->Info(std::stringstream() <<"AchievedExerciseLevel : " << bg->GetEnergySystem()->GetAchievedExerciseLevel()); // This will be NaN as the patient is not doing any exercise
   //bg->GetLogger()->Info(std::stringstream() <<"FatigueLevel : " << bg->GetEnergySystem()->GetFatigueLevel()); // No fatigue either
   bg->GetLogger()->Info(std::stringstream() <<"TotalMetabolicRate : " << bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W) << PowerUnit::W);//This will be at Basal Level
-  bg->GetLogger()->Info(std::stringstream() <<"TotalWorkRateLevel : " << bg->GetEnergySystem()->GetTotalWorkRateLevel());; // Nothing here either as the patient is resting
 
 	// Exercise Starts - instantiate an Exercise action and have the engine process it.
 	// After initiating exercise the patient’s metabolic rate begins to increased. 
@@ -133,6 +132,5 @@ void HowToExercise()
   //bg->GetLogger()->Info(std::stringstream() <<"AchievedExerciseLevel : " << bg->GetEnergySystem()->GetAchievedExerciseLevel()); // This will be NaN as the patient is not doing any exercise
   //bg->GetLogger()->Info(std::stringstream() <<"FatigueLevel : " << bg->GetEnergySystem()->GetFatigueLevel()); // We are not working out but we are still fatigued
   bg->GetLogger()->Info(std::stringstream() <<"TotalMetabolicRate : " << bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W) << PowerUnit::W);// We are still burning 
-  bg->GetLogger()->Info(std::stringstream() <<"TotalWorkRateLevel : " << bg->GetEnergySystem()->GetTotalWorkRateLevel());; // How much work we are getting over the max work rate possible
   bg->GetLogger()->Info("Finished");
 }
