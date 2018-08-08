@@ -285,6 +285,7 @@ add_dependencies(rebase-scenarios  ${PROJECT_NAME})
 add_dependencies(rebase-debug  ${PROJECT_NAME})
 add_dependencies(rebase-tests  ${PROJECT_NAME})
 add_dependencies(biogears-gui  ${PROJECT_NAME})
+add_dependencies(run-biogears-gui biogears-gui) 
 
 
 if(ARA_STAGE_RUNTIME)
@@ -330,4 +331,4 @@ set_target_properties(rebase-scenarios         PROPERTIES FOLDER "Java" )
 set_target_properties(rebase-debug             PROPERTIES FOLDER "Java" )
 set_target_properties(rebase-tests             PROPERTIES FOLDER "Java" )
 set_target_properties(biogears-gui             PROPERTIES FOLDER "Java" )
-
+set_target_properties(run-biogears-gui         PROPERTIES FOLDER "Java" )
