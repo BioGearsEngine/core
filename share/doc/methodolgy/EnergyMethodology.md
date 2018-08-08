@@ -179,7 +179,7 @@ The starvation functionality simulates an extended time period without nutrient 
 **The dehydration condition is disabled in the current release. An improved dehydration condition will be included with the next release.**
 Dehydration functionality is simulated completely in the %Energy system. Similar to starvation, dehydration assumes a coarse timestep over which the fluid loss would occur. According to the Journal of Sports Medicine and Physical Fitness @cite shirreffs2000hydration , the average loss rate on the first day without liquid intake is 2600 milliliters. This rate decreases to 1600 milliliters for each subsequent day. The %Energy system uses these average rates and the time since last liquid consumption to calculate volume lost. The volume decrement is distributed via volume weighting instantaneously to all vascular and tissue compartments. 
 
-### Hyperhidrosis
+### Hyperhidrosis and Hypohidrosis
 **Excessive sweating and a lack of sweating are conditions that can be modified by the "Hyperhidrosis" parameter in the patient file. Using a scalar from -1 to 1, a more negative value will scale down the patient's sweat rate more in order to simulate hypohidrosis while a more positive value increases sweat rate to demonstrate hyperhidrosis @cite shih1983autonomic. The default value of zero refers to the standard sweat rate of a person, while a value of -1 can simulate the rare condition in which a person is unable to sweat at all.
 @insert ..\doxygen\html\images\Energy\SweatRate.png
 @insert ..\doxygen\html\images\Energy\SkinTemp.png
@@ -236,8 +236,8 @@ The %Energy and %Environment systems were validated for six scenarios encompassi
 
 @anchor energy-exercise-validation
 ### Exercise
-There are three scenarios for validation of the exercise action. The first scenario (Tables 4a-d) takes advantage of the abundance of experiments using variations of the Bruce protocol to study exercise physiology. In the this scenario, the exercise intensity is periodically increased, with short breaks in between each exercise period. The second scenario (Table 5) qualitatively validates that a work rate threshold exists. The scenario is based on the assertion by @cite johnson2000exercise that a body working around the threshold for maximal oxygen uptake (approximately 430 watts) will only be able to perform at the desired level for about three minutes before reaching physiological limits. 
-In the final scenario (Table 6 and Figure 4), an individual excercises at a moderate to heavy intensity (Level = 0.234, or 65% of VO2 max) for an hour and the total fluid and ion loss from sweat is assessed.  The quantitative validation results are shown in the table below.
+There are four scenarios for validation of the exercise action. The first scenario (Tables 4a-d) takes advantage of the abundance of experiments using variations of the Bruce protocol to study exercise physiology. In this scenario, the exercise intensity is periodically increased, with short breaks in between each exercise period. The second scenario (Table 5) qualitatively validates that a work rate threshold exists. The scenario is based on the assertion by @cite johnson2000exercise that a body working around the threshold for maximal oxygen uptake (approximately 430 watts) will only be able to perform at the desired level for about three minutes before reaching physiological limits. 
+In the third scenario (Table 6 and Figure 4), an individual exercises at a moderate to heavy intensity for an hour and the total fluid and ion loss from sweat is assessed. Lastly, Table 7 demonstrates the change in core and skin temperatures during exercise in specific environmental conditions.  The quantitative validation results are shown in the table below.
 
 <center><br>
 *Table 4a. The dynamic response to exercise. 15 measures are compared to data reported in literature at 8 different times during increasing exercise intensity with intermittent rest, for a total of 120 points of comparison. The first intensity/rest period is shown in Table 4a.*
@@ -305,6 +305,12 @@ In the final scenario (Table 6 and Figure 4), an individual excercises at a mode
 <center>
 <i>Figure 4.  After hard exercise for an hour, the patient loses about 0.5 kg of fluid (approximately 0.5 L).  The cumulative losses of sodium, chloride, and potassium are 650 mg, 930 mg, and 102 mg, respectively.  Note that the mass of each ion in the extracellular skin tissue compartment decreases as the body sweats.</i>
 </center><br>
+
+*Table 7.  The results for changes in the thermal circuit during exercise in the heat.*
+|	Action	|	Notes	|	Occurrence Time (s)	|	Sampled Scenario Time (s)	|	Skin Temperature	|	Core Temperature	|
+|	---	|	---	|	---	|	---	|	---	|	---	|
+|	Exercise in 37 degC	|	Working at about 50% of VO2 max	|	2400	|	4260	|<span class="warning">	35.7 degC @cite tsuji2011effect	</span>|	38.7 degC @cite tsuji2011effect	</span>|
+
 
 
 There are several physiological measures that are failing validation for the exercise action. However, most of the failing measures will be addressed by improvements to the chemoreceptor model planned as a part of the %BioGears nervous system. The oxygen consumption and urine production measures may still fail validation during exercise after the nervous system is fully implemented. The development team is currently making plans to address those failures.
