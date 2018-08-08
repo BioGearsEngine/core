@@ -1460,24 +1460,19 @@ void Respiratory::COPD()
 
     // Calculate Pulmonary Capillary Resistance Multiplier based on severities
     double dMaxSeverity = std::max(dBronchitisSeverity, dEmphysemaSeverity);
-    // Resistance is based on a a simple line fit where severity = 0 is resistance multiplier = 1.0
-    // and severity = 0.6 is resistance multiplier = 2.0.
-    double dSlopePulResist = 2.5; // hard-coded slope for line
-    double dPulmonaryResistanceMultiplier = 1.0 + (dMaxSeverity * dSlopePulResist);
+    // Resistance is based on a a simple linear regression, with maximum of 3x the pulmonary resistance baseline
+    double dPulmonaryResistanceMultiplier = GeneralMath::LinearInterpolator(0.0, 1.0, 1.0, 3, dMaxSeverity);
     // Call UpdatePulmonaryCapillaryResistance
     UpdatePulmonaryCapillaryResistance(dPulmonaryResistanceMultiplier, dLeftLungFraction, dRightLungFraction);
 
-    // Calculate Alveoli Compliance Multiplier based on severities
-    // Compliance is based on a a simple line fit where severity = 0 is compliance multiplier = 1.0
-    // and severity = 0.6 is compliance multiplier = 1.25
-    double dSlopeAlveoCompl = 0.41; // hard-coded slope for line
-    double dCompilanceScalingFactor = 1.0 + (dEmphysemaSeverity * dSlopeAlveoCompl);
+    // Calculate Alveoli Compliance Multiplier based on severities.  Setting both lung fractions to 1 (as above) will have large impact on 
+	// compliances, so we don't need to make the severity too high to get the changes we want.  Scale from 0 to 0.35
+    double dCompilanceScalingFactor = GeneralMath::LinearInterpolator(0, 1.0, 0, 0.35, dEmphysemaSeverity);
     // Call UpdateAlveoliCompliance
     UpdateAlveoliCompliance(dCompilanceScalingFactor, dLeftLungFraction, dRightLungFraction);
 
-    // Calculate Gas Diffusion Surface Area Multiplier based on severities
-    // Resistance function: Base = 10, Min = 0.15, Max = 1.0 (decreasing with severity)
-    double dGasDiffScalingFactor = GeneralMath::ResistanceFunction(10, 0.15, 1.0, dEmphysemaSeverity);
+    // Calculate Gas Diffusion Surface Area scaling factor in the same ways as alveoli compliance
+    double dGasDiffScalingFactor = GeneralMath::LinearInterpolator(0, 1.0, 0, 0.3, dEmphysemaSeverity);
     // Call UpdateGasDiffusionSurfaceArea
     UpdateGasDiffusionSurfaceArea(dGasDiffScalingFactor, dLeftLungFraction, dRightLungFraction);
   }
@@ -1826,14 +1821,14 @@ void Respiratory::UpdateObstructiveResistance()
   if (m_PatientActions->HasAsthmaAttack()) {
     double dSeverity = m_PatientActions->GetAsthmaAttack()->GetSeverity().GetValue();
     // Resistance function: Base = 10, Min = 10, Max = 1750 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1750, 10, dSeverity);
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 1750.0, 10.0, dSeverity);
     combinedResistanceScalingFactor = dResistanceScalingFactor;
   }
   //COPD on
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     double dSeverity = m_data.GetConditions().GetChronicObstructivePulmonaryDisease()->GetBronchitisSeverity().GetValue();
-    // Resistance function: Base = 10, Min = 10, Max = 1750 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1750, 10, dSeverity);
+    // Resistance function: Base = 10, Min = 10, Max = 500 (increasing with severity)
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 500.0, 10.0, dSeverity);
     combinedResistanceScalingFactor = std::max(combinedResistanceScalingFactor, dResistanceScalingFactor);
   }
 

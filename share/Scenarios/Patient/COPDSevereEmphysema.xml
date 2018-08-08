@@ -5,8 +5,8 @@
     <InitialParameters>
 		<PatientFile>StandardMale.xml</PatientFile>
 		<Condition xsi:type="ChronicObstructivePulmonaryDiseaseData">
-			<BronchitisSeverity  value="0.50"/>
-			<EmphysemaSeverity   value="0.70"/>
+			<BronchitisSeverity  value="0.75"/>
+			<EmphysemaSeverity   value="0.9"/>
 		</Condition>
 	</InitialParameters>
 	
