@@ -117,6 +117,7 @@ endfunction()
 
 genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/outputs/jar/BioGears.jar
+        ${PROJECT_BINARY_DIR}/outputs/jar/BioGearsGUI.jar
         ${PROJECT_BINARY_DIR}/outputs/jar/BioGearsEngine.jar 
         ${PROJECT_BINARY_DIR}/outputs/jar/CommonDataModel.jar 
         ${PROJECT_BINARY_DIR}/outputs/jar/DataModelBindings.jar
@@ -226,6 +227,16 @@ add_custom_target(run-bge-tests
     VERBATIM
     USES_TERMINAL
 )
+set(args "")
+add_custom_target(run-biogears-gui
+   COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.biogears.gui.BioGearsGUI
+   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+   VERBATIM
+   USES_TERMINAL
+   )
+
+#java -classpath ../outputs/jar/BioGears.jar:../outputs/jar/BioGearsGUI.jar:../outputs/jar/BioGearsEngine.jar:../outputs/jar/CommonDataModel.jar:../outputs/jar/DataModelBindings.jar  mil.tatrc.physiology.biogears.gui.BioGearsGUI
+
 set (args "ALL true")
 add_custom_target(rebase-scenarios
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.Rebase ${args}
