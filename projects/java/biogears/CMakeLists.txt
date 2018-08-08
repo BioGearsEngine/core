@@ -227,13 +227,7 @@ add_custom_target(run-bge-tests
     VERBATIM
     USES_TERMINAL
 )
-set(args "")
-add_custom_target(run-biogears-gui
-   COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.biogears.gui.BioGearsGUI
-   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-   VERBATIM
-   USES_TERMINAL
-   )
+
 
 #java -classpath ../outputs/jar/BioGears.jar:../outputs/jar/BioGearsGUI.jar:../outputs/jar/BioGearsEngine.jar:../outputs/jar/CommonDataModel.jar:../outputs/jar/DataModelBindings.jar  mil.tatrc.physiology.biogears.gui.BioGearsGUI
 
@@ -261,7 +255,7 @@ add_custom_target(rebase-tests
 
 set (args "")
 add_custom_target(biogears-gui
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.biogears.gui.Bio ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.biogears.gui.BioGearsGUI ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -285,7 +279,6 @@ add_dependencies(rebase-scenarios  ${PROJECT_NAME})
 add_dependencies(rebase-debug  ${PROJECT_NAME})
 add_dependencies(rebase-tests  ${PROJECT_NAME})
 add_dependencies(biogears-gui  ${PROJECT_NAME})
-add_dependencies(run-biogears-gui biogears-gui) 
 
 
 if(ARA_STAGE_RUNTIME)
@@ -331,4 +324,3 @@ set_target_properties(rebase-scenarios         PROPERTIES FOLDER "Java" )
 set_target_properties(rebase-debug             PROPERTIES FOLDER "Java" )
 set_target_properties(rebase-tests             PROPERTIES FOLDER "Java" )
 set_target_properties(biogears-gui             PROPERTIES FOLDER "Java" )
-set_target_properties(run-biogears-gui         PROPERTIES FOLDER "Java" )

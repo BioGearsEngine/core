@@ -11,10 +11,10 @@
 	<MaxWorkRate value="762.2" unit="W"/>
 	<!-- MuscleMass CANNOT be set by the user -->
 	
-	<AlveoliSurfaceArea value="52.45" unit="m2"/>
+	<AlveoliSurfaceArea value="52.45" unit="m^2"/>
 	<Hyperhidrosis value="0.0"/>
 	<RightLungRatio value="0.525"/>
-	<SkinSurfaceArea value="1.618" unit="m2"/>
+	<SkinSurfaceArea value="1.618" unit="m^2"/>
 	<PainSusceptibility value="0.0"/>
 	
 	<BasalMetabolicRate value="1296.4" unit="kcal/day"/>
