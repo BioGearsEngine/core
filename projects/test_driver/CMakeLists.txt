@@ -52,7 +52,7 @@ set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
 ###############################################################################
 if(WIN32)
   list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
-  list(APPEND ${PREFIX}_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" /bigobj  $ENV{PARALLEL_COMPILE} )
+  list(APPEND ${PREFIX}_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" $ENV{PARALLEL_COMPILE} )
 elseif(CMAKE_COMPILER_IS_GNUCXX)
 list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
   list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
@@ -75,21 +75,12 @@ set_target_properties(${PROJECT_NAME}
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
-
+   
+  target_compile_definitions(${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
 ###############################################################################
 # COMPILATION & LINKAGE MODIFICATIONS
 ###############################################################################
-foreach(MY_ITEM ${${PREFIX}_CPPFLAGS_EXPORT})
-    TARGET_COMPILE_OPTIONS(${PROJECT_NAME}
-        PUBLIC ${MY_ITEM}
-    )
-endforeach(MY_ITEM)
-foreach(MY_ITEM ${${PREFIX}_CPPFLAGS})
-    TARGET_COMPILE_OPTIONS(${PROJECT_NAME}
-        PRIVATE ${MY_ITEM}
-    )
-endforeach(MY_ITEM)
-
 list(APPEND ${PREFIX}_INCLUDES
       ${PREFIX}_INCLUDE_DIR
       ${PREFIX}_PRIVATE_INCLUDE_DIR
