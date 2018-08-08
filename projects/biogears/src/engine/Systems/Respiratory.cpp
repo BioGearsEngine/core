@@ -1911,6 +1911,14 @@ void Respiratory::UpdateIERatio()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::UpdateAlveoliCompliance(double dScalingFactor, double dLeftLungFraction, double dRightLungFraction)
 {
+	//Testing shows that patient will die of extreme hypercapnia in most cases when the sum of the lung fractions and scaling factor is greater
+	//than 2.35.  While not a perfect cut off (i.e. severity = 1.0, Left = Right = 0.675 does not produce exact same result as severity = 0.35,
+	//Left = Right = 0.35), it allows for extreme scenarios (RR > 35, PaO2 < 40) without crashing engine.
+  if (dScalingFactor + dLeftLungFraction + dRightLungFraction > 2.35) {
+    dScalingFactor = 1.0;
+    dLeftLungFraction = 0.675;
+    dRightLungFraction = 0.657;
+  }
   // Get path compliances
   double dRightAlveoliBaselineCompliance = m_RightAlveoliToRightPleuralConnection->GetComplianceBaseline().GetValue(FlowComplianceUnit::L_Per_cmH2O);
   double dLeftAlveoliBaselineCompliance = m_LeftAlveoliToLeftPleuralConnection->GetComplianceBaseline().GetValue(FlowComplianceUnit::L_Per_cmH2O);
