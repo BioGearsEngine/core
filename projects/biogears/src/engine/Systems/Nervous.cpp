@@ -168,7 +168,6 @@ void Nervous::AtSteadyState()
   //the first time step after stabilization (and will stay that way, assuming no other perturbations to blood gas levels)
   m_ChemoreceptorFiringRateSetPoint_Hz = m_ChemoreceptorFiringRate_Hz;
   m_ChemoreceptorFiringRate_Hz = m_PeripheralBloodGasInteractionBaseline_Hz;
-  
 
   // The baroreceptor scales need to be reset any time the baselines are reset.
   GetBaroreceptorHeartRateScale().SetValue(1.0);
@@ -458,7 +457,7 @@ void Nervous::CheckNervousStatus()
 void Nervous::ChemoreceptorFeedback()
 {
   //-------Respiratory Feedback:  This is active throughtout the simulation (including stabilization)------------------------------
-  //Model Parameters from 
+  //Model Parameters from
   ///\@cite Magosso2001Mathematical
   double centralTimeConstant_s = 180.0;
   double centralGainConstant_L_Per_min_mmHg = 1.8;
@@ -478,7 +477,7 @@ void Nervous::ChemoreceptorFeedback()
 
   //Magosso and Ursino cite findings that central chemoreceptors are less sensitive at sub-normal levels of CO2 than to super-normal levels
   if (arterialCO2Pressure_mmHg < m_ArterialCarbonDioxideSetPoint_mmHg) {
-    centralGainConstant_L_Per_min_mmHg = 0.12;
+		centralGainConstant_L_Per_min_mmHg = 0.12;
   }
 
   //The psi parameter captures the combined interactive effect of O2 and CO2 on the peripheral chemoreceptors.  The degree
@@ -494,7 +493,7 @@ void Nervous::ChemoreceptorFeedback()
     gasInteraction = 1.4;
   }
   double psi = (psiNum / psiDen) * (gasInteraction * log(arterialCO2Pressure_mmHg / m_ArterialCarbonDioxideSetPoint_mmHg) + tuningFactor);
-  
+
   if (m_data.GetState() < EngineState::AtSecondaryStableState) {
     //This value is continuously updated during stabilization.  When system reaches steady state, it is used to reset the value of m_ChemoreceptorFiringRate_Hz
     //in the differential equation for dFiringRate_Hz so that all derivatives reset to 0 when a stable state is achieved.
@@ -513,7 +512,7 @@ void Nervous::ChemoreceptorFeedback()
   double drugCNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
   nextTargetVentilation_L_Per_min *= (1.0 - drugCNSModifier);
 
-  //Apply metabolic effects. The modifier is tuned to achieve the correct respiratory response for near maximal exercise. 
+  //Apply metabolic effects. The modifier is tuned to achieve the correct respiratory response for near maximal exercise.
   //A linear relationship is assumed for the respiratory effects due to increased metabolic exertion
   double TMR_W = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W);
   double BMR_W = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
@@ -522,10 +521,10 @@ void Nervous::ChemoreceptorFeedback()
   double metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
   nextTargetVentilation_L_Per_min *= metabolicModifier;
 
-  // Confirm that the target does not exceed the maximum ventilation (set in configuration).  
+  // Confirm that the target does not exceed the maximum ventilation (set in configuration).
   // Flag event if max is exceeded and (if event active) check to see if it has been deactivated
   double maximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);
-  
+
   if (nextTargetVentilation_L_Per_min > maximumPulmonaryVentilationRate) {
     nextTargetVentilation_L_Per_min = maximumPulmonaryVentilationRate;
     m_Patient->SetEvent(CDM::enumPatientEvent::MaximumPulmonaryVentilationRate, true, m_data.GetSimulationTime());
@@ -544,7 +543,7 @@ void Nervous::ChemoreceptorFeedback()
   m_CentralVentilationDelta_L_Per_min += dCentralVentilation_L_Per_min;
   m_PeripheralVentilationDelta_L_Per_min += dPeripheralVentilation_L_Per_min;
 
-//-----Cardiovascular Feedback:  This functionality is currently only active after stabilization.
+  //-----Cardiovascular Feedback:  This functionality is currently only active after stabilization.
   if (!m_FeedbackActive)
     return;
 
@@ -644,4 +643,3 @@ void Nervous::SetPupilEffects()
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
 }
-

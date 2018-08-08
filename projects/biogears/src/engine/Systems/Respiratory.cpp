@@ -1543,19 +1543,11 @@ void Respiratory::LobarPneumonia()
     double dLeftLungFraction = m_data.GetConditions().GetLobarPneumonia()->GetLeftLungAffected().GetValue();
     double dRightLungFraction = m_data.GetConditions().GetLobarPneumonia()->GetRightLungAffected().GetValue();
 
-    // Calculate Alveoli Compliance Multiplier based on severities
-    // Compliance is based on a exponential fit where severity = 0 is compliance multiplier = 1.0
-    // and severity = 1.0 is compliance multiplier = 0.01.
-    // Compliance function: Base = 10, Min = 0.01, Max = 1.0 (decreasing with severity)
-    double dCompilanceScalingFactor = GeneralMath::ResistanceFunction(10, 1.000, 0.001, (1 - dLobarPneumoniaSeverity));
-    // Call UpdateAlveoliCompliance
-    UpdateAlveoliCompliance(dCompilanceScalingFactor, dLeftLungFraction, dRightLungFraction);
+    // Call UpdateAlveoliCompliance -- the interaction of severity and lung fraction is accounted for in this function
+    UpdateAlveoliCompliance(dLobarPneumoniaSeverity, dLeftLungFraction, dRightLungFraction);
 
-    // Calculate Gas Diffusion Surface Area Multiplier based on severities
-    // Diffusion area function: Base = 10, Min = 0.15, Max = 1.0 (decreasing with severity)
-    double dGasDiffScalingFactor = GeneralMath::ResistanceFunction(10, 0.15, 1.0, dLobarPneumoniaSeverity);
-    // Call UpdateGasDiffusionSurfaceArea
-    UpdateGasDiffusionSurfaceArea(dGasDiffScalingFactor, dLeftLungFraction, dRightLungFraction);
+    // Call UpdateGasDiffusionSurfaceArea -- the interaction of severity and lung fraction is accounted for in this function
+    UpdateGasDiffusionSurfaceArea(dLobarPneumoniaSeverity, dLeftLungFraction, dRightLungFraction);
   }
 }
 
@@ -1833,15 +1825,15 @@ void Respiratory::UpdateObstructiveResistance()
   //Asthma attack on
   if (m_PatientActions->HasAsthmaAttack()) {
     double dSeverity = m_PatientActions->GetAsthmaAttack()->GetSeverity().GetValue();
-    // Resistance function: Base = 10, Min = 1.0, Max = 110 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1100, 1, dSeverity);
+    // Resistance function: Base = 10, Min = 10, Max = 1750 (increasing with severity)
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1750, 10, dSeverity);
     combinedResistanceScalingFactor = dResistanceScalingFactor;
   }
   //COPD on
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     double dSeverity = m_data.GetConditions().GetChronicObstructivePulmonaryDisease()->GetBronchitisSeverity().GetValue();
-    // Resistance function: Base = 10, Min = 1.0, Max = 100.0 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1100, 1, dSeverity);
+    // Resistance function: Base = 10, Min = 10, Max = 1750 (increasing with severity)
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10, 1750, 10, dSeverity);
     combinedResistanceScalingFactor = std::max(combinedResistanceScalingFactor, dResistanceScalingFactor);
   }
 
@@ -1895,8 +1887,10 @@ void Respiratory::UpdateIERatio()
   }
 
   if (combinedSeverity > 0.0) {
+    //The respiratory driver is very sensitive to the IEScaleFactor.  It does not take to decrease output IE Ratio significanlty.  Found that
+	//bounding at 0.85 worked well.
+    m_IEscaleFactor = 1.0 - 0.15 * combinedSeverity;
     //When albuterol is administered, the bronchodilation also causes the IE ratio to correct itself
-    m_IEscaleFactor = 1.0 - combinedSeverity;
     m_IEscaleFactor *= exp(7728.4 * m_AverageLocalTissueBronchodilationEffects);
 
     // IE scale factor is constrained to a minimum of 0.1 and a maximum 1.0. Lower than 0.1 causes simulation instability.
@@ -1909,29 +1903,31 @@ void Respiratory::UpdateIERatio()
 /// \brief
 /// Update Alveoli Compliance
 ///
-/// \param  dComplianceScalingFactor  Alveoli compliance multiplier
+/// \param  dScalingFactor			Multiplier based on the severity of the condition (lobar pneumonia, COPD, etc)
 /// \param  dLeftLungFraction     Fraction of left lung affected by change in surface area (0 to 1)
 /// \param  dRightLungFraction      Fraction of right lung affected by change in surface area (0 to 1)
 ///
 /// \return void
 ///
 /// \details
-/// This method takes a compliance scaling factor and lung percentages (left and right) as input
-/// variables.  It updates the Alveoli to Pleural compliances in order to model changes in alveoli
-/// compliance resulting from alveolus membrane damage or alveolus fluid content
+/// This method takes a scaling factor and lung percentages (left and right) as input variables
+/// The scaling factor and lung percentages are combined to produce a measure of deviation from compliance baseline.
+/// The Alveoli to Pleural compliances are updated to model alveolus membrane damage orchanges to alveolus fluid content
 //--------------------------------------------------------------------------------------------------
-void Respiratory::UpdateAlveoliCompliance(double dCompilanceScalingFactor, double dLeftLungFraction, double dRightLungFraction)
+void Respiratory::UpdateAlveoliCompliance(double dScalingFactor, double dLeftLungFraction, double dRightLungFraction)
 {
   // Get path compliances
   double dRightAlveoliBaselineCompliance = m_RightAlveoliToRightPleuralConnection->GetComplianceBaseline().GetValue(FlowComplianceUnit::L_Per_cmH2O);
   double dLeftAlveoliBaselineCompliance = m_LeftAlveoliToLeftPleuralConnection->GetComplianceBaseline().GetValue(FlowComplianceUnit::L_Per_cmH2O);
 
   // Left lung alveoli
-  dLeftAlveoliBaselineCompliance = (dLeftAlveoliBaselineCompliance * (1.0 - dLeftLungFraction)) + (dLeftAlveoliBaselineCompliance * dCompilanceScalingFactor * dLeftLungFraction);
+  double dLeftScalingFactor = GeneralMath::ResistanceFunction(10, 1.000, 0.005, 1.0 - dScalingFactor * dLeftLungFraction);
+  dLeftAlveoliBaselineCompliance *= dLeftScalingFactor;
   m_LeftAlveoliToLeftPleuralConnection->GetComplianceBaseline().SetValue(dLeftAlveoliBaselineCompliance, FlowComplianceUnit::L_Per_cmH2O);
 
   // Right lung alveoli
-  dRightAlveoliBaselineCompliance = (dRightAlveoliBaselineCompliance * (1.0 - dRightLungFraction)) + (dRightAlveoliBaselineCompliance * dCompilanceScalingFactor * dRightLungFraction);
+  double dRightScalingFactor = GeneralMath::ResistanceFunction(10, 1.000, 0.005, 1.0 - dScalingFactor * dRightLungFraction);
+  dRightAlveoliBaselineCompliance *= dRightScalingFactor;
   m_RightAlveoliToRightPleuralConnection->GetComplianceBaseline().SetValue(dRightAlveoliBaselineCompliance, FlowComplianceUnit::L_Per_cmH2O);
 }
 
@@ -1984,13 +1980,12 @@ void Respiratory::UpdateGasDiffusionSurfaceArea(double dFractionArea, double dLe
   // Get the right and left lung ratios
   double RightLungRatio = m_Patient->GetRightLungRatio().GetValue();
   double LeftLungRatio = 1.0 - RightLungRatio;
-
-  // Calculate the surface area contributions for each lung
-  double dRightContribution = RightLungRatio * ((AlveoliDiffusionArea_cm2 * (1.0 - dRightLungFraction)) + (AlveoliDiffusionArea_cm2 * dFractionArea * dRightLungFraction));
-  double dLeftContribution = LeftLungRatio * ((AlveoliDiffusionArea_cm2 * (1.0 - dLeftLungFraction)) + (AlveoliDiffusionArea_cm2 * dFractionArea * dLeftLungFraction));
-
+  
+  double dLeftScaleFactor = GeneralMath::ResistanceFunction(10, 0.15, 1.0, dFractionArea * dLeftLungFraction);
+  double dRightScaleFactor = GeneralMath::ResistanceFunction(10, 0.15, 1.0, dFractionArea * dRightLungFraction);
+  
   // Calculate the total surface area
-  AlveoliDiffusionArea_cm2 = dLeftContribution + dRightContribution;
+  AlveoliDiffusionArea_cm2 = dLeftScaleFactor * LeftLungRatio * AlveoliDiffusionArea_cm2 + dRightScaleFactor * RightLungRatio * AlveoliDiffusionArea_cm2;
 
   m_Patient->GetAlveoliSurfaceArea().SetValue(AlveoliDiffusionArea_cm2, AreaUnit::cm2);
 }
