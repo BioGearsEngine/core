@@ -89,6 +89,7 @@ endif()
 
 if(ARA_${PREFIX}_BUILD_STATIC)
   add_library(lib${PROJECT_NAME} STATIC ${LIB${PREFIX}_SOURCES} ${LIB${PREFIX}_HEADERS})
+  add_library(Biogears::lib${PROJECT_NAME} ALIAS lib${PROJECT_NAME})
 	set_target_properties(lib${PROJECT_NAME}
     PROPERTIES
     DEFINE_SYMBOL ${PROJECT_NAME}_EXPORTS
@@ -141,6 +142,7 @@ else()
     # libBiogears_String 
     ###############################################################################
     add_library(lib${PROJECT_NAME}_string SHARED ${LIB${PREFIX}_STRING_SOURCES} ${LIB${PREFIX}_STRING_HEADERS})
+    add_library(Biogears::lib${PROJECT_NAME}_string ALIAS lib${PROJECT_NAME}_string)
 
 	  set_target_properties(lib${PROJECT_NAME}_string
       PROPERTIES
@@ -185,6 +187,7 @@ else()
   # libBiogears_cdm
   ###############################################################################
   add_library(lib${PROJECT_NAME}_cdm    SHARED ${LIB${PREFIX}_CDM_SOURCES} ${LIB${PREFIX}CMD__HEADERS})
+  add_library(Biogears::lib${PROJECT_NAME}_cdm ALIAS lib${PROJECT_NAME}_cdm)
   set_target_properties(lib${PROJECT_NAME}_cdm
     PROPERTIES
     DEFINE_SYMBOL ${PROJECT_NAME}_cdm_EXPORTS
@@ -218,7 +221,7 @@ else()
   )
 	message(STATUS "${PREFIX}_cdm_LIBS=${${PREFIX}_cdm_LIBS}")
   if(WIN32)
-    target_link_libraries(lib${PROJECT_NAME}_cdm  PUBLIC lib${PROJECT_NAME}_string ${${PREFIX}_cdm_LIBS} )
+    target_link_libraries(lib${PROJECT_NAME}_cdm  PUBLIC Biogears::lib${PROJECT_NAME}_string ${${PREFIX}_cdm_LIBS} )
   else()
     target_link_libraries(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_cdm_LIBS} )
   endif()
@@ -231,6 +234,7 @@ else()
   # libBiogears
   ###############################################################################
   add_library(lib${PROJECT_NAME}        SHARED ${LIB${PREFIX}_SOURCES} ${LIB${PREFIX}_HEADERS})
+  add_library(Biogears::lib${PROJECT_NAME} ALIAS lib${PROJECT_NAME})
   	set_target_properties(lib${PROJECT_NAME}
     PROPERTIES
     DEFINE_SYMBOL ${PROJECT_NAME}_EXPORTS
@@ -261,7 +265,7 @@ else()
   set(${PREFIX}_LIBS
             Eigen3::Eigen
             Log4cpp::Log4cpp
-            lib${PROJECT_NAME}_cdm
+            Biogears::lib${PROJECT_NAME}_cdm
   )
   message(STATUS "${PREFIX}_LIBS=${${PREFIX}_LIBS}")
   target_link_libraries(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_LIBS} )
@@ -276,6 +280,7 @@ else()
   ###############################################################################
   if(Java_FOUND AND ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
      add_library(lib${PROJECT_NAME}_jni  SHARED ${LIB${PREFIX}_JNI_SOURCES} ${LIB${PREFIX}_JNI_HEADERS})
+     add_library(Biogears::lib${PROJECT_NAME}_jni ALIAS lib${PROJECT_NAME}_jni)
   	   set_target_properties(lib${PROJECT_NAME}_jni
        PROPERTIES
        DEFINE_SYMBOL ${PROJECT_NAME}_jni_EXPORTS
@@ -305,7 +310,7 @@ else()
   set(${PREFIX}_jni_LIBS
             CodeSynthesis::XSD
             Eigen3::Eigen
-            lib${PROJECT_NAME}
+            Biogears::lib${PROJECT_NAME}
   )
 	message(STATUS "${PREFIX}_jni_LIBS=${${PREFIX}_jni_LIBS}")
   if(WIN32)

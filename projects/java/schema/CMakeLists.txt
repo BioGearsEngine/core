@@ -53,7 +53,7 @@ add_jar(${PROJECT_NAME}
         OUTPUT_NAME ${SHORT_NAME}
 
         )
-add_dependencies(${PROJECT_NAME} libbiogears_jni)
+add_dependencies(${PROJECT_NAME} Biogears::libbiogears_jni)
 ###############################################################################
 #Define Logic
 ###############################################################################

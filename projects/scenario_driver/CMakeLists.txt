@@ -94,8 +94,8 @@ endforeach()
 set(${PREFIX}_LIBS
       ${CMAKE_THREAD_LIBS_INIT}
       ${CMAKE_DL_LIBS}
-      libbiogears_cdm
-      libbiogears
+      Biogears::libbiogears_cdm
+      Biogears::libbiogears
 )
 if(WIN32)
   list(APPEND ${PREFIX}_LIBS libbiogears_string)

@@ -28,15 +28,12 @@ function(add_howto name)
     ###############################################################################
     message(STATUS "Configuring ${EXAMPLE_NAME}")
     
-    add_source_files(COMMON_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.h"   "Headers\\Private\\")
     add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src/ "*.h"   "Headers\\Private\\")
-    add_source_files(COMMON_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.cpp" "Sources\\")
     add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src "*.cpp" "Sources\\")
-    add_source_files(COMMON_PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source/include "*.h"  "Headers\\Public\\")
     add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include "*.h"  "Headers\\Public\\")
     
-    set(${EXAMPLE_NAME}_HEADERS ${COMMON_HDRS} ${HDRS} ${COMMON_PUBLIC_HDRS} ${PUBLIC_HDRS} )
-    set(${EXAMPLE_NAME}_SOURCES ${COMMON_SRCS} ${SRCS} ) 
+    set(${EXAMPLE_NAME}_HEADERS ${HDRS} ${PUBLIC_HDRS} )
+    set(${EXAMPLE_NAME}_SOURCES ${SRCS} ) 
     
     ###############################################################################
     #Define Logic
@@ -78,9 +75,10 @@ function(add_howto name)
     )
 
     list(APPEND ${EXAMPLE_NAME}_LIBS
-      libbiogears
+      Biogears::libbiogears
       ${CMAKE_THREAD_LIBS_INIT}
       Threads::Threads
+      howto::common
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
@@ -114,6 +112,29 @@ if(ARA_${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   include ( ${PROJECT_SOURCE_DIR}/cmake/cmake-common_logic.cmake )
   
   find_package(Threads REQUIRED)
+
+
+  add_source_files(COMMON_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.h"   "Headers\\Private\\")
+  add_source_files(COMMON_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.cpp" "Sources\\")
+  add_source_files(COMMON_PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source/include "*.h"  "Headers\\Public\\")
+  add_library(howto-common OBJECT ${COMMON_HDRS} ${COMMON_SRCS} ${COMMON_PUBLIC_HDRS} )
+  add_library(howto::common ALIAS howto-common)
+   
+  set_target_properties(howto-common
+        PROPERTIES
+        FOLDER Examples
+        OUTPUT_NAME "howto-common"
+        PROJECT_LABEL "howto-common"
+        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+        CXX_STANDARD 14
+        VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+  )
+  target_link_libraries(howto-common Biogears::libbiogears)
+  target_include_directories(howto-common
+      PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/common-source
+  )
+
+ target_compile_definitions(howto-common PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS">  )
 
   childlist( dir_list ${CMAKE_CURRENT_SOURCE_DIR} )
   foreach( dir IN LISTS dir_list )
