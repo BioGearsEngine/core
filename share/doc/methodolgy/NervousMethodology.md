@@ -31,8 +31,7 @@ System Design
 =============
 Background and Scope
 --------------------
-The %BioGears Nervous System contains 
-
+The %BioGears %Nervous System began as a simple model that tracked clinical metrics associated with brain function (e.g. pupillary response).  The spectrum of actions to which the system responds has been expanded to include pain stimuluar and administration of drugs that alter nervous activity (i.e. neuromuscular blockers, opioids).  Low fidelity models representing the baroreceptor and chemoreceptor feedback systems have also been introduced.  Initially, these feedback models were constrained by the time step size used in %BioGears simulations:  Many higher fidelity models consist of a system of differential equations that would be unstable at low sampling rates.  However, as %BioGears has been improved, the simulation step has been decreased to 0.02 s, capable of capturing a 50 Hz signal.  As such, we have introduced a more detailed chemoreceptor model that transduces changes in blood gas concentrations to a nervous firing rate that dictates a target respiratory ventilation.  Future work will extend this model to cardiovascular control by the chemoreceptors and will implement a similar update to the Baroreceptor model.
 
 Data Flow
 ---------
@@ -146,7 +145,51 @@ Where x<sub>HR</sub>, x<sub>E</sub>, x<sub>R</sub> and x<sub>C</sub> are the rel
 <center> *Figure 3. The plot array demonstrates the normalized organ responses to sympathetic or parasympathetic activity, plotted against the normalized mean arterial pressure.* </center>
 
 ### Chemoreceptors
-The chemoreceptors are cells that are sensitive to reduced oxygen and excess carbon dioxide. Excitation of the chemoreceptors stimulates the sympathetic nervous system. The chemoreceptors contribute significantly to the control of respiratory function, and they are included in the [respiratory control model](@ref respiratory-chemoreceptors) developed for %BioGears. As sympathetic activators, the chemoreceptors also increase the heart rate and contractility. The complete mechanisms of chemoreceptor feedback are complicated and beyond the current scope of %BioGears, so a phenomenological model was developed to elicit an appropriate response to hypoxia and hypercapnia. Only the heart rate effects of chemoreceptor stimulation are modeled in the current version of %BioGears, but contractility modification will be included in a future release.  Figure 4 shows the chemoreceptor effect on heart rate. In the figure, the abscissa values represent a fractional deviation of gas concentration from baseline, and the ordinate values show the resultant change in heart rate as a fraction of the baseline heart rate. The final heart rate modification due to chemoreceptors is the sum of the oxygen and carbon dioxide effects. For example, severe hypoxia and severe hypercapnia will result in a three-fold increase in heart rate (baseline + 2 * baseline).
+The chemoreceptors are cells that are sensitive to changes in blood gas concentration. Peripheral chemosensitive cells--located in the aortic arch--detect fluctuations in both arterial carbon dioxide and oxygen partial pressures.  The central chemoreceptors, which reside in the central nervous system (CNS), respond to changes in cerebral blood pH caused by irregular carbon dioxide levels.  It is assumed in this model that carbon dioxide transport across the blood-brain barrier and equilibration therein are rapid processes; that is, it assumed that the central chemoreceptor response is proportional to deviations in arterial carbon dioxide.  As sympathetic activators, the chemoreceptors also increase the heart rate and contractility.
+
+####Respiratory Control
+Control of respiration is based on the model developed by Albanese, Magosso, and Ursino in @cite ursino2001acute, @cite magosso2001mathematical, and @cite ursino2002theoretical.  It is assumed that the central and peripheral feedback define deviations from baseline patient ventilation (set in %BioGears during system stabilization) and that their contributions are independent (and thus additive).  
+
+\f[\dot{V_{target}} = \dot{V_{base}} + \delta\dot{V_{c}} + \delta\dot{V_{p}} \f]
+<center>
+*Equation 8.*
+</center><br>
+
+Clearly, the blood gas levels are normal, central (\delta\dot{V<sub>c</sub>}) and peripheral (\delta\dot{V<sub>p</sub>}) changes in ventilation are 0, and target ventilation (\dot{V<sub>target</sub>}) equals patient baseline ventilation (\dot{V<sub>base</sub>}).
+
+The evolution of the central chemoreceptor feedback is assumed to be a function of arterial carbon dioxide partial pressure (P<sub>CO<sub>2</sub></sub>) deviation from its normal set point (P<sub>CO<sub>2,set</sub></sub> = 40 mmHg).
+
+\f[ \frac{d\delta\dot{V_{c}}}{dt} = \left(\frac{1}{ \tau_{c}} \right) \left( -\delta\dot{V_{c}} + g_{c}\left(P_{CO_{2}}(t) - P_{CO_{2,set}}\right)\right) \f]
+<center>
+*Equation 9.*
+</center><br>
+
+The parameters \tau<sub>c</sub> and g<sub>c</sub> are the time constant and control gain associated with the central response, respectively.  Equation 9 is identical to that reported in @magosso2001mathematical, except that a delay term is omitted.  This omission is a result of being currently unable to model delay differential equations in %BioGears.  
+
+The form of the peripheral feedback in Equation 10 is similar to Equation 9, but the response is dictated by a nerve firing rate that is a function of the combined action of carbon dioxide and oxygen.  Equations 11-12 show how this firing rate (f(t)) is calculated.
+
+\f[ \frac{d\delta\dot{V_{p}}}{dt} = \left(\frac{1}{ \tau_{p}} \right) \left( -\delta\dot{V_{p}} + g_{p}\left(f(t) - f_{set}\right)\right) \f]
+<center>
+*Equation 10.*
+</center><br>
+
+\f[ \frac{df}{dt} = \frac{1}{\tau_{f}}\left(-f(t) + \psi\right)
+<center>
+*Equation 11.*
+</center><br>
+
+\f[ \psi = \frac{f_{max} + f_{min}*exp\left(\frac{P_{O_{2}} - P_{O_{2,half}}}{k_{O_{2}}}\right)}{1 + exp\left(\frac{P_{O_{2}} - P_{O_{2,half}}}{k_{O_{2}}}\right)}*\left[K*ln\left(\frac{P_{CO_{2}}}{P_{CO_{2,set}}} + \gamma\right] \f]
+<center>
+*Equation 12.*
+</center><br>
+
+Equation 12 is a sigmoid that outputs a chemoreceptor firing rate (bounded by f<sub>min</sub> and f<sub>max</sub>) based on the current arterial oxygen pressure (P<sub>O<sub>2</sub></sub>).  The variables P<sub>O<sub>2,half</sub></sub> and k<sub>O<sub>2</sub></sub> are the half-max and slope parameters that define the shape of the sigmoid, a shape which is increasingly adjusted as the arterial carbon dioxide pressure (P<sub>CO<sub>2</sub></sub>) deviates from normal (P<sub>CO<sub>2,set</sub></sub>.  K and \gamma are tuning parameters required to maintain a steady output when oxygen and carbon dioxide pressures are at their normal values.  Values for all parameters in Equations 9-12 are available in @cite magosso2001mathematical.
+
+The performance of this model in %BioGears was validated under both hypercanpic and hypoxic conditions.  Hypercapnic validation was based on the study of Reynolds, Milhorn, and Holloman @cite reynolds1972transient, in which healthy volunteers breathed air with supernormal carbon dioxide levels (3%, 5%, 6%, and 7% CO<sub>2</sub>).  Likewise, hypoxic validation scenarios used data from Reynolds and Milhorn @cite reynolds1973transient.  Volunteers in this study breathed 7%, 8%, and 9% O<sub>2</sub> in nitrogen.  The validation results are below.               
+
+
+####Cardiovascular Control
+Only the heart rate effects of cardiovascular control are modeled in the current chemoreceptor implementation, but contractility modification will be included in a future release.  Figure 4 shows the chemoreceptor effect on heart rate. In the figure, the abscissa represents the fractional deviation of gas concentration from baseline, while the ordinate shows the resultant change in heart rate as a fraction of patient baseline. The final heart rate modification due to chemoreceptors is the sum of the oxygen and carbon dioxide effects. For example, severe hypoxia and severe hypercapnia will result in a three-fold increase in heart rate (baseline + 2 * baseline).
 
 <img src="./plots/Nervous/ChemoreceptorsModifiers.jpg" width="600">
 <center>
