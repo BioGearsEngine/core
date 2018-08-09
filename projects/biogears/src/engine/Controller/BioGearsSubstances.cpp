@@ -493,7 +493,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // BICARBONATE IS SET IN GASES SECTION //
 
   // CALCIUM //
-  concentration.SetValue(48.1, MassPerVolumeUnit::mg_Per_L);
+  concentration.SetValue(98.1, MassPerVolumeUnit::mg_Per_L);
   SetSubstanceConcentration(*m_calcium, vascular, concentration);
   // Tissue
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_calcium->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);

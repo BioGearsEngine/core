@@ -51,7 +51,7 @@ void HowToPainStimulus()
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPain.log");
   bg->GetLogger()->Info("HowToPain");
-  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
+ if (!bg->LoadState("./states/ToughGuy@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
@@ -85,7 +85,8 @@ void HowToPainStimulus()
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
-  // defined in the Physiology.xsd file
+  // defined in the Physiology.xsd file, 
+  //note: can't ask for substance values that aren't currently in the patient (i.e. can't ask for morphine, unless you administer it before advancing time)
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*morphine, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*epi, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
@@ -98,6 +99,9 @@ void HowToPainStimulus()
 
   //lets start the pain
   bg->ProcessAction(PainStimulus);
+  //administer morphine
+  bg->ProcessAction(bolus);
+  bg->GetLogger()->Info("Giving the patient Morphine.");
 
   tracker.AdvanceModelTime(300);
 
@@ -107,10 +111,7 @@ void HowToPainStimulus()
   bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
   
-  //administer morphine
-  bg->ProcessAction(bolus);
-  bg->GetLogger()->Info("Giving the patient Morphine.");
-
+ 
   //grab VAS score
   double pain = bg->GetNervousSystem()->GetPainVisualAnalogueScale();
   double dt = bg->GetTimeStep(TimeUnit::s);
