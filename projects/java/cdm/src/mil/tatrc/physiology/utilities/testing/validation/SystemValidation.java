@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 import mil.tatrc.physiology.utilities.Log;
 
-public class SystemValidation extends ValdiationTool
+public class SystemValidation extends ValidationTool
 {
   public SystemValidation()
   {

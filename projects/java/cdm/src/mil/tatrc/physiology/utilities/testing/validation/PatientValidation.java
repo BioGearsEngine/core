@@ -17,7 +17,7 @@ import java.util.Arrays;
 import mil.tatrc.physiology.datamodel.patient.SEPatient;
 import mil.tatrc.physiology.utilities.Log;
 
-public class PatientValidation extends ValdiationTool
+public class PatientValidation extends ValidationTool
 {
   public PatientValidation()
   {

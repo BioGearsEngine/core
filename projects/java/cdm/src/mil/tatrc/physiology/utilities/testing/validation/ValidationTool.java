@@ -42,7 +42,7 @@ import mil.tatrc.physiology.utilities.UnitConverter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.xssf.usermodel.*;
 
-public abstract class ValdiationTool {
+public abstract class ValidationTool {
   public static void main(String[] args)
   {
     SystemValidation.main(args);
