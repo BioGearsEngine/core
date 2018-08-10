@@ -27,6 +27,7 @@ public class SENervousSystem extends SEPhysiologySystem implements SESystem
 	protected SEPupillaryResponse rightPupillaryResponse;
 	protected SEScalar					  chemoreceptorHeartRateScale;
 	protected SEScalar					  chemoreceptorHeartElastanceScale;
+	protected SEScalar 					  painVisualAnalogueScale;
 
 	public SENervousSystem()
 	{
@@ -38,6 +39,7 @@ public class SENervousSystem extends SEPhysiologySystem implements SESystem
 		rightPupillaryResponse=null;
 		chemoreceptorHeartRateScale=null;
 		chemoreceptorHeartElastanceScale=null;
+		painVisualAnalogueScale=null;
 	}
 
 	public void reset()
@@ -58,6 +60,8 @@ public class SENervousSystem extends SEPhysiologySystem implements SESystem
 			chemoreceptorHeartRateScale.invalidate();
 		if(chemoreceptorHeartElastanceScale!=null)
 			chemoreceptorHeartElastanceScale.invalidate();
+		if(painVisualAnalogueScale!=null)
+			painVisualAnalogueScale.invalidate();
 	}
 
 	public boolean load(NervousSystemData in)
@@ -80,7 +84,8 @@ public class SENervousSystem extends SEPhysiologySystem implements SESystem
 			this.getLeftEyePupillaryResponse().load(in.getLeftEyePupillaryResponse());
 		if(in.getRightEyePupillaryResponse()!=null)
 			this.getRightEyePupillaryResponse().load(in.getRightEyePupillaryResponse());
-
+		if(in.getPainVisualAnalogueScale()!=null)
+			this.getPainVisualAnalogueScale().load(in.getPainVisualAnalogueScale());
 		return true;
 	}
 
@@ -106,11 +111,13 @@ public class SENervousSystem extends SEPhysiologySystem implements SESystem
 			data.setChemoreceptorHeartRateScale(chemoreceptorHeartRateScale.unload());
 		if (getChemoreceptorHeartElastanceScale() != null)
 			data.setChemoreceptorHeartElastanceScale(chemoreceptorHeartElastanceScale.unload());
-
+		if (getPainVisualAnalogueScale() != null)
+			data.setPainVisualAnalogueScale(painVisualAnalogueScale.unload());
 		if(hasLeftEyePupillaryResponse())
 			data.setLeftEyePupillaryResponse(this.leftPupillaryResponse.unload());
 		if(hasRightEyePupillaryResponse())
 			data.setRightEyePupillaryResponse(this.rightPupillaryResponse.unload());
+		
 	}
 
 	public boolean hasBaroreceptorHeartRateScale()
@@ -179,6 +186,17 @@ public class SENervousSystem extends SEPhysiologySystem implements SESystem
 		return chemoreceptorHeartElastanceScale;
 	}
 
+	public boolean hasPainVisualAnalogueScale()
+	{
+		return painVisualAnalogueScale == null ? false : painVisualAnalogueScale.isValid();
+	}
+	public SEScalar getPainVisualAnalogueScale()
+	{
+		if (painVisualAnalogueScale == null)
+			painVisualAnalogueScale = new SEScalar();
+		return painVisualAnalogueScale;
+	}
+
 	public SEPupillaryResponse getLeftEyePupillaryResponse() 
 	{ 
 		if(this.leftPupillaryResponse==null)
@@ -194,6 +212,5 @@ public class SENervousSystem extends SEPhysiologySystem implements SESystem
 		return this.rightPupillaryResponse;
 	}	
 	public boolean  hasRightEyePupillaryResponse() {return this.rightPupillaryResponse!=null;}
-
 
 }

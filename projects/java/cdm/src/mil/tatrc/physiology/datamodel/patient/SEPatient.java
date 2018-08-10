@@ -53,6 +53,7 @@ public class SEPatient
 	protected SEScalarVolume            residualVolume;
 	protected SEScalarVolume            totalLungCapacity;
 	protected SEScalarVolume            vitalCapacity;
+	protected SEScalarNeg1To1           painSusceptibility;
 
 	protected Map<EnumPatientEvent,Boolean> events = new HashMap<EnumPatientEvent,Boolean>();
 
@@ -123,6 +124,8 @@ public class SEPatient
 			this.totalLungCapacity.invalidate();
 		if(vitalCapacity != null)
 			this.vitalCapacity.invalidate();
+		if(painSusceptibility != null)
+			this.painSusceptibility.invalidate();
 
 		events.clear();
 	}
@@ -173,6 +176,9 @@ public class SEPatient
 		if(data.getTidalVolumeBaseline()!=null)
 			this.getTidalVolumeBaseline().load(data.getTidalVolumeBaseline());
 		
+		if(data.getPainSusceptibility()!=null)
+			this.getPainSusceptibility().load(data.getPainSusceptibility());
+
 		if(data.getHeartRateMaximum()!=null)
 			this.getHeartRateMaximum().load(data.getHeartRateMaximum());
 		if(data.getHeartRateMinimum()!=null)
@@ -222,6 +228,9 @@ public class SEPatient
 			to.setLeanBodyMass(this.leanBodyMass.unload());
 		if(hasMuscleMass())
 			to.setMuscleMass(this.muscleMass.unload());
+
+		if(hasPainSusceptibility())
+			to.setPainSusceptibility(this.painSusceptibility.unload());
 		
 		if(hasAlveoliSurfaceArea())
 			to.setAlveoliSurfaceArea(alveoliSurfaceArea.unload());    
@@ -317,6 +326,14 @@ public class SEPatient
 		return this.height;
 	}
 	public boolean          hasHeight() {return this.height==null?false:this.height.isValid();}
+
+	public SEScalarNeg1To1 getPainSusceptibility() 
+	{ 
+		if(this.painSusceptibility==null)
+			this.painSusceptibility=new SEScalarNeg1To1();
+		return this.painSusceptibility;
+	}
+	public boolean          hasPainSusceptibility() {return this.painSusceptibility==null?false:this.painSusceptibility.isValid();}
 
 	public boolean hasAlveoliSurfaceArea()
 	{
