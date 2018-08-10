@@ -224,7 +224,7 @@ public class TestDriver
     public void handleFatal(String msg) { Log.fatal("["+name+"] "+msg,""); }
   }
 
-  public void processConfigFile(String configFile)
+  public void processConfigFile(String configFile)//configFile is args[0]
   {        
     this.name = configFile.substring(0, configFile.lastIndexOf('.'));
     Log.setFileName(this.name+".log");
@@ -249,7 +249,10 @@ public class TestDriver
 
     // Parse the config file
     // TODO, make sure all \ are converted to /
-    try (Scanner scanner =  new Scanner( Paths.get(configFile)) )
+    if(!configFile.equals("email.cfg")){
+      processConfigFile("email.cfg");
+    }
+    try (Scanner scanner =  new Scanner( Paths.get(configFile)) )  
     {
       String line;
       while (scanner.hasNextLine())
@@ -756,7 +759,7 @@ public class TestDriver
   protected void email(TestReport report)
   {
     if(this.emailSubject==null||this.emailRecipients==null||
-        this.emailSender==null||this.emailSMTP==null)
+       this.emailSender==null||this.emailSMTP==null)
     {
       Log.error("Not sending email since all nessesary email info was not provided");
       return;
@@ -771,6 +774,7 @@ public class TestDriver
     }
     catch(Exception ex)
     {
+      Log.error("Local host name could not be resolved into an address");
     }  
     //Get revision number if found add it to the email and make a copy of the bin
     String commit= "";
@@ -778,7 +782,7 @@ public class TestDriver
     {
       commit= " Commit " + commitHash.substring(0, 8);
     }
-
+    //environment is never set, so this if statement will never execute
     String environmentString = "";
     if (environment != null && !environment.equals(""))
     {
@@ -786,7 +790,7 @@ public class TestDriver
     }
 
     // Email out a summary of all the reports we made
-    EmailUtil email = new EmailUtil();
+    EmailUtil email = new EmailUtil(); //Note that although it shares a name with a public library, EmailUtil is defined in EmailUtil.java
     email.setSubject(environmentString + this.emailSubject + " from "+hostname+commit);
     email.setSender(this.emailSender);
     email.setSMTP(this.emailSMTP);

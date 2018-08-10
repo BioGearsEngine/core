@@ -76,7 +76,7 @@ public class CSVPlotTool
       Log.fatal("Input file cannot be found");
       return;
     }
-    String reportDir = "./graph_results/"+f.getName();
+    String reportDir = "./graph_results/"+f.getName(); //f is a path, getName returns the last name of the pathname's name sequence
     reportDir=reportDir.substring(0,reportDir.lastIndexOf("."))+"/";  
     CSVPlotTool t = new CSVPlotTool();
     t.graphResults(args[0],reportDir);

@@ -160,11 +160,11 @@ public abstract class ValidationTool {
         Log.info("Emailling all recipients " + subj);
         // for(String recipient : config.getProperty("recipients").split(","))
         //   email.addRecipient(recipient.trim());
-        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+        try (Stream<String> stream = Files.lines(Paths.get(fileName))) { //lmarin, this code just does nothing
           for (String str : stream.toArray(String[] ::new)) {
             email.addRecipient(str);
           }
-        } catch (IOException e) {
+        } catch (IOException e) { //This exception will always be caught, because fileName should just be null
           e.printStackTrace();
         }
       } else { // Running on your own machine, just send it to yourself
