@@ -24,7 +24,17 @@ public class SEPainStimulus extends SEPatientAction
 
 	public SEPainStimulus()
 	{
+		location = null;
 		severity = null;
+	}
+	
+	public void copy(SEPainStimulus other)
+	{
+		if(this==other)
+			return;
+		super.copy(other);
+		severity = other.severity;
+		location = other.location;
 	}
 	
 	public void reset()
@@ -35,18 +45,9 @@ public class SEPainStimulus extends SEPatientAction
 		this.location=null;
 	}
 	
-	public void copy(SEPainStimulus other)
-	{
-		if(this==other)
-			return;
-		super.copy(other);
-		location = other.location;
-		severity = other.severity;
-	}
-	
 	public boolean isValid()
 	{
-		return hasSeverity();
+		return hasSeverity() && hasLocation();
 	}
 	
 	public boolean load(PainStimulusData in)
@@ -70,6 +71,8 @@ public class SEPainStimulus extends SEPatientAction
 		super.unload(data);
 		if (severity != null)
 			data.setSeverity(severity.unload());
+		if(this.location!=null)
+			data.setLocation(location);
 	}
 	
 	public String getLocation()
