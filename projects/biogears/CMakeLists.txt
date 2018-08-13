@@ -102,7 +102,7 @@ if(ARA_${PREFIX}_BUILD_STATIC)
     )
 
   if(WIN32)
-    list(APPEND ${PREFIX}_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX" $ENV{PARALLEL_COMPILE} )
+    list(APPEND ${PREFIX}_CPPFLAGS "_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" $ENV{PARALLEL_COMPILE} )
   elseif(CMAKE_COMPILER_IS_GNUCXX)
     list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
     list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
@@ -158,7 +158,7 @@ else()
     ###############################################################################
     # libBiogears_String OMPILATION & LINKAGE MODIFICATIONS
     ###############################################################################
-    set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX" > )
+    set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" > )
     target_compile_definitions(lib${PROJECT_NAME}_string  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
     target_compile_definitions(lib${PROJECT_NAME}_string  PRIVATE ${${PREFIX}_CPPFLAGS} )
     target_compile_options(lib${PROJECT_NAME}_string PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
@@ -203,7 +203,7 @@ else()
   ###############################################################################
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX" > )
+  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" > )
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME}_cdm PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
@@ -249,7 +249,7 @@ else()
   ###############################################################################
   # libBiogears COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX" > )
+  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" > )
   target_compile_definitions(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
   target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
@@ -294,7 +294,7 @@ else()
   ###############################################################################
   # libBiogears_jni COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX" > )
+  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" > )
   target_compile_definitions(lib${PROJECT_NAME}_jni  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
   target_compile_definitions(lib${PROJECT_NAME}_jni  PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME}_jni PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
