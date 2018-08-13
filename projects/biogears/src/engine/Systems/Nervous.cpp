@@ -186,9 +186,9 @@ void Nervous::AtSteadyState()
 //--------------------------------------------------------------------------------------------------
 void Nervous::PreProcess()
 {
-  BaroreceptorFeedback();
-  CheckPainStimulus();
-  ChemoreceptorFeedback();
+	CheckPainStimulus();
+	BaroreceptorFeedback();
+	ChemoreceptorFeedback();
 }
 
 //--------------------------------------------------------------------------------------------------

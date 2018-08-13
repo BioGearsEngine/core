@@ -13,8 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
-
-#include "biogears/cdm/utils/RunningAverage.h"
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/BioGearsNervousSystemData.hxx>
