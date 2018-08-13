@@ -1,4 +1,4 @@
-%Energy Methodology {#EnergyMethodology}
+﻿%Energy Methodology {#EnergyMethodology}
 ==========================
 
 Overview
@@ -181,9 +181,9 @@ Dehydration functionality is simulated completely in the %Energy system. Similar
 
 ### Hyperhidrosis and Hypohidrosis
 **Excessive sweating and a lack of sweating are conditions that can be modified by the "Hyperhidrosis" parameter in the patient file. Using a scalar from -1 to 1, a more negative value will scale down the patient's sweat rate more in order to simulate hypohidrosis while a more positive value increases sweat rate to demonstrate hyperhidrosis @cite shih1983autonomic. The default value of zero refers to the standard sweat rate of a person, while a value of -1 can simulate the rare condition in which a person is unable to sweat at all.
-@insert ..\doxygen\html\images\Energy\SweatRate.png
-@insert ..\doxygen\html\images\Energy\SkinTemp.png
-@insert ..\doxygen\html\images\Energy\CoreTemp.png
+<img src="./images/Energy/Energy/SweatRate.png" width="900">
+<img src="./images/Energy/Energy/SkinTemp.png" width="900">
+<img src="./images/Energy/Energy/CoreTemp.png" width="900">
 
 
 @anchor energy-events
@@ -210,7 +210,7 @@ Validation - Resting Physiologic State
 <br><center>
 *Table 2. The %Energy system properties consist of core and skin temperature, as well as metabolic production rates. The properties show good agreement with the validation values.*
 </center>
-@insert ..\..\bin\validation\EnergyValidationTable.md
+@insert validation/EnergyValidationTable.md
 
 The resting system properties for the energy system are temperatures and metabolic production rates. From Table 2, it is shown that the temperatures meet the validation criteria extremely well for resting conditions. Ketone production rate is currently low because only the brain uses ketones, and then only during starved states. Because ketone behavior is most important during starved states, it was tuned to perform at better long-term timescales, where this validation occurs only over a few minutes. Lactate production is low likely due to its clearance not being tied to gluconeogenesis. This will be addressed in an upcoming release. Resting state temperatures are good.
 
