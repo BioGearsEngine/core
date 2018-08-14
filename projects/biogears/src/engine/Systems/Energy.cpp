@@ -109,6 +109,7 @@ void Energy::Initialize()
   GetExerciseMeanArterialPressureDelta().SetValue(0.0, PressureUnit::mmHg);
   GetTotalWorkRateLevel().SetValue(0.0);
   GetFatigueLevel().SetValue(0.0);
+  GetSweatRate().SetValue(0.0, MassPerTimeUnit::kg_Per_s);
   GetChlorideLostToSweat().SetValue(0.0, MassUnit::mg);
   GetPotassiumLostToSweat().SetValue(0.0, MassUnit::mg);
   GetSodiumLostToSweat().SetValue(0.0, MassUnit::mg);
