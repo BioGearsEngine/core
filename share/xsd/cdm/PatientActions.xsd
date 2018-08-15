@@ -358,19 +358,19 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>		
 
-	<!-- @brief Various methods of substance administration. -->
+	<!-- @brief Various methods of substance administration. Currently unsupported methods are commented out.-->
 	<xs:simpleType name="enumBolusAdministration">
 		<xs:restriction base="xs:string">			
-			<xs:enumeration value="Epidural"/><!-- @brief Injection into a epidural space -->
-			<xs:enumeration value="Intraosseous"/><!-- @brief Injection into the bone marrow -->
+			<!--<xs:enumeration value="Epidural"/>--> <!-- @brief Injection into a epidural space -->
+			<!--<xs:enumeration value="Intraosseous"/>--> <!-- @brief Injection into the bone marrow -->
 			<xs:enumeration value="Intraarterial"/><!-- @brief Injection into an artery -->
-			<xs:enumeration value="Intracardiac"/><!-- @brief Injection into the heart -->
-			<xs:enumeration value="Intracerebral"/><!-- @brief Injection into the brain -->
-			<xs:enumeration value="Intracerebroventricular"/><!-- @brief Injection into the cerebral ventricles -->		
-			<xs:enumeration value="Intradermal"/><!-- @brief Injection into the skin -->
+			<!--<xs:enumeration value="Intracardiac"/>--> <!-- @brief Injection into the heart -->
+			<!--<xs:enumeration value="Intracerebral"/>--> <!-- @brief Injection into the brain -->
+			<!--<xs:enumeration value="Intracerebroventricular"/>--> <!-- @brief Injection into the cerebral ventricles -->		
+			<!--<xs:enumeration value="Intradermal"/>--> <!-- @brief Injection into the skin -->
 			<xs:enumeration value="Intramuscular"/><!-- @brief Injection into the muscle -->			
 			<xs:enumeration value="Intravenous"/><!-- @brief Injection into a vein -->					
-			<xs:enumeration value="Subcutaneous"/><!-- @brief Injection under the skin -->			
+			<!--<xs:enumeration value="Subcutaneous"/>--> <!-- @brief Injection under the skin -->			
 		</xs:restriction>
 	</xs:simpleType>
 	
