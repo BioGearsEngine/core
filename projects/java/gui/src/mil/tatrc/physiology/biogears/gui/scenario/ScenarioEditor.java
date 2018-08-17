@@ -16,6 +16,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -25,9 +28,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
 
 import mil.tatrc.physiology.biogears.gui.GUIContext;
 import mil.tatrc.physiology.biogears.gui.datarequests.DataRequestWindow;
@@ -165,37 +173,89 @@ public class ScenarioEditor extends JPanel implements ActionListener
 		hMap.put("Compartment", hCmpts);
 		actionPropertyOptions.put(SEHemorrhage.class, hMap);
 		// Substance Administrations
-		List<String> liqDrugs = new ArrayList<String>();
-		liqDrugs.add("Epinephrine");	
-		liqDrugs.add("Fentanyl");
-		liqDrugs.add("Furosemide");
-		liqDrugs.add("Ketamine");
-		liqDrugs.add("Midazolam");
-		liqDrugs.add("Morphine");
-		liqDrugs.add("Naloxone");
-		liqDrugs.add("Pralidoxime");
-		liqDrugs.add("Prednisone");
-		liqDrugs.add("Propofol");
-		liqDrugs.add("Rocuronium");
-		liqDrugs.add("Succinylcholine");
-		liqDrugs.add("Vasopressin");
+		List<String> liqDrugs = new ArrayList<String>();	//List to hold liquid drugs (i.e. bolus or infusion)
+		List<String> liqCmpds = new ArrayList<String>();	//List to hold compounts (i.e. saline, blood)
+		
+		//We could probably use the substance manager to do this, but we'd still need to get into the substance xmls to
+		//see if they have PK/PD definitions (since we can't access to BioGears "hasPK" or "hasPD" methods from here.  
+		//So I'm not sure how much time/effort it would save.
+		Path subPath = Paths.get(System.getProperty("user.dir"),"substances");	//Get substance directory
+		File substanceDir = new File(subPath.toString());
+		try {
+			if(substanceDir.exists() && substanceDir.isDirectory())
+		      {
+				//Create an xml document parser
+				DocumentBuilderFactory dbFact = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFact.newDocumentBuilder();
+				boolean hasPK = false;
+				boolean hasPD = false;
+				//Loop over substance xmls
+		        for(String sub : substanceDir.list())
+		        {
+		        	if(sub.endsWith(".xml"))
+		        	{
+		        		hasPK = false;
+		        		hasPD = false;
+		        		//Open substance file
+		        		Path xmlPath = Paths.get(subPath.toString(),sub);
+		        		Document doc = dBuilder.parse(xmlPath.toString());
+		        		Element rootElement = doc.getDocumentElement();
+		        		//Root Element should be the top level of xml--Substance or SubstanceCompound
+		        		rootElement.normalize();
+		        		if(rootElement.getNodeName().equals("SubstanceCompound"))
+		        		{
+		        			//If it's a Substance Compound, add it to that list and then move on
+		        			liqCmpds.add(sub.replace(".xml", ""));
+		        			continue;
+		        		}
+		        		//Filter by state so that we don't include drugs like Desflurane for boluses/infusions
+		        		if(rootElement.getElementsByTagName("State").item(0).getFirstChild().getTextContent().equals("Gas"))
+		        			continue;
+		        		//Filter by aersolization so that we don't include albuterol or sarin in boluses/infusions
+		        		if(rootElement.getElementsByTagName("Aerosolization").getLength()>0)
+		        			continue;
+		        		//Does the substance have PK defined?
+		        		if(rootElement.getElementsByTagName("Pharmacokinetics").getLength()>0)
+		        			hasPK = true;
+		        		//Does the substance have PD defined?
+		        		if(rootElement.getElementsByTagName("Pharmacodynamics").getLength()>0)
+		        			hasPD = true;
+		        		//If it has PK and PD, then we want to add it to our drug list
+		        		if(hasPK && hasPD)
+		        			liqDrugs.add(sub.replace(".xml", ""));
+		        	}
+		        }        
+		      }      	
+		}
+		catch(SecurityException e)
+		{
+			Log.warn("Couldn't load substance directory");
+		} catch (ParserConfigurationException e) {
+			Log.warn("Trouble making xml parser");
+		} catch (SAXException e) {
+			Log.warn("Couldn't open substance xml");
+		} catch (IOException e) {
+			Log.warn("Couldn't open substance xml");
+		}
+		//Put drug substances in a map
 		Map<String, List<String>> saMap = new HashMap<String, List<String>>();
 		saMap.put("Substance", liqDrugs);
+		//Add this map to both Bolus and Infusion actions
 		actionPropertyOptions.put(SESubstanceBolus.class, saMap);
 		actionPropertyOptions.put(SESubstanceInfusion.class, saMap);
-		List<String> liqCmpds = new ArrayList<String>();
-		liqCmpds.add("Blood");	
-		liqCmpds.add("Saline");
+		//Put compounds in a map
 		Map<String, List<String>> caMap = new HashMap<String, List<String>>();
 		caMap.put("SubstanceCompound", liqCmpds);
+		//Add this map to Substance Compound Infusion action
 		actionPropertyOptions.put(SESubstanceCompoundInfusion.class, caMap);
-		// Anesthesia Machine Substances
+		
+		//Anesthesia Machine Substances
 		List<String> anesDrugs = new ArrayList<String>();
 		anesDrugs.add("Desflurane");
 		Map<String, List<String>> anesMap = new HashMap<String, List<String>>();
 		anesMap.put("Substance", anesDrugs);
 		actionPropertyOptions.put(SEAnesthesiaMachineConfiguration.class, anesMap);
-	  // Inhaler Substances
+		//Inhaler Substances
 		List<String> iDrugs = new ArrayList<String>();
 		iDrugs.add("Albuterol");
 		Map<String, List<String>> iMap = new HashMap<String, List<String>>();
