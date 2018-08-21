@@ -41,6 +41,7 @@
 			<Substance>Albuterol</Substance>
 			<MeteredDose value="90.0" unit="ug"/>
 			<NozzleLoss value="0.04"/>
+			<SpacerVolume value="500.0" unit="mL"/>
 		</Configuration>
 	</Action>  
 	<Action xsi:type="ConsciousRespirationData" AppendToPrevious="true">
