@@ -438,7 +438,7 @@ bool BioGears::SetupPatient()
   double heartRate_bpm;
   double heartStandard_bpm = 72.0;
   double heartRateMax_bpm = 100.0;
-  double heartRateTachycardia_bpm = 110;
+  double heartRateTachycardia_bpm = 109;
   double heartRateMin_bpm = 60.0;
   double heartRateBradycardia_bpm = 50;
   if (!m_Patient->HasHeartRateBaseline()) {
@@ -458,7 +458,7 @@ bool BioGears::SetupPatient()
       err = true;
     }
   } else if (heartRate_bpm < heartRateMin_bpm) {
-    if (heartRate_bpm <= heartRateTachycardia_bpm) {
+    if (heartRate_bpm >= heartRateBradycardia_bpm) {
       ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is bradycardic. Bradycardia heart rate  is [" << heartRateBradycardia_bpm << "," << heartRateMin_bpm << "] bpm.";
       Info(ss);
     } else {
