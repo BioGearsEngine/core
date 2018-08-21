@@ -441,10 +441,8 @@ void Energy::CalculateSweatRate()
 
   /// Determine the maximum evaporative capacity to limit the amount of cooling due to sweat on the patient
   /// \cite potter2017mathematical
-  double effectiveClothingEvaporation_im_Per_clo = 0;
-  if ((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)) < 0.1) {
-    effectiveClothingEvaporation_im_Per_clo = pow(0.1, 0.29);
-  } else {
+  double effectiveClothingEvaporation_im_Per_clo = pow(0.1, 0.29);
+  if ((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)) > 0.1) {
     effectiveClothingEvaporation_im_Per_clo = pow((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)), 0.29);
   }
   
