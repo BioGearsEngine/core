@@ -174,6 +174,7 @@ private:
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
   double m_dt_min;
+  bool m_hadApnea; 
   // Configuration parameters
   double m_CentralControlGainConstant;
   double m_dDefaultOpenResistance_cmH2O_s_Per_L;

@@ -328,6 +328,7 @@ void Respiratory::SetUp()
   //Time Step
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_dt_min = m_data.GetTimeStep().GetValue(TimeUnit::min);
+  m_hadApnea = false; 
   //Patient
   m_Patient = &m_data.GetPatient();
   m_PatientActions = &m_data.GetActions().GetPatientActions();
@@ -1562,14 +1563,20 @@ void Respiratory::Apnea()
 {
   if (m_PatientActions->HasApnea()) {
     double apneaSeverity = m_PatientActions->GetApnea()->GetSeverity().GetValue();
-
-    if (apneaSeverity == 1.0) {
+	  m_hadApnea = true;
+    if (1.0 - apneaSeverity < ZERO_APPROX) {
       m_bNotBreathing = true;
     }
-
     //Just reduce the tidal volume by the percentage given
     m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + (m_DriverPressure_cmH2O - m_DefaultDrivePressure_cmH2O) * (1 - apneaSeverity);
   }
+  else{
+    if(m_hadApnea) {
+		m_hadApnea = false;
+		m_bNotBreathing = false;
+    }
+  }
+     
 }
 
 //--------------------------------------------------------------------------------------------------
