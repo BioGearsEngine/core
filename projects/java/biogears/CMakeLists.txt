@@ -90,7 +90,7 @@ set_target_properties(${PROJECT_NAME}
     OUTPUT_NAME ${SHORT_NAME}
     PROJECT_LABEL "${PROJECT_NAME}"
     )
-add_dependencies(${PROJECT_NAME} Biogears::libbiogears_jni
+add_dependencies(${PROJECT_NAME} libbiogears_jni
         Java_DataModelBindings
         Java_CommonDataModel
         Java_BioGearsEngine
@@ -160,20 +160,23 @@ endif()
 set (args "ValidationSystems.config" )
 add_custom_target(run-system-validation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "")
-add_custom_target(report-system-validation
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation ${args}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    VERBATIM
-    USES_TERMINAL
-)
+#This can be deleted later, I took its functionality and stuck it in the previous command, not getting rid of it yet just in case
+#set (args "")
+#add_custom_target(report-system-validation
+#    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation ${args}
+#    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+#    VERBATIM
+#    USES_TERMINAL
+#)
 set (args "ValidationPatients.config")
 add_custom_target(run-patient-validation
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.PatientValidation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
