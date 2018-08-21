@@ -437,10 +437,10 @@ bool BioGears::SetupPatient()
   //Heart Rate ---------------------------------------------------------------
   double heartRate_bpm;
   double heartStandard_bpm = 72.0;
-  double heartRateMax_bpm = 100.0;
-  double heartRateTachycardia_bpm = 109;
-  double heartRateMin_bpm = 60.0;
-  double heartRateBradycardia_bpm = 50;
+  double heartRateMax_bpm = 109.0;
+  double heartRateTachycardia_bpm = 100.0;
+  double heartRateMin_bpm = 50.0;
+  double heartRateBradycardia_bpm = 60.0;
   if (!m_Patient->HasHeartRateBaseline()) {
     heartRate_bpm = heartStandard_bpm;
     m_Patient->GetHeartRateBaseline().SetValue(heartRate_bpm, FrequencyUnit::Per_min);
@@ -448,21 +448,21 @@ bool BioGears::SetupPatient()
     Info(ss);
   }
   heartRate_bpm = m_Patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
-  if (heartRate_bpm > heartRateMax_bpm) {
-    if (heartRate_bpm <= heartRateTachycardia_bpm) {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is tachycardic. Tachycardia heart rate  is [" << heartRateMax_bpm << "," << heartRateTachycardia_bpm << "] bpm.";
+  if (heartRate_bpm > heartRateTachycardia_bpm) {
+    if (heartRate_bpm <= heartRateMax_bpm) {
+      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is tachycardic. Tachycardia heart rate  is [" << heartRateTachycardia_bpm << "," << heartRateMax_bpm << "] bpm.";
       Info(ss);
     } else {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is too high. Maximum heart rate baseline allowed is " << heartRateTachycardia_bpm << " bpm.";
+      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is too high. Maximum heart rate baseline allowed is " << heartRateMax_bpm << " bpm.";
       Error(ss);
       err = true;
     }
-  } else if (heartRate_bpm < heartRateMin_bpm) {
-    if (heartRate_bpm >= heartRateBradycardia_bpm) {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is bradycardic. Bradycardia heart rate  is [" << heartRateBradycardia_bpm << "," << heartRateMin_bpm << "] bpm.";
+  } else if (heartRate_bpm < heartRateBradycardia_bpm) {
+    if (heartRate_bpm >= heartRateMin_bpm) {
+      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is bradycardic. Bradycardia heart rate  is [" << heartRateMin_bpm << "," << heartRateBradycardia_bpm << "] bpm.";
       Info(ss);
     } else {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " is too low. Minimum heart rate baseline allowed is " << heartRateBradycardia_bpm << " bpm.";
+      ss << "Patient heart rate baseline of " << heartRate_bpm << " is too low. Minimum heart rate baseline allowed is " << heartRateMin_bpm << " bpm.";
       Error(ss);
       err = true;
     }
