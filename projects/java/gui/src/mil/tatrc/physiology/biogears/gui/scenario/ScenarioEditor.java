@@ -45,6 +45,7 @@ import mil.tatrc.physiology.datamodel.patient.SEPatient;
 import mil.tatrc.physiology.datamodel.patient.actions.SEConsciousRespiration;
 import mil.tatrc.physiology.datamodel.patient.actions.SEConsciousRespirationCommand;
 import mil.tatrc.physiology.datamodel.patient.actions.SEHemorrhage;
+import mil.tatrc.physiology.datamodel.patient.actions.SESepsis;
 import mil.tatrc.physiology.datamodel.patient.actions.SEPatientAction;
 import mil.tatrc.physiology.datamodel.patient.actions.SESubstanceBolus;
 import mil.tatrc.physiology.datamodel.patient.actions.SESubstanceCompoundInfusion;
@@ -172,6 +173,24 @@ public class ScenarioEditor extends JPanel implements ActionListener
 		Map<String, List<String>> hMap = new HashMap<String, List<String>>();
 		hMap.put("Compartment", hCmpts);
 		actionPropertyOptions.put(SEHemorrhage.class, hMap);
+		
+		//Sepsis Compartments
+		List<String> sepCmpts = new ArrayList<String>();
+		sepCmpts.add("Bone");
+		sepCmpts.add("Fat");
+		sepCmpts.add("Gut");
+		sepCmpts.add("LefKidney");
+		sepCmpts.add("LeftLung");
+		sepCmpts.add("Liver");
+		sepCmpts.add("Muscle");
+		sepCmpts.add("RightKidney");
+		sepCmpts.add("RightLung");
+		sepCmpts.add("Skin");
+		sepCmpts.add("Spleen");
+		Map<String,List<String>> sepMap = new HashMap<String, List<String>>();
+		sepMap.put("Compartment",  sepCmpts);
+		actionPropertyOptions.put(SESepsis.class, sepMap);
+		
 		// Substance Administrations
 		List<String> liqDrugs = new ArrayList<String>();	//List to hold liquid drugs (i.e. bolus or infusion)
 		List<String> liqCmpds = new ArrayList<String>();	//List to hold compounts (i.e. saline, blood)

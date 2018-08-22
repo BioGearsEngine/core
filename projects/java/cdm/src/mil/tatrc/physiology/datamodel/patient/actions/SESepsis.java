@@ -87,6 +87,10 @@ public class SESepsis extends SEPatientAction
 	{
 		return compartment==null?false:true;
 	}
+	public void setCompartment(String compartment)
+	{
+		this.compartment = compartment;
+	}
 	
 	public SEScalar0To1 getSeverity()
 	{
