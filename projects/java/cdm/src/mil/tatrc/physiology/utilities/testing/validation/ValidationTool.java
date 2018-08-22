@@ -151,6 +151,7 @@ public abstract class ValidationTool {
       } catch (Exception ex) {
         System.out.println("Hostname can not be resolved");
       }
+      /*
       EmailUtil email = new EmailUtil();
       String subj = env + " " + arch + " " + TABLE_TYPE + " Validation from " + hostname + " Revision " + revision;
       email.setSubject(subj);
@@ -171,6 +172,8 @@ public abstract class ValidationTool {
         Log.info("Emailling local runner " + subj);
         email.addRecipient(System.getProperty("user.name") + "@ara.com");
       }
+      email.addRecipient(config.getProperty("Recipients"));
+      */
       html.append("<html>");
       html.append("<body>");
 
@@ -435,12 +438,38 @@ public abstract class ValidationTool {
       WriteHTML(badSheets, fileName + " Errors");
       html.append("</body>");
       html.append("</html>");
+      EmailUtil email = new EmailUtil();
+      try(Scanner scanner = new Scanner( Paths.get("email.cfg")) )
+      {
+        String line;
+        String key;
+        String value;
+        while(scanner.hasNextLine())
+        {
+          line = scanner.nextLine();
+          line = line.trim();
+          key = line.substring(0, line.indexOf("="));
+          value = line.substring(line.indexOf("=") + 1);
+          if(key.equalsIgnoreCase("Subject"))
+          { email.setSubject(value); continue; }
+          if(key.equalsIgnoreCase("Sender"))
+          { email.setSender(value); continue; }
+          if(key.equalsIgnoreCase("SMTP"))
+          { email.setSMTP(value); continue; }
+          if(key.equalsIgnoreCase("Recipients"))
+          { email.addRecipient(value); continue; }
+        }
+      }
+      catch(Exception ex)
+      {
+        Log.warn(ex.toString());
+      }
       if (sendEmail)
       {
          try {
           email.sendHTML(html.toString());
         } catch (Exception ex) {
-          Log.warn("Unable to sendout email "); 
+          Log.warn(ex.toString()); 
         }
       } 
     } catch (Exception ex) {
