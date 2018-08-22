@@ -448,7 +448,7 @@ bool BioGears::SetupPatient()
     Info(ss);
   }
   heartRate_bpm = m_Patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
-  if (heartRate_bpm > heartRateTachycardia_bpm) {
+  if (heartRateTachycardia_bpm < heartRate_bpm) {
     if (heartRate_bpm <= heartRateMax_bpm) {
       ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is tachycardic. Tachycardia heart rate  is [" << heartRateTachycardia_bpm << "," << heartRateMax_bpm << "] bpm.";
       Info(ss);
@@ -458,7 +458,7 @@ bool BioGears::SetupPatient()
       err = true;
     }
   } else if (heartRate_bpm < heartRateBradycardia_bpm) {
-    if (heartRate_bpm >= heartRateMin_bpm) {
+    if (heartRateMin_bpm <= heartRate_bpm) {
       ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is bradycardic. Bradycardia heart rate  is [" << heartRateMin_bpm << "," << heartRateBradycardia_bpm << "] bpm.";
       Info(ss);
     } else {
