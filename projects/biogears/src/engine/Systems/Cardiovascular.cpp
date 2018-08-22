@@ -1772,6 +1772,9 @@ void Cardiovascular::AdjustVascularTone()
     for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
       if (!Path->HasNextResistance())
         continue;
+      if ((Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1) || (Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2)) {
+        continue;
+	  }
       UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
       UpdatedResistance_mmHg_s_Per_mL += ResistanceChange * UpdatedResistance_mmHg_s_Per_mL / GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL);
       if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
