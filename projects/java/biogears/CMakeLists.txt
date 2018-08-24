@@ -92,7 +92,7 @@ set_target_properties(${PROJECT_NAME}
     OUTPUT_NAME ${SHORT_NAME}
     PROJECT_LABEL "${PROJECT_NAME}"
     )
-add_dependencies(${PROJECT_NAME} libbiogears_jni
+add_dependencies(${PROJECT_NAME} Biogears::libbiogears_jni
         Java_DataModelBindings
         Java_CommonDataModel
         Java_BioGearsEngine
@@ -144,8 +144,8 @@ add_custom_target(gen-states
 )
 if(ARA_Biogears_BUILD_DOCUMENTATION)
     add_custom_target(gen-website-docs
-#        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
-#        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
+        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
+        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
         COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
         COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
         COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
@@ -161,7 +161,7 @@ if(ARA_Biogears_BUILD_DOCUMENTATION)
 endif()
 set (args "ValidationSystems.config" )
 add_custom_target(run-system-validation
-    #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
