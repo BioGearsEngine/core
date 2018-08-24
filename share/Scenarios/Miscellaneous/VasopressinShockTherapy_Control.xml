@@ -40,18 +40,47 @@
         <InitialRate value="350" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="8" unit="min"/>       
+        <Time value="15" unit="min"/>       
     </Action>
 	<Action xsi:type="HemorrhageData" Compartment="VenaCava">
         <InitialRate value="0.0" unit="mL/min"/>
     </Action>
+	<Action xsi:type="SubstanceCompoundInfusionData">
+        <SubstanceCompound>Saline</SubstanceCompound>
+        <BagVolume value="1000" unit="mL"/>
+        <Rate value="200" unit="mL/min"/>
+    </Action>
     <Action xsi:type="SubstanceCompoundInfusionData">
         <SubstanceCompound>Saline</SubstanceCompound>
-        <BagVolume value="2000.0" unit="mL"/>
-        <Rate value="3.33" unit="mL/min"/>
+        <BagVolume value="500" unit="mL"/>
+        <Rate value="0.5" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="30" unit="min"/>       
+        <Time value="15" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceCompoundInfusionData">
+        <SubstanceCompound>Saline</SubstanceCompound>
+        <BagVolume value="1000" unit="mL"/>
+        <Rate value="200" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="15" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceCompoundInfusionData">
+        <SubstanceCompound>Blood</SubstanceCompound>
+        <BagVolume value="300" unit="mL"/>
+        <Rate value="30" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="10" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceCompoundInfusionData">
+        <SubstanceCompound>Blood</SubstanceCompound>
+        <BagVolume value="300" unit="mL"/>
+        <Rate value="30" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="10" unit="min"/>       
     </Action>
 </Scenario>
 

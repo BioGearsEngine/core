@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Vasopressin</Name>
+    <Name>Vasopressin_Cardiovascular</Name>
     <Description>Inject standard patient with Vasopressin!</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
@@ -37,27 +37,19 @@
 	
 	<Action xsi:type="SubstanceInfusionData">
         <Substance>Vasopressin</Substance>
-        <Concentration value="0.0417" unit="ug/mL"/>
+        <Concentration value="0.0117" unit="ug/mL"/>
         <Rate value="1.0" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="20" unit="min"/>       
+        <Time value="55" unit="min"/>       
     </Action>
-		<Action xsi:type="SubstanceInfusionData">
-        <Substance>Vasopressin</Substance>
-        <Concentration value="0.1754" unit="ug/mL"/>
+	<Action xsi:type="SubstanceInfusionData">
+       <Substance>Vasopressin</Substance>
+        <Concentration value="0.0312" unit="ug/mL"/>
         <Rate value="1.0" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="20" unit="min"/>       
-    </Action>
-		<Action xsi:type="SubstanceInfusionData">
-        <Substance>Vasopressin</Substance>
-        <Concentration value="0.518" unit="ug/mL"/>
-        <Rate value="1.0" unit="mL/min"/>
-    </Action>
-	<Action xsi:type="AdvanceTimeData">
-        <Time value="20" unit="min"/>       
+        <Time value="55" unit="min"/>       
     </Action>
 </Scenario>
 

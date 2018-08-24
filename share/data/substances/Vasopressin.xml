@@ -27,8 +27,8 @@
     </Pharmacokinetics>
     <Pharmacodynamics>
         <Bronchodilation value="0.0"/>
-        <DiastolicPressureModifier value="0.9"/>
-        <EC50 value="0.001" unit="ug/mL"/>
+        <DiastolicPressureModifier value="1.0"/>
+        <EC50 value="0.0003" unit="ug/mL"/>
         <EMaxShapeParameter value="1"/>
         <HeartRateModifier value="0.0"/>
         <NeuromuscularBlock value="0.0"/>
@@ -38,7 +38,7 @@
         </PupillaryResponse>
         <RespirationRateModifier value="0.0"/>
         <Sedation value="0.0"/>
-        <SystolicPressureModifier value="0.9"/>
+        <SystolicPressureModifier value="1.0"/>
         <TidalVolumeModifier value="0.0"/>
         <TubularPermeabilityModifier value="-1.0"/>
         <CentralNervousModifier value="0.0"/>

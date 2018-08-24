@@ -34,14 +34,45 @@
 
 	
   </DataRequests>
-	
 	<Action xsi:type="SubstanceInfusionData">
         <Substance>Vasopressin</Substance>
-        <Concentration value="0.001925" unit="ug/mL"/>
+        <Concentration value="0.00090625" unit="ug/mL"/>
         <Rate value="1.0" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="120" unit="min"/>       
+        <Time value="60" unit="min"/>       
+    </Action>
+    <Action xsi:type="SubstanceInfusionData">
+        <Substance>Vasopressin</Substance>
+        <Concentration value="0.0018125" unit="ug/mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="60" unit="min"/>       
+    </Action>
+  	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Vasopressin</Substance>
+        <Concentration value="0.003625" unit="ug/mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="60" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Vasopressin</Substance>
+        <Concentration value="0.00725" unit="ug/mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="60" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Vasopressin</Substance>
+        <Concentration value="0.0145" unit="ug/mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="60" unit="min"/>       
     </Action>
 </Scenario>
 
