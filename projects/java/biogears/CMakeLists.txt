@@ -21,6 +21,8 @@ set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
 set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
+set(ARA_biogears_reference_file "D:/biogears/references/BioGears.bib")
+set(doxygen_dot_dir "C:/Program Files/graphviz-2.38/release/bin/")
 ###############################################################################
 # Requirments
 ###############################################################################
@@ -35,7 +37,7 @@ endif()
 #Sorce and Header Defines
 ###############################################################################
 message(STATUS "Configuring ${PROJECT_NAME}")
-
+SET(MD_MAIN_PAGE "MainPage.md")
 configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
 configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/nocode.doxy.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/NoCode.doxy @ONLY)
 configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/validationtables.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/ValidationTables.config @ONLY)
@@ -142,8 +144,8 @@ add_custom_target(gen-states
 )
 if(ARA_Biogears_BUILD_DOCUMENTATION)
     add_custom_target(gen-website-docs
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
+#        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
+#        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
         COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
         COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
         COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
@@ -159,7 +161,7 @@ if(ARA_Biogears_BUILD_DOCUMENTATION)
 endif()
 set (args "ValidationSystems.config" )
 add_custom_target(run-system-validation
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    #COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM

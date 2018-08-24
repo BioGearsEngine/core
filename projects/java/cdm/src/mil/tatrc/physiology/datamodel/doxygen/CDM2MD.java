@@ -50,7 +50,14 @@ public class CDM2MD
 	{
 		try
 		{
-			String destDir = "./markdown";
+			String destDir = "doc/markdown/processed_md"; // This might be a bug, I don't know if he meant to put it in doc/markdown
+            if(!Files.exists(destDir)) {
+              try {
+                Files.createDirectories(destDir);
+              } catch (IOException e) {
+                Log.error (String.format("Unable to destination directory %s. I might not have file permissions", destDir)); 
+              }
+            }
 			FileUtils.delete(destDir);
 			FileUtils.createDirectory(destDir);
 
