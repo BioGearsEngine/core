@@ -203,7 +203,7 @@ Diabetes mellitus type 2, also known as non-insulin-dependent diabetes mellitus,
 
 The diabetes type 2 condition in %BioGears has two components: an insulin production impairment scale and an insulin resistance scale. The insulin production impairment severity is exactly as in diabetes type 1. The insulin resistance severity is also a 0 to 1 severity value, where 0 means that the patient responds to insulin in a normal fashion, and 1 means that insulin has no effect in the system. Whereas in diabetes type 1, the only model effects were limitations on insulin and glucagon production, in diabetes type 2, the insulin model is modified a bit. The normal insulin production curve in %BioGears is based on @cite tolic2000modeling, but because its range is restricted to relatively normal blood glucose levels, this had to be modified. An insulin production multiplier was introduced that scaled insulin production for very high glucose values, as seen in @cite guyton2006medical. Figure 5 shows how insulin production is modified nonlinearly with increasing blood glucose.
 
-<img src="./images/Endocrine/DiabetesType2InsulinProduction.jpg" width="600">
+<img src="./plots/Endocrine/DiabetesType2InsulinProduction.jpg" width="600">
 <center>
 *Figure 5. Insulin production is modified in diabetes type 2.*
 </center><br>
