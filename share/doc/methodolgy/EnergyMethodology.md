@@ -181,9 +181,9 @@ Dehydration functionality is simulated completely in the %Energy system. Similar
 
 ### Hyperhidrosis and Hypohidrosis
 **Excessive sweating and a lack of sweating are conditions that can be modified by the "Hyperhidrosis" parameter in the patient file. Using a scalar from -1 to 1, a more negative value will scale down the patient's sweat rate more in order to simulate hypohidrosis while a more positive value increases sweat rate to demonstrate hyperhidrosis @cite shih1983autonomic. The default value of zero refers to the standard sweat rate of a person, while a value of -1 can simulate the rare condition in which a person is unable to sweat at all.
-<img src="./images/Energy/Energy/SweatRate.png" width="900">
-<img src="./images/Energy/Energy/SkinTemp.png" width="900">
-<img src="./images/Energy/Energy/CoreTemp.png" width="900">
+<img src="./images/Energy/SweatRate.png" width="900">
+<img src="./images/Energy/SkinTemp.png" width="900">
+<img src="./images/Energy/CoreTemp.png" width="900">
 
 
 @anchor energy-events
