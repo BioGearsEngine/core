@@ -70,28 +70,23 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
 }
 
 
-bool PhysiologyEngineConfiguration::HasOverrideConfig() const
-{
-  
-}
-
-void PhysiologyEngineConfiguration::GetOverrideConfig(const PhysiologyEngineConfiguration* override)
+bool PhysiologyEngineConfiguration::LoadOverrideConfig(const PhysiologyEngineConfiguration* override)
 {
   Info("Initializing Override");
-  m_OverrideConfig->Initialize(); // Load up Defaults
+  m_overrideConfig->Initialize(); // Load up Defaults
   if (override != nullptr) {
     Info("Merging Provided Override");
-    m_OverrideConfig->Merge(*override);
+    m_overrideConfig->Merge(*override);
   }
 
   // Now, Let's see if there is anything to merge into our base configuration
   Info("Merging OnDisk Override");
-  PhysiologyEngineConfiguration cFile(*logger);
-  cFile.LoadFile("BioGearsOverride.xml");
-  m_OverrideConfig->Merge(cFile);
+  PhysiologyEngineConfiguration orFile(*logger);
+  orFile.LoadFile("BioGearsOverride.xml");
+  m_overrideConfig->Merge(orFile);
 
   // Now we can check the config
-  if (m_OverrideConfig->HasOverrideConfig()) {
+  if (m_overrideConfig->HasOverrideConfig()) {
     std::string stableDir = "./stable/";
     MKDIR(stableDir.c_str());
     CDM::PatientData* pData = m_Patient->Unload();
