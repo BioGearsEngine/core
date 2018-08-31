@@ -73,8 +73,8 @@ public:
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
   virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
 
-  virtual bool HasOverrideConfig() const;
-  virtual void GetOverrideConfig();
+  const OverrideConfig& GetOverrideConfig();
+  virtual bool LoadOverrideConfig(const PhysiologyEngineConfiguration* override);
 
 protected:
   bool m_Merge;
@@ -85,7 +85,7 @@ protected:
   PhysiologyEngineDynamicStabilization* m_DynamicStabilizationCriteria;
   SEScalarTime* m_TimeStep;
   std::unique_ptr<bool> m_overrideMode;
-  OverrideConfig* m_overrideConfig;
+  std::unique_ptr<OverrideConfig> m_overrideConfig;
 
   CDM::enumOnOff::value m_WritePatientBaselineFile;
 };
