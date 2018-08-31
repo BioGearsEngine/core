@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BioGearsOverride xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+  
+  <!-- To override BioGears parameters mid run. -->
+
+  <HeartRate readOnly="false" unit="1/min" value="60"/>
+
+</BioGearsConfiguration>
+

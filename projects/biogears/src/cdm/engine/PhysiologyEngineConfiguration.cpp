@@ -18,7 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
-
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   : Loggable(logger)
 {
@@ -68,6 +67,50 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
     return true;
   }
   return Load(*pData);
+}
+
+
+bool PhysiologyEngineConfiguration::HasOverrideConfig() const
+{
+  
+}
+
+void PhysiologyEngineConfiguration::GetOverrideConfig(const PhysiologyEngineConfiguration* override)
+{
+  Info("Initializing Override");
+  m_OverrideConfig->Initialize(); // Load up Defaults
+  if (override != nullptr) {
+    Info("Merging Provided Override");
+    m_OverrideConfig->Merge(*override);
+  }
+
+  // Now, Let's see if there is anything to merge into our base configuration
+  Info("Merging OnDisk Override");
+  PhysiologyEngineConfiguration cFile(*logger);
+  cFile.LoadFile("BioGearsOverride.xml");
+  m_OverrideConfig->Merge(cFile);
+
+  // Now we can check the config
+  if (m_OverrideConfig->HasOverrideConfig()) {
+    std::string stableDir = "./stable/";
+    MKDIR(stableDir.c_str());
+    CDM::PatientData* pData = m_Patient->Unload();
+    pData->contentVersion(BGE::Version);
+    // Write out the stable patient state
+    std::ofstream stream(stableDir + m_Patient->GetName() + ".xml");
+    // Write out the xml file
+    xml_schema::namespace_infomap map;
+    map[""].name = "uri:/mil/tatrc/physiology/datamodel";
+    Patient(stream, *pData, map);
+    stream.close();
+    SAFE_DELETE(pData);
+  }
+}
+
+
+void PhysiologyEngineConfiguration::SetOverrideMode(bool ormode)
+{
+  *m_overrideMode = ormode;
 }
 
 bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& in)

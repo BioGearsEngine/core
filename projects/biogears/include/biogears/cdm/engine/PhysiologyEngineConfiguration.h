@@ -21,6 +21,7 @@ class PhysiologyEngineTimedStabilization;
 class PhysiologyEngineDynamicStabilization;
 class SEScalarTime;
 class TimeUnit;
+class OverrideConfig;
 
 CDM_BIND_DECL(PhysiologyEngineConfigurationData)
 
@@ -35,6 +36,8 @@ public:
 
   virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
   virtual CDM::PhysiologyEngineConfigurationData* Unload() const;
+
+  virtual void SetOverrideMode(bool);
 
 protected:
   void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
@@ -70,6 +73,9 @@ public:
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
   virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
 
+  virtual bool HasOverrideConfig() const;
+  virtual void GetOverrideConfig();
+
 protected:
   bool m_Merge;
   SEElectroCardioGramInterpolator* m_ECGInterpolator;
@@ -78,5 +84,8 @@ protected:
   PhysiologyEngineTimedStabilization* m_TimedStabilizationCriteria;
   PhysiologyEngineDynamicStabilization* m_DynamicStabilizationCriteria;
   SEScalarTime* m_TimeStep;
+  std::unique_ptr<bool> m_overrideMode;
+  OverrideConfig* m_overrideConfig;
+
   CDM::enumOnOff::value m_WritePatientBaselineFile;
 };
