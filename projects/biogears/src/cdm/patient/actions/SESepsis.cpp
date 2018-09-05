@@ -21,8 +21,9 @@ SESepsis::SESepsis()
   m_Compartment = ""; //User input, location of hemorrhage
   m_Severity = nullptr; //User input, initial rate of bleeding
   m_Pathogen = nullptr; //Pathogen level state variable in Kumar Model
-  m_WhiteBloodCell = nullptr; //White blood cell ("early mediator") level state variable in Kumar Model, as fraction of max value = 1
-  m_LateMediator = nullptr; //Late immune response level state variable in Kumar Model
+  m_Neutrophil = nullptr; //White blood cell ("early mediator") level state variable in Kumar Model, as fraction of max value = 1
+  m_TissueDamage = nullptr; //Late immune response level state variable in Kumar Model
+  m_Antiinflammation = nullptr;
 }
 
 SESepsis::~SESepsis()
@@ -37,8 +38,9 @@ void SESepsis::Clear()
   m_TissueResistorMap.clear();
   SAFE_DELETE(m_Severity);
   SAFE_DELETE(m_Pathogen);
-  SAFE_DELETE(m_WhiteBloodCell);
-  SAFE_DELETE(m_LateMediator);
+  SAFE_DELETE(m_Neutrophil);
+  SAFE_DELETE(m_TissueDamage);
+  SAFE_DELETE(m_Antiinflammation);
 }
 
 bool SESepsis::IsValid() const
@@ -109,27 +111,36 @@ SEScalar& SESepsis::GetPathogen()
 {
   if (m_Pathogen == nullptr) {
     m_Pathogen = new SEScalar();
-    m_Pathogen->SetValue(0.05); //Initial value assigned to Pathogen in Kumar Model
+    m_Pathogen->SetValue(0.5); //Initial value assigned to Pathogen in Kumar Model
   }
   return *m_Pathogen;
 }
 
-SEScalar& SESepsis::GetEarlyMediator()
+SEScalar& SESepsis::GetNeutrophil()
 { //Calling this GetEarlyMediator to not confuse with GetWhiteBloodCellCount in BloodChemistry system
-  if (m_WhiteBloodCell == nullptr) {
-    m_WhiteBloodCell = new SEScalar();
-    m_WhiteBloodCell->SetValue(0.05); //Initial value assigned to White Blood Cell level in Kumar Model
+  if (m_Neutrophil == nullptr) {
+    m_Neutrophil = new SEScalar();
+    m_Neutrophil->SetValue(0.0); //Initial value assigned to White Blood Cell level in Kumar Model
   }
-  return *m_WhiteBloodCell;
+  return *m_Neutrophil;
 }
 
-SEScalar& SESepsis::GetLateMediator()
+SEScalar& SESepsis::GetTissueDamage()
 {
-  if (m_LateMediator == nullptr) {
-    m_LateMediator = new SEScalar();
-    m_LateMediator->SetValue(1.0); //Initial value assigned to Late Mediator in Kumar Model
+  if (m_TissueDamage == nullptr) {
+    m_TissueDamage = new SEScalar();
+    m_TissueDamage->SetValue(0.0); //Initial value assigned to Late Mediator in Kumar Model
   }
-  return *m_LateMediator;
+  return *m_TissueDamage;
+}
+
+SEScalar& SESepsis::GetAntiinflammation()
+{
+  if (m_Antiinflammation == nullptr) {
+    m_Antiinflammation = new SEScalar();
+    m_Antiinflammation->SetValue(0.125);
+  }
+  return *m_Antiinflammation;
 }
 
 const std::map<std::string, std::string>& SESepsis::GetTissueResistorMap() const

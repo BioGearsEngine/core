@@ -47,8 +47,9 @@ public:
   virtual SEScalar0To1& GetSeverity();
 
   virtual SEScalar& GetPathogen();
-  virtual SEScalar& GetEarlyMediator();
-  virtual SEScalar& GetLateMediator();
+  virtual SEScalar& GetNeutrophil();
+  virtual SEScalar& GetTissueDamage();
+  virtual SEScalar& GetAntiinflammation();
 
   virtual void BuildTissueResistorMap();
   virtual const std::map<std::string, std::string>& GetTissueResistorMap() const;
@@ -59,8 +60,9 @@ protected:
   std::string m_Compartment;
   SEScalar0To1* m_Severity;
   SEScalar* m_Pathogen;
-  SEScalar* m_WhiteBloodCell;
-  SEScalar* m_LateMediator;
+  SEScalar* m_Neutrophil;
+  SEScalar* m_TissueDamage;
+  SEScalar* m_Antiinflammation;
   std::map<std::string, std::string> m_TissueResistorMap;
 };
 }

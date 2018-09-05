@@ -619,7 +619,15 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 
 void BloodChemistry::Sepsis()
 {
+  double pathogenTrack = 0.0;
+  double neutrophilTrack = 0.0;
+  double tissueDamageTrack = 0.0;
+  double antiinflammatoryTrack = 0.0;
   if (!m_PatientActions->HasSepsis()) {
+    m_data.GetDataTrack().Probe("debug_pathogen", pathogenTrack);
+    m_data.GetDataTrack().Probe("debug_neutrophil", neutrophilTrack);
+    m_data.GetDataTrack().Probe("debug_damage", tissueDamageTrack);
+    m_data.GetDataTrack().Probe("debug_anti", antiinflammatoryTrack);
     return;
   }
 
@@ -630,62 +638,65 @@ void BloodChemistry::Sepsis()
 
   //Get state parameter values
   double pathogen = sep->GetPathogen().GetValue();
-  double whiteBloodCell = sep->GetEarlyMediator().GetValue();
-  double lateMediator = sep->GetLateMediator().GetValue();
+  double neutrophil = sep->GetNeutrophil().GetValue();
+  double tissueDamage = sep->GetTissueDamage().GetValue();
+  double antiinflammation = sep->GetAntiinflammation().GetValue();
   double antibiotic_g = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
 
-  //Calculate pathogen activation of early immune response from severity (totally empirical relationship)
-  double logKmp = 0.4618 * exp(2.4525 * sep->GetSeverity().GetValue());
-  double wbcFractionMax = 0.0387 * logKmp + 0.7418; //We need to scale response as function of maximum possible white blood cell value
-  double kmp_Per_hr = exp(logKmp);
+  //Adjust time scale of parameters based off severity.  Currently set so that severity = 1 --> 100x speed
+  double timeScale = pow(100.0, sep->GetSeverity().GetValue());
 
-  //Constants needed for Kumar Model
-  double kp_Per_hr = 3.0; //Pathogen growth rate
-  double minimumInhibitory_g = 0.75; //Antibiotic threshold mass to have an effect on pathogen
-  double kpm_Per_hr = 3.0; //Pathogen susceptibility to immune response
-  double klm_Per_hr = 15.0; //Activation rate of late immune response
-  double kl_Per_hr = 1.0; //Immune response decay rate
-  double activationWidth = 0.5; //Attenuates coupling function between early and late immune response
-  double activationThreshold = 1.25; //Level of initial immune response that triggers late immune response
+  //Constants needed for Reynolds model:: p = pathogen, m = non specific immune response, n = phagocytotic (neutrophil) response, d = tissue damage)
+  double kpg_Per_h = 0.55 * timeScale;				//Pathogen growth rate
+  double kpm_Per_h = 0.6 * timeScale;				//Non-specific immunre response against pathogen
+  double kmp_Per_h = 0.01 * timeScale;				//Rate at which non-specific response is exhausted by pathogen
+  double sm_Per_h = 0.005 * timeScale;				//Source of non-specific local response
+  double um_Per_h = 0.002 * timeScale;				//Decay rate of non-specific local response
+  double pInf = 20.0;								//Max pathogen population (scaled to 10^6 /mL)
+  double kpn_Per_h = 1.8 * timeScale;				//Rate at which phagocytes consume pathogen
+  double knp_Per_h = 0.1 * timeScale;				//Activation of phagocytes by pathogen
+  double knn_Per_h = 0.01 * timeScale;				//Activation of phagocytes by existing phagocytes
+  double snr_Per_h = 0.08 * timeScale;				//Generation of resting phagocytes
+  double unr_Per_h = 0.12 * timeScale;				//Decay rate of resting phagocytes
+  double un_Per_h = 0.05 * timeScale;				//Decay rate of activated phagocytes
+  double knd_Per_h = 0.02 * timeScale;				//Activation of resting phagocytes by tissue damage
+  double kdn_Per_h = 0.35 * timeScale;				//Rate of tissue damage caused by active phagocytes
+  double xdn = 0.06;								//Level of activated phagocytes leading to half-max tissue damage
+  double ud_Per_h = 0.02 * timeScale;				//Decay rate of tissue damage (i.e. tissue repair rate)
+  double cInf = 0.28;								//Max anti-inflammatory response
+  double sc_Per_h = 0.0125 * timeScale;				//Source of anti-inflammatory mediator
+  double kcn_Per_h = 0.04 * timeScale;				//Max production rate of anti-inflammatory mediator
+  double kcnd = 48.0;								//Relative effectiveness of ativates phagocytes and damaged tissue in inducing anti-inflammatory response
+  double uc_Per_h = 0.1 * timeScale;				//Decay rate of anti-inflammatory mediator
+
+  //Intermediate functions
+  double alpha = knn_Per_h * neutrophil + knp_Per_h * pathogen + knd_Per_h * tissueDamage;
+  double cSat = pow(antiinflammation / cInf, 2);
+  double R = alpha / (1.0 + cSat);
+  double fN = neutrophil / (1.0 + cSat);
+  double fS = pow(fN, 6) / (pow(xdn, 6) + pow(fN, 6));
+  double fCa = (neutrophil + kcnd * tissueDamage) / (1.0 + cSat);
+
+  //Mass balances
+  double dPathogen_Per_h = kpg_Per_h * pathogen * (1.0 - pathogen / pInf) - kpm_Per_h * sm_Per_h * pathogen / (um_Per_h + kmp_Per_h * pathogen) - kpn_Per_h * fN * pathogen;
+  double dNeutrophil_Per_h = snr_Per_h * R / (unr_Per_h + R) - un_Per_h * neutrophil;
+  double dTissueDamage_Per_h = kdn_Per_h * fS - ud_Per_h * tissueDamage;
+  double dAntiinflammation_Per_h = sc_Per_h + (kcn_Per_h * fCa) / (1.0 + fCa) - uc_Per_h * antiinflammation;
+
   double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
+
+
+  sep->GetPathogen().IncrementValue(dPathogen_Per_h * dt_hr);
+  sep->GetNeutrophil().IncrementValue(dNeutrophil_Per_h * dt_hr);
+  sep->GetTissueDamage().IncrementValue(dTissueDamage_Per_h * dt_hr);
+  sep->GetAntiinflammation().IncrementValue(dAntiinflammation_Per_h * dt_hr);
+
+  //Physiological response
+  double maxTissueDamage = 17.5;				//Determined empirically from model
+  double severeThreshold = 0.35 * maxTissueDamage;
+  double modsThreshold = 0.85 * maxTissueDamage;
   double wbcBaseline_ct_Per_uL = 7000.0;
-  double wbcFractionInitial = 0.05;
 
-  //Other values we need to evaluate the system
-  double couplingFunction = 1.0 + tanh((whiteBloodCell - activationThreshold) / activationWidth);
-  double effectiveAntibiotic_g = 0;
-  if (antibiotic_g > minimumInhibitory_g)
-    effectiveAntibiotic_g = (antibiotic_g - minimumInhibitory_g) / sep->GetSeverity().GetValue();
-
-  //Calculate rates of change using Kumar model (@ cite Kumar2004Dynamics)
-  double dPathogen_Per_hr = kp_Per_hr * pathogen * (1.0 - pathogen) / (1 + effectiveAntibiotic_g) - kpm_Per_hr * whiteBloodCell * pathogen;
-  double dWhiteBloodCell_Per_hr = (kmp_Per_hr * pathogen + lateMediator) * whiteBloodCell * (1.0 - whiteBloodCell) - whiteBloodCell;
-  double dLateMediator_Per_hr = klm_Per_hr * couplingFunction - kl_Per_hr * lateMediator;
-
-  /*Adjust model to account for presence of antibiotics.  This is very hand-wavy to get behavior desired by AMM.  If for some reason they (or someone
-		else) want to increase/decrease amount of time for return to normal function, first adjust the minimum inhibitory concentration (higher for longer
-		recovery, lower for shorter recovery). If still not satisfactory, adjust decay of late mediator in presence of antibiotic (below).  But this
-		second knob is pretty sensitive.
-		*/
-  double nextPathogen = pathogen + dPathogen_Per_hr;
-  if ((nextPathogen > pathogen) && antibiotic_g > 0) {
-    //This means that we're getting into some oscillatory behavior after antibiotic administration (i.e. we hit a minimum pathogen concentration)
-    //Stop pathogen growth and allow late mediators to decay.  This will start to bring white blood cells back to normal
-    dPathogen_Per_hr = 0.0;
-    dLateMediator_Per_hr = -0.25 * sep->GetSeverity().GetValue(); //Scale with severity because low-severity scenarios have lower max wbc count
-  }
-  if (lateMediator <= 0) {
-    //Because of monkeying around above we might get a negative late mediator value.  Don't let this happen
-    dLateMediator_Per_hr = 0.0;
-  }
-
-  sep->GetPathogen().IncrementValue(dPathogen_Per_hr * dt_hr);
-  sep->GetEarlyMediator().IncrementValue(dWhiteBloodCell_Per_hr * dt_hr);
-  sep->GetLateMediator().IncrementValue(dLateMediator_Per_hr * dt_hr);
-
-  if (sep->GetEarlyMediator().GetValue() < wbcFractionInitial) {
-    sep->GetSeverity().SetValue(0.0); //Our White blood cell count has return to normal.  This will cause the Sepsis action to be inactivated
-  }
 
   //Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
   //The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
@@ -693,47 +704,42 @@ void BloodChemistry::Sepsis()
   //white blood cell fraction.
   SEFluidCircuitPath* vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
   double resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (whiteBloodCell - wbcFractionInitial));
+  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (tissueDamage / maxTissueDamage));
   vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextReflectionCoefficient = GeneralMath::LinearInterpolator(wbcFractionInitial, wbcFractionMax, 1.0, 0.05, whiteBloodCell);
+  double nextReflectionCoefficient = GeneralMath::LinearInterpolator(0.0, maxTissueDamage, 1.0, 0.05, tissueDamage);
   BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
   m_data.GetCompartments().GetTissueCompartment(sep->GetCompartment() + "Tissue")->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
-
-  //Adjust the other tissue resistances and permeabilities as sepsis worsens
-  //Do this in two stages so that blood volume loss doesn't drop off all at once but is more of a progression
-  double severeThreshold = 0.35 * wbcFractionMax;
-  double modsThreshold = 0.85 * wbcFractionMax;
 
   for (auto comp : m_data.GetCompartments().GetTissueLeafCompartments()) {
     if (comp->GetName().compare(BGE::TissueCompartment::Brain) == 0 || comp->GetName().compare(sepComp) == 0)
       continue; //Don't mess with the brain and don't repeat the compartment the infection started in
-    if (whiteBloodCell > severeThreshold && whiteBloodCell <= modsThreshold) {
-      nextReflectionCoefficient = GeneralMath::LinearInterpolator(severeThreshold, modsThreshold, 1.0, 0.5, whiteBloodCell);
+    if (tissueDamage > severeThreshold && tissueDamage <= modsThreshold) {
+      nextReflectionCoefficient = GeneralMath::LinearInterpolator(severeThreshold, modsThreshold, 1.0, 0.5, tissueDamage);
       BLIM(nextReflectionCoefficient, 0.0, 1.0);
       comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * ((tissueDamage - modsThreshold) / maxTissueDamage));
       vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
 
-    } else if (whiteBloodCell > modsThreshold) {
-      nextReflectionCoefficient = GeneralMath::LinearInterpolator(modsThreshold, wbcFractionMax, 0.5, 0.05, whiteBloodCell);
+    } else if (tissueDamage > modsThreshold) {
+      nextReflectionCoefficient = GeneralMath::LinearInterpolator(modsThreshold, maxTissueDamage, 0.5, 0.05, tissueDamage);
       BLIM(nextReflectionCoefficient, 0.0, 1.0);
       comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * ((tissueDamage - modsThreshold) / maxTissueDamage));
       vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
   }
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + (sep->GetEarlyMediator().GetValue() - wbcFractionInitial) / (5.0 * wbcFractionInitial));
+  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + sep->GetNeutrophil().GetValue() / 0.3);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
   //empirically determined to time symptom onset (i.e. temperature > 38 degC) with the appropriate stage of sepsis
-  double sigmoidInput = whiteBloodCell - wbcFractionInitial;
+  double sigmoidInput = tissueDamage / maxTissueDamage;
 
   //Respiration effects--Done in Respiratory system
 
@@ -749,9 +755,8 @@ void BloodChemistry::Sepsis()
   //Bilirubin counts (measure of liver perfusion)
   double baselineBilirubin_mg_Per_dL = 0.70;
   double maxBilirubin_mg_Per_dL = 26.0; //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
-  double halfMaxWBC = wbcFractionMax; //White blood cell fraction that causes half-max bilirubin concentration.  Set above 0.5 because bilirubin is a later sign of shock
+  double halfMaxWBC = modsThreshold; //White blood cell fraction that causes half-max bilirubin concentration.  Set above 0.5 because bilirubin is a later sign of shock
   double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
   double totalBilirubin_mg_Per_dL = GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput) + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
-}
 }

@@ -1001,9 +1001,9 @@ void Respiratory::ProcessDriverActions()
   //Process Sepsis effects
   double sepsisModifier = 0.0;
   if (m_PatientActions->HasSepsis()) {
-    double baselineWBCFraction = 0.05; //Initial value of white blood cells in model
+    double maxTissueDamage = 17.5; //Initial value of white blood cells in model
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
-    double sigmoidInput = m_PatientActions->GetSepsis()->GetEarlyMediator().GetValue() - baselineWBCFraction;
+    double sigmoidInput = m_PatientActions->GetSepsis()->GetTissueDamage().GetValue() / maxTissueDamage;
     sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
   }
 
