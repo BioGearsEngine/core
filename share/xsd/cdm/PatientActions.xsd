@@ -270,7 +270,16 @@ specific language governing permissions and limitations under the License.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
+	
+	<xs:complexType name="SepsisStateData">
+		<xs:sequence>
+			<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Neutrophil" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="TissueDamage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Antiinflammation" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
 	<!-- @brief -->
 	<xs:simpleType name="enumIntubationType">
 		<xs:restriction base="xs:string">

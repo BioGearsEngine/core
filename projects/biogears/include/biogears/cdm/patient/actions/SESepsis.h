@@ -13,13 +13,15 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
-
+#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/schema/ScalarData.hxx>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
 class SEScalar;
+
 
 class BIOGEARS_API SESepsis : public SEPatientAction {
 public:
@@ -46,10 +48,10 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual SEScalar& GetPathogen();
-  virtual SEScalar& GetNeutrophil();
-  virtual SEScalar& GetTissueDamage();
-  virtual SEScalar& GetAntiinflammation();
+  //virtual SEScalar& GetPathogen();
+  //virtual SEScalar& GetNeutrophil();
+  //virtual SEScalar& GetTissueDamage();
+  //virtual SEScalar& GetAntiinflammation();
 
   virtual void BuildTissueResistorMap();
   virtual const std::map<std::string, std::string>& GetTissueResistorMap() const;
@@ -59,10 +61,31 @@ public:
 protected:
   std::string m_Compartment;
   SEScalar0To1* m_Severity;
+  //SEScalar* m_Pathogen;
+  //SEScalar* m_Neutrophil;
+  //SEScalar* m_TissueDamage;
+  //SEScalar* m_Antiinflammation;
+  std::map<std::string, std::string> m_TissueResistorMap;
+};
+
+class BIOGEARS_API SESepsisState {
+public:
+  SESepsisState();
+  ~SESepsisState();
+
+  virtual bool Load(const CDM::SepsisStateData& in);
+  virtual CDM::SepsisStateData* Unload() const;
+
+  SEScalar& GetPathogen();
+  SEScalar& GetNeutrophil();
+  SEScalar& GetTissueDamage();
+  SEScalar& GetAntiinflammation();
+
+protected:
+  virtual void Unload(CDM::SepsisStateData& data) const;
   SEScalar* m_Pathogen;
   SEScalar* m_Neutrophil;
   SEScalar* m_TissueDamage;
   SEScalar* m_Antiinflammation;
-  std::map<std::string, std::string> m_TissueResistorMap;
 };
-}
+

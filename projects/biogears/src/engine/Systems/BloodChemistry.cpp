@@ -81,6 +81,7 @@ void BloodChemistry::Clear()
   m_venaCavaUrea = nullptr;
   m_ArterialOxygen_mmHg.Reset();
   m_ArterialCarbonDioxide_mmHg.Reset();
+  m_SepsisState = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -112,7 +113,13 @@ bool BloodChemistry::Load(const CDM::BioGearsBloodChemistrySystemData& in)
     return false;
   m_ArterialOxygen_mmHg.Load(in.ArterialOxygenAverage_mmHg());
   m_ArterialCarbonDioxide_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
+
+  if (in.SepsisState().present()) {
+    m_SepsisState->Load(in.SepsisState().get());
+  }
+
   BioGearsSystem::LoadState();
+
   return true;
 }
 CDM::BioGearsBloodChemistrySystemData* BloodChemistry::Unload() const
@@ -126,6 +133,9 @@ void BloodChemistry::Unload(CDM::BioGearsBloodChemistrySystemData& data) const
   SEBloodChemistrySystem::Unload(data);
   data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialOxygen_mmHg.Unload()));
   data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCarbonDioxide_mmHg.Unload()));
+  if (m_SepsisState != nullptr) {
+    data.SepsisState(std::unique_ptr<CDM::SepsisStateData>(m_SepsisState->Unload()));
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -630,44 +640,60 @@ void BloodChemistry::Sepsis()
     m_data.GetDataTrack().Probe("debug_anti", antiinflammatoryTrack);
     return;
   }
-
+  //Sepsis state data should not exist the first time we hit this point
+  if (m_SepsisState == nullptr) {
+    m_SepsisState = new SESepsisState();
+  }
   SESepsis* sep = m_PatientActions->GetSepsis();
   std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
   std::string sepComp = sep->GetCompartment() + "Tissue";
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
 
   //Get state parameter values
-  double pathogen = sep->GetPathogen().GetValue();
-  double neutrophil = sep->GetNeutrophil().GetValue();
-  double tissueDamage = sep->GetTissueDamage().GetValue();
-  double antiinflammation = sep->GetAntiinflammation().GetValue();
+  double pathogen = m_SepsisState->GetPathogen().GetValue();
+  double neutrophil = m_SepsisState->GetNeutrophil().GetValue();
+  double tissueDamage = m_SepsisState->GetTissueDamage().GetValue();
+  double antiinflammation = m_SepsisState->GetAntiinflammation().GetValue();
   double antibiotic_g = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
 
   //Adjust time scale of parameters based off severity.  Currently set so that severity = 1 --> 100x speed
   double timeScale = pow(100.0, sep->GetSeverity().GetValue());
 
-  //Constants needed for Reynolds model:: p = pathogen, m = non specific immune response, n = phagocytotic (neutrophil) response, d = tissue damage)
-  double kpg_Per_h = 0.55 * timeScale;				//Pathogen growth rate
-  double kpm_Per_h = 0.6 * timeScale;				//Non-specific immunre response against pathogen
-  double kmp_Per_h = 0.01 * timeScale;				//Rate at which non-specific response is exhausted by pathogen
-  double sm_Per_h = 0.005 * timeScale;				//Source of non-specific local response
-  double um_Per_h = 0.002 * timeScale;				//Decay rate of non-specific local response
-  double pInf = 20.0;								//Max pathogen population (scaled to 10^6 /mL)
-  double kpn_Per_h = 1.8 * timeScale;				//Rate at which phagocytes consume pathogen
-  double knp_Per_h = 0.1 * timeScale;				//Activation of phagocytes by pathogen
-  double knn_Per_h = 0.01 * timeScale;				//Activation of phagocytes by existing phagocytes
-  double snr_Per_h = 0.08 * timeScale;				//Generation of resting phagocytes
-  double unr_Per_h = 0.12 * timeScale;				//Decay rate of resting phagocytes
-  double un_Per_h = 0.05 * timeScale;				//Decay rate of activated phagocytes
-  double knd_Per_h = 0.02 * timeScale;				//Activation of resting phagocytes by tissue damage
-  double kdn_Per_h = 0.35 * timeScale;				//Rate of tissue damage caused by active phagocytes
-  double xdn = 0.06;								//Level of activated phagocytes leading to half-max tissue damage
-  double ud_Per_h = 0.02 * timeScale;				//Decay rate of tissue damage (i.e. tissue repair rate)
-  double cInf = 0.28;								//Max anti-inflammatory response
-  double sc_Per_h = 0.0125 * timeScale;				//Source of anti-inflammatory mediator
-  double kcn_Per_h = 0.04 * timeScale;				//Max production rate of anti-inflammatory mediator
-  double kcnd = 48.0;								//Relative effectiveness of ativates phagocytes and damaged tissue in inducing anti-inflammatory response
-  double uc_Per_h = 0.1 * timeScale;				//Decay rate of anti-inflammatory mediator
+  //Constants needed for Reynolds model:: 
+	//p = pathogen, m = non specific immune response, n = phagocytotic (neutrophil) response, d = tissue damage)
+ 
+  double kpg_Per_h = 0.55 * timeScale; //Pathogen growth rate
+  double kpm_Per_h = 0.6 * timeScale; //Non-specific immune response against pathogen
+  double kmp_Per_h = 0.01 * timeScale; //Rate at which non-specific response is exhausted by pathogen
+  double sm_Per_h = 0.005 * timeScale; //Source of non-specific local response
+  double um_Per_h = 0.002 * timeScale; //Decay rate of non-specific local response
+  double pInf = 20.0; //Max pathogen population (scaled to 10^6 /mL)
+  double kpn_Per_h = 1.8 * timeScale; //Rate at which phagocytes consume pathogen
+  double knp_Per_h = 0.1 * timeScale; //Activation of phagocytes by pathogen
+  double knn_Per_h = 0.01 * timeScale; //Activation of phagocytes by existing phagocytes
+  double snr_Per_h = 0.08 * timeScale; //Generation of resting phagocytes
+  double unr_Per_h = 0.12 * timeScale; //Decay rate of resting phagocytes
+  double un_Per_h = 0.05 * timeScale; //Decay rate of activated phagocytes
+  double knd_Per_h = 0.02 * timeScale; //Activation of resting phagocytes by tissue damage
+  double kdn_Per_h = 0.35 * timeScale; //Rate of tissue damage caused by active phagocytes
+  double xdn = 0.06; //Level of activated phagocytes leading to half-max tissue damage
+  double ud_Per_h = 0.02 * timeScale; //Decay rate of tissue damage (i.e. tissue repair rate)
+  double cInf = 0.28; //Max anti-inflammatory response
+  double sc_Per_h = 0.0125 * timeScale; //Source of anti-inflammatory mediator
+  double kcn_Per_h = 0.04 * timeScale; //Max production rate of anti-inflammatory mediator
+  double kcnd = 48.0; //Relative effectiveness of ativates phagocytes and damaged tissue in inducing anti-inflammatory response
+  double uc_Per_h = 0.1 * timeScale; //Decay rate of anti-inflammatory mediator
+
+  //Antibiotic pharmacodynamics--see Regoes2004Pharmacodynamic
+  double antibiotic_ug_Per_mL = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
+  double minimumInhibitoryConcentration_ug_Per_mL = 0.017;
+  double antibioticEMax = 0.8;
+  double antibioticShapeParam = 1.1;
+  double antibioticEffect_Per_h = antibioticEMax * pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (1.0 + pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
+
+  //Scale down pathogen growth rate and scale up anti-inflammation response as a function of antibiotic activity
+  kpg_Per_h -= antibioticEffect_Per_h * timeScale;
+  sc_Per_h += antibioticEffect_Per_h * timeScale;
 
   //Intermediate functions
   double alpha = knn_Per_h * neutrophil + knp_Per_h * pathogen + knd_Per_h * tissueDamage;
@@ -685,18 +711,16 @@ void BloodChemistry::Sepsis()
 
   double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
 
-
-  sep->GetPathogen().IncrementValue(dPathogen_Per_h * dt_hr);
-  sep->GetNeutrophil().IncrementValue(dNeutrophil_Per_h * dt_hr);
-  sep->GetTissueDamage().IncrementValue(dTissueDamage_Per_h * dt_hr);
-  sep->GetAntiinflammation().IncrementValue(dAntiinflammation_Per_h * dt_hr);
+  m_SepsisState->GetPathogen().IncrementValue(dPathogen_Per_h * dt_hr);
+  m_SepsisState->GetNeutrophil().IncrementValue(dNeutrophil_Per_h * dt_hr);
+  m_SepsisState->GetTissueDamage().IncrementValue(dTissueDamage_Per_h * dt_hr);
+  m_SepsisState->GetAntiinflammation().IncrementValue(dAntiinflammation_Per_h * dt_hr);
 
   //Physiological response
-  double maxTissueDamage = 17.5;				//Determined empirically from model
+  double maxTissueDamage = 17.5; //Determined empirically from model
   double severeThreshold = 0.35 * maxTissueDamage;
   double modsThreshold = 0.85 * maxTissueDamage;
   double wbcBaseline_ct_Per_uL = 7000.0;
-
 
   //Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
   //The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
@@ -734,7 +758,7 @@ void BloodChemistry::Sepsis()
   }
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + sep->GetNeutrophil().GetValue() / 0.3);
+  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophil / 0.3);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all

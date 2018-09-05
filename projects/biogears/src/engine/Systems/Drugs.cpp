@@ -772,7 +772,7 @@ void Drugs::CalculateSubstanceClearance()
   //Clear out antibiotic using plasma half-life reported by FDA (only applies to Sepsis scenarios)
   if (GetAntibioticMassInBody(MassUnit::g) >= ZERO_APPROX) {
     //Assuming that this rate doesn't change even though blood volume is going bonkers during sepsis
-    double rateConstant_Per_s = log(2.0) / 3600.0; //From FDA data, 1/2 life about 0.7-1 hr hrs (choose 1 so we don't get to 0 between doses), convert to /s basis
+    double rateConstant_Per_s = -(1.0 / 8.0) * log(0.1) / 3600.0;		//Convert from Per hr to per s, taken from Regoes2004Pharmacodynamic
     double antibioticMassCleared_g = rateConstant_Per_s * GetAntibioticMassInBody(MassUnit::g) * m_dt_s;
     GetAntibioticMassInBody().IncrementValue(-antibioticMassCleared_g, MassUnit::g);
   }

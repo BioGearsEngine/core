@@ -21,6 +21,11 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="SepsisState" type="SepsisStateData" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="Pathogen" type="xs:double" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="Neutrophil" type="xs:double" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="TissueDamage" type="xs:double" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="Antiinflammation" type="xs:double" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

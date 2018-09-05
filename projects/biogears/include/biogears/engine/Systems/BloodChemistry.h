@@ -112,5 +112,6 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaUrea;
 
   SEPatientActionCollection* m_PatientActions;
+  SESepsisState* m_SepsisState;
 };
 }
