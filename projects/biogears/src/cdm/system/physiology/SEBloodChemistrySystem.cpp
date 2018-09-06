@@ -57,6 +57,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_PulmonaryVenousOxygenPressure = nullptr;
   m_VenousCarbonDioxidePressure = nullptr;
   m_VenousOxygenPressure = nullptr;
+  m_SepsisInfectionState = nullptr;
 }
 
 SEBloodChemistrySystem::~SEBloodChemistrySystem()
@@ -233,7 +234,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetVenousCarbonDioxidePressure().Load(in.VenousCarbonDioxidePressure().get());
   if (in.VenousOxygenPressure().present())
     GetVenousOxygenPressure().Load(in.VenousOxygenPressure().get());
-
+  if (in.SepsisInfectionState().present())
+    GetSepsisInfectionState().Load(in.SepsisInfectionState().get());
   return true;
 }
 
@@ -309,6 +311,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
 	  data.VenousBloodPH(std::unique_ptr<CDM::ScalarData>(m_VenousBloodPH->Unload()));
   if (m_VenousOxygenPressure != nullptr)
     data.VenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousOxygenPressure->Unload()));
+  if (m_SepsisInfectionState != nullptr)
+    data.SepsisInfectionState(std::unique_ptr<CDM::SepsisStateData>(m_SepsisInfectionState->Unload()));
 }
 
 bool SEBloodChemistrySystem::HasBloodDensity() const
@@ -819,5 +823,16 @@ double SEBloodChemistrySystem::GetVenousCarbonDioxidePressure(const PressureUnit
   if (m_VenousCarbonDioxidePressure == nullptr)
     return SEScalar::dNaN();
   return m_VenousCarbonDioxidePressure->GetValue(unit);
+}
+
+bool SEBloodChemistrySystem::HasSepsisInfectionState() const
+{
+  return m_SepsisInfectionState == nullptr ? false : m_SepsisInfectionState->IsValid();
+}
+SESepsisState& SEBloodChemistrySystem::GetSepsisInfectionState()
+{
+  if (m_SepsisInfectionState == nullptr)
+    m_SepsisInfectionState = new SESepsisState();
+  return *m_SepsisInfectionState;
 }
 }

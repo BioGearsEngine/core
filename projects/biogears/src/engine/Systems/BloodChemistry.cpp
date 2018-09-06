@@ -81,7 +81,6 @@ void BloodChemistry::Clear()
   m_venaCavaUrea = nullptr;
   m_ArterialOxygen_mmHg.Reset();
   m_ArterialCarbonDioxide_mmHg.Reset();
-  m_SepsisState = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -114,10 +113,6 @@ bool BloodChemistry::Load(const CDM::BioGearsBloodChemistrySystemData& in)
   m_ArterialOxygen_mmHg.Load(in.ArterialOxygenAverage_mmHg());
   m_ArterialCarbonDioxide_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
 
-  if (in.SepsisState().present()) {
-    m_SepsisState->Load(in.SepsisState().get());
-  }
-
   BioGearsSystem::LoadState();
 
   return true;
@@ -133,9 +128,6 @@ void BloodChemistry::Unload(CDM::BioGearsBloodChemistrySystemData& data) const
   SEBloodChemistrySystem::Unload(data);
   data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialOxygen_mmHg.Unload()));
   data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCarbonDioxide_mmHg.Unload()));
-  if (m_SepsisState != nullptr) {
-    data.SepsisState(std::unique_ptr<CDM::SepsisStateData>(m_SepsisState->Unload()));
-  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -640,9 +632,12 @@ void BloodChemistry::Sepsis()
     m_data.GetDataTrack().Probe("debug_anti", antiinflammatoryTrack);
     return;
   }
-  //Sepsis state data should not exist the first time we hit this point
-  if (m_SepsisState == nullptr) {
-    m_SepsisState = new SESepsisState();
+  if (!HasSepsisInfectionState())
+  {
+    GetSepsisInfectionState().GetPathogen().SetValue(0.5);
+    GetSepsisInfectionState().GetNeutrophil().SetValue(0.0);
+    GetSepsisInfectionState().GetTissueDamage().SetValue(0.0);
+    GetSepsisInfectionState().GetAntiinflammation().SetValue(0.0);
   }
   SESepsis* sep = m_PatientActions->GetSepsis();
   std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
@@ -650,10 +645,10 @@ void BloodChemistry::Sepsis()
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
 
   //Get state parameter values
-  double pathogen = m_SepsisState->GetPathogen().GetValue();
-  double neutrophil = m_SepsisState->GetNeutrophil().GetValue();
-  double tissueDamage = m_SepsisState->GetTissueDamage().GetValue();
-  double antiinflammation = m_SepsisState->GetAntiinflammation().GetValue();
+  double pathogen = GetSepsisInfectionState().GetPathogen().GetValue();
+  double neutrophil = GetSepsisInfectionState().GetNeutrophil().GetValue();
+  double tissueDamage = GetSepsisInfectionState().GetTissueDamage().GetValue();
+  double antiinflammation = GetSepsisInfectionState().GetAntiinflammation().GetValue();
   double antibiotic_g = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
 
   //Adjust time scale of parameters based off severity.  Currently set so that severity = 1 --> 100x speed
@@ -711,10 +706,11 @@ void BloodChemistry::Sepsis()
 
   double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
 
-  m_SepsisState->GetPathogen().IncrementValue(dPathogen_Per_h * dt_hr);
-  m_SepsisState->GetNeutrophil().IncrementValue(dNeutrophil_Per_h * dt_hr);
-  m_SepsisState->GetTissueDamage().IncrementValue(dTissueDamage_Per_h * dt_hr);
-  m_SepsisState->GetAntiinflammation().IncrementValue(dAntiinflammation_Per_h * dt_hr);
+  GetSepsisInfectionState().GetPathogen().IncrementValue(dPathogen_Per_h * dt_hr);
+  GetSepsisInfectionState().GetNeutrophil().IncrementValue(dNeutrophil_Per_h * dt_hr);
+  GetSepsisInfectionState().GetTissueDamage().IncrementValue(dTissueDamage_Per_h * dt_hr);
+  GetSepsisInfectionState().GetAntiinflammation().IncrementValue(dAntiinflammation_Per_h * dt_hr);
+
 
   //Physiological response
   double maxTissueDamage = 17.5; //Determined empirically from model
@@ -783,4 +779,5 @@ void BloodChemistry::Sepsis()
   double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
   double totalBilirubin_mg_Per_dL = GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput) + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
+}
 }

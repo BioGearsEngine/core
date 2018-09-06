@@ -28,7 +28,23 @@ specific language governing permissions and limitations under the License.
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+	
+	<!--@brief State of the ODE model that tracks the growth of pathogen in the body and the associated immune response.  This information is needed by the Sepsis model and must be stored on CDM
+		so that it can be serialized and used to load Sepsis patient states at various progressions of illness.
+	-->
+   <xs:complexType name="SepsisStateData">
+		<xs:complexContent>
+			<xs:extension base="ObjectData">	
+				<xs:sequence>
+					<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Neutrophil" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TissueDamage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Antiinflammation" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
     <!-- @brief Provides clinician level data reflecting the composition of the blood.
          @details Blood Chemistry is complete analysis on the blood at any given point during the simulation.
          The blood chemistry system houses all of the blood concentrations and compositions needed to assess a patient's health. This system is under development
@@ -60,7 +76,8 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
                     <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
                     <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
-                    <!-- Substance Pressures -->
+                    <xs:element name="SepsisInfectionState" type="SepsisStateData" minOccurs="0" maxOccurs="1"/><!--@brief State vector for sepsis ODE model (pathogen count, neutrophil count, damage progression, and antiinflammation level).  Stored on CDM so that Sepsis states can be serialized-->
+					<!-- Substance Pressures -->
                     <xs:element name="ArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the aorta.-->
                     <xs:element name="ArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the aorta.-->
                     <xs:element name="PulmonaryArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the pulmonary arteries.-->

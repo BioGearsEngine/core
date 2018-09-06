@@ -800,8 +800,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_PatientActions->HasSepsis() && m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g) < ZERO_APPROX) {
     double maxTissueDamage = 17.5;
     double severity = m_PatientActions->GetSepsis()->GetSeverity().GetValue();
-    double tissueDamageFraction = m_PatientActions->GetSepsis()->GetTissueDamage().GetValue() / maxTissueDamage;
-    //This function is half of a Gaussian that becomes a constant background value when white blood cell count saturates.
+   double tissueDamageFraction = m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueDamage().GetValue() / maxTissueDamage;
+   //This function is half of a Gaussian that becomes a constant background value when white blood cell count saturates.
     //The baseline of 0.2 was determined empirically to balance lactate transport / elimination with production
     //Max value is a function of severity because higher severity scenarios are shorter and we need to spike the concentration faster
     //We also need the production to slack off or else we will just keep pumping out lactate indefinitely

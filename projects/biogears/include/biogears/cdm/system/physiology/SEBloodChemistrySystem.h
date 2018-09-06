@@ -338,6 +338,9 @@ public:
   virtual double GetVenousOxygenPressure(const PressureUnit& unit) const;
   //@}
 
+  virtual bool HasSepsisInfectionState() const;
+  virtual SESepsisState& GetSepsisInfectionState();
+
 protected:
   SEScalarMassPerVolume* m_BloodDensity;
   SEScalar* m_ArterialBloodPH;
@@ -370,5 +373,7 @@ protected:
   SEScalarPressure* m_PulmonaryVenousOxygenPressure;
   SEScalarPressure* m_VenousCarbonDioxidePressure;
   SEScalarPressure* m_VenousOxygenPressure;
+  SESepsisState* m_SepsisInfectionState;
 };
 }
+

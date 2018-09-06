@@ -17,15 +17,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
+
 SESepsis::SESepsis()
   : SEPatientAction()
 {
   m_Compartment = ""; //User input, location of hemorrhage
   m_Severity = nullptr; //User input, initial rate of bleeding
-  //m_Pathogen = nullptr; //Pathogen level state variable in Kumar Model
-  //m_Neutrophil = nullptr; //White blood cell ("early mediator") level state variable in Kumar Model, as fraction of max value = 1
-  //m_TissueDamage = nullptr; //Late immune response level state variable in Kumar Model
-  //m_Antiinflammation = nullptr;
 }
 
 SESepsis::~SESepsis()
@@ -39,10 +36,6 @@ void SESepsis::Clear()
   m_Compartment = "";
   m_TissueResistorMap.clear();
   SAFE_DELETE(m_Severity);
-  //SAFE_DELETE(m_Pathogen);
-  //SAFE_DELETE(m_Neutrophil);
-  //SAFE_DELETE(m_TissueDamage);
-  //SAFE_DELETE(m_Antiinflammation);
 }
 
 bool SESepsis::IsValid() const
@@ -109,42 +102,6 @@ SEScalar0To1& SESepsis::GetSeverity()
   return *m_Severity;
 }
 
-//SEScalar& SESepsis::GetPathogen()
-//{
-//  if (m_Pathogen == nullptr) {
-//    m_Pathogen = new SEScalar();
-//    m_Pathogen->SetValue(0.5); //Initial value assigned to Pathogen in Kumar Model
-//  }
-//  return *m_Pathogen;
-//}
-//
-//SEScalar& SESepsis::GetNeutrophil()
-//{ //Calling this GetEarlyMediator to not confuse with GetWhiteBloodCellCount in BloodChemistry system
-//  if (m_Neutrophil == nullptr) {
-//    m_Neutrophil = new SEScalar();
-//    m_Neutrophil->SetValue(0.0); //Initial value assigned to White Blood Cell level in Kumar Model
-//  }
-//  return *m_Neutrophil;
-//}
-//
-//SEScalar& SESepsis::GetTissueDamage()
-//{
-//  if (m_TissueDamage == nullptr) {
-//    m_TissueDamage = new SEScalar();
-//    m_TissueDamage->SetValue(0.0); //Initial value assigned to Late Mediator in Kumar Model
-//  }
-//  return *m_TissueDamage;
-//}
-//
-//SEScalar& SESepsis::GetAntiinflammation()
-//{
-//  if (m_Antiinflammation == nullptr) {
-//    m_Antiinflammation = new SEScalar();
-//    m_Antiinflammation->SetValue(0.125);
-//  }
-//  return *m_Antiinflammation;
-//}
-
 const std::map<std::string, std::string>& SESepsis::GetTissueResistorMap() const
 {
   return m_TissueResistorMap;
@@ -178,81 +135,4 @@ void SESepsis::ToString(std::ostream& str) const
   str << std::flush;
 }
 
-SESepsisState::SESepsisState()
-{
-  m_Pathogen = nullptr; //Pathogen level state variable in Kumar Model
-  m_Neutrophil = nullptr; //White blood cell ("early mediator") level state variable in Kumar Model, as fraction of max value = 1
-  m_TissueDamage = nullptr; //Late immune response level state variable in Kumar Model
-  m_Antiinflammation = nullptr;
 }
-
-SESepsisState::~SESepsisState()
-{
-  SAFE_DELETE(m_Pathogen);
-  SAFE_DELETE(m_Neutrophil);
-  SAFE_DELETE(m_TissueDamage);
-  SAFE_DELETE(m_Antiinflammation);
-}
-
-bool SESepsisState::Load(const CDM::SepsisStateData& in)
-{
-  GetPathogen().Load(in.Pathogen());
-  GetNeutrophil().Load(in.Neutrophil());
-  GetTissueDamage().Load(in.TissueDamage());
-  GetAntiinflammation().Load(in.Antiinflammation());
-}
-
-CDM::SepsisStateData* SESepsisState::Unload() const
-{
-  CDM::SepsisStateData* data(new CDM::SepsisStateData());
-  Unload(*data);
-  return data;
-}
-
-void SESepsisState::Unload(CDM::SepsisStateData& data) const
-{
-  data.Pathogen(std::unique_ptr<CDM::ScalarData>(m_Pathogen->Unload()));
-  data.Neutrophil(std::unique_ptr<CDM::ScalarData>(m_Neutrophil->Unload()));
-  data.TissueDamage(std::unique_ptr<CDM::ScalarData>(m_TissueDamage->Unload()));
-  data.Antiinflammation(std::unique_ptr<CDM::ScalarData>(m_Antiinflammation->Unload()));
-
-}
-
-SEScalar& SESepsisState::GetPathogen()
-{
-  if (m_Pathogen == nullptr) {
-    m_Pathogen = new SEScalar();
-    m_Pathogen->SetValue(0.5); //Initial value assigned to Pathogen in Kumar Model
-  }
-  return *m_Pathogen;
-}
-
-SEScalar& SESepsisState::GetNeutrophil()
-{ //Calling this GetEarlyMediator to not confuse with GetWhiteBloodCellCount in BloodChemistry system
-  if (m_Neutrophil == nullptr) {
-    m_Neutrophil = new SEScalar();
-    m_Neutrophil->SetValue(0.0); //Initial value assigned to White Blood Cell level in Kumar Model
-  }
-  return *m_Neutrophil;
-}
-
-SEScalar& SESepsisState::GetTissueDamage()
-{
-  if (m_TissueDamage == nullptr) {
-    m_TissueDamage = new SEScalar();
-    m_TissueDamage->SetValue(0.0); //Initial value assigned to Late Mediator in Kumar Model
-  }
-  return *m_TissueDamage;
-}
-
-SEScalar& SESepsisState::GetAntiinflammation()
-{
-  if (m_Antiinflammation == nullptr) {
-    m_Antiinflammation = new SEScalar();
-    m_Antiinflammation->SetValue(0.125);
-  }
-  return *m_Antiinflammation;
-}
-
-}
-

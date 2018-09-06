@@ -1003,8 +1003,8 @@ void Respiratory::ProcessDriverActions()
   if (m_PatientActions->HasSepsis()) {
     double maxTissueDamage = 17.5; //Initial value of white blood cells in model
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
-    double sigmoidInput = m_PatientActions->GetSepsis()->GetTissueDamage().GetValue() / maxTissueDamage;
-    sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
+    double sigmoidInput =m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueDamage().GetValue() / maxTissueDamage;
+	sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.25);
   }
 
   //Apply modifiers to tidal volume.  Cardiac arrest and neuromuscular block are multiplicative while drug change is additive

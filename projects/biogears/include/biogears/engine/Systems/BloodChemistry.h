@@ -110,8 +110,7 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaSodium;
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;
-
   SEPatientActionCollection* m_PatientActions;
-  SESepsisState* m_SepsisState;
+
 };
 }
