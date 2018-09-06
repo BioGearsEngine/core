@@ -30,6 +30,8 @@ public:
   virtual CDM::SepsisStateData* Unload() const;
   virtual bool IsValid();
 
+  virtual const SEScalar* GetScalar(const std::string& name);
+
 protected:
   virtual void Unload(CDM::SepsisStateData& data) const;
 

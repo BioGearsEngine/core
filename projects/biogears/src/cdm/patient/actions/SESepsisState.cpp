@@ -66,6 +66,19 @@ bool SESepsisState::IsValid()
     return false;
 }
 
+const SEScalar* SESepsisState::GetScalar(const std::string& name)
+{
+  if (name.compare("Pathogen") == 0)
+    return &GetPathogen();
+  if (name.compare("Neutrophil") == 0)
+    return &GetNeutrophil();
+  if (name.compare("TissueDamage") == 0)
+    return &GetTissueDamage();
+  if (name.compare("Antiinflammation") == 0)
+    return &GetAntiinflammation();
+  return nullptr;
+}
+
 bool SESepsisState::HasPathogen() const
 {
   return m_Pathogen == nullptr ? false : m_Pathogen->IsValid();

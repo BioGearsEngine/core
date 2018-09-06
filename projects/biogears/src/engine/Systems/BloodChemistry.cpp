@@ -621,15 +621,7 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 
 void BloodChemistry::Sepsis()
 {
-  double pathogenTrack = 0.0;
-  double neutrophilTrack = 0.0;
-  double tissueDamageTrack = 0.0;
-  double antiinflammatoryTrack = 0.0;
   if (!m_PatientActions->HasSepsis()) {
-    m_data.GetDataTrack().Probe("debug_pathogen", pathogenTrack);
-    m_data.GetDataTrack().Probe("debug_neutrophil", neutrophilTrack);
-    m_data.GetDataTrack().Probe("debug_damage", tissueDamageTrack);
-    m_data.GetDataTrack().Probe("debug_anti", antiinflammatoryTrack);
     return;
   }
   if (!HasSepsisInfectionState())
@@ -637,7 +629,7 @@ void BloodChemistry::Sepsis()
     GetSepsisInfectionState().GetPathogen().SetValue(0.5);
     GetSepsisInfectionState().GetNeutrophil().SetValue(0.0);
     GetSepsisInfectionState().GetTissueDamage().SetValue(0.0);
-    GetSepsisInfectionState().GetAntiinflammation().SetValue(0.0);
+    GetSepsisInfectionState().GetAntiinflammation().SetValue(0.125);
   }
   SESepsis* sep = m_PatientActions->GetSepsis();
   std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
@@ -680,15 +672,15 @@ void BloodChemistry::Sepsis()
   double uc_Per_h = 0.1 * timeScale; //Decay rate of anti-inflammatory mediator
 
   //Antibiotic pharmacodynamics--see Regoes2004Pharmacodynamic
-  double antibiotic_ug_Per_mL = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
-  double minimumInhibitoryConcentration_ug_Per_mL = 0.017;
-  double antibioticEMax = 0.8;
-  double antibioticShapeParam = 1.1;
+  double antibiotic_ug_Per_mL = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::ug);
+  double minimumInhibitoryConcentration_ug_Per_mL = 3.4;
+  double antibioticEMax = 0.025;
+  double antibioticShapeParam = 2.5;
   double antibioticEffect_Per_h = antibioticEMax * pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (1.0 + pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
 
   //Scale down pathogen growth rate and scale up anti-inflammation response as a function of antibiotic activity
-  kpg_Per_h -= antibioticEffect_Per_h * timeScale;
-  sc_Per_h += antibioticEffect_Per_h * timeScale;
+  kpg_Per_h -= (antibioticEffect_Per_h * timeScale);
+  sc_Per_h += (antibioticEffect_Per_h * timeScale);
 
   //Intermediate functions
   double alpha = knn_Per_h * neutrophil + knp_Per_h * pathogen + knd_Per_h * tissueDamage;

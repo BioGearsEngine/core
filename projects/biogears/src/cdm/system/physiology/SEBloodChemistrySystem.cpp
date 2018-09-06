@@ -166,6 +166,13 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   if (name.compare("VenousOxygenPressure") == 0)
     return &GetVenousOxygenPressure();
 
+  //This applies to SepsisInfectionState values, as they are defined SepsisInfectionState-Pathogen, e.g.
+  size_t split = name.find('-');
+  if (split != name.npos) {
+    std::string prop = name.substr(split + 1, name.npos);		//Get property that follows dash
+    return GetSepsisInfectionState().GetScalar(prop);
+  }
+
   return nullptr;
 }
 

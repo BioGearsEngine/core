@@ -402,10 +402,9 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->Balance(BalanceLiquidBy::Mass);
     }
     if ((compound->GetName().compare("Antibiotic") == 0)) {
-      //Our antibiotic currently is Piperacillin/Tazobactam and is specifically included for managing Sepsis
-      //Thus administering it in isolation will not have any pharmacodynamic effects
-      //Working on the assumption that drug is in concentration of 4.5 g per 150 mL, as indicated by FDA data
-      GetAntibioticMassInBody().IncrementValue(volumeToAdminister_mL * (4.5 / 150.0), MassUnit::g);
+      //Antibiotic is only used in Sepsis model.  We base dose on Regoes2004Pharmacodynamics model and parameters for Ampicillin 
+	  double antibioticConcentration_ug_Per_mL = 1.0;
+      GetAntibioticMassInBody().IncrementValue(antibioticConcentration_ug_Per_mL * volumeToAdminister_mL, MassUnit::ug);
     }
 
     if ((compound->GetName().compare("Saline") == 0) || (compound->GetName().compare("RingersLactate") == 0) || (compound->GetName().compare("Antibiotic") == 0)) //Note: Saline and ringers lactate have different densities than pure water
