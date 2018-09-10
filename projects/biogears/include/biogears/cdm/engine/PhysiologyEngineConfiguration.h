@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -19,6 +18,7 @@ class SEElectroCardioGramInterpolator;
 class PhysiologyEngineStabilization;
 class PhysiologyEngineTimedStabilization;
 class PhysiologyEngineDynamicStabilization;
+class SEPatient;
 class SEScalarTime;
 class TimeUnit;
 class OverrideConfig;
@@ -73,7 +73,6 @@ public:
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
   virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
 
-  const OverrideConfig& GetOverrideConfig();
   virtual bool LoadOverrideConfig(const PhysiologyEngineConfiguration* override);
 
 protected:
@@ -84,8 +83,9 @@ protected:
   PhysiologyEngineTimedStabilization* m_TimedStabilizationCriteria;
   PhysiologyEngineDynamicStabilization* m_DynamicStabilizationCriteria;
   SEScalarTime* m_TimeStep;
+  std::unique_ptr<SEPatient> m_Patient;
   std::unique_ptr<bool> m_overrideMode;
-  std::unique_ptr<OverrideConfig> m_overrideConfig;
+  OverrideConfig* m_overrideConfig;
 
   CDM::enumOnOff::value m_WritePatientBaselineFile;
 };

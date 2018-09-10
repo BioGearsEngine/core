@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-
+#include <biogears/cdm/patient/SEPatient.h>
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   : Loggable(logger)
 {
@@ -28,6 +28,7 @@ PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   m_DynamicStabilizationCriteria = nullptr;
   m_TimeStep = nullptr;
   m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
+  m_overrideConfig = nullptr;
 }
 
 PhysiologyEngineConfiguration::~PhysiologyEngineConfiguration()
