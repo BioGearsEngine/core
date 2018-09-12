@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
   
   <!-- @brief Declaration of BioGears System in which to apply the override value -->
-  <xs:complexType name="OverrideSystem">
+  <xs:complexType name="OverrideConfigData">
     <xs:complexContent>
 		<xs:extension base="ObjectData">
 			<xs:sequence>          
@@ -35,6 +35,6 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="OverrideConfig" type="OverrideSystem"/>
+  <xs:element name="OverrideConfig" type="OverrideConfigData"/>
   
 </xs:schema>
