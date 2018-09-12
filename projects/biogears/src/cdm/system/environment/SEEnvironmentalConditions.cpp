@@ -259,7 +259,7 @@ bool SEEnvironmentalConditions::Load(const std::string& environmentFile)
   std::unique_ptr<CDM::ObjectData> data;
 
   std::string eFile = environmentFile;
-  if (eFile.find("/environments") == std::string::npos) {
+  if (eFile.find("environments") == std::string::npos) {
     eFile = "./environments/";
     eFile += environmentFile;
   }

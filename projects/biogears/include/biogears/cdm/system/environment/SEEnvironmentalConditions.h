@@ -35,15 +35,8 @@ public:
   virtual void Clear();
 
   virtual bool Load(const CDM::EnvironmentalConditionsData& in);
-  virtual CDM::EnvironmentalConditionsData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::EnvironmentalConditionsData& data) const;
-
-  virtual void Merge(const SEEnvironmentalConditions& from);
-
-public:
   virtual bool Load(const std::string& environmentFile);
+  virtual CDM::EnvironmentalConditionsData* Unload() const;
 
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -105,6 +98,10 @@ public:
   const SESubstanceConcentration* GetAmbientAerosol(const SESubstance& substance) const;
   void RemoveAmbientAerosol(const SESubstance& substance);
   void RemoveAmbientAerosols();
+
+protected:
+  virtual void Unload(CDM::EnvironmentalConditionsData& data) const;
+  virtual void Merge(const SEEnvironmentalConditions& from);
 
 protected:
   CDM::enumSurroundingType::value m_SurroundingType;
