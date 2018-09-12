@@ -13,7 +13,9 @@ specific language governing permissions and limitations under the License.
 #pragma once
 CDM_BIND_DECL(OverrideConfigData)
 #include <biogears/schema/SEPatient.hxx>
-class OverrideConfigData;
+#include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/schema/enumOnOff.hxx>
 
 class BIOGEARS_API OverrideConfig : public Loggable {
 public:
@@ -22,8 +24,9 @@ public:
 
   virtual void Clear(); // Deletes all members
 
-  virtual bool LoadOverrideConfig(const CDM::OverrideConfigData& in);
-  virtual CDM::OverrideConfigDataData* Unload() const;
+  virtual bool LoadOverride(const CDM::OverrideConfigData& in);
+  virtual bool Load(const CDM::OverrideConfigData& in);
+  virtual CDM::OverrideConfigData* Unload() const;
 
 protected:
   virtual void Unload(CDM::OverrideConfigData& data) const;
@@ -32,6 +35,5 @@ public:
   
 protected:
 
-  std::map<CDM::ElectroCardioGramWaveformLeadNumber, SEScalarElectricPotential*> m_Leads;
-  std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, SEElectroCardioGramInterpolatorWaveform*>> m_Waveforms;
+  bool m_overrideMode;
 };

@@ -71,39 +71,6 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
 }
 
 
-bool PhysiologyEngineConfiguration::LoadOverrideConfig(const PhysiologyEngineConfiguration* override)
-{
-  Info("Initializing Override");
-  m_overrideConfig->Initialize(); // Load up Defaults
-  if (override != nullptr) {
-    Info("Merging Provided Override");
-    m_overrideConfig->Merge(*override);
-  }
-
-  // Now, Let's see if there is anything to merge into our base configuration
-  Info("Merging OnDisk Override");
-  PhysiologyEngineConfiguration orFile(*logger);
-  orFile.LoadFile("BioGearsOverride.xml");
-  m_overrideConfig->Merge(orFile);
-
-  // Now we can check the config
-  if (m_overrideConfig->HasOverrideConfig()) {
-    std::string stableDir = "./stable/";
-    MKDIR(stableDir.c_str());
-    CDM::PatientData* pData = m_Patient->Unload();
-    pData->contentVersion(BGE::Version);
-    // Write out the stable patient state
-    std::ofstream stream(stableDir + m_Patient->GetName() + ".xml");
-    // Write out the xml file
-    xml_schema::namespace_infomap map;
-    map[""].name = "uri:/mil/tatrc/physiology/datamodel";
-    Patient(stream, *pData, map);
-    stream.close();
-    SAFE_DELETE(pData);
-  }
-}
-
-
 void PhysiologyEngineConfiguration::SetOverrideMode(bool ormode)
 {
   *m_overrideMode = ormode;
