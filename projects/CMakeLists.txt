@@ -86,7 +86,7 @@ if(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
 
     configure_file(${doxyfile_in} ${doxyfile} @ONLY)
 
-    add_custom_target(doxygen
+    add_custom_target(doxygen ALL
         COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc
         COMMENT "Generating API documentation with Doxygen"
@@ -97,8 +97,7 @@ if(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
                           CXX_STANDARD 11
                           FOLDER "Other"
                           PROJECT_LABEL "Doxygen")
-
-install(DIRECTORY ${PROJECT_BINARY_DIR}/outputs/docs/html DESTINATION share/doc/kaleidoscppe/)
+   install(DIRECTORY ${PROJECT_BINARY_DIR}/outputs/docs/html DESTINATION share/doc/biogears/)
 endif()
 
 add_custom_command(
