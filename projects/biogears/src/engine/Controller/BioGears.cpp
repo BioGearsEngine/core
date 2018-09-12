@@ -137,7 +137,7 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   // Now, Let's see if there is anything to merge into our base configuration
   Info("Merging OnDisk Configuration");
   BioGearsConfiguration cFile(*m_Substances);
-  cFile.LoadFile("BioGearsConfiguration.xml");
+  cFile.Load("BioGearsConfiguration.xml");
   m_Config->Merge(cFile);
 
   // Now we can check the config

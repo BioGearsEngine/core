@@ -37,7 +37,7 @@ specific language governing permissions and limitations under the License.
 void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::string& sTestDirectory)
 {
   BioGears bg(sTestDirectory + "/InternalTemperatureVariableBMRCircuitTest.log");
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -106,7 +106,7 @@ void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::st
 void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::string& sTestDirectory)
 {
   BioGears bg(sTestDirectory + "/InternalTemperatureVariableSkinCircuitTest.log");
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -190,7 +190,7 @@ void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::s
 void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::string& sTestDirectory)
 {
   BioGears bg(sTestDirectory + "/InternalTemperatureVariableCoreCircuitTest.log");
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -273,7 +273,7 @@ void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::s
 void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::string& sTestDirectory)
 {
   BioGears bg(sTestDirectory + "/EnvironmentVariableTemperatureCircuitTest.log");
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -382,7 +382,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
 void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest(const std::string& sTestDirectory)
 {
   BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest.log");
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -509,7 +509,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
 void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(const std::string& sTestDirectory)
 {
   BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentSkinTempDropCircuitTest.log");
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -599,14 +599,14 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
 void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTestDirectory)
 {
   BioGears bg(sTestDirectory + "/EnvironmentTemperatureInput.log");
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
   bg.CreateCircuitsAndCompartments();
   Environment& env = (Environment&)bg.GetEnvironment();
   env.Initialize();
-  env.GetConditions().LoadFile("./environments/Standard.xml");
+  env.GetConditions().Load("./environments/Standard.xml");
   env.StateChange();
 
   bg.GetEnergy().GetCoreTemperature().SetValue(37.0, TemperatureUnit::C);

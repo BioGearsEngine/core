@@ -29,13 +29,9 @@ public:
   virtual void Clear();
 
   virtual bool Load(const CDM::PatientData& in);
+  bool Load(const std::string& patientFile);
   virtual CDM::PatientData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::PatientData& data) const;
-
-public:
-  bool LoadFile(const std::string& patientFile);
 
   /** @name GetScalar
 	*   @brief - A reflextion type call that will return the Scalar associated
@@ -65,6 +61,11 @@ public:
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();
+
+  virtual CDM::enumSex::value GetGender() const;
+  virtual void SetGender(CDM::enumSex::value sex);
+  virtual bool HasGender() const;
+  virtual void InvalidateGender();
 
   virtual CDM::enumSex::value GetSex() const;
   virtual void SetSex(CDM::enumSex::value sex);
@@ -194,6 +195,9 @@ public:
   virtual bool HasVitalCapacity() const;
   virtual SEScalarVolume& GetVitalCapacity();
   virtual double GetVitalCapacity(const VolumeUnit& unit) const;
+
+protected:
+  virtual void Unload(CDM::PatientData& data) const;
 
 protected:
   std::stringstream m_ss;

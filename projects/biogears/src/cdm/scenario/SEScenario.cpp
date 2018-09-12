@@ -109,7 +109,7 @@ void SEScenario::Unload(CDM::ScenarioData& data) const
     data.Action().push_back(std::unique_ptr<CDM::ActionData>(a->Unload()));
 }
 
-bool SEScenario::LoadFile(const std::string& scenarioFile)
+bool SEScenario::Load(const std::string& scenarioFile)
 {
   CDM::ScenarioData* pData;
   std::unique_ptr<CDM::ObjectData> data;

@@ -253,7 +253,7 @@ void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
   }
 }
 
-bool SEEnvironmentalConditions::LoadFile(const std::string& environmentFile)
+bool SEEnvironmentalConditions::Load(const std::string& environmentFile)
 {
   CDM::EnvironmentalConditionsData* eData;
   std::unique_ptr<CDM::ObjectData> data;

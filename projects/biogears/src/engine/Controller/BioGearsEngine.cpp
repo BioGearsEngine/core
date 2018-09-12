@@ -213,7 +213,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   // At this point I don't think we should be doing this... but maybe you want to...
   //Info("Merging OnDisk Configuration");
   //BioGearsConfiguration cFile(*m_Substances);
-  //cFile.LoadFile("BioGearsConfiguration.xml");
+  //cFile.Load("BioGearsConfiguration.xml");
   //m_Config->Merge(cFile);
 
   /////////////
@@ -440,7 +440,7 @@ bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std:
     pFile = "./patients/";
     pFile += patientFile;
   }
-  if (!m_Patient->LoadFile(pFile))
+  if (!m_Patient->Load(pFile))
     return false;
   return InitializeEngine(conditions, config);
 }

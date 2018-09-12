@@ -126,12 +126,12 @@ void SEInhaler::ProcessConfiguration(const SEInhalerConfiguration& config)
   if (config.HasConfiguration())
     Merge(*config.GetConfiguration());
   else if (config.HasConfigurationFile())
-    if (!LoadFile(config.GetConfigurationFile())) // Does NOT merge file in data, Should we?
+    if (!Load(config.GetConfigurationFile())) // Does NOT merge file in data, Should we?
       Error("Unable to load configuration file", "SEInhaler::ProcessConfiguration");
   StateChange();
 }
 
-bool SEInhaler::LoadFile(const std::string& file)
+bool SEInhaler::Load(const std::string& file)
 {
   CDM::InhalerData* pData;
   std::unique_ptr<CDM::ObjectData> data;

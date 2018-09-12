@@ -957,7 +957,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   DataTrack trk;
 
   Tissue& tsu = (Tissue&)bg.GetTissue();
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);

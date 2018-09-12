@@ -33,7 +33,7 @@ protected:
 public:
   const SEScalar* GetScalar(const std::string& name);
 
-  bool LoadFile(const std::string& nutritionFile);
+  bool Load(const std::string& nutritionFile);
 
   void Increment(const SENutrition& from);
 

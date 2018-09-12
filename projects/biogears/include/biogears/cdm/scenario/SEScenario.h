@@ -35,7 +35,7 @@ protected:
   void Unload(CDM::ScenarioData& data) const;
 
 public:
-  bool LoadFile(const std::string& scenarioFile);
+  bool Load(const std::string& scenarioFile);
   bool IsValid() const;
 
   virtual std::string GetName() const;

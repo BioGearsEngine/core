@@ -43,7 +43,7 @@ protected:
   virtual void Merge(const SEEnvironmentalConditions& from);
 
 public:
-  virtual bool LoadFile(const std::string& environmentFile);
+  virtual bool Load(const std::string& environmentFile);
 
   virtual const SEScalar* GetScalar(const std::string& name);
 

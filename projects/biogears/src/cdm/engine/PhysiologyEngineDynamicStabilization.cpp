@@ -404,7 +404,7 @@ void PhysiologyEngineDynamicStabilization::Unload(CDM::PhysiologyEngineDynamicSt
   }
 }
 
-bool PhysiologyEngineDynamicStabilization::LoadFile(const std::string& file)
+bool PhysiologyEngineDynamicStabilization::Load(const std::string& file)
 {
   CDM::PhysiologyEngineDynamicStabilizationData* pData;
   std::unique_ptr<CDM::ObjectData> data;

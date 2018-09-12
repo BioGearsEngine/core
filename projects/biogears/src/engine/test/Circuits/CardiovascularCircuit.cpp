@@ -180,7 +180,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   double binding_s = 0;
   BioGears bg(sTestDirectory + "/" + tName.str() + "CircuitAndTransportTest.log");
   bg.GetLogger()->Info("Running " + tName.str());
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   if (heartRate_bpm <= 0)
     heartRate_bpm = bg.GetPatient().GetHeartRateBaseline().GetValue(FrequencyUnit::Per_min);
@@ -195,7 +195,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   std::vector<SESubstance*> subs2Track;
   if (balanceBloodGases) {
     SEEnvironmentalConditions env(bg.GetSubstances());
-    env.LoadFile("./environments/Standard.xml");
+    env.Load("./environments/Standard.xml");
     SEGasCompartment* cEnv = bg.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient);
     for (SESubstanceFraction* subFrac : env.GetAmbientGases()) {
       bg.GetSubstances().AddActiveSubstance(subFrac->GetSubstance());

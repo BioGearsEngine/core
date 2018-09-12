@@ -181,7 +181,7 @@ const SEScalar* SENutrition::GetScalar(const std::string& name)
   return nullptr;
 }
 
-bool SENutrition::LoadFile(const std::string& nutritionFile)
+bool SENutrition::Load(const std::string& nutritionFile)
 {
   CDM::NutritionData* pData;
   std::unique_ptr<CDM::ObjectData> data;

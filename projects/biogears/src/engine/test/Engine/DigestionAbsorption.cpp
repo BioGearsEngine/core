@@ -51,7 +51,7 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
   BioGears bg(m_Logger);
   Gastrointestinal& gi = (Gastrointestinal&)bg.GetGastrointestinal();
 
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   SEPatient* patient = (SEPatient*)&bg.GetPatient();
 
@@ -351,7 +351,7 @@ void BioGearsEngineTest::AbsorptionTest(const std::string& rptDirectory, MealTyp
   BioGears bg(m_Logger);
   Gastrointestinal& gi = (Gastrointestinal&)bg.GetGastrointestinal();
 
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   SEPatient* patient = (SEPatient*)&bg.GetPatient();
 

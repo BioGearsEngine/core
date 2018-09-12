@@ -55,7 +55,7 @@ protected:
   virtual void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
 
 public:
-  bool LoadFile(const std::string& file);
+  bool Load(const std::string& file);
 
   virtual const SEScalar* GetScalar(const std::string& name);
 

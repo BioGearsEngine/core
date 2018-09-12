@@ -38,7 +38,7 @@ protected:
   virtual void Unload(CDM::PhysiologyEngineStabilizationData& data) const;
 
 public:
-  virtual bool LoadFile(const std::string& file) = 0;
+  virtual bool Load(const std::string& file) = 0;
 
   virtual bool StabilizeRestingState(PhysiologyEngine& engine) = 0;
   virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) = 0;

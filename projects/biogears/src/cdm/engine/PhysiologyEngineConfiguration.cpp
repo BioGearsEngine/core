@@ -60,7 +60,7 @@ void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& f
   m_Merge = false;
 }
 
-bool PhysiologyEngineConfiguration::LoadFile(const std::string& file)
+bool PhysiologyEngineConfiguration::Load(const std::string& file)
 {
   // if file does not exist, we stick with defaults
 

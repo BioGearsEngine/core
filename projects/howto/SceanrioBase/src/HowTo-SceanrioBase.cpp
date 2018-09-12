@@ -37,7 +37,7 @@ void HowToScenarioBase()
 	
 	//Let's read the scenario we want to base this engine on
 	SEScenario sce(bg->GetSubstanceManager());
-	sce.LoadFile("YourScenario.xml");
+	sce.Load("YourScenario.xml");
 
   if (sce.HasEngineStateFile())
   {

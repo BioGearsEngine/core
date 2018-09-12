@@ -49,7 +49,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
   Hepatic& hptc = (Hepatic&)bg.GetHepatic();
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
 
   //Create a circuit

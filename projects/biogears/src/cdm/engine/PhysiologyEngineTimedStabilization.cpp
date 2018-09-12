@@ -177,7 +177,7 @@ void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabil
   }
 }
 
-bool PhysiologyEngineTimedStabilization::LoadFile(const std::string& file)
+bool PhysiologyEngineTimedStabilization::Load(const std::string& file)
 {
   CDM::PhysiologyEngineTimedStabilizationData* pData;
   std::unique_ptr<CDM::ObjectData> data;

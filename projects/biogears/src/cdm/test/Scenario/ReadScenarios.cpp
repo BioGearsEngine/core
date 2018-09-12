@@ -86,14 +86,14 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
       SETestCase& testCase = testSuite.CreateTestCase();
       Info(it->c_str());
       try {
-        if (scenario.LoadFile(*it)) {
+        if (scenario.Load(*it)) {
           if (!scenario.IsValid())
             testCase.AddFailure(*it + " is not a valid scenario!");
 
           //if (scenario.GetInitialParameters().HasPatientFile())
           //{
           //  SEPatient patient(m_Logger);
-          //  patient.LoadFile(scenario.GetInitialParameters().GetPatientFile());
+          //  patient.Load(scenario.GetInitialParameters().GetPatientFile());
 
           //  PhysiologyEngineTrack trk(patient, subMgr, cmptMgr, physiology, equipment);
           //  for (SEDataRequest* dr : scenario.GetRequestedData())

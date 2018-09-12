@@ -277,7 +277,7 @@ void Gastrointestinal::PreProcess()
       SEConsumeNutrients* c = m_data.GetActions().GetPatientActions().GetConsumeNutrients();
       if (c->HasNutritionFile()) { // Grab file, then load it (note GetNutrition will remove the file name, so get it first)
         std::string file = c->GetNutritionFile();
-        if (!c->GetNutrition().LoadFile(file)) {
+        if (!c->GetNutrition().Load(file)) {
           /// \error Unable to read consume meal action file
           Error("Could not read provided nutrition file", "Gastrointestinal::PreProcess");
         }

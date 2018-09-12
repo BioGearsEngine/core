@@ -154,6 +154,22 @@ bool SEEnvironment::Load(const CDM::EnvironmentData& in)
   return true;
 }
 
+bool SEEnvironment::Load(const std::string& patientFile)
+{
+  CDM::EnvironmentData* pData;
+  std::unique_ptr<CDM::ObjectData> data;
+
+  data = Serializer::ReadFile(patientFile, GetLogger());
+  pData = dynamic_cast<CDM::EnvironmentData*>(data.get());
+  if (pData == nullptr) {
+    std::stringstream ss;
+    ss << "Environment file could not be read : " << patientFile << std::endl;
+    Error(ss);
+    return false;
+  }
+  return Load(*pData);
+}
+
 CDM::EnvironmentData* SEEnvironment::Unload() const
 {
   CDM::EnvironmentData* data = new CDM::EnvironmentData();
@@ -199,7 +215,7 @@ bool SEEnvironment::ProcessChange(const SEInitialEnvironment& change)
   if (change.HasConditions())
     GetConditions().Merge(*change.GetConditions());
   else if (change.HasConditionsFile()) {
-    if (!GetConditions().LoadFile(change.GetConditionsFile())) // Does NOT merge file in data, Should we?
+    if (!GetConditions().Load(change.GetConditionsFile())) // Does NOT merge file in data, Should we?
     {
       /// \error Unable to read Configuration Action file
       Error("Could not read provided SEInitialEnvironment file", "SEEnvironment::ProcessChange");
@@ -217,7 +233,7 @@ bool SEEnvironment::ProcessChange(const SEEnvironmentChange& change)
   if (change.HasConditions())
     GetConditions().Merge(*change.GetConditions());
   else if (change.HasConditionsFile()) {
-    if (!GetConditions().LoadFile(change.GetConditionsFile())) // Does NOT merge file in data, Should we?
+    if (!GetConditions().Load(change.GetConditionsFile())) // Does NOT merge file in data, Should we?
     {
       /// \error Unable to read Configuration Action file
       Error("Could not read provided SEEnvironmentChange file", "SEEnvironment::ProcessChange");

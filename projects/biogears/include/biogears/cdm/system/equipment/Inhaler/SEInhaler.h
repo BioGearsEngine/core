@@ -53,7 +53,7 @@ protected:
   virtual void ProcessConfiguration(const SEInhalerConfiguration& config);
 
 public:
-  bool LoadFile(const std::string& file);
+  bool Load(const std::string& file);
 
   virtual CDM::enumOnOff::value GetState() const;
   virtual void SetState(CDM::enumOnOff::value name);

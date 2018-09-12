@@ -30,7 +30,7 @@ public:
   virtual void Merge(const PhysiologyEngineConfiguration& from);
   virtual void Merge(const BioGearsConfiguration& from);
 
-  bool LoadFile(const std::string& file);
+  bool Load(const std::string& file);
 
   virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
   virtual bool Load(const CDM::BioGearsConfigurationData& in);

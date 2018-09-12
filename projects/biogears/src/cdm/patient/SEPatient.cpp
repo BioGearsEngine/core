@@ -94,7 +94,7 @@ SEPatient::~SEPatient()
   Clear();
 }
 
-bool SEPatient::LoadFile(const std::string& patientFile)
+bool SEPatient::Load(const std::string& patientFile)
 {
   CDM::PatientData* pData;
   std::unique_ptr<CDM::ObjectData> data;
@@ -805,19 +805,36 @@ void SEPatient::InvalidateName()
   m_Name = "";
 }
 
-CDM::enumSex::value SEPatient::GetSex() const
+CDM::enumSex::value SEPatient::GetGender() const
 {
   return m_Sex;
 }
-void SEPatient::SetSex(CDM::enumSex::value sex)
+void SEPatient::SetGender(CDM::enumSex::value sex)
 {
   m_Sex = sex;
 }
-bool SEPatient::HasSex() const
+bool SEPatient::HasGender() const
 {
   return m_Sex == ((CDM::enumSex::value)-1) ? false : true;
 }
-void SEPatient::InvalidateSex()
+void SEPatient::InvalidateGender()
+{
+  m_Sex = (CDM::enumSex::value)-1;
+}
+
+[[deprecated("Use GetGender instead")]] CDM::enumSex::value SEPatient::GetSex() const
+{
+  return m_Sex;
+}
+[[deprecated("Use SetGender instead")]] void SEPatient::SetSex(CDM::enumSex::value sex)
+{
+  m_Sex = sex;
+}
+[[depricated("Use HasGender instead")]] bool SEPatient::HasSex() const
+{
+  return m_Sex == ((CDM::enumSex::value)-1) ? false : true;
+}
+[[depricated("Use InvalidateGender instead")]] void SEPatient::InvalidateSex()
 {
   m_Sex = (CDM::enumSex::value)-1;
 }

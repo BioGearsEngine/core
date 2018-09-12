@@ -67,7 +67,7 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
 
   BioGears bg(sTestDirectory + "/" + tName + ".log");
   bg.GetLogger()->Info("Running " + tName);
-  bg.GetPatient().LoadFile("./patients/StandardMale.xml");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
 
   //Renal and Tissue are on

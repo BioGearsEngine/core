@@ -32,10 +32,9 @@ public:
   virtual void Clear();
 
   virtual bool Load(const CDM::EnvironmentData& in);
-  virtual CDM::EnvironmentData* Unload() const;
+  bool Load(const std::string& patientFile);
 
-protected:
-  virtual void Unload(CDM::EnvironmentData& data) const;
+  virtual CDM::EnvironmentData* Unload() const;
 
   /** @name ProcessChange
 	* @brief - Will change this class as directed by the Action
@@ -108,6 +107,9 @@ public:
   virtual bool HasSkinHeatLoss() const;
   virtual SEScalarPower& GetSkinHeatLoss();
   virtual double GetSkinHeatLoss(const PowerUnit& unit) const;
+
+protected:
+  virtual void Unload(CDM::EnvironmentData& data) const;
 
 protected:
   SEScalarPower* m_ConvectiveHeatLoss;
