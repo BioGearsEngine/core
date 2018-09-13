@@ -10,13 +10,15 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/patient/actions/SESepsisState.h>
+#include <biogears/cdm/stdafx.h>
 
 SESepsisState::SESepsisState()
   : m_Pathogen(nullptr)
-  , m_Neutrophil(nullptr)
-  , m_TissueDamage(nullptr)
+  , m_Macrophage(nullptr)
+  , m_NeutrophilResting(nullptr)
+  , m_NeutrophilActive(nullptr)
+  , m_TissueIntegrity(nullptr)
   , m_Antiinflammation(nullptr)
 {
 }
@@ -29,16 +31,20 @@ SESepsisState::~SESepsisState()
 void SESepsisState::Clear()
 {
   SAFE_DELETE(m_Pathogen);
-  SAFE_DELETE(m_Neutrophil);
-  SAFE_DELETE(m_TissueDamage);
+  SAFE_DELETE(m_Macrophage);
+  SAFE_DELETE(m_NeutrophilResting);
+  SAFE_DELETE(m_NeutrophilActive);
+  SAFE_DELETE(m_TissueIntegrity);
   SAFE_DELETE(m_Antiinflammation);
 }
 
 bool SESepsisState::Load(const CDM::SepsisStateData& in)
 {
   GetPathogen().Load(in.Pathogen());
-  GetNeutrophil().Load(in.Neutrophil());
-  GetTissueDamage().Load(in.TissueDamage());
+  GetMacrophage().Load(in.Macrophage());
+  GetNeutrophilResting().Load(in.NeutrophilResting());
+  GetNeutrophilActive().Load(in.NeutrophilActive());
+  GetTissueIntegrity().Load(in.TissueIntegrity());
   GetAntiinflammation().Load(in.Antiinflammation());
   return true;
 }
@@ -53,14 +59,16 @@ CDM::SepsisStateData* SESepsisState::Unload() const
 void SESepsisState::Unload(CDM::SepsisStateData& data) const
 {
   data.Pathogen(std::unique_ptr<CDM::ScalarData>(m_Pathogen->Unload()));
-  data.Neutrophil(std::unique_ptr<CDM::ScalarData>(m_Neutrophil->Unload()));
-  data.TissueDamage(std::unique_ptr<CDM::ScalarData>(m_TissueDamage->Unload()));
+  data.Macrophage(std::unique_ptr<CDM::ScalarData>(m_Macrophage->Unload()));
+  data.NeutrophilResting(std::unique_ptr<CDM::ScalarData>(m_NeutrophilResting->Unload()));
+  data.NeutrophilActive(std::unique_ptr<CDM::ScalarData>(m_NeutrophilActive->Unload()));
+  data.TissueIntegrity(std::unique_ptr<CDM::Scalar0To1Data>(m_TissueIntegrity->Unload()));
   data.Antiinflammation(std::unique_ptr<CDM::ScalarData>(m_Antiinflammation->Unload()));
 }
 
 bool SESepsisState::IsValid()
 {
-  if (HasPathogen() && HasNeutrophil() && HasTissueDamage() && HasAntiinflammation())
+  if (HasPathogen() && HasMacrophage() && HasNeutrophilResting() && HasNeutrophilActive() && HasTissueIntegrity() && HasAntiinflammation())
     return true;
   else
     return false;
@@ -70,10 +78,14 @@ const SEScalar* SESepsisState::GetScalar(const std::string& name)
 {
   if (name.compare("Pathogen") == 0)
     return &GetPathogen();
-  if (name.compare("Neutrophil") == 0)
-    return &GetNeutrophil();
-  if (name.compare("TissueDamage") == 0)
-    return &GetTissueDamage();
+  if (name.compare("Macrophage") == 0)
+    return &GetMacrophage();
+  if (name.compare("NeutrophilResting") == 0)
+    return &GetNeutrophilResting();
+  if (name.compare("NeutrophilActive") == 0)
+    return &GetNeutrophilActive();
+  if (name.compare("TissueIntegrity") == 0)
+    return &GetTissueIntegrity();
   if (name.compare("Antiinflammation") == 0)
     return &GetAntiinflammation();
   return nullptr;
@@ -96,38 +108,72 @@ double SESepsisState::GetPathogen() const
   return m_Pathogen->GetValue();
 }
 
-bool SESepsisState::HasNeutrophil() const
+bool SESepsisState::HasMacrophage() const
 {
-  return m_Neutrophil == nullptr ? false : m_Neutrophil->IsValid();
+  return m_Macrophage == nullptr ? false : m_Macrophage->IsValid();
 }
-SEScalar& SESepsisState::GetNeutrophil()
+SEScalar& SESepsisState::GetMacrophage()
 {
-  if (m_Neutrophil == nullptr)
-    m_Neutrophil = new SEScalar();
-  return *m_Neutrophil;
+  if (m_Macrophage == nullptr)
+    m_Macrophage = new SEScalar();
+  return *m_Macrophage;
 }
-double SESepsisState::GetNeutrophil() const
+double SESepsisState::GetMacrophage() const
 {
-  if (m_Neutrophil == nullptr)
+  if (m_Macrophage == nullptr)
     return SEScalar::dNaN();
-  return m_Neutrophil->GetValue();
+  return m_Macrophage->GetValue();
 }
 
-bool SESepsisState::HasTissueDamage() const
+bool SESepsisState::HasNeutrophilResting() const
 {
-  return m_TissueDamage == nullptr ? false : m_TissueDamage->IsValid();
+  return m_NeutrophilResting == nullptr ? false : m_NeutrophilResting->IsValid();
 }
-SEScalar& SESepsisState::GetTissueDamage()
+SEScalar& SESepsisState::GetNeutrophilResting()
 {
-  if (m_TissueDamage == nullptr)
-    m_TissueDamage = new SEScalar();
-  return *m_TissueDamage;
+  if (m_NeutrophilResting == nullptr)
+    m_NeutrophilResting = new SEScalar();
+  return *m_NeutrophilResting;
 }
-double SESepsisState::GetTissueDamage() const
+double SESepsisState::GetNeutrophilResting() const
 {
-  if (m_TissueDamage == nullptr)
+  if (m_NeutrophilResting == nullptr)
     return SEScalar::dNaN();
-  return m_TissueDamage->GetValue();
+  return m_NeutrophilResting->GetValue();
+}
+
+bool SESepsisState::HasNeutrophilActive() const
+{
+  return m_NeutrophilActive == nullptr ? false : m_NeutrophilActive->IsValid();
+}
+SEScalar& SESepsisState::GetNeutrophilActive()
+{
+  if (m_NeutrophilActive == nullptr)
+    m_NeutrophilActive = new SEScalar();
+  return *m_NeutrophilActive;
+}
+double SESepsisState::GetNeutrophilActive() const
+{
+  if (m_NeutrophilActive == nullptr)
+    return SEScalar::dNaN();
+  return m_NeutrophilActive->GetValue();
+}
+
+bool SESepsisState::HasTissueIntegrity() const
+{
+  return m_TissueIntegrity == nullptr ? false : m_TissueIntegrity->IsValid();
+}
+SEScalar0To1& SESepsisState::GetTissueIntegrity()
+{
+  if (m_TissueIntegrity == nullptr)
+    m_TissueIntegrity = new SEScalar0To1();
+  return *m_TissueIntegrity;
+}
+double SESepsisState::GetTissueIntegrity() const
+{
+  if (m_TissueIntegrity == nullptr)
+    return SEScalar::dNaN();
+  return m_TissueIntegrity->GetValue();
 }
 
 bool SESepsisState::HasAntiinflammation() const

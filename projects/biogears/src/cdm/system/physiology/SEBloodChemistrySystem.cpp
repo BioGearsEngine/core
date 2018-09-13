@@ -100,6 +100,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_VenousOxygenPressure);
   SAFE_DELETE(m_ArterialCarbonDioxidePressure);
   SAFE_DELETE(m_VenousCarbonDioxidePressure);
+  SAFE_DELETE(m_SepsisInfectionState);
 }
 
 const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)

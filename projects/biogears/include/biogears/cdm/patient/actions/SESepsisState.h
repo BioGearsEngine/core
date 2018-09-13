@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/SepsisStateData.hxx>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/ScalarData.hxx>
+#include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/schema/Scalar0To1Data.hxx>
 
 
 class BIOGEARS_API SESepsisState {
@@ -40,13 +42,21 @@ public:
   virtual SEScalar& GetPathogen();
   virtual double GetPathogen() const;
 
-  virtual bool HasNeutrophil() const;
-  virtual SEScalar& GetNeutrophil();
-  virtual double GetNeutrophil() const;
+    virtual bool HasMacrophage() const;
+  virtual SEScalar& GetMacrophage();
+  virtual double GetMacrophage() const;
 
-  virtual bool HasTissueDamage() const;
-  virtual SEScalar& GetTissueDamage();
-  virtual double GetTissueDamage() const;
+  virtual bool HasNeutrophilResting() const;
+  virtual SEScalar& GetNeutrophilResting();
+  virtual double GetNeutrophilResting() const;
+
+   virtual bool HasNeutrophilActive() const;
+  virtual SEScalar& GetNeutrophilActive();
+  virtual double GetNeutrophilActive() const;
+
+  virtual bool HasTissueIntegrity() const;
+  virtual SEScalar0To1& GetTissueIntegrity();
+  virtual double GetTissueIntegrity() const;
 
   virtual bool HasAntiinflammation() const;
   virtual SEScalar& GetAntiinflammation();
@@ -54,7 +64,9 @@ public:
 
 protected:
   SEScalar* m_Pathogen;
-  SEScalar* m_Neutrophil;
-  SEScalar* m_TissueDamage;
+  SEScalar* m_Macrophage;
+  SEScalar* m_NeutrophilResting;
+  SEScalar* m_NeutrophilActive;
+  SEScalar0To1* m_TissueIntegrity;
   SEScalar* m_Antiinflammation;
 };

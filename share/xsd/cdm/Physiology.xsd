@@ -37,8 +37,10 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="ObjectData">	
 				<xs:sequence>
 					<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Neutrophil" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TissueDamage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Macrophage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Antiinflammation" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
