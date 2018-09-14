@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include "biogears/cdm/system/physiology/OverrideConfig.h"
+
+
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   : Loggable(logger)
 {
@@ -97,6 +100,8 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
       return false;
     }
   }
+
+  // m_overridedata = OverrideConfig.ReadOverrideParameters("./override/BioGearsOverride.xml");
 
   std::unique_ptr<CDM::ObjectData> sData;
   const CDM::PhysiologyEngineTimedStabilizationData* tData = nullptr;

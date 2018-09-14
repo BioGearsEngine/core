@@ -16,12 +16,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/ArrayTimeData.hxx>
 #include <biogears/schema/DoubleArray.hxx>
 #include <biogears/schema/OverrideConfigData.hxx>
+#include "biogears/cdm/system/physiology/OverrideConfig.h"
 
 
-
+/* Work in Progress
 OverrideConfig::OverrideConfig(Logger* logger)
+: Loggable(logger)
+, m_overrideMode(false)
+{
+	
+}
+*/
+
+OverrideConfig::OverrideConfig(std::string path, Logger* logger)
   : Loggable(logger)
 {
+	LoadOverride(path);
 }
 
 OverrideConfig::~OverrideConfig()
@@ -35,7 +45,7 @@ void OverrideConfig::Clear()
   m_overrideMode = false;
 }
 
-bool OverrideConfig::LoadOverride(const std::string& file, const SEScalarTime* timeStep)
+bool OverrideConfig::LoadOverride(const std::string& file)
 {
   Clear();
   std::stringstream sst;
@@ -57,7 +67,6 @@ bool OverrideConfig::LoadOverride(const std::string& file, const SEScalarTime* t
     Error(sst);
     return false;
   }
-  if (timeStep != nullptr)
   return true;
 }
 
@@ -77,5 +86,27 @@ CDM::OverrideConfigData* OverrideConfig::Unload() const
 void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
 {
 
+}
+
+bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameterFile)
+{
+  CDM::OverrideConfigData* pData;
+  std::unique_ptr<CDM::ObjectData> data;
+
+  std::string opFile = overrideParameterFile;
+  if (opFile.find("/override") == std::string::npos) {
+    opFile = "./override/";
+    opFile += overrideParameterFile;
+  }
+
+  data = Serializer::ReadFile(opFile, GetLogger());
+  pData = dynamic_cast<CDM::OverrideConfigData*>(data.get());
+  if (pData == nullptr) {
+    std::stringstream ss;
+    ss << "Override file could not be read : " << overrideParameterFile << std::endl;
+    Error(ss);
+    return false;
+  }
+  return Load(*pData);
 }
 

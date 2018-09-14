@@ -12,26 +12,30 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 CDM_BIND_DECL(OverrideConfigData)
-#include <biogears/schema/SEPatient.hxx>
 #include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/enumOnOff.hxx>
 
 class BIOGEARS_API OverrideConfig : public Loggable {
 public:
-  OverrideConfig(Logger* logger);
+  // OverrideConfig(Logger* logger);
+  OverrideConfig(std::string path, Logger* logger);
   virtual ~OverrideConfig();
 
   virtual void Clear(); // Deletes all members
 
-  virtual bool LoadOverride(const CDM::OverrideConfigData& in);
+  virtual bool LoadOverride(const std::string& file);
   virtual bool Load(const CDM::OverrideConfigData& in);
   virtual CDM::OverrideConfigData* Unload() const;
 
 protected:
   virtual void Unload(CDM::OverrideConfigData& data) const;
+  bool ReadOverrideParameters(const std::string& overrideParameterFile);
 
 public:
+  // void ReadOverrideParmeters(const std::string& overrideParameterFile);
+  virtual OverrideConfig& GetOverride();
+
   
 protected:
 
