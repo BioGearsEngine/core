@@ -23,9 +23,9 @@ specific language governing permissions and limitations under the License.
 // Work in Progress
 OverrideConfig::OverrideConfig(Logger* logger)
 : Loggable(logger)
-, m_overrideMode(false)
 {
-	
+	m_overrideMode = CDM::enumOnOff::value(-1);
+
 }
 
 
@@ -45,7 +45,7 @@ void OverrideConfig::Clear()
 {
   /* Check this function */
   m_MeanArterialPressureOverride = nullptr;
-  m_overrideMode = false;
+  m_overrideMode = CDM::enumOnOff::value(-1); ;
 }
 
 bool OverrideConfig::LoadOverride(const std::string& file)

@@ -384,10 +384,10 @@ void Energy::CalculateVitalSigns()
 //--------------------------------------------------------------------------------------------------
 void Energy::CalculateMetabolicHeatGeneration()
 {
-  const BioGearsConfiguration& config = m_data.GetConfiguration();
+
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
-  double coreTemperatureLow_degC = config.GetCoreTemperatureLow(TemperatureUnit::C);
-  double coreTemperatureLowDelta_degC = config.GetDeltaCoreTemperatureLow(TemperatureUnit::C);
+  double coreTemperatureLow_degC = m_data.GetConfiguration().GetCoreTemperatureLow(TemperatureUnit::C);
+  double coreTemperatureLowDelta_degC = m_data.GetConfiguration().GetDeltaCoreTemperatureLow(TemperatureUnit::C);
   double coreTemperatureHigh_degC = 40.0; //TODO: This should use the config property why doesn't it?
   double totalMetabolicRateNew_Kcal_Per_day = 0.0;
   double totalMetabolicRateNew_W = 0.0;
@@ -432,10 +432,9 @@ void Energy::CalculateMetabolicHeatGeneration()
 //--------------------------------------------------------------------------------------------------
 void Energy::CalculateSweatRate()
 {
-  const BioGearsConfiguration& config = m_data.GetConfiguration();
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
-  double coreTemperatureHigh_degC = config.GetCoreTemperatureHigh(TemperatureUnit::C);
-  double sweatHeatTranferCoefficient_W_Per_K = config.GetSweatHeatTransfer(HeatConductanceUnit::W_Per_K);
+  double coreTemperatureHigh_degC = m_data.GetConfiguration().GetCoreTemperatureHigh(TemperatureUnit::C);
+  double sweatHeatTranferCoefficient_W_Per_K = m_data.GetConfiguration().GetSweatHeatTransfer(HeatConductanceUnit::W_Per_K);
 
   /// Determine the maximum evaporative capacity to limit the amount of cooling due to sweat on the patient
   /// \cite potter2017mathematical
@@ -451,7 +450,7 @@ void Energy::CalculateSweatRate()
   double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322*(pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); //Still needs effective clothing evaporation
 
 
-  double vaporizationEnergy_J_Per_kg = config.GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
+  double vaporizationEnergy_J_Per_kg = m_data.GetConfiguration().GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
   double sweatSodiumConcentration_mM = 51.0; /// \cite shirreffs1997whole
   double sweatPotassiumConcentration_mM = 6.0; /// \cite shirreffs1997whole
   double sweatChlorideConcentration_mM = 48.0; /// \cite shirreffs1997whole

@@ -81,8 +81,7 @@ protected:
 
   // Initialization
   void CalculateFilterability(SESubstance& sub);
-  //Conditions
-  void ConsumeMeal(double elapsedTime_s);
+  
 
   //Preprocess
   void CalculateUltrafiltrationFeedback();

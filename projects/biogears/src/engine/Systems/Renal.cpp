@@ -1623,39 +1623,6 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// Decrements substances according to how much time has passed since the last meal.
-///
-/// \param  elapsedTime_s   The amount of time that has elapsed since the last meal
-///
-/// \details
-/// The renal section of the consume meal condition is responsible for clearing renal specific substances from
-/// the blood. This is accomplished by taking the calculated clearance rate for the substance and multiplying
-/// by elapsedTime_s, which gives a total cleared mass for the given time. The new mass of the substance is then
-/// distributed to the blood and tissue.
-//--------------------------------------------------------------------------------------------------
-void Renal::ConsumeMeal(double elapsedTime_s)
-{
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
-    if (!sub->HasClearance())
-      continue;
-    if (!sub->GetClearance().HasRenalDynamic())
-      continue;
-
-    double clearance_mL_Per_s_Per_kg = sub->GetClearance().GetRenalClearance(VolumePerTimeMassUnit::mL_Per_s_kg);
-    double PatientWeight_kg = m_patient->GetWeight(MassUnit::kg);
-    double volumeCleared_mL = clearance_mL_Per_s_Per_kg * PatientWeight_kg * elapsedTime_s;
-    double aortaConcentration_mg_Per_mL = m_aorta->GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
-
-    SEScalarMass massCleared_mg;
-    massCleared_mg.SetValue(volumeCleared_mL * aortaConcentration_mg_Per_mL, MassUnit::mg);
-    //  AMB m_data.GetCircuits().DistributeBloodAndTissueMass(*sub, massCleared_mg);
-  }
-
-  //Don't bother updating the bladder because it will get the proper concentrations during stabilization
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
 /// Modifies permeability of the tubules
 ///
 /// \details

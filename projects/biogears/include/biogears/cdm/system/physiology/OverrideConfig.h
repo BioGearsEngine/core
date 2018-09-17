@@ -27,20 +27,16 @@ public:
   virtual bool LoadOverride(const std::string& file);
   virtual bool Load(const CDM::OverrideConfigData& in);
   virtual CDM::OverrideConfigData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::OverrideConfigData& data) const;
-  bool ReadOverrideParameters(const std::string& overrideParameterFile);
-
-public:
   // bool ReadOverrideParmeters(const std::string& overrideParameterFile);
   virtual bool HasOverride() const;
   virtual SEScalarPressure& GetOverride();
   virtual double GetOverride(const PressureUnit& unit) const;
 
-  
 protected:
+  virtual void Unload(CDM::OverrideConfigData& data) const;
+  bool ReadOverrideParameters(const std::string& overrideParameterFile);
 
-  bool m_overrideMode;
+
+  CDM::enumOnOff::value m_overrideMode;
   SEScalarPressure* m_MeanArterialPressureOverride;
 };
