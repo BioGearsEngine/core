@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ArrayTimeData.hxx>
 #include <biogears/schema/DoubleArray.hxx>
@@ -19,19 +20,20 @@ specific language governing permissions and limitations under the License.
 #include "biogears/cdm/system/physiology/OverrideConfig.h"
 
 
-/* Work in Progress
+// Work in Progress
 OverrideConfig::OverrideConfig(Logger* logger)
 : Loggable(logger)
 , m_overrideMode(false)
 {
 	
 }
-*/
+
 
 OverrideConfig::OverrideConfig(std::string path, Logger* logger)
   : Loggable(logger)
 {
 	LoadOverride(path);
+  m_MeanArterialPressureOverride = nullptr;
 }
 
 OverrideConfig::~OverrideConfig()
@@ -42,6 +44,7 @@ OverrideConfig::~OverrideConfig()
 void OverrideConfig::Clear()
 {
   /* Check this function */
+  m_MeanArterialPressureOverride = nullptr;
   m_overrideMode = false;
 }
 
@@ -110,3 +113,23 @@ bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameter
   return Load(*pData);
 }
 
+bool OverrideConfig::HasOverride() const
+{
+  return m_MeanArterialPressureOverride == nullptr ? false : m_MeanArterialPressureOverride->IsValid();
+}
+
+SEScalarPressure& OverrideConfig::GetOverride()
+{
+  if (m_MeanArterialPressureOverride == nullptr)
+    m_MeanArterialPressureOverride = new SEScalarPressure();
+  return *m_MeanArterialPressureOverride;
+}
+
+double OverrideConfig::GetOverride(const PressureUnit& unit) const
+{
+  if (m_MeanArterialPressureOverride == nullptr)
+  {
+    return SEScalar::dNaN();
+  }
+  return m_MeanArterialPressureOverride->GetValue(unit);
+}

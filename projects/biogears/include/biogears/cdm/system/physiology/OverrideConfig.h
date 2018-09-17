@@ -18,7 +18,7 @@ CDM_BIND_DECL(OverrideConfigData)
 
 class BIOGEARS_API OverrideConfig : public Loggable {
 public:
-  // OverrideConfig(Logger* logger);
+  OverrideConfig(Logger* logger);
   OverrideConfig(std::string path, Logger* logger);
   virtual ~OverrideConfig();
 
@@ -33,11 +33,14 @@ protected:
   bool ReadOverrideParameters(const std::string& overrideParameterFile);
 
 public:
-  // void ReadOverrideParmeters(const std::string& overrideParameterFile);
-  virtual OverrideConfig& GetOverride();
+  // bool ReadOverrideParmeters(const std::string& overrideParameterFile);
+  virtual bool HasOverride() const;
+  virtual SEScalarPressure& GetOverride();
+  virtual double GetOverride(const PressureUnit& unit) const;
 
   
 protected:
 
   bool m_overrideMode;
+  SEScalarPressure* m_MeanArterialPressureOverride;
 };
