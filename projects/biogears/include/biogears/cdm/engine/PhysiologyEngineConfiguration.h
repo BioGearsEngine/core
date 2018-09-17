@@ -73,7 +73,7 @@ public:
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
   virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
 
-  virtual bool LoadOverrideConfig(const PhysiologyEngineConfiguration* override);
+  // virtual bool LoadOverrideConfig(const PhysiologyEngineConfiguration* override);
 
 protected:
   bool m_Merge;
