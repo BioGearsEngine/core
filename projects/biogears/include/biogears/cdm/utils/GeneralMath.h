@@ -15,6 +15,16 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/SECircuitNode.h>
 
+class SEScalarOsmolality;
+class SEScalarOsmolarity;
+class SEScalarTemperature;
+class SEScalar;
+class SEScalarAmountPerVolume;
+class SEScalarPressure;
+class SEScalarFraction;
+class SEScalarMassPerVolume;
+class SEScalarVolume;
+class SEScalarMass;
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;

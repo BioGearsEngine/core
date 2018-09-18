@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -16,27 +17,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
-#include <biogears/schema/EnvironmentalConditionsData.hxx>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarHeatConductancePerAreaData.hxx>
-#include <biogears/schema/ScalarHeatResistanceAreaData.hxx>
-#include <biogears/schema/ScalarLengthPerTimeData.hxx>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/ScalarPowerData.hxx>
-#include <biogears/schema/ScalarPressureData.hxx>
-#include <biogears/schema/ScalarTemperatureData.hxx>
-
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/schema/SubstanceConcentrationData.hxx>
-#include <biogears/schema/SubstanceFractionData.hxx>
+
 
 SEEnvironmentalConditions::SEEnvironmentalConditions(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())

@@ -11,12 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
+#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/schema/cdm/Properties.hxx>
+
 class SEElectroCardioGramInterpolator;
 class PhysiologyEngineStabilization;
 class PhysiologyEngineTimedStabilization;
 class PhysiologyEngineDynamicStabilization;
-#include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/schema/enumOnOff.hxx>
+class SEScalarTime;
+class TimeUnit;
 
 CDM_BIND_DECL(PhysiologyEngineConfigurationData)
 

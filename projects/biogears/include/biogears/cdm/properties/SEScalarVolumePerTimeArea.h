@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarVolumePerTimeAreaData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API VolumePerTimeAreaUnit : public CCompoundUnit {
 public:
@@ -20,7 +20,7 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~VolumePerTimeAreaUnit() {}
+  virtual ~VolumePerTimeAreaUnit() = default;
 
   static bool IsValidUnit(const std::string& unit);
   static const VolumePerTimeAreaUnit& GetCompoundUnit(const std::string& unit);
@@ -32,8 +32,8 @@ public:
 
 class BIOGEARS_API SEScalarVolumePerTimeArea : public SEScalarQuantity<VolumePerTimeAreaUnit> {
 public:
-  SEScalarVolumePerTimeArea() {}
-  virtual ~SEScalarVolumePerTimeArea() {}
+  SEScalarVolumePerTimeArea() = default;
+  virtual ~SEScalarVolumePerTimeArea() = default;
 
-  CDM::ScalarVolumePerTimeAreaData* Unload() const;
+  CDM::ScalarVolumePerTimeAreaData* Unload() const override;
 };

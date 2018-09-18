@@ -12,7 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
+
 class SECircuitManager;
+class SEScalar;
 
 CDM_BIND_DECL(CompartmentLinkData)
 

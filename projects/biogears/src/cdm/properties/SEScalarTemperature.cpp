@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/stdafx.h>
 
 const TemperatureUnit TemperatureUnit::F("degF");
 const TemperatureUnit TemperatureUnit::C("degC");

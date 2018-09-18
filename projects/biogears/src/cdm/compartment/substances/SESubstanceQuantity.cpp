@@ -9,12 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/stdafx.h>
-
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
+
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/schema/SubstanceQuantityData.hxx>
 
 bool SESubstanceQuantity::Load(const CDM::SubstanceQuantityData& in)
 {

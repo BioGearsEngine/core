@@ -13,7 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/GastrointestinalSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
 
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
 public:

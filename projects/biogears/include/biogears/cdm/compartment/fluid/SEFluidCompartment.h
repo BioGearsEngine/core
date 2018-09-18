@@ -11,13 +11,23 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <vector>
+//Project Includes
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/FluidCompartmentData.hxx>
+#include <biogears/schema/cdm/Compartment.hxx>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 class SESubstance;
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+
 template <typename EdgeType, typename VertexType, typename CompartmentType>
 class SEFluidCompartmentLink;
 
@@ -26,6 +36,7 @@ class SEFluidCompartmentLink;
 
 template <FLUID_COMPARTMENT_TEMPLATE>
 class SEFluidCompartment : public SECompartment, public VertexType {
+
   template <typename CompartmentType, typename CompartmentLinkType>
   friend class SECompartmentGraph;
 
@@ -35,20 +46,20 @@ protected:
 public:
   virtual ~SEFluidCompartment();
 
-  virtual void Clear();
+  void Clear() override;
 
   virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::FluidCompartmentData* Unload() = 0;
+  CDM::FluidCompartmentData* Unload() override= 0;
 
 protected:
   virtual void Unload(CDM::FluidCompartmentData& data);
 
 public:
-  virtual std::string GetName() const { return m_Name; }
+  std::string GetName() const override { return m_Name; }
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool HasChildren() const { return !m_FluidChildren.empty(); }
+  bool HasChildren() const override { return !m_FluidChildren.empty(); }
 
   virtual bool HasNodeMapping() const { return m_Nodes.HasMapping(); }
   virtual SECompartmentNodes<FLUID_COMPARTMENT_NODE>& GetNodeMapping() { return m_Nodes; }
@@ -108,4 +119,4 @@ protected:
   std::vector<SEFluidCompartment*> m_FluidChildren;
   SECompartmentNodes<FLUID_COMPARTMENT_NODE> m_Nodes;
 };
-#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
+

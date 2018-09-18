@@ -15,6 +15,14 @@ specific language governing permissions and limitations under the License.
 
 class SELiquidCompartment;
 class SETissueCompartment;
+class SEScalarMass;
+class SEScalarAmountPerVolume;
+class AmountPerVolumeUnit;
+class MassUnit;
+class SEScalarMassPerVolume;
+class MassPerVolumeUnit;
+
+class BioGears;
 
 class BIOGEARS_API SizeIndependentDepositionEfficencyCoefficient {
   friend class BioGearsSubstances;

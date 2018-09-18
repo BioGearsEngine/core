@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/engine/Systems/Hepatic.h>
-#include <biogears/engine/stdafx.h>
 
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
@@ -20,6 +19,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 Hepatic::Hepatic(BioGears& bg)
   : SEHepaticSystem(bg.GetLogger())

@@ -11,8 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+
+#include <biogears/exports.h>
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
-#include <biogears/schema/ChronicVentricularSystolicDysfunctionData.hxx>
+#include <biogears/schema/cdm/PatientConditions.hxx>
 
 class BIOGEARS_API SEChronicVentricularSystolicDysfunction : public SEChronicHeartFailure {
 public:

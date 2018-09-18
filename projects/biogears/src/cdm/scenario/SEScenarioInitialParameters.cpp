@@ -9,19 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
-#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/schema/PhysiologyEngineConfigurationData.hxx>
-#include <biogears/schema/ScenarioInitialParametersData.hxx>
-
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/schema/PatientData.hxx>
-// Conditions
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/schema/ConditionData.hxx>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/schema/cdm/Patient.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
 
 SEScenarioInitialParameters::SEScenarioInitialParameters(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())

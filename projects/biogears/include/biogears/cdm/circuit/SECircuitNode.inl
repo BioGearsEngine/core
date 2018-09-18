@@ -10,10 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
-
+//Project Includes
 #include <biogears/cdm/circuit/SECircuitNode.h>
-#include <biogears/schema/CircuitNodeData.hxx>
+#include <biogears/schema/cdm/Circuit.hxx>
 
 template <CIRCUIT_NODE_TEMPLATE>
 SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const std::string& name, Logger* logger)

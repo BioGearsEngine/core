@@ -12,7 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/HepaticSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
+class SEScalarAmountPerTime;
+class AmountPerTimeUnit;
+class SEScalarMassPerTime;
+class MassPerTimeUnit;
 
 class BIOGEARS_API SEHepaticSystem : public SESystem {
 public:

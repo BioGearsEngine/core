@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/SubstanceAdministrationData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 class BIOGEARS_API SESubstanceAdministration : public SEPatientAction {
 public:

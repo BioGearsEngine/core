@@ -10,7 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-#include <biogears/schema/data-model-schema.hxx>
 #include <biogears/cdm/CommonDataModel.h>            // Needs to be included before BioGearsPhysiologyEngine.h
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 

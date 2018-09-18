@@ -14,8 +14,9 @@ specific language governing permissions and limitations under the License.
 /// @file CompoundUnitElement.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <biogears/cdm/utils/unitconversion/CompoundUnitElement.h>
+
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
 //----------------------------------------------------------------------------
 double CCompoundUnitElement::GetBigness() const

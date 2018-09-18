@@ -9,25 +9,22 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 
+//Standad Includes
+#include <cmath>
+//Project Includes
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
-#include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/TimingProfile.h>
-#include <biogears/schema/PhysiologyEngineDynamicConditionStabilizationData.hxx>
-#include <biogears/schema/PhysiologyEngineDynamicStabilizationCriteriaData.hxx>
-#include <biogears/schema/PhysiologyEngineDynamicStabilizationCriteriaPropertyData.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
 
-#include <cmath>
 
 bool PhysiologyEngineDynamicStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {

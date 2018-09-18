@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/BioGearsEnergySystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 class SEPatient;
 class SEPatientActionCollection;

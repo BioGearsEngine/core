@@ -11,10 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/SubstancePhysicochemicalData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
   : Loggable(logger)

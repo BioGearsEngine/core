@@ -13,10 +13,13 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 /// @file QuantityConversionKey.h
 /// @author Chris Volpe
-///
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <functional>
+
+#include <biogears/cdm/utils/unitconversion/QuantityConversionKey.h>
+
+#include <biogears/cdm/utils/unitconversion/QuantityTypeDescriptor.h>
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
 CQuantityConversionKey::CQuantityConversionKey(int fromID, int toID)
 {

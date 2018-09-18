@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEUrinate.h>
-#include <biogears/cdm/stdafx.h>
 
 SEUrinate::SEUrinate()
   : SEPatientAction()

@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitCalculator.h>
-#include <biogears/cdm/stdafx.h>
 
 SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(Logger* logger)
   : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(

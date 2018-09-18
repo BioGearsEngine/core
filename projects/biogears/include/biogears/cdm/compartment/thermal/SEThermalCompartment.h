@@ -11,12 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/compartment/SECompartment.h>
-CDM_BIND_DECL(ThermalCompartmentData)
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
-#include <biogears/schema/ThermalCompartmentData.hxx>
-class SEThermalCompartmentLink;
+#include <biogears/schema/cdm/Compartment.hxx>
 
+CDM_BIND_DECL(ThermalCompartmentData)
+class SEThermalCompartmentLink;
+class SEScalarPower;
+class PowerUnit;
+
+class SECompartmentManager;
 class BIOGEARS_API SEThermalCompartment : public SECompartment {
   friend class SECompartmentManager;
   template <typename CompartmentType, typename CompartmentLinkType>

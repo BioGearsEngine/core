@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/system/physiology/SEEnergySystem.h>
 
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
@@ -19,18 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/physiology/SEEnergySystem.h>
-#include <biogears/schema/EnergySystemData.hxx>
-#include <biogears/schema/ScalarAmountPerTimeData.hxx>
-#include <biogears/schema/ScalarAreaData.hxx>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/schema/ScalarMassPerTimeData.hxx>
-#include <biogears/schema/ScalarPowerData.hxx>
-#include <biogears/schema/ScalarPressureData.hxx>
-#include <biogears/schema/ScalarTemperatureData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SEEnergySystem::SEEnergySystem(Logger* logger)
   : SESystem(logger)

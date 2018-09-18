@@ -11,11 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
+
+#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 class SESubstance;
 class SESubstanceManager;
 class SEAnesthesiaMachine;
-CDM_BIND_DECL(AnesthesiaMachineChamberData)
-#include <biogears/schema/enumOnOff.hxx>
+class SEScalar;
+class SEScalarFraction;
 
 class BIOGEARS_API SEAnesthesiaMachineChamber : Loggable {
 protected:

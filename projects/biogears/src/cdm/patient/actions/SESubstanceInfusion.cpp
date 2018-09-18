@@ -9,16 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SESubstanceInfusion::SESubstanceInfusion(const SESubstance& substance)
   : SESubstanceAdministration()

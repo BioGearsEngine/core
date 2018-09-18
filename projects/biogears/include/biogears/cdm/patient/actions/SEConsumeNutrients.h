@@ -11,11 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
 
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-
-#include <biogears/schema/ConsumeNutrientsData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 class BIOGEARS_API SEConsumeNutrients : public SEPatientAction {
 public:

@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
-#include <biogears/cdm/stdafx.h>
 
 const ElectricResistanceUnit ElectricResistanceUnit::Ohm("ohm");
 

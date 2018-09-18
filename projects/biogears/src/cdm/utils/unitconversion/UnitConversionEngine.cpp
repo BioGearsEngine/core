@@ -14,14 +14,18 @@ specific language governing permissions and limitations under the License.
 /// @file UnitConversionEngine.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
+//Standard includes
 #include <sstream>
 #include <algorithm>
 #include <cctype>
-
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
-
+#include <cmath>
+#include <iostream>
+//Project Includes
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
+#include <biogears/cdm/utils/Logger.h>
+//Private Includes
 #include "UCEDefs.h"
 CUnitConversionEngine* CUnitConversionEngine::uce = nullptr;
 

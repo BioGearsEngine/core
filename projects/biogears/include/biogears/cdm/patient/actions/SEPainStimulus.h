@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/PainStimulusData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {

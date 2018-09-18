@@ -11,9 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
-CDM_BIND_DECL(AppliedTemperatureData)
-#include <biogears/schema/enumOnOff.hxx>
+#include "biogears/cdm/properties/SEScalarFraction.h"
 
+class SEScalar;
+class SEScalarTemperature;
+class TemperatureUnit;
+class SEScalarArea;
+class AreaUnit;
+
+CDM_BIND_DECL(AppliedTemperatureData)
 class BIOGEARS_API SEAppliedTemperature : public Loggable {
 public:
   SEAppliedTemperature(Logger* logger);

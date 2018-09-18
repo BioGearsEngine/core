@@ -15,12 +15,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/GasCompartmentData.hxx>
-#include <biogears/schema/Properties.hxx>
 
 enum class BalanceGasBy { Volume,
   VolumeFraction };
 
+class SECompartmentManager;
 class BIOGEARS_API SEGasCompartment : public SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity> {
   friend class SECompartmentManager;
 
@@ -31,15 +30,15 @@ public:
   virtual ~SEGasCompartment();
 
   virtual bool Load(const CDM::GasCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::GasCompartmentData* Unload();
+  virtual CDM::GasCompartmentData* Unload() override;
 
 protected:
   virtual void Unload(CDM::GasCompartmentData& data);
 
 public:
-  virtual void StateChange();
+  virtual void StateChange() override;
 
-  virtual void Balance(BalanceGasBy e);
+  virtual void Balance(BalanceGasBy by);
 
   virtual void AddChild(SEGasCompartment& child);
   virtual const std::vector<SEGasCompartment*>& GetChildren() { return m_Children; }

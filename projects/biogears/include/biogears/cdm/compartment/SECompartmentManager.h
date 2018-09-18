@@ -11,17 +11,20 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+#include <vector>
+#include <map>
+
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
-
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
-#include <biogears/schema/enumCompartmentType.hxx>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 CDM_BIND_DECL(CompartmentManagerData)
 

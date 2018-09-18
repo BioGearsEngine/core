@@ -11,11 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <memory>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
 class SETestCase;
 class SETestSuite;
+class SEFunction;
 
 CDM_BIND_DECL(TestErrorStatisticsData)
 // This data class is intended for use in array based data

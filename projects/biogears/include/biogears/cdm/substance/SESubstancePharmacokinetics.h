@@ -16,8 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
-#include <biogears/schema/enumSubstanceBindingProtein.hxx>
-#include <biogears/schema/enumSubstanceIonicState.hxx>
+#include <biogears/schema/cdm/Substance.hxx>
 
 CDM_BIND_DECL(SubstancePharmacokineticsData)
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {

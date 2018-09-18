@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // Testing some basic circuit functionality testing
+#include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/properties/SEScalarAmount.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
@@ -31,9 +32,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
-
-#include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 void CommonDataModelTest::ScalarTest(const std::string& sOutputDirectory)
 {

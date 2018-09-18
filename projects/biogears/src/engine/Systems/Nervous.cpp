@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Systems/Nervous.h>
 
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
@@ -28,9 +29,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
-#include <biogears/engine/Systems/Nervous.h>
-#include <biogears/engine/stdafx.h>
-#include <biogears/schema/BioGearsNervousSystemData.hxx>
+
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
@@ -186,9 +188,9 @@ void Nervous::AtSteadyState()
 //--------------------------------------------------------------------------------------------------
 void Nervous::PreProcess()
 {
-	CheckPainStimulus();
-	BaroreceptorFeedback();
-	ChemoreceptorFeedback();
+  CheckPainStimulus();
+  BaroreceptorFeedback();
+  ChemoreceptorFeedback();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -477,7 +479,7 @@ void Nervous::ChemoreceptorFeedback()
 
   //Magosso and Ursino cite findings that central chemoreceptors are less sensitive at sub-normal levels of CO2 than to super-normal levels
   if (arterialCO2Pressure_mmHg < m_ArterialCarbonDioxideSetPoint_mmHg) {
-		centralGainConstant_L_Per_min_mmHg = 0.12;
+    centralGainConstant_L_Per_min_mmHg = 0.12;
   }
 
   //The psi parameter captures the combined interactive effect of O2 and CO2 on the peripheral chemoreceptors.  The degree

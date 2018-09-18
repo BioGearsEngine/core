@@ -12,13 +12,16 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
+#include <biogears/schema/cdm/EngineState.hxx>
+
 class SEEventHandler;
 class SEPatient;
 class SEPatientAssessment;
-
 class SECondition;
 class SEAction;
-
+class TimeUnit;
 class SESubstanceManager;
 class SEBloodChemistrySystem;
 class SECardiovascularSystem;
@@ -36,13 +39,8 @@ class SEAnesthesiaMachine;
 class SEInhaler;
 class SEElectroCardioGram;
 class SECompartmentManager;
-
 class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration;
-
-#include <biogears/cdm/CommonDataModel.h>
-
-#include <biogears/schema/PhysiologyEngineStateData.hxx>
 
 /** 
  * @brief

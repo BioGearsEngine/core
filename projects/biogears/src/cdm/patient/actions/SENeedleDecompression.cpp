@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
-#include <biogears/cdm/stdafx.h>
 
 SENeedleDecompression::SENeedleDecompression()
   : SEPatientAction()

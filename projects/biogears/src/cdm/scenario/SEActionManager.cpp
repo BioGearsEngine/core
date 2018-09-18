@@ -11,11 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/scenario/SEActionManager.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/AnesthesiaMachineActionData.hxx>
-#include <biogears/schema/EnvironmentActionData.hxx>
-#include <biogears/schema/InhalerActionData.hxx>
-#include <biogears/schema/PatientActionData.hxx>
+
 
 SEActionManager::SEActionManager(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())

@@ -9,14 +9,18 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
+#include <biogears/cdm/utils/unitconversion/QuantityConversionDescriptor.h>
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 //----------------------------------------------------------------------------
 /// @file QuantityConversionDescriptor.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <iostream>
+
+//#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+
 //----------------------------------------------------------------------------
 CQuantityConversionDescriptor::CQuantityConversionDescriptor(double fromExp, const std::string& mappingUnit)
   : m_dFromExponent(fromExp)
@@ -55,4 +59,14 @@ void CQuantityConversionDescriptor::Validate(int fromQTID, int toQTID)
   if (resultDim != toDim) {
     std::cerr << "Error: Invalid quantity type conversion from " << fromType.GetName() << " to " << toType.GetName() << std::endl;
   }
+}
+
+const double& CQuantityConversionDescriptor::GetFromExponent() const
+{
+  return m_dFromExponent;
+}
+
+const CCompoundUnit* CQuantityConversionDescriptor::GetMappingUnit() const
+{
+  return m_CUMappingUnit;
 }

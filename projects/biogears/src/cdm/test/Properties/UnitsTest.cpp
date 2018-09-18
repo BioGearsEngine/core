@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // Testing creating and converting units
+//Standard includes
+#include <exception>
+//Project Includes
 #include <biogears/cdm/properties/SEScalarAmount.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
@@ -31,16 +34,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
-#include <exception>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 void CommonDataModelTest::ConvertList(std::vector<std::string> stringList)
 {
   if (stringList.empty())
     return;
 
-  int size = stringList.size();
-  for (int i = 0; i < size; i++) {
-    for (int j = 0; j < size; j++) {
+  size_t size = stringList.size();
+  for (size_t i = 0; i < size; i++) {
+    for (size_t j = 0; j < size; j++) {
       if (i == j)
         continue;
 

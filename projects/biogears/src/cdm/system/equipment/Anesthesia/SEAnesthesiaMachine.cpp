@@ -9,33 +9,20 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
-#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
-#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
-#include <biogears/schema/ActiveAnesthesiaMachineEventData.hxx>
-#include <biogears/schema/AnesthesiaMachineChamberData.hxx>
-#include <biogears/schema/AnesthesiaMachineOxygenBottleData.hxx>
-// State Actions
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 
 #include <biogears/cdm/Serializer.h>
-
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarFrequencyData.hxx>
-#include <biogears/schema/ScalarPressureData.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
 
 SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())

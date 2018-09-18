@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #define _USE_MATH_DEFINES
+#include <cmath>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
@@ -24,8 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/engine/Systems/Renal.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
-#include <biogears/schema/enumOnOff.hxx>
-#include <math.h>
+#include <biogears/schema/cdm/Properties.hxx>
 
 void BioGearsEngineTest::RenalCircuitAndTransportTest(const std::string& sTestDirectory)
 {

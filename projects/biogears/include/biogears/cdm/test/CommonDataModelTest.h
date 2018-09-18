@@ -1,5 +1,7 @@
 // The following tests will be exported and runnable
-
+#include <string>
+#include <sstream>
+#include <vector>
 // #include <biogears/schema/biogears-cdm.hxx>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
@@ -9,8 +11,11 @@
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
+
+class SECompartmentManager;
 
 enum enumCDMTestSourceType { DC,
   SIN,

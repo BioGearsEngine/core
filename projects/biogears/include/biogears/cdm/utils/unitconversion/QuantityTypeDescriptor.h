@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 /// a fundamental quantity or a derived quantity
 //----------------------------------------------------------------------------
 #pragma once
+#include <string>
 
 class CCompoundUnit;
 class CUnitDimension;

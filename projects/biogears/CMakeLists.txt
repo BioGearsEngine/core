@@ -31,19 +31,17 @@ verify_package(CodeSynthesis REQUIRED)
 ###############################################################################
 #Code Generation
 ###############################################################################
-#REGISTER_XSD_DIR("recursive/biogears" "biogears" "schema" "schema")
 file(GLOB_RECURSE biogears_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/biogears/*.xsd")
 file(GLOB_RECURSE cdm_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/cdm/*.xsd")
 
-GENERATE_XSD_SCHEMA( data-model-schema.xsd CONFIG data-model-schema.cfg 
-                     ROOT biogears SUBPATH schema RESOURCE_FOLDER resources/schema 
-		     STAGE
-		     )
 
-REGISTER_XSD_FILE  ( BioGearsDataModel.xsd CONFIG BioGearsDataModel.cfg 
-                     ROOT biogears SUBPATH schema RESOURCE_FOLDER resources/schema
-		     DEPENDS ${biogears_xsd_list} ${cdm_xsd_list} ${PROJECT_SOURCE_DIR}/share/xsd/CommonDataModel.xsd ${CMAKE_CURRENT_BINARY_DIR}/biogears/schema/data-model-schema.hxx
-                     STAGE)
+REGISTER_XSD_DIR(  ""   CONFIG BioGearsDataModel.cfg 
+                    ROOT "biogears" SUBPATH "schema" RESOURCE_FOLDER "resources/schema"
+                    TARGETS XSD_TARGETS)
+# REGISTER_XSD_FILE  ( BioGearsDataModel.xsd CONFIG BioGearsDataModel.cfg 
+#                      ROOT biogears SUBPATH schema RESOURCE_FOLDER resources/schema
+# 		     DEPENDS ${biogears_xsd_list} ${cdm_xsd_list} ${PROJECT_SOURCE_DIR}/share/xsd/CommonDataModel.xsd ${CMAKE_CURRENT_BINARY_DIR}/biogears/schema/data-model-schema.hxx
+#                    )
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
@@ -134,7 +132,7 @@ endif()
         ${CMAKE_DL_LIBS}
   )
   target_link_libraries(lib${PROJECT_NAME}  ${${PREFIX}_LIBS} )
-  add_dependencies(lib${PROJECT_NAME} xsd_gen_schema_BioGearsDataModel xsd_gen_schema_data-model-schema)
+  add_dependencies(lib${PROJECT_NAME} ${XSD_TARGETS} )
 
 else()
   if (WIN32)
@@ -171,7 +169,6 @@ else()
     )
     
     set(${PREFIX}_string_LIBS
-          Threads::Threads
           ${CMAKE_DL_LIBS}
     )
     target_link_libraries(lib${PROJECT_NAME}_string PUBLIC  ${${PREFIX}_string_LIBS} )
@@ -198,7 +195,7 @@ else()
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     CXX_STANDARD 14
     )
-  add_dependencies(lib${PROJECT_NAME}_cdm xsd_gen_schema_BioGearsDataModel xsd_gen_schema_data-model-schema)
+  add_dependencies(lib${PROJECT_NAME}_cdm ${XSD_TARGETS})
 
   ###############################################################################
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS

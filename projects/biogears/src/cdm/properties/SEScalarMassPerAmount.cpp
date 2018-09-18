@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
-#include <biogears/cdm/stdafx.h>
 
 const MassPerAmountUnit MassPerAmountUnit::g_Per_ct("g/ct");
 const MassPerAmountUnit MassPerAmountUnit::g_Per_mol("g/mol");

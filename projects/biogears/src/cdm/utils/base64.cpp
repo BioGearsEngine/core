@@ -25,7 +25,7 @@
 
 */
 
-#include <biogears/cdm/stdafx.h>
+
 #include <biogears/cdm/utils/base64.h>
 
 static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -80,7 +80,7 @@ std::string base64_encode(char const* bytes_to_encode, unsigned int in_len)
 
 std::string base64_decode(std::string const& encoded_string)
 {
-  int in_len = encoded_string.size();
+  size_t in_len = encoded_string.size();
   int i = 0;
   int j = 0;
   int in_ = 0;
@@ -92,7 +92,7 @@ std::string base64_decode(std::string const& encoded_string)
     in_++;
     if (i == 4) {
       for (i = 0; i < 4; i++)
-        char_array_4[i] = base64_chars.find(char_array_4[i]);
+        char_array_4[i] = static_cast<unsigned char>(base64_chars.find(char_array_4[i]));
 
       char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
       char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
@@ -109,7 +109,7 @@ std::string base64_decode(std::string const& encoded_string)
       char_array_4[j] = 0;
 
     for (j = 0; j < 4; j++)
-      char_array_4[j] = base64_chars.find(char_array_4[j]);
+      char_array_4[j] = static_cast<unsigned char>(base64_chars.find(char_array_4[j]));
 
     char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
     char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);

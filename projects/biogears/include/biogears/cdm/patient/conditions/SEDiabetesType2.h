@@ -11,8 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/DiabetesType2Data.hxx>
+#include <biogears/exports.h>
+#include <biogears/schema/cdm/PatientConditions.hxx>
+
+class SEScalar0To1;
 
 class BIOGEARS_API SEDiabetesType2 : public SEPatientCondition {
 public:

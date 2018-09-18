@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
-#include <biogears/schema/ElectricalCircuitPathData.hxx>
 
+class SECircuitManager;
 class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
 

@@ -9,17 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Systems/Drugs.h>
 
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/engine/Systems/Drugs.h>
-#include <biogears/engine/stdafx.h>
-
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
-
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
@@ -44,7 +41,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
-#include <biogears/schema/SubstanceConcentrationData.hxx>
+
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
+
 
 Drugs::Drugs(BioGears& bg)
   : SEDrugSystem(bg.GetLogger())

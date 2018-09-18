@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarForceData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API ForceUnit : public CCompoundUnit {
 public:
@@ -32,8 +32,8 @@ public:
 
 class BIOGEARS_API SEScalarForce : public SEScalarQuantity<ForceUnit> {
 public:
-  SEScalarForce() {}
-  virtual ~SEScalarForce() {}
+  SEScalarForce() = default;
+  virtual ~SEScalarForce() = default;
 
-  CDM::ScalarForceData* Unload() const;
+  CDM::ScalarForceData* Unload() const override;
 };

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/StarvationData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 class BIOGEARS_API SEStarvation : public SEPatientCondition {
 public:

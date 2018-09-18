@@ -11,13 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(LiquidCompartmentGraphData)
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/schema/cdm/Compartment.hxx>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
-#include <biogears/schema/GasCompartmentData.hxx>
-class SECompartmentManager;
 
+
+class SECompartmentManager;
+CDM_BIND_DECL(LiquidCompartmentGraphData)
 class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink> {
   friend class SECompartmentManager;
 

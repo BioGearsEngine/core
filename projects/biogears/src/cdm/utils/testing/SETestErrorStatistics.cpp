@@ -11,11 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
 
-#include <biogears/schema/Properties.hxx>
-#include <biogears/schema/TestReport.hxx>
-
 #include <biogears/cdm/properties/SEFunction.h>
-#include <biogears/cdm/stdafx.h>
+#include <biogears/schema/cdm/TestReport.hxx>
 
 SETestErrorStatistics::SETestErrorStatistics(Logger* logger)
   : Loggable(logger)

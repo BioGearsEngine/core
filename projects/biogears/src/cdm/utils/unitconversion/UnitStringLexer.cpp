@@ -14,10 +14,11 @@ specific language governing permissions and limitations under the License.
 /// @file UnitStringLexer.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
+#include <biogears/cdm/utils/unitconversion/UnitStringLexer.h>
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
 #include <ctype.h>
+
+#include <biogears/cdm/CommonDataModel.h>
 
 void CUnitStringLexer::ScanNextToken()
 {

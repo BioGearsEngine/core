@@ -9,15 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 
 #include <biogears/cdm/circuit/SECircuitManager.h>
-#include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
-#include <biogears/cdm/stdafx.h>
-
 #include <biogears/cdm/properties/SEScalarEnergy.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 SEThermalCompartment::SEThermalCompartment(const std::string& name, Logger* logger)
   : SECompartment(name, logger)

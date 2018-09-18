@@ -14,14 +14,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
+class SEGenericScalar;
+
 CDM_BIND_DECL(ScalarData)
 
 #define ZERO_APPROX 1e-10
 
 class BIOGEARS_API NoUnit {
 public:
-  NoUnit() {}
-  virtual ~NoUnit() {}
+  NoUnit() = default;
+  virtual ~NoUnit() = default;
 
   static const NoUnit unitless;
 };

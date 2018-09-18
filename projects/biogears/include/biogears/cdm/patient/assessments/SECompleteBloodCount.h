@@ -12,8 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-class SEBloodChemistrySystem;
-#include <biogears/schema/CompleteBloodCountData.hxx>
+#include "biogears/cdm/properties/SEScalarMassPerAmount.h"
+#include <biogears/schema/cdm/PatientAssessments.hxx>
+
+class SEScalarFraction;
+class SEScalarMassPerVolume;
+class SEScalarAmountPerVolume;
+class SEScalarMassPerAmount;
 
 class BIOGEARS_API SECompleteBloodCount : public SEPatientAssessment {
 public:

@@ -19,7 +19,11 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 #pragma once
 #include <algorithm>
+#include <vector>
+#include <cmath>
+#include <functional>
 
+#include <biogears/cdm/Macros.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnitElement.h>
 
 // The nth element in our array contains the total exponent of the nth fundamental

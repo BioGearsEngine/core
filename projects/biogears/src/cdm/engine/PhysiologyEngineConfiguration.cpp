@@ -9,23 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/schema/ElectroCardioGramWaveformInterpolatorData.hxx>
-#include <biogears/schema/PhysiologyEngineConfigurationData.hxx>
-#include <biogears/schema/PhysiologyEngineDynamicStabilizationData.hxx>
-#include <biogears/schema/PhysiologyEngineTimedStabilizationData.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
+
 
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   : Loggable(logger)

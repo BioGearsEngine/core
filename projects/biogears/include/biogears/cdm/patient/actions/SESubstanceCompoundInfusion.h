@@ -12,9 +12,11 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
+class SEScalarVolume;
+class SEScalarVolumePerTime;
 class SESubstanceCompound;
-#include <biogears/schema/SubstanceCompoundInfusionData.hxx>
 
 class BIOGEARS_API SESubstanceCompoundInfusion : public SESubstanceAdministration {
 public:

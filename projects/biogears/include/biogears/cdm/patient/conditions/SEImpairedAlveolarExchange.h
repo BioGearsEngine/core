@@ -11,7 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/ImpairedAlveolarExchangeData.hxx>
+#include <biogears/schema/cdm/PatientConditions.hxx>
+
+class SEScalarArea;
+class AreaUnit;
+class SEScalar0To1;
 
 class BIOGEARS_API SEImpairedAlveolarExchange : public SEPatientCondition {
 public:

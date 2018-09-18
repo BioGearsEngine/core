@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 /// of one quantity type to values of another quantity type.
 //----------------------------------------------------------------------------
 #pragma once
+#include <string>
+
+class CCompoundUnit;
 
 class CQuantityConversionDescriptor {
 public:
@@ -27,15 +30,8 @@ public:
 
   void Validate(int fromQTID, int toQTID);
 
-  const double& GetFromExponent() const
-  {
-    return m_dFromExponent;
-  }
-
-  const CCompoundUnit* GetMappingUnit() const
-  {
-    return m_CUMappingUnit;
-  }
+  const double& GetFromExponent() const;
+  const CCompoundUnit* GetMappingUnit() const;
 
 private:
   // What we raise the original quantity to

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 void CommonDataModelTest::ReadPatientDirectory(const std::string& rptDirectory)
 {

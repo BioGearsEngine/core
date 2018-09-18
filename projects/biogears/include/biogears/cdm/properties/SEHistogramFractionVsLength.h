@@ -12,19 +12,21 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEHistogram.h>
-#include <biogears/schema/HistogramFractionVsLengthData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
+
+class LengthUnit;
 
 class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram {
 public:
   SEHistogramFractionVsLength();
   virtual ~SEHistogramFractionVsLength();
 
-  virtual void Clear();
+  virtual void Clear() override;
 
   virtual bool IsVaild() const;
 
   virtual bool Load(const CDM::HistogramFractionVsLengthData& in);
-  virtual CDM::HistogramFractionVsLengthData* Unload() const;
+  virtual CDM::HistogramFractionVsLengthData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::HistogramFractionVsLengthData& data) const;

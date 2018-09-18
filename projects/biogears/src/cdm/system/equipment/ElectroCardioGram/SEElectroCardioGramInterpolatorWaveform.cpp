@@ -12,12 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
-#include <biogears/schema/ElectroCardioGramInterpolationWaveformData.hxx>
-#include <biogears/schema/IntegerArray.hxx>
-#include <biogears/schema/IntegerList.hxx>
+#include <biogears/schema/cdm/Physiology.hxx>
+#include <biogears/cdm/properties/SEScalarTime.h>
 
 SEElectroCardioGramInterpolatorWaveform::SEElectroCardioGramInterpolatorWaveform(Logger* logger)
   : Loggable(logger)

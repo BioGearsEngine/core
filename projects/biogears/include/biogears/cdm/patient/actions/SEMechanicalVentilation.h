@@ -12,12 +12,17 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/MechanicalVentilationData.hxx>
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+#include "biogears/cdm/properties/SEScalarPressure.h"
+
 class Serializer;
 class SESubstance;
 class SESubstanceFraction;
 class SEMechanicalVentilationConfiguration;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+class SEScalarPressure;
+class PressureUnit;
 
 class BIOGEARS_API SEMechanicalVentilation : public SEPatientAction {
 protected:

@@ -15,6 +15,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 class SEPatient;
+class SEScalar;
+class SEScalarMass;
+class MassUnit;
+class SEScalarMassPerTime;
+class MassPerTimeUnit;
+class SEScalarVolume;
+class VolumeUnit;
 
 CDM_BIND_DECL(NutritionData)
 class BIOGEARS_API SENutrition : public Loggable {

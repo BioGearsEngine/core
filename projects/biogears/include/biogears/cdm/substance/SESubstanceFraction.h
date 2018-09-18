@@ -17,8 +17,9 @@ specific language governing permissions and limitations under the License..
 class SESubstance;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
-CDM_BIND_DECL(SubstanceFractionData)
+class SEScalarFraction;
 
+CDM_BIND_DECL(SubstanceFractionData)
 class BIOGEARS_API SESubstanceFraction : public Loggable {
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager

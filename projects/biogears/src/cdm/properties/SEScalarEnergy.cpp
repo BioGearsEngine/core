@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarEnergy.h>
-#include <biogears/cdm/stdafx.h>
 
 const EnergyUnit EnergyUnit::J("J");
 const EnergyUnit EnergyUnit::mJ("mJ");

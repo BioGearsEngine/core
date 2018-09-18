@@ -13,12 +13,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarFrequencyData.hxx>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/SubstancePharmacodynamicsData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/schema/cdm/Substance.hxx>
 
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)

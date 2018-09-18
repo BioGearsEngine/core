@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarHeatResistance.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/schema/ThermalCircuitPathData.hxx>
 
+class SECircuitManager;
 class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH> {
   friend class SECircuitManager;
 

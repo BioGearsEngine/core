@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/ConfigParser.h>
 
 #include <fstream>
-#include <memory>
 #include <tuple>
 
 void ConfigSet::SetKeyValues(const std::map<std::string, std::string>& keyValues)

@@ -23,8 +23,9 @@ specific language governing permissions and limitations under the License.
 // container instantiations. In this particular case, the compiler complains about the member
 // variables "end" and "cursor". Note that exporting the iterator base must be done before
 // exporting the iterator template itself.
-#pragma warning(disable : 4231)
+#include <string>
 
+#pragma warning(disable : 4231)
 struct SUnitStringToken {
   SUnitStringToken()
     : tokenID(TT_ERR)

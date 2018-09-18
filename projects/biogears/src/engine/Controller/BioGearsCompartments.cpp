@@ -9,14 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsCompartments.h>
-#include <biogears/engine/stdafx.h>
 
+//Standard Includes
+#include <string>
+#include <vector>
+//Project Includes
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 std::vector<std::string> BGE::Graph::_values;
 std::vector<std::string> BGE::ChymeCompartment::_values;

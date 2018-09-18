@@ -9,23 +9,16 @@ KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
+
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/Logger.h>
 
-#pragma warning(push)
-#pragma warning(disable : 4512) // assignment operator could not be generated
-#pragma warning(disable : 4290) // C++ exception specification ignored except to \
-  // indicate a
-// function is not __declspec(nothrow)
+#pragma warning(push,0)
 #include <log4cpp/Appender.hh>
-#include <log4cpp/BasicLayout.hh>
 #include <log4cpp/FileAppender.hh>
-#include <log4cpp/Layout.hh>
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/PatternLayout.hh>
 #include <log4cpp/Priority.hh>
-#include <log4cpp/PropertyConfigurator.hh>
 #pragma warning(pop)
 
 #include <biogears/cdm/properties/SEScalarTime.h>

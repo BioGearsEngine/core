@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/GasSubstanceQuantityData.hxx>
+
 class SEGasCompartment;
 
 class BIOGEARS_API SEGasSubstanceQuantity : public SESubstanceQuantity, public SEGasTransportSubstance {
@@ -25,18 +25,18 @@ protected:
 public:
   virtual ~SEGasSubstanceQuantity();
 
-  virtual void Clear();
-  virtual void Invalidate();
+  virtual void Clear() override;
+  virtual void Invalidate() override;
 
   virtual bool Load(const CDM::GasSubstanceQuantityData& in);
-  virtual CDM::GasSubstanceQuantityData* Unload();
+  virtual CDM::GasSubstanceQuantityData* Unload() override;
 
 protected:
   virtual void Unload(CDM::GasSubstanceQuantityData& data);
 
 public:
   virtual void SetToZero();
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name) override;
 
   virtual bool HasPartialPressure() const;
   virtual SEScalarPressure& GetPartialPressure();
@@ -53,11 +53,11 @@ public:
 protected:
   virtual void AddChild(SEGasSubstanceQuantity& subQ);
 
-  virtual bool HasExtensive() const { return HasVolume(); }
-  virtual SEScalarVolume& GetExtensive() { return GetVolume(); }
+  virtual bool HasExtensive() const override { return HasVolume(); }
+  virtual SEScalarVolume& GetExtensive() override { return GetVolume(); }
 
-  virtual bool HasIntensive() const { return HasVolumeFraction(); }
-  virtual SEScalarFraction& GetIntensive() { return GetVolumeFraction(); }
+  virtual bool HasIntensive() const override { return HasVolumeFraction(); }
+  virtual SEScalarFraction& GetIntensive() override { return GetVolumeFraction(); }
 
   SEScalarPressure* m_PartialPressure;
   SEScalarVolume* m_Volume;

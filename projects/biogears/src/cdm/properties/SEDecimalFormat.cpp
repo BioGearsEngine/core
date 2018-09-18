@@ -9,13 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <iomanip>
-#include <iostream>
-
 #include <biogears/cdm/properties/SEDecimalFormat.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/DecimalFormatData.hxx>
-#include <biogears/schema/enumDecimalFormat.hxx>
+
+//Standard Includes
+#include <iomanip>
+#include <fstream>
+//Project Includes
+#include <biogears/schema/cdm/Properties.hxx>
+
 
 SEDecimalFormat::SEDecimalFormat(const SEDecimalFormat* dfault)
 {
@@ -62,7 +63,7 @@ CDM::DecimalFormatData* SEDecimalFormat::Unload()
 }
 void SEDecimalFormat::Unload(CDM::DecimalFormatData& data) const
 {
-  data.Precision(m_Precision);
+  data.Precision( static_cast<CDM::DecimalFormatData::Precision_type>(m_Precision));
   switch (m_Notation) {
   case DecimalNotation::Default:
   case DecimalNotation::Fixed: {

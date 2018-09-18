@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 /// This class encapsulates the definition of a particular unit symbol
 //----------------------------------------------------------------------------
 #pragma once
-
+#include <string>
 class CUnitDescriptor {
 public:
   // Defines what kind of constraint we impose on prefixes for this unit.

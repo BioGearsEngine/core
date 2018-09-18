@@ -14,9 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
-#include <biogears/schema/ThermalCircuitData.hxx>
-class SECircuitManager;
 
+class SECircuitManager;
 class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData> {
   friend class SECircuitManager;
 

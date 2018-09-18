@@ -9,17 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
+#include <biogears/cdm/substance/SESubstanceManager.h>
+//External Includes
+#include <dirent.h>
+//Project Includes
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
-#include <biogears/schema/SubstanceCompoundData.hxx>
-#include <biogears/schema/SubstanceData.hxx>
-#include <dirent.h>
 
 SESubstanceManager::SESubstanceManager(Logger* logger)
   : Loggable(logger)

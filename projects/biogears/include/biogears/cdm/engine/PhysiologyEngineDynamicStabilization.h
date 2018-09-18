@@ -14,8 +14,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/schema/PhysiologyEngineDynamicStabilizationData.hxx>
+#include <biogears/schema/biogears/BioGears.hxx>
 
+class TimeUnit;
 class PhysiologyEngineDynamicStabilizationCriteria;
 
 class BIOGEARS_API PropertyConvergence : public Loggable {

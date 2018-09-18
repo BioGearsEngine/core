@@ -13,30 +13,13 @@ specific language governing permissions and limitations under the License.
 #include "HowToTracker.h"
 
 // Include the various types you will be using in your code
-#include <biogears/schema/PatientData.hxx>
-
+#include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
-#include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
-#include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
-#include <biogears/cdm/system/physiology/SEEnergySystem.h>
-#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/cdm/utils/SEEventHandler.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/substance/SESubstance.h>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -77,12 +60,11 @@ void HowToCreateAPatient()
   stream.close();
   SAFE_DELETE(pData);
 
-	if (!bg->InitializeEngine(patient))
-	{
-		bg->GetLogger()->Error("Could not load state, check the error");
-		return;
-	}
+  if (!bg->InitializeEngine(patient)) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
 
   // You can save off the initial patient state if you want to use it later
-  bg->SaveState("./states/HowToCreateAPatient@0s.xml");  
+  bg->SaveState("./states/HowToCreateAPatient@0s.xml");
 }

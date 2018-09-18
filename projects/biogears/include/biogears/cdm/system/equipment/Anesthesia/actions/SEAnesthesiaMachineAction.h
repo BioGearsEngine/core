@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/AnesthesiaMachineActionData.hxx>
+#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 class BIOGEARS_API SEAnesthesiaMachineAction : public SEAction {
 public:

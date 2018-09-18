@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/SubstanceDataRequestData.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
+
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;

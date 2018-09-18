@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
-#include <biogears/cdm/stdafx.h>
 
 const MassPerTimeUnit MassPerTimeUnit::g_Per_s("g/s");
 const MassPerTimeUnit MassPerTimeUnit::g_Per_min("g/min");

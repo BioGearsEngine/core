@@ -12,31 +12,14 @@ specific language governing permissions and limitations under the License.
 
 #include "HowToTracker.h"
 
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 // Include the various types you will be using in your code
-#include <biogears/cdm/patient/actions/SEExercise.h>
-#include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
-#include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
-#include <biogears/cdm/system/physiology/SEEnergySystem.h>
-#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/substance/SESubstanceCompound.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -50,59 +33,55 @@ specific language governing permissions and limitations under the License.
 
 void HowToFaciculation()
 {
-	// Create the engine and load the patient
-	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToFasciculation.log");
-	bg->GetLogger()->Info("HowToFasciculation");
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToFasciculation.log");
+  bg->GetLogger()->Info("HowToFasciculation");
 
-	if (!bg->LoadState("./states/StandardMale@0s.xml"))
-	{
-		bg->GetLogger()->Error("Could not load state, check the error");
-		return;
-	}
+  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
 
-	//---Initialize all variables needed for scenario
-	SESubstance* Na = bg->GetSubstanceManager().GetSubstance("Sodium");
-	SESubstance* K = bg->GetSubstanceManager().GetSubstance("Potassium");
-	SESubstance* Cl = bg->GetSubstanceManager().GetSubstance("Chloride");
-	SESubstance* Ca = bg->GetSubstanceManager().GetSubstance("Calcium");
+  //---Initialize all variables needed for scenario
+  SESubstance* Na = bg->GetSubstanceManager().GetSubstance("Sodium");
+  SESubstance* K = bg->GetSubstanceManager().GetSubstance("Potassium");
+  SESubstance* Cl = bg->GetSubstanceManager().GetSubstance("Chloride");
+  SESubstance* Ca = bg->GetSubstanceManager().GetSubstance("Calcium");
 
-	double monitorTime = 200.0;			//how long we're going to be on the look out for ion imbalances in the blood
-	CDM::enumOnOff::value lowKActive;
-	lowKActive = CDM::enumOnOff::Off;
+  double monitorTime = 200.0; //how long we're going to be on the look out for ion imbalances in the blood
+  CDM::enumOnOff::value lowKActive;
+  lowKActive = CDM::enumOnOff::Off;
 
-	// The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+  // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
+  HowToTracker tracker(*bg);
 
-	bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Na, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
-	bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *K, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
-	bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Cl, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
-	bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Ca, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Na, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *K, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Cl, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Ca, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
 
-	bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToFasciculation.csv");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToFasciculation.csv");
 
-	// Advance some time to get some resting data
-	tracker.AdvanceModelTime(60);
+  // Advance some time to get some resting data
+  tracker.AdvanceModelTime(60);
 
-	bg->GetLogger()->Info("The patient is nice and healthy");
-	std::string message = "";
-	message = "Increase membrane resistance to potassium";
-	bg->GetLogger()->Info(message);
-	K->GetMembraneResistance().SetValue(5.0, ElectricResistanceUnit::Ohm);
+  bg->GetLogger()->Info("The patient is nice and healthy");
+  std::string message = "";
+  message = "Increase membrane resistance to potassium";
+  bg->GetLogger()->Info(message);
+  K->GetMembraneResistance().SetValue(5.0, ElectricResistanceUnit::Ohm);
 
+  while (bg->GetSimulationTime(TimeUnit::s) < monitorTime + 60.0) {
+    if (bg->GetPatient().IsEventActive(CDM::enumPatientEvent::MildHypokalemia) && (lowKActive == CDM::enumOnOff::Off)) {
+      lowKActive = CDM::enumOnOff::On;
+      message = "Patient has low serum potassium, muscle fasciculation may occur";
+      bg->GetLogger()->Info(message);
+    }
+    tracker.AdvanceModelTime(10.0);
+  }
+  message = "Return membrane resistance to potassium to baseline";
+  bg->GetLogger()->Info(message);
+  K->GetMembraneResistance().SetValue(0.248, ElectricResistanceUnit::Ohm);
 
-	while (bg->GetSimulationTime(TimeUnit::s) < monitorTime + 60.0)
-	{
-		if (bg->GetPatient().IsEventActive(CDM::enumPatientEvent::MildHypokalemia) && (lowKActive == CDM::enumOnOff::Off))
-		{
-			lowKActive = CDM::enumOnOff::On;
-			message = "Patient has low serum potassium, muscle fasciculation may occur";
-			bg->GetLogger()->Info(message);
-		}
-		tracker.AdvanceModelTime(10.0);
-	}
-	message = "Return membrane resistance to potassium to baseline";
-	bg->GetLogger()->Info(message);
-	K->GetMembraneResistance().SetValue(0.248, ElectricResistanceUnit::Ohm);
-
-	tracker.AdvanceModelTime(300);
+  tracker.AdvanceModelTime(300);
 }

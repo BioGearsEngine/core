@@ -9,14 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
 #include <biogears/cdm/properties/SEFunction.h>
+
 #include <biogears/cdm/properties/SEScalar.h> //Utils
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/DoubleArray.hxx>
-#include <biogears/schema/DoubleList.hxx>
-#include <biogears/schema/FunctionData.hxx>
-#include <biogears/schema/Properties.hxx>
 
 static std::stringstream err;
 
@@ -84,7 +79,7 @@ void SEFunction::Unload(CDM::FunctionData& data) const
 unsigned int SEFunction::Length()
 {
   if (IsValid())
-    return m_Independent.size();
+    return static_cast<unsigned int>(m_Independent.size());
   return 0;
 }
 

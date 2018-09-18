@@ -12,7 +12,21 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/EndocrineSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
+class SEScalarFraction;
+class SEScalarMass;
+class MassUnit;
+class SEScalarTemperature;
+class TemperatureUnit;
+class SEScalarAmountPerTime;
+class AmountPerTimeUnit;
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarMassPerTime;
+class MassPerTimeUnit;
+class SEScalarPower;
+class PowerUnit;
 
 class BIOGEARS_API SEEndocrineSystem : public SESystem {
 public:

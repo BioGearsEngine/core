@@ -12,7 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/AsthmaAttackData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
+class SEScalar0To1;
 
 class BIOGEARS_API SEAsthmaAttack : public SEPatientAction {
 public:

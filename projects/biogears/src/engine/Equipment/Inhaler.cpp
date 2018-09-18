@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Equipment/Inhaler.h>
 
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
@@ -20,9 +21,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+
 #include <biogears/engine/Controller/BioGears.h>
-#include <biogears/engine/Equipment/Inhaler.h>
-#include <biogears/engine/stdafx.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 /*
 ========================

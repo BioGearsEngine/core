@@ -9,17 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/substance/SESubstanceAerosolization.h>
 
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/substance/SESubstanceAerosolization.h>
-#include <biogears/schema/ScalarLengthData.hxx>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/SubstanceAerosolizationData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger)
   : Loggable(logger)

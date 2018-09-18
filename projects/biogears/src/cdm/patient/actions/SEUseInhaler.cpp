@@ -11,12 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
+
 
 SEUseInhaler::SEUseInhaler()
   : SEConsciousRespirationCommand()

@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
-#include <biogears/schema/VaporizerFailureData.hxx>
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/AnesthesiaActions.hxx>
+
+class SEScalar0To1;
+
 
 class BIOGEARS_API SEVaporizerFailure : public SEAnesthesiaMachineAction {
 public:

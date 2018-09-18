@@ -45,13 +45,20 @@ specific language governing permissions and limitations under the License.
 // a circular dependency that manifests itself as different error messages depending
 // on which thing you export first. So, on a hunch, I reversed the order, and voila!
 
+//Standard includes
+
+#include <vector>
+#include <fstream>
+#include <string>
+//Project Includes
+#include <biogears/exports.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnitElement.h>
 #include <biogears/cdm/utils/unitconversion/UnitDimension.h>
+
 
 class BIOGEARS_API CCompoundUnit {
   // Define the vector type that holds our individual components of a CompoundUnit
   typedef std::vector<CCompoundUnitElement> CUEVecType;
-
 public:
   // Default ctor
   CCompoundUnit()
@@ -281,7 +288,9 @@ private:
   // declared "mutable"
   mutable std::string m_strUnit;
   mutable double m_dBigness;
+#pragma warning(push, 0)
   CUEVecType m_CUEVec;
+#pragma warning(pop)
   mutable CUnitDimension* m_CUD;
   mutable bool m_bStaleBigness;
   mutable bool m_bStaleDimension;

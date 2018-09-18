@@ -9,15 +9,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/test/CommonDataModelTest.h>
+
+#include <fstream>
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/schema/cdm/Compartment.hxx>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
-#include <biogears/schema/Compartment.hxx>
-#include <biogears/schema/CompartmentData.hxx>
-#include <biogears/schema/CompartmentManagerData.hxx>
 CommonDataModelTest::CommonDataModelTest()
   : Loggable(new Logger())
   , m_Circuits(m_Logger)

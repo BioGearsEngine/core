@@ -63,7 +63,7 @@ void TaskRunner::AddTask(std::unique_ptr<Task> task)
 //--------------------------------------------------------------------------------------------------
 void TaskRunner::Run()
 {
-  m_totalTaskCount = m_tasks.size();
+  m_totalTaskCount = static_cast<decltype(m_totalTaskCount)>(m_tasks.size());
 
   if (m_echoPercentComplete) {
     PrintProgress();

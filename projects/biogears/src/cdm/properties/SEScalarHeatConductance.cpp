@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatConductance.h>
-#include <biogears/cdm/stdafx.h>
 
 const HeatConductanceUnit HeatConductanceUnit::W_Per_K("W/K");
 const HeatConductanceUnit HeatConductanceUnit::W_Per_C("W/degC");

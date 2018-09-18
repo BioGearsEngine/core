@@ -11,8 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/scenario/requests/SEPhysiologyDataRequest.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/PhysiologyDataRequestData.hxx>
+
 
 SEPhysiologyDataRequest::SEPhysiologyDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)

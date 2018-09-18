@@ -9,15 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/stdafx.h>
-
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/HemorrhageData.hxx>
-#include <biogears/schema/IntegerArray.hxx>
-#include <biogears/schema/IntegerList.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SEHemorrhage::SEHemorrhage()
   : SEPatientAction()

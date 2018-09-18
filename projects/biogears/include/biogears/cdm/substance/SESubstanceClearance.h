@@ -14,9 +14,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/enumCharge.hxx>
+#include <biogears/schema/cdm/Substance.hxx>
 
+class SEScalar;
+class SEScalarVolumePerTimeMass;
+class VolumePerTimeMassUnit;
+class MassPerTimeUnit;
+class SEScalarMassPerTime;
 class SESubstanceClearanceAnatomyEffect;
+class SEScalarVolumePerTimeMass;
+class SEScalarFraction;
+
 CDM_BIND_DECL(SubstanceClearanceData)
 
 enum class RenalDynamic { Clearance,

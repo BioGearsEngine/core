@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEProperty.h>
-#include <biogears/cdm/stdafx.h>
 
 SEProperty::SEProperty()
 {

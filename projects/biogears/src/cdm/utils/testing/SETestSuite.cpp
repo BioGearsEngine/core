@@ -10,12 +10,10 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
+
 #include <biogears/cdm/utils/testing/SETestSuite.h>
-#include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/schema/TestCase.hxx>
-#include <biogears/schema/TestErrorStatisticsData.hxx>
-#include <biogears/schema/TestSuite.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/schema/cdm/TestReport.hxx>
 
 SETestSuite::SETestSuite(Logger* logger)
   : Loggable(logger)
@@ -163,13 +161,13 @@ const std::vector<SETestCase*>& SETestSuite::GetTestCases() const
 
 int SETestSuite::GetNumberOfErrors() const
 {
-  int count = 0;
+  size_t count = 0;
 
-  for (unsigned int i = 0; i < m_TestCase.size(); i++) {
+  for (size_t i = 0; i < m_TestCase.size(); i++) {
     count += m_TestCase.at(i)->GetFailures().size();
   }
 
-  return count;
+  return static_cast<int>(count); //Major Possibility of a clamp
 }
 
 int SETestSuite::GetNumberOfTests() const

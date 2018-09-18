@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/substance/SESubstance.h>
 
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -20,17 +21,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
-#include <biogears/schema/SubstanceAerosolizationData.hxx>
-#include <biogears/schema/SubstanceClearanceData.hxx>
-#include <biogears/schema/SubstanceData.hxx>
-#include <biogears/schema/SubstancePharmacodynamicsData.hxx>
-#include <biogears/schema/SubstancePharmacokineticsData.hxx>
+
 
 SESubstance::SESubstance(Logger* logger)
   : Loggable(logger)

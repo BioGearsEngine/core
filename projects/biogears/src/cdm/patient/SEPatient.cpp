@@ -9,44 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/patient/SEPatient.h>
 
 #include <biogears/cdm/Serializer.h>
-
-#include <biogears/cdm/patient/SENutrition.h>
-#include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/properties/SEScalarArea.h>
-#include <biogears/cdm/properties/SEScalarFlowElastance.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarNeg1To1.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
-#include <biogears/schema/ActivePatientEventData.hxx>
-#include <biogears/schema/PatientData.hxx>
-#include <biogears/schema/ScalarAreaData.hxx>
-#include <biogears/schema/ScalarFlowElastanceData.hxx>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarFrequencyData.hxx>
-#include <biogears/schema/ScalarLengthData.hxx>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/ScalarNeg1To1Data.hxx>
-#include <biogears/schema/ScalarPowerData.hxx>
-#include <biogears/schema/ScalarPressureData.hxx>
-#include <biogears/schema/ScalarPressurePerVolumeData.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
+#include <biogears/schema/cdm/Patient.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SEPatient::SEPatient(Logger* logger)
   : Loggable(logger)
@@ -830,11 +799,11 @@ void SEPatient::InvalidateGender()
 {
   m_Sex = sex;
 }
-[[depricated("Use HasGender instead")]] bool SEPatient::HasSex() const
+[[deprecated("Use HasGender instead")]] bool SEPatient::HasSex() const
 {
   return m_Sex == ((CDM::enumSex::value)-1) ? false : true;
 }
-[[depricated("Use InvalidateGender instead")]] void SEPatient::InvalidateSex()
+[[deprecated("Use InvalidateGender instead")]] void SEPatient::InvalidateSex()
 {
   m_Sex = (CDM::enumSex::value)-1;
 }

@@ -24,6 +24,7 @@ misrepresented as being the original source code.
 René Nyffenegger rene.nyffenegger@adp-gmbh.ch
 
 */
+#include <biogears/exports.h>
 #include <string>
 
 std::string base64_encode(char const*, unsigned int len);

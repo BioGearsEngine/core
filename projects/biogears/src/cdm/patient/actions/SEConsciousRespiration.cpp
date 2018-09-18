@@ -9,20 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
-#include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
 
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
+#include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
-#include <biogears/schema/BreathHoldData.hxx>
-#include <biogears/schema/ForcedExhaleData.hxx>
-#include <biogears/schema/ForcedInhaleData.hxx>
-#include <biogears/schema/UseInhalerData.hxx>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 
 SEConsciousRespiration::SEConsciousRespiration()
   : SEPatientAction()

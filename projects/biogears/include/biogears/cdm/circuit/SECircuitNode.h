@@ -30,6 +30,7 @@ namespace tatrc {
 #define FLUID_CIRCUIT_NODE SEScalarPressure, SEScalarVolume
 #define THERMAL_CIRCUIT_NODE SEScalarTemperature, SEScalarEnergy
 
+
 template <CIRCUIT_NODE_TEMPLATE>
 class SECircuitNode : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>

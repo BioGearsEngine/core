@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/BioGearsRespiratorySystemData.hxx>
+#include <biogears/schema/biogears/BioGears.hxx>
 
 class SEPulmonaryFunctionTest;
 class SEPatient;

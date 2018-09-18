@@ -14,9 +14,10 @@ specific language governing permissions and limitations under the License.
 /// @file QuantityTypeDescriptor.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <biogears/cdm/utils/unitconversion/QuantityTypeDescriptor.h>
 
+#include <biogears/cdm/utils/unitconversion/UnitDimension.h>
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 //----------------------------------------------------------------------------
 CQuantityTypeDescriptor::CQuantityTypeDescriptor(const std::string& name, int fundIdx, bool twentyLog)
   : m_sName(name)

@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitCalculator.h>
-#include <biogears/cdm/stdafx.h>
 
 SEFluidCircuitCalculator::SEFluidCircuitCalculator(Logger* logger)
   : SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit>(

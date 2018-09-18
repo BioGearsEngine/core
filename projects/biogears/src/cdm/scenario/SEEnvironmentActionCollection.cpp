@@ -9,17 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
-#include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
-#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
-#include <biogears/cdm/stdafx.h>
+
+#include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
-#include <biogears/cdm/system/environment/SEEnvironment.h>
+#include <biogears/schema/cdm/EnvironmentActions.hxx>
 
 SEEnvironmentActionCollection::SEEnvironmentActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())

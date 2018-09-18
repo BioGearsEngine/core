@@ -9,12 +9,12 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
+//Standard Includes
+#include <numeric>
+//Project Includes
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/stdafx.h>
-#include <numeric>
 
 SEHistogramFractionVsLength::SEHistogramFractionVsLength()
   : SEHistogram()

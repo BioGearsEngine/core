@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-
+#include <biogears/exports.h>
 /**
  * Utility class that looks for a peak in data
  * looking at the data one point at a time.

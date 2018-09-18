@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <vector>
+#include <string>
+
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
 
 #define COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE typename GraphType, typename GraphVertexType, typename GraphEdgeType, typename CompartmentType, typename CompartmentLinkType
 #define COMPARTMENT_TRANSPORT_GRAPH_TYPES GraphType, GraphVertexType, GraphEdgeType, CompartmentType, CompartmentLinkType
@@ -48,4 +50,3 @@ protected:
   std::map<const GraphVertexType*, std::vector<GraphEdgeType*>*> m_SourceEdgeMap;
   std::map<const GraphVertexType*, std::vector<GraphEdgeType*>*> m_TargetEdgeMap;
 };
-#include <biogears/cdm/compartment/SECompartmentTransportGraph.inl>

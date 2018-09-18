@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarLengthPerTimeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API LengthPerTimeUnit : public CCompoundUnit {
 public:
@@ -20,7 +20,7 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~LengthPerTimeUnit() {}
+  virtual ~LengthPerTimeUnit() = default;
 
   static bool IsValidUnit(const std::string& unit);
   static const LengthPerTimeUnit& GetCompoundUnit(const std::string& unit);
@@ -35,8 +35,8 @@ public:
 
 class BIOGEARS_API SEScalarLengthPerTime : public SEScalarQuantity<LengthPerTimeUnit> {
 public:
-  SEScalarLengthPerTime() {}
-  virtual ~SEScalarLengthPerTime() {}
+  SEScalarLengthPerTime() = default;
+  virtual ~SEScalarLengthPerTime() = default;
 
-  CDM::ScalarLengthPerTimeData* Unload() const;
+  CDM::ScalarLengthPerTimeData* Unload() const override;
 };

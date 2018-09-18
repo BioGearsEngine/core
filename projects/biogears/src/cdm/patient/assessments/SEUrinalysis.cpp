@@ -9,29 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/patient/assessments/SEUrinalysis.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarOsmolality.h>
-#include <biogears/cdm/properties/SEScalarOsmolarity.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/physiology/SERenalSystem.h>
-#include <biogears/schema/Properties.hxx>
-#include <biogears/schema/ScalarAmountPerVolumeData.hxx>
-#include <biogears/schema/ScalarMassPerTimeData.hxx>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/ScalarOsmolalityData.hxx>
-#include <biogears/schema/ScalarOsmolarityData.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
-#include <biogears/schema/UrinalysisMicroscopicData.hxx>
 
 SEUrinalysis::SEUrinalysis(Logger* logger)
   : SEPatientAssessment(logger)

@@ -14,16 +14,32 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/enumSubstanceClass.hxx>
-#include <biogears/schema/enumSubstanceState.hxx>
+#include <biogears/schema/cdm/Substance.hxx>
 
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
-CDM_BIND_DECL(SubstanceData)
-class BIOGEARS_API SESubstance : public Loggable {
+class SEScalarMass;
+class MassUnit;
+class SEScalarMassPerAmount;
+class MassPerAmountUnit;
+class SEScalarVolumePerTimePressure;
+class VolumePerTimePressureUnit;
+class SEScalarInversePressure;
+class InversePressureUnit;
+class SEScalarMassPerAreaTime;
+class MassPerAreaTimeUnit;
+class SESubstancePharmacodynamics;
+class SEScalarElectricResistance;
+class ElectricResistanceUnit;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+class SEScalarPressure;
+class PressureUnit;
+
+  CDM_BIND_DECL(SubstanceData) class BIOGEARS_API SESubstance : public Loggable {
 public:
   SESubstance(Logger* logger);
   virtual ~SESubstance();

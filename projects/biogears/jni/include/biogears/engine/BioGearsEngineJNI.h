@@ -10,15 +10,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <jni.h>
+//Standard Includes
 #include <iostream>
-// #include <biogears/bind/biogears-cdm.hxx>
+#include <memory>
+//External Includes
+#include <jni.h>
+//Project Includes
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Equipment/ECG.h>
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
-#include <memory>
 
 class BioGearsEngineJNI : public LoggerForward, public SEScenarioCustomExec, public SEEventHandler
 {

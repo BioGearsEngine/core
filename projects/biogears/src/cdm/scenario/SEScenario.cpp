@@ -9,29 +9,12 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/scenario/SEScenario.h>
-#include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/ScenarioAutoSerializationData.hxx>
-#include <biogears/schema/ScenarioInitialParametersData.hxx>
-
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
-
-// Requests
-#include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/DataRequestData.hxx>
-// Conditions
-#include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/schema/ConditionData.hxx>
-// Actions
-#include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/ActionData.hxx>
-// Collections
-#include <biogears/cdm/scenario/SEAnesthesiaMachineActionCollection.h>
-#include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
 SEScenario::SEScenario(SESubstanceManager& subMgr)

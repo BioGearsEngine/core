@@ -12,10 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
+
 #include <biogears/cdm/compartment/SECompartmentLink.h>
-#include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/FluidCompartmentLinkData.hxx>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 #define FLUID_COMPARTMENT_LINK_TEMPLATE typename EdgeType, typename VertexType, typename CompartmentType
 #define FLUID_COMPARTMENT_LINK_TYPES EdgeType, VertexType, CompartmentType
@@ -25,14 +25,14 @@ class SEFluidCompartmentLink : public SECompartmentLink, public EdgeType {
 protected:
   SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name);
 
-public:
-  virtual ~SEFluidCompartmentLink();
-
-  virtual void Clear();
-
-  virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::FluidCompartmentLinkData* Unload() = 0;
-
+  public:
+    virtual ~SEFluidCompartmentLink();
+  
+    virtual void Clear();
+  
+    virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
+    virtual CDM::FluidCompartmentLinkData* Unload() = 0;
+  
 protected:
   virtual void Unload(CDM::FluidCompartmentLinkData& data);
 
@@ -73,4 +73,3 @@ protected:
   VertexType& m_TargetVertex;
   SEFluidCircuitPath* m_Path;
 };
-#include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>

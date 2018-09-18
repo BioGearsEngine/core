@@ -9,18 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/system/environment/SEActiveCooling.h>
+
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/system/environment/SEActiveCooling.h>
-#include <biogears/schema/ActiveCoolingData.hxx>
-#include <biogears/schema/ScalarAreaData.hxx>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarPowerData.hxx>
-#include <biogears/schema/ScalarTemperatureData.hxx>
+
 
 SEActiveCooling::SEActiveCooling(Logger* logger)
   : Loggable(logger)

@@ -13,8 +13,12 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
+#include <biogears/schema/cdm/Substance.hxx>
 
-CDM_BIND_DECL(SubstanceAerosolizationData)
+class SEScalar;
+class SEScalarNeg1To1;
+class SEScalar0To1;
+class SEHistogramFractionVsLength;
 
 class BIOGEARS_API SESubstanceAerosolization : public Loggable {
 public:

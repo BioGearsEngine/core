@@ -9,14 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
 
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/SubstanceConcentrationData.hxx>
 
 SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance)
   : Loggable(substance.GetLogger())

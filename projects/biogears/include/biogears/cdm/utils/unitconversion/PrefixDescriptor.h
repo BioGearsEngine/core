@@ -18,39 +18,17 @@ specific language governing permissions and limitations under the License.
 /// unit symbol
 //----------------------------------------------------------------------------
 #pragma once
+#include <biogears/exports.h>
+#include <string>
 
 class CPrefixDescriptor {
 public:
-  CPrefixDescriptor(std::string name, std::string sym, double scaleFac)
-    : m_strName(name)
-    , m_cSym(sym[0])
-    , m_dScaleFac(scaleFac)
-  {
-    // All done already
-  }
+  CPrefixDescriptor(std::string name, std::string sym, double scaleFac);
+  CPrefixDescriptor(std::string name, char sym, double scaleFac);
 
-  CPrefixDescriptor(std::string name, char sym, double scaleFac)
-    : m_strName(name)
-    , m_cSym(sym)
-    , m_dScaleFac(scaleFac)
-  {
-    // All done already
-  }
-
-  const std::string& GetName() const
-  {
-    return m_strName;
-  };
-
-  char GetSymbol() const
-  {
-    return m_cSym;
-  }
-
-  double GetScaleFactor() const
-  {
-    return m_dScaleFac;
-  }
+  const std::string& GetName() const;
+  char GetSymbol() const;
+  double  GetScaleFactor() const;
 
 private:
   std::string m_strName;

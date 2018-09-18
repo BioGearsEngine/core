@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarFlowResistanceData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API FlowResistanceUnit : public CCompoundUnit {
 public:
@@ -20,7 +20,7 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~FlowResistanceUnit() {}
+  virtual ~FlowResistanceUnit() = default;
 
   static bool IsValidUnit(const std::string& unit);
   static const FlowResistanceUnit& GetCompoundUnit(const std::string& unit);
@@ -34,8 +34,8 @@ public:
 
 class BIOGEARS_API SEScalarFlowResistance : public SEScalarQuantity<FlowResistanceUnit> {
 public:
-  SEScalarFlowResistance() {}
-  virtual ~SEScalarFlowResistance() {}
+  SEScalarFlowResistance() = default;
+  virtual ~SEScalarFlowResistance() = default;
 
-  CDM::ScalarFlowResistanceData* Unload() const;
+  CDM::ScalarFlowResistanceData* Unload() const override;
 };

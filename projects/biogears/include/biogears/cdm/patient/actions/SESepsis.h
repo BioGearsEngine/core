@@ -15,9 +15,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/schema/Scalar0To1Data.hxx>
-#include <biogears/schema/SepsisData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
+class SEScalar0To1;
+class SEScalar;
 
 class BIOGEARS_API SESepsis : public SEPatientAction {
 public:

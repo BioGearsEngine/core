@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/EnvironmentData.hxx>
-#include <biogears/schema/enumSurroundingType.hxx>
+#include <biogears/schema/cdm/Environment.hxx>
+
 class SESubstance;
 class SESubstanceFraction;
 class SESubstanceManager;
@@ -23,6 +23,12 @@ class SEInitialEnvironment;
 class SEActiveHeating;
 class SEActiveCooling;
 class SEAppliedTemperature;
+
+class SEScalarPower;
+class PowerUnit;
+class SEScalarHeatConductancePerArea;
+class HeatConductancePerAreaUnit;
+
 
 class BIOGEARS_API SEEnvironment : public SESystem {
 public:

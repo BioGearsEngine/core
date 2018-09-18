@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarElectricCharge.h>
-#include <biogears/cdm/stdafx.h>
 
 const ElectricChargeUnit ElectricChargeUnit::C("C");
 

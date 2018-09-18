@@ -9,29 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/engine/stdafx.h>
-
 #include <biogears/engine/Controller/BioGears.h>
 
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/utils/FileUtils.h>
-#include <biogears/schema/Patient.hxx>
-
-#include <biogears/engine/Equipment/AnesthesiaMachine.h>
-#include <biogears/engine/Equipment/ECG.h>
-#include <biogears/engine/Systems/Environment.h>
-#include <biogears/engine/Systems/Gastrointestinal.h>
-
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
-
-#include <biogears/schema/EnvironmentalConditionsData.hxx>
-
-#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -42,7 +27,19 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/engine/Equipment/AnesthesiaMachine.h>
+#include <biogears/engine/Equipment/ECG.h>
+#include <biogears/engine/Systems/Environment.h>
+#include <biogears/engine/Systems/Gastrointestinal.h>
+#include <biogears/schema/cdm/EnvironmentConditions.hxx>
+#include <biogears/schema/cdm/Patient.hxx>
 
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 BioGears::BioGears(const std::string& logFileName)
   : BioGears(new Logger(logFileName))
@@ -604,7 +601,6 @@ bool BioGears::SetupPatient()
     err = true;
   }
 
-
   //Right Lung Ratio ---------------------------------------------------------------
   double rightLungRatio;
   double rightLungRatioStandard = 0.525;
@@ -696,12 +692,12 @@ bool BioGears::SetupPatient()
     ss << "Patient inspiratory capacity cannot be set. It is directly computed via other lung volume patient parameters.";
     Error(ss);
     err = true;
-  }   
- 
+  }
+
   double tidalVolume_L = 37.0 * weight_kg / 1000.0 - functionalResidualCapacity_L;
   double targetVent_L_Per_min = tidalVolume_L * respirationRate_bpm;
   m_Patient->GetTotalVentilationBaseline().SetValue(targetVent_L_Per_min, VolumePerTimeUnit::L_Per_min);
-  
+
   //m_Patient->GetTargetVentilationBaseline().SetValue(10.75, VolumePerTimeUnit::L_Per_min);
   double vitalCapacity = totalLungCapacity_L - residualVolume_L;
   double expiratoryReserveVolume = functionalResidualCapacity_L - residualVolume_L;
@@ -881,7 +877,7 @@ void BioGears::AtSteadyState(EngineState state)
   m_GastrointestinalSystem->AtSteadyState();
   m_HepaticSystem->AtSteadyState();
   m_RenalSystem->AtSteadyState();
- // m_NervousSystem->AtSteadyState();
+  // m_NervousSystem->AtSteadyState();
   m_EnergySystem->AtSteadyState();
   m_EndocrineSystem->AtSteadyState();
   m_DrugSystem->AtSteadyState();
@@ -920,7 +916,7 @@ void BioGears::Process()
   m_GastrointestinalSystem->Process();
   m_HepaticSystem->Process();
   m_RenalSystem->Process();
- // m_NervousSystem->Process();
+  // m_NervousSystem->Process();
   m_EnergySystem->Process();
   m_EndocrineSystem->Process();
   m_DrugSystem->Process();
@@ -939,7 +935,7 @@ void BioGears::PostProcess()
   m_GastrointestinalSystem->PostProcess();
   m_HepaticSystem->PostProcess();
   m_RenalSystem->PostProcess();
- // m_NervousSystem->PostProcess();
+  // m_NervousSystem->PostProcess();
   m_EnergySystem->PostProcess();
   m_EndocrineSystem->PostProcess();
   m_DrugSystem->PostProcess();

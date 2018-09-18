@@ -12,11 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
-#include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
-#include <biogears/schema/GasCompartmentLinkData.hxx>
-
+#include "biogears/cdm/substance/SESubstanceTransport.h"
 class SEGasCompartment;
 
+class SECompartmentManager;
 class BIOGEARS_API SEGasCompartmentLink : public SEFluidCompartmentLink<SEGasTransportEdge, SEGasTransportVertex, SEGasCompartment> {
   friend class SECompartmentManager;
 
@@ -27,7 +26,8 @@ protected:
   }
 
 public:
-  ~SEGasCompartmentLink() {}
+  SEGasCompartmentLink() = default;
+  ~SEGasCompartmentLink() = default;
 
-  virtual CDM::GasCompartmentLinkData* Unload();
+  virtual CDM::GasCompartmentLinkData* Unload() override;
 };

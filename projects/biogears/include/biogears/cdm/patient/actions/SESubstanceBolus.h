@@ -12,12 +12,11 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
-class SESubstance;
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/SubstanceBolusData.hxx>
-#include <biogears/schema/SubstanceBolusStateData.hxx>
-#include <biogears/schema/enumBolusAdministration.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
+class SESubstance;
 
 class BIOGEARS_API SESubstanceBolus : public SESubstanceAdministration {
 public:

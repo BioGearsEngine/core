@@ -12,10 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/CompartmentDataRequestData.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
+
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
+
 
 class BIOGEARS_API SECompartmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;

@@ -15,9 +15,17 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/DrugSystemData.hxx>
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+class SEScalarFraction;
+class SEScalarMass;
+class MassUnit;
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarFrequency;
+class FrequencyUnit;
+class SEScalarVolume;
+class VolumeUnit;
 class BIOGEARS_API SEDrugSystem : public SESystem {
 public:
   SEDrugSystem(Logger* logger);

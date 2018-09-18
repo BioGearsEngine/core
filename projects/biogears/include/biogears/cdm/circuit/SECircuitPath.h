@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
-#include <biogears/schema/enumOpenClosed.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 #define CIRCUIT_PATH_TEMPLATE typename FluxScalar, typename ResistanceScalar, typename CapacitanceScalar, typename InductanceScalar, typename PotentialScalar, typename QuantityScalar
 #define CIRCUIT_PATH_TYPES FluxScalar, ResistanceScalar, CapacitanceScalar, InductanceScalar, PotentialScalar, QuantityScalar
@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #define THERMAL_CIRCUIT_PATH SEScalarPower, SEScalarHeatResistance, SEScalarHeatCapacitance, SEScalarHeatInductance, SEScalarTemperature, SEScalarEnergy
 
 CDM_BIND_DECL(CircuitPathData)
+
 
 template <CIRCUIT_PATH_TEMPLATE>
 class SECircuitPath : public Loggable {

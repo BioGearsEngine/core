@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
-#include <biogears/cdm/stdafx.h>
 
 SEPatientAssessmentRequest::SEPatientAssessmentRequest()
   : SEPatientAction()

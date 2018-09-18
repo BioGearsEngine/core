@@ -32,5 +32,7 @@ specific language governing permissions and limitations under the License.
     const std::basic_string<char>::size_type std::basic_string<char>::npos =  static_cast<std::basic_string<char>::size_type>(-1) ;
 #endif
   #endif //_MSC_VER
+#pragma warning(push,0])
   template class BIOGEARS_STRING_API std::basic_string<char>;
+#pragma warning(pop)  
 #endif

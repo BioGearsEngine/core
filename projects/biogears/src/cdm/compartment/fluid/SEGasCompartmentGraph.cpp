@@ -9,15 +9,17 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
+
+#include <biogears/cdm/compartment/SECompartmentGraph.inl>
+#include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/compartment/SECompartmentNodes.inl>
+#include <biogears/cdm/compartment/SECompartmentTransportGraph.inl>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/GasCompartmentGraphData.hxx>
-
+#include <biogears/cdm/utils/Logger.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
   m_Name = in.Name();

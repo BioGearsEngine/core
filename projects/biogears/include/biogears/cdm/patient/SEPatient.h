@@ -14,11 +14,32 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/enumPatientEvent.hxx>
-#include <biogears/schema/enumSex.hxx>
+#include <biogears/schema/cdm/Patient.hxx>
 
 class SEEventHandler;
 class SENutrition;
+class SEScalar;
+class TimeUnit;
+class SEScalarMass;
+class MassUnit;
+class SEScalarLength;
+class LengthUnit;
+class SEScalarArea;
+class AreaUnit;
+class SEScalarPower;
+class PowerUnit;
+class SEScalarVolume;
+class VolumeUnit;
+class SEScalarMassPerVolume;
+class MassPerVolumeUnit;
+class SEScalarFraction;
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarFrequency;
+class FrequencyUnit;
+class SEScalarNeg1To1;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
 
 CDM_BIND_DECL(PatientData)
 class BIOGEARS_API SEPatient : public Loggable {
@@ -31,7 +52,6 @@ public:
   virtual bool Load(const CDM::PatientData& in);
   bool Load(const std::string& patientFile);
   virtual CDM::PatientData* Unload() const;
-
 
   /** @name GetScalar
 	*   @brief - A reflextion type call that will return the Scalar associated

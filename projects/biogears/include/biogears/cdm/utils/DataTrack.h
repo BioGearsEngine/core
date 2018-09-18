@@ -11,10 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <fstream>
+#include <map>
+#include <string>
+#include <vector>
 
 #include <biogears/cdm/substance/SESubstance.h>
-#include <iomanip>
-#include <iostream>
+
+class PressureUnit;
 class SEElectricalCircuit;
 class SEFluidCircuit;
 class SEThermalCircuit;

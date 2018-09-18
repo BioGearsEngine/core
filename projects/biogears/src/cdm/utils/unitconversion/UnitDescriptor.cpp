@@ -14,9 +14,12 @@ specific language governing permissions and limitations under the License.
 /// @file UnitDescriptor.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <biogears/cdm/utils/unitconversion/UnitDescriptor.h>
 
+//Project Includes
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 //----------------------------------------------------------------------------
 CUnitDescriptor::CUnitDescriptor(const std::string& name, const std::string& symbol, unsigned int quantityTypeId,
   const std::string& targetCompoundUnit, const double& convFac, const double& bias,

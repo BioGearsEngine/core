@@ -9,13 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
+//Standard Includes
+#include <iostream>
+//External Inc lude
+#include <jni.h>
+//Project Includes
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
-#include <iostream>
-#include <jni.h>
 
 extern "C" JNIEXPORT jlong JNICALL Java_mil_tatrc_physiology_datamodel_testing_CDMUnitTestDriver_nativeAllocate(JNIEnv* env, jobject obj)
 {

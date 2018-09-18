@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <map>
+#include <vector>
+#include <algorithm>
 
 #define BLIM(input, min, max) (input = (input > max) ? max : ((input < min) ? min : input))
 #define LLIM(input, min) (input = (input < min) ? min : input)

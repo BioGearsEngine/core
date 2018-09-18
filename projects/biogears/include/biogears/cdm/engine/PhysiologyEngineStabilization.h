@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class PhysiologyEngine;
 class PhysiologyEngineTrack;

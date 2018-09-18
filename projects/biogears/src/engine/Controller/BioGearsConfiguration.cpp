@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/engine/stdafx.h>
+#include <biogears/engine/Controller/BioGearsConfiguration.h>
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
@@ -41,49 +41,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-
-#include <biogears/schema/BaroreceptorConfigurationData.hxx>
-#include <biogears/schema/BioGearsConfigurationData.hxx>
-#include <biogears/schema/BloodChemistryConfigurationData.hxx>
-#include <biogears/schema/CardiovascularConfigurationData.hxx>
-#include <biogears/schema/CircuitConfigurationData.hxx>
-#include <biogears/schema/ConstantsConfigurationData.hxx>
-#include <biogears/schema/DrugsConfigurationData.hxx>
-#include <biogears/schema/EnergyConfigurationData.hxx>
-#include <biogears/schema/EnvironmentConfigurationData.hxx>
-#include <biogears/schema/EnvironmentalConditionsData.hxx>
-#include <biogears/schema/GastrointestinalConfigurationData.hxx>
-#include <biogears/schema/NervousConfigurationData.hxx>
-#include <biogears/schema/PatientNutrition.hxx>
-#include <biogears/schema/RenalConfigurationData.hxx>
-#include <biogears/schema/RespiratoryConfigurationData.hxx>
-#include <biogears/schema/ScalarAreaData.hxx>
-#include <biogears/schema/ScalarAreaPerTimePressureData.hxx>
-#include <biogears/schema/ScalarElectricResistanceData.hxx>
-#include <biogears/schema/ScalarEnergyPerAmountData.hxx>
-#include <biogears/schema/ScalarEnergyPerMassData.hxx>
-#include <biogears/schema/ScalarFlowElastanceData.hxx>
-#include <biogears/schema/ScalarFlowResistanceData.hxx>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarHeatCapacitancePerAmountData.hxx>
-#include <biogears/schema/ScalarHeatCapacitancePerMassData.hxx>
-#include <biogears/schema/ScalarHeatConductanceData.hxx>
-#include <biogears/schema/ScalarHeatResistanceData.hxx>
-#include <biogears/schema/ScalarLengthData.hxx>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/schema/ScalarMassPerAmountData.hxx>
-#include <biogears/schema/ScalarMassPerTimeData.hxx>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/ScalarPowerPerAreaTemperatureToTheFourthData.hxx>
-#include <biogears/schema/ScalarPressureData.hxx>
-#include <biogears/schema/ScalarTemperatureData.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeAreaData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimePressureAreaData.hxx>
-#include <biogears/schema/TissueConfigurationData.hxx>
 
 BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   : PhysiologyEngineConfiguration(substances.GetLogger())

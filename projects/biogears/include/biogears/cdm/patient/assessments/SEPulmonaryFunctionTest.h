@@ -12,9 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
+#include <biogears/schema/cdm/PatientAssessments.hxx>
+
 class SEPatient;
 class SERespiratorySystem;
-#include <biogears/schema/PulmonaryFunctionTestData.hxx>
+class SEScalarVolume;
+class SEScalarVolumePerTime;
+class SEFunctionVolumeVsTime;
 
 class BIOGEARS_API SEPulmonaryFunctionTest : public SEPatientAssessment {
 public:

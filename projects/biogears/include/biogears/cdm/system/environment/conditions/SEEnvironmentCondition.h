@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/schema/EnvironmentConditionData.hxx>
+#include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
 class BIOGEARS_API SEEnvironmentCondition : public SECondition {
 public:

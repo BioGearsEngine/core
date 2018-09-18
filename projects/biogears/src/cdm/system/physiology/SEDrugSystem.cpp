@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/stdafx.h>
+#include <biogears/cdm/system/physiology/SEDrugSystem.h>
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -20,15 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/system/physiology/SEDrugSystem.h>
-#include <biogears/schema/ScalarData.hxx>
-#include <biogears/schema/ScalarFractionData.hxx>
-#include <biogears/schema/ScalarFrequencyData.hxx>
-#include <biogears/schema/ScalarLengthData.hxx>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/schema/ScalarMassPerVolumeData.hxx>
-#include <biogears/schema/ScalarPressureData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
+
 
 SEDrugSystem::SEDrugSystem(Logger* logger)
   : SESystem(logger)

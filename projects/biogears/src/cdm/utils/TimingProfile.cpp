@@ -10,7 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
+//Standard Include
+#include <map>
+//Project Includes
 #include <biogears/cdm/utils/TimingProfile.h>
 
 using State = biogears::State;

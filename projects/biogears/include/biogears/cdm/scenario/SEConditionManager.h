@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
+
 class SECondition;
 class SEChronicAnemia;
 class SEChronicHeartFailure;
@@ -27,8 +30,8 @@ class SEImpairedAlveolarExchange;
 class SELobarPneumonia;
 class SEInitialEnvironment;
 class SESubstanceManager;
-CDM_BIND_DECL(ConditionData);
 
+CDM_BIND_DECL(ConditionData);
 class BIOGEARS_API SEConditionManager : public Loggable {
 public:
   SEConditionManager(SESubstanceManager&);

@@ -12,7 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/AdvanceTimeData.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
+
+class TimeUnit;
 
 class BIOGEARS_API SEAdvanceTime : public SEAction {
 public:

@@ -10,15 +10,23 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
+#include <vector>
+
 #include <biogears/exports.h>
 
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/compartment/SECompartment.h>
-#include <biogears/schema/TissueCompartmentData.hxx>
+#include <biogears/schema/cdm/Compartment.hxx>
+
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
+class SEScalarMassPerMass;
+class MassPerMassUnit;
+class SEScalarElectricPotential;
+class ElectricPotentialUnit;
 
+class SECompartmentManager;
 class BIOGEARS_API SETissueCompartment : public SECompartment {
   friend class SECompartmentManager;
 
@@ -28,22 +36,22 @@ protected:
 public:
   virtual ~SETissueCompartment();
 
-  virtual void Clear();
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::TissueCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::TissueCompartmentData* Unload();
+  virtual CDM::TissueCompartmentData* Unload() override;
 
 protected:
   virtual void Unload(CDM::TissueCompartmentData& data);
 
 public:
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool HasChildren() const { return !m_Children.empty(); } // Children on tissue is not supported at this time
+  virtual bool HasChildren() const override { return !m_Children.empty(); } // Children on tissue is not supported at this time
   virtual const std::vector<SETissueCompartment*>& GetChildren() { return m_Children; } // Children on tissue is not supported at this time
   virtual const std::vector<SETissueCompartment*>& GetLeaves() { return m_Leaves; } // Children on tissue is not supported at this time
 
-  virtual void StateChange();
+  virtual void StateChange() override;
 
   virtual bool HasAcidicPhospohlipidConcentration() const;
   virtual SEScalarMassPerMass& GetAcidicPhospohlipidConcentration();

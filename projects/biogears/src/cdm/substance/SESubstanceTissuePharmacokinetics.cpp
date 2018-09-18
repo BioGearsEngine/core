@@ -10,11 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/stdafx.h>
+
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger)
   : Loggable(logger)

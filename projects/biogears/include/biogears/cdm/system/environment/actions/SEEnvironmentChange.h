@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
-#include <biogears/schema/EnvironmentChangeData.hxx>
+#include <biogears/schema/cdm/EnvironmentActions.hxx>
 
 class BIOGEARS_API SEEnvironmentChange : public SEEnvironmentAction {
 public:

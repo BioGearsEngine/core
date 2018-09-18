@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
-#include <biogears/cdm/stdafx.h>
 
 SEFluidCircuitNode::SEFluidCircuitNode(const std::string& name, Logger* logger)
   : SECircuitNode<SEScalarPressure, SEScalarVolume>(name, logger)

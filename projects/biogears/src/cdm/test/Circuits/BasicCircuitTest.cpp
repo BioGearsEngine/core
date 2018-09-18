@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/test/CommonDataModelTest.h>
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
@@ -29,10 +30,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/utils/FileUtils.h>
-#include <biogears/schema/Circuit.hxx>
+#include <biogears/schema/cdm/Circuit.hxx>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 void CommonDataModelTest::TestSetup7SeriesRCDC()
 {

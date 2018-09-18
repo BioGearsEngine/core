@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarElectricInductanceData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API ElectricInductanceUnit : public CCompoundUnit {
 public:
@@ -20,7 +20,7 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~ElectricInductanceUnit() {}
+  virtual ~ElectricInductanceUnit() = default;
 
   static bool IsValidUnit(const std::string& unit);
   static const ElectricInductanceUnit& GetCompoundUnit(const std::string& unit);
@@ -30,8 +30,8 @@ public:
 
 class BIOGEARS_API SEScalarElectricInductance : public SEScalarQuantity<ElectricInductanceUnit> {
 public:
-  SEScalarElectricInductance() {}
-  virtual ~SEScalarElectricInductance() {}
+  SEScalarElectricInductance() = default;
+  virtual ~SEScalarElectricInductance() = default;
 
-  CDM::ScalarElectricInductanceData* Unload() const;
+  CDM::ScalarElectricInductanceData* Unload() const override;
 };

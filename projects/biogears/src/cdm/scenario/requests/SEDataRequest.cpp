@@ -9,29 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/cdm/scenario/requests/SEEnvironmentDataRequest.h>
-#include <biogears/cdm/scenario/requests/SEEquipmentDataRequest.h>
-#include <biogears/cdm/scenario/requests/SEPatientDataRequest.h>
-#include <biogears/cdm/scenario/requests/SEPhysiologyDataRequest.h>
-#include <biogears/cdm/scenario/requests/SESubstanceDataRequest.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/DataRequestData.hxx>
-#include <biogears/schema/EnvironmentDataRequestData.hxx>
-#include <biogears/schema/EquipmentDataRequestData.hxx>
-#include <biogears/schema/PatientDataRequestData.hxx>
-#include <biogears/schema/PhysiologyDataRequestData.hxx>
-#include <biogears/schema/SubstanceDataRequestData.hxx>
-
-#include <biogears/cdm/scenario/requests/SEGasCompartmentDataRequest.h>
-#include <biogears/cdm/scenario/requests/SELiquidCompartmentDataRequest.h>
-#include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
-#include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
-#include <biogears/schema/GasCompartmentDataRequestData.hxx>
-#include <biogears/schema/LiquidCompartmentDataRequestData.hxx>
-#include <biogears/schema/ThermalCompartmentDataRequestData.hxx>
-#include <biogears/schema/TissueCompartmentDataRequestData.hxx>
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>

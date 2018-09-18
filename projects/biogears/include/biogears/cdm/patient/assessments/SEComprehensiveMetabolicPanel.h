@@ -12,8 +12,11 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
+#include <biogears/schema/cdm/PatientAssessments.hxx>
+
 class SEBloodChemistrySystem;
-#include <biogears/schema/ComprehensiveMetabolicPanelData.hxx>
+class SEScalarMassPerVolume;
+class SEScalarAmountPerVolume;
 
 class BIOGEARS_API SEComprehensiveMetabolicPanel : public SEPatientAssessment {
 public:

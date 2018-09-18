@@ -13,8 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 class SESubstance;
-#include <biogears/schema/SubstanceInfusionData.hxx>
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
+class SEScalarMassPerVolume;
+class SEScalarVolumePerTime;
 
 class BIOGEARS_API SESubstanceInfusion : public SESubstanceAdministration {
 public:

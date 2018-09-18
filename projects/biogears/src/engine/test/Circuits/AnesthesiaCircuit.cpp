@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #define _USE_MATH_DEFINES
+#include <cmath>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
@@ -23,7 +24,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
-#include <math.h>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief

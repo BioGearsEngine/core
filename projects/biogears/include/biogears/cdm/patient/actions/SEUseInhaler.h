@@ -12,9 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
-#include <biogears/schema/UseInhalerData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
 class SESubstance;
-
+class SEConsciousRespiration;
 class BIOGEARS_API SEUseInhaler : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
   SEUseInhaler();

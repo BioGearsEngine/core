@@ -12,7 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
-#include <biogears/schema/ChestCompressionForceData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
+class SEScalarForce;
 
 class BIOGEARS_API SEChestCompressionForce : public SEChestCompression {
 public:

@@ -19,25 +19,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
-#include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
-#include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/substance/SESubstanceCompound.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
-#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -51,11 +38,10 @@ void HowToPainStimulus()
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPain.log");
   bg->GetLogger()->Info("HowToPain");
- if (!bg->LoadState("./states/ToughGuy@0s.xml")) {
+  if (!bg->LoadState("./states/ToughGuy@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
-
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
   HowToTracker tracker(*bg);
@@ -85,7 +71,7 @@ void HowToPainStimulus()
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
-  // defined in the Physiology.xsd file, 
+  // defined in the Physiology.xsd file,
   //note: can't ask for substance values that aren't currently in the patient (i.e. can't ask for morphine, unless you administer it before advancing time)
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*morphine, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*epi, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
@@ -110,8 +96,7 @@ void HowToPainStimulus()
   bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  
- 
+
   //grab VAS score
   double pain = bg->GetNervousSystem()->GetPainVisualAnalogueScale();
   double dt = bg->GetTimeStep(TimeUnit::s);

@@ -12,13 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarFractionData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API SEScalarFraction : public SEScalar {
 
 public:
   SEScalarFraction();
-  virtual ~SEScalarFraction() {}
+  virtual ~SEScalarFraction() = default;
 
   CDM::ScalarFractionData* Unload() const;
 

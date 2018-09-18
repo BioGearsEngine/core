@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
-#include <biogears/schema/LiquidCompartmentDataRequestData.hxx>
+
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;

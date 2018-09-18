@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
-#include <biogears/cdm/stdafx.h>
 
 // Note this must match the enum values
 template <>

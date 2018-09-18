@@ -11,22 +11,21 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/utils/GeneralMath.h>
 
+//Standard Includes
 #include <sstream>
-
-#include <biogears/cdm/stdafx.h>
-
+//Project Includes
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
@@ -274,10 +273,10 @@ void GeneralMath::Combinations(std::vector<int> maxValues, std::vector<std::vect
 {
   int Oidx = 0;
   int numVals = 1;
-  int Olength = maxValues.size();
+  size_t Olength = maxValues.size();
   std::vector<int>*current, *next;
 
-  for (int i = 0; i < Olength; i++)
+  for (size_t i = 0; i < Olength; i++)
     numVals *= maxValues[Oidx] + 1;
   permutations.clear();
   permutations.resize(numVals);
@@ -286,11 +285,11 @@ void GeneralMath::Combinations(std::vector<int> maxValues, std::vector<std::vect
   current = &permutations[perm++];
   current->resize(Olength, 0);
 
-  for (int iter = 0; iter < numVals - 1; iter++) {
+  for (size_t iter = 0; iter < numVals - 1; iter++) {
     next = &permutations[perm++];
     Copy(*current, *next);
     current = next;
-    for (int i = 0; i <= Olength; i++) {
+    for (size_t i = 0; i <= Olength; i++) {
       if (++(*current)[i] > maxValues[i]) {
         (*current)[i] = 0;
       } else {

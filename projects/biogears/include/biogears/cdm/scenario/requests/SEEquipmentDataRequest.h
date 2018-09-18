@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/EquipmentDataRequestData.hxx>
+#include <biogears/schema/cdm/Environment.hxx>
 class SEDataRequestManager;
 
 class BIOGEARS_API SEEquipmentDataRequest : public SEDataRequest {
@@ -27,7 +29,7 @@ public:
   virtual void Clear(); //clear memory
 
   virtual bool Load(const CDM::EquipmentDataRequestData& in);
-  virtual CDM::EquipmentDataRequestData* Unload() const;
+  virtual CDM::EquipmentDataRequestData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::EquipmentDataRequestData& data) const;

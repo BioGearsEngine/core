@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
-
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 class CPScalar {
 public:
   // Default ctor

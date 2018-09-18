@@ -12,16 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
-
 #include <biogears/cdm/system/SESystem.h>
-
-#include <biogears/schema/AnesthesiaMachineData.hxx>
-#include <biogears/schema/enumAnesthesiaMachineConnection.hxx>
-#include <biogears/schema/enumAnesthesiaMachineEvent.hxx>
-#include <biogears/schema/enumAnesthesiaMachineOxygenSource.hxx>
-#include <biogears/schema/enumAnesthesiaMachinePrimaryGas.hxx>
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/exports.h>
+#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 class SEEventHandler;
 class SESubstanceManager;
@@ -29,6 +22,15 @@ class SEAnesthesiaMachineChamber;
 class SEAnesthesiaMachineOxygenBottle;
 class SEAnesthesiaMachineConfiguration;
 class Serializer;
+class TimeUnit;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarFrequency;
+class FrequencyUnit;
+class SEScalarFraction;
+
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
 protected:
   friend SEAnesthesiaMachineConfiguration;

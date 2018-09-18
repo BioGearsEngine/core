@@ -12,8 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/CircuitPathData.hxx>
+#include <biogears/schema/cdm/Circuit.hxx>
 
 template <CIRCUIT_PATH_TEMPLATE>
 SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const std::string& name)

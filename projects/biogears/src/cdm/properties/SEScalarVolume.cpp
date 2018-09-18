@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/stdafx.h>
 
 const VolumeUnit VolumeUnit::L("L");
 const VolumeUnit VolumeUnit::dL("dL");

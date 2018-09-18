@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/PhysiologyEngineTimedStabilizationData.hxx>
+#include <biogears/schema/cdm/EngineConfiguration.hxx>
 
 CDM_BIND_DECL(PhysiologyEngineTimedConditionStabilizationData)
 class BIOGEARS_API PhysiologyEngineTimedStabilizationCriteria : public Loggable {

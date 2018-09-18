@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/stdafx.h>
 
 const PowerUnit PowerUnit::W("W");
 const PowerUnit PowerUnit::kcal_Per_s("kcal/s");

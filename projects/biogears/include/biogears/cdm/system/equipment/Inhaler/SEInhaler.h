@@ -12,12 +12,18 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/InhalerData.hxx>
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/schema/biogears/BioGearsEquipment.hxx>
+
 class Serializer;
 class SESubstance;
 class SESubstanceManager;
 class SEInhalerConfiguration;
+class SEScalarVolume;
+class VolumeUnit;
+class SEScalarMass;
+class MassUnit;
+class SEScalarFraction;
 
 class BIOGEARS_API SEInhaler : public SESystem {
 protected:

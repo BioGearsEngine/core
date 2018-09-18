@@ -21,8 +21,7 @@ specific language governing permissions and limitations under the License.
 /// square root.
 //----------------------------------------------------------------------------
 
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <biogears/cdm/utils/unitconversion/PScalar.h>
 
 // We need one translation unit that processes the header file in
 // this DLL or else the methods won't be available in the Debug build,

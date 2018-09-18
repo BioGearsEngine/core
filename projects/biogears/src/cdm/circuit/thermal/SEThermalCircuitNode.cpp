@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
-#include <biogears/cdm/stdafx.h>
 
 SEThermalCircuitNode::SEThermalCircuitNode(const std::string& name, Logger* logger)
   : SECircuitNode<THERMAL_CIRCUIT_NODE>(name, logger)

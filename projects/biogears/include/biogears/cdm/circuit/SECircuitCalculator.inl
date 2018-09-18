@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
 #include <Eigen/Dense>
@@ -149,7 +148,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
   }
 
   size_t idx = 0;
-  int numNodes = m_circuit->GetNodes().size() - m_circuit->GetReferenceNodes().size();
+  size_t numNodes = m_circuit->GetNodes().size() - m_circuit->GetReferenceNodes().size();
   m_potentialSources.clear();
   for (PathType* p : m_circuit->GetPaths()) {
     //Set aside the pressure sources, since the Flow through them will be directly solved by adding them to the bottom of the matrix.
@@ -159,8 +158,8 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
     }
   }
 
-  int numSources = m_potentialSources.size();
-  int numVars = numNodes + numSources;
+  size_t numSources = m_potentialSources.size();
+  size_t numVars = numNodes + numSources;
   //Set the size of the matrix and initialize all elements to zero - we'll populate it later.
   //subtract the known reference - we don't need to solve for that pressure
   //(and it has to be known or we'll have too many unknowns).

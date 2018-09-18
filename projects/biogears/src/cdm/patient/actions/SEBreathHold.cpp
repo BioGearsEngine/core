@@ -11,11 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/Scalar0To1Data.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
+
 
 SEBreathHold::SEBreathHold()
   : SEConsciousRespirationCommand()

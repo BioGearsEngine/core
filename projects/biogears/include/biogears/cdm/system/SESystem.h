@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 class SESubstanceManager;
+class SEScalar;
 
 CDM_BIND_DECL(SystemData)
 class BIOGEARS_API SESystem : public Loggable {

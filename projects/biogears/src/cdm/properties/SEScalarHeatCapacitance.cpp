@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
-#include <biogears/cdm/stdafx.h>
 
 const HeatCapacitanceUnit HeatCapacitanceUnit::J_Per_K("J/K");
 const HeatCapacitanceUnit HeatCapacitanceUnit::kJ_Per_K("kJ/K");

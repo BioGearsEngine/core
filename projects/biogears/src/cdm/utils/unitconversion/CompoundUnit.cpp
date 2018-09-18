@@ -14,9 +14,10 @@ specific language governing permissions and limitations under the License.
 /// @file CompoundUnit.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
-
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
+#include <biogears/cdm/utils/unitconversion/UnitStringLexer.h>
+#include <biogears/cdm/utils/Logger.h>
 //----------------------------------------------------------------------------
 void CCompoundUnit::ParseString(const std::string& unitString)
 {

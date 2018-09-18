@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarVolumePerPressureData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API VolumePerPressureUnit : public CCompoundUnit {
 public:
@@ -20,7 +20,7 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~VolumePerPressureUnit() {}
+  virtual ~VolumePerPressureUnit() = default;
 
   static bool IsValidUnit(const std::string& unit);
   static const VolumePerPressureUnit& GetCompoundUnit(const std::string& unit);
@@ -31,8 +31,8 @@ public:
 
 class BIOGEARS_API SEScalarVolumePerPressure : public SEScalarQuantity<VolumePerPressureUnit> {
 public:
-  SEScalarVolumePerPressure() {}
-  virtual ~SEScalarVolumePerPressure() {}
+  SEScalarVolumePerPressure() = default;
+  virtual ~SEScalarVolumePerPressure() = default;
 
   CDM::ScalarVolumePerPressureData* Unload() const;
 };

@@ -9,21 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/schema/FunctionVolumeVsTimeData.hxx>
-#include <biogears/schema/ScalarFrequencyData.hxx>
-#include <biogears/schema/ScalarTimeData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 SEPulmonaryFunctionTest::SEPulmonaryFunctionTest(Logger* logger)
   : SEPatientAssessment(logger)

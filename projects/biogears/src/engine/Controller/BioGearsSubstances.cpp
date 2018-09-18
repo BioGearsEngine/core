@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Controller/BioGearsSubstances.h>
 
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
@@ -23,9 +24,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/environment/SEEnvironment.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-#include <biogears/engine/Controller/BioGearsSubstances.h>
-#include <biogears/engine/stdafx.h>
+
+namespace BGE = mil::tatrc::physiology::biogears;
 
 BioGearsSubstances::BioGearsSubstances(BioGears& data)
   : SESubstanceManager(data.GetLogger())

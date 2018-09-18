@@ -16,7 +16,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
-#include <biogears/schema/HemorrhageData.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+
+class SEScalarVolumePerTime;
 
 class BIOGEARS_API SEHemorrhage : public SEPatientAction {
 public:

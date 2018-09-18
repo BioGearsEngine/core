@@ -12,7 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/ElectroCardioGramData.hxx>
+#include <biogears/schema/cdm/ElectroCardioGram.hxx>
+
+class SEScalarElectricPotential;
+class ElectricPotentialUnit;
 
 class BIOGEARS_API SEElectroCardioGram : public SESystem {
 protected:

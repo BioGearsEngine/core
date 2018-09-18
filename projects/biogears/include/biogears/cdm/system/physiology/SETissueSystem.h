@@ -12,7 +12,20 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/TissueSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+class SEScalar0To1;
+class SEScalarVolume;
+class VolumeUnit;
+class SEScalarAmountPerVolume;
+class AmountPerVolumeUnit;
+class SEScalarMassPerVolume;
+class MassPerVolumeUnit;
+class SEScalarMass;
+class MassUnit;
+
 
 class BIOGEARS_API SETissueSystem : public SESystem {
 public:

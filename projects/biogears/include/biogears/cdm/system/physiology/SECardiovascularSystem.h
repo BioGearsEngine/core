@@ -12,8 +12,24 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/CardiovascularSystemData.hxx>
-#include <biogears/schema/enumHeartRhythm.hxx>
+#include <biogears/schema/cdm/Physiology.hxx>
+
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarVolume;
+class VolumeUnit;
+class SEScalarVolumePerTimeArea;
+class VolumePerTimeAreaUnit;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+class SEScalarFraction;
+class FractionUnit;
+class SEScalarFrequency;
+class FrequencyUnit;
+class SEScalarFlowResistance;
+class FlowResistanceUnit;
+class SEScalarPressureTimePerVolumeArea;
+class PressureTimePerVolumeAreaUnit;
 
 class BIOGEARS_API SECardiovascularSystem : public SESystem {
 public:

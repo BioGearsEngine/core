@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/stdafx.h>
+
 
 const LengthUnit LengthUnit::m("m");
 const LengthUnit LengthUnit::cm("cm");

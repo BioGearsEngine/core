@@ -9,13 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
+//Standard Includes
+#include <iostream>
+#include <map>
+//Project Includes
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/stdafx.h>
-
-#include <biogears/schema/BioGears.hxx>
 
 #include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/schema/biogears/BioGears.hxx>
 
 using namespace xercesc;
 namespace xml = xsd::cxx::xml;

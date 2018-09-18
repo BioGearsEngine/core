@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/properties/SEScalarEnergy.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/schema/ThermalCircuitNodeData.hxx>
 
+class SECircuitManager;
 class BIOGEARS_API SEThermalCircuitNode : public SECircuitNode<THERMAL_CIRCUIT_NODE> {
   friend class SECircuitManager;
 

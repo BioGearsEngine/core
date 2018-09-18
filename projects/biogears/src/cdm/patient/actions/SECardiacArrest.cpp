@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
-#include <biogears/cdm/stdafx.h>
+
 
 SECardiacArrest::SECardiacArrest()
   : SEPatientAction()

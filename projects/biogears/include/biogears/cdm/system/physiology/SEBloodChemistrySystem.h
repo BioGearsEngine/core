@@ -14,7 +14,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/BloodChemistrySystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
+class SEScalarMass;
+class MassUnit;
+class SEScalarMassPerVolume;
+class MassPerVolumeUnit;
+class SEScalarHeatCapacitancePerMass;
+class HeatCapacitancePerMassUnit;
+class SEScalarFraction;
+class SEScalarVolume;
+class VolumeUnit;
+class SEScalarAmountPerVolume;
+class AmountPerVolumeUnit;
+class SEScalarPressure;
+class PressureUnit;
+
 
 /** @copydoc Physiology_BloodChemistrySystemData
 	@nosubgrouping */

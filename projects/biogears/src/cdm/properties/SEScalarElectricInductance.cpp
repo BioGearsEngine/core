@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
-#include <biogears/cdm/stdafx.h>
 
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
 

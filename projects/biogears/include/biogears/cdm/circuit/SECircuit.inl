@@ -11,8 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/circuit/SECircuit.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/CircuitData.hxx>
+#include <biogears/schema/cdm/Circuit.hxx>
 
 #define ZERO_APPROX 1e-10
 #define OPEN_RESISTANCE 1e100

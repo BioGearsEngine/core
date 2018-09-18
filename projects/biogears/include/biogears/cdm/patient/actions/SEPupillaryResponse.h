@@ -13,8 +13,11 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
-#include <biogears/schema/PupillaryResponseData.hxx>
+#include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/utils/Logger.h>
+
+class SEScalar;
+class SEScalarNeg1To1;
 
 class BIOGEARS_API SEPupillaryResponse {
 public:

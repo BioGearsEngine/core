@@ -11,15 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/schema/DataRequestsData.hxx>
-#include <biogears/schema/ScenarioData.hxx>
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
+#include <biogears/exports.h>
+#include <biogears/schema/cdm/Scenario.hxx>
+
 class SESubstanceManager;
 class SEAction;
 class SEDataRequest;
 class SEScenarioInitialParameters;
 class SEScenarioAutoSerialization;
 class SEDecimalFormat;
-#include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 
 class BIOGEARS_API SEScenario : public Loggable {
 public:

@@ -13,23 +13,15 @@ specific language governing permissions and limitations under the License.
 #include "HowToTracker.h"
 
 // Include the various types you will be using in your code
-#include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
+#include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
+#include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
+#include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
-#include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/cdm/compartment/SECompartmentManager.h>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -37,25 +29,24 @@ specific language governing permissions and limitations under the License.
 ///
 /// \details
 /// Refer to the SETensionPneumothorax class
-/// Refer to the SENeedleDecompression class for pneumothorax intervention 
-/// Refer to the SEChestOcclusiveDressing class for pneumothorax intervention 
+/// Refer to the SENeedleDecompression class for pneumothorax intervention
+/// Refer to the SEChestOcclusiveDressing class for pneumothorax intervention
 //--------------------------------------------------------------------------------------------------
 void HowToTensionPneumothorax()
 {
-	// Create the engine and load the patient
-	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToTensionPneumothorax.log");
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToTensionPneumothorax.log");
   bg->GetLogger()->Info("HowToTensionPneumothorax");
-	if (!bg->LoadState("./states/StandardMale@0s.xml"))
-  {
+  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
-    // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+  // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
+  HowToTracker tracker(*bg);
 
-	// Create data requests for each value that should be written to the output log as the engine is executing
-	// Physiology System Names are defined on the System Objects 
-	// defined in the Physiology.xsd file
+  // Create data requests for each value that should be written to the output log as the engine is executing
+  // Physiology System Names are defined on the System Objects
+  // defined in the Physiology.xsd file
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
@@ -67,69 +58,71 @@ void HowToTensionPneumothorax()
 
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToTensionPneumothorax.csv");
 
-	bg->GetLogger()->Info("The patient is nice and healthy");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
-	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);;
+  bg->GetLogger()->Info("The patient is nice and healthy");
+  bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
+  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
+  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
+  ;
 
-	tracker.AdvanceModelTime(50);
+  tracker.AdvanceModelTime(50);
 
-	// Create a Tension Pnuemothorax 
-	// Set the severity (a fraction between 0 and 1)
-	SETensionPneumothorax pneumo;
-	
+  // Create a Tension Pnuemothorax
+  // Set the severity (a fraction between 0 and 1)
+  SETensionPneumothorax pneumo;
+
   // You can have a Closed or Open Tension Pneumothorax
-	pneumo.SetType(CDM::enumPneumothoraxType::Closed);
-	//pneumo.SetType(CDM::enumPneumothoraxType::Open);
-	pneumo.GetSeverity().SetValue(0.75);
-	
-    // It can be on the Left or right side
-	pneumo.SetSide(CDM::enumSide::Right);	
-	//pneumo.SetSide(CDM::enumSide::Left);
-	pneumo.SetComment("ICD-9: 860.0");
-	//pneumo.SetComment('ICD-9: 860.0');
-	bg->ProcessAction(pneumo);
+  pneumo.SetType(CDM::enumPneumothoraxType::Closed);
+  //pneumo.SetType(CDM::enumPneumothoraxType::Open);
+  pneumo.GetSeverity().SetValue(0.75);
 
-	bg->GetLogger()->Info("Giving the patient a tension pneumothorax");
-	bg->GetLogger()->Info("ICD-9: 860.0");
+  // It can be on the Left or right side
+  pneumo.SetSide(CDM::enumSide::Right);
+  //pneumo.SetSide(CDM::enumSide::Left);
+  pneumo.SetComment("ICD-9: 860.0");
+  //pneumo.SetComment('ICD-9: 860.0');
+  bg->ProcessAction(pneumo);
 
-	tracker.AdvanceModelTime(120);//This will advance the engine
+  bg->GetLogger()->Info("Giving the patient a tension pneumothorax");
+  bg->GetLogger()->Info("ICD-9: 860.0");
 
-	bg->GetLogger()->Info("The patient has had a tension pneumothorax for 120");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
-	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);;
+  tracker.AdvanceModelTime(120); //This will advance the engine
 
-	// Needle Decompression should help the patient out
-	SENeedleDecompression needleDecomp;
-	
+  bg->GetLogger()->Info("The patient has had a tension pneumothorax for 120");
+  bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
+  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
+  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
+  ;
+
+  // Needle Decompression should help the patient out
+  SENeedleDecompression needleDecomp;
+
   // You can turn it off when you would like to remove the intervention
-	needleDecomp.SetActive(false);
-	
+  needleDecomp.SetActive(false);
+
   // It can be on the Left or right side (it's a good idea to do it on the side of the pneumothorax ;)
-	needleDecomp.SetSide(CDM::enumSide::Right);
-	//needleDecomp.SetSide(CDM::enumSide::Left);
-	
+  needleDecomp.SetSide(CDM::enumSide::Right);
+  //needleDecomp.SetSide(CDM::enumSide::Left);
+
   bg->ProcessAction(needleDecomp);
-	bg->GetLogger()->Info("Giving the patient a needle decompression");
+  bg->GetLogger()->Info("Giving the patient a needle decompression");
 
-	tracker.AdvanceModelTime(400);
+  tracker.AdvanceModelTime(400);
 
-	bg->GetLogger()->Info("The patient has had a needle decompressed tension pneumothorax for 400s");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
-	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
+  bg->GetLogger()->Info("The patient has had a needle decompressed tension pneumothorax for 400s");
+  bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
+  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
+  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info("Finished");
 }

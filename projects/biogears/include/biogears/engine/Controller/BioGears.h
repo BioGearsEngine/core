@@ -14,20 +14,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/engine/Controller/BioGearsCircuits.h>
-#include <biogears/engine/Controller/BioGearsCompartments.h>
-#include <biogears/engine/Controller/BioGearsConfiguration.h>
-#include <biogears/engine/Controller/BioGearsSubstances.h>
-
-#include <biogears/schema/enumBioGearsAirwayMode.hxx>
-// CDM
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/scenario/SEConditionManager.h>
 #include <biogears/cdm/utils/DataTrack.h>
-
-// BioGears
+#include <biogears/engine/Controller/BioGearsCircuits.h>
+#include <biogears/engine/Controller/BioGearsCompartments.h>
+#include <biogears/engine/Controller/BioGearsConfiguration.h>
+#include <biogears/engine/Controller/BioGearsSubstances.h>
+#include <biogears/engine/Equipment/AnesthesiaMachine.h>
+#include <biogears/engine/Equipment/Inhaler.h>
 #include <biogears/engine/Systems/BloodChemistry.h>
 #include <biogears/engine/Systems/Cardiovascular.h>
 #include <biogears/engine/Systems/Drugs.h>
@@ -39,12 +36,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Nervous.h>
 #include <biogears/engine/Systems/Renal.h>
 #include <biogears/engine/Systems/Respiratory.h>
-#include <biogears/engine/Systems/Tissue.h>
-
-#include <biogears/engine/Equipment/AnesthesiaMachine.h>
-#include <biogears/engine/Equipment/Inhaler.h>
-
 #include <biogears/engine/Systems/Saturation.h>
+#include <biogears/engine/Systems/Tissue.h>
+#include <biogears/schema/biogears/BioGears.hxx>
 
 class SEPatientAssessment;
 class BioGearsScenarioExec;

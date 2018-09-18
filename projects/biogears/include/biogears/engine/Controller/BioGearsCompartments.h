@@ -13,10 +13,9 @@ specific language governing permissions and limitations under the License.
 #pragma once
 class BioGears;
 class SEGasCompartmentGraph;
-class SELiquidCompartmentGraph;
 
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 /**
 * @brief Manages all compartments and graphs associated with all %BioGears systems/equipement
 */

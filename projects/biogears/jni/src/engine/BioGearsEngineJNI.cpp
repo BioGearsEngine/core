@@ -9,25 +9,18 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/cdm/scenario/requests/SEDataRequest.h>
 #include <biogears/engine/BioGearsEngineJNI.h>
-#include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
-#include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
-#include <biogears/schema/BioGears.hxx>
-#include <biogears/schema/DataRequestsData.hxx>
-#include <biogears/schema/PatientAssessments.hxx>
-#include <biogears/schema/Scenario.hxx>
-
+#include <biogears/exports.h>
+//Project Includes
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
-
-#include <biogears/schema/BioGearsStateData.hxx>
-
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SECondition.h>
+#include <biogears/cdm/scenario/requests/SEDataRequest.h>
+#include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
+#include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
 extern "C" JNIEXPORT jlong JNICALL Java_mil_tatrc_physiology_biogears_testing_BGEUnitTestDriver_nativeAllocate(JNIEnv* env, jobject obj)

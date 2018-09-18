@@ -15,11 +15,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/BioGearsNervousSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 class SESubstance;
 class BioGears;
-
+class SEPatient;
 /**
  * @brief 
  * The nervous class holds models of the peripheral and central nervous system. Currently, on the baroreceptor reflex is modeled.

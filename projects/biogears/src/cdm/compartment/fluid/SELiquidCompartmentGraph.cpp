@@ -9,11 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/LiquidCompartmentGraphData.hxx>
+
+#include <biogears/cdm/compartment/SECompartmentGraph.inl>
+#include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/compartment/SECompartmentTransportGraph.inl>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 bool SELiquidCompartmentGraph::Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {

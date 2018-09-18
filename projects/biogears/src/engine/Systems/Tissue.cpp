@@ -9,22 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <math.h>
-
-#include <biogears/engine/Systems/Cardiovascular.h>
-#include <biogears/engine/Systems/Drugs.h>
-#include <biogears/engine/Systems/Energy.h>
-#include <biogears/engine/Systems/Respiratory.h>
 #include <biogears/engine/Systems/Tissue.h>
-#include <biogears/engine/stdafx.h>
 
+//Standad Includes
+#include <cmath>
+//Project Includes
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+#include <biogears/cdm/compartment//fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/conditions/SEDehydration.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
 #include <biogears/cdm/patient/conditions/SEStarvation.h>
@@ -54,9 +51,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
-
-// Conditions
-#include <biogears/cdm/patient/conditions/SEDehydration.h>
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Systems/Cardiovascular.h>
+#include <biogears/engine/Systems/Drugs.h>
+#include <biogears/engine/Systems/Energy.h>
+#include <biogears/engine/Systems/Respiratory.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
@@ -1336,7 +1337,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   m_RespiratoryQuotientRunningAverage.Sample(respiratoryQuotient);
 
   //Only record data every 50 steps for these to iron out noise
-  int steps = m_data.GetSimulationTime().GetValue(TimeUnit::s) / time_s;
+  int steps = static_cast<double>(m_data.GetSimulationTime().GetValue(TimeUnit::s) / time_s);
   if (steps % 50 == 0) {
     GetOxygenConsumptionRate().SetValue(m_O2ConsumedRunningAverage_mL_Per_s.Value(), VolumePerTimeUnit::mL_Per_s);
     GetCarbonDioxideProductionRate().SetValue(m_CO2ProducedRunningAverage_mL_Per_s.Value(), VolumePerTimeUnit::mL_Per_s);

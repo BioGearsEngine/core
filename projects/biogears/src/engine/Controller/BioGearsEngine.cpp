@@ -9,51 +9,30 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Controller/BioGearsEngine.h>
+
+#include <memory>
+//Project Includes
+#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/cdm/scenario/SEScenario.h>
-#include <biogears/cdm/utils/FileUtils.h>
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Equipment/ECG.h>
-#include <biogears/engine/stdafx.h>
-#include <biogears/schema/BioGears.hxx>
-#include <biogears/schema/BioGearsStateData.hxx>
-#include <biogears/schema/ConditionData.hxx>
-
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
+#include <biogears/cdm/scenario/SECondition.h>
+#include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
-#include <biogears/schema/BioGearsConfigurationData.hxx>
-#include <biogears/schema/Patient.hxx>
-#include <biogears/schema/PatientAssessments.hxx>
-#include <biogears/schema/PatientData.hxx>
+#include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/engine/Equipment/ECG.h>
 
-#include <biogears/schema/BioGearsAnesthesiaMachineData.hxx>
-#include <biogears/schema/BioGearsBloodChemistrySystemData.hxx>
-#include <biogears/schema/BioGearsCardiovascularSystemData.hxx>
-#include <biogears/schema/BioGearsDrugSystemData.hxx>
-#include <biogears/schema/BioGearsElectroCardioGramData.hxx>
-#include <biogears/schema/BioGearsEndocrineSystemData.hxx>
-#include <biogears/schema/BioGearsEnergySystemData.hxx>
-#include <biogears/schema/BioGearsEnvironmentData.hxx>
-#include <biogears/schema/BioGearsGastrointestinalSystemData.hxx>
-#include <biogears/schema/BioGearsHepaticSystemData.hxx>
-#include <biogears/schema/BioGearsInhalerData.hxx>
-#include <biogears/schema/BioGearsNervousSystemData.hxx>
-#include <biogears/schema/BioGearsRenalSystemData.hxx>
-#include <biogears/schema/BioGearsRespiratorySystemData.hxx>
-#include <biogears/schema/BioGearsTissueSystemData.hxx>
-
-#include <biogears/cdm/Serializer.h>
-
-#include <memory>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string& logfile)
 {

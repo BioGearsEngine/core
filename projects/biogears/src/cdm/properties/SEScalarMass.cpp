@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/stdafx.h>
 
 const MassUnit MassUnit::g("g");
 const MassUnit MassUnit::ug("ug");

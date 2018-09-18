@@ -9,20 +9,18 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Controller/BioGears.h>
 
 #include <biogears/engine/Equipment/ECG.h>
-#include <biogears/engine/stdafx.h>
-
 #include <biogears/engine/Systems/Cardiovascular.h>
-
 #include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/schema/ElectroCardioGramWaveformInterpolatorData.hxx>
-
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
+#include <biogears/engine/Controller/BioGearsSystem.h>
 
 #include <biogears/engine/Controller/BioGears.h>
-#include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 /*
 ========================
 Constructors

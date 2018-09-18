@@ -11,8 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarPressureTimePerVolumeAreaData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API PressureTimePerVolumeAreaUnit : public CCompoundUnit {
 public:
@@ -20,7 +21,7 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~PressureTimePerVolumeAreaUnit() {}
+  virtual ~PressureTimePerVolumeAreaUnit() = default;
 
   static bool IsValidUnit(const std::string& unit);
   static const PressureTimePerVolumeAreaUnit& GetCompoundUnit(const std::string& unit);
@@ -32,8 +33,8 @@ public:
 
 class BIOGEARS_API SEScalarPressureTimePerVolumeArea : public SEScalarQuantity<PressureTimePerVolumeAreaUnit> {
 public:
-  SEScalarPressureTimePerVolumeArea() {}
-  virtual ~SEScalarPressureTimePerVolumeArea() {}
+  SEScalarPressureTimePerVolumeArea() = default;
+  virtual ~SEScalarPressureTimePerVolumeArea() = default;
 
-  CDM::ScalarPressureTimePerVolumeAreaData* Unload() const;
+  CDM::ScalarPressureTimePerVolumeAreaData* Unload() const override;
 };

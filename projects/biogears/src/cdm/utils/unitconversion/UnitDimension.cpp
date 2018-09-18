@@ -14,8 +14,10 @@ specific language governing permissions and limitations under the License.
 /// @file UnitDimension.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+
+#include <biogears/cdm/utils/unitconversion/UnitDimension.h>
+
+#include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
 CUnitDimension::CUnitDimension()
   : m_EList(CUnitConversionEngine::GetEngine().GetNumFundamentalQuantities())

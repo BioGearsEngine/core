@@ -13,14 +13,14 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
-#include <biogears/schema/enumAnesthesiaMachineEvent.hxx>
-#include <biogears/schema/enumPatientEvent.hxx>
+#include <biogears/schema/cdm/Anesthesia.hxx>
+
 
 class BIOGEARS_API SEEventHandler : public Loggable {
 public:
   SEEventHandler(Logger* logger)
     : Loggable(logger){};
-  virtual ~SEEventHandler(){};
+  virtual ~SEEventHandler() = default;
 
   virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
   virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;

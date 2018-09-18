@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/physiology/SEHepaticSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/BioGearsHepaticSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 class SETissueSystem;
 class SELiquidSubstanceQuantity;

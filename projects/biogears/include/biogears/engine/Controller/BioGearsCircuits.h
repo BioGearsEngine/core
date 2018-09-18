@@ -15,7 +15,7 @@ class BioGears;
 
 #include <biogears/cdm/circuit/SECircuitManager.h>
 
-#include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 /**
 * @brief Manages all circuits associated with all %BioGears systems/equipement

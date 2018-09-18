@@ -12,7 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEFunction.h>
-#include <biogears/schema/FunctionElectricPotentialVsTimeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
+
+class TimeUnit;
+class ElectricPotentialUnit;
 
 class BIOGEARS_API SEFunctionElectricPotentialVsTime : public SEFunction {
 public:

@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/PhysiologyDataRequestData.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
+
 class SEDataRequestManager;
 
 class BIOGEARS_API SEPhysiologyDataRequest : public SEDataRequest {

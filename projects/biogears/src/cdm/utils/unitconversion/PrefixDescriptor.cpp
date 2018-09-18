@@ -13,5 +13,35 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 /// @file PrefixDescriptor.cpp
 //----------------------------------------------------------------------------
-#include <biogears/cdm/stdafx.h>
-#include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <biogears/cdm/utils/unitconversion/PrefixDescriptor.h>
+
+  CPrefixDescriptor::CPrefixDescriptor(std::string name, std::string sym, double scaleFac)
+  : m_strName(name)
+  , m_cSym(sym[0])
+  , m_dScaleFac(scaleFac)
+{
+  // All done already
+}
+
+CPrefixDescriptor::CPrefixDescriptor(std::string name, char sym, double scaleFac)
+  : m_strName(name)
+  , m_cSym(sym)
+  , m_dScaleFac(scaleFac)
+{
+  // All done already
+}
+
+const std::string& CPrefixDescriptor::GetName() const
+{
+  return m_strName;
+};
+
+char CPrefixDescriptor::GetSymbol() const
+{
+  return m_cSym;
+}
+
+double CPrefixDescriptor::GetScaleFactor() const
+{
+  return m_dScaleFac;
+}

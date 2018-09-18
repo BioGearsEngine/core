@@ -9,21 +9,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Systems/Energy.h>
 
 #include <biogears/engine/Systems/BloodChemistry.h>
 #include <biogears/engine/Systems/Cardiovascular.h>
-#include <biogears/engine/Systems/Drugs.h>
-#include <biogears/engine/Systems/Energy.h>
 #include <biogears/engine/Systems/Environment.h>
-#include <biogears/engine/stdafx.h>
 #include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/schema/RunningAverageData.hxx>
-
-#include <biogears/schema/EnvironmentalConditionsData.hxx>
-
+#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -56,6 +51,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
 
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 Energy::Energy(BioGears& bg)
   : SEEnergySystem(bg.GetLogger())
   , m_data(bg)

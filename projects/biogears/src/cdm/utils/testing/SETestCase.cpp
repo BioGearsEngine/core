@@ -11,10 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/stdafx.h>
+
 #include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/schema/TestCase.hxx>
-#include <biogears/schema/TestErrorStatisticsData.hxx>
+#include <biogears/schema/cdm/TestReport.hxx>
 
 SETestCase::SETestCase(Logger* logger)
   : Loggable(logger)

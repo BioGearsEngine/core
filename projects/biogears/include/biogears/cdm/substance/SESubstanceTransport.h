@@ -16,7 +16,12 @@ specific language governing permissions and limitations under the License.
 #endif
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
+#include "biogears/cdm/properties/SEScalarVolumePerTime.h"
+#include "biogears/cdm/properties/SEScalarMass.h"
+#include "biogears/cdm/properties/SEScalarMassPerVolume.h"
+#include "biogears/cdm/properties/SEScalarVolume.h"
+#include "biogears/cdm/properties/SEScalarFraction.h"
+
 
 #define SUBSTANCE_TRANSPORTER_TEMPLATE typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit
 

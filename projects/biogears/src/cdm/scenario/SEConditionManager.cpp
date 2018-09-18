@@ -9,12 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/scenario/SEConditionManager.h>
 
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/cdm/scenario/SEConditionManager.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//Patient Conditions
 #include <biogears/cdm/patient/conditions/SEChronicAnemia.h>
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
 #include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
@@ -26,23 +24,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
 #include <biogears/cdm/patient/conditions/SELobarPneumonia.h>
 #include <biogears/cdm/patient/conditions/SEStarvation.h>
-#include <biogears/schema/ChronicAnemiaData.hxx>
-#include <biogears/schema/ChronicHeartFailureData.hxx>
-#include <biogears/schema/ChronicObstructivePulmonaryDiseaseData.hxx>
-#include <biogears/schema/ChronicPericardialEffusionData.hxx>
-#include <biogears/schema/ChronicRenalStenosisData.hxx>
-#include <biogears/schema/ChronicVentricularSystolicDysfunctionData.hxx>
-#include <biogears/schema/DehydrationData.hxx>
-#include <biogears/schema/DiabetesType1Data.hxx>
-#include <biogears/schema/DiabetesType2Data.hxx>
-#include <biogears/schema/LobarPneumoniaData.hxx>
-#include <biogears/schema/StarvationData.hxx>
-
 #include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>
-#include <biogears/schema/ImpairedAlveolarExchangeData.hxx>
-// Environment Conditions
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
-#include <biogears/schema/InitialEnvironmentData.hxx>
+
 
 SEConditionManager::SEConditionManager(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())

@@ -40,8 +40,8 @@
 if(NOT CodeSynthesis_FOUND)
 function(REGISTER_XSD schema)
     cmake_parse_arguments( "_l" 
-                        "STAGEi;INSTALL"
-                        "ROOT;SUBPATH;RESOURCE_FOLDER"
+                        "STAGE;INSTALL"
+                        "ROOT;SUBPATH;RESOURCE_FOLDER;TARGETS"
                         "DEPENDS"
                         ${ARGN}
                         )
@@ -49,6 +49,9 @@ function(REGISTER_XSD schema)
   set(root_dir ${_l_ROOT} )
   set(component ${_l_SUBPATH} )
   set(resource_path ${_l_RESOURCE_FOLDER} )
+  if (NOT _l_TARGETS )
+    set(_l_TARGETS  _REGISTER_XSD_DIR_TARGETS )
+  endif()
 
   set(CodeSynthesis_FLAGS --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.cfg ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd)
 
@@ -88,7 +91,7 @@ function(REGISTER_XSD schema)
       PROPERTIES
       FOLDER "Code Generators"
       PROJECT_LABEL "XSD_Gen_${component}_${schema}")
-
+  list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
   if(_l_STAGE)
     add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${schema}.xsd ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml     
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
@@ -105,6 +108,7 @@ function(REGISTER_XSD schema)
         PROPERTIES
         FOLDER "Code Generators"
         PROJECT_LABEL "XSD_Move_${component}_${schema}")
+    list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
   endif()
   if(_l_INSTALL)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx
@@ -112,9 +116,9 @@ function(REGISTER_XSD schema)
           PERMISSIONS  OWNER_READ GROUP_READ WORLD_READ
          )
   endif()
-
+  set(${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)
 endfunction(REGISTER_XSD)
-
+#######################################################################################################################
 function(list_directory result curdir)
   file(GLOB children RELATIVE ${curdir} ${curdir}/*)
   set(list "")
@@ -123,7 +127,7 @@ function(list_directory result curdir)
   endforeach()
   set(${result} ${list} PARENT_SCOPE)
 endfunction()
-
+#######################################################################################################################
 
 #Registers all xsd found in a given DIR recursivly
 #
@@ -136,7 +140,7 @@ endfunction()
 function(REGISTER_XSD_DIR dir)
     cmake_parse_arguments( "_l" 
                           "STAGE;INSTALL"
-                          "ROOT;SUBPATH;RESOURCE_FOLDER"
+                          "ROOT;SUBPATH;RESOURCE_FOLDER;CONFIG;TARGETS"
                           "DEPENDS"
                           ${ARGN}
                           )
@@ -145,7 +149,9 @@ function(REGISTER_XSD_DIR dir)
   set(root_dir ${_l_ROOT} )
   set(component ${_l_SUBPATH} )
   set(resource_path ${_l_RESOURCE_FOLDER} )
-   
+  if (NOT _l_TARGETS )
+    set(_l_TARGETS  _REGISTER_XSD_DIR_TARGETS )
+  endif()
   if(_l_STAGE)
     list(APPEND SWITCH_FLAGS STAGE)
   endif()
@@ -158,20 +164,24 @@ function(REGISTER_XSD_DIR dir)
     if ( IS_DIRECTORY ${PROJECT_SOURCE_DIR}/share/xsd/${dir}/${item} )  
         REGISTER_XSD_DIR(  ${dir}/${item}  CONFIG ${cfg_file} 
               ROOT ${root_dir} SUBPATH ${component}/${item} 
-              RESOURCE_PATH ${resource_path}/${item} ${SWITCH_FLAGS})
-    else()
-        REGISTER_XSD_FILE(  ${dir}/${item} CONFIG ${cfg_file}.cfg 
+              RESOURCE_PATH ${resource_path}/${item} ${SWITCH_FLAGS} TARGETS ${_l_TARGETS} )
+    elseif( item MATCHES ".*\\.xsd")
+        REGISTER_XSD_FILE(  ${dir}/${item} CONFIG ${cfg_file} 
           ROOT ${root_dir} SUBPATH ${component}/ 
-          RESOURCE_PATH ${resource_path}/ ${SWITCH_FLAGS})
+          RESOURCE_PATH ${resource_path}/ ${SWITCH_FLAGS} TARGETS ${_l_TARGETS} )
     endif()
   endforeach()
+  message(STATUS "${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)")
+  set(${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)
 endfunction(REGISTER_XSD_DIR)
-
+#######################################################################################################################
+#REGISTER_XSD_FILE
+#######################################################################################################################
 function(REGISTER_XSD_FILE file )
   cmake_parse_arguments( "_l" 
-                          "STAGE"
-                          "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER"
-			  "DEPENDS;OUTPUTS"
+                          "STAGE;INSTALL"
+                          "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER;TARGETS"
+                          "DEPENDS;OUTPUTS"
                           ${ARGN}
                           )
 
@@ -179,6 +189,10 @@ function(REGISTER_XSD_FILE file )
   set(root_dir ${_l_ROOT} )
   set(component ${_l_SUBPATH} )
   set(resource_path ${_l_RESOURCE_FOLDER} )
+  if (NOT _l_TARGETS )
+    set(_l_TARGETS  _REGISTER_XSD_DIR_TARGETS )
+  endif()
+   
 
   set(CodeSynthesis_FLAGS --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file} ${PROJECT_SOURCE_DIR}/share/xsd/${file})
   
@@ -210,6 +224,7 @@ function(REGISTER_XSD_FILE file )
     endif(XSD_ERROR)
   endif()
 
+  string(REPLACE "/" "_" safe_unique_name ${component}/${schema})
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx ${_l_OUTPUTS}
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                       COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
@@ -218,46 +233,58 @@ function(REGISTER_XSD_FILE file )
                       DEPENDS ${_l_DEPENDS}
                       COMMENT "Generating source code from XML" )
 
-  add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${schema}.xsd    
-                      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/   
-                      DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${file}
-                      DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}
-                      COMMENT "Copying XML Template" )
-
-  string(REPLACE "/" "_" safe_unique_name ${component}/${schema})
   add_custom_target( xsd_gen_${safe_unique_name} DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx
                      COMMENT "Checking if re-generation is required" )
-
-  add_custom_target( xsd_stage_${safe_unique_name} DEPENDS  ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd
-                     COMMENT "Checking if re-generation is required" )
-
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx
-          DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${root_dir}/${component}/
-          PERMISSIONS  OWNER_READ GROUP_READ WORLD_READ
-         )
-
+  
   set_target_properties(xsd_gen_${safe_unique_name}
-      PROPERTIES
-      FOLDER "Code Generators"
-      PROJECT_LABEL "XSD_Gen_${safe_unique_name}")
+                        PROPERTIES
+                        FOLDER "Code Generators"
+                        PROJECT_LABEL "XSD_Gen_${safe_unique_name}")
 
-  set_target_properties(xsd_stage_${safe_unique_name}
-      PROPERTIES
-      FOLDER "Code Generators"
-      PROJECT_LABEL "XSD_Move_${safe_unique_name}")
+  list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
+  if(_l_STAGE)
+    add_custom_target( xsd_stage_${safe_unique_name} DEPENDS  ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd
+                       COMMENT "Checking if re-generation is required" )
+
+    add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${schema}.xsd    
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/   
+                        DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${file}
+                        DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}
+                        COMMENT "Copying XML Template" )
+    
+    set_target_properties(xsd_stage_${safe_unique_name}
+                          PROPERTIES
+                          FOLDER "Code Generators"
+                          PROJECT_LABEL "XSD_Move_${safe_unique_name}")
+	list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
+  endif()
+
+  if(_l_INSTALL)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${root_dir}/${component}/
+        PERMISSIONS  OWNER_READ GROUP_READ WORLD_READ
+       )
+  endif()
+  set(${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)
 endfunction(REGISTER_XSD_FILE)
+#######################################################################################################################
+# GENERATE_XSD_SCHEMA
+#######################################################################################################################
 function(GENERATE_XSD_SCHEMA file)
     cmake_parse_arguments( "_l" 
                           "STAGE;INSTALL"
-                          "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER"
-			  "DEPENDS;OUTPUTS"
+                          "CONFIG;ROOT;SUBPATH;RESOURCE_FOLDER;TARGETS"
+                          "DEPENDS;OUTPUTS"
                           ${ARGN})
 
   set(cfg_file ${_l_CONFIG} )
   set(root_dir ${_l_ROOT} )
   set(component ${_l_SUBPATH} )
   set(resource_path ${_l_RESOURCE_FOLDER} )
+    if (NOT _l_TARGETS )
+    set(_l_TARGETS  _REGISTER_XSD_DIR_TARGETS )
+  endif()
 
   set(CodeSynthesis_FLAGS --generate-xml-schema --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file} ${PROJECT_SOURCE_DIR}/share/xsd/${file})
  
@@ -300,7 +327,7 @@ function(GENERATE_XSD_SCHEMA file)
       PROPERTIES
       FOLDER "Code Generators"
       PROJECT_LABEL "XSD_Gen_${safe_unique_name}")
-
+  list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
   if(_l_STAGE)
     add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${schema}.xsd    
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
@@ -316,13 +343,15 @@ function(GENERATE_XSD_SCHEMA file)
         PROPERTIES
         FOLDER "Code Generators"
         PROJECT_LABEL "XSD_Move_${safe_unique_name}")
+    list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
   endif()
- if(_l_INSTALL)
-   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx
-          DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${root_dir}/${component}/
-          PERMISSIONS  OWNER_READ GROUP_READ WORLD_READ
-         )
- endif()
+   if(_l_INSTALL)
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${root_dir}/${component}/
+            PERMISSIONS  OWNER_READ GROUP_READ WORLD_READ
+           )
+   endif()
+   set(${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)
 endfunction(GENERATE_XSD_SCHEMA)
 #################################################################################################################
 #Begin Search of CodeSynthesis

@@ -9,54 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/stdafx.h>
-
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/schema/ActionData.hxx>
 
-#include <biogears/cdm/scenario/SEAdvanceTime.h>
-#include <biogears/schema/AdvanceTimeData.hxx>
-
-#include <biogears/cdm/scenario/SESerializeState.h>
-#include <biogears/schema/SerializeStateData.hxx>
-// Environment Actions
-#include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
-#include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
-#include <biogears/schema/EnvironmentChangeData.hxx>
-#include <biogears/schema/ThermalApplicationData.hxx>
-// Anesthesia Actions
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveLeak.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveObstruction.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveLeak.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveObstruction.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEMaskLeak.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenTankPressureLoss.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenWallPortPressureLoss.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SESodaLimeFailure.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SETubeCuffLeak.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEVaporizerFailure.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
-#include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
-#include <biogears/schema/AnesthesiaMachineActionData.hxx>
-#include <biogears/schema/AnesthesiaMachineConfigurationData.hxx>
-#include <biogears/schema/ExpiratoryValveLeakData.hxx>
-#include <biogears/schema/ExpiratoryValveObstructionData.hxx>
-#include <biogears/schema/InspiratoryValveLeakData.hxx>
-#include <biogears/schema/InspiratoryValveObstructionData.hxx>
-#include <biogears/schema/MaskLeakData.hxx>
-#include <biogears/schema/OxygenTankPressureLossData.hxx>
-#include <biogears/schema/OxygenWallPortPressureLossData.hxx>
-#include <biogears/schema/SodaLimeFailureData.hxx>
-#include <biogears/schema/TubeCuffLeakData.hxx>
-#include <biogears/schema/VaporizerFailureData.hxx>
-#include <biogears/schema/VentilatorPressureLossData.hxx>
-#include <biogears/schema/YPieceDisconnectData.hxx>
-// Inhaler Actions
-#include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
-#include <biogears/schema/InhalerConfigurationData.hxx>
-// Patient Actions
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
@@ -84,33 +38,25 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
-#include <biogears/schema/AcuteStressData.hxx>
-#include <biogears/schema/AirwayObstructionData.hxx>
-#include <biogears/schema/ApneaData.hxx>
-#include <biogears/schema/AsthmaAttackData.hxx>
-#include <biogears/schema/BrainInjuryData.hxx>
-#include <biogears/schema/BronchoconstrictionData.hxx>
-#include <biogears/schema/CardiacArrestData.hxx>
-#include <biogears/schema/ChestCompressionData.hxx>
-#include <biogears/schema/ChestCompressionForceData.hxx>
-#include <biogears/schema/ChestCompressionForceScaleData.hxx>
-#include <biogears/schema/ChestOcclusiveDressingData.hxx>
-#include <biogears/schema/ConsciousRespirationData.hxx>
-#include <biogears/schema/ConsumeNutrientsData.hxx>
-#include <biogears/schema/ExerciseData.hxx>
-#include <biogears/schema/HemorrhageData.hxx>
-#include <biogears/schema/IntubationData.hxx>
-#include <biogears/schema/MechanicalVentilationData.hxx>
-#include <biogears/schema/NeedleDecompressionData.hxx>
-#include <biogears/schema/PainStimulusData.hxx>
-#include <biogears/schema/PatientActionData.hxx>
-#include <biogears/schema/PatientAssessmentRequestData.hxx>
-#include <biogears/schema/PericardialEffusionData.hxx>
-#include <biogears/schema/SubstanceBolusData.hxx>
-#include <biogears/schema/SubstanceCompoundInfusionData.hxx>
-#include <biogears/schema/SubstanceInfusionData.hxx>
-#include <biogears/schema/TensionPneumothoraxData.hxx>
-#include <biogears/schema/UrinateData.hxx>
+#include <biogears/cdm/scenario/SEAdvanceTime.h>
+#include <biogears/cdm/scenario/SESerializeState.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
+#include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveLeak.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveObstruction.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveLeak.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveObstruction.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEMaskLeak.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenTankPressureLoss.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEOxygenWallPortPressureLoss.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SESodaLimeFailure.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SETubeCuffLeak.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEVaporizerFailure.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
+#include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
 SEAction::SEAction()
   : Loggable()

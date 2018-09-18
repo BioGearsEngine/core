@@ -13,14 +13,17 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/LiquidSubstanceQuantityData.hxx>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+
 class SELiquidCompartment;
 
-enum class BalanceLiquidBy { Mass,
+enum class BalanceLiquidBy {
+  Mass,
   Concentration,
   Molarity,
   PartialPressure };
 
+class SELiquidCompartment;
 class BIOGEARS_API SELiquidSubstanceQuantity : public SESubstanceQuantity, public SELiquidTransportSubstance {
   friend class SELiquidCompartment;
 

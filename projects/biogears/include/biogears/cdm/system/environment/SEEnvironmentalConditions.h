@@ -11,9 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/system/SESystem.h>
-CDM_BIND_DECL(EnvironmentalConditionsData)
-#include <biogears/schema/enumSurroundingType.hxx>
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
+#include <biogears/schema/cdm/Environment.hxx>
+
 class SESubstance;
 class SESubstanceFraction;
 class SESubstanceConcentration;
@@ -22,6 +23,20 @@ class SESubstanceManager;
 class SEEnvironmentChange;
 class SEInitialEnvironment;
 
+class SEScalar;
+class SEScalarMassPerVolume;
+class MassPerVolumeUnit;
+class SEScalarLengthPerTime;
+class LengthPerTimeUnit;
+class SEScalarTemperature;
+class TemperatureUnit;
+class SEScalarHeatResistanceArea;
+class HeatResistanceAreaUnit;
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarFraction;
+
+CDM_BIND_DECL(EnvironmentalConditionsData)
 class BIOGEARS_API SEEnvironmentalConditions : public Loggable {
 protected:
   friend SEEnvironment;

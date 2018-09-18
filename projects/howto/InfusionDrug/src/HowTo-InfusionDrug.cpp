@@ -13,27 +13,12 @@ specific language governing permissions and limitations under the License.
 #include "HowToTracker.h"
 
 // Include the various types you will be using in your code
-#include <biogears/cdm/utils/SEEventHandler.h>
-#include <biogears/cdm/patient/actions/SESubstanceBolus.h>
-#include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
-#include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
-#include <biogears/cdm/system/physiology/SEEnergySystem.h>
-#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/system/physiology/SEDrugSystem.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarOsmolality.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/physiology/SEDrugSystem.h>
+#include <biogears/cdm/system/physiology/SEEnergySystem.h>
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -46,28 +31,27 @@ specific language governing permissions and limitations under the License.
 void HowToInfusionDrug()
 {
   // Create the engine and load the patient
-	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("VasopressinPD.log");
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("VasopressinPD.log");
   bg->GetLogger()->Info("VasopressinPD");
-	if (!bg->LoadState("./states/StandardMale@0s.xml"))
-  {
+  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+  HowToTracker tracker(*bg);
 
-	SESubstance* vas = bg->GetSubstanceManager().GetSubstance("Vasopressin");
-	vas->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
+  SESubstance* vas = bg->GetSubstanceManager().GetSubstance("Vasopressin");
+  vas->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
 
-	// Create a substance bolus action to administer the substance
-	SESubstanceInfusion infuse(*vas);
-	infuse.GetConcentration().SetValue(0.102, MassPerVolumeUnit::ug_Per_mL);
-	infuse.GetRate().SetValue(0.1, VolumePerTimeUnit::mL_Per_min);
+  // Create a substance bolus action to administer the substance
+  SESubstanceInfusion infuse(*vas);
+  infuse.GetConcentration().SetValue(0.102, MassPerVolumeUnit::ug_Per_mL);
+  infuse.GetRate().SetValue(0.1, VolumePerTimeUnit::mL_Per_min);
 
-	// Create data requests for each value that should be written to the output log as the engine is executing
-	// Physiology System Names are defined on the System Objects 
-	// defined in the Physiology.xsd file
+  // Create data requests for each value that should be written to the output log as the engine is executing
+  // Physiology System Names are defined on the System Objects
+  // defined in the Physiology.xsd file
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*vas, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);

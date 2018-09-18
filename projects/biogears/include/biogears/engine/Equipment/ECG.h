@@ -16,8 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/schema/BioGearsElectroCardioGramData.hxx>
-
+#include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 /**

@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/InhalerActionData.hxx>
+#include <biogears/schema/cdm/InhalerActions.hxx>
 
 class BIOGEARS_API SEInhalerAction : public SEAction {
 public:

@@ -12,7 +12,21 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/RespiratorySystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
+class SEScalarPressure;
+class PressureUnit;
+class SEScalarFraction;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+class SEScalarFlowCompliance;
+class FlowComplianceUnit;
+class SEScalarFlowResistance;
+class FlowResistanceUnit;
+class SEScalarFrequency;
+class FrequencyUnit;
+class SEScalarVolume;
+class VolumeUnit;
 
 class BIOGEARS_API SERespiratorySystem : public SESystem {
 public:

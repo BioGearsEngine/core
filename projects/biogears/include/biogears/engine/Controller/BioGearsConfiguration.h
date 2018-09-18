@@ -11,11 +11,54 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-class SENutrition;
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
-#include <biogears/schema/BioGearsConfigurationData.hxx>
-class SEEnvironmentalConditions;
+#include <biogears/exports.h>
+#include <biogears/schema/biogears/BioGearsConfiguration.hxx>
+#include "biogears/cdm/properties/SEScalarFlowElastance.h"
 
+class SENutrition;
+class SEEnvironmentalConditions;
+class SEScalarArea;
+class AreaUnit;
+class SEScalarLength;
+class LengthUnit;
+class SEScalarAreaPerTimePressure;
+class AreaPerTimePressureUnit;
+class SEScalarFlowElastance;
+class FlowElastanceUnit;
+class SEScalarPowerPerAreaTemperatureToTheFourth;
+class PowerPerAreaTemperatureToTheFourthUnit;
+class SEScalarHeatCapacitancePerAmount;
+class HeatCapacitancePerAmountUnit;
+class SEScalarHeatCapacitancePerMass;
+class HeatCapacitancePerMassUnit;
+class SEScalarEnergyPerAmount;
+class EnergyPerAmountUnit;
+class SEScalarHeatConductance;
+class HeatConductanceUnit;
+class SEScalarEnergyPerMass;
+class EnergyPerMassUnit;
+class SEScalarVolumePerTimePressureArea;
+class VolumePerTimePressureAreaUnit;
+class SEScalarInverseVolume;
+class InverseVolumeUnit;
+class SEScalarMassPerAmount;
+class MassPerAmountUnit;
+class VolumeUnit;
+class SEScalarFlowResistance;
+class FlowResistanceUnit;
+class ElectricResistanceUnit;
+class SEScalarElectricResistance;
+class SEScalarHeatResistance;
+class HeatResistanceUnit;
+class SEScalarTemperatureUnit;
+class TemperatureUnit;
+class MassPerVolumeUnit;
+class SEScalarMassPerTime;
+class MassPerTimeUnit;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+class PressureUnit;
 /**
 * @brief %BioGears specific configuration parameters for all systems/equipment
 */

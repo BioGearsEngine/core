@@ -9,11 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
@@ -26,11 +28,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/utils/GeneralMath.h>
-
-#include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
 void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDynamicHormones, bool usingGlycogen, bool usingProteinStorage, bool usingFatStorage, bool fullStores, bool useDiffusion, bool useConsumption, bool usingLipogenesis, bool usingGluconeogenesis, bool isAnaerobic, double exerciseWork_W, const std::string& rptDirectory, double testDuration_hr, MealType mealType, std::string testName)
 {

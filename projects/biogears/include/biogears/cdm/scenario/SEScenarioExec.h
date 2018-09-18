@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+
+#include <biogears/cdm/CommonDataModel.h>
 
 class SEAction;
 class SEScenario;

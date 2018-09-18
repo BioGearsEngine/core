@@ -11,11 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 
-#ifdef REBASE_TOOL
-#define BIOGEARS_API
-#else
 #include <biogears/cdm/CommonDataModel.h>
-#endif
 
 #include <map>
 #include <string>

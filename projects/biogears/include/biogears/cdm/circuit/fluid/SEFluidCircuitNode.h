@@ -14,8 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/FluidCircuitNodeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
+class SECircuitManager;
 class BIOGEARS_API SEFluidCircuitNode : public SECircuitNode<FLUID_CIRCUIT_NODE> {
   friend class SECircuitManager;
 

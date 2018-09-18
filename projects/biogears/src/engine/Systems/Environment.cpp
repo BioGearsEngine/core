@@ -9,20 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/engine/stdafx.h>
-#include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
-#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/engine/Systems/Environment.h>
 
-#include <biogears/cdm/substance/SESubstanceConcentration.h>
-#include <biogears/cdm/substance/SESubstanceFraction.h>
-
-#include <biogears/cdm/system/environment/SEActiveCooling.h>
-#include <biogears/cdm/system/environment/SEActiveHeating.h>
-#include <biogears/cdm/system/environment/SEAppliedTemperature.h>
-
+#include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+#include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
@@ -42,6 +32,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
+#include <biogears/cdm/substance/SESubstanceFraction.h>
+#include <biogears/cdm/system/environment/SEActiveCooling.h>
+#include <biogears/cdm/system/environment/SEActiveHeating.h>
+#include <biogears/cdm/system/environment/SEAppliedTemperature.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 Environment::Environment(BioGears& bg)
   : SEEnvironment(bg.GetSubstances())
@@ -648,7 +648,7 @@ void Environment::CalculateEvaporation()
     if (m_EnvironmentSkinToGroundPath->HasHeatTransferRate()) {
       dTotalHeatLoss_W = m_EnvironmentSkinToGroundPath->GetHeatTransferRate().GetValue(PowerUnit::W);
     }
-    
+
     GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
 
     // m_data.GetDataTrack().Probe("EvapHeatLoss", GetEvaporativeHeatLoss().GetValue(PowerUnit::W));

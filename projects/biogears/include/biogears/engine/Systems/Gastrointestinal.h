@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/BioGearsGastrointestinalSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;

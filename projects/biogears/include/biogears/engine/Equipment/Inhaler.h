@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/BioGearsInhalerData.hxx>
+#include <biogears/schema/biogears/BioGearsEquipment.hxx>
 /**
 * @brief 
 * Generic inhaler for substance administration.
@@ -27,6 +27,7 @@ class SELiquidCompartment;
 class SEGasCompartment;
 class SELiquidSubstanceQuantity;
 class BioGears;
+
 class BIOGEARS_API Inhaler : public SEInhaler, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;

@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-
+#include <string>
 #pragma warning(push)
 // Disabling the waring about STL classes used have
 // to have a dll interface to be used by clients
@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 // abray@ara.com
 #pragma warning(disable : 4251)
 #include <biogears/engine/Controller/BioGears.h>
+#include <biogears/cdm/engine/PhysiologyEngine.h>
 #pragma warning(pop)
 
 //--------------------------------------------------------------------------------------------------

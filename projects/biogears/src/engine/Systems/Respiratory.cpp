@@ -11,11 +11,21 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/engine/Systems/Respiratory.h>
-#include <biogears/engine/stdafx.h>
-#include <biogears/schema/RunningAverageData.hxx>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
-// Properties
+#include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
+#include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
+#include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
+#include <biogears/cdm/patient/actions/SEBreathHold.h>
+#include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
+#include <biogears/cdm/patient/actions/SEForcedExhale.h>
+#include <biogears/cdm/patient/actions/SEForcedInhale.h>
+#include <biogears/cdm/patient/actions/SEUseInhaler.h>
+#include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
+#include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
+#include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>
+#include <biogears/cdm/patient/conditions/SELobarPneumonia.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
@@ -33,25 +43,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-//Circuits
-#include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
-#include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
-#include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
-#include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
-// Actions
-#include <biogears/cdm/patient/actions/SEBreathHold.h>
-#include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
-#include <biogears/cdm/patient/actions/SEForcedExhale.h>
-#include <biogears/cdm/patient/actions/SEForcedInhale.h>
-#include <biogears/cdm/patient/actions/SEUseInhaler.h>
-// Conditions
-#include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
-#include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>
-#include <biogears/cdm/patient/conditions/SELobarPneumonia.h>
-// Assessments
-#include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
+
+namespace BGE = mil::tatrc::physiology::biogears;
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4305 4244) // Disable some warning messages
@@ -328,7 +324,7 @@ void Respiratory::SetUp()
   //Time Step
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_dt_min = m_data.GetTimeStep().GetValue(TimeUnit::min);
-  m_hadApnea = false; 
+  m_hadApnea = false;
   //Patient
   m_Patient = &m_data.GetPatient();
   m_PatientActions = &m_data.GetActions().GetPatientActions();
@@ -883,7 +879,7 @@ void Respiratory::RespiratoryDriver()
     //Prepare for the next cycle -------------------------------------------------------------------------------
     if (m_BreathingCycleTime_s > TotalBreathingCycleTime_s) //End of the cycle or currently not breathing
     {
- 
+
       //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
       ///\@cite Magasso2001Mathematical
       double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
@@ -935,7 +931,7 @@ void Respiratory::RespiratoryDriver()
     //it's not being factored into the IERatio multiple times below.
     double driverInspirationTime_s = (IERatio / (1.0 + IERatio) * TotalBreathingCycleTime_s);
     double driverExpirationTime_s = TotalBreathingCycleTime_s - driverInspirationTime_s;
-    double tauExpiration_s = driverExpirationTime_s / 5.0;  //This gets our steady state IE ratio ~0.5
+    double tauExpiration_s = driverExpirationTime_s / 5.0; //This gets our steady state IE ratio ~0.5
 
     ////New driver
     if (m_BreathingCycleTime_s < driverInspirationTime_s) {
@@ -1466,8 +1462,8 @@ void Respiratory::COPD()
     // Call UpdatePulmonaryCapillaryResistance
     UpdatePulmonaryCapillaryResistance(dPulmonaryResistanceMultiplier, dLeftLungFraction, dRightLungFraction);
 
-    // Calculate Alveoli Compliance Multiplier based on severities.  Setting both lung fractions to 1 (as above) will have large impact on 
-	// compliances, so we don't need to make the severity too high to get the changes we want.  Scale from 0 to 0.35
+    // Calculate Alveoli Compliance Multiplier based on severities.  Setting both lung fractions to 1 (as above) will have large impact on
+    // compliances, so we don't need to make the severity too high to get the changes we want.  Scale from 0 to 0.35
     double dCompilanceScalingFactor = GeneralMath::LinearInterpolator(0, 1.0, 0, 0.35, dEmphysemaSeverity);
     // Call UpdateAlveoliCompliance
     UpdateAlveoliCompliance(dCompilanceScalingFactor, dLeftLungFraction, dRightLungFraction);
@@ -1563,20 +1559,18 @@ void Respiratory::Apnea()
 {
   if (m_PatientActions->HasApnea()) {
     double apneaSeverity = m_PatientActions->GetApnea()->GetSeverity().GetValue();
-	  m_hadApnea = true;
+    m_hadApnea = true;
     if (1.0 - apneaSeverity < ZERO_APPROX) {
       m_bNotBreathing = true;
     }
     //Just reduce the tidal volume by the percentage given
     m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + (m_DriverPressure_cmH2O - m_DefaultDrivePressure_cmH2O) * (1 - apneaSeverity);
-  }
-  else{
-    if(m_hadApnea) {
-		m_hadApnea = false;
-		m_bNotBreathing = false;
+  } else {
+    if (m_hadApnea) {
+      m_hadApnea = false;
+      m_bNotBreathing = false;
     }
   }
-     
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1890,7 +1884,7 @@ void Respiratory::UpdateIERatio()
 
   if (combinedSeverity > 0.0) {
     //The respiratory driver is very sensitive to the IEScaleFactor.  It does not take to decrease output IE Ratio significanlty.  Found that
-	//bounding at 0.85 worked well.
+    //bounding at 0.85 worked well.
     m_IEscaleFactor = 1.0 - 0.15 * combinedSeverity;
     //When albuterol is administered, the bronchodilation also causes the IE ratio to correct itself
     m_IEscaleFactor *= exp(7728.4 * m_AverageLocalTissueBronchodilationEffects);
@@ -1918,9 +1912,9 @@ void Respiratory::UpdateIERatio()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::UpdateAlveoliCompliance(double dScalingFactor, double dLeftLungFraction, double dRightLungFraction)
 {
-	//Testing shows that patient will die of extreme hypercapnia in most cases when the sum of the lung fractions and scaling factor is greater
-	//than 2.35.  While not a perfect cut off (i.e. severity = 1.0, Left = Right = 0.675 does not produce exact same result as severity = 0.35,
-	//Left = Right = 0.35), it allows for extreme scenarios (RR > 35, PaO2 < 40) without crashing engine.
+  //Testing shows that patient will die of extreme hypercapnia in most cases when the sum of the lung fractions and scaling factor is greater
+  //than 2.35.  While not a perfect cut off (i.e. severity = 1.0, Left = Right = 0.675 does not produce exact same result as severity = 0.35,
+  //Left = Right = 0.35), it allows for extreme scenarios (RR > 35, PaO2 < 40) without crashing engine.
   if (dScalingFactor + dLeftLungFraction + dRightLungFraction > 2.35) {
     dScalingFactor = 1.0;
     dLeftLungFraction = 0.675;
@@ -1990,10 +1984,10 @@ void Respiratory::UpdateGasDiffusionSurfaceArea(double dFractionArea, double dLe
   // Get the right and left lung ratios
   double RightLungRatio = m_Patient->GetRightLungRatio().GetValue();
   double LeftLungRatio = 1.0 - RightLungRatio;
-  
+
   double dLeftScaleFactor = GeneralMath::ResistanceFunction(10, 0.15, 1.0, dFractionArea * dLeftLungFraction);
   double dRightScaleFactor = GeneralMath::ResistanceFunction(10, 0.15, 1.0, dFractionArea * dRightLungFraction);
-  
+
   // Calculate the total surface area
   AlveoliDiffusionArea_cm2 = dLeftScaleFactor * LeftLungRatio * AlveoliDiffusionArea_cm2 + dRightScaleFactor * RightLungRatio * AlveoliDiffusionArea_cm2;
 

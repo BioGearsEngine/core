@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/Scalar0To1Data.hxx>
 
 class BIOGEARS_API SEScalar0To1 : public SEScalar {
 

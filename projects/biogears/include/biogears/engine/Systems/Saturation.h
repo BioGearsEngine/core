@@ -22,6 +22,8 @@ class SESubstance;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class BioGears;
+class SEScalarFraction;
+class SEScalarTemperature;
 
 /**
 * @brief

@@ -10,7 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/FileUtils.h>
@@ -18,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory)
 {

@@ -9,12 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/engine/Systems/Renal.h>
 
 #include <biogears/engine/Systems/Drugs.h>
-#include <biogears/engine/Systems/Renal.h>
-#include <biogears/engine/stdafx.h>
-#include <biogears/schema/RunningAverageData.hxx>
-
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
@@ -39,11 +36,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 #include <biogears/cdm/scenario/SECondition.h>
-
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
-
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
+
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+namespace BGE = mil::tatrc::physiology::biogears;
 
 Renal::Renal(BioGears& bg)
   : SERenalSystem(bg.GetLogger())

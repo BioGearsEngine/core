@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarHeatConductancePerAreaData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 class BIOGEARS_API HeatConductancePerAreaUnit : public CCompoundUnit {
 public:
@@ -20,7 +20,7 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~HeatConductancePerAreaUnit() {}
+  virtual ~HeatConductancePerAreaUnit() = default;
 
   static bool IsValidUnit(const std::string& unit);
   static const HeatConductancePerAreaUnit& GetCompoundUnit(const std::string& unit);
@@ -32,8 +32,8 @@ public:
 
 class BIOGEARS_API SEScalarHeatConductancePerArea : public SEScalarQuantity<HeatConductancePerAreaUnit> {
 public:
-  SEScalarHeatConductancePerArea() {}
-  virtual ~SEScalarHeatConductancePerArea() {}
+  SEScalarHeatConductancePerArea() = default;
+  virtual ~SEScalarHeatConductancePerArea() = default;
 
-  CDM::ScalarHeatConductancePerAreaData* Unload() const;
+  CDM::ScalarHeatConductancePerAreaData* Unload() const override;
 };

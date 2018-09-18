@@ -11,12 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-CDM_BIND_DECL(GasCompartmentGraphData)
+#include "biogears/cdm/CommonDataModel.h"
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
-#include <biogears/schema/GasCompartmentData.hxx>
+#include <biogears/schema/cdm/Compartment.hxx>
+
 class SECompartmentManager;
+CDM_BIND_DECL(GasCompartmentGraphData)
 
 class BIOGEARS_API SEGasCompartmentGraph : public SECompartmentTransportGraph<SEGasTransportGraph, SEGasTransportVertex, SEGasTransportEdge, SEGasCompartment, SEGasCompartmentLink> {
   friend class SECompartmentManager;
@@ -26,7 +28,7 @@ protected:
     : SECompartmentTransportGraph(name, logger){};
 
 public:
-  virtual ~SEGasCompartmentGraph() {}
+  virtual ~SEGasCompartmentGraph() = default;
 
   void AddGraph(SEGasCompartmentGraph& graph);
 
@@ -37,5 +39,5 @@ protected:
   virtual void Unload(CDM::GasCompartmentGraphData& data);
 
 protected:
-  void BalanceByIntensive();
+  void BalanceByIntensive() override;
 };

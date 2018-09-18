@@ -12,16 +12,16 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/schema/PatientConditionData.hxx>
+#include <biogears/schema/cdm/PatientConditions.hxx>
 
 class BIOGEARS_API SEPatientCondition : public SECondition {
 public:
   SEPatientCondition();
   virtual ~SEPatientCondition();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const = 0;
+  virtual bool IsValid() const override = 0;
 
   virtual bool Load(const CDM::PatientConditionData& in);
 
@@ -29,5 +29,5 @@ protected:
   virtual void Unload(CDM::PatientConditionData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const = 0;
+  virtual void ToString(std::ostream& str) const override = 0;
 };

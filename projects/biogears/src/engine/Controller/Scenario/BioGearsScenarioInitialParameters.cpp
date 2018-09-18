@@ -11,7 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioInitialParameters.h>
-#include <biogears/engine/stdafx.h>
+
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+
+namespace BGE = mil::tatrc::physiology::biogears;
 
 BioGearsScenarioInitialParameters::BioGearsScenarioInitialParameters(SESubstanceManager& subMgr)
   : SEScenarioInitialParameters(subMgr)

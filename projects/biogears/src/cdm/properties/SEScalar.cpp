@@ -11,10 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/cdm/stdafx.h>
 #include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/schema/Properties.hxx>
-#include <biogears/schema/ScalarData.hxx>
+
 
 unsigned long long int SEScalar::NaN = ((unsigned long long int)255 << (8 * 7)) + ((unsigned long long int)(255 - 8) << (8 * 6)) + ((unsigned long long int)255 << (8 * 5)) + ((unsigned long long int)255 << (8 * 4)) + ((unsigned long long int)255 << (8 * 3)) + (255 << (8 * 2)) + (255 << (8 * 1)) + 255;
 
@@ -25,7 +23,7 @@ double SEScalar::dNaN()
   return d;
 }
 
-const NoUnit NoUnit::unitless;
+const NoUnit NoUnit::unitless = NoUnit();
 const std::string unitless = "unitless";
 
 SEScalar::SEScalar()

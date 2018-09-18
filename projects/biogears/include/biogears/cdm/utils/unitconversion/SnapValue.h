@@ -26,8 +26,8 @@ specific language governing permissions and limitations under the License.
 // took the square root of an acre.
 //----------------------------------------------------------------------------
 #pragma once
-#include <float.h>
-
+#include <cfloat>
+#include <cmath>
 // The use of FLT_EPSILON instead of
 // DBL_EPSILON is just in case our values are the result of some
 // funky compiler intrinsic that does stuff in single precision. This should
@@ -299,7 +299,7 @@ protected:
     // when the fractional value is close to 0 or to +/- 1.
     double intval;
     double bump = 1.0;
-    double frac = modf(m_dVal, &intval);
+    double frac = std::modf(m_dVal, &intval);
     if (frac < 0) {
       frac = -frac;
       bump = -1.0;

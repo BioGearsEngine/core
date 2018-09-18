@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/BioGearsTissueSystemData.hxx>
+#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 class SESubstance;
 class SEGasCompartment;

@@ -9,15 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
 #pragma once
+
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
-#include <biogears/schema/LiquidCompartmentData.hxx>
-#include <biogears/schema/LiquidCompartmentLinkData.hxx>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 class SELiquidCompartment;
-
-class BIOGEARS_API SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment> {
+class SECompartmentManager;
+class SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment> {
   friend class SECompartmentManager;
 
 protected:
@@ -27,7 +27,7 @@ protected:
   }
 
 public:
-  ~SELiquidCompartmentLink() {}
+  ~SELiquidCompartmentLink() = default;
 
-  virtual CDM::LiquidCompartmentLinkData* Unload();
+  virtual CDM::LiquidCompartmentLinkData* Unload() override;
 };

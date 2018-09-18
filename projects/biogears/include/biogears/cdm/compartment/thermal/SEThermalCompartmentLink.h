@@ -15,8 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentLink.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/ThermalCompartmentLinkData.hxx>
+#include <biogears/schema/cdm/Compartment.hxx>
 
+class SECompartmentManager;
 class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink {
   friend class SECompartmentManager;
 
@@ -26,16 +27,16 @@ protected:
 public:
   virtual ~SEThermalCompartmentLink();
 
-  virtual void Clear();
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::ThermalCompartmentLinkData* Unload();
+  virtual CDM::ThermalCompartmentLinkData* Unload() override;
 
 protected:
   virtual void Unload(CDM::ThermalCompartmentLinkData& data);
 
 public:
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name) override;
 
   virtual bool HasHeatTransferRate() const;
   virtual SEScalarPower& GetHeatTransferRate();
@@ -65,5 +66,6 @@ class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment
 public:
   SEThermalCompartmentGraph(const std::string& name, Logger* logger)
     : SECompartmentGraph(name, logger){};
-  virtual ~SEThermalCompartmentGraph() {}
+
+  virtual ~SEThermalCompartmentGraph() = default;
 };

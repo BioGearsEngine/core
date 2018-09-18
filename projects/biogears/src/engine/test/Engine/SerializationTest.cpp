@@ -9,30 +9,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
-
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
-
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
-
-#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
-#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
-
-#include <biogears/schema/BioGearsStateData.hxx>
-
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
@@ -49,6 +35,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
+#include <biogears/cdm/utils/FileUtils.h>
 
 class HowToTracker {
 private:

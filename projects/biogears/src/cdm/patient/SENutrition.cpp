@@ -9,20 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/patient/SENutrition.h>
 
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/patient/SENutrition.h>
-#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/NutritionData.hxx>
-#include <biogears/schema/ScalarMassData.hxx>
-#include <biogears/schema/ScalarMassPerTimeData.hxx>
-#include <biogears/schema/ScalarVolumeData.hxx>
-#include <biogears/schema/ScalarVolumePerTimeData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/schema/cdm/PatientNutrition.hxx>
 
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)

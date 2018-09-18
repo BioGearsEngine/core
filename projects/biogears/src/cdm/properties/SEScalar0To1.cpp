@@ -11,8 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/Properties.hxx>
 
 SEScalar0To1::SEScalar0To1()
   : SEScalar()

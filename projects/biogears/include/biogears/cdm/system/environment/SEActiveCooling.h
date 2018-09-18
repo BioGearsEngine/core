@@ -10,8 +10,18 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
-CDM_BIND_DECL(ActiveCoolingData)
+#include <biogears/schema/cdm/Environment.hxx>
+
+class SEScalar;
+class SEScalarFraction;
+class SEScalarPower;
+class PowerUnit;
+class SEScalarArea;
+class AreaUnit;
+
 
 class BIOGEARS_API SEActiveCooling : public Loggable {
 public:

@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/test/CommonDataModelTest.h>
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
@@ -20,15 +21,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/test/CommonDataModelTest.h>
-#include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/cdm/utils/TimingProfile.h>
-#include <biogears/cdm/utils/testing/SETestCase.h>
-#include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/utils/testing/SETestSuite.h>
-
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
@@ -38,6 +30,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/cdm/utils/testing/SETestCase.h>
+#include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 // Maybe we want to test a couple compartments that overlap
 // i.e. 2 compartments containing the same node and or path

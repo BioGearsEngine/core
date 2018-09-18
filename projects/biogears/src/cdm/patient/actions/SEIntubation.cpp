@@ -11,8 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEIntubation.h>
-#include <biogears/cdm/stdafx.h>
-#include <biogears/schema/IntubationData.hxx>
+
 
 SEIntubation::SEIntubation()
   : SEPatientAction()

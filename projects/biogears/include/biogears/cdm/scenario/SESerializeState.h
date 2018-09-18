@@ -11,9 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/SerializeStateData.hxx>
-#include <biogears/schema/enumSerializationType.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
 
 class BIOGEARS_API SESerializeState : public SEAction {
 public:

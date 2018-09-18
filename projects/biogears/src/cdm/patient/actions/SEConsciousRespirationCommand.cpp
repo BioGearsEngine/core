@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
-#include <biogears/cdm/stdafx.h>
 
 SEConsciousRespirationCommand::SEConsciousRespirationCommand()
 {
