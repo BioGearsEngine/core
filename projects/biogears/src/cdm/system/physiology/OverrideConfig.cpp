@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/stdafx.h>
 #include <biogears/schema/ArrayTimeData.hxx>
 #include <biogears/schema/DoubleArray.hxx>
-#include <biogears/schema/OverrideConfigData.hxx>
 #include "biogears/cdm/system/physiology/OverrideConfig.h"
 
 
@@ -25,15 +24,8 @@ OverrideConfig::OverrideConfig(Logger* logger)
 : Loggable(logger)
 {
 	m_overrideMode = CDM::enumOnOff::value(-1);
+	m_MeanArterialPressureOverride = nullptr;
 
-}
-
-
-OverrideConfig::OverrideConfig(std::string path, Logger* logger)
-  : Loggable(logger)
-{
-	LoadOverride(path);
-  m_MeanArterialPressureOverride = nullptr;
 }
 
 OverrideConfig::~OverrideConfig()
@@ -44,8 +36,8 @@ OverrideConfig::~OverrideConfig()
 void OverrideConfig::Clear()
 {
   /* Check this function */
-  m_MeanArterialPressureOverride = nullptr;
-  m_overrideMode = CDM::enumOnOff::value(-1); ;
+	SAFE_DELETE(m_MeanArterialPressureOverride);
+	m_overrideMode = CDM::enumOnOff::value(-1); ;
 }
 
 bool OverrideConfig::LoadOverride(const std::string& file)
@@ -57,7 +49,7 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     Error(sst);
     return false;
   }
-  Clear();
+
   std::unique_ptr<CDM::ObjectData> data = Serializer::ReadFile(file, GetLogger());
   CDM::OverrideConfigData* pData = dynamic_cast<CDM::OverrideConfigData*>(data.get());
   if (pData == nullptr) {
@@ -73,10 +65,16 @@ bool OverrideConfig::LoadOverride(const std::string& file)
   return true;
 }
 
+//Need to finish
 bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
 {
-  Clear();
-  return true;
+	if (in.CardiovascularOverride().present()) {
+		const CDM::CardiovascularOverrideData& config = in.CardiovascularOverride().get();
+		if (config.MeanArterialPressureOverride().present())
+			GetMeanArterialPressureOverride().Load(config.MeanArterialPressureOverride().get());
+	}
+
+	return true;
 }
 
 CDM::OverrideConfigData* OverrideConfig::Unload() const
@@ -113,23 +111,45 @@ bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameter
   return Load(*pData);
 }
 
-bool OverrideConfig::HasOverride() const
-{
-  return m_MeanArterialPressureOverride == nullptr ? false : m_MeanArterialPressureOverride->IsValid();
-}
+//commenting for now
+//bool OverrideConfig::HasOverride() const
+//{
+//  return m_MeanArterialPressureOverride == nullptr ? false : m_MeanArterialPressureOverride->IsValid();
+//}
+//
+//SEScalarPressure& OverrideConfig::GetOverride()
+//{
+//  if (m_MeanArterialPressureOverride == nullptr)
+//    m_MeanArterialPressureOverride = new SEScalarPressure();
+//  return *m_MeanArterialPressureOverride;
+//}
+//
+//double OverrideConfig::GetOverride(const PressureUnit& unit) const
+//{
+//  if (m_MeanArterialPressureOverride == nullptr)
+//  {
+//    return SEScalar::dNaN();
+//  }
+//  return m_MeanArterialPressureOverride->GetValue(unit);
+//}
 
-SEScalarPressure& OverrideConfig::GetOverride()
-{
-  if (m_MeanArterialPressureOverride == nullptr)
-    m_MeanArterialPressureOverride = new SEScalarPressure();
-  return *m_MeanArterialPressureOverride;
-}
+////////////////////
+/** CardioVascular */
+////////////////////
 
-double OverrideConfig::GetOverride(const PressureUnit& unit) const
+bool OverrideConfig::HasMeanArterialPressureOverride() const
 {
-  if (m_MeanArterialPressureOverride == nullptr)
-  {
-    return SEScalar::dNaN();
-  }
-  return m_MeanArterialPressureOverride->GetValue(unit);
+	return m_MeanArterialPressureOverride == nullptr ? false : m_MeanArterialPressureOverride->IsValid();
+}
+SEScalar& OverrideConfig::GetMeanArterialPressureOverride()
+{
+	if (m_MeanArterialPressureOverride == nullptr)
+		m_MeanArterialPressureOverride = new SEScalarPressure();
+	return *m_MeanArterialPressureOverride;
+}
+double OverrideConfig::GetMeanArterialPressureOverride(const PressureUnit& unit) const
+{
+	if (m_MeanArterialPressureOverride == nullptr)
+		return SEScalar::dNaN();
+	return m_MeanArterialPressureOverride->GetValue(unit);
 }

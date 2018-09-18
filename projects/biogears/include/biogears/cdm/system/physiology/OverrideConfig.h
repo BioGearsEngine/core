@@ -15,11 +15,14 @@ CDM_BIND_DECL(OverrideConfigData)
 #include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/enumOnOff.hxx>
+#include <biogears/schema/OverrideConfigData.hxx>
+#include <biogears/schema/CardiovascularOverrideData.hxx>
+
+
 
 class BIOGEARS_API OverrideConfig : public Loggable {
 public:
   OverrideConfig(Logger* logger);
-  OverrideConfig(std::string path, Logger* logger);
   virtual ~OverrideConfig();
 
   virtual void Clear(); // Deletes all members
@@ -28,9 +31,13 @@ public:
   virtual bool Load(const CDM::OverrideConfigData& in);
   virtual CDM::OverrideConfigData* Unload() const;
   // bool ReadOverrideParmeters(const std::string& overrideParameterFile);
-  virtual bool HasOverride() const;
-  virtual SEScalarPressure& GetOverride();
-  virtual double GetOverride(const PressureUnit& unit) const;
+  //virtual bool HasOverride() const;
+  //virtual SEScalarPressure& GetOverride();
+  //virtual double GetOverride(const PressureUnit& unit) const;
+
+  virtual bool HasMeanArterialPressureOverride() const;
+  virtual SEScalar& GetMeanArterialPressureOverride();
+  virtual double GetMeanArterialPressureOverride(const PressureUnit& unit) const;
 
 protected:
   virtual void Unload(CDM::OverrideConfigData& data) const;

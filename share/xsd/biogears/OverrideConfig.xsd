@@ -14,11 +14,11 @@ specific language governing permissions and limitations under the License.
   
   <xs:include schemaLocation="../cdm/Properties.xsd"/>  
   
-  <xs:complexType name="CardiovascularData">
+  <xs:complexType name="CardiovascularOverrideData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="MeanArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>          
+          <xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>          
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -27,10 +27,10 @@ specific language governing permissions and limitations under the License.
   <!-- @brief Declaration of BioGears System in which to apply the override value -->
   <xs:complexType name="OverrideConfigData">
     <xs:complexContent>
-		<xs:extension base="ObjectData">
+		<xs:extension base="PhysiologyEngineConfigurationData">
 			<xs:sequence>          
           <!-- BioGears System in which the override is to be applied -->
-          <xs:element name="Cardiovascular" type="CardiovascularData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Patient Identifier. -->
+          <xs:element name="CardiovascularOverride" type="CardiovascularOverrideData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Patient Identifier. -->
 		</xs:sequence>        
       </xs:extension>
     </xs:complexContent>
