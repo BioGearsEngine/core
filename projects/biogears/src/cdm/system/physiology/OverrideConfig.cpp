@@ -86,7 +86,9 @@ CDM::OverrideConfigData* OverrideConfig::Unload() const
 
 void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
 {
-
+	CDM::CardiovascularOverrideData* cardio(new CDM::CardiovascularOverrideData());
+	if (HasMeanArterialPressureOverride())
+		cardio->MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureOverride->Unload()));
 }
 
 bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameterFile)

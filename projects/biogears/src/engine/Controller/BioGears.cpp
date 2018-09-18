@@ -137,6 +137,11 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   cFile.Load("BioGearsConfiguration.xml");
   m_Config->Merge(cFile);
 
+  /*Info("Checking Override Configuration");
+  OverrideConfig *cFile;
+  cFile.LoadFile("BioGearsConfiguration.xml");
+  m_Config->Merge(cFile);*/
+
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {
     std::string stableDir = "./stable/";
