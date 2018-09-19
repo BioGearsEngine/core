@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OverrideConfig xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
     <CardiovascularOverride>
-		<MeanArterialPressureOverride value="95.0" unit="mmHg">
+		<MeanArterialPressureOverride value="95.0" unit="mmHg"/>
     </CardiovascularOverride>
 </OverrideConfig>

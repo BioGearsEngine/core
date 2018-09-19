@@ -209,6 +209,8 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
     return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CompartmentManager(*doc).release());
   if (name.compare("BioGearsConfiguration") == 0)
     return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsConfiguration(*doc).release());
+  if (name.compare("OverrideConfig") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::OverrideConfig(*doc).release());
   if (name.compare("BioGearsState") == 0)
     return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsState(*doc).release());
   if (name.compare("DataRequests") == 0)

@@ -22,7 +22,7 @@ CDM_BIND_DECL(OverrideConfigData)
 
 class BIOGEARS_API OverrideConfig : public Loggable {
 public:
-  OverrideConfig(Logger* logger);
+  OverrideConfig();
   virtual ~OverrideConfig();
 
   virtual void Clear(); // Deletes all members

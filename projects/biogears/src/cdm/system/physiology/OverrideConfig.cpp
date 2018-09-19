@@ -13,14 +13,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
-//#include <biogears/cdm/stdafx.h>
 #include <biogears/schema/cdm/Properties.hxx>
 #include "biogears/cdm/system/physiology/OverrideConfig.h"
 
 
 // Work in Progress
-OverrideConfig::OverrideConfig(Logger* logger)
-: Loggable(logger)
+OverrideConfig::OverrideConfig()
+
 {
 	m_overrideMode = CDM::enumOnOff::value(-1);
 	m_MeanArterialPressureOverride = nullptr;

@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Gastrointestinal.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
+#include "biogears/cdm/system/physiology/OverrideConfig.h"
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -137,10 +138,10 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   cFile.Load("BioGearsConfiguration.xml");
   m_Config->Merge(cFile);
 
-  /*Info("Checking Override Configuration");
-  OverrideConfig *cFile;
-  cFile.LoadFile("BioGearsConfiguration.xml");
-  m_Config->Merge(cFile);*/
+  Info("Checking Override Configuration");
+  OverrideConfig oFile;
+  oFile.LoadOverride("OverrideConfig.xml");
+  //m_Config->Merge(oFile);
 
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {
