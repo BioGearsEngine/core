@@ -74,7 +74,6 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
       EnableCardiovascularOverride(config.EnableCardiovascularOverride().get());
     if (config.MeanArterialPressureOverride().present())
       GetMeanArterialPressureOverride().Load(config.MeanArterialPressureOverride().get());
-
 	}
 
 	return true;
