@@ -70,8 +70,8 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
 {
 	if (in.CardiovascularOverride().present()) {
 		const CDM::CardiovascularOverrideData& config = in.CardiovascularOverride().get();
-		if (config.MeanArterialPressureOverride().present())
-			GetMeanArterialPressureOverride().Load(config.MeanArterialPressureOverride().get());
+		if (config.EnableCardiovascularOverride().present())
+      EnableCardiovascularOverride(config.EnableCardiovascularOverride().get());
 	}
 
 	return true;
@@ -81,14 +81,23 @@ CDM::OverrideConfigData* OverrideConfig::Unload() const
 {
   CDM::OverrideConfigData* data(new CDM::OverrideConfigData());
   Unload(*data);
-  return data;
+  return data; 
+  
 }
 
 void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
 {
+  /*
 	CDM::CardiovascularOverrideData* cardio(new CDM::CardiovascularOverrideData());
 	if (HasMeanArterialPressureOverride())
 		cardio->MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureOverride->Unload()));
+  */
+
+  // PhysiologyEngineConfiguration::Unload(data);
+  CDM::CardiovascularOverrideData* cardiovascularoverride(new CDM::CardiovascularOverrideData());
+  if (HasEnableCardiovascularOverride())
+    cardiovascularoverride->EnableCardiovascularOverride(m_overrideMode);
+  data.CardiovascularOverride(std::unique_ptr<CDM::CardiovascularOverrideData>(cardiovascularoverride));
 }
 
 bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameterFile)
