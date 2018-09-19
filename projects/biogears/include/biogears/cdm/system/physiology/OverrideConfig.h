@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(OverrideConfigData)
 #include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/enumOnOff.hxx>
-#include <biogears/schema/OverrideConfigData.hxx>
-#include <biogears/schema/CardiovascularOverrideData.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/schema/biogears/OverrideConfig.hxx>
+//#include <biogears/schema/CardiovascularOverrideData.hxx>
 
 
 
