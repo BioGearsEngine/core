@@ -11,7 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SESepsisState.h>
-#include <biogears/cdm/stdafx.h>
+
+#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalar0To1.h>
 
 SESepsisState::SESepsisState()
   : m_Pathogen(nullptr)

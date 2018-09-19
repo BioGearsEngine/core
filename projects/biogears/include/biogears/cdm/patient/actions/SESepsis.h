@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
-#include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarData.hxx>
+
+
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 

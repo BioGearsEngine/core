@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 
+
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
@@ -170,7 +171,7 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   //This applies to SepsisInfectionState values, as they are defined SepsisInfectionState-Pathogen, e.g.
   size_t split = name.find('-');
   if (split != name.npos) {
-    std::string prop = name.substr(split + 1, name.npos);		//Get property that follows dash
+    std::string prop = name.substr(split + 1, name.npos); //Get property that follows dash
     return GetSepsisInfectionState().GetScalar(prop);
   }
 

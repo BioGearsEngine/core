@@ -12,11 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/exports.h>
-
+#include <biogears/cdm/patient/actions/SESepsisState.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+
 namespace biogears {
+
 class SEScalarMass;
 class MassUnit;
 class SEScalarMassPerVolume;
@@ -30,6 +32,7 @@ class SEScalarAmountPerVolume;
 class AmountPerVolumeUnit;
 class SEScalarPressure;
 class PressureUnit;
+class SESepsisState;
 
 
 /** @copydoc Physiology_BloodChemistrySystemData

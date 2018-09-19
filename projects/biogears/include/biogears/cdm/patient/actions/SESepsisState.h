@@ -10,16 +10,13 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-
-#include <biogears/cdm/system/SESystem.h>
-#include <biogears/cdm/utils/Logger.h>
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
-#include <biogears/schema/SepsisStateData.hxx>
-#include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/ScalarData.hxx>
-#include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/schema/Scalar0To1Data.hxx>
 
+#include <biogears/schema/cdm/Physiology.hxx>
+
+class SEScalar;
+class SEScalar0To1;
 
 class BIOGEARS_API SESepsisState {
 public:
@@ -42,7 +39,7 @@ public:
   virtual SEScalar& GetPathogen();
   virtual double GetPathogen() const;
 
-    virtual bool HasMacrophage() const;
+  virtual bool HasMacrophage() const;
   virtual SEScalar& GetMacrophage();
   virtual double GetMacrophage() const;
 
@@ -50,7 +47,7 @@ public:
   virtual SEScalar& GetNeutrophilResting();
   virtual double GetNeutrophilResting() const;
 
-   virtual bool HasNeutrophilActive() const;
+  virtual bool HasNeutrophilActive() const;
   virtual SEScalar& GetNeutrophilActive();
   virtual double GetNeutrophilActive() const;
 
