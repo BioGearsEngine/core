@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
   
   <xs:include schemaLocation="../cdm/Properties.xsd"/>  
+  <xs:include schemaLocation="../cdm/EngineConfiguration.xsd"/>  
+
   
   <xs:complexType name="CardiovascularOverrideData">
     <xs:complexContent>
