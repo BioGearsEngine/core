@@ -61,6 +61,7 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     return false;
   }
   m_overrideMode = CDM::enumOnOff::On;
+  Load(*pData);
   return true;
 }
 
@@ -71,6 +72,9 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
 		const CDM::CardiovascularOverrideData& config = in.CardiovascularOverride().get();
 		if (config.EnableCardiovascularOverride().present())
       EnableCardiovascularOverride(config.EnableCardiovascularOverride().get());
+    if (config.MeanArterialPressureOverride().present())
+      GetMeanArterialPressureOverride().Load(config.MeanArterialPressureOverride().get());
+
 	}
 
 	return true;
@@ -86,17 +90,19 @@ CDM::OverrideConfigData* OverrideConfig::Unload() const
 
 void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
 {
-  /*
-	CDM::CardiovascularOverrideData* cardio(new CDM::CardiovascularOverrideData());
-	if (HasMeanArterialPressureOverride())
-		cardio->MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureOverride->Unload()));
-  */
+
+  CDM::CardiovascularOverrideData* cardio(new CDM::CardiovascularOverrideData());
+  if (HasMeanArterialPressureOverride())
+    cardio->MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureOverride->Unload()));
+  
 
   // PhysiologyEngineConfiguration::Unload(data);
   CDM::CardiovascularOverrideData* cardiovascularoverride(new CDM::CardiovascularOverrideData());
   if (HasEnableCardiovascularOverride())
     cardiovascularoverride->EnableCardiovascularOverride(m_overrideMode);
   data.CardiovascularOverride(std::unique_ptr<CDM::CardiovascularOverrideData>(cardiovascularoverride));
+
+
 }
 
 bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameterFile)
@@ -151,7 +157,7 @@ bool OverrideConfig::HasMeanArterialPressureOverride() const
 {
 	return m_MeanArterialPressureOverride == nullptr ? false : m_MeanArterialPressureOverride->IsValid();
 }
-SEScalar& OverrideConfig::GetMeanArterialPressureOverride()
+SEScalarPressure& OverrideConfig::GetMeanArterialPressureOverride()
 {
 	if (m_MeanArterialPressureOverride == nullptr)
 		m_MeanArterialPressureOverride = new SEScalarPressure();

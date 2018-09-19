@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGears.h>
 
+#include "biogears/cdm/system/physiology/OverrideConfig.h"
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
@@ -37,7 +38,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Gastrointestinal.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
-#include "biogears/cdm/system/physiology/OverrideConfig.h"
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -100,6 +100,8 @@ BioGears::BioGears(Logger* logger)
   m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(*this));
 
   m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(*this));
+
+  m_OverrideConfig = std::unique_ptr<OverrideConfig>(new OverrideConfig());
 }
 
 DataTrack& BioGears::GetDataTrack()
@@ -142,6 +144,11 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   OverrideConfig oFile;
   oFile.LoadOverride("OverrideConfig.xml");
   //m_Config->Merge(oFile);
+
+  //double overrideMAP = m_OverrideConfig->GetMeanArterialPressureOverride().GetValue(PressureUnit::mmHg);
+  //std::stringstream POtest;
+  //POtest << "Override MAP of " << overrideMAP << " mmHg means this works. Finally.";
+  //Info(POtest);
 
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {

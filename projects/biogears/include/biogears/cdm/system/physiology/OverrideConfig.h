@@ -36,7 +36,7 @@ public:
   //virtual double GetOverride(const PressureUnit& unit) const;
 
   virtual bool HasMeanArterialPressureOverride() const;
-  virtual SEScalar& GetMeanArterialPressureOverride();
+  virtual SEScalarPressure& GetMeanArterialPressureOverride();
   virtual double GetMeanArterialPressureOverride(const PressureUnit& unit) const;
 
   virtual bool HasEnableCardiovascularOverride() const { return m_overrideMode != (CDM::enumOnOff::value)-1; }
