@@ -2419,7 +2419,7 @@ void Tissue::CalculateOncoticPressure()
   ////albumin is the only large protein present in significant quantities and use the correlation between albumin concentration and
   ////oncotic pressure reported by LP.  This assumes a healthy state where no other proteins are leaking across membrane.  Thus, these
   ////assumptions should change in hemorrhage and sepsis.
-  ///// \ToDo:  Adjust protein concentration calculations to consider effect of damaged microvasculature
+  /// \ToDo:  Adjust protein concentration calculations to consider effect of damaged microvasculature
   double reflectionCoefficient = 0.0;
   double vascularOncoticPressure_mmHg = 0.0;
   double interstitialOncoticPressure_mmHg = 0.0;

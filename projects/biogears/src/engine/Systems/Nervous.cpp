@@ -230,8 +230,10 @@ void Nervous::PostProcess()
 /// \todo Add decompensation. Perhaps a reduction in the effect that is a function of blood volume below a threshold... and maybe time.
 void Nervous::BaroreceptorFeedback()
 {
-  if (!m_FeedbackActive)
+  if (!m_FeedbackActive){
     return;
+  }
+
   //First calculate the sympathetic and parasympathetic firing rates:
   double nu = m_data.GetConfiguration().GetResponseSlope();
   double meanArterialPressure_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure(PressureUnit::mmHg);
@@ -257,6 +259,7 @@ void Nervous::BaroreceptorFeedback()
     painVAS *= 0.1;
     meanArterialPressureSetPoint_mmHg *= (1 + 0.65 * painVAS);
   }
+
 
   double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
   double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));

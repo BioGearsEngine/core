@@ -669,13 +669,14 @@ void BloodChemistry::Sepsis()
   double un_Per_h = 0.05 * timeScale; //Decay rate of activated phagocytes
   double knd_Per_h = 0.02 * timeScale; //Activation of resting phagocytes by tissue damage
   double kdn_Per_h = 0.35 * timeScale; //Rate of tissue damage caused by active phagocytes
-  double xdn = 0.3; //Level of activated phagocytes leading to half-max tissue damage
-  double ud_Per_h = 0.35 * timeScale; //Decay rate of tissue damage (i.e. tissue repair rate)--chosen to balance damage rate
+  double xdn = 0.45; //Level of activated phagocytes leading to half-max tissue damage
+  double ud_Per_h = 0.25 * timeScale; 
   double cInf = 0.28; //Max anti-inflammatory response
   double sc_Per_h = 0.0125 * timeScale; //Source of anti-inflammatory mediator
   double kcn_Per_h = 0.04 * timeScale; //Max production rate of anti-inflammatory mediator
   double kcnd = 48.0; //Relative effectiveness of ativates phagocytes and damaged tissue in inducing anti-inflammatory response
   double uc_Per_h = 0.1 * timeScale; //Decay rate of anti-inflammatory mediator
+  double kdp_Per_h = 0.005 * timeScale; //Rate at which pathogen causes inflammation / tissue damage
 
   //Antibiotic pharmacodynamics--see Regoes2004Pharmacodynamic
   double antibiotic_ug_Per_mL = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::ug);
@@ -700,7 +701,7 @@ void BloodChemistry::Sepsis()
   double dMacrophage_Per_h = sm_Per_h - um_Per_h * macrophage - kmp_Per_h * macrophage * pathogen;
   double dNeutrophilResting_Per_h = snr_Per_h - unr_Per_h * neutrophilResting - (knn_Per_h * neutrophilResting * neutrophilActive + knp_Per_h * pathogen * neutrophilResting + knd_Per_h * neutrophilResting * (1.0 - tissueIntegrity)) / (1.0 + cSat);
   double dNeutrophilActive_Per_h = (knn_Per_h * neutrophilResting * neutrophilActive + knp_Per_h * pathogen * neutrophilResting + knd_Per_h * neutrophilResting * (1.0 - tissueIntegrity)) / (1.0 + cSat) - un_Per_h * neutrophilActive;
-  double dTissueIntegrity_Per_h = ud_Per_h*(1.0-tissueIntegrity)*(tissueIntegrity-0.05)*tissueIntegrity-kdn_Per_h*fS*tissueIntegrity;
+  double dTissueIntegrity_Per_h = ud_Per_h*(1.0-tissueIntegrity)*(tissueIntegrity-0.05)*tissueIntegrity-(kdn_Per_h*fS + kdp_Per_h * pathogen)*tissueIntegrity;
   double dAntiinflammation_Per_h = sc_Per_h + (kcn_Per_h * fCa) / (1.0 + fCa) - uc_Per_h * antiinflammation;
 
   double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
@@ -714,7 +715,7 @@ void BloodChemistry::Sepsis()
 
 
   //Physiological response
-  double modsThreshold = 0.5;
+  double modsThreshold = 0.75;
   double wbcBaseline_ct_Per_uL = 7000.0;
 
   //Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
@@ -725,22 +726,22 @@ void BloodChemistry::Sepsis()
   double resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
   double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (1.0-tissueIntegrity));
   vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextReflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0.0, 1.0, 0.05, tissueIntegrity);
+  double nextReflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0.05, 1.0, 0.10, tissueIntegrity);
   BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
   m_data.GetCompartments().GetTissueCompartment(sep->GetCompartment() + "Tissue")->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
 
   for (auto comp : m_data.GetCompartments().GetTissueLeafCompartments()) {
     if (comp->GetName().compare(BGE::TissueCompartment::Brain) == 0 || comp->GetName().compare(sepComp) == 0)
       continue; //Don't mess with the brain and don't repeat the compartment the infection started in
-    if (tissueIntegrity < modsThreshold) {
-      nextReflectionCoefficient = GeneralMath::LinearInterpolator(modsThreshold, 0.0, 1.0, 0.05, tissueIntegrity);
+   // if (tissueIntegrity < modsThreshold) {
+      nextReflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0.05, 1.0, 0.10, tissueIntegrity);
       BLIM(nextReflectionCoefficient, 0.0, 1.0);
       comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (modsThreshold-tissueIntegrity));
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (1.0-tissueIntegrity));
       vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    } 
+   // } 
   }
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
@@ -755,13 +756,17 @@ void BloodChemistry::Sepsis()
 
   //Temperature (fever) effects
   double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
-  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.15); //was *0.75, then *0.85 for max value
+  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.05); //was *0.75, then *0.85 for max value
   coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
 
-  //Blood pressure effects (accomplish by dulling baroreceptor resistance scale)
-  double baroreceptorScaleDelta = 0.9 * sigmoidInput / (sigmoidInput + 0.25);
-  m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(1.0 - baroreceptorScaleDelta);
+  //Blood pressure effects (accomplish by overriding baroreceptor resistance scale)
+  double bpThreshold = 0.5;
+  double baroreceptorScale = exp(-3*(sigmoidInput-bpThreshold));
+  if (sigmoidInput >= bpThreshold) {
+    m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(baroreceptorScale);
+  }
 
+  
   //Bilirubin counts (measure of liver perfusion)
   double baselineBilirubin_mg_Per_dL = 0.70;
   double maxBilirubin_mg_Per_dL = 26.0; //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
