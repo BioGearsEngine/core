@@ -61,6 +61,7 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     Error(sst);
     return false;
   }
+  m_overrideMode = CDM::enumOnOff::On;
   return true;
 }
 
