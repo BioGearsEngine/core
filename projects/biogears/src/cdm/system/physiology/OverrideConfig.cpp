@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 OverrideConfig::OverrideConfig()
 
 {
-	m_overrideMode = CDM::enumOnOff::value(-1);
+	m_overrideMode = CDM::enumOnOff::Off;
 	m_MeanArterialPressureOverride = nullptr;
 
 }
@@ -35,7 +35,7 @@ void OverrideConfig::Clear()
 {
   /* Check this function */
 	SAFE_DELETE(m_MeanArterialPressureOverride);
-	m_overrideMode = CDM::enumOnOff::value(-1); ;
+	m_overrideMode = CDM::enumOnOff::Off; ;
 }
 
 bool OverrideConfig::LoadOverride(const std::string& file)
@@ -95,7 +95,6 @@ void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
     cardio->MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureOverride->Unload()));
   
 
-  // PhysiologyEngineConfiguration::Unload(data);
   CDM::CardiovascularOverrideData* cardiovascularoverride(new CDM::CardiovascularOverrideData());
   if (HasEnableCardiovascularOverride())
     cardiovascularoverride->EnableCardiovascularOverride(m_overrideMode);
