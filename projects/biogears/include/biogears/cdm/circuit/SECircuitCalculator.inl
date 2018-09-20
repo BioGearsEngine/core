@@ -17,13 +17,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
+#pragma warning(push, 0)  
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
 #include <Eigen/SparseLU>
 //#include <Eigen/SparseCholesky>
 #include <Eigen/IterativeLinearSolvers>
 #include <Eigen/SparseQR>
-
+#pragma warning(pop)
 #include <bitset>
 #include <numeric>
 
@@ -76,12 +77,12 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::Process(CircuitType& circuit
       p->SetNextPolarizedState(CDM::enumOpenClosed::Closed);
   }
 
-  //When we parse everything into our Ax=b matrices/vectors for the linear solver,
-  //the address (row,column) is based on indexes.
-  // The circuit has a method for getting a Jacobian index for all nodes except the reference node
-  //We'll solve circuits with switches using Assumed Valve (i.e. Diode) States model by thinking of them as switches
-  //and checking the resulting Flow and Pressure difference.
-  //We'll keep looping until we've either found a solution or determined that it cannot be solved in the current configuration.
+    //When we parse everything into our Ax=b matrices/vectors for the linear solver,
+    //the address (row,column) is based on indexes.
+    // The circuit has a method for getting a Jacobian index for all nodes except the reference node
+    //We'll solve circuits with switches using Assumed Valve (i.e. Diode) States model by thinking of them as switches
+    //and checking the resulting Flow and Pressure difference.
+    //We'll keep looping until we've either found a solution or determined that it cannot be solved in the current configuration.
 #ifdef VERBOSE
   int i = 0;
 #endif
@@ -410,12 +411,14 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::Solve()
     //Sparse methods
   case EigenCircuitSolver::SparseLU: {
     Eigen::SparseMatrix<double> sparse = m_AMatrix.sparseView();
+    //TODO:sawhite:Upgrade SparseMatrix to Eigen::SparseLU<Eigen::SparseMatrix<double, Eigen::ColMajor, int64_t>>
     Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;
     solver.compute(sparse);
     //Check to see if we have a good solution.
-    if (solver.info() == Eigen::Success)
+    if (solver.info() == Eigen::Success) {
       m_xVector = solver.solve(m_bVector);
-    else
+    } else
+
       sparseFailed = true;
     break;
   }
