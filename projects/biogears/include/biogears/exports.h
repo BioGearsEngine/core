@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 #define BIOGEARS_API __attribute__((visibility("default")))
 #define BG_EXT extern
 #else
-#ifdef biogears_EXPORTS
 #include <biogears/string-exports.h>
+#ifdef biogears_EXPORTS
 #define BIOGEARS_API __declspec(dllexport)
 #define BG_EXT
 #else
