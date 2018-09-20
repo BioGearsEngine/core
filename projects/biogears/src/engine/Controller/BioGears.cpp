@@ -143,19 +143,21 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
 
   Info("Checking Override Configuration");
   m_OverrideConfig->LoadOverride("OverrideConfig.xml");
+  
+  //m_Config->Merge(m_OverrideConfig);
 
   /*
   if (m_OverrideConfig->IsCardiovascularOverrideEnabled()) {
     Info("Cardiovascular IsEnabled");
   } 
-  */
+ 
 
   
   double overrideMAP = m_OverrideConfig->GetMeanArterialPressureOverride().GetValue(PressureUnit::mmHg);
   std::stringstream POtest;
   POtest << "Override MAP of " << overrideMAP << " mmHg means this works. Finally.";
   Info(POtest);
-  
+  */
 
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {
@@ -858,7 +860,8 @@ EngineState BioGears::GetState() { return m_State; }
 SaturationCalculator& BioGears::GetSaturationCalculator() { return *m_SaturationCalculator; }
 BioGearsSubstances& BioGears::GetSubstances() { return *m_Substances; }
 SEPatient& BioGears::GetPatient() { return *m_Patient; }
-SEBloodChemistrySystem& BioGears::GetBloodChemistry() { return *m_BloodChemistrySystem; }
+OverrideConfig& BioGears::GetOverride() { return *m_OverrideConfig;  }
+  SEBloodChemistrySystem& BioGears::GetBloodChemistry() { return *m_BloodChemistrySystem; }
 SECardiovascularSystem& BioGears::GetCardiovascular() { return *m_CardiovascularSystem; }
 SEDrugSystem& BioGears::GetDrugs() { return *m_DrugSystem; }
 SEEndocrineSystem& BioGears::GetEndocrine() { return *m_EndocrineSystem; }

@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 CDM_BIND_DECL(OverrideConfigData)
 #include <biogears/exports.h>
+#include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/biogears/OverrideConfig.hxx>
@@ -26,6 +27,8 @@ public:
   virtual ~OverrideConfig();
 
   virtual void Clear(); // Deletes all members
+
+ // virtual void Merge(const OverrideConfig& from);
 
   virtual bool LoadOverride(const std::string& file);
   virtual bool Load(const CDM::OverrideConfigData& in);
@@ -56,4 +59,5 @@ protected:
 
   CDM::enumOnOff::value m_overrideMode;
   SEScalarPressure* m_MeanArterialPressureOverride;
+  //bool m_ORMerge;
 };

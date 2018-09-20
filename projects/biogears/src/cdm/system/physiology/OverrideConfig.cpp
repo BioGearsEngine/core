@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
+//#include <biogears/engine/Controller/BioGearsConfiguration.h>
+
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/schema/cdm/Properties.hxx>
@@ -19,7 +22,6 @@ specific language governing permissions and limitations under the License.
 
 // Work in Progress
 OverrideConfig::OverrideConfig()
-
 {
 	m_overrideMode = CDM::enumOnOff::Off;
 	m_MeanArterialPressureOverride = nullptr;
@@ -40,7 +42,9 @@ void OverrideConfig::Clear()
 
 bool OverrideConfig::LoadOverride(const std::string& file)
 {
-  Clear();
+  //if (!m_ORMerge)
+  Clear(); // Reset only if we are not merging
+
   std::stringstream sst;
   if (file.empty()) {
     sst << "Override file not provided: " << file << std::endl;
@@ -78,6 +82,7 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
 
 	return true;
 }
+
 
 CDM::OverrideConfigData* OverrideConfig::Unload() const
 {
@@ -146,6 +151,7 @@ bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameter
 //  }
 //  return m_MeanArterialPressureOverride->GetValue(unit);
 //}
+
 
 ////////////////////
 /** CardioVascular */

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include "biogears/cdm/system/physiology/OverrideConfig.h"
 
 class SELiquidCompartmentGraph;
 class SEFluidCircuitCalculator;
@@ -29,6 +30,7 @@ class SELiquidCompartmentGraph;
 class SEFluidCircuitNode;
 class SEFluidCircuitPath;
 class BioGears;
+class OverrideConfig;
 /**
 * @brief 
 * The %Cardiovascular system utilizes circuit methodology to characterize the intravascular fluid dynamics throughout the body.
@@ -216,4 +218,6 @@ private:
 
   std::vector<SEFluidCircuitPath*> m_systemicResistancePaths;
   std::vector<SEFluidCircuitPath*> m_systemicCompliancePaths;
+
+  OverrideConfig* m_Override;
 };

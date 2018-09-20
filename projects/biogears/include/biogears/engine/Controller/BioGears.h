@@ -100,6 +100,7 @@ public:
   BioGearsSubstances& GetSubstances();
 
   SEPatient& GetPatient();
+  OverrideConfig& GetOverride();
   bool GetPatientAssessment(SEPatientAssessment& assessment);
 
   SEBloodChemistrySystem& GetBloodChemistry();
