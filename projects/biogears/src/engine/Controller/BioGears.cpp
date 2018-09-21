@@ -144,20 +144,6 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   Info("Checking Override Configuration");
   m_OverrideConfig->LoadOverride("OverrideConfig.xml");
   
-  //m_Config->Merge(m_OverrideConfig);
-
-  /*
-  if (m_OverrideConfig->IsCardiovascularOverrideEnabled()) {
-    Info("Cardiovascular IsEnabled");
-  } 
- 
-
-  
-  double overrideMAP = m_OverrideConfig->GetMeanArterialPressureOverride().GetValue(PressureUnit::mmHg);
-  std::stringstream POtest;
-  POtest << "Override MAP of " << overrideMAP << " mmHg means this works. Finally.";
-  Info(POtest);
-  */
 
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {

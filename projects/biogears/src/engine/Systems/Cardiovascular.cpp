@@ -629,6 +629,12 @@ void Cardiovascular::PreProcess()
   // and do the appropriate calculations based on the time location.
   HeartDriver();
   ProcessActions();
+  //check overrides 
+
+  if (m_Override->IsCardiovascularOverrideEnabled() && m_data.GetState() == EngineState::Active) {
+	  ProcessOverride();
+  }
+	
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -991,6 +997,8 @@ void Cardiovascular::Hemorrhage()
   double TotalLoss_mL = 0;
   double probabilitySurvival = 0.0;
   double bleedoutTime = 0.0;
+  double bleedRate_mL_Per_s = 0.0;
+  
 
   double bloodVolume_mL = GetBloodVolume(VolumeUnit::mL);
   double baselineBloodVolume_mL = m_patient->GetBloodVolumeBaseline(VolumeUnit::mL);
@@ -1000,8 +1008,20 @@ void Cardiovascular::Hemorrhage()
     h = hem.second;
     targetPath = m_CirculatoryCircuit->GetPath(h->GetCompartment() + "Bleed");
     locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg);
+	bleedRate_mL_Per_s = h->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s);
+
+	//enforce strict restictions on bleed rate for circuit stability
+	if (bleedRate_mL_Per_s > m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s)) {
+		std::stringstream err;
+		err << "bleed rate (mL/s): " << bleedRate_mL_Per_s << " is higher than the cardiac output (mL/s): ("
+			<< m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s) << ")";
+		Info(err);
+		Fatal("Cannot set a bleed rate higher than the cardiac output");
+		return;
+	}
+
     if (!h->HasBleedResistance()) {
-      h->GetBleedResistance().SetValue(locationPressure_mmHg / h->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
+      h->GetBleedResistance().SetValue(locationPressure_mmHg / bleedRate_mL_Per_s, FlowResistanceUnit::mmHg_s_Per_mL);
     }
 
     resistance = h->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1810,3 +1830,18 @@ void Cardiovascular::CalculateHeartRate()
   GetHeartRate().SetValue(HeartRate_Per_s * 60.0, FrequencyUnit::Per_min);
   m_CurrentCardiacCycleDuration_s = 0;
 }
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// determine override requirements from user defined inputs 
+///
+/// \details
+/// User specified override outputs that are specific to the cardiovascular system are implemented here.
+/// If overrides aren't present for this system then this function will not be called during preprocess.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::ProcessOverride()
+{
+	double map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
+	m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
+}
+

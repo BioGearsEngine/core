@@ -64,6 +64,11 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     Error(sst);
     return false;
   }
+  if (!pData->CardiovascularOverride()) {
+	  return false;
+  }
+		
+	
   m_overrideMode = CDM::enumOnOff::On;
   Load(*pData);
   return true;
