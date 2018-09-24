@@ -1538,6 +1538,7 @@ void Cardiovascular::TuneCircuit()
       {
         map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
         m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
+        //Info("Cardiovascular Override Enabled");
       } else {
       map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
       }

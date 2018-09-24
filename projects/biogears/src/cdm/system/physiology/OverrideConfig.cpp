@@ -37,12 +37,11 @@ void OverrideConfig::Clear()
 {
   /* Check this function */
 	SAFE_DELETE(m_MeanArterialPressureOverride);
-	m_overrideMode = CDM::enumOnOff::Off; ;
+	m_overrideMode = CDM::enumOnOff::Off; 
 }
 
 bool OverrideConfig::LoadOverride(const std::string& file)
 {
-  //if (!m_ORMerge)
   Clear(); // Reset only if we are not merging
 
   std::stringstream sst;

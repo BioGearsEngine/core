@@ -59,5 +59,4 @@ protected:
 
   CDM::enumOnOff::value m_overrideMode;
   SEScalarPressure* m_MeanArterialPressureOverride;
-  //bool m_ORMerge;
 };
