@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
-namespace biogears {
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -44,6 +43,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_RightOpenTensionPneumothorax = nullptr;
   m_RightClosedTensionPneumothorax = nullptr;
   m_Urinate = nullptr;
+  m_Override = nullptr;
 }
 
 SEPatientActionCollection::~SEPatientActionCollection()
@@ -151,6 +151,8 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     to.push_back(itr.second->Unload());
   if (HasUrinate())
     to.push_back(GetUrinate()->Unload());
+  if (HasOverride())
+    to.push_back((GetOverride()->Unload()));
 }
 
 bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action)
@@ -523,6 +525,18 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_Urinate);
+  }
+
+  const CDM::OverrideData* overrideparam = dynamic_cast<const CDM::OverrideData*>(&action);
+  if (overrideparam != nullptr) {
+    if (m_Override == nullptr)
+      m_Override = new SEOverride();
+    m_Override->Load(*overrideparam);
+    if (!m_Override->IsActive()) {
+      RemoveOverride();
+      return true;
+    }
+    return IsValid(*m_Override);
   }
 
   /// \error Unsupported Action
@@ -1015,4 +1029,16 @@ void SEPatientActionCollection::RemoveUrinate()
 {
   SAFE_DELETE(m_Urinate);
 }
+
+bool SEPatientActionCollection::HasOverride() const
+{
+  return m_Override == nullptr ? false : true;
+}
+SEOverride* SEPatientActionCollection::GetOverride() const
+{
+  return m_Override;
+}
+void SEPatientActionCollection::RemoveOverride()
+{
+  SAFE_DELETE(m_Override);
 }

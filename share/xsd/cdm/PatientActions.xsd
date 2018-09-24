@@ -436,6 +436,13 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- @brief Override a patient parameter. -->
+	<xs:complexType name="OverrideData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData"/>
+		</xs:complexContent>
+	</xs:complexType>
+	
 </xs:schema>
 	
 	
