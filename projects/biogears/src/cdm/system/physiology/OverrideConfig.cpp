@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/schema/cdm/Properties.hxx>
-#include "biogears/cdm/system/physiology/OverrideConfig.h"
+#include <biogears/cdm/system/physiology/OverrideConfig.h>
 
 
 // Work in Progress

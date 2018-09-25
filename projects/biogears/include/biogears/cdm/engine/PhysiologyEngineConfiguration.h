@@ -37,8 +37,6 @@ public:
   virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
   virtual CDM::PhysiologyEngineConfigurationData* Unload() const;
 
-  //virtual void SetOverrideMode(bool);
-
 protected:
   void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
 

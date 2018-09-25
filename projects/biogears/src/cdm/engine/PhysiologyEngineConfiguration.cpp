@@ -73,12 +73,7 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
   return Load(*pData);
 }
 
-/*
-void PhysiologyEngineConfiguration::SetOverrideMode(bool ormode)
-{
-  *m_overrideMode = ormode;
-}
-*/
+
 bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& in)
 {
   if (!m_Merge)
