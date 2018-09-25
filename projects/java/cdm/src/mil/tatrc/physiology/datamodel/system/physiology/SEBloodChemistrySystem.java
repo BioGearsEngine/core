@@ -20,7 +20,7 @@ import mil.tatrc.physiology.datamodel.system.SESystem;
 public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESystem
 {
   protected SEScalarMassPerVolume          bloodDensity;
-  protected SEScalar                       bloodPH;
+  protected SEScalar                       ArterialArterialBloodPH;
   protected SEScalarHeatCapacitancePerMass bloodSpecificHeat;
   protected SEScalarMassPerVolume          bloodUreaNitrogenConcentration;
   protected SEScalarFraction               carbonDioxideSaturation;
@@ -53,7 +53,7 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   public SEBloodChemistrySystem()
   {
     bloodDensity = null;
-    bloodPH = null;
+    ArterialArterialBloodPH = null;
     bloodSpecificHeat = null;
     bloodUreaNitrogenConcentration = null;
     carbonDioxideSaturation = null;
@@ -89,8 +89,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (bloodDensity != null)
       bloodDensity.invalidate();
-    if (bloodPH != null)
-      bloodPH.invalidate();
+    if (ArterialArterialBloodPH != null)
+      ArterialArterialBloodPH.invalidate();
     if (bloodSpecificHeat != null)
       bloodSpecificHeat.invalidate();
     if (bloodUreaNitrogenConcentration != null)
@@ -153,8 +153,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (in.getBloodDensity() != null)
       getBloodDensity().load(in.getBloodDensity());
-    if (in.getBloodPH() != null)
-      getBloodPH().load(in.getBloodPH());
+    if (in.ArterialBloodPH() != null)
+      ArterialBloodPH().load(in.ArterialBloodPH());
     if (in.getBloodSpecificHeat() != null)
       getBloodSpecificHeat().load(in.getBloodSpecificHeat());
     if (in.getBloodUreaNitrogenConcentration() != null)
@@ -226,8 +226,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (bloodDensity != null)
       data.setBloodDensity(bloodDensity.unload());
-    if (bloodPH != null)
-      data.setBloodPH(bloodPH.unload());
+    if (ArterialBloodPH != null)
+      data.setBloodPH(ArterialBloodPH.unload());
     if (bloodSpecificHeat != null)
       data.setBloodSpecificHeat(bloodSpecificHeat.unload());
     if (bloodUreaNitrogenConcentration != null)
@@ -296,15 +296,16 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
     return bloodDensity;
   }
 
-  public boolean hasBloodPH()
+  public boolean hasArterialBloodPH()
   {
-    return bloodPH == null ? false : bloodPH.isValid();
+    return ArterialBloodPH == null ? false : ArterialBloodPH.isValid();
   }
-  public SEScalar getBloodPH()
+  public SEScalar ArterialBloodPH()
   {
-    if (bloodPH == null)
-      bloodPH = new SEScalar();
-    return bloodPH;  }
+    if (ArterialBloodPH == null)
+      ArterialBloodPH = new SEScalar();
+    return ArterialBloodPH;
+  }
 
   public boolean hasBloodSpecificHeat()
   {
@@ -358,7 +359,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (hematocrit == null)
       hematocrit = new SEScalarFraction();
-    return hematocrit;  }
+    return hematocrit;
+  }
 
   public boolean hasHemoglobinContent()
   {
@@ -368,7 +370,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (hemoglobinContent == null)
       hemoglobinContent = new SEScalarMass();
-    return hemoglobinContent;  }
+    return hemoglobinContent;
+  }
 
   public boolean hasOxygenSaturation()
   {
@@ -378,7 +381,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (oxygenSaturation == null)
       oxygenSaturation = new SEScalarFraction();
-    return oxygenSaturation;  }
+    return oxygenSaturation;
+  }
 
   public boolean hasPhosphate()
   {
@@ -432,7 +436,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (redBloodCellCount == null)
       redBloodCellCount = new SEScalarAmountPerVolume();
-    return redBloodCellCount;  }
+    return redBloodCellCount;
+  }
 
   public boolean hasShuntFraction()
   {
@@ -442,7 +447,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (shuntFraction == null)
       shuntFraction = new SEScalarFraction();
-    return shuntFraction;  }
+    return shuntFraction;
+  }
   
   public boolean hasStrongIonDifference()
   {
@@ -574,7 +580,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (pulmonaryVenousOxygenPressure == null)
       pulmonaryVenousOxygenPressure = new SEScalarPressure();
-    return pulmonaryVenousOxygenPressure;  }
+    return pulmonaryVenousOxygenPressure;
+  }
 
   public boolean hasVenousCarbonDioxidePressure()
   {
@@ -595,5 +602,6 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (venousOxygenPressure == null)
       venousOxygenPressure = new SEScalarPressure();
-    return venousOxygenPressure;  }
+    return venousOxygenPressure;
+  }
 }
