@@ -6,7 +6,7 @@
         <PatientFile>StandardMale.xml</PatientFile>
     </InitialParameters>
 	<DataRequests>
-        <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH"/>
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput" Unit="mL/min"/>
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate" Unit="1/min"/>
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg"/>

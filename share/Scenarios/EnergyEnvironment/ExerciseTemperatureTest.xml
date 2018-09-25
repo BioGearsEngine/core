@@ -70,7 +70,7 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
 
 	<!-- Anything action specific data needed for verification of this scenario -->	
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH"                    Unit="unitless" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH"                    Unit="unitless" Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LactateProductionRate"      Unit="mol/day" Precision="2"/> 
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="FatigueLevel"               Unit="unitless" Precision="2"/>

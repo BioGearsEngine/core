@@ -6,7 +6,7 @@
 	
   <DataRequests>
 	<DataRequest Name="BloodDensity" xsi:type="PhysiologyDataRequestData" Unit="kg/m^3" Precision="0"/>
-	<DataRequest Name="BloodPH" xsi:type="PhysiologyDataRequestData" Precision="2"/>
+	<DataRequest Name="ArterialBloodPH" xsi:type="PhysiologyDataRequestData" Precision="2"/>
 	<DataRequest Name="BloodSpecificHeat" xsi:type="PhysiologyDataRequestData" Unit="J/K kg" Precision="0"/>
 	<DataRequest Name="BloodUreaNitrogenConcentration" xsi:type="PhysiologyDataRequestData" Unit="mg/dL" Precision="1"/>
 	<DataRequest Name="CarbonDioxideSaturation" xsi:type="PhysiologyDataRequestData" Precision="2"/>

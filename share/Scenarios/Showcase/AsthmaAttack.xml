@@ -18,7 +18,7 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"      Unit="mmHg"        Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"               Unit="1/min"       Precision="2"/>  
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction" Unit="unitless"    Precision="4"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH"                       Unit="unitless"    Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH"                       Unit="unitless"    Precision="2"/>
 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="0"/>

@@ -72,7 +72,7 @@
 
 	<!-- Anything action specific data needed for verification of this scenario -->
 	<!-- pH, Body weight, hematocrit, hemoglobin, albumin, blood volume, Extravascular volume, Sodium, Potassium, Chloride, Bicarbonate, Osmolality, StrongIonDifference -->
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH"                                                      Unit="unitless"  Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH"                                                      Unit="unitless"  Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="Hematocrit"                                                   Unit="unitless"  Precision="3"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Albumin"       Name="Concentration" Unit="g/L"    Precision="1"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Sodium"        Name="Molarity"      Unit="mmol/L" Precision="0"/>

@@ -28,7 +28,6 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
 
   m_BloodDensity = nullptr;
 
-  m_BloodPH = nullptr;
   m_BloodSpecificHeat = nullptr;
   m_BloodUreaNitrogenConcentration = nullptr;
   m_CarbonDioxideSaturation = nullptr;
@@ -71,7 +70,6 @@ void SEBloodChemistrySystem::Clear()
 
   SAFE_DELETE(m_ArterialBloodPH);
   SAFE_DELETE(m_BloodDensity);
-  SAFE_DELETE(m_BloodPH);
   SAFE_DELETE(m_BloodSpecificHeat);
   SAFE_DELETE(m_BloodUreaNitrogenConcentration);
   SAFE_DELETE(m_CarbonDioxideSaturation);
@@ -109,8 +107,6 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 	return &GetArterialBloodPH();
   if (name.compare("BloodDensity") == 0)
     return &GetBloodDensity();
-  if (name.compare("BloodPH") == 0)
-    return &GetBloodPH();
   if (name.compare("BloodSpecificHeat") == 0)
     return &GetBloodSpecificHeat();
   if (name.compare("BloodUreaNitrogenConcentration") == 0)
@@ -180,8 +176,6 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
 	  GetArterialBloodPH().Load(in.ArterialBloodPH().get());
   if (in.BloodDensity().present())
     GetBloodDensity().Load(in.BloodDensity().get());
-  if (in.BloodPH().present())
-    GetBloodPH().Load(in.BloodPH().get());
   if (in.BloodSpecificHeat().present())
     GetBloodSpecificHeat().Load(in.BloodSpecificHeat().get());
   if (in.BloodUreaNitrogenConcentration().present())
@@ -258,8 +252,6 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
 	  data.ArterialBloodPH(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPH->Unload()));
   if (m_BloodDensity != nullptr)
     data.BloodDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodDensity->Unload()));
-  if (m_BloodPH != nullptr)
-    data.BloodPH(std::unique_ptr<CDM::ScalarData>(m_BloodPH->Unload()));
   if (m_BloodSpecificHeat != nullptr)
     data.BloodSpecificHeat(std::unique_ptr<CDM::ScalarHeatCapacitancePerMassData>(m_BloodSpecificHeat->Unload()));
   if (m_BloodUreaNitrogenConcentration != nullptr)
@@ -334,23 +326,6 @@ double SEBloodChemistrySystem::GetBloodDensity(const MassPerVolumeUnit& unit) co
   if (m_BloodDensity == nullptr)
     return SEScalar::dNaN();
   return m_BloodDensity->GetValue(unit);
-}
-
-bool SEBloodChemistrySystem::HasBloodPH() const
-{
-  return m_BloodPH == nullptr ? false : m_BloodPH->IsValid();
-}
-SEScalar& SEBloodChemistrySystem::GetBloodPH()
-{
-  if (m_BloodPH == nullptr)
-    m_BloodPH = new SEScalar();
-  return *m_BloodPH;
-}
-double SEBloodChemistrySystem::GetBloodPH() const
-{
-  if (m_BloodPH == nullptr)
-    return SEScalar::dNaN();
-  return m_BloodPH->GetValue();
 }
 
 bool SEBloodChemistrySystem::HasArterialBloodPH() const

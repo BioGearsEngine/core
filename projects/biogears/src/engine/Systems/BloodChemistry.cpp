@@ -289,8 +289,6 @@ void BloodChemistry::Process()
   m_data.GetSubstances().GetUrea().GetBloodConcentration().Set(m_venaCavaUrea->GetConcentration());
 
   // Calculate pH
-  /// \todo Change system data so that we have ArterialBloodPH (from aorta) and VenousBloodPH (from vena cava)
-  GetBloodPH().Set(m_aorta->GetPH());
   GetArterialBloodPH().Set(m_aorta->GetPH());
   GetVenousBloodPH().Set(m_venaCava->GetPH());
 

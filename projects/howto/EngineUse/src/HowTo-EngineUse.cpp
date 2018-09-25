@@ -257,7 +257,7 @@ void HowToEngineUse()
   }
 
   bg->GetLogger()->Info(std::stringstream() << "OxygenSaturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
-  bg->GetLogger()->Info(std::stringstream() << "Blood pH : " << bg->GetBloodChemistrySystem()->GetBloodPH());
+  bg->GetLogger()->Info(std::stringstream() << "ArterialBlood pH : " << bg->GetBloodChemistrySystem()->GetArterialBloodPH());
   //  You should save off the SESubstanceQuantity* if you will need it more than once
   bg->GetLogger()->Info(std::stringstream() << "Lactate Concentration : " << bg->GetSubstanceManager().GetSubstance("Lactate")->GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL) << MassPerVolumeUnit::mg_Per_dL);
   bg->GetLogger()->Info(std::stringstream() << "Core Body Temperature : " << bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << TemperatureUnit::C);

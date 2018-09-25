@@ -65,7 +65,7 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SedationLevel" Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-SizeModifier" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-ReactivityModifier" Precision="3"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialArterialBloodPH" Precision="2"/>
   
   
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Morphine" Name="Concentration" Unit="ug/L" Precision="4"/>

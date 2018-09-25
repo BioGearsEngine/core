@@ -65,7 +65,7 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
 	
 	<!-- Anything action specific data needed for verification of this scenario -->
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodPH" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH" Precision="2"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="SweatRate" Unit="mg/min" Precision="2"/>
 	
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ChymeAbsorptionRate"            Unit="mL/min" Precision="2"/>

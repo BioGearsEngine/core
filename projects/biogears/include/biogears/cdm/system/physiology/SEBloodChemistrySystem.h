@@ -54,18 +54,9 @@ public:
   virtual SEScalarMassPerVolume& GetBloodDensity(); /**< @copydoc DOXY_CDM_GET */
   virtual double GetBloodDensity(const MassPerVolumeUnit& unit) const; /**< @copydoc DOXY_CDM_GET_VALUE */ //@}
 
-  /** @name BloodPH
-    *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodPH
-    *  @{*/
-  /// %Test if member has been allocated
-  virtual bool HasBloodPH() const;
-  /// Get member class, allocate if nullptr
-  virtual SEScalar& GetBloodPH();
-  virtual double GetBloodPH() const;
-  //@}
-
-  /** @name BloodPH
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodPH
+ 
+  /** @name ArterialBloodPH
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialBloodPH
   *  @{*/
   /// %Test if member has been allocated
   virtual bool HasArterialBloodPH() const;
@@ -74,8 +65,8 @@ public:
   virtual double GetArterialBloodPH() const;
   //@}
 
-  /** @name BloodPH
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodPH
+  /** @name VenousBloodPH
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousBloodPH
   *  @{*/
   /// %Test if member has been allocated
   virtual bool HasVenousBloodPH() const;
@@ -349,7 +340,6 @@ public:
 
 protected:
   SEScalarMassPerVolume* m_BloodDensity;
-  SEScalar* m_BloodPH;
   SEScalar* m_ArterialBloodPH;
   SEScalar* m_VenousBloodPH;
   SEScalarHeatCapacitancePerMass* m_BloodSpecificHeat;
