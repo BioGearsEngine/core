@@ -1722,7 +1722,7 @@ void Respiratory::CalculateVitalSigns()
   // The hydrogen ion concentration is a property of the blood
   // The events related to blood concentrations should be detected and set in blood chemistry.
   //Keep a running average of the pH
-  m_BloodPHRunningAverage.Sample(m_data.GetBloodChemistry().GetBloodPH().GetValue());
+  m_BloodPHRunningAverage.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
   //Reset at start of cardiac cycle
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     m_LastCardiacCycleBloodPH = m_BloodPHRunningAverage.Value();

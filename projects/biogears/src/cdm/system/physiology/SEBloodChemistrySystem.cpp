@@ -24,6 +24,8 @@ namespace biogears {
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
 {
+  m_ArterialBloodPH = nullptr;
+
   m_BloodDensity = nullptr;
 
   m_BloodPH = nullptr;
@@ -43,6 +45,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_StrongIonDifference = nullptr;
   m_TotalBilirubin = nullptr;
   m_TotalProteinConcentration = nullptr;
+  m_VenousBloodPH = nullptr;
   m_VolumeFractionNeutralPhospholipidInPlasma = nullptr;
   m_VolumeFractionNeutralLipidInPlasma = nullptr;
   m_WhiteBloodCellCount = nullptr;
@@ -66,6 +69,7 @@ void SEBloodChemistrySystem::Clear()
 {
   SESystem::Clear();
 
+  SAFE_DELETE(m_ArterialBloodPH);
   SAFE_DELETE(m_BloodDensity);
   SAFE_DELETE(m_BloodPH);
   SAFE_DELETE(m_BloodSpecificHeat);
@@ -84,6 +88,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_StrongIonDifference);
   SAFE_DELETE(m_TotalBilirubin);
   SAFE_DELETE(m_TotalProteinConcentration);
+  SAFE_DELETE(m_VenousBloodPH);
   SAFE_DELETE(m_VolumeFractionNeutralPhospholipidInPlasma);
   SAFE_DELETE(m_VolumeFractionNeutralLipidInPlasma);
   SAFE_DELETE(m_WhiteBloodCellCount);
@@ -100,6 +105,8 @@ void SEBloodChemistrySystem::Clear()
 
 const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 {
+  if (name.compare("ArterialBloodPH") == 0)
+	return &GetArterialBloodPH();
   if (name.compare("BloodDensity") == 0)
     return &GetBloodDensity();
   if (name.compare("BloodPH") == 0)
@@ -136,6 +143,8 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     return &GetTotalBilirubin();
   if (name.compare("TotalProteinConcentration") == 0)
     return &GetTotalProteinConcentration();
+  if (name.compare("VenousBloodPH") == 0)
+	  return &GetVenousBloodPH();
   if (name.compare("VolumeFractionNeutralPhospholipidInPlasma") == 0)
     return &GetVolumeFractionNeutralPhospholipidInPlasma();
   if (name.compare("VolumeFractionNeutralLipidInPlasma") == 0)
@@ -167,6 +176,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
 {
   SESystem::Load(in);
 
+  if (in.ArterialBloodPH().present())
+	  GetArterialBloodPH().Load(in.ArterialBloodPH().get());
   if (in.BloodDensity().present())
     GetBloodDensity().Load(in.BloodDensity().get());
   if (in.BloodPH().present())
@@ -203,6 +214,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetTotalBilirubin().Load(in.TotalBilirubin().get());
   if (in.TotalProteinConcentration().present())
     GetTotalProteinConcentration().Load(in.TotalProteinConcentration().get());
+  if (in.VenousBloodPH().present())
+	  GetVenousBloodPH().Load(in.VenousBloodPH().get());
   if (in.VolumeFractionNeutralPhospholipidInPlasma().present())
     GetVolumeFractionNeutralPhospholipidInPlasma().Load(in.VolumeFractionNeutralPhospholipidInPlasma().get());
   if (in.VolumeFractionNeutralLipidInPlasma().present())
@@ -241,6 +254,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
 {
   SESystem::Unload(data);
 
+  if (m_ArterialBloodPH != nullptr)
+	  data.ArterialBloodPH(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPH->Unload()));
   if (m_BloodDensity != nullptr)
     data.BloodDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodDensity->Unload()));
   if (m_BloodPH != nullptr)
@@ -298,6 +313,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.PulmonaryVenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryVenousOxygenPressure->Unload()));
   if (m_VenousCarbonDioxidePressure != nullptr)
     data.VenousCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousCarbonDioxidePressure->Unload()));
+  if (m_VenousBloodPH != nullptr)
+	  data.VenousBloodPH(std::unique_ptr<CDM::ScalarData>(m_VenousBloodPH->Unload()));
   if (m_VenousOxygenPressure != nullptr)
     data.VenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousOxygenPressure->Unload()));
 }
@@ -334,6 +351,40 @@ double SEBloodChemistrySystem::GetBloodPH() const
   if (m_BloodPH == nullptr)
     return SEScalar::dNaN();
   return m_BloodPH->GetValue();
+}
+
+bool SEBloodChemistrySystem::HasArterialBloodPH() const
+{
+	return m_ArterialBloodPH == nullptr ? false : m_ArterialBloodPH->IsValid();
+}
+SEScalar& SEBloodChemistrySystem::GetArterialBloodPH()
+{
+	if (m_ArterialBloodPH == nullptr)
+		m_ArterialBloodPH = new SEScalar();
+	return *m_ArterialBloodPH;
+}
+double SEBloodChemistrySystem::GetArterialBloodPH() const
+{
+	if (m_ArterialBloodPH == nullptr)
+		return SEScalar::dNaN();
+	return m_ArterialBloodPH->GetValue();
+}
+
+bool SEBloodChemistrySystem::HasVenousBloodPH() const
+{
+	return m_VenousBloodPH == nullptr ? false : m_VenousBloodPH->IsValid();
+}
+SEScalar& SEBloodChemistrySystem::GetVenousBloodPH()
+{
+	if (m_VenousBloodPH == nullptr)
+		m_VenousBloodPH = new SEScalar();
+	return *m_VenousBloodPH;
+}
+double SEBloodChemistrySystem::GetVenousBloodPH() const
+{
+	if (m_VenousBloodPH == nullptr)
+		return SEScalar::dNaN();
+	return m_VenousBloodPH->GetValue();
 }
 
 bool SEBloodChemistrySystem::HasBloodSpecificHeat() const

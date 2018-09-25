@@ -443,7 +443,7 @@ void Drugs::CalculatePartitionCoefficients()
 {
   SEBloodChemistrySystem& BloodChemistry = m_data.GetBloodChemistry();
   double IntracellularPH = m_data.GetTissue().GetIntracellularFluidPH().GetValue();
-  double PlasmaPH = BloodChemistry.GetBloodPH().GetValue();
+  double PlasmaPH = BloodChemistry.GetArterialBloodPH().GetValue();
   double NeutralLipidInPlasmaVolumeFraction = BloodChemistry.GetVolumeFractionNeutralLipidInPlasma().GetValue();
   double NeutralPhosphoLipidInPlasmaVolumeFraction = BloodChemistry.GetVolumeFractionNeutralPhospholipidInPlasma().GetValue();
   double IntracellularPHEffects = 0;

@@ -329,7 +329,7 @@ void Energy::CalculateVitalSigns()
   // The events related to blood concentrations should be detected and set in blood chemistry.
   double highPh = 8.5;
   double lowPh = 6.5; // \cite Edge2006AcidosisConscious
-  m_BloodpH.Sample(m_data.GetBloodChemistry().GetBloodPH().GetValue());
+  m_BloodpH.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
   m_BicarbonateMolarity_mmol_Per_L.Sample(m_AortaHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
   //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {

@@ -64,6 +64,26 @@ public:
   virtual double GetBloodPH() const;
   //@}
 
+  /** @name BloodPH
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodPH
+  *  @{*/
+  /// %Test if member has been allocated
+  virtual bool HasArterialBloodPH() const;
+  /// Get member class, allocate if nullptr
+  virtual SEScalar& GetArterialBloodPH();
+  virtual double GetArterialBloodPH() const;
+  //@}
+
+  /** @name BloodPH
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodPH
+  *  @{*/
+  /// %Test if member has been allocated
+  virtual bool HasVenousBloodPH() const;
+  /// Get member class, allocate if nullptr
+  virtual SEScalar& GetVenousBloodPH();
+  virtual double GetVenousBloodPH() const;
+  //@}
+
   /** @name BloodSpecificHeat
   *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodSpecificHeat
   *  @{*/
@@ -330,6 +350,8 @@ public:
 protected:
   SEScalarMassPerVolume* m_BloodDensity;
   SEScalar* m_BloodPH;
+  SEScalar* m_ArterialBloodPH;
+  SEScalar* m_VenousBloodPH;
   SEScalarHeatCapacitancePerMass* m_BloodSpecificHeat;
   SEScalarMassPerVolume* m_BloodUreaNitrogenConcentration;
   SEScalarFraction* m_CarbonDioxideSaturation;
