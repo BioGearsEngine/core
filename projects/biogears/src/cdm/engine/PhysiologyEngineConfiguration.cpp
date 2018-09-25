@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 #include <biogears/cdm/patient/SEPatient.h>
-#include "biogears/cdm/system/physiology/OverrideConfig.h"
+#include <biogears/cdm/system/physiology/OverrideConfig.h>
 
 
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)

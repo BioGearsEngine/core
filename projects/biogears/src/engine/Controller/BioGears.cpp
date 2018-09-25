@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGears.h>
 
-#include "biogears/cdm/system/physiology/OverrideConfig.h"
+#include <biogears/cdm/system/physiology/OverrideConfig.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
