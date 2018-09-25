@@ -20,7 +20,7 @@ import mil.tatrc.physiology.datamodel.system.SESystem;
 public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESystem
 {
   protected SEScalarMassPerVolume          bloodDensity;
-  protected SEScalar                       ArterialArterialBloodPH;
+  protected SEScalar                       ArterialBloodPH;
   protected SEScalarHeatCapacitancePerMass bloodSpecificHeat;
   protected SEScalarMassPerVolume          bloodUreaNitrogenConcentration;
   protected SEScalarFraction               carbonDioxideSaturation;
@@ -53,7 +53,7 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   public SEBloodChemistrySystem()
   {
     bloodDensity = null;
-    ArterialArterialBloodPH = null;
+    ArterialBloodPH = null;
     bloodSpecificHeat = null;
     bloodUreaNitrogenConcentration = null;
     carbonDioxideSaturation = null;
@@ -89,8 +89,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (bloodDensity != null)
       bloodDensity.invalidate();
-    if (ArterialArterialBloodPH != null)
-      ArterialArterialBloodPH.invalidate();
+    if (ArterialBloodPH != null)
+      ArterialBloodPH.invalidate();
     if (bloodSpecificHeat != null)
       bloodSpecificHeat.invalidate();
     if (bloodUreaNitrogenConcentration != null)
