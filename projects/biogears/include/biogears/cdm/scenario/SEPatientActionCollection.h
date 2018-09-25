@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
+#include "biogears/cdm/patient/actions/SEOverride.h"
 
 namespace biogears {
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
@@ -176,6 +177,10 @@ public:
   SEUrinate* GetUrinate() const;
   void RemoveUrinate();
 
+  bool HasOverride() const;
+  SEOverride* GetOverride() const;
+  void RemoveOverride();
+
 protected:
   bool IsValid(const SEPatientAction& action);
 
@@ -203,6 +208,7 @@ protected:
   SETensionPneumothorax* m_RightClosedTensionPneumothorax;
   SETensionPneumothorax* m_RightOpenTensionPneumothorax;
   SEUrinate* m_Urinate;
+  SEOverride* m_OverrideAction;
 
   std::map<std::string, SEHemorrhage*> m_Hemorrhages;
   std::map<std::string, SEPainStimulus*> m_PainStimuli;

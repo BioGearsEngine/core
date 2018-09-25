@@ -1534,7 +1534,9 @@ void Cardiovascular::TuneCircuit()
       CalculateVitalSigns();
       m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
       //return; //Skip stabelization for debugging
-
+      if (m_data.GetActions().GetPatientActions().HasOverride()) {
+        Info("Override Action in Place...");
+      }
       if (m_Override->IsCardiovascularOverrideEnabled())
       {
         map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);

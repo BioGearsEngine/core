@@ -43,7 +43,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_RightOpenTensionPneumothorax = nullptr;
   m_RightClosedTensionPneumothorax = nullptr;
   m_Urinate = nullptr;
-  m_Override = nullptr;
+  m_OverrideAction = nullptr;
 }
 
 SEPatientActionCollection::~SEPatientActionCollection()
@@ -529,14 +529,14 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
   const CDM::OverrideData* overrideparam = dynamic_cast<const CDM::OverrideData*>(&action);
   if (overrideparam != nullptr) {
-    if (m_Override == nullptr)
-      m_Override = new SEOverride();
-    m_Override->Load(*overrideparam);
-    if (!m_Override->IsActive()) {
+    if (m_OverrideAction == nullptr)
+      m_OverrideAction = new SEOverride();
+    m_OverrideAction->Load(*overrideparam);
+    if (!m_OverrideAction->IsActive()) {
       RemoveOverride();
       return true;
     }
-    return IsValid(*m_Override);
+    return IsValid(*m_OverrideAction);
   }
 
   /// \error Unsupported Action
@@ -1032,13 +1032,13 @@ void SEPatientActionCollection::RemoveUrinate()
 
 bool SEPatientActionCollection::HasOverride() const
 {
-  return m_Override == nullptr ? false : true;
+  return m_OverrideAction == nullptr ? false : true;
 }
 SEOverride* SEPatientActionCollection::GetOverride() const
 {
-  return m_Override;
+  return m_OverrideAction;
 }
 void SEPatientActionCollection::RemoveOverride()
 {
-  SAFE_DELETE(m_Override);
+  SAFE_DELETE(m_OverrideAction);
 }
