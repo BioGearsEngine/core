@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
+namespace biogears {
 class Logger;
 class SEScalarTime;
 class BIOGEARS_API Loggable {
@@ -121,3 +122,4 @@ protected:
   const SEScalarTime* m_time;
   std::stringstream m_ss;
 };
+}

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMass.h>
 
+namespace biogears {
 const MassUnit MassUnit::g("g");
 const MassUnit MassUnit::ug("ug");
 const MassUnit MassUnit::mg("mg");
@@ -57,4 +58,5 @@ const MassUnit& MassUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Mass unit";
   throw CommonDataModelException(err.str());
+}
 }

@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirectory)
 {
   m_Logger->ResetLogFile(sTestDirectory + "/LargeFlowTransportTest.log");
@@ -479,4 +480,5 @@ void CommonDataModelTest::GasTransportTest(const std::string& rptDirectory)
   file.close();
   outTrk.Clear();
   m_Circuits.Clear();
+}
 }

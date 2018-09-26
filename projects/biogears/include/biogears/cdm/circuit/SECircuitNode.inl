@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
+namespace biogears {
 template <CIRCUIT_NODE_TEMPLATE>
 SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const std::string& name, Logger* logger)
   : Loggable(logger)
@@ -123,4 +124,5 @@ QuantityScalar& SECircuitNode<CIRCUIT_NODE_TYPES>::GetQuantityBaseline()
   if (m_QuantityBaseline == nullptr)
     m_QuantityBaseline = new QuantityScalar();
   return *m_QuantityBaseline;
+}
 }

@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #pragma warning(pop)
 
+namespace biogears {
 //--------------------------------------------------------------------------------------------------
 /// @brief
 /// This is the implementation of the PhysiologyEngine interface for the biogears engines.
@@ -88,3 +89,4 @@ protected:
   PhysiologyEngineTrack m_EngineTrack;
   std::stringstream m_ss;
 };
+}

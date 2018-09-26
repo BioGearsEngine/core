@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 
+namespace biogears {
 SELiquidCompartment::SELiquidCompartment(const std::string& name, Logger* logger)
   : SEFluidCompartment(name, logger)
 {
@@ -125,7 +126,7 @@ double SELiquidCompartment::GetPH() const
   if (!m_Children.empty()) {
     double pH = 0;
     for (SELiquidCompartment* child : m_Children)
-      pH += pow(10, -child->GetPH().GetValue()) * child->GetVolume(VolumeUnit::mL);
+      pH += std::pow(10, -child->GetPH().GetValue()) * child->GetVolume(VolumeUnit::mL);
     pH = -log10(pH / GetVolume(VolumeUnit::mL));
     return pH;
   }
@@ -190,4 +191,5 @@ SELiquidSubstanceQuantity& SELiquidCompartment::CreateSubstanceQuantity(SESubsta
       subQ->AddChild(child->CreateSubstanceQuantity(substance));
   }
   return *subQ;
+}
 }

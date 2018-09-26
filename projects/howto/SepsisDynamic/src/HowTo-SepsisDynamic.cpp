@@ -27,8 +27,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
+using namespace biogears;
 //This method uses the Threaded BioGears functionality
-
 void HowToDynamicSepsis()
 {
   // Create the engine and have it run in it's own thread

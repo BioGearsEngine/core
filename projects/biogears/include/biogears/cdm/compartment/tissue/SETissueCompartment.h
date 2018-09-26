@@ -18,6 +18,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace biogears {
+
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
@@ -108,3 +110,4 @@ protected:
   std::vector<SETissueCompartment*> m_Children;
   std::vector<SETissueCompartment*> m_Leaves;
 };
+}

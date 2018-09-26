@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+
+namespace biogears {
 class BIOGEARS_API SEFunctionVolumeVsTime : public SEFunction {
 public:
   SEFunctionVolumeVsTime();
@@ -45,3 +47,4 @@ protected:
   const TimeUnit* m_TimeUnit;
   const VolumeUnit* m_VolumeUnit;
 };
+}

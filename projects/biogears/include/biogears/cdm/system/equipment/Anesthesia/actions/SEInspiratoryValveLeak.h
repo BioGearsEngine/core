@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 #include "biogears/cdm/properties/SEScalar0To1.h"
 
+namespace biogears {
 class SEScalar0To1;
 
 class BIOGEARS_API SEInspiratoryValveLeak : public SEAnesthesiaMachineAction {
@@ -41,3 +42,4 @@ public:
 protected:
   SEScalar0To1* m_Severity;
 };
+}

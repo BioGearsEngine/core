@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
+namespace biogears {
 class SEBloodChemistrySystem;
 class SEScalarMassPerVolume;
 class SEScalarAmountPerVolume;
@@ -91,3 +92,4 @@ protected:
   SEScalarMassPerVolume* m_TotalBilirubin;
   SEScalarMassPerVolume* m_TotalProtein;
 };
+}

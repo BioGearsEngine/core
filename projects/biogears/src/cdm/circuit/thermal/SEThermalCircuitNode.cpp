@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 
+namespace biogears {
 SEThermalCircuitNode::SEThermalCircuitNode(const std::string& name, Logger* logger)
   : SECircuitNode<THERMAL_CIRCUIT_NODE>(name, logger)
 {
@@ -136,4 +137,5 @@ double SEThermalCircuitNode::GetHeatBaseline(const EnergyUnit& unit) const
   if (m_QuantityBaseline == nullptr)
     return SEScalar::dNaN();
   return m_QuantityBaseline->GetValue(unit);
+}
 }

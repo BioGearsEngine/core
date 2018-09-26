@@ -14,13 +14,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+CDM_BIND_DECL(SubstanceConcentrationData)
+
+namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
 class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
 
-CDM_BIND_DECL(SubstanceConcentrationData)
 class BIOGEARS_API SESubstanceConcentration : public Loggable {
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
@@ -47,3 +49,4 @@ protected:
   SESubstance& m_Substance;
   SEScalarMassPerVolume* m_Concentration;
 };
+}

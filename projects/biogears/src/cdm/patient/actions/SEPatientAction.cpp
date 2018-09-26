@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
+namespace biogears {
 SEPatientAction::SEPatientAction()
   : SEAction()
 {
@@ -41,4 +42,5 @@ bool SEPatientAction::Load(const CDM::PatientActionData& in)
 void SEPatientAction::Unload(CDM::PatientActionData& data) const
 {
   SEAction::Unload(data);
+}
 }

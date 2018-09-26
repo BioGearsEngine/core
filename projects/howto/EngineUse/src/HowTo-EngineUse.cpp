@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// A class used to forward log messages for application specific handling logic

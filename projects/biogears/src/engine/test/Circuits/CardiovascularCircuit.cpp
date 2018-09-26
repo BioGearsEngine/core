@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+namespace biogears {
 enum Driver { Sinusoid = 0,
   Heart };
 
@@ -705,4 +706,5 @@ void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTes
   //    testNo++;
   //  }
   //}
+}
 }

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SENeedleDecompression : public SEPatientAction {
 public:
   SENeedleDecompression();
@@ -43,3 +44,4 @@ protected:
   CDM::enumSide::value m_Side;
   CDM::enumOnOff::value m_State;
 };
+}

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
 
+namespace biogears {
 SEThermalCircuitPath::SEThermalCircuitPath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name)
   : SECircuitPath<SEScalarPower, SEScalarHeatResistance, SEScalarHeatCapacitance, SEScalarHeatInductance, SEScalarTemperature, SEScalarEnergy>(src, tgt, name)
   , m_ThermalSourceNode(src)
@@ -391,4 +392,5 @@ double SEThermalCircuitPath::GetValveBreakdownTemperature(const TemperatureUnit&
   if (m_ValveBreakdownPotential == nullptr)
     return SEScalar::dNaN();
   return m_ValveBreakdownPotential->GetValue(unit);
+}
 }

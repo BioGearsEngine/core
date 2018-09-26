@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/utils/Logger.h>
 
+namespace biogears {
 class SEScalar;
 class SEScalarNeg1To1;
 
@@ -52,3 +53,4 @@ protected:
   SEScalarNeg1To1* m_ShapeModifier;
   SEScalarNeg1To1* m_SizeModifier;
 };
+}

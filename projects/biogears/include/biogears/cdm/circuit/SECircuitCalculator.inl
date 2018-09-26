@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 //#define TIMING
 #define OPEN_RESISTANCE 1e100
 
+namespace biogears {
 template <CIRCUIT_CALCULATOR_TEMPLATE>
 SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::SECircuitCalculator(const CapacitanceUnit& c, const FluxUnit& f, const InductanceUnit& i, const PotentialUnit& p, const QuantityUnit& q, const ResistanceUnit& r, Logger* logger)
   : Loggable(logger)
@@ -669,7 +670,7 @@ bool SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::CheckAndModifyValves()
   if (m_circuit->GetPolarizedElementPaths().empty() && m_circuit->GetValvePaths().empty())
     return true; //There aren't any valves to worry about
 
-  if (m_valveStates.size() >= ((uint64_t)(pow(2.0, int(m_valveStates.size()))))) {
+  if (m_valveStates.size() >= ((uint64_t)(std::pow(2.0, int(m_valveStates.size()))))) {
     ///\error Fatal: The combination of valves precludes the circuit from being solved.
     Fatal("The combination of valves precludes the circuit from being solved.");
   }
@@ -848,4 +849,5 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::PostProcess(CircuitType& cir
     p->GetNextInductance().Set(p->GetInductanceBaseline());
     p->GetNextPotentialSource().Set(p->GetPotentialSourceBaseline());
   }
+}
 }

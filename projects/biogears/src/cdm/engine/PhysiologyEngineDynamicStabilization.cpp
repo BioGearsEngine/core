@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 
-
+namespace biogears {
 bool PhysiologyEngineDynamicStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {
   Info("Converging to a steady state");
@@ -792,4 +792,5 @@ bool PropertyConvergence::IsOptional() const
 void PropertyConvergence::SetOptional(bool b)
 {
   m_Optional = b;
+}
 }

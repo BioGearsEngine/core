@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/SEActionManager.h>
 
-
+namespace biogears {
 SEActionManager::SEActionManager(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_PatientActions(substances)
@@ -85,4 +85,5 @@ bool SEActionManager::ProcessAction(const SEAction& action)
   /// \error Unsupported Action
   Error("Unsupported Action");
   return false;
+}
 }

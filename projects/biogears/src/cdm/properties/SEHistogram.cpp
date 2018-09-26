@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
+namespace biogears {
 static std::stringstream err;
 
 SEHistogram::SEHistogram()
@@ -124,4 +125,5 @@ std::vector<double>& SEHistogram::GetIndependent()
 const std::vector<double>& SEHistogram::GetIndependent() const
 {
   return m_Independent;
+}
 }

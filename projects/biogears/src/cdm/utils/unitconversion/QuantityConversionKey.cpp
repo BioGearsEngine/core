@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/QuantityTypeDescriptor.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
+namespace biogears {
 CQuantityConversionKey::CQuantityConversionKey(int fromID, int toID)
 {
   // Get the dimensions from the associated quantity type IDs
@@ -61,4 +62,5 @@ bool CQuantityConversionKey::operator<(const CQuantityConversionKey& rhs) const
 bool CQuantityConversionKey::operator==(const CQuantityConversionKey& rhs) const
 {
   return ((*m_CUDfromDim == *rhs.m_CUDfromDim) && (*m_CUDtoDim == *rhs.m_CUDtoDim));
+}
 }

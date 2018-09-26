@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <iostream>
 #include <memory> // std::auto_ptr
 #include <string>
+#include <memory>
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -30,7 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(ObjectData)
-
+namespace biogears {
 class BIOGEARS_API Serializer {
 public:
   static void Destroy() { SAFE_DELETE(m_me); }
@@ -65,3 +66,4 @@ private:
   bool failed_;
   std::stringstream error_;
 };
+}

@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+namespace biogears {
 SEChronicObstructivePulmonaryDisease::SEChronicObstructivePulmonaryDisease()
   : SEPatientCondition()
 {
@@ -93,4 +94,5 @@ void SEChronicObstructivePulmonaryDisease::ToString(std::ostream& str) const
   str << "\n\tEmphysemaSeverity: ";
   HasEmphysemaSeverity() ? str << *m_EmphysemaSeverity : str << "NaN";
   str << std::flush;
+}
 }

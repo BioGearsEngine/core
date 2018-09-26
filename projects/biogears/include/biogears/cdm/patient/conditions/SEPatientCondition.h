@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEPatientCondition : public SECondition {
 public:
   SEPatientCondition();
@@ -31,3 +32,4 @@ protected:
 public:
   virtual void ToString(std::ostream& str) const override = 0;
 };
+}

@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+namespace biogears {
 void CalculateMultipliers(double& dsResistanceMultiplier, double& usResistanceMultiplier, const double& map_mmHg, const double& cvp_mmHg, const SEFluidCircuitPath* brainResistanceDownstream, const SEFluidCircuitPath* brainResistanceUpstream)
 {
   //The brain portion of the CV circuit at steady state can be approximated as:
@@ -142,4 +143,5 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
     time_s += timeStep_s;
   }
   outTrk.StreamTrackToFile(file);
+}
 }

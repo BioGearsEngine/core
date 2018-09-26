@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SEPericardialEffusion::SEPericardialEffusion()
   : SEPatientAction()
 {
@@ -82,4 +83,5 @@ void SEPericardialEffusion::ToString(std::ostream& str) const
   str << "\n\tEffusion Rate: ";
   HasEffusionRate() ? str << *m_EffusionRate : str << "NaN";
   str << std::flush;
+}
 }

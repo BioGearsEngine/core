@@ -19,9 +19,11 @@ specific language governing permissions and limitations under the License.
 // This class will run BioGears in it's own thread and accept changes to hemorrage and iv flow as the engine is running
 
 // Forward declare what we will use in our thread
-class SEHemorrhage;
-class SESubstanceCompoundInfusion;
-class PhysiologyEngine;
+namespace biogears{
+  class SEHemorrhage;
+  class SESubstanceCompoundInfusion;
+  class PhysiologyEngine;
+}
 
 void HowToThreadedBioGears();
 
@@ -35,7 +37,7 @@ public:
   void SetIVFluidsFlow_mL_Per_min(double rate);
   virtual void Status();
 
-  Logger* GetLogger() { return m_bg->GetLogger(); }
+  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
 
 protected:
   void AdvanceTime();
@@ -44,8 +46,8 @@ protected:
   std::mutex  m_mutex;
   bool m_runThread;
 
-  std::unique_ptr<PhysiologyEngine> m_bg;
+  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
 
-  SEHemorrhage*                     m_hemorrhage;
-  SESubstanceCompoundInfusion*      m_infusion;
+  biogears::SEHemorrhage*                     m_hemorrhage;
+  biogears::SESubstanceCompoundInfusion*      m_infusion;
 };

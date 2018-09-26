@@ -30,7 +30,7 @@ struct Timer {
   std::chrono::high_resolution_clock::time_point end;
   State state = State::Ready;
 };
-}
+
 
 class BIOGEARS_API TimingProfile : public Loggable {
 public:
@@ -98,3 +98,4 @@ private:
 
   std::stringstream m_ss;
 };
+}

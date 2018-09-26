@@ -18,9 +18,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>
 
+namespace biogears {
 CDM::LiquidCompartmentLinkData* SELiquidCompartmentLink::Unload()
 {
   CDM::LiquidCompartmentLinkData* data = new CDM::LiquidCompartmentLinkData();
   SEFluidCompartmentLink::Unload(*data);
   return data;
+}
 }

@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+namespace biogears {
 class SEScalarArea;
 class AreaUnit;
 class SEScalar0To1;
@@ -49,3 +50,4 @@ protected:
   SEScalarArea* m_ImpairedSurfaceArea;
   SEScalar0To1* m_ImpairedFraction;
 };
+}

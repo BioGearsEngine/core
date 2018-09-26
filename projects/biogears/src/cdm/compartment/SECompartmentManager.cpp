@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace biogears {
 SECompartmentManager::SECompartmentManager(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
   , m_subMgr(subMgr)
@@ -891,4 +892,5 @@ void SECompartmentManager::AddSubstance(SESubstance& s, CompartmentType& cmpt) c
   SELiquidSubstanceQuantity* lsubQ = dynamic_cast<SELiquidSubstanceQuantity*>(&subQ);
   if (lsubQ != nullptr && (&s == m_O2 || &s == m_CO2 || &s == m_CO))
     lsubQ->SetHemoglobins(*m_Hb, *m_HbO2, *m_HbCO2, *m_HbO2CO2, *m_HbCO);
+}
 }

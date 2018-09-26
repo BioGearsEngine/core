@@ -31,11 +31,11 @@ specific language governing permissions and limitations under the License.
 // a compound unit structure. The purpose of this object is to determine whether
 // two CompoundUnits are dimensionally compatible (i.e. whether one can be converted
 // to the other and vice-versa).
-
+namespace biogears {
 class CUnitDimension {
 public:
-  typedef CCompoundUnitElement::ExponentType ExponentType;
-  typedef std::vector<ExponentType> ExponentList;
+  using ExponentType =  CCompoundUnitElement::ExponentType;
+  using ExponentList =  std::vector<ExponentType>;
 
   // Default ctor: size the array according to the number of fundamental quantities
   CUnitDimension();
@@ -329,11 +329,11 @@ inline size_t hash_value(const CUnitDimension& ref)
 {
   return ref.hash_value();
 }
-
+}
 namespace std {
 template <>
-struct hash<CUnitDimension> {
-  size_t operator()(const CUnitDimension& ref) const
+struct hash<biogears::CUnitDimension> {
+  size_t operator()(const biogears::CUnitDimension& ref) const
   {
     return ref.hash_value();
   }

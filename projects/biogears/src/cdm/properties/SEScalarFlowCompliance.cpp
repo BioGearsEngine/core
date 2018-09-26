@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 
+namespace biogears {
 const FlowComplianceUnit FlowComplianceUnit::L_Per_cmH2O("L/cmH2O");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_mmHg("mL/mmHg");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_cmH2O("mL/cmH2O");
@@ -52,4 +53,5 @@ const FlowComplianceUnit& FlowComplianceUnit::GetCompoundUnit(const std::string&
   std::stringstream err;
   err << unit << " is not a valid FlowCompliance unit";
   throw CommonDataModelException(err.str());
+}
 }

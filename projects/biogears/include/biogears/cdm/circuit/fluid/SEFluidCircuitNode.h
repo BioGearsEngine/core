@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 class SECircuitManager;
 class BIOGEARS_API SEFluidCircuitNode : public SECircuitNode<FLUID_CIRCUIT_NODE> {
   friend class SECircuitManager;
@@ -55,3 +56,4 @@ public:
   virtual SEScalarVolume& GetVolumeBaseline();
   virtual double GetVolumeBaseline(const VolumeUnit& unit) const;
 };
+}

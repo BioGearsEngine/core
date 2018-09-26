@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Energy.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+namespace biogears {
 //This test holds EnvironmentSkin and EnvironmentCore sources constant and varies BMR
 void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::string& sTestDirectory)
 {
@@ -292,7 +293,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
 
   //You must initialize these resistors or the circuit won't solve
   //These values were pulled from EnvironmentInput.csv from an older unit test
-  //SkinToClothing->GetResistanceBaseline().SetValue(22.836, HeatResistanceUnit::K_Per_W);	//R Clothing
+  //SkinToClothing->GetResistanceBaseline().SetValue(22.836, HeatResistanceUnit::K_Per_W);  //R Clothing
   SkinToClothing->GetResistanceBaseline().SetValue(.05, HeatResistanceUnit::K_Per_W); //R Clothing
   ClothingToEnvironment->GetResistanceBaseline().SetValue(4.379, HeatResistanceUnit::K_Per_W); //R Convection
   ClothingToEnclosure->GetResistanceBaseline().SetValue(0.039, HeatResistanceUnit::K_Per_W); //R Radiation
@@ -538,7 +539,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
   double CoreToSkinResistance_KPerW;
   CoreToSkinResistance_KPerW = 1.0 / (alphaScale * bloodDensity_kgPerm3 * bloodSpecificHeat_JPerkgK * skinBloodFlow_m3Persec);
 
-  //EnvironmentSkinToClothing->GetHeatResistanceBaseline()->SetValue(22.836, HeatResistanceUnit::K_Per_W);	//R Clothing (this high resistance really slows cooling)
+  //EnvironmentSkinToClothing->GetHeatResistanceBaseline()->SetValue(22.836, HeatResistanceUnit::K_Per_W);  //R Clothing (this high resistance really slows cooling)
   EnvSkinToClothing->GetResistanceBaseline().SetValue(.05, HeatResistanceUnit::K_Per_W); //R Clothing
   ClothingToEnvironment->GetResistanceBaseline().SetValue(4.379, HeatResistanceUnit::K_Per_W); //R Convection
   ClothingToEnclosure->GetResistanceBaseline().SetValue(0.039, HeatResistanceUnit::K_Per_W); //R Radiation
@@ -695,4 +696,5 @@ void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTe
 
   std::string sOutputFile = sTestDirectory + "/EnvironmentISO7730Comparison.csv";
   trk.WriteTrackToFile(sOutputFile.c_str());
+}
 }

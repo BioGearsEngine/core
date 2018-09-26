@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
+namespace biogears {
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name)
   : SECompartmentLink(name, src.GetLogger())
@@ -106,4 +107,5 @@ double SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetFlow(const Volum
   if (m_Flow == nullptr)
     return SEScalar::dNaN();
   return m_Flow->GetValue(unit);
+}
 }

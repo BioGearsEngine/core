@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 BioGearsScenarioExec::BioGearsScenarioExec(PhysiologyEngine& engine)
   : SEScenarioExec(engine)
 {
@@ -75,4 +76,5 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     Error("Caught unknown exception, ending simulation");
   }
   return false;
+}
 }

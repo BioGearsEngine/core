@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
+namespace biogears {
 class BIOGEARS_API SEInhalerActionCollection : public Loggable {
 public:
   SEInhalerActionCollection(SESubstanceManager&);
@@ -41,3 +42,4 @@ protected:
   SESubstanceManager& m_Substances;
   std::stringstream m_ss;
 };
+}

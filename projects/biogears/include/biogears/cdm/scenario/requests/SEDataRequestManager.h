@@ -25,6 +25,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 
 CDM_BIND_DECL(DataRequestsData)
+
+namespace biogears {
 class BIOGEARS_API SEDataRequestManager : public Loggable {
 public:
   SEDataRequestManager(Logger* logger);
@@ -78,3 +80,4 @@ protected:
 
   static SEDataRequest* newFromBind(const CDM::DataRequestData& dataRequest, SESubstanceManager& substances, const SEDecimalFormat* dfault = nullptr);
 };
+}

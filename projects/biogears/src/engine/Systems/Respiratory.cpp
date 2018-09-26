@@ -53,6 +53,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4305 4244) // Disable some warning messages
 #endif
 
+namespace biogears {
 //Flag for setting things constant to test
 //Should be commented out, unless debugging/tuning
 // #define TUNING
@@ -159,7 +160,7 @@ void Respiratory::Initialize()
   m_VentilationFrequency_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
   m_DriverPressureMin_cmH2O = m_DefaultDrivePressure_cmH2O;
-  m_VentilationToTidalVolumeSlope = m_TargetTidalVolume_L / pow(m_Patient->GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min) + 1.0, 0.65);
+  m_VentilationToTidalVolumeSlope = m_TargetTidalVolume_L / std::pow(m_Patient->GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min) + 1.0, 0.65);
 
   //The peak driver pressure is the pressure above the default pressure
   m_PeakRespiratoryDrivePressure_cmH2O = VolumeToDriverPressure(m_Patient->GetTotalLungCapacity(VolumeUnit::L) - m_Patient->GetInspiratoryReserveVolume(VolumeUnit::L)) - m_DefaultDrivePressure_cmH2O;
@@ -883,7 +884,7 @@ void Respiratory::RespiratoryDriver()
       //Target Tidal Volume (i.e. Driver amplitude) *************************************************************************
       ///\@cite Magasso2001Mathematical
       double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
-      m_TargetTidalVolume_L = m_VentilationToTidalVolumeSlope * pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
+      m_TargetTidalVolume_L = m_VentilationToTidalVolumeSlope * std::pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
 
       //All actions that effect the target tidal volume and respiration rate are processed in the function below.  The
       //ventilation frequency (m_VentilationFrequency_Per_min) is calculated in this function.
@@ -936,7 +937,7 @@ void Respiratory::RespiratoryDriver()
     ////New driver
     if (m_BreathingCycleTime_s < driverInspirationTime_s) {
       //Inspiration
-      m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + (-m_PeakRespiratoryDrivePressure_cmH2O * pow(m_BreathingCycleTime_s, 2) / (driverInspirationTime_s * driverExpirationTime_s) + (m_PeakRespiratoryDrivePressure_cmH2O * TotalBreathingCycleTime_s * m_BreathingCycleTime_s / (driverInspirationTime_s * driverExpirationTime_s)));
+      m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + (-m_PeakRespiratoryDrivePressure_cmH2O * std::pow(m_BreathingCycleTime_s, 2) / (driverInspirationTime_s * driverExpirationTime_s) + (m_PeakRespiratoryDrivePressure_cmH2O * TotalBreathingCycleTime_s * m_BreathingCycleTime_s / (driverInspirationTime_s * driverExpirationTime_s)));
     } else if (m_BreathingCycleTime_s < TotalBreathingCycleTime_s) {
       //Expiration
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + m_PeakRespiratoryDrivePressure_cmH2O / (1.0 - exp(-driverExpirationTime_s / tauExpiration_s)) * (exp(-(m_BreathingCycleTime_s - driverInspirationTime_s) / tauExpiration_s) - exp(-driverExpirationTime_s / tauExpiration_s));
@@ -1209,7 +1210,7 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetLeftOpenTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasLeftChestOcclusiveDressing()) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToLeftChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1224,7 +1225,7 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetRightOpenTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasRightChestOcclusiveDressing()) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1240,7 +1241,7 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetLeftClosedTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_LeftAlveoliLeakToLeftPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1255,7 +1256,7 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetRightClosedTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1899,7 +1900,7 @@ void Respiratory::UpdateIERatio()
 /// \brief
 /// Update Alveoli Compliance
 ///
-/// \param  dScalingFactor			Multiplier based on the severity of the condition (lobar pneumonia, COPD, etc)
+/// \param  dScalingFactor      Multiplier based on the severity of the condition (lobar pneumonia, COPD, etc)
 /// \param  dLeftLungFraction     Fraction of left lung affected by change in surface area (0 to 1)
 /// \param  dRightLungFraction      Fraction of right lung affected by change in surface area (0 to 1)
 ///
@@ -2008,7 +2009,7 @@ void Respiratory::UpdateGasDiffusionSurfaceArea(double dFractionArea, double dLe
 //--------------------------------------------------------------------------------------------------
 double Respiratory::VolumeToDriverPressure(double TargetVolume_L)
 {
-  return -0.3743 * pow(TargetVolume_L, 5.0) + 7.4105 * pow(TargetVolume_L, 4.0) - 57.076 * pow(TargetVolume_L, 3.0) + 214.11 * pow(TargetVolume_L, 2.0) - 404.97 * TargetVolume_L + 262.22;
+  return -0.3743 * std::pow(TargetVolume_L, 5.0) + 7.4105 * std::pow(TargetVolume_L, 4.0) - 57.076 * std::pow(TargetVolume_L, 3.0) + 214.11 * std::pow(TargetVolume_L, 2.0) - 404.97 * TargetVolume_L + 262.22;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -2114,4 +2115,5 @@ void Respiratory::TuneCircuit()
     if (compartment->HasVolume())
       compartment->Balance(BalanceGasBy::VolumeFraction);
   }
+}
 }

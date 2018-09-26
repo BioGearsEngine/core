@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 #include <biogears/schema/cdm/Environment.hxx>
+
+namespace biogears {
 class SEDataRequestManager;
 
 class BIOGEARS_API SEEquipmentDataRequest : public SEDataRequest {
@@ -43,3 +45,4 @@ public:
 protected:
   std::string m_Type;
 };
+}

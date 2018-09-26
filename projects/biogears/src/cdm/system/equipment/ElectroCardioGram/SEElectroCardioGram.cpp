@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEElectroCardioGram::SEElectroCardioGram(Logger* logger)
   : SESystem(logger)
 {
@@ -347,4 +348,5 @@ double SEElectroCardioGram::GetLead12ElectricPotential(const ElectricPotentialUn
   if (m_Lead12ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead12ElectricPotential->GetValue(unit);
+}
 }

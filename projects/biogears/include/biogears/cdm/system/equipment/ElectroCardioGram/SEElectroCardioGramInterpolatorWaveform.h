@@ -15,8 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/CommonDataModel.hxx>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-
 CDM_BIND_DECL(ElectroCardioGramInterpolationWaveformData)
+
+namespace biogears {
 class BIOGEARS_API SEElectroCardioGramInterpolatorWaveform : public Loggable {
 public:
   SEElectroCardioGramInterpolatorWaveform(Logger* logger);
@@ -58,3 +59,4 @@ protected:
   SEFunctionElectricPotentialVsTime* m_Data;
   std::vector<unsigned int> m_ActiveIndicies;
 };
+}

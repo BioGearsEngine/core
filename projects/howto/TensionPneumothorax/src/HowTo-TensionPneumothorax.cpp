@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for applying a Tension Pneumothorax insult to the patient

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace biogears {
 class SECompartmentManager;
 class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink {
   friend class SECompartmentManager;
@@ -60,8 +61,11 @@ protected:
   SEThermalCompartment& m_TargetCmpt;
   SEThermalCircuitPath* m_Path;
 };
+}
 
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
+namespace biogears
+{
 class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment, SEThermalCompartmentLink> {
 public:
   SEThermalCompartmentGraph(const std::string& name, Logger* logger)
@@ -69,3 +73,4 @@ public:
 
   virtual ~SEThermalCompartmentGraph() = default;
 };
+}

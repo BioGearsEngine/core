@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// This class derives from Task and implements Run() so it can be used in the TaskRunner.  When run,

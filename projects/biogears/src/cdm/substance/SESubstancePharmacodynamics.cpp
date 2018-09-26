@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
 
+namespace biogears {
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)
 {
@@ -475,4 +476,5 @@ double SESubstancePharmacodynamics::GetEffectSiteRateConstant(const FrequencyUni
   if (m_EffectSiteRateConstant == nullptr)
     return SEScalar::dNaN();
   return m_EffectSiteRateConstant->GetValue(unit);
+}
 }

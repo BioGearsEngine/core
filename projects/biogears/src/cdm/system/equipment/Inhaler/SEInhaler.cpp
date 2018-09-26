@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
-
+namespace biogears {
 SEInhaler::SEInhaler(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
@@ -222,4 +222,5 @@ void SEInhaler::SetSubstance(const SESubstance* sub)
 SESubstance* SEInhaler::GetSubstance() const
 {
   return (SESubstance*)m_Substance;
+}
 }

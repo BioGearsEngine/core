@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsConfiguration.hxx>
 #include "biogears/cdm/properties/SEScalarFlowElastance.h"
 
+namespace biogears {
 class SENutrition;
 class SEEnvironmentalConditions;
 class SEScalarArea;
@@ -606,3 +607,4 @@ public:
 protected:
   CDM::enumOnOff::value m_TissueEnabled;
 };
+}

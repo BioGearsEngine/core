@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 CDM_BIND_DECL(PropertyData)
 
+namespace biogears {
 class BIOGEARS_API SEProperty {
 protected:
 public:
@@ -31,3 +32,4 @@ public:
 protected:
   virtual void Unload(CDM::PropertyData& data) const;
 };
+}

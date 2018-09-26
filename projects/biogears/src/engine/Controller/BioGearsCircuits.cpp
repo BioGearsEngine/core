@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
+
 BioGearsCircuits::BioGearsCircuits(BioGears& bg)
   : SECircuitManager(bg.GetLogger())
   , m_data(bg)
@@ -198,4 +200,5 @@ SEThermalCircuit& BioGearsCircuits::GetExternalTemperatureCircuit()
   if (m_ExternalTemperatureCircuit == nullptr)
     m_ExternalTemperatureCircuit = &CreateThermalCircuit(BGE::Circuits::ExternalTemperature);
   return *m_ExternalTemperatureCircuit;
+}
 }

@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+using namespace biogears;
 extern "C" JNIEXPORT jlong JNICALL Java_mil_tatrc_physiology_biogears_testing_BGEUnitTestDriver_nativeAllocate(JNIEnv* env, jobject obj)
 {
   BioGearsEngineTest* executor = new BioGearsEngineTest();

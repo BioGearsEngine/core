@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
   : Loggable(logger)
 {
@@ -235,4 +236,5 @@ double SESubstancePhysicochemicals::GetOralAbsorptionRateConstant() const
   if (m_OralAbsorptionRateConstant == nullptr)
     return SEScalar::dNaN();
   return m_OralAbsorptionRateConstant->GetValue();
+}
 }

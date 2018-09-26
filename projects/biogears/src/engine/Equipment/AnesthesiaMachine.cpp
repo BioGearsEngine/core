@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 /*
 ========================
   Constructors
@@ -719,4 +720,5 @@ void AnesthesiaMachine::CheckReliefValve()
 
   //Always try to let it run without the relief valve operational (i.e. closed (i.e. allowing flow)), otherwise it will always stay shorted
   m_pSelectorToReliefValve->SetNextValve(CDM::enumOpenClosed::Open);
+}
 }

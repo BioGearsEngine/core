@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License.
 //Project Includes
 #include <biogears/cdm/utils/TimingProfile.h>
 
-using State = biogears::State;
-using Timer = biogears::Timer;
+namespace biogears {
+
 void TimingProfile::Clear()
 {
   m_timers.clear();
@@ -91,4 +91,5 @@ void TimingProfile::Print(const std::string& label)
   } else {
     std::cout << "TimingProfile:Elapsed:" << label << ":" << GetElapsedTime_s(label) << "s" << std::endl;
   }
+}
 }

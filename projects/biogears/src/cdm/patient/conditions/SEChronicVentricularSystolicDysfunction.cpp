@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>
 
+
+namespace biogears {
 SEChronicVentricularSystolicDysfunction::SEChronicVentricularSystolicDysfunction()
   : SEChronicHeartFailure()
 {
@@ -55,4 +57,5 @@ void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
   str << std::flush;
+}
 }

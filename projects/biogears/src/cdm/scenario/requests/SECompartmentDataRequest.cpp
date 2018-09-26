@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
-
+namespace biogears {
 SECompartmentDataRequest::SECompartmentDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
 {
@@ -82,4 +82,5 @@ void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& n
   m_Name = name;
   m_RequestedUnit = "";
   m_Unit = &unit;
+}
 }

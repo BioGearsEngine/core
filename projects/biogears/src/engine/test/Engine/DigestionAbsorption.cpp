@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
+namespace biogears {
 void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType mealType)
 {
   DataTrack trk;
@@ -739,4 +740,5 @@ void BioGearsEngineTest::AbsorptionProtein(const std::string& sOutputDirectory)
 void BioGearsEngineTest::AbsorptionFat(const std::string& sOutputDirectory)
 {
   AbsorptionTest(sOutputDirectory, MealType::FatOnly);
+}
 }

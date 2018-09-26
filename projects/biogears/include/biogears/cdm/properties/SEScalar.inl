@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 template <typename Unit>
 SEScalarQuantity<Unit>::SEScalarQuantity()
   : SEUnitScalar()
@@ -228,4 +229,5 @@ void SEScalarQuantity<Unit>::ToString(std::ostream& str) const
     str << m_value << std::flush;
   else
     str << m_value << "(" << *m_unit << ")" << std::flush;
+}
 }

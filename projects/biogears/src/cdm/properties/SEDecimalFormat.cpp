@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 //Project Includes
 #include <biogears/schema/cdm/Properties.hxx>
 
-
+namespace biogears {
 SEDecimalFormat::SEDecimalFormat(const SEDecimalFormat* dfault)
 {
   Reset();
@@ -107,4 +107,5 @@ void SEDecimalFormat::SetStream(std::ofstream& s)
   case DecimalNotation::Scientific:
     s << std::scientific << std::setprecision(m_Precision);
   }
+}
 }

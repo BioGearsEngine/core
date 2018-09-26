@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+namespace biogears {
 class SESubstanceManager;
 class CCompoundUnit;
 class SEDecimalFormat;
@@ -70,3 +71,4 @@ protected:
   std::string m_RequestedUnit;
   const CCompoundUnit* m_Unit;
 };
+}

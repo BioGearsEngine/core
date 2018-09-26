@@ -66,6 +66,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #define GAS_ONLY_PRODCOM
 #define ZERO_APPROX 1e-10
 
+namespace biogears {
 double Tissue::m_hepaticCO2Produced_mol;
 double Tissue::m_hepaticO2Consumed_mol;
 
@@ -596,10 +597,10 @@ void Tissue::CalculateDiffusion()
             // This uses the Renkin and Curry data for capillary exchange as reported in \cite fournier2011basic
             // Divide by 100 is because the Renkin-Curry equations are in per hectogram units, and 100 g/hg
             /// \todo I believe we can optimize with a cache of these values. Also, we can cache permeabilityCoefficient_mL_Per_s_g which is not a function of the tissue properties
-            double molecularRadius_nm = 0.0348 * pow(molarMass_g_Per_mol, 0.4175);
-            double vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
+            double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
+            double vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * std::pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
             if (molecularRadius_nm < 1.0)
-              vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * pow(molecularRadius_nm, -1.223) / 100.0;
+              vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * std::pow(molecularRadius_nm, -1.223) / 100.0;
 
             // Multiply by tissue mass to get the tissue-dependent coefficient.
             double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissue->GetTotalMass(MassUnit::g);
@@ -804,7 +805,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     //The baseline of 0.2 was determined empirically to balance lactate transport / elimination with production
     //Max value is a function of severity because higher severity scenarios are shorter and we need to spike the concentration faster
     //We also need the production to slack off or else we will just keep pumping out lactate indefinitely
-    hypoperfusedFraction = severity * exp(-pow(wbcChange / 0.5, 2)) + 0.25;
+    hypoperfusedFraction = severity * exp(-std::pow(wbcChange / 0.5, 2)) + 0.25;
   }
 
   //Reusable values for looping
@@ -1337,7 +1338,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   m_RespiratoryQuotientRunningAverage.Sample(respiratoryQuotient);
 
   //Only record data every 50 steps for these to iron out noise
-  int steps = static_cast<double>(m_data.GetSimulationTime().GetValue(TimeUnit::s) / time_s);
+  int steps = static_cast<int>(m_data.GetSimulationTime().GetValue(TimeUnit::s) / time_s);
   if (steps % 50 == 0) {
     GetOxygenConsumptionRate().SetValue(m_O2ConsumedRunningAverage_mL_Per_s.Value(), VolumePerTimeUnit::mL_Per_s);
     GetCarbonDioxideProductionRate().SetValue(m_CO2ProducedRunningAverage_mL_Per_s.Value(), VolumePerTimeUnit::mL_Per_s);
@@ -2297,7 +2298,7 @@ double Tissue::SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double 
   double sodiumMichaelis_mM = 15.0;
 
   double KTerm = extraK_mM / (extraK_mM + potassiumMichaelis_mM);
-  double NaTerm = 1.0 / (1.0 + pow((sodiumMichaelis_mM / intraNa_mM), 1.5));
+  double NaTerm = 1.0 / (1.0 + std::pow((sodiumMichaelis_mM / intraNa_mM), 1.5));
   double sigma = (1.0 / 7.0) * (exp(extraNa_mM / 69.73) - 1);
   double beta = potential_V * 96485.0 / (8.314 * 310.0);
   double f = 1.0 / (1.0 + 0.1245 * exp(-0.1 * beta) + 0.0365 * sigma * exp(-beta));
@@ -2438,7 +2439,7 @@ void Tissue::CalculateOncoticPressure()
     reflectionCoefficient = m_data.GetCompartments().GetTissueCompartment(tissue->GetName())->GetReflectionCoefficient().GetValue();
     LLIM(reflectionCoefficient, 0.05);
     effectiveVascular_g_Per_dL = 1.6 * GeneralMath::LinearInterpolator(0.0, 1.0, albuminTotalAvg_g_Per_dL, albuminVascularAvg_g_Per_dL, reflectionCoefficient);
-    vascularOncoticPressure_mmHg = 2.1 * effectiveVascular_g_Per_dL + 0.16 * pow(effectiveVascular_g_Per_dL, 2) + 0.009 * pow(effectiveVascular_g_Per_dL, 3);
+    vascularOncoticPressure_mmHg = 2.1 * effectiveVascular_g_Per_dL + 0.16 * std::pow(effectiveVascular_g_Per_dL, 2) + 0.009 * std::pow(effectiveVascular_g_Per_dL, 3);
     if (vascular->GetName() == BGE::VascularCompartment::Gut) {
       for (auto c : vascular->GetChildren()) {
         vascularCOP = m_VascularCopPaths[c];
@@ -2450,8 +2451,9 @@ void Tissue::CalculateOncoticPressure()
     }
 
     effectiveInterstitial_g_Per_dL = 1.6 * GeneralMath::LinearInterpolator(0.0, 1.0, albuminTotalAvg_g_Per_dL, albuminInterstitialAvg_g_Per_dL, reflectionCoefficient);
-    interstitialOncoticPressure_mmHg = 2.1 * effectiveInterstitial_g_Per_dL + 0.16 * pow(effectiveInterstitial_g_Per_dL, 2) + 0.009 * pow(effectiveInterstitial_g_Per_dL, 3);
+    interstitialOncoticPressure_mmHg = 2.1 * effectiveInterstitial_g_Per_dL + 0.16 * std::pow(effectiveInterstitial_g_Per_dL, 2) + 0.009 * std::pow(effectiveInterstitial_g_Per_dL, 3);
     interstitialCOP = m_InterstitialCopPaths[tissue];
     interstitialCOP->GetNextPressureSource().SetValue(interstitialOncoticPressure_mmHg, PressureUnit::mmHg);
   }
+}
 }

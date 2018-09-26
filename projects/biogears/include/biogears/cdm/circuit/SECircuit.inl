@@ -13,9 +13,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
+
 #define ZERO_APPROX 1e-10
 #define OPEN_RESISTANCE 1e100
-
+namespace biogears {
 template <CIRCUIT_TEMPLATE>
 SECircuit<CIRCUIT_TYPES>::SECircuit(const std::string& name, Logger* logger)
   : Loggable(logger)
@@ -499,4 +500,5 @@ void SECircuit<CIRCUIT_TYPES>::SetNextAndCurrentFromBaselines()
       n->GetNextQuantity().Copy(n->GetQuantityBaseline());
     }
   }
+}
 }

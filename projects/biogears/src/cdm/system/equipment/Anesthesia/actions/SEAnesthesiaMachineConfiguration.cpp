@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
+namespace biogears {
 SEAnesthesiaMachineConfiguration::SEAnesthesiaMachineConfiguration(SESubstanceManager& substances)
   : SEAnesthesiaMachineAction()
   , m_Substances(substances)
@@ -162,4 +163,5 @@ void SEAnesthesiaMachineConfiguration::ToString(std::ostream& str) const
     }
   }
   str << std::flush;
+}
 }

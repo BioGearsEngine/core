@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 
+namespace biogears {
 const MassPerTimeUnit MassPerTimeUnit::g_Per_s("g/s");
 const MassPerTimeUnit MassPerTimeUnit::g_Per_min("g/min");
 const MassPerTimeUnit MassPerTimeUnit::g_Per_day("g/day");
@@ -72,4 +73,5 @@ const MassPerTimeUnit& MassPerTimeUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid MassPerTime unit";
   throw CommonDataModelException(err.str());
+}
 }

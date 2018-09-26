@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
+
 class SELiquidCompartment;
 class SETissueCompartment;
 class SEScalarMass;
@@ -157,3 +159,4 @@ protected:
 
   BioGears& m_data;
 };
+}

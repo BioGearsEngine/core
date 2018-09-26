@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 
+namespace biogears {
 SEPatientAssessmentRequest::SEPatientAssessmentRequest()
   : SEPatientAction()
 {
@@ -85,4 +86,5 @@ void SEPatientAssessmentRequest::ToString(std::ostream& str) const
   str << "\n\tType: ";
   HasType() ? str << GetType() : str << "Not Set";
   str << std::flush;
+}
 }

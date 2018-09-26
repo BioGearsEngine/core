@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 class BIOGEARS_API MassUnit : public CCompoundUnit {
 public:
   MassUnit(const std::string& u)
@@ -39,3 +40,4 @@ public:
 
   CDM::ScalarMassData* Unload() const override;
 };
+}

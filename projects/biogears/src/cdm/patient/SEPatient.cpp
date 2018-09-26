@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SEPatient::SEPatient(Logger* logger)
   : Loggable(logger)
 {
@@ -1391,4 +1392,5 @@ double SEPatient::GetVitalCapacity(const VolumeUnit& unit) const
     return SEScalar::dNaN();
   }
   return m_VitalCapacity->GetValue(unit);
+}
 }

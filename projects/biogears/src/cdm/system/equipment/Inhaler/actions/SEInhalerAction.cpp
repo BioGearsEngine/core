@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 
+namespace biogears {
 SEInhalerAction::SEInhalerAction()
   : SEAction()
 {
@@ -47,4 +48,5 @@ CDM::InhalerActionData* SEInhalerAction::Unload() const
 void SEInhalerAction::Unload(CDM::InhalerActionData& data) const
 {
   SEAction::Unload(data);
+}
 }

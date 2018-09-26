@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 class BIOGEARS_API TemperatureUnit : public CCompoundUnit {
 public:
   TemperatureUnit(const std::string& u)
@@ -40,3 +41,4 @@ public:
 
   double GetValue(const TemperatureUnit& unit) const override; // Zero is not Zero for all units, gotta remove that logic for this scalar type
 };
+}

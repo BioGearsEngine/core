@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEEndocrineSystem::SEEndocrineSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -100,4 +101,5 @@ double SEEndocrineSystem::GetGlucagonSynthesisRate(const AmountPerTimeUnit& unit
   if (m_GlucagonSynthesisRate == nullptr)
     return SEScalar::dNaN();
   return m_GlucagonSynthesisRate->GetValue(unit);
+}
 }

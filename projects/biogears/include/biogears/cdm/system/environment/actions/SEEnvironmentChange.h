@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEEnvironmentChange : public SEEnvironmentAction {
 public:
   SEEnvironmentChange(SESubstanceManager& substances);
@@ -47,3 +48,4 @@ protected:
   std::string m_ConditionsFile;
   SEEnvironmentalConditions* m_Conditions;
 };
+}

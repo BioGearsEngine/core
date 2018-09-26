@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 
+namespace biogears {
 class SEDataRequestManager;
 
 class BIOGEARS_API SEEnvironmentDataRequest : public SEDataRequest {
@@ -35,3 +36,4 @@ protected:
 public:
 protected:
 };
+}

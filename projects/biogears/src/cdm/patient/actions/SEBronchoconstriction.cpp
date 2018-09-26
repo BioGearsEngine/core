@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-
+namespace biogears {
 SEBronchoconstriction::SEBronchoconstriction()
   : SEPatientAction()
 {
@@ -81,4 +81,5 @@ void SEBronchoconstriction::ToString(std::ostream& str) const
   str << "\n\tSeverity: ";
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
+}
 }

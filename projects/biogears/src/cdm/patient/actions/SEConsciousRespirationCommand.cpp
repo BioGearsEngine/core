@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 
+namespace biogears {
 SEConsciousRespirationCommand::SEConsciousRespirationCommand()
 {
   m_Comment = "";
@@ -65,4 +66,5 @@ bool SEConsciousRespirationCommand::HasComment() const
 void SEConsciousRespirationCommand::InvalidateComment()
 {
   m_Comment = "";
+}
 }

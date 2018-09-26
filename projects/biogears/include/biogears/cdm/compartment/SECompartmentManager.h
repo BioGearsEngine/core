@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(CompartmentManagerData)
 
+namespace biogears {
 class BIOGEARS_API SECompartmentManager : public Loggable {
 public:
   SECompartmentManager(SESubstanceManager& subMgr);
@@ -199,3 +200,4 @@ protected:
   SESubstance* m_HbCO;
   SESubstanceManager& m_subMgr;
 };
+}

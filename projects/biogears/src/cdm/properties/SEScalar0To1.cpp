@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+namespace biogears {
 SEScalar0To1::SEScalar0To1()
   : SEScalar()
 {
@@ -36,4 +37,5 @@ void SEScalar0To1::SetValue(double d)
 void SEScalar0To1::SetValue(double d, const NoUnit& unitless)
 {
   SEScalar0To1::SetValue(d);
+}
 }

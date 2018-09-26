@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 BioGearsScenarioInitialParameters::BioGearsScenarioInitialParameters(SESubstanceManager& subMgr)
   : SEScenarioInitialParameters(subMgr)
 {
@@ -40,4 +41,5 @@ const BioGearsConfiguration* BioGearsScenarioInitialParameters::GetConfiguration
 void BioGearsScenarioInitialParameters::SetConfiguration(const BioGearsConfiguration& config)
 {
   CDM_COPY((&config), (&GetConfiguration()));
+}
 }

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
 
+namespace biogears {
 const HeatCapacitanceUnit HeatCapacitanceUnit::J_Per_K("J/K");
 const HeatCapacitanceUnit HeatCapacitanceUnit::kJ_Per_K("kJ/K");
 const HeatCapacitanceUnit HeatCapacitanceUnit::kcal_Per_K("kcal/K");
@@ -52,4 +53,5 @@ const HeatCapacitanceUnit& HeatCapacitanceUnit::GetCompoundUnit(const std::strin
   std::stringstream err;
   err << unit << " is not a valid HeatCapacitance unit";
   throw CommonDataModelException(err.str());
+}
 }

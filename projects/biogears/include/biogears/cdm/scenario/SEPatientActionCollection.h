@@ -43,6 +43,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
+namespace biogears {
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
 public:
   SEPatientActionCollection(SESubstanceManager&);
@@ -214,3 +215,4 @@ protected:
   SESubstanceManager& m_Substances;
   std::stringstream m_ss;
 };
+}

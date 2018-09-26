@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 
-
+namespace biogears {
 SEIntubation::SEIntubation()
   : SEPatientAction()
 {
@@ -86,4 +86,5 @@ void SEIntubation::ToString(std::ostream& str) const
   str << "\n\tType: ";
   HasType() ? str << GetType() : str << "Not Set";
   str << std::flush;
+}
 }

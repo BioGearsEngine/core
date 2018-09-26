@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// A class used to handle any specific logic you may want to do each time step

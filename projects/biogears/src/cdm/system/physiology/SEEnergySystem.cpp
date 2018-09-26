@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SEEnergySystem::SEEnergySystem(Logger* logger)
   : SESystem(logger)
 {
@@ -387,4 +388,5 @@ double SEEnergySystem::GetTotalWorkRateLevel() const
   if (m_TotalWorkRateLevel == nullptr)
     return SEScalar::dNaN();
   return m_TotalWorkRateLevel->GetValue();
+}
 }

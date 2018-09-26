@@ -11,11 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-class BioGears;
-class SEGasCompartmentGraph;
 
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+
+namespace biogears {
+class BioGears;
+class SEGasCompartmentGraph;
 /**
 * @brief Manages all compartments and graphs associated with all %BioGears systems/equipement
 */
@@ -144,3 +146,4 @@ protected:
   std::map<SETissueCompartment*, SELiquidCompartment*> m_ExtracellularFluid;
   std::map<SETissueCompartment*, SELiquidCompartment*> m_IntracellularFluid;
 };
+}

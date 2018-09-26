@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 #include <biogears/cdm/utils/DataTrack.h>
 
+namespace biogears {
 class SESystem;
 class SEPatient;
 class SEEnvironment;
@@ -115,3 +116,4 @@ protected:
   std::vector<SESystem*> m_EquipmentSystems;
   std::map<const SEDataRequest*, SEDataRequestScalar*> m_Request2Scalar;
 };
+}

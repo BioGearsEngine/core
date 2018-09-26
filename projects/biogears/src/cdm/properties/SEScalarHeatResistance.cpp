@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatResistance.h>
 
+namespace biogears {
 const HeatResistanceUnit HeatResistanceUnit::K_Per_W("K/W");
 const HeatResistanceUnit HeatResistanceUnit::C_Per_W("degC/W");
 const HeatResistanceUnit HeatResistanceUnit::K_s_Per_kcal("K s/kcal");
@@ -52,4 +53,5 @@ const HeatResistanceUnit& HeatResistanceUnit::GetCompoundUnit(const std::string&
   std::stringstream err;
   err << unit << " is not a valid HeatResistance unit";
   throw CommonDataModelException(err.str());
+}
 }

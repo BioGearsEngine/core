@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #define COMBINED_CIRCUIT_TEMPLATE typename CombinedCircuitBindType, typename CircuitType, typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType
 #define COMBINED_CIRCUIT_TYPES CombinedCircuitBindType, CircuitType, CircuitBindType, NodeType, CircuitNodeBindType, PathType, CircuitPathBindType
 
+namespace biogears {
 template <COMBINED_CIRCUIT_TEMPLATE>
 class SECombinedCircuit : public CircuitType {
 public:
@@ -55,4 +56,5 @@ protected:
   std::vector<std::string> m_RemovedPaths;
   std::map<std::string, CircuitType*> m_Circuits;
 };
+}
 #include <biogears/cdm/circuit/SECombinedCircuit.inl>

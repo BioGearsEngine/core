@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SETensionPneumothorax::SETensionPneumothorax()
   : SEPatientAction()
 {
@@ -129,4 +130,5 @@ void SETensionPneumothorax::ToString(std::ostream& str) const
   str << "\n\tSide: ";
   HasSide() ? str << GetSide() : str << "Not Set";
   str << std::flush;
+}
 }

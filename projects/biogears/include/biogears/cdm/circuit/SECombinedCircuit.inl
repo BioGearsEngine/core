@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECombinedCircuit.h>
 #include <biogears/cdm/stdafx.h>
 
+namespace biogears {
 template <COMBINED_CIRCUIT_TEMPLATE>
 SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::SECombinedCircuit(const std::string& name, Logger* logger)
   : CircuitType(name, logger)
@@ -308,4 +309,5 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemovePath(const std::string& na
     i++;
   }
   Warning(GetName() + " does not have path " + name + ", path is not removed");
+}
 }

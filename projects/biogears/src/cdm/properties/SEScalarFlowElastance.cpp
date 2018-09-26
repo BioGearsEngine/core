@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
 
+namespace biogears {
 const FlowElastanceUnit FlowElastanceUnit::cmH2O_Per_L("cmH2O/L");
 const FlowElastanceUnit FlowElastanceUnit::mmHg_Per_mL("mmHg/mL");
 const FlowElastanceUnit FlowElastanceUnit::Pa_Per_m3("Pa/m^3");
@@ -47,4 +48,5 @@ const FlowElastanceUnit& FlowElastanceUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid FlowElastance unit";
   throw CommonDataModelException(err.str());
+}
 }

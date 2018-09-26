@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for performing a Pulmonary Function Test (PFT) on the patient

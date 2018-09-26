@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitCalculator.h>
 
+namespace biogears {
 SEFluidCircuitCalculator::SEFluidCircuitCalculator(Logger* logger)
   : SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit>(
       FlowComplianceUnit::m3_Per_Pa, VolumePerTimeUnit::m3_Per_s, FlowInertanceUnit::Pa_s2_Per_m3, PressureUnit::Pa, VolumeUnit::m3, FlowResistanceUnit::Pa_s_Per_m3, logger)
@@ -23,4 +24,5 @@ SEFluidCircuitCalculator::SEFluidCircuitCalculator(const FlowComplianceUnit& c, 
 }
 SEFluidCircuitCalculator::~SEFluidCircuitCalculator()
 {
+}
 }

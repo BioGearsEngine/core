@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
 
 CDM_BIND_DECL(PhysiologyEngineTimedConditionStabilizationData)
+
+namespace biogears {
 class BIOGEARS_API PhysiologyEngineTimedStabilizationCriteria : public Loggable {
 public:
   PhysiologyEngineTimedStabilizationCriteria(Logger* logger);
@@ -86,3 +88,4 @@ protected:
   SEScalarTime* m_FeedbackStabilizationTime;
   std::vector<PhysiologyEngineTimedStabilizationCriteria*> m_ConditionCriteria;
 };
+}

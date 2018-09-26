@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 
+namespace biogears {
 bool PhysiologyEngineTimedStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {
   if (!GetRestingStabilizationTime().IsValid())
@@ -330,4 +331,5 @@ SEScalarTime& PhysiologyEngineTimedStabilizationCriteria::GetTime()
 const SEScalarTime& PhysiologyEngineTimedStabilizationCriteria::GetTime() const
 {
   return m_Time;
+}
 }

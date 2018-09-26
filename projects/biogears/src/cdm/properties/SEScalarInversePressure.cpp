@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
 
+namespace biogears {
 const InversePressureUnit InversePressureUnit::Inverse_Pa("1/Pa");
 const InversePressureUnit InversePressureUnit::Inverse_mmHg("1/mmHg");
 const InversePressureUnit InversePressureUnit::Inverse_cmH2O("1/cmH2O");
@@ -52,4 +53,5 @@ const InversePressureUnit& InversePressureUnit::GetCompoundUnit(const std::strin
   std::stringstream err;
   err << unit << " is not a valid InversePressure unit";
   throw CommonDataModelException(err.str());
+}
 }

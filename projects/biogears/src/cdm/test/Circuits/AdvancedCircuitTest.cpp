@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 //*********************************************************
 //Circuit Setup
 //*********************************************************
@@ -1380,4 +1381,5 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
   std::string sOutputFile = sOutputDirectory + "/CircuitLockingTestReport.xml";
   testReport.WriteFile(sOutputFile);
   m_Circuits.Clear();
+}
 }

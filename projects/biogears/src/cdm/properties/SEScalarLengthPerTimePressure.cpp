@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLengthPerTimePressure.h>
 
+namespace biogears {
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_s_mmHg("m/s mmHg");
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::cm_Per_s_mmHg("cm/s mmHg");
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_min_mmHg("m/min mmHg");
@@ -52,4 +53,5 @@ const LengthPerTimePressureUnit& LengthPerTimePressureUnit::GetCompoundUnit(cons
   std::stringstream err;
   err << unit << " is not a valid LengthPerTimePressure unit";
   throw CommonDataModelException(err.str());
+}
 }

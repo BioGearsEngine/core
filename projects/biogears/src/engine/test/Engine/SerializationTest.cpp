@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 #include <biogears/cdm/utils/FileUtils.h>
 
+namespace biogears {
 class HowToTracker {
 private:
   double m_dT_s; // Cached Engine Time Step
@@ -318,4 +319,5 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
     InjectSuccsState(bg.get(), tracker, *Succs);
   }
   bg->SaveState("./FinalEngineState.xml");
+}
 }

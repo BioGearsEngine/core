@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmount.h>
 
-
+namespace biogears {
 SEUrinalysisMicroscopic::SEUrinalysisMicroscopic(Logger* logger)
   : SEPatientAssessment(logger)
 {
@@ -229,4 +229,5 @@ void SEUrinalysisMicroscopic::SetYeastResult(CDM::enumMicroscopicObservationAmou
 void SEUrinalysisMicroscopic::InvalidateYeastResult()
 {
   m_Yeast = CDM::enumMicroscopicObservationAmount::value(-1);
+}
 }

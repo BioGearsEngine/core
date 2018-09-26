@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 
+namespace biogears {
 DataTrack::DataTrack()
   : DataTrack(nullptr)
 {
@@ -745,4 +746,5 @@ void DataTrack::StreamProbesToFile(double time, std::ofstream& file)
   }
   file << std::endl;
   file.flush();
+}
 }

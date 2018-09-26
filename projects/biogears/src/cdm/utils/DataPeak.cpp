@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/DataPeak.h>
 
+namespace biogears {
 DataPeak::DataPeak(unsigned int samples, double epsilon)
 {
   m_Samples = samples;
@@ -54,7 +55,7 @@ bool DataPeak::Peaked(double value)
       // then another peak
       //                  .--.
       //        peak     /    \
-			//       .--      .
+      //       .--      .
       // ----./---\..../-------window
       //   ./
       m_PeakCount++;
@@ -90,4 +91,5 @@ bool DataPeak::Peaked(double value)
     }
   }
   return false;
+}
 }

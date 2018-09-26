@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(FunctionData)
 
+namespace biogears {
 class BIOGEARS_API SEFunction : public SEProperty {
 public:
   SEFunction();
@@ -48,3 +49,4 @@ protected:
   std::vector<double> m_Dependent;
   std::vector<double> m_Independent;
 };
+}

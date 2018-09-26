@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
 
+namespace biogears {
 const PowerPerAreaTemperatureToTheFourthUnit PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4("W/ m^2 K^4");
 
 CDM::ScalarPowerPerAreaTemperatureToTheFourthData* SEScalarPowerPerAreaTemperatureToTheFourth::Unload() const
@@ -37,4 +38,5 @@ const PowerPerAreaTemperatureToTheFourthUnit& PowerPerAreaTemperatureToTheFourth
   std::stringstream err;
   err << unit << " is not a valid PowerPerAreaTemperatureToTheFourth unit";
   throw CommonDataModelException(err.str());
+}
 }

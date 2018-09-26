@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <set>
 
+using namespace biogears;
 
 bool TestDriver::Configure(int argc, char* argv[])
 {

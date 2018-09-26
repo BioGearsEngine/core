@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
 
+namespace biogears {
 const EnergyPerMassUnit EnergyPerMassUnit::J_Per_kg("J/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::kJ_Per_kg("kJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::mJ_Per_kg("mJ/kg");
@@ -52,4 +53,5 @@ const EnergyPerMassUnit& EnergyPerMassUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid EnergyPerMass unit";
   throw CommonDataModelException(err.str());
+}
 }

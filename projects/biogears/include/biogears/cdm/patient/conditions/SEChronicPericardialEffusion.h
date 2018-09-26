@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+namespace biogears {
 class SEScalarVolume;
 
 class BIOGEARS_API SEChronicPericardialEffusion : public SEPatientCondition {
@@ -45,3 +46,4 @@ public:
 protected:
   SEScalarVolume* m_AccumulatedVolume;
 };
+}

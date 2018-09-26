@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SETissueCompartment::SETissueCompartment(const std::string& name, Logger* logger)
   : SECompartment(name, logger)
 {
@@ -313,4 +314,5 @@ double SETissueCompartment::GetTotalMass(const MassUnit& unit) const
   if (m_TotalMass == nullptr)
     return SEScalar::dNaN();
   return m_TotalMass->GetValue(unit);
+}
 }

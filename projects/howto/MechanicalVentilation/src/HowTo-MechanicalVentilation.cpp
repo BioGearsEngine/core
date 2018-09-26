@@ -41,6 +41,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 
+using namespace biogears;
 // Make a custom event handler that you can connect to your code (See EngineUse for more info)
 class MechVentHandler : public SEEventHandler {
 public:

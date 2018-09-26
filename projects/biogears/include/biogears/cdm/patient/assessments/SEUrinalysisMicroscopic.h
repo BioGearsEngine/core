@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
+namespace biogears {
 class SEScalarAmount;
 
 class BIOGEARS_API SEUrinalysisMicroscopic : public SEPatientAssessment {
@@ -81,3 +82,4 @@ protected:
   CDM::enumMicroscopicObservationAmount::value m_Trichomonads;
   CDM::enumMicroscopicObservationAmount::value m_Yeast;
 };
+}

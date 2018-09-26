@@ -14,8 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class SEScalar0To1;
 class SEConsciousRespiration;
+
 class BIOGEARS_API SEForcedExhale : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
   SEForcedExhale();
@@ -47,3 +49,4 @@ protected:
   SEScalar0To1* m_ExpiratoryReserveVolumeFraction;
   SEScalarTime* m_Period;
 };
+}

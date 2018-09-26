@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(ActionData);
+
+namespace biogears {
 class SESubstanceManager;
 
 class BIOGEARS_API SEAction : public Loggable {
@@ -54,4 +56,5 @@ inline std::ostream& operator<<(std::ostream& out, const SEAction& a)
 {
   a.ToString(out);
   return out;
+}
 }

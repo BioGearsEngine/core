@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class SEUrinalysis;
 class SEPatient;
 class SEFluidCircuit;
@@ -239,3 +240,4 @@ protected:
   SEScalarMass m_spCleared;
   ActiveTransport m_SubstanceTransport;
 };
+}

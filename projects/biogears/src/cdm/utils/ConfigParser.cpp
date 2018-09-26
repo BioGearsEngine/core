@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <fstream>
 #include <tuple>
 
+namespace biogears {
 void ConfigSet::SetKeyValues(const std::map<std::string, std::string>& keyValues)
 {
   m_keyValues = keyValues;
@@ -77,4 +78,5 @@ void ConfigParser::ParseConfigFile(const std::string& verificationConfigFilePath
 std::tuple<std::string, std::string> ConfigParser::ParseKeyValue(const std::string& line)
 {
   return std::make_tuple(line.substr(0, line.find("=")), line.substr(line.find("=") + 1));
+}
 }

@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 #include <biogears/cdm/system/physiology/OverrideConfig.h>
 
+namespace biogears {
 class SELiquidCompartmentGraph;
 class SEFluidCircuitCalculator;
 class SEPatient;
@@ -222,3 +223,4 @@ private:
 
   OverrideConfig* m_Override;
 };
+}

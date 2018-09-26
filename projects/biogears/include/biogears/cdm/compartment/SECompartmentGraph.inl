@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
 
-
+namespace biogears {
 template <COMPARTMENT_GRAPH_TEMPLATE>
 SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::SECompartmentGraph(const std::string& name, Logger* logger)
   : Loggable(logger)
@@ -144,4 +144,5 @@ void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::RemoveLink(const std::string& 
     }
     i++;
   }
+}
 }

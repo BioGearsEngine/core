@@ -15,13 +15,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/schema/cdm/Environment.hxx>
 
+namespace biogears {
 class SEScalar;
 class SEScalarFraction;
 class SEScalarPower;
 class PowerUnit;
 class SEScalarArea;
 class AreaUnit;
-
 
 class BIOGEARS_API SEActiveCooling : public Loggable {
 public:
@@ -59,3 +59,4 @@ protected:
   SEScalarArea* m_SurfaceArea;
   SEScalarFraction* m_SurfaceAreaFraction;
 };
+}

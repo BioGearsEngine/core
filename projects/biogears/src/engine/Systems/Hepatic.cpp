@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 Hepatic::Hepatic(BioGears& bg)
   : SEHepaticSystem(bg.GetLogger())
   , m_data(bg)
@@ -107,7 +108,7 @@ void Hepatic::Unload(CDM::BioGearsHepaticSystemData& data) const
 /// Initializes parameters for the Hepatic Class
 ///
 ///  \details
-///	 Initializes member variables and system level values on the common data model.
+///   Initializes member variables and system level values on the common data model.
 //--------------------------------------------------------------------------------------------------
 void Hepatic::SetUp()
 {
@@ -651,4 +652,5 @@ void Hepatic::Lipogenesis()
   Tissue::m_hepaticCO2Produced_mol += CO2Generated_mol;
   //TODO Add lipogenesis rate to CDM
   //m_data.GetDataTrack().Probe("InstantaneousTAGGenerated(mg)", TAGGenerated_g * 1000);
+}
 }

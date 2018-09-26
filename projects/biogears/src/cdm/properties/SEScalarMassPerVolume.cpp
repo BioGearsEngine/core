@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
+namespace biogears {
+
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_dL("g/dL");
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_cm3("g/cm^3");
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_m3("g/m^3");
@@ -102,4 +104,5 @@ const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid MassPerVolume unit";
   throw CommonDataModelException(err.str());
+}
 }

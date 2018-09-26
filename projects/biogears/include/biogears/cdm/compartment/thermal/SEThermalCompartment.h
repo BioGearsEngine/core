@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 CDM_BIND_DECL(ThermalCompartmentData)
+
+namespace biogears {
 class SEThermalCompartmentLink;
 class SEScalarPower;
 class PowerUnit;
@@ -94,3 +96,4 @@ protected:
   std::vector<SEThermalCompartment*> m_Leaves;
   SECompartmentNodes<THERMAL_COMPARTMENT_NODE> m_Nodes;
 };
+}

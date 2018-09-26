@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+CDM_BIND_DECL(ConditionData);
+
+namespace biogears {
 class SECondition;
 class SEChronicAnemia;
 class SEChronicHeartFailure;
@@ -31,7 +34,6 @@ class SELobarPneumonia;
 class SEInitialEnvironment;
 class SESubstanceManager;
 
-CDM_BIND_DECL(ConditionData);
 class BIOGEARS_API SEConditionManager : public Loggable {
 public:
   SEConditionManager(SESubstanceManager&);
@@ -107,3 +109,4 @@ protected:
   std::vector<SECondition*> m_Conditions;
   std::stringstream m_ss;
 };
+}

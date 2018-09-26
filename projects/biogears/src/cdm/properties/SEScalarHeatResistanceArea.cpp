@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
 
+namespace biogears {
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rsi("rsi");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::clo("clo");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rValue("rValue");
@@ -52,4 +53,5 @@ const HeatResistanceAreaUnit& HeatResistanceAreaUnit::GetCompoundUnit(const std:
   std::stringstream err;
   err << unit << " is not a valid HeatResistanceArea unit";
   throw CommonDataModelException(err.str());
+}
 }

@@ -38,7 +38,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4275)
 
 // #define VERBOSE
-
+namespace biogears {
 Nervous::Nervous(BioGears& bg)
   : SENervousSystem(bg.GetLogger())
   , m_data(bg)
@@ -258,8 +258,8 @@ void Nervous::BaroreceptorFeedback()
     meanArterialPressureSetPoint_mmHg *= (1 + 0.65 * painVAS);
   }
 
-  double sympatheticFraction = 1.0 / (1.0 + pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
-  double parasympatheticFraction = 1.0 / (1.0 + pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
+  double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
+  double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
 
   //Calculate the normalized change in heart rate
   double normalizedHeartRate = GetBaroreceptorHeartRateScale().GetValue();
@@ -623,15 +623,15 @@ void Nervous::SetPupilEffects()
         //https://www.wolframalpha.com/input/?i=y%3D(1+%2F+(1+%2B+exp(-2.0*(x+-+24))))+from+18%3Cx%3C28
         leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
         //https://www.wolframalpha.com/input/?i=y%3D-.001*pow(10,+.27*(x+-+15))+from+18%3Cx%3C28+and+-1%3Cy%3C0
-        leftPupilReactivityResponseLevel += -.001 * pow(10, .27 * (icp_mmHg - 15));
+        leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 15));
         rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
         rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
       } else if (b->GetType() == CDM::enumBrainInjuryType::LeftFocal) {
         leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
-        leftPupilReactivityResponseLevel += -.001 * pow(10, .27 * (icp_mmHg - 15));
+        leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 15));
       } else if (b->GetType() == CDM::enumBrainInjuryType::RightFocal) {
         rightPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
-        rightPupilReactivityResponseLevel += -.001 * pow(10, .27 * (icp_mmHg - 15));
+        rightPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 15));
       }
     }
   }
@@ -644,4 +644,5 @@ void Nervous::SetPupilEffects()
   GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
+}
 }

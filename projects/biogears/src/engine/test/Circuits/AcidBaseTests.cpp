@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestReport.h>
 
 #define VERBOSE
-
+namespace biogears {
 void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
 {
   // This is a unit test of the blood gas calculation methodology.
@@ -1206,4 +1206,5 @@ void BioGearsEngineTest::AcidBaseBloodGasTests(const std::string& sOutputDirecto
   bg.GetDataTrack().WriteTrackToFile(results.c_str());
 
   testReport.WriteFile(sOutputDirectory + "/AcidBaseBloodGasTestsReport.xml");
+}
 }

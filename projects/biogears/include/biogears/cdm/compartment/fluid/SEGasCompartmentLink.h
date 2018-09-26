@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
 #include "biogears/cdm/substance/SESubstanceTransport.h"
+
+namespace biogears {
 class SEGasCompartment;
 
 class SECompartmentManager;
@@ -31,3 +33,4 @@ public:
 
   virtual CDM::GasCompartmentLinkData* Unload() override;
 };
+}

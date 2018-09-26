@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
-
+namespace biogears {
 SESubstance::SESubstance(Logger* logger)
   : Loggable(logger)
 {
@@ -744,4 +744,5 @@ const SESubstancePharmacodynamics* SESubstance::GetPD() const
 void SESubstance::RemovePD()
 {
   SAFE_DELETE(m_PD);
+}
 }

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
 
+namespace biogears {
 const ElectricCapacitanceUnit ElectricCapacitanceUnit::F("F");
 
 CDM::ScalarElectricCapacitanceData* SEScalarElectricCapacitance::Unload() const
@@ -37,4 +38,5 @@ const ElectricCapacitanceUnit& ElectricCapacitanceUnit::GetCompoundUnit(const st
   std::stringstream err;
   err << unit << " is not a valid ElectricCapacitance unit";
   throw CommonDataModelException(err.str());
+}
 }

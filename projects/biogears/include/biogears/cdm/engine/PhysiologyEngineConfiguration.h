@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+CDM_BIND_DECL(PhysiologyEngineConfigurationData)
+
+namespace biogears {
 class SEElectroCardioGramInterpolator;
 class PhysiologyEngineStabilization;
 class PhysiologyEngineTimedStabilization;
@@ -23,7 +26,6 @@ class SEScalarTime;
 class TimeUnit;
 class OverrideConfig;
 
-CDM_BIND_DECL(PhysiologyEngineConfigurationData)
 
 class BIOGEARS_API PhysiologyEngineConfiguration : public Loggable {
 public:
@@ -87,3 +89,4 @@ protected:
 
   CDM::enumOnOff::value m_WritePatientBaselineFile;
 };
+}

@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
+namespace biogears {
 class SESubstance;
 class SEScalarPressure;
 class PressureUnit;
@@ -119,4 +120,4 @@ protected:
   std::vector<SEFluidCompartment*> m_FluidChildren;
   SECompartmentNodes<FLUID_COMPARTMENT_NODE> m_Nodes;
 };
-
+}

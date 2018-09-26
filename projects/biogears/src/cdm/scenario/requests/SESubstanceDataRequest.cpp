@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
+namespace biogears {
 SESubstanceDataRequest::SESubstanceDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
 {
@@ -135,4 +136,5 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string
   m_Name = name;
   m_RequestedUnit = unit;
   m_Unit = nullptr;
+}
 }

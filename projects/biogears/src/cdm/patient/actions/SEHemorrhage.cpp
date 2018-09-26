@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SEHemorrhage::SEHemorrhage()
   : SEPatientAction()
 {
@@ -192,4 +193,5 @@ void SEHemorrhage::ToString(std::ostream& str) const
       str << i;
   }
   str << std::flush;
+}
 }

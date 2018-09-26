@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
@@ -57,3 +58,4 @@ protected:
   std::string m_Compartment;
   const SESubstance* m_Substance;
 };
+}

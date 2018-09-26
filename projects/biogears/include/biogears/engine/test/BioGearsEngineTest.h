@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <math.h>
 
+namespace biogears {
 class SETestSuite;
 class HowToTracker;
 
@@ -244,3 +245,4 @@ protected:
   void InhalerState(PhysiologyEngine* bg, HowToTracker& tracker);
   void InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tracker, const SESubstance& succs);
 };
+}

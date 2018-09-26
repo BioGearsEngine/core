@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class SESubstance;
 class SEGasCompartment;
 class SETissueCompartment;
@@ -189,3 +190,4 @@ protected:
   std::vector<SETissueCompartment*> m_ConsumptionProdutionTissues;
   std::string m_AnaerobicTissues;
 };
+}

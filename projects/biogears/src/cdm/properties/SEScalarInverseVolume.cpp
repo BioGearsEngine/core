@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarInverseVolume.h>
 
+namespace biogears {
 const InverseVolumeUnit InverseVolumeUnit::Inverse_L("1/L");
 const InverseVolumeUnit InverseVolumeUnit::Inverse_mL("1/mL");
 
@@ -42,4 +43,5 @@ const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid Volume unit";
   throw CommonDataModelException(err.str());
+}
 }

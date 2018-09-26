@@ -42,6 +42,9 @@ specific language governing permissions and limitations under the License.
 
 #endif
 
+struct dirent;
+
+namespace biogears {
 bool BIOGEARS_API CreateFilePath(const std::string&);
 std::string BIOGEARS_API Replace(const std::string& original, const std::string& replace, const std::string& withThis);
 void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "");
@@ -62,4 +65,5 @@ public:
   ScopedFileSystemLock& operator=(ScopedFileSystemLock&& other) = delete;
 };
 
-bool BIOGEARS_API IsDirectory(struct dirent* ent);
+bool BIOGEARS_API IsDirectory( dirent* ent);
+}

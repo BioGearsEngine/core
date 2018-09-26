@@ -22,9 +22,8 @@ specific language governing permissions and limitations under the License.
 #include "biogears/cdm/properties/SEScalarVolume.h"
 #include "biogears/cdm/properties/SEScalarFraction.h"
 
-
+namespace biogears {
 #define SUBSTANCE_TRANSPORTER_TEMPLATE typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit
-
 #define TRANSPORT_AMOUNT_TYPES ExtensiveScalar, IntensiveScalar
 template <typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportAmount {
@@ -121,5 +120,7 @@ protected:
 
 using SEGasTransporter = SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
 using SELiquidTransporter = SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
+
+}
 
 #include <biogears/cdm/substance/SESubstanceTransport.inl>

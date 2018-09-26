@@ -11,7 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
+
+
 
 #if (0)
 #define DEBUGOUT(x) x
@@ -40,7 +41,6 @@ namespace tatrc {
 namespace CDM = mil::tatrc::physiology::datamodel;
 
 #include <stdexcept>
-
 #ifdef _MSC_VER
 #include <direct.h>
 #else
@@ -49,14 +49,16 @@ namespace CDM = mil::tatrc::physiology::datamodel;
 
 #if defined(_MSC_VER)
 #include <unordered_map>
-using namespace stdext;
 #else //if (__GCC__) || (__GNUC__)
 #include <unordered_map>
 #endif
 
-#pragma warning(disable : 4251)
 //Utilities
 
+#include <biogears/exports.h>
+namespace biogears {
+
+#pragma warning(disable : 4251)
 struct CommonDataModelException : public std::runtime_error {
   CommonDataModelException()
     : std::runtime_error("Common Data Model Error")
@@ -68,6 +70,7 @@ struct CommonDataModelException : public std::runtime_error {
   {
   }
 };
+}
 // Basics
 #include <biogears/cdm/Macros.h>
 #include <biogears/cdm/utils/Logger.h>

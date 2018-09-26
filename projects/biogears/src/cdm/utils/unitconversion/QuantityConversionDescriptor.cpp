@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 //#include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
 //----------------------------------------------------------------------------
+namespace biogears {
 CQuantityConversionDescriptor::CQuantityConversionDescriptor(double fromExp, const std::string& mappingUnit)
   : m_dFromExponent(fromExp)
 {
@@ -69,4 +70,5 @@ const double& CQuantityConversionDescriptor::GetFromExponent() const
 const CCompoundUnit* CQuantityConversionDescriptor::GetMappingUnit() const
 {
   return m_CUMappingUnit;
+}
 }

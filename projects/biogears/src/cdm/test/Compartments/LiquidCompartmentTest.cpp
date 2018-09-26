@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 // Maybe we want to test a couple compartments that overlap
 // i.e. 2 compartments containing the same node and or path
 
@@ -511,7 +512,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
   }
 
   // Check out pH
-  double L1C0_expected_pH = -log10(((pow(10, -L2C0_pH) * L2C0_mL) + (pow(10, -L2C1_pH) * L2C1_mL)) / (L2C0_mL + L2C1_mL));
+  double L1C0_expected_pH = -log10(((std::pow(10, -L2C0_pH) * L2C0_mL) + (std::pow(10, -L2C1_pH) * L2C1_mL)) / (L2C0_mL + L2C1_mL));
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidCompartment*>(L1C0)->GetPH(), L1C0_expected_pH) > m_PercentTolerance) {
     m_ss << L1C0->GetName() << " const pH is not correct : " << const_cast<const SELiquidCompartment*>(L1C0)->GetPH() << " expected " << L1C0_expected_pH;
     testCase.AddFailure(m_ss);
@@ -520,7 +521,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
     m_ss << L1C0->GetName() << " pH is not correct : " << L1C0->GetPH().GetValue() << " expected " << L1C0_expected_pH;
     testCase.AddFailure(m_ss);
   }
-  double L1C1_expected_pH = -log10(((pow(10, -L2C2_pH) * L2C2_mL) + (pow(10, -L2C3_pH) * L2C3_mL)) / (L2C2_mL + L2C3_mL));
+  double L1C1_expected_pH = -log10(((std::pow(10, -L2C2_pH) * L2C2_mL) + (std::pow(10, -L2C3_pH) * L2C3_mL)) / (L2C2_mL + L2C3_mL));
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidCompartment*>(L1C1)->GetPH(), L1C1_expected_pH) > m_PercentTolerance) {
     m_ss << L1C1->GetName() << " const pH is not correct : " << const_cast<const SELiquidCompartment*>(L1C1)->GetPH() << " expected " << L1C1_expected_pH;
     testCase.AddFailure(m_ss);
@@ -529,7 +530,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
     m_ss << L1C1->GetName() << " pH is not correct : " << L1C1->GetPH().GetValue() << " expected " << L1C1_expected_pH;
     testCase.AddFailure(m_ss);
   }
-  double L0C0_expected_pH = -log10(((pow(10, -L1C0_expected_pH) * L1C0_expected_mL) + (pow(10, -L1C1_expected_pH) * L1C1_expected_mL)) / (L1C0_expected_mL + L1C1_expected_mL));
+  double L0C0_expected_pH = -log10(((std::pow(10, -L1C0_expected_pH) * L1C0_expected_mL) + (std::pow(10, -L1C1_expected_pH) * L1C1_expected_mL)) / (L1C0_expected_mL + L1C1_expected_mL));
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidCompartment*>(L0C0)->GetPH(), L0C0_expected_pH) > m_PercentTolerance) {
     m_ss << L0C0->GetName() << " const pH is not correct : " << const_cast<const SELiquidCompartment*>(L0C0)->GetPH() << " expected " << L0C0_expected_pH;
     testCase.AddFailure(m_ss);
@@ -1320,4 +1321,5 @@ void CommonDataModelTest::LiquidCompartmentTest(const std::string& rptDirectory)
   TestUpdateLiquidLinks(UpdateLiquidLinks, subMgr);
 
   testReport.WriteFile(rptDirectory + "/LiquidCompartmentTestReport.xml");
+}
 }

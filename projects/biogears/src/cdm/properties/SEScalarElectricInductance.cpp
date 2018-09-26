@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
 
+namespace biogears {
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
 
 CDM::ScalarElectricInductanceData* SEScalarElectricInductance::Unload() const
@@ -37,4 +38,5 @@ const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const std:
   std::stringstream err;
   err << unit << " is not a valid ElectricInductance unit";
   throw CommonDataModelException(err.str());
+}
 }

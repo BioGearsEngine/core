@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricCurrent.h>
 
+namespace biogears {
 const ElectricCurrentUnit ElectricCurrentUnit::A("A");
 
 CDM::ScalarElectricCurrentData* SEScalarElectricCurrent::Unload() const
@@ -37,4 +38,5 @@ const ElectricCurrentUnit& ElectricCurrentUnit::GetCompoundUnit(const std::strin
   std::stringstream err;
   err << unit << " is not a valid ElectricCurrent unit";
   throw CommonDataModelException(err.str());
+}
 }

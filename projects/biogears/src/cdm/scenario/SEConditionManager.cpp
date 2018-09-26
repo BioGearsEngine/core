@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
-
+namespace biogears {
 SEConditionManager::SEConditionManager(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -350,4 +350,5 @@ bool SEConditionManager::HasInitialEnvironment() const
 SEInitialEnvironment* SEConditionManager::GetInitialEnvironment() const
 {
   return m_InitialEnvironment;
+}
 }

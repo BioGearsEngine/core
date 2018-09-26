@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <vector>
 
+namespace biogears {
 class Task;
 class TaskQueue;
 
@@ -32,3 +33,4 @@ public:
 private:
   TaskQueue* m_pTaskQueue = nullptr; ///< Pointer to the TaskQueue to draw Tasks from
 };
+}

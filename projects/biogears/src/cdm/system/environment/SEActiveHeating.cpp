@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEActiveHeating::SEActiveHeating(Logger* logger)
   : Loggable(logger)
 {
@@ -139,4 +140,5 @@ void SEActiveHeating::ToString(std::ostream& str) const
   str << "\n\tSurfaceAreaFraction :";
   HasSurfaceAreaFraction() ? str << *m_SurfaceAreaFraction : str << "NaN";
   str << std::flush;
+}
 }

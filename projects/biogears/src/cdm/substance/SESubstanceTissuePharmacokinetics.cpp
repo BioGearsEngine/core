@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger)
   : Loggable(logger)
   , m_Name(name)
@@ -82,4 +83,5 @@ double SESubstanceTissuePharmacokinetics::GetPartitionCoefficient() const
   if (m_PartitionCoefficient == nullptr)
     return SEScalar::dNaN();
   return m_PartitionCoefficient->GetValue();
+}
 }

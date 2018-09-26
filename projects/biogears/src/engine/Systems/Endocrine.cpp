@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 Endocrine::Endocrine(BioGears& bg)
   : SEEndocrineSystem(bg.GetLogger())
   , m_data(bg)
@@ -188,7 +189,7 @@ void Endocrine::SynthesizeInsulin()
 
     //Non-symmetric sigmoid roughly fit to Guyton curve
     //https://www.wolframalpha.com/input/?i=y+%3D+20.61421+%2B+(0.5089411+-+20.61421)%2F(1+%2B+(x%2F1.349053)%5E6.362276)%5E0.32948+from+0%3Cy%3C25+and+0%3Cx%3C7
-    double multiplier = 20.61421 + (.5089411 - 20.61421) / pow((1 + pow((bloodGlucoseConcentration_g_Per_L / 1.349053), 6.362276)), .32948);
+    double multiplier = 20.61421 + (.5089411 - 20.61421) / std::pow((1 + std::pow((bloodGlucoseConcentration_g_Per_L / 1.349053), 6.362276)), .32948);
 
     diabetesScale *= multiplier;
   }
@@ -313,4 +314,5 @@ void Endocrine::ReleaseEpinephrine()
 
   m_rKidneyEpinephrine->GetMass().IncrementValue(0.5 * epinephrineRelease_ug, MassUnit::ug);
   m_lKidneyEpinephrine->GetMass().IncrementValue(0.5 * epinephrineRelease_ug, MassUnit::ug);
+}
 }

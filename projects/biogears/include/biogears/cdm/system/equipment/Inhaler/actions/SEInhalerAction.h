@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/cdm/InhalerActions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEInhalerAction : public SEAction {
 public:
   SEInhalerAction();
@@ -31,3 +32,4 @@ protected:
 public:
   virtual void ToString(std::ostream& str) const = 0;
 };
+}

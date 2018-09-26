@@ -14,9 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
-class SEGenericScalar;
-
 CDM_BIND_DECL(ScalarData)
+
+namespace biogears {
+class SEGenericScalar;
 
 #define ZERO_APPROX 1e-10
 
@@ -55,16 +56,16 @@ protected:
 
 public:
   /**
-	 * Copies ONLY the value and unit
-	 * ONLY if the provided scalar is valid.
-	 */
+   * Copies ONLY the value and unit
+   * ONLY if the provided scalar is valid.
+   */
   bool Set(const SEScalar& s);
 
   /**
-	 * Copies the entire contents
-	 * of the provided scalar to this.
-	 * Even if s is invalid.
-	 */
+   * Copies the entire contents
+   * of the provided scalar to this.
+   * Even if s is invalid.
+   */
   void Copy(const SEScalar& s);
 
   virtual bool IsValid() const;
@@ -274,5 +275,5 @@ inline void IncrementOverride(SEScalarQuantity<Unit>& s, double value, const Uni
   s.IncrementValue(value, unit);
   s.SetReadOnly(b);
 }
-
+}
 #include <biogears/cdm/properties/SEScalar.inl>

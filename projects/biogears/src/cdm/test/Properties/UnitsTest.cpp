@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 void CommonDataModelTest::ConvertList(std::vector<std::string> stringList)
 {
   if (stringList.empty())
@@ -193,4 +194,5 @@ void CommonDataModelTest::UnitsTest(const std::string& sOutputDirectory)
   } catch (std::exception& e) {
     std::cout << "caught exception: " << e.what() << std::endl;
   }
+}
 }

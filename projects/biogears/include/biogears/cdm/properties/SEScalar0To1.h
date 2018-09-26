@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
 
+namespace biogears {
 class BIOGEARS_API SEScalar0To1 : public SEScalar {
 
 public:
@@ -26,3 +27,4 @@ public:
   void SetValue(double d);
   void SetValue(double d, const NoUnit& unitless);
 };
+}

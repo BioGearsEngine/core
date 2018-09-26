@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 
-class BioGearsEngineJNI : public LoggerForward, public SEScenarioCustomExec, public SEEventHandler
+class BioGearsEngineJNI : public biogears::LoggerForward, public biogears::SEScenarioCustomExec, public biogears::SEEventHandler
 {
 public:
 	BioGearsEngineJNI(const std::string& logFile);
@@ -35,20 +35,20 @@ public:
 	void ForwardWarning(const std::string&  msg, const std::string&  origin);
 	void ForwardError(const std::string&  msg, const std::string&  origin);
 	void ForwardFatal(const std::string&  msg, const std::string&  origin);
-	void CustomExec(double time_s, PhysiologyEngine* engine);
+	void CustomExec(double time_s, biogears::PhysiologyEngine* engine);
 	void PushData(double time_s);
 
-	void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr);
-	void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr);
+	void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const biogears::SEScalarTime* time = nullptr);
+	void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const biogears::SEScalarTime* time = nullptr);
 
 	JNIEnv*    jniEnv;
 	jobject    jniObj;
-	DataTrack* trk;
-	SEScenarioExec* exec;
+  biogears::DataTrack* trk;
+  biogears::SEScenarioExec* exec;
 	bool       firstUpdate;
 	int        update_cnt;
 	int        updateFrequency_cnt;
-	std::unique_ptr<PhysiologyEngine> eng;
+	std::unique_ptr<biogears::PhysiologyEngine> eng;
 	
 	jmethodID jniDebugMethodID;
   jmethodID jniInfoMethodID;

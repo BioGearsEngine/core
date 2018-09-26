@@ -54,6 +54,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
+
+namespace biogears {
 Energy::Energy(BioGears& bg)
   : SEEnergySystem(bg.GetLogger())
   , m_data(bg)
@@ -231,7 +233,7 @@ void Energy::Exercise()
         exerciseIntensity = 1;
         Warning("Desired work rate over max work rate. Desired work rate can be a value between 0 and 1200 W. Proceeding with max work rate.");
       }
-	  m_PatientActions->GetExercise()->GetDesiredWorkRate().Clear();
+    m_PatientActions->GetExercise()->GetDesiredWorkRate().Clear();
       m_PatientActions->GetExercise()->GetIntensity().SetValue(exerciseIntensity);
     } else {
       Warning("Exercise call with no severity. Action ignored.");
@@ -392,13 +394,13 @@ void Energy::CalculateMetabolicHeatGeneration()
   double totalMetabolicRateNew_Kcal_Per_day = 0.0;
   double totalMetabolicRateNew_W = 0.0;
   //The summit metabolism is the maximum amount of power the human body can generate due to shivering/response to the cold.
-  double summitMetabolism_W = 21.0 * pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
+  double summitMetabolism_W = 21.0 * std::pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
 
   if (coreTemperature_degC < 34.0) //Hypothermic state inducing metabolic depression (decline of metabolic heat generation)
   {
-    totalMetabolicRateNew_W = summitMetabolism_W * pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
+    totalMetabolicRateNew_W = summitMetabolism_W * std::pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W); /// \cite mallet2002hypothermia
   } else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
   {
@@ -415,7 +417,7 @@ void Energy::CalculateMetabolicHeatGeneration()
     GetTotalMetabolicRate().SetValue(TotalMetabolicRateProduced_kcal_Per_day, PowerUnit::kcal_Per_day);
   } else if (coreTemperature_degC > 40.0 && !m_PatientActions->HasExercise()) //Core temperature greater than 40.0. If not exercising, then the hyperthermia leads to increased metabolism
   {
-    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day * pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC); //The metabolic heat generated will increase by 11% for every degree above 40.0 C
+    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day * std::pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC); //The metabolic heat generated will increase by 11% for every degree above 40.0 C
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_Kcal_Per_day, PowerUnit::kcal_Per_day); /// \cite pate2001thermal
   }
 
@@ -438,16 +440,16 @@ void Energy::CalculateSweatRate()
 
   /// Determine the maximum evaporative capacity to limit the amount of cooling due to sweat on the patient
   /// \cite potter2017mathematical
-  double effectiveClothingEvaporation_im_Per_clo = pow(0.1, 0.29);
+  double effectiveClothingEvaporation_im_Per_clo = std::pow(0.1, 0.29);
   if ((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)) > 0.1) {
-    effectiveClothingEvaporation_im_Per_clo = pow((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)), 0.29);
+    effectiveClothingEvaporation_im_Per_clo = std::pow((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)), 0.29);
   }
   
   double dAirTemperature_C = m_data.GetEnvironment().GetConditions().GetAmbientTemperature(TemperatureUnit::C);
   double dWaterVaporPressureInAmbientAir_mmHg = GeneralMath::AntoineEquation(dAirTemperature_C);
   double m_dWaterVaporPressureInAmbientAir_Pa = Convert(dWaterVaporPressureInAmbientAir_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
   // double ambientAtmosphericPressure_Pa = m_data.GetEnvironment().GetConditions().GetAtmosphericPressure().GetValue(PressureUnit::Pa);
-  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322*(pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); //Still needs effective clothing evaporation
+  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322*(std::pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); //Still needs effective clothing evaporation
 
 
   double vaporizationEnergy_J_Per_kg = m_data.GetConfiguration().GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
@@ -574,4 +576,5 @@ void Energy::CalculateBasalMetabolicRate()
   ss << "Conditions applied homeostasis: "
      << "Patient basal metabolic rate = " << patientBMR_kcal_Per_day << " kcal/day";
   Info(ss);
+}
 }

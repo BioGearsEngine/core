@@ -55,7 +55,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/CompoundUnitElement.h>
 #include <biogears/cdm/utils/unitconversion/UnitDimension.h>
 
-
+namespace biogears {
 class BIOGEARS_API CCompoundUnit {
   // Define the vector type that holds our individual components of a CompoundUnit
   typedef std::vector<CCompoundUnitElement> CUEVecType;
@@ -328,4 +328,5 @@ inline std::ostream& operator<<(std::ostream& out, const CCompoundUnit* ccu)
   else
     out << ccu->GetString();
   return out;
+}
 }

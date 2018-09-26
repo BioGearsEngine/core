@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
+namespace biogears {
 class SEScalarElectricPotential;
 class ElectricPotentialUnit;
 
@@ -98,3 +99,4 @@ protected:
 
   std::stringstream m_ss;
 };
+}

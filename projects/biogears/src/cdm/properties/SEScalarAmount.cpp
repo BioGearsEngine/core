@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmount.h>
 
+namespace biogears {
 const AmountUnit AmountUnit::mol("mol");
 const AmountUnit AmountUnit::pmol("pmol");
 
@@ -41,4 +42,5 @@ const AmountUnit& AmountUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Amount unit";
   throw CommonDataModelException(err.str());
+}
 }

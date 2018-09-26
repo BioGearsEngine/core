@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 
+namespace biogears {
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_day("mol/day");
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_s("mol/s");
 AmountPerTimeUnit AmountPerTimeUnit::umol_Per_s("umol/s");
@@ -62,4 +63,5 @@ const AmountPerTimeUnit& AmountPerTimeUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid AmountPerTime unit";
   throw CommonDataModelException(err.str());
+}
 }

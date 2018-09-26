@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
+namespace biogears {
 //----------------------------------------------------------------------------
 double CCompoundUnitElement::GetBigness() const
 {
@@ -33,7 +34,7 @@ double CCompoundUnitElement::GetBigness() const
   // Combine the unit's conversion factor and prefix, and then
   // the exponent
   double dBigness = (ud.GetConvFac() * dPrefixFac);
-  return pow(dBigness, m_CExponent);
+  return std::pow(dBigness, m_CExponent);
 }
 
 //----------------------------------------------------------------------------
@@ -50,4 +51,5 @@ bool CCompoundUnitElement::IsDecibel() const
   static CUnitConversionEngine& uce = CUnitConversionEngine::GetEngine();
   const CUnitDescriptor& ud = uce.GetUnitDescriptor(m_iUnitID);
   return ud.IsDecibel();
+}
 }

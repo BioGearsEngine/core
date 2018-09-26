@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include "biogears/cdm/properties/SEScalarPressure.h"
 
+namespace biogears {
 class Serializer;
 class SESubstance;
 class SESubstanceFraction;
@@ -76,3 +77,4 @@ protected:
   std::vector<SESubstanceFraction*> m_GasFractions;
   std::vector<const SESubstanceFraction*> m_cGasFractions;
 };
+}

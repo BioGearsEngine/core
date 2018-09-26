@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarForce.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SEChestCompressionForce::SEChestCompressionForce()
   : SEChestCompression()
 {
@@ -82,4 +83,5 @@ void SEChestCompressionForce::ToString(std::ostream& str) const
   str << "\n\tForce: ";
   HasForce() ? str << *m_Force : str << "NaN";
   str << std::flush;
+}
 }

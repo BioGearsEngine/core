@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-
+namespace biogears {
 SEDrugSystem::SEDrugSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -373,4 +373,5 @@ double SEDrugSystem::GetCentralNervousResponse() const
   if (m_CentralNervousResponse == nullptr)
     return SEScalar::dNaN();
   return m_CentralNervousResponse->GetValue();
+}
 }

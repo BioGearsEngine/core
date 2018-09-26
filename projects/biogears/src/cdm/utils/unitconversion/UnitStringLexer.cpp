@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
+namespace biogears {
 void CUnitStringLexer::ScanNextToken()
 {
   bool done = false;
@@ -112,4 +113,5 @@ void CUnitStringLexer::ScanNextToken()
     }
 
   } while (!done && (cursor != end));
+}
 }

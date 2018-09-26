@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatInductance.h>
 
+namespace biogears {
 const HeatInductanceUnit HeatInductanceUnit::K_s_Per_W("K s/W");
 
 CDM::ScalarHeatInductanceData* SEScalarHeatInductance::Unload() const
@@ -37,4 +38,5 @@ const HeatInductanceUnit& HeatInductanceUnit::GetCompoundUnit(const std::string&
   std::stringstream err;
   err << unit << " is not a valid HeatInductance unit";
   throw CommonDataModelException(err.str());
+}
 }

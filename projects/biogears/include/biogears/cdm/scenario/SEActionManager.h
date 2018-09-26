@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEInhalerActionCollection.h>
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
+namespace biogears {
 class SESubstanceManager;
 class SEAction;
 
@@ -47,3 +48,4 @@ protected:
 
   std::stringstream m_ss;
 };
+}

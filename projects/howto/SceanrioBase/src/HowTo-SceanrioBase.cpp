@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/Serializer.h>
 
-
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Creating an engine based on a scenario file

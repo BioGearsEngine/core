@@ -15,6 +15,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 
 #pragma once
+
+CDM_BIND_DECL(CompartmentData)
+
+namespace biogears {
+
 class SEScalar;
 class SEGasCompartment;
 class SELiquidCompartment;
@@ -22,8 +27,6 @@ class SEThermalCompartment;
 class SETissueCompartment;
 class SESubstance;
 class SECircuitManager;
-
-CDM_BIND_DECL(CompartmentData)
 
 class BIOGEARS_API SECompartment : public Loggable {
 protected:
@@ -64,3 +67,4 @@ public:
     }
   }
 };
+}

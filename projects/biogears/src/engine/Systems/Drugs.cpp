@@ -46,7 +46,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-
+namespace biogears {
 Drugs::Drugs(BioGears& bg)
   : SEDrugSystem(bg.GetLogger())
   , m_data(bg)
@@ -496,9 +496,9 @@ void Drugs::CalculatePartitionCoefficients()
       }
       //Based on the ionic state, the partition coefficient equation and/or pH effect equations are varied.
       if (IonicState == CDM::enumSubstanceIonicState::Base) {
-        IntracellularPHEffects = pow(10.0, (AcidDissociationConstant - IntracellularPH));
+        IntracellularPHEffects = std::pow(10.0, (AcidDissociationConstant - IntracellularPH));
         PHEffectPower = PlasmaPH - AcidDissociationConstant;
-        PlasmaPHEffects = 1.0 + pow(10.0, PHEffectPower);
+        PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         EquationPartA = 1.0 + IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
         /// \todo How to support oral absorption - should I check if oral administration then use Oral absorption rate otherwise assume 1?
         EquationPartB = tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * IntracellularPHEffects / PlasmaPHEffects;
@@ -506,14 +506,14 @@ void Drugs::CalculatePartitionCoefficients()
       } else {
         if (IonicState == CDM::enumSubstanceIonicState::Acid) {
           PHEffectPower = IntracellularPH - AcidDissociationConstant;
-          IntracellularPHEffects = 1.0 + pow(10.0, PHEffectPower);
+          IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
           PHEffectPower = PlasmaPH - AcidDissociationConstant;
-          PlasmaPHEffects = 1.0 + pow(10.0, PHEffectPower);
+          PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         } else if (IonicState == CDM::enumSubstanceIonicState::WeakBase) {
           PHEffectPower = AcidDissociationConstant - IntracellularPH;
-          IntracellularPHEffects = 1.0 + pow(10.0, PHEffectPower);
+          IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
           PHEffectPower = AcidDissociationConstant - PlasmaPH;
-          PlasmaPHEffects = 1.0 + pow(10.0, PHEffectPower);
+          PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         } else {
           IntracellularPHEffects = 1.0;
           PlasmaPHEffects = 1.0;
@@ -585,7 +585,7 @@ void Drugs::CalculateDrugEffects()
         inhibitorConstant_ug_Per_mL = m_Naloxone->GetPD().GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
         inhibitorConcentration_ug_Per_mL = m_Naloxone->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
       }
-      concentrationEffects_unitless = pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (pow(ec50_ug_Per_mL, shapeParameter) * pow(1 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+      concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
     } else if (sub->GetName() == "Sarin") {
       concentrationEffects_unitless = m_RbcAcetylcholinesteraseFractionInhibited;
     } else {
@@ -594,7 +594,7 @@ void Drugs::CalculateDrugEffects()
         concentrationEffects_unitless = effectSiteConcentration_ug_Per_mL / (ec50_ug_Per_mL + effectSiteConcentration_ug_Per_mL);
 
       } else {
-        concentrationEffects_unitless = pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (pow(ec50_ug_Per_mL, shapeParameter) + pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+        concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       }
     }
     /// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.
@@ -838,4 +838,5 @@ void Drugs::SarinKinetics()
 
   if (m_data.GetSubstances().IsActive(*m_Pralidoxime))
     m_Pralidoxime->GetPlasmaConcentration().SetValue(PralidoximeConcentration_nM / 1000 * PralidoximeMolarMass_g_Per_umol, MassPerVolumeUnit::g_Per_L);
+}
 }

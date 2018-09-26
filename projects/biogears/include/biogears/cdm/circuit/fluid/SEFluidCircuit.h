@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
 
+namespace biogears {
 class SECircuitManager;
 class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
   friend class SECircuitManager;
@@ -33,3 +34,4 @@ public:
 protected:
   SECircuitManager& m_Mgr;
 };
+}

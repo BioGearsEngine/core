@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #define CIRCUIT_CALCULATOR_TEMPLATE typename CircuitType, typename NodeType, typename PathType, typename CapacitanceUnit, typename FluxUnit, typename InductanceUnit, typename PotentialUnit, typename QuantityUnit, typename ResistanceUnit
 #define CIRCUIT_CALCULATOR_TYPES CircuitType, NodeType, PathType, CapacitanceUnit, FluxUnit, InductanceUnit, PotentialUnit, QuantityUnit, ResistanceUnit
 
+namespace biogears {
 // These are the Eigen Solvers we can use for solving our circuits
 struct BIOGEARS_API EigenCircuitSolver {
   enum Type { Direct,
@@ -83,4 +84,5 @@ protected:
   const QuantityUnit& m_QuantityUnit;
   const ResistanceUnit& m_ResistanceUnit;
 };
+}
 #include <biogears/cdm/circuit/SECircuitCalculator.inl>

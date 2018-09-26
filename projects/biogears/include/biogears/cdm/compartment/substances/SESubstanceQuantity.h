@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/SubstanceQuantity.hxx>
 
+namespace biogears {
 class BIOGEARS_API SESubstanceQuantity : public Loggable {
 public:
   SESubstanceQuantity(SESubstance& sub)
@@ -38,3 +39,4 @@ public:
 protected:
   SESubstance& m_Substance;
 };
+}

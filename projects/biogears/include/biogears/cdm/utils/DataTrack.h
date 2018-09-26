@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstance.h>
 
+namespace biogears {
 class PressureUnit;
 class SEElectricalCircuit;
 class SEFluidCircuit;
@@ -107,3 +108,4 @@ protected:
 
   std::ifstream m_FileStream;
 };
+}

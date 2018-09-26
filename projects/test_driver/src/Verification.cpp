@@ -50,6 +50,55 @@ std::vector<std::string> ParseRecipients(const std::string& recipients)
 }
 }
 
+using namespace biogears;
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// This function is called when the task is executed, it creates a BioGearsEngine and executes the scenario
+//--------------------------------------------------------------------------------------------------
+void RunScenarioTask::RunScenarioTask::Run()
+{
+	// Set up the log file
+	std::string logFile = m_scenarioFile;
+	logFile = Replace(logFile, "verification", "bin");
+	logFile = Replace(logFile, ".xml", ".log");
+
+	// Set up the verification output file
+	std::string dataFile = m_scenarioFile;
+	dataFile = Replace(dataFile, "verification", "bin");
+	dataFile = Replace(dataFile, ".xml", "Results.csv");
+
+	// Delete any results file that may be there
+	remove(dataFile.c_str());
+
+	// Aquire the constrution mutex before we create the BioGearsEngine.  Due to some third-party library
+	// initialization constructs not being thread safe, we must not construct BioGearsEngines simultaneously
+	// from multiple threads.
+	ms_constructionMutex.lock();
+	std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(logFile.c_str());
+	ms_constructionMutex.unlock();
+
+	if (!bioGears)
+	{
+		std::cerr << "Unable to create BioGearsEngine" << std::endl;
+		return;
+	}
+
+	// Run the scenario
+	try
+	{
+		BioGearsScenarioExec exec(*bioGears);
+		exec.Execute(m_scenarioFile.c_str(), dataFile.c_str(), nullptr);
+	}
+	catch (std::exception ex)
+	{
+		std::cerr << ex.what() << std::endl;
+	}
+	catch (...)
+	{
+		std::cerr << "Unable to run scenario " << m_scenarioFile << std::endl;
+	}
+}
+
 Verification::Verification(const std::string& configFile, RunMode mode)
     : m_configFile(configFile),
       m_parser(m_configFile),

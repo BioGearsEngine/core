@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
-
+namespace biogears {
 SEThermalCompartmentDataRequest::SEThermalCompartmentDataRequest(const SEDecimalFormat* dfault)
   : SECompartmentDataRequest(dfault)
 {
@@ -41,4 +41,5 @@ CDM::ThermalCompartmentDataRequestData* SEThermalCompartmentDataRequest::Unload(
 void SEThermalCompartmentDataRequest::Unload(CDM::ThermalCompartmentDataRequestData& data) const
 {
   SECompartmentDataRequest::Unload(data);
+}
 }

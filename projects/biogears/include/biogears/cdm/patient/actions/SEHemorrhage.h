@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class SEScalarVolumePerTime;
 
 class BIOGEARS_API SEHemorrhage : public SEPatientAction {
@@ -61,3 +62,4 @@ protected:
   SEScalarFlowResistance* m_BleedResistance;
   std::map<std::string, std::vector<unsigned int>> organMap;
 };
+}

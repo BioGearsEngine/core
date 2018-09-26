@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEChestCompression : public SEPatientAction {
 public:
   SEChestCompression();
@@ -34,3 +35,4 @@ public:
 
 protected:
 };
+}

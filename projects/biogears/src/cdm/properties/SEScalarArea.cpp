@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarArea.h>
 
+namespace biogears {
 const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
 
@@ -42,4 +43,5 @@ const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Area unit";
   throw CommonDataModelException(err.str());
+}
 }

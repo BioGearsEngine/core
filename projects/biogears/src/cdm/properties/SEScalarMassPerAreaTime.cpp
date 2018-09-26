@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
 
+namespace biogears {
 const MassPerAreaTimeUnit MassPerAreaTimeUnit::g_Per_cm2_s("g/cm^2 s");
 
 CDM::ScalarMassPerAreaTimeData* SEScalarMassPerAreaTime::Unload() const
@@ -37,4 +38,5 @@ const MassPerAreaTimeUnit& MassPerAreaTimeUnit::GetCompoundUnit(const std::strin
   std::stringstream err;
   err << unit << " is not a valid MassPerAreaTime unit";
   throw CommonDataModelException(err.str());
+}
 }

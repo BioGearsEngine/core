@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(CircuitPathData)
 
-
+namespace biogears {
 template <CIRCUIT_PATH_TEMPLATE>
 class SECircuitPath : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
@@ -169,4 +169,5 @@ protected:
   PotentialScalar* m_PotentialSourceBaseline;
   PotentialScalar* m_ValveBreakdownPotential;
 };
+}
 #include <biogears/cdm/circuit/SECircuitPath.inl>

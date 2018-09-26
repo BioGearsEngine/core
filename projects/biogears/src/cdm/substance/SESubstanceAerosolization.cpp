@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger)
   : Loggable(logger)
 {
@@ -132,4 +133,5 @@ SEHistogramFractionVsLength& SESubstanceAerosolization::GetParticulateSizeDistri
 const SEHistogramFractionVsLength* SESubstanceAerosolization::GetParticulateSizeDistribution() const
 {
   return m_ParticulateSizeDistribution;
+}
 }

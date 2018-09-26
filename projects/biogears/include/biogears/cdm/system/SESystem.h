@@ -14,10 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+CDM_BIND_DECL(SystemData)
+
+namespace biogears {
 class SESubstanceManager;
 class SEScalar;
 
-CDM_BIND_DECL(SystemData)
 class BIOGEARS_API SESystem : public Loggable {
 public:
   SESystem(Logger* logger);
@@ -26,18 +28,18 @@ public:
   virtual void Clear(); // Deletes all members
 
   /** @name GetScalar
-	*   @brief - A reflextion type call that will return the Scalar associated
-	*            with the string. ex. GetScalar("Hematocrit") will return the
-	*            SEScalarPercent object associated with Hematocrit
-	*   @details - Note this is an expensive call as it will string compare many times
-	*              This is best used, and intended for, you to dynamically prepopulate
-	*              a mapping data structure that will help access what you need
-	*/
+  *   @brief - A reflextion type call that will return the Scalar associated
+  *            with the string. ex. GetScalar("Hematocrit") will return the
+  *            SEScalarPercent object associated with Hematocrit
+  *   @details - Note this is an expensive call as it will string compare many times
+  *              This is best used, and intended for, you to dynamically prepopulate
+  *              a mapping data structure that will help access what you need
+  */
   virtual const SEScalar* GetScalar(const std::string& name) = 0;
 
   /** @name GetScalar
-	*   @brief - Look for the Scalar property in the systems contained in the provided vector
-	*/
+  *   @brief - Look for the Scalar property in the systems contained in the provided vector
+  */
   static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
 
   virtual bool Load(const CDM::SystemData& in);
@@ -48,3 +50,4 @@ protected:
 
   std::stringstream m_ss;
 };
+}

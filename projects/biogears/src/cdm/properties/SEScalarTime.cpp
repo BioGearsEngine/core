@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+namespace biogears {
 #pragma push_macro("Time")
 #undef min
 const TimeUnit TimeUnit::s("s");
@@ -60,4 +61,5 @@ const TimeUnit& TimeUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Amount unit";
   throw CommonDataModelException(err.str());
+}
 }

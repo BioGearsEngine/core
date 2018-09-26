@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
+namespace biogears {
 CUnitDimension::CUnitDimension()
   : m_EList(CUnitConversionEngine::GetEngine().GetNumFundamentalQuantities())
 {
@@ -38,11 +39,11 @@ void CUnitDimension::InitElems()
   // commented out, to document what I did.
   //for each(ExponentType const &ExpRef in m_EList)
   //{
-  //	const_cast<ExponentType&>(ExpRef) = 12345;
+  //  const_cast<ExponentType&>(ExpRef) = 12345;
   //}
   //for each(ExponentType const &ExpRef in m_EList)
   //{
-  //	assert(const_cast<ExponentType&>(ExpRef) == 12345);
+  //  assert(const_cast<ExponentType&>(ExpRef) == 12345);
   //}
   //cerr << "*** Assertion passed in CUnitDimension::InitElemt(). Safe to remove code\n";
   // **** END OF SECTION TO REMOVE ****
@@ -58,3 +59,4 @@ void CUnitDimension::InitElems()
     *ExpRef = 0.0;
   }
 };
+}

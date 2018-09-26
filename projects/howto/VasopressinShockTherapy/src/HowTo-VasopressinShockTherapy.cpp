@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 
+using namespace biogears;
 void HowToVasopressinShockTherapy()
 {
   // Create the engine and load the patient

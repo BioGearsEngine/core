@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 
+namespace biogears {
 SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
@@ -581,4 +582,5 @@ const SEAnesthesiaMachineOxygenBottle* SEAnesthesiaMachine::GetOxygenBottleTwo()
 void SEAnesthesiaMachine::RemoveOxygenBottleTwo()
 {
   SAFE_DELETE(m_OxygenBottleTwo);
+}
 }

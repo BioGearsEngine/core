@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #define FLUID_COMPARTMENT_LINK_TEMPLATE typename EdgeType, typename VertexType, typename CompartmentType
 #define FLUID_COMPARTMENT_LINK_TYPES EdgeType, VertexType, CompartmentType
 
+namespace biogears {
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 class SEFluidCompartmentLink : public SECompartmentLink, public EdgeType {
 protected:
@@ -73,3 +74,4 @@ protected:
   VertexType& m_TargetVertex;
   SEFluidCircuitPath* m_Path;
 };
+}

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/UnitStringLexer.h>
 #include <biogears/cdm/utils/Logger.h>
 //----------------------------------------------------------------------------
+namespace biogears {
 void CCompoundUnit::ParseString(const std::string& unitString)
 {
   // Start with a clean slate
@@ -542,7 +543,7 @@ CCompoundUnit& CCompoundUnit::Raise(CCompoundUnitElement::ExponentType exp)
   }
 
   if (!m_bStaleBigness) {
-    m_dBigness = pow(m_dBigness, exp);
+    m_dBigness = std::pow(m_dBigness, exp);
   }
 
   if (!m_bStaleDimension) {
@@ -679,4 +680,5 @@ std::ostream& CCompoundUnit::PrintSelf(std::ostream& output) const
     } // it's a denominator factor
   } // for each element
   return output;
+}
 }

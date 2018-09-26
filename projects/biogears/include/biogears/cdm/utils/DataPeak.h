@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/exports.h>
+
+namespace biogears {
 /**
  * Utility class that looks for a peak in data
  * looking at the data one point at a time.
@@ -19,6 +21,7 @@ specific language governing permissions and limitations under the License.
  * Note: I wrote this for finding peaks on well behaved sinusoidal data. 
  *       I have some Ideas in the comments if the data is not as well behaved.
  */
+
 class BIOGEARS_API DataPeak {
 public:
   /**
@@ -67,3 +70,4 @@ protected:
   double m_LastTopPeak;
   double m_LastBottomPeak;
 };
+}

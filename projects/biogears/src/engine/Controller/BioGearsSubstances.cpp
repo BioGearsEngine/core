@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 BioGearsSubstances::BioGearsSubstances(BioGears& data)
   : SESubstanceManager(data.GetLogger())
   , m_data(data)
@@ -1380,10 +1381,10 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
       aerodynamicDiameter = concentrations.GetLength()[i] + stepSize * j; //Start at the bottom of the bin and march towards the top minus one step
       if (aerodynamicDiameter == 0)
         continue;
-      double inspirFrac = 1 - 0.5 * (1 - 1 / (1 + 0.00076 * pow(aerodynamicDiameter, 2.8)));
+      double inspirFrac = 1 - 0.5 * (1 - 1 / (1 + 0.00076 * std::pow(aerodynamicDiameter, 2.8)));
       sumHeadAirways += inspirFrac * (1 / (1 + exp(6.84 + 1.183 * log(aerodynamicDiameter))) + 1 / (1 + exp(0.924 - 1.885 * log(aerodynamicDiameter))));
-      sumAnatomicalDeadspace += 0.00352 / aerodynamicDiameter * (exp(-0.23 * pow((log(aerodynamicDiameter) + 3.4), 2)) + 63.9 * exp(-0.819 * pow((log(aerodynamicDiameter) - 1.61), 2)));
-      sumAlveoli += 0.0155 / aerodynamicDiameter * (exp(-0.416 * pow((log(aerodynamicDiameter) + 2.84), 2)) + 19.11 * exp(-0.482 * pow((log(aerodynamicDiameter) - 1.362), 2)));
+      sumAnatomicalDeadspace += 0.00352 / aerodynamicDiameter * (exp(-0.23 * std::pow((log(aerodynamicDiameter) + 3.4), 2)) + 63.9 * exp(-0.819 * std::pow((log(aerodynamicDiameter) - 1.61), 2)));
+      sumAlveoli += 0.0155 / aerodynamicDiameter * (exp(-0.416 * std::pow((log(aerodynamicDiameter) + 2.84), 2)) + 19.11 * exp(-0.482 * std::pow((log(aerodynamicDiameter) - 1.362), 2)));
     }
     // Mean this region
     depositionsMouth.GetFraction().push_back(sumHeadAirways / numPerRegion);
@@ -1438,4 +1439,5 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
   // Now we do not need to track size distributions, only mass (via concentration).
 
   return *SIDECoefficients;
+}
 }

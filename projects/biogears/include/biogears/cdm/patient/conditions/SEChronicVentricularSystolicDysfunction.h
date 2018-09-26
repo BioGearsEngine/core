@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEChronicVentricularSystolicDysfunction : public SEChronicHeartFailure {
 public:
   SEChronicVentricularSystolicDysfunction();
@@ -39,3 +40,4 @@ public:
 
 protected:
 };
+}

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.h>
 
+namespace biogears {
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const std::string& name, Logger* logger)
   : SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>(name, logger)
@@ -107,4 +108,5 @@ const std::vector<GraphEdgeType*>* SECompartmentTransportGraph<COMPARTMENT_TRANS
   if (itr == m_TargetEdgeMap.end())
     return nullptr;
   return itr->second;
+}
 }

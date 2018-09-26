@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TaskRunner/Task.h>
 #include <memory>
 
+namespace biogears {
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Interface through which TaskProcessors retrieve Tasks from the TaskRunner
@@ -24,3 +25,4 @@ public:
   virtual std::unique_ptr<Task> GetNextTask() = 0;
   virtual void ReportTaskComplete() = 0;
 };
+}

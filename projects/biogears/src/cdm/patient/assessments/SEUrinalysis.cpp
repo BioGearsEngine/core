@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
+namespace biogears {
 SEUrinalysis::SEUrinalysis(Logger* logger)
   : SEPatientAssessment(logger)
 {
@@ -315,4 +316,5 @@ SEUrinalysisMicroscopic& SEUrinalysis::GetMicroscopicResult()
 void SEUrinalysis::RemoveMicroscopicResult()
 {
   SAFE_DELETE(m_Microscopic);
+}
 }

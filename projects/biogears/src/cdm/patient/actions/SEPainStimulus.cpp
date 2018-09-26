@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 
+namespace biogears {
 SEPainStimulus::SEPainStimulus() : SEPatientAction()
 {
 	m_Severity=nullptr;
@@ -111,4 +112,5 @@ void SEPainStimulus::ToString(std::ostream &str) const
 		str << "\n\tLocation: "; HasLocation() ? str << GetLocation() : str << "No Location Set";
 		str << std::flush;
 	}
+}
 }

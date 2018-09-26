@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/system/physiology/OverrideConfig.h>
 
-
+namespace biogears {
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   : Loggable(logger)
 {
@@ -242,4 +242,5 @@ double PhysiologyEngineConfiguration::GetTimeStep(const TimeUnit& unit) const
   if (m_TimeStep == nullptr)
     return SEScalar::dNaN();
   return m_TimeStep->GetValue(unit);
+}
 }

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 
+namespace biogears {
 const LengthPerTimeUnit LengthPerTimeUnit::m_Per_s("m/s");
 const LengthPerTimeUnit LengthPerTimeUnit::cm_Per_s("cm/s");
 const LengthPerTimeUnit LengthPerTimeUnit::m_Per_min("m/min");
@@ -62,4 +63,5 @@ const LengthPerTimeUnit& LengthPerTimeUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid LengthPerTime unit";
   throw CommonDataModelException(err.str());
+}
 }

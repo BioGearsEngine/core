@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 
+namespace biogears {
 SEThermalApplication::SEThermalApplication()
   : SEEnvironmentAction()
 {
@@ -161,4 +162,5 @@ void SEThermalApplication::ToString(std::ostream& str) const
     str << "\n\tNo Applied Temperature";
 
   str << std::flush;
+}
 }

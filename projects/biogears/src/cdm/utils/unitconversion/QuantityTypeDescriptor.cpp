@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/UnitDimension.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 //----------------------------------------------------------------------------
+namespace biogears {
 CQuantityTypeDescriptor::CQuantityTypeDescriptor(const std::string& name, int fundIdx, bool twentyLog)
   : m_sName(name)
   , m_iFundIdx(fundIdx)
@@ -54,4 +55,5 @@ CQuantityTypeDescriptor::~CQuantityTypeDescriptor()
     delete m_CUExpansion;
   }
   delete m_CUD;
+}
 }

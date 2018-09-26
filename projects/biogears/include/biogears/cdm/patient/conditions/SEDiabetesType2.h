@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+namespace biogears {
 class SEScalar0To1;
 
 class BIOGEARS_API SEDiabetesType2 : public SEPatientCondition {
@@ -48,3 +49,4 @@ protected:
   SEScalar0To1* m_InsulinProductionSeverity;
   SEScalar0To1* m_InsulinResistanceSeverity;
 };
+}

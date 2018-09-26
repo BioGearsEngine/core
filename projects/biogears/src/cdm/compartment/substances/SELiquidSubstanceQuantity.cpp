@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 
+namespace biogears {
 SELiquidSubstanceQuantity::SELiquidSubstanceQuantity(SESubstance& sub, SELiquidCompartment& compartment)
   : SESubstanceQuantity(sub)
   , m_Compartment(compartment)
@@ -565,4 +566,5 @@ void SELiquidSubstanceQuantity::AddChild(SELiquidSubstanceQuantity& subQ)
 {
   if (!Contains(m_Children, subQ))
     m_Children.push_back(&subQ);
+}
 }

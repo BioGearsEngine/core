@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitCalculator.h>
 
+namespace biogears {
 SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(Logger* logger)
   : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(
       ElectricCapacitanceUnit::F, ElectricCurrentUnit::A, ElectricInductanceUnit::H, ElectricPotentialUnit::V, ElectricChargeUnit::C, ElectricResistanceUnit::Ohm, logger)
@@ -23,4 +24,5 @@ SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(const ElectricCapac
 }
 SEElectricalCircuitCalculator::~SEElectricalCircuitCalculator()
 {
+}
 }

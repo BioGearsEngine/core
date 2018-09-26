@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/SEInhalerActionCollection.h>
 
-
+namespace biogears {
 SEInhalerActionCollection::SEInhalerActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -82,4 +82,5 @@ SEInhalerConfiguration* SEInhalerActionCollection::GetConfiguration() const
 void SEInhalerActionCollection::RemoveConfiguration()
 {
   SAFE_DELETE(m_Configuration);
+}
 }

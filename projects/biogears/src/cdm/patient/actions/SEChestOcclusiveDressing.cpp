@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 
+namespace biogears {
 SEChestOcclusiveDressing::SEChestOcclusiveDressing()
   : SEPatientAction()
 {
@@ -95,4 +96,5 @@ void SEChestOcclusiveDressing::ToString(std::ostream& str) const
   str << "\n\tSide: ";
   HasSide() ? str << GetSide() : str << "Not Set";
   str << std::flush;
+}
 }

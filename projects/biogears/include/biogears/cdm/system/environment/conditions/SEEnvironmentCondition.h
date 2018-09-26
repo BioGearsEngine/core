@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEEnvironmentCondition : public SECondition {
 public:
   SEEnvironmentCondition();
@@ -31,3 +32,4 @@ protected:
 public:
   virtual void ToString(std::ostream& str) const = 0;
 };
+}

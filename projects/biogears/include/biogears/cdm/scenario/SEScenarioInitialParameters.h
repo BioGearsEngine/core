@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(ScenarioInitialParametersData)
+
+namespace biogears {
 class SEScenario;
 class SEPatient;
 class SECondition;
@@ -67,3 +69,4 @@ protected:
   std::string m_PatientFile;
   std::vector<SECondition*> m_Conditions;
 };
+}

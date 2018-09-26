@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class SEScalar0To1;
 
 class BIOGEARS_API SEChestCompressionForceScale : public SEChestCompression {
@@ -45,3 +46,4 @@ protected:
   SEScalar0To1* m_ForceScale;
   SEScalarTime* m_ForcePeriod;
 };
+}

@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+namespace biogears {
 SEDiabetesType1::SEDiabetesType1()
   : SEPatientCondition()
 {
@@ -76,4 +77,5 @@ void SEDiabetesType1::ToString(std::ostream& str) const
   str << "\n\tDiabetes Type 1 Insulin Production Severity: ";
   HasInsulinProductionSeverity() ? str << m_InsulinProductionSeverity : str << "NaN";
   str << std::flush;
+}
 }

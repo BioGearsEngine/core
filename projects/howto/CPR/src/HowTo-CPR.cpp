@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// A custom class for end users to listen to patient events

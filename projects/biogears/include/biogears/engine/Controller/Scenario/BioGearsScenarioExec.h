@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 
+namespace biogears {
 /**
 * @brief Overloaded scenario exector to run a %BioGears specific scenario
 */
@@ -26,3 +27,4 @@ public:
 
 protected:
 };
+}

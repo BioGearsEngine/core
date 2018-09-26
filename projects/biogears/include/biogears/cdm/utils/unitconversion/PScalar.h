@@ -24,6 +24,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
+
+namespace biogears{
 class CPScalar {
 public:
   // Default ctor
@@ -249,7 +251,7 @@ public:
   // in implementation of pow(). Same thing below for SQRoot() and sqrt()
   CPScalar& Raise(double pwr)
   {
-    m_dValue = pow(m_dValue, pwr);
+    m_dValue = std::pow(m_dValue, pwr);
     m_CCU.Raise(pwr);
     return *this;
   }
@@ -260,7 +262,7 @@ public:
   {
     // Rather than just invoking Raise(0.5) on ourselves, use sqrt(double) on the
     // value so that we can take advantage of intrinsic implementations on the X86
-    m_dValue = sqrt(m_dValue);
+    m_dValue = std::sqrt(m_dValue);
     m_CCU.Raise(0.5);
     return *this;
   }
@@ -510,4 +512,5 @@ template <class T>
 bool operator!=(const T& lhs, const CPScalar& rhs)
 {
   return CPScalar(lhs) != rhs;
+}
 }

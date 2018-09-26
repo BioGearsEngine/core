@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarForce.h>
 
+namespace biogears {
 const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
 const ForceUnit ForceUnit::dyn("dyn");
@@ -47,4 +48,5 @@ const ForceUnit& ForceUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Force unit";
   throw CommonDataModelException(err.str());
+}
 }

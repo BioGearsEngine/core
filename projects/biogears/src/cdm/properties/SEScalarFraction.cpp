@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
 
+namespace biogears {
 SEScalarFraction::SEScalarFraction()
   : SEScalar()
 {
@@ -43,4 +44,5 @@ double SEScalarFraction::GetValue(const NoUnit& unitless) const
 void SEScalarFraction::SetValue(double d, const NoUnit& unitless)
 {
   SEScalar::SetValue(d);
+}
 }

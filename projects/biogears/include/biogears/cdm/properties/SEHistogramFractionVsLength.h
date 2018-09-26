@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEHistogram.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 class LengthUnit;
 
 class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram {
@@ -45,3 +46,4 @@ public:
 protected:
   const LengthUnit* m_LengthUnit;
 };
+}

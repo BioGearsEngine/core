@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 // Maybe we want to test a couple compartements that overlap
 // i.e. 2 compartments containing the same node and or path
 
@@ -696,4 +697,5 @@ void CommonDataModelTest::ThermalCompartmentTest(const std::string& rptDirectory
   TestCircuitHeatTemperatureAndFlows(CircuitHeatTemperatureAndFlows, subMgr);
 
   testReport.WriteFile(rptDirectory + "/ThermalCompartmentTestReport.xml");
+}
 }

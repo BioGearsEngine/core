@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 ///

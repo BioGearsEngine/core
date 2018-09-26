@@ -11,9 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
+#include <vector>
 
+#include <biogears/exports.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
+
+namespace biogears {
 
 class SEScalarOsmolality;
 class SEScalarOsmolarity;
@@ -29,6 +32,7 @@ class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
+
 class BIOGEARS_API GeneralMath {
 public:
   static void CalculateConcentration(const SEScalarMass& mass, const SEScalarVolume& volume, SEScalarMassPerVolume& concentration, Logger* logger = nullptr);
@@ -41,7 +45,7 @@ public:
   static void CalculateSpecificGravity(const SEScalarMass& mass, const SEScalarVolume& volume, SEScalar& specificGravity, Logger* logger = nullptr);
   static void CalculateWaterDensity(const SEScalarTemperature& temp, SEScalarMassPerVolume& density);
 
-  static void Combinations(std::vector<int> maxValues, std::vector<std::vector<int>>& permutations);
+  static void Combinations(::std::vector<int> maxValues, ::std::vector<::std::vector<int>>& permutations);
   static double AntoineEquation(double dTemperature_C);
   static double LinearInterpolator(double x1, double x2, double y1, double y2, double xPrime);
   static double PercentDifference(double expected, double calculated);
@@ -50,3 +54,4 @@ public:
   static double LogisticFunction(double a, double x50, double k, double x);
   static double CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion, double& coreTemp_K);
 };
+}

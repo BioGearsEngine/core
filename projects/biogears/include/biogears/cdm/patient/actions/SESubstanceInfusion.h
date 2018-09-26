@@ -12,9 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
-class SESubstance;
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
+class SESubstance;
 class SEScalarMassPerVolume;
 class SEScalarVolumePerTime;
 
@@ -50,3 +51,4 @@ protected:
   SEScalarVolumePerTime* m_Rate;
   const SESubstance& m_Substance;
 };
+}

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
 
+namespace biogears {
 SESubstanceClearance::SESubstanceClearance(Logger* logger)
   : Loggable(logger)
 {
@@ -492,4 +493,5 @@ double SESubstanceClearance::GetSystemicClearance(const VolumePerTimeMassUnit& u
   if (m_SystemicClearance == nullptr)
     return SEScalar::dNaN();
   return m_SystemicClearance->GetValue(unit);
+}
 }

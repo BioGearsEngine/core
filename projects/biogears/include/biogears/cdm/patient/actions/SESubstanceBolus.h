@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class SESubstance;
 
 class BIOGEARS_API SESubstanceBolus : public SESubstanceAdministration {
@@ -77,3 +78,4 @@ protected:
   SEScalarTime m_elapsedTime;
   SEScalarVolume m_administeredDose;
 };
+}

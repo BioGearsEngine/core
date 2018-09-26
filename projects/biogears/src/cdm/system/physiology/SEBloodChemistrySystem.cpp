@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
 {
@@ -792,4 +793,5 @@ double SEBloodChemistrySystem::GetVenousCarbonDioxidePressure(const PressureUnit
   if (m_VenousCarbonDioxidePressure == nullptr)
     return SEScalar::dNaN();
   return m_VenousCarbonDioxidePressure->GetValue(unit);
+}
 }

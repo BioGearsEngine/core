@@ -51,6 +51,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 Cardiovascular::Cardiovascular(BioGears& bg)
   : SECardiovascularSystem(bg.GetLogger())
   , m_data(bg)
@@ -1199,7 +1200,7 @@ void Cardiovascular::CalculateAndSetCPRcompressionForce()
     double a = 4 * c / (m_CompressionPeriod_s * m_CompressionPeriod_s);
     double b = -a * m_CompressionPeriod_s;
 
-    compressionForce_N = pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
+    compressionForce_N = std::pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
 
     // 2 second max compression time is arbitrary. I just put it in to make sure it doesn't get stuck if
     // we accidentally make a really wide bell curve. Note that the bell curve parameters are currently hardcoded above.
@@ -1410,7 +1411,7 @@ void Cardiovascular::CalculateHeartElastance()
   double maxShape = 0.598;
 
   double normalizedCardiacTime = m_CurrentCardiacCycleTime_s / m_CardiacCyclePeriod_s;
-  double elastanceShapeFunction = (pow(normalizedCardiacTime / alpha1, n1) / (1.0 + pow(normalizedCardiacTime / alpha1, n1))) * (1.0 / (1.0 + pow(normalizedCardiacTime / alpha2, n2))) / maxShape;
+  double elastanceShapeFunction = (std::pow(normalizedCardiacTime / alpha1, n1) / (1.0 + std::pow(normalizedCardiacTime / alpha1, n1))) * (1.0 / (1.0 + std::pow(normalizedCardiacTime / alpha2, n2))) / maxShape;
 
   m_LeftHeartElastance_mmHg_Per_mL = (m_LeftHeartElastanceMax_mmHg_Per_mL - m_LeftHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_LeftHeartElastanceMin_mmHg_Per_mL;
   m_RightHeartElastance_mmHg_Per_mL = (m_RightHeartElastanceMax_mmHg_Per_mL - m_RightHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_RightHeartElastanceMin_mmHg_Per_mL;
@@ -1801,7 +1802,7 @@ void Cardiovascular::AdjustVascularTone()
         continue;
       if ((Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1) || (Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2)) {
         continue;
-	  }
+    }
       UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
       UpdatedResistance_mmHg_s_Per_mL += ResistanceChange * UpdatedResistance_mmHg_s_Per_mL / GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL);
       if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
@@ -1845,4 +1846,4 @@ void Cardiovascular::ProcessOverride()
 	double map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
 	m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
 }
-
+}

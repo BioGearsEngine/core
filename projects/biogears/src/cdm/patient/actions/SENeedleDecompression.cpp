@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 
+namespace biogears {
 SENeedleDecompression::SENeedleDecompression()
   : SEPatientAction()
 {
@@ -95,4 +96,5 @@ void SENeedleDecompression::ToString(std::ostream& str) const
   str << "\n\tSide: ";
   HasSide() ? str << GetSide() : str << "No Side Set";
   str << std::flush;
+}
 }

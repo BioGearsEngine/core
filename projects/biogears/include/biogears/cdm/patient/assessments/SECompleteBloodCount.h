@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include "biogears/cdm/properties/SEScalarMassPerAmount.h"
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
+namespace biogears {
 class SEScalarFraction;
 class SEScalarMassPerVolume;
 class SEScalarAmountPerVolume;
@@ -69,3 +70,4 @@ protected:
   SEScalarAmountPerVolume* m_RedBloodCellCount;
   SEScalarAmountPerVolume* m_WhiteBloodCellCount;
 };
+}

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 
+namespace biogears {
 class SETissueCompartment;
 class SECompartmentManager;
 class SELiquidSubstanceQuantity;
@@ -70,4 +71,4 @@ protected:
   std::vector<SELiquidCompartment*> m_Children;
   std::vector<SELiquidCompartment*> m_Leaves;
 };
-
+}

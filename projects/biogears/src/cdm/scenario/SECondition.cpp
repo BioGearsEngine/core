@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
+namespace biogears {
 SECondition::SECondition()
   : Loggable()
 {
@@ -160,4 +161,5 @@ bool SECondition::HasComment() const
 void SECondition::InvalidateComment()
 {
   m_Comment = "";
+}
 }

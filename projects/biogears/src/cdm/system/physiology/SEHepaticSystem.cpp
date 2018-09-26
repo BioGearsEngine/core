@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEHepaticSystem::SEHepaticSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -103,4 +104,5 @@ double SEHepaticSystem::GetHepaticGluconeogenesisRate(const MassPerTimeUnit& uni
   if (m_HepaticGluconeogenesisRate == nullptr)
     return SEScalar::dNaN();
   return m_HepaticGluconeogenesisRate->GetValue(unit);
+}
 }

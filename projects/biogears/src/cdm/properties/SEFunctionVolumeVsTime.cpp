@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
+namespace biogears {
 SEFunctionVolumeVsTime::SEFunctionVolumeVsTime()
   : SEFunction()
 {
@@ -96,4 +97,5 @@ const VolumeUnit* SEFunctionVolumeVsTime::GetVolumeUnit()
 void SEFunctionVolumeVsTime::SetVolumeUnit(const VolumeUnit& unit)
 {
   m_VolumeUnit = &unit;
+}
 }

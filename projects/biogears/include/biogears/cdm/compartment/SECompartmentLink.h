@@ -13,10 +13,11 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 
+CDM_BIND_DECL(CompartmentLinkData)
+
+namespace biogears {
 class SECircuitManager;
 class SEScalar;
-
-CDM_BIND_DECL(CompartmentLinkData)
 
 class BIOGEARS_API SECompartmentLink : public Loggable {
 protected:
@@ -41,3 +42,4 @@ public:
 protected:
   std::string m_Name;
 };
+}

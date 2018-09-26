@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatConductance.h>
 
+namespace biogears {
 const HeatConductanceUnit HeatConductanceUnit::W_Per_K("W/K");
 const HeatConductanceUnit HeatConductanceUnit::W_Per_C("W/degC");
 const HeatConductanceUnit HeatConductanceUnit::kcal_Per_K_s("kcal/K s");
@@ -52,4 +53,5 @@ const HeatConductanceUnit& HeatConductanceUnit::GetCompoundUnit(const std::strin
   std::stringstream err;
   err << unit << " is not a valid HeatConductance unit";
   throw CommonDataModelException(err.str());
+}
 }

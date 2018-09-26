@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SENervousSystem::SENervousSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -287,4 +288,4 @@ const SEPupillaryResponse* SENervousSystem::GetRightEyePupillaryResponse() const
 void SENervousSystem::RemoveRightEyePupillaryResponse()
 {
   SAFE_DELETE(m_RightEyePupillaryResponse);
-}
+}}

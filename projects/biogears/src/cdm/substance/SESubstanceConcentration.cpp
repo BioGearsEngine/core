@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance)
   : Loggable(substance.GetLogger())
   , m_Substance(substance)
@@ -73,4 +74,5 @@ double SESubstanceConcentration::GetConcentration(const MassPerVolumeUnit& unit)
 SESubstance& SESubstanceConcentration::GetSubstance() const
 {
   return m_Substance;
+}
 }

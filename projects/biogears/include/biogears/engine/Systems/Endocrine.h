@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class SELiquidSubstanceQuantity;
 class BioGears;
 /**
@@ -78,3 +79,4 @@ private:
   SELiquidSubstanceQuantity* m_splanchnicInsulin = nullptr;
   SELiquidSubstanceQuantity* m_splanchnicGlucagon = nullptr;
 };
+}

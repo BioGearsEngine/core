@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+namespace biogears {
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Runs the test for the circuit math in the anesthesia machine
@@ -166,4 +167,5 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(const std::str
 void BioGearsEngineTest::RespiratoryWithAnesthesiaMachineCircuitAndTransportTest(const std::string& sTestDirectory)
 {
   AnesthesiaMachineCircuitAndTransportTest(RespiratoryWithAnesthesiaMachine, sTestDirectory);
+}
 }

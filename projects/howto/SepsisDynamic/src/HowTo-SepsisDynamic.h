@@ -14,9 +14,12 @@ specific language governing permissions and limitations under the License.
 #include "HowToTracker.h"
 #include "HowTo-ThreadedBioGears.h"
 
+namespace biogears
+{
 class SESepsis;
 class SESubstance;
 class SESubstanceInfusion;
+}
 
 void HowToDynamicSepsis();
 
@@ -32,7 +35,7 @@ public:
 	void SetSepsis(std::string& location, double& severity);
 	
 protected:
-	SESepsis*							m_sepsis;
-	SESubstanceInfusion*				m_pressor;
-	SESubstanceCompoundInfusion*		m_antibiotic;
+	biogears::SESepsis*							m_sepsis;
+  biogears::SESubstanceInfusion*				m_pressor;
+  biogears::SESubstanceCompoundInfusion*		m_antibiotic;
 };

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
+namespace biogears {
 class SECircuitManager;
 class BIOGEARS_API SEFluidCircuitPath : public SECircuitPath<FLUID_CIRCUIT_PATH> {
   friend class SECircuitManager;
@@ -105,3 +106,4 @@ protected:
   SEFluidCircuitNode& m_FluidSourceNode;
   SEFluidCircuitNode& m_FluidTargetNode;
 };
+}

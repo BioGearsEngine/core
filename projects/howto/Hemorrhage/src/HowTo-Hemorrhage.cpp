@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 
-
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for applying a Hemorrhage insult to the patient and also demonstrate how injury code can be used to initiate a hemorrhage if desired

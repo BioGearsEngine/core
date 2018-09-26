@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
+
+namespace biogears {
 class SESubstance;
 class SEConsciousRespiration;
 class BIOGEARS_API SEUseInhaler : public SEConsciousRespirationCommand {
@@ -38,3 +40,4 @@ public:
 
 protected:
 };
+}

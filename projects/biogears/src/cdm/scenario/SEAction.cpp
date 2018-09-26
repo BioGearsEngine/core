@@ -58,6 +58,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
+namespace biogears {
 SEAction::SEAction()
   : Loggable()
 {
@@ -467,4 +468,5 @@ bool SEAction::HasComment() const
 void SEAction::InvalidateComment()
 {
   m_Comment = "";
+}
 }

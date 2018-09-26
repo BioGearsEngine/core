@@ -44,6 +44,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 Renal::Renal(BioGears& bg)
   : SERenalSystem(bg.GetLogger())
   , m_data(bg)
@@ -935,7 +936,7 @@ void Renal::CalculateFilterability(SESubstance& sub)
 {
   double molarMass_g_Per_mol = sub.GetMolarMass(MassPerAmountUnit::g_Per_mol);
   //Determine the molecular radius using a best fit equation
-  double molecularRadius_nm = 0.0348 * pow(molarMass_g_Per_mol, 0.4175);
+  double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
   //Determine how well this substance transports with respect to water
   //There are three best fit curves that vary by molecule charge
   double filterability = 0.0;
@@ -948,17 +949,17 @@ void Renal::CalculateFilterability(SESubstance& sub)
   } else {
     switch (sub.GetClearance().GetChargeInBlood()) {
     case CDM::enumCharge::Positive:
-      filterability = 0.0386 * pow(molecularRadius_nm, 4.0) - 0.431 * pow(molecularRadius_nm, 3.0)
-        + 1.61 * pow(molecularRadius_nm, 2.0) - 2.6162 * molecularRadius_nm + 2.607;
+      filterability = 0.0386 * std::pow(molecularRadius_nm, 4.0) - 0.431 * std::pow(molecularRadius_nm, 3.0)
+        + 1.61 * std::pow(molecularRadius_nm, 2.0) - 2.6162 * molecularRadius_nm + 2.607;
       break;
     case CDM::enumCharge::Neutral:
-      filterability = -0.0908 * pow(molecularRadius_nm, 4.0) + 1.2135 * pow(molecularRadius_nm, 3.0)
-        - 5.76 * pow(molecularRadius_nm, 2.0) + 11.013 * molecularRadius_nm - 6.2792;
+      filterability = -0.0908 * std::pow(molecularRadius_nm, 4.0) + 1.2135 * std::pow(molecularRadius_nm, 3.0)
+        - 5.76 * std::pow(molecularRadius_nm, 2.0) + 11.013 * molecularRadius_nm - 6.2792;
       break;
     case CDM::enumCharge::Negative:
       //Subtracting 0.01 to account for not enough significant digits given by the best fit - tuned looking at data table from report and confirmed for Albumin
-      filterability = 0.0616 * pow(molecularRadius_nm, 4.0) - 0.8781 * pow(molecularRadius_nm, 3.0)
-        + 4.6699 * pow(molecularRadius_nm, 2.0) - 10.995 * molecularRadius_nm + 9.6959 - 0.01;
+      filterability = 0.0616 * std::pow(molecularRadius_nm, 4.0) - 0.8781 * std::pow(molecularRadius_nm, 3.0)
+        + 4.6699 * std::pow(molecularRadius_nm, 2.0) - 10.995 * molecularRadius_nm + 9.6959 - 0.01;
       break;
     default:
       break;
@@ -1554,7 +1555,7 @@ void Renal::CalculateColloidOsmoticPressure(SEScalarMassPerVolume& albuminConcen
 
   //Assume a typical Albumin to total protein ratio
   double totalProteinConentration_g_Per_dL = 1.6 * albuminConcentration.GetValue(MassPerVolumeUnit::g_Per_dL);
-  double osmoticPressure_mmHg = 2.1 * totalProteinConentration_g_Per_dL + 0.16 * pow(totalProteinConentration_g_Per_dL, 2.0) + 0.009 * pow(totalProteinConentration_g_Per_dL, 3.0);
+  double osmoticPressure_mmHg = 2.1 * totalProteinConentration_g_Per_dL + 0.16 * std::pow(totalProteinConentration_g_Per_dL, 2.0) + 0.009 * std::pow(totalProteinConentration_g_Per_dL, 3.0);
   osmoticPressure.SetValue(-osmoticPressure_mmHg, PressureUnit::mmHg);
 }
 
@@ -1651,7 +1652,7 @@ void Renal::CalculateOsmoreceptorFeedback()
       //LEFT
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetLeftTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      m_leftReabsorptionPermeabilityModificationFactor = pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
+      m_leftReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
 
       if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_leftReabsorptionPermeabilityModificationFactor;
@@ -1663,7 +1664,7 @@ void Renal::CalculateOsmoreceptorFeedback()
       //RIGHT
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      m_rightReabsorptionPermeabilityModificationFactor = pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
+      m_rightReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
       if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_rightReabsorptionPermeabilityModificationFactor;
 
@@ -1852,7 +1853,7 @@ void Renal::CalculateFluidPermeability()
       //compute desired permeability as a function of arterial pressure, else set as baseline
       if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         if (round(leftArterialPressure_mmHg) >= 80.0) {
-          permeability_mL_Per_s_mmHg_m2 = a * pow(leftArterialPressure_mmHg, 2) + b * leftArterialPressure_mmHg + c;
+          permeability_mL_Per_s_mmHg_m2 = a * std::pow(leftArterialPressure_mmHg, 2) + b * leftArterialPressure_mmHg + c;
         } else {
           permeability_mL_Per_s_mmHg_m2 = m_leftReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
         }
@@ -1878,7 +1879,7 @@ void Renal::CalculateFluidPermeability()
       //compute desired permeability as a function of arterial pressure, else set as baseline
       if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         if (round(rightArterialPressure_mmHg) >= 80.0) {
-          permeability_mL_Per_s_mmHg_m2 = a * pow(rightArterialPressure_mmHg, 2) + b * rightArterialPressure_mmHg + c;
+          permeability_mL_Per_s_mmHg_m2 = a * std::pow(rightArterialPressure_mmHg, 2) + b * rightArterialPressure_mmHg + c;
         } else {
           permeability_mL_Per_s_mmHg_m2 = m_rightReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
         }
@@ -1898,4 +1899,5 @@ void Renal::CalculateFluidPermeability()
     m_leftRenalArterialPressure_mmHg_runningAvg.Reset();
     m_rightRenalArterialPressure_mmHg_runningAvg.Reset();
   }
+}
 }

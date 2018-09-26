@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -811,4 +812,5 @@ double SECardiovascularSystem::GetSystolicArterialPressure(const PressureUnit& u
   if (m_SystolicArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_SystolicArterialPressure->GetValue(unit);
+}
 }

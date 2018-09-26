@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstance.h>
 
+namespace biogears {
 bool SESubstanceQuantity::Load(const CDM::SubstanceQuantityData& in)
 {
   Clear();
@@ -22,4 +23,5 @@ bool SESubstanceQuantity::Load(const CDM::SubstanceQuantityData& in)
 void SESubstanceQuantity::Unload(CDM::SubstanceQuantityData& data)
 {
   data.Substance(m_Substance.GetName());
+}
 }

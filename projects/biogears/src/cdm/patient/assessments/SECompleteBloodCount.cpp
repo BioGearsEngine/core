@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 
-
+namespace biogears {
 SECompleteBloodCount::SECompleteBloodCount(Logger* logger)
   : SEPatientAssessment(logger)
 {
@@ -184,4 +184,5 @@ SEScalarAmountPerVolume& SECompleteBloodCount::GetWhiteBloodCellCount()
   if (m_WhiteBloodCellCount == nullptr)
     m_WhiteBloodCellCount = new SEScalarAmountPerVolume();
   return *m_WhiteBloodCellCount;
+}
 }

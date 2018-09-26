@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 #include <biogears/cdm/compartment/SECompartmentGraph.inl>
 
+namespace biogears {
 SEGasCompartment::SEGasCompartment(const std::string& name, Logger* logger)
   : SEFluidCompartment(name, logger)
 {
@@ -152,4 +153,5 @@ SEGasSubstanceQuantity& SEGasCompartment::CreateSubstanceQuantity(SESubstance& s
       subQ->AddChild(child->CreateSubstanceQuantity(substance));
   }
   return *subQ;
+}
 }

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Anesthesia.hxx>
 
-
+namespace biogears {
 class BIOGEARS_API SEEventHandler : public Loggable {
 public:
   SEEventHandler(Logger* logger)
@@ -25,3 +25,4 @@ public:
   virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
   virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
 };
+}

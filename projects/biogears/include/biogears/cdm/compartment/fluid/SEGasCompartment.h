@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
+namespace biogears {
 enum class BalanceGasBy { Volume,
   VolumeFraction };
 
@@ -50,3 +51,4 @@ protected:
   std::vector<SEGasCompartment*> m_Children;
   std::vector<SEGasCompartment*> m_Leaves;
 };
+}

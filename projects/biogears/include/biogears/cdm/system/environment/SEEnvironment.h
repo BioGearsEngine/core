@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/cdm/Environment.hxx>
 
+namespace biogears {
 class SESubstance;
 class SESubstanceFraction;
 class SESubstanceManager;
@@ -29,7 +30,6 @@ class PowerUnit;
 class SEScalarHeatConductancePerArea;
 class HeatConductancePerAreaUnit;
 
-
 class BIOGEARS_API SEEnvironment : public SESystem {
 public:
   SEEnvironment(SESubstanceManager& substances);
@@ -43,20 +43,20 @@ public:
   virtual CDM::EnvironmentData* Unload() const;
 
   /** @name ProcessChange
-	* @brief - Will change this class as directed by the Action
-	*/
+  * @brief - Will change this class as directed by the Action
+  */
   virtual bool ProcessChange(const SEEnvironmentChange& action);
 
   /** @name ProcessChange
-	* @brief - Will change this class as directed by the Condition
-	*/
+  * @brief - Will change this class as directed by the Condition
+  */
   virtual bool ProcessChange(const SEInitialEnvironment& change);
 
   /** @name StateChange
-	*   @brief - This method is called when ever there is a state change
-	*            Specically a new file has been loaded, configuration action, or the system reset
-	*            Engine specific methodology can then update their logic.
-	*/
+  *   @brief - This method is called when ever there is a state change
+  *            Specically a new file has been loaded, configuration action, or the system reset
+  *            Engine specific methodology can then update their logic.
+  */
   virtual void StateChange(){};
 
 public:
@@ -134,3 +134,4 @@ protected:
 
   SESubstanceManager& m_Substances;
 };
+}

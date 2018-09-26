@@ -10,41 +10,42 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
+namespace biogears {
+	SEEnvironmentCondition::SEEnvironmentCondition()
+		: SECondition()
+	{
+	}
 
-SEEnvironmentCondition::SEEnvironmentCondition()
-  : SECondition()
-{
-}
+	SEEnvironmentCondition::~SEEnvironmentCondition()
+	{
+		Clear();
+	}
 
-SEEnvironmentCondition::~SEEnvironmentCondition()
-{
-  Clear();
-}
+	void SEEnvironmentCondition::Clear()
+	{
+		SECondition::Clear();
+	}
 
-void SEEnvironmentCondition::Clear()
-{
-  SECondition::Clear();
-}
+	bool SEEnvironmentCondition::IsValid() const
+	{
+		return SECondition::IsValid();
+	}
 
-bool SEEnvironmentCondition::IsValid() const
-{
-  return SECondition::IsValid();
-}
+	bool SEEnvironmentCondition::Load(const CDM::EnvironmentConditionData& in)
+	{
+		SECondition::Load(in);
+		return true;
+	}
 
-bool SEEnvironmentCondition::Load(const CDM::EnvironmentConditionData& in)
-{
-  SECondition::Load(in);
-  return true;
-}
+	CDM::EnvironmentConditionData* SEEnvironmentCondition::Unload() const
+	{
+		CDM::EnvironmentConditionData* data = new CDM::EnvironmentConditionData();
+		Unload(*data);
+		return data;
+	}
 
-CDM::EnvironmentConditionData* SEEnvironmentCondition::Unload() const
-{
-  CDM::EnvironmentConditionData* data = new CDM::EnvironmentConditionData();
-  Unload(*data);
-  return data;
-}
-
-void SEEnvironmentCondition::Unload(CDM::EnvironmentConditionData& data) const
-{
-  SECondition::Unload(data);
+	void SEEnvironmentCondition::Unload(CDM::EnvironmentConditionData& data) const
+	{
+		SECondition::Unload(data);
+	}
 }

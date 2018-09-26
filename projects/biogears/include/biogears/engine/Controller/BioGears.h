@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Tissue.h>
 #include <biogears/schema/biogears/BioGears.hxx>
 
+namespace biogears {
 class SEPatientAssessment;
 class BioGearsScenarioExec;
 enum class EngineState { NotReady = 0,
@@ -212,3 +213,4 @@ protected:
   // Flag to destroy the logger or not
   bool myLogger;
 };
+}

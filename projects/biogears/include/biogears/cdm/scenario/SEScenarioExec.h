@@ -15,10 +15,12 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
+CDM_BIND_DECL(ScenarioData)
+
+namespace biogears {
 class SEAction;
 class SEScenario;
 class PhysiologyEngine;
-CDM_BIND_DECL(ScenarioData)
 
 class BIOGEARS_API SEScenarioCustomExec {
 public:
@@ -50,3 +52,4 @@ protected:
 
   std::stringstream m_ss;
 };
+}

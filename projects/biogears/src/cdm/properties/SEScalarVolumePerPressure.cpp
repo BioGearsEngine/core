@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
 
+namespace biogears {
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_Pa("L/Pa");
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_cmH2O("L/cmH2O");
 
@@ -42,4 +43,5 @@ const VolumePerPressureUnit& VolumePerPressureUnit::GetCompoundUnit(const std::s
   std::stringstream err;
   err << unit << " is not a valid VolumePerPressure unit";
   throw CommonDataModelException(err.str());
+}
 }

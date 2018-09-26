@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 
-
+namespace biogears {
 SECardiacArrest::SECardiacArrest()
   : SEPatientAction()
 {
@@ -72,4 +72,5 @@ void SECardiacArrest::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << "\n\tState: " << IsActive();
   str << std::flush;
+}
 }

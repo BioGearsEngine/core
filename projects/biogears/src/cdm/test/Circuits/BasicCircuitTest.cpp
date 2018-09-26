@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Circuit.hxx>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 void CommonDataModelTest::TestSetup7SeriesRCDC()
 {
   SEFluidCircuit& fluidCircuit = m_Circuits.CreateFluidCircuit("Fluid");
@@ -1153,59 +1154,59 @@ void CommonDataModelTest::TestSetup17BasicDiodePULSE()
 //void TestSetup18Comprehensive2DC()
 //{
 //
-//	//10. Comprehensive1
-//	SEFluidCircuit& fluidCircuit = m_Circuits.CreateFluidCircuit("Fluid");
+//  //10. Comprehensive1
+//  SEFluidCircuit& fluidCircuit = m_Circuits.CreateFluidCircuit("Fluid");
 //
-//	//-----------------------------------------------------------
-//	//Nodes
-//	SEFluidCircuitNode& Node1 = fluidCircuit.CreateNode("Node1");
-//	SEFluidCircuitNode& Node2 = fluidCircuit.CreateNode("Node2");
-//	SEFluidCircuitNode& Node3 = fluidCircuit.CreateNode("Node3");
-//	SEFluidCircuitNode& Node4 = fluidCircuit.CreateNode("Node4");
+//  //-----------------------------------------------------------
+//  //Nodes
+//  SEFluidCircuitNode& Node1 = fluidCircuit.CreateNode("Node1");
+//  SEFluidCircuitNode& Node2 = fluidCircuit.CreateNode("Node2");
+//  SEFluidCircuitNode& Node3 = fluidCircuit.CreateNode("Node3");
+//  SEFluidCircuitNode& Node4 = fluidCircuit.CreateNode("Node4");
 //
-//	//Reference node
-//	//This works like ground - I added code to allow it to have a value other than 0
-//	fluidCircuit.AddReferenceNode(Node4);
-//	//We have to initialize this pressure if it's attached to a Compliance
-//	//But it doesn't necessarily have to be 0
-//	Node3.GetPressure().SetValue(0, PressureUnit::Pa);
-//	Node4.GetPressure().SetValue(0, PressureUnit::Pa);
+//  //Reference node
+//  //This works like ground - I added code to allow it to have a value other than 0
+//  fluidCircuit.AddReferenceNode(Node4);
+//  //We have to initialize this pressure if it's attached to a Compliance
+//  //But it doesn't necessarily have to be 0
+//  Node3.GetPressure().SetValue(0, PressureUnit::Pa);
+//  Node4.GetPressure().SetValue(0, PressureUnit::Pa);
 //
-//	//We need to initialize volumes
-//	Node1.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
-//	Node2.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
-//	Node3.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
-//	//Node4.GetSourceNode().GetNextVolume().SetValue(1e10, VolumeUnit::m3);	//infinite ground
+//  //We need to initialize volumes
+//  Node1.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
+//  Node2.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
+//  Node3.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
+//  //Node4.GetSourceNode().GetNextVolume().SetValue(1e10, VolumeUnit::m3);  //infinite ground
 //
-//	//-----------------------------------------------------------
-//	//Paths
-//	//Pressure source
-//	SEFluidCircuitPath& Path1 = fluidCircuit.CreatePath(Node4,Node1,"Path1");
-//	Path1.GetNextPressureSource().SetValue(20, PressureUnit::Pa);
+//  //-----------------------------------------------------------
+//  //Paths
+//  //Pressure source
+//  SEFluidCircuitPath& Path1 = fluidCircuit.CreatePath(Node4,Node1,"Path1");
+//  Path1.GetNextPressureSource().SetValue(20, PressureUnit::Pa);
 //
-//	SEFluidCircuitPath& Path2 = fluidCircuit.CreatePath(Node1,Node2,"Path2");
-//	Path2.GetNextResistance().SetValue(1000, FlowResistanceUnit::Pa_s_Per_m3);
-//	SEFluidCircuitPath& Path3 = fluidCircuit.CreatePath(Node2,Node3,"Path3");
-//	Path3.SetSwitch(CDM::enumOpenClosed::Open);
-//	SEFluidCircuitPath& Path4 = fluidCircuit.CreatePath(Node3,Node4,"Path4");
-//	Path4.GetNextInertance().SetValue(0.001, FlowInertanceUnit::Pa_s2_Per_m3);
-//	SEFluidCircuitPath& Path5 = fluidCircuit.CreatePath(Node1,Node4,"Path5");
-//	Path5.GetNextResistance().SetValue(1000, FlowResistanceUnit::Pa_s_Per_m3);
-//	SEFluidCircuitPath& Path6 = fluidCircuit.CreatePath(Node2,Node4,"Path6");
-//	Path6.GetNextCompliance().SetValue(1000, FlowComplianceUnit::m3_Per_Pa);
-//	Path6.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
-//	Node2.GetPressure().SetValue(0, PressureUnit::Pa);
+//  SEFluidCircuitPath& Path2 = fluidCircuit.CreatePath(Node1,Node2,"Path2");
+//  Path2.GetNextResistance().SetValue(1000, FlowResistanceUnit::Pa_s_Per_m3);
+//  SEFluidCircuitPath& Path3 = fluidCircuit.CreatePath(Node2,Node3,"Path3");
+//  Path3.SetSwitch(CDM::enumOpenClosed::Open);
+//  SEFluidCircuitPath& Path4 = fluidCircuit.CreatePath(Node3,Node4,"Path4");
+//  Path4.GetNextInertance().SetValue(0.001, FlowInertanceUnit::Pa_s2_Per_m3);
+//  SEFluidCircuitPath& Path5 = fluidCircuit.CreatePath(Node1,Node4,"Path5");
+//  Path5.GetNextResistance().SetValue(1000, FlowResistanceUnit::Pa_s_Per_m3);
+//  SEFluidCircuitPath& Path6 = fluidCircuit.CreatePath(Node2,Node4,"Path6");
+//  Path6.GetNextCompliance().SetValue(1000, FlowComplianceUnit::m3_Per_Pa);
+//  Path6.GetSourceNode().GetNextVolume().SetValue(5, VolumeUnit::m3);
+//  Node2.GetPressure().SetValue(0, PressureUnit::Pa);
 //
-//	//Flow Source
-//	SEFluidCircuitPath& Path7 = fluidCircuit.CreatePath(Node4,Node1,"Path7");
-//	Path7.GetNextFlowSource().SetValue(3,VolumePerTimeUnit::m3_Per_s);
+//  //Flow Source
+//  SEFluidCircuitPath& Path7 = fluidCircuit.CreatePath(Node4,Node1,"Path7");
+//  Path7.GetNextFlowSource().SetValue(3,VolumePerTimeUnit::m3_Per_s);
 //
-//	// Basic Description
-//	// DC only, switch controlled from preprocess.
-//	// Scenario 1 DC Pressure Source => Should see similar behavior to pulse train in test case 1, SeriesRC
-//	// Scenario 2 Sinusoidal Pressure Source =>  N/A
-//	// Scenario 3 Pulse Train Pressure Source => N/A
-//	// TODO: Add scenarios for flow sources
+//  // Basic Description
+//  // DC only, switch controlled from preprocess.
+//  // Scenario 1 DC Pressure Source => Should see similar behavior to pulse train in test case 1, SeriesRC
+//  // Scenario 2 Sinusoidal Pressure Source =>  N/A
+//  // Scenario 3 Pulse Train Pressure Source => N/A
+//  // TODO: Add scenarios for flow sources
 //}
 
 void CommonDataModelTest::TestSetup18RCSeriesDCCurrent()
@@ -3927,8 +3928,8 @@ void CommonDataModelTest::TestPreProcess1(double dT, int i)
 {
 
   //Note: If you don't modify a value, it will remain the same.
-  //		Only assign a value for Next if you're changing it.
-  //		Never change "current" values, only next.
+  //    Only assign a value for Next if you're changing it.
+  //    Never change "current" values, only next.
 
   // ALL PRESSURE SOURCES MUST EXIST ON PATH 1 UNTIL THIS IS CHANGED TO BE MORE FLEXIBLE
   // ALL FLOW SOURCES MUST EXIST ON PATH 7 UNTIL THIS IS CHANGED TO BE MORE FLEXIBLE
@@ -4015,8 +4016,8 @@ void CommonDataModelTest::TestPreProcess2(double dT, int i)
 {
 
   //Note: If you don't modify a value, it will remain the same.
-  //		Only assign a value for Next if you're changing it.
-  //		Never change "current" values, only next.
+  //    Only assign a value for Next if you're changing it.
+  //    Never change "current" values, only next.
 
   // ALL PRESSURE SOURCES MUST EXIST ON PATH 1 UNTIL THIS IS CHANGED TO BE MORE FLEXIBLE
   double ONE = 1;
@@ -4101,8 +4102,8 @@ void CommonDataModelTest::TestPreProcess3(double dT, int i)
 {
 
   //Note: If you don't modify a value, it will remain the same.
-  //		Only assign a value for Next if you're changing it.
-  //		Never change "current" values, only next.
+  //    Only assign a value for Next if you're changing it.
+  //    Never change "current" values, only next.
 
   // ALL PRESSURE SOURCES MUST EXIST ON PATH 1 UNTIL THIS IS CHANGED TO BE MORE FLEXIBLE
 
@@ -4221,8 +4222,8 @@ void CommonDataModelTest::TestPreProcess4(double dT, int i)
 {
 
   //Note: If you don't modify a value, it will remain the same.
-  //		Only assign a value for Next if you're changing it.
-  //		Never change "current" values, only next.
+  //    Only assign a value for Next if you're changing it.
+  //    Never change "current" values, only next.
 
   // ALL PRESSURE SOURCES MUST EXIST ON PATH 1 UNTIL THIS IS CHANGED TO BE MORE FLEXIBLE
   double ONE = 1;
@@ -4304,8 +4305,8 @@ void CommonDataModelTest::TestPreProcess4(double dT, int i)
 void CommonDataModelTest::BasicCircuitPreProcess(double dT)
 {
   //Note: If you don't modify a value, it will remain the same.
-  //		Only assign a value for Next if you're changing it.
-  //		Never change "current" values, only next.
+  //    Only assign a value for Next if you're changing it.
+  //    Never change "current" values, only next.
   double dPressure = 20 + 20 * sin(dT);
   m_Circuits.GetFluidPath("Path1")->GetNextPressureSource().SetValue(dPressure, PressureUnit::Pa);
 }
@@ -5144,4 +5145,5 @@ void CommonDataModelTest::TestCircuitSerialization(const std::string& fileName)
       Error("Could not load Circuit Data");
   } else
     Error("Could not cast loaded Circuit Data");
+}
 }

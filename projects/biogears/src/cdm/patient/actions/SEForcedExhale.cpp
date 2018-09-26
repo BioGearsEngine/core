@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+namespace biogears {
 SEForcedExhale::SEForcedExhale()
   : SEConsciousRespirationCommand()
 {
@@ -99,4 +100,5 @@ void SEForcedExhale::ToString(std::ostream& str) const
   str << "\n\tPeriod: ";
   HasPeriod() ? str << *m_Period : str << "NaN";
   str << std::flush;
+}
 }

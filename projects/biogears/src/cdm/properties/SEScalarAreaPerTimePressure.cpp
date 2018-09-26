@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAreaPerTimePressure.h>
 
+namespace biogears {
 const AreaPerTimePressureUnit AreaPerTimePressureUnit::m2_Per_s_mmHg("m^2/s mmHg");
 const AreaPerTimePressureUnit AreaPerTimePressureUnit::cm2_Per_s_mmHg("cm^2/s mmHg");
 const AreaPerTimePressureUnit AreaPerTimePressureUnit::m2_Per_min_mmHg("m^2/min mmHg");
@@ -52,4 +53,5 @@ const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const st
   std::stringstream err;
   err << unit << " is not a valid AreaPerTimePressure unit";
   throw CommonDataModelException(err.str());
+}
 }

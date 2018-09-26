@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 
+namespace biogears {
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2("mL/min mmHg m^2");
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2("mL/s mmHg m^2");
 
@@ -42,4 +43,5 @@ const VolumePerTimePressureAreaUnit& VolumePerTimePressureAreaUnit::GetCompoundU
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimePressureArea unit";
   throw CommonDataModelException(err.str());
+}
 }

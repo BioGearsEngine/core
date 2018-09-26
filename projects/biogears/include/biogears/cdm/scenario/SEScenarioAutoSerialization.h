@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Scenario.hxx>
 
 CDM_BIND_DECL(ScenarioAutoSerializationData)
+namespace biogears {
+
 class BIOGEARS_API SEScenarioAutoSerialization : public Loggable {
 public:
   SEScenarioAutoSerialization(Logger* logger);
@@ -68,3 +70,4 @@ protected:
   std::string m_Directory;
   std::string m_FileName;
 };
+}

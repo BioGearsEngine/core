@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 
+namespace biogears {
 SEInhalerConfiguration::SEInhalerConfiguration(SESubstanceManager& substances)
   : SEInhalerAction()
   , m_Substances(substances)
@@ -125,4 +126,5 @@ void SEInhalerConfiguration::ToString(std::ostream& str) const
     m_Configuration->HasSubstance() ? str << m_Configuration->GetSubstance()->GetName() : str << "Not Set";
   }
   str << std::flush;
+}
 }

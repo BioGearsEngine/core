@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SEOxygenWallPortPressureLoss::SEOxygenWallPortPressureLoss()
   : SEAnesthesiaMachineAction()
 {
@@ -71,4 +72,5 @@ void SEOxygenWallPortPressureLoss::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << "\n\tState: " << IsActive();
   str << std::flush;
+}
 }

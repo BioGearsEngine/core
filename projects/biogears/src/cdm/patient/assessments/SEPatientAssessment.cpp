@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
+namespace biogears {
 SEPatientAssessment::SEPatientAssessment(Logger* logger)
   : Loggable(logger)
 {
@@ -45,4 +46,5 @@ CDM::PatientAssessmentData* SEPatientAssessment::Unload()
 
 void SEPatientAssessment::Unload(CDM::PatientAssessmentData& data)
 {
+}
 }

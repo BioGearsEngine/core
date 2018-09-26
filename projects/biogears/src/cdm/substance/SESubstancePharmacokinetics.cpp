@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
+namespace biogears {
 SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
   : Loggable(logger)
 {
@@ -131,4 +132,5 @@ const SESubstanceTissuePharmacokinetics* SESubstancePharmacokinetics::GetTissueK
 void SESubstancePharmacokinetics::RemoveTissueKinetics(const std::string& name)
 {
   m_TissueKinetics.erase(name);
+}
 }

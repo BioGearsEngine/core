@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+namespace biogears {
 SEElectroCardioGramInterpolatorWaveform::SEElectroCardioGramInterpolatorWaveform(Logger* logger)
   : Loggable(logger)
 {
@@ -142,4 +143,5 @@ double SEElectroCardioGramInterpolatorWaveform::GetTimeStep(const TimeUnit& unit
   if (m_TimeStep == nullptr)
     return SEScalar::dNaN();
   return m_TimeStep->GetValue(unit);
+}
 }

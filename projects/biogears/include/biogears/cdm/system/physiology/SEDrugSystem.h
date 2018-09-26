@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class SEScalarFraction;
 class SEScalarMass;
 class MassUnit;
@@ -105,3 +106,4 @@ protected:
   SEScalarFraction* m_TubularPermeabilityChange;
   SEScalarFraction* m_CentralNervousResponse;
 };
+}

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
 
+namespace biogears {
 const PressureUnit PressureUnit::Pa("Pa");
 const PressureUnit PressureUnit::mmHg("mmHg");
 const PressureUnit PressureUnit::cmH2O("cmH2O");
@@ -57,4 +58,5 @@ const PressureUnit& PressureUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Pressure unit";
   throw CommonDataModelException(err.str());
+}
 }

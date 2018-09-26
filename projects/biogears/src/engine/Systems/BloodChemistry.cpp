@@ -35,7 +35,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
-
+namespace biogears {
 BloodChemistry::BloodChemistry(BioGears& bg)
   : SEBloodChemistrySystem(bg.GetLogger())
   , m_data(bg)
@@ -663,10 +663,10 @@ void BloodChemistry::Sepsis()
   double dLateMediator_Per_hr = klm_Per_hr * couplingFunction - kl_Per_hr * lateMediator;
 
   /*Adjust model to account for presence of antibiotics.  This is very hand-wavy to get behavior desired by AMM.  If for some reason they (or someone
-  else) want to increase/decrease amount of time for return to normal function, first adjust the minimum inhibitory concentration (higher for longer
-  recovery, lower for shorter recovery). If still not satisfactory, adjust decay of late mediator in presence of antibiotic (below).  But this 
-  second knob is pretty sensitive.
-  */
+		else) want to increase/decrease amount of time for return to normal function, first adjust the minimum inhibitory concentration (higher for longer
+		recovery, lower for shorter recovery). If still not satisfactory, adjust decay of late mediator in presence of antibiotic (below).  But this
+		second knob is pretty sensitive.
+		*/
   double nextPathogen = pathogen + dPathogen_Per_hr;
   if ((nextPathogen > pathogen) && antibiotic_g > 0) {
     //This means that we're getting into some oscillatory behavior after antibiotic administration (i.e. we hit a minimum pathogen concentration)
@@ -693,7 +693,7 @@ void BloodChemistry::Sepsis()
   //white blood cell fraction.
   SEFluidCircuitPath* vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
   double resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - wbcFractionInitial));
+  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (whiteBloodCell - wbcFractionInitial));
   vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double nextReflectionCoefficient = GeneralMath::LinearInterpolator(wbcFractionInitial, wbcFractionMax, 1.0, 0.05, whiteBloodCell);
   BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
@@ -713,7 +713,7 @@ void BloodChemistry::Sepsis()
       comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (whiteBloodCell - modsThreshold));
       vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
 
     } else if (whiteBloodCell > modsThreshold) {
@@ -722,7 +722,7 @@ void BloodChemistry::Sepsis()
       comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (whiteBloodCell - modsThreshold));
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (whiteBloodCell - modsThreshold));
       vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
   }
@@ -753,4 +753,5 @@ void BloodChemistry::Sepsis()
   double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
   double totalBilirubin_mg_Per_dL = GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput) + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
+}
 }

@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SERespiratorySystem::SERespiratorySystem(Logger* logger)
   : SESystem(logger)
 {
@@ -560,4 +561,5 @@ double SERespiratorySystem::GetTranspulmonaryPressure(const PressureUnit& unit) 
   if (m_TranspulmonaryPressure == nullptr)
     return SEScalar::dNaN();
   return m_TranspulmonaryPressure->GetValue(unit);
+}
 }

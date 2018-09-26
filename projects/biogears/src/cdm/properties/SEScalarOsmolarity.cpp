@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
 
+namespace biogears {
 const OsmolarityUnit OsmolarityUnit::Osm_Per_L("Osm/L");
 const OsmolarityUnit OsmolarityUnit::mOsm_Per_L("mOsm/L");
 
@@ -42,4 +43,5 @@ const OsmolarityUnit& OsmolarityUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Osmolarity unit";
   throw CommonDataModelException(err.str());
+}
 }

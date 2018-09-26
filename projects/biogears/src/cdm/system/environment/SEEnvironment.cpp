@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
+namespace biogears {
 SEEnvironment::SEEnvironment(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
@@ -438,4 +439,5 @@ double SEEnvironment::GetSkinHeatLoss(const PowerUnit& unit) const
   if (m_SkinHeatLoss == nullptr)
     return SEScalar::dNaN();
   return m_SkinHeatLoss->GetValue(unit);
+}
 }

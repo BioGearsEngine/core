@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEConsciousRespiration::SEConsciousRespiration()
   : SEPatientAction()
 {
@@ -151,4 +152,5 @@ void SEConsciousRespiration::ToString(std::ostream& str) const
     c->ToString(str);
   }
   str << std::flush;
+}
 }

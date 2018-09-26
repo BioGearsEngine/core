@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
+namespace biogears {
 const VolumePerTimeUnit VolumePerTimeUnit::L_Per_s("L/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_s("mL/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_day("mL/day");
@@ -72,4 +73,5 @@ const VolumePerTimeUnit& VolumePerTimeUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid VolumePerTime unit";
   throw CommonDataModelException(err.str());
+}
 }

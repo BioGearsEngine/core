@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Demonstrates how to set concentrations of ionic compounds in bloodstream and tissue and call events

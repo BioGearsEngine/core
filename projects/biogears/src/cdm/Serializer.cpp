@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 using namespace xercesc;
 namespace xml = xsd::cxx::xml;
 
+namespace biogears {
 Serializer* Serializer::m_me = nullptr;
 bool Serializer::m_Initialized = false;
 std::unique_ptr<xercesc::XMLGrammarPool> Serializer::m_GrammerPool;
@@ -220,4 +221,5 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   err << "Unsupported root tag " << name << " found in xml file " << xmlFile << std::ends;
   logger->Error(err);
   return obj;
+}
 }

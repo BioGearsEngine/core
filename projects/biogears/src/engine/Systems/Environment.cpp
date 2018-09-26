@@ -43,6 +43,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
 Environment::Environment(BioGears& bg)
   : SEEnvironment(bg.GetSubstances())
   , m_data(bg)
@@ -103,7 +104,7 @@ void Environment::Initialize()
   double patientMass_g = m_Patient->GetWeight(MassUnit::g);
   double patientHeight_m = m_Patient->GetHeight(LengthUnit::m);
   double pi = 3.14159;
-  m_PatientEquivalentDiameter_m = pow(Convert(patientMass_g / patientDensity_g_Per_mL, VolumeUnit::mL, VolumeUnit::m3) / (pi * patientHeight_m), 0.5);
+  m_PatientEquivalentDiameter_m = std::pow(Convert(patientMass_g / patientDensity_g_Per_mL, VolumeUnit::mL, VolumeUnit::m3) / (pi * patientHeight_m), 0.5);
 }
 
 bool Environment::Load(const CDM::BioGearsEnvironmentData& in)
@@ -459,7 +460,7 @@ void Environment::CalculateSupplementalValues()
   //Determine the heat vaporization of water
   //This equation was determined using a best fit from experimental data
   double dTemperature_K = Convert(dAirTemperature_C, TemperatureUnit::C, TemperatureUnit::K);
-  double dHeatOfVaporizationOfWater_JPerMol = -0.1004 * pow(dTemperature_K, 2) + 22.173 * dTemperature_K + 46375.0;
+  double dHeatOfVaporizationOfWater_JPerMol = -0.1004 * std::pow(dTemperature_K, 2) + 22.173 * dTemperature_K + 46375.0;
   //Convert moles of water to kg
   m_dHeatOfVaporizationOfWater_J_Per_kg = dHeatOfVaporizationOfWater_JPerMol / 0.0180153; //1 mol of water = 0.0180153 kg
 
@@ -468,10 +469,10 @@ void Environment::CalculateSupplementalValues()
     double dWaterTemperature_C = GetConditions().GetAmbientTemperature(TemperatureUnit::C);
     double dT = Convert(dWaterTemperature_C, TemperatureUnit::C, TemperatureUnit::K) / 298.15;
 
-    m_WaterSpecificHeat_J_Per_kg_K = 0.001 * ((-1.0E-7) * pow(dWaterTemperature_C, 3.0) + (3.0E-5) * pow(dWaterTemperature_C, 2.0) - 0.0018 * dWaterTemperature_C + 4.2093);
-    m_WaterViscosity_N_s_Per_m2 = 0.001 * ((-3.0E-6) * pow(dWaterTemperature_C, 3.0) + 0.0006 * pow(dWaterTemperature_C, 2.0) - 0.0462 * dWaterTemperature_C + 1.7412);
-    m_WaterThermalConductivity_W_Per_m_K = 0.6065 * (-1.48446 + 4.12292 * dT + -1.63866 * pow(dT, 2));
-    m_ThermalExpansion_Per_K = (6.0E-7) * pow(dWaterTemperature_C, 3.0) - 0.0001 * pow(dWaterTemperature_C, 2.0) + 0.016 * dWaterTemperature_C - 0.0632;
+    m_WaterSpecificHeat_J_Per_kg_K = 0.001 * ((-1.0E-7) * std::pow(dWaterTemperature_C, 3.0) + (3.0E-5) * std::pow(dWaterTemperature_C, 2.0) - 0.0018 * dWaterTemperature_C + 4.2093);
+    m_WaterViscosity_N_s_Per_m2 = 0.001 * ((-3.0E-6) * std::pow(dWaterTemperature_C, 3.0) + 0.0006 * std::pow(dWaterTemperature_C, 2.0) - 0.0462 * dWaterTemperature_C + 1.7412);
+    m_WaterThermalConductivity_W_Per_m_K = 0.6065 * (-1.48446 + 4.12292 * dT + -1.63866 * std::pow(dT, 2));
+    m_ThermalExpansion_Per_K = (6.0E-7) * std::pow(dWaterTemperature_C, 3.0) - 0.0001 * std::pow(dWaterTemperature_C, 2.0) + 0.016 * dWaterTemperature_C - 0.0632;
   }
 }
 
@@ -505,7 +506,7 @@ void Environment::CalculateRadiation()
     double dEffectiveAreaOverSurfaceArea = 0.73; //Standing
     double dClothingTemperature_K = m_ClothingNode->GetTemperature().GetValue(TemperatureUnit::K);
     double dMeanRadiantTemperature_K = m_EnclosureNode->GetTemperature().GetValue(TemperatureUnit::K);
-    double dRadiativeHeatTransferCoefficient_WPerM2_K = std::abs(4.0 * dEmissivity * dStefanBoltzmann_WPerM2_K4 * dEffectiveAreaOverSurfaceArea * pow((dClothingTemperature_K + dMeanRadiantTemperature_K) / 2.0, 3));
+    double dRadiativeHeatTransferCoefficient_WPerM2_K = std::abs(4.0 * dEmissivity * dStefanBoltzmann_WPerM2_K4 * dEffectiveAreaOverSurfaceArea * std::pow((dClothingTemperature_K + dMeanRadiantTemperature_K) / 2.0, 3));
     GetRadiativeHeatTranferCoefficient().SetValue(dRadiativeHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
 
     //Calculate the resistance
@@ -556,7 +557,7 @@ void Environment::CalculateConvection()
 
     //Calculate the coefficient
     //Heat transfer coefficient for submerged water convection. C. Boutelier et al. Experimental study of convective heat transfer coefficient for the human body in water. Journal of Applied Physiology. 1977. Vol. 42. p.93-100
-    double dGrashofNumber = dGravity_m_Per_s2 * m_ThermalExpansion_Per_K * (std::abs(dClothingTemperature_K - dWaterTemperature_K)) * pow(m_PatientEquivalentDiameter_m, 3.0) / (m_WaterViscosity_N_s_Per_m2 / dWaterDensity.GetValue(MassPerVolumeUnit::kg_Per_m3));
+    double dGrashofNumber = dGravity_m_Per_s2 * m_ThermalExpansion_Per_K * (std::abs(dClothingTemperature_K - dWaterTemperature_K)) * std::pow(m_PatientEquivalentDiameter_m, 3.0) / (m_WaterViscosity_N_s_Per_m2 / dWaterDensity.GetValue(MassPerVolumeUnit::kg_Per_m3));
     double dPrandtlNumber = m_WaterSpecificHeat_J_Per_kg_K * m_WaterViscosity_N_s_Per_m2 / m_WaterThermalConductivity_W_Per_m_K;
     dConvectiveHeatTransferCoefficient_WPerM2_K = 0.09 * (dGrashofNumber - dPrandtlNumber) * 0.275;
   } else //Air
@@ -564,7 +565,7 @@ void Environment::CalculateConvection()
     //Calculate the coefficient
     //Velocity should take into account wind and patient movement combined
     double dAirVelocity_MPerS = GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s);
-    dConvectiveHeatTransferCoefficient_WPerM2_K = 10.3 * pow(dAirVelocity_MPerS, 0.6);
+    dConvectiveHeatTransferCoefficient_WPerM2_K = 10.3 * std::pow(dAirVelocity_MPerS, 0.6);
   }
 
   //Set the coefficient
@@ -728,9 +729,10 @@ double Environment::AntoineEquation(double dTemperature_C)
       dB = 1810.94;
       dC = 244.485;
     }
-    dWaterVaporPressureInAmbientAir_mmHg = pow(10.0, dA - (dB / (dC + dTemperature_C)));
+    dWaterVaporPressureInAmbientAir_mmHg = std::pow(10.0, dA - (dB / (dC + dTemperature_C)));
   }
 
   return dWaterVaporPressureInAmbientAir_mmHg;
 }
 */
+}

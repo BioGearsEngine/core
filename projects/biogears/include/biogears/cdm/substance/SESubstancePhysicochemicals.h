@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Substance.hxx>
 
 CDM_BIND_DECL(SubstancePhysicochemicalData)
+
+namespace biogears {
 class BIOGEARS_API SESubstancePhysicochemicals : public Loggable {
 public:
   SESubstancePhysicochemicals(Logger* logger);
@@ -73,3 +75,4 @@ protected:
   SEScalar* m_LogP;
   SEScalar* m_OralAbsorptionRateConstant;
 };
+}

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 class BIOGEARS_API ElectricResistanceUnit : public CCompoundUnit {
 public:
   ElectricResistanceUnit(const std::string& u)
@@ -35,3 +36,4 @@ public:
 
   CDM::ScalarElectricResistanceData* Unload() const override;
 };
+}

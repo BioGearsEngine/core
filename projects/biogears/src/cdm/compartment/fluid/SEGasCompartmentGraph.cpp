@@ -20,6 +20,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/schema/cdm/Compartment.hxx>
+
+namespace biogears {
 bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
   m_Name = in.Name();
@@ -92,4 +94,5 @@ void SEGasCompartmentGraph::AddGraph(SEGasCompartmentGraph& graph)
     AddCompartment(*cmpt);
   for (SEGasCompartmentLink* lnk : graph.GetLinks())
     AddLink(*lnk);
+}
 }

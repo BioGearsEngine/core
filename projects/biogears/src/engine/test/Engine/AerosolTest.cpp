@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
+namespace biogears {
 void BioGearsEngineTest::AerosolTest(const std::string& sOutputDirectory)
 {
   m_Logger->ResetLogFile(sOutputDirectory + "/AerosolTest.log");
@@ -502,4 +503,5 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
   }
 
   tc.GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
+}
 }

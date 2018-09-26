@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SERenalSystem::SERenalSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -1437,4 +1438,5 @@ double SERenalSystem::GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit&
   if (m_UrineUreaNitrogenConcentration == nullptr)
     return SEScalar::dNaN();
   return m_UrineUreaNitrogenConcentration->GetValue(unit);
+}
 }

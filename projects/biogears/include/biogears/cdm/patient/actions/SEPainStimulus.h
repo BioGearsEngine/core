@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+namespace biogears {
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {
 public:
 
@@ -46,4 +47,5 @@ public:
 protected:
 	SEScalar0To1*           m_Severity;
 	std::string             m_Location;
-};      
+};
+}

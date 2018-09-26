@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/test/BioGearsEngineTest.h>
 #include <math.h>
 
+namespace biogears {
 void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfiguration config, const std::string& sTestDirectory)
 {
   TimingProfile tmr;
@@ -275,4 +276,5 @@ void BioGearsEngineTest::RespiratoryDriverTest(const std::string& sTestDirectory
   std::stringstream ss;
   ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run";
   bg.GetLogger()->Info(ss.str(), "RespiratoryDriverTest");
+}
 }

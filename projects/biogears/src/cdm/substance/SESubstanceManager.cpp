@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
+namespace biogears {
 SESubstanceManager::SESubstanceManager(Logger* logger)
   : Loggable(logger)
 {
@@ -339,4 +340,5 @@ bool SESubstanceManager::LoadSubstanceDirectory()
     succeed = false;
     return succeed;
   }
+}
 }

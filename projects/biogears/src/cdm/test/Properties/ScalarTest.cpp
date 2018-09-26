@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 void CommonDataModelTest::ScalarTest(const std::string& sOutputDirectory)
 {
   std::ofstream file;
@@ -92,11 +93,12 @@ void CommonDataModelTest::ScalarTest(const std::string& sOutputDirectory)
 
   //
   //if(!p.IsValidUnit("Pa"))
-  //	std::cerr<<"Pa should be a valid Pressure unit"<<std::endl;
+  //  std::cerr<<"Pa should be a valid Pressure unit"<<std::endl;
   //if(p.IsValidUnit("Pap"))
-  //	std::cerr<<"Pap should NOT be a valid Pressure unit"<<std::endl;
+  //  std::cerr<<"Pap should NOT be a valid Pressure unit"<<std::endl;
   //p.SetValue(5,PressureUnit::Pa);
   //std::cout<<"Testing Scalar "<<p.GetValue(PressureUnit::Pa)<<PressureUnit::Pa<<std::endl;
   //std::cout<<"Testing Scalar "<<p.GetValue(PressureUnit::mmHg)<<PressureUnit::mmHg<<std::endl;
   //std::cout<<"Testing Scalar "<<p.GetValue(PressureUnit::cmH2O)<<PressureUnit::cmH2O<<std::endl;
+}
 }

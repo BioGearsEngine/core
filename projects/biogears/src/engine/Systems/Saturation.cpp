@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 
 //#define VERBOSE
-
+namespace biogears {
 template <typename _Scalar, int NX = Eigen::Dynamic, int NY = Eigen::Dynamic>
 struct Functor {
   typedef _Scalar Scalar;
@@ -320,7 +320,7 @@ void SaturationCalculator::CalculateCarbonMonoxideSpeciesDistribution(SELiquidCo
   }
   // Check to make sure hemoglobin was conserved
   newTotalHb_mM = HbUnbound_mM + HbO2_mM + HbO2CO2_mM + HbCO2_mM + targetBoundCO_mM;
-  if (abs(newTotalHb_mM - totalHb_mM) > tolerance)
+  if (std::abs(newTotalHb_mM - totalHb_mM) > tolerance)
     Warning("Hemoglobin not conserved during carbon monoxide species distribution calculation.");
 
   // We can now set and balance for CO.
@@ -424,11 +424,11 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
     double newHb_mM = m_subHbQ->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
     double newTotalHb_mM = newHbO2_mM + newHbCO2_mM + newHbO2CO2_mM + newHb_mM + newHbCO_mM;
     double diffTotal = newTotalHb_mM - oldTotalHb_mM;
-    if (abs(diffTotal) > 1.0e-8) {
+    if (std::abs(diffTotal) > 1.0e-8) {
       std::stringstream debugSS;
       debugSS << "CalculateCarbonMonoxideSpeciesDistribution failed to conserve hemoglobin. Difference = ";
       debugSS << diffTotal;
-      if (abs(diffTotal) > 1.0e-8)
+      if (std::abs(diffTotal) > 1.0e-8)
         Warning(debugSS.str());
     }
 
@@ -929,7 +929,7 @@ void SaturationCalculator::CalculateHemoglobinSaturations(double O2PartialPressu
   double alphaCO20 = fact * 30.7; // solubility of CO2 in water at 37 C; M / mmHg
   double O20 = alphaO20 * pO20; // standard O2 concentration in RBCs; M
   double CO20 = alphaCO20 * pCO20; // standard CO2 concentration in RBCs; M
-  double Hp0 = pow(10, (-pH0)); // standard H + concentration in RBCs; M
+  double Hp0 = std::pow(10, (-pH0)); // standard H + concentration in RBCs; M
   double pHpl0 = pH0 - log10(Rrbc); // standard pH in plasma; unitless
   double P500 = 26.8 - 20 * CO_sat; // standard pO2 at 50% SHbO2; mmHg
   double C500 = alphaO20 * P500; // standard O2 concentration at 50 % SHbO2; M
@@ -944,11 +944,11 @@ void SaturationCalculator::CalculateHemoglobinSaturations(double O2PartialPressu
   double alphaO2 = fact * (1.37 - 0.0137 * Tempdiff + 0.00058 * Tempdiff * Tempdiff);
   double alphaCO2 = fact * (30.7 - 0.57 * Tempdiff + 0.02 * Tempdiff * Tempdiff);
   double pK1 = 6.091 - 0.0434 * pHpldiff + 0.0014 * Tempdiff * pHpldiff;
-  double K1 = pow(10, -pK1);
+  double K1 = std::pow(10, -pK1);
   double O2 = alphaO2 * O2PartialPressureGuess_mmHg;
   double CO2 = alphaCO2 * CO2PartialPressureGuess_mmHg;
-  double Hp = pow(10, -pH);
-  double Hppl = pow(10, -pHpl);
+  double Hp = std::pow(10, -pH);
+  double Hppl = std::pow(10, -pHpl);
 
   double Term1 = K2p * (1 + K2dp / Hp);
   double Term2 = K3p * (1 + K3dp / Hp);
@@ -961,8 +961,8 @@ void SaturationCalculator::CalculateHemoglobinSaturations(double O2PartialPressu
   double Kratio10 = (Term10 * CO20 + Term30) / (Term20 * CO20 + Term40);
   double Kratio11 = (Term1 * CO20 + Term3) / (Term2 * CO20 + Term4);
   double Kratio12 = (Term10 * alphaCO20 * CO2PartialPressureGuess_mmHg + Term30) / (Term20 * alphaCO20 * CO2PartialPressureGuess_mmHg + Term40);
-  double K4dp = Kratio10 * pow(O20, n0) / pow(C500, nhill);
-  double K4tp = K4dp / pow(O20, n0);
+  double K4dp = Kratio10 * std::pow(O20, n0) / std::pow(C500, nhill);
+  double K4tp = K4dp / std::pow(O20, n0);
   double Kratio20 = Kratio10 / K4tp; // = C500^nhill
   double Kratio21 = Kratio11 / K4tp;
   double Kratio22 = Kratio12 / K4tp;
@@ -997,9 +997,9 @@ void SaturationCalculator::CalculateHemoglobinSaturations(double O2PartialPressu
     n4 = (log10(Kratio20) - nhill * log10(C504)) / (log10(Temp0) - log10(temperature_C));
   }
 
-  double Term5 = pow((Hp0 / Hp), n1) * pow((CO20 / CO2), n2) * pow((DPG0 / DPG), n3) * pow((Temp0 / temperature_C), n4);
+  double Term5 = std::pow((Hp0 / Hp), n1) * std::pow((CO20 / CO2), n2) * std::pow((DPG0 / DPG), n3) * std::pow((Temp0 / temperature_C), n4);
 
-  double K4p = K4dp * pow((O2 / O20), n0) * Term5;
+  double K4p = K4dp * std::pow((O2 / O20), n0) * Term5;
   double KHbO2 = K4p * (Term2 * CO2 + Term4) / (Term1 * CO2 + Term3);
   double KHbCO2 = (Term1 + Term2 * K4p * O2) / (Term3 + Term4 * K4p * O2);
 
@@ -1098,4 +1098,5 @@ bool SaturationCalculator::DistributeHemoglobinBySaturation()
   m_subHbO2CO2Q->Balance(BalanceLiquidBy::Molarity);
 
   return true;
+}
 }

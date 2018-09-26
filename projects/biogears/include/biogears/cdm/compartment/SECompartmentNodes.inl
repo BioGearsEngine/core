@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
 #include <biogears/cdm/properties/SEScalar.h>
 
-
+namespace biogears {
 template <COMPARTMENT_NODE_TEMPLATE>
 SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SECompartmentNodes(Logger* logger)
   : Loggable(logger)
@@ -154,4 +154,5 @@ void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::StateChange()
   m_QuantityNodes.clear();
   for (NodeType* node : m_AllNodes)
     SortNode(*node);
+}
 }

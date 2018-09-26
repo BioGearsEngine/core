@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+namespace biogears {
 class SEScalar0To1;
 
 class BIOGEARS_API SEChronicObstructivePulmonaryDisease : public SEPatientCondition {
@@ -49,3 +50,4 @@ protected:
   SEScalar0To1* m_BronchitisSeverity;
   SEScalar0To1* m_EmphysemaSeverity;
 };
+}

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/FileUtils.h>
 #include <dirent.h>
 
+namespace biogears {
 std::string Replace(const std::string& original, const std::string& replace, const std::string& withThis)
 {
   size_t idx = 0;
@@ -68,7 +69,7 @@ bool CreateFilePath(const std::string& path)
 void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask)
 {
   DIR* d;
-  struct dirent* ent;
+  dirent* ent;
   std::string filename;
   if ((d = opendir(dir.c_str())) != nullptr) {
     while ((ent = readdir(d)) != nullptr) {
@@ -93,7 +94,7 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
 void DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories)
 {
   DIR* d;
-  struct dirent* ent;
+  dirent* ent;
   std::string filename;
   if ((d = opendir(dir.c_str())) != nullptr) {
     while ((ent = readdir(d)) != nullptr) {
@@ -135,7 +136,7 @@ ScopedFileSystemLock::~ScopedFileSystemLock()
   g_fileSystemMutex.unlock();
 }
 
-bool IsDirectory(struct dirent* ent)
+bool IsDirectory(struct ::dirent* ent)
 {
 #if defined(__MINGW64_VERSION_MAJOR) || defined(__gnu_linux__)
   struct stat info;
@@ -146,4 +147,5 @@ bool IsDirectory(struct dirent* ent)
 #else
   return ent->d_type == DT_DIR;
 #endif
+}
 }

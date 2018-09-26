@@ -42,6 +42,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
+
 BioGears::BioGears(const std::string& logFileName)
   : BioGears(new Logger(logFileName))
 {
@@ -331,13 +333,13 @@ bool BioGears::SetupPatient()
   double BMIUnderweight_kg_per_m2 = 18.5;
   double BMISeverelyUnderweight_kg_per_m2 = 16.0;
   if (!m_Patient->HasWeight()) {
-    weight_kg = BMIStandard_kg_per_m2 * pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
+    weight_kg = BMIStandard_kg_per_m2 * std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
     m_Patient->GetWeight().SetValue(weight_kg, MassUnit::kg);
     ss << "No patient weight set. Using the standard BMI value of 21.75 kg/m^2, resulting in a weight of " << weight_kg << " kg.";
     Info(ss);
   }
   weight_kg = m_Patient->GetWeight(MassUnit::kg);
-  BMI_kg_per_m2 = weight_kg / pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
+  BMI_kg_per_m2 = weight_kg / std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
   if (BMI_kg_per_m2 > BMIObese_kg_per_m2) {
     ss << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << "  kg/m^2 is too high. Obese patients must be modeled by adding/using a condition. Maximum BMI allowed is " << BMIObese_kg_per_m2 << " kg/m^2.";
     Error(ss);
@@ -560,7 +562,7 @@ bool BioGears::SetupPatient()
   //Blood Volume ---------------------------------------------------------------
   /// \cite Morgan2006Clinical
   double bloodVolume_mL;
-  double computedBloodVolume_mL = 65.6 * pow(weight_kg, 1.02);
+  double computedBloodVolume_mL = 65.6 * std::pow(weight_kg, 1.02);
   double bloodVolumeMin_mL = computedBloodVolume_mL * 0.85; //Stage 1 Hypovolemia
   double bloodVolumeMax_mL = computedBloodVolume_mL * 1.15; //Just go the same distance on the other side
   if (!m_Patient->HasBloodVolumeBaseline()) {
@@ -760,7 +762,7 @@ bool BioGears::SetupPatient()
   //Skin Surface Area ---------------------------------------------------------------
   /// \cite du1989formula
   double skinSurfaceArea_m2;
-  double computSkinSurfaceArea_m2 = 0.20247 * pow(weight_kg, 0.425) * pow(Convert(height_cm, LengthUnit::cm, LengthUnit::m), 0.725);
+  double computSkinSurfaceArea_m2 = 0.20247 * std::pow(weight_kg, 0.425) * std::pow(Convert(height_cm, LengthUnit::cm, LengthUnit::m), 0.725);
   if (!m_Patient->HasSkinSurfaceArea()) {
     skinSurfaceArea_m2 = computSkinSurfaceArea_m2;
     m_Patient->GetSkinSurfaceArea().SetValue(skinSurfaceArea_m2, AreaUnit::m2);
@@ -2962,7 +2964,7 @@ void BioGears::SetupTissue()
     standardPatientWeight_lb = 130.0;
     standardPatientHeight_in = 64.0;
   }
-  double typicalSkinSurfaceArea_m2 = 0.20247 * pow(Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg), 0.425) * pow(Convert(standardPatientHeight_in, LengthUnit::in, LengthUnit::m), 0.725);
+  double typicalSkinSurfaceArea_m2 = 0.20247 * std::pow(Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg), 0.425) * std::pow(Convert(standardPatientHeight_in, LengthUnit::in, LengthUnit::m), 0.725);
   double patientSkinArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
   SkinTissueMass = SkinTissueMass * patientSkinArea_m2 / typicalSkinSurfaceArea_m2;
 
@@ -3024,8 +3026,8 @@ void BioGears::SetupTissue()
   double albuminExtracell_g_Per_dL = 2.0;
   double totalPlasamaProtein_g_Per_dL = 1.6 * albuminVascular_g_Per_dL; //Relationship between albumin and total plasma protein
   double totalInterstitialProtein_g_Per_dL = 1.6 * albuminExtracell_g_Per_dL;
-  double copVascular_mmHg = 2.1 * totalPlasamaProtein_g_Per_dL + 0.16 * pow(totalPlasamaProtein_g_Per_dL, 2) + 0.009 * pow(totalPlasamaProtein_g_Per_dL, 3); //Use Landis-Pappenheimer equation to get plasma colloid oncotic pressure
-  double copExtracell_mmHg = 2.1 * totalInterstitialProtein_g_Per_dL + 0.16 * pow(totalInterstitialProtein_g_Per_dL, 2) + 0.009 * pow(totalInterstitialProtein_g_Per_dL, 3); //If we assume only albumin leaks across membrame, use relationshp for albumin colloid pressure from Mazzoni1988Dynamic
+  double copVascular_mmHg = 2.1 * totalPlasamaProtein_g_Per_dL + 0.16 * std::pow(totalPlasamaProtein_g_Per_dL, 2) + 0.009 * std::pow(totalPlasamaProtein_g_Per_dL, 3); //Use Landis-Pappenheimer equation to get plasma colloid oncotic pressure
+  double copExtracell_mmHg = 2.1 * totalInterstitialProtein_g_Per_dL + 0.16 * std::pow(totalInterstitialProtein_g_Per_dL, 2) + 0.009 * std::pow(totalInterstitialProtein_g_Per_dL, 3); //If we assume only albumin leaks across membrame, use relationshp for albumin colloid pressure from Mazzoni1988Dynamic
   double capillaryConductivity_mL_Per_s_mmHg_kg = 0.1 / 60.0; //Carlson1996Impairment--defined "per kg" body weight but assuming here extendable to "kg tissue"
   //The value above is useful if you assume that whatever excess fluid leaks into interstitium is filtered by lymph.
   //However, the lymph is not being used so this scaling factor will slow flows down a little too much.
@@ -4844,4 +4846,5 @@ void BioGears::SetupInternalTemperature()
   InternalCoreToGround.MapPath(CoreToTemperatureGround);
   SEThermalCompartmentLink& InternalSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalCore, BGE::TemperatureLink::InternalSkinToGround);
   InternalSkinToGround.MapPath(SkinToTemperatureGround);
+}
 }

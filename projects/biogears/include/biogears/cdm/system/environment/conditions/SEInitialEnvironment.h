@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEInitialEnvironment : public SEEnvironmentCondition {
 public:
   SEInitialEnvironment(SESubstanceManager& substances);
@@ -49,3 +50,4 @@ protected:
   std::string m_ConditionsFile;
   SEEnvironmentalConditions* m_Conditions;
 };
+}

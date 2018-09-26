@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEAppliedTemperature::SEAppliedTemperature(Logger* logger)
   : Loggable(logger)
 {
@@ -152,4 +153,5 @@ void SEAppliedTemperature::ToString(std::ostream& str) const
   HasSurfaceAreaFraction() ? str << *m_SurfaceAreaFraction : str << "NaN";
   str << "\n\tState :" << m_State;
   str << std::flush;
+}
 }

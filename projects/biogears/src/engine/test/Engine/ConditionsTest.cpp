@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
+namespace biogears {
 void BioGearsEngineTest::ConditionCombinations(const std::string& rptDirectory)
 {
   Logger log("ConditionsPermutationsReport.log");
@@ -65,4 +66,5 @@ void BioGearsEngineTest::ConditionCombinations(const std::string& rptDirectory)
   }
   testReport.WriteFile("ConditionsPermutationsReport.xml");
   DELETE_VECTOR(testConditions);
+}
 }

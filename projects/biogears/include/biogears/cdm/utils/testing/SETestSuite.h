@@ -12,9 +12,11 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/utils/testing/SETestCase.h>
-class SETestReport;
 
 CDM_BIND_DECL(TestSuite)
+
+namespace biogears{
+class SETestReport;
 class BIOGEARS_API SETestSuite : public Loggable {
   friend SETestReport;
 
@@ -59,3 +61,4 @@ protected:
   std::vector<SETestCase*> m_TestCase;
   mutable SEScalarTime m_Time;
 };
+}

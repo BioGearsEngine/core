@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
+namespace biogears {
 class SEScalar0To1;
-
 
 class BIOGEARS_API SESodaLimeFailure : public SEAnesthesiaMachineAction {
 public:
@@ -41,3 +41,4 @@ public:
 protected:
   SEScalar0To1* m_Severity;
 };
+}

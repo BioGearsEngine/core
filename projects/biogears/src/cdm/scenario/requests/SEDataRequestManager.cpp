@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-
+namespace biogears {
 SEDataRequestManager::SEDataRequestManager(Logger* logger)
   : Loggable(logger)
 {
@@ -225,4 +225,5 @@ SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& dat
   if (substances.GetLogger() != nullptr)
     substances.GetLogger()->Error("Unsupported DataRequest Received", "SEDataRequest::newFromBind");
   return nullptr;
+}
 }

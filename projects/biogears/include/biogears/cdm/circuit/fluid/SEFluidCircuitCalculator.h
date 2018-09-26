@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-//CDM_BIND_DECL(FluidCircuitData)
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 
@@ -22,9 +21,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
+namespace biogears {
 class BIOGEARS_API SEFluidCircuitCalculator : public SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit> {
 public:
   SEFluidCircuitCalculator(Logger* logger);
   SEFluidCircuitCalculator(const FlowComplianceUnit&, const VolumePerTimeUnit&, const FlowInertanceUnit&, const PressureUnit&, const VolumeUnit&, const FlowResistanceUnit&, Logger* logger);
   virtual ~SEFluidCircuitCalculator();
 };
+}

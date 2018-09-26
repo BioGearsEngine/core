@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/Logger.h>
 
+namespace biogears {
 SEFunctionElectricPotentialVsTime::SEFunctionElectricPotentialVsTime()
   : SEFunction()
 {
@@ -155,4 +156,5 @@ SEFunctionElectricPotentialVsTime* SEFunctionElectricPotentialVsTime::Interpolat
   if (!newFunction->IsValid())
     throw new CommonDataModelException("Could not Interpolate to provided time");
   return newFunction;
+}
 }

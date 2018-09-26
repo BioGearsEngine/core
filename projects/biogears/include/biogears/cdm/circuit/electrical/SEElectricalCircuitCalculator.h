@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-//CDM_BIND_DECL(ElectricalCircuitData)
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 
@@ -22,9 +21,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 
+namespace biogears {
 class BIOGEARS_API SEElectricalCircuitCalculator : public SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit> {
 public:
   SEElectricalCircuitCalculator(Logger* logger);
   SEElectricalCircuitCalculator(const ElectricCapacitanceUnit&, const ElectricCurrentUnit&, const ElectricInductanceUnit&, const ElectricPotentialUnit&, const ElectricChargeUnit&, const ElectricResistanceUnit&, Logger* logger);
   virtual ~SEElectricalCircuitCalculator();
 };
+}

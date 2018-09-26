@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Environment.hxx>
 
+namespace biogears {
 SEEquipmentDataRequest::SEEquipmentDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
 {
@@ -66,4 +67,5 @@ void SEEquipmentDataRequest::SetType(const std::string& Type)
 void SEEquipmentDataRequest::InvalidateType()
 {
   m_Type = "";
+}
 }

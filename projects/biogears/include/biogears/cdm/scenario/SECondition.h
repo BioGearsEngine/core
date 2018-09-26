@@ -14,9 +14,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+CDM_BIND_DECL(ConditionData);
+
+namespace biogears {
 class SESubstanceManager;
 
-CDM_BIND_DECL(ConditionData);
 class BIOGEARS_API SECondition : public Loggable {
 public:
   SECondition();
@@ -53,4 +55,5 @@ inline std::ostream& operator<<(std::ostream& out, const SECondition& a)
 {
   a.ToString(out);
   return out;
+}
 }

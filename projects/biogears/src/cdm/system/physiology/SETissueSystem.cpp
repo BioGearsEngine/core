@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-
+namespace biogears {
 SETissueSystem::SETissueSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -535,4 +535,5 @@ double SETissueSystem::GetStoredFat(const MassUnit& unit) const
   if (m_StoredFat == nullptr)
     return SEScalar::dNaN();
   return m_StoredFat->GetValue(unit);
+}
 }

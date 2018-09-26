@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-
+namespace biogears {
 SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger)
   : Loggable(logger)
 {
@@ -89,4 +89,5 @@ void SEAnesthesiaMachineOxygenBottle::ToString(std::ostream& str)
   else
     str << "\rVolume : NaN" << GetVolume();
   str << std::flush;
+}
 }

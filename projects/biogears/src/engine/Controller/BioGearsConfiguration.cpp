@@ -45,6 +45,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
+namespace biogears {
 BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   : PhysiologyEngineConfiguration(substances.GetLogger())
   , m_Substances(substances)
@@ -2444,4 +2445,5 @@ double BioGearsConfiguration::GetVentilationTidalVolumeIntercept(const VolumeUni
   if (m_VentilationTidalVolumeIntercept == nullptr)
     return SEScalar::dNaN();
   return m_VentilationTidalVolumeIntercept->GetValue(unit);
+}
 }

@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
-
+namespace biogears {
 unsigned long long int SEScalar::NaN = ((unsigned long long int)255 << (8 * 7)) + ((unsigned long long int)(255 - 8) << (8 * 6)) + ((unsigned long long int)255 << (8 * 5)) + ((unsigned long long int)255 << (8 * 4)) + ((unsigned long long int)255 << (8 * 3)) + (255 << (8 * 2)) + (255 << (8 * 1)) + 255;
 
 double SEScalar::dNaN()
@@ -304,4 +304,5 @@ bool CompatibleUnits(const CCompoundUnit& from, const CCompoundUnit& to)
   if (uce.GetQuantityConversionParams(from.GetDimension(), to.GetDimension(), fromExp, mappingUnit))
     return true;
   return false;
+}
 }

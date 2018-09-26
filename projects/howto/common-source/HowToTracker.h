@@ -20,9 +20,9 @@ class HowToTracker
 {
 private:
   double m_dT_s;  // Cached Engine Time Step
-  PhysiologyEngine& m_Engine;
+  biogears::PhysiologyEngine& m_Engine;
 public:
-  HowToTracker(PhysiologyEngine& engine);
+  HowToTracker(biogears::PhysiologyEngine& engine);
    ~HowToTracker();
 
   // This class will operate on seconds

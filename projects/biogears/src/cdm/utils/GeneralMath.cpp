@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 double GeneralMath::AntoineEquation(double dTemperature_C)
 {
   double dA = 0.0;
@@ -48,7 +49,7 @@ double GeneralMath::AntoineEquation(double dTemperature_C)
       dB = 1810.94;
       dC = 244.485;
     }
-    dWaterVaporPressureInAmbientAir_mmHg = pow(10.0, dA - (dB / (dC + dTemperature_C)));
+    dWaterVaporPressureInAmbientAir_mmHg = std::pow(10.0, dA - (dB / (dC + dTemperature_C)));
   }
 
   return dWaterVaporPressureInAmbientAir_mmHg;
@@ -227,7 +228,7 @@ void GeneralMath::CalculateWaterDensity(const SEScalarTemperature& temp, SEScala
   double D = .05107;
   double temp_K = temp.GetValue(TemperatureUnit::K);
 
-  double density_kg_Per_m3 = A / (pow(B, 1 + pow(1 - (temp_K / C), D)));
+  double density_kg_Per_m3 = A / (std::pow(B, 1 + std::pow(1 - (temp_K / C), D)));
 
   density.SetValue(density_kg_Per_m3, MassPerVolumeUnit::kg_Per_m3);
 }
@@ -363,7 +364,7 @@ double GeneralMath::ResistanceFunction(double dbase, double dmin, double dmax, d
 {
   double dy = SEScalar::dNaN(); // Resistance value
   if (dmin > 0.0 && dmax > 0.0 && dx >= 0.0 && dx <= 1.0) {
-    dy = pow(dbase, ((log10(dmin / dmax) * dx) + log10(dmax)));
+    dy = std::pow(dbase, ((std::log10(dmin / dmax) * dx) + std::log10(dmax)));
   }
   return dy;
 }
@@ -417,4 +418,5 @@ double GeneralMath::CalculateNernstPotential(SELiquidCompartment& extra, SELiqui
 
   double nernst_V = (gasConstant_J_Per_mol * coreTemp_K) / (faradaysConstant_C_Per_mol * z) * log(extraIon_M / intraIon_M);
   return nernst_V;
+}
 }

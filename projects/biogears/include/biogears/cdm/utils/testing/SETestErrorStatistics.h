@@ -16,11 +16,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+CDM_BIND_DECL(TestErrorStatisticsData)
+namespace biogears{
 class SETestCase;
 class SETestSuite;
 class SEFunction;
 
-CDM_BIND_DECL(TestErrorStatisticsData)
 // This data class is intended for use in array based data
 // Each value in the array is compared and can be tracked
 // and this provides a summary of how many values in the array
@@ -92,3 +93,4 @@ protected:
   SEFunction* m_PercentToleranceVsNumErrorsHistogram;
   std::vector<std::string> m_Differences;
 };
+}

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
+namespace biogears {
 const TemperatureUnit TemperatureUnit::F("degF");
 const TemperatureUnit TemperatureUnit::C("degC");
 const TemperatureUnit TemperatureUnit::K("K");
@@ -63,4 +64,5 @@ double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
   if (m_unit == &unit)
     return m_value;
   return Convert(m_value, *m_unit, unit);
+}
 }

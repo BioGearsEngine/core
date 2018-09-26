@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 //Project Includes
 #include <biogears/schema/cdm/Properties.hxx>
 
-
+namespace biogears {
 RunningAverage::RunningAverage()
 {
   Reset();
@@ -60,4 +60,5 @@ double RunningAverage::Sample(double d)
 double RunningAverage::Value()
 {
   return m_Sum / double(m_NumSamples);
+}
 }

@@ -14,13 +14,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
+
+CDM_BIND_DECL(AnesthesiaMachineOxygenBottleData)
+
+namespace biogears {
 class SEAnesthesiaMachine;
 class SESubstanceManager;
 class SEScalar;
 class SEScalarVolume;
 class VolumeUnit;
 
-CDM_BIND_DECL(AnesthesiaMachineOxygenBottleData)
 class BIOGEARS_API SEAnesthesiaMachineOxygenBottle : Loggable {
 protected:
   friend SEAnesthesiaMachine;
@@ -51,3 +54,4 @@ public:
 protected:
   SEScalarVolume* m_Volume;
 };
+}

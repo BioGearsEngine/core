@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 
+namespace biogears {
 class BIOGEARS_API SEAnesthesiaMachineActionCollection : public Loggable {
 public:
   SEAnesthesiaMachineActionCollection(SESubstanceManager&);
@@ -119,3 +120,4 @@ protected:
   SESubstanceManager& m_Substances;
   std::stringstream m_ss;
 };
+}

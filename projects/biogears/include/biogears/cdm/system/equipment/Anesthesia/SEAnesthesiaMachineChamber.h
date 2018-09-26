@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
+
+namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEAnesthesiaMachine;
@@ -66,3 +68,4 @@ protected:
 
   SESubstanceManager& m_Substances;
 };
+}

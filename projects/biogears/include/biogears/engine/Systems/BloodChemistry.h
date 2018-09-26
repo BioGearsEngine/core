@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
 class SELiquidCompartment;
@@ -112,3 +113,4 @@ protected:
 
   SEPatientActionCollection* m_PatientActions;
 };
+}

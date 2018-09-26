@@ -15,10 +15,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
+CDM_BIND_DECL(ElectroCardioGramWaveformInterpolatorData)
+
+namespace biogears {
 class SEElectroCardioGramInterpolatorWaveform;
 class SEScalarElectricPotential;
 
-CDM_BIND_DECL(ElectroCardioGramWaveformInterpolatorData)
 class BIOGEARS_API SEElectroCardioGramInterpolator : public Loggable {
 public:
   SEElectroCardioGramInterpolator(Logger* logger);
@@ -54,3 +56,4 @@ protected:
   std::map<CDM::ElectroCardioGramWaveformLeadNumber, SEScalarElectricPotential*> m_Leads;
   std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, SEElectroCardioGramInterpolatorWaveform*>> m_Waveforms;
 };
+}

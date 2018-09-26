@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SEBrainInjury::SEBrainInjury()
   : SEPatientAction()
 {
@@ -106,4 +107,5 @@ void SEBrainInjury::ToString(std::ostream& str) const
   str << "\n\tType: ";
   HasType() ? str << GetType() : str << "Not Set";
   str << std::flush;
+}
 }

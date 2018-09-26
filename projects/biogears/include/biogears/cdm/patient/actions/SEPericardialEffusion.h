@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class SEScalarVolumePerTime;
 
 class BIOGEARS_API SEPericardialEffusion : public SEPatientAction {
@@ -41,3 +42,4 @@ public:
 protected:
   SEScalarVolumePerTime* m_EffusionRate;
 };
+}

@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
+namespace biogears {
 double TotalHbMols(SELiquidCompartmentGraph& Graph, SESubstance& Hb, SESubstance& HbO2, SESubstance& HbO2CO2, SESubstance& HbCO2)
 {
   double Hb_g_Per_mol = Hb.GetMolarMass(MassPerAmountUnit::g_Per_mol);
@@ -502,4 +503,5 @@ void BioGearsEngineTest::AcidBaseFiveCompartmentTestWithProductionConsumptionAnd
 void BioGearsEngineTest::FiveCompartmentTestWithActiveDiffusion(const std::string& sOutputDirectory)
 {
   FourCompartmentTest(false, false, true, true, sOutputDirectory);
+}
 }

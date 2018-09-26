@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
@@ -33,3 +34,4 @@ public:
 protected:
   virtual void Unload(CDM::GasCompartmentDataRequestData& data) const;
 };
+}

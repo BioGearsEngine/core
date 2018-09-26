@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Substance.hxx>
 
 CDM_BIND_DECL(SubstancePharmacokineticsData)
+
+namespace biogears {
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
 public:
   SESubstancePharmacokinetics(Logger* logger);
@@ -50,3 +52,4 @@ protected:
   SESubstancePhysicochemicals* m_Physicochemicals;
   std::map<std::string, SESubstanceTissuePharmacokinetics*> m_TissueKinetics;
 };
+}

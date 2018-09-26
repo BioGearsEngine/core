@@ -13,9 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
-class SETestSuite;
-
 CDM_BIND_DECL(TestCase)
+
+namespace biogears{
+class SETestSuite;
 
 class BIOGEARS_API SETestCase : public Loggable {
   friend SETestSuite;
@@ -54,3 +55,4 @@ protected:
   std::vector<std::string> m_Failure;
   std::vector<SETestErrorStatistics*> m_CaseEqualsErrors;
 };
+}

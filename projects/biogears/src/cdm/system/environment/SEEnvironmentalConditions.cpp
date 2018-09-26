@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-
+namespace biogears {
 SEEnvironmentalConditions::SEEnvironmentalConditions(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -552,4 +552,5 @@ void SEEnvironmentalConditions::RemoveAmbientAerosols()
 {
   DELETE_VECTOR(m_AmbientAerosols);
   m_cAmbientAerosols.clear();
+}
 }

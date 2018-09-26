@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 class SECircuitManager;
 class BIOGEARS_API SEElectricalCircuitNode : public SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
@@ -55,3 +56,4 @@ public:
   virtual SEScalarElectricCharge& GetChargeBaseline();
   virtual double GetChargeBaseline(const ElectricChargeUnit& unit) const;
 };
+}

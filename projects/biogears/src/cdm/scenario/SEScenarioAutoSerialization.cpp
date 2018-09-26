@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+namespace biogears {
 SEScenarioAutoSerialization::SEScenarioAutoSerialization(Logger* logger)
   : Loggable(logger)
 {
@@ -191,4 +192,5 @@ bool SEScenarioAutoSerialization::HasFileName() const
 void SEScenarioAutoSerialization::InvalidateFileName()
 {
   m_FileName = "";
+}
 }

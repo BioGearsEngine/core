@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/TestReport.hxx>
 
+namespace biogears {
 SETestSuite::SETestSuite(Logger* logger)
   : Loggable(logger)
 {
@@ -179,4 +180,5 @@ int SETestSuite::GetNumberOfTests() const
   }
 
   return count;
+}
 }

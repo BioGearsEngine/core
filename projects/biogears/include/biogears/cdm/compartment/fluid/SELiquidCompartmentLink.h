@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace biogears {
 class SELiquidCompartment;
 class SECompartmentManager;
 class SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment> {
@@ -31,3 +32,4 @@ public:
 
   virtual CDM::LiquidCompartmentLinkData* Unload() override;
 };
+}

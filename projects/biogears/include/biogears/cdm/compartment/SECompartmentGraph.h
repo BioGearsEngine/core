@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <vector>
 
+namespace biogears {
+
 class Logger;
 
 #define COMPARTMENT_GRAPH_TEMPLATE typename CompartmentType, typename CompartmentLinkType
@@ -51,3 +53,4 @@ protected:
   std::vector<CompartmentType*> m_Compartments;
   std::vector<CompartmentLinkType*> m_CompartmentLinks;
 };
+}

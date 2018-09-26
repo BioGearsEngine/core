@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
+
+namespace biogears {
 /**
 * @brief 
 * Generic ECG machine to assess the heart rhythm.
@@ -65,3 +67,4 @@ protected:
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
 };
+}

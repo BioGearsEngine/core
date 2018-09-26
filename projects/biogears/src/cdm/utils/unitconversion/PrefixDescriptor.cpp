@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 /// @file PrefixDescriptor.cpp
 //----------------------------------------------------------------------------
 #include <biogears/cdm/utils/unitconversion/PrefixDescriptor.h>
-
+namespace biogears {
   CPrefixDescriptor::CPrefixDescriptor(std::string name, std::string sym, double scaleFac)
   : m_strName(name)
   , m_cSym(sym[0])
@@ -44,4 +44,5 @@ char CPrefixDescriptor::GetSymbol() const
 double CPrefixDescriptor::GetScaleFactor() const
 {
   return m_dScaleFac;
+}
 }

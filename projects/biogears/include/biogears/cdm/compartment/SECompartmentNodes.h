@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #define FLUID_COMPARTMENT_NODE SEFluidCircuitNode, SEScalarPressure, PressureUnit, SEScalarVolume, VolumeUnit
 #define THERMAL_COMPARTMENT_NODE SEThermalCircuitNode, SEScalarTemperature, TemperatureUnit, SEScalarEnergy, EnergyUnit
 
+namespace biogears {
 template <COMPARTMENT_NODE_TEMPLATE>
 class SECompartmentNodes : public Loggable {
 public:
@@ -54,4 +55,5 @@ protected:
   QuantityScalar* m_Quantity;
   PotentialScalar* m_Potential;
 };
+}
 #include <biogears/cdm/compartment/SECompartmentNodes.inl>

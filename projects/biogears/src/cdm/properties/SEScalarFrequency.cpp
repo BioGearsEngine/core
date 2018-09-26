@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 
+namespace biogears {
 const FrequencyUnit FrequencyUnit::Per_min("1/min");
 const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
@@ -47,4 +48,5 @@ const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Frequency unit";
   throw CommonDataModelException(err.str());
+}
 }

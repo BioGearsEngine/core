@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
+CDM_BIND_DECL(SubstanceClearanceData)
+
+namespace biogears {
 class SEScalar;
 class SEScalarVolumePerTimeMass;
 class VolumePerTimeMassUnit;
@@ -25,7 +28,6 @@ class SESubstanceClearanceAnatomyEffect;
 class SEScalarVolumePerTimeMass;
 class SEScalarFraction;
 
-CDM_BIND_DECL(SubstanceClearanceData)
 
 enum class RenalDynamic { Clearance,
   Regulation };
@@ -129,3 +131,4 @@ protected:
   SEScalar* m_GlomerularFilterability;
   SEScalarVolumePerTimeMass* m_SystemicClearance;
 };
+}

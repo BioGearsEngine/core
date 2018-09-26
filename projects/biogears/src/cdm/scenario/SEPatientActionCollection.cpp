@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
+namespace biogears {
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -1013,4 +1014,5 @@ SEUrinate* SEPatientActionCollection::GetUrinate() const
 void SEPatientActionCollection::RemoveUrinate()
 {
   SAFE_DELETE(m_Urinate);
+}
 }

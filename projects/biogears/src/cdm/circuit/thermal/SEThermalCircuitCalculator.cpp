@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitCalculator.h>
 
+namespace biogears {
 SEThermalCircuitCalculator::SEThermalCircuitCalculator(Logger* logger)
   : SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit>(
       HeatCapacitanceUnit::J_Per_K, PowerUnit::W, HeatInductanceUnit::K_s_Per_W, TemperatureUnit::K, EnergyUnit::J, HeatResistanceUnit::K_Per_W, logger)
@@ -23,4 +24,5 @@ SEThermalCircuitCalculator::SEThermalCircuitCalculator(const HeatCapacitanceUnit
 }
 SEThermalCircuitCalculator::~SEThermalCircuitCalculator()
 {
+}
 }

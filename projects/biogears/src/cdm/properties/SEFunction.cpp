@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
+namespace biogears {
 static std::stringstream err;
 
 SEFunction::SEFunction()
@@ -105,4 +106,5 @@ double SEFunction::GetIndependentValue(unsigned int index)
 std::vector<double>& SEFunction::GetIndependent()
 {
   return m_Independent;
+}
 }

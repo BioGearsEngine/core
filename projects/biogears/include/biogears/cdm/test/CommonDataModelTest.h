@@ -15,6 +15,7 @@
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
+namespace biogears {
 class SECompartmentManager;
 
 enum enumCDMTestSourceType { DC,
@@ -446,3 +447,4 @@ protected:
   // just a sandbox at this point Maybe one day I will set something up, but
   // these are generally not a problem (no jinx!)
 };
+}

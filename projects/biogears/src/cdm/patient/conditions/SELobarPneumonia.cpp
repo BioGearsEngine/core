@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-
+namespace biogears {
 SELobarPneumonia::SELobarPneumonia()
   : SEPatientCondition()
 {
@@ -112,4 +112,5 @@ void SELobarPneumonia::ToString(std::ostream& str) const
   str << "\n\tRightLungAffected: ";
   HasRightLungAffected() ? str << *m_RightLungAffected : str << "NaN";
   str << std::flush;
+}
 }

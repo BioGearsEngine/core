@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-//CDM_BIND_DECL(ThermalCircuitData)
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 
@@ -22,9 +21,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
+namespace biogears {
 class BIOGEARS_API SEThermalCircuitCalculator : public SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit> {
 public:
   SEThermalCircuitCalculator(Logger* logger);
   SEThermalCircuitCalculator(const HeatCapacitanceUnit&, const PowerUnit&, const HeatInductanceUnit&, const TemperatureUnit&, const EnergyUnit&, const HeatResistanceUnit&, Logger* logger);
   virtual ~SEThermalCircuitCalculator();
 };
+}

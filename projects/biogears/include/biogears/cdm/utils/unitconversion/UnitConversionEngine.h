@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/UnitDescriptor.h>
 #include <biogears/cdm/utils/unitconversion/UnitDimension.h>
 
+namespace biogears {
 class BIOGEARS_API CUnitConversionEngine {
 private:
   static CUnitConversionEngine* uce;
@@ -197,3 +198,4 @@ private:
 
   std::string m_wrkDir; // I made this static and accessable for another project, so this is legacy and could be removed if causing issues
 };
+}

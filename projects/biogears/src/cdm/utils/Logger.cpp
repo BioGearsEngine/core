@@ -23,6 +23,7 @@ governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+namespace biogears {
 const std::string Loggable::empty("");
 
 // logger constructor
@@ -326,7 +327,7 @@ void Loggable::Debug(const std::string& msg, const std::string& origin) const
     m_Logger->Debug(msg, origin);
   // Not writing out DEBUG to console, only to log
   // else// if(stdOut) TODO support
-  //	std::cout<<"DEBUG:"<<msg<<" : "<<origin<<std::endl;
+  //  std::cout<<"DEBUG:"<<msg<<" : "<<origin<<std::endl;
 }
 void Loggable::Debug(std::stringstream& msg, const std::string& origin) const
 {
@@ -339,4 +340,5 @@ void Loggable::Debug(std::ostream& msg, const std::string& origin) const
   std::stringstream ss;
   ss << msg.rdbuf();
   Debug(ss.str(), origin);
+}
 }

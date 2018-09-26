@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class SEScalarVolume;
 class SEScalarVolumePerTime;
 class SESubstanceCompound;
@@ -50,3 +51,4 @@ protected:
   SEScalarVolumePerTime* m_Rate;
   const SESubstanceCompound& m_Compound;
 };
+}

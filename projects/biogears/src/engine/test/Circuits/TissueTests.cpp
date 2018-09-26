@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/DataTrack.h>
 
+namespace biogears {
 void BioGearsEngineTest::DistributeMass(SETestSuite& testSuite)
 {
   TimingProfile timer;
@@ -545,12 +546,12 @@ void BioGearsEngineTest::SimpleDiffusionTwoCompartmentTest(const std::string& rp
   tissue.GetTotalMass().SetValue(500.0, MassUnit::g);
 
   double molarMass = o2->GetMolarMass().GetValue(MassPerAmountUnit::g_Per_mol);
-  double molecularRadius = 0.0348 * pow(molarMass, 0.4175);
+  double molecularRadius = 0.0348 * std::pow(molarMass, 0.4175);
   double permeabilityCoefficient_mL_Per_s_hg;
   if (molecularRadius > 1.0) {
-    permeabilityCoefficient_mL_Per_s_hg = 0.0287 * pow(molecularRadius, -2.920);
+    permeabilityCoefficient_mL_Per_s_hg = 0.0287 * std::pow(molecularRadius, -2.920);
   } else {
-    permeabilityCoefficient_mL_Per_s_hg = 0.0184 * pow(molecularRadius, -1.223);
+    permeabilityCoefficient_mL_Per_s_hg = 0.0184 * std::pow(molecularRadius, -1.223);
   }
 
   // The tissue mass baseline is a constant property of the tissue - values can be found in the ICRP and other sources
@@ -1032,7 +1033,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   double veinToHeartResistance = (veinsPressure_mmHg) / muscleFlow_mL_Per_s; //mmHg-s/mL --> assumes heart entry node is reference pressure
   double vascularToExtraResistance = 30.0; //mmHg-s/mL calculated from hydraulic conductivity in Gyenge1998Transport
 
-  double capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
+  double capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * std::pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
   double interstitialCOP_mmHg = 1.75 * Alb_Extra_g_Per_dL; //Mazzoni1988Dynamic
   double e1NodePressure = muscleVascularPressure_mmHg - capillaryCOP_mmHg; //We're assuming the pressure drop across the resistor between Ex1 and Ex2 is very small
   double e2NodePressure = e1NodePressure - lymphFlowBaseline_mL_Per_s * vascularToExtraResistance; //Using lymph flow baseline because it should be in steady state with what's going in to interstitial space
@@ -1374,7 +1375,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
       //Calculate next osmotic pressure gradient
       Alb_Vasc_g_Per_dL = cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
       Alb_Extra_g_Per_dL = cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-      capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
+      capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * std::pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
       interstitialCOP_mmHg = 1.5 * Alb_Extra_g_Per_dL; //Mazzoni1988Dynamic
       pPlasmaCOP.GetNextPressureSource().SetValue(capillaryCOP_mmHg, PressureUnit::mmHg);
       pInterstitialCOP.GetNextPressureSource().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
@@ -1489,7 +1490,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
       //Calculate next osmotic pressure gradient
       Alb_Vasc_g_Per_dL = cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
       Alb_Extra_g_Per_dL = cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-      capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
+      capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * std::pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
       interstitialCOP_mmHg = 1.5 * Alb_Extra_g_Per_dL; //Mazzoni1988Dynamic
       pPlasmaCOP.GetNextPressureSource().SetValue(capillaryCOP_mmHg, PressureUnit::mmHg);
       pInterstitialCOP.GetNextPressureSource().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
@@ -1553,4 +1554,5 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
     testTrk.WriteTrackToFile(testFile.c_str());
     break;
   }
+}
 }

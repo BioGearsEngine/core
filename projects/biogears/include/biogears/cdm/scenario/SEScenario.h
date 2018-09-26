@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+namespace biogears {
 class SESubstanceManager;
 class SEAction;
 class SEDataRequest;
@@ -81,3 +82,4 @@ protected:
   SEDataRequestManager m_DataRequestMgr;
   std::vector<SEAction*> m_Actions;
 };
+}

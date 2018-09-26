@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 #include <algorithm>
 
+namespace biogears {
 #define BLIM(input, min, max) (input = (input > max) ? max : ((input < min) ? min : input))
 #define LLIM(input, min) (input = (input < min) ? min : input)
 #define ULIM(input, max) (input = (input > max) ? max : input)
@@ -122,4 +123,5 @@ template <typename valueType>
 bool SameSign(valueType x, valueType y)
 {
   return (x >= 0) ^ (y < 0);
+}
 }

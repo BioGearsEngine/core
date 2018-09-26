@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
+
+namespace biogears {
 /**
 * @brief 
 * Generic inhaler for substance administration.
@@ -73,3 +75,4 @@ protected:
   SEGasCompartment* m_AmbientEnv;
   SELiquidSubstanceQuantity* m_InhalerDrug;
 };
+}

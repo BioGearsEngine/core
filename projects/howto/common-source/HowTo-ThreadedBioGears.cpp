@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
+using namespace biogears;
+
 void HowToThreadedBioGears()
 {
   // Create the engine and have it run in it's own thread

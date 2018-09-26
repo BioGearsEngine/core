@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 CommonDataModelTest::CommonDataModelTest()
   : Loggable(new Logger())
   , m_Circuits(m_Logger)
@@ -273,4 +274,5 @@ void CommonDataModelTest::TestCompartmentSerialization(SECompartmentManager& mgr
   } else {
     Error("Could not cast loaded Compartment Manager Data");
   }
+}
 }

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 
+namespace biogears {
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
@@ -42,4 +43,5 @@ const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const std::s
   std::stringstream err;
   err << unit << " is not a valid Electric Potential unit";
   throw CommonDataModelException(err.str());
+}
 }

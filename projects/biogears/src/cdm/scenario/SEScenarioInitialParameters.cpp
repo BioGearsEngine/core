@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+namespace biogears {
 SEScenarioInitialParameters::SEScenarioInitialParameters(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
   , m_SubMgr(subMgr)
@@ -165,4 +166,5 @@ void SEScenarioInitialParameters::AddCondition(const SECondition& c)
 const std::vector<SECondition*>& SEScenarioInitialParameters::GetConditions() const
 {
   return m_Conditions;
+}
 }

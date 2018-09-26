@@ -11,12 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-class BioGears;
 
 #include <biogears/cdm/circuit/SECircuitManager.h>
 
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
+class BioGears;
 /**
 * @brief Manages all circuits associated with all %BioGears systems/equipement
 */
@@ -79,15 +80,15 @@ protected:
   SEThermalCircuit* m_InternalTemperatureCircuit; // Attempt at circuit independence
   SEThermalCircuit* m_ExternalTemperatureCircuit; // Attempt at circuit independence
 };
-
+}
 ///////////////////////////////
 // Respiratory Circuit Enums //
 ///////////////////////////////
 
 namespace mil {
 namespace tatrc {
-  namespace physiology {
-    namespace biogears {
+namespace physiology {
+namespace biogears {
 
       class Circuits {
       public:
@@ -819,7 +820,7 @@ namespace tatrc {
       public:
         DEFINE_STATIC_STRING(GutChymeToSmallIntestineVascular);
       };
-    }
-  }
-}
-}
+} //namespace biogears
+} //namespace physiology
+} //namespace tatric
+} //namespace mil

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEConsumeNutrients : public SEPatientAction {
 public:
   SEConsumeNutrients();
@@ -49,3 +50,4 @@ protected:
   SENutrition* m_Nutrition;
   std::string m_NutritionFile;
 };
+}

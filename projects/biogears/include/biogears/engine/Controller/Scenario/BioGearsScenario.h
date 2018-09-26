@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioInitialParameters.h>
 
+namespace biogears {
 /**
 * @brief A BioGears specific scenario (i.e. holds a %BioGears configuration object)
 */
@@ -25,3 +26,4 @@ public:
   virtual BioGearsScenarioInitialParameters& GetInitialParameters();
   virtual const BioGearsScenarioInitialParameters* GetInitialParameters() const;
 };
+}

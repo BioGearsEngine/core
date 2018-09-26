@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
+namespace biogears {
 void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDynamicHormones, bool usingGlycogen, bool usingProteinStorage, bool usingFatStorage, bool fullStores, bool useDiffusion, bool useConsumption, bool usingLipogenesis, bool usingGluconeogenesis, bool isAnaerobic, double exerciseWork_W, const std::string& rptDirectory, double testDuration_hr, MealType mealType, std::string testName)
 {
   DataTrack trk;
@@ -971,11 +972,11 @@ void BioGearsEngineTest::NutrientDiffusion(std::vector<SELiquidCompartment*>& va
           // Divide by 100 is because the Renkin-Curry equations are in per hectogram units, and 100 g/hg
           /// \todo I believe we can optimize with a cache of these values. Also, we can cache permeabilityCoefficient_mL_Per_s_g which is not a function of the tissue properties
           double vToECpermeabilityCoefficient_mL_Per_s_g = 0;
-          double molecularRadius_nm = 0.0348 * pow(molarMass_g_Per_mol, 0.4175);
+          double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
           if (molecularRadius_nm < 1.0)
-            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * pow(molecularRadius_nm, -1.223) / 100.0;
+            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * std::pow(molecularRadius_nm, -1.223) / 100.0;
           else
-            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
+            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * std::pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
 
           // Multiply by tissue mass to get the tissue-dependent coefficient.
           double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissueTotalMasses.at(tissueIndex);
@@ -1460,4 +1461,5 @@ void BioGearsEngineTest::LipogenesisTest(const std::string& sOutputDirectory)
     MealType::Balanced, //meal type
     "LipogenesisTest" //test name
   );
+}
 }

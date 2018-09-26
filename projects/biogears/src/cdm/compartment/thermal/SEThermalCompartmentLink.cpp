@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 
+namespace biogears {
 SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const std::string& name)
   : SECompartmentLink(name, src.GetLogger())
   , m_SourceCmpt(src)
@@ -99,4 +100,5 @@ double SEThermalCompartmentLink::GetHeatTransferRate(const PowerUnit& unit) cons
   if (m_HeatTransferRate == nullptr)
     return SEScalar::dNaN();
   return m_HeatTransferRate->GetValue(unit);
+}
 }

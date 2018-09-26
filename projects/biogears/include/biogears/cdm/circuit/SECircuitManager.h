@@ -16,11 +16,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 
 #include <biogears/schema/cdm/Properties.hxx>
+
 CDM_BIND_DECL(CircuitManagerData);
 
 #define CIRCUIT_LEDGER_TEMPLATE typename NodeType, typename PathType, typename CircuitType
 #define CIRCUIT_LEDGER_TYPES NodeType, PathType, CircuitType
 
+namespace biogears {
 class SECircuitManager;
 template <CIRCUIT_LEDGER_TEMPLATE>
 class SECircuitLedger {
@@ -272,3 +274,4 @@ protected:
     return nullptr;
   }
 };
+}

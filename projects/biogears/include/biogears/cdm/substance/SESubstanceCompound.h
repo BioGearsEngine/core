@@ -15,10 +15,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
+namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SESubstanceConcentration;
-
 
 class BIOGEARS_API SESubstanceCompound : public Loggable {
 public:
@@ -53,3 +53,4 @@ protected:
   std::vector<SESubstanceConcentration*> m_Components;
   std::vector<const SESubstanceConcentration*> m_cComponents;
 };
+}

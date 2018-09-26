@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-
+namespace biogears {
 SEChronicAnemia::SEChronicAnemia()
   : SEPatientCondition()
 {
@@ -77,4 +77,5 @@ void SEChronicAnemia::ToString(std::ostream& str) const
   str << "\n\tReduction Factor: ";
   HasReductionFactor() ? str << m_ReductionFactor : str << "NaN";
   str << std::flush;
+}
 }

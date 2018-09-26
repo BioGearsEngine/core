@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 
+namespace biogears {
 class SEPatient;
 class SEPatientActionCollection;
 class SEEnvironmentActionCollection;
@@ -116,3 +117,4 @@ protected:
   SEThermalCircuitPath* m_EnvironmentSkinToGroundPath;
   SEThermalCircuitPath* m_EnvironmentCoreToGroundPath;
 };
+}

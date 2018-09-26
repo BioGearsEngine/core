@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <string>
 
+namespace biogears {
 class CCompoundUnit;
 class CUnitDimension;
 
@@ -90,3 +91,4 @@ private:
   CUnitDimension* m_CUD;
   bool m_bTwentyLogRule;
 };
+}

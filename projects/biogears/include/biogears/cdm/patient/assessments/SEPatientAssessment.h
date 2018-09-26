@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(PatientAssessmentData)
+namespace biogears {
 /**
  * @brief
  * Data formed at a level of a clinicians report. 
@@ -37,3 +38,4 @@ protected:
 
 public:
 };
+}

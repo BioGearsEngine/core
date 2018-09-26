@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
+namespace biogears {
 const VolumeUnit VolumeUnit::L("L");
 const VolumeUnit VolumeUnit::dL("dL");
 const VolumeUnit VolumeUnit::mL("mL");
@@ -57,4 +58,5 @@ const VolumeUnit& VolumeUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Volume unit";
   throw CommonDataModelException(err.str());
+}
 }

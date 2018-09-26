@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/engine/Controller/BioGearsConfiguration.h>
+
+namespace biogears {
 class BioGearsScenario;
 
 /**
@@ -32,3 +34,4 @@ protected:
 
 protected:
 };
+}

@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include "controller/BioGears.h"
 #include "stdafx.h"
 
+namespace biogears {
 BioGearsInterCircuitConnections::BioGearsInterCircuitConnections(BioGears& bg)
   : SECircuitContainer(bg.GetLogger())
 {
@@ -65,4 +66,5 @@ bool BioGearsInterCircuitConnections::LoadInterCircuitConnections(const std::str
   m_RespiratoryAnesthesiaMachineInterCircuitConnection->SetActive(false);
 
   return true;
+}
 }

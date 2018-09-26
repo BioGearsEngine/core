@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+namespace biogears {
 BioGearsEngineTest::BioGearsEngineTest()
   : Loggable(new Logger())
 {
@@ -242,4 +243,5 @@ void BioGearsEngineTest::FillFunctionMap()
     &BioGearsEngineTest::FullStoresFastingTest));
   bgeMap.insert(
     std::make_pair("LipogenesisTest", &BioGearsEngineTest::LipogenesisTest));
+}
 }

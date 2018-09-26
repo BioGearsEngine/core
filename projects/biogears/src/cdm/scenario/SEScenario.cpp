@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
+namespace biogears {
 SEScenario::SEScenario(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
   , m_SubMgr(subMgr)
@@ -219,4 +220,5 @@ void SEScenario::AddAction(const SEAction& a)
 const std::vector<SEAction*>& SEScenario::GetActions() const
 {
   return m_Actions;
+}
 }

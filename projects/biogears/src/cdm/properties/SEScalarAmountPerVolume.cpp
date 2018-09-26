@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
+namespace biogears {
 AmountPerVolumeUnit AmountPerVolumeUnit::mol_Per_L("mol/L");
 AmountPerVolumeUnit AmountPerVolumeUnit::mol_Per_mL("mol/mL");
 AmountPerVolumeUnit AmountPerVolumeUnit::mmol_Per_L("mmol/L");
@@ -61,4 +62,5 @@ const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const std::strin
   std::stringstream err;
   err << unit << " is not a valid AmountPerVolume unit";
   throw CommonDataModelException(err.str());
+}
 }

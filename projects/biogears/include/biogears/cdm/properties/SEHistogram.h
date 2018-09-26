@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(HistogramData)
 
+namespace biogears {
 class BIOGEARS_API SEHistogram : public SEProperty {
 public:
   SEHistogram();
@@ -48,3 +49,4 @@ protected:
   std::vector<double> m_Dependent;
   std::vector<double> m_Independent;
 };
+}

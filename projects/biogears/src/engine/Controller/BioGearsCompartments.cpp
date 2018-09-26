@@ -44,6 +44,7 @@ std::vector<std::string> BGE::InhalerLink::_values;
 std::vector<std::string> BGE::MechanicalVentilatorCompartment::_values;
 std::vector<std::string> BGE::MechanicalVentilatorLink::_values;
 
+namespace biogears {
 BioGearsCompartments::BioGearsCompartments(BioGears& bg)
   : SECompartmentManager(bg.GetSubstances())
   , m_data(bg)
@@ -384,4 +385,5 @@ SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndMechanicalVentilat
   if (m_CombinedRespiratoryMechanicalVentilatorGraph == nullptr)
     m_CombinedRespiratoryMechanicalVentilatorGraph = &CreateGasGraph(BGE::Graph::RespiratoryAndMechanicalVentilator);
   return *m_CombinedRespiratoryMechanicalVentilatorGraph;
+}
 }

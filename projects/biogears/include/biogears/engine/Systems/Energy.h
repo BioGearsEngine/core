@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class SEPatient;
 class SEPatientActionCollection;
 class SELiquidSubstanceQuantity;
@@ -107,3 +108,4 @@ private:
   SEThermalCircuit* m_TemperatureCircuit;
   SEThermalCircuitCalculator m_circuitCalculator;
 };
+}

@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
+namespace biogears {
 SEConsumeNutrients::SEConsumeNutrients()
   : SEPatientAction()
 {
@@ -134,4 +135,5 @@ void SEConsumeNutrients::ToString(std::ostream& str) const
     str << "\n\tNutrition File: ";
   str << m_NutritionFile;
   str << std::flush;
+}
 }

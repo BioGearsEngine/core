@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
+namespace biogears {
 void CommonDataModelTest::TissueCompartmentTest(const std::string& rptDirectory)
 {
   TimingProfile pTimer;
@@ -149,4 +150,5 @@ void CommonDataModelTest::TissueCompartmentTest(const std::string& rptDirectory)
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Serialization"), TimeUnit::s);
 
   testReport.WriteFile(rptDirectory + "/TissueCompartmentTestReport.xml");
+}
 }

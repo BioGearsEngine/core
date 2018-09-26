@@ -34,6 +34,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace biogears {
+
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string& logfile)
 {
   return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile));
@@ -780,4 +782,5 @@ const SEInhaler* BioGearsEngine::GetInhaler()
 const SECompartmentManager& BioGearsEngine::GetCompartments()
 {
   return BioGears::GetCompartments();
+}
 }

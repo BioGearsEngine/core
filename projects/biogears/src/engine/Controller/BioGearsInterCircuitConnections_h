@@ -15,6 +15,7 @@ class BioGears;
 #include "Serializer.h"
 #include "circuit/SECircuitContainer.h"
 
+namespace biogears {
 class BIOGEARS_API BioGearsInterCircuitConnections : public SECircuitContainer {
 public:
   BioGearsInterCircuitConnections(BioGears& data);
@@ -32,3 +33,4 @@ protected:
   BioGears* m_Data;
   SEInterCircuitConnection* m_RespiratoryAnesthesiaMachineInterCircuitConnection;
 };
+}

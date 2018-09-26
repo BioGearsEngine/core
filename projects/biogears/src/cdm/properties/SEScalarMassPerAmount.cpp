@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 
+namespace biogears {
 const MassPerAmountUnit MassPerAmountUnit::g_Per_ct("g/ct");
 const MassPerAmountUnit MassPerAmountUnit::g_Per_mol("g/mol");
 const MassPerAmountUnit MassPerAmountUnit::g_Per_mmol("g/mmol");
@@ -87,4 +88,5 @@ const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const std::string& u
   std::stringstream err;
   err << unit << " is not a valid MassPerAmount unit";
   throw CommonDataModelException(err.str());
+}
 }

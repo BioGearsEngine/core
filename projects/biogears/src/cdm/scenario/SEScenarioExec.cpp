@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+namespace biogears {
 SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
   , m_Engine(engine)
@@ -301,4 +302,5 @@ bool SEScenarioExec::ProcessActions(const SEScenario& scenario)
 bool SEScenarioExec::ProcessAction(const SEAction& action)
 {
   return m_Engine.ProcessAction(action);
+}
 }

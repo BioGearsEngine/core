@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
+namespace biogears {
 SECircuitManager::SECircuitManager(Logger* logger)
   : Loggable(logger)
 {
@@ -240,4 +241,5 @@ void SECircuitManager::SetReadOnlyThermal(bool b)
     if (pItr.second->HasPotentialSource())
       pItr.second->GetPotentialSource().SetReadOnly(b);
   }
+}
 }

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(CircuitData)
 
+namespace biogears {
 template <CIRCUIT_TEMPLATE>
 class SECircuit : public Loggable {
 public:
@@ -88,4 +89,5 @@ protected:
   std::vector<PathType*> m_PolarizedElementPaths;
   std::map<const NodeType*, size_t> m_CalculatorIndex; // A unique id (starting at 0) for all nodes except the reference node
 };
+}
 #include <biogears/cdm/circuit/SECircuit.inl>

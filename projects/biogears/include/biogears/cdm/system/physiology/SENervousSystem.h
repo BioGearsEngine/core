@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class BIOGEARS_API SENervousSystem : public SESystem {
 public:
   SENervousSystem(Logger* logger);
@@ -83,3 +84,4 @@ protected:
   SEScalar* m_ChemoreceptorHeartRateScale;
   SEScalar* m_ChemoreceptorHeartElastanceScale;
 };
+}

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace biogears {
 bool SELiquidCompartmentGraph::Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
   m_Name = in.Name();
@@ -67,4 +68,5 @@ void SELiquidCompartmentGraph::AddGraph(SELiquidCompartmentGraph& graph)
     AddCompartment(*cmpt);
   for (SELiquidCompartmentLink* lnk : graph.GetLinks())
     AddLink(*lnk);
+}
 }

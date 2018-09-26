@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
+namespace biogears {
 class SEPatient;
 class SERenalSystem;
 class SEAnatomy;
@@ -108,3 +109,4 @@ protected:
 
   SEUrinalysisMicroscopic* m_Microscopic;
 };
+}

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
 CDM_BIND_DECL(TestReportData)
-
+namespace biogears{
 class BIOGEARS_API SETestReport : public Loggable {
 public:
   SETestReport(Logger* logger);
@@ -38,3 +38,4 @@ public:
 protected:
   std::vector<SETestSuite*> m_testSuite;
 };
+}

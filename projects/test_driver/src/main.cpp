@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
 
+using namespace biogears;
+
 int main(int argc, char* argv[])
 {
 

@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 //Private Includes
 #include "UCEDefs.h"
+namespace biogears {
 CUnitConversionEngine* CUnitConversionEngine::uce = nullptr;
 
 class InitializeUnitConversionEngine {
@@ -226,8 +227,8 @@ void CUnitConversionEngine::LoadDefinitionsFlatFile()
       unsigned int qtID = GetQuantityTypeID(QuantName);
 
       //cerr << "Found unit name:" << UnitName << " symbol:" << UnitSymbol <<
-      //	" convfac:" << convFac << " target:" << TargetCompoundUnit << " prefix mode:" <<
-      //	PrefixModeStr << endl;
+      //  " convfac:" << convFac << " target:" << TargetCompoundUnit << " prefix mode:" <<
+      //  PrefixModeStr << endl;
 
       if (CIEQUAL(PrefixModeStr, std::string("NOPREFIXES"))) {
         PrefixMode = CUnitDescriptor::NONE;
@@ -385,7 +386,7 @@ double CUnitConversionEngine::QuickConvertValue(const double& value, const CComp
   rv = value;
   if (fromUnit.IsDecibel()) {
     double scalefac = fromUnit.GetDecibelLogScaleFactor();
-    rv = pow(10.0, rv / scalefac);
+    rv = std::pow(10.0, rv / scalefac);
   }
 
   rv -= fromUnit.GetBias();
@@ -451,8 +452,8 @@ double CUnitConversionEngine::ConvertQuantityType(const double& value, const CCo
   // QuickConvertValue.
   double mappedVal = value;
   mappedVal -= fromUnit.GetBias();
-  mappedVal = pow(mappedVal, fromExp);
-  mappingUnit *= pow(fromUnit, fromExp);
+  mappedVal = std::pow(mappedVal, fromExp);
+  mappingUnit *= biogears::pow(fromUnit, fromExp);
 
   // Sanity check
   if (*(mappingUnit.GetDimension()) != *toDim) {
@@ -576,7 +577,7 @@ bool CUnitConversionEngine::GetQuantityConversionParams(const CUnitDimension* fr
     // If:
     //     TO = M_unit * FROM^F_exp
     // then solving for FROM yields:
-    //	   FROM = M_unit^(-1/F_exp) * TO^(1/F_exp)
+    //     FROM = M_unit^(-1/F_exp) * TO^(1/F_exp)
 
     mappingUnit.Raise(-1.0 / fromExp);
     fromExp = 1.0 / fromExp;
@@ -652,4 +653,5 @@ CCompoundUnit* CUnitConversionEngine::GetCompoundUnit(const std::string& unitStr
 {
   // Caller is responsible for freeing.
   return new CCompoundUnit(unitString);
+}
 }

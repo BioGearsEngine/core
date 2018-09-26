@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 
+namespace biogears {
 const ElectricResistanceUnit ElectricResistanceUnit::Ohm("ohm");
 
 CDM::ScalarElectricResistanceData* SEScalarElectricResistance::Unload() const
@@ -37,4 +38,5 @@ const ElectricResistanceUnit& ElectricResistanceUnit::GetCompoundUnit(const std:
   std::stringstream err;
   err << unit << " is not a valid ElectricResistance unit";
   throw CommonDataModelException(err.str());
+}
 }

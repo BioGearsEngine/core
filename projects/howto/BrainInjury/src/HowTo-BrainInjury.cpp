@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 int GlasgowEstimator(double);
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for the Brain Injury Patient Insult

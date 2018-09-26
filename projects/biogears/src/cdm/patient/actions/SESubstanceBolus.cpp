@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SESubstanceBolus::SESubstanceBolus(const SESubstance& substance)
   : SESubstanceAdministration()
   , m_Substance(substance)
@@ -161,4 +162,5 @@ void SESubstanceBolusState::Unload(CDM::SubstanceBolusStateData& data) const
   data.Substance(m_substance.GetName());
   data.ElapsedTime(std::unique_ptr<CDM::ScalarTimeData>(m_elapsedTime.Unload()));
   data.AdministeredDose(std::unique_ptr<CDM::ScalarVolumeData>(m_administeredDose.Unload()));
+}
 }

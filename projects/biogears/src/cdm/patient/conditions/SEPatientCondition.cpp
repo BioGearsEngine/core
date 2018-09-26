@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 
+namespace biogears {
 SEPatientCondition::SEPatientCondition()
   : SECondition()
 {
@@ -40,4 +41,5 @@ bool SEPatientCondition::Load(const CDM::PatientConditionData& in)
 void SEPatientCondition::Unload(CDM::PatientConditionData& data) const
 {
   SECondition::Unload(data);
+}
 }

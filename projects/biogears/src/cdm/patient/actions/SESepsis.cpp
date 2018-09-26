@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 
+namespace biogears {
 SESepsis::SESepsis()
   : SEPatientAction()
 {
@@ -162,4 +163,5 @@ void SESepsis::ToString(std::ostream& str) const
   str << "\n\tCompartment: ";
   HasCompartment() ? str << GetCompartment() : str << "No Compartment Set";
   str << std::flush;
+}
 }

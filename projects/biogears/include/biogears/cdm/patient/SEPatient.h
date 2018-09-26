@@ -16,6 +16,10 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Patient.hxx>
 
+CDM_BIND_DECL(PatientData)
+
+namespace biogears {
+  
 class SEEventHandler;
 class SENutrition;
 class SEScalar;
@@ -41,7 +45,6 @@ class SEScalarNeg1To1;
 class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 
-CDM_BIND_DECL(PatientData)
 class BIOGEARS_API SEPatient : public Loggable {
 public:
   SEPatient(Logger* logger);
@@ -54,13 +57,13 @@ public:
   virtual CDM::PatientData* Unload() const;
 
   /** @name GetScalar
-	*   @brief - A reflextion type call that will return the Scalar associated
-	*            with the string. ex. GetScalar("Hematocrit") will return the
-	*            SEScalarPercent object associated with Hematocrit
-	*   @details - Note this is an expensive call as it will string compare many times
-	*              This is best used, and intended for, you to dynamically prepopulate
-	*              a mapping data structure that will help access what you need
-	*/
+  *   @brief - A reflextion type call that will return the Scalar associated
+  *            with the string. ex. GetScalar("Hematocrit") will return the
+  *            SEScalarPercent object associated with Hematocrit
+  *   @details - Note this is an expensive call as it will string compare many times
+  *              This is best used, and intended for, you to dynamically prepopulate
+  *              a mapping data structure that will help access what you need
+  */
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual const std::map<CDM::enumPatientEvent::value, bool>& GetEventStates() const { return m_EventState; }
@@ -69,12 +72,12 @@ public:
   virtual double GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const;
   virtual void UpdateEvents(const SEScalarTime& timeStep);
   /** @name ForwardEvents
-	 *  @brief - Set a callback class to invoke when any event changes
-	 *  @details - Note that the handler callback can and will be called in the middle of a time step
-	 *             So system and compartment objects may not be completely up to date when called.
-	 *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine 
-	 *             data is up to date at the time the callback is invoked
-	 */
+   *  @brief - Set a callback class to invoke when any event changes
+   *  @details - Note that the handler callback can and will be called in the middle of a time step
+   *             So system and compartment objects may not be completely up to date when called.
+   *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine 
+   *             data is up to date at the time the callback is invoked
+   */
   virtual void ForwardEvents(SEEventHandler* handler) const;
 
   virtual std::string GetName() const;
@@ -262,3 +265,4 @@ protected:
   SEScalarVolume* m_TotalLungCapacity;
   SEScalarVolume* m_VitalCapacity;
 };
+}

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
 
+namespace biogears {
 SEElectroCardioGramInterpolator::SEElectroCardioGramInterpolator(Logger* logger)
   : Loggable(logger)
 {
@@ -234,4 +235,5 @@ void SEElectroCardioGramInterpolator::RemoveWaveform(CDM::ElectroCardioGramWavef
     return;
   delete w->second;
   w->second = nullptr;
+}
 }

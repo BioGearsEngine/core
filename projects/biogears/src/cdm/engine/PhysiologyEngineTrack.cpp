@@ -48,6 +48,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/cdm/utils/DataTrack.h>
 
+namespace biogears {
 std::string Space2Underscore(const std::string& str)
 {
   std::string s = str;
@@ -610,4 +611,5 @@ void SEDataRequestScalar::UpdateScalar()
     }
   }
   Error("Could not update " + Heading);
+}
 }

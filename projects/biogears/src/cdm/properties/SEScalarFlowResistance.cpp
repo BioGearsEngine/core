@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
 
+namespace biogears {
 const FlowResistanceUnit FlowResistanceUnit::cmH2O_s_Per_L("cmH2O s/L");
 const FlowResistanceUnit FlowResistanceUnit::mmHg_s_Per_mL("mmHg s/mL");
 const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_mL("mmHg min/mL");
@@ -57,4 +58,5 @@ const FlowResistanceUnit& FlowResistanceUnit::GetCompoundUnit(const std::string&
   std::stringstream err;
   err << unit << " is not a valid FlowResistance unit";
   throw CommonDataModelException(err.str());
+}
 }

@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+namespace biogears {
 class BIOGEARS_API SESerializeState : public SEAction {
 public:
   SESerializeState();
@@ -48,3 +49,4 @@ protected:
   std::string m_Filename;
   CDM::enumSerializationType::value m_Type;
 };
+}

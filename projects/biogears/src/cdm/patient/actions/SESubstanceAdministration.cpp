@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
-
+namespace biogears {
 SESubstanceAdministration::SESubstanceAdministration()
   : SEPatientAction()
 {
@@ -48,4 +48,5 @@ bool SESubstanceAdministration::Load(const CDM::SubstanceAdministrationData& in)
 void SESubstanceAdministration::Unload(CDM::SubstanceAdministrationData& data) const
 {
   SEPatientAction::Unload(data);
+}
 }

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarEnergy.h>
 
+namespace biogears {
 const EnergyUnit EnergyUnit::J("J");
 const EnergyUnit EnergyUnit::mJ("mJ");
 const EnergyUnit EnergyUnit::kJ("kJ");
@@ -52,4 +53,5 @@ const EnergyUnit& EnergyUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Energy unit";
   throw CommonDataModelException(err.str());
+}
 }

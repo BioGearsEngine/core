@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
 
+namespace biogears {
 PhysiologyEngineStabilization::PhysiologyEngineStabilization(Logger* logger)
   : Loggable(logger)
 {
@@ -81,4 +82,5 @@ SEScalarTime& PhysiologyEngineStabilization::GetStabilizationDuration()
   if (m_StabilizationDuration == nullptr)
     m_StabilizationDuration = new SEScalarTime();
   return *m_StabilizationDuration;
+}
 }

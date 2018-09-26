@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //#define VERBOSE
 #define ZERO_APPROX 1e-10
 
+namespace biogears {
 template <typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit>
 SESubstanceTransporter<GraphType, FluxUnit, QuantityUnit, ExtensiveUnit, IntensiveUnit>::SESubstanceTransporter(const FluxUnit& fUnit,
   const QuantityUnit& qUnit,
@@ -191,3 +192,4 @@ void SESubstanceTransporter<GraphType, FluxUnit, QuantityUnit, ExtensiveUnit, In
   }
   graph.BalanceByIntensive();
 }
+} //namespace biogears

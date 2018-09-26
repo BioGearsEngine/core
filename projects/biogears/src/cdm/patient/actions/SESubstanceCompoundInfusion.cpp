@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 SESubstanceCompoundInfusion::SESubstanceCompoundInfusion(const SESubstanceCompound& compound)
   : SESubstanceAdministration()
   , m_Compound(compound)
@@ -110,4 +111,6 @@ void SESubstanceCompoundInfusion::ToString(std::ostream& str) const
   HasBagVolume() ? str << *m_BagVolume : str << "NaN";
   str << "\n\tSubstance Compound: " << m_Compound.GetName();
   str << std::flush;
+}
+
 }

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+namespace biogears {
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Interface from which tasks used in the TaskRunner should derive
@@ -20,3 +21,4 @@ class Task {
 public:
   virtual void Run() = 0;
 };
+}

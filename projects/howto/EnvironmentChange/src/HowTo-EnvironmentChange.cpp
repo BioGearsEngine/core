@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
+using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for applying an Environment Change to the patient

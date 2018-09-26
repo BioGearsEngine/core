@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/test/BioGearsEngineTest.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace biogears {
 void BioGearsEngineTest::RenalCircuitAndTransportTest(const std::string& sTestDirectory)
 {
   TimingProfile tmr;
@@ -295,7 +296,7 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
     bool UPRSteady = false;
     bool convergedCheck = false;
     //validation data of urine production:
-    double urineValidation = (a * pow(MAP, 2) + b * MAP + c);
+    double urineValidation = (a * std::pow(MAP, 2) + b * MAP + c);
     //get the permeability and resistance for output:
     double permeabilityCurrentLeft_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
     double permeabilityCurrentRight_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
@@ -669,4 +670,5 @@ void BioGearsEngineTest::RenalSecretionTest(const std::string& sTestDirectory)
 void BioGearsEngineTest::RenalUrinateTest(const std::string& sTestDirectory)
 {
   RenalSystemTest(Urinating, sTestDirectory, "RenalUrinateOutput");
+}
 }

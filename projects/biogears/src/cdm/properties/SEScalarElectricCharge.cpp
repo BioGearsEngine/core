@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricCharge.h>
 
+namespace biogears {
 const ElectricChargeUnit ElectricChargeUnit::C("C");
 
 CDM::ScalarElectricChargeData* SEScalarElectricCharge::Unload() const
@@ -37,4 +38,5 @@ const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const std::string&
   std::stringstream err;
   err << unit << " is not a valid ElectricCharge unit";
   throw CommonDataModelException(err.str());
+}
 }

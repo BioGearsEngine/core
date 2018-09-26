@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 
+namespace biogears {
 SEElectricalCircuitNode::SEElectricalCircuitNode(const std::string& name, Logger* logger)
   : SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>(name, logger)
 {
@@ -135,4 +136,5 @@ double SEElectricalCircuitNode::GetChargeBaseline(const ElectricChargeUnit& unit
   if (m_QuantityBaseline == nullptr)
     return SEScalar::dNaN();
   return m_QuantityBaseline->GetValue(unit);
+}
 }

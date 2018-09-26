@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TaskRunner/Task.h>
 #include <biogears/cdm/utils/TaskRunner/TaskRunner.h>
 
+namespace biogears {
 class RunEngineTask : public Task {
 public:
   RunEngineTask(std::unique_ptr<PhysiologyEngine> pEngine)
@@ -167,4 +168,5 @@ void BioGearsEngineTest::MultiEngineTest(const std::string& sTestDirectory)
                                                                                                      "\n";
 
   std::cin.get();
+}
 }

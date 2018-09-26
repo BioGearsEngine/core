@@ -14,15 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-namespace mil {
-namespace tatrc {
-  namespace physiology {
-    namespace datamodel {
-      class CircuitNodeData;
-    }
-  }
-}
-}
+CDM_BIND_DECL( CircuitNodeData )
 
 #define CIRCUIT_NODE_TEMPLATE typename PotentialScalar, typename QuantityScalar
 #define CIRCUIT_NODE_TYPES PotentialScalar, QuantityScalar
@@ -30,6 +22,7 @@ namespace tatrc {
 #define FLUID_CIRCUIT_NODE SEScalarPressure, SEScalarVolume
 #define THERMAL_CIRCUIT_NODE SEScalarTemperature, SEScalarEnergy
 
+namespace biogears {
 
 template <CIRCUIT_NODE_TEMPLATE>
 class SECircuitNode : public Loggable {
@@ -78,4 +71,6 @@ protected:
   QuantityScalar* m_NextQuantity;
   QuantityScalar* m_QuantityBaseline;
 };
+}
+
 #include <biogears/cdm/circuit/SECircuitNode.inl>

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
+namespace biogears {
 class SEPatient;
 class SERespiratorySystem;
 class SEScalarVolume;
@@ -98,3 +99,4 @@ protected:
 
   SEFunctionVolumeVsTime* m_LungVolumePlot;
 };
+}

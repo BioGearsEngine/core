@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/exports.h>
-
+namespace biogears{
 class CUnitDimension;
 class CQuantityConversionKey;
 
@@ -87,13 +87,14 @@ inline size_t hash_value(const CQuantityConversionKey& ref)
 {
   return ref.hash_value();
 }
+} //namespace biogears
 
 namespace std {
 template <>
-struct hash<CQuantityConversionKey> {
-  size_t operator()(const CQuantityConversionKey& ref) const
+struct hash<biogears::CQuantityConversionKey> {
+  size_t operator()(const biogears::CQuantityConversionKey& ref) const
   {
     return ref.hash_value();
   }
 };
-}
+}//namespace std

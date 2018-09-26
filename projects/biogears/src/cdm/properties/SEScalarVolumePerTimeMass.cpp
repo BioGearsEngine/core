@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
 
+namespace biogears {
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::L_Per_s_g("L/s g");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_s_g("mL / s g");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_min_kg("mL/min kg");
@@ -57,4 +58,5 @@ const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const std::s
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimeMass unit";
   throw CommonDataModelException(err.str());
+}
 }

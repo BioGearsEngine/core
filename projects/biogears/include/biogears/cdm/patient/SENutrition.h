@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+CDM_BIND_DECL(NutritionData)
+
+namespace biogears {
 class SEPatient;
 class SEScalar;
 class SEScalarMass;
@@ -23,7 +26,6 @@ class MassPerTimeUnit;
 class SEScalarVolume;
 class VolumeUnit;
 
-CDM_BIND_DECL(NutritionData)
 class BIOGEARS_API SENutrition : public Loggable {
 public:
   SENutrition(Logger* logger);
@@ -100,4 +102,5 @@ inline std::ostream& operator<<(std::ostream& out, const SENutrition& n)
 {
   n.ToString(out);
   return out;
+}
 }

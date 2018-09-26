@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 #include <biogears/schema/cdm/InhalerActions.hxx>
 
+namespace biogears {
 class SEInhaler;
 class SESubstanceManager;
 
@@ -50,3 +51,4 @@ protected:
   std::string m_ConfigurationFile;
   SEInhaler* m_Configuration;
 };
+}

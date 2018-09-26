@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+namespace biogears {
 std::chrono::microseconds::rep vectorAverage(std::vector<std::chrono::microseconds::rep> const& v)
 {
   if (v.size() > 0) {
@@ -659,4 +660,5 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
 
   //What should we write out in the report and/or Track?
   //testReport.WriteFile(rptDirectory + "/SolverSpeedTest.xml");
+}
 }

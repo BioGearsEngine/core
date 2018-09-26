@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
+namespace biogears {
+
 class SEEventHandler;
 class SESubstanceManager;
 class SEAnesthesiaMachineChamber;
@@ -48,10 +50,10 @@ protected:
   virtual void Unload(CDM::AnesthesiaMachineData& data) const;
 
   /** @name StateChange
-	*   @brief - This method is called when ever there is a state change
-	*            Specically a new file has been loaded, configuration action, or the system reset
-	*            Engine specific methodology can then update their logic.
-	*/
+  *   @brief - This method is called when ever there is a state change
+  *            Specically a new file has been loaded, configuration action, or the system reset
+  *            Engine specific methodology can then update their logic.
+  */
   virtual void StateChange(){};
   virtual void Merge(const SEAnesthesiaMachine& from);
   virtual void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
@@ -67,12 +69,12 @@ public:
   virtual double GetEventDuration(CDM::enumAnesthesiaMachineEvent::value type, const TimeUnit& unit) const;
   virtual void UpdateEvents(const SEScalarTime& timeStep);
   /** @name ForwardEvents
-	*  @brief - Set a callback class to invoke when any event changes
-	*  @details - Note that the handler callback can and will be called in the middle of a time step
-	*             So system and compartment objects may not be completely up to date when called.
-	*             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine
-	*             data is up to date at the time the callback is invoked
-	*/
+  *  @brief - Set a callback class to invoke when any event changes
+  *  @details - Note that the handler callback can and will be called in the middle of a time step
+  *             So system and compartment objects may not be completely up to date when called.
+  *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine
+  *             data is up to date at the time the callback is invoked
+  */
   virtual void ForwardEvents(SEEventHandler* handler);
 
   virtual CDM::enumAnesthesiaMachineConnection::value GetConnection() const;
@@ -164,3 +166,4 @@ protected:
 
   SESubstanceManager& m_Substances;
 };
+}

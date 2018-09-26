@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 
+namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
 {
@@ -390,4 +391,5 @@ void SENutrition::ToString(std::ostream& str) const
   str << "\n\tWater: ";
   HasWater() ? str << *m_Water : str << "None";
   str << std::flush;
+}
 }

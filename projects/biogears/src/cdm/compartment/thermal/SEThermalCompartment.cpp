@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 SEThermalCompartment::SEThermalCompartment(const std::string& name, Logger* logger)
   : SECompartment(name, logger)
   , m_Nodes(logger)
@@ -377,4 +378,5 @@ void SEThermalCompartment::AddChild(SEThermalCompartment& child)
   if (HasChild(child.GetName()))
     return;
   m_Children.push_back(&child);
+}
 }

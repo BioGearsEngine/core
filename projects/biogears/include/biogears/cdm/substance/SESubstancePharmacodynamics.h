@@ -16,12 +16,14 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
+CDM_BIND_DECL(SubstancePharmacodynamicsData)
+
+namespace biogears {
+
 class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
-
-CDM_BIND_DECL(SubstancePharmacodynamicsData)
 
 class BIOGEARS_API SESubstancePharmacodynamics : Loggable {
 public:
@@ -115,3 +117,4 @@ protected:
   SEScalarFraction* m_CentralNervousModifier;
   SEScalarFrequency* m_EffectSiteRateConstant;
 };
+}

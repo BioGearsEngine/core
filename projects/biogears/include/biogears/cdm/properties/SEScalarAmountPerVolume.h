@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
 
+namespace biogears {
 class BIOGEARS_API AmountPerVolumeUnit : public CCompoundUnit {
 public:
   AmountPerVolumeUnit(const std::string& u)
@@ -40,3 +41,4 @@ public:
 
   CDM::ScalarAmountPerVolumeData* Unload() const override;
 };
+}

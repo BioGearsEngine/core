@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 
+namespace biogears {
 SEFluidCircuit::SEFluidCircuit(const std::string& name, SECircuitManager& mgr)
   : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger())
   , m_Mgr(mgr)
@@ -48,4 +49,5 @@ void SEFluidCircuit::AddCircuit(SEFluidCircuit& circuit)
     AddPath(*path);
   for (SEFluidCircuitNode* node : circuit.GetReferenceNodes())
     AddReferenceNode(*node);
+}
 }

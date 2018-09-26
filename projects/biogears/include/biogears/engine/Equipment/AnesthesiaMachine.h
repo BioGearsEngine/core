@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGears.hxx>
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
 
+namespace biogears {
 class BioGears;
 class SEAnesthesiaMachineActionCollection;
 class SEGasCompartment;
@@ -118,3 +119,4 @@ private:
   SEFluidCircuitPath* m_pExpiratoryLimbToSelector;
   SEFluidCircuitPath* m_pSelectorToScrubber;
 };
+}

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+namespace biogears {
 void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory)
 {
   TimingProfile pTimer;
@@ -43,4 +44,5 @@ void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory
   // TODO would be nice to listen to errors on the logger and add them to the testCase failures...
 
   testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");
+}
 }

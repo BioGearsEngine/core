@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 
-
+namespace biogears {
 SEComprehensiveMetabolicPanel::SEComprehensiveMetabolicPanel(Logger* logger)
   : SEPatientAssessment(logger)
 {
@@ -278,4 +278,5 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetTotalProtein()
   if (m_TotalProtein == nullptr)
     m_TotalProtein = new SEScalarMassPerVolume();
   return *m_TotalProtein;
+}
 }

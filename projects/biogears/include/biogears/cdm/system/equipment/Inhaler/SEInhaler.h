@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
 
+namespace biogears {
 class Serializer;
 class SESubstance;
 class SESubstanceManager;
@@ -34,13 +35,13 @@ public:
   virtual void Clear();
 
   /** @name GetScalar
-	*   @brief - A reflextion type call that will return the Scalar associated
-	*            with the string. ex. GetScalar("Hematocrit") will return the
-	*            SEScalarPercent object associated with Hematocrit
-	*   @details - Note this is an expensive call as it will string compare many times
-	*              This is best used, and intended for, you to dynamically prepopulate
-	*              a mapping data structure that will help access what you need
-	*/
+  *   @brief - A reflextion type call that will return the Scalar associated
+  *            with the string. ex. GetScalar("Hematocrit") will return the
+  *            SEScalarPercent object associated with Hematocrit
+  *   @details - Note this is an expensive call as it will string compare many times
+  *              This is best used, and intended for, you to dynamically prepopulate
+  *              a mapping data structure that will help access what you need
+  */
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool Load(const CDM::InhalerData& in);
@@ -50,10 +51,10 @@ protected:
   virtual void Unload(CDM::InhalerData& data) const;
 
   /** @name StateChange
-	*   @brief - This method is called when ever there is a state change
-	*            Specically a new file has been loaded, configuration action, or the system reset
-	*            Engine specific methodology can then update their logic.
-	*/
+  *   @brief - This method is called when ever there is a state change
+  *            Specically a new file has been loaded, configuration action, or the system reset
+  *            Engine specific methodology can then update their logic.
+  */
   virtual void StateChange(){};
   virtual void Merge(const SEInhaler& from);
   virtual void ProcessConfiguration(const SEInhalerConfiguration& config);
@@ -93,3 +94,4 @@ protected:
 
   SESubstanceManager& m_Substances;
 };
+}

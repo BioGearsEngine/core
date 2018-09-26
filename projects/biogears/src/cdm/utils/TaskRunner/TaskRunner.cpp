@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <iomanip>
 #include <thread>
 
+namespace biogears {
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Constructor
@@ -145,4 +146,5 @@ void TaskRunner::PrintProgress()
   std::cout << "] " << std::fixed << std::setprecision(2) << (percent * 100.0) << "%\n";
 
   std::cout.flags(flags);
+}
 }

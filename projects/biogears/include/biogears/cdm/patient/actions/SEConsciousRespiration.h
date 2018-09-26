@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class SEConsciousRespirationCommand;
 class SEForcedExhale;
 class SEForcedInhale;
@@ -53,3 +54,4 @@ protected:
   bool m_ClearCommands;
   std::vector<SEConsciousRespirationCommand*> m_Commands;
 };
+}

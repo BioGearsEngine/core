@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
-
+using namespace biogears;
 HowToTracker::HowToTracker(PhysiologyEngine& engine) : m_Engine(engine)
 {
   m_dT_s = m_Engine.GetTimeStep(TimeUnit::s);

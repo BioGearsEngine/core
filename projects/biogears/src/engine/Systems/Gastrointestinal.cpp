@@ -36,7 +36,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4275)
 
 //#define logMeal
-
+namespace biogears {
 Gastrointestinal::Gastrointestinal(BioGears& bg)
   : SEGastrointestinalSystem(bg.GetLogger())
   , m_data(bg)
@@ -836,4 +836,5 @@ void Gastrointestinal::Process()
 //--------------------------------------------------------------------------------------------------
 void Gastrointestinal::PostProcess()
 {
+}
 }

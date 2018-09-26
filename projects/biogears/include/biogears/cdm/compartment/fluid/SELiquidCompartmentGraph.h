@@ -17,9 +17,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 
-
-class SECompartmentManager;
 CDM_BIND_DECL(LiquidCompartmentGraphData)
+
+namespace biogears {
+class SECompartmentManager;
 class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink> {
   friend class SECompartmentManager;
 
@@ -41,3 +42,4 @@ protected:
 protected:
   void BalanceByIntensive();
 };
+}

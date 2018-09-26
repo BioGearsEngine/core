@@ -21,6 +21,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
+CDM_BIND_DECL(SubstanceData) 
+
+namespace biogears {
 class SEScalarMass;
 class MassUnit;
 class SEScalarMassPerAmount;
@@ -39,7 +42,7 @@ class VolumePerTimeUnit;
 class SEScalarPressure;
 class PressureUnit;
 
-  CDM_BIND_DECL(SubstanceData) class BIOGEARS_API SESubstance : public Loggable {
+class BIOGEARS_API SESubstance : public Loggable {
 public:
   SESubstance(Logger* logger);
   virtual ~SESubstance();
@@ -201,3 +204,4 @@ protected:
   SESubstancePharmacokinetics* m_PK;
   SESubstancePharmacodynamics* m_PD;
 };
+}

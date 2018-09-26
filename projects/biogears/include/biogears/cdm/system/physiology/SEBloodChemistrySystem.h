@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+namespace biogears {
 class SEScalarMass;
 class MassUnit;
 class SEScalarMassPerVolume;
@@ -32,7 +33,7 @@ class PressureUnit;
 
 
 /** @copydoc Physiology_BloodChemistrySystemData
-	@nosubgrouping */
+  @nosubgrouping */
 class BIOGEARS_API SEBloodChemistrySystem : public SESystem {
 public:
   SEBloodChemistrySystem(Logger* logger);
@@ -358,3 +359,4 @@ protected:
   SEScalarPressure* m_VenousCarbonDioxidePressure;
   SEScalarPressure* m_VenousOxygenPressure;
 };
+}

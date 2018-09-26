@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 
+using namespace biogears;
 
 bool BioGearsScenarioDriver::Configure(int argc, char* argv[])
 {

@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 
+CDM_BIND_DECL(ActiveHeatingData)
+
+namespace biogears {
 class SEScalar;
 class SEScalarFraction;
 class SEScalarPower;
@@ -22,7 +25,6 @@ class PowerUnit;
 class SEScalarArea;
 class AreaUnit;
 
-CDM_BIND_DECL(ActiveHeatingData)
 class BIOGEARS_API SEActiveHeating : public Loggable {
 public:
   SEActiveHeating(Logger* logger);
@@ -59,3 +61,4 @@ protected:
   SEScalarArea* m_SurfaceArea;
   SEScalarFraction* m_SurfaceAreaFraction;
 };
+}

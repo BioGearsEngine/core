@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+namespace biogears {
 SEEnvironmentChange::SEEnvironmentChange(SESubstanceManager& substances)
   : SEEnvironmentAction()
   , m_Substances(substances)
@@ -148,4 +149,5 @@ void SEEnvironmentChange::ToString(std::ostream& str) const
     }
   }
   str << std::flush;
+}
 }

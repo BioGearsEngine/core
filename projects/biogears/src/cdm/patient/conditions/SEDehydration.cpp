@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-
+namespace biogears {
 SEDehydration::SEDehydration()
   : SEPatientCondition()
 {
@@ -77,4 +77,5 @@ void SEDehydration::ToString(std::ostream& str) const
   str << "\n\tFractional amount of body weight change due to fluid loss: ";
   HasDehydrationFraction() ? str << m_DehydrationFraction : str << "NaN";
   str << std::flush;
+}
 }

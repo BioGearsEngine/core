@@ -17,12 +17,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Properties.hxx>
 
+CDM_BIND_DECL(PhysiologyEngineStabilizationData)
+
+namespace biogears {
 class PhysiologyEngine;
 class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration;
 class SECondition;
-
-CDM_BIND_DECL(PhysiologyEngineStabilizationData)
 
 class BIOGEARS_API PhysiologyEngineStabilization : public Loggable {
 public:
@@ -63,3 +64,4 @@ protected:
 
   SEScalarTime* m_StabilizationDuration;
 };
+}

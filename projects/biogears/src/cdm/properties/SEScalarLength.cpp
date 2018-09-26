@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLength.h>
 
-
+namespace biogears {
 const LengthUnit LengthUnit::m("m");
 const LengthUnit LengthUnit::cm("cm");
 const LengthUnit LengthUnit::mm("mm");
@@ -63,4 +63,5 @@ const LengthUnit& LengthUnit::GetCompoundUnit(const std::string& unit)
   std::stringstream err;
   err << unit << " is not a valid Length unit";
   throw CommonDataModelException(err.str());
+}
 }

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+namespace biogears {
 class BIOGEARS_API SEStarvation : public SEPatientCondition {
 public:
   SEStarvation();
@@ -40,3 +41,4 @@ public:
 protected:
   SEScalarTime* m_TimeSinceMeal;
 };
+}

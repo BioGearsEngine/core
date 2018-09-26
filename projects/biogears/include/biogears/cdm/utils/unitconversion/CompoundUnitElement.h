@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/unitconversion/SnapValue.h>
 
+namespace biogears {
 class CCompoundUnitElement {
 public:
   // The use of CSnapValue as the exponent type allows for fractional exponents
@@ -146,3 +147,4 @@ private:
   ExponentType m_CExponent;
   int m_iPrefixID;
 };
+}

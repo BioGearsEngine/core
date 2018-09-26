@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+namespace biogears {
 class SEScalar0To1;
 
 class BIOGEARS_API SEAcuteStress : public SEPatientAction {
@@ -41,3 +42,4 @@ public:
 protected:
   SEScalar0To1* m_Severity;
 };
+}

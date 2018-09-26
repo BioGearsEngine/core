@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 
+namespace biogears {
 void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
 {
   TimingProfile pTimer;
@@ -146,4 +147,5 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
     }
   }
   testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");
+}
 }

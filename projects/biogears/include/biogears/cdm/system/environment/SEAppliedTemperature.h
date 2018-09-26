@@ -13,13 +13,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include "biogears/cdm/properties/SEScalarFraction.h"
 
+CDM_BIND_DECL(AppliedTemperatureData)
+
+namespace biogears {
 class SEScalar;
 class SEScalarTemperature;
 class TemperatureUnit;
 class SEScalarArea;
 class AreaUnit;
 
-CDM_BIND_DECL(AppliedTemperatureData)
 class BIOGEARS_API SEAppliedTemperature : public Loggable {
 public:
   SEAppliedTemperature(Logger* logger);
@@ -60,3 +62,4 @@ protected:
   SEScalarFraction* m_SurfaceAreaFraction;
   CDM::enumOnOff::value m_State;
 };
+}
