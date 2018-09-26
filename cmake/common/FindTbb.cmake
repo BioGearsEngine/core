@@ -49,6 +49,7 @@ if(Tbb_FOUND)
   mark_as_advanced(Tbb_MALLOC_LIBRARY)
   mark_as_advanced(Tbb_LIBRARY_DEBUG)
   mark_as_advanced(Tbb_LIBRARY)
+  mark_as_advanced(Tbb_DIR)
 
       add_library(Tbb::malloc IMPORTED GLOBAL)
       set_target_properties(Tbb::malloc

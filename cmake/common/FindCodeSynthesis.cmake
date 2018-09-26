@@ -397,5 +397,6 @@ if(CodeSynthesis_FOUND)
 
   mark_as_advanced(CodeSynthesis_INCLUDE_DIR)
   mark_as_advanced(CodeSynthesis_EXECUTABLE)
+  mark_as_advanced(CodeSynthesis_DIR)
 endif()
 endif()
