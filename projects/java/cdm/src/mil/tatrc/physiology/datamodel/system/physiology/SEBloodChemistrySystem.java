@@ -153,8 +153,8 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     if (in.getBloodDensity() != null)
       getBloodDensity().load(in.getBloodDensity());
-    if (in.ArterialBloodPH() != null)
-      ArterialBloodPH().load(in.ArterialBloodPH());
+    if (in.getArterialBloodPH() != null)
+      getArterialBloodPH().load(in.getArterialBloodPH());
     if (in.getBloodSpecificHeat() != null)
       getBloodSpecificHeat().load(in.getBloodSpecificHeat());
     if (in.getBloodUreaNitrogenConcentration() != null)
@@ -227,7 +227,7 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
     if (bloodDensity != null)
       data.setBloodDensity(bloodDensity.unload());
     if (ArterialBloodPH != null)
-      data.setBloodPH(ArterialBloodPH.unload());
+      data.setArterialBloodPH(ArterialBloodPH.unload());
     if (bloodSpecificHeat != null)
       data.setBloodSpecificHeat(bloodSpecificHeat.unload());
     if (bloodUreaNitrogenConcentration != null)
@@ -300,7 +300,7 @@ public class SEBloodChemistrySystem extends SEPhysiologySystem implements SESyst
   {
     return ArterialBloodPH == null ? false : ArterialBloodPH.isValid();
   }
-  public SEScalar ArterialBloodPH()
+  public SEScalar getArterialBloodPH()
   {
     if (ArterialBloodPH == null)
       ArterialBloodPH = new SEScalar();
