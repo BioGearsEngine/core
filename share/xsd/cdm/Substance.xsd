@@ -55,6 +55,7 @@ specific language governing permissions and limitations under the License.
   <xs:simpleType name="enumSubstanceClass">
   	<xs:restriction base="xs:string">
   		<xs:enumeration value="Anesthetic"/>
+		<xs:enumeration value="Antibiotic"/>
   		<xs:enumeration value="Ion"/>
   		<xs:enumeration value="Opioid"/>
   		<xs:enumeration value="ReversalAgent"/>
