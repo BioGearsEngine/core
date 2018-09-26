@@ -45,8 +45,8 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="5"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftAfferentArterioleResistance"   Unit="mmHg min/mL" Precision="6"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance"  Unit="mmHg min/mL" Precision="6"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialArterialBloodPH" Precision="2"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="VenousArterialBloodPH" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="VenousBloodPH" Precision="2"/>
 
   <DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"                            Name="Pressure"        Unit="cmH2O" Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
@@ -119,15 +119,15 @@
         <Time value="30" unit="s"/>       
     </Action>
 	<Action xsi:type="HemorrhageData" Compartment="Aorta">
-		<InitialRate value="175" unit="mL/min"/>
+		<InitialRate value="200" unit="mL/min"/>
 	</Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="1000" unit="s"/>       
+        <Time value="1800" unit="s"/>       
     </Action>
 	<Action xsi:type="HemorrhageData" Compartment="Aorta">
 		<InitialRate value="0" unit="mL/min"/>
 	</Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="500" unit="s"/>       
+        <Time value="1000" unit="s"/>       
     </Action>
 </Scenario>
