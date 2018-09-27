@@ -77,6 +77,7 @@ void SEPatientActionCollection::Clear()
   RemoveRightClosedTensionPneumothorax();
   RemoveSepsis();
   RemoveUrinate();
+  RemoveOverride();
 
   DELETE_MAP_SECOND(m_Hemorrhages);
   DELETE_MAP_SECOND(m_PainStimuli);
@@ -526,18 +527,19 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     }
     return IsValid(*m_Urinate);
   }
-
-  const CDM::OverrideData* overrideparam = dynamic_cast<const CDM::OverrideData*>(&action);
-  if (overrideparam != nullptr) {
-    if (m_OverrideAction == nullptr)
-      m_OverrideAction = new SEOverride();
-    m_OverrideAction->Load(*overrideparam);
-    if (!m_OverrideAction->IsActive()) {
-      RemoveOverride();
-      return true;
+ 
+    const CDM::OverrideData* orData = dynamic_cast<const CDM::OverrideData*>(&action);
+    if (orData != nullptr) {
+      if (m_OverrideAction == nullptr)
+        m_OverrideAction = new SEOverride();
+      m_OverrideAction->Load(*orData);
+      if (!m_OverrideAction->IsActive()) {
+        RemoveOverride();
+        return true;
+      }
+      return IsValid(*m_OverrideAction);
     }
-    return IsValid(*m_OverrideAction);
-  }
+  
 
   /// \error Unsupported Action
   Error("Unsupported Action");

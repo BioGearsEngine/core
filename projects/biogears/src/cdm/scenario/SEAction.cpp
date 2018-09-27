@@ -57,6 +57,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
+#include <biogears/cdm/patient/actions/SEOverride.h>
 
 namespace biogears {
 SEAction::SEAction()
@@ -245,6 +246,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
     if (needlData != nullptr) {
       SENeedleDecompression* a = new SENeedleDecompression();
       a->Load(*needlData);
+      return a;
+    }
+
+    CDM::OverrideData* overrideData = dynamic_cast<CDM::OverrideData*>(action);
+    if (overrideData != nullptr) {
+       SEOverride* a = new SEOverride();
+      a->Load(*overrideData);
       return a;
     }
 

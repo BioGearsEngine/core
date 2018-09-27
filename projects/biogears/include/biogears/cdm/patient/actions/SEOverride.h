@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+class Serializer;
+
 class BIOGEARS_API SEOverride : public SEPatientAction {
 public:
   SEOverride();
@@ -32,7 +34,13 @@ protected:
   virtual void Unload(CDM::OverrideData& data) const;
 
 public:
+  CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const;
+  void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state);
+  bool SEOverride::HasOverrideSwitch() const;
+  void SEOverride::InvalidateOverrideSwitch();
+
   virtual void ToString(std::ostream& str) const;
 
 protected:
+  CDM::enumOnOff m_OverrideSwitch;
 };

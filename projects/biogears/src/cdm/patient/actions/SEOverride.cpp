@@ -15,7 +15,8 @@ specific language governing permissions and limitations under the License.
 SEOverride::SEOverride()
   : SEPatientAction()
 {
-}
+  m_OverrideSwitch = CDM::enumOnOff::Off;
+  }
 
 SEOverride::~SEOverride()
 {
@@ -24,6 +25,7 @@ SEOverride::~SEOverride()
 
 void SEOverride::Clear()
 {
+  m_OverrideSwitch = CDM::enumOnOff::Off;
   SEPatientAction::Clear();
 }
 
@@ -39,8 +41,11 @@ bool SEOverride::IsActive() const
 
 bool SEOverride::Load(const CDM::OverrideData& in)
 {
-  SEPatientAction::Load(in);
-  return true;
+  SEPatientAction::Clear();
+  SetOverrideSwitch(in.State());
+  //SEPatientAction::Load(in);
+  //return true;
+  return IsValid();
 }
 
 CDM::OverrideData* SEOverride::Unload() const
@@ -53,12 +58,35 @@ CDM::OverrideData* SEOverride::Unload() const
 void SEOverride::Unload(CDM::OverrideData& data) const
 {
   SEPatientAction::Unload(data);
+  if (HasOverrideSwitch())
+    data.State(m_OverrideSwitch);
 }
+
+CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
+{
+  return m_OverrideSwitch;
+}
+void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state)
+{
+  m_OverrideSwitch = state;
+}
+bool SEOverride::HasOverrideSwitch() const
+{
+  return m_OverrideSwitch == ((CDM::enumOnOff::Off)) ? false : true;
+}
+void SEOverride::InvalidateOverrideSwitch()
+{
+  m_OverrideSwitch = (CDM::enumOnOff::Off);
+}
+
 
 void SEOverride::ToString(std::ostream& str) const
 {
-  str << "Action : Parameter Override";
+  str << "Patient Action : Override Parameter";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
+
+  str << "\n\tState: ";
+  HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
   str << std::flush;
 }

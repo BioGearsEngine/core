@@ -47,11 +47,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Nervous.h>
 #include <biogears/engine/Systems/Renal.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
 Cardiovascular::Cardiovascular(BioGears& bg)
   : SECardiovascularSystem(bg.GetLogger())
   , m_data(bg)
@@ -630,12 +629,11 @@ void Cardiovascular::PreProcess()
   // and do the appropriate calculations based on the time location.
   HeartDriver();
   ProcessActions();
-  //check overrides 
+  //check overrides
 
   if (m_Override->IsCardiovascularOverrideEnabled() && m_data.GetState() == EngineState::Active) {
-	  ProcessOverride();
+    ProcessOverride();
   }
-	
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -652,6 +650,10 @@ void Cardiovascular::PreProcess()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::Process()
 {
+  if (m_data.GetActions().GetPatientActions().HasOverride()) 
+  {
+      Info("Override Action in Place...");
+  }
   m_circuitCalculator.Process(*m_CirculatoryCircuit, m_dT_s);
   m_transporter.Transport(*m_CirculatoryGraph, m_dT_s);
   CalculateVitalSigns();
@@ -999,7 +1001,6 @@ void Cardiovascular::Hemorrhage()
   double probabilitySurvival = 0.0;
   double bleedoutTime = 0.0;
   double bleedRate_mL_Per_s = 0.0;
-  
 
   double bloodVolume_mL = GetBloodVolume(VolumeUnit::mL);
   double baselineBloodVolume_mL = m_patient->GetBloodVolumeBaseline(VolumeUnit::mL);
@@ -1009,17 +1010,17 @@ void Cardiovascular::Hemorrhage()
     h = hem.second;
     targetPath = m_CirculatoryCircuit->GetPath(h->GetCompartment() + "Bleed");
     locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg);
-	bleedRate_mL_Per_s = h->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s);
+    bleedRate_mL_Per_s = h->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s);
 
-	//enforce strict restictions on bleed rate for circuit stability
-	if (bleedRate_mL_Per_s > m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s)) {
-		std::stringstream err;
-		err << "bleed rate (mL/s): " << bleedRate_mL_Per_s << " is higher than the cardiac output (mL/s): ("
-			<< m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s) << ")";
-		Info(err);
-		Fatal("Cannot set a bleed rate higher than the cardiac output");
-		return;
-	}
+    //enforce strict restictions on bleed rate for circuit stability
+    if (bleedRate_mL_Per_s > m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s)) {
+      std::stringstream err;
+      err << "bleed rate (mL/s): " << bleedRate_mL_Per_s << " is higher than the cardiac output (mL/s): ("
+          << m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s) << ")";
+      Info(err);
+      Fatal("Cannot set a bleed rate higher than the cardiac output");
+      return;
+    }
 
     if (!h->HasBleedResistance()) {
       h->GetBleedResistance().SetValue(locationPressure_mmHg / bleedRate_mL_Per_s, FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1200,7 +1201,7 @@ void Cardiovascular::CalculateAndSetCPRcompressionForce()
     double a = 4 * c / (m_CompressionPeriod_s * m_CompressionPeriod_s);
     double b = -a * m_CompressionPeriod_s;
 
-    compressionForce_N = std::pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
+    compressionForce_N = pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
 
     // 2 second max compression time is arbitrary. I just put it in to make sure it doesn't get stuck if
     // we accidentally make a really wide bell curve. Note that the bell curve parameters are currently hardcoded above.
@@ -1411,7 +1412,7 @@ void Cardiovascular::CalculateHeartElastance()
   double maxShape = 0.598;
 
   double normalizedCardiacTime = m_CurrentCardiacCycleTime_s / m_CardiacCyclePeriod_s;
-  double elastanceShapeFunction = (std::pow(normalizedCardiacTime / alpha1, n1) / (1.0 + std::pow(normalizedCardiacTime / alpha1, n1))) * (1.0 / (1.0 + std::pow(normalizedCardiacTime / alpha2, n2))) / maxShape;
+  double elastanceShapeFunction = (pow(normalizedCardiacTime / alpha1, n1) / (1.0 + pow(normalizedCardiacTime / alpha1, n1))) * (1.0 / (1.0 + pow(normalizedCardiacTime / alpha2, n2))) / maxShape;
 
   m_LeftHeartElastance_mmHg_Per_mL = (m_LeftHeartElastanceMax_mmHg_Per_mL - m_LeftHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_LeftHeartElastanceMin_mmHg_Per_mL;
   m_RightHeartElastance_mmHg_Per_mL = (m_RightHeartElastanceMax_mmHg_Per_mL - m_RightHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_RightHeartElastanceMin_mmHg_Per_mL;
@@ -1534,16 +1535,13 @@ void Cardiovascular::TuneCircuit()
       CalculateVitalSigns();
       m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
       //return; //Skip stabelization for debugging
-      if (m_data.GetActions().GetPatientActions().HasOverride()) {
-        Info("Override Action in Place...");
-      }
-      if (m_Override->IsCardiovascularOverrideEnabled())
-      {
+
+      if (m_Override->IsCardiovascularOverrideEnabled()) {
         map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
         m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
         //Info("Cardiovascular Override Enabled");
       } else {
-      map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
+        map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
       }
       systolic_mmHg = GetSystolicArterialPressure(PressureUnit::mmHg);
       diastolic_mmHg = GetDiastolicArterialPressure(PressureUnit::mmHg);
@@ -1804,7 +1802,7 @@ void Cardiovascular::AdjustVascularTone()
         continue;
       if ((Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1) || (Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2)) {
         continue;
-    }
+      }
       UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
       UpdatedResistance_mmHg_s_Per_mL += ResistanceChange * UpdatedResistance_mmHg_s_Per_mL / GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL);
       if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
@@ -1837,7 +1835,7 @@ void Cardiovascular::CalculateHeartRate()
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// determine override requirements from user defined inputs 
+/// determine override requirements from user defined inputs
 ///
 /// \details
 /// User specified override outputs that are specific to the cardiovascular system are implemented here.
@@ -1845,7 +1843,6 @@ void Cardiovascular::CalculateHeartRate()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::ProcessOverride()
 {
-	double map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
-	m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
-}
+  double map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
+  m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
 }
