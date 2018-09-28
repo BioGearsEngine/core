@@ -8,12 +8,12 @@
         <Systemic>
             <FractionExcretedInFeces value="0.0"/>
             <FractionUnboundInPlasma value="0.75"/>
-            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
-            <RenalClearance value="1.0" unit="mL/min kg"/>
-            <SystemicClearance value="1.98" unit="mL/min kg"/>
+            <IntrinsicClearance value="0.022" unit="mL/min kg"/>
+            <RenalClearance value="1.27" unit="mL/min kg"/>
+            <SystemicClearance value="3.64" unit="mL/min kg"/>
         </Systemic>
         <RenalDynamics>
-            <Clearance value="1.0" unit="mL/min kg"/>
+            <Clearance value="1.27" unit="mL/min kg"/>
         </RenalDynamics>
     </Clearance>
     <Pharmacokinetics>
@@ -73,8 +73,8 @@
     <Pharmacodynamics>
         <Bronchodilation value="0.0"/>
         <DiastolicPressureModifier value="0.0"/>
-        <EC50 value="0.5" unit="ug/mL"/>
-        <EMaxShapeParameter value="1.0"/>
+        <EC50 value="2.0" unit="ug/mL"/>
+        <EMaxShapeParameter value="2.0"/>
         <HeartRateModifier value="0.0"/>
         <NeuromuscularBlock value="0.0"/>
         <PupillaryResponse>

@@ -8,12 +8,12 @@
         <Systemic>
             <FractionExcretedInFeces value="0.0"/>
             <FractionUnboundInPlasma value="0.785"/>
-            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
-            <RenalClearance value="1.04" unit="mL/min kg"/>
-            <SystemicClearance value="1.83" unit="mL/min kg"/>
+            <IntrinsicClearance value="0.006" unit="mL/min kg"/>
+            <RenalClearance value="1.69" unit="mL/min kg"/>
+            <SystemicClearance value="2.57" unit="mL/min kg"/>
         </Systemic>
         <RenalDynamics>
-            <Clearance value="1.04" unit="mL/min kg"/>
+            <Clearance value="1.69" unit="mL/min kg"/>
         </RenalDynamics>
     </Clearance>
     <Pharmacokinetics>
