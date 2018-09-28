@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
+#include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 class Serializer;
@@ -38,9 +39,13 @@ public:
   void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state);
   bool SEOverride::HasOverrideSwitch() const;
   void SEOverride::InvalidateOverrideSwitch();
+  bool SEOverride::HasMAPOverride() const;
+  SEScalarPressure& SEOverride::GetMAPOverride();
+  double SEOverride::GetMAPOverride(const PressureUnit& unit) const;
 
   virtual void ToString(std::ostream& str) const;
 
 protected:
   CDM::enumOnOff m_OverrideSwitch;
+  SEScalarPressure* m_PressureOR;
 };

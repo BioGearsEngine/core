@@ -436,11 +436,15 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+
 	<!-- @brief Override a patient parameter. -->
 	<xs:complexType name="OverrideData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
-					<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief -->
+				<xs:sequence>
+					<xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. -->                 					
+				</xs:sequence>  
+				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

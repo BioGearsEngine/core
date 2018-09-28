@@ -631,7 +631,7 @@ void Cardiovascular::PreProcess()
   ProcessActions();
   //check overrides
 
-  if (m_Override->IsCardiovascularOverrideEnabled() && m_data.GetState() == EngineState::Active) {
+  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
     ProcessOverride();
   }
 }
@@ -1839,6 +1839,13 @@ void Cardiovascular::CalculateHeartRate()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::ProcessOverride()
 {
-  double map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
+  double map_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure().GetValue(PressureUnit::mmHg);
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
+  {
+    map_mmHg = m_data.GetActions().GetPatientActions().GetOverride()->GetMAPOverride(PressureUnit::mmHg);
+
+  } else {
+    map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
+  }
   m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
-}
+ }

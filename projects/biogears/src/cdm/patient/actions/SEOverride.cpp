@@ -12,10 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEOverride.h>
 
+#include <biogears/cdm/properties/SEScalarPressure.h>
+
 SEOverride::SEOverride()
   : SEPatientAction()
 {
   m_OverrideSwitch = CDM::enumOnOff::Off;
+  m_PressureOR = nullptr;
   }
 
 SEOverride::~SEOverride()
@@ -25,24 +28,39 @@ SEOverride::~SEOverride()
 
 void SEOverride::Clear()
 {
-  m_OverrideSwitch = CDM::enumOnOff::Off;
   SEPatientAction::Clear();
+  m_OverrideSwitch = CDM::enumOnOff::Off;
+  SAFE_DELETE(m_PressureOR);
 }
 
 bool SEOverride::IsValid() const
 {
-  return SEPatientAction::IsValid();
+  if (!HasOverrideSwitch()) {
+    Error("Override must have state.");
+    return false;
+  }
+  if (!HasMAPOverride() && GetOverrideSwitch()==CDM::enumOnOff::On) {
+    Error("Override must have a parameter");
+    return false;
+  }
+  return true;
 }
 
 bool SEOverride::IsActive() const
 {
-  return IsValid();
+  if (!HasOverrideSwitch())
+    return false;
+  return GetOverrideSwitch() == CDM::enumOnOff::On;
 }
 
 bool SEOverride::Load(const CDM::OverrideData& in)
 {
   SEPatientAction::Clear();
   SetOverrideSwitch(in.State());
+  if (in.MeanArterialPressureOverride().present())
+    GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
+  else
+    GetMAPOverride().Invalidate();
   //SEPatientAction::Load(in);
   //return true;
   return IsValid();
@@ -60,6 +78,8 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   SEPatientAction::Unload(data);
   if (HasOverrideSwitch())
     data.State(m_OverrideSwitch);
+  if (HasMAPOverride())
+    data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
 }
 
 CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
@@ -80,6 +100,23 @@ void SEOverride::InvalidateOverrideSwitch()
   m_OverrideSwitch = (CDM::enumOnOff::Off);
 }
 
+bool SEOverride::HasMAPOverride() const
+{
+  return m_PressureOR == nullptr ? false : m_PressureOR->IsValid();
+}
+SEScalarPressure& SEOverride::GetMAPOverride()
+{
+  if (m_PressureOR == nullptr)
+    m_PressureOR = new SEScalarPressure();
+  return *m_PressureOR;
+}
+double SEOverride::GetMAPOverride(const PressureUnit& unit) const
+{
+  if (m_PressureOR == nullptr)
+    return SEScalar::dNaN();
+  return m_PressureOR->GetValue(unit);
+}
+
 
 void SEOverride::ToString(std::ostream& str) const
 {
@@ -89,5 +126,7 @@ void SEOverride::ToString(std::ostream& str) const
 
   str << "\n\tState: ";
   HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
+  str << "\n\tPressure: ";
+  HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
   str << std::flush;
 }
