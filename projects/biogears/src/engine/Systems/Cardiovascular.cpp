@@ -650,10 +650,6 @@ void Cardiovascular::PreProcess()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::Process()
 {
-  if (m_data.GetActions().GetPatientActions().HasOverride()) 
-  {
-      Info("Override Action in Place...");
-  }
   m_circuitCalculator.Process(*m_CirculatoryCircuit, m_dT_s);
   m_transporter.Transport(*m_CirculatoryGraph, m_dT_s);
   CalculateVitalSigns();

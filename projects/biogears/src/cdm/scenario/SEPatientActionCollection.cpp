@@ -527,19 +527,18 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     }
     return IsValid(*m_Urinate);
   }
- 
-    const CDM::OverrideData* orData = dynamic_cast<const CDM::OverrideData*>(&action);
-    if (orData != nullptr) {
-      if (m_OverrideAction == nullptr)
-        m_OverrideAction = new SEOverride();
-      m_OverrideAction->Load(*orData);
-      if (!m_OverrideAction->IsActive()) {
-        RemoveOverride();
-        return true;
-      }
-      return IsValid(*m_OverrideAction);
+
+  const CDM::OverrideData* orData = dynamic_cast<const CDM::OverrideData*>(&action);
+  if (orData != nullptr) {
+    if (m_OverrideAction == nullptr)
+      m_OverrideAction = new SEOverride();
+    m_OverrideAction->Load(*orData);
+    if (!m_OverrideAction->IsActive()) {
+      RemoveOverride();
+      return true;
     }
-  
+    return IsValid(*m_OverrideAction);
+  }
 
   /// \error Unsupported Action
   Error("Unsupported Action");
@@ -1043,4 +1042,8 @@ SEOverride* SEPatientActionCollection::GetOverride() const
 void SEPatientActionCollection::RemoveOverride()
 {
   SAFE_DELETE(m_OverrideAction);
+}
+bool SEPatientActionCollection::IsOverrideActionOn() const
+{
+  return (HasOverride()) && (m_OverrideAction->GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
 }

@@ -180,6 +180,7 @@ public:
   bool HasOverride() const;
   SEOverride* GetOverride() const;
   void RemoveOverride();
+  bool IsOverrideActionOn() const;
 
 protected:
   bool IsValid(const SEPatientAction& action);

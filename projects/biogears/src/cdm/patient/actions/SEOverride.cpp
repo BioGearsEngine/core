@@ -72,7 +72,8 @@ void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state)
 }
 bool SEOverride::HasOverrideSwitch() const
 {
-  return m_OverrideSwitch == ((CDM::enumOnOff::Off)) ? false : true;
+  return (m_OverrideSwitch == CDM::enumOnOff::Off) ? true : 
+         (m_OverrideSwitch == CDM::enumOnOff::On) ?  true : false;
 }
 void SEOverride::InvalidateOverrideSwitch()
 {
