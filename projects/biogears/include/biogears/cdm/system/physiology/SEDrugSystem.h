@@ -43,10 +43,6 @@ protected:
   virtual void Unload(CDM::DrugSystemData& data) const;
 
 public:
-  virtual bool HasAntibioticMassInBody() const;
-  virtual SEScalarMass& GetAntibioticMassInBody();
-  virtual double GetAntibioticMassInBody(const MassUnit& unit) const;
-
   virtual bool HasBronchodilationLevel() const;
   virtual SEScalarFraction& GetBronchodilationLevel();
   virtual double GetBronchodilationLevel() const;
@@ -93,7 +89,6 @@ public:
   virtual double GetCentralNervousResponse() const;
 
 protected:
-  SEScalarMass* m_AntibioticMassInBody;
   SEScalarFraction* m_BronchodilationLevel;
   SEScalarFrequency* m_HeartRateChange;
   SEScalarPressure* m_MeanBloodPressureChange;

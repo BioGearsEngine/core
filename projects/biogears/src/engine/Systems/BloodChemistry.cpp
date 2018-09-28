@@ -646,7 +646,7 @@ void BloodChemistry::Sepsis()
   double neutrophilActive = GetSepsisInfectionState().GetNeutrophilActive().GetValue();
   double tissueIntegrity = GetSepsisInfectionState().GetTissueIntegrity().GetValue();
   double antiinflammation = GetSepsisInfectionState().GetAntiinflammation().GetValue();
-  double antibiotic_g = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g);
+
 
   //Adjust time scale of parameters based off severity.  Currently set so range is 1 to 20 times baseline parameters.  Severity is squared
   //because otherwise outputs converge too similarly at high severities
@@ -679,15 +679,15 @@ void BloodChemistry::Sepsis()
   double kdp_Per_h = 0.005 * timeScale; //Rate at which pathogen causes inflammation / tissue damage
 
   //Antibiotic pharmacodynamics--see Regoes2004Pharmacodynamic
-  double antibiotic_ug_Per_mL = m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::ug);
+
   double minimumInhibitoryConcentration_ug_Per_mL = 3.4;
   double antibioticEMax = 2.5;
   double antibioticShapeParam = 1.0;
   double antibioticEC50 = 1.5;
-  double antibioticEffect_Per_h = antibioticEMax * pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (pow(antibioticEC50,antibioticShapeParam) + pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
+  //double antibioticEffect_Per_h = antibioticEMax * pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (pow(antibioticEC50,antibioticShapeParam) + pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
 
   //Scale down pathogen growth rate and scale up anti-inflammation response as a function of antibiotic activity
-  kpg_Per_h = kpg_Per_h -(antibioticEffect_Per_h * timeScale);
+ // kpg_Per_h = kpg_Per_h -(antibioticEffect_Per_h * timeScale);
   //sc_Per_h = sc_Per_h + (antibioticEffect_Per_h * timeScale);
 
   //Intermediate functions

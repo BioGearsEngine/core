@@ -80,8 +80,6 @@ void Drugs::Clear()
 void Drugs::Initialize()
 {
   BioGearsSystem::Initialize();
-
-  GetAntibioticMassInBody().SetValue(0.0, MassUnit::g);
   GetBronchodilationLevel().SetValue(0.0);
   GetHeartRateChange().SetValue(0.0, FrequencyUnit::Per_min);
   GetMeanBloodPressureChange().SetValue(0.0, PressureUnit::mmHg);
@@ -400,11 +398,6 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       double massIncrement_ug = volumeToAdminister_mL * component->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
       subQ->Balance(BalanceLiquidBy::Mass);
-    }
-    if ((compound->GetName().compare("Antibiotic") == 0)) {
-      //Antibiotic is only used in Sepsis model.  We base dose on Regoes2004Pharmacodynamics model and parameters for Ampicillin 
-	  double antibioticConcentration_ug_Per_mL = 1.0;
-      GetAntibioticMassInBody().IncrementValue(antibioticConcentration_ug_Per_mL * volumeToAdminister_mL, MassUnit::ug);
     }
 
     if ((compound->GetName().compare("Saline") == 0) || (compound->GetName().compare("RingersLactate") == 0) || (compound->GetName().compare("Antibiotic") == 0)) //Note: Saline and ringers lactate have different densities than pure water
@@ -766,14 +759,6 @@ void Drugs::CalculateSubstanceClearance()
 
     //Hepatic Excretion
     m_data.GetSubstances().CalculateGenericExcretion(LiverVascularFlow_mL_Per_s, *m_liverTissue, *sub, clearance.GetFractionExcretedInFeces().GetValue(), m_dt_s);
-  }
-
-  //Clear out antibiotic using plasma half-life reported by FDA (only applies to Sepsis scenarios)
-  if (GetAntibioticMassInBody(MassUnit::g) >= ZERO_APPROX) {
-    //Assuming that this rate doesn't change even though blood volume is going bonkers during sepsis
-    double rateConstant_Per_s = -(1.0 / 8.0) * log(0.1) / 3600.0;		//Convert from Per hr to per s, taken from Regoes2004Pharmacodynamic
-    double antibioticMassCleared_g = rateConstant_Per_s * GetAntibioticMassInBody(MassUnit::g) * m_dt_s;
-    GetAntibioticMassInBody().IncrementValue(-antibioticMassCleared_g, MassUnit::g);
   }
 }
 

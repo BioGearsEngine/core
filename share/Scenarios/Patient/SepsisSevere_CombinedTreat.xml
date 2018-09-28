@@ -88,7 +88,6 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature" Substance="Oxygen" Name="Molarity" Unit="mmol/L" Precision="3"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Oxygen" Name="Molarity" Unit="mmol/L" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBilirubin" Unit="mg/dL" Precision="3"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="AntibioticMassInBody" Unit="mg" Precision="3"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Lactate"        Name="Concentration" Unit="mg/dL" Precision="3"/>
 	
 	</DataRequests>
