@@ -25,6 +25,8 @@ if(NOT Log4cpp_FOUND)
   find_library(Log4cpp_LIBRARY_RELEASE NAMES
       log4cpp
       liblog4cpp
+      Log4cpp
+      libLog4cpp
   
     PATH_SUFFIX  release
     DOC "Log4cpp Release Library. Prefered over DLL"
@@ -37,6 +39,12 @@ if(NOT Log4cpp_FOUND)
       liblog4cppD
       log4cpp
       liblog4cpp
+      Log4cpp_d
+      LibLog4cpp_d
+      Log4cppD
+      libLog4cppD
+      Log4cpp
+      libLog4cpp
     PATH_SUFFIX  debug
     DOC "Log4cpp Debug Library. Prefered over DLL"
   )
