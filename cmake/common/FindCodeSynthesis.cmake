@@ -55,14 +55,11 @@ function(REGISTER_XSD schema)
 
   set(CodeSynthesis_FLAGS --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} --options-file ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.cfg ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd)
 
-  if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx 
-      OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml      OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd 
-    )
+  if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx )
     message(STATUS "Generating ${schema}.hxx and ${schema}.cxx")
     execute_process( WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
                      COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
-                     COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xml ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.template.xml
                      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd   
                      ERROR_VARIABLE XSD_ERROR
                      OUTPUT_QUIET
@@ -198,15 +195,12 @@ function(REGISTER_XSD_FILE file )
   
   get_filename_component(schema ${file} NAME_WE)
 
-  if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx 
-      OR NOT EXISTS ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd 
-    )
+  if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx )
     message(STATUS "Generating ${root_dir}/${component}${schema}{.hxx,.cxx}")
     execute_process( 
                      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
                      COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
-                     COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd   
                      ERROR_VARIABLE XSD_ERROR
                    )
     if(XSD_ERROR )
@@ -329,6 +323,7 @@ function(GENERATE_XSD_SCHEMA file)
       PROJECT_LABEL "XSD_Gen_${safe_unique_name}")
   list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
   if(_l_STAGE)
+    message(FATAL_ERROR "_l_STAGE=${_l_STAGE} is TRUE")
     add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${schema}.xsd    
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                         COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/   
