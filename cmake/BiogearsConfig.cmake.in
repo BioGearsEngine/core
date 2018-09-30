@@ -11,3 +11,20 @@ include ( "${CMAKE_CURRENT_LIST_DIR}/@ROOT_PROJECT_NAME@.cmake" )
 find_dependency(Eigen3)
 find_dependency(Log4cpp)
 find_dependency(CodeSynthesis)
+
+#
+# Function Stage_BioGears_Schema
+# Param: DIR - Directory to stage the contents of Biogears_XSD_SCHEMA_DIR
+#
+# Places the value of Biogears_XSD_SCHEMA_LIST in to DIR
+# Each file will become its on custom_target and will be staged before by runtime
+function(stage_biogears_schema DIR)
+ foreach( file IN LISTS Biogears_XSD_SCHEMA_LIST )
+	 string(REPLACE "${PROJECT_SOURCE_DIR}/share/biogears" "${DIR}" destination_file "${_file}" )
+	 add_custom_command(
+		 OUTPUT  ${runtime_file}
+		 DEPENDS ${_file}
+                COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
+	 )
+ endforeach()
+endfunction()

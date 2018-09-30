@@ -38,10 +38,6 @@ file(GLOB_RECURSE cdm_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/cdm/*.xsd")
 REGISTER_XSD_DIR(  ""   CONFIG BioGearsDataModel.cfg 
                     ROOT "biogears" SUBPATH "schema" RESOURCE_FOLDER "resources/schema"
                     TARGETS XSD_TARGETS)
-# REGISTER_XSD_FILE  ( BioGearsDataModel.xsd CONFIG BioGearsDataModel.cfg 
-#                      ROOT biogears SUBPATH schema RESOURCE_FOLDER resources/schema
-# 		     DEPENDS ${biogears_xsd_list} ${cdm_xsd_list} ${PROJECT_SOURCE_DIR}/share/xsd/CommonDataModel.xsd ${CMAKE_CURRENT_BINARY_DIR}/biogears/schema/data-model-schema.hxx
-#                    )
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################

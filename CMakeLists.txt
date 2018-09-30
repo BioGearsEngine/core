@@ -85,10 +85,17 @@ write_basic_package_version_file(
 )
 
 # install the configuration file
+if(NOT Log4cpp_DIR)
+  list(APPEND Packages ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindLog4cpp.cmake)
+endif()
+if(NOT Xerces-c_DIR)
+  list(APPEND Packages ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindXerces-c.cmake)
+endif()
+if(NOT CodeSynthesis_DIR)
+  list(APPEND Packages ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindCodeSynthesis.cmake)
+endif()
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${ROOT_PROJECT_NAME}Config.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindLog4cpp.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindXerces-c.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindCodeSynthesis.cmake
+  ${Packages}
   DESTINATION lib/cmake/${ROOT_PROJECT_NAME}
 )
