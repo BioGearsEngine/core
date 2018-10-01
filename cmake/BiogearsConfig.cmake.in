@@ -30,9 +30,7 @@ function(stage_biogears_schema )
   set(__RESULTS_VAR _stage_biogears_schema_results)
  endif()
  foreach( file IN LISTS Biogears_XSD_SCHEMA_LIST )
-	 message(STATUS "string(REPLACE \"${Biogears_XSD_SCHEMA_DIR}\" \"${__DESTINATION}/xsd\" destination_file \"${file}\" )")
 	 string(REPLACE "${Biogears_XSD_SCHEMA_DIR}" "${__DESTINATION}/xsd" destination_file "${file}" )
-   message(STATUS "destination_file=${destination_file}")
    list(APPEND ${__RESULTS_VAR} ${destination_file} )
 	 add_custom_command(
 		 OUTPUT  ${destination_file}
@@ -64,9 +62,7 @@ function(stage_biogears_data)
   set(__RESULTS_VAR _stage_biogears_data_results)
  endif()
  foreach( file IN LISTS Biogears_XSD_DATA_LIST )
-	 message(STATUS "string(REPLACE \"${Biogears_XML_DATA_DIR}\" \"${__DESTINATION}/\" destination_file \"${file}\" )")
 	 string(REPLACE "${Biogears_XML_DATA_DIR}" "${__DESTINATION}" destination_file "${file}" )
-   message(STATUS "destination_file=${destination_file}")
    list(APPEND ${__RESULTS_VAR} ${destination_file} )
 	 add_custom_command(
 		 OUTPUT  ${destination_file}
