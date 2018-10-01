@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 
 class Serializer;
 
+namespace biogears {
 class BIOGEARS_API SEOverride : public SEPatientAction {
 public:
   SEOverride();
@@ -49,3 +50,4 @@ protected:
   CDM::enumOnOff m_OverrideSwitch;
   SEScalarPressure* m_PressureOR;
 };
+}

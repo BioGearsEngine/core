@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
 
+namespace biogears {
 SEOverride::SEOverride()
   : SEPatientAction()
 {
@@ -129,4 +130,5 @@ void SEOverride::ToString(std::ostream& str) const
   str << "\n\tPressure: ";
   HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
   str << std::flush;
+}
 }

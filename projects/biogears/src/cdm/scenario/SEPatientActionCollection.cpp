@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
+namespace biogears {
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -1046,4 +1047,5 @@ void SEPatientActionCollection::RemoveOverride()
 bool SEPatientActionCollection::IsOverrideActionOn() const
 {
   return (HasOverride()) && (m_OverrideAction->GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
+}
 }
