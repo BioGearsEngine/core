@@ -626,6 +626,9 @@ void Cardiovascular::ChronicRenalStenosis()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PreProcess()
 {
+  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+    ProcessOverride();
+  }
   // Locate the cardiac cycle in time (systole, diastole)
   // and do the appropriate calculations based on the time location.
   HeartDriver();

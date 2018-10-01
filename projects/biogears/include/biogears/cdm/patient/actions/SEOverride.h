@@ -37,12 +37,12 @@ protected:
 
 public:
   CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const;
-  void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state);
-  bool SEOverride::HasOverrideSwitch() const;
-  void SEOverride::InvalidateOverrideSwitch();
-  bool SEOverride::HasMAPOverride() const;
-  SEScalarPressure& SEOverride::GetMAPOverride();
-  double SEOverride::GetMAPOverride(const PressureUnit& unit) const;
+  void SetOverrideSwitch(CDM::enumOnOff::value state);
+  bool HasOverrideSwitch() const;
+  void InvalidateOverrideSwitch();
+  bool HasMAPOverride() const;
+  SEScalarPressure& GetMAPOverride();
+  double GetMAPOverride(const PressureUnit& unit) const;
 
   virtual void ToString(std::ostream& str) const;
 
