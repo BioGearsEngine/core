@@ -30,11 +30,9 @@ public class SEDrugSystem extends SEPhysiologySystem implements SESystem
   protected SEScalarVolume      tidalVolumeChange;
   protected SEScalarFraction    tubularPermeabilityChange;
   protected SEScalarFraction		centralNervousResponse;
-  protected SEScalarMass				antibioticMassInBody;
 
   public SEDrugSystem()
   {
-    antibioticMassInBody = null;
     bronchodilationLevel = null;
     heartRateChange = null;
     meanBloodPressureChange = null;
@@ -50,8 +48,6 @@ public class SEDrugSystem extends SEPhysiologySystem implements SESystem
 
   public void reset()
   {
-  	if(antibioticMassInBody != null)
-  		antibioticMassInBody.invalidate();
     if (bronchodilationLevel != null)
       bronchodilationLevel.invalidate();
     if (heartRateChange != null)
@@ -78,8 +74,6 @@ public class SEDrugSystem extends SEPhysiologySystem implements SESystem
 
   public boolean load(DrugSystemData in)
   {
-  	if(in.getAntibioticMassInBody() != null)
-  		getAntibioticMassInBody().load(in.getAntibioticMassInBody());
     if (in.getBronchodilationLevel() != null)
       getBronchodilationLevel().load(in.getBronchodilationLevel());
     if (in.getHeartRateChange() != null)
@@ -115,8 +109,6 @@ public class SEDrugSystem extends SEPhysiologySystem implements SESystem
 
   protected void unload(DrugSystemData data)
   {
-  	if (antibioticMassInBody != null)
-  		data.setAntibioticMassInBody(antibioticMassInBody.unload());
     if (bronchodilationLevel != null)
       data.setBronchodilationLevel(bronchodilationLevel.unload());
     if (heartRateChange != null)
@@ -139,17 +131,6 @@ public class SEDrugSystem extends SEPhysiologySystem implements SESystem
       data.setTubularPermeabilityChange(tubularPermeabilityChange.unload());
     if (centralNervousResponse != null)
     	data.setCentralNervousResponse(centralNervousResponse.unload());
-  }
-  
-  public SEScalarMass getAntibioticMassInBody()
-  {
-  	if (antibioticMassInBody == null)
-  		antibioticMassInBody = new SEScalarMass();
-  	return antibioticMassInBody;
-  }
-  public boolean hasAntibioticMassInBody()
-  {
-  	return antibioticMassInBody == null ? false : antibioticMassInBody.isValid();
   }
   
   public SEScalarFraction getBronchodilationLevel()

@@ -797,7 +797,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   //Assume that the muscles are most effected by this deficit and increase the anaerobic fraction as a function of sepsis progression
   //Skip over this if there is antibiotic because antibiotic decreases white blood cell count, and if left to its own devices the lactate
   //levels would spike up again because of how they are tied to the wbc count
-  if (m_PatientActions->HasSepsis() && m_data.GetDrugs().GetAntibioticMassInBody(MassUnit::g) < ZERO_APPROX) {
+  if (m_PatientActions->HasSepsis()) {
     double maxTissueDamage = 17.5;
     double severity = m_PatientActions->GetSepsis()->GetSeverity().GetValue();
    double tissueDamageFraction = 1.0 - m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
