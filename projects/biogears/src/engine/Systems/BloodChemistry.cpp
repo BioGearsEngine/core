@@ -680,15 +680,19 @@ void BloodChemistry::Sepsis()
 
   //Antibiotic pharmacodynamics--see Regoes2004Pharmacodynamic
 
-  double minimumInhibitoryConcentration_ug_Per_mL = 3.4;
+ // double piperacillin_ug_Per_mL = m_data.GetSubstances().GetSubstance("Piperacillin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
+  double minimumInhibitoryConcentration_ug_Per_mL = 64.0;
   double antibioticEMax = 2.5;
-  double antibioticShapeParam = 1.0;
-  double antibioticEC50 = 1.5;
-  //double antibioticEffect_Per_h = antibioticEMax * pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (pow(antibioticEC50,antibioticShapeParam) + pow(antibiotic_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
+  double antibioticShapeParam = 2.0;
+  double antibioticEC50 = 2.0;
+  double antibioticEffect_Per_h = 0.0;
+  if (m_data.GetSubstances().GetSubstance("Piperacillin")->HasPlasmaConcentration()) {
+    double piperacillin_ug_Per_mL = m_data.GetSubstances().GetSubstance("Piperacillin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
+    antibioticEffect_Per_h = antibioticEMax * std::pow(piperacillin_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (std::pow(antibioticEC50, antibioticShapeParam) + std::pow(piperacillin_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
+  }
 
   //Scale down pathogen growth rate and scale up anti-inflammation response as a function of antibiotic activity
- // kpg_Per_h = kpg_Per_h -(antibioticEffect_Per_h * timeScale);
-  //sc_Per_h = sc_Per_h + (antibioticEffect_Per_h * timeScale);
+  kpg_Per_h = kpg_Per_h -(antibioticEffect_Per_h * timeScale);
 
   //Intermediate functions
   double cSat = pow(antiinflammation / cInf, 2);
