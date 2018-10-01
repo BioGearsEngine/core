@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Physiology.hxx>
 
+namespace biogears {
+
 class SEScalar;
 class SEScalar0To1;
 
@@ -67,3 +69,5 @@ protected:
   SEScalar0To1* m_TissueIntegrity;
   SEScalar* m_Antiinflammation;
 };
+
+}

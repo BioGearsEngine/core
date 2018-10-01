@@ -650,7 +650,7 @@ void BloodChemistry::Sepsis()
 
   //Adjust time scale of parameters based off severity.  Currently set so range is 1 to 20 times baseline parameters.  Severity is squared
   //because otherwise outputs converge too similarly at high severities
-  double timeScale = pow(20.0, sepSeverity*sepSeverity);
+  double timeScale = std::pow(20.0, sepSeverity*sepSeverity);
 
   //Constants needed for Reynolds model:: 
 	//p = pathogen, m = non specific immune response, n = phagocytotic (neutrophil) response, d = tissue damage)
@@ -695,9 +695,9 @@ void BloodChemistry::Sepsis()
   kpg_Per_h = kpg_Per_h -(antibioticEffect_Per_h * timeScale);
 
   //Intermediate functions
-  double cSat = pow(antiinflammation / cInf, 2);
+  double cSat = std::pow(antiinflammation / cInf, 2);
   double fN = neutrophilActive / (1.0 + cSat);
-  double fS = pow(fN, 6) / (pow(xdn, 6) + pow(fN, 6));
+  double fS = std::pow(fN, 6) / (std::pow(xdn, 6) + std::pow(fN, 6));
   double fCa = (neutrophilActive + kcnd * (1.0-tissueIntegrity)) / (1.0 + cSat);
 
   //Mass balances
@@ -728,7 +728,7 @@ void BloodChemistry::Sepsis()
   //tissue integrity.
   SEFluidCircuitPath* vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
   double resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (1.0-tissueIntegrity));
+  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (1.0-tissueIntegrity));
   vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double nextReflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0.05, 1.0, 0.10, tissueIntegrity);
   BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
@@ -743,7 +743,7 @@ void BloodChemistry::Sepsis()
       comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
       vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
       resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * pow(10.0, -10 * (1.0-tissueIntegrity));
+      nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (1.0-tissueIntegrity));
       vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
    // } 
   }

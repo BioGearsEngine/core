@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+namespace biogears {
+
 SESepsisState::SESepsisState()
   : m_Pathogen(nullptr)
   , m_Macrophage(nullptr)
@@ -193,4 +195,5 @@ double SESepsisState::GetAntiinflammation() const
   if (m_Antiinflammation == nullptr)
     return SEScalar::dNaN();
   return m_Antiinflammation->GetValue();
+}
 }
