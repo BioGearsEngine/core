@@ -805,7 +805,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     //The baseline of 0.2 was determined empirically to balance lactate transport / elimination with production
     //Max value is a function of severity because higher severity scenarios are shorter and we need to spike the concentration faster
     //We also need the production to slack off or else we will just keep pumping out lactate indefinitely
-    hypoperfusedFraction = severity * exp(-pow(tissueDamageFraction / 0.5, 2)) + 0.25;
+    hypoperfusedFraction = severity * exp(-std::pow(tissueDamageFraction / 0.5, 2)) + 0.25;
   }
 
   //Reusable values for looping
