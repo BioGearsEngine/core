@@ -36,7 +36,7 @@ protected:
   virtual void Unload(CDM::OverrideData& data) const;
 
 public:
-  CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const;
+  CDM::enumOnOff::value GetOverrideSwitch() const;
   void SetOverrideSwitch(CDM::enumOnOff::value state);
   bool HasOverrideSwitch() const;
   void InvalidateOverrideSwitch();
