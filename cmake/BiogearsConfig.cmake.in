@@ -26,6 +26,9 @@ function(stage_biogears_schema )
                      ""
                      "DESTINATION;RESULTS_VAR"
                      "" ${ARGN})
+ if(NOT __DESTINATION)
+  message(FATAL_ERROR "DESTINATION required but not given")
+ endif()
  if(NOT __RESULTS_VAR)
   set(__RESULTS_VAR _stage_biogears_schema_results)
  endif()
@@ -48,7 +51,7 @@ endfunction()
 
 #
 # Function Stage_BioGears_Data
-# Param: DIR - Directory to stage the contents of Biogears_XSD_SCHEMA_DIR
+# Param: DESTINATION - Directory to stage the contents of Biogears_XSD_SCHEMA_DIR
 # Param: RESULTS_VAR - Variable to store the results in
 #
 # Places the value of Biogears_XSD_DATA_LIST in to DIR
@@ -58,6 +61,9 @@ function(stage_biogears_data)
                      ""
                      "DESTINATION;RESULTS_VAR"
                      "" ${ARGN})
+ if(NOT __DESTINATION)
+  message(FATAL_ERROR "DESTINATION required but not given")
+ endif()
  if(NOT __RESULTS_VAR)
   set(__RESULTS_VAR _stage_biogears_data_results)
  endif()
