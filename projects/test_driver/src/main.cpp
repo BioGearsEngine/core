@@ -16,21 +16,30 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
+#include "biogears/engine/test/BioGearsEngineTest.h"
 
 using namespace biogears;
 
 int main(int argc, char* argv[])
 {
 
-  if (argc < 3) {
-    std::cout << "Usuage\n\t " << argv[0] << ": <test> <output_dir>" << std::endl;
+  if (argc < 4) {
+    std::cout << "Usuage\n\t " << argv[0] << ": <type (BGE or CDM)> <test> <output_dir>" << std::endl;
   }
   else {
-    std::string test= argv[1];
-    std::string dir = argv[2];
-    CommonDataModelTest executor;
-    executor.GetLogger()->LogToConsole(true);
-    executor.RunTest(test, dir);
+    std::string type = argv[1];
+    std::string test= argv[2];
+    std::string dir = argv[3];
+    if (type.compare("CDM") == 0) {
+      CommonDataModelTest executor;
+      executor.GetLogger()->LogToConsole(true);
+      executor.RunTest(test, dir);
+    } else if(type.compare("BGE")==0) {
+      BioGearsEngineTest executor;
+      executor.RunTest(test, dir);
+    } else {
+      std::cout << "Invalid type.  Options are BGE and CDM" << std::endl;
+      }
 
   }
 
