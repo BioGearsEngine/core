@@ -243,5 +243,9 @@ void BioGearsEngineTest::FillFunctionMap()
     &BioGearsEngineTest::FullStoresFastingTest));
   bgeMap.insert(
     std::make_pair("LipogenesisTest", &BioGearsEngineTest::LipogenesisTest));
+
+  bgeMap.insert(
+    std::make_pair("AcuteInflammationTest",
+      &BioGearsEngineTest::AcuteInflammationTest));
 }
 }

@@ -184,6 +184,13 @@ public:
   void BrainInjuryTest(const std::string& rptDirectory);
 
 protected:
+
+public:
+  ///////////////////
+  // Blood Chemistry Tests //
+  void AcuteInflammationTest(const std::string& rptDirectory);
+
+
 public:
   ////////////////////////////
   // Acid Base Engine Tests //
