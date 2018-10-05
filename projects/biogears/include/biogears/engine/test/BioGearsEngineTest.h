@@ -190,6 +190,10 @@ public:
   // Blood Chemistry Tests //
   void AcuteInflammationTest(const std::string& rptDirectory);
 
+protected:
+  double Hill(double x, double& n, double& h);
+  double DownReg(double x, double &cin, double &hin, double &ilbar, double &il);
+
 
 public:
   ////////////////////////////
