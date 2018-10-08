@@ -19,8 +19,9 @@ SEOverride::SEOverride()
   : SEPatientAction()
 {
   m_OverrideSwitch = CDM::enumOnOff::Off;
+  m_OverrideValid = CDM::enumOnOff::Off;
   m_PressureOR = nullptr;
-  }
+}
 
 SEOverride::~SEOverride()
 {
@@ -31,6 +32,7 @@ void SEOverride::Clear()
 {
   SEPatientAction::Clear();
   m_OverrideSwitch = CDM::enumOnOff::Off;
+  m_OverrideValid = CDM::enumOnOff::Off;
   SAFE_DELETE(m_PressureOR);
 }
 
@@ -40,7 +42,7 @@ bool SEOverride::IsValid() const
     Error("Override must have state.");
     return false;
   }
-  if (!HasMAPOverride() && GetOverrideSwitch()==CDM::enumOnOff::On) {
+  if (!HasMAPOverride() && GetOverrideSwitch() == CDM::enumOnOff::On) {
     Error("Override must have a parameter");
     return false;
   }
@@ -93,12 +95,31 @@ void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state)
 }
 bool SEOverride::HasOverrideSwitch() const
 {
-  return (m_OverrideSwitch == CDM::enumOnOff::Off) ? true : 
-         (m_OverrideSwitch == CDM::enumOnOff::On) ?  true : false;
+  return (m_OverrideSwitch == CDM::enumOnOff::Off) ? true : (m_OverrideSwitch == CDM::enumOnOff::On) ? true : false;
 }
 void SEOverride::InvalidateOverrideSwitch()
 {
   m_OverrideSwitch = (CDM::enumOnOff::Off);
+}
+CDM::enumOnOff::value SEOverride::GetOverrideValidity() const
+{
+  return m_OverrideValid;
+}
+void SEOverride::SetOverrideValidity(CDM::enumOnOff::value valid)
+{
+  m_OverrideValid = valid;
+}
+bool SEOverride::HasOverrideValidity() const
+{
+  return (m_OverrideValid == CDM::enumOnOff::Off) ? true : (m_OverrideValid == CDM::enumOnOff::On) ? true : false;
+}
+void SEOverride::InvalidateOverrideValidity()
+{
+  m_OverrideValid = (CDM::enumOnOff::Off);
+}
+bool SEOverride::IsOverrideValid()
+{
+  return (m_OverrideValid == CDM::enumOnOff::On) ? true : false;
 }
 
 bool SEOverride::HasMAPOverride() const
@@ -118,7 +139,6 @@ double SEOverride::GetMAPOverride(const PressureUnit& unit) const
   return m_PressureOR->GetValue(unit);
 }
 
-
 void SEOverride::ToString(std::ostream& str) const
 {
   str << "Patient Action : Override Parameter";
@@ -127,6 +147,11 @@ void SEOverride::ToString(std::ostream& str) const
 
   str << "\n\tState: ";
   HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
+  str << "\n\tValid: ";
+  HasOverrideValidity() ? str << GetOverrideValidity() : str << "Not Set";
+  if (GetOverrideValidity() == CDM::enumOnOff::Off) {
+    str << ("\n\tOverride has turned validity off. Outputs no longer resemble validated parameters.");
+  }
   str << "\n\tPressure: ";
   HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
   str << std::flush;

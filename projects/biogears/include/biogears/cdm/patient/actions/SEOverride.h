@@ -40,6 +40,11 @@ public:
   void SetOverrideSwitch(CDM::enumOnOff::value state);
   bool HasOverrideSwitch() const;
   void InvalidateOverrideSwitch();
+  CDM::enumOnOff::value GetOverrideValidity() const;
+  void SetOverrideValidity(CDM::enumOnOff::value valid);
+  bool HasOverrideValidity() const;
+  void InvalidateOverrideValidity();
+  bool IsOverrideValid();
   bool HasMAPOverride() const;
   SEScalarPressure& GetMAPOverride();
   double GetMAPOverride(const PressureUnit& unit) const;
@@ -48,6 +53,7 @@ public:
 
 protected:
   CDM::enumOnOff m_OverrideSwitch;
+  CDM::enumOnOff m_OverrideValid;
   SEScalarPressure* m_PressureOR;
 };
 }

@@ -445,6 +445,7 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. -->                 					
 				</xs:sequence>  
 				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
+				<xs:attribute name="Valid" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

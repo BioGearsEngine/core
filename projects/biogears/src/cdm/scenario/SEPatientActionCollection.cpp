@@ -1048,4 +1048,8 @@ bool SEPatientActionCollection::IsOverrideActionOn() const
 {
   return (HasOverride()) && (m_OverrideAction->GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
 }
+bool SEPatientActionCollection::IsOverrideActionValid() const
+{
+  return (HasOverride()) && (m_OverrideAction->GetOverrideValidity() == CDM::enumOnOff::On) ? true : false;
+}
 }
