@@ -589,6 +589,13 @@ void Drugs::CalculateDrugEffects()
         concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       }
     }
+
+    if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
+    {
+      pd.GetDiastolicPressureModifier().SetValue(0.0);
+      pd.GetSystolicPressureModifier().SetValue(0.0);
+    }
+
     /// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.
     // This would be a problem for something like a continuous infusion of a drug or an environmental drug
     // where we need to establish a new homeostatic point. Once the patient stabilizes with the drug effect included, a new baseline is

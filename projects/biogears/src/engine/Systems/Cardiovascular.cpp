@@ -626,18 +626,12 @@ void Cardiovascular::ChronicRenalStenosis()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PreProcess()
 {
-  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
-    ProcessOverride();
-  }
+  
   // Locate the cardiac cycle in time (systole, diastole)
   // and do the appropriate calculations based on the time location.
   HeartDriver();
   ProcessActions();
-  //check overrides
 
-  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
-    ProcessOverride();
-  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -668,6 +662,9 @@ void Cardiovascular::Process()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PostProcess()
 {
+  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+    ProcessOverride();
+  }
   m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
 }
 
@@ -1844,13 +1841,17 @@ void Cardiovascular::CalculateHeartRate()
 void Cardiovascular::ProcessOverride()
 {
   double map_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure().GetValue(PressureUnit::mmHg);
-  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
-  {
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
     map_mmHg = m_data.GetActions().GetPatientActions().GetOverride()->GetMAPOverride(PressureUnit::mmHg);
 
   } else {
     map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
   }
   m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
- }
+}
+}
+
+void biogears::Cardiovascular::OverrideControlLoop()
+{
+  return;
 }

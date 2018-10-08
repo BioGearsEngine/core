@@ -67,7 +67,7 @@ public:
 protected:
   virtual void Unload(CDM::BioGearsCardiovascularSystemData& data) const;
 
-  // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
+  // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp();
 
 public:
@@ -89,9 +89,11 @@ private:
   /**/ void BeginCardiacCycle();
   /**/ void CalculateHeartElastance();
   void ProcessOverride();
+  
   // IF STABILIZING
   void TuneCircuit();
   /**/ void TunePaths(double systemicResistanceScale, double systemicComplianceScale, double aortaResistanceScale, double aortaComplianceScale, double rightHeartResistanceScale, double venaCavaComplianceScale);
+  /**/ void OverrideControlLoop();
   // ELSE
   void MetabolicToneResponse();
   void ProcessActions();
