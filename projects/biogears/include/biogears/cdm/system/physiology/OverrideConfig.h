@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/biogears/OverrideConfig.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
 
 CDM_BIND_DECL(OverrideConfigData)
 
@@ -37,6 +38,7 @@ public:
   //virtual SEScalarPressure& GetOverride();
   //virtual double GetOverride(const PressureUnit& unit) const;
 
+  // Cardiovascular Parameters
   virtual bool HasMeanArterialPressureOverride() const;
   virtual SEScalarPressure& GetMeanArterialPressureOverride();
   virtual double GetMeanArterialPressureOverride(const PressureUnit& unit) const;
@@ -51,11 +53,27 @@ public:
   }
   virtual void EnableCardiovascularOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
 
+  //Energy Parameters
+  virtual bool HasCoreTemperatureOverride() const;
+  virtual SEScalarTemperature& GetCoreTemperatureOverride();
+  virtual double GetCoreTemperatureOverride(const TemperatureUnit& unit) const;
+
+  virtual bool HasEnableEnergyOverride() const
+  {
+    return m_overrideMode != (CDM::enumOnOff::Off);
+  }
+  virtual bool IsEnergyOverrideEnabled() const
+  {
+    return m_overrideMode == CDM::enumOnOff::On;
+  }
+  virtual void EnableEnergyOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
+
 protected:
   virtual void Unload(CDM::OverrideConfigData& data) const;
   bool ReadOverrideParameters(const std::string& overrideParameterFile);
 
   CDM::enumOnOff::value m_overrideMode;
   SEScalarPressure* m_MeanArterialPressureOverride;
+  SEScalarTemperature* m_CoreTemperatureOverride;
 };
 }

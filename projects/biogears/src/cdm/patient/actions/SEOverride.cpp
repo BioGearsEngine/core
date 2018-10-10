@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEOverride.h>
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+
 
 namespace biogears {
 SEOverride::SEOverride()
@@ -21,6 +23,7 @@ SEOverride::SEOverride()
   m_OverrideSwitch = CDM::enumOnOff::Off;
   m_OverrideValid = CDM::enumOnOff::Off;
   m_PressureOR = nullptr;
+  m_CoreTemperatureOR = nullptr;
 }
 
 SEOverride::~SEOverride()
@@ -34,6 +37,7 @@ void SEOverride::Clear()
   m_OverrideSwitch = CDM::enumOnOff::Off;
   m_OverrideValid = CDM::enumOnOff::Off;
   SAFE_DELETE(m_PressureOR);
+  SAFE_DELETE(m_CoreTemperatureOR);
 }
 
 bool SEOverride::IsValid() const
@@ -42,7 +46,7 @@ bool SEOverride::IsValid() const
     Error("Override must have state.");
     return false;
   }
-  if (!HasMAPOverride() && GetOverrideSwitch() == CDM::enumOnOff::On) {
+  if ((!HasMAPOverride() && !HasCoreTemperatureOverride()) && GetOverrideSwitch() == CDM::enumOnOff::On) {
     Error("Override must have a parameter");
     return false;
   }
@@ -51,7 +55,7 @@ bool SEOverride::IsValid() const
 
 bool SEOverride::IsActive() const
 {
-  if (!HasOverrideSwitch())
+  if (!HasOverrideSwitch() || !HasOverrideValidity())
     return false;
   return GetOverrideSwitch() == CDM::enumOnOff::On;
 }
@@ -60,10 +64,15 @@ bool SEOverride::Load(const CDM::OverrideData& in)
 {
   SEPatientAction::Clear();
   SetOverrideSwitch(in.State());
+  SetOverrideValidity(in.Valid());
   if (in.MeanArterialPressureOverride().present())
     GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
   else
     GetMAPOverride().Invalidate();
+  if (in.CoreTemperatureOverride().present())
+    GetCoreTemperatureOverride().Load(in.CoreTemperatureOverride().get());
+  else
+    GetCoreTemperatureOverride().Invalidate();
   //SEPatientAction::Load(in);
   //return true;
   return IsValid();
@@ -81,8 +90,12 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   SEPatientAction::Unload(data);
   if (HasOverrideSwitch())
     data.State(m_OverrideSwitch);
+  if (HasOverrideValidity())
+    data.Valid(m_OverrideValid);
   if (HasMAPOverride())
     data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
+  if (HasCoreTemperatureOverride())
+    data.CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOR->Unload()));
 }
 
 CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
@@ -122,6 +135,7 @@ bool SEOverride::IsOverrideValid()
   return (m_OverrideValid == CDM::enumOnOff::On) ? true : false;
 }
 
+// Cardiovascular Overrides //
 bool SEOverride::HasMAPOverride() const
 {
   return m_PressureOR == nullptr ? false : m_PressureOR->IsValid();
@@ -139,6 +153,34 @@ double SEOverride::GetMAPOverride(const PressureUnit& unit) const
   return m_PressureOR->GetValue(unit);
 }
 
+bool SEOverride::HasCardiovascularOverride() const
+{
+  return HasMAPOverride() ? true : false;
+}
+
+// Energy Overrides //
+bool SEOverride::HasCoreTemperatureOverride() const
+{
+  return m_CoreTemperatureOR == nullptr ? false : m_CoreTemperatureOR->IsValid();
+}
+SEScalarTemperature& SEOverride::GetCoreTemperatureOverride()
+{
+  if (m_CoreTemperatureOR == nullptr)
+    m_CoreTemperatureOR = new SEScalarTemperature();
+  return *m_CoreTemperatureOR;
+}
+double SEOverride::GetCoreTemperatureOverride(const TemperatureUnit& unit) const
+{
+  if (m_CoreTemperatureOR == nullptr)
+    return SEScalar::dNaN();
+  return m_CoreTemperatureOR->GetValue(unit);
+}
+
+bool SEOverride::HasEnergyOverride() const
+{
+  return HasCoreTemperatureOverride() ? true : false;
+}
+
 void SEOverride::ToString(std::ostream& str) const
 {
   str << "Patient Action : Override Parameter";
@@ -152,8 +194,17 @@ void SEOverride::ToString(std::ostream& str) const
   if (GetOverrideValidity() == CDM::enumOnOff::Off) {
     str << ("\n\tOverride has turned validity off. Outputs no longer resemble validated parameters.");
   }
-  str << "\n\tPressure: ";
-  HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
-  str << std::flush;
+  if (HasMAPOverride())
+  {
+    str << "\n\tPressure: ";
+    HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
+    str << std::flush;
+  }
+  if (HasCoreTemperatureOverride())
+  {
+    str << "\n\tCore Temperature: ";
+    HasCoreTemperatureOverride() ? str << *m_CoreTemperatureOR : str << "Not Set";
+    str << std::flush;
+  } 
 }
 }

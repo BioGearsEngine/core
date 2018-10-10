@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 class Serializer;
@@ -45,15 +46,26 @@ public:
   bool HasOverrideValidity() const;
   void InvalidateOverrideValidity();
   bool IsOverrideValid();
+
+
   bool HasMAPOverride() const;
   SEScalarPressure& GetMAPOverride();
   double GetMAPOverride(const PressureUnit& unit) const;
+  bool HasCardiovascularOverride() const;
+
+  bool HasCoreTemperatureOverride() const;
+  SEScalarTemperature& GetCoreTemperatureOverride();
+  double GetCoreTemperatureOverride(const TemperatureUnit& unit) const;
+  bool HasEnergyOverride() const;
 
   virtual void ToString(std::ostream& str) const;
 
 protected:
+  bool m_CardiovascularOverride;
+  bool m_EnergyOverride;
   CDM::enumOnOff m_OverrideSwitch;
   CDM::enumOnOff m_OverrideValid;
   SEScalarPressure* m_PressureOR;
+  SEScalarTemperature* m_CoreTemperatureOR;
 };
 }

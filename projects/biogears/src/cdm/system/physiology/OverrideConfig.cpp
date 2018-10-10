@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/system/physiology/OverrideConfig.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -26,6 +27,7 @@ OverrideConfig::OverrideConfig()
 {
   m_overrideMode = CDM::enumOnOff::Off;
   m_MeanArterialPressureOverride = nullptr;
+  m_CoreTemperatureOverride = nullptr;
 }
 
 OverrideConfig::~OverrideConfig()
@@ -37,6 +39,7 @@ void OverrideConfig::Clear()
 {
   /* Check this function */
   SAFE_DELETE(m_MeanArterialPressureOverride);
+  SAFE_DELETE(m_CoreTemperatureOverride);
   m_overrideMode = CDM::enumOnOff::Off;
 }
 
@@ -169,5 +172,27 @@ double OverrideConfig::GetMeanArterialPressureOverride(const PressureUnit& unit)
   if (m_MeanArterialPressureOverride == nullptr)
     return SEScalar::dNaN();
   return m_MeanArterialPressureOverride->GetValue(unit);
+}
+
+
+////////////////////
+/** Energy */
+////////////////////
+
+bool OverrideConfig::HasCoreTemperatureOverride() const
+{
+  return m_CoreTemperatureOverride == nullptr ? false : m_CoreTemperatureOverride->IsValid();
+}
+SEScalarTemperature& OverrideConfig::GetCoreTemperatureOverride()
+{
+  if (m_CoreTemperatureOverride == nullptr)
+    m_CoreTemperatureOverride = new SEScalarTemperature();
+  return *m_CoreTemperatureOverride;
+}
+double OverrideConfig::GetCoreTemperatureOverride(const TemperatureUnit& unit) const
+{
+  if (m_CoreTemperatureOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_CoreTemperatureOverride->GetValue(unit);
 }
 }

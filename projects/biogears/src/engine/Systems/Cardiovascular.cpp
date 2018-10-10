@@ -662,7 +662,7 @@ void Cardiovascular::Process()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PostProcess()
 {
-  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) && m_data.GetState() == EngineState::Active) {
     ProcessOverride();
   }
   m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
