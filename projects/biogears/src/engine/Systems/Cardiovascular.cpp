@@ -626,12 +626,11 @@ void Cardiovascular::ChronicRenalStenosis()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PreProcess()
 {
-  
+
   // Locate the cardiac cycle in time (systole, diastole)
   // and do the appropriate calculations based on the time location.
   HeartDriver();
   ProcessActions();
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -662,8 +661,11 @@ void Cardiovascular::Process()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PostProcess()
 {
-  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) && m_data.GetState() == EngineState::Active) {
-    ProcessOverride();
+  if ((m_Override->IsCardiovascularOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) 
+    {
+      ProcessOverride();
+    }
   }
   m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
 }
@@ -1533,13 +1535,13 @@ void Cardiovascular::TuneCircuit()
       m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
       //return; //Skip stabelization for debugging
 
-      if (m_Override->IsCardiovascularOverrideEnabled()) {
+      /*if (m_Override->IsCardiovascularOverrideEnabled()) {
         map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
         m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
         //Info("Cardiovascular Override Enabled");
       } else {
         map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
-      }
+      }*/
       systolic_mmHg = GetSystolicArterialPressure(PressureUnit::mmHg);
       diastolic_mmHg = GetDiastolicArterialPressure(PressureUnit::mmHg);
       cardiacOutput_mL_Per_min = GetCardiacOutput(VolumePerTimeUnit::mL_Per_min);
@@ -1856,7 +1858,7 @@ void biogears::Cardiovascular::OverrideControlLoop()
 {
   double maxMAPOverride = 105.0; //mmHg
   double minMAPOverride = 60.0; //mmHg
-  double currentMAPOverride = 85.0; //Average MAP, value gets changed in next check 
+  double currentMAPOverride = 85.0; //Average MAP, value gets changed in next check
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
     currentMAPOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetMAPOverride(PressureUnit::mmHg);
 
@@ -1864,12 +1866,10 @@ void biogears::Cardiovascular::OverrideControlLoop()
     currentMAPOverride = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
   }
 
-  if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity()==CDM::enumOnOff::On))
-  {
+  if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
     m_ss << "Cardiovascular Override set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
   } else {
     return;
   }
-
- }
+}

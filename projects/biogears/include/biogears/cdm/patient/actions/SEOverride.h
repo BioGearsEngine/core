@@ -61,8 +61,6 @@ public:
   virtual void ToString(std::ostream& str) const;
 
 protected:
-  bool m_CardiovascularOverride;
-  bool m_EnergyOverride;
   CDM::enumOnOff m_OverrideSwitch;
   CDM::enumOnOff m_OverrideValid;
   SEScalarPressure* m_PressureOR;

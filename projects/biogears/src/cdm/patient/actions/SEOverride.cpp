@@ -46,18 +46,18 @@ bool SEOverride::IsValid() const
     Error("Override must have state.");
     return false;
   }
-  if ((!HasMAPOverride() && !HasCoreTemperatureOverride()) && GetOverrideSwitch() == CDM::enumOnOff::On) {
-    Error("Override must have a parameter");
+  if (GetOverrideSwitch() == CDM::enumOnOff::On) {
+    return true;
+  } else {
     return false;
   }
-  return true;
 }
 
 bool SEOverride::IsActive() const
 {
   if (!HasOverrideSwitch() || !HasOverrideValidity())
     return false;
-  return GetOverrideSwitch() == CDM::enumOnOff::On;
+  return (GetOverrideSwitch() == CDM::enumOnOff::On && (GetOverrideValidity()==CDM::enumOnOff::On || GetOverrideValidity()==CDM::enumOnOff::Off));
 }
 
 bool SEOverride::Load(const CDM::OverrideData& in)
@@ -191,7 +191,7 @@ void SEOverride::ToString(std::ostream& str) const
   HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
   str << "\n\tValid: ";
   HasOverrideValidity() ? str << GetOverrideValidity() : str << "Not Set";
-  if (GetOverrideValidity() == CDM::enumOnOff::Off) {
+  if (GetOverrideValidity() == CDM::enumOnOff::Off && GetOverrideSwitch() == CDM::enumOnOff::On) {
     str << ("\n\tOverride has turned validity off. Outputs no longer resemble validated parameters.");
   }
   if (HasMAPOverride())

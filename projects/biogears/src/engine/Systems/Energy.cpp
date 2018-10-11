@@ -159,6 +159,7 @@ void Energy::SetUp()
   m_dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_PatientActions = &m_data.GetActions().GetPatientActions();
   m_Patient = &m_data.GetPatient();
+  m_Override = &m_data.GetOverride();
 
   m_AortaHCO3 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(m_data.GetSubstances().GetHCO3());
   m_SkinSodium = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstances().GetSodium());
@@ -276,6 +277,11 @@ void Energy::Process()
 //--------------------------------------------------------------------------------------------------
 void Energy::PostProcess()
 {
+  if ((m_Override->IsEnergyOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasEnergyOverride()) {
+      ProcessOverride();
+    }
+  }
   m_circuitCalculator.PostProcess(*m_TemperatureCircuit);
 }
 
@@ -577,4 +583,45 @@ void Energy::CalculateBasalMetabolicRate()
      << "Patient basal metabolic rate = " << patientBMR_kcal_Per_day << " kcal/day";
   Info(ss);
 }
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// determine override requirements from user defined inputs
+///
+/// \details
+/// User specified override outputs that are specific to the cardiovascular system are implemented here.
+/// If overrides aren't present for this system then this function will not be called during preprocess.
+//--------------------------------------------------------------------------------------------------
+void biogears::Energy::ProcessOverride() 
+{
+  OverrideControlLoop();
+  double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C);
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride()) {
+    coreTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+  } else {
+    coreTemp_degC = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
+  }
+  m_data.GetEnergy().GetCoreTemperature().SetValue(coreTemp_degC, TemperatureUnit::C);
+}
+
+
+void biogears::Energy::OverrideControlLoop()
+{
+  double maxCoreTempOverride = 200.0; //mmHg
+  double minCoreTempOverride = 0.0; //mmHg
+  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Average MAP, value gets changed in next check
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride()) {
+    currentCoreTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+
+  } else {
+    currentCoreTempOverride = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
+  }
+
+  if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
+    m_ss << "Energy Override set outside of bounds of validated parameter override. Results are now unpredictable.";
+    Fatal(m_ss);
+  } else {
+    return;
+  }
 }
