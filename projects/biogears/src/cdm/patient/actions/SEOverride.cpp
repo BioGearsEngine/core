@@ -24,6 +24,7 @@ SEOverride::SEOverride()
   m_OverrideValid = CDM::enumOnOff::Off;
   m_PressureOR = nullptr;
   m_CoreTemperatureOR = nullptr;
+  m_SkinTemperatureOR = nullptr;
 }
 
 SEOverride::~SEOverride()
@@ -38,6 +39,7 @@ void SEOverride::Clear()
   m_OverrideValid = CDM::enumOnOff::Off;
   SAFE_DELETE(m_PressureOR);
   SAFE_DELETE(m_CoreTemperatureOR);
+  SAFE_DELETE(m_SkinTemperatureOR);
 }
 
 bool SEOverride::IsValid() const
@@ -73,6 +75,10 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetCoreTemperatureOverride().Load(in.CoreTemperatureOverride().get());
   else
     GetCoreTemperatureOverride().Invalidate();
+  if (in.SkinTemperatureOverride().present())
+    GetSkinTemperatureOverride().Load(in.SkinTemperatureOverride().get());
+  else
+    GetSkinTemperatureOverride().Invalidate();
   //SEPatientAction::Load(in);
   //return true;
   return IsValid();
@@ -96,6 +102,8 @@ void SEOverride::Unload(CDM::OverrideData& data) const
     data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
   if (HasCoreTemperatureOverride())
     data.CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOR->Unload()));
+  if (HasSkinTemperatureOverride())
+    data.SkinTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureOR->Unload()));
 }
 
 CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
@@ -175,10 +183,28 @@ double SEOverride::GetCoreTemperatureOverride(const TemperatureUnit& unit) const
     return SEScalar::dNaN();
   return m_CoreTemperatureOR->GetValue(unit);
 }
+bool SEOverride::HasSkinTemperatureOverride() const
+{
+  return m_SkinTemperatureOR == nullptr ? false : m_SkinTemperatureOR->IsValid();
+}
+SEScalarTemperature& SEOverride::GetSkinTemperatureOverride()
+{
+  if (m_SkinTemperatureOR == nullptr)
+    m_SkinTemperatureOR = new SEScalarTemperature();
+  return *m_SkinTemperatureOR;
+}
+double SEOverride::GetSkinTemperatureOverride(const TemperatureUnit& unit) const
+{
+  if (m_SkinTemperatureOR == nullptr)
+    return SEScalar::dNaN();
+  return m_SkinTemperatureOR->GetValue(unit);
+}
 
 bool SEOverride::HasEnergyOverride() const
 {
-  return HasCoreTemperatureOverride() ? true : false;
+  return HasCoreTemperatureOverride() ? true :
+  HasSkinTemperatureOverride() ? true :
+  false;
 }
 
 void SEOverride::ToString(std::ostream& str) const
@@ -205,6 +231,11 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tCore Temperature: ";
     HasCoreTemperatureOverride() ? str << *m_CoreTemperatureOR : str << "Not Set";
     str << std::flush;
-  } 
+  }
+  if (HasSkinTemperatureOverride()) {
+    str << "\n\tSkin Temperature: ";
+    HasSkinTemperatureOverride() ? str << *m_SkinTemperatureOR : str << "Not Set";
+    str << std::flush;
+  }
 }
 }

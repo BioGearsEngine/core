@@ -56,6 +56,9 @@ public:
   bool HasCoreTemperatureOverride() const;
   SEScalarTemperature& GetCoreTemperatureOverride();
   double GetCoreTemperatureOverride(const TemperatureUnit& unit) const;
+  bool HasSkinTemperatureOverride() const;
+  SEScalarTemperature& GetSkinTemperatureOverride();
+  double GetSkinTemperatureOverride(const TemperatureUnit& unit) const;
   bool HasEnergyOverride() const;
 
   virtual void ToString(std::ostream& str) const;
@@ -65,5 +68,6 @@ protected:
   CDM::enumOnOff m_OverrideValid;
   SEScalarPressure* m_PressureOR;
   SEScalarTemperature* m_CoreTemperatureOR;
+  SEScalarTemperature* m_SkinTemperatureOR;
 };
 }

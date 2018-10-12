@@ -28,6 +28,7 @@ OverrideConfig::OverrideConfig()
   m_overrideMode = CDM::enumOnOff::Off;
   m_MeanArterialPressureOverride = nullptr;
   m_CoreTemperatureOverride = nullptr;
+  m_SkinTemperatureOverride = nullptr;
 }
 
 OverrideConfig::~OverrideConfig()
@@ -40,6 +41,7 @@ void OverrideConfig::Clear()
   /* Check this function */
   SAFE_DELETE(m_MeanArterialPressureOverride);
   SAFE_DELETE(m_CoreTemperatureOverride);
+  SAFE_DELETE(m_SkinTemperatureOverride);
   m_overrideMode = CDM::enumOnOff::Off;
 }
 
@@ -66,7 +68,7 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     Error(sst);
     return false;
   }
-  if (!pData->CardiovascularOverride()) {
+  if (!pData->CardiovascularOverride() && !pData->EnergyOverride()) {
     return false;
   }
 
@@ -84,6 +86,15 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
       EnableCardiovascularOverride(config.EnableCardiovascularOverride().get());
     if (config.MeanArterialPressureOverride().present())
       GetMeanArterialPressureOverride().Load(config.MeanArterialPressureOverride().get());
+  }
+  if (in.EnergyOverride().present()) {
+    const CDM::EnergyOverrideData& config = in.EnergyOverride().get();
+    if (config.EnableEnergyOverride().present())
+      EnableEnergyOverride(config.EnableEnergyOverride().get());
+    if (config.CoreTemperatureOverride().present())
+      GetCoreTemperatureOverride().Load(config.CoreTemperatureOverride().get());
+    if (config.SkinTemperatureOverride().present())
+      GetSkinTemperatureOverride().Load(config.SkinTemperatureOverride().get());
   }
 
   return true;
@@ -107,6 +118,17 @@ void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
   if (HasEnableCardiovascularOverride())
     cardiovascularoverride->EnableCardiovascularOverride(m_overrideMode);
   data.CardiovascularOverride(std::unique_ptr<CDM::CardiovascularOverrideData>(cardiovascularoverride));
+
+  CDM::EnergyOverrideData* energy(new CDM::EnergyOverrideData());
+  if (HasCoreTemperatureOverride())
+    energy->CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOverride->Unload()));
+  if (HasSkinTemperatureOverride())
+    energy->SkinTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureOverride->Unload()));
+
+  CDM::EnergyOverrideData* energyoverride(new CDM::EnergyOverrideData());
+  if (HasEnableEnergyOverride())
+    energyoverride->EnableEnergyOverride(m_overrideMode);
+  data.EnergyOverride(std::unique_ptr<CDM::EnergyOverrideData>(energyoverride));
 }
 
 bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameterFile)
@@ -194,5 +216,21 @@ double OverrideConfig::GetCoreTemperatureOverride(const TemperatureUnit& unit) c
   if (m_CoreTemperatureOverride == nullptr)
     return SEScalar::dNaN();
   return m_CoreTemperatureOverride->GetValue(unit);
+}
+bool OverrideConfig::HasSkinTemperatureOverride() const
+{
+  return m_SkinTemperatureOverride == nullptr ? false : m_SkinTemperatureOverride->IsValid();
+}
+SEScalarTemperature& OverrideConfig::GetSkinTemperatureOverride()
+{
+  if (m_SkinTemperatureOverride == nullptr)
+    m_SkinTemperatureOverride = new SEScalarTemperature();
+  return *m_SkinTemperatureOverride;
+}
+double OverrideConfig::GetSkinTemperatureOverride(const TemperatureUnit& unit) const
+{
+  if (m_SkinTemperatureOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_SkinTemperatureOverride->GetValue(unit);
 }
 }

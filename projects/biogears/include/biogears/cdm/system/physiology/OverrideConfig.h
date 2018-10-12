@@ -57,6 +57,9 @@ public:
   virtual bool HasCoreTemperatureOverride() const;
   virtual SEScalarTemperature& GetCoreTemperatureOverride();
   virtual double GetCoreTemperatureOverride(const TemperatureUnit& unit) const;
+  virtual bool HasSkinTemperatureOverride() const;
+  virtual SEScalarTemperature& GetSkinTemperatureOverride();
+  virtual double GetSkinTemperatureOverride(const TemperatureUnit& unit) const;
 
   virtual bool HasEnableEnergyOverride() const
   {
@@ -75,5 +78,7 @@ protected:
   CDM::enumOnOff::value m_overrideMode;
   SEScalarPressure* m_MeanArterialPressureOverride;
   SEScalarTemperature* m_CoreTemperatureOverride;
+  SEScalarTemperature* m_SkinTemperatureOverride;
+
 };
 }

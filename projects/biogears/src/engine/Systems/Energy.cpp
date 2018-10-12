@@ -597,12 +597,18 @@ void biogears::Energy::ProcessOverride()
 {
   OverrideControlLoop();
   double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C);
-  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride()) {
-    coreTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+  double skinTemp_degC = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C);
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
+      coreTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
+      skinTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
   } else {
     coreTemp_degC = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
+    skinTemp_degC = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
   }
   m_data.GetEnergy().GetCoreTemperature().SetValue(coreTemp_degC, TemperatureUnit::C);
+  m_data.GetEnergy().GetSkinTemperature().SetValue(skinTemp_degC, TemperatureUnit::C);
 }
 
 
@@ -610,16 +616,26 @@ void biogears::Energy::OverrideControlLoop()
 {
   double maxCoreTempOverride = 200.0; //mmHg
   double minCoreTempOverride = 0.0; //mmHg
-  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Average MAP, value gets changed in next check
-  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride()) {
-    currentCoreTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Average CT, value gets changed in next check
+  double maxSkinTempOverride = 200.0; //mmHg
+  double minSkinTempOverride = 0.0; //mmHg
+  double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Average ST, value gets changed in next check
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
+      currentCoreTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
+      currentSkinTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
 
   } else {
     currentCoreTempOverride = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
+    currentSkinTempOverride = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
   }
 
   if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
-    m_ss << "Energy Override set outside of bounds of validated parameter override. Results are now unpredictable.";
+    m_ss << "Core Temperature Override set outside of bounds of validated parameter override. Results are now unpredictable.";
+    Fatal(m_ss);
+  } else if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
+    m_ss << "Skin Temperature Override set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
   } else {
     return;
