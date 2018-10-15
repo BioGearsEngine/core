@@ -72,6 +72,7 @@ public:
 protected:
   void CheckBloodSubstanceLevels();
   void Sepsis();
+  void AcuteInflammatoryResponse();
 
   // Serializable member variables (Set in Initialize and in schema)
   RunningAverage m_ArterialOxygen_mmHg;
