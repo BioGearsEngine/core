@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 
-
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
@@ -59,6 +58,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_VenousCarbonDioxidePressure = nullptr;
   m_VenousOxygenPressure = nullptr;
   m_SepsisInfectionState = nullptr;
+  m_AcuteInflammatoryResponse = nullptr;
 }
 
 SEBloodChemistrySystem::~SEBloodChemistrySystem()
@@ -102,12 +102,13 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_ArterialCarbonDioxidePressure);
   SAFE_DELETE(m_VenousCarbonDioxidePressure);
   SAFE_DELETE(m_SepsisInfectionState);
+  SAFE_DELETE(m_AcuteInflammatoryResponse);
 }
 
 const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 {
   if (name.compare("ArterialBloodPH") == 0)
-	return &GetArterialBloodPH();
+    return &GetArterialBloodPH();
   if (name.compare("BloodDensity") == 0)
     return &GetBloodDensity();
   if (name.compare("BloodSpecificHeat") == 0)
@@ -143,7 +144,7 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   if (name.compare("TotalProteinConcentration") == 0)
     return &GetTotalProteinConcentration();
   if (name.compare("VenousBloodPH") == 0)
-	  return &GetVenousBloodPH();
+    return &GetVenousBloodPH();
   if (name.compare("VolumeFractionNeutralPhospholipidInPlasma") == 0)
     return &GetVolumeFractionNeutralPhospholipidInPlasma();
   if (name.compare("VolumeFractionNeutralLipidInPlasma") == 0)
@@ -168,11 +169,17 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   if (name.compare("VenousOxygenPressure") == 0)
     return &GetVenousOxygenPressure();
 
-  //This applies to SepsisInfectionState values, as they are defined SepsisInfectionState-Pathogen, e.g.
+  //This applies to SepsisState and InflammationState values (Sepsis will be replaced eventually), as they are defined SepsisInfectionState-Pathogen, e.g.
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string prop = name.substr(split + 1, name.npos); //Get property that follows dash
-    return GetSepsisInfectionState().GetScalar(prop);
+    std::string parent = name.substr(0, split);
+    if (parent.compare("SepsisInfectionSTate") == 0) {
+      return GetSepsisInfectionState().GetScalar(prop);
+    }
+    if (parent.compare("AcuteInflammatoryResponse") == 0) {
+      return GetAcuteInflammatoryResponse().GetScalar(prop);
+    }
   }
 
   return nullptr;
@@ -183,7 +190,7 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
   SESystem::Load(in);
 
   if (in.ArterialBloodPH().present())
-	  GetArterialBloodPH().Load(in.ArterialBloodPH().get());
+    GetArterialBloodPH().Load(in.ArterialBloodPH().get());
   if (in.BloodDensity().present())
     GetBloodDensity().Load(in.BloodDensity().get());
   if (in.BloodSpecificHeat().present())
@@ -219,7 +226,7 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
   if (in.TotalProteinConcentration().present())
     GetTotalProteinConcentration().Load(in.TotalProteinConcentration().get());
   if (in.VenousBloodPH().present())
-	  GetVenousBloodPH().Load(in.VenousBloodPH().get());
+    GetVenousBloodPH().Load(in.VenousBloodPH().get());
   if (in.VolumeFractionNeutralPhospholipidInPlasma().present())
     GetVolumeFractionNeutralPhospholipidInPlasma().Load(in.VolumeFractionNeutralPhospholipidInPlasma().get());
   if (in.VolumeFractionNeutralLipidInPlasma().present())
@@ -245,6 +252,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetVenousOxygenPressure().Load(in.VenousOxygenPressure().get());
   if (in.SepsisInfectionState().present())
     GetSepsisInfectionState().Load(in.SepsisInfectionState().get());
+  if (in.AcuteInflammatoryResponse().present())
+    GetAcuteInflammatoryResponse().Load(in.AcuteInflammatoryResponse().get());
   return true;
 }
 
@@ -260,7 +269,7 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
   SESystem::Unload(data);
 
   if (m_ArterialBloodPH != nullptr)
-	  data.ArterialBloodPH(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPH->Unload()));
+    data.ArterialBloodPH(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPH->Unload()));
   if (m_BloodDensity != nullptr)
     data.BloodDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodDensity->Unload()));
   if (m_BloodSpecificHeat != nullptr)
@@ -317,11 +326,13 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
   if (m_VenousCarbonDioxidePressure != nullptr)
     data.VenousCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousCarbonDioxidePressure->Unload()));
   if (m_VenousBloodPH != nullptr)
-	  data.VenousBloodPH(std::unique_ptr<CDM::ScalarData>(m_VenousBloodPH->Unload()));
+    data.VenousBloodPH(std::unique_ptr<CDM::ScalarData>(m_VenousBloodPH->Unload()));
   if (m_VenousOxygenPressure != nullptr)
     data.VenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousOxygenPressure->Unload()));
   if (m_SepsisInfectionState != nullptr)
     data.SepsisInfectionState(std::unique_ptr<CDM::SepsisStateData>(m_SepsisInfectionState->Unload()));
+  if (m_AcuteInflammatoryResponse != nullptr)
+    data.AcuteInflammatoryResponse(std::unique_ptr<CDM::InflammationStateData>(m_AcuteInflammatoryResponse->Unload()));
 }
 
 bool SEBloodChemistrySystem::HasBloodDensity() const
@@ -343,36 +354,36 @@ double SEBloodChemistrySystem::GetBloodDensity(const MassPerVolumeUnit& unit) co
 
 bool SEBloodChemistrySystem::HasArterialBloodPH() const
 {
-	return m_ArterialBloodPH == nullptr ? false : m_ArterialBloodPH->IsValid();
+  return m_ArterialBloodPH == nullptr ? false : m_ArterialBloodPH->IsValid();
 }
 SEScalar& SEBloodChemistrySystem::GetArterialBloodPH()
 {
-	if (m_ArterialBloodPH == nullptr)
-		m_ArterialBloodPH = new SEScalar();
-	return *m_ArterialBloodPH;
+  if (m_ArterialBloodPH == nullptr)
+    m_ArterialBloodPH = new SEScalar();
+  return *m_ArterialBloodPH;
 }
 double SEBloodChemistrySystem::GetArterialBloodPH() const
 {
-	if (m_ArterialBloodPH == nullptr)
-		return SEScalar::dNaN();
-	return m_ArterialBloodPH->GetValue();
+  if (m_ArterialBloodPH == nullptr)
+    return SEScalar::dNaN();
+  return m_ArterialBloodPH->GetValue();
 }
 
 bool SEBloodChemistrySystem::HasVenousBloodPH() const
 {
-	return m_VenousBloodPH == nullptr ? false : m_VenousBloodPH->IsValid();
+  return m_VenousBloodPH == nullptr ? false : m_VenousBloodPH->IsValid();
 }
 SEScalar& SEBloodChemistrySystem::GetVenousBloodPH()
 {
-	if (m_VenousBloodPH == nullptr)
-		m_VenousBloodPH = new SEScalar();
-	return *m_VenousBloodPH;
+  if (m_VenousBloodPH == nullptr)
+    m_VenousBloodPH = new SEScalar();
+  return *m_VenousBloodPH;
 }
 double SEBloodChemistrySystem::GetVenousBloodPH() const
 {
-	if (m_VenousBloodPH == nullptr)
-		return SEScalar::dNaN();
-	return m_VenousBloodPH->GetValue();
+  if (m_VenousBloodPH == nullptr)
+    return SEScalar::dNaN();
+  return m_VenousBloodPH->GetValue();
 }
 
 bool SEBloodChemistrySystem::HasBloodSpecificHeat() const
@@ -843,5 +854,16 @@ SESepsisState& SEBloodChemistrySystem::GetSepsisInfectionState()
   if (m_SepsisInfectionState == nullptr)
     m_SepsisInfectionState = new SESepsisState();
   return *m_SepsisInfectionState;
+}
+
+bool SEBloodChemistrySystem::HasAcuteInflammatoryResponse() const
+{
+  return m_AcuteInflammatoryResponse == nullptr ? false : m_AcuteInflammatoryResponse->IsValid();
+}
+SEInflammationState& SEBloodChemistrySystem::GetAcuteInflammatoryResponse()
+{
+  if (m_AcuteInflammatoryResponse == nullptr)
+    m_AcuteInflammatoryResponse = new SEInflammationState();
+  return *m_AcuteInflammatoryResponse;
 }
 }

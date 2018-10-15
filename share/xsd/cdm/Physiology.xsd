@@ -47,6 +47,31 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!--@brief State of the acute inflammation model that tracks response to an insult (pathogen, trauma).  To be used first with respect to burn model and then extended to a geneneral Sepsis model 
+	(replacing SepsisState above)
+	-->
+	<xs:complexType name="InflammationStateData">
+		<xs:complexContent>
+			<xs:extension base="ObjectData">
+				<xs:sequence>
+					<xs:element name="PathogenBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PathogenTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="MacrophageRestingTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="MacrophageActiveTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NeutrophilRestingBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NeutrophilActiveBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NeutrophilActiveTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TNFBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TNFTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="IL10Blood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="IL10Tissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Inflammation" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
     <!-- @brief Provides clinician level data reflecting the composition of the blood.
          @details Blood Chemistry is complete analysis on the blood at any given point during the simulation.
          The blood chemistry system houses all of the blood concentrations and compositions needed to assess a patient's health. This system is under development
@@ -79,6 +104,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
                     <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
                     <xs:element name="SepsisInfectionState" type="SepsisStateData" minOccurs="0" maxOccurs="1"/><!--@brief State vector for sepsis ODE model (pathogen count, neutrophil count, damage progression, and antiinflammation level).  Stored on CDM so that Sepsis states can be serialized-->
+					<xs:element name="AcuteInflammatoryResponse" type="InflammationStateData" minOccurs="0" maxOccurs="1"/> <!--@brief State vector for general acute inflammation model representing response to infection and trauma-->
 					<!-- Substance Pressures -->
                     <xs:element name="ArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the aorta.-->
                     <xs:element name="ArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the aorta.-->

@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 #include <biogears/cdm/patient/actions/SESepsisState.h>
+#include <biogears/cdm/patient/actions/SEInflammationState.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
@@ -33,6 +34,7 @@ class AmountPerVolumeUnit;
 class SEScalarPressure;
 class PressureUnit;
 class SESepsisState;
+class SEInflammationState;
 
 
 /** @copydoc Physiology_BloodChemistrySystemData
@@ -344,6 +346,9 @@ public:
   virtual bool HasSepsisInfectionState() const;
   virtual SESepsisState& GetSepsisInfectionState();
 
+  virtual bool HasAcuteInflammatoryResponse() const;
+  virtual SEInflammationState& GetAcuteInflammatoryResponse();
+
 protected:
   SEScalarMassPerVolume* m_BloodDensity;
   SEScalar* m_ArterialBloodPH;
@@ -377,6 +382,7 @@ protected:
   SEScalarPressure* m_VenousCarbonDioxidePressure;
   SEScalarPressure* m_VenousOxygenPressure;
   SESepsisState* m_SepsisInfectionState;
+  SEInflammationState* m_AcuteInflammatoryResponse;
 };
 }
 
