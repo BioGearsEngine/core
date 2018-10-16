@@ -21,7 +21,8 @@ specific language governing permissions and limitations under the License.
       <xs:extension base="ObjectData">
         <xs:sequence>
           <xs:element name="EnableCardiovascularOverride" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>          
+          <xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>  
+		  <xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/>  		  
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

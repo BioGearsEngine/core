@@ -515,7 +515,7 @@ void BioGearsEngine::AdvanceModelTime()
 {
   if (!IsReady())
     return;
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::IrreversibleState) && (!m_OverrideConfig->IsCardiovascularOverrideEnabled() || !m_data.GetActions().GetPatientActions().IsOverrideActionOn()))
+  if (m_Patient->IsEventActive(CDM::enumPatientEvent::IrreversibleState))
     return;
 
   PreProcess();

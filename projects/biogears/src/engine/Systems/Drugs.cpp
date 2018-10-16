@@ -590,13 +590,16 @@ void Drugs::CalculateDrugEffects()
       }
     }
 
-    if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
+    if (m_data.GetActions().GetPatientActions().IsOverrideActionOn())
       {
-      if (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::Off)
+      if (!m_data.GetActions().GetPatientActions().IsOverrideActionValid() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
         {
           pd.GetDiastolicPressureModifier().SetValue(0.0);
           pd.GetSystolicPressureModifier().SetValue(0.0);
         }
+      if (!m_data.GetActions().GetPatientActions().IsOverrideActionValid() && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
+        pd.GetHeartRateModifier().SetValue(0.0);
+      }
     }
 
     /// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.

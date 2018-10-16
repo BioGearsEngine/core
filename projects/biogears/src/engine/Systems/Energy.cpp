@@ -11,12 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Energy.h>
 
-#include <biogears/engine/Systems/BloodChemistry.h>
-#include <biogears/engine/Systems/Cardiovascular.h>
-#include <biogears/engine/Systems/Environment.h>
-#include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/schema/cdm/Properties.hxx>
-#include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
@@ -50,9 +44,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/engine/Systems/BloodChemistry.h>
+#include <biogears/engine/Systems/Cardiovascular.h>
+#include <biogears/engine/Systems/Environment.h>
+#include <biogears/schema/biogears/BioGearsEnvironment.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -234,7 +234,7 @@ void Energy::Exercise()
         exerciseIntensity = 1;
         Warning("Desired work rate over max work rate. Desired work rate can be a value between 0 and 1200 W. Proceeding with max work rate.");
       }
-    m_PatientActions->GetExercise()->GetDesiredWorkRate().Clear();
+      m_PatientActions->GetExercise()->GetDesiredWorkRate().Clear();
       m_PatientActions->GetExercise()->GetIntensity().SetValue(exerciseIntensity);
     } else {
       Warning("Exercise call with no severity. Action ignored.");
@@ -242,7 +242,7 @@ void Energy::Exercise()
   } else {
     return;
   }
-  
+
   // The MetabolicRateGain is used to ramp the metabolic rate to the value specified by the user's exercise intensity.
   double MetabolicRateGain = 1.0;
   double workRateDesired_W = exerciseIntensity * maxWorkRate_W;
@@ -450,26 +450,25 @@ void Energy::CalculateSweatRate()
   if ((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)) > 0.1) {
     effectiveClothingEvaporation_im_Per_clo = std::pow((m_data.GetEnvironment().GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s)), 0.29);
   }
-  
+
   double dAirTemperature_C = m_data.GetEnvironment().GetConditions().GetAmbientTemperature(TemperatureUnit::C);
   double dWaterVaporPressureInAmbientAir_mmHg = GeneralMath::AntoineEquation(dAirTemperature_C);
   double m_dWaterVaporPressureInAmbientAir_Pa = Convert(dWaterVaporPressureInAmbientAir_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
   // double ambientAtmosphericPressure_Pa = m_data.GetEnvironment().GetConditions().GetAtmosphericPressure().GetValue(PressureUnit::Pa);
-  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322*(std::pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); //Still needs effective clothing evaporation
-
+  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322 * (std::pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); //Still needs effective clothing evaporation
 
   double vaporizationEnergy_J_Per_kg = m_data.GetConfiguration().GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
   double sweatSodiumConcentration_mM = 51.0; /// \cite shirreffs1997whole
   double sweatPotassiumConcentration_mM = 6.0; /// \cite shirreffs1997whole
   double sweatChlorideConcentration_mM = 48.0; /// \cite shirreffs1997whole
     // static double totalSweatLost_mL = 0; --Used to figure out total sweat loss during exercise scenario during debugging
-  
+
   double currentEvaporativeCapacity_W = sweatHeatTranferCoefficient_W_Per_K * (m_skinNode->GetTemperature(TemperatureUnit::K));
   if (currentEvaporativeCapacity_W > maximumEvaporativeCapacity_W) {
-  
+
     sweatHeatTranferCoefficient_W_Per_K = maximumEvaporativeCapacity_W / (m_skinNode->GetTemperature(TemperatureUnit::K));
   }
-  
+
   /// \todo Convert to sweat density once specific gravity calculation is in
   SEScalarMassPerVolume sweatDensity;
   GeneralMath::CalculateWaterDensity(m_skinNode->GetTemperature(), sweatDensity);
@@ -583,7 +582,6 @@ void Energy::CalculateBasalMetabolicRate()
      << "Patient basal metabolic rate = " << patientBMR_kcal_Per_day << " kcal/day";
   Info(ss);
 }
-}
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -593,7 +591,7 @@ void Energy::CalculateBasalMetabolicRate()
 /// User specified override outputs that are specific to the cardiovascular system are implemented here.
 /// If overrides aren't present for this system then this function will not be called during preprocess.
 //--------------------------------------------------------------------------------------------------
-void biogears::Energy::ProcessOverride() 
+void Energy::ProcessOverride()
 {
   OverrideControlLoop();
   double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C);
@@ -604,22 +602,23 @@ void biogears::Energy::ProcessOverride()
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
       skinTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
   } else {
-    coreTemp_degC = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
-    skinTemp_degC = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
+    if (m_Override->HasCoreTemperatureOverride())
+      coreTemp_degC = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
+    if (m_Override->HasSkinTemperatureOverride())
+      skinTemp_degC = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
   }
   m_data.GetEnergy().GetCoreTemperature().SetValue(coreTemp_degC, TemperatureUnit::C);
   m_data.GetEnergy().GetSkinTemperature().SetValue(skinTemp_degC, TemperatureUnit::C);
 }
 
-
-void biogears::Energy::OverrideControlLoop()
+void Energy::OverrideControlLoop()
 {
   double maxCoreTempOverride = 200.0; //mmHg
   double minCoreTempOverride = 0.0; //mmHg
-  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Average CT, value gets changed in next check
+  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Current CT, value gets changed in next check
   double maxSkinTempOverride = 200.0; //mmHg
   double minSkinTempOverride = 0.0; //mmHg
-  double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Average ST, value gets changed in next check
+  double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Current ST, value gets changed in next check
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
       currentCoreTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
@@ -627,17 +626,20 @@ void biogears::Energy::OverrideControlLoop()
       currentSkinTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
 
   } else {
-    currentCoreTempOverride = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
-    currentSkinTempOverride = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
+    if (m_Override->HasCoreTemperatureOverride())
+      currentCoreTempOverride = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
+    if (m_Override->HasSkinTemperatureOverride())
+      currentSkinTempOverride = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
   }
 
   if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
-    m_ss << "Core Temperature Override set outside of bounds of validated parameter override. Results are now unpredictable.";
+    m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
-  } else if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
-    m_ss << "Skin Temperature Override set outside of bounds of validated parameter override. Results are now unpredictable.";
-    Fatal(m_ss);
-  } else {
-    return;
   }
+  if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
+    m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
+    Fatal(m_ss);
+  }
+  return;
+}
 }

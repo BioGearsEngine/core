@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEOverride.h>
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
 
@@ -23,6 +24,7 @@ SEOverride::SEOverride()
   m_OverrideSwitch = CDM::enumOnOff::Off;
   m_OverrideValid = CDM::enumOnOff::Off;
   m_PressureOR = nullptr;
+  m_HeartRateOR = nullptr;
   m_CoreTemperatureOR = nullptr;
   m_SkinTemperatureOR = nullptr;
 }
@@ -38,6 +40,7 @@ void SEOverride::Clear()
   m_OverrideSwitch = CDM::enumOnOff::Off;
   m_OverrideValid = CDM::enumOnOff::Off;
   SAFE_DELETE(m_PressureOR);
+  SAFE_DELETE(m_HeartRateOR);
   SAFE_DELETE(m_CoreTemperatureOR);
   SAFE_DELETE(m_SkinTemperatureOR);
 }
@@ -71,6 +74,10 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
   else
     GetMAPOverride().Invalidate();
+  if (in.HeartRateOverride().present())
+    GetHeartRateOverride().Load(in.HeartRateOverride().get());
+  else
+    GetHeartRateOverride().Invalidate();
   if (in.CoreTemperatureOverride().present())
     GetCoreTemperatureOverride().Load(in.CoreTemperatureOverride().get());
   else
@@ -100,6 +107,8 @@ void SEOverride::Unload(CDM::OverrideData& data) const
     data.Valid(m_OverrideValid);
   if (HasMAPOverride())
     data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
+  if (HasHeartRateOverride())
+    data.HeartRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateOR->Unload()));
   if (HasCoreTemperatureOverride())
     data.CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOR->Unload()));
   if (HasSkinTemperatureOverride())
@@ -160,10 +169,29 @@ double SEOverride::GetMAPOverride(const PressureUnit& unit) const
     return SEScalar::dNaN();
   return m_PressureOR->GetValue(unit);
 }
+bool SEOverride::HasHeartRateOverride() const
+{
+  return m_HeartRateOR == nullptr ? false : m_HeartRateOR->IsValid();
+}
+SEScalarFrequency& SEOverride::GetHeartRateOverride()
+{
+  if (m_HeartRateOR == nullptr)
+    m_HeartRateOR = new SEScalarFrequency();
+  return *m_HeartRateOR;
+}
+double SEOverride::GetHeartRateOverride(const FrequencyUnit& unit) const
+{
+  if (m_HeartRateOR == nullptr)
+    return SEScalar::dNaN();
+  return m_HeartRateOR->GetValue(unit);
+}
 
 bool SEOverride::HasCardiovascularOverride() const
 {
-  return HasMAPOverride() ? true : false;
+  return HasMAPOverride() ? true : 
+  HasHeartRateOverride() ? true :
+  false;
+ 
 }
 
 // Energy Overrides //
@@ -222,8 +250,13 @@ void SEOverride::ToString(std::ostream& str) const
   }
   if (HasMAPOverride())
   {
-    str << "\n\tPressure: ";
+    str << "\n\tMean Arterial Pressure: ";
     HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
+    str << std::flush;
+  }
+  if (HasHeartRateOverride()) {
+    str << "\n\tHeart Rate: ";
+    HasHeartRateOverride() ? str << *m_HeartRateOR : str << "Not Set";
     str << std::flush;
   }
   if (HasCoreTemperatureOverride())

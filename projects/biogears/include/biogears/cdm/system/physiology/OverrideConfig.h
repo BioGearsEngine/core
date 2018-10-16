@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/OverrideConfig.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 
 CDM_BIND_DECL(OverrideConfigData)
 
@@ -42,6 +44,9 @@ public:
   virtual bool HasMeanArterialPressureOverride() const;
   virtual SEScalarPressure& GetMeanArterialPressureOverride();
   virtual double GetMeanArterialPressureOverride(const PressureUnit& unit) const;
+  virtual bool HasHeartRateOverride() const;
+  virtual SEScalarFrequency& GetHeartRateOverride();
+  virtual double GetHeartRateOverride(const FrequencyUnit& unit) const;
 
   virtual bool HasEnableCardiovascularOverride() const
   {
@@ -79,6 +84,7 @@ protected:
   SEScalarPressure* m_MeanArterialPressureOverride;
   SEScalarTemperature* m_CoreTemperatureOverride;
   SEScalarTemperature* m_SkinTemperatureOverride;
+  SEScalarFrequency* m_HeartRateOverride;
 
 };
 }
