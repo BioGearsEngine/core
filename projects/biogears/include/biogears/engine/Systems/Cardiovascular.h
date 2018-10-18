@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 #include <biogears/cdm/system/physiology/OverrideConfig.h>
+#include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
 namespace biogears {
 class SELiquidCompartmentGraph;
@@ -223,6 +224,7 @@ private:
   std::vector<SEFluidCircuitPath*> m_systemicResistancePaths;
   std::vector<SEFluidCircuitPath*> m_systemicCompliancePaths;
 
+  SEPatientActionCollection* m_PatientActions;
   OverrideConfig* m_Override;
 };
 }

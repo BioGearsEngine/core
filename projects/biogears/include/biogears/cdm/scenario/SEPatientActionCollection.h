@@ -42,7 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
-#include "biogears/cdm/patient/actions/SEOverride.h"
+#include <biogears/cdm/patient/actions/SEOverride.h>
 
 namespace biogears {
 class BIOGEARS_API SEPatientActionCollection : public Loggable {

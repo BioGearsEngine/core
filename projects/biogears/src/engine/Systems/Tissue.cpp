@@ -1494,7 +1494,8 @@ void Tissue::ProteinStorageAndRelease()
       if (m_Patient->GetMuscleMass(MassUnit::g) < proteinBreakdownRate_g_Per_s * m_Dt_s) {
         m_ss << "The patient has consumed all of their body's amino acids. They've effectively starved.";
         Warning(m_ss);
-        m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionValid())
+          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       } else {
         m_MuscleAA->GetMass().IncrementValue(proteinBreakdownRate_g_Per_s * m_Dt_s, MassUnit::g);
         m_Patient->GetMuscleMass().IncrementValue(-proteinBreakdownRate_g_Per_s * m_Dt_s, MassUnit::g);
@@ -1631,7 +1632,8 @@ void Tissue::FatStorageAndRelease()
     if (GetStoredFat(MassUnit::g) < fatReleaseRate_g_Per_s * m_Dt_s) {
       m_ss << "The patient has consumed all of their body's fat. They've effectively starved.";
       Warning(m_ss);
-      m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionValid())
+        m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
     } else {
       m_FatTAG->GetMass().IncrementValue(fatReleaseRate_g_Per_s * m_Dt_s, MassUnit::g);
       GetStoredFat().IncrementValue(-fatReleaseRate_g_Per_s * m_Dt_s, MassUnit::g);
