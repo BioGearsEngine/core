@@ -205,10 +205,13 @@ private:
   SEGasCompartment* m_Lungs;
   SEGasCompartment* m_Carina;
   SEGasSubstanceQuantity* m_CarinaO2;
+  SEGasSubstanceQuantity* m_CarinaCO2;
   SELiquidSubstanceQuantity* m_AortaO2;
   SELiquidSubstanceQuantity* m_AortaCO2;
   SEGasSubstanceQuantity* m_LeftAlveoliO2;
   SEGasSubstanceQuantity* m_RightAlveoliO2;
+  SEGasSubstanceQuantity* m_LeftAlveoliCO2;
+  SEGasSubstanceQuantity* m_RightAlveoliCO2;
   std::vector<SELiquidCompartment*> m_AerosolEffects;
   SEGasCompartment* m_MechanicalVentilatorConnection;
   //Circuits

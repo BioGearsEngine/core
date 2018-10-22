@@ -39,7 +39,7 @@ void HowToPainStimulus()
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPain.log");
   bg->GetLogger()->Info("HowToPain");
-  if (!bg->LoadState("./states/ToughGuy@0s.xml")) {
+  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
@@ -57,6 +57,10 @@ void HowToPainStimulus()
   severity = 0.5;
   PainStimulus.SetLocation(location);
   PainStimulus.GetSeverity().SetValue(severity);
+
+  //grab VAS score  
+  double pain;
+  double dt = bg->GetTimeStep(TimeUnit::s);
 
   //Set up substances.  Initialized morphine plasma concentration to 0.  Note that saline is technically a compound--this is
   //so the engine knows to look for multiple components within the same substance file (i.e. Na, Cl, etc)
@@ -87,20 +91,23 @@ void HowToPainStimulus()
   //lets start the pain
   bg->ProcessAction(PainStimulus);
   //administer morphine
-  bg->ProcessAction(bolus);
+
+  tracker.AdvanceModelTime(3);
+  pain = bg->GetNervousSystem()->GetPainVisualAnalogueScale();
+  std::cout << pain << std::endl;
+
+  if (pain > 2.0) {
+    bg->GetLogger()->Info("The patient is in pain");
+  }
+
   bg->GetLogger()->Info("Giving the patient Morphine.");
+  bg->ProcessAction(bolus);
 
-  tracker.AdvanceModelTime(300);
 
-  bg->GetLogger()->Info("The patient is in pain");
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
   bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-
-  //grab VAS score
-  double pain = bg->GetNervousSystem()->GetPainVisualAnalogueScale();
-  double dt = bg->GetTimeStep(TimeUnit::s);
 
   // Advance some time until patient is comfortable
   while (pain > 1.0) {

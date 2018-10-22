@@ -352,11 +352,14 @@ void Respiratory::SetUp()
   m_RightLungExtravascular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightLungIntracellular);
   m_Carina = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Carina);
   m_CarinaO2 = m_Carina->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
+  m_CarinaCO2 = m_Carina->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
   SELiquidCompartment* Aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
   m_AortaO2 = Aorta->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
   m_AortaCO2 = Aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
   m_LeftAlveoliO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
   m_RightAlveoliO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
+  m_LeftAlveoliCO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+  m_RightAlveoliCO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
   m_MechanicalVentilatorConnection = m_data.GetCompartments().GetGasCompartment(BGE::MechanicalVentilatorCompartment::Connection);
   // Compartments we will process aerosol effects on
   m_AerosolEffects.push_back(m_data.GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::Carina));
@@ -885,6 +888,20 @@ void Respiratory::RespiratoryDriver()
       ///\@cite Magasso2001Mathematical
       double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
       m_TargetTidalVolume_L = m_VentilationToTidalVolumeSlope * std::pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
+
+      double arterialPHBaseline = 7.41;
+
+      //update target tidal volume
+      if (m_data.GetState() == EngineState::AtSecondaryStableState) {
+        arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
+        }
+
+      //if (m_Patient->IsEventActive(CDM::enumPatientEvent::RespiratoryAlkalosis)) {
+        double arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
+        double diffPH = 8.0*((arterialPHBaseline - arterialPH) / arterialPHBaseline);
+        m_TargetTidalVolume_L *= (1 + diffPH);
+      //}
+
 
       //All actions that effect the target tidal volume and respiration rate are processed in the function below.  The
       //ventilation frequency (m_VentilationFrequency_Per_min) is calculated in this function.
@@ -1657,9 +1674,9 @@ void Respiratory::CalculateVitalSigns()
       subQ->GetSubstance().GetEndTidalPressure().Set(subQ->GetPartialPressure());
     }
     GetEndTidalCarbonDioxideFraction().Set(m_data.GetSubstances().GetCO2().GetEndTidalFraction());
-    GetEndTidalCarbonDioxidePressure().Set(m_data.GetSubstances().GetCO2().GetEndTidalPressure());
+    GetEndTidalCarbonDioxidePressure().Set(m_LeftAlveoliCO2->GetPartialPressure());
 
-    // Calculate Ventilations
+    // Calculate Ventilationss
     GetTotalAlveolarVentilation().SetValue(AlveoliDeltaVolume_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
     GetTotalPulmonaryVentilation().SetValue(TidalVolume_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
     GetTotalDeadSpaceVentilation().SetValue(DeadSpaceDeltaVolume_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
