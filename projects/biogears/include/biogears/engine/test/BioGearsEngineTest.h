@@ -193,6 +193,9 @@ public:
 protected:
   double Hill(double x, double& n, double& h);
   double DownReg(double x, double &cin, double &hin, double &ilbar, double &il);
+  double Up1(double y, double x, double n);
+  double Up2(double y, double x, double n);
+  double Down(double y, double x, double n);
 
 
 public:

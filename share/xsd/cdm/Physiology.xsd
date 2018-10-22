@@ -54,19 +54,23 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
 				<xs:sequence>
-					<xs:element name="PathogenBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="PathogenTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="MacrophageRestingTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="MacrophageActiveTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilRestingBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilActiveBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilActiveTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TNFBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TNFTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="IL10Blood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="IL10Tissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Trauma" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="MacrophageResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="MacrophageActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="InducibleNOSynthasePre" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="InducibleNOSynthase" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ConstitutiveNOSynthase" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Nitrate" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TumorNecrosisFactor" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Interleukin6" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Interleukin10" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Interleukin12" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Inflammation" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -37,72 +37,91 @@ protected:
   virtual void Unload(CDM::InflammationStateData& data) const;
 
 public:
-  virtual bool HasPathogenTissue() const;
-  virtual SEScalar& GetPathogenTissue();
-  virtual double GetPathogenTissue() const;
+  virtual bool HasPathogen() const;
+  virtual SEScalar& GetPathogen();
+  virtual double GetPathogen() const;
 
-  virtual bool HasPathogenBlood() const;
-  virtual SEScalar& GetPathogenBlood();
-  virtual double GetPathogenBlood() const;
+  virtual bool HasTrauma() const;
+  virtual SEScalar& GetTrauma();
+  virtual double GetTrauma() const;
 
-  virtual bool HasMacrophageRestingTissue() const;
-  virtual SEScalar& GetMacrophageRestingTissue();
-  virtual double GetMacrophageRestingTissue() const;
+  virtual bool HasMacrophageResting() const;
+  virtual SEScalar& GetMacrophageResting();
+  virtual double GetMacrophageResting() const;
 
-  virtual bool HasMacrophageActiveTissue() const;
-  virtual SEScalar& GetMacrophageActiveTissue();
-  virtual double GetMacrophageActiveTissue() const;
+  virtual bool HasMacrophageActive() const;
+  virtual SEScalar& GetMacrophageActive();
+  virtual double GetMacrophageActive() const;
 
-  virtual bool HasNeutrophilRestingBlood() const;
-  virtual SEScalar& GetNeutrophilRestingBlood();
-  virtual double GetNeutrophilRestingBlood() const;
+  virtual bool HasNeutrophilResting() const;
+  virtual SEScalar& GetNeutrophilResting();
+  virtual double GetNeutrophilResting() const;
 
-  virtual bool HasNeutrophilActiveBlood() const;
-  virtual SEScalar& GetNeutrophilActiveBlood();
-  virtual double GetNeutrophilActiveBlood() const;
+  virtual bool HasNeutrophilActive() const;
+  virtual SEScalar& GetNeutrophilActive();
+  virtual double GetNeutrophilActive() const;
 
-  virtual bool HasNeutrophilActiveTissue() const;
-  virtual SEScalar& GetNeutrophilActiveTissue();
-  virtual double GetNeutrophilActiveTissue() const;
+  virtual bool HasInducibleNOSynthasePre() const;
+  virtual SEScalar& GetInducibleNOSynthasePre();
+  virtual double GetInducibleNOSynthasePre() const;
 
-  virtual bool HasTNFBlood() const;
-  virtual SEScalar& GetTNFBlood();
-  virtual double GetTNFBlood() const;
+  virtual bool HasInducibleNOSynthase() const;
+  virtual SEScalar& GetInducibleNOSynthase();
+  virtual double GetInducibleNOSynthase() const;
 
-  virtual bool HasTNFTissue() const;
-  virtual SEScalar& GetTNFTissue();
-  virtual double GetTNFTissue() const;
+  virtual bool HasConstitutiveNOSynthase() const;
+  virtual SEScalar& GetConstitutiveNOSynthase();
+  virtual double GetConstitutiveNOSynthase() const;
 
-  virtual bool HasIL10Blood() const;
-  virtual SEScalar& GetIL10Blood();
-  virtual double GetIL10Blood() const;
+  virtual bool HasNitrate() const;
+  virtual SEScalar& GetNitrate();
+  virtual double GetNitrate() const;
 
-  virtual bool HasIL10Tissue() const;
-  virtual SEScalar& GetIL10Tissue();
-  virtual double GetIL10Tissue() const;
+  virtual bool HasNitricOxide() const;
+  virtual SEScalar& GetNitricOxide();
+  virtual double GetNitricOxide() const;
+
+  virtual bool HasTumorNecrosisFactor() const;
+  virtual SEScalar& GetTumorNecrosisFactor();
+  virtual double GetTumorNecrosisFactor() const;
+
+  virtual bool HasInterleukin6() const;
+  virtual SEScalar& GetInterleukin6();
+  virtual double GetInterleukin6() const;
+
+  virtual bool HasInterleukin10() const;
+  virtual SEScalar& GetInterleukin10();
+  virtual double GetInterleukin10() const;
+
+  virtual bool HasInterleukin12() const;
+  virtual SEScalar& GetInterleukin12();
+  virtual double GetInterleukin12() const;
+
+  virtual bool HasCatecholamines() const;
+  virtual SEScalar& GetCatecholamines();
+  virtual double GetCatecholamines() const;
 
   virtual bool HasTissueIntegrity() const;
   virtual SEScalar0To1& GetTissueIntegrity();
   virtual double GetTissueIntegrity() const;
 
-  virtual bool HasInflammation() const;
-  virtual SEScalar0To1& GetInflammation();
-  virtual double GetInflammation() const;
-
-
 protected:
-  SEScalar* m_PathogenTissue;
-  SEScalar* m_PathogenBlood;
-  SEScalar* m_MacrophageRestingTissue;
-  SEScalar* m_MacrophageActiveTissue;
-  SEScalar* m_NeutrophilRestingBlood;
-  SEScalar* m_NeutrophilActiveBlood;
-  SEScalar* m_NeutrophilActiveTissue;
-  SEScalar* m_TNFBlood;
-  SEScalar* m_TNFTissue;
-  SEScalar* m_IL10Blood;
-  SEScalar* m_IL10Tissue;
+  SEScalar* m_Pathogen;
+  SEScalar* m_Trauma;
+  SEScalar* m_MacrophageResting;
+  SEScalar* m_MacrophageActive;
+  SEScalar* m_NeutrophilResting;
+  SEScalar* m_NeutrophilActive;
+  SEScalar* m_InducibleNOSynthasePre;
+  SEScalar* m_InducibleNOSynthase;
+  SEScalar* m_ConstitutiveNOSynthase;
+  SEScalar* m_Nitrate;
+  SEScalar* m_NitricOxide;
+  SEScalar* m_TumorNecrosisFactor;
+  SEScalar* m_Interleukin6;
+  SEScalar* m_Interleukin10;
+  SEScalar* m_Interleukin12;
+  SEScalar* m_Catecholamines;
   SEScalar0To1* m_TissueIntegrity;
-  SEScalar0To1* m_Inflammation;
 };
 }

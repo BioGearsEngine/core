@@ -20,7 +20,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
 {
   //Items for scenario definition
   m_Logger->ResetLogFile(rptDirectory + "/AcuteInflammation.log");
-  std::string stateFile = rptDirectory + "/StateData.csv";
+  std::string stateFile = rptDirectory + "/ShockData.csv";
   std::string circuitFile = rptDirectory + "/AIR_Circuit.csv";
   std::string stabilizeFile = rptDirectory + "/Stabilization.csv";
   std::string cvFile = rptDirectory + "/CVCircuit.csv";
@@ -36,13 +36,6 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   //Set up patient
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
-  //bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
-  //bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
-  //bg.CreateCircuitsAndCompartments();
-
-  //Cardiovascular& cv = (Cardiovascular&)bg.GetCardiovascular();
-  //cv.m_TuneCircuit = true; // Run the circuit as constructed
-  //SEFluidCircuit* cvCircuit = &bg.GetCircuits().GetActiveCardiovascularCircuit();
 
   //Volume and pressure parameters for 4-element CV circuit (Brady2017Mathematical)
   //Volumes
@@ -233,7 +226,295 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   bgGraph->AddLink(lSkinTissue);
   bgGraph->StateChange();
 
-  //Model Parameters--From Reynolds2008Mathematical (substance interactions) and Brady2017Mathematical (temp, HR, pain modifiers)
+
+  //Model Parameters
+  //Source terms
+  double sM = 1.0, sN = 1.0, s6 = 0.001, s10 = 0.01;
+  //Endotoxin decay
+  double kL = 1.0;
+  //Macrophage interaction
+  double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9;
+  //Activate macrophage interactions
+  double kMANO = 0.2, kMA = 0.2;
+  //Neutrophil interactions
+  double kNL = 0.15, kNTNF = 0.2, kN6 = 0.557, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 15.0, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2, xNNO = 0.5;
+  //Inducible NOS
+  double kINOSN = 1.5, kINOSM = 0.1, kINOSEC = 0.1, kINOS6 = 2.0, kINOSd = 0.05, kINOS = 0.101, xINOS10 = 0.1, xINOSTNF = 0.05, xINOS6 = 0.1, xINOSNO = 0.3;
+  //E NOS
+  double kENOS = 4.0, kENOSEC = 0.05, xENOSTNF = 0.4, xENOSL = 1.015, xENOSTR = 0.1;
+  //Nitric oxide
+  double kN = 0.5, kNO3 = 0.46, kNOMA = 2.0;
+  //TNF
+  double kTNFN = 2.97, kTNFM = 0.1, kTNF = 1.4, xTNF6 = 0.059, xTNF10 = 0.079;
+  //IL6
+  double k6M = 3.03, k6TNF = 1.0, k62 = 3.4, k6NO = 2.97, k6 = 0.7, k6N = 0.2, x610 = 0.1782, x6TNF = 0.1, x66 = 0.2277, x6NO = 0.4;
+  //IL10
+  double k10MA = 0.1, k10N = 0.1, k10A = 62.87, k10TNF = 1.485, k106 = 0.051, k10 = 0.35, k10R = 0.1, x10TNF = 0.05, x1012 = 0.049, x106 = 0.08;
+  //CA
+  double kCA = 0.1, kCATR = 0.16;
+  //IL12
+  double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
+  //Blood pressure
+  double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
+  //Damage --- changed kDB from 0.02, changed xD6 from 0.25
+  double kDB = 0.005, kD6 = 0.3, kD = 0.05, kDTR = 0.05, xD6 = 1.2, xDNO = 0.4;
+  //Temperature parameters
+  double kT = 1.0, kTTnf = 1.5, nTTnf = 0.2, hTTnf = 0.75, TMax = 39.5, TMin = 37.0, kT6 = 1.5, nT6 = 0.5, hT6 = 0.75, kT10 = 0.0625, nT10 = 0.2, hT10 = 1.0;
+  //Heart rate parameters
+  double kH = 0.2, nHT = 1.0, hHT = 2.0, HMax = 192.0, HBase = 72.0, tau2 = 0.003;
+  //Pain threshold parameters
+  double kPTP = 0.025, kPT = 0.011, PTM = 1.0;
+
+  //Initial state
+  double pathogen = 6.0;
+  double macrophageResting = 1.0;
+  double macrophageActive = 0.0;
+  double neutrophilResting = 1.0;
+  double neutrophilActive = 0.0;
+  double iNOS = 0.0;
+  double iNOSd = 0.0;
+  double eNOS = 0.05;
+  double NO3 = 0.0;
+  double TNF = 0.0;
+  double IL6 = 0.001;
+  double IL10 = 0.01;
+  double IL12 = 0.0;
+  double Ca = 0.0;
+  double bloodPressure = 1.0;
+  double tissueIntegrity = 1.0;
+  double temp = TMin;
+  double heartRate = HBase;
+  double pain = 1.0;
+
+  double trauma = 0.0;
+  double autonomic = 0.0;
+  double NO = 0.0;
+  double fB = 0.0;
+
+  //Initialize differential terms
+  double dPathogen;
+  double dMacrophageResting;
+  double dMacrophageActive;
+  double dNeutrophilResting;
+  double dNeutrophilActive;
+  double dINOS;
+  double dINOSD;
+  double dENOS;
+  double dNO3;
+  double dTNF;
+  double dIL6;
+  double dIL10;
+  double dIL12;
+  double dCa;
+  double dBloodPressure;
+  double dTissueIntegrity;
+  double dTemp;
+  double dHeartRate;
+  double dPain;
+
+  //Simulation Parameters
+  double simTime_min =24*60.0;
+  double stabilizationTime_min = 15;
+  double dt_s = 0.25;
+  double stateTime_s = 0.0;
+  double circuitTime_s = 0.0;
+  double dt_h = dt_s / 3600.0;
+  double stateTime_h = 0.0;
+
+  //Physiological Effects
+ // double respirationRate = 12.0 * (1.0 + 0.65 * (1.0 - pain)); //As in Respiratory::ProcessDriverActions
+  double map_mmHg = nAorta1.GetPressure(PressureUnit::mmHg);
+  double totalVascularVolume_mL;
+  double systemicResistanceBase_mmHg_min_Per_mL = map_mmHg / cardiacOutput_mL_Per_min;
+  double systemicResistance_mmHg_min_Per_mL = systemicResistanceBase_mmHg_min_Per_mL;
+  double strokeVolume_mL = cardiacOutput_mL_Per_min / heartRate;
+
+
+  //Stabilize circuit
+  for (int i = 0; i < stabilizationTime_min * 60.0 / dt_s; i++) {
+    calc.Process(*bgCircuit, dt_s);
+    calc.PostProcess(*bgCircuit);
+    circuitTrk.Track(circuitTime_s, *bgCircuit);
+    circuitTime_s += dt_s;
+  }
+  bgCircuit->RemovePath("pHeartToGround");
+  bgCircuit->StateChange();
+  circuitTrk.WriteTrackToFile(stabilizeFile.c_str());
+  totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
+  cvTrk.WriteTrackToFile(cvFile.c_str());
+  std::cout << "Stabilized circuit" << std::endl;
+  //Advance model
+  for (int i = 0; i <= simTime_min * 60.0 / dt_s; i++) {
+
+    //Record state
+    stateTrk.Track("Pathogen", stateTime_h, pathogen);
+    stateTrk.Track("Macrophage_Resting", stateTime_h, macrophageResting);
+    stateTrk.Track("Macrophage_Active", stateTime_h, macrophageActive);
+    stateTrk.Track("Neutrophil_Resting", stateTime_h, neutrophilResting);
+    stateTrk.Track("Neutrophil_Active", stateTime_h, neutrophilActive);
+    stateTrk.Track("Nitric_INOS", stateTime_h, iNOS);
+    stateTrk.Track("Nitric_INOSD", stateTime_h, iNOSd);
+    stateTrk.Track("Nitric_ENOS", stateTime_h, eNOS);
+    stateTrk.Track("Nitric_NO3", stateTime_h, NO3 * 1000.0);
+    stateTrk.Track("Nitric_NO", stateTime_h, NO);
+    stateTrk.Track("TNF", stateTime_h, TNF * 35000.0);
+    stateTrk.Track("IL-6", stateTime_h, IL6 * 17000.0);
+    stateTrk.Track("IL-10", stateTime_h, IL10 * 8000.0);
+    stateTrk.Track("IL-12", stateTime_h, IL12);
+    stateTrk.Track("Catecholmines", stateTime_h, Ca);
+    stateTrk.Track("PressureModifier", stateTime_h, bloodPressure);
+    stateTrk.Track("TissueIntegrity", stateTime_h, tissueIntegrity);
+    stateTrk.Track("BloodPressure_Scale", stateTime_h, bloodPressure);
+    stateTrk.Track("Systemic_Resistance", stateTime_h, systemicResistanceBase_mmHg_min_Per_mL);
+    stateTrk.Track("CoreTemp", stateTime_h, temp);
+    stateTrk.Track("HeartRate", stateTime_h, heartRate);
+    stateTrk.Track("PainThreshold", stateTime_h, pain);
+
+    stateTrk.Track("AortaVolume_L", stateTime_h, cArtery.GetVolume(VolumeUnit::L));
+    stateTrk.Track("OrganBedVolume_L", stateTime_h, cOrganBed.GetVolume(VolumeUnit::L));
+    stateTrk.Track("SkinVascularVolume_L", stateTime_h, cSkin.GetVolume(VolumeUnit::L));
+    stateTrk.Track("VeinousVolume_L", stateTime_h, cVein.GetVolume(VolumeUnit::L));
+    stateTrk.Track("SkinInterstitialVolume_L", stateTime_h, cSkinInterstitium.GetVolume(VolumeUnit::L));
+    stateTrk.Track("VascularVolume_L", stateTime_h, totalVascularVolume_mL / 1000.0);
+    stateTrk.Track("ProteinVascular", stateTime_h, effectiveProteinVascular_g_Per_dL);
+    stateTrk.Track("ProteinInterstitial", stateTime_h, effectiveProteinInterstitium_g_Per_dL);
+  
+    stateTrk.Track("SystemicResistance", stateTime_h, systemicResistance_mmHg_min_Per_mL);
+    stateTrk.Track("EndothelialResistance", stateTime_h, pSkinEndothelium.GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
+    stateTrk.Track("TotalVolume_L", stateTime_h, totalVolume_mL / 1000.0);
+
+
+    //Intermediate
+    if (1.0 - bloodPressure > 0.0) {
+      fB = std::pow(1.0 - bloodPressure, 4.0);
+    } else {
+      fB = 0.0;
+    }
+
+    dPathogen = -kL * pathogen;
+    dMacrophageResting = -((kML * Up1(pathogen, xML, 2.0) + kMD * Up2(1.0 - tissueIntegrity, xMD, 4.0)) * (Up2(TNF, xMTNF, 2.0) + kM6 * Up2(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * Down(IL10 + Ca, xM10, 2.0) - kMR * (macrophageResting - sM); 
+    dMacrophageActive = ((kML * Up1(pathogen, xML, 2.0) + kMD * Up2(1.0 - tissueIntegrity, xMD, 4.0)) * (Up2(TNF, xMTNF, 2.0) + kM6 * Up2(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * Down(IL10 + Ca, xM10, 2) - kMA * macrophageActive;
+    dNeutrophilResting = -(kNL * Up1(pathogen, xNL, 1.0) + kNTNF * Up1(TNF, xNTNF, 1.0) + kN6 * Up1(IL6, xN6, 2.0) + kND * Up1(1.0 - tissueIntegrity, xND, 2.0) + kNB * fB * kNTR * trauma) * Down(IL10 + Ca, xN10, 2.0) * neutrophilResting - kNR * (neutrophilResting - sN);
+    dNeutrophilActive = (kNL * Up1(pathogen, xNL, 1.0) + kNTNF * Up1(TNF, xNTNF, 1.0) + kN6 * Up1(IL6, xN6, 2.0) + kND * Up1(1.0 - tissueIntegrity, xND, 2.0) + kNB * fB + kNTR * trauma) * Down(IL10 + Ca, xN10, 2.0) * neutrophilResting - kNA * neutrophilActive;
+    dINOS = kINOS * (iNOSd - iNOS);
+    dINOSD = (kINOSN * neutrophilActive + kINOSM * macrophageActive + kINOSEC * (Up1(TNF, xINOSTNF, 2.0) + kINOS6 * Up1(IL6, xINOS6, 2.0))) * Down(IL10, xINOS10, 2.0) * Down(NO, xINOSNO, 2.0) - kINOSd * iNOSd;
+    dENOS = kENOSEC * Down(TNF, xENOSTNF, 1.0) * Down(pathogen, xENOSL, 1.0) * Down(trauma, xENOSTR, 4.0) - kENOS * eNOS;
+    dNO3 = kNO3 * (NO - NO3);
+    dTNF = (kTNFN * neutrophilActive + kTNFM * macrophageActive) * Down(IL10 + Ca, xTNF10, 2.0) * Down(IL6, xTNF6, 3.0) - kTNF * TNF;
+    dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * Up2(TNF, x6TNF, 2.0) + k6NO * Up2(NO, x6NO, 2.0)) * Down(IL10 + Ca, x610, 2.0) + k6 * (s6 - IL6);
+    dIL10 = (k10N * neutrophilActive + macrophageActive * (1 + k10A * autonomic)) * (k10MA + k10TNF * Up2(TNF, x10TNF, 4.0) + k106 * Up2(IL6, x106, 4.0)) * ((1 - k10R) * Down(IL12, x1012, 4.0) + k10R) - k10 * (IL10 - s10);
+    dIL12 = k12M * macrophageActive * Down(IL10, x1210, 2.0) - k12 * IL12;
+    dCa = kCATR * autonomic - kCA * Ca;
+    dBloodPressure = kB * (1.0 / (1.0 + kBNO * (NO - xBNO)) - bloodPressure);
+    dTissueIntegrity = kD * (1.0 - tissueIntegrity)*tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * Up2(IL6, xD6, 2.0) + kDTR * trauma) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
+    dTemp = -temp + kT * (TMax - TMin) * (kTTnf * Up2(TNF, nTTnf, hTTnf) + kT6 * Up2(IL6, nT6, hT6) - kT10 * (1 - Down(IL10, nT10, hT10))) + TMin;
+    dHeartRate = (-heartRate + kH * (HMax - HBase) * Up2(temp-TMin,nHT,hHT)+HBase) / tau2;
+    dPain = -kPTP * pathogen * pain + kPT * (PTM - pain);
+
+
+    pathogen += (dPathogen * dt_h);
+    macrophageResting += (dMacrophageResting * dt_h);
+    macrophageActive += (dMacrophageActive * dt_h);
+    neutrophilResting += (dNeutrophilResting * dt_h);
+    neutrophilActive += (dNeutrophilActive * dt_h);
+    iNOS += (dINOS * dt_h);
+    iNOSd += (dINOSD * dt_h);
+    eNOS += (dENOS * dt_h);
+    NO3 += (dNO3 * dt_h);
+    TNF += (dTNF * dt_h);
+    IL6 += (dIL6 * dt_h);
+    IL10 += (dIL10 * dt_h);
+    IL12 += (dIL12 * dt_h);
+    Ca += (dCa * dt_h);
+    bloodPressure += (dBloodPressure * dt_h);
+    tissueIntegrity += (dTissueIntegrity * dt_h);
+    temp += (dTemp * dt_h);
+    heartRate += (dHeartRate * dt_h);
+    pain += (dPain * dt_h);
+
+    NO = iNOS * (1.0 + kNOMA * (macrophageActive + neutrophilActive)) + eNOS;
+
+
+    // //Physiological effects
+    // //Tissue
+    reflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0, 1.0, 0, tissueIntegrity);
+    SkinTissue.GetReflectionCoefficient().SetValue(reflectionCoefficient);
+    BLIM(reflectionCoefficient, 0.0, 1.0);
+    effectiveProteinVascular_g_Per_dL = GeneralMath::LinearInterpolator(0.0, 1.0, averageProtein_g_Per_dL, totalProteinVascular_g_Per_dL, reflectionCoefficient);
+    effectiveProteinInterstitium_g_Per_dL = GeneralMath::LinearInterpolator(0.0, 1.0, averageProtein_g_Per_dL, totalProteinInterstitium_g_Per_dL, reflectionCoefficient);
+    vascularCOP_mmHg = 2.1 * effectiveProteinVascular_g_Per_dL + 0.16 * std::pow(effectiveProteinVascular_g_Per_dL, 2) + 0.009 * std::pow(effectiveProteinVascular_g_Per_dL, 3); //Mazzoni1988Dynamic
+    interstitialCOP_mmHg = 2.1 * effectiveProteinInterstitium_g_Per_dL + 0.16 * std::pow(effectiveProteinInterstitium_g_Per_dL, 2) + 0.009 * std::pow(effectiveProteinInterstitium_g_Per_dL, 3);
+    pSkinVascularCOP.GetNextPressureSource().SetValue(-vascularCOP_mmHg, PressureUnit::mmHg);
+    pSkinInterstitialCOP.GetNextPressureSource().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
+    pSkinEndothelium.GetNextResistance().SetValue(pSkinEndothelium.GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * std::pow(10.0, tissueIntegrity - 1.0), FlowResistanceUnit::mmHg_min_Per_mL);
+
+    //Cardiovascular
+    for (auto p : bgCircuit->GetPaths()) {
+      if (p->HasResistanceBaseline() && p->GetName() != "pSkinEndothelium") {
+        p->GetNextResistance().SetValue(p->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * bloodPressure, FlowResistanceUnit::mmHg_min_Per_mL);
+      }
+    }
+
+    systemicResistance_mmHg_min_Per_mL = systemicResistanceBase_mmHg_min_Per_mL * bloodPressure;
+    cardiacOutput_mL_Per_min = strokeVolume_mL * heartRate;
+    map_mmHg = systemicResistance_mmHg_min_Per_mL * cardiacOutput_mL_Per_min;
+    pDrivePressure.GetNextPressureSource().SetValue(map_mmHg, PressureUnit::mmHg);
+
+    totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
+    totalVolume_mL = totalVascularVolume_mL + cSkinInterstitium.GetVolume(VolumeUnit::mL);
+
+    //Process Circuit
+    calc.Process(*bgCircuit, dt_s);
+
+    //Post-process circuit
+    calc.PostProcess(*bgCircuit);
+
+
+
+    stateTime_s += dt_s;
+    stateTime_h += dt_h;
+
+    if (i % (3000 * 30) == 0) {
+      std::cout << stateTime_s / 60 << " min" << std::endl;
+    }
+  }
+  std::cout << "Writing state" << std::endl;
+  stateTrk.WriteTrackToFile(stateFile.c_str());
+ /* std::cout << "Writing circuit" << std::endl;
+  circuitTrk.WriteTrackToFile(circuitFile.c_str());*/
+}
+
+double BioGearsEngineTest::Up1(double y, double x, double n)
+{
+  return std::pow(y, n) / (1.0 + std::pow(y / x, n));
+}
+double BioGearsEngineTest::Up2(double y, double x, double n)
+{
+  return std::pow(y, n) / (std::pow(x, n) + std::pow(y, n));
+}
+double BioGearsEngineTest::Down(double y, double x, double n)
+{
+  return 1.0 / (1.0 + std::pow(y / x, n));
+}
+
+
+
+double BioGearsEngineTest::Hill(double x, double& n, double& h)
+{
+  return (std::pow(x, h)) / (std::pow(x, h) + std::pow(n, h));
+}
+
+double BioGearsEngineTest::DownReg(double x, double& cin, double& hin, double& ilbar, double& il)
+{
+  return x * ((1.0 - cin) / (1.0 + std::pow(il / ilbar, hin)) + cin);
+}
+
+
+
+
+
+/*    
+ *      //Model Parameters--From Reynolds2008Mathematical (substance interactions) and Brady2017Mathematical (temp, HR, pain modifiers)
   //Notes:
   //First Letter: s = source, u = decay, k = interaction
   //States:  m = macrophage, nr = resting neutrophil, na = active neutophil, TNF = tumor necrosis factor, IL = interleukin-10
@@ -352,51 +633,8 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   double dResistanceScale;
   double tisVolumeScale = skinTissueVolume_L / 0.5;
   double bloodVolumeScale = skinVascularVolume_mL / 1000.0 / 50.0;
-  //Simulation Parameters
-  double simTime_min = 48*60.0;
-  double stabilizationTime_min = 15;
-  double dt_s = 0.25;
-  double stateTime_s = 0.0;
-  double circuitTime_s = 0.0;
-  double dt_h = dt_s / 3600.0;
-  double stateTime_h = 0.0;
 
-  //Physiological Effects
-  double respirationRate = 12.0 * (1.0 + 0.65 * (1.0 - pain)); //As in Respiratory::ProcessDriverActions
-  double map_mmHg = nAorta1.GetPressure(PressureUnit::mmHg);
-  double totalVascularVolume_mL;
-  double systemicResistanceBase_mmHg_min_Per_mL = map_mmHg / cardiacOutput_mL_Per_min;
-  double systemicResistance_mmHg_min_Per_mL = systemicResistanceBase_mmHg_min_Per_mL;
-  double strokeVolume_mL = cardiacOutput_mL_Per_min / heartRate;
-
-  /*SEFluidCircuitPath* RightCompliance = cvCircuit->GetPath(BGE::CardiovascularPath::RightHeart1ToRightHeart3);
-  SEFluidCircuitPath* LeftCompliance = cvCircuit->GetPath(BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);*/
-
-  //Stabilize circuit
-  for (int i = 0; i < stabilizationTime_min * 60.0 / dt_s; i++) {
-    
-    /*double rHeartElastance;
-    double lHeartElastance;
-    SinusoidHeartDriver(circuitTime_s, heartRate / 60.0, lHeartElastance, rHeartElastance);
-    RightCompliance->GetNextCompliance().SetValue(1.0 / rHeartElastance, FlowComplianceUnit::mL_Per_mmHg);
-    LeftCompliance->GetNextCompliance().SetValue(1.0 / lHeartElastance, FlowComplianceUnit::mL_Per_mmHg);  */
-    //pDrivePressure.GetNextPressureSource().SetValue(map_mmHg - nHeart.GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
-    calc.Process(*bgCircuit, dt_s);
-    //calc.Process(*cvCircuit, dt_s);
-    calc.PostProcess(*bgCircuit);
-    //calc.PostProcess(*cvCircuit);
-    circuitTrk.Track(circuitTime_s, *bgCircuit);
-    //cvTrk.Track(circuitTime_s, *cvCircuit);
-    circuitTime_s += dt_s;
-  }
-  bgCircuit->RemovePath("pHeartToGround");
-  bgCircuit->StateChange();
-  circuitTrk.WriteTrackToFile(stabilizeFile.c_str());
-  totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
-  //cvTrk.WriteTrackToFile(cvFile.c_str());
-  std::cout << "Stabilized circuit" << std::endl;
-  //Advance model
-  for (int i = 0; i <= simTime_min * 60.0 / dt_s; i++) {
+  
     //Diffusion Terms
     volumeBlood = skinVascularVolume_mL / 1000.0;
     volumeTis = cSkinInterstitium.GetVolume(VolumeUnit::L);
@@ -461,41 +699,10 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
     resistanceScale += (dResistanceScale * dt_h);
 
 
-   // //Physiological effects
-   // //Tissue
-    reflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0, 1.0, 0, tissueIntegrity);
-    SkinTissue.GetReflectionCoefficient().SetValue(reflectionCoefficient);
-    BLIM(reflectionCoefficient, 0.0, 1.0);
-    effectiveProteinVascular_g_Per_dL = GeneralMath::LinearInterpolator(0.0, 1.0, averageProtein_g_Per_dL, totalProteinVascular_g_Per_dL, reflectionCoefficient);
-    effectiveProteinInterstitium_g_Per_dL = GeneralMath::LinearInterpolator(0.0, 1.0, averageProtein_g_Per_dL, totalProteinInterstitium_g_Per_dL, reflectionCoefficient);
-    vascularCOP_mmHg = 2.1 * effectiveProteinVascular_g_Per_dL + 0.16 * std::pow(effectiveProteinVascular_g_Per_dL, 2) + 0.009 * std::pow(effectiveProteinVascular_g_Per_dL, 3); //Mazzoni1988Dynamic
-    interstitialCOP_mmHg = 2.1 * effectiveProteinInterstitium_g_Per_dL + 0.16 * std::pow(effectiveProteinInterstitium_g_Per_dL, 2) + 0.009 * std::pow(effectiveProteinInterstitium_g_Per_dL, 3);
-    pSkinVascularCOP.GetNextPressureSource().SetValue(-vascularCOP_mmHg, PressureUnit::mmHg);
-    pSkinInterstitialCOP.GetNextPressureSource().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
-    pSkinEndothelium.GetNextResistance().SetValue(pSkinEndothelium.GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * std::pow(10.0, tissueIntegrity-1.0), FlowResistanceUnit::mmHg_min_Per_mL);
-
-   //Cardiovascular
-    for (auto p : bgCircuit->GetPaths())
-    {
-      if (p->HasResistanceBaseline() && p->GetName() != "pSkinEndothelium") {
-        p->GetNextResistance().SetValue(p->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resistanceScale, FlowResistanceUnit::mmHg_min_Per_mL);
-      }
-    }
-
-    systemicResistance_mmHg_min_Per_mL = systemicResistanceBase_mmHg_min_Per_mL * resistanceScale;
-    //cardiacOutput_mL_Per_min = strokeVolume_mL * heartRate;
-    map_mmHg = systemicResistance_mmHg_min_Per_mL * cardiacOutput_mL_Per_min;
-    pDrivePressure.GetNextPressureSource().SetValue(map_mmHg, PressureUnit::mmHg);
-
-    totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
-    totalVolume_mL = totalVascularVolume_mL + cSkinInterstitium.GetVolume(VolumeUnit::mL);
 
 
-    //Process Circuit
-    calc.Process(*bgCircuit, dt_s);
 
-    //Post-process circuit
-    calc.PostProcess(*bgCircuit);
+
 
     //Track State
     stateTrk.Track("Pathogen_Tissue", stateTime_h, pathogenTis);
@@ -529,30 +736,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
     stateTrk.Track("ResistanceScale", stateTime_h, resistanceScale);
     stateTrk.Track("SystemicResistance", stateTime_h, systemicResistance_mmHg_min_Per_mL);
     stateTrk.Track("EndothelialResistance", stateTime_h, pSkinEndothelium.GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
-    stateTrk.Track("TotalVolume_L", stateTime_h, totalVolume_mL / 1000.0);
+    stateTrk.Track("TotalVolume_L", stateTime_h, totalVolume_mL / 1000.0);*/
 
-    //circuitTrk.Track(circuitTime_s, *bgCircuit);
 
-    stateTime_s += dt_s;
-    stateTime_h += dt_h;
-
-    if (i % (3000 * 30) == 0) {
-      std::cout << stateTime_s / 60 << " min" << std::endl;
-    }
-  }
-  std::cout << "Writing state" << std::endl;
-  stateTrk.WriteTrackToFile(stateFile.c_str());
- /* std::cout << "Writing circuit" << std::endl;
-  circuitTrk.WriteTrackToFile(circuitFile.c_str());*/
-}
-
-double BioGearsEngineTest::Hill(double x, double& n, double& h)
-{
-  return (std::pow(x, h)) / (std::pow(x, h) + std::pow(n, h));
-}
-
-double BioGearsEngineTest::DownReg(double x, double& cin, double& hin, double& ilbar, double& il)
-{
-  return x * ((1.0 - cin) / (1.0 + std::pow(il / ilbar, hin)) + cin);
-}
 }
