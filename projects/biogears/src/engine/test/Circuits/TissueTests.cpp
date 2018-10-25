@@ -944,15 +944,17 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   enum testCases { ExtraIntra = 0,
     VascExtra = 1,
     Combined = 2 };
-  int testRun = Combined;
+  int testRun = VascExtra;
   m_Logger->ResetLogFile(rptDirectory + "/TissueCombinedTransportTest.log");
   std::string circuitFile = rptDirectory + "/TissueTransportCircuit.csv";
   std::string testFile = rptDirectory + "/TissueCombinedTransportTest.csv";
+  std::string stabilizationFile = rptDirectory + "/TissueCombinedStabilization.csv";
   BioGears bg(m_Logger);
   SECircuitManager circuits(m_Logger);
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
   DataTrack circuitTrk;
+  DataTrack stabilization;
   DataTrack testTrk;
   DataTrack trk;
 
@@ -979,10 +981,10 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   double dt = 1.0; //s
   double time = 0.0; //s
   double perturb = 0.0;
-  double stabilizationTime = 120; //min
-  double simTime = 180.0; //Total sim length
+  double stabilizationTime = 30; //min
+  double simTime = 360; //Total sim length
   double startInfuse = 30.0;
-  double endInfuse = 90.0;
+  double endInfuse = -1.0;  //Means we won't do infusion
   bool testSaline = true;
   //Substance concentrations
   double Na_Extra = 145.0;
@@ -997,10 +999,10 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   //Albumin parameters
   double Alb_Vasc_g_Per_dL = 4.5;
   double Alb_Extra_g_Per_dL = 2.0;
-  double pecletNum = 0.0;
-  double albReflection = 0.903;
+  double albReflection = 0.94;
   double kAlbumin_mL_Per_s = 0.01339; //Empirically determined to get net albumin flux = 0 at steady state flows
-  double massMoved_ug = 0.0;
+  double massVascularToInterstitial_ug = 0.0;
+  double massInterstitialToLymph_ug = 0.0;
 
   double Potential = -84.8;
   double flowRate_mL_Per_s = 0.0; //for tracking filtration in test 1
@@ -1031,21 +1033,30 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   double heartToMuscleResistance = (aortaPressure_mmHg - muscleVascularPressure_mmHg) / muscleFlow_mL_Per_s; //mmHg-s/mL
   double muscleToVeinResistance = (muscleVascularPressure_mmHg - veinsPressure_mmHg) / (muscleFlow_mL_Per_s - lymphFlowBaseline_mL_Per_s); //mmHg-s/mL
   double veinToHeartResistance = (veinsPressure_mmHg) / muscleFlow_mL_Per_s; //mmHg-s/mL --> assumes heart entry node is reference pressure
-  double vascularToExtraResistance = 30.0; //mmHg-s/mL calculated from hydraulic conductivity in Gyenge1998Transport
+  double vascularToExtraResistance_mmHg_min_Per_mL = 1.0 / 5.82;
 
-  double capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * std::pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
-  double interstitialCOP_mmHg = 1.75 * Alb_Extra_g_Per_dL; //Mazzoni1988Dynamic
+  double capillaryCOP_mmHg = 2.1 * Alb_Vasc_g_Per_dL + 0.16 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.009 * std::pow(Alb_Vasc_g_Per_dL, 3);
+  double interstitialCOP_mmHg = 2.1 * Alb_Extra_g_Per_dL + 0.16 * std::pow(Alb_Extra_g_Per_dL, 2) + 0.009 * std::pow(Alb_Extra_g_Per_dL, 3);
+  double targetGradient_mmHg = 3.0;
+  double hydrostaticGradient_mmHg = targetGradient_mmHg + albReflection * (capillaryCOP_mmHg - interstitialCOP_mmHg);
   double e1NodePressure = muscleVascularPressure_mmHg - capillaryCOP_mmHg; //We're assuming the pressure drop across the resistor between Ex1 and Ex2 is very small
-  double e2NodePressure = e1NodePressure - lymphFlowBaseline_mL_Per_s * vascularToExtraResistance; //Using lymph flow baseline because it should be in steady state with what's going in to interstitial space
-  double e3NodePressure = e2NodePressure + interstitialCOP_mmHg;
-  double lymphResistance = (e3NodePressure - veinsPressure_mmHg) / lymphFlowBaseline_mL_Per_s;
-  double lymphFlow_mL_Per_s = 0.0; //Use to calculate the next lymph flow source value
+  double e3NodePressure = muscleVascularPressure_mmHg - hydrostaticGradient_mmHg; 
+  double e2NodePressure = e3NodePressure - interstitialCOP_mmHg;
+  double targetFlow_mL_Per_min = targetGradient_mmHg / vascularToExtraResistance_mmHg_min_Per_mL; 
   double ivRate_mL_Per_s = (0.05 + 0.247 + 0.14) * 1000.0 / 3600.0; //1 L per hour to mL/s, scaled down to available volume in this circuit
   double salineNa_mg_Per_mL = 3.54;
   double salineCl_mg_Per_mL = 5.46;
   double ivAlbumin_mg_Per_mL = 74.50;
   double vascularVolume_mL = 0.0;
   double pumpCompliance_mL_Per_mmHg = 100.0 / 1.5; //From Chaim2016Haemodynamic--need this to adjust pump rate when IV fluid is given since volume expansion occurs
+  double diffusivityCoefficient_mL_Per_min = 0.97;
+  double albuminDiffusive_ug_Per_min;
+  double albuminConvective_ug_Per_min;
+  double lymphSensitivity = 0.4 * targetFlow_mL_Per_min;
+  double lymphFlow_mL_Per_s;
+  double interstitialPressureBaseline_mmHg;
+
+
 
   //Extra<->Intra Test Circuit
   SEFluidCircuit* IEcircuit = &circuits.CreateFluidCircuit("CircuitDeSoleil");
@@ -1130,15 +1141,15 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   SEFluidCircuitPath& pHeartPump = EVcircuit->CreatePath(nHeartIn, nHeartOut, "HeartPumpPath");
   pHeartPump.GetPressureSourceBaseline().SetValue(90, PressureUnit::mmHg); //From BioGears CV circuit setup
   SEFluidCircuitPath& pPlasmaCOP = EVcircuit->CreatePath(nEx1, nMuscleVascular, "PlasmaCOP"); //Note direction interstitial to vascular
-  pPlasmaCOP.GetPressureSourceBaseline().SetValue(capillaryCOP_mmHg, PressureUnit::mmHg);
+  pPlasmaCOP.GetPressureSourceBaseline().SetValue(albReflection * capillaryCOP_mmHg, PressureUnit::mmHg);
   SEFluidCircuitPath& pEx1ToEx2 = EVcircuit->CreatePath(nEx1, nEx2, "ExtraResistancePath");
-  pEx1ToEx2.GetResistanceBaseline().SetValue(vascularToExtraResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+  pEx1ToEx2.GetResistanceBaseline().SetValue(vascularToExtraResistance_mmHg_min_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
   SEFluidCircuitPath& pInterstitialCOP = EVcircuit->CreatePath(nEx2, nEx3, "InterstitialCOP");
-  pInterstitialCOP.GetPressureSourceBaseline().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
+  pInterstitialCOP.GetPressureSourceBaseline().SetValue(albReflection * interstitialCOP_mmHg, PressureUnit::mmHg);
   SEFluidCircuitPath& pEx3ToLymph = EVcircuit->CreatePath(nEx3, nLymph, "ExtracellularToLymph1Path");
-  pEx3ToLymph.GetFlowSourceBaseline().SetValue(lymphFlowBaseline_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
+  pEx3ToLymph.GetFlowSourceBaseline().SetValue(targetFlow_mL_Per_min, VolumePerTimeUnit::mL_Per_min);
   SEFluidCircuitPath& pLymphToVeins = EVcircuit->CreatePath(nLymph, nVeins, "LymphReturnPath");
-  //pLymphToVeins.GetResistanceBaseline().SetValue(lymphResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+  pLymphToVeins.GetFlowSourceBaseline().SetValue(targetFlow_mL_Per_min, VolumePerTimeUnit::mL_Per_min);
   SEFluidCircuitPath& pHeartInToGround = EVcircuit->CreatePath(nHeartIn, nGround, "HeartToGroundPath"); //Need this to get reference value for circuit
   pHeartInToGround.GetFlowSourceBaseline().SetValue(0.0, VolumePerTimeUnit::mL_Per_s);
   SEFluidCircuitPath& pMuscleToGround = EVcircuit->CreatePath(nMuscleVascular, nGround, "GroundToMusclePath");
@@ -1190,8 +1201,8 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   Graph->AddLink(lHeartToMuscle);
   Graph->AddLink(lMuscleToVeins);
   Graph->AddLink(lVeinsToHeart);
-  Graph->AddLink(lExtraToLymph); //Whatever is in the interstitial (that does not go to intracellular) should go to lymph, so this is good to have
-  Graph->AddLink(lLymphToVeins);
+  //Graph->AddLink(lExtraToLymph);
+  //Graph->AddLink(lLymphToVeins);
   Graph->StateChange();
 
   std::vector<SELiquidCompartment*> Comps = Graph->GetCompartments();
@@ -1323,16 +1334,18 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
       for (auto comp : Comps) {
         volumeTrk += comp->GetVolume(VolumeUnit::mL);
       }
-      circuitTrk.Track(time, *EVcircuit);
-      circuitTrk.Track("TotalVolume_mL", time, volumeTrk);
+      stabilization.Track(time, *EVcircuit);
+      stabilization.Track("TotalVolume_mL", time, volumeTrk);
       time += dt;
     }
     Info("Finished stabilization");
+    stabilization.WriteTrackToFile(stabilizationFile.c_str());
     time = 0.0;
     dt = 0.2;
     vascularVolumeBaseline_mL = 0.0; //Reset this since compliances might have caused them to shift
     lymphFlowBaseline_mL_Per_s = pEx3ToLymph.GetFlow(VolumePerTimeUnit::mL_Per_s);
     muscleExtracellularVolume_mL = cExtraCell.GetVolume(VolumeUnit::mL); //Get stabilized volume to use for lymph relationship
+    interstitialPressureBaseline_mmHg = nEx3.GetPressure(PressureUnit::mmHg);
     for (auto comp : Comps) {
       if ((comp->GetName() == "MuscleExtracellularCompartment") || (comp->GetName() == "MuscleLymphCompartment"))
         continue;
@@ -1365,27 +1378,33 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
 
       //Need to move the albumin manually--by definition a positive value is from capillary to interstitial
       //Don't worry about "DistributeMass" functions because we don't have any child compartments to worry about here
-      pecletNum = pEx1ToEx2.GetFlow(VolumePerTimeUnit::mL_Per_s) * (1 - albReflection) / kAlbumin_mL_Per_s;
-      massMoved_ug = pEx1ToEx2.GetFlow(VolumePerTimeUnit::mL_Per_s) * (1 - albReflection) * ((cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) - exp(-pecletNum) * cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL)) / (1 - exp(-pecletNum))) * dt;
-      cMuscle.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(-massMoved_ug, MassUnit::ug);
-      cExtraCell.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(massMoved_ug, MassUnit::ug);
+      albuminDiffusive_ug_Per_min = diffusivityCoefficient_mL_Per_min * (cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) - cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL));
+      albuminConvective_ug_Per_min = pEx1ToEx2.GetFlow(VolumePerTimeUnit::mL_Per_min) * (1.0 - albReflection) * (cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) + cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL)) / 2.0;
+      massVascularToInterstitial_ug = (albuminDiffusive_ug_Per_min + albuminConvective_ug_Per_min) / 60.0 * dt;
+
+      massInterstitialToLymph_ug = lymphFlow_mL_Per_s * cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) * dt;
+
+      cMuscle.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(-massVascularToInterstitial_ug, MassUnit::ug);
+      cExtraCell.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(massVascularToInterstitial_ug - massInterstitialToLymph_ug, MassUnit::ug);
+      cLymph.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(massInterstitialToLymph_ug, MassUnit::ug);
       cMuscle.GetSubstanceQuantity(Alb)->Balance(BalanceLiquidBy::Mass);
       cExtraCell.GetSubstanceQuantity(Alb)->Balance(BalanceLiquidBy::Mass);
+      cLymph.GetSubstanceQuantity(Alb)->Balance(BalanceLiquidBy::Mass);
 
       //Calculate next osmotic pressure gradient
       Alb_Vasc_g_Per_dL = cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
       Alb_Extra_g_Per_dL = cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-      capillaryCOP_mmHg = 2.8 * Alb_Vasc_g_Per_dL + 0.18 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.012 * std::pow(Alb_Vasc_g_Per_dL, 3); //Mazzoni1988Dynamic
-      interstitialCOP_mmHg = 1.5 * Alb_Extra_g_Per_dL; //Mazzoni1988Dynamic
-      pPlasmaCOP.GetNextPressureSource().SetValue(capillaryCOP_mmHg, PressureUnit::mmHg);
-      pInterstitialCOP.GetNextPressureSource().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
+      capillaryCOP_mmHg =  2.1 * Alb_Vasc_g_Per_dL + 0.16 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.009 * std::pow(Alb_Vasc_g_Per_dL, 3);
+      interstitialCOP_mmHg =  2.1 * Alb_Extra_g_Per_dL + 0.16 * std::pow(Alb_Extra_g_Per_dL, 2) + 0.009 * std::pow(Alb_Extra_g_Per_dL, 3);
+      pPlasmaCOP.GetNextPressureSource().SetValue(albReflection*capillaryCOP_mmHg, PressureUnit::mmHg);
+      pInterstitialCOP.GetNextPressureSource().SetValue(albReflection*interstitialCOP_mmHg, PressureUnit::mmHg);
 
       //Adjust lymph flow
       //pEx3ToLymph.GetNextPressureSource().SetValue(nVeins.GetPressure(PressureUnit::mmHg) - veinsPressure_mmHg, PressureUnit::mmHg);
-      lymphFlow_mL_Per_s = lymphFlowBaseline_mL_Per_s + (0.0581 / 60.0) * (nEx3.GetPressure(PressureUnit::mmHg) - e3NodePressure) * MuscleTissue.GetTotalMass(MassUnit::kg);
+      lymphFlow_mL_Per_s = lymphFlowBaseline_mL_Per_s + lymphSensitivity * (nEx3.GetPressure(PressureUnit::mmHg) - interstitialPressureBaseline_mmHg);
       BLIM(lymphFlow_mL_Per_s, 0.5 * lymphFlowBaseline_mL_Per_s, 22.0 * lymphFlowBaseline_mL_Per_s); //UB comes from Mazzoni and Himeno
       pEx3ToLymph.GetNextFlowSource().SetValue(lymphFlow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-
+      pLymphToVeins.GetNextFlowSource().SetValue(lymphFlow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
       vascularVolume_mL = 0.0;
       volumeTrk = 0.0;
 
@@ -1416,11 +1435,14 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
       txpt.Transport(*Graph, dt);
       calc.PostProcess(*EVcircuit);
 
-      testTrk.Track(time, *EVcircuit);
+      circuitTrk.Track(time, *EVcircuit);
       testTrk.Track(time, *Graph, &subs);
       testTrk.Track("TotalVolume_mL", time, volumeTrk);
       testTrk.Track("VascularVolume_mL", time, vascularVolume_mL);
       testTrk.Track("MembranePotential_mV", time, Potential);
+      testTrk.Track("AlbuminVToI", time, massVascularToInterstitial_ug);
+      testTrk.Track("AlbuminLToV", time, massInterstitialToLymph_ug);
+
       time += dt;
     }
 
@@ -1480,10 +1502,9 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
 
       //Need to move the albumin manually--by definition a positive value is from capillary to interstitial
       //Don't worry about "DistributeMass" functions because we don't have any child compartments to worry about here
-      pecletNum = pEx1ToEx2.GetFlow(VolumePerTimeUnit::mL_Per_s) * (1 - albReflection) / kAlbumin_mL_Per_s;
-      massMoved_ug = pEx1ToEx2.GetFlow(VolumePerTimeUnit::mL_Per_s) * (1 - albReflection) * ((cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) - exp(-pecletNum) * cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL)) / (1 - exp(-pecletNum))) * dt;
-      cMuscle.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(-massMoved_ug, MassUnit::ug);
-      cExtraCell.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(massMoved_ug, MassUnit::ug);
+     
+      cMuscle.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(-massVascularToInterstitial_ug, MassUnit::ug);
+      cExtraCell.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(massVascularToInterstitial_ug, MassUnit::ug);
       cMuscle.GetSubstanceQuantity(Alb)->Balance(BalanceLiquidBy::Mass);
       cExtraCell.GetSubstanceQuantity(Alb)->Balance(BalanceLiquidBy::Mass);
 
