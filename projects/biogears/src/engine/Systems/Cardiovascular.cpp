@@ -1543,9 +1543,9 @@ void Cardiovascular::TuneCircuit()
         map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
         m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
         //Info("Cardiovascular Override Enabled");
-      } else {
-        map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
-      }*/
+      } else { */
+      map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
+      //}
       systolic_mmHg = GetSystolicArterialPressure(PressureUnit::mmHg);
       diastolic_mmHg = GetDiastolicArterialPressure(PressureUnit::mmHg);
       cardiacOutput_mL_Per_min = GetCardiacOutput(VolumePerTimeUnit::mL_Per_min);
@@ -1880,9 +1880,17 @@ void Cardiovascular::OverrideControlLoop()
       currentHROverride = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
   } else {
     if (m_Override->HasMeanArterialPressureOverride())
+      {
       currentMAPOverride = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
+      m_ss << "Mean Arterial Pressure has a lower bound of " << minMAPOverride << "mmHg and an upper bound of " << maxMAPOverride << "mmHg.";
+      Info(m_ss);
+      }
     if (m_Override->HasHeartRateOverride())
+      {
       currentHROverride = m_Override->GetHeartRateOverride(FrequencyUnit::Per_min);
+      m_ss << "Heart Rate has a lower bound of " << minHROverride << "bpm and an upper bound of " << maxHROverride << "bpm.";
+      Info(m_ss);
+      }
   }
 
   if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {

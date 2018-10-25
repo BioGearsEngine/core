@@ -45,10 +45,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
 #include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/engine/Systems/BloodChemistry.h>
-#include <biogears/engine/Systems/Cardiovascular.h>
-#include <biogears/engine/Systems/Environment.h>
-#include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
@@ -616,17 +612,25 @@ void Energy::ProcessOverride()
 
 void Energy::OverrideControlLoop()
 {
-  double maxCoreTempOverride = 200.0; //mmHg
-  double minCoreTempOverride = 0.0; //mmHg
+  double maxCoreTempOverride = 200.0; //degC
+  double minCoreTempOverride = 0.0; //degC
   double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Current CT, value gets changed in next check
-  double maxSkinTempOverride = 200.0; //mmHg
-  double minSkinTempOverride = 0.0; //mmHg
+  double maxSkinTempOverride = 200.0; //degC
+  double minSkinTempOverride = 0.0; //degC
   double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Current ST, value gets changed in next check
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
+      {
+      m_ss << "Core temperature has a lower bound of " << minCoreTempOverride << "degrees Celsius and an upper bound of " << maxCoreTempOverride << "degrees Celsius.";
+      Info(m_ss);
       currentCoreTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+      }
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
+      {
+      m_ss << "Skin temperature has a lower bound of " << minSkinTempOverride << "degrees Celsius and an upper bound of " << maxSkinTempOverride << "degrees Celsius.";
+      Info(m_ss);
       currentSkinTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
+      }
 
   } else {
     if (m_Override->HasCoreTemperatureOverride())
