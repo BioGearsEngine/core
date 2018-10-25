@@ -1539,13 +1539,8 @@ void Cardiovascular::TuneCircuit()
       m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
       //return; //Skip stabelization for debugging
 
-      /*if (m_Override->IsCardiovascularOverrideEnabled()) {
-        map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
-        m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
-        //Info("Cardiovascular Override Enabled");
-      } else { */
+
       map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
-      //}
       systolic_mmHg = GetSystolicArterialPressure(PressureUnit::mmHg);
       diastolic_mmHg = GetDiastolicArterialPressure(PressureUnit::mmHg);
       cardiacOutput_mL_Per_min = GetCardiacOutput(VolumePerTimeUnit::mL_Per_min);
