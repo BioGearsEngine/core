@@ -278,32 +278,38 @@ void SEAnesthesiaMachine::SetEvent(CDM::enumAnesthesiaMachineEvent::value type, 
       switch (type) {
       case CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted:
         m_ss << "Oxygen Bottle 1 has been exhausted";
+        Info(m_ss);
         break;
       case CDM::enumAnesthesiaMachineEvent::OxygenBottle2Exhausted:
         m_ss << "Oxygen Bottle 2 has been exhausted";
+        Info(m_ss);
         break;
       case CDM::enumAnesthesiaMachineEvent::ReliefValveActive:
-        m_ss << "Relief valve active - pressure exceeded";
+        m_ss << "Relief valve activated - pressure exceeded - relieving pressure";
+        Info(m_ss);
         break;
       default:
         m_ss << "Anesthesia Machine Event On : " << type; //TODO CDM::enumAnesthesiaMachineEvent::_xsd_enumAnesthesiaMachineEvent_literals_[type];
+        Info(m_ss);
       }
     } else {
       switch (type) {
       case CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted:
         m_ss << "Oxygen Bottle 1 has been replenished";
+        Info(m_ss);
         break;
       case CDM::enumAnesthesiaMachineEvent::OxygenBottle2Exhausted:
         m_ss << "Oxygen Bottle 2 has been replenished";
+        Info(m_ss);
         break;
       case CDM::enumAnesthesiaMachineEvent::ReliefValveActive:
-        m_ss << "Relief valve inactive - pressure below setting";
         break;
       default:
         m_ss << "Anesthesia Machine Event Off : " << type; // TODO CDM::enumAnesthesiaMachineEvent::_xsd_enumAnesthesiaMachineEvent_literals_[type];
+        Info(m_ss);
       }
     }
-    Info(m_ss);
+    
   }
   m_EventState[type] = active;
   m_EventDuration_s[type] = 0;
