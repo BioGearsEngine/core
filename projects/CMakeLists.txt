@@ -65,6 +65,8 @@ add_subdirectory(scenario_driver)
 add_subdirectory(test_driver)
 add_subdirectory(howto)
 add_subdirectory(unit)
+add_subdirectory(__gendata)
+add_subdirectory(__genstates)
 
 
 if(Java_FOUND AND ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
