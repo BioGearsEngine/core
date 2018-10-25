@@ -187,8 +187,12 @@ def plot(root_dir, source, skip_count):
                     unit = col[unitIndex:len(col)]
                     plotCol = col.replace(unit,'')
                 
+                #Unit Test outputs sometimes put '/' in unit names, which throws off SaveFig function. Replace '/' with 'per'
+                if plotCol.find('/')!=-1:
+                    plotCol = plotCol.replace('/','Per')
                 log("Plotting {}".format(col), LOG_LEVEL_2)
-                
+
+                    
                 plt.plot(xData,yData,'-k',label='Scenario')
                 if baseFound:
                     try:
