@@ -1877,14 +1877,10 @@ void Cardiovascular::OverrideControlLoop()
     if (m_Override->HasMeanArterialPressureOverride())
       {
       currentMAPOverride = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
-      m_ss << "Mean Arterial Pressure has a lower bound of " << minMAPOverride << "mmHg and an upper bound of " << maxMAPOverride << "mmHg.";
-      Info(m_ss);
       }
     if (m_Override->HasHeartRateOverride())
       {
       currentHROverride = m_Override->GetHeartRateOverride(FrequencyUnit::Per_min);
-      m_ss << "Heart Rate has a lower bound of " << minHROverride << "bpm and an upper bound of " << maxHROverride << "bpm.";
-      Info(m_ss);
       }
   }
 

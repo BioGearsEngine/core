@@ -621,14 +621,10 @@ void Energy::OverrideControlLoop()
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
       {
-      m_ss << "Core temperature has a lower bound of " << minCoreTempOverride << "degrees Celsius and an upper bound of " << maxCoreTempOverride << "degrees Celsius.";
-      Info(m_ss);
       currentCoreTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
       }
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
       {
-      m_ss << "Skin temperature has a lower bound of " << minSkinTempOverride << "degrees Celsius and an upper bound of " << maxSkinTempOverride << "degrees Celsius.";
-      Info(m_ss);
       currentSkinTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
       }
 

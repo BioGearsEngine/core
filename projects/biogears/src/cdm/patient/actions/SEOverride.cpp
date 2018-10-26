@@ -254,22 +254,30 @@ void SEOverride::ToString(std::ostream& str) const
   {
     str << "\n\tMean Arterial Pressure: ";
     HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tMean Arterial Pressure has a lower bound of 60 mmHg and an upper bound of 105 mmHg.";
     str << std::flush;
   }
   if (HasHeartRateOverride()) {
     str << "\n\tHeart Rate: ";
     HasHeartRateOverride() ? str << *m_HeartRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tHeart Rate has a lower bound of 30 bpm and an upper bound of 240 bpm.";
     str << std::flush;
   }
   if (HasCoreTemperatureOverride())
   {
     str << "\n\tCore Temperature: ";
     HasCoreTemperatureOverride() ? str << *m_CoreTemperatureOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tCore Temperature has a lower bound of 0 degrees Celsius and an upper bound of 200 degrees Celsius.";
     str << std::flush;
   }
   if (HasSkinTemperatureOverride()) {
     str << "\n\tSkin Temperature: ";
     HasSkinTemperatureOverride() ? str << *m_SkinTemperatureOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tSkin Temperature has a lower bound of 0 degrees Celsius and an upper bound of 200 degrees Celsius.";
     str << std::flush;
   }
 }
