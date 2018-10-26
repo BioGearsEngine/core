@@ -309,7 +309,7 @@ void Energy::CalculateVitalSigns()
     if (coreTemperature_degC < coreTempIrreversible_degC) {
       ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia and is in an irreversible state.";
       Warning(ss);
-      if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionValid())
+      if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
         m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
     }
 
@@ -348,7 +348,7 @@ void Energy::CalculateVitalSigns()
       if (bloodPH < lowPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
-        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionValid())
+        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0) {
         /// \event The patient has exited the state state of metabolic acidosis
@@ -364,7 +364,7 @@ void Energy::CalculateVitalSigns()
       if (bloodPH > highPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is above 8.5, patient is experiencing extreme metabolic Alkalosis and is in an irreversible state.";
         Warning(ss);
-        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionValid())
+        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
 
@@ -639,11 +639,11 @@ void Energy::OverrideControlLoop()
       currentSkinTempOverride = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
   }
 
-  if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
+  if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
   }
-  if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
+  if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
   }

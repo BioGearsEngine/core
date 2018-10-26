@@ -783,7 +783,7 @@ void Cardiovascular::CalculateVitalSigns()
         m_ss << "50% of the patient's blood volume has been lost. The patient is now in an irreversible state.";
         Warning(m_ss);
         /// \irreversible Over half the patients blood volume has been lost.
-        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionValid())
+        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
           m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
     } else {
@@ -817,7 +817,7 @@ void Cardiovascular::CalculateVitalSigns()
     }
     ///\event Patient: Asystole: Heart Rate has fallen below minimum value and is being set to 0.
     // @cite guinness2005lowest
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27 && m_data.GetActions().GetPatientActions().IsOverrideActionValid()) {
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27 && m_data.GetActions().GetPatientActions().IsOverrideActionConformant()) {
       m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
       SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
     }
@@ -833,7 +833,7 @@ void Cardiovascular::CalculateVitalSigns()
       m_ss << "Asystole has occurred for " << m_patient->GetEventDuration(CDM::enumPatientEvent::Asystole, TimeUnit::s) << " seconds, patient is in irreversible state.";
       Warning(m_ss);
       /// \irreversible Heart has been in asystole for over 45 min
-      if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionValid())
+      if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
         m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
     }
   }
@@ -1888,11 +1888,11 @@ void Cardiovascular::OverrideControlLoop()
       }
   }
 
-  if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
+  if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Mean Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
   }
-  if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideValidity() == CDM::enumOnOff::On)) {
+  if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
   }

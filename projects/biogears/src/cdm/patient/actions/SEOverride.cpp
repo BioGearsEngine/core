@@ -22,7 +22,7 @@ SEOverride::SEOverride()
   : SEPatientAction()
 {
   m_OverrideSwitch = CDM::enumOnOff::Off;
-  m_OverrideValid = CDM::enumOnOff::Off;
+  m_OverrideConformance = CDM::enumOnOff::Off;
   m_PressureOR = nullptr;
   m_HeartRateOR = nullptr;
   m_CoreTemperatureOR = nullptr;
@@ -38,7 +38,7 @@ void SEOverride::Clear()
 {
   SEPatientAction::Clear();
   m_OverrideSwitch = CDM::enumOnOff::Off;
-  m_OverrideValid = CDM::enumOnOff::Off;
+  m_OverrideConformance = CDM::enumOnOff::Off;
   SAFE_DELETE(m_PressureOR);
   SAFE_DELETE(m_HeartRateOR);
   SAFE_DELETE(m_CoreTemperatureOR);
@@ -60,16 +60,16 @@ bool SEOverride::IsValid() const
 
 bool SEOverride::IsActive() const
 {
-  if (!HasOverrideSwitch() || !HasOverrideValidity())
+  if (!HasOverrideSwitch() || !HasOverrideConformance())
     return false;
-  return (GetOverrideSwitch() == CDM::enumOnOff::On && (GetOverrideValidity()==CDM::enumOnOff::On || GetOverrideValidity()==CDM::enumOnOff::Off));
+  return (GetOverrideSwitch() == CDM::enumOnOff::On && (GetOverrideConformance() == CDM::enumOnOff::On || GetOverrideConformance() == CDM::enumOnOff::Off));
 }
 
 bool SEOverride::Load(const CDM::OverrideData& in)
 {
   SEPatientAction::Clear();
   SetOverrideSwitch(in.State());
-  SetOverrideValidity(in.Valid());
+  SetOverrideConformance(in.Conformant());
   if (in.MeanArterialPressureOverride().present())
     GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
   else
@@ -103,8 +103,8 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   SEPatientAction::Unload(data);
   if (HasOverrideSwitch())
     data.State(m_OverrideSwitch);
-  if (HasOverrideValidity())
-    data.Valid(m_OverrideValid);
+  if (HasOverrideConformance())
+    data.Conformant(m_OverrideConformance);
   if (HasMAPOverride())
     data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
   if (HasHeartRateOverride())
@@ -125,31 +125,33 @@ void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state)
 }
 bool SEOverride::HasOverrideSwitch() const
 {
-  return (m_OverrideSwitch == CDM::enumOnOff::Off) ? true : (m_OverrideSwitch == CDM::enumOnOff::On) ? true : false;
+  return (m_OverrideSwitch == CDM::enumOnOff::Off) ? true : 
+  (m_OverrideSwitch == CDM::enumOnOff::On) ? true : false;
 }
 void SEOverride::InvalidateOverrideSwitch()
 {
   m_OverrideSwitch = (CDM::enumOnOff::Off);
 }
-CDM::enumOnOff::value SEOverride::GetOverrideValidity() const
+CDM::enumOnOff::value SEOverride::GetOverrideConformance() const
 {
-  return m_OverrideValid;
+  return m_OverrideConformance;
 }
-void SEOverride::SetOverrideValidity(CDM::enumOnOff::value valid)
+void SEOverride::SetOverrideConformance(CDM::enumOnOff::value valid)
 {
-  m_OverrideValid = valid;
+  m_OverrideConformance = valid;
 }
-bool SEOverride::HasOverrideValidity() const
+bool SEOverride::HasOverrideConformance() const
 {
-  return (m_OverrideValid == CDM::enumOnOff::Off) ? true : (m_OverrideValid == CDM::enumOnOff::On) ? true : false;
+  return (m_OverrideConformance == CDM::enumOnOff::Off) ? true : 
+  (m_OverrideConformance == CDM::enumOnOff::On) ? true : false;
 }
-void SEOverride::InvalidateOverrideValidity()
+void SEOverride::InvalidateOverrideConformance()
 {
-  m_OverrideValid = (CDM::enumOnOff::Off);
+  m_OverrideConformance = (CDM::enumOnOff::Off);
 }
-bool SEOverride::IsOverrideValid()
+bool SEOverride::IsOverrideConformant()
 {
-  return (m_OverrideValid == CDM::enumOnOff::On) ? true : false;
+  return (m_OverrideConformance == CDM::enumOnOff::On) ? true : false;
 }
 
 // Cardiovascular Overrides //
@@ -244,9 +246,9 @@ void SEOverride::ToString(std::ostream& str) const
   str << "\n\tState: ";
   HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
   str << "\n\tValid: ";
-  HasOverrideValidity() ? str << GetOverrideValidity() : str << "Not Set";
-  if (GetOverrideValidity() == CDM::enumOnOff::Off && GetOverrideSwitch() == CDM::enumOnOff::On) {
-    str << ("\n\tOverride has turned validity off. Outputs no longer resemble validated parameters.");
+  HasOverrideConformance() ? str << GetOverrideConformance() : str << "Not Set";
+  if (GetOverrideConformance() == CDM::enumOnOff::Off && GetOverrideSwitch() == CDM::enumOnOff::On) {
+    str << ("\n\tOverride has turned conformance off. Outputs no longer resemble validated parameters.");
   }
   if (HasMAPOverride())
   {

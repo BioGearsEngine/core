@@ -42,11 +42,11 @@ public:
   void SetOverrideSwitch(CDM::enumOnOff::value state);
   bool HasOverrideSwitch() const;
   void InvalidateOverrideSwitch();
-  CDM::enumOnOff::value GetOverrideValidity() const;
-  void SetOverrideValidity(CDM::enumOnOff::value valid);
-  bool HasOverrideValidity() const;
-  void InvalidateOverrideValidity();
-  bool IsOverrideValid();
+  CDM::enumOnOff::value GetOverrideConformance() const;
+  void SetOverrideConformance(CDM::enumOnOff::value valid);
+  bool HasOverrideConformance() const;
+  void InvalidateOverrideConformance();
+  bool IsOverrideConformant();
 
 
   bool HasMAPOverride() const;
@@ -69,7 +69,7 @@ public:
 
 protected:
   CDM::enumOnOff m_OverrideSwitch;
-  CDM::enumOnOff m_OverrideValid;
+  CDM::enumOnOff m_OverrideConformance;
   SEScalarPressure* m_PressureOR;
   SEScalarFrequency* m_HeartRateOR;
   SEScalarTemperature* m_CoreTemperatureOR;

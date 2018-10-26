@@ -1048,8 +1048,8 @@ bool SEPatientActionCollection::IsOverrideActionOn() const
 {
   return (HasOverride()) && (m_OverrideAction->GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
 }
-bool SEPatientActionCollection::IsOverrideActionValid() const
+bool SEPatientActionCollection::IsOverrideActionConformant() const
 {
-  return (HasOverride()) && (m_OverrideAction->GetOverrideValidity() == CDM::enumOnOff::On) ? true : false;
+  return (HasOverride()) && (m_OverrideAction->GetOverrideConformance() == CDM::enumOnOff::On) ? true : false;
 }
 }
