@@ -82,7 +82,6 @@ public:
   virtual const SECompartmentManager& GetCompartments();
 
 protected:
-  BioGears& m_data;
   virtual bool IsReady();
   virtual bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
 

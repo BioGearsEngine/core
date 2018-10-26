@@ -48,7 +48,6 @@ std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 
 BioGearsEngine::BioGearsEngine(Logger* logger)
   : BioGears(logger)
-  , m_data(*this)
   , m_EngineTrack(*this)
 {
   m_State = EngineState::NotReady;
@@ -58,7 +57,6 @@ BioGearsEngine::BioGearsEngine(Logger* logger)
 
 BioGearsEngine::BioGearsEngine(const std::string& logFileName)
   : BioGears(logFileName)
-  , m_data(*this)
   , m_EngineTrack(*this)
 {
   m_State = EngineState::NotReady;
