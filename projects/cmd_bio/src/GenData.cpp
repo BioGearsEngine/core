@@ -10,45 +10,102 @@
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
 
+#include "GenData.h"
 #include <biogears/exports.h>
-#include "GenStates.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
-namespace biogears
+#include <vector>
+
+std::string findAndReplace(std::string& S, const std::string& toReplace, const std::string& replaceWith)
 {
-  CSVToXMLConvertor::CSVToXMLConvertor(std::string path, std::string filename)
-    :_path(path)
-  ,_filename(filename)
-  {
-    
+  size_t start = 0;
+  while (true) {
+    size_t pos = S.find(toReplace, start);
+    if (pos == std::string::npos) {
+      break;
+    }
+    S.replace(pos, toReplace.length(), replaceWith);
+    start = pos + replaceWith.length();
   }
-  //-----------------------------------------------------------------------------
-  SubstanceGenerator::SubstanceGenerator(std::string path, std::string filename)
-    :CSVToXMLConvertor(path,filename)
-  {
-    
+  return S;
+}
+
+namespace biogears {
+CSVToXMLConvertor::CSVToXMLConvertor(std::string path, std::string filename)
+  : _path(path)
+  , _filename(filename)
+{
+}
+//-----------------------------------------------------------------------------
+SubstanceGenerator::SubstanceGenerator(std::string path, std::string filename)
+  : CSVToXMLConvertor(path, filename)
+{
+}
+//-----------------------------------------------------------------------------
+SubstanceGenerator::~SubstanceGenerator()
+{
+}
+//-----------------------------------------------------------------------------
+bool SubstanceGenerator::parse()
+{
+  std::ifstream file("Substances.csv");
+  std::string row;
+  std::vector<std::vector<std::string>> rows;
+  
+  while (std::getline(file, row)) {
+    std::vector<std::string> temp;
+    int i = 0;
+    int start = 0;
+    while (i < row.size()) {
+      if (row.at(i) == ',') {
+        temp.push_back(row.substr(start, i - start));
+        ++i;
+        start = i;
+	  }
+      else if (row.at(i) == '"') {
+        ++i;
+        int start = i;
+        while (row.at(i) != '"') {
+          if (i == row.size() - 1) {
+            std::string row2;
+            std::getline(file, row2);
+			row.append(row2);
+		  }
+          ++i;
+		}
+        temp.push_back(row.substr(start, i - start));
+        while (i < row.size() && row.at(i) != ',') {
+          ++i;
+		}
+        ++i;
+	  } 
+	  else {
+        ++i;
+	  }
+	}
+    rows.push_back(temp);
   }
-  //-----------------------------------------------------------------------------
-  SubstanceGenerator::~SubstanceGenerator()
-  {
-    
+  for (int k = 0; k < rows.size(); ++k) {
+    for (int x = 0; x < rows.at(k).size(); ++x) {
+      std::cout << rows.at(k).at(x) << " ";
+	}
+    std::cout << std::endl;
   }
-  //-----------------------------------------------------------------------------
-  bool SubstanceGenerator::parse()
-  {
-    return false;
-  }
-  //-----------------------------------------------------------------------------
-  bool SubstanceGenerator::save() const
-  {
-    return false;
-  }
-  //-----------------------------------------------------------------------------
-  void SubstanceGenerator::print() const
-  {
-    std::cout << "\n" << Path() << Filename() << "\n";
-  }
-  //-----------------------------------------------------------------------------
+  std::cout << "Complete" << std::endl;
+  return false;
+}
+//-----------------------------------------------------------------------------
+bool SubstanceGenerator::save() const
+{
+  return false;
+}
+//-----------------------------------------------------------------------------
+void SubstanceGenerator::print() const
+{
+  std::cout << "\n"
+            << Path() << Filename() << "\n";
+}
+//-----------------------------------------------------------------------------
 }

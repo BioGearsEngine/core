@@ -4,7 +4,7 @@
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/cdm/utils/DataTrack.h>
 
-#include <biogears/StateGenerator.h>
+#include "StateGenerator.h"
 
 #include <iostream>
 #include <fstream>
@@ -83,8 +83,8 @@ int StateGenerator::runScenario(int patientNum, std::string& XMLFileName, std::s
   outputFile = findAndReplace(outputFile, ".xml", patientResults);
 
   std::unique_ptr<PhysiologyEngine> eng = CreateBioGearsEngine(logFile);
-  eng->GetLogger()->SetForward(this);
-  eng->GetLogger()->LogToConsole(false);
+  //eng->GetLogger()->SetForward(this);  //'this' assumes that we're running out of an object that can be passed into the SetForward function of a logger object
+  //eng->GetLogger()->LogToConsole(false);
   DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
   BioGearsScenario sce(eng->GetSubstanceManager());
 
