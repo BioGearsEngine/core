@@ -1,0 +1,28 @@
+Environment Data,,,,,,,,,,,,,
+Name,Standard,Submerged,Hypobaric3000m,Hypobaric4000m,ExerciseEnvironment,SubmergedFreezing,CheyenneMountainAprilCool,CheyenneMountainAprilWarm,CheyenneMountainAmbulance,AnchorageDecember,AnchorageInside,CheyenneMountainFireFighter,CarbonMonoxideAtmospheric
+,,,,,,,,,,,,,
+SurroundingType,Air,Water,Air,Air,Air,Water,Air,Air,Air,Air,Air,Air,Air
+,,,,,,,,,,,,,
+AirVelocity,0.1 m/s,0 m/s,0.0 m/s,0.0 m/s,2.5 m/s,0 m/s,0 m/s,0 m/s,0 m/s,5.0 m/s,0 m/s,0 m/s,0.1 m/s
+AmbientTemperature,22 C,10 C,22 C,22 C,35 C,10 C,16 C,23 C,22 C,-10 C,22 C,25 C,22 C
+AtmosphericPressure,760 mmHg,1260 mmHg,525 mmHg,475 mmHg,760 mmHg,760 mmHg,542 mmHg,542 mmHg,542 mmHg,757 mmHg,757 mmHg,542 mmHg,760 mmHg
+ClothingResistance,0.5 clo,3.0 clo,0.5 clo,0.5 clo,3.0 clo,3.0 clo,2.0 clo,2.0 clo,0.5 clo,1.0 clo,1.5 clo,2.0 clo,0.5 clo
+Emissivity,0.95,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.95
+MeanRadiantTemperature,22 C,15 C,22 C,22 C,35 C,15 C,16 C,23 C,22 C,-10 C,22 C,25 C,22 C
+RelativeHumidity,0.6,1,0.5,0.5,0.45,1,0.5,0.5,0.5,0.01,0.5,0.1,0.6
+RespirationAmbientTemperature,22 C,16 C,22 C,22 C,35 C,16 C,16 C,23 C,22 C,-10 C,22 C,25 C,22 C
+AmbientGasData,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas
+Substance,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen,Nitrogen
+FractionAmount,0.7896,0.7901,0.7896,0.7901,0.7901,0.7901,0.7901,0.7901,0.7901,0.7901,0.7901,0.79008,0.7895998
+AmbientGasData,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas
+Substance,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen
+FractionAmount,0.21,0.2095,0.21,0.2095,0.2095,0.2095,0.2095,0.2095,0.2095,0.2095,0.2095,0.2095,0.21
+AmbientGasData,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas
+Substance,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide
+FractionAmount,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004,0.0004
+AmbientGasData,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas,AmbientGas
+Substance,,,,,,,,,,,,CarbonMonoxide,CarbonMonoxide
+FractionAmount,,,,,,,,,,,,0.00002,0.0000002
+AmbientAerosolData,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol,AmbientAerosol
+Substance,,,,,,,,,,,,ForestFireParticulate,
+Concentration,,,,,,,,,,,,2.9 mg/m^3,

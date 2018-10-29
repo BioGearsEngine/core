@@ -1,0 +1,12 @@
+Nutrition Data,,,,
+Name,Standard,Soylent,Water,NoMacros
+,,,,
+Carbohydrate,130 g,57 g,0 g,0 g
+CarbohydrateDigestionRate,0.5 g/min,0.625 g/min,0.5 g/min,0.625 g/min
+Fat,27 g,23 g,0 g,0 g
+FatDigestionRate,0.055 g/min,0.055 g/min,0.055 g/min,0.055 g/min
+Protein,20 g,20 g,0 g,0 g
+ProteinDigestionRate,0.071 g/min,0.157 g/min,0.071 g/min,0.157 g/min
+Calcium,500 mg,300 mg,0 g,500 mg
+Sodium,1.0 g,380 mg,0 g,1.0 g
+Water,0.5 L,1.0 L,1.25 L,0.5 L

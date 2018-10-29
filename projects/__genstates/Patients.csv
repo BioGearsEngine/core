@@ -1,0 +1,27 @@
+,Base Validation,,,,Respiratory Validation,,,,Combined and Showcase,,,,,,,,,,Extremes,
+Name,StandardMale,StandardFemale,DefaultMale,DefaultFemale,Overweight,Underweight,Tachycardic,Bradycardic,Cynthia,Gus,Joel,Nathan,Rick,Hassan,Soldier,Jeff,Carol,Jane,ExtremeFemale,ExtremeMale
+Required,,,,,,,,,,,,,,,,,,,,
+Sex,Male,Female,Male,Female,Male,Male,Male,Male,Female,Male,Male,Male,Male,Male,Male,Male,Female,Female,Female,Male
+Physical Characteristics,,,,,,,,,,,,,,,,,,,,
+Age,44 yr,44 yr,,,44 yr,44 yr,44 yr,44 yr,30 yr,32 yr,44 yr,44 yr,23 yr,28 yr,22 yr,25 yr,40 yr,18 yr,18 yr,65 yr
+Weight,170 lb,130 lb,,,215 lb,115 lb,170 lb,170 lb,130 lb,190 lb,170 lb,170 lb,161 lb,185 lb,170 lb,180 lb,160 lb,120 lb,,
+Height,71 in,64 in,,,71 in,71 in,71 in,71 in,64 in,70 in,71 in,71 in,68 in,72 in,71 in,72 in,66 in,64 in,4.5 ft,7 ft
+BodyFatFraction,0.21,0.28,,,0.25,0.15,0.18,0.18,0.18,0.18,0.18,0.18,0.18,0.18,0.18,0.12,0.25,0.18,0.32,0.02
+Systemic Targets To Tune Engine To,,,,,,,,,,,,,,,,,,,,
+BloodVolumeBaseline,,,,,,,,,,,,,,,,,,,,
+BasalMetabolicRate,,,,,,,,,,,,,,,,,,,,
+HeartRateBaseline,72 bpm,72 bpm,,,72 bpm,72 bpm,110 bpm,50 bpm,72 bpm,93 bpm,110 bpm,72 bpm,100 bpm,110 bpm,84 bpm,72 bpm,72 bpm,72 bpm,60 bpm,100 bpm
+SystolicArterialPressureBaseline,114 mmHg,114 mmHg,,,114 mmHg,114 mmHg,114 mmHg,114 mmHg,114 mmHg,90 mmHg,120 mmHg,114 mmHg,120 mmHg,90 mmHg,114 mmHg,114 mmHg,114 mmHg,114 mmHg,90 mmHg,120 mmHg
+DiastolicArterialPressureBaseline,73.5 mmHg,73.5 mmHg,,,73.5 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,60 mmHg,80 mmHg,73.5 mmHg,80 mmHg,60 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,60 mmHg,80 mmHg
+RespirationRateBaseline,16 bpm,16 bpm,,,16 bpm,16 bpm,20 bpm,12 bpm,18 bpm,14 bpm,15 bpm,16 bpm,16 bpm,18 bpm,16 bpm,16 bpm,18 bpm,18 bpm,12 bpm,20 bpm
+"Overridable Physical Characteristics 
+(But one should change these via Conditions)",,,,,,,,,,,,,,,,,,,,
+AlveoliSurfaceArea,,,,,,,,,,,,,,,,,,,,
+RightLungRatio,,,,,,,,,,,,,,,,,,,0.5,0.6
+SkinSurfaceArea,,,,,,,,,,,,,,,,,,,,
+Overridable System Bounds ,,,,,,,,,,,,,,,,,,,,
+HeartRateMaximum,,,,,,,,,,,,,,,,,,,,
+HeartRateMinimum,,,,,,,,,,,,,,,,,,,,
+FunctionalResidualCapacity,,,,,,,,,,,,,,,,,,,,
+TotalLungCapacity,,,,,,,,,,,,,,,,,,,,
+ResidualVolume,,,,,,,,,,,,,,,,,,,,
