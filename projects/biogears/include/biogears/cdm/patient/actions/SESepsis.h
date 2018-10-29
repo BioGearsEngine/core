@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -22,11 +21,13 @@ namespace biogears {
 class SEScalar0To1;
 class SEScalar;
 
-
 class BIOGEARS_API SESepsis : public SEPatientAction {
 public:
   SESepsis();
   virtual ~SESepsis();
+
+  static constexpr const char* TypeTag() { return "SESepsis"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Clear(); //clear memory
 
@@ -57,6 +58,5 @@ protected:
   std::string m_Compartment;
   SEScalar0To1* m_Severity;
   std::map<std::string, std::string> m_TissueResistorMap;
-
 };
 }

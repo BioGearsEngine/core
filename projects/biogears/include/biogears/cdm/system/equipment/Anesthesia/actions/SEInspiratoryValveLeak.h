@@ -10,9 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
+#include "biogears/cdm/properties/SEScalar0To1.h"
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
-#include "biogears/cdm/properties/SEScalar0To1.h"
 
 namespace biogears {
 class SEScalar0To1;
@@ -21,6 +21,9 @@ class BIOGEARS_API SEInspiratoryValveLeak : public SEAnesthesiaMachineAction {
 public:
   SEInspiratoryValveLeak();
   virtual ~SEInspiratoryValveLeak();
+
+  static constexpr const char* TypeTag() { return "SEInspiratoryValveLeak"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Clear();
 

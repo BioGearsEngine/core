@@ -20,6 +20,9 @@ public:
   SEIntubation();
   virtual ~SEIntubation();
 
+  static constexpr const char* TypeTag() { return "SEIntubation"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

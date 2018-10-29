@@ -22,6 +22,9 @@ public:
   SESerializeState();
   virtual ~SESerializeState();
 
+  static constexpr const char* TypeTag() { return "SESerializeState"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

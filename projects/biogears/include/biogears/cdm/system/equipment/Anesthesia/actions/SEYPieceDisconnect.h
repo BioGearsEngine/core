@@ -21,6 +21,9 @@ public:
   SEYPieceDisconnect();
   virtual ~SEYPieceDisconnect();
 
+  static constexpr const char* TypeTag() { return "SEYPeiceDisconnect"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

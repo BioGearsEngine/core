@@ -26,6 +26,9 @@ public:
   SEConsciousRespiration();
   virtual ~SEConsciousRespiration();
 
+  static constexpr const char* TypeTag() { return "SEConsciousRespiration"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

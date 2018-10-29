@@ -20,6 +20,9 @@ public:
   SEChestCompression();
   virtual ~SEChestCompression();
 
+  static constexpr const char* TypeTag() { return "SEChestCompression"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

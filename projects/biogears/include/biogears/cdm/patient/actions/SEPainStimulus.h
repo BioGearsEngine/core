@@ -19,33 +19,35 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {
 public:
+  SEPainStimulus();
+  virtual ~SEPainStimulus();
 
-	SEPainStimulus();
-	virtual ~SEPainStimulus();
+  static constexpr const char* TypeTag() { return "SEPainStimulus"; };
+  const char* classname() const override { return TypeTag(); }
 
-	virtual void Clear();
+  virtual void Clear();
 
-	virtual bool IsValid() const;
-	virtual bool IsActive() const;
+  virtual bool IsValid() const;
+  virtual bool IsActive() const;
 
   virtual bool Load(const CDM::PainStimulusData& in);
   virtual CDM::PainStimulusData* Unload() const;
+
 protected:
   virtual void Unload(CDM::PainStimulusData& data) const;
 
 public:
-
-	virtual bool HasSeverity() const;
-	virtual SEScalar0To1& GetSeverity();	
+  virtual bool HasSeverity() const;
+  virtual SEScalar0To1& GetSeverity();
 
   virtual bool HasLocation() const;
   virtual std::string GetLocation() const;
   virtual void SetLocation(const std::string& name);
 
-	virtual void ToString(std::ostream &str) const;
+  virtual void ToString(std::ostream& str) const;
 
 protected:
-	SEScalar0To1*           m_Severity;
-	std::string             m_Location;
+  SEScalar0To1* m_Severity;
+  std::string m_Location;
 };
 }

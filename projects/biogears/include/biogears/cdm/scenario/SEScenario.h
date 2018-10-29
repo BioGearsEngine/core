@@ -67,6 +67,8 @@ public:
   virtual void RemoveAutoSerialization();
 
   virtual void AddAction(const SEAction& action);
+  virtual void ClearActions();
+  virtual bool AddActionAfter(const SEAction& reference, const SEAction& action);
   virtual const std::vector<SEAction*>& GetActions() const;
 
   virtual SEDataRequestManager& GetDataRequestManager() { return m_DataRequestMgr; }

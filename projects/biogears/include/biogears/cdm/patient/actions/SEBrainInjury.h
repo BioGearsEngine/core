@@ -22,6 +22,9 @@ public:
   SEBrainInjury();
   virtual ~SEBrainInjury();
 
+  static constexpr const char* TypeTag() { return "SEBrainInjury"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

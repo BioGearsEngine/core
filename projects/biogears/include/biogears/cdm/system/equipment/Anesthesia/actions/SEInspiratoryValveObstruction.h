@@ -21,6 +21,9 @@ public:
   SEInspiratoryValveObstruction();
   virtual ~SEInspiratoryValveObstruction();
 
+  static constexpr const char* TypeTag() { return "SEInspiratoryValveObstruction"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

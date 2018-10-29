@@ -21,6 +21,8 @@ class SESubstanceManager;
 
 class BIOGEARS_API SEAction : public Loggable {
 public:
+  virtual const char* classname() const = 0;
+
   SEAction();
   virtual ~SEAction();
 
@@ -47,7 +49,7 @@ public:
   virtual void InvalidateComment();
 
   virtual void ToString(std::ostream& str) const = 0;
-
+  virtual std::string ToString() const;
 protected:
   std::string m_Comment;
 };

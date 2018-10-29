@@ -21,6 +21,9 @@ public:
   SEOxygenTankPressureLoss();
   virtual ~SEOxygenTankPressureLoss();
 
+  static constexpr const char* TypeTag() { return "SEOxygenTankPressureLoss"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

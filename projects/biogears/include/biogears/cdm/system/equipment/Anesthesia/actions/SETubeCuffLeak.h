@@ -21,6 +21,9 @@ public:
   SETubeCuffLeak();
   virtual ~SETubeCuffLeak();
 
+  static constexpr const char* TypeTag() { return "SETubeCuffLeak"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

@@ -20,6 +20,9 @@ public:
   SEEnvironmentChange(SESubstanceManager& substances);
   virtual ~SEEnvironmentChange();
 
+  static constexpr const char* TypeTag() { return "SEEnvironmentChange"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

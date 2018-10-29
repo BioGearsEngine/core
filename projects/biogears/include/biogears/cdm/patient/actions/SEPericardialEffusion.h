@@ -22,6 +22,9 @@ public:
   SEPericardialEffusion();
   virtual ~SEPericardialEffusion();
 
+  static constexpr const char* TypeTag() { return "SEPericardialEffusion"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

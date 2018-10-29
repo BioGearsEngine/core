@@ -20,6 +20,9 @@ public:
   SEPatientAssessmentRequest();
   virtual ~SEPatientAssessmentRequest();
 
+  static constexpr const char* TypeTag() { return "SEPatientAssessmentRequest"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

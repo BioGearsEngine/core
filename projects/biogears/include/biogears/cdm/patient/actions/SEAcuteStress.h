@@ -21,6 +21,9 @@ class BIOGEARS_API SEAcuteStress : public SEPatientAction {
 public:
   SEAcuteStress();
   virtual ~SEAcuteStress();
+  
+  static constexpr const char* TypeTag() { return "SEAcuteStress"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Clear();
 

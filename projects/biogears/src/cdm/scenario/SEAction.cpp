@@ -477,4 +477,10 @@ void SEAction::InvalidateComment()
 {
   m_Comment = "";
 }
+std::string SEAction::ToString() const
+{
+  std::stringstream ss;
+  this->ToString(ss);
+  return ss.str();
+}
 }

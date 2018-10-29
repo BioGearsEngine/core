@@ -21,6 +21,9 @@ public:
   SESodaLimeFailure();
   virtual ~SESodaLimeFailure();
 
+  static constexpr const char* TypeTag() { return "SESodaLimeFailure"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

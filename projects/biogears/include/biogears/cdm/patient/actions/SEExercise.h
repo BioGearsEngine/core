@@ -23,6 +23,9 @@ public:
   SEExercise();
   virtual ~SEExercise();
 
+  static constexpr const char* TypeTag() { return "SEExercise"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

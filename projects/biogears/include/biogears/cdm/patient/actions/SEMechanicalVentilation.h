@@ -11,9 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include "biogears/cdm/properties/SEScalarPressure.h"
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
-#include "biogears/cdm/properties/SEScalarPressure.h"
 
 namespace biogears {
 class Serializer;
@@ -30,6 +30,9 @@ protected:
 public:
   SEMechanicalVentilation();
   virtual ~SEMechanicalVentilation();
+
+  static constexpr const char* TypeTag() { return "SEMechanicalVentilation"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Clear();
 

@@ -21,6 +21,9 @@ public:
   SEMaskLeak();
   virtual ~SEMaskLeak();
 
+  static constexpr const char* TypeTag() { return "SEMaskLeak"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

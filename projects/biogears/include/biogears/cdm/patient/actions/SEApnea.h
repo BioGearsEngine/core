@@ -22,6 +22,9 @@ public:
   SEApnea();
   virtual ~SEApnea();
 
+  static constexpr const char* TypeTag() { return "SEApena"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

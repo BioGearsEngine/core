@@ -22,6 +22,9 @@ class BIOGEARS_API SEInhalerConfiguration : public SEInhalerAction {
 public:
   SEInhalerConfiguration(SESubstanceManager& substances);
   virtual ~SEInhalerConfiguration();
+  
+  static constexpr const char* TypeTag() { return "SEInhalerConfiguration"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Clear();
 

@@ -22,6 +22,9 @@ public:
   SEAnesthesiaMachineConfiguration(SESubstanceManager& substances);
   virtual ~SEAnesthesiaMachineConfiguration();
 
+  static constexpr const char* TypeTag() { return "SEAnesthesiaMachineConfiguration"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

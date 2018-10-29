@@ -23,6 +23,9 @@ public:
   SEConsumeNutrients();
   virtual ~SEConsumeNutrients();
 
+  static constexpr const char* TypeTag() { return "SEconsumeNutrients"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

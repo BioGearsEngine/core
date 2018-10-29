@@ -196,12 +196,14 @@ bool SEScenario::HasAutoSerialization() const
 {
   return m_AutoSerialization == nullptr ? false : m_AutoSerialization->IsValid();
 }
+
 SEScenarioAutoSerialization& SEScenario::GetAutoSerialization()
 {
   if (m_AutoSerialization == nullptr)
     m_AutoSerialization = new SEScenarioAutoSerialization(GetLogger());
   return *m_AutoSerialization;
 }
+
 const SEScenarioAutoSerialization* SEScenario::GetAutoSerialization() const
 {
   return m_AutoSerialization;
@@ -217,8 +219,26 @@ void SEScenario::AddAction(const SEAction& a)
   m_Actions.push_back(SEAction::newFromBind(*bind, m_SubMgr));
   delete bind;
 }
+bool SEScenario::AddActionAfter(const SEAction& ref, const SEAction& after)
+{
+  bool success = false;
+  auto refItr = std::find( m_Actions.begin(), m_Actions.end(), &ref);
+  if(refItr != m_Actions.end())
+  {
+    CDM::ActionData* bind = after.Unload();
+    m_Actions.insert( refItr, SEAction::newFromBind(*bind, m_SubMgr));  
+    delete bind;
+    success = true;
+  }
+  return success;
+}
+void SEScenario::ClearActions()
+{
+  DELETE_VECTOR(m_Actions);
+}
 const std::vector<SEAction*>& SEScenario::GetActions() const
 {
   return m_Actions;
 }
+
 }

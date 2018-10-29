@@ -20,6 +20,9 @@ public:
   SESubstanceAdministration();
   virtual ~SESubstanceAdministration();
 
+  static constexpr const char* TypeTag() { return "SESubstanceAdministration"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;

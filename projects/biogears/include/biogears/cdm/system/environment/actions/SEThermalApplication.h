@@ -23,6 +23,9 @@ public:
   SEThermalApplication();
   virtual ~SEThermalApplication();
 
+  static constexpr const char* TypeTag() { return "SEThermalApplication"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

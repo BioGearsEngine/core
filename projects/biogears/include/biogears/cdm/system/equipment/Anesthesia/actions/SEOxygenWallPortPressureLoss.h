@@ -21,6 +21,9 @@ public:
   SEOxygenWallPortPressureLoss();
   virtual ~SEOxygenWallPortPressureLoss();
 
+  static constexpr const char* TypeTag() { return "SEOxygenWallPortPressureLoss"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear();
 
   virtual bool IsValid() const;

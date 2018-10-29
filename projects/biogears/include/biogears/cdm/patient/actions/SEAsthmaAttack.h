@@ -22,6 +22,9 @@ public:
   SEAsthmaAttack();
   virtual ~SEAsthmaAttack();
 
+  static constexpr const char* TypeTag() { return "SEAsthmaAttack"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Clear(); //clear memory
 
   virtual bool IsValid() const;
