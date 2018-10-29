@@ -74,6 +74,7 @@ public class DataSetReader
   public static void loadData() throws FileNotFoundException
   {
       Path data_path = m_resources.findResource(DEFAULT_DIRECTORY+DEFAULT_FILE);
+      // just checks if "BioGears.xlsx" is a file then returns it as a Path
       loadData(data_path);
 
   }
@@ -103,12 +104,12 @@ public class DataSetReader
         return;
       }
       Log.info(path.toString());
-      FileInputStream xlFile = null;
-      XSSFWorkbook xlWBook = null;
-      try {
+      FileInputStream xlFile = null; // xlFile reads in bytes from a file in a file system
+      XSSFWorkbook xlWBook = null;   // xlWBook is a high level representation of a spreadsheetML workbook.
+      try {                          // 
         Log.info(path.toString());
-        xlFile = new FileInputStream(path.toString());		
-        xlWBook =  new XSSFWorkbook (xlFile);     
+        xlFile = new FileInputStream(path.toString()); // reads "BioGears.xlsx"
+        xlWBook =  new XSSFWorkbook (xlFile);          // turns xlWBook into an XSSFWorkbook of "BioGears.xlsx"
       } catch (java.lang.NoClassDefFoundError e) {
         Log.error(e.toString());
         return;
@@ -117,12 +118,13 @@ public class DataSetReader
         e.printStackTrace();
         return;
       }
-      evaluator = xlWBook.getCreationHelper().createFormulaEvaluator();
+      evaluator = xlWBook.getCreationHelper().createFormulaEvaluator(); 
       
       String contentVersion = "";
-      Properties props = new Properties();
+      Properties props = new Properties(); //Properties is a hashtable where both key and value are strings
       try {
         props.load(new FileInputStream( m_resources.findResource("src/build.properties").toString()) );
+        //props.load loads the key and element pairs from the input byte stream
         contentVersion = props.getProperty("biogears.version");
       } catch (FileNotFoundException e) {
         contentVersion = "Unknown";
@@ -130,9 +132,9 @@ public class DataSetReader
       List<SEPatient> patients = readPatients(xlWBook.getSheet("Patients"));
       for(SEPatient p : patients)
       {
-        Log.info("Writing patient : "+p.getName());
-        ObjectData obj = p.unload();
-        obj.setContentVersion(contentVersion);
+        Log.info("Writing patient : "+p.getName()); // Log is just logging the output, for the ultimate
+        ObjectData obj = p.unload();                // result it's not the most important part
+        obj.setContentVersion(contentVersion);      // 
         CDMSerializer.writeFile("./patients/"+p.getName()+".xml", obj);
       }
       Map<String,SESubstance> substances=readSubstances(xlWBook.getSheet("Substances"));
@@ -192,10 +194,10 @@ public class DataSetReader
     try
     {
       int rows = xlSheet.getPhysicalNumberOfRows();		  
-      for (int r = 0; r < rows; r++) 
+      for (int r = 0; r < rows; r++) // iterate through all of the rows of the patient sheet
       {
-        XSSFRow row = xlSheet.getRow(r);
-        if (row == null) 
+        XSSFRow row = xlSheet.getRow(r); //row is a high level representation of a row of a spreadsheet
+        if (row == null) //if the row is empty?
           continue;
         int cells = row.getPhysicalNumberOfCells();
         if(r==0)
@@ -203,7 +205,7 @@ public class DataSetReader
           for(int i=1;i<cells;i++)
             patients.add(new SEPatient());
         }
-        property = row.getCell(0).getStringCellValue();
+        property = row.getCell(0).getStringCellValue(); // reads the title of the row
         if(property==null||property.isEmpty())
           continue;
         Log.info("Processing Patient Field : "+property);
