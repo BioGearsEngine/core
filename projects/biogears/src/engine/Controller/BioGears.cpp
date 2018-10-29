@@ -150,7 +150,7 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {
     std::string stableDir = "./stable/";
-    MKDIR(stableDir.c_str());
+    MakeDirectory(stableDir);
     CDM::PatientData* pData = m_Patient->Unload();
     pData->contentVersion(BGE::Version);
     // Write out the stable patient state

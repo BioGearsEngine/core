@@ -14,6 +14,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/FileUtils.h>
 #include <dirent.h>
 
+#if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
+
+#define MAXPATH MAX_PATH
+#define GETCWD _getcwd
+#define MKDIR(x) _mkdir(x)
+#define RMDIR(x) _rmdir(x)
+#else
+
+
+#define MAXPATH PATH_MAX
+#define GETCWD getcwd
+#define MKDIR(x) mkdir(x, 0755)
+#define RMDIR(x) rmdir(x)
+
+#endif
+
 namespace biogears {
 std::string Replace(const std::string& original, const std::string& replace, const std::string& withThis)
 {
@@ -90,6 +106,10 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
     }
   }
 }
+void MakeDirectory(const std::string& dir)
+{
+  MKDIR(dir.c_str());
+}
 
 void DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories)
 {
@@ -113,7 +133,7 @@ void DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories)
       }
     }
   }
-  rmdir(dir.c_str());
+  RMDIR(dir.c_str());
 }
 
 std::string GetCurrentWorkingDirectory()

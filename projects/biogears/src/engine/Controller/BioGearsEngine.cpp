@@ -547,7 +547,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
         SaveState(serialize->GetFilename());
       else {
         std::stringstream ss;
-        MKDIR("./states");
+        MakeDirectory("./states");
         ss << "./states/" << m_Patient->GetName() << "@" << GetSimulationTime(TimeUnit::s) << "s.xml";
         SaveState(ss.str());
       }

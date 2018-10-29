@@ -20,10 +20,6 @@ specific language governing permissions and limitations under the License.
 
 #include <windows.h>
 
-#define MAXPATH MAX_PATH
-#define GETCWD _getcwd
-#define MKDIR(x) mkdir(x)
-
 #else
 
 #include <unistd.h>
@@ -31,10 +27,6 @@ specific language governing permissions and limitations under the License.
 #if defined(__clang__)
 #include <sys/syslimits.h>
 #endif
-
-#define MAXPATH PATH_MAX
-#define GETCWD getcwd
-#define MKDIR(x) mkdir(x, 0755)
 
 #if defined(__gnu_linux__)
 #include <cstring>
@@ -50,6 +42,7 @@ std::string BIOGEARS_API Replace(const std::string& original, const std::string&
 void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "");
 std::string BIOGEARS_API GetCurrentWorkingDirectory();
 void BIOGEARS_API DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories = true);
+void BIOGEARS_API MakeDirectory(const std::string& dir);
 
 BIOGEARS_API extern std::recursive_mutex g_fileSystemMutex;
 
