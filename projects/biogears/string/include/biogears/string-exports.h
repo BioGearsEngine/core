@@ -28,13 +28,13 @@ specific language governing permissions and limitations under the License.
 #include<string>
 #if _MSC_VER >= 1600 &&  _MSC_VER < 1910 
 #ifndef MSVC_2015_STRING_HACK
-#define MSVC_2015_STRING_HACK
-const std::basic_string<char>::size_type std::basic_string<char>::npos = static_cast<std::basic_string<char>::size_type>(-1);
+//#define MSVC_2015_STRING_HACK
+//const std::basic_string<char>::size_type std::basic_string<char>::npos = static_cast<std::basic_string<char>::size_type>(-1);
 #endif
 #endif //_MSC_VER
-#pragma warning(push,0])
-template class BIOGEARS_STRING_API std::allocator<char>;
-template class BIOGEARS_STRING_API std::_String_alloc<std::_String_base_types<char, std::allocator<char>>>;
-template class BIOGEARS_STRING_API std::basic_string<char>;
-#pragma warning(pop)  
+//#pragma warning(push,0)
+//template class BIOGEARS_STRING_API std::allocator<char>;
+//template class BIOGEARS_STRING_API std::_String_alloc<std::_String_base_types<char, std::allocator<char>>>;
+//template class BIOGEARS_STRING_API std::basic_string<char>;
+//#pragma warning(pop)  
 #endif
