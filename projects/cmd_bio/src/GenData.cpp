@@ -264,11 +264,26 @@ bool SubstanceGenerator::process(const std::vector<std::vector<std::string>>& da
       }
       ++substanceItr;
     }
-  } else {
+  }
+  else {
     rValue = false;
   }
   for (auto& substance : _substances) {
     std::cout << substance;
+
+    xml_schema::namespace_infomap info;
+    info[""].name = "uri:/mil/tatrc/physiology/datamodel";
+    info[""].schema = "BioGears.xsd";
+
+    try {
+      std::ofstream file;
+      file.open(substance.Name() + ".xml");
+      Substance(file, substance, info);
+      file.close();
+    }
+    catch (std::exception e) {
+      std::cout << e.what() << std::endl;
+    }
   }
   return rValue;
 }
