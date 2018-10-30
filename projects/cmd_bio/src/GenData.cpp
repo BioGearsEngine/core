@@ -95,7 +95,11 @@ bool SubstanceGenerator::parse()
           }
           ++i;
         }
-        columns.at(column).push_back(row.substr(start, i - start));
+        if (column == columns.size()) {
+          finalColumn.push_back(row.substr(start, i - start));
+        } else {
+          columns.at(column).push_back(row.substr(start, i - start));
+		}
         ++column;
         ++i;
         start = i;
@@ -107,13 +111,15 @@ bool SubstanceGenerator::parse()
         ++i;
       }
     }
-    finalColumn.push_back(row.substr(start, row.size() - start));
+    if (column == columns.size()) {
+      finalColumn.push_back(row.substr(start, row.size() - start));
+	}
   }
   columns.push_back(finalColumn);
   i = 0;
-  for (i = 0; i < columns.size(); ++i) {
-    for (int k = 0; k < columns.at(i).size(); ++k) {
-      std::cout << columns.at(i).at(k) << ",";
+  for (i = 0; i < columns.at(0).size(); ++i) {
+    for (int k = 0; k < columns.size(); ++k) {
+      std::cout << columns.at(k).at(i) << ",";
 	}
     std::cout << std::endl
               << std::endl;
