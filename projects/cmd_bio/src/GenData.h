@@ -16,6 +16,8 @@
 #include <string>
 #include <vector>
 #include <map>
+
+#include <biogears/schema/cdm/Substance.hxx>
 namespace biogears
 {
   class CSVToXMLConvertor
@@ -52,9 +54,10 @@ namespace biogears
     bool parse() override;
     bool save() const override;
     void print() const override;
-
+  protected:
+    bool process(const std::vector<std::vector<std::string>>& data);
   private:
-    
+    std::vector<mil::tatrc::physiology::datamodel::SubstanceData> _substances ;
   };
 } //namespace biogears
 
