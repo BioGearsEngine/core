@@ -32,6 +32,7 @@ OverrideConfig::OverrideConfig()
   m_HeartRateOverride = nullptr;
   m_CoreTemperatureOverride = nullptr;
   m_SkinTemperatureOverride = nullptr;
+  m_TotalMetabolicOverride = nullptr;
 }
 
 OverrideConfig::~OverrideConfig()
@@ -46,6 +47,7 @@ void OverrideConfig::Clear()
   SAFE_DELETE(m_HeartRateOverride);
   SAFE_DELETE(m_CoreTemperatureOverride);
   SAFE_DELETE(m_SkinTemperatureOverride);
+  SAFE_DELETE(m_TotalMetabolicOverride);
   m_overrideMode = CDM::enumOnOff::Off;
 }
 
@@ -101,6 +103,8 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
       GetCoreTemperatureOverride().Load(config.CoreTemperatureOverride().get());
     if (config.SkinTemperatureOverride().present())
       GetSkinTemperatureOverride().Load(config.SkinTemperatureOverride().get());
+    if (config.TotalMetabolicRateOverride().present())
+      GetTotalMetabolicOverride().Load(config.TotalMetabolicRateOverride().get());
   }
 
   return true;
@@ -132,6 +136,8 @@ void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
     energy->CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOverride->Unload()));
   if (HasSkinTemperatureOverride())
     energy->SkinTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureOverride->Unload()));
+  if (HasTotalMetabolicOverride())
+    energy->TotalMetabolicRateOverride(std::unique_ptr<CDM::ScalarPowerData>(m_TotalMetabolicOverride->Unload()));
 
   CDM::EnergyOverrideData* energyoverride(new CDM::EnergyOverrideData());
   if (HasEnableEnergyOverride())
@@ -256,5 +262,22 @@ double OverrideConfig::GetSkinTemperatureOverride(const TemperatureUnit& unit) c
   if (m_SkinTemperatureOverride == nullptr)
     return SEScalar::dNaN();
   return m_SkinTemperatureOverride->GetValue(unit);
+}
+
+  bool OverrideConfig::HasTotalMetabolicOverride() const
+{
+    return m_TotalMetabolicOverride == nullptr ? false : m_TotalMetabolicOverride->IsValid();
+  }
+SEScalarPower& OverrideConfig::GetTotalMetabolicOverride()
+{
+  if (m_TotalMetabolicOverride == nullptr)
+    m_TotalMetabolicOverride = new SEScalarPower();
+  return *m_TotalMetabolicOverride;
+}
+double OverrideConfig::GetTotalMetabolicOverride(const PowerUnit& unit) const
+{
+  if (m_TotalMetabolicOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_TotalMetabolicOverride->GetValue(unit);
 }
 }

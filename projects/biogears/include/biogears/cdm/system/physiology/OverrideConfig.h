@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
 
 CDM_BIND_DECL(OverrideConfigData)
 
@@ -65,6 +66,9 @@ public:
   virtual bool HasSkinTemperatureOverride() const;
   virtual SEScalarTemperature& GetSkinTemperatureOverride();
   virtual double GetSkinTemperatureOverride(const TemperatureUnit& unit) const;
+  virtual bool HasTotalMetabolicOverride() const;
+  virtual SEScalarPower& GetTotalMetabolicOverride();
+  virtual double GetTotalMetabolicOverride(const PowerUnit& unit) const;
 
   virtual bool HasEnableEnergyOverride() const
   {
@@ -85,6 +89,7 @@ protected:
   SEScalarTemperature* m_CoreTemperatureOverride;
   SEScalarTemperature* m_SkinTemperatureOverride;
   SEScalarFrequency* m_HeartRateOverride;
+  SEScalarPower* m_TotalMetabolicOverride;
 
 };
 }

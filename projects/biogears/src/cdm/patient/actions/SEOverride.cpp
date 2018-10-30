@@ -27,6 +27,7 @@ SEOverride::SEOverride()
   m_HeartRateOR = nullptr;
   m_CoreTemperatureOR = nullptr;
   m_SkinTemperatureOR = nullptr;
+  m_TotalMetabolicOR = nullptr;
 }
 
 SEOverride::~SEOverride()
@@ -43,6 +44,7 @@ void SEOverride::Clear()
   SAFE_DELETE(m_HeartRateOR);
   SAFE_DELETE(m_CoreTemperatureOR);
   SAFE_DELETE(m_SkinTemperatureOR);
+  SAFE_DELETE(m_TotalMetabolicOR);
 }
 
 bool SEOverride::IsValid() const
@@ -86,6 +88,10 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetSkinTemperatureOverride().Load(in.SkinTemperatureOverride().get());
   else
     GetSkinTemperatureOverride().Invalidate();
+  if (in.TotalMetabolicRateOverride().present())
+    GetTotalMetabolicOverride().Load(in.TotalMetabolicRateOverride().get());
+  else
+    GetTotalMetabolicOverride().Invalidate();
   //SEPatientAction::Load(in);
   //return true;
   return IsValid();
@@ -113,6 +119,8 @@ void SEOverride::Unload(CDM::OverrideData& data) const
     data.CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOR->Unload()));
   if (HasSkinTemperatureOverride())
     data.SkinTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureOR->Unload()));
+  if (HasTotalMetabolicOverride())
+    data.TotalMetabolicRateOverride(std::unique_ptr<CDM::ScalarPowerData>(m_TotalMetabolicOR->Unload()));
 }
 
 CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
@@ -229,11 +237,28 @@ double SEOverride::GetSkinTemperatureOverride(const TemperatureUnit& unit) const
     return SEScalar::dNaN();
   return m_SkinTemperatureOR->GetValue(unit);
 }
+bool SEOverride::HasTotalMetabolicOverride() const
+{
+  return m_TotalMetabolicOR == nullptr ? false : m_TotalMetabolicOR->IsValid();
+}
+SEScalarPower& SEOverride::GetTotalMetabolicOverride()
+{
+  if (m_TotalMetabolicOR == nullptr)
+    m_TotalMetabolicOR = new SEScalarPower();
+  return *m_TotalMetabolicOR;
+}
+double SEOverride::GetTotalMetabolicOverride(const PowerUnit& unit) const
+{
+  if (m_TotalMetabolicOR == nullptr)
+    return SEScalar::dNaN();
+  return m_TotalMetabolicOR->GetValue(unit);
+}
 
 bool SEOverride::HasEnergyOverride() const
 {
   return HasCoreTemperatureOverride() ? true :
   HasSkinTemperatureOverride() ? true :
+  HasTotalMetabolicOverride() ? true :
   false;
 }
 
@@ -278,6 +303,13 @@ void SEOverride::ToString(std::ostream& str) const
     HasSkinTemperatureOverride() ? str << *m_SkinTemperatureOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On)
       str << "\n\tSkin Temperature has a lower bound of 0 degrees Celsius and an upper bound of 200 degrees Celsius.";
+    str << std::flush;
+  }
+  if (HasTotalMetabolicOverride()) {
+    str << "\n\tTotal Metabolic Rate: ";
+    HasTotalMetabolicOverride() ? str << *m_TotalMetabolicOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tTotal Metabolic Rate has a lower bound of 1 kcal/day and an upper bound of 5000 kcal/day.";
     str << std::flush;
   }
 }

@@ -595,19 +595,25 @@ void Energy::ProcessOverride()
   OverrideControlLoop();
   double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C);
   double skinTemp_degC = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C);
+  double totalMetabolic_kcal_per_day = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
       coreTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
       skinTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasTotalMetabolicOverride())
+      totalMetabolic_kcal_per_day = m_data.GetActions().GetPatientActions().GetOverride()->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
   } else {
     if (m_Override->HasCoreTemperatureOverride())
       coreTemp_degC = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
     if (m_Override->HasSkinTemperatureOverride())
       skinTemp_degC = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
+    if (m_Override->HasTotalMetabolicOverride())
+      totalMetabolic_kcal_per_day = m_Override->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
   }
   m_data.GetEnergy().GetCoreTemperature().SetValue(coreTemp_degC, TemperatureUnit::C);
   m_data.GetEnergy().GetSkinTemperature().SetValue(skinTemp_degC, TemperatureUnit::C);
+  m_data.GetEnergy().GetTotalMetabolicRate().SetValue(totalMetabolic_kcal_per_day, PowerUnit::kcal_Per_day);
 }
 
 void Energy::OverrideControlLoop()
@@ -618,6 +624,9 @@ void Energy::OverrideControlLoop()
   double maxSkinTempOverride = 200.0; //degC
   double minSkinTempOverride = 0.0; //degC
   double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Current ST, value gets changed in next check
+  double maxTotalMetabolicOverride = 5000.0; //kcal/day
+  double minTotalMetabolicOverride = 0.0; //kcal/day
+  double currentTotalMetabolicOverride = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day); //Current Metabolic Rate
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
       {
@@ -627,12 +636,17 @@ void Energy::OverrideControlLoop()
       {
       currentSkinTempOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
       }
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasTotalMetabolicOverride()) {
+        currentTotalMetabolicOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
+    }
 
   } else {
     if (m_Override->HasCoreTemperatureOverride())
       currentCoreTempOverride = m_Override->GetCoreTemperatureOverride(TemperatureUnit::C);
     if (m_Override->HasSkinTemperatureOverride())
       currentSkinTempOverride = m_Override->GetSkinTemperatureOverride(TemperatureUnit::C);
+    if (m_Override->HasTotalMetabolicOverride())
+      currentTotalMetabolicOverride = m_Override->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
   }
 
   if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
@@ -641,6 +655,10 @@ void Energy::OverrideControlLoop()
   }
   if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
+    Fatal(m_ss);
+  }
+  if ((currentTotalMetabolicOverride < minTotalMetabolicOverride || currentTotalMetabolicOverride > maxTotalMetabolicOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Total Metabolic Rate Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
     Fatal(m_ss);
   }
   return;

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
 
 class Serializer;
 
@@ -66,6 +67,9 @@ public:
   bool HasSkinTemperatureOverride() const;
   SEScalarTemperature& GetSkinTemperatureOverride();
   double GetSkinTemperatureOverride(const TemperatureUnit& unit) const;
+  bool HasTotalMetabolicOverride() const;
+  SEScalarPower& GetTotalMetabolicOverride();
+  double GetTotalMetabolicOverride(const PowerUnit& unit) const;
   bool HasEnergyOverride() const;
 
   virtual void ToString(std::ostream& str) const;
@@ -77,5 +81,6 @@ protected:
   SEScalarFrequency* m_HeartRateOR;
   SEScalarTemperature* m_CoreTemperatureOR;
   SEScalarTemperature* m_SkinTemperatureOR;
+  SEScalarPower* m_TotalMetabolicOR;
 };
 }
