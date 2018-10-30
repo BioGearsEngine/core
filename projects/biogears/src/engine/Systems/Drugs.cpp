@@ -596,12 +596,14 @@ void Drugs::CalculateDrugEffects()
         {
           pd.GetDiastolicPressureModifier().SetValue(0.0);
           pd.GetSystolicPressureModifier().SetValue(0.0);
+          m_ss << "Pharmacodynamics have been turned off due to validity being turned off.";
+          Info(m_ss);
         }
       if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
         pd.GetHeartRateModifier().SetValue(0.0);
+        m_ss << "Pharmacodynamics have been turned off due to validity being turned off.";
+        Info(m_ss);
       }
-      m_ss << "Pharmacodynamics have been turned off due to validity being turned off.";
-      Info(m_ss);
     }
 
     /// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.
