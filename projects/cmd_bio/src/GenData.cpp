@@ -57,29 +57,48 @@ bool SubstanceGenerator::parse()
 
   std::ifstream file("Substances.csv");
   std::string row;
-  std::vector<std::vector<std::string>> rows;
-
-  while (std::getline(file, row)) {
-    std::vector<std::string> temp;
-    int i = 0;
+  std::vector<std::vector<std::string>> columns;
+  int column = 0;
     int start = 0;
+  int i = 0;
+  std::getline(file, row);
+  for (; i < row.size(); ++i) {
+      if (row.at(i) == ',') {
+      std::vector<std::string> temp;
+        temp.push_back(row.substr(start, i - start));
+      columns.push_back(temp);
+      ++i;
+      start = i;
+    }
+  }
+  std::cout << "001" << std::endl;
+  std::vector<std::string> finalColumn;
+  finalColumn.push_back(row.substr(start, row.size() - start));
+  while (std::getline(file, row)) {
+    column = 0;
+    i = 0;
+    start = 0;
     while (i < row.size()) {
       if (row.at(i) == ',') {
-        temp.push_back(row.substr(start, i - start));
+        columns.at(column).push_back(row.substr(start, i - start));
+        ++column;
         ++i;
         start = i;
       } else if (row.at(i) == '"') {
         ++i;
-        int start = i;
+        start = i;
         while (row.at(i) != '"') {
-          if (i == row.size() - 1) {
+          if (i == (row.size() - 1)) {
             std::string row2;
             std::getline(file, row2);
             row.append(row2);
           }
           ++i;
         }
-        temp.push_back(row.substr(start, i - start));
+        columns.at(column).push_back(row.substr(start, i - start));
+        ++column;
+        ++i;
+        start = i;
         while (i < row.size() && row.at(i) != ',') {
           ++i;
         }
@@ -88,17 +107,23 @@ bool SubstanceGenerator::parse()
         ++i;
       }
     }
-    rows.push_back(temp);
+    finalColumn.push_back(row.substr(start, row.size() - start));
   }
-  for (auto& row : rows) {
-    for (auto& string : row) {
-      std::cout << string << " ";
-    }
-    std::cout << "\n";
+  columns.push_back(finalColumn);
+  std::cout << "002"
+  i = 0;
+  for (i = 0; i < columns.size(); ++i) {
+    for (int k = 0; k < columns.at(i).size(); ++k) {
+      std::cout << columns.at(i).at(k) << ",";
+	}
+    std::cout << std::endl
+              << std::endl;
   }
-  process(rows);
   std::cout << "Complete" << std::endl;
-  return rValue;
+  for (i = 0; i < columns.size(); ++i) {
+    std::cout << i << " " << columns.at(i).size() << std::endl;
+  }
+  return false;
 }
 //-----------------------------------------------------------------------------
 bool SubstanceGenerator::save() const
