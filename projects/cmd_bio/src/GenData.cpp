@@ -71,10 +71,10 @@ bool SubstanceGenerator::parse()
       start = i;
     }
   }
-  std::cout << "001" << std::endl;
   std::vector<std::string> finalColumn;
   finalColumn.push_back(row.substr(start, row.size() - start));
   while (std::getline(file, row)) {
+    std::cout << row << std::endl;
     column = 0;
     i = 0;
     start = 0;
@@ -110,7 +110,6 @@ bool SubstanceGenerator::parse()
     finalColumn.push_back(row.substr(start, row.size() - start));
   }
   columns.push_back(finalColumn);
-  std::cout << "002"
   i = 0;
   for (i = 0; i < columns.size(); ++i) {
     for (int k = 0; k < columns.at(i).size(); ++k) {
