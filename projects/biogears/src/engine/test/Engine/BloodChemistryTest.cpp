@@ -23,12 +23,14 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   std::string stateFile = rptDirectory + "/ShockData.csv";
   std::string circuitFile = rptDirectory + "/AIR_Circuit.csv";
   std::string stabilizeFile = rptDirectory + "/Stabilization.csv";
+  std::string stabilizeFile2 = rptDirectory + "/Stabilization2.csv";
   std::string cvFile = rptDirectory + "/CVCircuit.csv";
   BioGears bg(m_Logger);
   SECircuitManager circuits(m_Logger);
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
   DataTrack circuitTrk;
+  DataTrack circuitTrk2;
   DataTrack stateTrk;
   DataTrack cvTrk;
   Info("Setting Up");
@@ -45,11 +47,14 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   double organBedVascularVolume_mL = 0.614 * totalVolume_mL;
   double skinVascularVolume_mL = 0.037 * totalVolume_mL;
 
-  //double totalECF_mL = 17.
+  //Albumin
+  SESubstance& Albumin = bg.GetSubstances().GetAlbumin();
+  bg.GetSubstances().AddActiveSubstance(Albumin);
 
   //Tissue parameters
   double skinTissueMass_kg = 0.15;
-  double skinTissueVolume_L = 1.092;   //Levitt2003Pharmacokinetics
+  double skinTissueVolume_L = 1.092; //Levitt2003Pharmacokinetics
+  double organTissueVolume_L = 10.0;
   double skinEWFraction = 0.382;
   double Alb_Vasc_g_Per_dL = 4.5;
   double Alb_Extra_g_Per_dL = 2.0;
@@ -57,13 +62,14 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   double totalProteinInterstitium_g_Per_dL = Alb_Extra_g_Per_dL * 1.6;
   double vascularCOP_mmHg = 2.1 * totalProteinVascular_g_Per_dL + 0.16 * std::pow(totalProteinVascular_g_Per_dL, 2) + 0.009 * std::pow(totalProteinVascular_g_Per_dL, 3); //Mazzoni1988Dynamic
   double interstitialCOP_mmHg = 2.1 * totalProteinInterstitium_g_Per_dL + 0.16 * std::pow(totalProteinInterstitium_g_Per_dL, 2) + 0.009 * std::pow(totalProteinInterstitium_g_Per_dL, 3);
-  double targetHydrostaticPressure_mmHg = vascularCOP_mmHg - interstitialCOP_mmHg;
-  double endothelialResistance_mmHg_min_Per_mL = 1.0 / (1000 * skinTissueVolume_L);
+  double targetNetGradient_mmHg = 5.0;
+  double targetHydrostaticGradient_mmHg = targetNetGradient_mmHg + (vascularCOP_mmHg - interstitialCOP_mmHg); //COP gradient opposes flow into capillaries.  Thus, to get to target total gradient we need a hydrostatic gradient to oppose it
+
   //Values for determining osmotic pressure from tissue integrity
   double averageProtein_g_Per_dL = (totalProteinVascular_g_Per_dL + totalProteinInterstitium_g_Per_dL) / 2.0; //Used to adjust osmotic pressure later
   double effectiveProteinVascular_g_Per_dL = totalProteinVascular_g_Per_dL;
   double effectiveProteinInterstitium_g_Per_dL = totalProteinInterstitium_g_Per_dL;
-  double reflectionCoefficient = 1.0;
+  double reflectionCoefficient = 0.95;
 
   //Pressures
   double aorta1Pressure_mmHg = 90.0;
@@ -72,13 +78,25 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   double skinVascularPressure_mmHg = 9.462; //From BioGears::SetUpCardiovascular
   double venaCavaPressure_mmHg = 3.5;
   double skinLumenPressure_mmHg = skinVascularPressure_mmHg - vascularCOP_mmHg;
-  double skinInterstitialPressure_mmHg = skinLumenPressure_mmHg - targetHydrostaticPressure_mmHg;
+  double skinInterstitialPressure_mmHg = skinVascularPressure_mmHg - targetHydrostaticGradient_mmHg;
   double skinGlycocalyxPressure_mmHg = skinInterstitialPressure_mmHg - interstitialCOP_mmHg;
+  ;
+  double organLumenPressure_mmHg = skinVascularPressure_mmHg - vascularCOP_mmHg;
+  double organInterstitialPressure_mmHg = organBedPressure_mmHg - targetHydrostaticGradient_mmHg;
+  double organGlycocalyxPressure_mmHg = organInterstitialPressure_mmHg - interstitialCOP_mmHg;
+  double lymphPressure_mmHg = venaCavaPressure_mmHg + 4.5; //Based on values from LymphLinearCircuit doc
+  double skinToLymphPump_mmHg = lymphPressure_mmHg - skinInterstitialPressure_mmHg;
+  double organToLymphPump_mmHg = lymphPressure_mmHg - organInterstitialPressure_mmHg;
 
   //Target flow
   double cardiacOutput_mL_Per_min = totalVolume_mL;
   double skinTargetFlow_mL_Per_min = 0.067 * cardiacOutput_mL_Per_min;
   double organTargetFlow_mL_Per_min = (1.0 - 0.067) * cardiacOutput_mL_Per_min;
+  double filteredFlow_mL_Per_min = 3.0;
+  double skinFilteredFlow_mL_Per_min = 0.067 * filteredFlow_mL_Per_min;
+  double organFilteredFlow_mL_Per_min = (1.0 - 0.067) * filteredFlow_mL_Per_min;
+
+  //Estimated albumin filtration (needed for lymph volume calculation)
 
   //Resistances
   double aortaResistance_mmHg_min_Per_mL = (aorta1Pressure_mmHg - aorta2Pressure_mmHg) / cardiacOutput_mL_Per_min;
@@ -87,12 +105,18 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   double organReturnResistance_mmHg_min_Per_mL = (organBedPressure_mmHg - venaCavaPressure_mmHg) / organTargetFlow_mL_Per_min;
   double skinReturnResistance_mmHg_min_Per_mL = (skinVascularPressure_mmHg - venaCavaPressure_mmHg) / skinTargetFlow_mL_Per_min;
   double veinousReturn_mmHg_min_Per_mL = venaCavaPressure_mmHg / cardiacOutput_mL_Per_min; //Need this to return to ground pressure upon entering heart
+  double skinEndothelialResistance_mmHg_min_Per_mL = targetNetGradient_mmHg / skinFilteredFlow_mL_Per_min;
+  double organEndotheialResistance_mmHg_min_Per_mL = targetNetGradient_mmHg / organFilteredFlow_mL_Per_min;
+  double lymphReturnResistance_mmHg_min_Per_mL = (lymphPressure_mmHg - venaCavaPressure_mmHg) / filteredFlow_mL_Per_min;
 
   //Compliances
   double aortaCompliance_mL_Per_mmHg = aortaTotalVolume_mL / aorta2Pressure_mmHg;
   double organBedCompliance_mL_Per_mmHg = organBedVascularVolume_mL / organBedPressure_mmHg;
   double skinCompliance_mL_Per_mmHg = skinVascularVolume_mL / skinVascularPressure_mmHg;
   double venaCavaCompliance_mL_Per_mmHg = venaCavaTotalVolume_mL / venaCavaPressure_mmHg;
+  double skinInterstitialCompliance_mL_Per_mmHg = 90.0;
+  double organInterstitialCompliance_mL_Per_mmHg = organTissueVolume_L * 1000.0 / organInterstitialPressure_mmHg;
+  double lymphCompliance_mL_Per_mmHg = 1000.0 / lymphPressure_mmHg; //Lymph volume = 1.0 L      //1.0 / 175.0;
 
   //Circuit Construction
   SEFluidCircuit* bgCircuit = &circuits.CreateFluidCircuit("BgCircuit");
@@ -137,6 +161,22 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   nSkinInterstitium.GetNextPressure().SetValue(skinInterstitialPressure_mmHg, PressureUnit::mmHg);
   nSkinInterstitium.GetVolumeBaseline().SetValue(skinTissueVolume_L * 1000.0, VolumeUnit::mL);
 
+  //Added for albumin test
+  SEFluidCircuitNode& nOrganLumen = bgCircuit->CreateNode("nOrganLumen");
+  nOrganLumen.GetPressure().SetValue(organLumenPressure_mmHg, PressureUnit::mmHg);
+  nOrganLumen.GetNextPressure().SetValue(organLumenPressure_mmHg, PressureUnit::mmHg);
+  SEFluidCircuitNode& nOrganGlycocalyx = bgCircuit->CreateNode("nOrganGlycocalyx");
+  nOrganGlycocalyx.GetPressure().SetValue(organGlycocalyxPressure_mmHg, PressureUnit::mmHg);
+  nOrganGlycocalyx.GetNextPressure().SetValue(organGlycocalyxPressure_mmHg, PressureUnit::mmHg);
+  SEFluidCircuitNode& nOrganInterstitial = bgCircuit->CreateNode("nOrganInterstitial");
+  nOrganInterstitial.GetPressure().SetValue(organInterstitialPressure_mmHg, PressureUnit::mmHg);
+  nOrganInterstitial.GetNextPressure().SetValue(organInterstitialPressure_mmHg, PressureUnit::mmHg);
+  nOrganInterstitial.GetVolumeBaseline().SetValue(organTissueVolume_L, VolumeUnit::L);
+  SEFluidCircuitNode& nLymphCollect = bgCircuit->CreateNode("nLymphCollect");
+  nLymphCollect.GetPressure().SetValue(lymphPressure_mmHg, PressureUnit::mmHg);
+  nLymphCollect.GetNextPressure().SetValue(lymphPressure_mmHg, PressureUnit::mmHg);
+  nLymphCollect.GetVolumeBaseline().SetValue(1.0, VolumeUnit::L);
+
   //Paths
   SEFluidCircuitPath& pDrivePressure = bgCircuit->CreatePath(nHeart, nAorta1, "pPressureSource");
   pDrivePressure.GetPressureSourceBaseline().SetValue(aorta1Pressure_mmHg, PressureUnit::mmHg);
@@ -163,20 +203,38 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   SEFluidCircuitPath& pSkinVascularCOP = bgCircuit->CreatePath(nSkin, nSkinLumen, "pSkinVascularCOP");
   pSkinVascularCOP.GetPressureSourceBaseline().SetValue(-vascularCOP_mmHg, PressureUnit::mmHg);
   SEFluidCircuitPath& pSkinEndothelium = bgCircuit->CreatePath(nSkinLumen, nSkinGlycocalyx, "pSkinEndothelium");
-  pSkinEndothelium.GetResistanceBaseline().SetValue(endothelialResistance_mmHg_min_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+  pSkinEndothelium.GetResistanceBaseline().SetValue(skinEndothelialResistance_mmHg_min_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
   SEFluidCircuitPath& pSkinInterstitialCOP = bgCircuit->CreatePath(nSkinGlycocalyx, nSkinInterstitium, "pSkinInterstitialCOP");
   pSkinInterstitialCOP.GetPressureSourceBaseline().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
   SEFluidCircuitPath& pSkinTissueCompliance = bgCircuit->CreatePath(nSkinInterstitium, nGround, "pSkinTissueCompliance");
-  pSkinTissueCompliance.GetComplianceBaseline().SetValue(90.0, FlowComplianceUnit::mL_Per_mmHg);
+  pSkinTissueCompliance.GetComplianceBaseline().SetValue(skinInterstitialCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
 
   SEFluidCircuitPath& pHeartToGround = bgCircuit->CreatePath(nGround, nHeart, "pHeartToGround");
- 
+
+  //Paths added for Albumin Test
+  SEFluidCircuitPath& pOrganVascularCOP = bgCircuit->CreatePath(nOrganBed, nOrganLumen, "pOrganVascularCOP");
+  pOrganVascularCOP.GetPressureSourceBaseline().SetValue(-vascularCOP_mmHg, PressureUnit::mmHg);
+  SEFluidCircuitPath& pOrganEndothelium = bgCircuit->CreatePath(nOrganLumen, nOrganGlycocalyx, "pOrganEndothelium");
+  pOrganEndothelium.GetResistanceBaseline().SetValue(organEndotheialResistance_mmHg_min_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+  SEFluidCircuitPath& pOrganInterstitialCOP = bgCircuit->CreatePath(nOrganGlycocalyx, nOrganInterstitial, "pOrganInterstitialCOP");
+  pOrganInterstitialCOP.GetPressureSourceBaseline().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
+  SEFluidCircuitPath& pOrganCompliance = bgCircuit->CreatePath(nOrganInterstitial, nGround, "pOrganTissueCompliance");
+  pOrganCompliance.GetComplianceBaseline().SetValue(organInterstitialCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
+  SEFluidCircuitPath& pSkinToLymph = bgCircuit->CreatePath(nSkinInterstitium, nLymphCollect, "pSkinToLymph");
+  pSkinToLymph.GetPressureSourceBaseline().SetValue(skinToLymphPump_mmHg, PressureUnit::mmHg);
+  SEFluidCircuitPath& pOrganToLymph = bgCircuit->CreatePath(nOrganInterstitial, nLymphCollect, "pOrganToLymph");
+  pOrganToLymph.GetPressureSourceBaseline().SetValue(organToLymphPump_mmHg, PressureUnit::mmHg);
+  SEFluidCircuitPath& pLymphReturn = bgCircuit->CreatePath(nLymphCollect, nVein, "pLymphReturn");
+  pLymphReturn.GetResistanceBaseline().SetValue(lymphReturnResistance_mmHg_min_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+  SEFluidCircuitPath& pLymphCompliance = bgCircuit->CreatePath(nLymphCollect, nGround, "pLymphCompliance");
+  pLymphCompliance.GetComplianceBaseline().SetValue(lymphCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
 
   bgCircuit->SetNextAndCurrentFromBaselines();
   bgCircuit->StateChange();
 
   //Compartments
   SELiquidCompartment& cArtery = bg.GetCompartments().CreateLiquidCompartment("cArtery");
+  cArtery.MapNode(nHeart);
   cArtery.MapNode(nAorta1);
   cArtery.MapNode(nAorta2);
   SELiquidCompartment& cVein = bg.GetCompartments().CreateLiquidCompartment("cVein");
@@ -186,18 +244,25 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   cSkin.MapNode(nSkinLumen);
   SELiquidCompartment& cOrganBed = bg.GetCompartments().CreateLiquidCompartment("cOrgan");
   cOrganBed.MapNode(nOrganBed);
-  SELiquidCompartment& cHeart = bg.GetCompartments().CreateLiquidCompartment("cHeart");
-  cHeart.MapNode(nHeart);
+  //SELiquidCompartment& cHeart = bg.GetCompartments().CreateLiquidCompartment("cHeart");
+  //cHeart.MapNode(nHeart);
   SELiquidCompartment& cSkinInterstitium = bg.GetCompartments().CreateLiquidCompartment("cSkinInterstitium");
   cSkinInterstitium.MapNode(nSkinGlycocalyx);
   cSkinInterstitium.MapNode(nSkinInterstitium);
+  SELiquidCompartment& cOrganInterstitium = bg.GetCompartments().CreateLiquidCompartment("cOrganInterstitium");
+  cOrganInterstitium.MapNode(nOrganGlycocalyx);
+  cOrganInterstitium.MapNode(nOrganInterstitial);
+  SELiquidCompartment& cLymph = bg.GetCompartments().CreateLiquidCompartment("cLymph");
+  cLymph.MapNode(nLymphCollect);
 
   SETissueCompartment& SkinTissue = bg.GetCompartments().CreateTissueCompartment("cSkinTissue");
   SkinTissue.GetReflectionCoefficient().SetValue(reflectionCoefficient);
+  SETissueCompartment& OrganTissue = bg.GetCompartments().CreateTissueCompartment("cOrganTissue");
+  OrganTissue.GetReflectionCoefficient().SetValue(reflectionCoefficient);
 
   //Links
-  SELiquidCompartmentLink& lHeartToArtery = bg.GetCompartments().CreateLiquidLink(cHeart, cArtery, "HeartToArteryLink");
-  lHeartToArtery.MapPath(pDrivePressure);
+  //SELiquidCompartmentLink& lHeartToArtery = bg.GetCompartments().CreateLiquidLink(cHeart, cArtery, "HeartToArteryLink");
+  //lHeartToArtery.MapPath(pDrivePressure);
   SELiquidCompartmentLink& lArteryToOrgan = bg.GetCompartments().CreateLiquidLink(cArtery, cOrganBed, "ArteryToOrgansLink");
   lArteryToOrgan.MapPath(pOrganBedInflow);
   SELiquidCompartmentLink& lArteryToSkin = bg.GetCompartments().CreateLiquidLink(cArtery, cSkin, "ArteryToSkinLink");
@@ -206,26 +271,24 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   lSkinToVein.MapPath(pSkinOutflow);
   SELiquidCompartmentLink& lOrganToVein = bg.GetCompartments().CreateLiquidLink(cOrganBed, cVein, "OrganToVeinLink");
   lOrganToVein.MapPath(pOrganBedOutflow);
-  SELiquidCompartmentLink& lVeinToHeart = bg.GetCompartments().CreateLiquidLink(cVein, cHeart, "VeinToHeartLink");
+  SELiquidCompartmentLink& lVeinToHeart = bg.GetCompartments().CreateLiquidLink(cVein, cArtery, "VeinToHeartLink");
   lVeinToHeart.MapPath(pReturn);
-  SELiquidCompartmentLink& lSkinTissue = bg.GetCompartments().CreateLiquidLink(cSkin, cSkinInterstitium, "SkinTissueLink");
-  lSkinTissue.MapPath(pSkinEndothelium);
 
   bgGraph->AddCompartment(cArtery);
   bgGraph->AddCompartment(cOrganBed);
   bgGraph->AddCompartment(cVein);
-  bgGraph->AddCompartment(cHeart);
+  //bgGraph->AddCompartment(cHeart);
   bgGraph->AddCompartment(cSkin);
   bgGraph->AddCompartment(cSkinInterstitium);
-  bgGraph->AddLink(lHeartToArtery);
+  bgGraph->AddCompartment(cOrganInterstitium);
+  bgGraph->AddCompartment(cLymph);
+  //bgGraph->AddLink(lHeartToArtery);
   bgGraph->AddLink(lArteryToOrgan);
   bgGraph->AddLink(lOrganToVein);
   bgGraph->AddLink(lVeinToHeart);
   bgGraph->AddLink(lArteryToSkin);
   bgGraph->AddLink(lSkinToVein);
-  bgGraph->AddLink(lSkinTissue);
   bgGraph->StateChange();
-
 
   //Model Parameters
   //Source terms
@@ -266,7 +329,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   double kPTP = 0.025, kPT = 0.011, PTM = 1.0;
 
   //Initial state
-  double pathogen = 6.0;
+  double pathogen = 12.0;
   double macrophageResting = 1.0;
   double macrophageActive = 0.0;
   double neutrophilResting = 1.0;
@@ -313,39 +376,115 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   double dPain;
 
   //Simulation Parameters
-  double simTime_min =24*60.0;
-  double stabilizationTime_min = 15;
+  double simTime_min = 420.0;
+  double stabilizationTime_min = 15.0;
+  double secondaryStabilizationTime_min = 45.0;
   double dt_s = 0.25;
   double stateTime_s = 0.0;
   double circuitTime_s = 0.0;
+  double secondaryTime_s = 0.0;
   double dt_h = dt_s / 3600.0;
   double stateTime_h = 0.0;
+  double scale = 1.0;
 
   //Physiological Effects
- // double respirationRate = 12.0 * (1.0 + 0.65 * (1.0 - pain)); //As in Respiratory::ProcessDriverActions
+  // double respirationRate = 12.0 * (1.0 + 0.65 * (1.0 - pain)); //As in Respiratory::ProcessDriverActions
   double map_mmHg = nAorta1.GetPressure(PressureUnit::mmHg);
   double totalVascularVolume_mL;
+  double totalInterstitialVolume_mL;
   double systemicResistanceBase_mmHg_min_Per_mL = map_mmHg / cardiacOutput_mL_Per_min;
   double systemicResistance_mmHg_min_Per_mL = systemicResistanceBase_mmHg_min_Per_mL;
   double strokeVolume_mL = cardiacOutput_mL_Per_min / heartRate;
 
+  double albuminMoved_ug = 0.0; //debugging
+  double totalAlbumin_mg = 0.0;
+  double dt_min = dt_s / 60.0;
+  double netAlbuminDiffusion_ug = 0.0;
+  double interstitialVolume_mL = 0.0;
 
-  //Stabilize circuit
+  std::vector<SELiquidCompartment*> vasc = { &cArtery, &cSkin, &cOrganBed, &cVein };
+  std::vector<SELiquidCompartment*> extra = { &cOrganInterstitium, &cSkinInterstitium, &cLymph };
+
+  //Initial stabilization (no albumin)
   for (int i = 0; i < stabilizationTime_min * 60.0 / dt_s; i++) {
     calc.Process(*bgCircuit, dt_s);
     calc.PostProcess(*bgCircuit);
+
+    totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
     circuitTrk.Track(circuitTime_s, *bgCircuit);
+    circuitTrk.Track("TotalVascularVolume", circuitTime_s, totalVascularVolume_mL);
     circuitTime_s += dt_s;
   }
   bgCircuit->RemovePath("pHeartToGround");
   bgCircuit->StateChange();
   circuitTrk.WriteTrackToFile(stabilizeFile.c_str());
-  totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
-  cvTrk.WriteTrackToFile(cvFile.c_str());
-  std::cout << "Stabilized circuit" << std::endl;
-  //Advance model
-  for (int i = 0; i <= simTime_min * 60.0 / dt_s; i++) {
 
+  cvTrk.WriteTrackToFile(cvFile.c_str());
+  std::cout << "Initial Stabilization" << std::endl;
+
+  //Initialize albumin concentrations and balance
+  cArtery.GetSubstanceQuantity(Albumin)->GetConcentration().SetValue(Alb_Vasc_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  cVein.GetSubstanceQuantity(Albumin)->GetConcentration().SetValue(Alb_Vasc_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  cOrganBed.GetSubstanceQuantity(Albumin)->GetConcentration().SetValue(Alb_Vasc_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  cSkin.GetSubstanceQuantity(Albumin)->GetConcentration().SetValue(Alb_Vasc_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  cSkinInterstitium.GetSubstanceQuantity(Albumin)->GetConcentration().SetValue(Alb_Extra_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  cOrganInterstitium.GetSubstanceQuantity(Albumin)->GetConcentration().SetValue(Alb_Extra_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  cLymph.GetSubstanceQuantity(Albumin)->GetConcentration().SetValue(Alb_Extra_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  for (auto comp : bgGraph->GetCompartments()) {
+    comp->GetSubstanceQuantity(Albumin)->Balance(BalanceLiquidBy::Concentration);
+    totalAlbumin_mg += comp->GetSubstanceQuantity(Albumin)->GetMass(MassUnit::mg);
+  }
+
+  //Secondary stabilization
+  for (int i = 0; i <= secondaryStabilizationTime_min * 60 / dt_s; i++) {
+
+    UpdateOncoticPressure(cSkin.GetSubstanceQuantity(Albumin)->GetConcentration(), cSkinInterstitium.GetSubstanceQuantity(Albumin)->GetConcentration(), pSkinVascularCOP, pSkinInterstitialCOP);
+    UpdateOncoticPressure(cOrganBed.GetSubstanceQuantity(Albumin)->GetConcentration(), cOrganInterstitium.GetSubstanceQuantity(Albumin)->GetConcentration(), pOrganVascularCOP, pOrganInterstitialCOP);
+    calc.Process(*bgCircuit, dt_s);
+    txpt.Transport(*bgGraph, dt_s);
+    totalAlbumin_mg = 0.0;
+    netAlbuminDiffusion_ug = 0.0;
+    albuminMoved_ug = AlbuminTransport(cSkin, cSkinInterstitium, pSkinEndothelium, Albumin, dt_min, tissueIntegrity);
+    netAlbuminDiffusion_ug += albuminMoved_ug;
+    circuitTrk2.Track("Alb_Skin_VtoE", secondaryTime_s, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cSkinInterstitium, cLymph, pSkinToLymph, Albumin, dt_min, tissueIntegrity);
+    circuitTrk2.Track("Alb_Skin_EtoL", secondaryTime_s, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cOrganBed, cOrganInterstitium, pOrganEndothelium, Albumin, dt_min, tissueIntegrity);
+    netAlbuminDiffusion_ug += albuminMoved_ug;
+    circuitTrk2.Track("Alb_Organ_VtoE", secondaryTime_s, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cOrganInterstitium, cLymph, pOrganToLymph, Albumin, dt_min, tissueIntegrity);
+    circuitTrk2.Track("Alb_Organ_EtoL", secondaryTime_s, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cLymph, cVein, pLymphReturn, Albumin, dt_min, tissueIntegrity);
+    netAlbuminDiffusion_ug -= albuminMoved_ug;
+    circuitTrk2.Track("Alb_Lymph_Return", secondaryTime_s, albuminMoved_ug);
+    circuitTrk2.Track("Alb_NetDiffusion", secondaryTime_s, netAlbuminDiffusion_ug);
+
+    for (auto comp : bgGraph->GetCompartments()) {
+      comp->GetSubstanceQuantity(Albumin)->Balance(BalanceLiquidBy::Mass);
+    }
+    for (auto comp : bgGraph->GetCompartments()) {
+      totalAlbumin_mg += comp->GetSubstanceQuantity(Albumin)->GetMass(MassUnit::mg);
+    }
+
+    calc.PostProcess(*bgCircuit);
+
+    totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
+    interstitialVolume_mL = cSkinInterstitium.GetVolume(VolumeUnit::mL) + cOrganInterstitium.GetVolume(VolumeUnit::mL);
+    circuitTrk2.Track(secondaryTime_s, *bgCircuit);
+    circuitTrk2.Track("InterstitialVolume", secondaryTime_s, interstitialVolume_mL);
+    circuitTrk2.Track("TotalVascularVolume", secondaryTime_s, totalVascularVolume_mL);
+    circuitTrk2.Track("TotalAlbumin_mg", secondaryTime_s, totalAlbumin_mg);
+    circuitTrk2.Track(secondaryTime_s, *bgGraph);
+    secondaryTime_s += dt_s;
+  }
+  std::cout << "Secondary stabilization" << std::endl;
+  circuitTrk2.WriteTrackToFile(stabilizeFile2.c_str());
+
+  for (int i = 0; i < simTime_min * 60.0 / dt_s; i++) {
+    totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
+    totalInterstitialVolume_mL = cSkinInterstitium.GetVolume(VolumeUnit::mL) + cOrganInterstitium.GetVolume(VolumeUnit::mL) + cLymph.GetVolume(VolumeUnit::mL);
+
+    totalVolume_mL = totalVascularVolume_mL + totalInterstitialVolume_mL;
     //Record state
     stateTrk.Track("Pathogen", stateTime_h, pathogen);
     stateTrk.Track("Macrophage_Resting", stateTime_h, macrophageResting);
@@ -378,11 +517,11 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
     stateTrk.Track("VascularVolume_L", stateTime_h, totalVascularVolume_mL / 1000.0);
     stateTrk.Track("ProteinVascular", stateTime_h, effectiveProteinVascular_g_Per_dL);
     stateTrk.Track("ProteinInterstitial", stateTime_h, effectiveProteinInterstitium_g_Per_dL);
-  
+
     stateTrk.Track("SystemicResistance", stateTime_h, systemicResistance_mmHg_min_Per_mL);
     stateTrk.Track("EndothelialResistance", stateTime_h, pSkinEndothelium.GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
     stateTrk.Track("TotalVolume_L", stateTime_h, totalVolume_mL / 1000.0);
-
+    stateTrk.Track("TotalInterstitialVolume_mL", stateTime_h, totalInterstitialVolume_mL);
 
     //Intermediate
     if (1.0 - bloodPressure > 0.0) {
@@ -392,7 +531,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
     }
 
     dPathogen = -kL * pathogen;
-    dMacrophageResting = -((kML * Up1(pathogen, xML, 2.0) + kMD * Up2(1.0 - tissueIntegrity, xMD, 4.0)) * (Up2(TNF, xMTNF, 2.0) + kM6 * Up2(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * Down(IL10 + Ca, xM10, 2.0) - kMR * (macrophageResting - sM); 
+    dMacrophageResting = -((kML * Up1(pathogen, xML, 2.0) + kMD * Up2(1.0 - tissueIntegrity, xMD, 4.0)) * (Up2(TNF, xMTNF, 2.0) + kM6 * Up2(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * Down(IL10 + Ca, xM10, 2.0) - kMR * (macrophageResting - sM);
     dMacrophageActive = ((kML * Up1(pathogen, xML, 2.0) + kMD * Up2(1.0 - tissueIntegrity, xMD, 4.0)) * (Up2(TNF, xMTNF, 2.0) + kM6 * Up2(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * Down(IL10 + Ca, xM10, 2) - kMA * macrophageActive;
     dNeutrophilResting = -(kNL * Up1(pathogen, xNL, 1.0) + kNTNF * Up1(TNF, xNTNF, 1.0) + kN6 * Up1(IL6, xN6, 2.0) + kND * Up1(1.0 - tissueIntegrity, xND, 2.0) + kNB * fB * kNTR * trauma) * Down(IL10 + Ca, xN10, 2.0) * neutrophilResting - kNR * (neutrophilResting - sN);
     dNeutrophilActive = (kNL * Up1(pathogen, xNL, 1.0) + kNTNF * Up1(TNF, xNTNF, 1.0) + kN6 * Up1(IL6, xN6, 2.0) + kND * Up1(1.0 - tissueIntegrity, xND, 2.0) + kNB * fB + kNTR * trauma) * Down(IL10 + Ca, xN10, 2.0) * neutrophilResting - kNA * neutrophilActive;
@@ -406,51 +545,49 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
     dIL12 = k12M * macrophageActive * Down(IL10, x1210, 2.0) - k12 * IL12;
     dCa = kCATR * autonomic - kCA * Ca;
     dBloodPressure = kB * (1.0 / (1.0 + kBNO * (NO - xBNO)) - bloodPressure);
-    dTissueIntegrity = kD * (1.0 - tissueIntegrity)*tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * Up2(IL6, xD6, 2.0) + kDTR * trauma) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
+    dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * Up2(IL6, xD6, 2.0) + kDTR * trauma) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
     dTemp = -temp + kT * (TMax - TMin) * (kTTnf * Up2(TNF, nTTnf, hTTnf) + kT6 * Up2(IL6, nT6, hT6) - kT10 * (1 - Down(IL10, nT10, hT10))) + TMin;
-    dHeartRate = (-heartRate + kH * (HMax - HBase) * Up2(temp-TMin,nHT,hHT)+HBase) / tau2;
+    dHeartRate = (-heartRate + kH * (HMax - HBase) * Up2(temp - TMin, nHT, hHT) + HBase) / tau2;
     dPain = -kPTP * pathogen * pain + kPT * (PTM - pain);
 
-
-    pathogen += (dPathogen * dt_h);
-    macrophageResting += (dMacrophageResting * dt_h);
-    macrophageActive += (dMacrophageActive * dt_h);
-    neutrophilResting += (dNeutrophilResting * dt_h);
-    neutrophilActive += (dNeutrophilActive * dt_h);
-    iNOS += (dINOS * dt_h);
-    iNOSd += (dINOSD * dt_h);
-    eNOS += (dENOS * dt_h);
-    NO3 += (dNO3 * dt_h);
-    TNF += (dTNF * dt_h);
-    IL6 += (dIL6 * dt_h);
-    IL10 += (dIL10 * dt_h);
-    IL12 += (dIL12 * dt_h);
-    Ca += (dCa * dt_h);
-    bloodPressure += (dBloodPressure * dt_h);
-    tissueIntegrity += (dTissueIntegrity * dt_h);
-    temp += (dTemp * dt_h);
-    heartRate += (dHeartRate * dt_h);
-    pain += (dPain * dt_h);
+    pathogen += (dPathogen * dt_h)*scale;
+    macrophageResting += (dMacrophageResting * dt_h)*scale;
+    macrophageActive += (dMacrophageActive * dt_h)*scale;
+    neutrophilResting += (dNeutrophilResting * dt_h)*scale;
+    neutrophilActive += (dNeutrophilActive * dt_h)*scale;
+    iNOS += (dINOS * dt_h)*scale;
+    iNOSd += (dINOSD * dt_h)*scale;
+    eNOS += (dENOS * dt_h)*scale;
+    NO3 += (dNO3 * dt_h)*scale;
+    TNF += (dTNF * dt_h)*scale;
+    IL6 += (dIL6 * dt_h)*scale;
+    IL10 += (dIL10 * dt_h)*scale;
+    IL12 += (dIL12 * dt_h)*scale;
+    Ca += (dCa * dt_h)*scale;
+    bloodPressure += (dBloodPressure * dt_h) *scale;
+    tissueIntegrity += (dTissueIntegrity * dt_h)*scale;
+    temp += (dTemp * dt_h)*scale;
+    heartRate += (dHeartRate * dt_h) * 0 * scale;   //Doesn't really play nice with the albumin transport (vein volume goes negative), so not including this right now
+    pain += (dPain * dt_h)*scale;
 
     NO = iNOS * (1.0 + kNOMA * (macrophageActive + neutrophilActive)) + eNOS;
-
 
     // //Physiological effects
     // //Tissue
     reflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0, 1.0, 0, tissueIntegrity);
     SkinTissue.GetReflectionCoefficient().SetValue(reflectionCoefficient);
     BLIM(reflectionCoefficient, 0.0, 1.0);
-    effectiveProteinVascular_g_Per_dL = GeneralMath::LinearInterpolator(0.0, 1.0, averageProtein_g_Per_dL, totalProteinVascular_g_Per_dL, reflectionCoefficient);
-    effectiveProteinInterstitium_g_Per_dL = GeneralMath::LinearInterpolator(0.0, 1.0, averageProtein_g_Per_dL, totalProteinInterstitium_g_Per_dL, reflectionCoefficient);
-    vascularCOP_mmHg = 2.1 * effectiveProteinVascular_g_Per_dL + 0.16 * std::pow(effectiveProteinVascular_g_Per_dL, 2) + 0.009 * std::pow(effectiveProteinVascular_g_Per_dL, 3); //Mazzoni1988Dynamic
-    interstitialCOP_mmHg = 2.1 * effectiveProteinInterstitium_g_Per_dL + 0.16 * std::pow(effectiveProteinInterstitium_g_Per_dL, 2) + 0.009 * std::pow(effectiveProteinInterstitium_g_Per_dL, 3);
-    pSkinVascularCOP.GetNextPressureSource().SetValue(-vascularCOP_mmHg, PressureUnit::mmHg);
-    pSkinInterstitialCOP.GetNextPressureSource().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
-    pSkinEndothelium.GetNextResistance().SetValue(pSkinEndothelium.GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * std::pow(10.0, tissueIntegrity - 1.0), FlowResistanceUnit::mmHg_min_Per_mL);
-
+    double endothelialResistanceScale = GeneralMath::ResistanceFunction(10.0, 1.0, 0.1, tissueIntegrity);
+    endothelialResistanceScale = GeneralMath::LinearInterpolator(1.0, 0.0, 1.0, 0.1, tissueIntegrity);
+    pSkinEndothelium.GetNextResistance().SetValue(pSkinEndothelium.GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * endothelialResistanceScale, FlowResistanceUnit::mmHg_min_Per_mL);
+    pOrganEndothelium.GetNextResistance().SetValue(pOrganEndothelium.GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * endothelialResistanceScale, FlowResistanceUnit::mmHg_min_Per_mL);
+   
+    UpdateOncoticPressure(cSkin.GetSubstanceQuantity(Albumin)->GetConcentration(), cSkinInterstitium.GetSubstanceQuantity(Albumin)->GetConcentration(), pSkinVascularCOP, pSkinInterstitialCOP);
+    UpdateOncoticPressure(cOrganBed.GetSubstanceQuantity(Albumin)->GetConcentration(), cOrganInterstitium.GetSubstanceQuantity(Albumin)->GetConcentration(), pOrganVascularCOP, pOrganInterstitialCOP);
+    
     //Cardiovascular
     for (auto p : bgCircuit->GetPaths()) {
-      if (p->HasResistanceBaseline() && p->GetName() != "pSkinEndothelium") {
+      if (p->HasResistanceBaseline() && (p->GetName() != "pSkinEndothelium" && p->GetName() != "pOrganEndothelium")) {
         p->GetNextResistance().SetValue(p->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * bloodPressure, FlowResistanceUnit::mmHg_min_Per_mL);
       }
     }
@@ -460,17 +597,27 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
     map_mmHg = systemicResistance_mmHg_min_Per_mL * cardiacOutput_mL_Per_min;
     pDrivePressure.GetNextPressureSource().SetValue(map_mmHg, PressureUnit::mmHg);
 
-    totalVascularVolume_mL = cArtery.GetVolume(VolumeUnit::mL) + cVein.GetVolume(VolumeUnit::mL) + cSkin.GetVolume(VolumeUnit::mL) + cOrganBed.GetVolume(VolumeUnit::mL);
-    totalVolume_mL = totalVascularVolume_mL + cSkinInterstitium.GetVolume(VolumeUnit::mL);
-
     //Process Circuit
     calc.Process(*bgCircuit, dt_s);
-
+    txpt.Transport(*bgGraph, dt_s);
+    totalAlbumin_mg = 0.0;
+    netAlbuminDiffusion_ug = 0.0;
+    albuminMoved_ug = AlbuminTransport(cSkin, cSkinInterstitium, pSkinEndothelium, Albumin, dt_min, tissueIntegrity);
+    netAlbuminDiffusion_ug += albuminMoved_ug;
+    stateTrk.Track("Alb_Skin_VtoE", stateTime_h, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cSkinInterstitium, cLymph, pSkinToLymph, Albumin, dt_min, tissueIntegrity);
+    stateTrk.Track("Alb_Skin_EtoL", stateTime_h, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cOrganBed, cOrganInterstitium, pOrganEndothelium, Albumin, dt_min, tissueIntegrity);
+    netAlbuminDiffusion_ug += albuminMoved_ug;
+    stateTrk.Track("Alb_Organ_VtoE", stateTime_h, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cOrganInterstitium, cLymph, pOrganToLymph, Albumin, dt_min, tissueIntegrity);
+    stateTrk.Track("Alb_Organ_EtoL", stateTime_h, albuminMoved_ug);
+    albuminMoved_ug = AlbuminTransport(cLymph, cVein, pLymphReturn, Albumin, dt_min, tissueIntegrity);
+    netAlbuminDiffusion_ug -= albuminMoved_ug;
     //Post-process circuit
     calc.PostProcess(*bgCircuit);
-
-
-
+    cvTrk.Track(stateTime_h, *bgCircuit);
+    cvTrk.Track(stateTime_h, *bgGraph);
     stateTime_s += dt_s;
     stateTime_h += dt_h;
 
@@ -480,8 +627,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   }
   std::cout << "Writing state" << std::endl;
   stateTrk.WriteTrackToFile(stateFile.c_str());
- /* std::cout << "Writing circuit" << std::endl;
-  circuitTrk.WriteTrackToFile(circuitFile.c_str());*/
+  cvTrk.WriteTrackToFile(cvFile.c_str());
 }
 
 double BioGearsEngineTest::Up1(double y, double x, double n)
@@ -497,246 +643,55 @@ double BioGearsEngineTest::Down(double y, double x, double n)
   return 1.0 / (1.0 + std::pow(y / x, n));
 }
 
-
-
-double BioGearsEngineTest::Hill(double x, double& n, double& h)
+double BioGearsEngineTest::AlbuminTransport(SELiquidCompartment& from, SELiquidCompartment& to, SEFluidCircuitPath& flowPath, SESubstance& alb, double dt_min, double tissueIntegrity)
 {
-  return (std::pow(x, h)) / (std::pow(x, h) + std::pow(n, h));
+  double alphaSmall = 0.84; //0.6;
+  double alphaLarge = 1.0 - alphaSmall; //0.175;
+  double diffusivityCoefficientSmallBase_mL_Per_min = 0.09;
+  double diffusivityCoefficientLarge_mL_Per_min = 0.80;
+  double reflectionCoefficientSmallBase = 0.975;
+  double reflectionCoefficientLargeBase = 0.09;
+  double fluidFlux_mL_Per_min = flowPath.GetFlow(VolumePerTimeUnit::mL_Per_min);
+
+  //As tissue integrity declines, decrease reflection coefficient of small pores and increase their permeability (basically transition them to large pores)
+  double reflectionCoefficientSmall = GeneralMath::LinearInterpolator(1.0, 0.0, reflectionCoefficientSmallBase, 0.1, tissueIntegrity);
+  double reflectionCoefficientLarge = GeneralMath::LinearInterpolator(1.0, 0.0, reflectionCoefficientLargeBase, 0.1, tissueIntegrity);
+  double diffusivityCoefficientSmall_mL_Per_min = GeneralMath::LinearInterpolator(1.0, 0.0, diffusivityCoefficientSmallBase_mL_Per_min, diffusivityCoefficientLarge_mL_Per_min, tissueIntegrity);
+
+  double totalMassMoved_ug = 0.0;
+  if (flowPath.GetName() == "pSkinEndothelium" || flowPath.GetName() == "pOrganEndothelium") {
+    double albuminVascular_ug_Per_mL = from.GetSubstanceQuantity(alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+    double albuminExtracellular_ug_Per_mL = to.GetSubstanceQuantity(alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+    double averageConcentration_ug_Per_mL = (albuminVascular_ug_Per_mL + albuminExtracellular_ug_Per_mL) / 2.0;
+
+    double diffusiveSmall_ug_per_min = diffusivityCoefficientSmall_mL_Per_min * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
+    double diffusiveLarge_ug_Per_min = diffusivityCoefficientLarge_mL_Per_min * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
+    double convectiveSmall_ug_Per_min = (1.0 - reflectionCoefficientSmall) * alphaSmall * fluidFlux_mL_Per_min * averageConcentration_ug_Per_mL;
+    double convectiveLarge_ug_Per_min = (1.0 - reflectionCoefficientLarge) * alphaLarge * fluidFlux_mL_Per_min * averageConcentration_ug_Per_mL;
+
+    totalMassMoved_ug = (diffusiveSmall_ug_per_min + diffusiveLarge_ug_Per_min + convectiveSmall_ug_Per_min + convectiveLarge_ug_Per_min) * dt_min;
+  } else {
+
+    totalMassMoved_ug = from.GetSubstanceQuantity(alb)->GetConcentration(MassPerVolumeUnit::ug_Per_mL) * fluidFlux_mL_Per_min * dt_min;
+  }
+
+  from.GetSubstanceQuantity(alb)->GetMass().IncrementValue(-totalMassMoved_ug, MassUnit::ug);
+  to.GetSubstanceQuantity(alb)->GetMass().IncrementValue(totalMassMoved_ug, MassUnit::ug);
+  return totalMassMoved_ug;
 }
 
-double BioGearsEngineTest::DownReg(double x, double& cin, double& hin, double& ilbar, double& il)
+void BioGearsEngineTest::UpdateOncoticPressure(SEScalarMassPerVolume& albVas, SEScalarMassPerVolume& albExtra, SEFluidCircuitPath& plasma, SEFluidCircuitPath& inter)
 {
-  return x * ((1.0 - cin) / (1.0 + std::pow(il / ilbar, hin)) + cin);
+  double albuminVacular_g_Per_dL = albVas.GetValue(MassPerVolumeUnit::g_Per_dL);
+  double albuminInterstitial_g_Per_dL = albExtra.GetValue(MassPerVolumeUnit::g_Per_dL);
+  double totalProteinVascular_g_Per_dL = 1.6 * albuminVacular_g_Per_dL;
+  double totalProteinInterstitium_g_Per_dL = 1.6 * albuminInterstitial_g_Per_dL;
+
+  double vascularCOP_mmHg = 2.1 * totalProteinVascular_g_Per_dL + 0.16 * std::pow(totalProteinVascular_g_Per_dL, 2) + 0.009 * std::pow(totalProteinVascular_g_Per_dL, 3); //Mazzoni1988Dynamic
+  double interstitialCOP_mmHg = 2.1 * totalProteinInterstitium_g_Per_dL + 0.16 * std::pow(totalProteinInterstitium_g_Per_dL, 2) + 0.009 * std::pow(totalProteinInterstitium_g_Per_dL, 3);
+
+  plasma.GetNextPressureSource().SetValue(-vascularCOP_mmHg, PressureUnit::mmHg);
+  inter.GetNextPressureSource().SetValue(interstitialCOP_mmHg, PressureUnit::mmHg);
 }
-
-
-
-
-
-/*    
- *      //Model Parameters--From Reynolds2008Mathematical (substance interactions) and Brady2017Mathematical (temp, HR, pain modifiers)
-  //Notes:
-  //First Letter: s = source, u = decay, k = interaction
-  //States:  m = macrophage, nr = resting neutrophil, na = active neutophil, TNF = tumor necrosis factor, IL = interleukin-10
-  // NO = nitric oxide, TI = tissue integrity, Z = inflammation level, Fe = temperature (fever), HR = heart rate, Pa = pain threshold
-  //b suffix denotes substance in blood
-  //All rates are /hr
-  //Volumes (change later based on compartments)
-  double volumeBlood = totalVolume_mL / 1000.0, volumeTis =cSkinInterstitium.GetVolume(VolumeUnit::L);
-  //Source and decay terms
-  double sm = 10.0, snb = sm, sb = 0.0075, sbb = sb, um = 0.12, uma = 0.05, ut = 1.8, utb = ut, unb = um, unba = 0.05, una = unba;
-  double uiMax = 0.34, uiMin = 0.005, uibMax = uiMax, uibMin = uiMin, ur = 4, urb = ur;
-  //Pathogen population parameters
-  double kpg = 0.6, kpbg = kpg, pInf = 20000.0, pbInf = 20.0;
-  //Tissue integrity and repair
-  double ktg = 2.0, TInf = 1.0;
-  //Proportion of macrophages and neutrophils consumed during phagocytosis
-  double r = 0.98, rb = r;
-  //Background immune system (in this case, first b = background, second b = blood)
-  double kpb = 0.461, kpbb = kpb, ub = 0.0023, ubb = ub, kbp = 0.0001, kbbp = 0.02;
-  //Activation of macrophages and neutrophils
-  double kmp = 5.0, kmtcell = 20.0, kmtmol = 5.0, kmrcell = 0.01, knpbcell = 5.0, kntbcell = 2.0, kntbmol = 0.8, knrbcell = 0.1;
-  //Cytokine production
-  double kmai = 1000.0, kmat = 3000.0;
-  //Depletion of pathogen
-  double kmappath = 2.8, knappath = 5.8, knapbpath = 0.04, knapcell = 5.0, knapbcell = knapcell;
-  //Tissue depletion from radicals
-  double krtt = 0.01;
-  //Radical production
-  double krtr = 0.1, knar = 0.01, knarb = knar, knatr = knar, krntp = 0.2, krtmp = 0.00001;
-  //Inflammation hill coefficients
-  double ktz = 0.5, uz = 0.01, xtz = 20.0, ktzi = 0.1, htz = 2.0;
-  //Tissue integrity threshold
-  double a = 0.1;
-  //TNF activation hill parameters
-  double xt = 20.0, xtb = 2.0, ht = 2.0, htb = ht;
-  //Neutrophil self-regulation
-  double ksnb = 3.0, xsnb = 200.0, hsnb = 2.0;
-  //Pathogen interaction hill terms
-  double xpma = 200.0, xpna = 1500.0, hpma = 3.0, hpna = hpma, xpb = 0.1, hpb = 1.0;
-  //Hill parameters for TNF production
-  double xma = 80.0, hma = 2.0;
-  //Hill parameters for IL10
-  double vi = 8.0, hi = 2.0, xmi = 140, hmi = 2.0, vib = vi, hib = hi;
-  //IL10 down-regulation parameters
-  double dci = 0.05, dhi = 3.0, dilbar = 200.0;
-  double dcin = 0.15, dhin = 1.0, dilnbar = 80.0;
-  double dcit = 1e-6, dhit = 5.0, diltbar = 60.0;
-  double dcib = 0.05, dhib = 3.0, dilbbar = 200.0;
-  double dcinb = 0.15, dhinb = 1.0, dilnbbar = 80.0;
-  //Diffusion parameters
-  double difbn = 0.005; 
-  double diffn = 50;
-  double difbmol = 10.0; 
-  double diffmol = 1.0;
-  double difpb = 1.0, diffp = 1.0;
-  double difat = 50.0; 
-  double difbt = 0.8;
-  double difab = 2000.0;
-  //Temperature parameters
-  double kT = 1.0, kTTnf = 1.5, nTTnf = 30.0, hTTnf = 0.75, TMax = 39.5, TMin = 37.0;
-  //Heart rate parameters
-  double kH = 0.353, nHT = 1.0, hHT = 2.0, HMax = 192.0, HBase = 72.0, tau2 = 0.003;
-  //Pain threshold parameters
-  double kPTP = 0.00025, kPT = 0.011, PTM = 1.0;
-  //Resistance parameters
-  double kB = 0.35;
-  double kBNO = 0.05;
-  double minRScale = 0.5;
-
-  //State variables
-  double pathogenTis = 100.0;
-  double pathogenBlood = 0.0;
-  double macrophageRestingTis = sm / um;
-  double macrophageActiveTis = 0.0;
-  double tnfTis = 0.0;
-  double tnfBlood = 0.0;
-  double neutrophilRestingBlood = snb / unb;
-  double neutrophilActiveTis = 0.0;
-  double neutrophilActiveBlood = 0.0;
-  double ilTis = 0.0;
-  double ilBlood = 0.0;
-  double nitricTis = 0.0;
-  double nitricBlood = 0.0;
-  double tissueIntegrity = 1.0;
-  double inflammation = 0.0;
-  double temp = TMin;
-  double heartRate = HBase;
-  double pain = PTM;
-  double resistanceScale = 1.0;
-
-  //Declare diffusion and differential terms outside of loop
-  //Diffusion Terms
-  double difZ;
-  double difPTis;
-  double difPBlood;
-  double difMol;
-  double difN;
-  double dPathogenTis;
-  double dPathogenBlood;
-  double dMacrophageRestingTis;
-  double dMacrophageActiveTis;
-  double dTnfTis;
-  double dTnfBlood;
-  double dNeutrophilRestingBlood;
-  double dNeutrophilActiveTis;
-  double dNeutrophilActiveBlood;
-  double dIlTis;
-  double dIlBlood;
-  double dNitricTis;
-  double dNitricBlood;
-  double dTissueIntegrity;
-  double dInflammation;
-  double dTemp;
-  double dHeartRate;
-  double dPain;
-  double dResistanceScale;
-  double tisVolumeScale = skinTissueVolume_L / 0.5;
-  double bloodVolumeScale = skinVascularVolume_mL / 1000.0 / 50.0;
-
-  
-    //Diffusion Terms
-    volumeBlood = skinVascularVolume_mL / 1000.0;
-    volumeTis = cSkinInterstitium.GetVolume(VolumeUnit::L);
-    bloodVolumeScale = volumeBlood / 50.0;
-    volumeTis = volumeTis / 0.5;
-    difZ = difpb * (1.0 + diffp * inflammation);
-    if (pathogenTis > 0.0) {
-      difPTis = (difat * std::pow(pathogenTis, 2.0 / 3.0)) / (1.0 + difbt * std::pow(pathogenTis, 1.0 / 3.0));
-    } else {
-      difPTis = 0.0;
-    }
-    if (pathogenBlood > 0.0) {
-      difPBlood = difab * pathogenBlood;
-    } else {
-      difPBlood = 0;
-    }
-
-    difMol = difbmol * (1.0 + diffmol * inflammation);
-    difN = difbn * (1.0 + diffn * inflammation);
-
-    //Differential terms
-    dPathogenTis = kpg * pathogenTis * (1.0 - pathogenTis / pInf) - kmappath * DownReg(macrophageActiveTis * Hill(pathogenTis, xpma, hpma), dci, dhi, dilbar, ilTis) - knappath * DownReg(neutrophilActiveTis * Hill(pathogenTis, xpna, hpna), dcin, dhin, dilnbar, ilTis) - sb * kpb * pathogenTis / (ub + kbp * pathogenTis) + difZ * (difPBlood - difPTis) / volumeTis * tisVolumeScale;
-    dPathogenBlood = kpbg * pathogenBlood * (1.0 - pathogenBlood / pbInf) - knapbpath * DownReg(neutrophilActiveBlood * Hill(pathogenBlood, xpb, hpb), dcinb, dhinb, dilnbbar, ilBlood) + difZ * (difPTis - difPBlood) / volumeBlood * bloodVolumeScale - sbb * kpbb * pathogenBlood / (ubb + kbbp * pathogenBlood);
-    dMacrophageRestingTis = sm - um * macrophageRestingTis - (kmp * DownReg(macrophageRestingTis * Hill(pathogenTis, xpma, hpma), dci, dhi, dilbar, ilTis) + kmtcell * DownReg(macrophageRestingTis * Hill(tnfTis, xt, ht), dci, dhi, dilbar, ilTis) + kmrcell * DownReg(macrophageRestingTis, dci, dhi, dilbar, ilTis) * nitricTis);
-    dMacrophageActiveTis = -uma * macrophageActiveTis + (kmp * DownReg(macrophageRestingTis * Hill(pathogenTis, xpma, hpma), dci, dhi, dilbar, ilTis) + kmtcell * DownReg(macrophageRestingTis * Hill(tnfTis, xt, ht), dci, dhi, dilbar, ilTis) + kmrcell * DownReg(macrophageRestingTis, dci, dhi, dilbar, ilTis) * nitricTis);
-    dTnfTis = -ut * tnfTis + difMol * (tnfBlood - tnfTis) / volumeTis * tisVolumeScale - kmtmol * DownReg(macrophageRestingTis * Hill(tnfTis, xt, ht), dci, dhi, dilbar, ilTis) + kmat * DownReg(Hill(macrophageActiveTis, xma, hma), dcit, dhit, diltbar, ilTis);
-    dTnfBlood = -utb * tnfBlood + difMol * (tnfTis - tnfBlood) / volumeBlood * bloodVolumeScale - kntbmol * DownReg(neutrophilRestingBlood * Hill(tnfBlood, xtb, htb), dcinb, dhinb, dilnbbar, ilBlood);
-    dNeutrophilRestingBlood = (snb + ksnb * Hill(neutrophilActiveBlood + neutrophilActiveTis, xsnb, hsnb)) - unb * neutrophilRestingBlood - (kntbcell * DownReg(neutrophilRestingBlood * Hill(tnfBlood, xtb, htb), dcinb, dhinb, dilnbbar, ilBlood) + knrbcell * DownReg(neutrophilRestingBlood * nitricBlood, dcinb, dhinb, dilnbbar, ilBlood) + knpbcell * DownReg(neutrophilRestingBlood * Hill(pathogenBlood, xpb, hpb), dcib, dhib, dilbbar, ilBlood));
-    dNeutrophilActiveTis = -una * neutrophilActiveTis + difN * neutrophilActiveBlood / volumeTis * tisVolumeScale - (1 - r) * knapcell * DownReg(neutrophilActiveTis * Hill(pathogenTis, xpna, hpna), dcin, dhin, dilnbar, ilTis);
-    dNeutrophilActiveBlood = -unba * neutrophilActiveBlood - difN * neutrophilActiveBlood / volumeBlood * bloodVolumeScale + (knpbcell * DownReg(neutrophilRestingBlood * Hill(pathogenBlood, xpb, hpb), dcinb, dhinb, dilnbbar, ilBlood) + kntbcell * DownReg(neutrophilRestingBlood * Hill(tnfBlood, xtb, htb), dcinb, dhinb, dilnbbar, ilBlood) + knrbcell * DownReg(neutrophilRestingBlood * nitricBlood, dcinb, dhinb, dilnbbar, ilBlood)) - (1 - rb) * knapbcell * DownReg(neutrophilActiveBlood * Hill(pathogenBlood, xpb, hpb), dcinb, dhinb, dilnbbar, ilBlood);
-    dIlTis = -(uiMax - (uiMax - uiMin) * Hill(ilTis, vi, hi)) * ilTis + difMol * (ilBlood - ilTis) / volumeTis * tisVolumeScale + kmai * DownReg(Hill(macrophageActiveTis, xmi, hmi), dci, dhi, dilbar, ilTis);
-    dIlBlood = -(uibMax - (uibMax - uibMin) * Hill(ilBlood, vib, hib)) * ilBlood + difMol * (ilTis - ilBlood) / volumeBlood * bloodVolumeScale;
-    dNitricTis = -ur * nitricTis + difMol * (nitricBlood - nitricTis) / volumeTis * tisVolumeScale + krtr * nitricBlood * tissueIntegrity + knar * DownReg(neutrophilActiveTis, dcin, dhin, dilnbar, ilTis) + knatr * neutrophilActiveTis * tissueIntegrity + krntp * neutrophilActiveTis * pathogenTis * tissueIntegrity + krtmp * macrophageActiveTis * pathogenTis * tissueIntegrity;
-    dNitricBlood = -urb * nitricBlood + difMol * (nitricTis - nitricBlood) / volumeBlood * bloodVolumeScale + knarb * DownReg(neutrophilActiveBlood, dcinb, dhinb, dilnbbar, ilBlood);
-    dTissueIntegrity = ktg * tissueIntegrity * (1.0 - tissueIntegrity / TInf) * (tissueIntegrity - a) - krtt * nitricTis * tissueIntegrity;
-    dInflammation = ktz * (Hill(tnfTis, xtz, htz) + ktzi * (TInf - tissueIntegrity)) * (1 - inflammation) - uz * inflammation;
-    dTemp = (TMax - temp) * (Hill(tnfTis, nTTnf, hTTnf) + ktzi * (TInf - tissueIntegrity)) - uz * (temp - TMin);
-    dHeartRate = (-heartRate + kH * (HMax - HBase) * Hill(temp - TMin, nHT, hHT) + HBase) / tau2;
-    dPain = -kPTP * pathogenTis * pain + kPT * (PTM - pain);
-    dResistanceScale = kB * (resistanceScale - minRScale) * (1.0 / (1.0 + kBNO * nitricTis) - resistanceScale);
-   
-
-    //Increment state
-    pathogenTis += (dPathogenTis * dt_h);
-    pathogenBlood += (dPathogenBlood * dt_h);
-    macrophageRestingTis += (dMacrophageRestingTis * dt_h);
-    macrophageActiveTis += (dMacrophageActiveTis * dt_h);
-    tnfTis += (dTnfTis * dt_h);
-    tnfBlood += (dTnfBlood * dt_h);
-    neutrophilRestingBlood += (dNeutrophilRestingBlood * dt_h);
-    neutrophilActiveTis += (dNeutrophilActiveTis * dt_h);
-    neutrophilActiveBlood += (dNeutrophilActiveBlood * dt_h);
-    ilTis += (dIlTis * dt_h);
-    ilBlood += (dIlBlood * dt_h);
-    nitricTis += (dNitricTis * dt_h);
-    nitricBlood += (dNitricBlood * dt_h);
-    tissueIntegrity += (dTissueIntegrity * dt_h);
-    inflammation += (dInflammation * dt_h);
-    temp += (dTemp * dt_h);
-    heartRate += (dHeartRate * dt_h);
-    pain += (dPain * dt_h);
-    resistanceScale += (dResistanceScale * dt_h);
-
-
-
-
-
-
-
-    //Track State
-    stateTrk.Track("Pathogen_Tissue", stateTime_h, pathogenTis);
-    stateTrk.Track("Pathogen_Blood", stateTime_h, pathogenBlood);
-    stateTrk.Track("MacrophageTissue_Resting", stateTime_h, macrophageRestingTis);
-    stateTrk.Track("MacrophageTissue_Active", stateTime_h, macrophageActiveTis);
-    stateTrk.Track("TNF_Tissue", stateTime_h, tnfTis);
-    stateTrk.Track("TNF_Blood", stateTime_h, tnfBlood);
-    stateTrk.Track("NeutrophilTissue_Active", stateTime_h, neutrophilActiveTis);
-    stateTrk.Track("NeutrophilBlood_Resting", stateTime_h, neutrophilRestingBlood);
-    stateTrk.Track("NeutrophilBlood_Active", stateTime_h, neutrophilActiveBlood);
-    stateTrk.Track("IL10_Tissue", stateTime_h, ilTis);
-    stateTrk.Track("IL10_Blood", stateTime_h, ilBlood);
-    stateTrk.Track("NO_Tissue", stateTime_h, nitricTis);
-    stateTrk.Track("NO_Blood", stateTime_h, nitricBlood);
-    stateTrk.Track("TissueIntegrity", stateTime_h, tissueIntegrity);
-    stateTrk.Track("Inflammation", stateTime_h, inflammation);
-    stateTrk.Track("CoreTemp", stateTime_h, temp);
-    stateTrk.Track("HeartRate", stateTime_h, heartRate);
-    stateTrk.Track("PainThreshold", stateTime_h, pain);
-    stateTrk.Track("RespirationRate", stateTime_h, respirationRate);
-    stateTrk.Track("MAP-Set", stateTime_h, map_mmHg);
-    stateTrk.Track("AortaVolume_L", stateTime_h, cArtery.GetVolume(VolumeUnit::L));
-    stateTrk.Track("OrganBedVolume_L", stateTime_h, cOrganBed.GetVolume(VolumeUnit::L));
-    stateTrk.Track("SkinVascularVolume_L", stateTime_h, cSkin.GetVolume(VolumeUnit::L));
-    stateTrk.Track("VeinousVolume_L", stateTime_h, cVein.GetVolume(VolumeUnit::L));
-    stateTrk.Track("SkinInterstitialVolume_L", stateTime_h, cSkinInterstitium.GetVolume(VolumeUnit::L));
-    stateTrk.Track("VascularVolume_L", stateTime_h, totalVascularVolume_mL / 1000.0);
-    stateTrk.Track("ProteinVascular", stateTime_h, effectiveProteinVascular_g_Per_dL);
-    stateTrk.Track("ProteinInterstitial", stateTime_h, effectiveProteinInterstitium_g_Per_dL);
-    stateTrk.Track("ResistanceScale", stateTime_h, resistanceScale);
-    stateTrk.Track("SystemicResistance", stateTime_h, systemicResistance_mmHg_min_Per_mL);
-    stateTrk.Track("EndothelialResistance", stateTime_h, pSkinEndothelium.GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
-    stateTrk.Track("TotalVolume_L", stateTime_h, totalVolume_mL / 1000.0);*/
-
 
 }

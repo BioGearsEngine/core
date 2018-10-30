@@ -191,12 +191,11 @@ public:
   void AcuteInflammationTest(const std::string& rptDirectory);
 
 protected:
-  double Hill(double x, double& n, double& h);
-  double DownReg(double x, double &cin, double &hin, double &ilbar, double &il);
   double Up1(double y, double x, double n);
   double Up2(double y, double x, double n);
   double Down(double y, double x, double n);
-
+  double AlbuminTransport(SELiquidCompartment& from, SELiquidCompartment& to, SEFluidCircuitPath& flowPath, SESubstance& alb, double dt_min, double tissueIntegrity);
+  void UpdateOncoticPressure(SEScalarMassPerVolume& albVas, SEScalarMassPerVolume& albExtra, SEFluidCircuitPath& plasma, SEFluidCircuitPath& inter);
 
 public:
   ////////////////////////////
