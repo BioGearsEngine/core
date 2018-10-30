@@ -53,7 +53,7 @@ bool SubstanceGenerator::parse()
   std::ifstream file("Substances.csv");
   std::string row;
   std::vector<std::vector<std::string>> rows;
-  
+
   while (std::getline(file, row)) {
     std::vector<std::string> temp;
     int i = 0;
@@ -63,35 +63,33 @@ bool SubstanceGenerator::parse()
         temp.push_back(row.substr(start, i - start));
         ++i;
         start = i;
-	  }
-      else if (row.at(i) == '"') {
+      } else if (row.at(i) == '"') {
         ++i;
         int start = i;
         while (row.at(i) != '"') {
           if (i == row.size() - 1) {
             std::string row2;
             std::getline(file, row2);
-			row.append(row2);
-		  }
+            row.append(row2);
+          }
           ++i;
-		}
+        }
         temp.push_back(row.substr(start, i - start));
         while (i < row.size() && row.at(i) != ',') {
           ++i;
-		}
+        }
         ++i;
-	  } 
-	  else {
+      } else {
         ++i;
-	  }
-	}
+      }
+    }
     rows.push_back(temp);
   }
   for (auto& row : rows) {
     for (auto& string : row) {
       std::cout << string << " ";
-	}
-    std::cout << std::endl;
+    }
+    std::cout << "\n";
   }
   std::cout << "Complete" << std::endl;
   return false;
