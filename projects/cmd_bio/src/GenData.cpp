@@ -87,9 +87,9 @@ bool SubstanceGenerator::parse()
 	}
     rows.push_back(temp);
   }
-  for (int k = 0; k < rows.size(); ++k) {
-    for (int x = 0; x < rows.at(k).size(); ++x) {
-      std::cout << rows.at(k).at(x) << " ";
+  for (auto& row : rows) {
+    for (auto& string : row) {
+      std::cout << string << " ";
 	}
     std::cout << std::endl;
   }
