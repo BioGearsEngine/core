@@ -889,20 +889,6 @@ void Respiratory::RespiratoryDriver()
       double dTargetPulmonaryVentilation_L_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
       m_TargetTidalVolume_L = m_VentilationToTidalVolumeSlope * std::pow(dTargetPulmonaryVentilation_L_Per_min + 1.0, 0.65);
 
-      double arterialPHBaseline = 7.41;
-
-      //update target tidal volume
-      if (m_data.GetState() == EngineState::AtSecondaryStableState) {
-        arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
-        }
-
-      //if (m_Patient->IsEventActive(CDM::enumPatientEvent::RespiratoryAlkalosis)) {
-        double arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
-        double diffPH = 8.0*((arterialPHBaseline - arterialPH) / arterialPHBaseline);
-        m_TargetTidalVolume_L *= (1 + diffPH);
-      //}
-
-
       //All actions that effect the target tidal volume and respiration rate are processed in the function below.  The
       //ventilation frequency (m_VentilationFrequency_Per_min) is calculated in this function.
       ProcessDriverActions();
@@ -997,6 +983,12 @@ void Respiratory::ProcessDriverActions()
   double NMBModifier = 1.0;
   double SedationModifier = 1.0;
 
+  //PH imbalance parameters
+  double arterialPH = 0.0;
+  double arterialPHBaseline = 7.41;
+  double scalingFactor = 500.0;
+
+
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
     NMBModifier = 0.0;
     DrugRRChange_Per_min = 0.0;
@@ -1028,6 +1020,18 @@ void Respiratory::ProcessDriverActions()
   m_TargetTidalVolume_L *= NMBModifier;
   m_TargetTidalVolume_L += DrugsTVChange_L;
 
+  //update target tidal volume
+  if (m_data.GetState() < EngineState::SecondaryStabilization) {
+    arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
+  }
+
+
+  arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
+  double diffPH = scalingFactor*(std::abs(arterialPHBaseline - arterialPH) / arterialPHBaseline);
+  
+
+
+
   //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications.  The Respiration Rate will make up for the Alveoli Ventilation difference
   double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
   double dMaximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);
@@ -1043,6 +1047,7 @@ void Respiratory::ProcessDriverActions()
     m_VentilationFrequency_Per_min *= (1.0 + 0.65 * painVAS); //scale with pain response
     m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
     m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
+    m_VentilationFrequency_Per_min += diffPH;
   }
 
   if (m_VentilationFrequency_Per_min == 0.0) {
