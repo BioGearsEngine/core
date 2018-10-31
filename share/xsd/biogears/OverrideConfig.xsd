@@ -46,7 +46,7 @@ specific language governing permissions and limitations under the License.
       <xs:extension base="ObjectData">
         <xs:sequence>
           <xs:element name="EnableRenalOverride" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
-		  <xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTime" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
