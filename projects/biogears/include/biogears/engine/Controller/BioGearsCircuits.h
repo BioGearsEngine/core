@@ -669,6 +669,7 @@ namespace biogears {
         DEFINE_STATIC_STRING(LeftLungE3ToLymph);
 
         DEFINE_STATIC_STRING(LymphToVenaCava);
+        DEFINE_STATIC_STRING(LymphToGround);
 
         DEFINE_STATIC_STRING(MuscleVToMuscleE1);
         DEFINE_STATIC_STRING(MuscleE1ToMuscleE2);
