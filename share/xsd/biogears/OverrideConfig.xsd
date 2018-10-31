@@ -41,6 +41,17 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
   
+  <xs:complexType name="RenalOverrideData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="EnableRenalOverride" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTime" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
   <!-- @brief Declaration of BioGears System in which to apply the override value -->
   <xs:complexType name="OverrideConfigData">
     <xs:complexContent>
@@ -49,6 +60,7 @@ specific language governing permissions and limitations under the License.
           <!-- BioGears System in which the override is to be applied -->
           <xs:element name="CardiovascularOverride" type="CardiovascularOverrideData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Patient Identifier. -->
 		  <xs:element name="EnergyOverride" type="EnergyOverrideData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Patient Identifier. -->
+		  <xs:element name="RenalOverride" type="RenalOverrideData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Patient Identifier. -->
 		</xs:sequence>        
       </xs:extension>
     </xs:complexContent>

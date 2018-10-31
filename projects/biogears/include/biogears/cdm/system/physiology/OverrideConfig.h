@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
 CDM_BIND_DECL(OverrideConfigData)
 
@@ -80,6 +81,21 @@ public:
   }
   virtual void EnableEnergyOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
 
+  //Renal Parameters
+  virtual bool HasUrineProductionOverride() const;
+  virtual SEScalarVolumePerTime& GetUrineProductionOverride();
+  virtual double GetUrineProductionOverride(const VolumePerTimeUnit& unit) const;
+
+  virtual bool HasEnableRenalOverride() const
+  {
+    return m_overrideMode != (CDM::enumOnOff::Off);
+  }
+  virtual bool IsRenalOverrideEnabled() const
+  {
+    return m_overrideMode == CDM::enumOnOff::On;
+  }
+  virtual void EnableRenalOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
+
 protected:
   virtual void Unload(CDM::OverrideConfigData& data) const;
   bool ReadOverrideParameters(const std::string& overrideParameterFile);
@@ -90,6 +106,7 @@ protected:
   SEScalarTemperature* m_SkinTemperatureOverride;
   SEScalarFrequency* m_HeartRateOverride;
   SEScalarPower* m_TotalMetabolicOverride;
+  SEScalarVolumePerTime* m_UrineProductionOverride;
 
 };
 }

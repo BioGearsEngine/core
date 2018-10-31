@@ -447,6 +447,7 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Temperature of core. -->                 					
 					<xs:element name="SkinTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Temperature of skin. -->    
 					<xs:element name="TotalMetabolicRateOverride" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<< @brief The metabolic rate. -->
+					<xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The urine production rate. -->
 				</xs:sequence>  
 				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
 				<xs:attribute name="Conformant" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->

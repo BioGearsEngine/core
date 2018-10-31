@@ -33,6 +33,7 @@ OverrideConfig::OverrideConfig()
   m_CoreTemperatureOverride = nullptr;
   m_SkinTemperatureOverride = nullptr;
   m_TotalMetabolicOverride = nullptr;
+  m_UrineProductionOverride = nullptr;
 }
 
 OverrideConfig::~OverrideConfig()
@@ -48,6 +49,7 @@ void OverrideConfig::Clear()
   SAFE_DELETE(m_CoreTemperatureOverride);
   SAFE_DELETE(m_SkinTemperatureOverride);
   SAFE_DELETE(m_TotalMetabolicOverride);
+  SAFE_DELETE(m_UrineProductionOverride);
   m_overrideMode = CDM::enumOnOff::Off;
 }
 
@@ -74,7 +76,7 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     Error(sst);
     return false;
   }
-  if (!pData->CardiovascularOverride() && !pData->EnergyOverride()) {
+  if (!pData->CardiovascularOverride() && !pData->EnergyOverride() && !pData->RenalOverride()) {
     return false;
   }
 
@@ -105,6 +107,13 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
       GetSkinTemperatureOverride().Load(config.SkinTemperatureOverride().get());
     if (config.TotalMetabolicRateOverride().present())
       GetTotalMetabolicOverride().Load(config.TotalMetabolicRateOverride().get());
+  }
+  if (in.RenalOverride().present()) {
+    const CDM::RenalOverrideData& config = in.RenalOverride().get();
+    if (config.EnableRenalOverride().present())
+      EnableRenalOverride(config.EnableRenalOverride().get());
+    if (config.UrineProductionRateOverride().present())
+      GetUrineProductionOverride().Load(config.UrineProductionRateOverride().get());
   }
 
   return true;
@@ -143,6 +152,15 @@ void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
   if (HasEnableEnergyOverride())
     energyoverride->EnableEnergyOverride(m_overrideMode);
   data.EnergyOverride(std::unique_ptr<CDM::EnergyOverrideData>(energyoverride));
+
+  CDM::RenalOverrideData* renal(new CDM::RenalOverrideData());
+  if (HasUrineProductionOverride())
+    renal->UrineProductionRateOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_UrineProductionOverride->Unload()));
+
+  CDM::RenalOverrideData* renaloverride(new CDM::RenalOverrideData());
+  if (HasEnableRenalOverride())
+    renaloverride->EnableRenalOverride(m_overrideMode);
+  data.RenalOverride(std::unique_ptr<CDM::RenalOverrideData>(renaloverride));
 }
 
 bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameterFile)
@@ -263,7 +281,6 @@ double OverrideConfig::GetSkinTemperatureOverride(const TemperatureUnit& unit) c
     return SEScalar::dNaN();
   return m_SkinTemperatureOverride->GetValue(unit);
 }
-
   bool OverrideConfig::HasTotalMetabolicOverride() const
 {
     return m_TotalMetabolicOverride == nullptr ? false : m_TotalMetabolicOverride->IsValid();
@@ -279,5 +296,25 @@ double OverrideConfig::GetTotalMetabolicOverride(const PowerUnit& unit) const
   if (m_TotalMetabolicOverride == nullptr)
     return SEScalar::dNaN();
   return m_TotalMetabolicOverride->GetValue(unit);
+}
+
+////////////////////
+/** Renal */
+////////////////////
+bool OverrideConfig::HasUrineProductionOverride() const
+{
+  return m_UrineProductionOverride == nullptr ? false : m_UrineProductionOverride->IsValid();
+}
+SEScalarVolumePerTime& OverrideConfig::GetUrineProductionOverride()
+{
+  if (m_UrineProductionOverride == nullptr)
+    m_UrineProductionOverride = new SEScalarVolumePerTime();
+  return *m_UrineProductionOverride;
+}
+double OverrideConfig::GetUrineProductionOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_UrineProductionOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_UrineProductionOverride->GetValue(unit);
 }
 }
