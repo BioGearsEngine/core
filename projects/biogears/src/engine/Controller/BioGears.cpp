@@ -1085,7 +1085,7 @@ void BioGears::SetupCardiovascular()
   double VolumeFractionArmRight = VolumeFractionArmLeft, VascularPressureTargetArmRight = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetArmRight = VascularFlowTargetArmLeft;
   double VolumeFractionBone = 0.07, VascularPressureTargetBone = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetBone = 0.05 * cardiacOutputTarget_mL_Per_s;
   double VolumeFractionBrain = 0.012, VascularPressureTargetBrain = 0.08 * systolicPressureTarget_mmHg, VascularFlowTargetBrain = 0.12 * cardiacOutputTarget_mL_Per_s;
-  double VolumeFractionFat = male ? 0.05 : 0.085, VascularPressureTargetFat = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetFat = male ? 0.05 * cardiacOutputTarget_mL_Per_s : 0.0085 * cardiacOutputTarget_mL_Per_s;
+  double VolumeFractionFat = male ? 0.05 : 0.085, VascularPressureTargetFat = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetFat = male ? 0.05 * cardiacOutputTarget_mL_Per_s : 0.085 * cardiacOutputTarget_mL_Per_s;
   double VolumeFractionHeartLeft = 0.0025, VascularPressureTargetHeartLeft = 1.06667 * systolicPressureTarget_mmHg; /*No flow targets heart right*/
   double VolumeFractionHeartRight = 0.0025, VascularPressureTargetHeartRight = 0.16667 * systolicPressureTarget_mmHg; /*No flow targets heart left*/
   double VolumeFractionKidney = 0.0202, VascularPressureTargetKidney = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetKidney = male ? 0.098 * cardiacOutputTarget_mL_Per_s : 0.088 * cardiacOutputTarget_mL_Per_s;
