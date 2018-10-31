@@ -2915,38 +2915,39 @@ void BioGears::SetupTissue()
   double SkinEWFraction = 0.382, SkinIWFraction = 0.291, SkinNLFraction = 0.0284, SkinNPFraction = 0.0111, SkinARatio = 0.277, SkinAAGRatio = 0.277, SkinLRatio = 0.096, SkinAPL = 1.32;
   double SpleenEWFraction = 0.207, SpleenIWFraction = 0.579, SpleenNLFraction = 0.0201, SpleenNPFraction = 0.0198, SpleenARatio = 0.277, SpleenAAGRatio = 0.277, SpleenLRatio = 0.096, SpleenAPL = 3.18;
 
-  //Typical ICRP Male
+  //Typical ICRP Male--scaled using reported values for 73 kg male
   //Total Mass (kg)
-  double AdiposeTissueMass = 14.5;
-  double BoneTissueMass = 10.5;
-  double BrainTissueMass = 1.45;
-  double GutTissueMass = 1.02;
-  double RKidneyTissueMass = 0.155;
-  double LKidneyTissueMass = 0.155;
-  double LiverTissueMass = 1.8;
-  double RLungTissueMass = 0.25;
-  double LLungTissueMass = 0.25;
-  double MuscleTissueMass = 29.0;
-  double MyocardiumTissueMass = 0.33;
-  double SkinTissueMass = 3.3;
-  double SpleenTissueMass = 0.15;
+  double totalBodyMass_kg = m_Patient->GetWeight(MassUnit::kg);
+  double AdiposeTissueMass = (18.2 / 73.0) * totalBodyMass_kg;
+  double BoneTissueMass = (10.5 / 73.0) * totalBodyMass_kg;
+  double BrainTissueMass = (1.45 / 73.0) * totalBodyMass_kg;
+  double GutTissueMass = (1.32 / 73.0) * totalBodyMass_kg;      //Adding up stomach, large intestine, small intestine, pancreas, gall bladder
+  double RKidneyTissueMass = (0.155 / 73.0) * totalBodyMass_kg;
+  double LKidneyTissueMass = (0.155 / 73.0) * totalBodyMass_kg;
+  double LiverTissueMass = (1.8 / 73.0) * totalBodyMass_kg;
+  double RLungTissueMass = (0.25 / 73.0) * totalBodyMass_kg;
+  double LLungTissueMass = (0.25 / 73.0) * totalBodyMass_kg;
+  double MuscleTissueMass = (29.0 / 73.0) * totalBodyMass_kg;
+  double MyocardiumTissueMass = (0.33 / 73.0) * totalBodyMass_kg;
+  double SkinTissueMass = (3.3 / 73.0) * totalBodyMass_kg;
+  double SpleenTissueMass = (0.15 / 73) * totalBodyMass_kg;
 
-  //Typical ICRP Female - From ICRP
+  //Typical ICRP Female - From ICRP--scaled using values from 60 kg female
   //Total Mass (kg)
   if (m_Patient->GetSex() == CDM::enumSex::Female) {
-    AdiposeTissueMass = 19.0;
-    BoneTissueMass = 7.8;
-    BrainTissueMass = 1.3;
-    GutTissueMass = 0.96;
-    RKidneyTissueMass = 0.1375;
-    LKidneyTissueMass = 0.1375;
-    LiverTissueMass = 1.4;
-    RLungTissueMass = 0.21;
-    LLungTissueMass = 0.21;
-    MuscleTissueMass = 17.5;
-    MyocardiumTissueMass = 0.25;
-    SkinTissueMass = 2.3;
-    SpleenTissueMass = 0.13;
+    AdiposeTissueMass = (22.5 / 60.0) * totalBodyMass_kg;
+    BoneTissueMass = (7.8 / 60.0) * totalBodyMass_kg;
+    BrainTissueMass = (1.3 / 60.0) * totalBodyMass_kg;
+    GutTissueMass = (1.228 / 60.0) * totalBodyMass_kg;
+    RKidneyTissueMass = (0.1375 / 60.0) * totalBodyMass_kg;
+    LKidneyTissueMass = (0.1375 / 60.0) * totalBodyMass_kg;
+    LiverTissueMass = (1.4 / 60.0) * totalBodyMass_kg;
+    RLungTissueMass = (0.21 / 60.0) * totalBodyMass_kg;
+    LLungTissueMass = (0.21 / 60.0) * totalBodyMass_kg;
+    MuscleTissueMass = (17.5 / 60.0) * totalBodyMass_kg;
+    MyocardiumTissueMass = (0.25 / 60.0) * totalBodyMass_kg;
+    SkinTissueMass = (2.3 / 60.0) * totalBodyMass_kg;
+    SpleenTissueMass = (0.13 / 60.0) * totalBodyMass_kg;
   }
 
   //Scale things based on patient parameters -------------------------------
