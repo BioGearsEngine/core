@@ -28,6 +28,7 @@ SEOverride::SEOverride()
   m_CoreTemperatureOR = nullptr;
   m_SkinTemperatureOR = nullptr;
   m_TotalMetabolicOR = nullptr;
+  m_UrineProductionRateOR = nullptr;
 }
 
 SEOverride::~SEOverride()
@@ -45,6 +46,7 @@ void SEOverride::Clear()
   SAFE_DELETE(m_CoreTemperatureOR);
   SAFE_DELETE(m_SkinTemperatureOR);
   SAFE_DELETE(m_TotalMetabolicOR);
+  SAFE_DELETE(m_UrineProductionRateOR);
 }
 
 bool SEOverride::IsValid() const
@@ -92,6 +94,10 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetTotalMetabolicOverride().Load(in.TotalMetabolicRateOverride().get());
   else
     GetTotalMetabolicOverride().Invalidate();
+  if (in.UrineProductionRateOverride().present())
+    GetUrineProductionRateOverride().Load(in.UrineProductionRateOverride().get());
+  else
+    GetUrineProductionRateOverride().Invalidate();
   //SEPatientAction::Load(in);
   //return true;
   return IsValid();
@@ -121,6 +127,8 @@ void SEOverride::Unload(CDM::OverrideData& data) const
     data.SkinTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureOR->Unload()));
   if (HasTotalMetabolicOverride())
     data.TotalMetabolicRateOverride(std::unique_ptr<CDM::ScalarPowerData>(m_TotalMetabolicOR->Unload()));
+  if (HasUrineProductionRateOverride())
+    data.UrineProductionRateOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_UrineProductionRateOR->Unload()));
 }
 
 CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
@@ -262,6 +270,31 @@ bool SEOverride::HasEnergyOverride() const
   false;
 }
 
+// Renal Overrides //
+bool SEOverride::HasUrineProductionRateOverride() const
+{
+  return m_UrineProductionRateOR == nullptr ? false : m_UrineProductionRateOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetUrineProductionRateOverride()
+{
+  if (m_UrineProductionRateOR == nullptr)
+    m_UrineProductionRateOR = new SEScalarVolumePerTime();
+  return *m_UrineProductionRateOR;
+}
+double SEOverride::GetUrineProductionRateOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_UrineProductionRateOR == nullptr)
+    return SEScalar::dNaN();
+  return m_UrineProductionRateOR->GetValue(unit);
+}
+
+bool SEOverride::HasRenalOverride() const
+{
+  return HasUrineProductionRateOverride() ? true : false;
+}
+
+
+
 void SEOverride::ToString(std::ostream& str) const
 {
   str << "Patient Action : Override Parameter";
@@ -270,7 +303,7 @@ void SEOverride::ToString(std::ostream& str) const
 
   str << "\n\tState: ";
   HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
-  str << "\n\tValid: ";
+  str << "\n\tConformant: ";
   HasOverrideConformance() ? str << GetOverrideConformance() : str << "Not Set";
   if (GetOverrideConformance() == CDM::enumOnOff::Off && GetOverrideSwitch() == CDM::enumOnOff::On) {
     str << ("\n\tOverride has turned conformance off. Outputs no longer resemble validated parameters.");
@@ -310,6 +343,13 @@ void SEOverride::ToString(std::ostream& str) const
     HasTotalMetabolicOverride() ? str << *m_TotalMetabolicOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On)
       str << "\n\tTotal Metabolic Rate has a lower bound of 1 kcal/day and an upper bound of 5000 kcal/day.";
+    str << std::flush;
+  }
+  if (HasUrineProductionRateOverride()) {
+    str << "\n\tUrine Production Rate: ";
+    HasUrineProductionRateOverride() ? str << *m_UrineProductionRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tUrine Production Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
     str << std::flush;
   }
 }

@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
 class Serializer;
 
@@ -52,7 +53,7 @@ public:
   void InvalidateOverrideConformance();
   bool IsOverrideConformant();
 
-
+  //Cardiovascular
   bool HasMAPOverride() const;
   SEScalarPressure& GetMAPOverride();
   double GetMAPOverride(const PressureUnit& unit) const;
@@ -61,6 +62,7 @@ public:
   double GetHeartRateOverride(const FrequencyUnit& unit) const;
   bool HasCardiovascularOverride() const;
 
+  //Energy
   bool HasCoreTemperatureOverride() const;
   SEScalarTemperature& GetCoreTemperatureOverride();
   double GetCoreTemperatureOverride(const TemperatureUnit& unit) const;
@@ -72,6 +74,12 @@ public:
   double GetTotalMetabolicOverride(const PowerUnit& unit) const;
   bool HasEnergyOverride() const;
 
+  //Renal
+  bool HasUrineProductionRateOverride() const;
+  SEScalarVolumePerTime& GetUrineProductionRateOverride();
+  double GetUrineProductionRateOverride(const VolumePerTimeUnit& unit) const;
+  bool HasRenalOverride() const;
+
   virtual void ToString(std::ostream& str) const;
 
 protected:
@@ -82,5 +90,6 @@ protected:
   SEScalarTemperature* m_CoreTemperatureOR;
   SEScalarTemperature* m_SkinTemperatureOR;
   SEScalarPower* m_TotalMetabolicOR;
+  SEScalarVolumePerTime* m_UrineProductionRateOR;
 };
 }

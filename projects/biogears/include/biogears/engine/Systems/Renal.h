@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/system/physiology/OverrideConfig.h>
 
 namespace biogears {
 class SEUrinalysis;
@@ -104,6 +105,11 @@ protected:
   void CalculateAutomaticClearance(SESubstance& sub);
   void CalculateGluconeogenesis();
   void CalculateVitalSigns();
+
+  //Override
+  void ProcessOverride();
+  void OverrideControlLoop();
+
 
   // Serializable member variables (Set in Initialize and in schema)
   bool m_Urinating;
@@ -239,5 +245,8 @@ protected:
   // Utility/ScratchPads
   SEScalarMass m_spCleared;
   ActiveTransport m_SubstanceTransport;
+
+  //Overrides
+  OverrideConfig* m_Override;
 };
 }

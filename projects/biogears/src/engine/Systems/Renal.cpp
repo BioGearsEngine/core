@@ -11,11 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Renal.h>
 
-#include <biogears/engine/Systems/Drugs.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/assessments/SEUrinalysis.h>
+#include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 #include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
@@ -36,12 +38,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
-#include <biogears/cdm/patient/assessments/SEUrinalysis.h>
-#include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
+#include <biogears/engine/Systems/Drugs.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -308,6 +308,7 @@ void Renal::SetUp()
 {
   m_dt = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_patient = &m_data.GetPatient();
+  m_Override = &m_data.GetOverride();
 
   //Substances
   m_sodium = &m_data.GetSubstances().GetSodium();
@@ -506,6 +507,11 @@ void Renal::Process()
 void Renal::PostProcess()
 {
   //Circuit PostProcessing is done on the entire circulatory circuit elsewhere
+  if ((m_Override->IsRenalOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasRenalOverride()) {
+      ProcessOverride();
+    }
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1899,5 +1905,48 @@ void Renal::CalculateFluidPermeability()
     m_leftRenalArterialPressure_mmHg_runningAvg.Reset();
     m_rightRenalArterialPressure_mmHg_runningAvg.Reset();
   }
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// determine override requirements from user defined inputs
+///
+/// \details
+/// User specified override outputs that are specific to the cardiovascular system are implemented here.
+/// If overrides aren't present for this system then this function will not be called during preprocess.
+//--------------------------------------------------------------------------------------------------
+void Renal::ProcessOverride()
+{
+  OverrideControlLoop();
+  double urineProductionRate_ml_Per_min = m_data.GetRenal().GetUrineProductionRate().GetValue(VolumePerTimeUnit::mL_Per_min);
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride())
+      urineProductionRate_ml_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
+  } else {
+    if (m_Override->HasUrineProductionOverride())
+      urineProductionRate_ml_Per_min = m_Override->GetUrineProductionOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  m_data.GetRenal().GetUrineProductionRate().SetValue(urineProductionRate_ml_Per_min, VolumePerTimeUnit::mL_Per_min);
+}
+
+void Renal::OverrideControlLoop()
+{
+  double maxUrineProductionOverride = 1000.0; //mL/min
+  double minUrineProductionOverride = 0.0; //mL/min
+  double currentUrineProductionOverride = m_data.GetRenal().GetUrineProductionRate().GetValue(VolumePerTimeUnit::mL_Per_min); //Current UPR, value gets changed in next check
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride()) {
+      currentUrineProductionOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
+    }
+  } else {
+    if (m_Override->HasUrineProductionOverride())
+      currentUrineProductionOverride = m_Override->GetUrineProductionOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+
+  if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Urine Production Rate Override (Renal) set outside of bounds of validated parameter override. Results are now unpredictable.";
+    Fatal(m_ss);
+  }
+  return;
 }
 }
