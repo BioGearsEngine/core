@@ -36,7 +36,7 @@ namespace biogears
     bool save() const override;
     void print() const override;
   protected:
-    bool process(const std::vector<std::vector<std::string>>& data);
+    bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::EnvironmentalConditionsData& environment);
   private:
     std::vector<Environment> _input;
     std::vector<mil::tatrc::physiology::datamodel::BioGearsConfigurationData> _Environments;
