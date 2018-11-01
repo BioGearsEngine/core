@@ -22,6 +22,9 @@ namespace biogears
   class CSVToXMLConvertor
   {
   public:
+    using CSV_Row = std::pair<std::string, std::vector<std::string>>;
+    using CSV_RowItr = std::vector<CSV_Row>::iterator;
+
     CSVToXMLConvertor( std::string path, std::string filename);
 
     virtual ~CSVToXMLConvertor() = default;
@@ -48,7 +51,7 @@ namespace biogears
     std::string _path;
     std::string _filename;
 
-    std::vector<std::pair<std::string, std::vector<std::string>>> _data;
+    std::vector<CSV_Row> _data;
 
   protected:
     inline auto begin() -> decltype(_data.begin()) { return _data.begin(); }

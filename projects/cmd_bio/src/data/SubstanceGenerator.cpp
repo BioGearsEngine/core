@@ -12,6 +12,7 @@
 
 #include "SubstanceGenerator.h"
 
+#include "../utils/string-helpers.h"
 #include <fstream>
 #include <iostream>
 
@@ -42,23 +43,18 @@ bool SubstanceGenerator::parse()
         _substances.push_back(std::move(data));
       }
     } else if ("Aerosolization (all or none)" == lineItr->first) {
-
+      process_aerosol(++lineItr);
+      lineItr += 3;
     } else if ("Clearance (all or none)" == lineItr->first) {
-
+      //TODO Process 5 Rows
     } else if ("Renal Dynamics Choices" == lineItr->first) {
-
+      //TODO Process 6 Rows
     } else if ("Pharmacokinetics (all or none)" == lineItr->first) {
-
+      //TODO Process 6 Rows
     } else if ("Aerosolization (all or none)" == lineItr->first) {
-
-    } else if ("Aerosolization (all or none)" == lineItr->first) {
-
-    } else if ("Aerosolization (all or none)" == lineItr->first) {
-
-    } else if ("Aerosolization (all or none)" == lineItr->first) {
-
+      //TODO Process 15 Rows
     } else if ("BoneTissue Pharmacokinetics" == lineItr->first) {
-
+      //TODO PRocess Remaining ROWS in sets of two;
     } else {
       for (auto property : lineItr->second) {
         for (auto& substance : _substances) {
@@ -222,4 +218,87 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
   return rValue;
 }
 //-----------------------------------------------------------------------------
+bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
+{
+  namespace CDM = mil::tatrc::physiology::datamodel;
+
+  //TODO:Bounds Checking
+  //TODO:Exceptiom Handling
+  bool rValue = true;
+  size_t index = 0;
+
+  for (auto& substance : _substances) {
+
+    CDM::SubstanceAerosolizationData data;
+    //Step: 1 bronchiole_modifier
+    auto& value = (itr)->second[index];
+    if (!value.empty()) {
+      CDM::SubstanceAerosolizationData::BronchioleModifier_type bron_data;
+      try {
+
+        bron_data.value(std::stoi(value));
+        data.BronchioleModifier(bron_data);
+      } catch (std::exception e) {
+        rValue = false;
+      }
+    }
+    //Step: 2 inflamation_coefficient
+    value = (itr + 1)->second[index];
+    if (!value.empty()) {
+      CDM::SubstanceAerosolizationData::InflammationCoefficient_type infl_data;
+      try {
+
+        infl_data.value(std::stoi(value));
+        data.InflammationCoefficient(infl_data);
+      } catch (std::exception e) {
+        rValue = false;
+      }
+    }
+    //Step: 3 particulate_size_distribution
+    value = (itr + 2)->second[index];
+    if (!value.empty()) {
+      CDM::SubstanceAerosolizationData::ParticulateSizeDistribution_type part_data;
+      CDM::SubstanceAerosolizationData::ParticulateSizeDistribution_type::Independent_type indep_type;
+      CDM::SubstanceAerosolizationData::ParticulateSizeDistribution_type::Dependent_type dep_type;
+
+      value.erase(std::remove(value.begin(), value.end(), '"'), value.end());
+      std::string delimiters = "][";
+      auto token_start = value.begin();
+      auto token_end = std::find_first_of(token_start + 1, value.end(), delimiters.begin(), delimiters.end());
+      auto dependent = split({ token_start + 1, token_end }, ',');
+      try {
+        auto dVec = vstod(dependent);
+        dep_type.DoubleList(CDM::SubstanceAerosolizationData::ParticulateSizeDistribution_type::Dependent_type::DoubleList_type(dVec.begin(), dVec.end()));
+        part_data.Dependent(dep_type);
+      } catch (std::exception e) {
+        rValue = false;
+      }
+
+      token_start = std::find_first_of(token_end + 1, value.end(), delimiters.begin(), delimiters.end());
+      token_end = std::find_first_of(token_start + 1, value.end(), delimiters.begin(), delimiters.end());
+      auto indepdent = split({ token_start + 1, token_end }, ',');
+
+      try {
+        auto dVec = vstod(indepdent);
+        indep_type.DoubleList(CDM::SubstanceAerosolizationData::ParticulateSizeDistribution_type::Dependent_type::DoubleList_type(dVec.begin(), dVec.end()));
+        part_data.Independent(indep_type);
+      } catch (std::exception e) {
+        rValue = false;
+      }
+
+      token_start = std::find_first_of(token_end + 1, value.end(), delimiters.begin(), delimiters.end());
+      token_end = std::find_first_of(token_start + 1, value.end(), delimiters.begin(), delimiters.end());
+      auto units = split({ token_start + 1, token_end }, ',');
+      part_data.DependentUnit(units[0]);
+      part_data.IndependentUnit(units[1]);
+
+      data.ParticulateSizeDistribution(part_data);
+    }
+    if (!value.empty()) {
+      substance.Aerosolization(data);
+    }
+    ++index;
+  }
+  return rValue;
+}
 }

@@ -14,43 +14,81 @@
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************:
 
-#include <string>
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
 #include <cctype>
+#include <functional>
 #include <locale>
+#include <regex>
+#include <string>
 
 namespace biogears {
-  inline std::string findAndReplace(std::string& S, const std::string& toReplace, const std::string& replaceWith)
-  {
-    size_t start = 0;
-    while (true) {
-      size_t pos = S.find(toReplace, start);
-      if (pos == std::string::npos) {
-        break;
-      }
-      S.replace(pos, toReplace.length(), replaceWith);
-      start = pos + replaceWith.length();
+inline std::string findAndReplace(std::string& S, const std::string& toReplace, const std::string& replaceWith)
+{
+  size_t start = 0;
+  while (true) {
+    size_t pos = S.find(toReplace, start);
+    if (pos == std::string::npos) {
+      break;
     }
-    return S;
+    S.replace(pos, toReplace.length(), replaceWith);
+    start = pos + replaceWith.length();
   }
+  return S;
+}
+//-------------------------------------------------------------------------------
+inline std::string& ltrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
+{
+  str.erase(0, str.find_first_not_of(chars));
+  return str;
+}
+//-------------------------------------------------------------------------------
+inline std::string& rtrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
+{
+  str.erase(str.find_last_not_of(chars) + 1);
+  return str;
+}
+//-------------------------------------------------------------------------------
+inline std::string& trim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
+{
+  return ltrim(rtrim(str, chars), chars);
+}
+//-------------------------------------------------------------------------------
+inline std::vector<std::string> re_split(const std::string& input, const std::string& regex)
+{
+  // passing -1 as the submatch index parameter performs splitting
+  std::regex re(regex);
+  std::sregex_token_iterator
+    first{ input.begin(), input.end(), re, -1 },
+    last;
+  return { first, last };
+}
+//-------------------------------------------------------------------------------
+inline std::vector<std::string> split(const std::string& input, const char delimiter)
+{
+  // passing -1 as the submatch index parameter performs splitting
+  auto start = input.begin();
+  auto end = input.begin();
+  std::string d{ delimiter };
 
-  std::string& ltrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
-  {
-    str.erase(0, str.find_first_not_of(chars));
-    return str;
+  std::vector<std::string> rValue;
+  while (end != input.end()) {
+    end = std::find_first_of(start, input.end(), d.begin(), d.end());
+    rValue.emplace_back(start, end);
+    if (end != input.end()) {
+      start = ++end;
+    }
   }
-
-  std::string& rtrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
-  {
-    str.erase(str.find_last_not_of(chars) + 1);
-    return str;
-  }
-
-  std::string& trim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
-  {
-    return ltrim(rtrim(str, chars), chars);
-  }
+  return rValue;
+}
+//-------------------------------------------------------------------------------
+inline std::vector<double> vstod(const std::vector<std::string>& input)
+{
+  std::vector<double> result(input.size());
+  std::transform(input.begin(), input.end(), result.begin(), [](const std::string& val) {
+    return std::stod(val);
+  });
+  return result;
+}
 }
 
 #endif // BIOGEARS_CMD_UTILS_STRING_HELPER_H

@@ -16,25 +16,27 @@
 #include <string>
 #include <vector>
 
-#include <biogears/schema/cdm/Substance.hxx>
 #include "CVSToXMLConvertor.h"
-namespace biogears
-{
+#include <biogears/schema/cdm/Substance.hxx>
+namespace biogears {
 
-  class SubstanceGenerator : public CSVToXMLConvertor
-  {
-  public:
-    SubstanceGenerator(std::string path);
-    ~SubstanceGenerator() override;
+class SubstanceGenerator : public CSVToXMLConvertor {
+public:
+  using XSD_Type = mil::tatrc::physiology::datamodel::SubstanceData;
 
-    bool parse() override;
-    bool save() const override;
-    void print() const override;
-  protected:
-    bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::SubstanceData& substance);
-  private:
-    std::vector<mil::tatrc::physiology::datamodel::SubstanceData> _substances;
-  };
+  SubstanceGenerator(std::string path);
+  ~SubstanceGenerator() override;
+
+  bool parse() override;
+  bool save() const override;
+  void print() const override;
+
+protected:
+  bool process(const std::string& name, const std::string& value, XSD_Type& substance);
+  bool process_aerosol(CSV_RowItr);
+private:
+  std::vector<XSD_Type> _substances;
+};
 } //namespace biogears
 
 #endif //BIOGEARS_SUSTANCE_GENERATOR_H
