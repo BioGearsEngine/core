@@ -113,4 +113,30 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
   }
   return rValue;
 }
+/*
+bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
+{
+  namespace CDM = mil::tatrc::physiology::datamodel;
+  bool rValue = true;
+  bool apply_results = false;
+  size_t index = 0;
+  for (auto& environment : _environments) {
+    auto& value1 = (itr + 1)->second[index];
+    auto& value2 = (itr + 2)->second[index];
+    if (!value1.empty()) {
+      CDM::EnvironmentalConditionsData ec_data;
+      CDM::EnvironmentalConditionsData::AmbientGas_type ag_data;
+      CDM::EnvironmentalConditionsData::AmbientGas_type::FractionAmount_type fa_data;
+      try {
+        ag_data.Name(value1);
+        fa_data.value(std::stod(value2));
+        ag_data.FractionAmount(fa_data);
+        ec_data.AmbientGas(ag_data);
+	  } catch (std::exception ex) {
+        rValue = false;
+	  }
+	}
+  }
+}
+*/
 }
