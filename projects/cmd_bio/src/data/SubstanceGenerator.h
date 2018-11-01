@@ -35,6 +35,9 @@ protected:
   bool process(const std::string& name, const std::string& value, XSD_Type& substance);
   bool process_aerosol(CSV_RowItr);
   bool process_clearance(CSV_RowItr);
+  bool process_pharmacokinetics(CSV_RowItr);
+  bool process_pharmacodynamics(CSV_RowItr);
+  bool process_tissues(CSV_RowItr);
 private:
   std::vector<XSD_Type> _substances;
 };

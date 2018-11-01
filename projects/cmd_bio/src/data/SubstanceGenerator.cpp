@@ -43,22 +43,23 @@ bool SubstanceGenerator::parse()
         _substances.push_back(std::move(data));
       }
     } else if ("Aerosolization (all or none)" == lineItr->first) {
-      process_aerosol(++lineItr);
+      rValue &= process_aerosol(++lineItr);
       lineItr += 2;
     } else if ("Clearance (all or none)" == lineItr->first) {
-      process_clearance(++lineItr);
+      rValue &= process_clearance(++lineItr);
       lineItr += 11;
-    } else if ("Renal Dynamics Choices" == lineItr->first) {
-      //TODO Process 6 Rows
     } else if ("Pharmacokinetics (all or none)" == lineItr->first) {
-      //TODO Process 6 Rows
-    } else if ("Aerosolization (all or none)" == lineItr->first) {
-      //TODO Process 15 Rows
-    } else if ("BoneTissue Pharmacokinetics" == lineItr->first) {
-      //TODO PRocess Remaining ROWS in sets of two;
+      rValue &= process_pharmacokinetics(++lineItr);
+      lineItr += 5;
+    } else if ("Pharmacodynamics (all or none)" == lineItr->first) {
+      rValue &= process_pharmacodynamics(++lineItr);
+      lineItr += 14;
+    } else if ( lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
+      rValue &= process_tissues(lineItr);
+      lineItr += 1;
     } else {
       for (size_t index = 0; index < _substances.size() && index < lineItr->second.size(); ++index) {
-          process(lineItr->first, lineItr->second[index], _substances[index]);
+        process(lineItr->first, lineItr->second[index], _substances[index]);
       }
     }
   }
@@ -130,11 +131,9 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     }
   } else if ("Density" == name) {
     SubstanceData::Density_type density;
-    size_t pos;
+    size_t pos = 0;
     try {
-      double v = std::stod(value, &pos);
-      value.substr(pos);
-      density.value(v);
+      density.value(std::stod(value, &pos));
       density.unit(trim(value.substr(pos)));
       substance.Density(density);
     } catch (std::exception e) {
@@ -143,10 +142,9 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
 
   } else if ("MaximumDiffusionFlux" == name) {
     SubstanceData::MaximumDiffusionFlux_type diffusion;
-    size_t pos;
+    size_t pos = 0;
     try {
-      double v = std::stod(value, &pos);
-      diffusion.value(v);
+      diffusion.value(std::stod(value, &pos));
       diffusion.unit(trim(value.substr(pos)));
       substance.MaximumDiffusionFlux(diffusion);
     } catch (std::exception e) {
@@ -154,22 +152,19 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     }
   } else if ("MichaelisCoefficient" == name) {
     SubstanceData::MichaelisCoefficient_type type;
-    size_t pos;
+    size_t pos = 0;
     try {
-      double v = std::stod(value, &pos);
-      std::string u = value.substr(pos);
-      type.value(v);
-      type.unit(u);
+      type.value(std::stod(value, &pos));
+      type.unit(trim(value.substr(pos)));
       substance.MichaelisCoefficient(type);
     } catch (std::exception e) {
       rValue = false;
     }
   } else if ("MembraneResistance" == name) {
     SubstanceData::MembraneResistance_type type;
-    size_t pos;
+    size_t pos = 0;
     try {
-      double v = std::stod(value, &pos);
-      type.value(v);
+      type.value(std::stod(value, &pos));
       type.unit(trim(value.substr(pos)));
       substance.MembraneResistance(type);
     } catch (std::exception e) {
@@ -177,10 +172,9 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     }
   } else if ("MolarMass" == name) {
     SubstanceData::MolarMass_type type;
-    size_t pos;
+    size_t pos = 0;
     try {
-      double v = std::stod(value, &pos);
-      type.value(v);
+      type.value(std::stod(value, &pos));
       type.unit(trim(value.substr(pos)));
       substance.MolarMass(type);
     } catch (std::exception e) {
@@ -188,10 +182,9 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     }
   } else if ("RelativeDiffusionCoefficient" == name) {
     SubstanceData::RelativeDiffusionCoefficient_type type;
-    size_t pos;
+    size_t pos = 0;
     try {
-      double v = std::stod(value, &pos);
-      type.value(v);
+      type.value(std::stod(value, &pos));
       type.unit(trim(value.substr(pos)));
       substance.RelativeDiffusionCoefficient(type);
     } catch (std::exception e) {
@@ -199,10 +192,10 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     }
   } else if ("SolubilityCoefficient" == name) {
     SubstanceData::SolubilityCoefficient_type type;
-    size_t pos;
+    size_t pos = 0;
     try {
-      double v = std::stod(value, &pos);
-      type.value(v);
+
+      type.value(std::stod(value, &pos));
       type.unit(trim(value.substr(pos)));
       substance.SolubilityCoefficient(type);
     } catch (std::exception e) {
@@ -318,6 +311,7 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
       CDM::SubstanceClearanceData::Systemic_type::IntrinsicClearance_type ic_data;
       CDM::SubstanceClearanceData::Systemic_type::RenalClearance_type rc_data;
       CDM::SubstanceClearanceData::Systemic_type::SystemicClearance_type sc_data;
+      size_t pos = 0;
       try {
         feif_data.value(std::stod(value));
         systemic_data.FractionExcretedInFeces(feif_data);
@@ -325,8 +319,6 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
         value = (itr + 1)->second[index];
         fuip_data.value(std::stod(value));
         systemic_data.FractionUnboundInPlasma(fuip_data);
-
-        size_t pos;
 
         value = (itr + 2)->second[index];
         ic_data.value(std::stod(value, &pos));
@@ -372,14 +364,11 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
           regulation_data.ReabsorptionRatio(std::stod(value));
           value = (itr + 11)->second[index];
 
-          size_t pos;
-          double v = std::stod(value, &pos);
-          std::string u = value.substr(pos);
           CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type::TransportMaximum_type transport_data;
-
+          size_t pos = 0;
           regulation_data.TransportMaximum(transport_data);
-          regulation_data.TransportMaximum().value(v);
-          regulation_data.TransportMaximum().unit(trim(u));
+          regulation_data.TransportMaximum().value(std::stod(value, &pos));
+          regulation_data.TransportMaximum().unit(trim(value.substr(pos)));
 
           renal_data.Regulation(regulation_data);
           data.RenalDynamics(renal_data);
@@ -391,6 +380,152 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
 
     if (apply_results) {
       substance.Clearance(data);
+    }
+    ++index;
+  }
+  return rValue;
+}
+//-----------------------------------------------------------------------------
+bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
+{
+  namespace CDM = mil::tatrc::physiology::datamodel;
+
+  //TODO:Bounds Checking
+  //TODO:Exceptiom Handling
+  bool rValue = true;
+  bool apply_results = false;
+  size_t index = 0;
+  for (auto& substance : _substances) {
+    CDM::SubstanceData::Pharmacokinetics_type data;
+    CDM::SubstanceData::Pharmacokinetics_type::Physicochemicals_type phys_type;
+
+    auto& value = (itr)->second[index];
+    if (!value.empty()) {
+      try {
+
+        phys_type.AcidDissociationConstant(std::stod(value));
+        value = (itr + 1)->second[index];
+        phys_type.BindingProtein(value);
+        value = (itr + 2)->second[index];
+        phys_type.BloodPlasmaRatio(std::stod(value));
+        value = (itr + 3)->second[index];
+        phys_type.FractionUnboundInPlasma(std::stod(value));
+        value = (itr + 4)->second[index];
+        phys_type.IonicState(value);
+        value = (itr + 5)->second[index];
+        phys_type.LogP(std::stod(value));
+
+        data.Physicochemicals(phys_type);
+        substance.Pharmacokinetics(data);
+      } catch (std::exception e) {
+        rValue = false;
+      }
+    }
+    ++index;
+  }
+  return rValue;
+}
+//-------------------------------------------------------------------------------
+bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
+{
+  namespace CDM = mil::tatrc::physiology::datamodel;
+
+  //TODO:Bounds Checking
+  //TODO:Exceptiom Handling
+  bool rValue = true;
+  bool apply_results = false;
+  size_t index = 0;
+  for (auto& substance : _substances) {
+    CDM::SubstanceData::Pharmacodynamics_type data;
+
+    auto& value = (itr)->second[index];
+    if (!value.empty()) {
+      try {
+        size_t pos = 0;
+
+        data.Bronchodilation(std::stod(value));
+        value = (itr + 1)->second[index];
+        data.DiastolicPressureModifier(std::stod(value));
+        value = (itr + 2)->second[index];
+        CDM::SubstanceData::Pharmacodynamics_type::EC50_type ec50_data;
+        ec50_data.value(std::stod(value, &pos));
+        ec50_data.unit(trim(value.substr(pos)));
+        data.EC50(ec50_data);
+        value = (itr + 3)->second[index];
+        data.EMaxShapeParameter(std::stod(value));
+        value = (itr + 4)->second[index];
+        data.HeartRateModifier(std::stod(value));
+        value = (itr + 5)->second[index];
+        data.NeuromuscularBlock(std::stod(value));
+        //PupillaryResponse
+        CDM::SubstanceData::Pharmacodynamics_type::PupillaryResponse_type pr_data;
+        value = (itr + 6)->second[index];
+        pr_data.ReactivityModifier(std::stod(value));
+        value = (itr + 7)->second[index];
+        pr_data.SizeModifier(std::stod(value));
+        data.PupillaryResponse(pr_data);
+
+        value = (itr + 8)->second[index];
+        data.RespirationRateModifier(std::stod(value));
+        value = (itr + 9)->second[index];
+        data.Sedation(std::stod(value));
+        value = (itr + 10)->second[index];
+        data.SystolicPressureModifier(std::stod(value));
+        value = (itr + 11)->second[index];
+        data.TidalVolumeModifier(std::stod(value));
+        value = (itr + 12)->second[index];
+        data.TubularPermeabilityModifier(std::stod(value));
+        value = (itr + 13)->second[index];
+        data.CentralNervousModifier(std::stod(value));
+        value = (itr + 14)->second[index];
+        CDM::SubstanceData::Pharmacodynamics_type::EffectSiteRateConstant_type esrc_type;
+        esrc_type.value(std::stod(value, &pos));
+        esrc_type.unit(trim(value.substr(pos)));
+        data.EffectSiteRateConstant(esrc_type);
+
+        substance.Pharmacodynamics(data);
+      } catch (std::exception e) {
+        rValue = false;
+      }
+    }
+    ++index;
+  }
+  return rValue;
+}
+//-----------------------------------------------------------------------------
+bool SubstanceGenerator::process_tissues(CSV_RowItr itr)
+{
+  namespace CDM = mil::tatrc::physiology::datamodel;
+
+  //TODO:Bounds Checking
+  //TODO:Exceptiom Handling
+  bool rValue = true;
+  bool apply_results = false;
+  size_t index = 0;
+
+  for (auto& substance : _substances) {
+    auto& value = (itr + 1)->second[index];
+    if (!value.empty()) {
+      std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type> data;
+      std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type::TissueKinetics_sequence> tissues;
+      if ( substance.Pharmacokinetics().present() ) {
+        data = substance.Pharmacokinetics().detach();
+      } else {
+        data = std::make_unique<CDM::SubstanceData::Pharmacokinetics_type>();
+        tissues = std::make_unique<CDM::SubstanceData::Pharmacokinetics_type::TissueKinetics_sequence>();
+      }
+
+      CDM::SubstanceData::Pharmacokinetics_type::TissueKinetics_type tissue_data;
+      try {
+        auto name = split(itr->first, ' ');
+        tissue_data.Name(name[0]);
+        value = (itr + 1)->second[index];
+        tissue_data.PartitionCoefficient(std::stod(value));
+        data->TissueKinetics().push_back(tissue_data);
+        substance.Pharmacokinetics(std::move(data));
+      } catch (std::exception e) {
+        rValue = false;
+      }
     }
     ++index;
   }
