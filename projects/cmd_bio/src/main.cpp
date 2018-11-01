@@ -23,7 +23,7 @@ int main (int argc, char* argv[])
     {
       auto substances = bg::SubstanceGenerator("");
       substances.parse();
-      substances.print();
+      substances.save();
     } 
 	else {
       std::cout << "Input not recognized" << std::endl;

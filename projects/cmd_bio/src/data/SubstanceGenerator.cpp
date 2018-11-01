@@ -35,12 +35,30 @@ bool SubstanceGenerator::parse()
   bool rValue = true;
   read_csv();
   for (auto lineItr = begin(); lineItr != end(); ++lineItr) {
-    if (lineItr->first == "Name") {
+    if ("Name" == lineItr->first) {
       for (auto name : lineItr->second) {
         CDM::SubstanceData data;
         data.Name(name);
         _substances.push_back(std::move(data));
       }
+    } else if ("Aerosolization (all or none)" == lineItr->first) {
+
+    } else if ("Clearance (all or none)" == lineItr->first) {
+
+    } else if ("Renal Dynamics Choices" == lineItr->first) {
+
+    } else if ("Pharmacokinetics (all or none)" == lineItr->first) {
+
+    } else if ("Aerosolization (all or none)" == lineItr->first) {
+
+    } else if ("Aerosolization (all or none)" == lineItr->first) {
+
+    } else if ("Aerosolization (all or none)" == lineItr->first) {
+
+    } else if ("Aerosolization (all or none)" == lineItr->first) {
+
+    } else if ("BoneTissue Pharmacokinetics" == lineItr->first) {
+
     } else {
       for (auto property : lineItr->second) {
         for (auto& substance : _substances) {
@@ -54,14 +72,27 @@ bool SubstanceGenerator::parse()
 //-----------------------------------------------------------------------------
 bool SubstanceGenerator::save() const
 {
+  for (auto& substance : _substances) {
+    xml_schema::namespace_infomap info;
+    info[""].name = "uri:/mil/tatrc/physiology/datamodel";
+    info[""].schema = "BioGears.xsd";
 
+    try {
+      std::ofstream file;
+      file.open(substance.Name() + ".xml");
+      Substance(file, substance, info);
+      file.close();
+
+    } catch (std::exception e) {
+      std::cout << e.what() << std::endl;
+    }
+  }
   return false;
 }
 //-----------------------------------------------------------------------------
 void SubstanceGenerator::print() const
 {
-  for ( auto& substance : _substances )
-  {
+  for (auto& substance : _substances) {
     std::cout << substance;
   }
 }
@@ -70,8 +101,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
 {
   using namespace mil::tatrc::physiology::datamodel;
   bool rValue = true;
-  if ( value.empty() )
-  {
+  if (value.empty()) {
     //Process nothing as the value is empty.
   } else if ("State" == name) {
     if ("Solid" == value) {
