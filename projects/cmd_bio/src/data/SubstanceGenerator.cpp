@@ -10,37 +10,15 @@
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
 
-#include "GenData.h"
-#include <biogears/exports.h>
+#include "SubstanceGenerator.h"
 
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <vector>
-
-std::string findAndReplace(std::string& S, const std::string& toReplace, const std::string& replaceWith)
-{
-  size_t start = 0;
-  while (true) {
-    size_t pos = S.find(toReplace, start);
-    if (pos == std::string::npos) {
-      break;
-    }
-    S.replace(pos, toReplace.length(), replaceWith);
-    start = pos + replaceWith.length();
-  }
-  return S;
-}
 
 namespace biogears {
-CSVToXMLConvertor::CSVToXMLConvertor(std::string path, std::string filename)
-  : _path(path)
-  , _filename(filename)
-{
-}
 //-----------------------------------------------------------------------------
-SubstanceGenerator::SubstanceGenerator(std::string path, std::string filename)
-  : CSVToXMLConvertor(path, filename)
+SubstanceGenerator::SubstanceGenerator(std::string path)
+  : CSVToXMLConvertor(path, "Substances.csv")
 {
 }
 //-----------------------------------------------------------------------------
@@ -53,82 +31,25 @@ SubstanceGenerator::~SubstanceGenerator()
 //!
 bool SubstanceGenerator::parse()
 {
+  namespace CDM = mil::tatrc::physiology::datamodel;
   bool rValue = true;
-
-  std::ifstream file("Substances.csv");
-  std::string row;
-  std::vector<std::vector<std::string>> columns;
-  int column = 0;
-    int start = 0;
-  int i = 0;
-  std::getline(file, row);
-  for (; i < row.size(); ++i) {
-      if (row.at(i) == ',') {
-      std::vector<std::string> temp;
-        temp.push_back(row.substr(start, i - start));
-      columns.push_back(temp);
-      ++i;
-      start = i;
-    }
-  }
-  std::vector<std::string> finalColumn;
-  finalColumn.push_back(row.substr(start, row.size() - start));
-  while (std::getline(file, row)) {
-    std::cout << row << std::endl;
-    column = 0;
-    i = 0;
-    start = 0;
-    while (i < row.size()) {
-      if (row.at(i) == ',') {
-        columns.at(column).push_back(row.substr(start, i - start));
-        ++column;
-        ++i;
-        start = i;
-      } else if (row.at(i) == '"') {
-        ++i;
-        start = i;
-        while (row.at(i) != '"') {
-          if (i == (row.size() - 1)) {
-            std::string row2;
-            std::getline(file, row2);
-            row.append(row2);
-          }
-          ++i;
+  read_csv();
+  for (auto lineItr = begin(); lineItr != end(); ++lineItr) {
+    if (lineItr->first == "Name") {
+      for (auto name : lineItr->second) {
+        CDM::SubstanceData data;
+        data.Name(name);
+        _substances.push_back(std::move(data));
+      }
+    } else {
+      for (auto property : lineItr->second) {
+        for (auto& substance : _substances) {
+          process(lineItr->first, property, substance);
         }
-        if (column == columns.size()) {
-          finalColumn.push_back(row.substr(start, i - start));
-        } else {
-          columns.at(column).push_back(row.substr(start, i - start));
-		}
-        ++column;
-        ++i;
-        start = i;
-        while (i < row.size() && row.at(i) != ',') {
-          ++i;
-        }
-        ++i;
-      } else {
-        ++i;
       }
     }
-    if (column == columns.size()) {
-      finalColumn.push_back(row.substr(start, row.size() - start));
-	}
   }
-  columns.push_back(finalColumn);
-  i = 0;
-  for (i = 0; i < columns.at(0).size(); ++i) {
-    for (int k = 0; k < columns.size(); ++k) {
-      std::cout << columns.at(k).at(i) << ",";
-	}
-    std::cout << std::endl
-              << std::endl;
-  }
-  std::cout << "Complete" << std::endl;
-  for (i = 0; i < columns.size(); ++i) {
-    std::cout << i << " " << columns.at(i).size() << std::endl;
-  }
-  return false;
+  return rValue;
 }
 //-----------------------------------------------------------------------------
 bool SubstanceGenerator::save() const
@@ -139,16 +60,20 @@ bool SubstanceGenerator::save() const
 //-----------------------------------------------------------------------------
 void SubstanceGenerator::print() const
 {
-
-  std::cout << "\n"
-            << Path() << Filename() << "\n";
+  for ( auto& substance : _substances )
+  {
+    std::cout << substance;
+  }
 }
 //-----------------------------------------------------------------------------
-bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::SubstanceData& substance)
+bool SubstanceGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::SubstanceData& substance)
 {
   using namespace mil::tatrc::physiology::datamodel;
   bool rValue = true;
-  if ("State" == name) {
+  if ( value.empty() )
+  {
+    //Process nothing as the value is empty.
+  } else if ("State" == name) {
     if ("Solid" == value) {
       substance.State(SubstanceData::State_type::Solid);
     } else if ("Liquid" == value) {
@@ -267,54 +192,4 @@ bool process(const std::string& name, const std::string& value, mil::tatrc::phys
   return rValue;
 }
 //-----------------------------------------------------------------------------
-bool SubstanceGenerator::process(const std::vector<std::vector<std::string>>& data)
-{
-  using namespace mil::tatrc::physiology::datamodel;
-  bool rValue = true;
-
-  if (data.size() > 2) {
-    auto& headers = data[0];
-    auto headerItr = headers.begin() + 1;
-    auto substanceItr = data.begin() + 1;
-
-    for (auto itr = headers.begin() + 1; itr != headers.end(); ++itr) {
-      _substances.emplace_back();
-      auto& substance = _substances.back();
-      substance.Name(*itr);
-    }
-
-    while (substanceItr != data.end()) {
-      auto& sub = *substanceItr;
-      auto itr = _substances.begin();
-      size_t index = 1;
-      for (auto& substance : _substances) {
-        if (index < sub.size()) {
-          rValue &= biogears::process(sub[0], sub[index++], substance);
-        }
-      }
-      ++substanceItr;
-    }
-  }
-  else {
-    rValue = false;
-  }
-  for (auto& substance : _substances) {
-    std::cout << substance;
-
-    xml_schema::namespace_infomap info;
-    info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-    info[""].schema = "BioGears.xsd";
-
-    try {
-      std::ofstream file;
-      file.open(substance.Name() + ".xml");
-      Substance(file, substance, info);
-      file.close();
-    }
-    catch (std::exception e) {
-      std::cout << e.what() << std::endl;
-    }
-  }
-  return rValue;
-}
 }

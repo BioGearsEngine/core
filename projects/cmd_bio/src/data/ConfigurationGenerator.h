@@ -1,5 +1,5 @@
-#ifndef BIOGEARS_GEN_STATES_H
-#define BIOGEARS_GEN_STATES_H
+#ifndef BIOGEARS_CONFIGURATION_GENERATOR_H
+#define BIOGEARS_CONFIGURATION_GENERATOR_H
 
 //**********************************************************************************
 //Copyright 2015 Applied Research Associates, Inc.
@@ -15,41 +15,22 @@
 
 #include <string>
 #include <vector>
-#include <map>
 
-#include <biogears/schema/cdm/Substance.hxx>
+#include <biogears/schema/biogears/BioGearsConfiguration.hxx>
+#include "CVSToXMLConvertor.h"
 namespace biogears
 {
-  class CSVToXMLConvertor
+
+  struct Configuration
   {
-  public:
-    CSVToXMLConvertor( std::string path, std::string filename);
 
-    virtual ~CSVToXMLConvertor() = default;
-
-    virtual bool parse() = 0;
-    virtual bool save() const = 0;
-    virtual void print() const = 0;
-
-    inline std::string Path() const { return _path; }
-    inline std::string Filename() const { return _filename;  }
-
-  protected:
-    void Path(const std::string& path) { _path = path; }
-    void FileName(const std::string& filename) { _filename = filename; }
-
-  private:
-    std::string _path;
-    std::string _filename;
-
-    std::vector<std::map<std::string, std::string>> _data;
   };
 
-  class SubstanceGenerator: public CSVToXMLConvertor
+  class ConfigurationGenerator : public CSVToXMLConvertor
   {
   public:
-    SubstanceGenerator(std::string path, std::string filename);
-    ~SubstanceGenerator() override;
+    ConfigurationGenerator(std::string path, std::string filename);
+    ~ConfigurationGenerator() override;
 
     bool parse() override;
     bool save() const override;
@@ -57,8 +38,9 @@ namespace biogears
   protected:
     bool process(const std::vector<std::vector<std::string>>& data);
   private:
-    std::vector<mil::tatrc::physiology::datamodel::SubstanceData> _substances ;
+    std::vector<Configuration> _input;
+    std::vector<mil::tatrc::physiology::datamodel::BioGearsConfigurationData> _Configurations;
   };
 } //namespace biogears
 
-#endif //BIOGEARS_GEN_STATES_H
+#endif //BIOGEARS_CONFIGURATION_GENERATOR_H

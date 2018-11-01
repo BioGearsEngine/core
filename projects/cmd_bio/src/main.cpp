@@ -4,7 +4,7 @@
 #include <string>
 
 #include "StateGenerator.h"
-#include "GenData.h"
+#include "data/SubstanceGenerator.h"
 
 int main (int argc, char* argv[])
 {
@@ -21,7 +21,7 @@ int main (int argc, char* argv[])
     } 
 	else if ("DATA" == std::string(argv[1]) )
     {
-      auto substances = bg::SubstanceGenerator("", "Substances.csv");
+      auto substances = bg::SubstanceGenerator("");
       substances.parse();
       substances.print();
     } 
