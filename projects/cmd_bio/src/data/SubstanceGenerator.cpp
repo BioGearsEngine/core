@@ -57,10 +57,8 @@ bool SubstanceGenerator::parse()
     } else if ("BoneTissue Pharmacokinetics" == lineItr->first) {
       //TODO PRocess Remaining ROWS in sets of two;
     } else {
-      for (auto property : lineItr->second) {
-        for (auto& substance : _substances) {
-          process(lineItr->first, property, substance);
-        }
+      for (size_t index = 0; index < _substances.size() && index < lineItr->second.size(); ++index) {
+          process(lineItr->first, lineItr->second[index], _substances[index]);
       }
     }
   }
@@ -135,9 +133,9 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     try {
       double v = std::stod(value, &pos);
-      std::string u = value.substr(pos);
+      value.substr(pos);
       density.value(v);
-      density.unit(u);
+      density.unit(trim(value.substr(pos)));
       substance.Density(density);
     } catch (std::exception e) {
       rValue = false;
@@ -148,9 +146,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     try {
       double v = std::stod(value, &pos);
-      std::string u = value.substr(pos);
       diffusion.value(v);
-      diffusion.unit(u);
+      diffusion.unit(trim(value.substr(pos)));
       substance.MaximumDiffusionFlux(diffusion);
     } catch (std::exception e) {
       rValue = false;
@@ -172,9 +169,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     try {
       double v = std::stod(value, &pos);
-      std::string u = value.substr(pos);
       type.value(v);
-      type.unit(u);
+      type.unit(trim(value.substr(pos)));
       substance.MembraneResistance(type);
     } catch (std::exception e) {
       rValue = false;
@@ -184,9 +180,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     try {
       double v = std::stod(value, &pos);
-      std::string u = value.substr(pos);
       type.value(v);
-      type.unit(u);
+      type.unit(trim(value.substr(pos)));
       substance.MolarMass(type);
     } catch (std::exception e) {
       rValue = false;
@@ -196,9 +191,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     try {
       double v = std::stod(value, &pos);
-      std::string u = value.substr(pos);
       type.value(v);
-      type.unit(u);
+      type.unit(trim(value.substr(pos)));
       substance.RelativeDiffusionCoefficient(type);
     } catch (std::exception e) {
       rValue = false;
@@ -208,9 +202,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     try {
       double v = std::stod(value, &pos);
-      std::string u = value.substr(pos);
       type.value(v);
-      type.unit(u);
+      type.unit(trim(value.substr(pos)));
       substance.SolubilityCoefficient(type);
     } catch (std::exception e) {
       rValue = false;
@@ -237,7 +230,7 @@ bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
       CDM::SubstanceAerosolizationData::BronchioleModifier_type bron_data;
       try {
 
-        bron_data.value(std::stoi(value));
+        bron_data.value(std::stod(value));
         data.BronchioleModifier(bron_data);
       } catch (std::exception e) {
         rValue = false;
@@ -249,7 +242,7 @@ bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
       CDM::SubstanceAerosolizationData::InflammationCoefficient_type infl_data;
       try {
 
-        infl_data.value(std::stoi(value));
+        infl_data.value(std::stod(value));
         data.InflammationCoefficient(infl_data);
       } catch (std::exception e) {
         rValue = false;
@@ -326,23 +319,28 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
       CDM::SubstanceClearanceData::Systemic_type::RenalClearance_type rc_data;
       CDM::SubstanceClearanceData::Systemic_type::SystemicClearance_type sc_data;
       try {
-        feif_data.value(std::stoi(value));
+        feif_data.value(std::stod(value));
         systemic_data.FractionExcretedInFeces(feif_data);
 
         value = (itr + 1)->second[index];
-        fuip_data.value(std::stoi(value));
+        fuip_data.value(std::stod(value));
         systemic_data.FractionUnboundInPlasma(fuip_data);
 
+        size_t pos;
+
         value = (itr + 2)->second[index];
-        ic_data.value(std::stoi(value));
+        ic_data.value(std::stod(value, &pos));
+        ic_data.unit(trim(value.substr(pos)));
         systemic_data.IntrinsicClearance(ic_data);
 
         value = (itr + 3)->second[index];
-        rc_data.value(std::stoi(value));
+        rc_data.value(std::stod(value, &pos));
+        rc_data.unit(trim(value.substr(pos)));
         systemic_data.RenalClearance(rc_data);
 
         value = (itr + 4)->second[index];
-        sc_data.value(std::stoi(value));
+        sc_data.value(std::stod(value, &pos));
+        sc_data.unit(trim(value.substr(pos)));
         systemic_data.SystemicClearance(sc_data);
 
         data.Systemic(systemic_data);
@@ -352,15 +350,42 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
     }
 
     value = (itr + 6)->second[index];
+    CDM::SubstanceClearanceData::RenalDynamics_type renal_data;
     if (!value.empty()) {
       apply_results = true;
-      CDM::SubstanceClearanceData::RenalDynamics_type renal_data;
-      
+      try {
+        renal_data.Clearance(std::stod(value));
+        data.RenalDynamics(renal_data);
+      } catch (std::exception e) {
+        rValue = false;
+      }
     } else {
       value = (itr + 8)->second[index];
       if (!value.empty()) {
         apply_results = true;
-        CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type;
+        CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type regulation_data;
+        regulation_data.ChargeInBlood(value);
+        try {
+          value = (itr + 9)->second[index];
+          regulation_data.FractionUnboundInPlasma(std::stod(value));
+          value = (itr + 10)->second[index];
+          regulation_data.ReabsorptionRatio(std::stod(value));
+          value = (itr + 11)->second[index];
+
+          size_t pos;
+          double v = std::stod(value, &pos);
+          std::string u = value.substr(pos);
+          CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type::TransportMaximum_type transport_data;
+
+          regulation_data.TransportMaximum(transport_data);
+          regulation_data.TransportMaximum().value(v);
+          regulation_data.TransportMaximum().unit(trim(u));
+
+          renal_data.Regulation(regulation_data);
+          data.RenalDynamics(renal_data);
+        } catch (std::exception e) {
+          rValue = false;
+        }
       }
     }
 
