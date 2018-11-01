@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/system/physiology/OverrideConfig.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/engine/Equipment/AnesthesiaMachine.h>
@@ -102,6 +103,7 @@ BioGears::BioGears(Logger* logger)
 
   m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(*this));
 
+  m_OverrideConfig = std::unique_ptr<OverrideConfig>(new OverrideConfig());
 }
 
 DataTrack& BioGears::GetDataTrack()
@@ -140,8 +142,9 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   cFile.Load("BioGearsConfiguration.xml");
   m_Config->Merge(cFile);
 
- 
-  
+  Info("Checking Override Configuration");
+  m_OverrideConfig->LoadOverride("OverrideConfig.xml");
+
 
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {
@@ -844,6 +847,7 @@ EngineState BioGears::GetState() { return m_State; }
 SaturationCalculator& BioGears::GetSaturationCalculator() { return *m_SaturationCalculator; }
 BioGearsSubstances& BioGears::GetSubstances() { return *m_Substances; }
 SEPatient& BioGears::GetPatient() { return *m_Patient; }
+OverrideConfig& BioGears::GetOverride() { return *m_OverrideConfig; }
 SEBloodChemistrySystem& BioGears::GetBloodChemistry() { return *m_BloodChemistrySystem; }
 SECardiovascularSystem& BioGears::GetCardiovascular() { return *m_CardiovascularSystem; }
 SEDrugSystem& BioGears::GetDrugs() { return *m_DrugSystem; }
@@ -2915,39 +2919,50 @@ void BioGears::SetupTissue()
   double SkinEWFraction = 0.382, SkinIWFraction = 0.291, SkinNLFraction = 0.0284, SkinNPFraction = 0.0111, SkinARatio = 0.277, SkinAAGRatio = 0.277, SkinLRatio = 0.096, SkinAPL = 1.32;
   double SpleenEWFraction = 0.207, SpleenIWFraction = 0.579, SpleenNLFraction = 0.0201, SpleenNPFraction = 0.0198, SpleenARatio = 0.277, SpleenAAGRatio = 0.277, SpleenLRatio = 0.096, SpleenAPL = 3.18;
 
-  //Typical ICRP Male--scaled using reported values for 73 kg male
+  //Typical ICRP Male
   //Total Mass (kg)
-  double totalBodyMass_kg = m_Patient->GetWeight(MassUnit::kg);
-  double AdiposeTissueMass = (18.2 / 73.0) * totalBodyMass_kg;
-  double BoneTissueMass = (10.5 / 73.0) * totalBodyMass_kg;
-  double BrainTissueMass = (1.45 / 73.0) * totalBodyMass_kg;
-  double GutTissueMass = (1.32 / 73.0) * totalBodyMass_kg;      //Adding up stomach, large intestine, small intestine, pancreas, gall bladder
-  double RKidneyTissueMass = (0.155 / 73.0) * totalBodyMass_kg;
-  double LKidneyTissueMass = (0.155 / 73.0) * totalBodyMass_kg;
-  double LiverTissueMass = (1.8 / 73.0) * totalBodyMass_kg;
-  double RLungTissueMass = (0.25 / 73.0) * totalBodyMass_kg;
-  double LLungTissueMass = (0.25 / 73.0) * totalBodyMass_kg;
-  double MuscleTissueMass = (29.0 / 73.0) * totalBodyMass_kg;
-  double MyocardiumTissueMass = (0.33 / 73.0) * totalBodyMass_kg;
-  double SkinTissueMass = (3.3 / 73.0) * totalBodyMass_kg;
-  double SpleenTissueMass = (0.15 / 73) * totalBodyMass_kg;
+  double AdiposeTissueMass = 14.5;
+  double BoneTissueMass = 10.5;
+  double BrainTissueMass = 1.45;
+  double GutTissueMass = 1.02;
+  double RKidneyTissueMass = 0.155;
+  double LKidneyTissueMass = 0.155;
+  double LiverTissueMass = 1.8;
+  double RLungTissueMass = 0.25;
+  double LLungTissueMass = 0.25;
+  double MuscleTissueMass = 29.0;
+  double MyocardiumTissueMass = 0.33;
+  double SkinTissueMass = 3.3;
+  double SpleenTissueMass = 0.15;
+  //Typical extracellular water values from Bhave2011Body--for whatever reason using EW fractions from PK/PD literature above does not give same value
+  double AdiposeECW_L = 1.62;
+  double BoneECW_L = 1.35;
+  double VisceralECW_L = 1.51; //Bhave lumps brain and abdominal organs in a single value.  We will scale these proportionately by each tissues volume
+  double MuscleECW_L = 3.47;
+  double SkinECW_L = 2.94;
 
-  //Typical ICRP Female - From ICRP--scaled using values from 60 kg female
+  //Typical ICRP Female - From ICRP
   //Total Mass (kg)
   if (m_Patient->GetSex() == CDM::enumSex::Female) {
-    AdiposeTissueMass = (22.5 / 60.0) * totalBodyMass_kg;
-    BoneTissueMass = (7.8 / 60.0) * totalBodyMass_kg;
-    BrainTissueMass = (1.3 / 60.0) * totalBodyMass_kg;
-    GutTissueMass = (1.228 / 60.0) * totalBodyMass_kg;
-    RKidneyTissueMass = (0.1375 / 60.0) * totalBodyMass_kg;
-    LKidneyTissueMass = (0.1375 / 60.0) * totalBodyMass_kg;
-    LiverTissueMass = (1.4 / 60.0) * totalBodyMass_kg;
-    RLungTissueMass = (0.21 / 60.0) * totalBodyMass_kg;
-    LLungTissueMass = (0.21 / 60.0) * totalBodyMass_kg;
-    MuscleTissueMass = (17.5 / 60.0) * totalBodyMass_kg;
-    MyocardiumTissueMass = (0.25 / 60.0) * totalBodyMass_kg;
-    SkinTissueMass = (2.3 / 60.0) * totalBodyMass_kg;
-    SpleenTissueMass = (0.13 / 60.0) * totalBodyMass_kg;
+    AdiposeTissueMass = 19.0;
+    BoneTissueMass = 7.8;
+    BrainTissueMass = 1.3;
+    GutTissueMass = 0.96;
+    RKidneyTissueMass = 0.1375;
+    LKidneyTissueMass = 0.1375;
+    LiverTissueMass = 1.4;
+    RLungTissueMass = 0.21;
+    LLungTissueMass = 0.21;
+    MuscleTissueMass = 17.5;
+    MyocardiumTissueMass = 0.25;
+    SkinTissueMass = 2.3;
+    SpleenTissueMass = 0.13;
+    //Extracellular water values
+    AdiposeECW_L = 1.97;
+    BoneECW_L = 0.99;
+    VisceralECW_L = 1.36;
+    MuscleECW_L = 2.19;
+    SkinECW_L = 2.05;
   }
 
   //Scale things based on patient parameters -------------------------------
@@ -3990,7 +4005,6 @@ void BioGears::SetupTissue()
   cCombinedCardiovascular.SetNextAndCurrentFromBaselines();
   cCombinedCardiovascular.StateChange();
 }
-
 
 void BioGears::SetupRespiratory()
 {
