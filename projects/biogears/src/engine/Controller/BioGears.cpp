@@ -3227,7 +3227,7 @@ void BioGears::SetupTissue()
   SEFluidCircuitNode& BrainE3 = cCombinedCardiovascular.CreateNode(BGE::TissueNode::BrainE3);
   SEFluidCircuitNode& BrainI = cCombinedCardiovascular.CreateNode(BGE::TissueNode::BrainI);
 
-  vNodePressure = BrainV->GetPressure(PressureUnit::mmHg) / VolumeModifierBrain;
+  vNodePressure = BrainV->GetPressure(PressureUnit::mmHg); // VolumeModifierBrain;
   e1NodePressure = vNodePressure - copVascular_mmHg; //Plasma colloid osmotic pressure opposes flow into tissue space (i.e. favor E1 to V)
   e3NodePressure = vNodePressure - targetHydrostaticGradient_mmHg;
   e2NodePressure = e3NodePressure - copExtracell_mmHg; //Extracellular colloid osmotic pressure promotes flow from E2 to E3
@@ -3525,7 +3525,7 @@ void BioGears::SetupTissue()
   SEFluidCircuitNode& LiverE3 = cCombinedCardiovascular.CreateNode(BGE::TissueNode::LiverE3);
   SEFluidCircuitNode& LiverI = cCombinedCardiovascular.CreateNode(BGE::TissueNode::LiverI);
 
-  vNodePressure = LiverV->GetPressure(PressureUnit::mmHg) / VolumeModifierLiver;
+  vNodePressure = LiverV->GetPressure(PressureUnit::mmHg); // VolumeModifierLiver;
   e1NodePressure = vNodePressure - copVascular_mmHg; //Plasma colloid osmotic pressure opposes flow into tissue space (i.e. favor E1 to V)
   e3NodePressure = vNodePressure - targetHydrostaticGradient_mmHg;
   e2NodePressure = e3NodePressure - copExtracell_mmHg; //Extracellular colloid osmotic pressure promotes flow from E2 to E3
@@ -3872,7 +3872,7 @@ void BioGears::SetupTissue()
   SEFluidCircuitNode& SkinE3 = cCombinedCardiovascular.CreateNode(BGE::TissueNode::SkinE3);
   SEFluidCircuitNode& SkinI = cCombinedCardiovascular.CreateNode(BGE::TissueNode::SkinI);
 
-  vNodePressure = SkinV->GetPressure(PressureUnit::mmHg) / VolumeModifierSkin;
+  vNodePressure = SkinV->GetPressure(PressureUnit::mmHg); // VolumeModifierSkin;
   e1NodePressure = vNodePressure - copVascular_mmHg; //Plasma colloid osmotic pressure opposes flow into tissue space (i.e. favor E1 to V)
   e3NodePressure = vNodePressure - targetHydrostaticGradient_mmHg;
   e2NodePressure = e3NodePressure - copExtracell_mmHg; //Extracellular colloid osmotic pressure promotes flow from E2 to E3
