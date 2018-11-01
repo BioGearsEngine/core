@@ -75,7 +75,7 @@ bool SubstanceGenerator::save() const
 
     try {
       std::ofstream file;
-      file.open(substance.Name() + ".xml");
+      file.open("substances/" + substance.Name() + ".xml");
       Substance(file, substance, info);
       file.close();
 
@@ -150,12 +150,12 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     } catch (std::exception e) {
       rValue = false;
     }
-  } else if ("MichaelisCoefficient" == name) {
+  } else if ("MichauelisCoefficient" == name) {
     SubstanceData::MichaelisCoefficient_type type;
     size_t pos = 0;
     try {
       type.value(std::stod(value, &pos));
-      type.unit(trim(value.substr(pos)));
+      //type.unit(trim(value.substr(pos)));
       substance.MichaelisCoefficient(type);
     } catch (std::exception e) {
       rValue = false;
@@ -185,7 +185,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos = 0;
     try {
       type.value(std::stod(value, &pos));
-      type.unit(trim(value.substr(pos)));
+      //type.unit(trim(value.substr(pos))); //No Unit 
       substance.RelativeDiffusionCoefficient(type);
     } catch (std::exception e) {
       rValue = false;
@@ -296,22 +296,23 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
   //TODO:Bounds Checking
   //TODO:Exceptiom Handling
   bool rValue = true;
-  bool apply_results = false;
+  bool default_clearance = true;
   size_t index = 0;
+  size_t pos = 0;
   for (auto& substance : _substances) {
     CDM::SubstanceClearanceData data;
+    default_clearance = true;
 
     auto& value = (itr)->second[index];
     if (!value.empty()) {
       CDM::SubstanceClearanceData::Systemic_type systemic_data;
-      apply_results = true;
+  
 
       CDM::SubstanceClearanceData::Systemic_type::FractionExcretedInFeces_type feif_data;
       CDM::SubstanceClearanceData::Systemic_type::FractionUnboundInPlasma_type fuip_data;
       CDM::SubstanceClearanceData::Systemic_type::IntrinsicClearance_type ic_data;
       CDM::SubstanceClearanceData::Systemic_type::RenalClearance_type rc_data;
       CDM::SubstanceClearanceData::Systemic_type::SystemicClearance_type sc_data;
-      size_t pos = 0;
       try {
         feif_data.value(std::stod(value));
         systemic_data.FractionExcretedInFeces(feif_data);
@@ -344,9 +345,10 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
     value = (itr + 6)->second[index];
     CDM::SubstanceClearanceData::RenalDynamics_type renal_data;
     if (!value.empty()) {
-      apply_results = true;
+      default_clearance = false;
       try {
-        renal_data.Clearance(std::stod(value));
+        renal_data.Clearance(std::stod(value,&pos));
+        renal_data.Clearance()->unit(trim(value.substr(pos)));
         data.RenalDynamics(renal_data);
       } catch (std::exception e) {
         rValue = false;
@@ -354,7 +356,7 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
     } else {
       value = (itr + 8)->second[index];
       if (!value.empty()) {
-        apply_results = true;
+        default_clearance = false;
         CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type regulation_data;
         regulation_data.ChargeInBlood(value);
         try {
@@ -365,7 +367,6 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
           value = (itr + 11)->second[index];
 
           CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type::TransportMaximum_type transport_data;
-          size_t pos = 0;
           regulation_data.TransportMaximum(transport_data);
           regulation_data.TransportMaximum().value(std::stod(value, &pos));
           regulation_data.TransportMaximum().unit(trim(value.substr(pos)));
@@ -378,9 +379,13 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
       }
     }
 
-    if (apply_results) {
-      substance.Clearance(data);
+    if (default_clearance) {
+      CDM::SubstanceClearanceData::RenalDynamics_type renal_data;
+      renal_data.Clearance(0.0);
+      renal_data.Clearance()->unit("mL/min kg");
+      data.RenalDynamics(renal_data);
     }
+    substance.Clearance(data);
     ++index;
   }
   return rValue;
