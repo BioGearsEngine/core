@@ -34,6 +34,7 @@ public:
 protected:
   bool process(const std::string& name, const std::string& value, XSD_Type& substance);
   bool process_aerosol(CSV_RowItr);
+  bool process_clearance(CSV_RowItr);
 private:
   std::vector<XSD_Type> _substances;
 };

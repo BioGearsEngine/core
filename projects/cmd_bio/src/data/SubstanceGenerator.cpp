@@ -44,9 +44,10 @@ bool SubstanceGenerator::parse()
       }
     } else if ("Aerosolization (all or none)" == lineItr->first) {
       process_aerosol(++lineItr);
-      lineItr += 3;
+      lineItr += 2;
     } else if ("Clearance (all or none)" == lineItr->first) {
-      //TODO Process 5 Rows
+      process_clearance(++lineItr);
+      lineItr += 11;
     } else if ("Renal Dynamics Choices" == lineItr->first) {
       //TODO Process 6 Rows
     } else if ("Pharmacokinetics (all or none)" == lineItr->first) {
@@ -296,6 +297,75 @@ bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
     }
     if (!value.empty()) {
       substance.Aerosolization(data);
+    }
+    ++index;
+  }
+  return rValue;
+}
+//-----------------------------------------------------------------------------
+bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
+{
+  namespace CDM = mil::tatrc::physiology::datamodel;
+
+  //TODO:Bounds Checking
+  //TODO:Exceptiom Handling
+  bool rValue = true;
+  bool apply_results = false;
+  size_t index = 0;
+  for (auto& substance : _substances) {
+    CDM::SubstanceClearanceData data;
+
+    auto& value = (itr)->second[index];
+    if (!value.empty()) {
+      CDM::SubstanceClearanceData::Systemic_type systemic_data;
+      apply_results = true;
+
+      CDM::SubstanceClearanceData::Systemic_type::FractionExcretedInFeces_type feif_data;
+      CDM::SubstanceClearanceData::Systemic_type::FractionUnboundInPlasma_type fuip_data;
+      CDM::SubstanceClearanceData::Systemic_type::IntrinsicClearance_type ic_data;
+      CDM::SubstanceClearanceData::Systemic_type::RenalClearance_type rc_data;
+      CDM::SubstanceClearanceData::Systemic_type::SystemicClearance_type sc_data;
+      try {
+        feif_data.value(std::stoi(value));
+        systemic_data.FractionExcretedInFeces(feif_data);
+
+        value = (itr + 1)->second[index];
+        fuip_data.value(std::stoi(value));
+        systemic_data.FractionUnboundInPlasma(fuip_data);
+
+        value = (itr + 2)->second[index];
+        ic_data.value(std::stoi(value));
+        systemic_data.IntrinsicClearance(ic_data);
+
+        value = (itr + 3)->second[index];
+        rc_data.value(std::stoi(value));
+        systemic_data.RenalClearance(rc_data);
+
+        value = (itr + 4)->second[index];
+        sc_data.value(std::stoi(value));
+        systemic_data.SystemicClearance(sc_data);
+
+        data.Systemic(systemic_data);
+      } catch (std::exception e) {
+        rValue = false;
+      }
+    }
+
+    value = (itr + 6)->second[index];
+    if (!value.empty()) {
+      apply_results = true;
+      CDM::SubstanceClearanceData::RenalDynamics_type renal_data;
+      
+    } else {
+      value = (itr + 8)->second[index];
+      if (!value.empty()) {
+        apply_results = true;
+        CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type;
+      }
+    }
+
+    if (apply_results) {
+      substance.Clearance(data);
     }
     ++index;
   }
