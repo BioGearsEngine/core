@@ -35,7 +35,7 @@ bool CSVToXMLConvertor::read_csv()
 
   bool rValue = true;
 
-  auto filename = (Path().empty()) ? Filename() : Path()+"/"+Filename();
+  auto filename = (Path().empty()) ? Filename() : Path() + "/" + Filename();
   std::ifstream input(filename);
   std::string line = "";
   std::string token = "";
@@ -69,10 +69,9 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
         row.first = std::string(token_start, token_end);
         token_start = token_end + 1;
         if (row.first.empty()) {
-          row.first = "UNSET";
+          row.first = "LOGIC_GUARD_FOR_UNAMED_ROWS";
         }
-      }
-      else {
+      } else {
         row.second.emplace_back(token_start, token_end);
         trim(row.second.back());
         token_start = token_end + 1;
@@ -81,10 +80,8 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
     case '"':
       token_end = std::find_first_of(token_end + 1, line.end(), delimiters.begin(), delimiters.end());
       //Handle Returnlines in " which is insane but in the files
-      if ( token_end == line.end() )
-      {        
-        do
-        {
+      if (token_end == line.end()) {
+        do {
           std::string next_line;
           std::getline(input, next_line);
           size_t start = std::distance(line.begin(), token_start);
@@ -101,6 +98,9 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
       break;
     }
     ++token_end;
+  }
+  if ("LOGIC_GUARD_FOR_UNAMED_ROWS" == row.first) {
+    row.first.clear();
   }
   return rValue;
 }
