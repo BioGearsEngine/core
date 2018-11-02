@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
       envs.parse();
       envs.save();
     } else if ("PATIENTS" == std::string(argv[1])) {
-      auto patients = bg::PatientGenerator("");
+      auto patients = bg::PatientGenerator();
       patients.parse();
       patients.save();
     } else if ("CONF" == std::string(argv[1])) {
