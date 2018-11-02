@@ -4,30 +4,30 @@
 #include <string>
 
 #include "StateGenerator.h"
+#include "data/EnvironmentGenerator.h"
 #include "data/SubstanceGenerator.h"
 
-int main (int argc, char* argv[])
+int main(int argc, char* argv[])
 {
   namespace bg = biogears;
-  if ( argc > 1 )
-  {
-    if ( "STATES" == std::string(argv[1]) )
-    {
+  if (argc > 1) {
+    if ("STATES" == std::string(argv[1])) {
       auto generator = bg::StateGenerator();
 
       std::string var1{ argv[2] };
-      std::string var2{" Foo"};
-      generator.runScenario(0, var1, var2 );
-    } 
-	else if ("DATA" == std::string(argv[1]) )
-    {
+      std::string var2{ " Foo" };
+      generator.runScenario(0, var1, var2);
+    } else if ("SUBS" == std::string(argv[1])) {
       auto substances = bg::SubstanceGenerator("");
       substances.parse();
       substances.save();
-    } 
-	else {
+    } else if ("ENVS" == std::string(argv[1])) {
+      auto envs = bg::EnvironmentGenerator("");
+      envs.parse();
+      envs.save();
+    } else {
       std::cout << "Input not recognized" << std::endl;
-	}
+    }
   }
   return 0;
 }

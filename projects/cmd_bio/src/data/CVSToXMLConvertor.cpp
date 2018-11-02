@@ -46,7 +46,7 @@ bool CSVToXMLConvertor::read_csv()
     current_row.second.clear();
 
     rValue &= parse_line(line, current_row, input);
-    if (!current_row.first.empty()) {
+    if (!current_row.first.empty() && "UNSET" != current_row.first) {
       _data.push_back(current_row);
     }
   }

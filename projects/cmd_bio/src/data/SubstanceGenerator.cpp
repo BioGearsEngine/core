@@ -511,7 +511,7 @@ bool SubstanceGenerator::process_tissues(CSV_RowItr itr)
   for (auto& substance : _substances) {
     auto& value = (itr + 1)->second[index];
     if (!value.empty()) {
-      std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type> data;
+      std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type> data; 
       std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type::TissueKinetics_sequence> tissues;
       if ( substance.Pharmacokinetics().present() ) {
         data = substance.Pharmacokinetics().detach();
