@@ -48,6 +48,11 @@ inline std::string& rtrim(std::string& str, const std::string& chars = "\t\n\v\f
   return str;
 }
 //-------------------------------------------------------------------------------
+inline std::string& trim(std::string&& str, const std::string&& chars = "\t\n\v\f\r ")
+{
+  return ltrim(rtrim(str, chars), chars);
+}
+//-------------------------------------------------------------------------------
 inline std::string& trim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
 {
   return ltrim(rtrim(str, chars), chars);
