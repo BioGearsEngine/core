@@ -479,9 +479,9 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity2.SetValue(0.0, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_albumin, tissue, molarity1, molarity2);
   //Lymph - should be same as extracellular
-  /*concentration.SetValue(2.0, MassPerVolumeUnit::g_Per_dL);
+  concentration.SetValue(2.0, MassPerVolumeUnit::g_Per_dL);
   lymph->GetSubstanceQuantity(*m_albumin)->GetConcentration().Set(concentration);
-  lymph->GetSubstanceQuantity(*m_albumin)->Balance(BalanceLiquidBy::Concentration);*/
+  lymph->GetSubstanceQuantity(*m_albumin)->Balance(BalanceLiquidBy::Concentration);
 
   // AMINOACIDS //
   concentration.SetValue(50.0, MassPerVolumeUnit::mg_Per_dL);
@@ -490,9 +490,9 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_aminoAcids->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceMolarity(*m_aminoAcids, tissue, molarity1, molarity1);
   //Lymph
-  /* lymph->GetSubstanceQuantity(*m_aminoAcids)->GetMolarity().Set(molarity1);
+   lymph->GetSubstanceQuantity(*m_aminoAcids)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_aminoAcids)->Balance(BalanceLiquidBy::Molarity);
-*/
+
   // BICARBONATE IS SET IN GASES SECTION //
 
   // CALCIUM //
@@ -503,8 +503,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity2.SetValue(0.0001, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_calcium, tissue, molarity1, molarity2);
   //Lymph
-  /* lymph->GetSubstanceQuantity(*m_calcium)->GetMolarity().Set(molarity1);
-   lymph->GetSubstanceQuantity(*m_calcium)->Balance(BalanceLiquidBy::Molarity);*/
+   lymph->GetSubstanceQuantity(*m_calcium)->GetMolarity().Set(molarity1);
+   lymph->GetSubstanceQuantity(*m_calcium)->Balance(BalanceLiquidBy::Molarity);
   // Set Urine
   concentration.SetValue(98.1, MassPerVolumeUnit::mg_Per_L);
   subQ = leftBowmansCapsules->GetSubstanceQuantity(*m_calcium);
@@ -572,8 +572,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity1.SetValue(0.106, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_creatinine, tissue, molarity1);
   //Lymph
-  /* lymph->GetSubstanceQuantity(*m_creatinine)->GetMolarity().Set(molarity1);
-  lymph->GetSubstanceQuantity(*m_creatinine)->Balance(BalanceLiquidBy::Molarity);*/
+   lymph->GetSubstanceQuantity(*m_creatinine)->GetMolarity().Set(molarity1);
+  lymph->GetSubstanceQuantity(*m_creatinine)->Balance(BalanceLiquidBy::Molarity);
 
   // EPINEPHRINE //
   // Initializing to artificial plasma concentration because BG plasma is not totally correct
@@ -585,9 +585,9 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   //molarity1.SetValue(0, AmountPerVolumeUnit::mmol_Per_L); //epinephrine: 183.2044 g/mol
   SetSubstanceMolarity(*m_epi, tissue, molarity1);
   //Lymph
-  /* lymph->GetSubstanceQuantity(*m_epi)->GetMolarity().Set(molarity1);
+   lymph->GetSubstanceQuantity(*m_epi)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_epi)->Balance(BalanceLiquidBy::Molarity);
-*/
+
   // GLUCAGON //
   concentration.SetValue(0.079, MassPerVolumeUnit::ug_Per_L); //We want 70 pg/mL, but it dips in stabilization, so set it higher
   SetSubstanceConcentration(*m_glucagon, vascular, concentration);
@@ -616,8 +616,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // Tissue
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceMolarity(*m_glucose, tissue, molarity1, molarity1);
-  /* lymph->GetSubstanceQuantity(*m_glucose)->GetMolarity().Set(molarity1);
-  lymph->GetSubstanceQuantity(*m_glucose)->Balance(BalanceLiquidBy::Molarity);*/
+   lymph->GetSubstanceQuantity(*m_glucose)->GetMolarity().Set(molarity1);
+  lymph->GetSubstanceQuantity(*m_glucose)->Balance(BalanceLiquidBy::Molarity);
 
   // INSULIN //
   concentration.SetValue(0.85, MassPerVolumeUnit::ug_Per_L); //118.1 pmol/L is desired (.6859 ug/L), was .85 because of stabilization dip, but it seems okay now
@@ -660,8 +660,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity1.SetValue(0.09, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_ketones, tissue, molarity1);
   //Lymph
-  /* lymph->GetSubstanceQuantity(*m_ketones)->GetMolarity().Set(molarity1);
-  lymph->GetSubstanceQuantity(*m_ketones)->Balance(BalanceLiquidBy::Molarity);*/
+   lymph->GetSubstanceQuantity(*m_ketones)->GetMolarity().Set(molarity1);
+  lymph->GetSubstanceQuantity(*m_ketones)->Balance(BalanceLiquidBy::Molarity);
 
   // LACTATE //
   concentration.SetValue(142.5, MassPerVolumeUnit::mg_Per_L);
@@ -682,8 +682,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // Tissue
   SetSubstanceMolarity(*m_lactate, tissue, molarity1, molarity1);
   //Lymph
-  /* lymph->GetSubstanceQuantity(*m_lactate)->GetMolarity().Set(molarity1);
-  lymph->GetSubstanceQuantity(*m_lactate)->Balance(BalanceLiquidBy::Molarity);*/
+   lymph->GetSubstanceQuantity(*m_lactate)->GetMolarity().Set(molarity1);
+  lymph->GetSubstanceQuantity(*m_lactate)->Balance(BalanceLiquidBy::Molarity);
 
   // POTASSIUM //
   concentration.SetValue(175.5, MassPerVolumeUnit::mg_Per_L);
@@ -715,8 +715,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity2.SetValue(120, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_potassium, tissue, molarity1, molarity2);
   //Lymph
-  /*lymph->GetSubstanceQuantity(*m_potassium)->GetMolarity().Set(molarity1);
-  lymph->GetSubstanceQuantity(*m_potassium)->Balance(BalanceLiquidBy::Molarity);*/
+  lymph->GetSubstanceQuantity(*m_potassium)->GetMolarity().Set(molarity1);
+  lymph->GetSubstanceQuantity(*m_potassium)->Balance(BalanceLiquidBy::Molarity);
 
   // SODIUM //
   concentration.SetValue(0.335, MassPerVolumeUnit::g_Per_dL);
@@ -748,8 +748,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity2.SetValue(15, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_sodium, tissue, molarity1, molarity2);
   //Lymph
-  /*lymph->GetSubstanceQuantity(*m_sodium)->GetMolarity().Set(molarity1);
-  lymph->GetSubstanceQuantity(*m_sodium)->Balance(BalanceLiquidBy::Molarity);*/
+  lymph->GetSubstanceQuantity(*m_sodium)->GetMolarity().Set(molarity1);
+  lymph->GetSubstanceQuantity(*m_sodium)->Balance(BalanceLiquidBy::Molarity);
 
   // TRIACYLGLYCEROL //
   concentration.SetValue(75.0, MassPerVolumeUnit::mg_Per_dL);
@@ -766,8 +766,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_triacylglycerol->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceMolarity(*m_triacylglycerol, tissue, molarity1, molarity1);
   //Lymph
-  /*lymph->GetSubstanceQuantity(*m_triacylglycerol)->GetMolarity().Set(molarity1);
-  lymph->GetSubstanceQuantity(*m_triacylglycerol)->Balance(BalanceLiquidBy::Molarity);*/
+  lymph->GetSubstanceQuantity(*m_triacylglycerol)->GetMolarity().Set(molarity1);
+  lymph->GetSubstanceQuantity(*m_triacylglycerol)->Balance(BalanceLiquidBy::Molarity);
   // TAG can't cross blood-brain barrier, so no TAG there
   molarity1.SetValue(0, AmountPerVolumeUnit::mmol_Per_L);
   m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainExtracellular)->GetSubstanceQuantity(*m_triacylglycerol)->GetMolarity().Set(molarity1);

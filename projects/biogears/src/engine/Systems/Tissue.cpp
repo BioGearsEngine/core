@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <cmath>
 //Project Includes
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
-#include <biogears/cdm/compartment//fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
@@ -51,12 +51,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Systems/Cardiovascular.h>
 #include <biogears/engine/Systems/Drugs.h>
 #include <biogears/engine/Systems/Energy.h>
 #include <biogears/engine/Systems/Respiratory.h>
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
@@ -354,6 +354,22 @@ void Tissue::SetUp()
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Skin)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinE3ToSkinI);
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Spleen)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SpleenE3ToSpleenI);
 
+  m_LymphPaths.clear();
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::FatExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::FatE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BoneExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BoneE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BrainE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::GutExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::GutE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LeftKidneyExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftKidneyE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightKidneyExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightKidneyE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LiverExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LiverE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LeftLungExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightLungExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightLungE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::MuscleExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MuscleE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::MyocardiumExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MyocardiumE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SpleenExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SpleenE3ToLymph);
+  m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LymphToVenaCava);
+
   m_ConsumptionProdutionTissues.clear();
   m_ConsumptionProdutionTissues.push_back(m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Fat));
   m_ConsumptionProdutionTissues.push_back(m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Bone));
@@ -498,6 +514,13 @@ void Tissue::PreProcess()
 {
   CalculateTissueFluidFluxes();
   CalculateOncoticPressure();
+
+  for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
+    SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
+    SEFluidCircuitPath* l = m_LymphPaths[&ex];
+    std::string name = l->GetName();
+    m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_min));
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -517,6 +540,7 @@ void Tissue::Process()
   CalculateDiffusion();
   ManageSubstancesAndSaturation();
   CalculateVitals();
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -545,6 +569,8 @@ void Tissue::CalculateDiffusion()
 {
   SETissueCompartment* tissue;
   SELiquidCompartment* vascular;
+  SELiquidCompartment* lymph = m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph);
+  SELiquidCompartment* venaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava);
   const SESubstanceTissuePharmacokinetics* tissueKinetics;
   for (auto tissueVascular : m_TissueToVascular) {
     tissue = tissueVascular.first;
@@ -582,6 +608,9 @@ void Tissue::CalculateDiffusion()
 
           //Extracellular to Intracellular
           moved_ug = MoveMassByInstantDiffusion(extracellular, intracellular, *sub, m_Dt_s);
+
+          //Extracellular to Lymph
+          //moved_ug = MoveMassByInstantDiffusion(extracellular, *lymph, *sub, m_Dt_s);
         }
         //Bicarbonate doesn't diffuse because it is charged
         else if (sub->GetName() != "Bicarbonate") {
@@ -618,6 +647,9 @@ void Tissue::CalculateDiffusion()
             //a molar mass < 1000 so they will all funnel here
             if (sub->GetClassification() != CDM::enumSubstanceClass::Ion)
               moved_ug = MoveMassBySimpleDiffusion(extracellular, intracellular, *sub, ECtoICPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
+
+            //Extracellular to Lymph
+            //moved_ug = MoveMassByConvection(extracellular, *lymph, *sub, m_Dt_s);
           }
 
           //Facilitated diffusion depends on the substance having flux values
@@ -634,38 +666,20 @@ void Tissue::CalculateDiffusion()
 
             //Extracellular to Intracellular
             moved_ug = MoveMassByFacilitatedDiffusion(extracellular, intracellular, *sub, combinedCoefficient_g_Per_s, m_Dt_s);
+
+            //Extracellular to Lymph
+            // moved_ug = MoveMassByConvection(extracellular, *lymph, *sub, m_Dt_s);
           }
-          //This Albumin diffusion is in case we start dynamically adjusting oncotic pressures, perhaps during hemorrhages or sepsis
-          //  if (sub->GetName() == "Albumin" && tissue->GetReflectionCoefficient().GetValue()!=1.0)
-          //  {
-          //    //We don't transport albumin if the membrane is impermeable to albumin (i.e. reflection coefficient = 1).  This will cause undefined behavior
-          //    double albuminK_mL_Per_s = 0.02;
-          //    double vascularToExtraFlow_mL_Per_s = m_InterstitialCopPaths[tissue]->GetFlow(VolumePerTimeUnit::mL_Per_s);  //Vascular to Extra Path is first path in Tissue Paths vector
-          //    double pecletNumber = abs(vascularToExtraFlow_mL_Per_s) * (1 - tissue->GetReflectionCoefficient().GetValue()) / albuminK_mL_Per_s;
-          //    double num = vascular->GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL)
-          //      - exp(-pecletNumber) * extracellular.GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
-          //    double den = 1.0 - exp(-pecletNumber);
-          //    moved_ug = vascularToExtraFlow_mL_Per_s * (1 - tissue->GetReflectionCoefficient().GetValue()) * (num / den) * m_Dt_s;
-          //    if (moved_ug > 0)
-          //    {
-          //      if (moved_ug > vascular->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug))
-          //      {
-          //        moved_ug = vascular->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
-          //      }
-          //      DistributeMassbyVolumeWeighted(extracellular, *sub, moved_ug, MassUnit::ug);
-          //      DistributeMassbyMassWeighted(*vascular, *sub, -moved_ug, MassUnit::ug);
-          //    }
-          //    else
-          //    {
-          //      if (-moved_ug > extracellular.GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug))
-          //      {
-          //        moved_ug = -extracellular.GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
-          //      }
-          //      DistributeMassbyMassWeighted(extracellular, *sub, moved_ug, MassUnit::ug);
-          //      DistributeMassbyVolumeWeighted(*vascular, *sub, -moved_ug, MassUnit::ug);
-          //    }
-          //
-          //  }
+          ////This Albumin diffusion is in case we start dynamically adjusting oncotic pressures, perhaps during hemorrhages or sepsis
+          if (sub->GetName() == "Albumin") {
+            moved_ug = AlbuminTransport(*vascular, extracellular, *tissue, m_Dt_s);
+            std::string name = m_ExtraToIntraPaths[tissue]->GetName() + "Albumin";
+            m_data.GetDataTrack().Probe(name, moved_ug);
+            name = m_LymphPaths[&extracellular]->GetName() + "Albumin";
+            moved_ug = MoveMassByConvection(extracellular, *lymph, *sub, m_Dt_s);
+            m_data.GetDataTrack().Probe(name, moved_ug);
+
+          }
         }
 
         //Now that mass has been moved, balance to set concentrations and molarities
@@ -675,6 +689,11 @@ void Tissue::CalculateDiffusion()
       }
     }
   }
+  //Need to transport albumin from lymph to vena cava
+  double toLymph = MoveMassByConvection(*lymph, *venaCava, *m_Albumin, m_Dt_s);
+  m_data.GetDataTrack().Probe("LymphAlbReturn", toLymph);
+  lymph->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
+  venaCava->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -800,8 +819,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_PatientActions->HasSepsis()) {
     double maxTissueDamage = 17.5;
     double severity = m_PatientActions->GetSepsis()->GetSeverity().GetValue();
-   double tissueDamageFraction = 1.0 - m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
-   //This function is half of a Gaussian that becomes a constant background value when white blood cell count saturates.
+    double tissueDamageFraction = 1.0 - m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
+    //This function is half of a Gaussian that becomes a constant background value when white blood cell count saturates.
     //The baseline of 0.2 was determined empirically to balance lactate transport / elimination with production
     //Max value is a function of severity because higher severity scenarios are shorter and we need to spike the concentration faster
     //We also need the production to slack off or else we will just keep pumping out lactate indefinitely
@@ -2109,6 +2128,29 @@ double Tissue::MoveMassByFacilitatedDiffusion(SELiquidCompartment& source, SELiq
   return amountIncrement_g;
 } // End FacilitatedMassDiffusion
 
+double Tissue::MoveMassByConvection(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double timestep_s)
+{
+  const SELiquidSubstanceQuantity* sSubQ = source.GetSubstanceQuantity(sub);
+  const SELiquidSubstanceQuantity* tSubQ = target.GetSubstanceQuantity(sub);
+
+  double fluidFlow_mL_Per_s = m_LymphPaths[&source]->GetFlow(VolumePerTimeUnit::mL_Per_s);
+
+  double amountIncrement_ug = fluidFlow_mL_Per_s * sSubQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL) * timestep_s;
+
+  if (amountIncrement_ug > 0.0) {
+    if (amountIncrement_ug > sSubQ->GetMass(MassUnit::ug)) {
+      amountIncrement_ug = sSubQ->GetMass(MassUnit::ug);
+    }
+    DistributeMassbyMassWeighted(source, sub, -amountIncrement_ug, MassUnit::ug);
+    DistributeMassbyVolumeWeighted(target, sub, amountIncrement_ug, MassUnit::ug);
+  } else // negative increment means it is coming from the target and going to the source
+  {
+    amountIncrement_ug = 0.0;
+  }
+
+  return amountIncrement_ug;
+}
+
 /// --------------------------------------------------------------------------------------------------
 /// \brief
 /// Calculates the mass transport of a substance between compartments by active transport
@@ -2392,11 +2434,6 @@ void Tissue::CalculateTissueFluidFluxes()
 /// from each compartment.  Future edits could include calculating pressures on a compartment by compartment basis.
 void Tissue::CalculateOncoticPressure()
 {
-  //We don't want to mess with the pressure sources on the circuit until stabilization has been completed
-
-  if (m_data.GetState() < EngineState::AtInitialStableState) {
-    return;
-  }
   SETissueCompartment* tissue;
   SELiquidCompartment* vascular;
   SEFluidCircuitPath* vascularCOP;
@@ -2414,7 +2451,6 @@ void Tissue::CalculateOncoticPressure()
 
   double albuminVascularAvg_g_Per_dL = albuminMassInBlood_g / vascularVolume_dL;
   double albuminInterstitialAvg_g_Per_dL = albuminMassInTissue_g / interstitialVolume_dL;
-  double albuminTotalAvg_g_Per_dL = (albuminMassInTissue_g + albuminMassInBlood_g) / (vascularVolume_dL + interstitialVolume_dL);
 
   ////In calculating oncotic pressure, we assume a linear relationship between plasma albumin concentration and total plasma protein
   ////concentration.  We then use the Landis-Pappenheimer (LP) Equation for total protein.  In the interstitial space, we assume that
@@ -2440,7 +2476,7 @@ void Tissue::CalculateOncoticPressure()
 
     reflectionCoefficient = m_data.GetCompartments().GetTissueCompartment(tissue->GetName())->GetReflectionCoefficient().GetValue();
     LLIM(reflectionCoefficient, 0.05);
-    effectiveVascular_g_Per_dL = 1.6 * GeneralMath::LinearInterpolator(0.0, 1.0, albuminTotalAvg_g_Per_dL, albuminVascularAvg_g_Per_dL, reflectionCoefficient);
+    effectiveVascular_g_Per_dL = 1.6 * albuminVascularAvg_g_Per_dL;
     vascularOncoticPressure_mmHg = 2.1 * effectiveVascular_g_Per_dL + 0.16 * std::pow(effectiveVascular_g_Per_dL, 2) + 0.009 * std::pow(effectiveVascular_g_Per_dL, 3);
     if (vascular->GetName() == BGE::VascularCompartment::Gut) {
       for (auto c : vascular->GetChildren()) {
@@ -2452,10 +2488,58 @@ void Tissue::CalculateOncoticPressure()
       vascularCOP->GetNextPressureSource().SetValue(-vascularOncoticPressure_mmHg, PressureUnit::mmHg);
     }
 
-    effectiveInterstitial_g_Per_dL = 1.6 * GeneralMath::LinearInterpolator(0.0, 1.0, albuminTotalAvg_g_Per_dL, albuminInterstitialAvg_g_Per_dL, reflectionCoefficient);
+    effectiveInterstitial_g_Per_dL = 1.6 * albuminInterstitialAvg_g_Per_dL;
     interstitialOncoticPressure_mmHg = 2.1 * effectiveInterstitial_g_Per_dL + 0.16 * std::pow(effectiveInterstitial_g_Per_dL, 2) + 0.009 * std::pow(effectiveInterstitial_g_Per_dL, 3);
     interstitialCOP = m_InterstitialCopPaths[tissue];
     interstitialCOP->GetNextPressureSource().SetValue(interstitialOncoticPressure_mmHg, PressureUnit::mmHg);
   }
+}
+
+double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartment& extra, SETissueCompartment& tissue, double timestep_s)
+{
+  double alphaSmall = 0.9;
+  double alphaLarge = 1.0 - alphaSmall;
+  double diffusivityCoefficientSmallBase_mL_Per_min_kg = 0.00753;
+  double diffusivityCoefficientLarge_mL_Per_min_kg = 0.03306;
+  double reflectionCoefficientSmallBase = 0.954;
+  double reflectionCoefficientLargeBase = 0.097;
+  double fluidFlux_mL_Per_min = m_InterstitialCopPaths[&tissue]->GetFlow(VolumePerTimeUnit::mL_Per_min);
+  double tissueMass_kg = tissue.GetTotalMass(MassUnit::kg);
+  double tissueIntegrity = tissue.GetReflectionCoefficient().GetValue(); //Rename this later in CDM
+
+  double reflectionCoefficientSmall = GeneralMath::LinearInterpolator(1.0, 0.0, reflectionCoefficientSmallBase, 0.01, tissueIntegrity);
+  double reflectionCoefficientLarge = GeneralMath::LinearInterpolator(1.0, 0.0, reflectionCoefficientLargeBase, 0.01, tissueIntegrity);
+  double diffusivityCoefficientSmall_mL_Per_min_kg = GeneralMath::LinearInterpolator(1.0, 0.0, diffusivityCoefficientSmallBase_mL_Per_min_kg, diffusivityCoefficientLarge_mL_Per_min_kg, tissueIntegrity);
+  BLIM(reflectionCoefficientSmall, 0.0, 1.0);
+  BLIM(reflectionCoefficientLarge, 0.0, 1.0);
+
+  double albuminVascular_ug_Per_mL = vascular.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+  double albuminExtracellular_ug_Per_mL = extra.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+  double averageAlbumin_ug_Per_mL = (albuminVascular_ug_Per_mL + albuminExtracellular_ug_Per_mL) / 2.0;
+
+  double diffusiveSmall_ug_Per_min = diffusivityCoefficientSmall_mL_Per_min_kg * tissueMass_kg * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
+  double diffusiveLarge_ug_Per_min = diffusivityCoefficientLarge_mL_Per_min_kg * tissueMass_kg * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
+  double convectiveSmall_ug_Per_min = (1.0 - reflectionCoefficientSmall) * alphaSmall * fluidFlux_mL_Per_min * averageAlbumin_ug_Per_mL;
+  double convectiveLarge_ug_Per_min = (1.0 - reflectionCoefficientLarge) * alphaLarge * fluidFlux_mL_Per_min * averageAlbumin_ug_Per_mL;
+
+  double moved_ug = (diffusiveSmall_ug_Per_min + diffusiveLarge_ug_Per_min + convectiveSmall_ug_Per_min + convectiveLarge_ug_Per_min) / 60.0 * timestep_s;
+
+  if (moved_ug > 0) {
+    if (moved_ug > vascular.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug)) {
+      moved_ug = vascular.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug);
+    }
+    DistributeMassbyVolumeWeighted(extra, *m_Albumin, moved_ug, MassUnit::ug);
+    DistributeMassbyMassWeighted(vascular, *m_Albumin, -moved_ug, MassUnit::ug);
+  } else {
+    if (-moved_ug > extra.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug)) {
+      moved_ug = -extra.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug);
+    }
+    DistributeMassbyMassWeighted(extra, *m_Albumin, moved_ug, MassUnit::ug);
+    DistributeMassbyVolumeWeighted(vascular, *m_Albumin, -moved_ug, MassUnit::ug);
+  }
+
+  //Experimental section
+
+  return moved_ug;
 }
 }

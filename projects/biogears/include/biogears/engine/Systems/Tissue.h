@@ -104,7 +104,9 @@ protected:
   double MoveMassBySimpleDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double permeabilityCofficient_mL_Per_s, double timestep_s);
   double MoveMassByFacilitatedDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double combinedCoefficient_g_Per_s, double timestep_s);
   double MoveMassByActiveTransport(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double pumpRate_g_Per_s, double timestep_s);
+  double MoveMassByConvection(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double timestep_s);
   void CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartment& extra, SELiquidCompartment& intra, SELiquidCompartment& vascular);
+  double AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartment& extra, SETissueCompartment& tissue, double timestep_s);
   void CalculateTissueFluidFluxes();
 
   void CalculateOncoticPressure();
@@ -185,6 +187,7 @@ protected:
   std::map<SELiquidCompartment*, SEFluidCircuitPath*> m_VascularCopPaths;
   std::map<SETissueCompartment*, SEFluidCircuitPath*> m_InterstitialCopPaths;
   std::map<SETissueCompartment*, SEFluidCircuitPath*> m_ExtraToIntraPaths;
+  std::map<SELiquidCompartment*, SEFluidCircuitPath*> m_LymphPaths;
   std::map<SETissueCompartment*, double> m_ExtracellularVolumeBaselines;
   std::map<SELiquidCompartment*, double> m_VascularVolumeBaselines;
   std::vector<SETissueCompartment*> m_ConsumptionProdutionTissues;
