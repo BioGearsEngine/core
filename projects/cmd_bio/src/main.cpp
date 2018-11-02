@@ -6,6 +6,7 @@
 #include "StateGenerator.h"
 #include "data/EnvironmentGenerator.h"
 #include "data/SubstanceGenerator.h"
+#include "data/PatientGenerator.h"
 
 int main(int argc, char* argv[])
 {
@@ -25,7 +26,11 @@ int main(int argc, char* argv[])
       auto envs = bg::EnvironmentGenerator("");
       envs.parse();
       envs.save();
-    } else {
+    } else if ("PATIENTS" == std::string(argv[1])) {
+      auto patients = bg::PatientGenerator("");
+	  patients.parse();
+	  patients.save();
+	} else {
       std::cout << "Input not recognized" << std::endl;
     }
   }

@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include <biogears/schema/biogears/BioGearsConfiguration.hxx>
+#include <biogears/schema/cdm/Patient.hxx>
 #include "CSVToXMLConvertor.h"
 namespace biogears
 {
@@ -29,17 +29,17 @@ namespace biogears
   class PatientGenerator : public CSVToXMLConvertor
   {
   public:
-    PatientGenerator(std::string path, std::string filename);
+    PatientGenerator(std::string path);
     ~PatientGenerator() override;
 
     bool parse() override;
     bool save() const override;
     void print() const override;
   protected:
-    bool process(const std::vector<std::vector<std::string>>& data);
+    bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::PatientData& patient);
   private:
     std::vector<Patient> _input;
-    std::vector<mil::tatrc::physiology::datamodel::BioGearsConfigurationData> _Patients;
+    std::vector<mil::tatrc::physiology::datamodel::PatientData> _patients;
   };
 } //namespace biogears
 
