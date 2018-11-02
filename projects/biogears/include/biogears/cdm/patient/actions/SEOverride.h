@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 class Serializer;
 
@@ -80,6 +81,15 @@ public:
   double GetUrineProductionRateOverride(const VolumePerTimeUnit& unit) const;
   bool HasRenalOverride() const;
 
+  //Respiratory
+  bool HasRespirationRateOverride() const;
+  SEScalarFrequency& GetRespirationRateOverride();
+  double GetRespirationRateOverride(const FrequencyUnit& unit) const;
+  bool HasTidalVolumeOverride() const;
+  SEScalarVolume& GetTidalVolumeOverride();
+  double GetTidalVolumeOverride(const VolumeUnit& unit) const;
+  bool HasRespiratoryOverride() const;
+
   virtual void ToString(std::ostream& str) const;
 
 protected:
@@ -91,5 +101,7 @@ protected:
   SEScalarTemperature* m_SkinTemperatureOR;
   SEScalarPower* m_TotalMetabolicOR;
   SEScalarVolumePerTime* m_UrineProductionRateOR;
+  SEScalarFrequency* m_RespirationRateOR;
+  SEScalarVolume* m_TidalVolumeOR;
 };
 }

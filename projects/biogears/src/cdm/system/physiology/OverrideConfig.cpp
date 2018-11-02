@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 namespace biogears {
 
@@ -34,6 +35,8 @@ OverrideConfig::OverrideConfig()
   m_SkinTemperatureOverride = nullptr;
   m_TotalMetabolicOverride = nullptr;
   m_UrineProductionOverride = nullptr;
+  m_RespirationRateOverride = nullptr;
+  m_TidalVolumeOverride = nullptr;
 }
 
 OverrideConfig::~OverrideConfig()
@@ -50,6 +53,8 @@ void OverrideConfig::Clear()
   SAFE_DELETE(m_SkinTemperatureOverride);
   SAFE_DELETE(m_TotalMetabolicOverride);
   SAFE_DELETE(m_UrineProductionOverride);
+  SAFE_DELETE(m_RespirationRateOverride);
+  SAFE_DELETE(m_TidalVolumeOverride);
   m_overrideMode = CDM::enumOnOff::Off;
 }
 
@@ -76,7 +81,7 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     Error(sst);
     return false;
   }
-  if (!pData->CardiovascularOverride() && !pData->EnergyOverride() && !pData->RenalOverride()) {
+  if (!pData->CardiovascularOverride() && !pData->EnergyOverride() && !pData->RenalOverride() && !pData->RespiratoryOverride()) {
     return false;
   }
 
@@ -115,6 +120,15 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
     if (config.UrineProductionRateOverride().present())
       GetUrineProductionOverride().Load(config.UrineProductionRateOverride().get());
   }
+  if (in.RespiratoryOverride().present()) {
+    const CDM::RespiratoryOverrideData& config = in.RespiratoryOverride().get();
+    if (config.EnableRespiratoryOverride().present())
+      EnableRespiratoryOverride(config.EnableRespiratoryOverride().get());
+    if (config.RespirationRateOverride().present())
+      GetRespirationRateOverride().Load(config.RespirationRateOverride().get());
+    if (config.TidalVolumeOverride().present())
+      GetTidalVolumeOverride().Load(config.TidalVolumeOverride().get());
+    }
 
   return true;
 }
@@ -161,6 +175,17 @@ void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
   if (HasEnableRenalOverride())
     renaloverride->EnableRenalOverride(m_overrideMode);
   data.RenalOverride(std::unique_ptr<CDM::RenalOverrideData>(renaloverride));
+
+  CDM::RespiratoryOverrideData* respiratory(new CDM::RespiratoryOverrideData());
+  if (HasRespirationRateOverride())
+    respiratory->RespirationRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateOverride->Unload()));
+  if (HasTidalVolumeOverride())
+    respiratory->TidalVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeOverride->Unload()));
+
+  CDM::RespiratoryOverrideData* respiratoryoverride(new CDM::RespiratoryOverrideData());
+  if (HasEnableRespiratoryOverride())
+    respiratoryoverride->EnableRespiratoryOverride(m_overrideMode);
+  data.RespiratoryOverride(std::unique_ptr<CDM::RespiratoryOverrideData>(respiratoryoverride));
 }
 
 bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameterFile)
@@ -316,5 +341,42 @@ double OverrideConfig::GetUrineProductionOverride(const VolumePerTimeUnit& unit)
   if (m_UrineProductionOverride == nullptr)
     return SEScalar::dNaN();
   return m_UrineProductionOverride->GetValue(unit);
+}
+
+////////////////////
+/** Respiratory */
+////////////////////
+
+bool OverrideConfig::HasRespirationRateOverride() const
+{
+  return m_RespirationRateOverride == nullptr ? false : m_RespirationRateOverride->IsValid();
+}
+SEScalarFrequency& OverrideConfig::GetRespirationRateOverride()
+{
+  if (m_RespirationRateOverride == nullptr)
+    m_RespirationRateOverride = new SEScalarFrequency();
+  return *m_RespirationRateOverride;
+}
+double OverrideConfig::GetRespirationRateOverride(const FrequencyUnit& unit) const
+{
+  if (m_RespirationRateOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_RespirationRateOverride->GetValue(unit);
+}
+bool OverrideConfig::HasTidalVolumeOverride() const
+{
+  return m_TidalVolumeOverride == nullptr ? false : m_TidalVolumeOverride->IsValid();
+}
+SEScalarVolume& OverrideConfig::GetTidalVolumeOverride()
+{
+  if (m_TidalVolumeOverride == nullptr)
+    m_TidalVolumeOverride = new SEScalarVolume();
+  return *m_TidalVolumeOverride;
+}
+double OverrideConfig::GetTidalVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_TidalVolumeOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_TidalVolumeOverride->GetValue(unit);
 }
 }

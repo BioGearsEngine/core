@@ -21,6 +21,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+
 
 CDM_BIND_DECL(OverrideConfigData)
 
@@ -96,6 +98,24 @@ public:
   }
   virtual void EnableRenalOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
 
+  // Respiratory Parameters
+  virtual bool HasRespirationRateOverride() const;
+  virtual SEScalarFrequency& GetRespirationRateOverride();
+  virtual double GetRespirationRateOverride(const FrequencyUnit& unit) const;
+  virtual bool HasTidalVolumeOverride() const;
+  virtual SEScalarVolume& GetTidalVolumeOverride();
+  virtual double GetTidalVolumeOverride(const VolumeUnit& unit) const;
+
+  virtual bool HasEnableRespiratoryOverride() const
+  {
+    return m_overrideMode != (CDM::enumOnOff::Off);
+  }
+  virtual bool IsRespiratoryOverrideEnabled() const
+  {
+    return m_overrideMode == CDM::enumOnOff::On;
+  }
+  virtual void EnableRespiratoryOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
+
 protected:
   virtual void Unload(CDM::OverrideConfigData& data) const;
   bool ReadOverrideParameters(const std::string& overrideParameterFile);
@@ -107,6 +127,8 @@ protected:
   SEScalarFrequency* m_HeartRateOverride;
   SEScalarPower* m_TotalMetabolicOverride;
   SEScalarVolumePerTime* m_UrineProductionOverride;
+  SEScalarFrequency* m_RespirationRateOverride;
+  SEScalarVolume* m_TidalVolumeOverride;
 
 };
 }

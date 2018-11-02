@@ -29,6 +29,8 @@ SEOverride::SEOverride()
   m_SkinTemperatureOR = nullptr;
   m_TotalMetabolicOR = nullptr;
   m_UrineProductionRateOR = nullptr;
+  m_RespirationRateOR = nullptr;
+  m_TidalVolumeOR = nullptr;
 }
 
 SEOverride::~SEOverride()
@@ -47,6 +49,8 @@ void SEOverride::Clear()
   SAFE_DELETE(m_SkinTemperatureOR);
   SAFE_DELETE(m_TotalMetabolicOR);
   SAFE_DELETE(m_UrineProductionRateOR);
+  SAFE_DELETE(m_RespirationRateOR);
+  SAFE_DELETE(m_TidalVolumeOR);
 }
 
 bool SEOverride::IsValid() const
@@ -98,6 +102,14 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetUrineProductionRateOverride().Load(in.UrineProductionRateOverride().get());
   else
     GetUrineProductionRateOverride().Invalidate();
+  if (in.RespirationRateOverride().present())
+    GetRespirationRateOverride().Load(in.RespirationRateOverride().get());
+  else
+    GetRespirationRateOverride().Invalidate();
+  if (in.TidalVolumeOverride().present())
+    GetTidalVolumeOverride().Load(in.TidalVolumeOverride().get());
+  else
+    GetTidalVolumeOverride().Invalidate();
   //SEPatientAction::Load(in);
   //return true;
   return IsValid();
@@ -129,6 +141,10 @@ void SEOverride::Unload(CDM::OverrideData& data) const
     data.TotalMetabolicRateOverride(std::unique_ptr<CDM::ScalarPowerData>(m_TotalMetabolicOR->Unload()));
   if (HasUrineProductionRateOverride())
     data.UrineProductionRateOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_UrineProductionRateOR->Unload()));
+  if (HasRespirationRateOverride())
+    data.RespirationRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateOR->Unload()));
+  if (HasTidalVolumeOverride())
+    data.TidalVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeOR->Unload()));
 }
 
 CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
@@ -294,6 +310,45 @@ bool SEOverride::HasRenalOverride() const
 }
 
 
+// Respiratory Overrides //
+bool SEOverride::HasRespirationRateOverride() const
+{
+  return m_RespirationRateOR == nullptr ? false : m_RespirationRateOR->IsValid();
+}
+SEScalarFrequency& SEOverride::GetRespirationRateOverride()
+{
+  if (m_RespirationRateOR == nullptr)
+    m_RespirationRateOR = new SEScalarFrequency();
+  return *m_RespirationRateOR;
+}
+double SEOverride::GetRespirationRateOverride(const FrequencyUnit& unit) const
+{
+  if (m_RespirationRateOR == nullptr)
+    return SEScalar::dNaN();
+  return m_RespirationRateOR->GetValue(unit);
+}
+bool SEOverride::HasTidalVolumeOverride() const
+{
+  return m_TidalVolumeOR == nullptr ? false : m_TidalVolumeOR->IsValid();
+}
+SEScalarVolume& SEOverride::GetTidalVolumeOverride()
+{
+  if (m_TidalVolumeOR == nullptr)
+    m_TidalVolumeOR = new SEScalarVolume();
+  return *m_TidalVolumeOR;
+}
+double SEOverride::GetTidalVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_TidalVolumeOR == nullptr)
+    return SEScalar::dNaN();
+  return m_TidalVolumeOR->GetValue(unit);
+}
+
+bool SEOverride::HasRespiratoryOverride() const
+{
+  return HasRespirationRateOverride() ? true : HasTidalVolumeOverride() ? true : false;
+}
+
 
 void SEOverride::ToString(std::ostream& str) const
 {
@@ -350,6 +405,20 @@ void SEOverride::ToString(std::ostream& str) const
     HasUrineProductionRateOverride() ? str << *m_UrineProductionRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On)
       str << "\n\tUrine Production Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
+    str << std::flush;
+  }
+  if (HasRespirationRateOverride()) {
+    str << "\n\tRespiration Rate: ";
+    HasRespirationRateOverride() ? str << *m_RespirationRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tRespiration Rate has a lower bound of 0 breaths/min and an upper bound of 60 breaths/min.";
+    str << std::flush;
+  }
+  if (HasTidalVolumeOverride()) {
+    str << "\n\tTidal Volume: ";
+    HasTidalVolumeOverride() ? str << *m_TidalVolumeOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tTidal Volume has a lower bound of 0 mL and an upper bound of 10000 mL.";
     str << std::flush;
   }
 }
