@@ -988,7 +988,7 @@ void Respiratory::ProcessDriverActions()
 
   //PH imbalance parameters
   double arterialPH;
-  double scalingFactor = 500.0;
+  double scalingFactor = 560.0;
 
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
     NMBModifier = 0.0;
