@@ -1,5 +1,5 @@
-#ifndef BIOGEARS_CVS_TO_XML_CONVERTOR_H
-#define BIOGEARS_CVS_TO_XML_CONVERTOR_H
+#ifndef BIOGEARS_CSV_TO_XML_CONVERTOR_H
+#define BIOGEARS_CSV_TO_XML_CONVERTOR_H
 
 //**********************************************************************************
 //Copyright 2015 Applied Research Associates, Inc.
@@ -61,4 +61,4 @@ namespace biogears
  
 } //namespace biogears
 
-#endif //BIOGEARS_CVS_TO_XML_CONVERTOR_H
+#endif //BIOGEARS_CSV_TO_XML_CONVERTOR_H

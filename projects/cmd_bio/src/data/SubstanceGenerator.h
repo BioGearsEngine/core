@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include "CVSToXMLConvertor.h"
+#include "CSVToXMLConvertor.h"
 #include <biogears/schema/cdm/Substance.hxx>
 namespace biogears {
 

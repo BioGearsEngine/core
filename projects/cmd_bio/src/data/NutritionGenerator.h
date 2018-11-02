@@ -1,5 +1,5 @@
-#ifndef BIOGEARS_NEUTRITION_GENERATOR_H
-#define BIOGEARS_NEUTRITION_GENERATOR_H
+#ifndef BIOGEARS_NUTRITION_GENERATOR_H
+#define BIOGEARS_NUTRITION_GENERATOR_H
 
 //**********************************************************************************
 //Copyright 2015 Applied Research Associates, Inc.
@@ -17,7 +17,7 @@
 #include <vector>
 
 #include <biogears/schema/biogears/BioGearsConfiguration.hxx>
-#include "CVSToXMLConvertor.h"
+#include "CSVToXMLConvertor.h"
 namespace biogears
 {
 
