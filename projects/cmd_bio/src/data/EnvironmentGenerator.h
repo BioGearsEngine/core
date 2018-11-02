@@ -29,7 +29,7 @@ namespace biogears
   class EnvironmentGenerator : public CSVToXMLConvertor
   {
   public:
-    EnvironmentGenerator(std::string path);
+    EnvironmentGenerator(std::string path = "'");
     ~EnvironmentGenerator() override;
 
     bool parse() override;

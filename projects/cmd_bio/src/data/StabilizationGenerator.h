@@ -16,8 +16,9 @@
 #include <string>
 #include <vector>
 
-#include <biogears/schema/biogears/BioGearsConfiguration.hxx>
+#include <biogears/schema/cdm/EngineConfiguration.hxx>
 #include "CSVToXMLConvertor.h"
+
 namespace biogears
 {
 
@@ -29,17 +30,19 @@ namespace biogears
   class StabilizationGenerator : public CSVToXMLConvertor
   {
   public:
-    StabilizationGenerator(std::string path, std::string filename);
+    StabilizationGenerator(std::string path = "");
     ~StabilizationGenerator() override;
 
     bool parse() override;
     bool save() const override;
     void print() const override;
   protected:
-    bool process(const std::vector<std::vector<std::string>>& data);
+    bool process_RestingStabilizationCriteria(CSV_RowItr);
+    bool process_FeedbackStabilizationCriteria(CSV_RowItr);
+    bool process_ConditionStabilization(CSV_RowItr);
   private:
-    std::vector<Stabilization> _input;
-    std::vector<mil::tatrc::physiology::datamodel::BioGearsConfigurationData> _Stabilizations;
+    mil::tatrc::physiology::datamodel::PhysiologyEngineDynamicStabilizationData _dynamic;
+    mil::tatrc::physiology::datamodel::PhysiologyEngineTimedStabilizationData _timed;
   };
 } //namespace biogears
 

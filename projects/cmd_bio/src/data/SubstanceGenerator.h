@@ -24,7 +24,7 @@ class SubstanceGenerator : public CSVToXMLConvertor {
 public:
   using XSD_Type = mil::tatrc::physiology::datamodel::SubstanceData;
 
-  SubstanceGenerator(std::string path);
+  SubstanceGenerator(std::string path = "");
   ~SubstanceGenerator() override;
 
   bool parse() override;
