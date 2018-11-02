@@ -55,7 +55,7 @@ void SEScalar::Load(const CDM::ScalarData& in)
   SetValue(in.value());
   if (in.unit().present()) {
     std::string u = in.unit().get();
-    if (u != "unitless")
+    if ( !("unitless" == u || "" == u || u.empty()) )
       throw CommonDataModelException("CDM::Scalar API is intended to be unitless, You are trying to load a ScalarData with a unit defined");
   }
   m_readOnly = in.readOnly();
