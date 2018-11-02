@@ -2862,6 +2862,7 @@ void BioGears::SetupTissue()
   Info("Setting Up Tissue");
   SEFluidCircuit& cCardiovascular = m_Circuits->GetCardiovascularCircuit();
   SEFluidCircuit& cCombinedCardiovascular = m_Circuits->GetActiveCardiovascularCircuit();
+  SELiquidCompartmentGraph& gCombinedCardiovascular = m_Compartments->GetActiveCardiovascularGraph();
 
   SEFluidCircuitNode* Ground = cCombinedCardiovascular.GetNode(BGE::CardiovascularNode::Ground);
   ///////////
@@ -2873,8 +2874,6 @@ void BioGears::SetupTissue()
   double lymphTotalBody_mL_Per_min = 3.5; //This corresponds to ~ 5 L/day of lymph flow in body
 
   SEFluidCircuitNode* VenaCava = cCombinedCardiovascular.GetNode(BGE::CardiovascularNode::VenaCava);
-  double VolumeModifierVenaCava = 0.66932 * 1.134447; //From SetUpCardiovascular--this is important because the vena cava pressure target we are assuming changes because of this modifier being included in the vena cava compliance
-
   SEFluidCircuitPath& LymphToVenaCava = cCombinedCardiovascular.CreatePath(Lymph, *VenaCava, BGE::TissuePath::LymphToVenaCava);
   LymphToVenaCava.GetResistanceBaseline().SetValue((Lymph.GetPressure(PressureUnit::mmHg) - VenaCava->GetPressure(PressureUnit::mmHg)) / lymphTotalBody_mL_Per_min, FlowResistanceUnit::mmHg_min_Per_mL);
   SEFluidCircuitPath& LymphToGround = cCombinedCardiovascular.CreatePath(Lymph, *Ground, BGE::TissuePath::LymphToGround);
@@ -2884,8 +2883,7 @@ void BioGears::SetupTissue()
   SELiquidCompartment& cLymph = m_Compartments->CreateLiquidCompartment(BGE::LymphCompartment::Lymph);
   cLymph.MapNode(Lymph);
 
-  SELiquidCompartmentLink& lLymphToVenaCava = m_Compartments->CreateLiquidLink(cLymph, *cVenaCava, BGE::LymphLink::LymphToVenaCava);
-  lLymphToVenaCava.MapPath(LymphToVenaCava);
+  gCombinedCardiovascular.AddCompartment(cLymph);
 
   /// \todo Put Initial Circuit/Compartment data values into the configuration file.
 
@@ -2934,12 +2932,6 @@ void BioGears::SetupTissue()
   double MyocardiumTissueMass = 0.33;
   double SkinTissueMass = 3.3;
   double SpleenTissueMass = 0.15;
-  //Typical extracellular water values from Bhave2011Body--for whatever reason using EW fractions from PK/PD literature above does not give same value
-  double AdiposeECW_L = 1.62;
-  double BoneECW_L = 1.35;
-  double VisceralECW_L = 1.51; //Bhave lumps brain and abdominal organs in a single value.  We will scale these proportionately by each tissues volume
-  double MuscleECW_L = 3.47;
-  double SkinECW_L = 2.94;
 
   //Typical ICRP Female - From ICRP
   //Total Mass (kg)
@@ -2957,12 +2949,6 @@ void BioGears::SetupTissue()
     MyocardiumTissueMass = 0.25;
     SkinTissueMass = 2.3;
     SpleenTissueMass = 0.13;
-    //Extracellular water values
-    AdiposeECW_L = 1.97;
-    BoneECW_L = 0.99;
-    VisceralECW_L = 1.36;
-    MuscleECW_L = 2.19;
-    SkinECW_L = 2.05;
   }
 
   //Scale things based on patient parameters -------------------------------
@@ -3052,14 +3038,12 @@ void BioGears::SetupTissue()
   double targetHydrostaticGradient_mmHg = targetPressureGradient_mmHg + (copVascular_mmHg - copExtracell_mmHg); //COP gradient opposes flow into capillaries.  Thus, to get to target total gradient we need a hydrostatic gradient to oppose it
 
   //These modifiers are copied from the SetUp Cardiovascular function.  The volume modification helps tune the vascular node volumes, but it also causes pressure drops
-  //on those nodes.  This is a problem because the tissue nodes below have their pressures set based on the pressures set on the CV nodes.  But those setpoints are not
-  //the final stable pressures due to the volume modifications.  Thus we use these modifiers again here to get an "apparent" pressure setpoint to base the tissue pressure on.
-  double VolumeModifierBrain = 0.998011 * 1.038409, VolumeModifierBone = 1.175574 * 0.985629, VolumeModifierFat = 1.175573 * 0.986527;
-  double VolumeModifierGut = 1.17528 * 0.985609, VolumeModifierKidneyL = 0.737649 * 0.954339;
-  double VolumeModifierPulmCapL = 0.724704 * 1.079139, VolumeModifierLiver = 1.157475 * 0.991848;
-  double VolumeModifierMuscle = 1.175573 * 0.986529, VolumeModifierMyocardium = 1.175564 * 0.986531, VolumeModifierKidneyR = 0.737649 * 0.954339;
-  double VolumeModifierPulmCapR = 0.602545 * 1.118213;
-  double VolumeModifierSkin = 1.007306 * 1.035695, VolumeModifierSpleen = 1.17528 * 0.986509;
+  //on those nodes.  This is a problem because the tissue nodes below have their pressures set based on the pressures set on the CV nodes.  If the pressure in the vasculature
+  //drops too much, the gradient favoring filtration to the tissue is lost.  Factoring in these modifiers prevents this.  Note: Did not include modifier for brain, lungs, or kidneys.
+  double VolumeModifierBone = 1.175574 * 0.985629, VolumeModifierFat = 1.175573 * 0.986527;
+  double VolumeModifierGut = 1.17528 * 0.985609;
+  double VolumeModifierMuscle = 1.175573 * 0.986529, VolumeModifierMyocardium = 1.175564 * 0.986531;
+  double VolumeModifierSpleen = 1.17528 * 0.986509;
 
   //Use these and keep recycling for each tissue to help define node and path baselines
   double vNodePressure = 0.0;
@@ -3145,13 +3129,6 @@ void BioGears::SetupTissue()
   FatTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   FatTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& FatVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Fat),
-    FatExtracellular, BGE::VascularLink::FatVascularToTissue);
-  FatVascularToTissue.MapPath(FatVToFatE1);
-
-  SELiquidCompartmentLink& FatTissueToLymph = m_Compartments->CreateLiquidLink(FatExtracellular, cLymph, BGE::LymphLink::FatTissueToLymph);
-  FatTissueToLymph.MapPath(FatE3ToLymph);
-
   //////////
   // Bone //
   SEFluidCircuitNode* BoneV = cCombinedCardiovascular.GetNode(BGE::CardiovascularNode::Bone1);
@@ -3212,12 +3189,6 @@ void BioGears::SetupTissue()
   BoneTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   BoneTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& BoneVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Bone),
-    BoneExtracellular, BGE::VascularLink::BoneVascularToTissue);
-  BoneVascularToTissue.MapPath(BoneVToBoneE1);
-
-  SELiquidCompartmentLink& BoneTissueToLymph = m_Compartments->CreateLiquidLink(BoneExtracellular, cLymph, BGE::LymphLink::BoneTissueToLymph);
-  BoneTissueToLymph.MapPath(BoneE3ToLymph);
 
   ///////////
   // Brain //
@@ -3280,11 +3251,6 @@ void BioGears::SetupTissue()
   BrainTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   BrainTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& BrainVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Brain), BrainExtracellular, BGE::VascularLink::BrainVascularToTissue);
-  BrainVascularToTissue.MapPath(BrainVToBrainE1);
-
-  SELiquidCompartmentLink& BrainTissueToLymph = m_Compartments->CreateLiquidLink(BrainExtracellular, cLymph, BGE::LymphLink::BrainTissueToLymph);
-  BrainTissueToLymph.MapPath(BrainE3ToLymph);
 
   /////////
   // Gut //
@@ -3356,21 +3322,6 @@ void BioGears::SetupTissue()
   GutTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   GutTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& SmallIntestineVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::SmallIntestine),
-    GutExtracellular, BGE::VascularLink::SmallIntestineVascularToTissue);
-  SmallIntestineVascularToTissue.MapPath(SmallIntestineVToGutE1);
-
-  SELiquidCompartmentLink& LargeIntestineVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::LargeIntestine),
-    GutExtracellular, BGE::VascularLink::LargeIntestineVascularToTissue);
-  LargeIntestineVascularToTissue.MapPath(LargeIntestineVToGutE1);
-
-  SELiquidCompartmentLink& SplanchnicVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Splanchnic),
-    GutExtracellular, BGE::VascularLink::SplanchnicVascularToTissue);
-  SplanchnicVascularToTissue.MapPath(SplanchnicVToGutE1);
-
-  SELiquidCompartmentLink& GutTissueToLymph = m_Compartments->CreateLiquidLink(GutExtracellular, cLymph, BGE::LymphLink::GutTissueToLymph);
-  GutTissueToLymph.MapPath(GutE3ToLymph);
-
   /////////////////
   // Left Kidney //
   SEFluidCircuitNode* LeftKidneyV;
@@ -3439,12 +3390,6 @@ void BioGears::SetupTissue()
   LeftKidneyTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   LeftKidneyTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& LeftKidneyVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::LeftKidney),
-    LeftKidneyExtracellular, BGE::VascularLink::LeftKidneyVascularToTissue);
-  LeftKidneyVascularToTissue.MapPath(LeftKidneyVToLeftKidneyE1);
-
-  SELiquidCompartmentLink& LeftKidneyTissueToLymph = m_Compartments->CreateLiquidLink(LeftKidneyExtracellular, cLymph, BGE::LymphLink::LeftKidneyTissueToLymph);
-  LeftKidneyTissueToLymph.MapPath(LeftKidneyE3ToLymph);
 
   ///////////////
   // Left Lung //
@@ -3514,8 +3459,8 @@ void BioGears::SetupTissue()
     LeftLungExtracellular, BGE::VascularLink::LeftLungVascularToTissue);
   LeftLungVascularToTissue.MapPath(LeftLungVToLeftLungE1);
 
-  SELiquidCompartmentLink& LeftLungTissueToLymph = m_Compartments->CreateLiquidLink(LeftLungExtracellular, cLymph, BGE::LymphLink::LeftLungTissueToLymph);
-  LeftLungTissueToLymph.MapPath(LeftLungE3ToLymph);
+  //SELiquidCompartmentLink& LeftLungTissueToLymph = m_Compartments->CreateLiquidLink(LeftLungExtracellular, cLymph, BGE::LymphLink::LeftLungTissueToLymph);
+  //LeftLungTissueToLymph.MapPath(LeftLungE3ToLymph);
 
   ///////////
   // Liver //
@@ -3577,12 +3522,6 @@ void BioGears::SetupTissue()
   LiverTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   LiverTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& LiverVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Liver),
-    LiverExtracellular, BGE::VascularLink::LiverVascularToTissue);
-  LiverVascularToTissue.MapPath(LiverVToLiverE1);
-
-  SELiquidCompartmentLink& LiverTissueToLymph = m_Compartments->CreateLiquidLink(LiverExtracellular, cLymph, BGE::LymphLink::LiverTissueToLymph);
-  LiverTissueToLymph.MapPath(LiverE3ToLymph);
 
   ////////////
   // Muscle //
@@ -3644,12 +3583,6 @@ void BioGears::SetupTissue()
   MuscleTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   MuscleTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& MuscleVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Muscle),
-    MuscleExtracellular, BGE::VascularLink::MuscleVascularToTissue);
-  MuscleVascularToTissue.MapPath(MuscleVToMuscleE1);
-
-  SELiquidCompartmentLink& MuscleTissueToLymph = m_Compartments->CreateLiquidLink(MuscleExtracellular, cLymph, BGE::LymphLink::MuscleTissueToLymph);
-  MuscleTissueToLymph.MapPath(MuscleE3ToLymph);
 
   ////////////////
   // Myocardium //
@@ -3711,12 +3644,6 @@ void BioGears::SetupTissue()
   MyocardiumTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   MyocardiumTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& MyocardiumVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Myocardium),
-    MyocardiumExtracellular, BGE::VascularLink::MyocardiumVascularToTissue);
-  MyocardiumVascularToTissue.MapPath(MyocardiumVToMyocardiumE1);
-
-  SELiquidCompartmentLink& MyocardiumTissueToLymph = m_Compartments->CreateLiquidLink(MyocardiumExtracellular, cLymph, BGE::LymphLink::MyocardiumTissueToLymph);
-  MyocardiumTissueToLymph.MapPath(MyocardiumE3ToLymph);
 
   //////////////////
   // Right Kidney //
@@ -3786,11 +3713,6 @@ void BioGears::SetupTissue()
   RightKidneyTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   RightKidneyTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& RightKidneyVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::RightKidney), RightKidneyExtracellular, BGE::VascularLink::RightKidneyVascularToTissue);
-  RightKidneyVascularToTissue.MapPath(RightKidneyVToRightKidneyE1);
-
-  SELiquidCompartmentLink& RightKidneyTissueToLymph = m_Compartments->CreateLiquidLink(RightKidneyExtracellular, cLymph, BGE::LymphLink::RightKidneyTissueToLymph);
-  RightKidneyTissueToLymph.MapPath(RightKidneyE3ToLymph);
 
   ////////////////
   // Right Lung //
@@ -3857,13 +3779,6 @@ void BioGears::SetupTissue()
   RightLungTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   RightLungTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& RightLungVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::RightLung),
-    RightLungExtracellular, BGE::VascularLink::RightLungVascularToTissue);
-  RightLungVascularToTissue.MapPath(RightLungVToRightLungE1);
-
-  SELiquidCompartmentLink& RightLungTissueToLymph = m_Compartments->CreateLiquidLink(RightLungExtracellular, cLymph, BGE::LymphLink::RightLungTissueToLymph);
-  RightLungTissueToLymph.MapPath(RightLungE3ToLymph);
-
   //////////
   // Skin //
   SEFluidCircuitNode* SkinV = cCombinedCardiovascular.GetNode(BGE::CardiovascularNode::Skin1);
@@ -3928,12 +3843,6 @@ void BioGears::SetupTissue()
   SkinTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   SkinTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& SkinVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Skin),
-    SkinExtracellular, BGE::VascularLink::SkinVascularToTissue);
-  SkinVascularToTissue.MapPath(SkinVToSkinE1);
-
-  SELiquidCompartmentLink& SkinTissueToLymph = m_Compartments->CreateLiquidLink(SkinExtracellular, cLymph, BGE::LymphLink::SkinTissueToLymph);
-  SkinTissueToLymph.MapPath(SkinE3ToLymph);
 
   ////////////
   // Spleen //
@@ -3995,15 +3904,37 @@ void BioGears::SetupTissue()
   SpleenTissue.GetMembranePotential().SetValue(-84.8, ElectricPotentialUnit::mV);
   SpleenTissue.GetReflectionCoefficient().SetValue(1.0);
 
-  SELiquidCompartmentLink& SpleenVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::Spleen),
-    SpleenExtracellular, BGE::VascularLink::SpleenVascularToTissue);
-  SpleenVascularToTissue.MapPath(SpleenVToSpleenE1);
-
-  SELiquidCompartmentLink& SpleenTissueToLymph = m_Compartments->CreateLiquidLink(SpleenExtracellular, cLymph, BGE::LymphLink::SpleenTissueToLymph);
-  SpleenTissueToLymph.MapPath(SpleenE3ToLymph);
-
+  ////Finalize Circuit Changes
   cCombinedCardiovascular.SetNextAndCurrentFromBaselines();
   cCombinedCardiovascular.StateChange();
+
+  ////Add compartments to graph, but not links because all substance transport involving extracellular is performed manually in Tissue::CalculateDiffusion
+  gCombinedCardiovascular.AddCompartment(FatExtracellular);
+  gCombinedCardiovascular.AddCompartment(FatIntracellular);
+  gCombinedCardiovascular.AddCompartment(BoneExtracellular);
+  gCombinedCardiovascular.AddCompartment(BoneIntracellular);
+  gCombinedCardiovascular.AddCompartment(BrainExtracellular);
+  gCombinedCardiovascular.AddCompartment(BrainIntracellular);
+  gCombinedCardiovascular.AddCompartment(GutExtracellular);
+  gCombinedCardiovascular.AddCompartment(GutIntracellular);
+  gCombinedCardiovascular.AddCompartment(LeftKidneyExtracellular);
+  gCombinedCardiovascular.AddCompartment(LeftLungExtracellular);
+  gCombinedCardiovascular.AddCompartment(LiverExtracellular);
+  gCombinedCardiovascular.AddCompartment(LiverIntracellular);
+  gCombinedCardiovascular.AddCompartment(MuscleExtracellular);
+  gCombinedCardiovascular.AddCompartment(MuscleIntracellular);
+  gCombinedCardiovascular.AddCompartment(MyocardiumExtracellular);
+  gCombinedCardiovascular.AddCompartment(MyocardiumIntracellular);
+  gCombinedCardiovascular.AddCompartment(RightKidneyExtracellular);
+  gCombinedCardiovascular.AddCompartment(RightKidneyIntracellular);
+  gCombinedCardiovascular.AddCompartment(RightLungExtracellular);
+  gCombinedCardiovascular.AddCompartment(RightLungIntracellular);
+  gCombinedCardiovascular.AddCompartment(SkinExtracellular);
+  gCombinedCardiovascular.AddCompartment(SkinIntracellular);
+  gCombinedCardiovascular.AddCompartment(SpleenExtracellular);
+  gCombinedCardiovascular.AddCompartment(SpleenIntracellular);
+
+  gCombinedCardiovascular.StateChange();
 }
 
 void BioGears::SetupRespiratory()
