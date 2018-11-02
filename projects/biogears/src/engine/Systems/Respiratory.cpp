@@ -1050,9 +1050,6 @@ void Respiratory::ProcessDriverActions()
     m_VentilationFrequency_Per_min += diffPH;
   }
 
-  if (m_VentilationFrequency_Per_min == 0.0) {
-    m_bNotBreathing = true;
-  }
   if (m_VentilationFrequency_Per_min > dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L) {
     double test = 0.0;
   }
