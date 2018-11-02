@@ -2197,11 +2197,13 @@ void Respiratory::OverrideControlLoop()
 
   if ((currentRROverride < minRROverride || currentRROverride > maxRROverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Respiration Rate Override (Respiratory) set outside of bounds of validated parameter override. Results are now unpredictable.";
-    Fatal(m_ss);
+    Info(m_ss);
+    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Tidal Volume (Tidal Volume) Override set outside of bounds of validated parameter override. Results are now unpredictable.";
-    Fatal(m_ss);
+    Info(m_ss);
+    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   return;
 }

@@ -1886,11 +1886,13 @@ void Cardiovascular::OverrideControlLoop()
 
   if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Mean Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. Results are now unpredictable.";
-    Fatal(m_ss);
+    Info(m_ss);
+    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. Results are now unpredictable.";
-    Fatal(m_ss);
+    Info(m_ss);
+    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   return;
 }

@@ -1945,7 +1945,8 @@ void Renal::OverrideControlLoop()
 
   if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Urine Production Rate Override (Renal) set outside of bounds of validated parameter override. Results are now unpredictable.";
-    Fatal(m_ss);
+    Info(m_ss);
+    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   return;
 }
