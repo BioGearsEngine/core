@@ -171,6 +171,9 @@ void Respiratory::Initialize()
   //Asthma
   m_IEscaleFactor = 1.0;
 
+  //PH balancing
+  m_arterialPHBaseline = 0.0;
+
   // Conscious Respiration
   m_ConsciousRespirationPeriod_s = 0.0;
   m_ConsciousRespirationRemainingPeriod_s = 0.0;
@@ -984,10 +987,8 @@ void Respiratory::ProcessDriverActions()
   double SedationModifier = 1.0;
 
   //PH imbalance parameters
-  double arterialPH = 0.0;
-  double arterialPHBaseline = 7.41;
+  double arterialPH;
   double scalingFactor = 500.0;
-
 
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
     NMBModifier = 0.0;
@@ -1011,8 +1012,8 @@ void Respiratory::ProcessDriverActions()
   double sepsisModifier = 0.0;
   if (m_PatientActions->HasSepsis()) {
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
-    double sigmoidInput =1.0-m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
-	sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.05);
+    double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
+    sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.05);
   }
 
   //Apply modifiers to tidal volume.  Cardiac arrest and neuromuscular block are multiplicative while drug change is additive
@@ -1020,17 +1021,16 @@ void Respiratory::ProcessDriverActions()
   m_TargetTidalVolume_L *= NMBModifier;
   m_TargetTidalVolume_L += DrugsTVChange_L;
 
-  //update target tidal volume
-  if (m_data.GetState() < EngineState::SecondaryStabilization) {
-    arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
+  //update PH during stabilization
+  if (m_data.GetState() < EngineState::Active) {
+    m_arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
   }
 
-
   arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
-  double diffPH = scalingFactor*(std::abs(arterialPHBaseline - arterialPH) / arterialPHBaseline);
-  
+  double diffPH = scalingFactor * (arterialPH - m_arterialPHBaseline) / m_arterialPHBaseline;
 
-
+  //don't let negatives effect changes
+  diffPH = std::max(diffPH, 0.0);
 
   //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications.  The Respiration Rate will make up for the Alveoli Ventilation difference
   double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
@@ -1053,9 +1053,11 @@ void Respiratory::ProcessDriverActions()
   if (m_VentilationFrequency_Per_min == 0.0) {
     m_bNotBreathing = true;
   }
-
-  //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
-  m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
+  if (m_VentilationFrequency_Per_min > dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L) {
+    double test = 0.0;
+  }
+    //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
+    m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
 }
 
 //--------------------------------------------------------------------------------------------------

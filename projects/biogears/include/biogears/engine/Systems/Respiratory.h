@@ -188,6 +188,8 @@ private:
   double m_VentilatoryOcclusionPressure_cmH2O;
   // State between functions (i.e. shared between methods in preprocess, set to a default value at the start of preprocess)
   double m_AverageLocalTissueBronchodilationEffects;
+  // member to save off baseline PH in the patient 
+  double m_arterialPHBaseline;
 
   // Patient
   SEPatient* m_Patient;
