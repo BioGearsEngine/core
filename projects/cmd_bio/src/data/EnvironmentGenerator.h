@@ -29,14 +29,15 @@ namespace biogears
   class EnvironmentGenerator : public CSVToXMLConvertor
   {
   public:
-    EnvironmentGenerator(std::string path, std::string filename);
+    EnvironmentGenerator(std::string path);
     ~EnvironmentGenerator() override;
 
     bool parse() override;
     bool save() const override;
     void print() const override;
   protected:
-    //bool process_ambientgasdata(CSV_RowItr itr);
+    bool process_ambientgasdata(CSV_RowItr itr);
+    bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr);
     bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::EnvironmentalConditionsData& environment);
   private:
     std::vector<Environment> _input;
