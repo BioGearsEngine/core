@@ -21,15 +21,10 @@
 namespace biogears
 {
 
-  struct Patient
-  {
-
-  };
-
   class PatientGenerator : public CSVToXMLConvertor
   {
   public:
-    PatientGenerator(std::string path);
+    PatientGenerator(std::string path = "");
     ~PatientGenerator() override;
 
     bool parse() override;
@@ -38,7 +33,6 @@ namespace biogears
   protected:
     bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::PatientData& patient);
   private:
-    std::vector<Patient> _input;
     std::vector<mil::tatrc::physiology::datamodel::PatientData> _patients;
   };
 } //namespace biogears

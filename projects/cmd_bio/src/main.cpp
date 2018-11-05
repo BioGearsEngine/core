@@ -8,6 +8,7 @@
 #include "data/PatientGenerator.h"
 #include "data/StabilizationGenerator.h"
 #include "data/SubstanceGenerator.h"
+#include "data/NutritionGenerator.h"
 
 int main(int argc, char* argv[])
 {
@@ -35,9 +36,13 @@ int main(int argc, char* argv[])
       auto confs = bg::StabilizationGenerator();
       confs.parse();
       confs.save();
+    } else if ("NUTRITION" == std::string(argv[1])) {
+      auto confs = bg::NutritionGenerator();
+      confs.parse();
+      confs.save();
     } else {
       std::cout << "Input not recognized" << std::endl;
-      std::cout << "Usuage " + std::string(argv[0]) + ": [SUBS|ENVS|PATIENTS|CONF]";
+      std::cout << "Usuage " + std::string(argv[0]) + ": [SUBS|ENVS|PATIENTS|CONF|NEUTRITION]";
     }
   }
   return 0;

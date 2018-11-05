@@ -21,11 +21,6 @@
 namespace biogears
 {
 
-  struct Compound
-  {
-
-  };
-
   class CompoundGenerator : public CSVToXMLConvertor
   {
   public:
@@ -38,7 +33,6 @@ namespace biogears
   protected:
     bool process(const std::vector<std::vector<std::string>>& data);
   private:
-    std::vector<Compound> _input;
     std::vector<mil::tatrc::physiology::datamodel::BioGearsConfigurationData> _Compounds;
   };
 } //namespace biogears

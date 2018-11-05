@@ -16,30 +16,24 @@
 #include <string>
 #include <vector>
 
-#include <biogears/schema/biogears/BioGearsConfiguration.hxx>
+#include <biogears/schema/cdm/PatientNutrition.hxx>
 #include "CSVToXMLConvertor.h"
 namespace biogears
 {
 
-  struct Neutrition
-  {
-
-  };
-
-  class NeutritionGenerator : public CSVToXMLConvertor
+  class NutritionGenerator : public CSVToXMLConvertor
   {
   public:
-    NeutritionGenerator(std::string path, std::string filename);
-    ~NeutritionGenerator() override;
+    NutritionGenerator(std::string path = "");
+    ~NutritionGenerator() override;
 
     bool parse() override;
     bool save() const override;
     void print() const override;
   protected:
-    bool process(const std::vector<std::vector<std::string>>& data);
+    bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::NutritionData& patient);
   private:
-    std::vector<Neutrition> _input;
-    std::vector<mil::tatrc::physiology::datamodel::BioGearsConfigurationData> _Neutritions;
+    std::vector<mil::tatrc::physiology::datamodel::NutritionData> _nutrients;
   };
 } //namespace biogears
 
