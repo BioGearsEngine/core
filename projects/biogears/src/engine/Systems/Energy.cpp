@@ -650,17 +650,17 @@ void Energy::OverrideControlLoop()
   }
 
   if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
+    m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. Conformance turned off.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
+    m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. Conformance turned off.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentTotalMetabolicOverride < minTotalMetabolicOverride || currentTotalMetabolicOverride > maxTotalMetabolicOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Total Metabolic Rate Override (Energy) set outside of bounds of validated parameter override. Results are now unpredictable.";
+    m_ss << "Total Metabolic Rate Override (Energy) set outside of bounds of validated parameter override. Conformance turned off.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }

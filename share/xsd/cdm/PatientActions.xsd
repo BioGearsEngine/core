@@ -442,6 +442,7 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
+					<xs:element name="CardiacOutputOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief The volume of blood being pumped from the heart in a given time interval. -->
 					<xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. -->  
 					<xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of heart beat. -->					
 					<xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Temperature of core. -->                 					

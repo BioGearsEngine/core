@@ -23,6 +23,7 @@ SEOverride::SEOverride()
 {
   m_OverrideSwitch = CDM::enumOnOff::Off;
   m_OverrideConformance = CDM::enumOnOff::Off;
+  m_CardiacOutputOR = nullptr;
   m_PressureOR = nullptr;
   m_HeartRateOR = nullptr;
   m_CoreTemperatureOR = nullptr;
@@ -43,6 +44,7 @@ void SEOverride::Clear()
   SEPatientAction::Clear();
   m_OverrideSwitch = CDM::enumOnOff::Off;
   m_OverrideConformance = CDM::enumOnOff::Off;
+  SAFE_DELETE(m_CardiacOutputOR);
   SAFE_DELETE(m_PressureOR);
   SAFE_DELETE(m_HeartRateOR);
   SAFE_DELETE(m_CoreTemperatureOR);
@@ -78,6 +80,10 @@ bool SEOverride::Load(const CDM::OverrideData& in)
   SEPatientAction::Clear();
   SetOverrideSwitch(in.State());
   SetOverrideConformance(in.Conformant());
+  if (in.CardiacOutputOverride().present())
+    GetCardiacOutputOverride().Load(in.CardiacOutputOverride().get());
+  else
+    GetCardiacOutputOverride().Invalidate();
   if (in.MeanArterialPressureOverride().present())
     GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
   else
@@ -129,6 +135,8 @@ void SEOverride::Unload(CDM::OverrideData& data) const
     data.State(m_OverrideSwitch);
   if (HasOverrideConformance())
     data.Conformant(m_OverrideConformance);
+  if (HasCardiacOutputOverride())
+    data.CardiacOutputOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CardiacOutputOR->Unload()));
   if (HasMAPOverride())
     data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
   if (HasHeartRateOverride())
@@ -187,6 +195,22 @@ bool SEOverride::IsOverrideConformant()
 }
 
 // Cardiovascular Overrides //
+bool SEOverride::HasCardiacOutputOverride() const
+{
+  return m_CardiacOutputOR == nullptr ? false : m_CardiacOutputOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetCardiacOutputOverride()
+{
+  if (m_CardiacOutputOR == nullptr)
+    m_CardiacOutputOR = new SEScalarVolumePerTime();
+  return *m_CardiacOutputOR;
+}
+double SEOverride::GetCardiacOutputOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_CardiacOutputOR == nullptr)
+    return SEScalar::dNaN();
+  return m_CardiacOutputOR->GetValue(unit);
+}
 bool SEOverride::HasMAPOverride() const
 {
   return m_PressureOR == nullptr ? false : m_PressureOR->IsValid();
@@ -222,7 +246,8 @@ double SEOverride::GetHeartRateOverride(const FrequencyUnit& unit) const
 
 bool SEOverride::HasCardiovascularOverride() const
 {
-  return HasMAPOverride() ? true : 
+  return HasCardiacOutputOverride() ? true :
+  HasMAPOverride() ? true : 
   HasHeartRateOverride() ? true :
   false;
  
@@ -362,6 +387,13 @@ void SEOverride::ToString(std::ostream& str) const
   HasOverrideConformance() ? str << GetOverrideConformance() : str << "Not Set";
   if (GetOverrideConformance() == CDM::enumOnOff::Off && GetOverrideSwitch() == CDM::enumOnOff::On) {
     str << ("\n\tOverride has turned conformance off. Outputs no longer resemble validated parameters.");
+  }
+  if (HasCardiacOutputOverride()) {
+    str << "\n\tCardiac Output: ";
+    HasCardiacOutputOverride() ? str << *m_CardiacOutputOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tCardiac Output has a lower bound of 0 L/min and an upper bound of 100 L/min.";
+    str << std::flush;
   }
   if (HasMAPOverride())
   {

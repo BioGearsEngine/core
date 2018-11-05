@@ -29,6 +29,7 @@ namespace biogears {
 OverrideConfig::OverrideConfig()
 {
   m_overrideMode = CDM::enumOnOff::Off;
+  m_CardiacOutputOverride = nullptr;
   m_MeanArterialPressureOverride = nullptr;
   m_HeartRateOverride = nullptr;
   m_CoreTemperatureOverride = nullptr;
@@ -47,6 +48,7 @@ OverrideConfig::~OverrideConfig()
 void OverrideConfig::Clear()
 {
   /* Check this function */
+  SAFE_DELETE(m_CardiacOutputOverride);
   SAFE_DELETE(m_MeanArterialPressureOverride);
   SAFE_DELETE(m_HeartRateOverride);
   SAFE_DELETE(m_CoreTemperatureOverride);
@@ -97,6 +99,8 @@ bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
     const CDM::CardiovascularOverrideData& config = in.CardiovascularOverride().get();
     if (config.EnableCardiovascularOverride().present())
       EnableCardiovascularOverride(config.EnableCardiovascularOverride().get());
+    if (config.CardiacOutputOverride().present())
+      GetCardiacOutputOverride().Load(config.CardiacOutputOverride().get());
     if (config.MeanArterialPressureOverride().present())
       GetMeanArterialPressureOverride().Load(config.MeanArterialPressureOverride().get());
     if (config.HeartRateOverride().present())
@@ -144,6 +148,8 @@ void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
 {
 
   CDM::CardiovascularOverrideData* cardio(new CDM::CardiovascularOverrideData());
+  if (HasCardiacOutputOverride())
+    cardio->CardiacOutputOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CardiacOutputOverride->Unload()));
   if (HasMeanArterialPressureOverride())
     cardio->MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureOverride->Unload()));
   if (HasHeartRateOverride())
@@ -236,6 +242,22 @@ bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameter
 /** CardioVascular */
 ////////////////////
 
+  bool OverrideConfig::HasCardiacOutputOverride() const
+{
+    return m_CardiacOutputOverride == nullptr ? false : m_CardiacOutputOverride->IsValid();
+  }
+SEScalarVolumePerTime& OverrideConfig::GetCardiacOutputOverride()
+{
+  if (m_CardiacOutputOverride == nullptr)
+    m_CardiacOutputOverride = new SEScalarVolumePerTime();
+  return *m_CardiacOutputOverride;
+}
+double OverrideConfig::GetCardiacOutputOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_CardiacOutputOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_CardiacOutputOverride->GetValue(unit);
+}
 bool OverrideConfig::HasMeanArterialPressureOverride() const
 {
   return m_MeanArterialPressureOverride == nullptr ? false : m_MeanArterialPressureOverride->IsValid();

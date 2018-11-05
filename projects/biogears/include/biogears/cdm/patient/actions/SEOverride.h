@@ -55,6 +55,9 @@ public:
   bool IsOverrideConformant();
 
   //Cardiovascular
+  bool HasCardiacOutputOverride() const;
+  SEScalarVolumePerTime& GetCardiacOutputOverride();
+  double GetCardiacOutputOverride(const VolumePerTimeUnit& unit) const;
   bool HasMAPOverride() const;
   SEScalarPressure& GetMAPOverride();
   double GetMAPOverride(const PressureUnit& unit) const;
@@ -95,6 +98,7 @@ public:
 protected:
   CDM::enumOnOff m_OverrideSwitch;
   CDM::enumOnOff m_OverrideConformance;
+  SEScalarVolumePerTime* m_CardiacOutputOR;
   SEScalarPressure* m_PressureOR;
   SEScalarFrequency* m_HeartRateOR;
   SEScalarTemperature* m_CoreTemperatureOR;
