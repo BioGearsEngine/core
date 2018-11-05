@@ -22,6 +22,7 @@ namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
 {
+  m_Name = "";
   m_Carbohydrate = nullptr;
   m_CarbohydrateDigestionRate = nullptr;
   m_Fat = nullptr;
@@ -40,6 +41,7 @@ SENutrition::~SENutrition()
 
 void SENutrition::Clear()
 {
+  m_Name = "";
   SAFE_DELETE(m_Carbohydrate);
   SAFE_DELETE(m_CarbohydrateDigestionRate);
   SAFE_DELETE(m_Fat);
@@ -103,6 +105,7 @@ bool SENutrition::Load(const CDM::NutritionData& in)
 {
   Clear();
 
+  m_Name = in.Name();
   if (in.Carbohydrate().present())
     GetCarbohydrate().Load(in.Carbohydrate().get());
   if (in.CarbohydrateDigestionRate().present())
@@ -133,6 +136,9 @@ CDM::NutritionData* SENutrition::Unload() const
 
 void SENutrition::Unload(CDM::NutritionData& data) const
 {
+  if(!m_Name.empty()) {
+    data.Name(m_Name);
+  }
   if (m_Carbohydrate != nullptr)
     data.Carbohydrate(std::unique_ptr<CDM::ScalarMassData>(m_Carbohydrate->Unload()));
   if (m_CarbohydrateDigestionRate != nullptr)
@@ -198,6 +204,22 @@ bool SENutrition::Load(const std::string& nutritionFile)
   return Load(*pData);
 }
 
+std::string SENutrition::GetName() const
+{
+  return m_Name;
+}
+void SENutrition::SetName(const std::string& name)
+{
+  m_Name = name;
+}
+bool SENutrition::HasName() const
+{
+  return m_Name.empty() ? false : true;
+}
+void SENutrition::InvalidateName()
+{
+  m_Name = "";
+}
 bool SENutrition::HasCarbohydrate() const
 {
   return m_Carbohydrate == nullptr ? false : m_Carbohydrate->IsValid();

@@ -62,6 +62,11 @@ public:
 public:
   virtual const SEScalar* GetScalar(const std::string& name);
 
+  virtual std::string GetName() const;
+  virtual void SetName(const std::string& name);
+  virtual bool HasName() const;
+  virtual void InvalidateName();
+
   virtual bool HasActiveHeating() const;
   virtual SEActiveHeating& GetActiveHeating();
   virtual const SEActiveHeating* GetActiveHeating() const;
@@ -118,6 +123,7 @@ protected:
   virtual void Unload(CDM::EnvironmentData& data) const;
 
 protected:
+  std::string m_Name;
   SEScalarPower* m_ConvectiveHeatLoss;
   SEScalarHeatConductancePerArea* m_ConvectiveHeatTranferCoefficient;
   SEScalarPower* m_EvaporativeHeatLoss;

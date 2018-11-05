@@ -46,6 +46,11 @@ public:
 
   void Increment(const SENutrition& from);
 
+  virtual std::string GetName() const;
+  virtual void SetName(const std::string& name);
+  virtual bool HasName() const;
+  virtual void InvalidateName();
+
   virtual bool HasCarbohydrate() const;
   virtual SEScalarMass& GetCarbohydrate();
   virtual double GetCarbohydrate(const MassUnit& unit) const;
@@ -87,6 +92,7 @@ public:
   virtual void ToString(std::ostream& str) const;
 
 protected:
+  std::string m_Name;
   SEScalarMass* m_Carbohydrate;
   SEScalarMassPerTime* m_CarbohydrateDigestionRate;
   SEScalarMass* m_Fat;

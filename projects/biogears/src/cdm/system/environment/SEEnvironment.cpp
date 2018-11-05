@@ -34,6 +34,7 @@ SEEnvironment::SEEnvironment(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
 {
+  m_Name = "";
   m_ActiveHeating = nullptr;
   m_ActiveCooling = nullptr;
   m_AppliedTemperature = nullptr;
@@ -56,6 +57,7 @@ SEEnvironment::~SEEnvironment()
 void SEEnvironment::Clear()
 {
   SESystem::Clear();
+  m_Name = "";
   SAFE_DELETE(m_ActiveHeating);
   SAFE_DELETE(m_ActiveCooling);
   SAFE_DELETE(m_AppliedTemperature);
@@ -108,7 +110,7 @@ const SEScalar* SEEnvironment::GetScalar(const std::string& name)
 bool SEEnvironment::Load(const CDM::EnvironmentData& in)
 {
   SESystem::Load(in);
-
+  m_Name = in.Name();
   if (in.ActiveHeating().present())
     GetActiveHeating().Load(in.ActiveHeating().get());
   if (in.ActiveCooling().present())
@@ -165,7 +167,9 @@ CDM::EnvironmentData* SEEnvironment::Unload() const
 void SEEnvironment::Unload(CDM::EnvironmentData& data) const
 {
   SESystem::Unload(data);
-
+  if (HasName()) {
+    data.Name(m_Name);
+  }
   if (HasActiveHeating() && m_ActiveHeating->GetPower().IsPositive())
     data.ActiveHeating(std::unique_ptr<CDM::ActiveHeatingData>(m_ActiveHeating->Unload()));
   if (HasActiveCooling() && m_ActiveCooling->GetPower().IsPositive())
@@ -229,6 +233,22 @@ bool SEEnvironment::ProcessChange(const SEEnvironmentChange& change)
   return true;
 }
 
+std::string SEEnvironment::GetName() const
+{
+  return m_Name;
+}
+void SEEnvironment::SetName(const std::string& name)
+{
+  m_Name = name;
+}
+bool SEEnvironment::HasName() const
+{
+  return m_Name.empty() ? false : true;
+}
+void SEEnvironment::InvalidateName()
+{
+  m_Name = "";
+}
 bool SEEnvironment::HasActiveHeating() const
 {
   return m_ActiveHeating != nullptr;
