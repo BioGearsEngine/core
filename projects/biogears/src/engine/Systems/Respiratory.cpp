@@ -1050,9 +1050,6 @@ void Respiratory::ProcessDriverActions()
     m_VentilationFrequency_Per_min += diffPH;
   }
 
-  if (m_VentilationFrequency_Per_min > dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L) {
-    double test = 0.0;
-  }
     //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
     m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
 }
