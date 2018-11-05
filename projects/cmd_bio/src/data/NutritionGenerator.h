@@ -37,4 +37,4 @@ namespace biogears
   };
 } //namespace biogears
 
-#endif //BIOGEARS_NEUTRITION_GENERATOR_H
+#endif //BIOGEARS_NUTRITION_GENERATOR_H

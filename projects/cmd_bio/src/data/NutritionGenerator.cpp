@@ -1,3 +1,4 @@
+
 #include "NutritionGenerator.h"
 #include "../utils/string-helpers.h"
 
@@ -162,7 +163,6 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
       rValue = false;
     }
   }
-
   return rValue;
 }
 //-----------------------------------------------------------------------------
@@ -170,3 +170,4 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
 //-----------------------------------------------------------------------------
 
 } //end namespace biogears
+

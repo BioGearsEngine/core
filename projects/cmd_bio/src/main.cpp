@@ -6,8 +6,10 @@
 #include "StateGenerator.h"
 #include "data/EnvironmentGenerator.h"
 #include "data/PatientGenerator.h"
+
 #include "data/StabilizationGenerator.h"
 #include "data/SubstanceGenerator.h"
+
 #include "data/NutritionGenerator.h"
 
 int main(int argc, char* argv[])

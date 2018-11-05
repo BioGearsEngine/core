@@ -47,12 +47,6 @@ bool PatientGenerator::parse()
         data.Name(name);
         _patients.push_back(std::move(data));
       }
-    } else if ("AmbientGasData" == lineItr->first) {
-      //process_ambientgasdata(lineItr);
-      //lineItr += 2;
-    } else if ("AmbientAerosolData" == lineItr->first) {
-      //process_ambientaerosoldata(lineItr);
-      //lineItr += 2;
     } else {
       for (size_t index = 0; index < _patients.size() && index < lineItr->second.size(); ++index) {
         process(lineItr->first, lineItr->second[index], _patients[index]);
