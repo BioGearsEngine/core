@@ -46,7 +46,7 @@ bool CSVToXMLConvertor::read_csv()
     current_row.second.clear();
 
     rValue &= parse_line(line, current_row, input);
-    if (!current_row.first.empty() && "UNSET" != current_row.first) {
+    if (!current_row.first.empty() && "LOGIC_GUARD_FOR_UNAMED_ROWS" != current_row.first) {
       _data.push_back(current_row);
     }
   }
@@ -98,6 +98,11 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
       break;
     }
     ++token_end;
+  }
+ 
+  if( token_start < token_end )
+  {
+    row.second.emplace_back(trim(std::string(token_start, token_end)));
   }
   if ("LOGIC_GUARD_FOR_UNAMED_ROWS" == row.first) {
     row.first.clear();
