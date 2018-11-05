@@ -1758,11 +1758,11 @@ void Respiratory::CalculateVitalSigns()
   if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
 
     //Bradypnea
-    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 8) {
+    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 8 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min) < 8)) {
       /// \event Patient: Bradypnea: Respiration rate is below 10 breaths per minute
       /// The patient has bradypnea.
       m_Patient->SetEvent(CDM::enumPatientEvent::Bradypnea, true, m_data.GetSimulationTime()); /// \cite overdyk2007continuous
-    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) >= 10) // offset by .5
+    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) >= 10) // offset by 2
     {
       /// \event Patient: End Bradypnea Event. The respiration rate has risen above 10.
       /// The patient is no longer considered to have bradypnea.
@@ -1770,11 +1770,11 @@ void Respiratory::CalculateVitalSigns()
     }
 
     //Tachypnea
-    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) > 20) {
+    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) > 20 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min) > 20)) {
       /// \event Patient: Tachypnea: Respiration rate is above 20 breaths per minute.
       /// The patient has tachypnea.
       m_Patient->SetEvent(CDM::enumPatientEvent::Tachypnea, true, m_data.GetSimulationTime()); /// \cite
-    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) <= 18) // offset by .5
+    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) <= 18) // offset by 2 // && m_Patient->GetEventDuration(CDM::enumPatientEvent::Tachypnea, TimeUnit::s) > 5 for time based segmentation
     {
       /// \event Patient: End Tachypnea Event. The respiration rate has fallen below 19.5.
       /// The patient is no longer considered to have tachypnea.
@@ -2170,6 +2170,7 @@ void Respiratory::ProcessOverride()
       tidalvolume_mL = m_Override->GetTidalVolumeOverride(VolumeUnit::mL);
   }
   m_data.GetRespiratory().GetRespirationRate().SetValue(rr_per_min, FrequencyUnit::Per_min);
+  //m_Patient->GetRespirationRateBaseline().SetValue(rr_per_min, FrequencyUnit::Per_min);
   m_data.GetRespiratory().GetTidalVolume().SetValue(tidalvolume_mL, VolumeUnit::mL);
 }
 

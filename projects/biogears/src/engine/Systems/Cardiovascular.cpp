@@ -803,10 +803,10 @@ void Cardiovascular::CalculateVitalSigns()
     /// \event Patient: Tachycardia: heart rate exceeds 100 beats per minute.  This state is alleviated if it decreases below 90.
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 90)
       m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, false, m_data.GetSimulationTime());
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 100)
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 100 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) > 100))
       m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, true, m_data.GetSimulationTime());
     /// \event Patient: Bradycardia: heart rate falls below 60 beats per minute.  This state is alleviated if it increases above 65.
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 60)
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 60 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) < 60))
       m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, true, m_data.GetSimulationTime());
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 65)
       m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, false, m_data.GetSimulationTime());
