@@ -121,4 +121,15 @@ endif()
      ARCHIVE DESTINATION lib
   )
 
+  install(DIRECTORY 
+    include/biogears
+    DESTINATION include/
+    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+    )
+
+	install(FILES 
+    "include/units.h"
+    DESTINATION include/
+    )
+
 message(STATUS "")
