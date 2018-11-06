@@ -13,10 +13,36 @@
 #include <string>
 namespace biogears {
 
-std::string patientFiles[] = { "Bradycardic.xml" //length 26
-  ,"Carol.xml", "Cynthia.xml", "DefaultFemale.xml", "DefaultMale.xml", "DefaultTemplateFemale.xml", "DefaultTemplateMale.xml", "ExtremeFemale.xml", "ExtremeMale.xml", "Gus.xml", "Hassan.xml", "Jane.xml", "Jeff.xml", "Joel.xml", "Nathan.xml", "Overweight.xml", "Ricky.xml", "Roy.xml", "Soldier.xml", "StandardFemale.xml", "StandardMale.xml", "Tachycardic.xml", "ToughGirl.xml", "ToughGuy.xml", "Tristan.xml", "Underweight.xml" };
+  // length 26
+std::string patientFiles[] = { "Bradycardic.xml",
+                               "Carol.xml",
+                               "Cynthia.xml",
+                               "DefaultFemale.xml",
+                               "DefaultMale.xml",
+                               "DefaultTemplateFemale.xml",
+                               "DefaultTemplateMale.xml",
+                               "ExtremeFemale.xml",
+                               "ExtremeMale.xml",
+                               "Gus.xml",
+                               "Hassan.xml",
+                               "Jane.xml",
+                               "Jeff.xml",
+                               "Joel.xml",
+                               "Nathan.xml",
+                               "Overweight.xml",
+                               "Ricky.xml",
+                               "Roy.xml",
+                               "Soldier.xml",
+                               "StandardFemale.xml",
+                               "StandardMale.xml",
+                               "Tachycardic.xml",
+                               "ToughGirl.xml",
+                               "ToughGuy.xml",
+                               "Tristan.xml",
+                               "Underweight.xml" };
 
-std::string findAndReplace(std::string& S, const std::string& toReplace, const std::string& replaceWith)
+std::string findAndReplace(std::string& S, const std::string& toReplace,
+                           const std::string& replaceWith)
 {
   size_t start = 0;
   while (true) {
@@ -86,4 +112,4 @@ int StateGenerator::runScenario(int patientNum, std::string&& XMLString)
   return 0;
 }
 //-------------------------------------------------------------------------------
-} //namespac biogears
+} // namespace biogears
