@@ -19,8 +19,16 @@ int main(int argc, char** argv)
 {
   namespace bg = biogears;
   ArgumentParser parser;
-  parser.parse(argc, argv);
 
+  parser.addArgument("STATES");
+  parser.addArgument("SUBS");
+  parser.addArgument("ENVS");
+  parser.addArgument("PATIENTS");
+  parser.addArgument("CONF");
+  parser.addArgument("NUTRITION");
+  parser.addArgument("COMPOUNDS");
+
+  parser.parse(argc,argv);
   if (argc > 1) {
     if (parser.exists("STATES")) {
       auto generator = bg::StateGenerator();
