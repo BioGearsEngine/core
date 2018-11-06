@@ -25,7 +25,6 @@ set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 ###############################################################################
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
-find_package(Units REQUIRED)
 ###############################################################################
 #Code Generation
 ###############################################################################
