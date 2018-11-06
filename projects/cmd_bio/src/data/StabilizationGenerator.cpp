@@ -73,7 +73,7 @@ bool StabilizationGenerator::save() const
 
   try {
     std::ofstream file;
-    file.open("config/TimeStilization.xml");
+    file.open("config/TimedStabilization.xml");
     CDM::PhysiologyEngineTimedStabilization(file, _timed, info);
     file.close();
 
