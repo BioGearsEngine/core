@@ -44,6 +44,24 @@ public:
   //virtual SEScalarPressure& GetOverride();
   //virtual double GetOverride(const PressureUnit& unit) const;
 
+  // Blood Chem Parameters
+  virtual bool HasArterialPHOverride() const;
+  virtual SEScalar& GetArterialPHOverride();
+  double GetArterialPHOverride() const;
+  virtual bool HasVenousPHOverride() const;
+  virtual SEScalar& GetVenousPHOverride();
+  double GetVenousPHOverride() const;
+
+  virtual bool HasEnableBloodChemistryOverride() const
+  {
+    return m_overrideMode != (CDM::enumOnOff::Off);
+  }
+  virtual bool IsBloodChemistryOverrideEnabled() const
+  {
+    return m_overrideMode == CDM::enumOnOff::On;
+  }
+  virtual void EnableBloodChemistryOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
+
   // Cardiovascular Parameters
   virtual bool HasCardiacOutputOverride() const;
   virtual SEScalarVolumePerTime& GetCardiacOutputOverride();
@@ -124,6 +142,8 @@ protected:
   bool ReadOverrideParameters(const std::string& overrideParameterFile);
 
   CDM::enumOnOff::value m_overrideMode;
+  SEScalar* m_ArterialPHOverride;
+  SEScalar* m_VenousPHOverride;
   SEScalarVolumePerTime* m_CardiacOutputOverride;
   SEScalarPressure* m_MeanArterialPressureOverride;
   SEScalarTemperature* m_CoreTemperatureOverride;

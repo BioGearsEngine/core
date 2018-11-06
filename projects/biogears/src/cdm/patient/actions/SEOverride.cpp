@@ -22,6 +22,8 @@ SEOverride::SEOverride()
   : SEPatientAction()
 {
   m_OverrideSwitch = CDM::enumOnOff::Off;
+  m_ArterialPHOR = nullptr;
+  m_VenousPHOR = nullptr;
   m_OverrideConformance = CDM::enumOnOff::Off;
   m_CardiacOutputOR = nullptr;
   m_PressureOR = nullptr;
@@ -44,6 +46,8 @@ void SEOverride::Clear()
   SEPatientAction::Clear();
   m_OverrideSwitch = CDM::enumOnOff::Off;
   m_OverrideConformance = CDM::enumOnOff::Off;
+  SAFE_DELETE(m_ArterialPHOR);
+  SAFE_DELETE(m_VenousPHOR);
   SAFE_DELETE(m_CardiacOutputOR);
   SAFE_DELETE(m_PressureOR);
   SAFE_DELETE(m_HeartRateOR);
@@ -80,6 +84,14 @@ bool SEOverride::Load(const CDM::OverrideData& in)
   SEPatientAction::Clear();
   SetOverrideSwitch(in.State());
   SetOverrideConformance(in.Conformant());
+  if (in.ArterialBloodPHOverride().present())
+    GetArterialPHOverride().Load(in.ArterialBloodPHOverride().get());
+  else
+    GetArterialPHOverride().Invalidate();
+  if (in.VenousBloodPHOverride().present())
+    GetVenousPHOverride().Load(in.VenousBloodPHOverride().get());
+  else
+    GetVenousPHOverride().Invalidate();
   if (in.CardiacOutputOverride().present())
     GetCardiacOutputOverride().Load(in.CardiacOutputOverride().get());
   else
@@ -135,6 +147,10 @@ void SEOverride::Unload(CDM::OverrideData& data) const
     data.State(m_OverrideSwitch);
   if (HasOverrideConformance())
     data.Conformant(m_OverrideConformance);
+  if (HasArterialPHOverride())
+    data.ArterialBloodPHOverride(std::unique_ptr<CDM::ScalarData>(m_ArterialPHOR->Unload()));
+  if (HasVenousPHOverride())
+    data.VenousBloodPHOverride(std::unique_ptr<CDM::ScalarData>(m_VenousPHOR->Unload()));
   if (HasCardiacOutputOverride())
     data.CardiacOutputOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CardiacOutputOR->Unload()));
   if (HasMAPOverride())
@@ -192,6 +208,45 @@ void SEOverride::InvalidateOverrideConformance()
 bool SEOverride::IsOverrideConformant()
 {
   return (m_OverrideConformance == CDM::enumOnOff::On) ? true : false;
+}
+
+// Blood Chemistry Overrides //
+bool SEOverride::HasArterialPHOverride() const
+{
+  return m_ArterialPHOR == nullptr ? false : m_ArterialPHOR->IsValid();
+}
+SEScalar& SEOverride::GetArterialPHOverride()
+{
+  if (m_ArterialPHOR == nullptr)
+    m_ArterialPHOR = new SEScalar();
+  return *m_ArterialPHOR;
+}
+double SEOverride::GetArterialPHOverride() const
+{
+  if (m_ArterialPHOR == nullptr)
+    return SEScalar::dNaN();
+  return m_ArterialPHOR->GetValue();
+}
+bool SEOverride::HasVenousPHOverride() const
+{
+  return m_VenousPHOR == nullptr ? false : m_VenousPHOR->IsValid();
+}
+SEScalar& SEOverride::GetVenousPHOverride()
+{
+  if (m_VenousPHOR == nullptr)
+    m_VenousPHOR = new SEScalar();
+  return *m_VenousPHOR;
+}
+double SEOverride::GetVenousPHOverride() const
+{
+  if (m_VenousPHOR == nullptr)
+    return SEScalar::dNaN();
+  return m_VenousPHOR->GetValue();
+}
+
+bool SEOverride::HasBloodChemistryOverride() const
+{
+  return HasArterialPHOverride() ? true : HasVenousPHOverride() ? true : false;
 }
 
 // Cardiovascular Overrides //
@@ -388,6 +443,20 @@ void SEOverride::ToString(std::ostream& str) const
   if (GetOverrideConformance() == CDM::enumOnOff::Off && GetOverrideSwitch() == CDM::enumOnOff::On) {
     str << ("\n\tOverride has turned conformance off. Outputs no longer resemble validated parameters.");
   }
+  if (HasArterialPHOverride()) {
+    str << "\n\tArterial PH: ";
+    HasArterialPHOverride() ? str << *m_ArterialPHOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tArterial PH has a lower bound of 0 and an upper bound of 14.";
+    str << std::flush;
+  }
+  if (HasVenousPHOverride()) {
+    str << "\n\tVenous PH: ";
+    HasVenousPHOverride() ? str << *m_VenousPHOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On)
+      str << "\n\tVenous PH has a lower bound of 0 and an upper bound of 14.";
+    str << std::flush;
+  }
   if (HasCardiacOutputOverride()) {
     str << "\n\tCardiac Output: ";
     HasCardiacOutputOverride() ? str << *m_CardiacOutputOR : str << "Not Set";
@@ -401,6 +470,8 @@ void SEOverride::ToString(std::ostream& str) const
     HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On)
       str << "\n\tMean Arterial Pressure has a lower bound of 60 mmHg and an upper bound of 105 mmHg.";
+    else
+      str << "\n\tPharmacodynamics have been turned off due to conformance being turned off.";
     str << std::flush;
   }
   if (HasHeartRateOverride()) {
@@ -408,6 +479,8 @@ void SEOverride::ToString(std::ostream& str) const
     HasHeartRateOverride() ? str << *m_HeartRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On)
       str << "\n\tHeart Rate has a lower bound of 30 bpm and an upper bound of 240 bpm.";
+    else
+      str << "\n\tPharmacodynamics have been turned off due to conformance being turned off.";
     str << std::flush;
   }
   if (HasCoreTemperatureOverride())

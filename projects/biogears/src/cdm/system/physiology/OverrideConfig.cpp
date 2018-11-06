@@ -29,6 +29,8 @@ namespace biogears {
 OverrideConfig::OverrideConfig()
 {
   m_overrideMode = CDM::enumOnOff::Off;
+  m_ArterialPHOverride = nullptr;
+  m_VenousPHOverride = nullptr;
   m_CardiacOutputOverride = nullptr;
   m_MeanArterialPressureOverride = nullptr;
   m_HeartRateOverride = nullptr;
@@ -48,6 +50,8 @@ OverrideConfig::~OverrideConfig()
 void OverrideConfig::Clear()
 {
   /* Check this function */
+  SAFE_DELETE(m_ArterialPHOverride);
+  SAFE_DELETE(m_VenousPHOverride);
   SAFE_DELETE(m_CardiacOutputOverride);
   SAFE_DELETE(m_MeanArterialPressureOverride);
   SAFE_DELETE(m_HeartRateOverride);
@@ -83,7 +87,7 @@ bool OverrideConfig::LoadOverride(const std::string& file)
     Error(sst);
     return false;
   }
-  if (!pData->CardiovascularOverride() && !pData->EnergyOverride() && !pData->RenalOverride() && !pData->RespiratoryOverride()) {
+  if (!pData->BloodChemistryOverride() && !pData->CardiovascularOverride() && !pData->EnergyOverride() && !pData->RenalOverride() && !pData->RespiratoryOverride()) {
     return false;
   }
 
@@ -95,6 +99,15 @@ bool OverrideConfig::LoadOverride(const std::string& file)
 //Need to finish
 bool OverrideConfig::Load(const CDM::OverrideConfigData& in)
 {
+  if (in.BloodChemistryOverride().present()) {
+    const CDM::BloodChemistryOverrideData& config = in.BloodChemistryOverride().get();
+    if (config.EnableBloodChemistryOverride().present())
+      EnableBloodChemistryOverride(config.EnableBloodChemistryOverride().get());
+    if (config.ArterialBloodPHOverride().present())
+      GetArterialPHOverride().Load(config.ArterialBloodPHOverride().get());
+    if (config.VenousBloodPHOverride().present())
+      GetVenousPHOverride().Load(config.VenousBloodPHOverride().get());
+  }
   if (in.CardiovascularOverride().present()) {
     const CDM::CardiovascularOverrideData& config = in.CardiovascularOverride().get();
     if (config.EnableCardiovascularOverride().present())
@@ -146,6 +159,16 @@ CDM::OverrideConfigData* OverrideConfig::Unload() const
 
 void OverrideConfig::Unload(CDM::OverrideConfigData& data) const
 {
+  CDM::BloodChemistryOverrideData* bloodchem(new CDM::BloodChemistryOverrideData());
+  if (HasArterialPHOverride())
+    bloodchem->ArterialBloodPHOverride(std::unique_ptr<CDM::ScalarData>(m_ArterialPHOverride->Unload()));
+  if (HasVenousPHOverride())
+    bloodchem->VenousBloodPHOverride(std::unique_ptr<CDM::ScalarData>(m_VenousPHOverride->Unload()));
+
+  CDM::BloodChemistryOverrideData* bloodchemoverride(new CDM::BloodChemistryOverrideData());
+  if (HasEnableBloodChemistryOverride())
+    bloodchemoverride->EnableBloodChemistryOverride(m_overrideMode);
+  data.BloodChemistryOverride(std::unique_ptr<CDM::BloodChemistryOverrideData>(bloodchemoverride));
 
   CDM::CardiovascularOverrideData* cardio(new CDM::CardiovascularOverrideData());
   if (HasCardiacOutputOverride())
@@ -237,6 +260,43 @@ bool OverrideConfig::ReadOverrideParameters(const std::string& overrideParameter
 //  }
 //  return m_MeanArterialPressureOverride->GetValue(unit);
 //}
+
+////////////////////
+/** Blood Chemistry */
+////////////////////
+
+bool OverrideConfig::HasArterialPHOverride() const
+{
+  return m_ArterialPHOverride == nullptr ? false : m_ArterialPHOverride->IsValid();
+}
+SEScalar& OverrideConfig::GetArterialPHOverride()
+{
+  if (m_ArterialPHOverride == nullptr)
+    m_ArterialPHOverride = new SEScalar();
+  return *m_ArterialPHOverride;
+}
+double OverrideConfig::GetArterialPHOverride() const
+{
+  if (m_ArterialPHOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_ArterialPHOverride->GetValue();
+}
+bool OverrideConfig::HasVenousPHOverride() const
+{
+  return m_VenousPHOverride == nullptr ? false : m_VenousPHOverride->IsValid();
+}
+SEScalar& OverrideConfig::GetVenousPHOverride()
+{
+  if (m_VenousPHOverride == nullptr)
+    m_VenousPHOverride = new SEScalar();
+  return *m_VenousPHOverride;
+}
+double OverrideConfig::GetVenousPHOverride() const
+{
+  if (m_VenousPHOverride == nullptr)
+    return SEScalar::dNaN();
+  return m_VenousPHOverride->GetValue();
+}
 
 ////////////////////
 /** CardioVascular */

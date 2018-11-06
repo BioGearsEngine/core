@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/system/physiology/OverrideConfig.h>
 
 namespace biogears {
 class SECompleteBloodCount;
@@ -74,9 +75,17 @@ protected:
   void Sepsis();
   void AcuteInflammatoryResponse();
 
+  //Override
+  void ProcessOverride();
+  void OverrideControlLoop();
+
   // Serializable member variables (Set in Initialize and in schema)
   RunningAverage m_ArterialOxygen_mmHg;
   RunningAverage m_ArterialCarbonDioxide_mmHg;
+
+  // Patient
+  SEPatient* m_Patient;
+  SEPatientActionCollection* m_PatientActions;
 
   // Stateless member variable (Set in SetUp())
   double m_redBloodCellVolume_mL;
@@ -111,7 +120,9 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaSodium;
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;
-  SEPatientActionCollection* m_PatientActions;
+
+  //Overrides
+  OverrideConfig* m_Override;
 
 };
 }

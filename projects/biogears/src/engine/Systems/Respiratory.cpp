@@ -2202,7 +2202,7 @@ void Respiratory::OverrideControlLoop()
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Tidal Volume (Tidal Volume) Override set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Tidal Volume (Respiratory) Override set outside of bounds of validated parameter override. Conformance turned off.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }

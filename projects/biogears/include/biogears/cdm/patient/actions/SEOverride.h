@@ -54,6 +54,15 @@ public:
   void InvalidateOverrideConformance();
   bool IsOverrideConformant();
 
+  //Blood Chemistry
+  bool HasArterialPHOverride() const;
+  SEScalar& GetArterialPHOverride();
+  double GetArterialPHOverride() const;
+  bool HasVenousPHOverride() const;
+  SEScalar& GetVenousPHOverride();
+  double GetVenousPHOverride() const;
+  bool HasBloodChemistryOverride() const;
+
   //Cardiovascular
   bool HasCardiacOutputOverride() const;
   SEScalarVolumePerTime& GetCardiacOutputOverride();
@@ -98,6 +107,8 @@ public:
 protected:
   CDM::enumOnOff m_OverrideSwitch;
   CDM::enumOnOff m_OverrideConformance;
+  SEScalar* m_ArterialPHOR;
+  SEScalar* m_VenousPHOR;
   SEScalarVolumePerTime* m_CardiacOutputOR;
   SEScalarPressure* m_PressureOR;
   SEScalarFrequency* m_HeartRateOR;
