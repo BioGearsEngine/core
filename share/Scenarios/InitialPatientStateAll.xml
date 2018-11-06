@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+  <Name>InitialStableState</Name>
+  <Description>Stabilize a patient and save out the engines state at time zero</Description>
+  <InitialParameters><PatientFile>all</PatientFile></InitialParameters>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+		<Filename></Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+</Scenario>
