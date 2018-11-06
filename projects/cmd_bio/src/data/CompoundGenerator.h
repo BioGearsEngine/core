@@ -15,8 +15,8 @@
 
 #include <string>
 #include <vector>
+#include <biogears/schema/cdm/Substance.hxx>
 
-#include <biogears/schema/biogears/BioGearsConfiguration.hxx>
 #include "CSVToXMLConvertor.h"
 namespace biogears
 {
@@ -24,16 +24,16 @@ namespace biogears
   class CompoundGenerator : public CSVToXMLConvertor
   {
   public:
-    CompoundGenerator(std::string path, std::string filename);
+    CompoundGenerator(std::string path = "");
     ~CompoundGenerator() override;
 
     bool parse() override;
     bool save() const override;
     void print() const override;
   protected:
-    bool process(const std::vector<std::vector<std::string>>& data);
+    bool process_substance(CSV_RowItr itr);
   private:
-    std::vector<mil::tatrc::physiology::datamodel::BioGearsConfigurationData> _Compounds;
+    std::vector<mil::tatrc::physiology::datamodel::SubstanceCompoundData> _compounds;
   };
 } //namespace biogears
 
