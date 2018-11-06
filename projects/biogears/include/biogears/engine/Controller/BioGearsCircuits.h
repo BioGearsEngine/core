@@ -87,8 +87,8 @@ protected:
 
 namespace mil {
 namespace tatrc {
-namespace physiology {
-namespace biogears {
+  namespace physiology {
+    namespace biogears {
 
       class Circuits {
       public:
@@ -556,56 +556,82 @@ namespace biogears {
         DEFINE_STATIC_STRING(BoneE2);
         DEFINE_STATIC_STRING(BoneE3);
         DEFINE_STATIC_STRING(BoneI);
+        DEFINE_STATIC_STRING(BoneL1);
+        DEFINE_STATIC_STRING(BoneL2);
         DEFINE_STATIC_STRING(BrainE1);
         DEFINE_STATIC_STRING(BrainE2);
         DEFINE_STATIC_STRING(BrainE3);
         DEFINE_STATIC_STRING(BrainI);
+        DEFINE_STATIC_STRING(BrainL1);
+        DEFINE_STATIC_STRING(BrainL2);
         DEFINE_STATIC_STRING(FatE1);
         DEFINE_STATIC_STRING(FatE2);
         DEFINE_STATIC_STRING(FatE3);
         DEFINE_STATIC_STRING(FatI);
+        DEFINE_STATIC_STRING(FatL1);
+        DEFINE_STATIC_STRING(FatL2)
         DEFINE_STATIC_STRING(GutE1);
         DEFINE_STATIC_STRING(GutE2);
         DEFINE_STATIC_STRING(GutE3);
         DEFINE_STATIC_STRING(GutI);
+        DEFINE_STATIC_STRING(GutL1);
+        DEFINE_STATIC_STRING(GutL2)
         DEFINE_STATIC_STRING(LiverE1);
         DEFINE_STATIC_STRING(LiverE2);
         DEFINE_STATIC_STRING(LiverE3);
         DEFINE_STATIC_STRING(LiverI);
+        DEFINE_STATIC_STRING(LiverL1);
+        DEFINE_STATIC_STRING(LiverL2);
         DEFINE_STATIC_STRING(LeftKidneyE1);
         DEFINE_STATIC_STRING(LeftKidneyE2);
         DEFINE_STATIC_STRING(LeftKidneyE3);
         DEFINE_STATIC_STRING(LeftKidneyI);
+        DEFINE_STATIC_STRING(LeftKidneyL1);
+        DEFINE_STATIC_STRING(LeftKidneyL2);
         DEFINE_STATIC_STRING(LeftLungE1);
         DEFINE_STATIC_STRING(LeftLungE2);
         DEFINE_STATIC_STRING(LeftLungE3);
         DEFINE_STATIC_STRING(LeftLungI);
-        DEFINE_STATIC_STRING(Lymph);
+        DEFINE_STATIC_STRING(LeftLungL1);
+        DEFINE_STATIC_STRING(LeftLungL2);
+        DEFINE_STATIC_STRING(Lymph)
+        DEFINE_STATIC_STRING(Lymph2);
         DEFINE_STATIC_STRING(MuscleE1);
         DEFINE_STATIC_STRING(MuscleE2);
         DEFINE_STATIC_STRING(MuscleE3)
         DEFINE_STATIC_STRING(MuscleI);
-        ;
+        DEFINE_STATIC_STRING(MuscleL1);
+        DEFINE_STATIC_STRING(MuscleL2);
         DEFINE_STATIC_STRING(MyocardiumE1);
         DEFINE_STATIC_STRING(MyocardiumE2);
         DEFINE_STATIC_STRING(MyocardiumE3);
         DEFINE_STATIC_STRING(MyocardiumI);
+        DEFINE_STATIC_STRING(MyocardiumL1);
+        DEFINE_STATIC_STRING(MyocardiumL2);
         DEFINE_STATIC_STRING(RightLungE1);
         DEFINE_STATIC_STRING(RightLungE2);
         DEFINE_STATIC_STRING(RightLungE3);
         DEFINE_STATIC_STRING(RightLungI);
+        DEFINE_STATIC_STRING(RightLungL1);
+        DEFINE_STATIC_STRING(RightLungL2);
         DEFINE_STATIC_STRING(RightKidneyE1);
         DEFINE_STATIC_STRING(RightKidneyE2);
         DEFINE_STATIC_STRING(RightKidneyE3);
         DEFINE_STATIC_STRING(RightKidneyI);
+        DEFINE_STATIC_STRING(RightKidneyL1);
+        DEFINE_STATIC_STRING(RightKidneyL2);
         DEFINE_STATIC_STRING(SkinE1);
         DEFINE_STATIC_STRING(SkinE2);
         DEFINE_STATIC_STRING(SkinE3);
         DEFINE_STATIC_STRING(SkinI);
+        DEFINE_STATIC_STRING(SkinL1);
+        DEFINE_STATIC_STRING(SkinL2);
         DEFINE_STATIC_STRING(SpleenE1);
         DEFINE_STATIC_STRING(SpleenE2);
         DEFINE_STATIC_STRING(SpleenE3);
         DEFINE_STATIC_STRING(SpleenI);
+        DEFINE_STATIC_STRING(SpleenL1);
+        DEFINE_STATIC_STRING(SpleenL2);
       };
 
       class TissuePath {
@@ -616,7 +642,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(BoneE3ToBoneI);
         DEFINE_STATIC_STRING(BoneE3ToGround);
         DEFINE_STATIC_STRING(BoneIToGround);
-        DEFINE_STATIC_STRING(BoneE3ToLymph);
+        DEFINE_STATIC_STRING(BoneE3ToBoneL1);
+        DEFINE_STATIC_STRING(BoneL1ToBoneL2);
+        DEFINE_STATIC_STRING(BoneToLymphValve);
 
         DEFINE_STATIC_STRING(BrainVToBrainE1);
         DEFINE_STATIC_STRING(BrainE1ToBrainE2);
@@ -624,7 +652,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(BrainE3ToBrainI);
         DEFINE_STATIC_STRING(BrainE3ToGround);
         DEFINE_STATIC_STRING(BrainIToGround);
-        DEFINE_STATIC_STRING(BrainE3ToLymph);
+        DEFINE_STATIC_STRING(BrainE3ToBrainL1);
+        DEFINE_STATIC_STRING(BrainL1ToBrainL2);
+        DEFINE_STATIC_STRING(BrainToLymphValve);
 
         DEFINE_STATIC_STRING(FatVToFatE1);
         DEFINE_STATIC_STRING(FatE1ToFatE2);
@@ -632,7 +662,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(FatE3ToFatI);
         DEFINE_STATIC_STRING(FatE3ToGround);
         DEFINE_STATIC_STRING(FatIToGround);
-        DEFINE_STATIC_STRING(FatE3ToLymph);
+        DEFINE_STATIC_STRING(FatE3ToFatL1);
+        DEFINE_STATIC_STRING(FatL1ToFatL2);
+        DEFINE_STATIC_STRING(FatToLymphValve);
 
         DEFINE_STATIC_STRING(SmallIntestineVToGutE1);
         DEFINE_STATIC_STRING(LargeIntestineVToGutE1);
@@ -642,7 +674,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(GutE3ToGutI);
         DEFINE_STATIC_STRING(GutE3ToGround);
         DEFINE_STATIC_STRING(GutIToGround);
-        DEFINE_STATIC_STRING(GutE3ToLymph);
+        DEFINE_STATIC_STRING(GutE3ToGutL1);
+        DEFINE_STATIC_STRING(GutL1ToGutL2);
+        DEFINE_STATIC_STRING(GutToLymphValve);
 
         DEFINE_STATIC_STRING(LiverVToLiverE1);
         DEFINE_STATIC_STRING(LiverE1ToLiverE2);
@@ -650,7 +684,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(LiverE3ToLiverI);
         DEFINE_STATIC_STRING(LiverE3ToGround);
         DEFINE_STATIC_STRING(LiverIToGround);
-        DEFINE_STATIC_STRING(LiverE3ToLymph);
+        DEFINE_STATIC_STRING(LiverE3ToLiverL1);
+        DEFINE_STATIC_STRING(LiverL1ToLiverL2);
+        DEFINE_STATIC_STRING(LiverToLymphValve);
 
         DEFINE_STATIC_STRING(LeftKidneyVToLeftKidneyE1);
         DEFINE_STATIC_STRING(LeftKidneyE1ToLeftKidneyE2);
@@ -658,7 +694,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(LeftKidneyE3ToLeftKidneyI);
         DEFINE_STATIC_STRING(LeftKidneyE3ToGround);
         DEFINE_STATIC_STRING(LeftKidneyIToGround);
-        DEFINE_STATIC_STRING(LeftKidneyE3ToLymph);
+        DEFINE_STATIC_STRING(LeftKidneyE3ToLeftKidneyL1);
+        DEFINE_STATIC_STRING(LeftKidneyL1ToLeftKidneyL2);
+        DEFINE_STATIC_STRING(LeftKidneyToLymphValve);
 
         DEFINE_STATIC_STRING(LeftLungVToLeftLungE1);
         DEFINE_STATIC_STRING(LeftLungE1ToLeftLungE2);
@@ -666,8 +704,11 @@ namespace biogears {
         DEFINE_STATIC_STRING(LeftLungE3ToLeftLungI);
         DEFINE_STATIC_STRING(LeftLungE3ToGround);
         DEFINE_STATIC_STRING(LeftLungIToGround);
-        DEFINE_STATIC_STRING(LeftLungE3ToLymph);
+        DEFINE_STATIC_STRING(LeftLungE3ToLeftLungL1);
+        DEFINE_STATIC_STRING(LeftLungL1ToLeftLungL2);
+        DEFINE_STATIC_STRING(LeftLungToLymphValve);
 
+        DEFINE_STATIC_STRING(Lymph1ToLymph2);
         DEFINE_STATIC_STRING(LymphToVenaCava);
         DEFINE_STATIC_STRING(LymphToGround);
 
@@ -677,7 +718,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(MuscleE3ToMuscleI);
         DEFINE_STATIC_STRING(MuscleE3ToGround);
         DEFINE_STATIC_STRING(MuscleIToGround);
-        DEFINE_STATIC_STRING(MuscleE3ToLymph);
+        DEFINE_STATIC_STRING(MuscleE3ToMuscleL1);
+        DEFINE_STATIC_STRING(MuscleL1ToMuscleL2);
+        DEFINE_STATIC_STRING(MuscleToLymphValve);
 
         DEFINE_STATIC_STRING(MyocardiumVToMyocardiumE1);
         DEFINE_STATIC_STRING(MyocardiumE1ToMyocardiumE2);
@@ -685,7 +728,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(MyocardiumE3ToMyocardiumI);
         DEFINE_STATIC_STRING(MyocardiumE3ToGround);
         DEFINE_STATIC_STRING(MyocardiumIToGround);
-        DEFINE_STATIC_STRING(MyocardiumE3ToLymph);
+        DEFINE_STATIC_STRING(MyocardiumE3ToMyocardiumL1);
+        DEFINE_STATIC_STRING(MyocardiumL1ToMyocardiumL2);
+        DEFINE_STATIC_STRING(MyocardiumToLymphValve);
 
         DEFINE_STATIC_STRING(RightLungVToRightLungE1);
         DEFINE_STATIC_STRING(RightLungE1ToRightLungE2);
@@ -693,7 +738,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(RightLungE3ToRightLungI);
         DEFINE_STATIC_STRING(RightLungE3ToGround);
         DEFINE_STATIC_STRING(RightLungIToGround);
-        DEFINE_STATIC_STRING(RightLungE3ToLymph);
+        DEFINE_STATIC_STRING(RightLungE3ToRightLungL1);
+        DEFINE_STATIC_STRING(RightLungL1ToRightLungL2);
+        DEFINE_STATIC_STRING(RightLungToLymphValve);
 
         DEFINE_STATIC_STRING(RightKidneyVToRightKidneyE1);
         DEFINE_STATIC_STRING(RightKidneyE1ToRightKidneyE2);
@@ -701,7 +748,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(RightKidneyE3ToRightKidneyI);
         DEFINE_STATIC_STRING(RightKidneyE3ToGround);
         DEFINE_STATIC_STRING(RightKidneyIToGround);
-        DEFINE_STATIC_STRING(RightKidneyE3ToLymph);
+        DEFINE_STATIC_STRING(RightKidneyE3ToRightKidneyL1);
+        DEFINE_STATIC_STRING(RightKidneyL1ToRightKidneyL2);
+        DEFINE_STATIC_STRING(RightKidneyToLymphValve);
 
         DEFINE_STATIC_STRING(SkinVToSkinE1);
         DEFINE_STATIC_STRING(SkinE1ToSkinE2);
@@ -709,8 +758,10 @@ namespace biogears {
         DEFINE_STATIC_STRING(SkinE3ToSkinI);
         DEFINE_STATIC_STRING(SkinE3ToGround);
         DEFINE_STATIC_STRING(SkinIToGround);
-        DEFINE_STATIC_STRING(SkinE3ToLymph);
+        DEFINE_STATIC_STRING(SkinE3ToSkinL1);
+        DEFINE_STATIC_STRING(SkinL1ToSkinL2);
         DEFINE_STATIC_STRING(SkinSweating);
+        DEFINE_STATIC_STRING(SkinToLymphValve);
 
         DEFINE_STATIC_STRING(SpleenVToSpleenE1);
         DEFINE_STATIC_STRING(SpleenE1ToSpleenE2);
@@ -718,7 +769,9 @@ namespace biogears {
         DEFINE_STATIC_STRING(SpleenE3ToSpleenI);
         DEFINE_STATIC_STRING(SpleenE3ToGround);
         DEFINE_STATIC_STRING(SpleenIToGround);
-        DEFINE_STATIC_STRING(SpleenE3ToLymph);
+        DEFINE_STATIC_STRING(SpleenE3ToSpleenL1);
+        DEFINE_STATIC_STRING(SpleenL1ToSpleenL2);
+        DEFINE_STATIC_STRING(SpleenToLymphValve);
       };
 
       class RenalNode {
@@ -821,7 +874,7 @@ namespace biogears {
       public:
         DEFINE_STATIC_STRING(GutChymeToSmallIntestineVascular);
       };
-} //namespace biogears
-} //namespace physiology
+    } //namespace biogears
+  } //namespace physiology
 } //namespace tatric
 } //namespace mil

@@ -28,8 +28,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
@@ -274,6 +274,7 @@ void Gastrointestinal::AtSteadyState()
 
 void Gastrointestinal::PreProcess()
 {
+  double GutSecretion_mL_Per_min = 0.0;
   if (m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().HasConsumeNutrients()) {
       // Use Default Rates if none provided
@@ -290,8 +291,9 @@ void Gastrointestinal::PreProcess()
       m_data.GetPatient().GetWeight().IncrementValue(c->GetNutrition().GetWeight(MassUnit::kg), MassUnit::kg);
       m_data.GetActions().GetPatientActions().RemoveConsumeNutrients();
     }
-    GastricSecretion(m_dT_s); // Move some water from the Gut EV fluids to the Stomach
+    //GastricSecretion(m_dT_s); // Move some water from the Gut EV fluids to the Stomach
     DigestNutrient();
+    GutSecretion_mL_Per_min = m_GutE3ToGroundPath->GetNextFlowSource(VolumePerTimeUnit::mL_Per_min);
   } else {
     // Reset the Gut Chyme substance to their original values
     for (auto i : m_InitialSubstanceMasses_ug) {
@@ -301,6 +303,7 @@ void Gastrointestinal::PreProcess()
   }
   ChymeSecretion(); // Secrete sodium first
   AbsorbNutrients(); // Absorb nutrients into the Blood from the small intestine chyme
+ // m_data.GetDataTrack().Probe("GutSecrection", GutSecretion_mL_Per_min);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -317,6 +320,7 @@ void Gastrointestinal::GastricSecretion(double duration_s)
   //There is a compliance, so the volume will be modified accordingly
   m_GutE3ToGroundPath->GetNextFlowSource().SetValue(m_secretionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   m_StomachContents->GetWater().IncrementValue(m_secretionRate_mL_Per_s * duration_s, VolumeUnit::mL);
+  
 }
 
 // --------------------------------------------------------------------------------------------------
@@ -591,6 +595,8 @@ void Gastrointestinal::AbsorbNutrients()
       m_GItoCVPath->GetSourceNode().GetNextVolume().IncrementValue(-absorbedVolume_mL, VolumeUnit::mL);
     }
   }
+;
+
 
   //only move sodium independently if it wasn't moved through the co-transporter
   if (sodiumAbsorbed_g < ZERO_APPROX) {

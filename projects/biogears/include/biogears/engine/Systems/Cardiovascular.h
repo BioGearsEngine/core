@@ -222,6 +222,7 @@ private:
 
   std::vector<SEFluidCircuitPath*> m_systemicResistancePaths;
   std::vector<SEFluidCircuitPath*> m_systemicCompliancePaths;
+  std::vector<SEFluidCircuitPath*> m_tissueResistancePaths;
 
   SEPatientActionCollection* m_PatientActions;
 };

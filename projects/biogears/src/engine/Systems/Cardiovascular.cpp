@@ -379,6 +379,8 @@ void Cardiovascular::SetUp()
 
   m_systemicResistancePaths.clear();
   m_systemicCompliancePaths.clear();
+  m_tissueResistancePaths.clear();
+  
   std::vector<SEFluidCircuitNode*> venousNodes;
   SEFluidCircuitNode* aorta = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Aorta1);
   SEFluidCircuitNode* ground = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Ground);
@@ -409,6 +411,22 @@ void Cardiovascular::SetUp()
   m_AortaResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta3ToAorta1);
   m_VenaCavaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
   m_RightHeartResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToRightHeart2);
+
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::GutE1ToGutE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::BoneE1ToBoneE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::BrainE1ToBrainE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::FatE1ToFatE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::LeftKidneyE1ToLeftKidneyE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::LiverE1ToLiverE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::MuscleE1ToMuscleE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::MyocardiumE1ToMyocardiumE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::RightKidneyE1ToRightKidneyE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::RightLungE1ToRightLungE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::SkinE1ToSkinE2));
+  m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::SpleenE1ToSpleenE2));
+
+
 
   m_PatientActions = &m_data.GetActions().GetPatientActions();
 }
@@ -1719,6 +1737,16 @@ void Cardiovascular::TunePaths(double systemicResistanceScale, double systemicCo
       p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
   }
+  if (systemicResistanceScale != 1.0) {
+    for (SEFluidCircuitPath* p : m_tissueResistancePaths) {
+      sp1_mmHg_s_Per_mL = p->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_min_Per_mL) / systemicResistanceScale;
+
+      p->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+      p->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+      p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+    }
+  }
+
   if (aortaComplianceScale != 1) {
     sp1_mmHg_s_Per_mL = m_AortaCompliance->GetCapacitanceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg) * aortaComplianceScale;
     m_AortaCompliance->GetCapacitanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
