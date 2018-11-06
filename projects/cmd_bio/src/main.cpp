@@ -42,7 +42,7 @@ int main(int argc, char** argv)
       }
     } else {
       std::cout << "Input not recognized" << std::endl;
-      std::cout << "Usuage " + std::string(argv[0]) + ": [SUBS|ENVS|PATIENTS|CONF|NEUTRITION]";
+      std::cout << "Usage " + std::string(argv[0]) + ": [SUBS|ENVS|PATIENTS|CONF|NEUTRITION]";
     }
   }
   return 0;
