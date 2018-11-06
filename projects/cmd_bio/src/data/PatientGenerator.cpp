@@ -24,7 +24,7 @@ bool PatientGenerator::save() const
 
     try {
       std::ofstream file;
-      file.open("patients" + patient.Name() + ".xml");
+      file.open("patients/" + patient.Name() + ".xml");
       mil::tatrc::physiology::datamodel::Patient(file, patient, info);
       file.close();
 

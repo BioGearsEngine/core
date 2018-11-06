@@ -20,6 +20,7 @@ int main(int argc, char** argv)
   namespace bg = biogears;
   ArgumentParser parser;
 
+  parser.addArgument("DATA");
   parser.addArgument("STATES");
   parser.addArgument("SUBS");
   parser.addArgument("ENVS");
