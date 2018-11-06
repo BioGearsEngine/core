@@ -63,7 +63,7 @@ bool StabilizationGenerator::save() const
 
   try {
     std::ofstream file;
-    file.open("config/DhynamicStabilization.xml");
+    file.open("config/DynamicStabilization.xml");
     CDM::PhysiologyEngineDynamicStabilization(file, _dynamic, info);
     file.close();
 

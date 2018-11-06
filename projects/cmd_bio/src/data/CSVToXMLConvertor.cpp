@@ -102,7 +102,9 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
  
   if( token_start < token_end )
   {
-    row.second.emplace_back(std::string(token_start, token_end));
+    row.second.emplace_back(trim(std::string(token_start, token_end)));
+  } else if ( token_start == token_end){
+    row.second.emplace_back( "" );
   }
   if ("LOGIC_GUARD_FOR_UNAMED_ROWS" == row.first) {
     row.first.clear();
