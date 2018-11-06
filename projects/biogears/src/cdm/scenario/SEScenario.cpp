@@ -137,6 +137,22 @@ void SEScenario::InvalidateName()
   m_Name = "";
 }
 
+std::string SEScenario::GetPatientFile() const
+{
+  return m_PatientFile;
+}
+void SEScenario::SetPatientFile(const std::string& PatientFile) {
+  m_PatientFile = PatientFile;
+}
+bool SEScenario::HasPatientFile() const
+{
+  return m_PatientFile.empty() ? false : true;
+}
+void SEScenario::InvalidatePatientFile()
+{
+  m_PatientFile = "";
+}
+
 std::string SEScenario::GetDescription() const
 {
   return m_Description;

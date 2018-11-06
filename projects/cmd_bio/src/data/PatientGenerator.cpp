@@ -5,7 +5,12 @@
 #include <iostream>
 
 namespace biogears {
-
+std::string ConvertBeatUnits(std::string unit){
+  if(unit == "bpm"){
+    return "1/min";
+  }
+  return unit;
+}
 PatientGenerator::PatientGenerator(std::string path)
   : CSVToXMLConvertor(path, "Patients.csv")
 {
@@ -79,7 +84,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::Age_type a_data;
     try {
       a_data.value(std::stod(value, &pos));
-      a_data.unit(value.substr(pos));
+      a_data.unit(trim(value.substr(pos)));
       patient.Age(a_data);
     } catch (std::exception e) {
       rValue = false;
@@ -89,7 +94,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::Weight_type w_data;
     try {
       w_data.value(std::stod(value, &pos));
-      w_data.unit(value.substr(pos));
+      w_data.unit(trim(value.substr(pos)));
       patient.Weight(w_data);
     } catch (std::exception e) {
       rValue = false;
@@ -99,7 +104,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::Height_type h_data;
     try {
       h_data.value(std::stod(value, &pos));
-      h_data.unit(value.substr(pos));
+      h_data.unit(trim(value.substr(pos)));
       patient.Height(h_data);
     } catch (std::exception e) {
       rValue = false;
@@ -125,7 +130,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::SkinSurfaceArea_type ssa_data;
     try {
       ssa_data.value(std::stod(value, &pos));
-      ssa_data.unit(value.substr(pos));
+      ssa_data.unit(trim(value.substr(pos)));
       patient.SkinSurfaceArea(ssa_data);
     } catch (std::exception e) {
       rValue = false;
@@ -135,7 +140,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::BasalMetabolicRate_type bmr_data;
     try {
       bmr_data.value(std::stod(value, &pos));
-      bmr_data.unit(value.substr(pos));
+      bmr_data.unit(trim(value.substr(pos)));
       patient.BasalMetabolicRate(bmr_data);
     } catch (std::exception e) {
       rValue = false;
@@ -145,7 +150,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::BloodVolumeBaseline_type bvb_data;
     try {
       bvb_data.value(std::stod(value, &pos));
-      bvb_data.unit(value.substr(pos));
+      bvb_data.unit(trim(value.substr(pos)));
       patient.BloodVolumeBaseline(bvb_data);
     } catch (std::exception e) {
       rValue = false;
@@ -155,7 +160,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::DiastolicArterialPressureBaseline_type dapb_data;
     try {
       dapb_data.value(std::stod(value, &pos));
-      dapb_data.unit(value.substr(pos));
+      dapb_data.unit(trim(value.substr(pos)));
       patient.DiastolicArterialPressureBaseline(dapb_data);
     } catch (std::exception e) {
       rValue = false;
@@ -165,7 +170,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::HeartRateBaseline_type hrb_data;
     try {
       hrb_data.value(std::stod(value, &pos));
-      hrb_data.unit(value.substr(pos));
+      hrb_data.unit(ConvertBeatUnits(trim(value.substr(pos))));
       patient.HeartRateBaseline(hrb_data);
     } catch (std::exception e) {
       rValue = false;
@@ -175,7 +180,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::RespirationRateBaseline_type rrb_data;
     try {
       rrb_data.value(std::stod(value, &pos));
-      rrb_data.unit(value.substr(pos));
+      rrb_data.unit(ConvertBeatUnits(trim(value.substr(pos))));
       patient.RespirationRateBaseline(rrb_data);
     } catch (std::exception e) {
       rValue = false;
@@ -185,7 +190,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::SystolicArterialPressureBaseline_type sapb_data;
     try {
       sapb_data.value(std::stod(value, &pos));
-      sapb_data.unit(value.substr(pos));
+      sapb_data.unit(trim(value.substr(pos)));
       patient.SystolicArterialPressureBaseline(sapb_data);
     } catch (std::exception e) {
       rValue = false;
@@ -195,7 +200,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::HeartRateMaximum_type hrm_data;
     try {
       hrm_data.value(std::stod(value, &pos));
-      hrm_data.unit(value.substr(pos));
+      hrm_data.unit(ConvertBeatUnits(trim(value.substr(pos))));
       patient.HeartRateMaximum(hrm_data);
     } catch (std::exception e) {
       rValue = false;
@@ -205,7 +210,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::HeartRateMinimum_type hrm_data;
     try {
       hrm_data.value(std::stod(value, &pos));
-      hrm_data.unit(value.substr(pos));
+      hrm_data.unit(ConvertBeatUnits(trim(value.substr(pos))));
       patient.HeartRateMinimum(hrm_data);
     } catch (std::exception e) {
       rValue = false;
@@ -215,7 +220,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::FunctionalResidualCapacity_type frc_data;
     try {
       frc_data.value(std::stod(value, &pos));
-      frc_data.unit(value.substr(pos));
+      frc_data.unit(trim(value.substr(pos)));
       patient.FunctionalResidualCapacity(frc_data);
     } catch (std::exception e) {
       rValue = false;
@@ -225,7 +230,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::TotalLungCapacity_type tlc_data;
     try {
       tlc_data.value(std::stod(value, &pos));
-      tlc_data.unit(value.substr(pos));
+      tlc_data.unit(trim(value.substr(pos)));
       patient.TotalLungCapacity(tlc_data);
     } catch (std::exception e) {
       rValue = false;
@@ -235,7 +240,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::AlveoliSurfaceArea_type asa_data;
     try {
       asa_data.value(std::stod(value, &pos));
-      asa_data.unit(value.substr(pos));
+      asa_data.unit(trim(value.substr(pos)));
       patient.AlveoliSurfaceArea(asa_data);
     } catch (std::exception e) {
       rValue = false;
@@ -245,7 +250,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     PatientData::ResidualVolume_type rv_data;
     try {
       rv_data.value(std::stod(value, &pos));
-      rv_data.unit(value.substr(pos));
+      rv_data.unit(trim(value.substr(pos)));
       patient.ResidualVolume(rv_data);
     } catch (std::exception e) {
       rValue = false;

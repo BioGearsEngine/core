@@ -5,6 +5,23 @@
 #include <iostream>
 
 namespace biogears {
+std::string ConvertTemperatureUnit(std::string unit);
+
+
+
+std::string ConvertTemperatureUnit(std::string unit)
+{
+  if (unit == "C") {
+    return "degC";
+  }
+  if (unit == "F") {
+    return "degF";
+  }
+  if (unit == "R") {
+    return "degR";
+  }
+  return unit;
+}
 
 EnvironmentGenerator::EnvironmentGenerator(std::string path)
   : CSVToXMLConvertor(path, "Environment.csv")
@@ -87,7 +104,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     size_t pos = 0;
     try {
       av_data.value(std::stod(value, &pos));
-      av_data.unit(trim(value.substr(pos)));
+	  av_data.unit(ConvertTemperatureUnit(trim(value.substr(pos))));
       environment.AirVelocity(av_data);
     } catch (std::exception e) {
       rValue = false;
@@ -99,7 +116,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
       double v = std::stod(value, &pos);
       std::string u = value.substr(pos);
       at_data.value(v);
-      at_data.unit(u);
+      at_data.unit(ConvertTemperatureUnit(trim(u)));
       environment.AmbientTemperature(at_data);
     } catch (std::exception e) {
       rValue = false;
@@ -111,7 +128,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
       double v = std::stod(value, &pos);
       std::string u = value.substr(pos);
       ap_data.value(v);
-      ap_data.unit(u);
+      ap_data.unit(ConvertTemperatureUnit(trim(u)));
       environment.AtmosphericPressure(ap_data);
     } catch (std::exception e) {
       rValue = false;
@@ -123,7 +140,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
       double v = std::stod(value, &pos);
       std::string u = value.substr(pos);
       cr_data.value(v);
-      cr_data.unit(u);
+      cr_data.unit(ConvertTemperatureUnit(trim(u)));
       environment.ClothingResistance(cr_data);
     } catch (std::exception e) {
       rValue = false;
@@ -144,7 +161,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
       double v = std::stod(value, &pos);
       std::string u = value.substr(pos);
       mrt_data.value(v);
-      mrt_data.unit(u);
+      mrt_data.unit(ConvertTemperatureUnit(trim(u)));
       environment.MeanRadiantTemperature(mrt_data);
     } catch (std::exception e) {
       rValue = false;
@@ -156,7 +173,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
       double v = std::stod(value, &pos);
       std::string u = value.substr(pos);
       rh_data.value(v);
-      rh_data.unit(u);
+      rh_data.unit(ConvertTemperatureUnit(trim(u)));
       environment.RelativeHumidity(rh_data);
     } catch (std::exception e) {
       rValue = false;
@@ -168,7 +185,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
       double v = std::stod(value, &pos);
       std::string u = value.substr(pos);
       rat_data.value(v);
-      rat_data.unit(u);
+      rat_data.unit(ConvertTemperatureUnit(trim(u)));
       environment.RespirationAmbientTemperature(rat_data);
     } catch (std::exception e) {
       rValue = false;
@@ -221,7 +238,7 @@ bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
         size_t pos = 0;
         ae_data.Name(value1);
         ae_data.Concentration(std::stod(value2, &pos));
-        ae_data.Concentration().unit(trim(value2.substr(pos)));
+        ae_data.Concentration().unit(ConvertTemperatureUnit(trim(value2.substr(pos))));
         environment.AmbientAerosol().push_back(ae_data);
       } catch (std::exception e) {
         rValue = false;
@@ -231,5 +248,7 @@ bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
   }
   return rValue;
 }
+
+
 
 } //Namespace

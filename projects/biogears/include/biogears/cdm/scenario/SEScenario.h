@@ -46,6 +46,11 @@ public:
   virtual bool HasName() const;
   virtual void InvalidateName();
 
+  virtual std::string GetPatientFile() const;
+  virtual void SetPatientFile(const std::string& PatientFile);
+  virtual bool HasPatientFile() const;
+  virtual void InvalidatePatientFile();
+
   virtual std::string GetDescription() const;
   virtual void SetDescription(const std::string& desc);
   virtual bool HasDescription() const;
@@ -79,6 +84,7 @@ protected:
   std::string m_Name;
   std::string m_Description;
   std::string m_EngineStateFile;
+  std::string m_PatientFile;
   SEScenarioInitialParameters* m_InitialParameters;
   SEScenarioAutoSerialization* m_AutoSerialization;
   SEDataRequestManager m_DataRequestMgr;

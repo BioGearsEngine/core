@@ -33,10 +33,7 @@ int main(int argc, char** argv)
   if (argc > 1) {
     if (parser.exists("STATES")) {
       auto generator = bg::StateGenerator();
-
-      std::string var1{ argv[2] };
-      std::string var2{ " Foo" };
-      generator.runScenario(0, var1, var2);
+      generator.GenStates();
     } else if (parser.exists("DATA")) {
       std::vector<std::unique_ptr<bg::CSVToXMLConvertor>> generators;
       generators.push_back(std::make_unique<bg::SubstanceGenerator>());

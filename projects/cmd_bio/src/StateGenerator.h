@@ -11,7 +11,8 @@ namespace biogears
     StateGenerator();
     ~StateGenerator();
 
-    int runScenario(int patientNum, std::string& XMLFileName, std::string& XMLString);
+    int runScenario(int patientNum, std::string&& XMLString);
+	void GenStates();
   };
 } //namespace biogears
 

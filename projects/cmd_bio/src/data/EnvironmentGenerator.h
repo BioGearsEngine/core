@@ -39,6 +39,7 @@ namespace biogears
     bool process_ambientgasdata(CSV_RowItr itr);
     bool process_ambientaerosoldata(CSV_RowItr itr);
     bool process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::EnvironmentalConditionsData& environment);
+	
   private:
     std::vector<Environment> _input;
     std::vector<mil::tatrc::physiology::datamodel::EnvironmentalConditionsData> _environments;

@@ -94,6 +94,8 @@ inline std::vector<double> vstod(const std::vector<std::string>& input)
   });
   return result;
 }
+//--------------------------------------------------------------------------------
+
 }
 
 #endif // BIOGEARS_CMD_UTILS_STRING_HELPER_H

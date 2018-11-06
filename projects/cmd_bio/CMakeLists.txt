@@ -97,9 +97,6 @@ set(${PREFIX}_LIBS
       Biogears::libbiogears_cdm
       Biogears::libbiogears
 )
-if(WIN32)
-  list(APPEND ${PREFIX}_LIBS libbiogears_string)
-endif()
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )
  

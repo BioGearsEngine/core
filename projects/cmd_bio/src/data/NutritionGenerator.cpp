@@ -77,7 +77,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::Carbohydrate_type c_data;
     try {
       c_data.value(std::stod(value, &pos));
-      c_data.unit(value.substr(pos));
+      c_data.unit(trim(value.substr(pos)));
       nutrient.Carbohydrate(c_data);
     } catch (std::exception e) {
       rValue = false;
@@ -87,7 +87,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::CarbohydrateDigestionRate_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.CarbohydrateDigestionRate(type_data);
     } catch (std::exception e) {
       rValue = false;
@@ -97,7 +97,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::Fat_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.Fat(type_data);
     } catch (std::exception e) {
       rValue = false;
@@ -107,7 +107,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::FatDigestionRate_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.FatDigestionRate(type_data);
     } catch (std::exception e) {
       rValue = false;
@@ -117,7 +117,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::Protein_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.Protein(type_data);
     } catch (std::exception e) {
       rValue = false;
@@ -127,7 +127,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::ProteinDigestionRate_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.ProteinDigestionRate(type_data);
     } catch (std::exception e) {
       rValue = false;
@@ -137,7 +137,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::Calcium_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.Calcium(type_data);
     } catch (std::exception e) {
       rValue = false;
@@ -147,7 +147,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::Sodium_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.Sodium(type_data);
     } catch (std::exception e) {
       rValue = false;
@@ -157,7 +157,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     NutritionData::Water_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
-      type_data.unit(value.substr(pos));
+      type_data.unit(trim(value.substr(pos)));
       nutrient.Water(type_data);
     } catch (std::exception e) {
       rValue = false;
