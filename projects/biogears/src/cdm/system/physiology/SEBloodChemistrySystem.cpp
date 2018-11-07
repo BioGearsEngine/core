@@ -178,7 +178,7 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   if (split != name.npos) {
     std::string prop = name.substr(split + 1, name.npos); //Get property that follows dash
     std::string parent = name.substr(0, split);
-    if (parent.compare("SepsisInfectionSTate") == 0) {
+    if (parent.compare("SepsisInfectionState") == 0) {
       return GetSepsisInfectionState().GetScalar(prop);
     }
     if (parent.compare("AcuteInflammatoryResponse") == 0) {

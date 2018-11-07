@@ -187,6 +187,7 @@ protected:
   std::map<SELiquidCompartment*, SEFluidCircuitPath*> m_VascularCopPaths;
   std::map<SETissueCompartment*, SEFluidCircuitPath*> m_InterstitialCopPaths;
   std::map<SETissueCompartment*, SEFluidCircuitPath*> m_ExtraToIntraPaths;
+  std::map<SETissueCompartment*, SEFluidCircuitPath*> m_EndothelialResistancePaths;
   std::map<SELiquidCompartment*, SEFluidCircuitPath*> m_LymphPaths;
   std::vector<SETissueCompartment*> m_ConsumptionProdutionTissues;
   std::string m_AnaerobicTissues;

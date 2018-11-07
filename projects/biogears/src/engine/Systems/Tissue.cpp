@@ -349,6 +349,22 @@ void Tissue::SetUp()
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Skin)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinE3ToSkinI);
   m_ExtraToIntraPaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Spleen)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SpleenE3ToSpleenI);
 
+  m_EndothelialResistancePaths.clear();
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Fat)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::FatE1ToFatE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Bone)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BoneE1ToBoneE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Brain)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BrainE1ToBrainE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Gut)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::GutE1ToGutE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftKidney)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftKidneyE1ToLeftKidneyE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightKidney)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightKidneyE1ToRightKidneyE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LiverE1ToLiverE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftLung)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightLung)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::RightLungE1ToRightLungE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MuscleE1ToMuscleE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::MyocardiumE1ToMyocardiumE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Skin)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinE1ToSkinE2);
+  m_EndothelialResistancePaths[m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Spleen)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SpleenE1ToSpleenE2);
+
+
   m_LymphPaths.clear();
   m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::FatExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::FatE3ToFatL1);
   m_LymphPaths[m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BoneExtracellular)] = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::BoneE3ToBoneL1);
@@ -509,11 +525,40 @@ void Tissue::PreProcess()
   CalculateTissueFluidFluxes();
   CalculateOncoticPressure();
 
+  //Lots of debug tracking
   for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
     SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
     SEFluidCircuitPath* l = m_LymphPaths[&ex];
     std::string name = l->GetName();
     m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_s));
+    SEFluidCircuitPath* extraCOP = m_InterstitialCopPaths[t];
+    std::string name2 = extraCOP->GetName();
+    m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
+    m_data.GetDataTrack().Probe(name2 + "COP", extraCOP->GetNextPressureSource(PressureUnit::mmHg));
+    double albuminConcentration = ex.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+    m_data.GetDataTrack().Probe(ex.GetName() + "Albumin_g_Per_dL", albuminConcentration);
+    SELiquidCompartment* vas = m_TissueToVascular[t];
+    std::string name3 = vas->GetName();
+    SEFluidCircuitPath* vasCOP;
+    if (name3 == BGE::VascularCompartment::Gut) {
+      for (auto c : vas->GetChildren()) {
+        name3 = c->GetName();
+        vasCOP = m_VascularCopPaths[c];
+        m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+        albuminConcentration = c->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+        m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+      }
+    } else {
+      name3 = vas->GetName();
+      if (name3 == BGE::VascularCompartment::LeftKidney)
+        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftRenalArtery);
+      if (name3 == BGE::VascularCompartment::RightKidney)
+        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
+      vasCOP = m_VascularCopPaths[vas];
+      m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+      albuminConcentration = vas->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_mL);
+      m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+    }
   }
 }
 
@@ -2454,10 +2499,17 @@ void Tissue::CalculateOncoticPressure()
     if (vascular->GetName() == BGE::VascularCompartment::RightKidney)
       vascular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
 
-    reflectionCoefficient = m_data.GetCompartments().GetTissueCompartment(tissue->GetName())->GetReflectionCoefficient().GetValue();
-    LLIM(reflectionCoefficient, 0.05);
-    effectiveVascular_g_Per_dL = 1.6 * albuminVascularAvg_g_Per_dL;
+    if (m_data.GetState() < EngineState::AtSecondaryStableState) {
+      effectiveVascular_g_Per_dL = 1.6 * albuminVascularAvg_g_Per_dL;
+      effectiveInterstitial_g_Per_dL = 1.6 * albuminInterstitialAvg_g_Per_dL;
+    } else {
+      effectiveVascular_g_Per_dL = 1.6 * vascular->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+      effectiveInterstitial_g_Per_dL = 1.6 * m_data.GetCompartments().GetExtracellularFluid(*tissue).GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+
+    }
     vascularOncoticPressure_mmHg = 2.1 * effectiveVascular_g_Per_dL + 0.16 * std::pow(effectiveVascular_g_Per_dL, 2) + 0.009 * std::pow(effectiveVascular_g_Per_dL, 3);
+    interstitialOncoticPressure_mmHg = 2.1 * effectiveInterstitial_g_Per_dL + 0.16 * std::pow(effectiveInterstitial_g_Per_dL, 2) + 0.009 * std::pow(effectiveInterstitial_g_Per_dL, 3);
+
     if (vascular->GetName() == BGE::VascularCompartment::Gut) {
       for (auto c : vascular->GetChildren()) {
         vascularCOP = m_VascularCopPaths[c];
@@ -2467,9 +2519,6 @@ void Tissue::CalculateOncoticPressure()
       vascularCOP = m_VascularCopPaths[vascular];
       vascularCOP->GetNextPressureSource().SetValue(-vascularOncoticPressure_mmHg, PressureUnit::mmHg);
     }
-
-    effectiveInterstitial_g_Per_dL = 1.6 * albuminInterstitialAvg_g_Per_dL;
-    interstitialOncoticPressure_mmHg = 2.1 * effectiveInterstitial_g_Per_dL + 0.16 * std::pow(effectiveInterstitial_g_Per_dL, 2) + 0.009 * std::pow(effectiveInterstitial_g_Per_dL, 3);
     interstitialCOP = m_InterstitialCopPaths[tissue];
     interstitialCOP->GetNextPressureSource().SetValue(interstitialOncoticPressure_mmHg, PressureUnit::mmHg);
   }
@@ -2480,16 +2529,22 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
   double alphaSmall = 0.9;
   double alphaLarge = 1.0 - alphaSmall;
   double diffusivityCoefficientSmallBase_mL_Per_min_kg = 0.00753;
-  double diffusivityCoefficientLarge_mL_Per_min_kg = 0.03306;
+  double diffusivityCoefficientLargeBase_mL_Per_min_kg = 0.03306;
   double reflectionCoefficientSmallBase = 0.954;
   double reflectionCoefficientLargeBase = 0.097;
   double fluidFlux_mL_Per_min = m_InterstitialCopPaths[&tissue]->GetFlow(VolumePerTimeUnit::mL_Per_min);
   double tissueMass_kg = tissue.GetTotalMass(MassUnit::kg);
-  double tissueIntegrity = m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
+  double tissueIntegrity = tissue.GetReflectionCoefficient().GetValue();
+  double fluidPermeabilityBaseline = 1.0 / m_EndothelialResistancePaths[&tissue]->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL);
+  double fluidPermeability = 1.0 / m_EndothelialResistancePaths[&tissue]->GetResistance(FlowResistanceUnit::mmHg_min_Per_mL);
 
-  double reflectionCoefficientSmall = GeneralMath::LinearInterpolator(1.0, 0.0, reflectionCoefficientSmallBase, 0.01, tissueIntegrity);
-  double reflectionCoefficientLarge = GeneralMath::LinearInterpolator(1.0, 0.0, reflectionCoefficientLargeBase, 0.01, tissueIntegrity);
-  double diffusivityCoefficientSmall_mL_Per_min_kg = GeneralMath::LinearInterpolator(1.0, 0.0, diffusivityCoefficientSmallBase_mL_Per_min_kg, diffusivityCoefficientLarge_mL_Per_min_kg, tissueIntegrity);
+  m_data.GetDataTrack().Probe(tissue.GetName() + "_Resistance", m_EndothelialResistancePaths[&tissue]->GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
+  m_data.GetDataTrack().Probe(tissue.GetName() + "_PSRatio", fluidPermeability / fluidPermeabilityBaseline);
+
+  double reflectionCoefficientSmall = reflectionCoefficientSmallBase * std::exp(-4.0 * (1.0 - tissueIntegrity));
+  double reflectionCoefficientLarge = reflectionCoefficientLargeBase * std::exp(-4.0 * (1.0 - tissueIntegrity));
+  double diffusivityCoefficientSmall_mL_Per_min_kg = (fluidPermeability / fluidPermeabilityBaseline) * diffusivityCoefficientSmallBase_mL_Per_min_kg;
+  double diffusivityCoefficientLarge_mL_Per_min_kg = (fluidPermeability / fluidPermeabilityBaseline) * diffusivityCoefficientLargeBase_mL_Per_min_kg;
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);
   BLIM(reflectionCoefficientLarge, 0.0, 1.0);
 

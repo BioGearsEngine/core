@@ -732,26 +732,25 @@ void BloodChemistry::Sepsis()
   //The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
   //sources) to arbitrary values.  Thus we use the linear interpolator to move coefficients from initial value of 1.0 as function of
   //tissue integrity.
-  SEFluidCircuitPath* vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
-  double resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (1.0 - tissueIntegrity));
-  vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextReflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0.05, 1.0, 0.10, tissueIntegrity);
-  BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
-  m_data.GetCompartments().GetTissueCompartment(sep->GetCompartment() + "Tissue")->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
+  SEFluidCircuitPath* vascularLeak; // = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
+  double resistanceBase_mmHg_s_Per_mL;// = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+  double nextResistance_mmHg_s_Per_mL; //= resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (1.0 - tissueIntegrity));
+  //vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+  double nextReflectionCoefficient; //= GeneralMath::LinearInterpolator(1.0, 0.05, 1.0, 0.10, tissueIntegrity);
+  //BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
+  //m_data.GetCompartments().GetTissueCompartment(sep->GetCompartment() + "Tissue")->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
 
   for (auto comp : m_data.GetCompartments().GetTissueLeafCompartments()) {
-    if (comp->GetName().compare(BGE::TissueCompartment::Brain) == 0 || comp->GetName().compare(sepComp) == 0)
-      continue; //Don't mess with the brain and don't repeat the compartment the infection started in
-    // if (tissueIntegrity < modsThreshold) {
-    nextReflectionCoefficient = GeneralMath::LinearInterpolator(1.0, 0.05, 1.0, 0.10, tissueIntegrity);
+    if (comp->GetName().compare(BGE::TissueCompartment::Brain) == 0)
+      continue; //Don't mess with the brain 
+    nextReflectionCoefficient = tissueIntegrity;
     BLIM(nextReflectionCoefficient, 0.0, 1.0);
     comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
     vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
     resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-    nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (1.0 - tissueIntegrity));
+    nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * GeneralMath::ResistanceFunction(10.0, 1.0, 0.005, tissueIntegrity);
+    //nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * GeneralMath::LinearInterpolator(1.0, 0.0, 1.0, 0.1, tissueIntegrity); //std::pow(10.0, -10 * (1.0 - tissueIntegrity));
     vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    // }
   }
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
@@ -770,10 +769,10 @@ void BloodChemistry::Sepsis()
   coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
 
   //Blood pressure effects (accomplish by overriding baroreceptor resistance scale)
-  double bpThreshold = 0.5;
+  double bpThreshold = 0.75;
   double baroreceptorScale = exp(-3 * (sigmoidInput - bpThreshold));
   if (sigmoidInput >= bpThreshold) {
-    m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(baroreceptorScale);
+    //m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(baroreceptorScale);
   }
 
   //Bilirubin counts (measure of liver perfusion)
