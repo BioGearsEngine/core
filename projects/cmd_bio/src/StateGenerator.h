@@ -3,16 +3,26 @@
 
 #include <string>
 
+#include <biogears/threading/thread_pool.h>
+#include <biogears/threading/runnable.h>
+
 namespace biogears
 {
-  class StateGenerator
+  class StateGenerator : biogears::Runnable
   {
   public:
-    StateGenerator();
-    ~StateGenerator();
+    StateGenerator( size_t thread_count);
+    StateGenerator( const StateGenerator&) = delete;
+    StateGenerator(StateGenerator&&) = default;
+    ~StateGenerator() override;
 
-    int runScenario(int patientNum, std::string&& XMLString);
-	void GenStates();
+    void GenStates();
+   
+    void run()  override;
+    void stop() override;
+    void join() override; 
+  private:
+    ThreadPool _pool;
   };
 } //namespace biogears
 

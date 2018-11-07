@@ -26,7 +26,7 @@
 #include <biogears/threading/thread_work_channel.h>
 #include <biogears/threading/steppable.h>
 
-#include <biogears/Export.h>
+#include <biogears/common-exports.h>
 namespace biogears {
 
   class BIOGEARS_COMMON_PUBLIC_API ThreadPool {

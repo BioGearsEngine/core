@@ -32,8 +32,12 @@ int main(int argc, char** argv)
   parser.parse(argc,argv);
   if (argc > 1) {
     if (parser.exists("STATES")) {
-      auto generator = bg::StateGenerator();
+      biogears::StateGenerator generator{ 5 };
+
       generator.GenStates();
+      generator.run();
+      generator.join();
+
     } else if (parser.exists("DATA")) {
       std::vector<std::unique_ptr<bg::CSVToXMLConvertor>> generators;
       generators.push_back(std::make_unique<bg::SubstanceGenerator>());

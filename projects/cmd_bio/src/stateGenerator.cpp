@@ -6,40 +6,14 @@
 
 #include "StateGenerator.h"
 
-#include <sstream>
 #include <fstream>
 #include <iostream>
 #include <mutex>
+#include <sstream>
 #include <string>
-namespace biogears {
 
-  // length 26
-std::string patientFiles[] = { "Bradycardic.xml",
-                               "Carol.xml",
-                               "Cynthia.xml",
-                               "DefaultFemale.xml",
-                               "DefaultMale.xml",
-                               "DefaultTemplateFemale.xml",
-                               "DefaultTemplateMale.xml",
-                               "ExtremeFemale.xml",
-                               "ExtremeMale.xml",
-                               "Gus.xml",
-                               "Hassan.xml",
-                               "Jane.xml",
-                               "Jeff.xml",
-                               "Joel.xml",
-                               "Nathan.xml",
-                               "Overweight.xml",
-                               "Ricky.xml",
-                               "Roy.xml",
-                               "Soldier.xml",
-                               "StandardFemale.xml",
-                               "StandardMale.xml",
-                               "Tachycardic.xml",
-                               "ToughGirl.xml",
-                               "ToughGuy.xml",
-                               "Tristan.xml",
-                               "Underweight.xml" };
+namespace biogears {
+int runScenario(const std::string patient, std::string&& XMLString);
 
 std::string findAndReplace(std::string& S, const std::string& toReplace,
                            const std::string& replaceWith)
@@ -56,7 +30,8 @@ std::string findAndReplace(std::string& S, const std::string& toReplace,
   return S;
 }
 //-------------------------------------------------------------------------------
-StateGenerator::StateGenerator()
+StateGenerator::StateGenerator(size_t thread_count)
+  : _pool(thread_count)
 {
 }
 //-------------------------------------------------------------------------------
@@ -66,10 +41,36 @@ StateGenerator::~StateGenerator()
 //-------------------------------------------------------------------------------
 void StateGenerator::GenStates()
 {
-   
-  //for(int i = 0;i < patientFiles->size();i++){
-  for(int i = 0;i < 2;i++){
-    runScenario(i,"Scenarios/InitialPatientStateAll.xml");
+
+  std::string patientFiles[] = { "Bradycardic.xml",
+                                 "Carol.xml",
+                                 "Cynthia.xml",
+                                 "DefaultFemale.xml",
+                                 "DefaultMale.xml",
+                                 "DefaultTemplateFemale.xml",
+                                 "DefaultTemplateMale.xml",
+                                 "ExtremeFemale.xml",
+                                 "ExtremeMale.xml",
+                                 "Gus.xml",
+                                 "Hassan.xml",
+                                 "Jane.xml",
+                                 "Jeff.xml",
+                                 "Joel.xml",
+                                 "Nathan.xml",
+                                 "Overweight.xml",
+                                 "Ricky.xml",
+                                 "Roy.xml",
+                                 "Soldier.xml",
+                                 "StandardFemale.xml",
+                                 "StandardMale.xml",
+                                 "Tachycardic.xml",
+                                 "ToughGirl.xml",
+                                 "ToughGuy.xml",
+                                 "Tristan.xml",
+                                 "Underweight.xml" };
+
+  for (auto& patient : patientFiles) {
+    _pool.queue_work(std::bind(&biogears::runScenario, patient, "Scenarios/InitialPatientStateAll.xml"));
   }
 }
 //-------------------------------------------------------------------------------
@@ -78,9 +79,9 @@ void StateGenerator::GenStates()
 //! \param patientNum -- WHAT AM I
 //! \param XMLString   -- WHAT AM I
 //! \return --
-int StateGenerator::runScenario(int patientNum, std::string&& XMLString)
+int runScenario(const std::string patient, std::string&& XMLString)
 {
-  std::string patientXML(patientFiles[patientNum]);
+  std::string patientXML(patient);
 
   std::string patientLog = "-" + patientXML;
   patientLog = findAndReplace(patientLog, ".xml", ".log");
@@ -88,17 +89,17 @@ int StateGenerator::runScenario(int patientNum, std::string&& XMLString)
   std::string patientResults = "-" + patientXML;
   patientResults = findAndReplace(patientResults, ".xml", "Results.csv");
 
-  std::string logFile(patientFiles[patientNum]);
-  std::string outputFile(patientFiles[patientNum]);
+  std::string logFile(patient);
+  std::string outputFile(patient);
   logFile = findAndReplace(logFile, ".xml", "Results.log");
   outputFile = findAndReplace(outputFile, ".xml", "Results.csv");
 
-  std::unique_ptr<PhysiologyEngine> eng ;
+  std::unique_ptr<PhysiologyEngine> eng;
   try {
-	  eng = CreateBioGearsEngine(logFile);
-  } catch ( std::exception e) {
-	std::cout << e.what();
-	return 0;
+    eng = CreateBioGearsEngine(logFile);
+  } catch (std::exception e) {
+    std::cout << e.what();
+    return 0;
   }
   DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
   BioGearsScenario sce(eng->GetSubstanceManager());
@@ -112,4 +113,18 @@ int StateGenerator::runScenario(int patientNum, std::string&& XMLString)
   return 0;
 }
 //-------------------------------------------------------------------------------
+void StateGenerator::run()
+{
+  _pool.start();
+}
+//-------------------------------------------------------------------------------
+void StateGenerator::stop()
+{
+  _pool.stop();
+}
+//-------------------------------------------------------------------------------
+void StateGenerator::join()
+{
+  _pool.join();
+}
 } // namespace biogears

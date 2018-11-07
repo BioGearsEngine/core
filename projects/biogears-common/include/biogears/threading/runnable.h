@@ -29,9 +29,9 @@ namespace biogears {
   public:
     virtual ~Runnable() {};
 
-    virtual void run()   = 0; //< Executes a single pass of the logic loop;
-    virtual void stop()  = 0; //< Executes a single pass of the logic loop;
-    virtual void join()  = 0; //< Executes a single pass of the logic loop;
+    virtual void run()   = 0; //< Starts Executing Runnable until Runnable Completes
+    virtual void stop()  = 0; //< Sets Stop condition so running process will finish at the next possible moment;
+    virtual void join()  = 0; //< Blocks until running process is completed;
   };
 }
 
