@@ -70,7 +70,7 @@ void StateGenerator::GenStates()
                                  "Underweight.xml" };
 
   for (auto& patient : patientFiles) {
-    std::function<void(void)> work = std::bind(&biogears::runScenario, patient, "Scenarios/InitialPatientStateAll.xml");
+    std::function<void()> work = [=](){ biogears::runScenario(patient, std::string("Scenarios/InitialPatientStateAll.xml")); };
     _pool.queue_work(work);
   }
 }
