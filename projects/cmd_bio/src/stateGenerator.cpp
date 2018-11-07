@@ -124,6 +124,11 @@ void StateGenerator::stop()
   _pool.stop();
 }
 //-------------------------------------------------------------------------------
+bool StateGenerator::stop_if_empty()
+{  
+  return _pool.stop_if_empty();
+}
+//-------------------------------------------------------------------------------
 void StateGenerator::join()
 {
   _pool.join();

@@ -20,6 +20,7 @@ namespace biogears
    
     void run()  override;
     void stop() override;
+    bool stop_if_empty();
     void join() override; 
   private:
     ThreadPool _pool;

@@ -129,6 +129,16 @@ void ThreadPool::stop()
 	_impl->poolPauseSignal.notify_all();
 }
 //-------------------------------------------------------------------------------
+bool ThreadPool::stop_if_empty()
+{
+  if ( 0 == _impl->workQueue->unsafe_size() )
+  {
+    stop();
+    return true;
+  }
+  return false;
+}
+//-------------------------------------------------------------------------------
 void ThreadPool::join()
 {
   for (auto& thread : _impl->pool)

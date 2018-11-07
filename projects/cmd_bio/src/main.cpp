@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <thread>
 
 #include "StateGenerator.h"
 #include "data/EnvironmentGenerator.h"
@@ -36,6 +37,11 @@ int main(int argc, char** argv)
 
       generator.GenStates();
       generator.run();
+
+      while ( !generator.stop_if_empty() )
+      {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
       generator.join();
 
     } else if (parser.exists("DATA")) {
