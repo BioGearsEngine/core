@@ -56,14 +56,13 @@ list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
   list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
 endif()
 
-set(LIB_TYPE SHARED)
-if (BIOGEARS_COMMON_BUILD_STATIC)
-  list(APPEND ${PREFIX}_CPPFLAGS "-DBIOGEARS_COMMON_BUILD_STATIC")
-  set(LIB_TYPE STATIC)
+
+if(BIOGEARS_COMMON_BUILD_STATIC)
+  add_library(lib${PROJECT_NAME} STATIC  ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
+else()
+  add_library(lib${PROJECT_NAME} SHARED  ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
 endif()
 
-
-add_library(lib${PROJECT_NAME} ${LIB_TYPE}  ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
 add_library(Biogears::libbiogears_common ALIAS lib${PROJECT_NAME})
 set_target_properties(lib${PROJECT_NAME}
   PROPERTIES
@@ -76,7 +75,11 @@ set_target_properties(lib${PROJECT_NAME}
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
-  target_compile_definitions(lib${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_definitions(lib${PROJECT_NAME} PUBLIC  ${${PREFIX}_INTERFACE_CPPFLAGS} PRIVATE ${${PREFIX}_CPPFLAGS} )
+  if (BIOGEARS_COMMON_BUILD_STATIC)
+  target_compile_definitions(lib${PROJECT_NAME} PUBLIC  "BIOGEARS_COMMON_BUILD_STATIC")
+  set(LIB_TYPE STATIC)
+endif()
   target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
 target_include_directories(lib${PROJECT_NAME}
   PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR}
