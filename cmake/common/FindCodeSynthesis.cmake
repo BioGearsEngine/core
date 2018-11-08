@@ -168,7 +168,6 @@ function(REGISTER_XSD_DIR dir)
           RESOURCE_PATH ${resource_path}/ ${SWITCH_FLAGS} TARGETS ${_l_TARGETS} )
     endif()
   endforeach()
-  message(STATUS "${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)")
   set(${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)
 endfunction(REGISTER_XSD_DIR)
 #######################################################################################################################
@@ -323,7 +322,6 @@ function(GENERATE_XSD_SCHEMA file)
       PROJECT_LABEL "XSD_Gen_${safe_unique_name}")
   list(APPEND ${_l_TARGETS} xsd_gen_${safe_unique_name})
   if(_l_STAGE)
-    message(FATAL_ERROR "_l_STAGE=${_l_STAGE} is TRUE")
     add_custom_command( OUTPUT  ${CMAKE_BINARY_DIR}/${schema}.xsd    
                         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                         COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${file} ${CMAKE_BINARY_DIR}/${resource_path}/   
