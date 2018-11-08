@@ -1,4 +1,3 @@
-,,,,
 Data Type,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound
 Compound Name,Saline,Blood,RingersLactate,PiperacillinTazobactam
 ,Substance,Substance,,Substance
@@ -16,15 +15,21 @@ Concentration,,4.5 g/dL,0.0156 g/dL,
 ,Substance,Substance,,Substance
 Component Name,,Urea,Calcium,
 Concentration,,0.0257 g/dL,0.006 g/dL,
-,Substance,Substance,,Substance
+,Substance,Substance,Substance,Substance
 Component Name,,Glucose,,
 Concentration,,0.08 g/dL,,
-,Substance,Substance,,Substance
+,Substance,Substance,Substance,Substance
 Component Name,,Triacylglycerol,,
 Concentration,,0.107 g/dL,,
-,Substance,Substance,,Substance
+,Substance,Substance,Substance,Substance
 Component Name,,Calcium,,
 Concentration,,.010 g/dL,,
-,Substance,Substance,,Substance
+,Substance,Substance,Substance,Substance
 Component Name,,Creatinine,,
 Concentration,,.001 g/dL,,
+,Substance,Substance,Substance ,Substance
+Component Name,Oxygen,Oxygen,,
+Concentration,0.0329 g/L,0.0314 g/L,,
+,Substance,Substance,Substance,Substance
+Component Name,CarbonDioxide,CarbonDioxide,,
+Concentration,0.786 g/L,0.715 g/L,,

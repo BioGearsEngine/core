@@ -150,7 +150,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     } catch (std::exception e) {
       rValue = false;
     }
-  } else if ("MichauelisCoefficient" == name) {
+  } else if ("MichaelisCoefficient" == name) {
     SubstanceData::MichaelisCoefficient_type type;
     size_t pos = 0;
     try {
