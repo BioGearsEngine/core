@@ -87,6 +87,7 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>                     
                     <xs:element name="BloodDensity" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Mass per unit volume of the blood. -->
                     <xs:element name="ArterialBloodPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Measure of acidity or basicity of the arterial blood. -->
+                    <xs:element name="ArterialBloodPHBaseline" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Measure of acidity or basicity of the arterial blood. Baseline value for model. -->
                     <xs:element name="VenousBloodPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Measure of acidity or basicity of the venous blood. -->
                     <xs:element name="BloodSpecificHeat" type="ScalarHeatCapacitancePerMassData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The amount of energy required to raise one kilogram of blood by one degree Celsius. -->
                     <xs:element name="BloodUreaNitrogenConcentration" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The BUN concentration in the blood.-->                    

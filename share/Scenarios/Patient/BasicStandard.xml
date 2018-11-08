@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
 	<Name>BasicStandard</Name>
 	<Description>Basic scenario measuring patient vitals with no insults or interventions</Description>
-	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
 	
 	<!-- Base system data required for all scenario verification -->
   <DataRequests>
@@ -83,7 +83,7 @@
 	</DataRequests>
 
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="2" unit="min"/>		
+		<Time value="6" unit="min"/>		
 	</Action>
   
 </Scenario>

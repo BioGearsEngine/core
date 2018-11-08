@@ -1024,8 +1024,11 @@ void Respiratory::ProcessDriverActions()
   //update PH during stabilization
   if (m_data.GetState() < EngineState::Active) {
     m_arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
+    m_data.GetBloodChemistry().GetArterialBloodPHBaseline().SetValue(m_arterialPHBaseline);
   }
 
+  //compute the ph difference 
+  m_arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPHBaseline().GetValue();
   arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
   double diffPH = scalingFactor * (arterialPH - m_arterialPHBaseline) / m_arterialPHBaseline;
 

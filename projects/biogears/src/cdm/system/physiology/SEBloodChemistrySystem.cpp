@@ -25,6 +25,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
 {
   m_ArterialBloodPH = nullptr;
+  m_ArterialBloodPHBaseline = nullptr;
 
   m_BloodDensity = nullptr;
 
@@ -71,6 +72,7 @@ void SEBloodChemistrySystem::Clear()
   SESystem::Clear();
 
   SAFE_DELETE(m_ArterialBloodPH);
+  SAFE_DELETE(m_ArterialBloodPHBaseline);
   SAFE_DELETE(m_BloodDensity);
   SAFE_DELETE(m_BloodSpecificHeat);
   SAFE_DELETE(m_BloodUreaNitrogenConcentration);
@@ -109,6 +111,8 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 {
   if (name.compare("ArterialBloodPH") == 0)
     return &GetArterialBloodPH();
+  if (name.compare("ArterialBloodPHBaseline") == 0)
+    return &GetArterialBloodPHBaseline();
   if (name.compare("BloodDensity") == 0)
     return &GetBloodDensity();
   if (name.compare("BloodSpecificHeat") == 0)
@@ -191,6 +195,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
 
   if (in.ArterialBloodPH().present())
     GetArterialBloodPH().Load(in.ArterialBloodPH().get());
+  if (in.ArterialBloodPHBaseline().present())
+    GetArterialBloodPHBaseline().Load(in.ArterialBloodPHBaseline().get());
   if (in.BloodDensity().present())
     GetBloodDensity().Load(in.BloodDensity().get());
   if (in.BloodSpecificHeat().present())
@@ -270,6 +276,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
 
   if (m_ArterialBloodPH != nullptr)
     data.ArterialBloodPH(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPH->Unload()));
+  if (m_ArterialBloodPHBaseline != nullptr)
+    data.ArterialBloodPHBaseline(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPHBaseline->Unload()));
   if (m_BloodDensity != nullptr)
     data.BloodDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodDensity->Unload()));
   if (m_BloodSpecificHeat != nullptr)
@@ -367,6 +375,23 @@ double SEBloodChemistrySystem::GetArterialBloodPH() const
   if (m_ArterialBloodPH == nullptr)
     return SEScalar::dNaN();
   return m_ArterialBloodPH->GetValue();
+}
+
+bool SEBloodChemistrySystem::HasArterialBloodPHBaseline() const
+{
+  return m_ArterialBloodPHBaseline == nullptr ? false : m_ArterialBloodPHBaseline->IsValid();
+}
+SEScalar& SEBloodChemistrySystem::GetArterialBloodPHBaseline()
+{
+  if (m_ArterialBloodPHBaseline == nullptr)
+    m_ArterialBloodPHBaseline = new SEScalar();
+  return *m_ArterialBloodPHBaseline;
+}
+double SEBloodChemistrySystem::GetArterialBloodPHBaseline() const
+{
+  if (m_ArterialBloodPHBaseline == nullptr)
+    return SEScalar::dNaN();
+  return m_ArterialBloodPHBaseline->GetValue();
 }
 
 bool SEBloodChemistrySystem::HasVenousBloodPH() const
