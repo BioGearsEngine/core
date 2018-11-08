@@ -31,6 +31,7 @@ public:
   virtual CDM::InflammationStateData* Unload() const;
   virtual bool IsValid();
 
+  void InitializeState();
   virtual const SEScalar* GetScalar(const std::string& name);
 
 protected:

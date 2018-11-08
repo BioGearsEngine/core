@@ -113,6 +113,27 @@ void SEInflammationState::Unload(CDM::InflammationStateData& data) const
   data.TissueIntegrity(std::unique_ptr<CDM::Scalar0To1Data>(m_TissueIntegrity->Unload()));
 }
 
+void SEInflammationState::InitializeState()
+{
+  //Values from Chow2005Acute
+  GetPathogen().SetValue(0.0);
+  GetMacrophageResting().SetValue(1.0);
+  GetMacrophageActive().SetValue(0.0);
+  GetNeutrophilResting().SetValue(1.0);
+  GetNeutrophilActive().SetValue(0.0);
+  GetInducibleNOSynthase().SetValue(0.0);
+  GetInducibleNOSynthasePre().SetValue(0.0);
+  GetConstitutiveNOSynthase().SetValue(0.05);
+  GetNitrate().SetValue(0.0);
+  GetNitricOxide().SetValue(0.0);
+  GetTumorNecrosisFactor().SetValue(0.0);
+  GetInterleukin6().SetValue(0.001);
+  GetInterleukin10().SetValue(0.01);
+  GetInterleukin12().SetValue(0.0);
+  GetCatecholamines().SetValue(0.0);
+  GetTissueIntegrity().SetValue(1.0);
+}
+
 bool SEInflammationState::IsValid()
 {
   if (HasPathogen() && HasTrauma() && HasMacrophageResting() && HasMacrophageActive() && HasNeutrophilResting() && HasNeutrophilActive() && HasInducibleNOSynthasePre() && HasInducibleNOSynthase() && HasConstitutiveNOSynthase() && HasNitrate() && HasNitricOxide() && HasTumorNecrosisFactor() && HasInterleukin6() && HasInterleukin10() && HasInterleukin12() && HasCatecholamines() && HasTissueIntegrity())
@@ -447,6 +468,4 @@ double SEInflammationState::GetTissueIntegrity() const
     return SEScalar::dNaN();
   return m_TissueIntegrity->GetValue();
 }
-
-
 }
