@@ -24,8 +24,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
@@ -418,5 +418,15 @@ double GeneralMath::CalculateNernstPotential(SELiquidCompartment& extra, SELiqui
 
   double nernst_V = (gasConstant_J_Per_mol * coreTemp_K) / (faradaysConstant_C_Per_mol * z) * log(extraIon_M / intraIon_M);
   return nernst_V;
+}
+
+double GeneralMath::HillActivation(double x, double n, double h)
+{
+  return std::pow(x, h) / (std::pow(x, h) + std::pow(n, h));
+}
+
+double GeneralMath::HillInhibition(double x, double n, double h)
+{
+  return 1.0 / (1.0 + std::pow(x / n, h));
 }
 }

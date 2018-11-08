@@ -53,5 +53,7 @@ public:
   static double ResistanceFunction(double dbase, double dmin, double dmax, double dx);
   static double LogisticFunction(double a, double x50, double k, double x);
   static double CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion, double& coreTemp_K);
+  static double HillActivation(double x, double n, double h);
+  static double HillInhibition(double x, double n, double h);
 };
 }
