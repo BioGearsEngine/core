@@ -748,8 +748,7 @@ void BloodChemistry::Sepsis()
     comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
     vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
     resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-    nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * GeneralMath::ResistanceFunction(10.0, 1.0, 0.005, tissueIntegrity);
-    //nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * GeneralMath::LinearInterpolator(1.0, 0.0, 1.0, 0.1, tissueIntegrity); //std::pow(10.0, -10 * (1.0 - tissueIntegrity));
+    nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * GeneralMath::ResistanceFunction(10.0, 1.0, 0.05, tissueIntegrity);
     vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   }
 
