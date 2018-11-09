@@ -1,8 +1,6 @@
 #ifndef BIOGEARS_STATE_GENERATOR_H
 #define BIOGEARS_STATE_GENERATOR_H
 
-#include <string>
-
 #include <biogears/threading/thread_pool.h>
 #include <biogears/threading/runnable.h>
 

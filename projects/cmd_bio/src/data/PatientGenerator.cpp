@@ -20,6 +20,10 @@ PatientGenerator::~PatientGenerator()
 {
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Saves xml file for each patient
+//! \return bool, true if no exceptions are thrown, false otherwise
+//! 
 bool PatientGenerator::save() const
 {
   for (auto& patient : _patients) {
@@ -40,6 +44,10 @@ bool PatientGenerator::save() const
   return false;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Populates _patients with PatientData objects to be read into xml's
+//! \return bool
+//! 
 bool PatientGenerator::parse()
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -69,6 +77,13 @@ void PatientGenerator::print() const
 }
 
 //-----------------------------------------------------------------------------
+//!
+//! \brief Checks first cell of csv row and sets corresponding data of PatientData object
+//! \param name first cell of row
+//! \param value another cell of the same row
+//! \param patient PatientData object
+//! \return 
+//! 
 bool PatientGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::PatientData& patient)
 {
   using namespace mil::tatrc::physiology::datamodel;

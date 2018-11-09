@@ -16,6 +16,12 @@
 #include "data/CompoundGenerator.h"
 #include "data/NutritionGenerator.h"
 
+//!
+//! \brief Reads command line argument and executes corresponding operation
+//! \param argc Number of command line arguments
+//! \param argv Pointers to command line arguments
+//! \return int 0 on success, other numbers on failure
+//! 
 int main(int argc, char** argv)
 {
   namespace bg = biogears;
@@ -23,13 +29,7 @@ int main(int argc, char** argv)
 
   parser.addArgument("DATA");
   parser.addArgument("STATES");
-  parser.addArgument("SUBS");
-  parser.addArgument("ENVS");
-  parser.addArgument("PATIENTS");
-  parser.addArgument("CONF");
-  parser.addArgument("NUTRITION");
-  parser.addArgument("COMPOUNDS");
-
+  
   parser.parse(argc,argv);
   if (argc > 1) {
     if (parser.exists("STATES")) {
@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 
       generator.GenStates();
       generator.run();
-
+      
       while ( !generator.stop_if_empty() )
       {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
       }
     } else {
       std::cout << "Input not recognized" << std::endl;
-      std::cout << "Usage " + std::string(argv[0]) + ": [SUBS|ENVS|PATIENTS|CONF|NEUTRITION]";
+      std::cout << "Usage " + std::string(argv[0]) + ": [STATES|DATA]";
     }
   }
   return 0;

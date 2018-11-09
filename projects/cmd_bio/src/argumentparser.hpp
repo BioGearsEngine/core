@@ -13,6 +13,11 @@ public:
   ArgumentParser() {}
   ~ArgumentParser() {}
 //--------------------------------------------------------------------------------
+  //!
+  //! \brief Takes in command line arguments, checks them against arg_list, and inserts them to args.
+  //! \param argc Number of arguments
+  //! \param argv Pointers to arguments
+  //! 
   void parse(int argc, char** argv)
   {
     for (int i = 1; i < argc; i++) {
@@ -33,11 +38,22 @@ public:
     }
   }
   //--------------------------------------------------------------------------------
+  //!
+  //! \brief Checks if name is contained in args
+  //! \param name string to search args for
+  //! \return bool true if name is present in args, false otherwise
+  //! 
   bool exists(std::string name)
   {
     return (args.find(name) != args.end());
   }
   //--------------------------------------------------------------------------------
+  //!
+  //! \brief Searches for std::string name in args, if name is present returns 
+  //!        string vector of inputs mapped to name. Otherwise returns empty vector.
+  //! \param name string to search args for 
+  //! \return vector of strings
+  //! 
   std::vector<std::string> getArgList(std::string name){
     std::map<std::string, std::vector<std::string>>::iterator it = args.find(name);
 	if(it == args.end()){
@@ -47,11 +63,20 @@ public:
 	return it->second;
   }
   //--------------------------------------------------------------------------------
+  //!
+  //! \brief If no int specifying number of args for name is provided, then the argumentparser assumes the number is 0.
+  //! \param name string to add to arg_list
+  //! 
   void addArgument(std::string name)
   {
     addArgument(name, 0);
   }
   //--------------------------------------------------------------------------------
+  //!
+  //! \brief 
+  //! \param name string to add to arg_list 
+  //! \param nargs number of arguments that directly follow name in command line input.
+  //! 
   void addArgument(std::string name, int nargs)
   {
     arg_list[name] = nargs;

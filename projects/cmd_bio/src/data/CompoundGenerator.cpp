@@ -18,8 +18,13 @@ CompoundGenerator::~CompoundGenerator()
 }
 //-----------------------------------------------------------------------------
 
+//!
+//! \brief Iterates through _compounds and saves an xml of each compound
+//! \return bool rValue, true if there were no exceptions, false otherwise
+//! 
 bool CompoundGenerator::save() const
 {
+  bool rValue = true;
   for (auto& compound : _compounds) {
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
@@ -32,12 +37,17 @@ bool CompoundGenerator::save() const
       file.close();
 
     } catch (std::exception e) {
+      rValue = false;
       std::cout << e.what() << std::endl;
     }
   }
-  return false;
+  return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads Compounds.csv and populates _compounds with compound objects for each compound in the csv
+//! \return bool rValue, true if there were no issues reading from Compounds.csv, false otherwise
+//! 
 bool CompoundGenerator::parse()
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -60,6 +70,9 @@ bool CompoundGenerator::parse()
 }
 //-----------------------------------------------------------------------------
 
+//!
+//! \brief prints out contents of _compounds
+//! 
 void CompoundGenerator::print() const
 {
   for (auto& compound : _compounds) {
@@ -67,6 +80,11 @@ void CompoundGenerator::print() const
   }
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Called by parse in order to write nested tags into the compound objects of _compounds
+//! \param itr, iterator for cells of the Compounds.csv document
+//! \return bool rValue, true if there were no exceptions, false otherwise
+//! 
 bool CompoundGenerator::process_substance(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;

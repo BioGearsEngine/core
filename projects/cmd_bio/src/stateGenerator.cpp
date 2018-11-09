@@ -6,12 +6,9 @@
 
 #include "StateGenerator.h"
 
-#include <fstream>
 #include <iostream>
-#include <mutex>
-#include <sstream>
 #include <string>
-
+//
 namespace biogears {
 int runScenario(const std::string patient, std::string&& XMLString);
 

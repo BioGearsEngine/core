@@ -22,6 +22,13 @@
 #include <string>
 
 namespace biogears {
+//!
+//! \brief Replaces all instances of the string toReplace in the string S with the string replaceWith 
+//! \param S 
+//! \param toReplace 
+//! \param replaceWith 
+//! \return 
+//! 
 inline std::string findAndReplace(std::string& S, const std::string& toReplace, const std::string& replaceWith)
 {
   size_t start = 0;
@@ -36,23 +43,49 @@ inline std::string findAndReplace(std::string& S, const std::string& toReplace, 
   return S;
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Trims all leading whitespaces of string str
+//! \param str 
+//! \param chars 
+//! \return resulting string
+//! 
 inline std::string& ltrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
 {
   str.erase(0, str.find_first_not_of(chars));
   return str;
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Trims all trailing whitespace of string str
+//! \param str 
+//! \param chars 
+//! \return resulting string
+//! 
 inline std::string& rtrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
 {
   str.erase(str.find_last_not_of(chars) + 1);
   return str;
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Trims all leading and trailing whitespace of string str, note that this version of
+//!        trim is differentiated from the other version as the strings being passed in are 
+//!        rvalue references.
+//! \param str 
+//! \param chars 
+//! \return resulting string
+//! 
 inline std::string& trim(std::string&& str, const std::string&& chars = "\t\n\v\f\r ")
 {
   return ltrim(rtrim(str, chars), chars);
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Trims all leading and trailing whitespace of string str
+//! \param str 
+//! \param chars 
+//! \return 
+//! 
 inline std::string& trim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
 {
   return ltrim(rtrim(str, chars), chars);
@@ -68,6 +101,12 @@ inline std::vector<std::string> re_split(const std::string& input, const std::st
   return { first, last };
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Splits string input around char delimiter
+//! \param input string to be split
+//! \param delimiter char to split around
+//! \return std::vector containing both left and right split of string input
+//! 
 inline std::vector<std::string> split(const std::string& input, const char delimiter)
 {
   // passing -1 as the submatch index parameter performs splitting
@@ -86,6 +125,11 @@ inline std::vector<std::string> split(const std::string& input, const char delim
   return rValue;
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Converts all strings in vector of strings into doubles
+//! \param input string vector
+//! \return double vector
+//! 
 inline std::vector<double> vstod(const std::vector<std::string>& input)
 {
   std::vector<double> result(input.size());

@@ -28,6 +28,10 @@ CSVToXMLConvertor::CSVToXMLConvertor(std::string path, std::string filename)
 {
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief  Reads in the csv file line by line, then passes each line to parse_line
+//! \return bool rValue
+//! 
 bool CSVToXMLConvertor::read_csv()
 {
   using csv = std::vector<std::pair<std::string, std::vector<std::string>>>;
@@ -46,7 +50,7 @@ bool CSVToXMLConvertor::read_csv()
     current_row.second.clear();
 
     rValue &= parse_line(line, current_row, input);
-    if (!current_row.first.empty() && "LOGIC_GUARD_FOR_UNAMED_ROWS" != current_row.first) {
+    if (!current_row.first.empty() && "LOGIC_GUARD_FOR_UNNAMED_ROWS" != current_row.first) {
       _data.push_back(current_row);
     }
   }
@@ -54,6 +58,13 @@ bool CSVToXMLConvertor::read_csv()
   return rValue;
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Tokenizes a line of a csv document
+//! \param line, csv line to be tokenized
+//! \param row,  a data structure representation of a csv row
+//! \param input the csv filestream (this is necessary for an edge case in which a newline character appears inbetween quotation marks)
+//! \return bool rValue
+//! 
 bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std::vector<std::string>>& row, std::ifstream& input)
 {
   bool rValue = true;
@@ -69,7 +80,7 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
         row.first = std::string(token_start, token_end);
         token_start = token_end + 1;
         if (row.first.empty()) {
-          row.first = "LOGIC_GUARD_FOR_UNAMED_ROWS";
+          row.first = "LOGIC_GUARD_FOR_UNNAMED_ROWS";
         }
       } else {
         row.second.emplace_back(token_start, token_end);
@@ -106,7 +117,7 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
   } else if ( token_start == token_end){
     row.second.emplace_back( "" );
   }
-  if ("LOGIC_GUARD_FOR_UNAMED_ROWS" == row.first) {
+  if ("LOGIC_GUARD_FOR_UNNAMED_ROWS" == row.first) {
     row.first.clear();
   }
   return rValue;

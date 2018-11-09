@@ -18,11 +18,18 @@
 
 namespace biogears {
 //-----------------------------------------------------------------------------
+//!
+//! \brief 
+//! \param path -- std:string -- The Path to the CSV document folder will be appened with a delimiter. 
+//!
 SubstanceGenerator::SubstanceGenerator(std::string path)
   : CSVToXMLConvertor(path, "Substances.csv")
 {
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief 
+//! 
 SubstanceGenerator::~SubstanceGenerator()
 {
 }
@@ -66,6 +73,10 @@ bool SubstanceGenerator::parse()
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Saves xml for each SubstanceData object in _substances
+//! \return 
+//! 
 bool SubstanceGenerator::save() const
 {
   for (auto& substance : _substances) {
@@ -93,6 +104,13 @@ void SubstanceGenerator::print() const
   }
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Checks first cell of csv row and sets corresponding data of SubstanceData object
+//! \param name first cell of row
+//! \param value another cell of same row
+//! \param substance SubstanceData object
+//! \return 
+//! 
 bool SubstanceGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::SubstanceData& substance)
 {
   using namespace mil::tatrc::physiology::datamodel;
@@ -205,6 +223,11 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in data for the xml tags nested inside the aerosol tag
+//! \param itr, iterator for the data structure representation of csv rows 
+//! \return 
+//! 
 bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -289,6 +312,11 @@ bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in data for xml tags nested in the clearance tag
+//! \param itr, iterator for the data structure representation of csv rows 
+//! \return 
+//! 
 bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -391,6 +419,11 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in data for the xml tags nested inside the pharmacokinetics tag
+//! \param itr, iterator for the data structure representation of csv rows 
+//! \return 
+//! 
 bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -431,6 +464,11 @@ bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
   return rValue;
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Reads in data for the xml tags nested inside the pharmacodynamics tag
+//! \param itr, iterator for the data structure representation of csv rows 
+//! \return 
+//! 
 bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -498,6 +536,11 @@ bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in data for the xml tags nested inside the tissues tag
+//! \param itr, iterator for the data structure representation of csv rows 
+//! \return 
+//! 
 bool SubstanceGenerator::process_tissues(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;

@@ -54,6 +54,10 @@ bool StabilizationGenerator::parse()
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Saves xml for timed and dynamic stabilization object
+//! \return 
+//! 
 bool StabilizationGenerator::save() const
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -91,6 +95,11 @@ void StabilizationGenerator::print() const
 }
 
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in resting resting stabilization data from Stabilization.csv
+//! \param itr 
+//! \return 
+//! 
 bool StabilizationGenerator::process_RestingStabilizationCriteria(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -135,6 +144,11 @@ bool StabilizationGenerator::process_RestingStabilizationCriteria(CSV_RowItr itr
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in feedback stabilization data from Stabilization.csv
+//! \param itr 
+//! \return 
+//! 
 bool StabilizationGenerator::process_FeedbackStabilizationCriteria(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -178,6 +192,11 @@ bool StabilizationGenerator::process_FeedbackStabilizationCriteria(CSV_RowItr it
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in condition stabilization data from Stabilization.csv
+//! \param itr 
+//! \return 
+//! 
 bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -227,4 +246,4 @@ bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
   _dynamic.ConditionStabilization().push_back(data);
   return rValue;
 }
-} //Namespace biogears_ui
+} //Namespace biogears

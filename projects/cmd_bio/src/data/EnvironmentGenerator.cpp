@@ -9,6 +9,11 @@ std::string ConvertTemperatureUnit(std::string unit);
 
 
 
+//!
+//! \brief  
+//! \param name of unit
+//! \return 
+//! 
 std::string ConvertTemperatureUnit(std::string unit)
 {
   if (unit == "C") {
@@ -32,8 +37,13 @@ EnvironmentGenerator::~EnvironmentGenerator()
 {
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Saves xml file for  each environment
+//! \return bool, true if no exceptions were thrown, false otherwise 
+//! 
 bool EnvironmentGenerator::save() const
 {
+  bool rValue = true;
   for (auto& env : _environments) {
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
@@ -46,12 +56,17 @@ bool EnvironmentGenerator::save() const
       file.close();
 
     } catch (std::exception e) {
+      rValue = false;
       std::cout << e.what() << std::endl;
     }
   }
-  return false;
+  return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Populates _environments with EnvironmentalDataObjects to be read into xml's
+//! \return bool
+//! 
 bool EnvironmentGenerator::parse()
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -86,6 +101,13 @@ void EnvironmentGenerator::print() const
   }
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief Checks first cell of csv row and sets corresponding data of EnvironmentalConditionsObject 
+//! \param name first cell of row
+//! \param value another cell of the same row
+//! \param environment EnvironmentalConditionsData object
+//! \return 
+//! 
 bool EnvironmentGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::EnvironmentalConditionsData& environment)
 {
   using namespace mil::tatrc::physiology::datamodel;
@@ -196,6 +218,11 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
 
 //-----------------------------------------------------------------------------
 
+//!
+//! \brief Reads in data for the xml tags nested inside the aerosolization tag
+//! \param itr, iterator for data structure representation of CSV rows
+//! \return 
+//! 
 bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -223,6 +250,11 @@ bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
 }
 
 //-----------------------------------------------------------------------------
+//!
+//! \brief Reads in data for the xml tags nested inside the ambientaerosoldata tag
+//! \param itr, iterator for data structure representation of CSV rows
+//! \return 
+//! 
 bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
