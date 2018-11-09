@@ -74,8 +74,9 @@ bool SEOverride::IsValid() const
 
 bool SEOverride::IsActive() const
 {
-  if (!HasOverrideSwitch() || !HasOverrideConformance())
+  if (!HasOverrideSwitch() || !HasOverrideConformance()) {
     return false;
+  }
   return (GetOverrideSwitch() == CDM::enumOnOff::On && (GetOverrideConformance() == CDM::enumOnOff::On || GetOverrideConformance() == CDM::enumOnOff::Off));
 }
 
@@ -84,50 +85,61 @@ bool SEOverride::Load(const CDM::OverrideData& in)
   SEPatientAction::Clear();
   SetOverrideSwitch(in.State());
   SetOverrideConformance(in.Conformant());
-  if (in.ArterialBloodPHOverride().present())
+  if (in.ArterialBloodPHOverride().present()) {
     GetArterialPHOverride().Load(in.ArterialBloodPHOverride().get());
-  else
+  } else {
     GetArterialPHOverride().Invalidate();
-  if (in.VenousBloodPHOverride().present())
+  }
+  if (in.VenousBloodPHOverride().present()) {
     GetVenousPHOverride().Load(in.VenousBloodPHOverride().get());
-  else
+  } else {
     GetVenousPHOverride().Invalidate();
-  if (in.CardiacOutputOverride().present())
+  }
+  if (in.CardiacOutputOverride().present()) {
     GetCardiacOutputOverride().Load(in.CardiacOutputOverride().get());
-  else
+  } else {
     GetCardiacOutputOverride().Invalidate();
-  if (in.MeanArterialPressureOverride().present())
+  }
+  if (in.MeanArterialPressureOverride().present()) {
     GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
-  else
+  } else {
     GetMAPOverride().Invalidate();
-  if (in.HeartRateOverride().present())
+  }
+  if (in.HeartRateOverride().present()) {
     GetHeartRateOverride().Load(in.HeartRateOverride().get());
-  else
+  } else {
     GetHeartRateOverride().Invalidate();
-  if (in.CoreTemperatureOverride().present())
+  }
+  if (in.CoreTemperatureOverride().present()) {
     GetCoreTemperatureOverride().Load(in.CoreTemperatureOverride().get());
-  else
+  } else {
     GetCoreTemperatureOverride().Invalidate();
-  if (in.SkinTemperatureOverride().present())
+  }
+  if (in.SkinTemperatureOverride().present()) {
     GetSkinTemperatureOverride().Load(in.SkinTemperatureOverride().get());
-  else
+  } else {
     GetSkinTemperatureOverride().Invalidate();
-  if (in.TotalMetabolicRateOverride().present())
+  }
+  if (in.TotalMetabolicRateOverride().present()) {
     GetTotalMetabolicOverride().Load(in.TotalMetabolicRateOverride().get());
-  else
+  } else {
     GetTotalMetabolicOverride().Invalidate();
-  if (in.UrineProductionRateOverride().present())
+  }
+  if (in.UrineProductionRateOverride().present()) {
     GetUrineProductionRateOverride().Load(in.UrineProductionRateOverride().get());
-  else
+  } else {
     GetUrineProductionRateOverride().Invalidate();
-  if (in.RespirationRateOverride().present())
+  }
+  if (in.RespirationRateOverride().present()) {
     GetRespirationRateOverride().Load(in.RespirationRateOverride().get());
-  else
+  } else {
     GetRespirationRateOverride().Invalidate();
-  if (in.TidalVolumeOverride().present())
+  }
+  if (in.TidalVolumeOverride().present()) {
     GetTidalVolumeOverride().Load(in.TidalVolumeOverride().get());
-  else
+  } else {
     GetTidalVolumeOverride().Invalidate();
+  }
   //SEPatientAction::Load(in);
   //return true;
   return IsValid();
@@ -143,32 +155,45 @@ CDM::OverrideData* SEOverride::Unload() const
 void SEOverride::Unload(CDM::OverrideData& data) const
 {
   SEPatientAction::Unload(data);
-  if (HasOverrideSwitch())
+  if (HasOverrideSwitch()) {
     data.State(m_OverrideSwitch);
-  if (HasOverrideConformance())
+  }
+  if (HasOverrideConformance()) {
     data.Conformant(m_OverrideConformance);
-  if (HasArterialPHOverride())
+  }
+  if (HasArterialPHOverride()) {
     data.ArterialBloodPHOverride(std::unique_ptr<CDM::ScalarData>(m_ArterialPHOR->Unload()));
-  if (HasVenousPHOverride())
+  }
+  if (HasVenousPHOverride()) {
     data.VenousBloodPHOverride(std::unique_ptr<CDM::ScalarData>(m_VenousPHOR->Unload()));
-  if (HasCardiacOutputOverride())
+  }
+  if (HasCardiacOutputOverride()) {
     data.CardiacOutputOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CardiacOutputOR->Unload()));
-  if (HasMAPOverride())
+  }
+  if (HasMAPOverride()) {
     data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
-  if (HasHeartRateOverride())
+  }
+  if (HasHeartRateOverride()) {
     data.HeartRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateOR->Unload()));
-  if (HasCoreTemperatureOverride())
+  }
+  if (HasCoreTemperatureOverride()) {
     data.CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOR->Unload()));
-  if (HasSkinTemperatureOverride())
+  }
+  if (HasSkinTemperatureOverride()) {
     data.SkinTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureOR->Unload()));
-  if (HasTotalMetabolicOverride())
+  }
+  if (HasTotalMetabolicOverride()) {
     data.TotalMetabolicRateOverride(std::unique_ptr<CDM::ScalarPowerData>(m_TotalMetabolicOR->Unload()));
-  if (HasUrineProductionRateOverride())
+  }
+  if (HasUrineProductionRateOverride()) {
     data.UrineProductionRateOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_UrineProductionRateOR->Unload()));
-  if (HasRespirationRateOverride())
+  }
+  if (HasRespirationRateOverride()) {
     data.RespirationRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateOR->Unload()));
-  if (HasTidalVolumeOverride())
+  }
+  if (HasTidalVolumeOverride()) {
     data.TidalVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeOR->Unload()));
+  }
 }
 
 CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
@@ -217,14 +242,16 @@ bool SEOverride::HasArterialPHOverride() const
 }
 SEScalar& SEOverride::GetArterialPHOverride()
 {
-  if (m_ArterialPHOR == nullptr)
+  if (m_ArterialPHOR == nullptr) {
     m_ArterialPHOR = new SEScalar();
+  }
   return *m_ArterialPHOR;
 }
 double SEOverride::GetArterialPHOverride() const
 {
-  if (m_ArterialPHOR == nullptr)
+  if (m_ArterialPHOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_ArterialPHOR->GetValue();
 }
 bool SEOverride::HasVenousPHOverride() const
@@ -233,14 +260,16 @@ bool SEOverride::HasVenousPHOverride() const
 }
 SEScalar& SEOverride::GetVenousPHOverride()
 {
-  if (m_VenousPHOR == nullptr)
+  if (m_VenousPHOR == nullptr) {
     m_VenousPHOR = new SEScalar();
+  }
   return *m_VenousPHOR;
 }
 double SEOverride::GetVenousPHOverride() const
 {
-  if (m_VenousPHOR == nullptr)
+  if (m_VenousPHOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_VenousPHOR->GetValue();
 }
 
@@ -256,14 +285,16 @@ bool SEOverride::HasCardiacOutputOverride() const
 }
 SEScalarVolumePerTime& SEOverride::GetCardiacOutputOverride()
 {
-  if (m_CardiacOutputOR == nullptr)
+  if (m_CardiacOutputOR == nullptr) {
     m_CardiacOutputOR = new SEScalarVolumePerTime();
+  }
   return *m_CardiacOutputOR;
 }
 double SEOverride::GetCardiacOutputOverride(const VolumePerTimeUnit& unit) const
 {
-  if (m_CardiacOutputOR == nullptr)
+  if (m_CardiacOutputOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_CardiacOutputOR->GetValue(unit);
 }
 bool SEOverride::HasMAPOverride() const
@@ -272,14 +303,16 @@ bool SEOverride::HasMAPOverride() const
 }
 SEScalarPressure& SEOverride::GetMAPOverride()
 {
-  if (m_PressureOR == nullptr)
+  if (m_PressureOR == nullptr) {
     m_PressureOR = new SEScalarPressure();
+  }
   return *m_PressureOR;
 }
 double SEOverride::GetMAPOverride(const PressureUnit& unit) const
 {
-  if (m_PressureOR == nullptr)
+  if (m_PressureOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_PressureOR->GetValue(unit);
 }
 bool SEOverride::HasHeartRateOverride() const
@@ -288,14 +321,16 @@ bool SEOverride::HasHeartRateOverride() const
 }
 SEScalarFrequency& SEOverride::GetHeartRateOverride()
 {
-  if (m_HeartRateOR == nullptr)
+  if (m_HeartRateOR == nullptr) {
     m_HeartRateOR = new SEScalarFrequency();
+  }
   return *m_HeartRateOR;
 }
 double SEOverride::GetHeartRateOverride(const FrequencyUnit& unit) const
 {
-  if (m_HeartRateOR == nullptr)
+  if (m_HeartRateOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_HeartRateOR->GetValue(unit);
 }
 
@@ -315,14 +350,16 @@ bool SEOverride::HasCoreTemperatureOverride() const
 }
 SEScalarTemperature& SEOverride::GetCoreTemperatureOverride()
 {
-  if (m_CoreTemperatureOR == nullptr)
+  if (m_CoreTemperatureOR == nullptr) {
     m_CoreTemperatureOR = new SEScalarTemperature();
+  }
   return *m_CoreTemperatureOR;
 }
 double SEOverride::GetCoreTemperatureOverride(const TemperatureUnit& unit) const
 {
-  if (m_CoreTemperatureOR == nullptr)
+  if (m_CoreTemperatureOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_CoreTemperatureOR->GetValue(unit);
 }
 bool SEOverride::HasSkinTemperatureOverride() const
@@ -331,14 +368,16 @@ bool SEOverride::HasSkinTemperatureOverride() const
 }
 SEScalarTemperature& SEOverride::GetSkinTemperatureOverride()
 {
-  if (m_SkinTemperatureOR == nullptr)
+  if (m_SkinTemperatureOR == nullptr) {
     m_SkinTemperatureOR = new SEScalarTemperature();
+  }
   return *m_SkinTemperatureOR;
 }
 double SEOverride::GetSkinTemperatureOverride(const TemperatureUnit& unit) const
 {
-  if (m_SkinTemperatureOR == nullptr)
+  if (m_SkinTemperatureOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_SkinTemperatureOR->GetValue(unit);
 }
 bool SEOverride::HasTotalMetabolicOverride() const
@@ -347,14 +386,16 @@ bool SEOverride::HasTotalMetabolicOverride() const
 }
 SEScalarPower& SEOverride::GetTotalMetabolicOverride()
 {
-  if (m_TotalMetabolicOR == nullptr)
+  if (m_TotalMetabolicOR == nullptr) {
     m_TotalMetabolicOR = new SEScalarPower();
+  }
   return *m_TotalMetabolicOR;
 }
 double SEOverride::GetTotalMetabolicOverride(const PowerUnit& unit) const
 {
-  if (m_TotalMetabolicOR == nullptr)
+  if (m_TotalMetabolicOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_TotalMetabolicOR->GetValue(unit);
 }
 
@@ -373,14 +414,16 @@ bool SEOverride::HasUrineProductionRateOverride() const
 }
 SEScalarVolumePerTime& SEOverride::GetUrineProductionRateOverride()
 {
-  if (m_UrineProductionRateOR == nullptr)
+  if (m_UrineProductionRateOR == nullptr) {
     m_UrineProductionRateOR = new SEScalarVolumePerTime();
+  }
   return *m_UrineProductionRateOR;
 }
 double SEOverride::GetUrineProductionRateOverride(const VolumePerTimeUnit& unit) const
 {
-  if (m_UrineProductionRateOR == nullptr)
+  if (m_UrineProductionRateOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_UrineProductionRateOR->GetValue(unit);
 }
 
@@ -397,14 +440,16 @@ bool SEOverride::HasRespirationRateOverride() const
 }
 SEScalarFrequency& SEOverride::GetRespirationRateOverride()
 {
-  if (m_RespirationRateOR == nullptr)
+  if (m_RespirationRateOR == nullptr) {
     m_RespirationRateOR = new SEScalarFrequency();
+  }
   return *m_RespirationRateOR;
 }
 double SEOverride::GetRespirationRateOverride(const FrequencyUnit& unit) const
 {
-  if (m_RespirationRateOR == nullptr)
+  if (m_RespirationRateOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_RespirationRateOR->GetValue(unit);
 }
 bool SEOverride::HasTidalVolumeOverride() const
@@ -413,14 +458,16 @@ bool SEOverride::HasTidalVolumeOverride() const
 }
 SEScalarVolume& SEOverride::GetTidalVolumeOverride()
 {
-  if (m_TidalVolumeOR == nullptr)
+  if (m_TidalVolumeOR == nullptr) {
     m_TidalVolumeOR = new SEScalarVolume();
+  }
   return *m_TidalVolumeOR;
 }
 double SEOverride::GetTidalVolumeOverride(const VolumeUnit& unit) const
 {
-  if (m_TidalVolumeOR == nullptr)
+  if (m_TidalVolumeOR == nullptr) {
     return SEScalar::dNaN();
+  }
   return m_TidalVolumeOR->GetValue(unit);
 }
 
@@ -433,8 +480,9 @@ bool SEOverride::HasRespiratoryOverride() const
 void SEOverride::ToString(std::ostream& str) const
 {
   str << "Patient Action : Override Parameter";
-  if (HasComment())
+  if (HasComment()) {
     str << "\n\tComment: " << m_Comment;
+  }
 
   str << "\n\tState: ";
   HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
@@ -446,84 +494,95 @@ void SEOverride::ToString(std::ostream& str) const
   if (HasArterialPHOverride()) {
     str << "\n\tArterial PH: ";
     HasArterialPHOverride() ? str << *m_ArterialPHOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tArterial PH has a lower bound of 0 and an upper bound of 14.";
+    }
     str << std::flush;
   }
   if (HasVenousPHOverride()) {
     str << "\n\tVenous PH: ";
     HasVenousPHOverride() ? str << *m_VenousPHOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tVenous PH has a lower bound of 0 and an upper bound of 14.";
+    }
     str << std::flush;
   }
   if (HasCardiacOutputOverride()) {
     str << "\n\tCardiac Output: ";
     HasCardiacOutputOverride() ? str << *m_CardiacOutputOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tCardiac Output has a lower bound of 0 L/min and an upper bound of 100 L/min.";
+    }
     str << std::flush;
   }
   if (HasMAPOverride())
   {
     str << "\n\tMean Arterial Pressure: ";
     HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tMean Arterial Pressure has a lower bound of 60 mmHg and an upper bound of 105 mmHg.";
-    else
+    } else {
       str << "\n\tPharmacodynamics have been turned off due to conformance being turned off.";
+    }
     str << std::flush;
   }
   if (HasHeartRateOverride()) {
     str << "\n\tHeart Rate: ";
     HasHeartRateOverride() ? str << *m_HeartRateOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tHeart Rate has a lower bound of 30 bpm and an upper bound of 240 bpm.";
-    else
+    } else {
       str << "\n\tPharmacodynamics have been turned off due to conformance being turned off.";
+    }
     str << std::flush;
   }
   if (HasCoreTemperatureOverride())
   {
     str << "\n\tCore Temperature: ";
     HasCoreTemperatureOverride() ? str << *m_CoreTemperatureOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tCore Temperature has a lower bound of 0 degrees Celsius and an upper bound of 200 degrees Celsius.";
+    }
     str << std::flush;
   }
   if (HasSkinTemperatureOverride()) {
     str << "\n\tSkin Temperature: ";
     HasSkinTemperatureOverride() ? str << *m_SkinTemperatureOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tSkin Temperature has a lower bound of 0 degrees Celsius and an upper bound of 200 degrees Celsius.";
+    }
     str << std::flush;
   }
   if (HasTotalMetabolicOverride()) {
     str << "\n\tTotal Metabolic Rate: ";
     HasTotalMetabolicOverride() ? str << *m_TotalMetabolicOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tTotal Metabolic Rate has a lower bound of 1 kcal/day and an upper bound of 5000 kcal/day.";
+    }
     str << std::flush;
   }
   if (HasUrineProductionRateOverride()) {
     str << "\n\tUrine Production Rate: ";
     HasUrineProductionRateOverride() ? str << *m_UrineProductionRateOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tUrine Production Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
+    }
     str << std::flush;
   }
   if (HasRespirationRateOverride()) {
     str << "\n\tRespiration Rate: ";
     HasRespirationRateOverride() ? str << *m_RespirationRateOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tRespiration Rate has a lower bound of 0 breaths/min and an upper bound of 60 breaths/min.";
+    }
     str << std::flush;
   }
   if (HasTidalVolumeOverride()) {
     str << "\n\tTidal Volume: ";
     HasTidalVolumeOverride() ? str << *m_TidalVolumeOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On)
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tTidal Volume has a lower bound of 0 mL and an upper bound of 10000 mL.";
+    }
     str << std::flush;
   }
 }

@@ -13,16 +13,15 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/exports.h>
 #include <biogears/schema/biogears/OverrideConfig.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-
 
 CDM_BIND_DECL(OverrideConfigData)
 
@@ -52,12 +51,10 @@ public:
   virtual SEScalar& GetVenousPHOverride();
   double GetVenousPHOverride() const;
 
-  virtual bool HasEnableBloodChemistryOverride() const
-  {
+  virtual bool HasEnableBloodChemistryOverride() const {
     return m_overrideMode != (CDM::enumOnOff::Off);
   }
-  virtual bool IsBloodChemistryOverrideEnabled() const
-  {
+  virtual bool IsBloodChemistryOverrideEnabled() const {
     return m_overrideMode == CDM::enumOnOff::On;
   }
   virtual void EnableBloodChemistryOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
@@ -73,12 +70,10 @@ public:
   virtual SEScalarFrequency& GetHeartRateOverride();
   virtual double GetHeartRateOverride(const FrequencyUnit& unit) const;
 
-  virtual bool HasEnableCardiovascularOverride() const
-  {
+  virtual bool HasEnableCardiovascularOverride() const {
     return m_overrideMode != (CDM::enumOnOff::Off);
   }
-  virtual bool IsCardiovascularOverrideEnabled() const
-  {
+  virtual bool IsCardiovascularOverrideEnabled() const {
     return m_overrideMode == CDM::enumOnOff::On;
   }
   virtual void EnableCardiovascularOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
@@ -94,12 +89,10 @@ public:
   virtual SEScalarPower& GetTotalMetabolicOverride();
   virtual double GetTotalMetabolicOverride(const PowerUnit& unit) const;
 
-  virtual bool HasEnableEnergyOverride() const
-  {
+  virtual bool HasEnableEnergyOverride() const {
     return m_overrideMode != (CDM::enumOnOff::Off);
   }
-  virtual bool IsEnergyOverrideEnabled() const
-  {
+  virtual bool IsEnergyOverrideEnabled() const {
     return m_overrideMode == CDM::enumOnOff::On;
   }
   virtual void EnableEnergyOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
@@ -109,12 +102,10 @@ public:
   virtual SEScalarVolumePerTime& GetUrineProductionOverride();
   virtual double GetUrineProductionOverride(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasEnableRenalOverride() const
-  {
+  virtual bool HasEnableRenalOverride() const {
     return m_overrideMode != (CDM::enumOnOff::Off);
   }
-  virtual bool IsRenalOverrideEnabled() const
-  {
+  virtual bool IsRenalOverrideEnabled() const {
     return m_overrideMode == CDM::enumOnOff::On;
   }
   virtual void EnableRenalOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
@@ -127,12 +118,10 @@ public:
   virtual SEScalarVolume& GetTidalVolumeOverride();
   virtual double GetTidalVolumeOverride(const VolumeUnit& unit) const;
 
-  virtual bool HasEnableRespiratoryOverride() const
-  {
+  virtual bool HasEnableRespiratoryOverride() const {
     return m_overrideMode != (CDM::enumOnOff::Off);
   }
-  virtual bool IsRespiratoryOverrideEnabled() const
-  {
+  virtual bool IsRespiratoryOverrideEnabled() const {
     return m_overrideMode == CDM::enumOnOff::On;
   }
   virtual void EnableRespiratoryOverride(CDM::enumOnOff::value s) { m_overrideMode = s; }
@@ -153,6 +142,5 @@ protected:
   SEScalarVolumePerTime* m_UrineProductionOverride;
   SEScalarFrequency* m_RespirationRateOverride;
   SEScalarVolume* m_TidalVolumeOverride;
-
 };
 }
