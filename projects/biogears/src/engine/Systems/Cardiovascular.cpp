@@ -1847,18 +1847,30 @@ void Cardiovascular::ProcessOverride()
   double hr_bpm = m_data.GetCardiovascular().GetHeartRate().GetValue(FrequencyUnit::Per_min);
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiacOutputOverride())
+      {
       cardiacoutput_mL_per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
+      }
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
+      {
       map_mmHg = m_data.GetActions().GetPatientActions().GetOverride()->GetMAPOverride(PressureUnit::mmHg);
+      }
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride())
+      {
       hr_bpm = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
+      }
   } else {
     if (m_Override->HasCardiacOutputOverride())
+      {
       cardiacoutput_mL_per_min = m_Override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
+      }
     if (m_Override->HasMeanArterialPressureOverride())
+      {
       map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
+      }
     if (m_Override->HasHeartRateOverride())
+      {
       hr_bpm = m_Override->GetHeartRateOverride(FrequencyUnit::Per_min);
+      }
   }
   m_data.GetCardiovascular().GetCardiacOutput().SetValue(cardiacoutput_mL_per_min, VolumePerTimeUnit::L_Per_min);
   m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);

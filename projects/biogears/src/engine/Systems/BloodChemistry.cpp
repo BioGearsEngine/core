@@ -828,9 +828,13 @@ void BloodChemistry::OverrideControlLoop()
   double currentVenPHOverride = m_data.GetBloodChemistry().GetVenousBloodPH().GetValue(); //Current Venous pH, value gets changed in next check
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasArterialPHOverride())
+      {
       currentArtPHOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetArterialPHOverride().GetValue();
+      }
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasVenousPHOverride())
+      {
       currentVenPHOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetVenousPHOverride().GetValue();
+      }
   } else {
     if (m_Override->HasArterialPHOverride()) {
       currentArtPHOverride = m_Override->GetArterialPHOverride().GetValue();
