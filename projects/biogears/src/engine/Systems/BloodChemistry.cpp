@@ -99,11 +99,10 @@ void BloodChemistry::Initialize()
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
   //Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
-
+  GetAcuteInflammatoryResponse().InitializeState();
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   GetCarbonMonoxideSaturation().SetValue(0);
-  GetAcuteInflammatoryResponse().InitializeState();
   Process(); // Calculate the initial system values
 }
 
@@ -787,6 +786,19 @@ void BloodChemistry::Sepsis()
 
 void BloodChemistry::AcuteInflammatoryResponse()
 {
+  /*if (!HasAcuteInflammatoryResponse()) {
+    GetAcuteInflammatoryResponse().InitializeState();
+  }*/
+  if (m_data.GetState() < EngineState::Active) {
+    return;
+  }
+  //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.  
+  //We will store them with those units (for outputs), but they need to be scaled back down to dimensionless values to use in model equations
+  double tnfScale = 35000.0;
+  double nitrateScale = 1000.0;
+  double il6Scale = 17000.0;
+  double il10Scale = 8000.0;
+
   //Get inflammation state variables
   double pathogen = GetAcuteInflammatoryResponse().GetPathogen().GetValue();
   double macrophageResting = GetAcuteInflammatoryResponse().GetMacrophageResting().GetValue();
@@ -797,10 +809,10 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double iNOSpre = GetAcuteInflammatoryResponse().GetInducibleNOSynthasePre().GetValue();
   double eNOS = GetAcuteInflammatoryResponse().GetConstitutiveNOSynthase().GetValue();
   double nitricOxide = GetAcuteInflammatoryResponse().GetNitricOxide().GetValue();
-  double NO3 = GetAcuteInflammatoryResponse().GetNitrate().GetValue();
-  double TNF = GetAcuteInflammatoryResponse().GetTumorNecrosisFactor().GetValue();
-  double IL6 = GetAcuteInflammatoryResponse().GetInterleukin6().GetValue();
-  double IL10 = GetAcuteInflammatoryResponse().GetInterleukin10().GetValue();
+  double NO3 = GetAcuteInflammatoryResponse().GetNitrate().GetValue() / nitrateScale;
+  double TNF = GetAcuteInflammatoryResponse().GetTumorNecrosisFactor().GetValue() / tnfScale;
+  double IL6 = GetAcuteInflammatoryResponse().GetInterleukin6().GetValue() / il6Scale;
+  double IL10 = GetAcuteInflammatoryResponse().GetInterleukin10().GetValue() / il10Scale;
   double IL12 = GetAcuteInflammatoryResponse().GetInterleukin12().GetValue();
   double catecholamines = GetAcuteInflammatoryResponse().GetCatecholamines().GetValue();
   double tissueIntegrity = GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
@@ -851,6 +863,9 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Pain threshold parameters
   double kPTP = 0.025, kPT = 0.011, PTM = 1.0;
 
+  //Notes
+    //Max damage with original chow model is 10-->scale xMD, xND appropriately
+
   double dPathogen = -kL * pathogen;
   double dMacrophageResting = -((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMR * (macrophageResting - sM);
   double dMacrophageActive = ((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMA * macrophageActive;
@@ -867,22 +882,25 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dCa = kCATR * autonomic - kCA * catecholamines;
   double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
 
-  //Increment state values
-  GetAcuteInflammatoryResponse().GetPathogen().IncrementValue(dPathogen * dt_hr);
-  GetAcuteInflammatoryResponse().GetMacrophageResting().IncrementValue(dMacrophageResting * dt_hr);
-  GetAcuteInflammatoryResponse().GetMacrophageActive().IncrementValue(dMacrophageActive * dt_hr);
-  GetAcuteInflammatoryResponse().GetNeutrophilResting().IncrementValue(dNeutrophilResting * dt_hr);
-  GetAcuteInflammatoryResponse().GetNeutrophilActive().IncrementValue(dNeutrophilActive * dt_hr);
-  GetAcuteInflammatoryResponse().GetInducibleNOSynthase().IncrementValue(dINOS * dt_hr);
-  GetAcuteInflammatoryResponse().GetInducibleNOSynthasePre().IncrementValue(dINOSpre * dt_hr);
-  GetAcuteInflammatoryResponse().GetConstitutiveNOSynthase().IncrementValue(dENOS * dt_hr);
-  GetAcuteInflammatoryResponse().GetNitrate().IncrementValue(dNO3 * dt_hr);
-  GetAcuteInflammatoryResponse().GetTumorNecrosisFactor().IncrementValue(dTNF * dt_hr);
-  GetAcuteInflammatoryResponse().GetInterleukin6().IncrementValue(dIL6 * dt_hr);
-  GetAcuteInflammatoryResponse().GetInterleukin10().IncrementValue(dIL10 * dt_hr);
-  GetAcuteInflammatoryResponse().GetInterleukin12().IncrementValue(dIL12 * dt_hr);
-  GetAcuteInflammatoryResponse().GetCatecholamines().IncrementValue(dCa * dt_hr);
-  GetAcuteInflammatoryResponse().GetTissueIntegrity().IncrementValue(dTissueIntegrity * dt_hr);
+  //Scale Factor to speed up during debug/testing (and probably for some scenarios)
+  double scaleFactor = 8.0;
+
+  //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up
+  GetAcuteInflammatoryResponse().GetPathogen().IncrementValue(dPathogen * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetMacrophageResting().IncrementValue(dMacrophageResting * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetMacrophageActive().IncrementValue(dMacrophageActive * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetNeutrophilResting().IncrementValue(dNeutrophilResting * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetNeutrophilActive().IncrementValue(dNeutrophilActive * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetInducibleNOSynthase().IncrementValue(dINOS * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetInducibleNOSynthasePre().IncrementValue(dINOSpre * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetConstitutiveNOSynthase().IncrementValue(dENOS * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetNitrate().IncrementValue(dNO3 * dt_hr * scaleFactor * nitrateScale);
+  GetAcuteInflammatoryResponse().GetTumorNecrosisFactor().IncrementValue(dTNF * dt_hr * scaleFactor * tnfScale);
+  GetAcuteInflammatoryResponse().GetInterleukin6().IncrementValue(dIL6 * dt_hr * scaleFactor * il6Scale);
+  GetAcuteInflammatoryResponse().GetInterleukin10().IncrementValue(dIL10 * dt_hr * scaleFactor * il10Scale);
+  GetAcuteInflammatoryResponse().GetInterleukin12().IncrementValue(dIL12 * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetCatecholamines().IncrementValue(dCa * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetTissueIntegrity().IncrementValue(dTissueIntegrity * dt_hr * scaleFactor);
   //Nitric oxide is an algebraic relationship--update it here using new macrophage and neutrophil values
   nitricOxide = iNOS * (1.0 + kNOMA * (GetAcuteInflammatoryResponse().GetMacrophageActive().GetValue() + GetAcuteInflammatoryResponse().GetNeutrophilActive().GetValue())) + eNOS;
   GetAcuteInflammatoryResponse().GetNitricOxide().SetValue(nitricOxide);

@@ -117,6 +117,17 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!--@brief A burn wound, severity of which is determined by proportion of body surface area affected-->
+	<xs:complexType name="BurnWoundData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="TotalBodySurfaceArea" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<!-- @brief Applies a non-specific cardiac arrest. -->
 	<xs:complexType name="CardiacArrestData">
 		<xs:complexContent>

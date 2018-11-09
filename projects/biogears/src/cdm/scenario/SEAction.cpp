@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
 #include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
+#include <biogears/cdm/patient/actions/SEBurnWound.h>
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
@@ -161,6 +162,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SEBrainInjury* a = new SEBrainInjury();
       a->Load(*brainInjData);
       return a;
+    }
+
+    CDM::BurnWoundData* burnData = dynamic_cast<CDM::BurnWoundData*>(action);
+    if (burnData != nullptr) {
+      SEBurnWound* burn = new SEBurnWound();
+      burn->Load(*burnData);
+      return burn;
     }
 
     CDM::BronchoconstrictionData* bconData = dynamic_cast<CDM::BronchoconstrictionData*>(action);

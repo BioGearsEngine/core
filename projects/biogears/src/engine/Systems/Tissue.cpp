@@ -525,17 +525,17 @@ void Tissue::PreProcess()
   CalculateOncoticPressure();
 
   //Lots of debug tracking
-  /*for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
+  for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
     SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
     SEFluidCircuitPath* l = m_LymphPaths[&ex];
     std::string name = l->GetName();
-    m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_s));
+   // m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_s));
     SEFluidCircuitPath* extraCOP = m_InterstitialCopPaths[t];
     std::string name2 = extraCOP->GetName();
-    m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
-    m_data.GetDataTrack().Probe(name2 + "COP", extraCOP->GetNextPressureSource(PressureUnit::mmHg));
+   // m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
+    //m_data.GetDataTrack().Probe(name2 + "COP", extraCOP->GetNextPressureSource(PressureUnit::mmHg));
     double albuminConcentration = ex.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-    m_data.GetDataTrack().Probe(ex.GetName() + "Albumin_g_Per_dL", albuminConcentration);
+    //m_data.GetDataTrack().Probe(ex.GetName() + "Albumin_g_Per_dL", albuminConcentration);
     SELiquidCompartment* vas = m_TissueToVascular[t];
     std::string name3 = vas->GetName();
     SEFluidCircuitPath* vasCOP;
@@ -543,9 +543,9 @@ void Tissue::PreProcess()
       for (auto c : vas->GetChildren()) {
         name3 = c->GetName();
         vasCOP = m_VascularCopPaths[c];
-        m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+        //m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
         albuminConcentration = c->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-        m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+        //m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
       }
     } else {
       name3 = vas->GetName();
@@ -554,11 +554,20 @@ void Tissue::PreProcess()
       if (name3 == BGE::VascularCompartment::RightKidney)
         vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
       vasCOP = m_VascularCopPaths[vas];
-      m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
-      albuminConcentration = vas->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_mL);
-      m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+      //m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+      albuminConcentration = vas->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+      //m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
     }
-  }*/
+
+    SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
+    double il6 = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetInterleukin6().GetValue();
+    double resChange = 1.0 - 0.65 * std::pow(il6-17.0, 2.0) / (std::pow(il6-17.0,2.0) + std::pow(4000.0, 2.0));    //Do a sigmoid to see what happens--baseline is il6 = 17
+    //resChange = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+    if (t->GetName() != BGE::TissueCompartment::Brain) {
+      res->GetNextResistance().SetValue(res->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resChange, FlowResistanceUnit::mmHg_min_Per_mL);
+    }
+    
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -702,10 +711,10 @@ void Tissue::CalculateDiffusion()
           if (sub->GetName() == "Albumin") {
             moved_ug = AlbuminTransport(*vascular, extracellular, *tissue, m_Dt_s);
             std::string name = m_ExtraToIntraPaths[tissue]->GetName() + "Albumin";
-            // m_data.GetDataTrack().Probe(name, moved_ug);
+            //m_data.GetDataTrack().Probe(name, moved_ug);
             name = m_LymphPaths[&extracellular]->GetName() + "Albumin";
             moved_ug = MoveMassByConvection(extracellular, *lymph, *sub, m_Dt_s);
-            // m_data.GetDataTrack().Probe(name, moved_ug);
+            //m_data.GetDataTrack().Probe(name, moved_ug);
           }
         }
 
@@ -2536,13 +2545,16 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
   double fluidPermeabilityBaseline = 1.0 / m_EndothelialResistancePaths[&tissue]->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL);
   double fluidPermeability = 1.0 / m_EndothelialResistancePaths[&tissue]->GetResistance(FlowResistanceUnit::mmHg_min_Per_mL);
 
-  // m_data.GetDataTrack().Probe(tissue.GetName() + "_Resistance", m_EndothelialResistancePaths[&tissue]->GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
-  //m_data.GetDataTrack().Probe(tissue.GetName() + "_PSRatio", fluidPermeability / fluidPermeabilityBaseline);
+  double il6Baseline_pg_Per_L = 17.0;
+  double il6_pg_Per_L = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetInterleukin6().GetValue();
+
+  //m_data.GetDataTrack().Probe(tissue.GetName() + "_Resistance", m_EndothelialResistancePaths[&tissue]->GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
+  //m_data.GetDataTrack().Probe(tissue.GetName() + "_PSRatio", il6_pg_Per_L / il6Baseline_pg_Per_L);
 
   double reflectionCoefficientSmall = reflectionCoefficientSmallBase * std::exp(-4.0 * (1.0 - tissueIntegrity));
   double reflectionCoefficientLarge = reflectionCoefficientLargeBase * std::exp(-4.0 * (1.0 - tissueIntegrity));
-  double diffusivityCoefficientSmall_mL_Per_min_kg = (fluidPermeability / fluidPermeabilityBaseline) * diffusivityCoefficientSmallBase_mL_Per_min_kg;
-  double diffusivityCoefficientLarge_mL_Per_min_kg = (fluidPermeability / fluidPermeabilityBaseline) * diffusivityCoefficientLargeBase_mL_Per_min_kg;
+  double diffusivityCoefficientSmall_mL_Per_min_kg = (il6_pg_Per_L / il6Baseline_pg_Per_L) * diffusivityCoefficientSmallBase_mL_Per_min_kg;
+  double diffusivityCoefficientLarge_mL_Per_min_kg = (il6_pg_Per_L / il6Baseline_pg_Per_L) * diffusivityCoefficientLargeBase_mL_Per_min_kg;
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);
   BLIM(reflectionCoefficientLarge, 0.0, 1.0);
 

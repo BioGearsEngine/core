@@ -1053,7 +1053,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   double albuminDiffusive_ug_Per_min;
   double albuminConvective_ug_Per_min;
   double lymphSensitivity = 0.4 * targetFlow_mL_Per_min;
-  double lymphFlow_mL_Per_s;
+  double lymphFlow_mL_Per_s=0.0;
   double interstitialPressureBaseline_mmHg;
 
 

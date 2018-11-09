@@ -26,6 +26,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_AsthmaAttack = nullptr;
   m_BrainInjury = nullptr;
   m_Bronchoconstriction = nullptr;
+  m_BurnWound = nullptr;
   m_CardiacArrest = nullptr;
   m_ChestCompression = nullptr;
   m_ConsciousRespiration = nullptr;
@@ -60,6 +61,7 @@ void SEPatientActionCollection::Clear()
   RemoveAsthmaAttack();
   RemoveBrainInjury();
   RemoveBronchoconstriction();
+  RemoveBurnWound();
   RemoveChestCompression();
   RemoveCardiacArrest();
   RemoveConsciousRespiration();
@@ -101,8 +103,10 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     to.push_back(GetBrainInjury()->Unload());
   if (HasBronchoconstriction())
     to.push_back(GetBronchoconstriction()->Unload());
+  if (HasBurnWound())
+    to.push_back(GetBurnWound()->Unload());
   if (HasCardiacArrest())
-    to.push_back(GetCardiacArrest()->Unload());
+      to.push_back(GetCardiacArrest()->Unload());
   if (HasChestCompressionForce())
     to.push_back(GetChestCompressionForce()->Unload());
   if (HasChestCompressionForceScale())
@@ -260,6 +264,18 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_Bronchoconstriction);
+  }
+
+  const CDM::BurnWoundData* burn = dynamic_cast<const CDM::BurnWoundData*>(&action);
+  if (burn != nullptr) {
+    if (m_BurnWound == nullptr)
+      m_BurnWound = new SEBurnWound();
+    m_BurnWound->Load(*burn);
+    if (!m_BurnWound->IsActive()) {
+      RemoveBurnWound();
+      return true;
+    }
+    return IsValid(*m_BurnWound);
   }
 
   const CDM::CardiacArrestData* cardiacarrest = dynamic_cast<const CDM::CardiacArrestData*>(&action);
@@ -631,6 +647,19 @@ SEBronchoconstriction* SEPatientActionCollection::GetBronchoconstriction() const
 void SEPatientActionCollection::RemoveBronchoconstriction()
 {
   SAFE_DELETE(m_Bronchoconstriction);
+}
+
+bool SEPatientActionCollection::HasBurnWound() const
+{
+  return m_BurnWound == nullptr ? false : true;
+}
+SEBurnWound* SEPatientActionCollection::GetBurnWound() const
+{
+  return m_BurnWound;
+}
+void SEPatientActionCollection::RemoveBurnWound()
+{
+  SAFE_DELETE(m_BurnWound);
 }
 
 bool SEPatientActionCollection::HasCardiacArrest() const

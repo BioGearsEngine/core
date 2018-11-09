@@ -69,6 +69,7 @@ bool SEInflammationState::Load(const CDM::InflammationStateData& in)
   GetPathogen().Load(in.Pathogen());
   GetTrauma().Load(in.Trauma());
   GetMacrophageResting().Load(in.MacrophageResting());
+  GetMacrophageActive().Load(in.MacrophageActive());
   GetNeutrophilResting().Load(in.NeutrophilResting());
   GetNeutrophilActive().Load(in.NeutrophilActive());
   GetInducibleNOSynthasePre().Load(in.InducibleNOSynthasePre());
@@ -116,7 +117,8 @@ void SEInflammationState::Unload(CDM::InflammationStateData& data) const
 void SEInflammationState::InitializeState()
 {
   //Values from Chow2005Acute
-  GetPathogen().SetValue(0.0);
+  GetPathogen().SetValue(6.0);  //Change this back to 0 after testing
+  GetTrauma().SetValue(0.0);
   GetMacrophageResting().SetValue(1.0);
   GetMacrophageActive().SetValue(0.0);
   GetNeutrophilResting().SetValue(1.0);
@@ -127,8 +129,8 @@ void SEInflammationState::InitializeState()
   GetNitrate().SetValue(0.0);
   GetNitricOxide().SetValue(0.0);
   GetTumorNecrosisFactor().SetValue(0.0);
-  GetInterleukin6().SetValue(0.001);
-  GetInterleukin10().SetValue(0.01);
+  GetInterleukin6().SetValue(17.0);     //Value is in pg/L-->gets scaled down in model
+  GetInterleukin10().SetValue(80.0);    //Value is in pg/L-->gets scaled down in model  
   GetInterleukin12().SetValue(0.0);
   GetCatecholamines().SetValue(0.0);
   GetTissueIntegrity().SetValue(1.0);
@@ -154,6 +156,8 @@ const SEScalar* SEInflammationState::GetScalar(const std::string& name)
     return &GetMacrophageActive();
   if (name.compare("NeutrophilResting") == 0)
     return &GetNeutrophilResting();
+  if (name.compare("NeutrophilActive") == 0)
+    return &GetNeutrophilActive();
   if (name.compare("InducibleNOSynthasePre") == 0)
     return &GetInducibleNOSynthasePre();
   if (name.compare("InducibleNOSynthase") == 0)

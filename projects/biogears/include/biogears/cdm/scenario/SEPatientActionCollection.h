@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
 #include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
+#include <biogears/cdm/patient/actions/SEBurnWound.h>
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForceScale.h>
@@ -31,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
+#include <biogears/cdm/patient/actions/SEOverride.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
@@ -42,7 +44,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
-#include <biogears/cdm/patient/actions/SEOverride.h>
 
 namespace biogears {
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
@@ -81,6 +82,10 @@ public:
   SEBronchoconstriction* GetBronchoconstriction() const;
   void RemoveBronchoconstriction();
 
+  bool HasBurnWound() const;
+  SEBurnWound* GetBurnWound() const;
+  void RemoveBurnWound();
+  
   bool HasCardiacArrest() const;
   SECardiacArrest* GetCardiacArrest() const;
   void RemoveCardiacArrest();
@@ -192,6 +197,7 @@ protected:
   SEAsthmaAttack* m_AsthmaAttack;
   SEBrainInjury* m_BrainInjury;
   SEBronchoconstriction* m_Bronchoconstriction;
+  SEBurnWound* m_BurnWound;
   SECardiacArrest* m_CardiacArrest;
   SEChestCompression* m_ChestCompression;
   SEChestOcclusiveDressing* m_LeftChestOcclusiveDressing;
