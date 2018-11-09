@@ -85,13 +85,13 @@
 	<Action xsi:type="AnesthesiaMachineConfigurationData">
 		<Configuration>
         <Connection>Tube</Connection>
-			<InletFlow value="0.0" unit="L/min"/>
+			<InletFlow value="0.5" unit="L/min"/>
 			<InspiratoryExpiratoryRatio value="0.5"/>
 			<OxygenFraction value="0.3"/>
 			<OxygenSource>Wall</OxygenSource>
 			<PositiveEndExpiredPressure value="0.5" unit="mmHg"/>
 			<PrimaryGas>Air</PrimaryGas>
-			<ReliefValvePressure value="20.0" unit="mmHg"/>
+			<ReliefValvePressure value="25.0" unit="mmHg"/>
 			<RespiratoryRate value="20" unit="1/min"/>
 			<VentilatorPressure value="20" unit="mmHg"/>	
 		</Configuration>
