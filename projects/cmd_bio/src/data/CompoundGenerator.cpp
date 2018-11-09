@@ -19,7 +19,7 @@ CompoundGenerator::~CompoundGenerator()
 //-----------------------------------------------------------------------------
 
 //!
-//! \brief Iterates through _compounds and saves an xml of each compound
+//! \brief Iterates through _compounds and saves an xml of each SubstanceCompoundData object
 //! \return bool rValue, true if there were no exceptions, false otherwise
 //! 
 bool CompoundGenerator::save() const
@@ -45,7 +45,7 @@ bool CompoundGenerator::save() const
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief Reads Compounds.csv and populates _compounds with compound objects for each compound in the csv
+//! \brief reads Compounds.csv and populates _compounds with SubstanceCompoundData objects for each compound in the csv
 //! \return bool rValue, true if there were no issues reading from Compounds.csv, false otherwise
 //! 
 bool CompoundGenerator::parse()
@@ -71,8 +71,8 @@ bool CompoundGenerator::parse()
 //-----------------------------------------------------------------------------
 
 //!
-//! \brief prints out contents of _compounds
-//! 
+//! \brief prints out contents of SubstanceCompoundData objects in _compounds
+//! \details Note that the '<<' operator is overloaded for SubstanceCompoundData objects in this case, and will display each member of the objects
 void CompoundGenerator::print() const
 {
   for (auto& compound : _compounds) {
@@ -81,10 +81,11 @@ void CompoundGenerator::print() const
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief Called by parse in order to write nested tags into the compound objects of _compounds
-//! \param itr, iterator for cells of the Compounds.csv document
+//! \brief called by parse in order to write nested tags into the SubstanceCompoundData objects of _compounds
+//! \param itr : iterator for cells of the Compounds.csv document
 //! \return bool rValue, true if there were no exceptions, false otherwise
-//! 
+//! \details since nested tags are dependent on multiple rows of the csv document it is necessary to write a method such as this one
+//!          for all tags which nest other xml tags.
 bool CompoundGenerator::process_substance(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;

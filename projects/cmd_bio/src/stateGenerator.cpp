@@ -5,27 +5,13 @@
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 
 #include "StateGenerator.h"
-
+#include "utils/string-helpers.h"
 #include <iostream>
 #include <string>
 //
 namespace biogears {
 int runScenario(const std::string patient, std::string&& XMLString);
 
-std::string findAndReplace(std::string& S, const std::string& toReplace,
-                           const std::string& replaceWith)
-{
-  size_t start = 0;
-  while (true) {
-    size_t pos = S.find(toReplace, start);
-    if (pos == std::string::npos) {
-      break;
-    }
-    S.replace(pos, toReplace.length(), replaceWith);
-    start = pos + replaceWith.length();
-  }
-  return S;
-}
 //-------------------------------------------------------------------------------
 StateGenerator::StateGenerator(size_t thread_count)
   : _pool(thread_count)
@@ -36,6 +22,9 @@ StateGenerator::~StateGenerator()
 {
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief Iterates through patientFiles, creates a lambda function for each item, and passes those functions to a thread pool
+//! 
 void StateGenerator::GenStates()
 {
 
@@ -74,9 +63,11 @@ void StateGenerator::GenStates()
 //-------------------------------------------------------------------------------
 
 //!
-//! \param patientNum -- WHAT AM I
-//! \param XMLString   -- WHAT AM I
-//! \return --
+//! \brief creates a BioGearsScenarioExec object and executes the scenario
+//! \param patient : the name of the patient being used for the scenario
+//! \param XMLString : a path to the xml scenario being used
+//! \return int 0 if no exceptions were encountered, otherwise 1
+//!
 int runScenario(const std::string patient, std::string&& XMLString)
 {
   std::string patientXML(patient);
@@ -97,7 +88,7 @@ int runScenario(const std::string patient, std::string&& XMLString)
     eng = CreateBioGearsEngine(logFile);
   } catch (std::exception e) {
     std::cout << e.what();
-    return 0;
+    return 1;
   }
   DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
   BioGearsScenario sce(eng->GetSubstanceManager());
@@ -111,21 +102,34 @@ int runScenario(const std::string patient, std::string&& XMLString)
   return 0;
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief thread pool begins execution of tasks in queue
+//! 
 void StateGenerator::run()
 {
   _pool.start();
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief stops execution of tasks in queue
+//! 
 void StateGenerator::stop()
 {
   _pool.stop();
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief stops the thread pool if the work queue is empty
+//! \return true if the work queue is empty, false otherwise
+//! 
 bool StateGenerator::stop_if_empty()
 {  
   return _pool.stop_if_empty();
 }
 //-------------------------------------------------------------------------------
+//!
+//! \brief joins threads in thread pool
+//! 
 void StateGenerator::join()
 {
   _pool.join();

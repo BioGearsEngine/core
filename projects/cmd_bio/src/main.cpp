@@ -18,8 +18,8 @@
 
 //!
 //! \brief Reads command line argument and executes corresponding operation
-//! \param argc Number of command line arguments
-//! \param argv Pointers to command line arguments
+//! \param argc : Number of command line arguments
+//! \param argv : Pointers to command line arguments
 //! \return int 0 on success, other numbers on failure
 //! 
 int main(int argc, char** argv)

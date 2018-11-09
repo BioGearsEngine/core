@@ -29,8 +29,8 @@ CSVToXMLConvertor::CSVToXMLConvertor(std::string path, std::string filename)
 }
 //-------------------------------------------------------------------------------
 //!
-//! \brief  Reads in the csv file line by line, then passes each line to parse_line
-//! \return bool rValue
+//! \brief  reads in the csv file line by line, then passes each line to parse_line
+//! \return bool rValue true if no issues were encountered while parsing, false otherwise
 //! 
 bool CSVToXMLConvertor::read_csv()
 {
@@ -59,10 +59,10 @@ bool CSVToXMLConvertor::read_csv()
 }
 //-------------------------------------------------------------------------------
 //!
-//! \brief Tokenizes a line of a csv document
-//! \param line, csv line to be tokenized
-//! \param row,  a data structure representation of a csv row
-//! \param input the csv filestream (this is necessary for an edge case in which a newline character appears inbetween quotation marks)
+//! \brief tokenizes a line of a csv document
+//! \param line : csv line to be tokenized
+//! \param row : a data structure representation of a csv row
+//! \param input : the csv filestream (this is necessary for an edge case in which a newline character appears inbetween quotation marks)
 //! \return bool rValue
 //! 
 bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std::vector<std::string>>& row, std::ifstream& input)

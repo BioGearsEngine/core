@@ -17,6 +17,10 @@ NutritionGenerator::~NutritionGenerator()
 {
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief  saves all of the NutritionData objects in _nutrients to xml files
+//! \return 
+//! 
 bool NutritionGenerator::save() const
 {
   for (auto& nutrition_conf : _nutrients) {
@@ -37,6 +41,10 @@ bool NutritionGenerator::save() const
   return false;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief  populates _nutrients with NutrientDataObjects
+//! \return 
+//! 
 bool NutritionGenerator::parse()
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -58,6 +66,9 @@ bool NutritionGenerator::parse()
   return rValue;
 }
 //-----------------------------------------------------------------------------
+//!
+//! \brief prints out contents of NutrientDataObjects in _nutrients, note that the '<<' operator is overloaded for these objects to print out individual members
+//! 
 void NutritionGenerator::print() const
 {
   for (auto& env : _nutrients) {
@@ -66,6 +77,13 @@ void NutritionGenerator::print() const
 }
 
 //-----------------------------------------------------------------------------
+//!
+//! \brief Checks first cell of csv row and sets corresponding data of NutritionData object
+//! \param name first cell of row
+//! \param value another cell of the same row
+//! \param nutrient NutritionData 
+//! \return
+//!
 bool NutritionGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::NutritionData& nutrient)
 {
   using namespace mil::tatrc::physiology::datamodel;

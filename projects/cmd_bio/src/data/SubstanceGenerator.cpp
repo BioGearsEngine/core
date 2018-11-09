@@ -227,7 +227,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
 //! \brief Reads in data for the xml tags nested inside the aerosol tag
 //! \param itr, iterator for the data structure representation of csv rows 
 //! \return 
-//! 
+//! \details since nested tags are dependent on multiple rows of the csv document it is necessary to write a method such as this one
+//!          for all tags which nest other xml tags.
 bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;

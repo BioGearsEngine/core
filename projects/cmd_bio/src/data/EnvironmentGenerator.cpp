@@ -10,9 +10,11 @@ std::string ConvertTemperatureUnit(std::string unit);
 
 
 //!
-//! \brief  
-//! \param name of unit
+//! \brief converts string std::string unit into appropriate representation of the unit it represents
+//! \param unit 
 //! \return 
+//! \details for the purpose of running scenarios, the units "C", "F", and "R" are not recognized. This
+//!          converts them into units that are accepted by the scenario executor.
 //! 
 std::string ConvertTemperatureUnit(std::string unit)
 {
@@ -38,7 +40,7 @@ EnvironmentGenerator::~EnvironmentGenerator()
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief Saves xml file for  each environment
+//! \brief saves xml file for  each environment
 //! \return bool, true if no exceptions were thrown, false otherwise 
 //! 
 bool EnvironmentGenerator::save() const
@@ -64,7 +66,7 @@ bool EnvironmentGenerator::save() const
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief Populates _environments with EnvironmentalDataObjects to be read into xml's
+//! \brief populates _environments with EnvironmentalDataObjects to be read into xml's
 //! \return bool
 //! 
 bool EnvironmentGenerator::parse()
@@ -222,7 +224,8 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
 //! \brief Reads in data for the xml tags nested inside the aerosolization tag
 //! \param itr, iterator for data structure representation of CSV rows
 //! \return 
-//! 
+//! \details since nested tags are dependent on multiple rows of the csv document it is necessary to write a method such as this one
+//!          for all tags which nest other xml tags.
 bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -253,7 +256,7 @@ bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
 //!
 //! \brief Reads in data for the xml tags nested inside the ambientaerosoldata tag
 //! \param itr, iterator for data structure representation of CSV rows
-//! \return 
+//! \return bool, true if no exceptions were thrown, false otherwise
 //! 
 bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
 {
