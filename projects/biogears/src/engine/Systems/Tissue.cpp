@@ -529,10 +529,10 @@ void Tissue::PreProcess()
     SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
     SEFluidCircuitPath* l = m_LymphPaths[&ex];
     std::string name = l->GetName();
-   // m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_s));
+    //m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_s));
     SEFluidCircuitPath* extraCOP = m_InterstitialCopPaths[t];
     std::string name2 = extraCOP->GetName();
-   // m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
+    //m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
     //m_data.GetDataTrack().Probe(name2 + "COP", extraCOP->GetNextPressureSource(PressureUnit::mmHg));
     double albuminConcentration = ex.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
     //m_data.GetDataTrack().Probe(ex.GetName() + "Albumin_g_Per_dL", albuminConcentration);
@@ -561,12 +561,11 @@ void Tissue::PreProcess()
 
     SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
     double il6 = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetInterleukin6().GetValue();
-    double resChange = 1.0 - 0.65 * std::pow(il6-17.0, 2.0) / (std::pow(il6-17.0,2.0) + std::pow(4000.0, 2.0));    //Do a sigmoid to see what happens--baseline is il6 = 17
+    double resChange = 1.0 - 0.65 * std::pow(il6 - 17.0, 2.0) / (std::pow(il6 - 17.0, 2.0) + std::pow(4000.0, 2.0)); //Do a sigmoid to see what happens--baseline is il6 = 17
     //resChange = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
     if (t->GetName() != BGE::TissueCompartment::Brain) {
       res->GetNextResistance().SetValue(res->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resChange, FlowResistanceUnit::mmHg_min_Per_mL);
     }
-    
   }
 }
 
@@ -711,7 +710,7 @@ void Tissue::CalculateDiffusion()
           if (sub->GetName() == "Albumin") {
             moved_ug = AlbuminTransport(*vascular, extracellular, *tissue, m_Dt_s);
             std::string name = m_ExtraToIntraPaths[tissue]->GetName() + "Albumin";
-            //m_data.GetDataTrack().Probe(name, moved_ug);
+           // m_data.GetDataTrack().Probe(name, moved_ug);
             name = m_LymphPaths[&extracellular]->GetName() + "Albumin";
             moved_ug = MoveMassByConvection(extracellular, *lymph, *sub, m_Dt_s);
             //m_data.GetDataTrack().Probe(name, moved_ug);
@@ -2535,8 +2534,7 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 {
   double alphaSmall = 0.9;
   double alphaLarge = 1.0 - alphaSmall;
-  double diffusivityCoefficientSmallBase_mL_Per_min_kg = 0.00753;
-  double diffusivityCoefficientLargeBase_mL_Per_min_kg = 0.03306;
+  double diffusivityCoefficientBase_mL_Per_min_kg = 0.03306;
   double reflectionCoefficientSmallBase = 0.954;
   double reflectionCoefficientLargeBase = 0.097;
   double fluidFlux_mL_Per_min = m_InterstitialCopPaths[&tissue]->GetFlow(VolumePerTimeUnit::mL_Per_min);
@@ -2548,13 +2546,12 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
   double il6Baseline_pg_Per_L = 17.0;
   double il6_pg_Per_L = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetInterleukin6().GetValue();
 
-  //m_data.GetDataTrack().Probe(tissue.GetName() + "_Resistance", m_EndothelialResistancePaths[&tissue]->GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
+ // m_data.GetDataTrack().Probe(tissue.GetName() + "_Resistance", m_EndothelialResistancePaths[&tissue]->GetResistance(FlowResistanceUnit::mmHg_min_Per_mL));
   //m_data.GetDataTrack().Probe(tissue.GetName() + "_PSRatio", il6_pg_Per_L / il6Baseline_pg_Per_L);
 
   double reflectionCoefficientSmall = reflectionCoefficientSmallBase * std::exp(-4.0 * (1.0 - tissueIntegrity));
   double reflectionCoefficientLarge = reflectionCoefficientLargeBase * std::exp(-4.0 * (1.0 - tissueIntegrity));
-  double diffusivityCoefficientSmall_mL_Per_min_kg = (il6_pg_Per_L / il6Baseline_pg_Per_L) * diffusivityCoefficientSmallBase_mL_Per_min_kg;
-  double diffusivityCoefficientLarge_mL_Per_min_kg = (il6_pg_Per_L / il6Baseline_pg_Per_L) * diffusivityCoefficientLargeBase_mL_Per_min_kg;
+  double diffusivityCoefficient_mL_Per_min_kg = (il6_pg_Per_L / il6Baseline_pg_Per_L) * diffusivityCoefficientBase_mL_Per_min_kg;
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);
   BLIM(reflectionCoefficientLarge, 0.0, 1.0);
 
@@ -2562,12 +2559,12 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
   double albuminExtracellular_ug_Per_mL = extra.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   double averageAlbumin_ug_Per_mL = (albuminVascular_ug_Per_mL + albuminExtracellular_ug_Per_mL) / 2.0;
 
-  double diffusiveSmall_ug_Per_min = diffusivityCoefficientSmall_mL_Per_min_kg * tissueMass_kg * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
-  double diffusiveLarge_ug_Per_min = diffusivityCoefficientLarge_mL_Per_min_kg * tissueMass_kg * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
+
+  double diffusiveLarge_ug_Per_min = diffusivityCoefficient_mL_Per_min_kg * tissueMass_kg * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
   double convectiveSmall_ug_Per_min = (1.0 - reflectionCoefficientSmall) * alphaSmall * fluidFlux_mL_Per_min * averageAlbumin_ug_Per_mL;
   double convectiveLarge_ug_Per_min = (1.0 - reflectionCoefficientLarge) * alphaLarge * fluidFlux_mL_Per_min * averageAlbumin_ug_Per_mL;
 
-  double moved_ug = (diffusiveSmall_ug_Per_min + diffusiveLarge_ug_Per_min + convectiveSmall_ug_Per_min + convectiveLarge_ug_Per_min) / 60.0 * timestep_s;
+  double moved_ug = (diffusiveLarge_ug_Per_min + convectiveLarge_ug_Per_min + convectiveSmall_ug_Per_min) / 60.0 * timestep_s;
 
   if (moved_ug > 0) {
     if (moved_ug > vascular.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug)) {
@@ -2587,4 +2584,5 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 
   return moved_ug;
 }
+
 }

@@ -786,12 +786,21 @@ void BloodChemistry::Sepsis()
 
 void BloodChemistry::AcuteInflammatoryResponse()
 {
-  /*if (!HasAcuteInflammatoryResponse()) {
-    GetAcuteInflammatoryResponse().InitializeState();
-  }*/
-  if (m_data.GetState() < EngineState::Active) {
+  if (!GetAcuteInflammatoryResponse().HasInflammationSources()) {
     return;
   }
+  //Handle all inflammation actions here instead of creating one action for each.  We can filter based on "InflammationSource"
+  std::vector<CDM::enumInflammationSource> sources = GetAcuteInflammatoryResponse().GetInflammationSources(); //Scale Factor to speed up during debug/testing (and probably for some scenarios)
+  double scaleFactor = 1.0;
+  if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
+    double totalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    scaleFactor = 4.0;
+	  if(std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
+      GetAcuteInflammatoryResponse().GetTrauma().SetValue(totalBodySurfaceArea);
+      GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
+    }
+  }
+
   //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.  
   //We will store them with those units (for outputs), but they need to be scaled back down to dimensionless values to use in model equations
   double tnfScale = 35000.0;
@@ -801,6 +810,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
 
   //Get inflammation state variables
   double pathogen = GetAcuteInflammatoryResponse().GetPathogen().GetValue();
+  double trauma = GetAcuteInflammatoryResponse().GetTrauma().GetValue();
   double macrophageResting = GetAcuteInflammatoryResponse().GetMacrophageResting().GetValue();
   double macrophageActive = GetAcuteInflammatoryResponse().GetMacrophageActive().GetValue();
   double neutrophilResting = GetAcuteInflammatoryResponse().GetNeutrophilResting().GetValue();
@@ -821,7 +831,6 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
 
   //Non-serialized variables
-  double trauma = 0.0;
   double fB = 0.0;
   double autonomic = 0.0;
 
@@ -830,6 +839,8 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double sM = 1.0, sN = 1.0, s6 = 0.001, s10 = 0.01;
   //Endotoxin decay
   double kL = 1.0;
+  //Trauma decay
+  double kTr = 3.0;
   //Macrophage interaction
   double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9;
   //Activate macrophage interactions
@@ -867,6 +878,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
     //Max damage with original chow model is 10-->scale xMD, xND appropriately
 
   double dPathogen = -kL * pathogen;
+  double dTrauma = -kTr * trauma;
   double dMacrophageResting = -((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMR * (macrophageResting - sM);
   double dMacrophageActive = ((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMA * macrophageActive;
   double dNeutrophilResting = -(kNL * xNL * GeneralMath::HillActivation(pathogen, xNL, 1.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(IL6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - tissueIntegrity, xND, 2.0) + kNB * fB * kNTR * trauma) * GeneralMath::HillInhibition(IL10 + catecholamines, xN10, 2.0) * neutrophilResting - kNR * (neutrophilResting - sN);
@@ -882,11 +894,11 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dCa = kCATR * autonomic - kCA * catecholamines;
   double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
 
-  //Scale Factor to speed up during debug/testing (and probably for some scenarios)
-  double scaleFactor = 8.0;
+
 
   //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up
   GetAcuteInflammatoryResponse().GetPathogen().IncrementValue(dPathogen * dt_hr * scaleFactor);
+  GetAcuteInflammatoryResponse().GetTrauma().IncrementValue(dTrauma * dt_hr * scaleFactor);
   GetAcuteInflammatoryResponse().GetMacrophageResting().IncrementValue(dMacrophageResting * dt_hr * scaleFactor);
   GetAcuteInflammatoryResponse().GetMacrophageActive().IncrementValue(dMacrophageActive * dt_hr * scaleFactor);
   GetAcuteInflammatoryResponse().GetNeutrophilResting().IncrementValue(dNeutrophilResting * dt_hr * scaleFactor);

@@ -84,6 +84,7 @@ protected:
   void CheckGlycogenLevels();
   void ManageSubstancesAndSaturation();
 
+
   // Postprocess Methods
 
   //conditions
