@@ -15,7 +15,7 @@
 //! \date 2017 Mar 9
 //!
 
-#include <util/string_manipulation.h>
+#include <biogears/string/manipulation.h>
 
 #include <algorithm>
 
