@@ -35,6 +35,7 @@
 		
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"                   Unit="degC"        Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalMetabolicRate"         Unit="kcal/day" Precision="2"/>
 		
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"             Unit="mL/min"      Precision="3"/>
@@ -87,13 +88,15 @@
 		<Time value="2" unit="min"/>		
 	</Action>
 	<Action xsi:type="OverrideData" State="On" Conformant="On">
-		<CoreTemperatureOverride value="31" unit="degC"/>		
+		<CoreTemperatureOverride value="31" unit="degC"/>	
+		<SkinTemperatureOverride value="29" unit="degC"/>
+		<TotalMetabolicRateOverride value="350" unit="W"/>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="3" unit="min"/>		
 	</Action>
 	<Action xsi:type="OverrideData" State="On" Conformant="Off">
-		<HeartRateOverride value="100" unit="1/min"/>		
+		<HeartRateOverride value="120" unit="1/min"/>		
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="3" unit="min"/>		
@@ -103,6 +106,7 @@
 		<ArterialBloodPHOverride value="8"/>		
 		<VenousBloodPHOverride value="7"/>	
 		<RespirationRateOverride value="14" unit="1/min"/>	
+		<TidalVolumeOverride value="3000" unit="mL"/>	
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="6" unit="min"/>		

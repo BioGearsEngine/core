@@ -803,10 +803,10 @@ void Cardiovascular::CalculateVitalSigns()
     /// \event Patient: Tachycardia: heart rate exceeds 100 beats per minute.  This state is alleviated if it decreases below 90.
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 90)
       m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, false, m_data.GetSimulationTime());
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 100 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) > 100))
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 100 || (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) > 100))
       m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, true, m_data.GetSimulationTime());
     /// \event Patient: Bradycardia: heart rate falls below 60 beats per minute.  This state is alleviated if it increases above 65.
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 60 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) < 60))
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 60 || (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) < 60))
       m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, true, m_data.GetSimulationTime());
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 65)
       m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, false, m_data.GetSimulationTime());
@@ -1825,8 +1825,11 @@ void Cardiovascular::CalculateHeartRate()
 {
   // The time that the flow actually decreased below the threshold was last time slice (when m_HeartFlowDetected
   // was set back to false), so we need to subtract one time step from the interval.
-
-  double HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
+  double HeartRate_Per_s = 0.0;
+  if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride())
+    HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
+  else
+    HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
   GetHeartRate().SetValue(HeartRate_Per_s * 60.0, FrequencyUnit::Per_min);
   m_CurrentCardiacCycleDuration_s = 0;
 }
@@ -1846,29 +1849,23 @@ void Cardiovascular::ProcessOverride()
   double map_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure().GetValue(PressureUnit::mmHg);
   double hr_bpm = m_data.GetCardiovascular().GetHeartRate().GetValue(FrequencyUnit::Per_min);
   if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiacOutputOverride())
-      {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiacOutputOverride()) {
       cardiacoutput_mL_per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
       }
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
-      {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
       map_mmHg = m_data.GetActions().GetPatientActions().GetOverride()->GetMAPOverride(PressureUnit::mmHg);
       }
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride())
-      {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
       hr_bpm = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
       }
   } else {
-    if (m_Override->HasCardiacOutputOverride())
-      {
+    if (m_Override->HasCardiacOutputOverride()) {
       cardiacoutput_mL_per_min = m_Override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
       }
-    if (m_Override->HasMeanArterialPressureOverride())
-      {
+    if (m_Override->HasMeanArterialPressureOverride()) {
       map_mmHg = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
       }
-    if (m_Override->HasHeartRateOverride())
-      {
+    if (m_Override->HasHeartRateOverride()) {
       hr_bpm = m_Override->GetHeartRateOverride(FrequencyUnit::Per_min);
       }
   }
@@ -1897,16 +1894,13 @@ void Cardiovascular::OverrideControlLoop()
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride())
       currentHROverride = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
   } else {
-    if (m_Override->HasCardiacOutputOverride())
-    {
+    if (m_Override->HasCardiacOutputOverride()) {
       currentCardiacOutput = m_Override->GetCardiacOutputOverride(VolumePerTimeUnit::mL_Per_min);
     }
-    if (m_Override->HasMeanArterialPressureOverride())
-    {
+    if (m_Override->HasMeanArterialPressureOverride()) {
       currentMAPOverride = m_Override->GetMeanArterialPressureOverride(PressureUnit::mmHg);
     }
-    if (m_Override->HasHeartRateOverride())
-    {
+    if (m_Override->HasHeartRateOverride()) {
       currentHROverride = m_Override->GetHeartRateOverride(FrequencyUnit::Per_min);
     }
   }

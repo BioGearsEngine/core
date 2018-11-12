@@ -178,7 +178,7 @@ public:
   void RemoveUrinate();
 
   bool HasOverride() const;
-  SEOverride* GetOverride() const;
+  SEOverride* GetOverride();
   void RemoveOverride();
   bool IsOverrideActionOn() const;
   bool IsOverrideActionConformant() const;

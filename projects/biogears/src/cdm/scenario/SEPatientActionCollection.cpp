@@ -1036,8 +1036,12 @@ bool SEPatientActionCollection::HasOverride() const
 {
   return m_OverrideAction == nullptr ? false : true;
 }
-SEOverride* SEPatientActionCollection::GetOverride() const
+SEOverride* SEPatientActionCollection::GetOverride()
 {
+  if (m_OverrideAction == nullptr) {
+    //Need to ensure default constructor for SEOverride sets all values to False or at least override on to off
+    m_OverrideAction = new SEOverride();
+  }
   return m_OverrideAction;
 }
 void SEPatientActionCollection::RemoveOverride()
