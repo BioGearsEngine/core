@@ -1,3 +1,15 @@
+//**********************************************************************************
+//Copyright 2015 Applied Research Associates, Inc.
+//Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+//this file except in compliance with the License.You may obtain a copy of the License
+//at :
+//http://www.apache.org/licenses/LICENSE-2.0
+//Unless required by applicable law or agreed to in writing, software distributed under
+//the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+//CONDITIONS OF ANY KIND, either express or implied.See the License for the
+//specific language governing permissions and limitations under the License.
+//**************************************************************************************
+
 #include "argumentparser.hpp"
 
 #include <biogears/exports.h>
@@ -29,6 +41,10 @@ int main(int argc, char** argv)
 
   parser.addArgument("DATA");
   parser.addArgument("STATES");
+  parser.addArgument("SYSTEM");
+  parser.addArgument("PATIENT");
+  parser.addArgument("DRUG");
+  parser.addArgument("VERIFICATION");
   
   parser.parse(argc,argv);
   if (argc > 1) {
@@ -56,6 +72,10 @@ int main(int argc, char** argv)
         gen->parse();
         gen->save();
       }
+    } else if (parser.exists("SYSTEM")) {
+    } else if (parser.exists("PATIENT")) {
+    } else if (parser.exists("DRUG")) {
+    } else if (parser.exists("VERIFICATION")) {
     } else {
       std::cout << "Input not recognized" << std::endl;
       std::cout << "Usage " + std::string(argv[0]) + ": [STATES|DATA]";
