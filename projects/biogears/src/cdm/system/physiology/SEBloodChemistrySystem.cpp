@@ -593,7 +593,7 @@ SEScalarAmountPerVolume& SEBloodChemistrySystem::GetRedBloodCellAcetylcholineste
 }
 double SEBloodChemistrySystem::GetRedBloodCellAcetylcholinesterase(const AmountPerVolumeUnit& unit) const
 {
-  if (m_RedBloodCellCount == nullptr)
+  if (m_RedBloodCellAcetylcholinesterase == nullptr)
     return SEScalar::dNaN();
   return m_RedBloodCellAcetylcholinesterase->GetValue(unit);
 }
