@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 #include <unistd.h>
 
-#if defined(__clang__)
+#if defined(__clang__) && !defined(ANDROID)
 #include <sys/syslimits.h>
 #endif
 
