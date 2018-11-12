@@ -803,10 +803,10 @@ void Cardiovascular::CalculateVitalSigns()
     /// \event Patient: Tachycardia: heart rate exceeds 100 beats per minute.  This state is alleviated if it decreases below 90.
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 90)
       m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, false, m_data.GetSimulationTime());
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 100 || (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) > 100))
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 100)
       m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, true, m_data.GetSimulationTime());
     /// \event Patient: Bradycardia: heart rate falls below 60 beats per minute.  This state is alleviated if it increases above 65.
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 60 || (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min) < 60))
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 60)
       m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, true, m_data.GetSimulationTime());
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 65)
       m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, false, m_data.GetSimulationTime());
@@ -1826,10 +1826,11 @@ void Cardiovascular::CalculateHeartRate()
   // The time that the flow actually decreased below the threshold was last time slice (when m_HeartFlowDetected
   // was set back to false), so we need to subtract one time step from the interval.
   double HeartRate_Per_s = 0.0;
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride())
+  if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
     HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
-  else
+  } else {
     HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
+  }
   GetHeartRate().SetValue(HeartRate_Per_s * 60.0, FrequencyUnit::Per_min);
   m_CurrentCardiacCycleDuration_s = 0;
 }
@@ -1906,17 +1907,17 @@ void Cardiovascular::OverrideControlLoop()
   }
 
   if ((currentCardiacOutput < minCardiacOutput || currentCardiacOutput > maxCardiacOutput) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Cardiac Output Override (Cardiovascular) set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Cardiac Output Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Mean Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Mean Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }

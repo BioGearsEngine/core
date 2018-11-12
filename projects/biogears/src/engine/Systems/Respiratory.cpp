@@ -1653,7 +1653,12 @@ void Respiratory::CalculateVitalSigns()
     && (m_ElapsedBreathingCycleTime_min > dTimeTol)) {
     m_Patient->SetEvent(CDM::enumPatientEvent::StartOfInhale, true, m_data.GetSimulationTime());
     // Calculate Respiration Rate and track time and update cycle flag
-    double RespirationRate_Per_min = 1.0 / m_ElapsedBreathingCycleTime_min;
+    double RespirationRate_Per_min = 0.0;
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride()) {
+      RespirationRate_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
+    } else { 
+      RespirationRate_Per_min = 1.0 / m_ElapsedBreathingCycleTime_min;
+    }
     GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
 
     double dExpirationTime = m_ElapsedBreathingCycleTime_min - m_BreathTimeExhale_min;
@@ -1758,7 +1763,7 @@ void Respiratory::CalculateVitalSigns()
   if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
 
     //Bradypnea
-    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 8 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min) < 8)) {
+    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 8) {
       /// \event Patient: Bradypnea: Respiration rate is below 10 breaths per minute
       /// The patient has bradypnea.
       m_Patient->SetEvent(CDM::enumPatientEvent::Bradypnea, true, m_data.GetSimulationTime()); /// \cite overdyk2007continuous
@@ -1770,7 +1775,7 @@ void Respiratory::CalculateVitalSigns()
     }
 
     //Tachypnea
-    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) > 20 || (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min) > 20)) {
+    if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) > 20) {
       /// \event Patient: Tachypnea: Respiration rate is above 20 breaths per minute.
       /// The patient has tachypnea.
       m_Patient->SetEvent(CDM::enumPatientEvent::Tachypnea, true, m_data.GetSimulationTime()); /// \cite
@@ -2197,12 +2202,12 @@ void Respiratory::OverrideControlLoop()
   }
 
   if ((currentRROverride < minRROverride || currentRROverride > maxRROverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Respiration Rate Override (Respiratory) set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Respiration Rate Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Tidal Volume (Respiratory) Override set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Tidal Volume (Respiratory) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }

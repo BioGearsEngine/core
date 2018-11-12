@@ -845,12 +845,12 @@ void BloodChemistry::OverrideControlLoop()
   }
 
   if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Arterial Blood pH Override (BloodChemistry) set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Arterial Blood pH Override (BloodChemistry) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   if ((currentVenPHOverride < minVenPHOverride || currentVenPHOverride > maxVenPHOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Venous Blood pH (BloodChemistry) Override set outside of bounds of validated parameter override. Conformance turned off.";
+    m_ss << "Venous Blood pH (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
   }
