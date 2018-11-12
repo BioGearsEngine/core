@@ -50,6 +50,14 @@ specific language governing permissions and limitations under the License.
 	<!--@brief State of the acute inflammation model that tracks response to an insult (pathogen, trauma).  To be used first with respect to burn model and then extended to a geneneral Sepsis model 
 	(replacing SepsisState above)
 	-->
+	<xs:simpleType name="enumInflammationSource">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Burn"/>
+			<xs:enumeration value="Hemorrhage"/>
+			<xs:enumeration value="Pathogen"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
 	<xs:complexType name="InflammationStateData">
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
@@ -71,6 +79,7 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="Interleukin12" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -62,6 +62,7 @@ void SEInflammationState::Clear()
   SAFE_DELETE(m_Interleukin12);
   SAFE_DELETE(m_Catecholamines);
   SAFE_DELETE(m_TissueIntegrity);
+  m_InflammationSources.clear();
 }
 
 bool SEInflammationState::Load(const CDM::InflammationStateData& in)
@@ -83,6 +84,9 @@ bool SEInflammationState::Load(const CDM::InflammationStateData& in)
   GetInterleukin12().Load(in.Interleukin12());
   GetCatecholamines().Load(in.Catecholamines());
   GetTissueIntegrity().Load(in.TissueIntegrity());
+  for (auto src : in.Source()){
+    m_InflammationSources.push_back(src);
+  }
   return true;
 }
 
@@ -112,12 +116,15 @@ void SEInflammationState::Unload(CDM::InflammationStateData& data) const
   data.Interleukin12(std::unique_ptr<CDM::ScalarData>(m_Interleukin12->Unload()));
   data.Catecholamines(std::unique_ptr<CDM::ScalarData>(m_Catecholamines->Unload()));
   data.TissueIntegrity(std::unique_ptr<CDM::Scalar0To1Data>(m_TissueIntegrity->Unload()));
+  for (auto src : m_InflammationSources) {
+    data.Source().push_back(src);
+  }
 }
 
 void SEInflammationState::InitializeState()
 {
   //Values from Chow2005Acute
-  GetPathogen().SetValue(6.0);  //Change this back to 0 after testing
+  GetPathogen().SetValue(0.0);  //Change this back to 0 after testing
   GetTrauma().SetValue(0.0);
   GetMacrophageResting().SetValue(1.0);
   GetMacrophageActive().SetValue(0.0);
@@ -472,4 +479,15 @@ double SEInflammationState::GetTissueIntegrity() const
     return SEScalar::dNaN();
   return m_TissueIntegrity->GetValue();
 }
+
+bool SEInflammationState::HasInflammationSources() const
+{
+  return !m_InflammationSources.empty();
+}
+
+std::vector<CDM::enumInflammationSource>& SEInflammationState::GetInflammationSources()
+{
+  return m_InflammationSources;
+}
+
 }

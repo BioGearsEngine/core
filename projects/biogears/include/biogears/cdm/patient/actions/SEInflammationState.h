@@ -106,6 +106,9 @@ public:
   virtual SEScalar0To1& GetTissueIntegrity();
   virtual double GetTissueIntegrity() const;
 
+  virtual bool HasInflammationSources() const;
+  virtual std::vector<CDM::enumInflammationSource>& GetInflammationSources();
+
 protected:
   SEScalar* m_Pathogen;
   SEScalar* m_Trauma;
@@ -124,5 +127,6 @@ protected:
   SEScalar* m_Interleukin12;
   SEScalar* m_Catecholamines;
   SEScalar0To1* m_TissueIntegrity;
+  std::vector<CDM::enumInflammationSource> m_InflammationSources;
 };
 }

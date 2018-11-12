@@ -49,8 +49,6 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 {
   SEPatientAction::Load(in);
   GetTotalBodySurfaceArea().Load(in.TotalBodySurfaceArea());
-  m_Inflammation = true;  //If we're loading a state, then the inflammation model has already been initiated and will be loaded as well
-
   return true;
 }
 
