@@ -11,7 +11,8 @@
 //**************************************************************************************
 
 #include "argumentparser.hpp"
-
+#include "ConfigParser.hpp"
+#include "TestDriver.h"
 #include <biogears/exports.h>
 
 #include <iostream>
@@ -19,6 +20,7 @@
 #include <thread>
 
 #include "StateGenerator.h"
+#include "PatientValidationGenerator.h"
 #include "data/EnvironmentGenerator.h"
 #include "data/PatientGenerator.h"
 
@@ -73,9 +75,24 @@ int main(int argc, char** argv)
         gen->save();
       }
     } else if (parser.exists("SYSTEM")) {
+      std::vector<std::string> files = biogears::ParseConfigFile("ValidationSystemsShort.config");
+      biogears::TestDriver test{ 5 };
+      test.RunTests(files);
+      test.run();
     } else if (parser.exists("PATIENT")) {
+      biogears::PatientValidationGenerator generator{ 5 };
+      generator.GenPatientValidation();
+      generator.run();
     } else if (parser.exists("DRUG")) {
+      std::vector<std::string> files = biogears::ParseConfigFile("ValidationDrugsShort.config");
+      biogears::TestDriver test{ 5 };
+      test.RunTests(files);
+      test.run();
     } else if (parser.exists("VERIFICATION")) {
+      std::vector<std::string> files = biogears::ParseConfigFile("VerificationScenariosShort.config");
+      biogears::TestDriver test{ 5 };
+      test.RunTests(files);
+      test.run();
     } else {
       std::cout << "Input not recognized" << std::endl;
       std::cout << "Usage " + std::string(argv[0]) + ": [STATES|DATA]";
