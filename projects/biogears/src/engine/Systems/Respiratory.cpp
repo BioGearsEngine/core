@@ -1032,7 +1032,7 @@ void Respiratory::ProcessDriverActions()
     m_data.GetBloodChemistry().GetArterialBloodPHBaseline().SetValue(m_arterialPHBaseline);
   }
 
-  //compute the ph difference 
+  //compute the ph difference
   m_arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPHBaseline().GetValue();
   arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
   double diffPH = scalingFactor * (arterialPH - m_arterialPHBaseline) / m_arterialPHBaseline;
@@ -1058,8 +1058,8 @@ void Respiratory::ProcessDriverActions()
     m_VentilationFrequency_Per_min += diffPH;
   }
 
-    //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
-    m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
+  //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
+  m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1236,8 +1236,10 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasLeftChestOcclusiveDressing()) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+      } else if (severity == 0) {
+        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
-      resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
+        resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToLeftChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
       if (m_PatientActions->HasLeftNeedleDecompression()) {
@@ -1251,6 +1253,8 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasRightChestOcclusiveDressing()) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+      } else if (severity == 0) {
+        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1267,6 +1271,8 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+      } else if (severity == 0) {
+        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_LeftAlveoliLeakToLeftPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1282,6 +1288,8 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+      } else if (severity == 0) {
+        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1655,7 +1663,7 @@ void Respiratory::CalculateVitalSigns()
     double RespirationRate_Per_min = 0.0;
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride()) {
       RespirationRate_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
-    } else { 
+    } else {
       RespirationRate_Per_min = 1.0 / m_ElapsedBreathingCycleTime_min;
     }
     GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
