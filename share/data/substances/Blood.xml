@@ -1,37 +1,37 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Blood</Name>
-    <Component Name="Hemoglobin">
-        <Concentration value="3.7" unit="g/dL"/>
-    </Component>
-    <Component Name="Oxyhemoglobin">
-        <Concentration value="11.1" unit="g/dL"/>
-    </Component>
-    <Component Name="Sodium">
-        <Concentration value="0.322" unit="g/dL"/>
-    </Component>
-    <Component Name="Albumin">
-        <Concentration value="4.5" unit="g/dL"/>
-    </Component>
-    <Component Name="Urea">
-        <Concentration value="0.0257" unit="g/dL"/>
-    </Component>
-    <Component Name="Glucose">
-        <Concentration value="0.08" unit="g/dL"/>
-    </Component>
-    <Component Name="Triacylglycerol">
-        <Concentration value="0.107" unit="g/dL"/>
-    </Component>
-    <Component Name="Calcium">
-        <Concentration value="0.01" unit="g/dL"/>
-    </Component>
-    <Component Name="Creatinine">
-        <Concentration value="0.001" unit="g/dL"/>
-    </Component>
-    <Component Name="Oxygen">
-      <Concentration value="0.0314" unit="g/L"/>
-    </Component>
-    <Component Name="CarbonDioxide">
-      <Concentration value="0.715" unit="g/L"/>
-    </Component>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Blood</Name>
+  <Component Name="Hemoglobin">
+    <Concentration readOnly="false" unit="g/dL" value="3.7"/>
+  </Component>
+  <Component Name="Oxyhemoglobin">
+    <Concentration readOnly="false" unit="g/dL" value="11.1"/>
+  </Component>
+  <Component Name="Sodium">
+    <Concentration readOnly="false" unit="g/dL" value="0.322"/>
+  </Component>
+  <Component Name="Albumin">
+    <Concentration readOnly="false" unit="g/dL" value="4.5"/>
+  </Component>
+  <Component Name="Urea">
+    <Concentration readOnly="false" unit="g/dL" value="0.0257"/>
+  </Component>
+  <Component Name="Glucose">
+    <Concentration readOnly="false" unit="g/dL" value="0.08"/>
+  </Component>
+  <Component Name="Triacylglycerol">
+    <Concentration readOnly="false" unit="g/dL" value="0.107"/>
+  </Component>
+  <Component Name="Calcium">
+    <Concentration readOnly="false" unit="g/dL" value="0.01"/>
+  </Component>
+  <Component Name="Creatinine">
+    <Concentration readOnly="false" unit="g/dL" value="0.001"/>
+  </Component>
+  <Component Name="Oxygen">
+    <Concentration readOnly="false" unit="g/L" value="0.0314"/>
+  </Component>
+  <Component Name="CarbonDioxide">
+    <Concentration readOnly="false" unit="g/L" value="0.715"/>
+  </Component>
 </SubstanceCompound>

@@ -1,92 +1,92 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Morphine</Name>
-    <Classification>Opioid</Classification>
-    <MolarMass value="285.34" unit="g/mol"/>
-    <State>Liquid</State>
-    <Clearance>
-        <Systemic>
-            <FractionExcretedInFeces value="0.1"/>
-            <FractionUnboundInPlasma value="0.65"/>
-            <IntrinsicClearance value="10.5" unit="mL/min kg"/>
-            <RenalClearance value="1.5" unit="mL/min kg"/>
-            <SystemicClearance value="12.0" unit="mL/min kg"/>
-        </Systemic>
-        <RenalDynamics>
-            <Clearance value="1.5" unit="mL/min kg"/>
-        </RenalDynamics>
-    </Clearance>
-    <Pharmacokinetics>
-        <TissueKinetics>
-            <Name>GutTissue</Name>
-            <PartitionCoefficient value="0.99"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>LeftKidneyTissue</Name>
-            <PartitionCoefficient value="0.93"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>MuscleTissue</Name>
-            <PartitionCoefficient value="0.73"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>SkinTissue</Name>
-            <PartitionCoefficient value="1.11"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>LiverTissue</Name>
-            <PartitionCoefficient value="1.01"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>MyocardiumTissue</Name>
-            <PartitionCoefficient value="1.17"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>RightLungTissue</Name>
-            <PartitionCoefficient value="0.71"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>BrainTissue</Name>
-            <PartitionCoefficient value="1.27"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>BoneTissue</Name>
-            <PartitionCoefficient value="1.98"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>LeftLungTissue</Name>
-            <PartitionCoefficient value="0.71"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>FatTissue</Name>
-            <PartitionCoefficient value="4.78"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>RightKidneyTissue</Name>
-            <PartitionCoefficient value="0.93"/>
-        </TissueKinetics>
-        <TissueKinetics>
-            <Name>SpleenTissue</Name>
-            <PartitionCoefficient value="0.73"/>
-        </TissueKinetics>
-    </Pharmacokinetics>
-    <Pharmacodynamics>
-        <Bronchodilation value="0.0"/>
-        <DiastolicPressureModifier value="-0.15"/>
-        <EC50 value="0.075" unit="ug/mL"/>
-        <EMaxShapeParameter value="1.0"/>
-        <HeartRateModifier value="-0.06"/>
-        <NeuromuscularBlock value="0.0"/>
-        <PupillaryResponse>
-            <ReactivityModifier value="0.0"/>
-            <SizeModifier value="-0.25"/>
-        </PupillaryResponse>
-        <RespirationRateModifier value="-0.85"/>
-        <Sedation value="0.0"/>
-        <SystolicPressureModifier value="-0.1"/>
-        <TidalVolumeModifier value="0.0"/>
-        <TubularPermeabilityModifier value="0.0"/>
-        <CentralNervousModifier value="0.925"/>
-        <EffectSiteRateConstant value="0.0026" unit="1/min"/>
-    </Pharmacodynamics>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Morphine</Name>
+  <Classification>Opioid</Classification>
+  <MolarMass readOnly="false" unit="g/mol" value="285.34"/>
+  <State>Liquid</State>
+  <Clearance>
+    <Systemic>
+      <FractionExcretedInFeces readOnly="false" value="0.1"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.65"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="10.5"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="1.5"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="12"/>
+    </Systemic>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="1.5"/>
+    </RenalDynamics>
+  </Clearance>
+  <Pharmacokinetics>
+    <TissueKinetics>
+      <Name>BoneTissue</Name>
+      <PartitionCoefficient readOnly="false" value="1.98"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>BrainTissue</Name>
+      <PartitionCoefficient readOnly="false" value="1.27"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>FatTissue</Name>
+      <PartitionCoefficient readOnly="false" value="4.78"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>GutTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.99"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>LeftKidneyTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.93"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>LeftLungTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.71"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>LiverTissue</Name>
+      <PartitionCoefficient readOnly="false" value="1.01"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>MuscleTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.73"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>MyocardiumTissue</Name>
+      <PartitionCoefficient readOnly="false" value="1.17"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>RightKidneyTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.93"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>RightLungTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.71"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>SkinTissue</Name>
+      <PartitionCoefficient readOnly="false" value="1.11"/>
+    </TissueKinetics>
+    <TissueKinetics>
+      <Name>SpleenTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.73"/>
+    </TissueKinetics>
+  </Pharmacokinetics>
+  <Pharmacodynamics>
+    <Bronchodilation readOnly="false" value="0"/>
+    <DiastolicPressureModifier readOnly="false" value="-0.15"/>
+    <EC50 readOnly="false" unit="ug/mL" value="0.075"/>
+    <EMaxShapeParameter readOnly="false" value="1"/>
+    <HeartRateModifier readOnly="false" value="-0.06"/>
+    <NeuromuscularBlock readOnly="false" value="0"/>
+    <PupillaryResponse>
+      <ReactivityModifier readOnly="false" value="0"/>
+      <SizeModifier readOnly="false" value="-0.25"/>
+    </PupillaryResponse>
+    <RespirationRateModifier readOnly="false" value="-0.85"/>
+    <Sedation readOnly="false" value="0"/>
+    <SystolicPressureModifier readOnly="false" value="-0.1"/>
+    <TidalVolumeModifier readOnly="false" value="0"/>
+    <TubularPermeabilityModifier readOnly="false" value="0"/>
+    <CentralNervousModifier readOnly="false" value="0.925"/>
+    <EffectSiteRateConstant readOnly="false" unit="1/min" value="0.0026"/>
+  </Pharmacodynamics>
 </Substance>

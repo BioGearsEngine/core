@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Globulin</Name>
-    <State>Liquid</State>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Globulin</Name>
+  <State>Liquid</State>
+  <Clearance>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
+    </RenalDynamics>
+  </Clearance>
 </Substance>

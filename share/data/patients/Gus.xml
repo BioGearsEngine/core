@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Patient xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Gus</Name>
-    <Sex>Male</Sex>
-    <Age value="32.0" unit="yr"/>
-    <Weight value="190.0" unit="lb"/>
-    <Height value="70.0" unit="in"/>
-    <BodyFatFraction value="0.18"/>
-    <DiastolicArterialPressureBaseline value="60.0" unit="mmHg"/>
-    <HeartRateBaseline value="93.0" unit="1/min"/>
-    <RespirationRateBaseline value="14.0" unit="1/min"/>
-    <SystolicArterialPressureBaseline value="90.0" unit="mmHg"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Patient xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Gus</Name>
+  <Sex>Male</Sex>
+  <Age readOnly="false" unit="yr" value="32"/>
+  <Weight readOnly="false" unit="lb" value="190"/>
+  <Height readOnly="false" unit="in" value="70"/>
+  <BodyFatFraction readOnly="false" value="0.18"/>
+  <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="60"/>
+  <HeartRateBaseline readOnly="false" unit="1/min" value="93"/>
+  <RespirationRateBaseline readOnly="false" unit="1/min" value="14"/>
+  <SystolicArterialPressureBaseline readOnly="false" unit="mmHg" value="90"/>
 </Patient>

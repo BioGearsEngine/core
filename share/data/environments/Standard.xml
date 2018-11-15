@@ -1,21 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<EnvironmentalConditions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <SurroundingType>Air</SurroundingType>
-    <AirVelocity value="0.1" unit="m/s"/>
-    <AmbientTemperature value="22.0" unit="degC"/>
-    <AtmosphericPressure value="760.0" unit="mmHg"/>
-    <ClothingResistance value="0.5" unit="clo"/>
-    <Emissivity value="0.95"/>
-    <MeanRadiantTemperature value="22.0" unit="degC"/>
-    <RelativeHumidity value="0.6"/>
-    <RespirationAmbientTemperature value="22.0" unit="degC"/>
-    <AmbientGas Name="Nitrogen">
-        <FractionAmount value="0.7896"/>
-    </AmbientGas>
-    <AmbientGas Name="Oxygen">
-        <FractionAmount value="0.21"/>
-    </AmbientGas>
-    <AmbientGas Name="CarbonDioxide">
-        <FractionAmount value="4.0E-4"/>
-    </AmbientGas>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<EnvironmentalConditions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Standard</Name>
+  <SurroundingType>Air</SurroundingType>
+  <AirVelocity readOnly="false" unit="m/s" value="0.1"/>
+  <AmbientTemperature readOnly="false" unit="degC" value="22"/>
+  <AtmosphericPressure readOnly="false" unit="mmHg" value="760"/>
+  <ClothingResistance readOnly="false" unit="clo" value="0.5"/>
+  <Emissivity readOnly="false" value="0.95"/>
+  <MeanRadiantTemperature readOnly="false" unit="degC" value="22"/>
+  <RelativeHumidity readOnly="false" unit="" value="0.6"/>
+  <RespirationAmbientTemperature readOnly="false" unit="degC" value="22"/>
+  <AmbientGas Name="Nitrogen">
+    <FractionAmount readOnly="false" value="0.7896"/>
+  </AmbientGas>
+  <AmbientGas Name="Oxygen">
+    <FractionAmount readOnly="false" value="0.21"/>
+  </AmbientGas>
+  <AmbientGas Name="CarbonDioxide">
+    <FractionAmount readOnly="false" value="0.0004"/>
+  </AmbientGas>
 </EnvironmentalConditions>

@@ -1,6 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Carbaminohemoglobin</Name>
-    <MolarMass value="64634.04" unit="g/mol"/>
-    <State>Molecular</State>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Carbaminohemoglobin</Name>
+  <MolarMass readOnly="false" unit="g/mol" value="64634.04"/>
+  <State>Molecular</State>
+  <Clearance>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
+    </RenalDynamics>
+  </Clearance>
 </Substance>

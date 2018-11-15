@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Creatinine</Name>
-    <MolarMass value="113.12" unit="g/mol"/>
-    <State>Liquid</State>
-    <Clearance>
-        <RenalDynamics>
-            <Regulation>
-                <ChargeInBlood>Positive</ChargeInBlood>
-                <FractionUnboundInPlasma value="1.0"/>
-                <ReabsorptionRatio value="0.0"/>
-                <TransportMaximum value="0.0" unit="g/min"/>
-            </Regulation>
-        </RenalDynamics>
-    </Clearance>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Creatinine</Name>
+  <MolarMass readOnly="false" unit="g/mol" value="113.12"/>
+  <State>Liquid</State>
+  <Clearance>
+    <RenalDynamics>
+      <Regulation>
+        <ChargeInBlood>Positive</ChargeInBlood>
+        <FractionUnboundInPlasma readOnly="false" value="1"/>
+        <ReabsorptionRatio readOnly="false" value="0"/>
+        <TransportMaximum readOnly="false" unit="g/min" value="0"/>
+      </Regulation>
+    </RenalDynamics>
+  </Clearance>
 </Substance>

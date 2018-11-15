@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Furosemide</Name>
-    <MolarMass value="330.74" unit="g/mol"/>
-    <State>Liquid</State>
-    <Clearance>
-        <Systemic>
-            <FractionExcretedInFeces value="0.08"/>
-            <FractionUnboundInPlasma value="0.05"/>
-            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
-            <RenalClearance value="2.25" unit="mL/min kg"/>
-            <SystemicClearance value="4.62" unit="mL/min kg"/>
-        </Systemic>
-        <RenalDynamics>
-            <Clearance value="2.25" unit="mL/min kg"/>
-        </RenalDynamics>
-    </Clearance>
-    <Pharmacokinetics>
-        <Physicochemicals>
-            <AcidDissociationConstant value="3.0"/>
-            <BindingProtein>Albumin</BindingProtein>
-            <BloodPlasmaRatio value="0.75"/>
-            <FractionUnboundInPlasma value="0.05"/>
-            <IonicState>Acid</IonicState>
-            <LogP value="2.03"/>
-        </Physicochemicals>
-    </Pharmacokinetics>
-    <Pharmacodynamics>
-        <Bronchodilation value="0.0"/>
-        <DiastolicPressureModifier value="0.0"/>
-        <EC50 value="0.4462" unit="ug/mL"/>
-        <EMaxShapeParameter value="1.0"/>
-        <HeartRateModifier value="0.0"/>
-        <NeuromuscularBlock value="0.0"/>
-        <PupillaryResponse>
-            <ReactivityModifier value="0.0"/>
-            <SizeModifier value="0.0"/>
-        </PupillaryResponse>
-        <RespirationRateModifier value="0.0"/>
-        <Sedation value="0.0"/>
-        <SystolicPressureModifier value="0.0"/>
-        <TidalVolumeModifier value="0.0"/>
-        <TubularPermeabilityModifier value="0.8"/>
-        <CentralNervousModifier value="0.0"/>
-        <EffectSiteRateConstant value="0.0" unit="1/min"/>
-    </Pharmacodynamics>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Furosemide</Name>
+  <MolarMass readOnly="false" unit="g/mol" value="330.74"/>
+  <State>Liquid</State>
+  <Clearance>
+    <Systemic>
+      <FractionExcretedInFeces readOnly="false" value="0.08"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.05"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="2.25"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="4.62"/>
+    </Systemic>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="2.25"/>
+    </RenalDynamics>
+  </Clearance>
+  <Pharmacokinetics>
+    <Physicochemicals>
+      <AcidDissociationConstant readOnly="false" value="3"/>
+      <BindingProtein>Albumin</BindingProtein>
+      <BloodPlasmaRatio readOnly="false" value="0.75"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.05"/>
+      <IonicState>Acid</IonicState>
+      <LogP readOnly="false" value="2.03"/>
+    </Physicochemicals>
+  </Pharmacokinetics>
+  <Pharmacodynamics>
+    <Bronchodilation readOnly="false" value="0"/>
+    <DiastolicPressureModifier readOnly="false" value="0"/>
+    <EC50 readOnly="false" unit="ug/mL" value="0.4462"/>
+    <EMaxShapeParameter readOnly="false" value="1"/>
+    <HeartRateModifier readOnly="false" value="0"/>
+    <NeuromuscularBlock readOnly="false" value="0"/>
+    <PupillaryResponse>
+      <ReactivityModifier readOnly="false" value="0"/>
+      <SizeModifier readOnly="false" value="0"/>
+    </PupillaryResponse>
+    <RespirationRateModifier readOnly="false" value="0"/>
+    <Sedation readOnly="false" value="0"/>
+    <SystolicPressureModifier readOnly="false" value="0"/>
+    <TidalVolumeModifier readOnly="false" value="0"/>
+    <TubularPermeabilityModifier readOnly="false" value="0.8"/>
+    <CentralNervousModifier readOnly="false" value="0"/>
+    <EffectSiteRateConstant readOnly="false" unit="1/min" value="0"/>
+  </Pharmacodynamics>
 </Substance>

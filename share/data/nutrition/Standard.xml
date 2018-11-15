@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Nutrition xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Carbohydrate value="130.0" unit="g"/>
-    <CarbohydrateDigestionRate value="0.5" unit="g/min"/>
-    <Fat value="27.0" unit="g"/>
-    <FatDigestionRate value="0.055" unit="g/min"/>
-    <Protein value="20.0" unit="g"/>
-    <ProteinDigestionRate value="0.071" unit="g/min"/>
-    <Calcium value="500.0" unit="mg"/>
-    <Sodium value="1.0" unit="g"/>
-    <Water value="0.5" unit="L"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Nutrition xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Standard</Name>
+  <Carbohydrate readOnly="false" unit="g" value="130"/>
+  <CarbohydrateDigestionRate readOnly="false" unit="g/min" value="0.5"/>
+  <Fat readOnly="false" unit="g" value="27"/>
+  <FatDigestionRate readOnly="false" unit="g/min" value="0.055"/>
+  <Protein readOnly="false" unit="g" value="20"/>
+  <ProteinDigestionRate readOnly="false" unit="g/min" value="0.071"/>
+  <Calcium readOnly="false" unit="mg" value="500"/>
+  <Sodium readOnly="false" unit="g" value="1"/>
+  <Water readOnly="false" unit="L" value="0.5"/>
 </Nutrition>

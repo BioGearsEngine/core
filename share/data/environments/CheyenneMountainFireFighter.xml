@@ -1,27 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<EnvironmentalConditions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <SurroundingType>Air</SurroundingType>
-    <AirVelocity value="0.0" unit="m/s"/>
-    <AmbientTemperature value="25.0" unit="degC"/>
-    <AtmosphericPressure value="542.0" unit="mmHg"/>
-    <ClothingResistance value="2.0" unit="clo"/>
-    <Emissivity value="0.9"/>
-    <MeanRadiantTemperature value="25.0" unit="degC"/>
-    <RelativeHumidity value="0.1"/>
-    <RespirationAmbientTemperature value="25.0" unit="degC"/>
-    <AmbientGas Name="Nitrogen">
-        <FractionAmount value="0.79008"/>
-    </AmbientGas>
-    <AmbientGas Name="Oxygen">
-        <FractionAmount value="0.2095"/>
-    </AmbientGas>
-    <AmbientGas Name="CarbonDioxide">
-        <FractionAmount value="4.0E-4"/>
-    </AmbientGas>
-    <AmbientGas Name="CarbonMonoxide">
-        <FractionAmount value="2.0E-5"/>
-    </AmbientGas>
-    <AmbientAerosol Name="ForestFireParticulate">
-        <Concentration value="2.9" unit="mg/m^3"/>
-    </AmbientAerosol>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<EnvironmentalConditions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>CheyenneMountainFireFighter</Name>
+  <SurroundingType>Air</SurroundingType>
+  <AirVelocity readOnly="false" unit="m/s" value="0"/>
+  <AmbientTemperature readOnly="false" unit="degC" value="25"/>
+  <AtmosphericPressure readOnly="false" unit="mmHg" value="542"/>
+  <ClothingResistance readOnly="false" unit="clo" value="2"/>
+  <Emissivity readOnly="false" value="0.9"/>
+  <MeanRadiantTemperature readOnly="false" unit="degC" value="25"/>
+  <RelativeHumidity readOnly="false" unit="" value="0.1"/>
+  <RespirationAmbientTemperature readOnly="false" unit="degC" value="25"/>
+  <AmbientGas Name="Nitrogen">
+    <FractionAmount readOnly="false" value="0.79008"/>
+  </AmbientGas>
+  <AmbientGas Name="Oxygen">
+    <FractionAmount readOnly="false" value="0.2095"/>
+  </AmbientGas>
+  <AmbientGas Name="CarbonDioxide">
+    <FractionAmount readOnly="false" value="0.0004"/>
+  </AmbientGas>
+  <AmbientGas Name="CarbonMonoxide">
+    <FractionAmount readOnly="false" value="2e-05"/>
+  </AmbientGas>
+  <AmbientAerosol Name="ForestFireParticulate">
+    <Concentration readOnly="false" unit="mg/m^3" value="2.9"/>
+  </AmbientAerosol>
 </EnvironmentalConditions>

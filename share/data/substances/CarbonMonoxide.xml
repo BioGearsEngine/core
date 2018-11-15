@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>CarbonMonoxide</Name>
-    <Density value="1165.0" unit="g/m^3"/>
-    <MolarMass value="28.01" unit="g/mol"/>
-    <State>Gas</State>
-    <RelativeDiffusionCoefficient value="1.0"/>
-    <SolubilityCoefficient value="0.018" unit="1/atm"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>CarbonMonoxide</Name>
+  <Density readOnly="false" unit="g/m^3" value="1165"/>
+  <MolarMass readOnly="false" unit="g/mol" value="28.01"/>
+  <State>Gas</State>
+  <RelativeDiffusionCoefficient readOnly="false" value="1"/>
+  <SolubilityCoefficient readOnly="false" unit="1/atm" value="0.018"/>
+  <Clearance>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
+    </RenalDynamics>
+  </Clearance>
 </Substance>

@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>RingersLactate</Name>
-    <Component Name="Sodium">
-        <Concentration value="0.299" unit="g/dL"/>
-    </Component>
-    <Component Name="Chloride">
-        <Concentration value="0.386" unit="g/dL"/>
-    </Component>
-    <Component Name="Lactate">
-        <Concentration value="0.249" unit="g/dL"/>
-    </Component>
-    <Component Name="Potassium">
-        <Concentration value="0.0156" unit="g/dL"/>
-    </Component>
-    <Component Name="Calcium">
-        <Concentration value="0.006" unit="g/dL"/>
-    </Component>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>RingersLactate</Name>
+  <Component Name="Sodium">
+    <Concentration readOnly="false" unit="g/dL" value="0.299"/>
+  </Component>
+  <Component Name="Chloride">
+    <Concentration readOnly="false" unit="g/dL" value="0.386"/>
+  </Component>
+  <Component Name="Lactate">
+    <Concentration readOnly="false" unit="g/dL" value="0.249"/>
+  </Component>
+  <Component Name="Potassium">
+    <Concentration readOnly="false" unit="g/dL" value="0.0156"/>
+  </Component>
+  <Component Name="Calcium">
+    <Concentration readOnly="false" unit="g/dL" value="0.006"/>
+  </Component>
 </SubstanceCompound>

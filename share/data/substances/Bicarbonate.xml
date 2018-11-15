@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Bicarbonate</Name>
-    <MolarMass value="61.02" unit="g/mol"/>
-    <State>Liquid</State>
-    <Clearance>
-        <RenalDynamics>
-            <Regulation>
-                <ChargeInBlood>Negative</ChargeInBlood>
-                <FractionUnboundInPlasma value="1.0"/>
-                <ReabsorptionRatio value="12.5"/>
-                <TransportMaximum value="INF" unit="mg/min"/>
-            </Regulation>
-        </RenalDynamics>
-    </Clearance>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Bicarbonate</Name>
+  <MolarMass readOnly="false" unit="g/mol" value="61.02"/>
+  <State>Liquid</State>
+  <Clearance>
+    <RenalDynamics>
+      <Regulation>
+        <ChargeInBlood>Negative</ChargeInBlood>
+        <FractionUnboundInPlasma readOnly="false" value="1"/>
+        <ReabsorptionRatio readOnly="false" value="12.5"/>
+        <TransportMaximum readOnly="false" unit="mg/min" value="INF"/>
+      </Regulation>
+    </RenalDynamics>
+  </Clearance>
 </Substance>

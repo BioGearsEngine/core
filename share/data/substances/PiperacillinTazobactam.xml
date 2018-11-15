@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="Unknown" xsi:schemaLocation="">
-	<!--Assumes a 20 mL injection vial, yielding 4 g piperacillin / 0.5 g tazobactam--> 
-    <Name>PiperacillinTazobactam</Name>
-    <Component Name="Piperacillin">
-        <Concentration value="0.2" unit="g/mL"/>
-    </Component>
-    <Component Name="Tazobactam">
-        <Concentration value="0.025" unit="g/mL"/>
-    </Component>
-    <Component Name="Sodium">
-        <Concentration value="0.0268" unit="g/mL"/>
-    </Component>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>PiperacillinTazobactam</Name>
+  <Component Name="Piperacillin">
+    <Concentration readOnly="false" unit="g/mL" value="0.2"/>
+  </Component>
+  <Component Name="Tazobactam">
+    <Concentration readOnly="false" unit="g/mL" value="0.025"/>
+  </Component>
+  <Component Name="Sodium">
+    <Concentration readOnly="false" unit="g/mL" value="0.0268"/>
+  </Component>
 </SubstanceCompound>

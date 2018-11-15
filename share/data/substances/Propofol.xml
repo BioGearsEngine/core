@@ -1,48 +1,48 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Propofol</Name>
-    <Classification>Anesthetic</Classification>
-    <MolarMass value="178.27" unit="g/mol"/>
-    <State>Liquid</State>
-    <Clearance>
-        <Systemic>
-            <FractionExcretedInFeces value="0.02"/>
-            <FractionUnboundInPlasma value="0.03"/>
-            <IntrinsicClearance value="1.44" unit="mL/min kg"/>
-            <RenalClearance value="1.3" unit="mL/min kg"/>
-            <SystemicClearance value="3.0" unit="mL/min kg"/>
-        </Systemic>
-        <RenalDynamics>
-            <Clearance value="1.3" unit="mL/min kg"/>
-        </RenalDynamics>
-    </Clearance>
-    <Pharmacokinetics>
-        <Physicochemicals>
-            <AcidDissociationConstant value="11.1"/>
-            <BindingProtein>Albumin</BindingProtein>
-            <BloodPlasmaRatio value="0.03"/>
-            <FractionUnboundInPlasma value="0.03"/>
-            <IonicState>Acid</IonicState>
-            <LogP value="3.79"/>
-        </Physicochemicals>
-    </Pharmacokinetics>
-    <Pharmacodynamics>
-        <Bronchodilation value="0.0"/>
-        <DiastolicPressureModifier value="-0.35"/>
-        <EC50 value="0.7649" unit="ug/mL"/>
-        <EMaxShapeParameter value="1.0"/>
-        <HeartRateModifier value="0.0"/>
-        <NeuromuscularBlock value="0.0"/>
-        <PupillaryResponse>
-            <ReactivityModifier value="0.5"/>
-            <SizeModifier value="0.0"/>
-        </PupillaryResponse>
-        <RespirationRateModifier value="-1.0"/>
-        <Sedation value="1.0"/>
-        <SystolicPressureModifier value="-0.35"/>
-        <TidalVolumeModifier value="-1.0"/>
-        <TubularPermeabilityModifier value="0.0"/>
-        <CentralNervousModifier value="0.0"/>
-        <EffectSiteRateConstant value="0.4" unit="1/min"/>
-    </Pharmacodynamics>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Propofol</Name>
+  <Classification>Anesthetic</Classification>
+  <MolarMass readOnly="false" unit="g/mol" value="178.27"/>
+  <State>Liquid</State>
+  <Clearance>
+    <Systemic>
+      <FractionExcretedInFeces readOnly="false" value="0.02"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.03"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="1.44"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="1.3"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="3"/>
+    </Systemic>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="1.3"/>
+    </RenalDynamics>
+  </Clearance>
+  <Pharmacokinetics>
+    <Physicochemicals>
+      <AcidDissociationConstant readOnly="false" value="11.1"/>
+      <BindingProtein>Albumin</BindingProtein>
+      <BloodPlasmaRatio readOnly="false" value="0.03"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.03"/>
+      <IonicState>Acid</IonicState>
+      <LogP readOnly="false" value="3.79"/>
+    </Physicochemicals>
+  </Pharmacokinetics>
+  <Pharmacodynamics>
+    <Bronchodilation readOnly="false" value="0"/>
+    <DiastolicPressureModifier readOnly="false" value="-0.35"/>
+    <EC50 readOnly="false" unit="ug/mL" value="0.7649"/>
+    <EMaxShapeParameter readOnly="false" value="1"/>
+    <HeartRateModifier readOnly="false" value="0"/>
+    <NeuromuscularBlock readOnly="false" value="0"/>
+    <PupillaryResponse>
+      <ReactivityModifier readOnly="false" value="0.5"/>
+      <SizeModifier readOnly="false" value="0"/>
+    </PupillaryResponse>
+    <RespirationRateModifier readOnly="false" value="-1"/>
+    <Sedation readOnly="false" value="1"/>
+    <SystolicPressureModifier readOnly="false" value="-0.35"/>
+    <TidalVolumeModifier readOnly="false" value="-1"/>
+    <TubularPermeabilityModifier readOnly="false" value="0"/>
+    <CentralNervousModifier readOnly="false" value="0"/>
+    <EffectSiteRateConstant readOnly="false" unit="1/min" value="0.4"/>
+  </Pharmacodynamics>
 </Substance>

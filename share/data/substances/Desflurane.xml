@@ -1,51 +1,51 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Desflurane</Name>
-    <Classification>Anesthetic</Classification>
-    <Density value="6610.0" unit="g/m^3"/>
-    <MolarMass value="168.038" unit="g/mol"/>
-    <State>Gas</State>
-    <RelativeDiffusionCoefficient value="0.25"/>
-    <SolubilityCoefficient value="0.42" unit="1/atm"/>
-    <Clearance>
-        <Systemic>
-            <FractionExcretedInFeces value="0.0"/>
-            <FractionUnboundInPlasma value="1.0"/>
-            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
-            <RenalClearance value="0.0" unit="mL/min kg"/>
-            <SystemicClearance value="2.0" unit="mL/min kg"/>
-        </Systemic>
-        <RenalDynamics>
-            <Clearance value="0.0" unit="mL/min kg"/>
-        </RenalDynamics>
-    </Clearance>
-    <Pharmacokinetics>
-        <Physicochemicals>
-            <AcidDissociationConstant value="18.87"/>
-            <BindingProtein>Albumin</BindingProtein>
-            <BloodPlasmaRatio value="1.0"/>
-            <FractionUnboundInPlasma value="1.0"/>
-            <IonicState>Neutral</IonicState>
-            <LogP value="2.06"/>
-        </Physicochemicals>
-    </Pharmacokinetics>
-    <Pharmacodynamics>
-        <Bronchodilation value="0.0"/>
-        <DiastolicPressureModifier value="-0.35"/>
-        <EC50 value="100.0" unit="ug/mL"/>
-        <EMaxShapeParameter value="10.0"/>
-        <HeartRateModifier value="0.8"/>
-        <NeuromuscularBlock value="0.0"/>
-        <PupillaryResponse>
-            <ReactivityModifier value="0.0"/>
-            <SizeModifier value="0.0"/>
-        </PupillaryResponse>
-        <RespirationRateModifier value="0.0"/>
-        <Sedation value="0.0"/>
-        <SystolicPressureModifier value="-0.35"/>
-        <TidalVolumeModifier value="-0.55"/>
-        <TubularPermeabilityModifier value="0.0"/>
-        <CentralNervousModifier value="0.0"/>
-        <EffectSiteRateConstant value="0.55" unit="1/min"/>
-    </Pharmacodynamics>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Desflurane</Name>
+  <Classification>Anesthetic</Classification>
+  <Density readOnly="false" unit="g/m^3" value="6610"/>
+  <MolarMass readOnly="false" unit="g/mol" value="168.038"/>
+  <State>Gas</State>
+  <RelativeDiffusionCoefficient readOnly="false" value="0.25"/>
+  <SolubilityCoefficient readOnly="false" unit="1/atm" value="0.42"/>
+  <Clearance>
+    <Systemic>
+      <FractionExcretedInFeces readOnly="false" value="0"/>
+      <FractionUnboundInPlasma readOnly="false" value="1"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="0"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="2"/>
+    </Systemic>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
+    </RenalDynamics>
+  </Clearance>
+  <Pharmacokinetics>
+    <Physicochemicals>
+      <AcidDissociationConstant readOnly="false" value="18.87"/>
+      <BindingProtein>Albumin</BindingProtein>
+      <BloodPlasmaRatio readOnly="false" value="1"/>
+      <FractionUnboundInPlasma readOnly="false" value="1"/>
+      <IonicState>Neutral</IonicState>
+      <LogP readOnly="false" value="2.06"/>
+    </Physicochemicals>
+  </Pharmacokinetics>
+  <Pharmacodynamics>
+    <Bronchodilation readOnly="false" value="0"/>
+    <DiastolicPressureModifier readOnly="false" value="-0.35"/>
+    <EC50 readOnly="false" unit="ug/mL" value="100"/>
+    <EMaxShapeParameter readOnly="false" value="10"/>
+    <HeartRateModifier readOnly="false" value="0.8"/>
+    <NeuromuscularBlock readOnly="false" value="0"/>
+    <PupillaryResponse>
+      <ReactivityModifier readOnly="false" value="0"/>
+      <SizeModifier readOnly="false" value="0"/>
+    </PupillaryResponse>
+    <RespirationRateModifier readOnly="false" value="0"/>
+    <Sedation readOnly="false" value="0"/>
+    <SystolicPressureModifier readOnly="false" value="-0.35"/>
+    <TidalVolumeModifier readOnly="false" value="-0.55"/>
+    <TubularPermeabilityModifier readOnly="false" value="0"/>
+    <CentralNervousModifier readOnly="false" value="0"/>
+    <EffectSiteRateConstant readOnly="false" unit="1/min" value="0.55"/>
+  </Pharmacodynamics>
 </Substance>

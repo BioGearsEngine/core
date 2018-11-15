@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Lactate</Name>
-    <MolarMass value="89.07" unit="g/mol"/>
-    <State>Liquid</State>
-    <Clearance>
-        <RenalDynamics>
-            <Regulation>
-                <ChargeInBlood>Negative</ChargeInBlood>
-                <FractionUnboundInPlasma value="1.0"/>
-                <ReabsorptionRatio value="0.114"/>
-                <TransportMaximum value="0.075" unit="g/min"/>
-            </Regulation>
-        </RenalDynamics>
-    </Clearance>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Lactate</Name>
+  <MolarMass readOnly="false" unit="g/mol" value="89.07"/>
+  <State>Liquid</State>
+  <Clearance>
+    <RenalDynamics>
+      <Regulation>
+        <ChargeInBlood>Negative</ChargeInBlood>
+        <FractionUnboundInPlasma readOnly="false" value="1"/>
+        <ReabsorptionRatio readOnly="false" value="0.114"/>
+        <TransportMaximum readOnly="false" unit="g/min" value="0.075"/>
+      </Regulation>
+    </RenalDynamics>
+  </Clearance>
 </Substance>
