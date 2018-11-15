@@ -51,9 +51,12 @@ int main(int argc, char** argv)
   parser.addArgument("VALIDATION");   // run-cdm-validation
   
   parser.parse(argc,argv);
+
+  unsigned int n = std::thread::hardware_concurrency();
+
   if (argc > 1) {
-    if (parser.exists("STATES")) { // gen-states
-      biogears::StateGenerator generator{ 5 };
+    if (parser.exists("STATES")) {
+      biogears::StateGenerator generator{ n };
 
       generator.GenStates();
       generator.run();
