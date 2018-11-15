@@ -10,8 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #include <biogears/cdm/utils/FileUtils.h>
+
+#include <regex>
 #include <dirent.h>
 
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
@@ -82,11 +83,12 @@ bool CreateFilePath(const std::string& path)
   return true;
 }
 
-void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask)
+void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& regex)
 {
   DIR* d;
   dirent* ent;
   std::string filename;
+  std::regex mask{ regex };
   if ((d = opendir(dir.c_str())) != nullptr) {
     while ((ent = readdir(d)) != nullptr) {
       size_t nameLength = strlen(ent->d_name);
@@ -98,14 +100,22 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
       filename += ent->d_name;
 
       if (!IsDirectory(ent)) {
-        if (filename.find(mask) != std::string::npos)
+        if ( std::regex_search(filename,mask) )
           files.push_back(filename);
       } else {
-        ListFiles(filename, files, mask);
+        ListFiles(filename, files, regex);
       }
     }
   }
 }
+
+std::vector<std::string> ListFiles(const std::string& dir, const std::string& regex)
+{
+  std::vector<std::string> files;
+  ListFiles(dir, files, regex);
+  return files;
+}
+
 void MakeDirectory(const std::string& dir)
 {
   MKDIR(dir.c_str());

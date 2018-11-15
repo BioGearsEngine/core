@@ -113,7 +113,7 @@ bool SEScenarioExec::Execute(const SEScenario& scenario, const std::string& resu
 
       if (params->HasPatientFile()) {
         // Set up the patient
-        std::string pFile = "./patients/";
+        std::string pFile = "";
         pFile += params->GetPatientFile();
         if (!m_Engine.InitializeEngine(pFile.c_str(), &conditions, params->GetConfiguration())) {
           Error("Unable to initialize engine");

@@ -417,7 +417,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
   std::string pFile = patientFile;
-  if (pFile.find("/patients") == std::string::npos) { // Prepend the patient directory if it's not there
+  if (pFile.find("patients/") == std::string::npos) { // Prepend the patient directory if it's not there
     pFile = "./patients/";
     pFile += patientFile;
   }

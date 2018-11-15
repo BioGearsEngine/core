@@ -10,6 +10,7 @@
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
 #include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
@@ -19,6 +20,7 @@
 #include "utils/string-helpers.h"
 #include <iostream>
 #include <string>
+
 //
 namespace biogears {
 int runScenario(const std::string patient, std::string&& XMLString);
@@ -35,39 +37,13 @@ StateGenerator::~StateGenerator()
 //-------------------------------------------------------------------------------
 //!
 //! \brief Iterates through patientFiles, creates a lambda function for each item, and passes those functions to a thread pool
-//! 
+//!
 void StateGenerator::GenStates()
 {
 
-  std::string patientFiles[] = { "Bradycardic.xml",
-                                 "Carol.xml",
-                                 "Cynthia.xml",
-                                 "DefaultFemale.xml",
-                                 "DefaultMale.xml",
-                                 "DefaultTemplateFemale.xml",
-                                 "DefaultTemplateMale.xml",
-                                 "ExtremeFemale.xml",
-                                 "ExtremeMale.xml",
-                                 "Gus.xml",
-                                 "Hassan.xml",
-                                 "Jane.xml",
-                                 "Jeff.xml",
-                                 "Joel.xml",
-                                 "Nathan.xml",
-                                 "Overweight.xml",
-                                 "Ricky.xml",
-                                 "Roy.xml",
-                                 "Soldier.xml",
-                                 "StandardFemale.xml",
-                                 "StandardMale.xml",
-                                 "Tachycardic.xml",
-                                 "ToughGirl.xml",
-                                 "ToughGuy.xml",
-                                 "Tristan.xml",
-                                 "Underweight.xml" };
-
-  for (auto& patient : patientFiles) {
-    std::function<void()> work = [=](){ biogears::runScenario(patient, std::string("Scenarios/InitialPatientStateAll.xml")); };
+  auto patients = ListFiles( "patients", R"(\.xml)");
+  for (auto& patient : patients) {
+    std::function<void()> work = [=]() { biogears::runScenario(patient, std::string("Scenarios/InitialPatientStateAll.xml")); };
     _pool.queue_work(work);
   }
 }
@@ -115,7 +91,7 @@ int runScenario(const std::string patient, std::string&& XMLString)
 //-------------------------------------------------------------------------------
 //!
 //! \brief thread pool begins execution of tasks in queue
-//! 
+//!
 void StateGenerator::run()
 {
   _pool.start();
@@ -123,7 +99,7 @@ void StateGenerator::run()
 //-------------------------------------------------------------------------------
 //!
 //! \brief stops execution of tasks in queue
-//! 
+//!
 void StateGenerator::stop()
 {
   _pool.stop();
@@ -132,15 +108,15 @@ void StateGenerator::stop()
 //!
 //! \brief stops the thread pool if the work queue is empty
 //! \return true if the work queue is empty, false otherwise
-//! 
+//!
 bool StateGenerator::stop_if_empty()
-{  
+{
   return _pool.stop_if_empty();
 }
 //-------------------------------------------------------------------------------
 //!
 //! \brief joins threads in thread pool
-//! 
+//!
 void StateGenerator::join()
 {
   _pool.join();

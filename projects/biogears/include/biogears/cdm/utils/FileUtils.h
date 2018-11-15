@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 
 #include <mutex>
+#include <vector>
+#include <string>
 
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
 
@@ -40,6 +42,8 @@ namespace biogears {
 bool BIOGEARS_API CreateFilePath(const std::string&);
 std::string BIOGEARS_API Replace(const std::string& original, const std::string& replace, const std::string& withThis);
 void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "");
+std::vector<std::string> BIOGEARS_API ListFiles(const std::string& dir, const std::string&regex);
+
 std::string BIOGEARS_API GetCurrentWorkingDirectory();
 void BIOGEARS_API DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories = true);
 void BIOGEARS_API MakeDirectory(const std::string& dir);
