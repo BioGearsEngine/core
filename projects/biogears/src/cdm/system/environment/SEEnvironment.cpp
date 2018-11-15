@@ -169,7 +169,10 @@ void SEEnvironment::Unload(CDM::EnvironmentData& data) const
   SESystem::Unload(data);
   if (HasName()) {
     data.Name(m_Name);
+  } else {
+    data.Name("Unknown Environment");
   }
+
   if (HasActiveHeating() && m_ActiveHeating->GetPower().IsPositive())
     data.ActiveHeating(std::unique_ptr<CDM::ActiveHeatingData>(m_ActiveHeating->Unload()));
   if (HasActiveCooling() && m_ActiveCooling->GetPower().IsPositive())
@@ -249,6 +252,7 @@ void SEEnvironment::InvalidateName()
 {
   m_Name = "";
 }
+
 bool SEEnvironment::HasActiveHeating() const
 {
   return m_ActiveHeating != nullptr;

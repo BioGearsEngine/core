@@ -57,6 +57,11 @@ public:
 
   virtual const SEScalar* GetScalar(const std::string& name);
 
+  virtual std::string GetName() const;
+  virtual void SetName(const std::string& name);
+  virtual bool HasName() const;
+  virtual void InvalidateName();
+
   virtual CDM::enumSurroundingType::value GetSurroundingType() const;
   virtual void SetSurroundingType(CDM::enumSurroundingType::value name);
   virtual bool HasSurroundingType() const;
@@ -123,6 +128,7 @@ protected:
 protected:
   CDM::enumSurroundingType::value m_SurroundingType;
 
+  std::string m_Name;
   SEScalarMassPerVolume* m_AirDensity;
   SEScalarLengthPerTime* m_AirVelocity;
   SEScalarTemperature* m_AmbientTemperature;

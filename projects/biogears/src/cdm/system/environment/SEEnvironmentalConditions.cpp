@@ -94,6 +94,7 @@ const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name)
 bool SEEnvironmentalConditions::Load(const CDM::EnvironmentalConditionsData& in)
 {
   Clear();
+  m_Name = in.Name();
   if (in.SurroundingType().present())
     m_SurroundingType = in.SurroundingType().get();
   if (in.AirDensity().present())
@@ -160,6 +161,12 @@ CDM::EnvironmentalConditionsData* SEEnvironmentalConditions::Unload() const
 
 void SEEnvironmentalConditions::Unload(CDM::EnvironmentalConditionsData& data) const
 {
+  if (HasName()) {
+    data.Name(m_Name);
+  }
+  else {
+    data.Name("Unknown Environment Conditions");
+  }
   if (HasSurroundingType())
     data.SurroundingType(m_SurroundingType);
   if (m_AirDensity != nullptr)
@@ -262,6 +269,23 @@ bool SEEnvironmentalConditions::Load(const std::string& environmentFile)
     return false;
 
   return true;
+}
+
+std::string SEEnvironmentalConditions::GetName() const
+{
+  return m_Name;
+}
+void SEEnvironmentalConditions::SetName(const std::string& name)
+{
+  m_Name = name;
+}
+bool SEEnvironmentalConditions::HasName() const
+{
+  return m_Name.empty() ? false : true;
+}
+void SEEnvironmentalConditions::InvalidateName()
+{
+  m_Name = "";
 }
 
 CDM::enumSurroundingType::value SEEnvironmentalConditions::GetSurroundingType() const

@@ -238,8 +238,12 @@ CDM::SubstanceData* SESubstance::Unload() const
 
 void SESubstance::Unload(CDM::SubstanceData& data) const
 {
-  if (HasName())
+  if (HasName()) {
     data.Name(m_Name);
+  } else
+  {
+    data.Name("Unknown Substance");
+  }
   if (HasState())
     data.State(m_State);
   if (HasClassification())
