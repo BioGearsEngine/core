@@ -27,4 +27,23 @@
 	<Time value="60" unit="sec"/>		
 </Action>
   
+
+</Action>
+	<Action xsi:type="HemorrhageData" Compartment="RightLeg">
+	<InitialRate value="150" unit="mL/min"/>
+</Action>
+
+<Action xsi:type="AcuteStressData">
+    <Severity value="0.1"/>       
+</Action>
+
+<Action xsi:type="PainStimulusData">
+    <Severity value="0.5"/>       
+</Action>
+
+<Action xsi:type="AdvanceTimeData">
+	<Time value="3" unit="min"/>		
+</Action>
+  
+
 </Scenario>
