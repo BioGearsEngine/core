@@ -786,19 +786,21 @@ void BloodChemistry::Sepsis()
 
 void BloodChemistry::AcuteInflammatoryResponse()
 {
-  if (!GetAcuteInflammatoryResponse().HasInflammationSources()) {
-    return;
-  }
   //Handle all inflammation actions here instead of creating one action for each.  We can filter based on "InflammationSource"
   std::vector<CDM::enumInflammationSource> sources = GetAcuteInflammatoryResponse().GetInflammationSources(); //Scale Factor to speed up during debug/testing (and probably for some scenarios)
   double scaleFactor = 1.0;
+  double burnTotalBodySurfaceArea = 0.0;
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    double totalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-    scaleFactor = 4.0;
-	  if(std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
-      GetAcuteInflammatoryResponse().GetTrauma().SetValue(totalBodySurfaceArea);
+    burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    scaleFactor = 2.0;
+    if(std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
+      GetAcuteInflammatoryResponse().GetTrauma().SetValue(10.0 * burnTotalBodySurfaceArea);  //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen 
       GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
     }
+  }
+  //Perform this check after looking for inflammatory actions (otherwise we'll never process)
+  if (!GetAcuteInflammatoryResponse().HasInflammationSources()) {
+    return;
   }
 
   //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.  
@@ -840,7 +842,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Endotoxin decay
   double kL = 1.0;
   //Trauma decay
-  double kTr = 3.0;
+  double kTr = 1.5;  //Determined empirically to give good results
   //Macrophage interaction
   double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9;
   //Activate macrophage interactions
@@ -865,8 +867,9 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
   //Blood pressure
   double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
-  //Damage --- changed kDB from 0.02, changed xD6 from 0.25
-  double kDB = 0.005, kD6 = 0.3, kD = 0.05, kDTR = 0.05, xD6 = 1.2, xDNO = 0.4;
+  //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05, changed kD from 0.05
+  double kDB = 0.005, kD6 = 0.3, kD = 0.01, xD6 = 1.2, xDNO = 0.4;
+  double kDTR = 0.15;   //This is a base value that will be adjusted as a function of type and severity of traums
   //Temperature parameters
   double kT = 1.0, kTTnf = 1.5, nTTnf = 0.2, hTTnf = 0.75, TMax = 39.5, TMin = 37.0, kT6 = 1.5, nT6 = 0.5, hT6 = 0.75, kT10 = 0.0625, nT10 = 0.2, hT10 = 1.0;
   //Heart rate parameters
@@ -874,8 +877,11 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Pain threshold parameters
   double kPTP = 0.025, kPT = 0.011, PTM = 1.0;
 
-  //Notes
-    //Max damage with original chow model is 10-->scale xMD, xND appropriately
+  //Adjust parameters depending on inflammation source
+  if (burnTotalBodySurfaceArea != 0) {
+    //Rate at which burn causes damage varies on the severity of the burn.  A larger burn causes a bigger initial hit to tissue damage
+    kDTR *= burnTotalBodySurfaceArea;
+  }
 
   double dPathogen = -kL * pathogen;
   double dTrauma = -kTr * trauma;
@@ -893,7 +899,6 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dIL12 = k12M * macrophageActive * GeneralMath::HillInhibition(IL10, x1210, 2.0) - k12 * IL12;
   double dCa = kCATR * autonomic - kCA * catecholamines;
   double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
-
 
 
   //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up

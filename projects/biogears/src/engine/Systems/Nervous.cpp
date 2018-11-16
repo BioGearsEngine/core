@@ -312,7 +312,8 @@ void Nervous::BaroreceptorFeedback()
 //--------------------------------------------------------------------------------------------------
 void Nervous::CheckPainStimulus()
 {
-  if (!m_data.GetActions().GetPatientActions().HasPainStimulus()) {
+  //Screen for both external pain stimulus and presence of inflammation
+  if (!m_data.GetActions().GetPatientActions().HasPainStimulus()&&!m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
     GetPainVisualAnalogueScale().SetValue(0.0);
     return;
   }
@@ -339,6 +340,18 @@ void Nervous::CheckPainStimulus()
     double CNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
     CNSPainBuffer = exp(-CNSModifier * NervousScalar);
   }
+
+  //determine pain response from inflammation caused by burn trauma
+  if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
+    double traumaLevel = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTrauma().GetValue();
+    double traumaHalfMax = 0.1;
+    //Hill function w/ shape parameter = 2, avoiding using std::pow
+    double traumaPain = (traumaLevel * traumaLevel) / ((traumaLevel * traumaLevel) + (traumaHalfMax * traumaHalfMax));
+    //Add to tempPainVAS and factor in susceptibility and drug effects
+    tempPainVAS += (traumaPain * susceptabilityMapping * CNSPainBuffer);
+  }
+
+
 
   //iterate over all locations to get a cumulative stimulus and buffer them
   for (auto pain : pains) {
