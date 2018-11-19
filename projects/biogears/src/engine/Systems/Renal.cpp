@@ -1916,27 +1916,29 @@ void Renal::CalculateFluidPermeability()
 //--------------------------------------------------------------------------------------------------
 void Renal::ProcessOverride()
 {
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
   double urineProductionRate_ml_Per_min = m_data.GetRenal().GetUrineProductionRate().GetValue(VolumePerTimeUnit::mL_Per_min);
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride())
-    urineProductionRate_ml_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
+  if (override->HasUrineProductionRateOverride())
+    urineProductionRate_ml_Per_min = override->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
   
   m_data.GetRenal().GetUrineProductionRate().SetValue(urineProductionRate_ml_Per_min, VolumePerTimeUnit::mL_Per_min);
 }
 
 void Renal::OverrideControlLoop()
 {
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
   double maxUrineProductionOverride = 1000.0; //mL/min
   double minUrineProductionOverride = 0.0; //mL/min
   double currentUrineProductionOverride = m_data.GetRenal().GetUrineProductionRate().GetValue(VolumePerTimeUnit::mL_Per_min); //Current UPR, value gets changed in next check
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride()) {
-    currentUrineProductionOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
+  if (override->HasUrineProductionRateOverride()) {
+    currentUrineProductionOverride = override->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
   }
 
-  if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Urine Production Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   return;
 }

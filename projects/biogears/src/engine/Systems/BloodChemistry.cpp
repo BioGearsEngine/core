@@ -799,43 +799,43 @@ void BloodChemistry::AcuteInflammatoryResponse()
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::ProcessOverride()
 {
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
   double arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
   double venousPH = m_data.GetBloodChemistry().GetVenousBloodPH().GetValue();
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasArterialPHOverride())
-    arterialPH = m_data.GetActions().GetPatientActions().GetOverride()->GetArterialPHOverride().GetValue();
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasVenousPHOverride())
-    venousPH = m_data.GetActions().GetPatientActions().GetOverride()->GetVenousPHOverride().GetValue();
+  if (override->HasArterialPHOverride())
+    arterialPH = override->GetArterialPHOverride().GetValue();
+  if (override->HasVenousPHOverride())
+    venousPH = override->GetVenousPHOverride().GetValue();
   m_data.GetBloodChemistry().GetArterialBloodPH().SetValue(arterialPH);
   m_data.GetBloodChemistry().GetVenousBloodPH().SetValue(venousPH);
 }
 
 void BloodChemistry::OverrideControlLoop()
 {
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
   double maxArtPHOverride = 14.0; //Arterial pH
   double minArtPHOverride = 0.0; //Arterial pH
   double currentArtPHOverride = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue(); //Current Arterial pH, value gets changed in next check
   double maxVenPHOverride = 14.0; //Venous pH
   double minVenPHOverride = 0.0; //Venous pH
   double currentVenPHOverride = m_data.GetBloodChemistry().GetVenousBloodPH().GetValue(); //Current Venous pH, value gets changed in next check
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasArterialPHOverride())
-    {
-    currentArtPHOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetArterialPHOverride().GetValue();
+  if (override->HasArterialPHOverride()) {
+    currentArtPHOverride = override->GetArterialPHOverride().GetValue();
     }
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasVenousPHOverride())
-    {
-    currentVenPHOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetVenousPHOverride().GetValue();
+  if (override->HasVenousPHOverride()) {
+      currentVenPHOverride = override->GetVenousPHOverride().GetValue();
     } 
 
-  if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Arterial Blood pH Override (BloodChemistry) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentVenPHOverride < minVenPHOverride || currentVenPHOverride > maxVenPHOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentVenPHOverride < minVenPHOverride || currentVenPHOverride > maxVenPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Venous Blood pH (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   return;
 }

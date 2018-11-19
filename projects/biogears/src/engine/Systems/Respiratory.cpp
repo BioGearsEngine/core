@@ -2159,13 +2159,14 @@ void Respiratory::TuneCircuit()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::ProcessOverride()
 {
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
   double rr_per_min = m_data.GetRespiratory().GetRespirationRate().GetValue(FrequencyUnit::Per_min);
   double tidalvolume_mL = m_data.GetRespiratory().GetTidalVolume().GetValue(VolumeUnit::mL);
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride())
-    rr_per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasTidalVolumeOverride())
-    tidalvolume_mL = m_data.GetActions().GetPatientActions().GetOverride()->GetTidalVolumeOverride(VolumeUnit::mL);
+  if (override->HasRespirationRateOverride())
+    rr_per_min = override->GetRespirationRateOverride(FrequencyUnit::Per_min);
+  if (override->HasTidalVolumeOverride())
+    tidalvolume_mL = override->GetTidalVolumeOverride(VolumeUnit::mL);
 
   m_data.GetRespiratory().GetRespirationRate().SetValue(rr_per_min, FrequencyUnit::Per_min);
   //m_Patient->GetRespirationRateBaseline().SetValue(rr_per_min, FrequencyUnit::Per_min);
@@ -2174,27 +2175,28 @@ void Respiratory::ProcessOverride()
 
 void Respiratory::OverrideControlLoop()
 {
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
   double maxRROverride = 60.0; //respiration rate in breaths per min
   double minRROverride = 0.0; //respiration rate in breaths per min
   double currentRROverride = 12.0; //Average RR, value gets changed in next check
   double maxTVOverride = 10000.0; //Tidal volume in mL
   double minTVOverride = 0.0; //Tidal volume in mL
   double currentTVOverride = m_data.GetRespiratory().GetTidalVolume().GetValue(VolumeUnit::mL); //Current Tidal Volume, value gets changed in next check
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride())
-    currentRROverride = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasTidalVolumeOverride())
-    currentTVOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetTidalVolumeOverride(VolumeUnit::mL);
+  if (override->HasRespirationRateOverride())
+    currentRROverride = override->GetRespirationRateOverride(FrequencyUnit::Per_min);
+  if (override->HasTidalVolumeOverride())
+    currentTVOverride = override->GetTidalVolumeOverride(VolumeUnit::mL);
 
 
-  if ((currentRROverride < minRROverride || currentRROverride > maxRROverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentRROverride < minRROverride || currentRROverride > maxRROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Respiration Rate Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Tidal Volume (Respiratory) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    m_data.GetActions().GetPatientActions().GetOverride()->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
   return;
 }
