@@ -208,8 +208,6 @@ protected:
 
   std::unique_ptr<SEPatient> m_Patient;
 
-  std::unique_ptr<OverrideConfig> m_OverrideConfig;
-
   // Flag to destroy the logger or not
   bool myLogger;
 };

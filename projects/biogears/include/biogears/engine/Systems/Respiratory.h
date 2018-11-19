@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGears.hxx>
-#include <biogears/cdm/system/physiology/OverrideConfig.h>
 
 namespace biogears {
 class SEPulmonaryFunctionTest;
@@ -262,8 +261,5 @@ private:
   SEFluidCircuitCalculator m_Calculator;
   SEGasTransporter m_GasTransporter;
   SELiquidTransporter m_AerosolTransporter;
-
-  //Overrides
-  OverrideConfig* m_Override;
 };
 }

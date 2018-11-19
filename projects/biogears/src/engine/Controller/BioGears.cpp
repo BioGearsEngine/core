@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGears.h>
 
-#include <biogears/cdm/system/physiology/OverrideConfig.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
@@ -103,8 +102,6 @@ BioGears::BioGears(Logger* logger)
 
   m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(*this));
 
-  m_OverrideConfig = std::unique_ptr<OverrideConfig>(new OverrideConfig());
-
 }
 
 DataTrack& BioGears::GetDataTrack()
@@ -143,8 +140,7 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   cFile.Load("BioGearsConfiguration.xml");
   m_Config->Merge(cFile);
 
-  Info("Checking Override Configuration");
-  m_OverrideConfig->LoadOverride("OverrideConfig.xml");
+ 
   
 
   // Now we can check the config
@@ -848,8 +844,7 @@ EngineState BioGears::GetState() { return m_State; }
 SaturationCalculator& BioGears::GetSaturationCalculator() { return *m_SaturationCalculator; }
 BioGearsSubstances& BioGears::GetSubstances() { return *m_Substances; }
 SEPatient& BioGears::GetPatient() { return *m_Patient; }
-OverrideConfig& BioGears::GetOverride() { return *m_OverrideConfig;  }
-  SEBloodChemistrySystem& BioGears::GetBloodChemistry() { return *m_BloodChemistrySystem; }
+SEBloodChemistrySystem& BioGears::GetBloodChemistry() { return *m_BloodChemistrySystem; }
 SECardiovascularSystem& BioGears::GetCardiovascular() { return *m_CardiovascularSystem; }
 SEDrugSystem& BioGears::GetDrugs() { return *m_DrugSystem; }
 SEEndocrineSystem& BioGears::GetEndocrine() { return *m_EndocrineSystem; }

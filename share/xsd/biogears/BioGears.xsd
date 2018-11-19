@@ -18,7 +18,6 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="../biogears/BioGearsEnvironment.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsEquipment.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsPhysiology.xsd"/>
-  <xs:include schemaLocation="../biogears/OverrideConfig.xsd"/>
 
   
   <!-- BioGears Enums -->

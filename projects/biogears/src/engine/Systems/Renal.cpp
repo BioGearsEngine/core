@@ -308,7 +308,6 @@ void Renal::SetUp()
 {
   m_dt = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_patient = &m_data.GetPatient();
-  m_Override = &m_data.GetOverride();
 
   //Substances
   m_sodium = &m_data.GetSubstances().GetSodium();
@@ -507,7 +506,7 @@ void Renal::Process()
 void Renal::PostProcess()
 {
   //Circuit PostProcessing is done on the entire circulatory circuit elsewhere
-  if ((m_Override->IsRenalOverrideEnabled() || m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasRenalOverride()) {
       ProcessOverride();
     }
@@ -1919,13 +1918,9 @@ void Renal::ProcessOverride()
 {
   OverrideControlLoop();
   double urineProductionRate_ml_Per_min = m_data.GetRenal().GetUrineProductionRate().GetValue(VolumePerTimeUnit::mL_Per_min);
-  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride())
-      urineProductionRate_ml_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
-  } else {
-    if (m_Override->HasUrineProductionOverride())
-      urineProductionRate_ml_Per_min = m_Override->GetUrineProductionOverride(VolumePerTimeUnit::mL_Per_min);
-  }
+  if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride())
+    urineProductionRate_ml_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
+  
   m_data.GetRenal().GetUrineProductionRate().SetValue(urineProductionRate_ml_Per_min, VolumePerTimeUnit::mL_Per_min);
 }
 
@@ -1934,13 +1929,8 @@ void Renal::OverrideControlLoop()
   double maxUrineProductionOverride = 1000.0; //mL/min
   double minUrineProductionOverride = 0.0; //mL/min
   double currentUrineProductionOverride = m_data.GetRenal().GetUrineProductionRate().GetValue(VolumePerTimeUnit::mL_Per_min); //Current UPR, value gets changed in next check
-  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride()) {
-      currentUrineProductionOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-  } else {
-    if (m_Override->HasUrineProductionOverride())
-      currentUrineProductionOverride = m_Override->GetUrineProductionOverride(VolumePerTimeUnit::mL_Per_min);
+  if (m_data.GetActions().GetPatientActions().GetOverride()->HasUrineProductionRateOverride()) {
+    currentUrineProductionOverride = m_data.GetActions().GetPatientActions().GetOverride()->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
   }
 
   if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On)) {

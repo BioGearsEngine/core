@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include <biogears/cdm/system/physiology/OverrideConfig.h>
 
 namespace biogears {
 class SEPatient;
@@ -112,6 +111,5 @@ private:
   SEThermalCircuit* m_TemperatureCircuit;
   SEThermalCircuitCalculator m_circuitCalculator;
 
-  OverrideConfig* m_Override;
 };
 }
