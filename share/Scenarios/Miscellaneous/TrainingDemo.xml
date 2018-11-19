@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
 	<Name>ProlongedCareDemo</Name>
-	<Description>You are a SFODA operating at a Host Nation Army outpost in ###, ###.  Friendly forces include ### Army Commandos and local police forces.  You are operating under the request of the President and Government of ###, and have a well-established status of forces agreement with stipulation to not engage terrorist combatants unless in self-defense.</Description>
+	<Description>You are a ### operating at a Host Nation Army outpost in ###, ###.  Friendly forces include ### Army Commandos and local police forces.  You are operating under the request of the President and Government of ###, and have a well-established status of forces agreement with stipulation to not engage terrorist combatants unless in self-defense.</Description>
 
 	<EngineStateFile>./states/Soldier@0s.xml</EngineStateFile>
 	
@@ -21,56 +21,54 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PainVisualAnalogueScale"          Unit="unitless"    Precision="3"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/hr"      Precision="3"/>
 
 	<!-- Drug specific values -->
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Morphine" Name="PlasmaConcentration" Unit="ug/mL" Precision="9"/>	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Morphine" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SedationLevel" Precision="2"/>
-
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralNervousResponse" Precision="2"/>
 
 
 </DataRequests>
 
 <Action xsi:type="AdvanceTimeData">
-	<Time value="60" unit="sec"/>		
+	<Time value="60" unit="s"/>		
 </Action>
   
-<!-- 30 yo, penetraiting extremity wounds -->
+<!-- 22 yo, penetraiting extremity wounds, with closed ptx -->
 
-</Action>
-	<Action xsi:type="HemorrhageData" Compartment="RightLeg">
+
+<Action xsi:type="HemorrhageData" Compartment="RightLeg">
 	<InitialRate value="250" unit="mL/min"/>
 </Action>
 
-</Action>
-	<Action xsi:type="HemorrhageData" Compartment="RightArm">
-	<InitialRate value="150" unit="mL/min"/>
+
+<Action xsi:type="HemorrhageData" Compartment="RightArm">
+	<InitialRate value="250" unit="mL/min"/>
 </Action>
 
-<Action xsi:type="AcuteStressData">
-    <Severity value="0.1"/>       
+<Action xsi:type="TensionPneumothoraxData" Type="Closed" Side="Left">
+    <Severity value="0.2"/>
 </Action>
 
-<!-- The patient you are treating will scale this (more or less pain tolerant) -->
-<Action xsi:type="PainStimulusData">
-    <Severity value="0.5"/>       
+<!-- The patient you are treating will scale this (more or less pain tolerant) 
+<Action xsi:type="PainStimulusData" Location="Chest">
+    <Severity value="0.0"/>       
 </Action>
+-->
 
 <!-- reaction time to get to and begin treating the patient, assume Tourniquet  was successfull, you can decide by reducing hemorrhage severity (scenario specific) -->
 <Action xsi:type="AdvanceTimeData">
-	<Time value="10" unit="min"/>		
+	<Time value="15" unit="min"/>		
 </Action>
   
 <!-- Tourniquet applied to patient reduces most of the bleeding (about ~2 L already lost) (Note: this is up to scenario) -->
-</Action>
-	<Action xsi:type="HemorrhageData" Compartment="RightLeg">
+<Action xsi:type="HemorrhageData" Compartment="RightLeg">
 	<InitialRate value="0" unit="mL/min"/>
 </Action>
 
-</Action>
-	<Action xsi:type="HemorrhageData" Compartment="RightArm">
+<Action xsi:type="HemorrhageData" Compartment="RightArm">
 	<InitialRate value="0" unit="mL/min"/>
 </Action>
 
@@ -78,11 +76,16 @@
 	<Time value="5" unit="min"/>		
 </Action>
 
+<!--  Needle Decompression after the tournicate application -->
+<Action xsi:type="NeedleDecompressionData" State="On" Side="Left">
+    <Comment>Intervention</Comment>
+</Action>
+
 <!-- Get an IV in and administer whole blood, can replace this with saline, or other supported biogears substance (drug, ringerslactate, antibiotics) -->
 <Action xsi:type="SubstanceCompoundInfusionData">
     <SubstanceCompound>Blood</SubstanceCompound>
     <BagVolume value="500" unit="mL"/>
-    <Rate value="100" unit="mL/min"/>
+    <Rate value="200" unit="mL/min"/>
 </Action>
 
 <!-- Patient is now complaining about pain after Tourniquet application, lets treat with morphine -->
@@ -92,12 +95,70 @@
 
 <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
 	<Substance>Morphine</Substance>
-	<Concentration value="1000" unit="ug/mL"/>
-	<Dose value="10.5" unit="mL"/>
+	<Concentration value="1" unit="mg/mL"/>
+	<Dose value="10.0" unit="mL"/>
+</Action>
+
+<!-- Other drug possibilities for the scenario
+ <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Ketamine</Substance>
+        <Concentration value="1000" unit="ug/mL"/>
+        <Dose value="115.0" unit="mL"/>
+    </Action>
+
+<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Fentanyl</Substance>
+        <Concentration value="10" unit="ug/mL"/>
+        <Dose value="10" unit="mL"/>
+    </Action>
+
+-->
+
+<Action xsi:type="AdvanceTimeData">
+	<Time value="5" unit="min"/>		
+</Action>
+
+<!-- Keep transfusing redblood cells, maybe we run out and this is now saline or ringers -->
+<Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Blood</SubstanceCompound>
+    <BagVolume value="500" unit="mL"/>
+    <Rate value="200" unit="mL/min"/>
 </Action>
 
 <Action xsi:type="AdvanceTimeData">
-	<Time value="50" unit="min"/>		
+	<Time value="5" unit="min"/>		
+</Action>
+
+<Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Blood</SubstanceCompound>
+    <BagVolume value="500" unit="mL"/>
+    <Rate value="200" unit="mL/min"/>
+</Action>
+
+<Action xsi:type="AdvanceTimeData">
+	<Time value="5" unit="min"/>		
+</Action>
+
+<Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Blood</SubstanceCompound>
+    <BagVolume value="500" unit="mL"/>
+    <Rate value="200" unit="mL/min"/>
+</Action>
+
+<Action xsi:type="AdvanceTimeData">
+	<Time value="5" unit="min"/>		
+</Action>
+
+<Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Blood</SubstanceCompound>
+    <BagVolume value="500" unit="mL"/>
+    <Rate value="200" unit="mL/min"/>
+</Action>
+
+
+
+<Action xsi:type="AdvanceTimeData">
+	<Time value="20" unit="min"/>		
 </Action>
 
 </Scenario>
