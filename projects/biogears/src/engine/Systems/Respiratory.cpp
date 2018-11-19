@@ -1236,8 +1236,6 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasLeftChestOcclusiveDressing()) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
-      } else if (severity == 0) {
-        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
         resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToLeftChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1253,8 +1251,6 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasRightChestOcclusiveDressing()) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
-      } else if (severity == 0) {
-        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1271,8 +1267,6 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
-      } else if (severity == 0) {
-        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_LeftAlveoliLeakToLeftPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1288,8 +1282,6 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
-      } else if (severity == 0) {
-        Info("Tension Pneumothorax severity set to 0.0. This will not change configuration. Only way to resolve a pneumothorax is through treatment.");
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);

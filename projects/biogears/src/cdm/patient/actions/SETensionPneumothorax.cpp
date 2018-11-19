@@ -123,6 +123,10 @@ void SETensionPneumothorax::ToString(std::ostream& str) const
   str << "Patient Action : Tension Pneumothorax";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
+  if (m_Severity->GetValue() == 0) {
+    m_Severity->SetValue(0.001);
+    Info("Severity set to 0.001. Tension pneumothorax requires treatment to be relieved.");
+  }
   str << "\n\tSeverity: ";
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << "\n\tType: ";
