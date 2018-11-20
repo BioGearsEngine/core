@@ -11,7 +11,7 @@
 //**************************************************************************************
 
 #include "argumentparser.hpp"
-#include "ConfigParser.hpp"
+#include "ConfigFileParser.hpp"
 #include "TestDriver.h"
 #include <biogears/exports.h>
 
