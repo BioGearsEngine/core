@@ -6,6 +6,8 @@
     <Weight value="67.0" unit="kg"/>
     <Height value="172.0" unit="cm"/>
     <BodyFatFraction value="0.21"/>
+	<MaxWorkRate value="315.0" unit="W"/>
+	<Hyperhidrosis value="0.2"/>
     <DiastolicArterialPressureBaseline value="73.5" unit="mmHg"/>
     <HeartRateBaseline value="72.0" unit="1/min"/>
     <RespirationRateBaseline value="16.0" unit="1/min"/>
