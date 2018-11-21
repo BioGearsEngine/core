@@ -20,10 +20,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarAmountPerTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
 
 class Serializer;
 
 namespace biogears {
+class MassUnit;
+
 class BIOGEARS_API SEOverride : public SEPatientAction {
 public:
   SEOverride();
@@ -76,15 +80,46 @@ public:
   bool HasCardiovascularOverride() const;
 
   //Energy
+  bool HasAchievedExerciseLevelOverride() const;
+  SEScalarFraction& GetAchievedExerciseLevelOverride();
+  double GetAchievedExerciseLevelOverride() const;
   bool HasCoreTemperatureOverride() const;
   SEScalarTemperature& GetCoreTemperatureOverride();
   double GetCoreTemperatureOverride(const TemperatureUnit& unit) const;
+  bool HasCreatinineProductionRateOverride() const;
+  SEScalarAmountPerTime& GetCreatinineProductionRateOverride();
+  double GetCreatinineProductionRateOverride(const AmountPerTimeUnit& unit) const;
+  bool HasExerciseMeanArterialPressureDeltaOverride() const;
+  SEScalarPressure& GetExerciseMeanArterialPressureDeltaOverride();
+  double GetExerciseMeanArterialPressureDeltaOverride(const PressureUnit& unit) const;
+  bool HasFatigueLevelOverride() const;
+  SEScalarFraction& GetFatigueLevelOverride();
+  double GetFatigueLevelOverride() const;
+  bool HasLactateProductionRateOverride() const;
+  SEScalarAmountPerTime& GetLactateProductionRateOverride();
+  double GetLactateProductionRateOverride(const AmountPerTimeUnit& unit) const;
   bool HasSkinTemperatureOverride() const;
   SEScalarTemperature& GetSkinTemperatureOverride();
   double GetSkinTemperatureOverride(const TemperatureUnit& unit) const;
+  bool HasSweatRateOverride() const;
+  SEScalarMassPerTime& GetSweatRateOverride();
+  double GetSweatRateOverride(const MassPerTimeUnit& unit) const;
   bool HasTotalMetabolicOverride() const;
   SEScalarPower& GetTotalMetabolicOverride();
   double GetTotalMetabolicOverride(const PowerUnit& unit) const;
+  bool HasTotalWorkRateLevelOverride() const;
+  SEScalarFraction& GetTotalWorkRateLevelOverride();
+  double GetTotalWorkRateLevelOverride() const;
+  bool HasSodiumLostToSweatOverride() const;
+  SEScalarMass& GetSodiumLostToSweatOverride();
+  double GetSodiumLostToSweatOverride(const MassUnit& unit) const;
+  bool HasPotassiumLostToSweatOverride() const;
+  SEScalarMass& GetPotassiumLostToSweatOverride();
+  double GetPotassiumLostToSweatOverride(const MassUnit& unit) const;
+  bool HasChlorideLostToSweatOverride() const;
+  SEScalarMass& GetChlorideLostToSweatOverride();
+  double GetChlorideLostToSweatOverride(const MassUnit& unit) const;
+
   bool HasEnergyOverride() const;
 
   //Renal
@@ -112,9 +147,19 @@ protected:
   SEScalarVolumePerTime* m_CardiacOutputOR;
   SEScalarPressure* m_PressureOR;
   SEScalarFrequency* m_HeartRateOR;
+  SEScalarFraction* m_AcheivedExerciseLevelOR;
   SEScalarTemperature* m_CoreTemperatureOR;
+  SEScalarAmountPerTime* m_CreatinineProductionRateOR;
+  SEScalarPressure* m_ExerciseMeanArterialPressureDeltaOR;
+  SEScalarFraction* m_FatigueLevelOR;
+  SEScalarAmountPerTime* m_LactateProductionRateOR;
   SEScalarTemperature* m_SkinTemperatureOR;
+  SEScalarMassPerTime* m_SweatRateOR;
   SEScalarPower* m_TotalMetabolicOR;
+  SEScalarFraction* m_TotalWorkRateLevelOR;
+  SEScalarMass* m_SodiumLostToSweatOR;
+  SEScalarMass* m_PotassiumLostToSweatOR;
+  SEScalarMass* m_ChlorideLostToSweatOR;
   SEScalarVolumePerTime* m_UrineProductionRateOR;
   SEScalarFrequency* m_RespirationRateOR;
   SEScalarVolume* m_TidalVolumeOR;

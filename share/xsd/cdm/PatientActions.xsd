@@ -447,9 +447,19 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="CardiacOutputOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief The volume of blood being pumped from the heart in a given time interval. -->
 					<xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. -->  
 					<xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of heart beat. -->					
-					<xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Temperature of core. -->                 					
-					<xs:element name="SkinTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Temperature of skin. -->    
-					<xs:element name="TotalMetabolicRateOverride" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<< @brief The metabolic rate. -->
+					<xs:element name="AchievedExerciseLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief The fraction of how much of the requested exercise the patient is able to achieve. 1.0 means the the patient is performing at the requested level. Nan is the patient is not exercising (no Action)-->
+                    <xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The internal body temperature.-->
+                    <xs:element name="CreatinineProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The generation of creatinine in the muscle tissue per -->                    
+                    <xs:element name="ExerciseMeanArterialPressureDeltaOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief The pressure delta that occurs during exercise. Used to modify the baroreceptor set-point -->
+                    <xs:element name="FatigueLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The exhaustion level of the body, or inability to perform physical exercise @details The amount of energy available for activity divided by the normal rested energy -->                            
+                    <xs:element name="LactateProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The molar amount of lactate generated on the tissue level from anaerobic metabolism -->
+                    <xs:element name="SkinTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The skin surface temperature.-->
+                    <xs:element name="SweatRateOverride" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Mass of sweat generated per unit time due to elevated core temperature -->
+                    <xs:element name="TotalMetabolicRateOverride" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The basal metabolic rate plus additional energy expenditure rates due to activity.-->
+                    <xs:element name="TotalWorkRateLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The current patient work rate above basal over the maximum work rate capable by the patient -->
+                    <xs:element name="SodiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of sodium lost while sweating during exercise -->
+                    <xs:element name="PotassiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of potassium lost while sweating during exercise --> 
+                    <xs:element name="ChlorideLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->        
 					<xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The urine production rate. -->
 					<xs:element name="RespirationRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of respiration. -->
 					<xs:element name="TidalVolumeOverride" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The volume of air moved into or out of the lungs during normal respiration. -->

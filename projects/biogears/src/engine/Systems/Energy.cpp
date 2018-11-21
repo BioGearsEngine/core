@@ -593,16 +593,27 @@ void Energy::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
-  double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C);
-  double skinTemp_degC = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C);
-  double totalMetabolic_kcal_per_day = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
-  if (override->HasCoreTemperatureOverride())
-    coreTemp_degC = override->GetCoreTemperatureOverride(TemperatureUnit::C);
-  if (override->HasSkinTemperatureOverride())
-    skinTemp_degC = override->GetSkinTemperatureOverride(TemperatureUnit::C);
-  if (override->HasTotalMetabolicOverride())
-    totalMetabolic_kcal_per_day = override->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
-
+  double acheivedExercise = GetAchievedExerciseLevel().GetValue();
+  double coreTemp_degC = GetCoreTemperature().GetValue(TemperatureUnit::C);
+  double creatinine = GetCreatinineProductionRate().GetValue(AmountPerTimeUnit::mol_Per_s);
+  double exerciseMAP_mmHg = GetExerciseMeanArterialPressureDelta().GetValue(PressureUnit::mmHg);
+  double fatigue = GetFatigueLevel().GetValue();
+  double lactateProduction_mol_per_s = GetLactateProductionRate().GetValue(AmountPerTimeUnit::mol_Per_s);
+  double skinTemp_degC = GetSkinTemperature().GetValue(TemperatureUnit::C);
+  double sweatRate_g_per_s = GetSweatRate().GetValue(MassPerTimeUnit::g_Per_s);
+  double totalMetabolic_kcal_per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  double totalWorkRate = GetTotalWorkRateLevel().GetValue();
+  double sodiumSweat_g = GetSodiumLostToSweat().GetValue(MassUnit::g);
+  double potassiumSweat_g = GetPotassiumLostToSweat().GetValue(MassUnit::g);
+  double chlorideSweat_g = GetChlorideLostToSweat().GetValue(MassUnit::g);
+  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
+      coreTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
+      skinTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasTotalMetabolicOverride())
+      totalMetabolic_kcal_per_day = m_data.GetActions().GetPatientActions().GetOverride()->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
+  }
   m_data.GetEnergy().GetCoreTemperature().SetValue(coreTemp_degC, TemperatureUnit::C);
   m_data.GetEnergy().GetSkinTemperature().SetValue(skinTemp_degC, TemperatureUnit::C);
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(totalMetabolic_kcal_per_day, PowerUnit::kcal_Per_day);

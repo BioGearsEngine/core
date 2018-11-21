@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
 
 
 namespace biogears {
@@ -28,9 +30,19 @@ SEOverride::SEOverride()
   m_CardiacOutputOR = nullptr;
   m_PressureOR = nullptr;
   m_HeartRateOR = nullptr;
+  m_AcheivedExerciseLevelOR = nullptr;
   m_CoreTemperatureOR = nullptr;
+  m_CreatinineProductionRateOR = nullptr;
+  m_ExerciseMeanArterialPressureDeltaOR = nullptr;
+  m_FatigueLevelOR = nullptr;
+  m_LactateProductionRateOR = nullptr;
   m_SkinTemperatureOR = nullptr;
+  m_SweatRateOR = nullptr;
   m_TotalMetabolicOR = nullptr;
+  m_TotalWorkRateLevelOR = nullptr;
+  m_SodiumLostToSweatOR = nullptr;
+  m_PotassiumLostToSweatOR = nullptr;
+  m_ChlorideLostToSweatOR = nullptr;
   m_UrineProductionRateOR = nullptr;
   m_RespirationRateOR = nullptr;
   m_TidalVolumeOR = nullptr;
@@ -51,9 +63,19 @@ void SEOverride::Clear()
   SAFE_DELETE(m_CardiacOutputOR);
   SAFE_DELETE(m_PressureOR);
   SAFE_DELETE(m_HeartRateOR);
+  SAFE_DELETE(m_AcheivedExerciseLevelOR);
   SAFE_DELETE(m_CoreTemperatureOR);
+  SAFE_DELETE(m_CreatinineProductionRateOR);
+  SAFE_DELETE(m_ExerciseMeanArterialPressureDeltaOR);
+  SAFE_DELETE(m_FatigueLevelOR);
+  SAFE_DELETE(m_LactateProductionRateOR);
   SAFE_DELETE(m_SkinTemperatureOR);
+  SAFE_DELETE(m_SweatRateOR);
   SAFE_DELETE(m_TotalMetabolicOR);
+  SAFE_DELETE(m_TotalWorkRateLevelOR);
+  SAFE_DELETE(m_SodiumLostToSweatOR);
+  SAFE_DELETE(m_PotassiumLostToSweatOR);
+  SAFE_DELETE(m_ChlorideLostToSweatOR);
   SAFE_DELETE(m_UrineProductionRateOR);
   SAFE_DELETE(m_RespirationRateOR);
   SAFE_DELETE(m_TidalVolumeOR);
@@ -110,20 +132,70 @@ bool SEOverride::Load(const CDM::OverrideData& in)
   } else {
     GetHeartRateOverride().Invalidate();
   }
+  if (in.AchievedExerciseLevelOverride().present()) {
+    GetAchievedExerciseLevelOverride().Load(in.AchievedExerciseLevelOverride().get());
+  } else {
+    GetAchievedExerciseLevelOverride().Invalidate();
+  }
   if (in.CoreTemperatureOverride().present()) {
     GetCoreTemperatureOverride().Load(in.CoreTemperatureOverride().get());
   } else {
     GetCoreTemperatureOverride().Invalidate();
+  }
+  if (in.CreatinineProductionRateOverride().present()) {
+    GetCreatinineProductionRateOverride().Load(in.CreatinineProductionRateOverride().get());
+  } else {
+    GetCreatinineProductionRateOverride().Invalidate();
+  }
+  if (in.ExerciseMeanArterialPressureDeltaOverride().present()) {
+    GetExerciseMeanArterialPressureDeltaOverride().Load(in.ExerciseMeanArterialPressureDeltaOverride().get());
+  } else {
+    GetExerciseMeanArterialPressureDeltaOverride().Invalidate();
+  }
+  if (in.FatigueLevelOverride().present()) {
+    GetFatigueLevelOverride().Load(in.FatigueLevelOverride().get());
+  } else {
+    GetFatigueLevelOverride().Invalidate();
+  }
+  if (in.LactateProductionRateOverride().present()) {
+    GetLactateProductionRateOverride().Load(in.LactateProductionRateOverride().get());
+  } else {
+    GetLactateProductionRateOverride().Invalidate();
   }
   if (in.SkinTemperatureOverride().present()) {
     GetSkinTemperatureOverride().Load(in.SkinTemperatureOverride().get());
   } else {
     GetSkinTemperatureOverride().Invalidate();
   }
+  if (in.SweatRateOverride().present()) {
+    GetSweatRateOverride().Load(in.SweatRateOverride().get());
+  } else {
+    GetSweatRateOverride().Invalidate();
+  }
   if (in.TotalMetabolicRateOverride().present()) {
     GetTotalMetabolicOverride().Load(in.TotalMetabolicRateOverride().get());
   } else {
     GetTotalMetabolicOverride().Invalidate();
+  }
+  if (in.TotalWorkRateLevelOverride().present()) {
+    GetTotalWorkRateLevelOverride().Load(in.TotalWorkRateLevelOverride().get());
+  } else {
+    GetTotalWorkRateLevelOverride().Invalidate();
+  }
+  if (in.SodiumLostToSweatOverride().present()) {
+    GetSodiumLostToSweatOverride().Load(in.SodiumLostToSweatOverride().get());
+  } else {
+    GetSodiumLostToSweatOverride().Invalidate();
+  }
+  if (in.PotassiumLostToSweatOverride().present()) {
+    GetPotassiumLostToSweatOverride().Load(in.PotassiumLostToSweatOverride().get());
+  } else {
+    GetPotassiumLostToSweatOverride().Invalidate();
+  }
+  if (in.ChlorideLostToSweatOverride().present()) {
+    GetChlorideLostToSweatOverride().Load(in.ChlorideLostToSweatOverride().get());
+  } else {
+    GetChlorideLostToSweatOverride().Invalidate();
   }
   if (in.UrineProductionRateOverride().present()) {
     GetUrineProductionRateOverride().Load(in.UrineProductionRateOverride().get());
@@ -176,14 +248,44 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   if (HasHeartRateOverride()) {
     data.HeartRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateOR->Unload()));
   }
+  if (HasAchievedExerciseLevelOverride()) {
+    data.AchievedExerciseLevelOverride(std::unique_ptr<CDM::ScalarFractionData>(m_AcheivedExerciseLevelOR->Unload()));
+  }
   if (HasCoreTemperatureOverride()) {
     data.CoreTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperatureOR->Unload()));
+  }
+  if (HasCreatinineProductionRateOverride()) {
+    data.CreatinineProductionRateOverride(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_CreatinineProductionRateOR->Unload()));
+  }
+  if (HasExerciseMeanArterialPressureDeltaOverride()) {
+    data.ExerciseMeanArterialPressureDeltaOverride(std::unique_ptr<CDM::ScalarPressureData>(m_ExerciseMeanArterialPressureDeltaOR->Unload()));
+  }
+  if (HasFatigueLevelOverride()) {
+    data.FatigueLevelOverride(std::unique_ptr<CDM::ScalarFractionData>(m_FatigueLevelOR->Unload()));
+  }
+  if (HasLactateProductionRateOverride()) {
+    data.LactateProductionRateOverride(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_LactateProductionRateOR->Unload()));
   }
   if (HasSkinTemperatureOverride()) {
     data.SkinTemperatureOverride(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureOR->Unload()));
   }
+  if (HasSweatRateOverride()) {
+    data.SweatRateOverride(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_SweatRateOR->Unload()));
+  }
   if (HasTotalMetabolicOverride()) {
     data.TotalMetabolicRateOverride(std::unique_ptr<CDM::ScalarPowerData>(m_TotalMetabolicOR->Unload()));
+  }
+  if (HasTotalWorkRateLevelOverride()) {
+    data.TotalWorkRateLevelOverride(std::unique_ptr<CDM::ScalarFractionData>(m_TotalWorkRateLevelOR->Unload()));
+  }
+  if (HasSodiumLostToSweatOverride()) {
+    data.SodiumLostToSweatOverride(std::unique_ptr<CDM::ScalarMassData>(m_SodiumLostToSweatOR->Unload()));
+  }
+  if (HasPotassiumLostToSweatOverride()) {
+    data.PotassiumLostToSweatOverride(std::unique_ptr<CDM::ScalarMassData>(m_PotassiumLostToSweatOR->Unload()));
+  }
+  if (HasChlorideLostToSweatOverride()) {
+    data.ChlorideLostToSweatOverride(std::unique_ptr<CDM::ScalarMassData>(m_ChlorideLostToSweatOR->Unload()));
   }
   if (HasUrineProductionRateOverride()) {
     data.UrineProductionRateOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_UrineProductionRateOR->Unload()));
@@ -344,7 +446,25 @@ bool SEOverride::HasCardiovascularOverride() const
 }
 
 // Energy Overrides //
-bool SEOverride::HasCoreTemperatureOverride() const
+bool SEOverride::HasAchievedExerciseLevelOverride() const
+{
+  return m_AcheivedExerciseLevelOR == nullptr ? false : m_AcheivedExerciseLevelOR->IsValid();
+}
+SEScalarFraction& SEOverride::GetAchievedExerciseLevelOverride()
+{
+  if (m_AcheivedExerciseLevelOR == nullptr) {
+    m_AcheivedExerciseLevelOR = new SEScalarFraction();
+  }
+  return *m_AcheivedExerciseLevelOR;
+}
+double SEOverride::GetAchievedExerciseLevelOverride() const
+{
+  if (m_AcheivedExerciseLevelOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_AcheivedExerciseLevelOR->GetValue();
+}
+  bool SEOverride::HasCoreTemperatureOverride() const
 {
   return m_CoreTemperatureOR == nullptr ? false : m_CoreTemperatureOR->IsValid();
 }
@@ -361,6 +481,78 @@ double SEOverride::GetCoreTemperatureOverride(const TemperatureUnit& unit) const
     return SEScalar::dNaN();
   }
   return m_CoreTemperatureOR->GetValue(unit);
+}
+bool SEOverride::HasCreatinineProductionRateOverride() const
+{
+  return m_CreatinineProductionRateOR == nullptr ? false : m_CreatinineProductionRateOR->IsValid();
+}
+SEScalarAmountPerTime& SEOverride::GetCreatinineProductionRateOverride()
+{
+  if (m_CreatinineProductionRateOR == nullptr) {
+    m_CreatinineProductionRateOR = new SEScalarAmountPerTime();
+  }
+  return *m_CreatinineProductionRateOR;
+}
+double SEOverride::GetCreatinineProductionRateOverride(const AmountPerTimeUnit& unit) const
+{
+  if (m_CreatinineProductionRateOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_CreatinineProductionRateOR->GetValue(unit);
+}
+bool SEOverride::HasExerciseMeanArterialPressureDeltaOverride() const
+{
+  return m_ExerciseMeanArterialPressureDeltaOR == nullptr ? false : m_ExerciseMeanArterialPressureDeltaOR->IsValid();
+}
+SEScalarPressure& SEOverride::GetExerciseMeanArterialPressureDeltaOverride()
+{
+  if (m_ExerciseMeanArterialPressureDeltaOR == nullptr) {
+    m_ExerciseMeanArterialPressureDeltaOR = new SEScalarPressure();
+  }
+  return *m_ExerciseMeanArterialPressureDeltaOR;
+}
+double SEOverride::GetExerciseMeanArterialPressureDeltaOverride(const PressureUnit& unit) const
+{
+  if (m_ExerciseMeanArterialPressureDeltaOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_ExerciseMeanArterialPressureDeltaOR->GetValue(unit);
+}
+bool SEOverride::HasFatigueLevelOverride() const
+{
+  return m_FatigueLevelOR == nullptr ? false : m_FatigueLevelOR->IsValid();
+}
+SEScalarFraction& SEOverride::GetFatigueLevelOverride()
+{
+  if (m_FatigueLevelOR == nullptr) {
+    m_FatigueLevelOR = new SEScalarFraction();
+  }
+  return *m_FatigueLevelOR;
+}
+double SEOverride::GetFatigueLevelOverride() const
+{
+  if (m_FatigueLevelOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_FatigueLevelOR->GetValue();
+}
+bool SEOverride::HasLactateProductionRateOverride() const
+{
+  return m_LactateProductionRateOR == nullptr ? false : m_LactateProductionRateOR->IsValid();
+}
+SEScalarAmountPerTime& SEOverride::GetLactateProductionRateOverride()
+{
+  if (m_LactateProductionRateOR == nullptr) {
+    m_LactateProductionRateOR = new SEScalarAmountPerTime();
+  }
+  return *m_LactateProductionRateOR;
+}
+double SEOverride::GetLactateProductionRateOverride(const AmountPerTimeUnit& unit) const
+{
+  if (m_LactateProductionRateOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_LactateProductionRateOR->GetValue(unit);
 }
 bool SEOverride::HasSkinTemperatureOverride() const
 {
@@ -380,6 +572,24 @@ double SEOverride::GetSkinTemperatureOverride(const TemperatureUnit& unit) const
   }
   return m_SkinTemperatureOR->GetValue(unit);
 }
+bool SEOverride::HasSweatRateOverride() const
+{
+  return m_SweatRateOR == nullptr ? false : m_SweatRateOR->IsValid();
+}
+SEScalarMassPerTime& SEOverride::GetSweatRateOverride()
+{
+  if (m_SweatRateOR == nullptr) {
+    m_SweatRateOR = new SEScalarMassPerTime();
+  }
+  return *m_SweatRateOR;
+}
+double SEOverride::GetSweatRateOverride(const MassPerTimeUnit& unit) const
+{
+  if (m_SweatRateOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_SweatRateOR->GetValue(unit);
+}
 bool SEOverride::HasTotalMetabolicOverride() const
 {
   return m_TotalMetabolicOR == nullptr ? false : m_TotalMetabolicOR->IsValid();
@@ -398,12 +608,94 @@ double SEOverride::GetTotalMetabolicOverride(const PowerUnit& unit) const
   }
   return m_TotalMetabolicOR->GetValue(unit);
 }
+bool SEOverride::HasTotalWorkRateLevelOverride() const
+{
+  return m_TotalWorkRateLevelOR == nullptr ? false : m_TotalWorkRateLevelOR->IsValid();
+}
+SEScalarFraction& SEOverride::GetTotalWorkRateLevelOverride()
+{
+  if (m_TotalWorkRateLevelOR == nullptr) {
+    m_TotalWorkRateLevelOR = new SEScalarFraction();
+  }
+  return *m_TotalWorkRateLevelOR;
+}
+double SEOverride::GetTotalWorkRateLevelOverride() const
+{
+  if (m_TotalWorkRateLevelOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_TotalWorkRateLevelOR->GetValue();
+}
+bool SEOverride::HasSodiumLostToSweatOverride() const
+{
+  return m_SodiumLostToSweatOR == nullptr ? false : m_SodiumLostToSweatOR->IsValid();
+}
+SEScalarMass& SEOverride::GetSodiumLostToSweatOverride()
+{
+  if (m_SodiumLostToSweatOR == nullptr) {
+    m_SodiumLostToSweatOR = new SEScalarMass();
+  }
+  return *m_SodiumLostToSweatOR;
+}
+double SEOverride::GetSodiumLostToSweatOverride(const MassUnit& unit) const
+{
+  if (m_SodiumLostToSweatOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_SodiumLostToSweatOR->GetValue(unit);
+}
+bool SEOverride::HasPotassiumLostToSweatOverride() const
+{
+  return m_PotassiumLostToSweatOR == nullptr ? false : m_PotassiumLostToSweatOR->IsValid();
+}
+SEScalarMass& SEOverride::GetPotassiumLostToSweatOverride()
+{
+  if (m_PotassiumLostToSweatOR == nullptr) {
+    m_PotassiumLostToSweatOR = new SEScalarMass();
+  }
+  return *m_PotassiumLostToSweatOR;
+}
+double SEOverride::GetPotassiumLostToSweatOverride(const MassUnit& unit) const
+{
+  if (m_PotassiumLostToSweatOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_PotassiumLostToSweatOR->GetValue(unit);
+}
+bool SEOverride::HasChlorideLostToSweatOverride() const
+{
+  return m_ChlorideLostToSweatOR == nullptr ? false : m_ChlorideLostToSweatOR->IsValid();
+}
+SEScalarMass& SEOverride::GetChlorideLostToSweatOverride()
+{
+  if (m_ChlorideLostToSweatOR == nullptr) {
+    m_ChlorideLostToSweatOR = new SEScalarMass();
+  }
+  return *m_ChlorideLostToSweatOR;
+}
+double SEOverride::GetChlorideLostToSweatOverride(const MassUnit& unit) const
+{
+  if (m_ChlorideLostToSweatOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_ChlorideLostToSweatOR->GetValue(unit);
+}
 
 bool SEOverride::HasEnergyOverride() const
 {
-  return HasCoreTemperatureOverride() ? true :
-  HasSkinTemperatureOverride() ? true :
-  HasTotalMetabolicOverride() ? true :
+  return HasAchievedExerciseLevelOverride() ||
+  HasCoreTemperatureOverride() ||
+  HasCreatinineProductionRateOverride() || 
+  HasExerciseMeanArterialPressureDeltaOverride() ||
+  HasFatigueLevelOverride() ||
+  HasLactateProductionRateOverride() ||
+  HasSkinTemperatureOverride() ||
+  HasSweatRateOverride() ||
+  HasTotalMetabolicOverride() || 
+  HasTotalWorkRateLevelOverride() ||
+  HasSodiumLostToSweatOverride() ||
+  HasPotassiumLostToSweatOverride() || 
+  HasChlorideLostToSweatOverride() ? true :
   false;
 }
 
@@ -536,12 +828,52 @@ void SEOverride::ToString(std::ostream& str) const
     }
     str << std::flush;
   }
+  if (HasAchievedExerciseLevelOverride()) {
+    str << "\n\tAcieved Exercise Level: ";
+    HasAchievedExerciseLevelOverride() ? str << *m_AcheivedExerciseLevelOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tAcheived Exercise Level has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
   if (HasCoreTemperatureOverride())
   {
     str << "\n\tCore Temperature: ";
     HasCoreTemperatureOverride() ? str << *m_CoreTemperatureOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tCore Temperature has a lower bound of 0 degrees Celsius and an upper bound of 200 degrees Celsius.";
+    }
+    str << std::flush;
+  }
+  if (HasCreatinineProductionRateOverride()) {
+    str << "\n\tCreatinine Production Rate: ";
+    HasCreatinineProductionRateOverride() ? str << *m_CreatinineProductionRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tCreatinine Production has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasExerciseMeanArterialPressureDeltaOverride()) {
+    str << "\n\tExercise MAP Delta: ";
+    HasExerciseMeanArterialPressureDeltaOverride() ? str << *m_ExerciseMeanArterialPressureDeltaOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tExercise MAP Delta has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasFatigueLevelOverride()) {
+    str << "\n\tFatigue Level: ";
+    HasFatigueLevelOverride() ? str << *m_FatigueLevelOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tFatigue Level has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasLactateProductionRateOverride()) {
+    str << "\n\tLactate Production: ";
+    HasLactateProductionRateOverride() ? str << *m_LactateProductionRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tLactate Production has a lower bound of X and an upper bound of Y.";
     }
     str << std::flush;
   }
@@ -553,11 +885,51 @@ void SEOverride::ToString(std::ostream& str) const
     }
     str << std::flush;
   }
+  if (HasSweatRateOverride()) {
+    str << "\n\tSweat Rate: ";
+    HasSweatRateOverride() ? str << *m_SweatRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tSweat Rate has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
   if (HasTotalMetabolicOverride()) {
     str << "\n\tTotal Metabolic Rate: ";
     HasTotalMetabolicOverride() ? str << *m_TotalMetabolicOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tTotal Metabolic Rate has a lower bound of 1 kcal/day and an upper bound of 5000 kcal/day.";
+    }
+    str << std::flush;
+  }
+  if (HasTotalWorkRateLevelOverride()) {
+    str << "\n\tTotal Work Rate Level: ";
+    HasTotalWorkRateLevelOverride() ? str << *m_TotalWorkRateLevelOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tTotal Work Rate Level has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasSodiumLostToSweatOverride()) {
+    str << "\n\tSodium Lost to Sweat: ";
+    HasSodiumLostToSweatOverride() ? str << *m_SodiumLostToSweatOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tSodium Lost to Sweat has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasPotassiumLostToSweatOverride()) {
+    str << "\n\tPotassium Lost to Sweat: ";
+    HasPotassiumLostToSweatOverride() ? str << *m_PotassiumLostToSweatOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tPotassium Lost to Sweat has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasChlorideLostToSweatOverride()) {
+    str << "\n\tChloride Lost to Sweat: ";
+    HasChlorideLostToSweatOverride() ? str << *m_ChlorideLostToSweatOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tChloride Lost to Sweat has a lower bound of X and an upper bound of Y.";
     }
     str << std::flush;
   }
