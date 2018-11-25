@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
@@ -583,4 +584,9 @@ void SEAnesthesiaMachine::RemoveOxygenBottleTwo()
 {
   SAFE_DELETE(m_OxygenBottleTwo);
 }
+Tree<std::string> SEAnesthesiaMachine::GetPhysiologyRequestGraph() const
+{
+  return {};
+}
+
 }

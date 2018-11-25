@@ -22,66 +22,66 @@ class BIOGEARS_API SEElectroCardioGram : public SESystem {
 protected:
 public:
   SEElectroCardioGram(Logger* logger);
-  virtual ~SEElectroCardioGram();
+  ~SEElectroCardioGram() override;
 
-  virtual void Clear();
+  void Clear() override;
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::ElectroCardioGramData& in);
-  virtual CDM::ElectroCardioGramData* Unload() const;
-
+  bool Load(const CDM::ElectroCardioGramData& in);
+  CDM::ElectroCardioGramData* Unload() const override;
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::ElectroCardioGramData& data) const;
+  void Unload(CDM::ElectroCardioGramData& data) const;
 
 public:
-  virtual bool HasLead1ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead1ElectricPotential();
-  virtual double GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead1ElectricPotential() const;
+  SEScalarElectricPotential& GetLead1ElectricPotential();
+  double GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead2ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead2ElectricPotential();
-  virtual double GetLead2ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead2ElectricPotential() const;
+  SEScalarElectricPotential& GetLead2ElectricPotential();
+  double GetLead2ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead3ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead3ElectricPotential();
-  virtual double GetLead3ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead3ElectricPotential() const;
+  SEScalarElectricPotential& GetLead3ElectricPotential();
+  double GetLead3ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead4ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead4ElectricPotential();
-  virtual double GetLead4ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead4ElectricPotential() const;
+  SEScalarElectricPotential& GetLead4ElectricPotential();
+  double GetLead4ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead5ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead5ElectricPotential();
-  virtual double GetLead5ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead5ElectricPotential() const;
+  SEScalarElectricPotential& GetLead5ElectricPotential();
+  double GetLead5ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead6ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead6ElectricPotential();
-  virtual double GetLead6ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead6ElectricPotential() const;
+  SEScalarElectricPotential& GetLead6ElectricPotential();
+  double GetLead6ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead7ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead7ElectricPotential();
-  virtual double GetLead7ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead7ElectricPotential() const;
+  SEScalarElectricPotential& GetLead7ElectricPotential();
+  double GetLead7ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead8ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead8ElectricPotential();
-  virtual double GetLead8ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead8ElectricPotential() const;
+  SEScalarElectricPotential& GetLead8ElectricPotential();
+  double GetLead8ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead9ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead9ElectricPotential();
-  virtual double GetLead9ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead9ElectricPotential() const;
+  SEScalarElectricPotential& GetLead9ElectricPotential();
+  double GetLead9ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead10ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead10ElectricPotential();
-  virtual double GetLead10ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead10ElectricPotential() const;
+  SEScalarElectricPotential& GetLead10ElectricPotential();
+  double GetLead10ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead11ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead11ElectricPotential();
-  virtual double GetLead11ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead11ElectricPotential() const;
+  SEScalarElectricPotential& GetLead11ElectricPotential();
+  double GetLead11ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  virtual bool HasLead12ElectricPotential() const;
-  virtual SEScalarElectricPotential& GetLead12ElectricPotential();
-  virtual double GetLead12ElectricPotential(const ElectricPotentialUnit& unit) const;
+  bool HasLead12ElectricPotential() const;
+  SEScalarElectricPotential& GetLead12ElectricPotential();
+  double GetLead12ElectricPotential(const ElectricPotentialUnit& unit) const;
 
 protected:
   SEScalarElectricPotential* m_Lead1ElectricPotential;

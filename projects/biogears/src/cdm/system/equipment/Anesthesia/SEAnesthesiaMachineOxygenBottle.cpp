@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger)
@@ -20,16 +21,19 @@ SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger)
 {
   m_Volume = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SEAnesthesiaMachineOxygenBottle::~SEAnesthesiaMachineOxygenBottle()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineOxygenBottle::Clear()
 {
   SAFE_DELETE(m_Volume);
 }
+//-------------------------------------------------------------------------------
 
 bool SEAnesthesiaMachineOxygenBottle::Load(const CDM::AnesthesiaMachineOxygenBottleData& in)
 {
@@ -37,6 +41,7 @@ bool SEAnesthesiaMachineOxygenBottle::Load(const CDM::AnesthesiaMachineOxygenBot
     GetVolume().Load(in.Volume().get());
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::AnesthesiaMachineOxygenBottleData* SEAnesthesiaMachineOxygenBottle::Unload() const
 {
@@ -44,17 +49,20 @@ CDM::AnesthesiaMachineOxygenBottleData* SEAnesthesiaMachineOxygenBottle::Unload(
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineOxygenBottle::Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const
 {
   if (m_Volume != nullptr)
     data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(m_Volume->Unload()));
 }
+//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineOxygenBottle::Merge(const SEAnesthesiaMachineOxygenBottle& from)
 {
   COPY_PROPERTY(Volume);
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const std::string& name)
 {
@@ -62,11 +70,13 @@ const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const std::string& na
     return &GetVolume();
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SEAnesthesiaMachineOxygenBottle::HasVolume() const
 {
   return m_Volume == nullptr ? false : m_Volume->IsValid();
 }
+//-------------------------------------------------------------------------------
 
 SEScalarVolume& SEAnesthesiaMachineOxygenBottle::GetVolume()
 {
@@ -74,13 +84,14 @@ SEScalarVolume& SEAnesthesiaMachineOxygenBottle::GetVolume()
     m_Volume = new SEScalarVolume();
   return *m_Volume;
 }
+//-------------------------------------------------------------------------------
 double SEAnesthesiaMachineOxygenBottle::GetVolume(const VolumeUnit& unit) const
 {
   if (m_Volume == nullptr)
     return SEScalar::dNaN();
   return m_Volume->GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineOxygenBottle::ToString(std::ostream& str)
 {
   str << " Anesthesia Machine Oxygen Bottle, ";
@@ -90,4 +101,5 @@ void SEAnesthesiaMachineOxygenBottle::ToString(std::ostream& str)
     str << "\rVolume : NaN" << GetVolume();
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
 }

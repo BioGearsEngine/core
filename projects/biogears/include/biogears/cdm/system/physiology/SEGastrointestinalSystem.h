@@ -22,26 +22,27 @@ class VolumePerTimeUnit;
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
 public:
   SEGastrointestinalSystem(Logger* logger);
-  virtual ~SEGastrointestinalSystem();
+  ~SEGastrointestinalSystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool HasChymeAbsorptionRate() const;
-  virtual SEScalarVolumePerTime& GetChymeAbsorptionRate();
-  virtual double GetChymeAbsorptionRate(const VolumePerTimeUnit& unit) const;
+  bool HasChymeAbsorptionRate() const;
+  SEScalarVolumePerTime& GetChymeAbsorptionRate();
+  double GetChymeAbsorptionRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasStomachContents() const;
-  virtual SENutrition& GetStomachContents();
-  virtual const SENutrition* GetStomachContents() const;
-  virtual void RemoveStomachContents();
+  bool HasStomachContents() const;
+  SENutrition& GetStomachContents();
+  const SENutrition* GetStomachContents() const;
+  void RemoveStomachContents();
 
-  virtual bool Load(const CDM::GastrointestinalSystemData& in);
-  virtual CDM::GastrointestinalSystemData* Unload() const;
+  bool Load(const CDM::GastrointestinalSystemData& in);
+  CDM::GastrointestinalSystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::GastrointestinalSystemData& data) const;
+  void Unload(CDM::GastrointestinalSystemData& data) const;
 
 protected:
   SEScalarVolumePerTime* m_ChymeAbsorptionRate;

@@ -22,56 +22,57 @@ namespace biogears {
 class BIOGEARS_API SENervousSystem : public SESystem {
 public:
   SENervousSystem(Logger* logger);
-  virtual ~SENervousSystem();
+  ~SENervousSystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::NervousSystemData& in);
-  virtual CDM::NervousSystemData* Unload() const;
+  bool Load(const CDM::NervousSystemData& in);
+  CDM::NervousSystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::NervousSystemData& data) const;
+  void Unload(CDM::NervousSystemData& data) const;
 
 public:
-  virtual bool HasBaroreceptorHeartRateScale() const;
-  virtual SEScalar& GetBaroreceptorHeartRateScale();
-  virtual double GetBaroreceptorHeartRateScale() const;
+  bool HasBaroreceptorHeartRateScale() const;
+  SEScalar& GetBaroreceptorHeartRateScale();
+  double GetBaroreceptorHeartRateScale() const;
 
-  virtual bool HasBaroreceptorHeartElastanceScale() const;
-  virtual SEScalar& GetBaroreceptorHeartElastanceScale();
-  virtual double GetBaroreceptorHeartElastanceScale() const;
+  bool HasBaroreceptorHeartElastanceScale() const;
+  SEScalar& GetBaroreceptorHeartElastanceScale();
+  double GetBaroreceptorHeartElastanceScale() const;
 
-  virtual bool HasBaroreceptorResistanceScale() const;
-  virtual SEScalar& GetBaroreceptorResistanceScale();
-  virtual double GetBaroreceptorResistanceScale() const;
+  bool HasBaroreceptorResistanceScale() const;
+  SEScalar& GetBaroreceptorResistanceScale();
+  double GetBaroreceptorResistanceScale() const;
 
-  virtual bool HasBaroreceptorComplianceScale() const;
-  virtual SEScalar& GetBaroreceptorComplianceScale();
-  virtual double GetBaroreceptorComplianceScale() const;
+  bool HasBaroreceptorComplianceScale() const;
+  SEScalar& GetBaroreceptorComplianceScale();
+  double GetBaroreceptorComplianceScale() const;
 
-  virtual bool HasChemoreceptorHeartRateScale() const;
-  virtual SEScalar& GetChemoreceptorHeartRateScale();
-  virtual double GetChemoreceptorHeartRateScale() const;
+  bool HasChemoreceptorHeartRateScale() const;
+  SEScalar& GetChemoreceptorHeartRateScale();
+  double GetChemoreceptorHeartRateScale() const;
 
-  virtual bool HasChemoreceptorHeartElastanceScale() const;
-  virtual SEScalar& GetChemoreceptorHeartElastanceScale();
-  virtual double GetChemoreceptorHeartElastanceScale() const;
+  bool HasChemoreceptorHeartElastanceScale() const;
+  SEScalar& GetChemoreceptorHeartElastanceScale();
+  double GetChemoreceptorHeartElastanceScale() const;
 
-  virtual bool HasLeftEyePupillaryResponse() const;
-  virtual SEPupillaryResponse& GetLeftEyePupillaryResponse();
-  virtual const SEPupillaryResponse* GetLeftEyePupillaryResponse() const;
-  virtual void RemoveLeftEyePupillaryResponse();
+  bool HasLeftEyePupillaryResponse() const;
+  SEPupillaryResponse& GetLeftEyePupillaryResponse();
+  const SEPupillaryResponse* GetLeftEyePupillaryResponse() const;
+  void RemoveLeftEyePupillaryResponse();
 
-  virtual bool HasPainVisualAnalogueScale() const;
-  virtual SEScalar& GetPainVisualAnalogueScale();
-  virtual double GetPainVisualAnalogueScale() const;
+  bool HasPainVisualAnalogueScale() const;
+  SEScalar& GetPainVisualAnalogueScale();
+  double GetPainVisualAnalogueScale() const;
 
-  virtual bool HasRightEyePupillaryResponse() const;
-  virtual SEPupillaryResponse& GetRightEyePupillaryResponse();
-  virtual const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
-  virtual void RemoveRightEyePupillaryResponse();
+  bool HasRightEyePupillaryResponse() const;
+  SEPupillaryResponse& GetRightEyePupillaryResponse();
+  const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
+  void RemoveRightEyePupillaryResponse();
 
 protected:
   SEScalar* m_BaroreceptorHeartRateScale;

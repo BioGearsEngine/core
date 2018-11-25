@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SEEnergySystem::SEEnergySystem(Logger* logger)
@@ -40,11 +41,13 @@ SEEnergySystem::SEEnergySystem(Logger* logger)
   m_TotalMetabolicRate = nullptr;
   m_TotalWorkRateLevel = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SEEnergySystem::~SEEnergySystem()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEEnergySystem::Clear()
 {
@@ -64,6 +67,7 @@ void SEEnergySystem::Clear()
   SAFE_DELETE(m_TotalMetabolicRate);
   SAFE_DELETE(m_TotalWorkRateLevel);
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
 {
@@ -95,6 +99,7 @@ const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
     return &GetTotalWorkRateLevel();
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::Load(const CDM::EnergySystemData& in)
 {
@@ -129,6 +134,7 @@ bool SEEnergySystem::Load(const CDM::EnergySystemData& in)
 
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::EnergySystemData* SEEnergySystem::Unload() const
 {
@@ -136,6 +142,7 @@ CDM::EnergySystemData* SEEnergySystem::Unload() const
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SEEnergySystem::Unload(CDM::EnergySystemData& data) const
 {
@@ -168,51 +175,60 @@ void SEEnergySystem::Unload(CDM::EnergySystemData& data) const
   if (m_TotalWorkRateLevel != nullptr)
     data.TotalWorkRateLevel(std::unique_ptr<CDM::ScalarFractionData>(m_TotalWorkRateLevel->Unload()));
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasAchievedExerciseLevel() const
 {
   return m_AchievedExerciseLevel == nullptr ? false : m_AchievedExerciseLevel->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SEEnergySystem::GetAchievedExerciseLevel()
 {
   if (m_AchievedExerciseLevel == nullptr)
     m_AchievedExerciseLevel = new SEScalarFraction();
   return *m_AchievedExerciseLevel;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetAchievedExerciseLevel() const
 {
   if (m_AchievedExerciseLevel == nullptr)
     return SEScalar::dNaN();
   return m_AchievedExerciseLevel->GetValue();
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasChlorideLostToSweat() const
 {
   return m_ChlorideLostToSweat == nullptr ? false : m_ChlorideLostToSweat->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMass& SEEnergySystem::GetChlorideLostToSweat()
 {
   if (m_ChlorideLostToSweat == nullptr)
     m_ChlorideLostToSweat = new SEScalarMass();
   return *m_ChlorideLostToSweat;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetChlorideLostToSweat(const MassUnit& unit) const
 {
   if (m_ChlorideLostToSweat == nullptr)
     return SEScalar::dNaN();
   return m_ChlorideLostToSweat->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasCoreTemperature() const
 {
   return m_CoreTemperature == nullptr ? false : m_CoreTemperature->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTemperature& SEEnergySystem::GetCoreTemperature()
 {
   if (m_CoreTemperature == nullptr)
     m_CoreTemperature = new SEScalarTemperature();
   return *m_CoreTemperature;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetCoreTemperature(const TemperatureUnit& unit) const
 {
   if (m_CoreTemperature == nullptr)
@@ -224,169 +240,203 @@ bool SEEnergySystem::HasCreatinineProductionRate() const
 {
   return m_CreatinineProductionRate == nullptr ? false : m_CreatinineProductionRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarAmountPerTime& SEEnergySystem::GetCreatinineProductionRate()
 {
   if (m_CreatinineProductionRate == nullptr)
     m_CreatinineProductionRate = new SEScalarAmountPerTime();
   return *m_CreatinineProductionRate;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetCreatinineProductionRate(const AmountPerTimeUnit& unit) const
 {
   if (m_CreatinineProductionRate == nullptr)
     return SEScalar::dNaN();
   return m_CreatinineProductionRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasExerciseMeanArterialPressureDelta() const
 {
   return m_ExerciseMeanArterialPressureDelta == nullptr ? false : m_ExerciseMeanArterialPressureDelta->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SEEnergySystem::GetExerciseMeanArterialPressureDelta()
 {
   if (m_ExerciseMeanArterialPressureDelta == nullptr)
     m_ExerciseMeanArterialPressureDelta = new SEScalarPressure();
   return *m_ExerciseMeanArterialPressureDelta;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetExerciseMeanArterialPressureDelta(const PressureUnit& unit) const
 {
   if (m_ExerciseMeanArterialPressureDelta == nullptr)
     return SEScalar::dNaN();
   return m_ExerciseMeanArterialPressureDelta->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasFatigueLevel() const
 {
   return m_FatigueLevel == nullptr ? false : m_FatigueLevel->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SEEnergySystem::GetFatigueLevel()
 {
   if (m_FatigueLevel == nullptr)
     m_FatigueLevel = new SEScalarFraction();
   return *m_FatigueLevel;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetFatigueLevel() const
 {
   if (m_FatigueLevel == nullptr)
     return SEScalar::dNaN();
   return m_FatigueLevel->GetValue();
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasLactateProductionRate() const
 {
   return m_LactateProductionRate == nullptr ? false : m_LactateProductionRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarAmountPerTime& SEEnergySystem::GetLactateProductionRate()
 {
   if (m_LactateProductionRate == nullptr)
     m_LactateProductionRate = new SEScalarAmountPerTime();
   return *m_LactateProductionRate;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetLactateProductionRate(const AmountPerTimeUnit& unit) const
 {
   if (m_LactateProductionRate == nullptr)
     return SEScalar::dNaN();
   return m_LactateProductionRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasPotassiumLostToSweat() const
 {
   return m_PotassiumLostToSweat == nullptr ? false : m_PotassiumLostToSweat->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMass& SEEnergySystem::GetPotassiumLostToSweat()
 {
   if (m_PotassiumLostToSweat == nullptr)
     m_PotassiumLostToSweat = new SEScalarMass();
   return *m_PotassiumLostToSweat;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetPotassiumLostToSweat(const MassUnit& unit) const
 {
   if (m_PotassiumLostToSweat == nullptr)
     return SEScalar::dNaN();
   return m_PotassiumLostToSweat->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasSkinTemperature() const
 {
   return m_SkinTemperature == nullptr ? false : m_SkinTemperature->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTemperature& SEEnergySystem::GetSkinTemperature()
 {
   if (m_SkinTemperature == nullptr)
     m_SkinTemperature = new SEScalarTemperature();
   return *m_SkinTemperature;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetSkinTemperature(const TemperatureUnit& unit) const
 {
   if (m_SkinTemperature == nullptr)
     return SEScalar::dNaN();
   return m_SkinTemperature->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasSodiumLostToSweat() const
 {
   return m_SodiumLostToSweat == nullptr ? false : m_SodiumLostToSweat->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMass& SEEnergySystem::GetSodiumLostToSweat()
 {
   if (m_SodiumLostToSweat == nullptr)
     m_SodiumLostToSweat = new SEScalarMass();
   return *m_SodiumLostToSweat;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetSodiumLostToSweat(const MassUnit& unit) const
 {
   if (m_SodiumLostToSweat == nullptr)
     return SEScalar::dNaN();
   return m_SodiumLostToSweat->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasSweatRate() const
 {
   return m_SweatRate == nullptr ? false : m_SweatRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMassPerTime& SEEnergySystem::GetSweatRate()
 {
   if (m_SweatRate == nullptr)
     m_SweatRate = new SEScalarMassPerTime();
   return *m_SweatRate;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetSweatRate(const MassPerTimeUnit& unit) const
 {
   if (m_SweatRate == nullptr)
     return SEScalar::dNaN();
   return m_SweatRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasTotalMetabolicRate() const
 {
   return m_TotalMetabolicRate == nullptr ? false : m_TotalMetabolicRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPower& SEEnergySystem::GetTotalMetabolicRate()
 {
   if (m_TotalMetabolicRate == nullptr)
     m_TotalMetabolicRate = new SEScalarPower();
   return *m_TotalMetabolicRate;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetTotalMetabolicRate(const PowerUnit& unit) const
 {
   if (m_TotalMetabolicRate == nullptr)
     return SEScalar::dNaN();
   return m_TotalMetabolicRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEEnergySystem::HasTotalWorkRateLevel() const
 {
   return m_TotalWorkRateLevel == nullptr ? false : m_TotalWorkRateLevel->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SEEnergySystem::GetTotalWorkRateLevel()
 {
   if (m_TotalWorkRateLevel == nullptr)
     m_TotalWorkRateLevel = new SEScalarFraction();
   return *m_TotalWorkRateLevel;
 }
+//-------------------------------------------------------------------------------
 double SEEnergySystem::GetTotalWorkRateLevel() const
 {
   if (m_TotalWorkRateLevel == nullptr)
     return SEScalar::dNaN();
   return m_TotalWorkRateLevel->GetValue();
+}
+//-------------------------------------------------------------------------------
+Tree<std::string> SEEnergySystem::GetPhysiologyRequestGraph() const
+{
+  return {};
 }
 }

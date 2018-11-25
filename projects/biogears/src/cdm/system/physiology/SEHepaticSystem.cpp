@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SEHepaticSystem::SEHepaticSystem(Logger* logger)
@@ -22,11 +23,13 @@ SEHepaticSystem::SEHepaticSystem(Logger* logger)
   m_KetoneProductionRate = nullptr;
   m_HepaticGluconeogenesisRate = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SEHepaticSystem::~SEHepaticSystem()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEHepaticSystem::Clear()
 {
@@ -35,6 +38,7 @@ void SEHepaticSystem::Clear()
   SAFE_DELETE(m_KetoneProductionRate);
   SAFE_DELETE(m_HepaticGluconeogenesisRate);
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
 {
@@ -44,6 +48,7 @@ const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
     return &GetHepaticGluconeogenesisRate();
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SEHepaticSystem::Load(const CDM::HepaticSystemData& in)
 {
@@ -56,12 +61,14 @@ bool SEHepaticSystem::Load(const CDM::HepaticSystemData& in)
 
   return true;
 }
+//-------------------------------------------------------------------------------
 CDM::HepaticSystemData* SEHepaticSystem::Unload() const
 {
   CDM::HepaticSystemData* data = new CDM::HepaticSystemData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SEHepaticSystem::Unload(CDM::HepaticSystemData& data) const
 {
   SESystem::Unload(data);
@@ -71,38 +78,49 @@ void SEHepaticSystem::Unload(CDM::HepaticSystemData& data) const
   if (m_HepaticGluconeogenesisRate != nullptr)
     data.HepaticGluconeogenesisRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_HepaticGluconeogenesisRate->Unload()));
 }
+//-------------------------------------------------------------------------------
 
 bool SEHepaticSystem::HasKetoneProductionRate() const
 {
   return m_KetoneProductionRate == nullptr ? false : m_KetoneProductionRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarAmountPerTime& SEHepaticSystem::GetKetoneProductionRate()
 {
   if (m_KetoneProductionRate == nullptr)
     m_KetoneProductionRate = new SEScalarAmountPerTime();
   return *m_KetoneProductionRate;
 }
+//-------------------------------------------------------------------------------
 double SEHepaticSystem::GetKetoneProductionRate(const AmountPerTimeUnit& unit) const
 {
   if (m_KetoneProductionRate == nullptr)
     return SEScalar::dNaN();
   return m_KetoneProductionRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEHepaticSystem::HasHepaticGluconeogenesisRate() const
 {
   return m_HepaticGluconeogenesisRate == nullptr ? false : m_HepaticGluconeogenesisRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMassPerTime& SEHepaticSystem::GetHepaticGluconeogenesisRate()
 {
   if (m_HepaticGluconeogenesisRate == nullptr)
     m_HepaticGluconeogenesisRate = new SEScalarMassPerTime();
   return *m_HepaticGluconeogenesisRate;
 }
+//-------------------------------------------------------------------------------
 double SEHepaticSystem::GetHepaticGluconeogenesisRate(const MassPerTimeUnit& unit) const
 {
   if (m_HepaticGluconeogenesisRate == nullptr)
     return SEScalar::dNaN();
   return m_HepaticGluconeogenesisRate->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+Tree<std::string> SEHepaticSystem::GetPhysiologyRequestGraph() const
+{
+  return {};
 }
 }

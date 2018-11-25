@@ -33,94 +33,94 @@ class HeatConductancePerAreaUnit;
 class BIOGEARS_API SEEnvironment : public SESystem {
 public:
   SEEnvironment(SESubstanceManager& substances);
-  virtual ~SEEnvironment();
+  ~SEEnvironment() override;
 
-  virtual void Clear();
+  void Clear() override;
 
-  virtual bool Load(const CDM::EnvironmentData& in);
+  bool Load(const CDM::EnvironmentData& in);
   bool Load(const std::string& patientFile);
 
-  virtual CDM::EnvironmentData* Unload() const;
-
+  CDM::EnvironmentData* Unload() const;
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
   /** @name ProcessChange
   * @brief - Will change this class as directed by the Action
   */
-  virtual bool ProcessChange(const SEEnvironmentChange& action);
+  bool ProcessChange(const SEEnvironmentChange& action);
 
   /** @name ProcessChange
   * @brief - Will change this class as directed by the Condition
   */
-  virtual bool ProcessChange(const SEInitialEnvironment& change);
+  bool ProcessChange(const SEInitialEnvironment& change);
 
   /** @name StateChange
   *   @brief - This method is called when ever there is a state change
   *            Specically a new file has been loaded, configuration action, or the system reset
   *            Engine specific methodology can then update their logic.
   */
-  virtual void StateChange(){};
+  virtual void StateChange() = 0;
 
 public:
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual std::string GetName() const;
-  virtual void SetName(const std::string& name);
-  virtual bool HasName() const;
-  virtual void InvalidateName();
+  std::string GetName() const;
+  void SetName(const std::string& name);
+  bool HasName() const;
+  void InvalidateName();
 
-  virtual bool HasActiveHeating() const;
-  virtual SEActiveHeating& GetActiveHeating();
-  virtual const SEActiveHeating* GetActiveHeating() const;
-  virtual void RemoveActiveHeating();
+  bool HasActiveHeating() const;
+  SEActiveHeating& GetActiveHeating();
+  const SEActiveHeating* GetActiveHeating() const;
+  void RemoveActiveHeating();
 
-  virtual bool HasActiveCooling() const;
-  virtual SEActiveCooling& GetActiveCooling();
-  virtual const SEActiveCooling* GetActiveCooling() const;
-  virtual void RemoveActiveCooling();
+  bool HasActiveCooling() const;
+  SEActiveCooling& GetActiveCooling();
+  const SEActiveCooling* GetActiveCooling() const;
+  void RemoveActiveCooling();
 
-  virtual bool HasAppliedTemperature() const;
-  virtual SEAppliedTemperature& GetAppliedTemperature();
-  virtual const SEAppliedTemperature* GetAppliedTemperature() const;
-  virtual void RemoveAppliedTemperature();
+  bool HasAppliedTemperature() const;
+  SEAppliedTemperature& GetAppliedTemperature();
+  const SEAppliedTemperature* GetAppliedTemperature() const;
+  void RemoveAppliedTemperature();
 
-  virtual bool HasConditions() const;
-  virtual SEEnvironmentalConditions& GetConditions();
-  virtual const SEEnvironmentalConditions* GetConditions() const;
-  virtual void RemoveConditions();
+  bool HasConditions() const;
+  SEEnvironmentalConditions& GetConditions();
+  const SEEnvironmentalConditions* GetConditions() const;
+  void RemoveConditions();
 
-  virtual bool HasConvectiveHeatLoss() const;
-  virtual SEScalarPower& GetConvectiveHeatLoss();
-  virtual double GetConvectiveHeatLoss(const PowerUnit& unit) const;
+  bool HasConvectiveHeatLoss() const;
+  SEScalarPower& GetConvectiveHeatLoss();
+  double GetConvectiveHeatLoss(const PowerUnit& unit) const;
 
-  virtual bool HasConvectiveHeatTranferCoefficient() const;
-  virtual SEScalarHeatConductancePerArea& GetConvectiveHeatTranferCoefficient();
-  virtual double GetConvectiveHeatTranferCoefficient(const HeatConductancePerAreaUnit& unit) const;
+  bool HasConvectiveHeatTranferCoefficient() const;
+  SEScalarHeatConductancePerArea& GetConvectiveHeatTranferCoefficient();
+  double GetConvectiveHeatTranferCoefficient(const HeatConductancePerAreaUnit& unit) const;
 
-  virtual bool HasEvaporativeHeatLoss() const;
-  virtual SEScalarPower& GetEvaporativeHeatLoss();
-  virtual double GetEvaporativeHeatLoss(const PowerUnit& unit) const;
+  bool HasEvaporativeHeatLoss() const;
+  SEScalarPower& GetEvaporativeHeatLoss();
+  double GetEvaporativeHeatLoss(const PowerUnit& unit) const;
 
-  virtual bool HasEvaporativeHeatTranferCoefficient() const;
-  virtual SEScalarHeatConductancePerArea& GetEvaporativeHeatTranferCoefficient();
-  virtual double GetEvaporativeHeatTranferCoefficient(const HeatConductancePerAreaUnit& unit) const;
+  bool HasEvaporativeHeatTranferCoefficient() const;
+  SEScalarHeatConductancePerArea& GetEvaporativeHeatTranferCoefficient();
+  double GetEvaporativeHeatTranferCoefficient(const HeatConductancePerAreaUnit& unit) const;
 
-  virtual bool HasRadiativeHeatLoss() const;
-  virtual SEScalarPower& GetRadiativeHeatLoss();
-  virtual double GetRadiativeHeatLoss(const PowerUnit& unit) const;
+  bool HasRadiativeHeatLoss() const;
+  SEScalarPower& GetRadiativeHeatLoss();
+  double GetRadiativeHeatLoss(const PowerUnit& unit) const;
 
-  virtual bool HasRadiativeHeatTranferCoefficient() const;
-  virtual SEScalarHeatConductancePerArea& GetRadiativeHeatTranferCoefficient();
-  virtual double GetRadiativeHeatTranferCoefficient(const HeatConductancePerAreaUnit& unit) const;
+  bool HasRadiativeHeatTranferCoefficient() const;
+  SEScalarHeatConductancePerArea& GetRadiativeHeatTranferCoefficient();
+  double GetRadiativeHeatTranferCoefficient(const HeatConductancePerAreaUnit& unit) const;
 
-  virtual bool HasRespirationHeatLoss() const;
-  virtual SEScalarPower& GetRespirationHeatLoss();
-  virtual double GetRespirationHeatLoss(const PowerUnit& unit) const;
+  bool HasRespirationHeatLoss() const;
+  SEScalarPower& GetRespirationHeatLoss();
+  double GetRespirationHeatLoss(const PowerUnit& unit) const;
 
-  virtual bool HasSkinHeatLoss() const;
-  virtual SEScalarPower& GetSkinHeatLoss();
-  virtual double GetSkinHeatLoss(const PowerUnit& unit) const;
+  bool HasSkinHeatLoss() const;
+  SEScalarPower& GetSkinHeatLoss();
+  double GetSkinHeatLoss(const PowerUnit& unit) const;
 
 protected:
-  virtual void Unload(CDM::EnvironmentData& data) const;
+  void Unload(CDM::EnvironmentData& data) const;
 
 protected:
   std::string m_Name;

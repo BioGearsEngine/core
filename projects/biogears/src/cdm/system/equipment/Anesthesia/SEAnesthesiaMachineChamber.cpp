@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+
 namespace biogears {
 SEAnesthesiaMachineChamber::SEAnesthesiaMachineChamber(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
@@ -24,11 +25,13 @@ SEAnesthesiaMachineChamber::SEAnesthesiaMachineChamber(SESubstanceManager& subst
   m_SubstanceFraction = nullptr;
   m_Substance = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SEAnesthesiaMachineChamber::~SEAnesthesiaMachineChamber()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineChamber::Clear()
 {
@@ -36,6 +39,7 @@ void SEAnesthesiaMachineChamber::Clear()
   SAFE_DELETE(m_SubstanceFraction);
   m_Substance = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SEAnesthesiaMachineChamber::Load(const CDM::AnesthesiaMachineChamberData& in)
 {
@@ -54,6 +58,7 @@ bool SEAnesthesiaMachineChamber::Load(const CDM::AnesthesiaMachineChamberData& i
   }
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::AnesthesiaMachineChamberData* SEAnesthesiaMachineChamber::Unload() const
 {
@@ -61,6 +66,7 @@ CDM::AnesthesiaMachineChamberData* SEAnesthesiaMachineChamber::Unload() const
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineChamber::Unload(CDM::AnesthesiaMachineChamberData& data) const
 {
@@ -71,6 +77,7 @@ void SEAnesthesiaMachineChamber::Unload(CDM::AnesthesiaMachineChamberData& data)
   if (HasSubstance())
     data.Substance(m_Substance->GetName());
 }
+//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineChamber::Merge(const SEAnesthesiaMachineChamber& from)
 {
@@ -90,6 +97,7 @@ void SEAnesthesiaMachineChamber::Merge(const SEAnesthesiaMachineChamber& from)
       m_Substance = from.m_Substance;
   }
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const std::string& name)
 {
@@ -97,58 +105,70 @@ const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const std::string& name)
     return &GetSubstanceFraction();
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 CDM::enumOnOff::value SEAnesthesiaMachineChamber::GetState() const
 {
   return m_State;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineChamber::SetState(CDM::enumOnOff::value state)
 {
   m_State = state;
 }
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineChamber::HasState() const
 {
   return m_State == ((CDM::enumOnOff::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineChamber::InvalidateState()
 {
   m_State = (CDM::enumOnOff::value)-1;
 }
+//-------------------------------------------------------------------------------
 
 bool SEAnesthesiaMachineChamber::HasSubstanceFraction() const
 {
   return m_SubstanceFraction == nullptr ? false : m_SubstanceFraction->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SEAnesthesiaMachineChamber::GetSubstanceFraction()
 {
   if (m_SubstanceFraction == nullptr)
     m_SubstanceFraction = new SEScalarFraction();
   return *m_SubstanceFraction;
 }
+//-------------------------------------------------------------------------------
 double SEAnesthesiaMachineChamber::GetSubstanceFraction() const
 {
   if (m_SubstanceFraction == nullptr)
     return SEScalar::dNaN();
   return m_SubstanceFraction->GetValue();
 }
+//-------------------------------------------------------------------------------
 
 bool SEAnesthesiaMachineChamber::HasSubstance() const
 {
   return m_Substance == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SESubstance* SEAnesthesiaMachineChamber::GetSubstance() const
 {
   return (SESubstance*)m_Substance;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineChamber::SetSubstance(const SESubstance& substance)
 {
   m_Substance = &substance;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineChamber::RemoveSubstance()
 {
   m_Substance = nullptr;
   ;
 }
+//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineChamber::ToString(std::ostream& str) const
 {
@@ -158,4 +178,5 @@ void SEAnesthesiaMachineChamber::ToString(std::ostream& str) const
   else
     str << "Action not specified properly" << std::flush;
 }
+
 }

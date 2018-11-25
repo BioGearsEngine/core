@@ -28,10 +28,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/utils/FileUtils.h>
-#include <biogears/engine/Equipment/ECG.h>
-
+#include <biogears/container/Tree.tci.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Equipment/ECG.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -40,12 +40,12 @@ std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string& logfil
 {
   return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile));
 }
-
+//-------------------------------------------------------------------------------
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 {
   return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger));
 }
-
+//-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger)
   : BioGears(logger)
   , m_EngineTrack(*this)
@@ -54,7 +54,7 @@ BioGearsEngine::BioGearsEngine(Logger* logger)
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
 }
-
+//-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const std::string& logFileName)
   : BioGears(logFileName)
   , m_EngineTrack(*this)
@@ -63,21 +63,21 @@ BioGearsEngine::BioGearsEngine(const std::string& logFileName)
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
 }
-
+//-------------------------------------------------------------------------------
 BioGearsEngine::~BioGearsEngine()
 {
 }
-
+//-------------------------------------------------------------------------------
 Logger* BioGearsEngine::GetLogger()
 {
   return Loggable::GetLogger();
 }
-
+//-------------------------------------------------------------------------------
 PhysiologyEngineTrack* BioGearsEngine::GetEngineTrack()
 {
   return &m_EngineTrack;
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
   std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(file, GetLogger());
@@ -87,7 +87,7 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
   Error("File does not contain a valid PhysiologyEngineState");
   return false;
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime)
 {
   m_ss.str("");
@@ -343,7 +343,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   m_State = EngineState::Active;
   return true; // return CheckDataRequirements/IsValid() or something
 }
-
+//-------------------------------------------------------------------------------
 std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const std::string& file)
 {
   std::unique_ptr<CDM::PhysiologyEngineStateData> state(new CDM::BioGearsStateData());
@@ -413,7 +413,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
 
   return state;
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
   std::string pFile = patientFile;
@@ -425,7 +425,7 @@ bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std:
     return false;
   return InitializeEngine(conditions, config);
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
   CDM_COPY((&patient), m_Patient);
@@ -433,7 +433,7 @@ bool BioGearsEngine::InitializeEngine(const SEPatient& patient, const std::vecto
   // and notify we are ignoring anything provided we won't use
   return InitializeEngine(conditions, config);
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
   m_EngineTrack.ResetFile();
@@ -498,17 +498,17 @@ bool BioGearsEngine::InitializeEngine(const std::vector<const SECondition*>* con
 
   return true;
 }
-
+//-------------------------------------------------------------------------------
 double BioGearsEngine::GetTimeStep(const TimeUnit& unit)
 {
   return m_Config->GetTimeStep(unit);
 }
-
+//-------------------------------------------------------------------------------
 double BioGearsEngine::GetSimulationTime(const TimeUnit& unit)
 {
   return m_SimulationTime->GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 void BioGearsEngine::AdvanceModelTime()
 {
   if (!IsReady())
@@ -524,7 +524,7 @@ void BioGearsEngine::AdvanceModelTime()
   m_CurrentTime->Increment(m_Config->GetTimeStep());
   m_SimulationTime->Increment(m_Config->GetTimeStep());
 }
-
+//-------------------------------------------------------------------------------
 void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit)
 {
   double time_s = Convert(time, unit, TimeUnit::s);
@@ -532,7 +532,7 @@ void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit)
   for (int i = 0; i < count; i++)
     AdvanceModelTime();
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::ProcessAction(const SEAction& action)
 {
   if (!IsReady())
@@ -664,7 +664,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
 
   return GetActions().ProcessAction(action);
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::IsReady()
 {
   if (m_State == EngineState::NotReady) {
@@ -673,7 +673,7 @@ bool BioGearsEngine::IsReady()
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void BioGearsEngine::SetEventHandler(SEEventHandler* handler)
 {
   m_EventHandler = handler;
@@ -681,106 +681,124 @@ void BioGearsEngine::SetEventHandler(SEEventHandler* handler)
     m_Patient->ForwardEvents(m_EventHandler);
   m_AnesthesiaMachine->ForwardEvents(m_EventHandler);
 }
-
+//-------------------------------------------------------------------------------
 const PhysiologyEngineConfiguration* BioGearsEngine::GetConfiguration()
 {
   return &BioGears::GetConfiguration();
 }
-
+//-------------------------------------------------------------------------------
 const SEPatient& BioGearsEngine::GetPatient()
 {
   return BioGears::GetPatient();
 }
-
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::GetPatientAssessment(SEPatientAssessment& assessment)
 {
   if (!IsReady())
     return false;
   return BioGears::GetPatientAssessment(assessment);
 }
-
+//-------------------------------------------------------------------------------
 const SEEnvironment* BioGearsEngine::GetEnvironment()
 {
   return &BioGears::GetEnvironment();
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceManager& BioGearsEngine::GetSubstanceManager()
 {
   return *m_Substances;
 }
-
+//-------------------------------------------------------------------------------
 const SEBloodChemistrySystem* BioGearsEngine::GetBloodChemistrySystem()
 {
   return &BioGears::GetBloodChemistry();
 }
-
+//-------------------------------------------------------------------------------
 const SECardiovascularSystem* BioGearsEngine::GetCardiovascularSystem()
 {
   return &BioGears::GetCardiovascular();
 }
-
+//-------------------------------------------------------------------------------
 const SEDrugSystem* BioGearsEngine::GetDrugSystem()
 {
   return &BioGears::GetDrugs();
 }
-
+//-------------------------------------------------------------------------------
 const SEEndocrineSystem* BioGearsEngine::GetEndocrineSystem()
 {
   return &BioGears::GetEndocrine();
 }
-
+//-------------------------------------------------------------------------------
 const SEEnergySystem* BioGearsEngine::GetEnergySystem()
 {
   return &BioGears::GetEnergy();
 }
-
+//-------------------------------------------------------------------------------
 const SEGastrointestinalSystem* BioGearsEngine::GetGastrointestinalSystem()
 {
   return &BioGears::GetGastrointestinal();
 }
-
+//-------------------------------------------------------------------------------
 const SEHepaticSystem* BioGearsEngine::GetHepaticSystem()
 {
   return &BioGears::GetHepatic();
 }
-
+//-------------------------------------------------------------------------------
 const SENervousSystem* BioGearsEngine::GetNervousSystem()
 {
   return &BioGears::GetNervous();
 }
-
+//-------------------------------------------------------------------------------
 const SERenalSystem* BioGearsEngine::GetRenalSystem()
 {
   return &BioGears::GetRenal();
 }
-
+//-------------------------------------------------------------------------------
 const SERespiratorySystem* BioGearsEngine::GetRespiratorySystem()
 {
   return &BioGears::GetRespiratory();
 }
-
+//-------------------------------------------------------------------------------
 const SETissueSystem* BioGearsEngine::GetTissueSystem()
 {
   return &BioGears::GetTissue();
 }
-
+//-------------------------------------------------------------------------------
 const SEAnesthesiaMachine* BioGearsEngine::GetAnesthesiaMachine()
 {
   return &BioGears::GetAnesthesiaMachine();
 }
-
+//-------------------------------------------------------------------------------
 const SEElectroCardioGram* BioGearsEngine::GetElectroCardioGram()
 {
   return &BioGears::GetECG();
 }
-
+//-------------------------------------------------------------------------------
 const SEInhaler* BioGearsEngine::GetInhaler()
 {
   return &BioGears::GetInhaler();
 }
-
+//-------------------------------------------------------------------------------
 const SECompartmentManager& BioGearsEngine::GetCompartments()
 {
   return BioGears::GetCompartments();
+}
+//-------------------------------------------------------------------------------
+Tree<std::string> BioGearsEngine::GetDataRequestGraph() const
+{
+  Tree<std::string> dataTree{ "" };
+  dataTree.emplace_back(GetBloodChemistry().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetCardiovascular().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetDrugs().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetEndocrine().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetEnergy().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetGastrointestinal().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetHepatic().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetNervous().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetRenal().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetRespiratory().GetPhysiologyRequestGraph());
+  dataTree.emplace_back(GetTissue().GetPhysiologyRequestGraph());
+
+  return dataTree;
 }
 }

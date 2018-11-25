@@ -32,26 +32,27 @@ class PowerUnit;
 class BIOGEARS_API SEEndocrineSystem : public SESystem {
 public:
   SEEndocrineSystem(Logger* logger);
-  virtual ~SEEndocrineSystem();
+  ~SEEndocrineSystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::EndocrineSystemData& in);
-  virtual CDM::EndocrineSystemData* Unload() const;
+  bool Load(const CDM::EndocrineSystemData& in);
+  CDM::EndocrineSystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::EndocrineSystemData& data) const;
+  void Unload(CDM::EndocrineSystemData& data) const;
 
 public:
-  virtual bool HasInsulinSynthesisRate() const;
-  virtual SEScalarAmountPerTime& GetInsulinSynthesisRate();
-  virtual double GetInsulinSynthesisRate(const AmountPerTimeUnit& unit) const;
+  bool HasInsulinSynthesisRate() const;
+  SEScalarAmountPerTime& GetInsulinSynthesisRate();
+  double GetInsulinSynthesisRate(const AmountPerTimeUnit& unit) const;
 
-  virtual bool HasGlucagonSynthesisRate() const;
-  virtual SEScalarAmountPerTime& GetGlucagonSynthesisRate();
-  virtual double GetGlucagonSynthesisRate(const AmountPerTimeUnit& unit) const;
+  bool HasGlucagonSynthesisRate() const;
+  SEScalarAmountPerTime& GetGlucagonSynthesisRate();
+  double GetGlucagonSynthesisRate(const AmountPerTimeUnit& unit) const;
 
 protected:
   SEScalarAmountPerTime* m_InsulinSynthesisRate;

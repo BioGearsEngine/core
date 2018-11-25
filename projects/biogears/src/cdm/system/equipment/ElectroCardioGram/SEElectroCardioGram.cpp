@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SEElectroCardioGram::SEElectroCardioGram(Logger* logger)
@@ -31,11 +32,13 @@ SEElectroCardioGram::SEElectroCardioGram(Logger* logger)
   m_Lead11ElectricPotential = nullptr;
   m_Lead12ElectricPotential = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SEElectroCardioGram::~SEElectroCardioGram()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEElectroCardioGram::Clear()
 {
@@ -52,6 +55,7 @@ void SEElectroCardioGram::Clear()
   SAFE_DELETE(m_Lead11ElectricPotential);
   SAFE_DELETE(m_Lead12ElectricPotential);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::Load(const CDM::ElectroCardioGramData& in)
 {
@@ -81,6 +85,7 @@ bool SEElectroCardioGram::Load(const CDM::ElectroCardioGramData& in)
     GetLead12ElectricPotential().Load(in.Lead12ElectricPotential().get());
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::ElectroCardioGramData* SEElectroCardioGram::Unload() const
 {
@@ -88,6 +93,7 @@ CDM::ElectroCardioGramData* SEElectroCardioGram::Unload() const
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
 {
@@ -116,6 +122,7 @@ void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
   if (m_Lead12ElectricPotential != nullptr)
     data.Lead12ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead12ElectricPotential->Unload()));
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SEElectroCardioGram::GetScalar(const std::string& name)
 {
@@ -145,208 +152,249 @@ const SEScalar* SEElectroCardioGram::GetScalar(const std::string& name)
     return &GetLead12ElectricPotential();
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead1ElectricPotential() const
 {
   return m_Lead1ElectricPotential == nullptr ? false : m_Lead1ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead1ElectricPotential()
 {
   if (m_Lead1ElectricPotential == nullptr)
     m_Lead1ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead1ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead1ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead1ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead2ElectricPotential() const
 {
   return m_Lead2ElectricPotential == nullptr ? false : m_Lead2ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead2ElectricPotential()
 {
   if (m_Lead2ElectricPotential == nullptr)
     m_Lead2ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead2ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead2ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead2ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead2ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead3ElectricPotential() const
 {
   return m_Lead3ElectricPotential == nullptr ? false : m_Lead3ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead3ElectricPotential()
 {
   if (m_Lead3ElectricPotential == nullptr)
     m_Lead3ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead3ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead3ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead3ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead3ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead4ElectricPotential() const
 {
   return m_Lead4ElectricPotential == nullptr ? false : m_Lead4ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead4ElectricPotential()
 {
   if (m_Lead4ElectricPotential == nullptr)
     m_Lead4ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead4ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead4ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead4ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead4ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead5ElectricPotential() const
 {
   return m_Lead5ElectricPotential == nullptr ? false : m_Lead5ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead5ElectricPotential()
 {
   if (m_Lead5ElectricPotential == nullptr)
     m_Lead5ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead5ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead5ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead5ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead5ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead6ElectricPotential() const
 {
   return m_Lead6ElectricPotential == nullptr ? false : m_Lead6ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead6ElectricPotential()
 {
   if (m_Lead6ElectricPotential == nullptr)
     m_Lead6ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead6ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead6ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead6ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead6ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead7ElectricPotential() const
 {
   return m_Lead7ElectricPotential == nullptr ? false : m_Lead7ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead7ElectricPotential()
 {
   if (m_Lead7ElectricPotential == nullptr)
     m_Lead7ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead7ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead7ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead7ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead7ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead8ElectricPotential() const
 {
   return m_Lead8ElectricPotential == nullptr ? false : m_Lead8ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead8ElectricPotential()
 {
   if (m_Lead8ElectricPotential == nullptr)
     m_Lead8ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead8ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead8ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead8ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead8ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead9ElectricPotential() const
 {
   return m_Lead9ElectricPotential == nullptr ? false : m_Lead9ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead9ElectricPotential()
 {
   if (m_Lead9ElectricPotential == nullptr)
     m_Lead9ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead9ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead9ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead9ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead9ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead10ElectricPotential() const
 {
   return m_Lead10ElectricPotential == nullptr ? false : m_Lead10ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead10ElectricPotential()
 {
   if (m_Lead10ElectricPotential == nullptr)
     m_Lead10ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead10ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead10ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead10ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead10ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead11ElectricPotential() const
 {
   return m_Lead11ElectricPotential == nullptr ? false : m_Lead11ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead11ElectricPotential()
 {
   if (m_Lead11ElectricPotential == nullptr)
     m_Lead11ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead11ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead11ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead11ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead11ElectricPotential->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEElectroCardioGram::HasLead12ElectricPotential() const
 {
   return m_Lead12ElectricPotential == nullptr ? false : m_Lead12ElectricPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarElectricPotential& SEElectroCardioGram::GetLead12ElectricPotential()
 {
   if (m_Lead12ElectricPotential == nullptr)
     m_Lead12ElectricPotential = new SEScalarElectricPotential();
   return *m_Lead12ElectricPotential;
 }
+//-------------------------------------------------------------------------------
 double SEElectroCardioGram::GetLead12ElectricPotential(const ElectricPotentialUnit& unit) const
 {
   if (m_Lead12ElectricPotential == nullptr)
     return SEScalar::dNaN();
   return m_Lead12ElectricPotential->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+Tree<std::string> SEElectroCardioGram::GetPhysiologyRequestGraph() const
+{
+  return {};
 }
 }

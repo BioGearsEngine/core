@@ -32,70 +32,71 @@ class PowerUnit;
 class BIOGEARS_API SEEnergySystem : public SESystem {
 public:
   SEEnergySystem(Logger* logger);
-  virtual ~SEEnergySystem();
+  ~SEEnergySystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::EnergySystemData& in);
-  virtual CDM::EnergySystemData* Unload() const;
+  bool Load(const CDM::EnergySystemData& in);
+  CDM::EnergySystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::EnergySystemData& data) const;
+  void Unload(CDM::EnergySystemData& data) const;
 
 public:
-  virtual bool HasAchievedExerciseLevel() const;
-  virtual SEScalarFraction& GetAchievedExerciseLevel();
-  virtual double GetAchievedExerciseLevel() const;
+  bool HasAchievedExerciseLevel() const;
+  SEScalarFraction& GetAchievedExerciseLevel();
+  double GetAchievedExerciseLevel() const;
 
-  virtual bool HasChlorideLostToSweat() const;
-  virtual SEScalarMass& GetChlorideLostToSweat();
-  virtual double GetChlorideLostToSweat(const MassUnit& unit) const;
+  bool HasChlorideLostToSweat() const;
+  SEScalarMass& GetChlorideLostToSweat();
+  double GetChlorideLostToSweat(const MassUnit& unit) const;
 
-  virtual bool HasCoreTemperature() const;
-  virtual SEScalarTemperature& GetCoreTemperature();
-  virtual double GetCoreTemperature(const TemperatureUnit& unit) const;
+  bool HasCoreTemperature() const;
+  SEScalarTemperature& GetCoreTemperature();
+  double GetCoreTemperature(const TemperatureUnit& unit) const;
 
-  virtual bool HasCreatinineProductionRate() const;
-  virtual SEScalarAmountPerTime& GetCreatinineProductionRate();
-  virtual double GetCreatinineProductionRate(const AmountPerTimeUnit& unit) const;
+  bool HasCreatinineProductionRate() const;
+  SEScalarAmountPerTime& GetCreatinineProductionRate();
+  double GetCreatinineProductionRate(const AmountPerTimeUnit& unit) const;
 
-  virtual bool HasExerciseMeanArterialPressureDelta() const;
-  virtual SEScalarPressure& GetExerciseMeanArterialPressureDelta();
-  virtual double GetExerciseMeanArterialPressureDelta(const PressureUnit& unit) const;
+  bool HasExerciseMeanArterialPressureDelta() const;
+  SEScalarPressure& GetExerciseMeanArterialPressureDelta();
+  double GetExerciseMeanArterialPressureDelta(const PressureUnit& unit) const;
 
-  virtual bool HasFatigueLevel() const;
-  virtual SEScalarFraction& GetFatigueLevel();
-  virtual double GetFatigueLevel() const;
+  bool HasFatigueLevel() const;
+  SEScalarFraction& GetFatigueLevel();
+  double GetFatigueLevel() const;
 
-  virtual bool HasLactateProductionRate() const;
-  virtual SEScalarAmountPerTime& GetLactateProductionRate();
-  virtual double GetLactateProductionRate(const AmountPerTimeUnit& unit) const;
+  bool HasLactateProductionRate() const;
+  SEScalarAmountPerTime& GetLactateProductionRate();
+  double GetLactateProductionRate(const AmountPerTimeUnit& unit) const;
 
-  virtual bool HasPotassiumLostToSweat() const;
-  virtual SEScalarMass& GetPotassiumLostToSweat();
-  virtual double GetPotassiumLostToSweat(const MassUnit& unit) const;
+  bool HasPotassiumLostToSweat() const;
+  SEScalarMass& GetPotassiumLostToSweat();
+  double GetPotassiumLostToSweat(const MassUnit& unit) const;
 
-  virtual bool HasSkinTemperature() const;
-  virtual SEScalarTemperature& GetSkinTemperature();
-  virtual double GetSkinTemperature(const TemperatureUnit& unit) const;
+  bool HasSkinTemperature() const;
+  SEScalarTemperature& GetSkinTemperature();
+  double GetSkinTemperature(const TemperatureUnit& unit) const;
 
-  virtual bool HasSodiumLostToSweat() const;
-  virtual SEScalarMass& GetSodiumLostToSweat();
-  virtual double GetSodiumLostToSweat(const MassUnit& unit) const;
+  bool HasSodiumLostToSweat() const;
+  SEScalarMass& GetSodiumLostToSweat();
+  double GetSodiumLostToSweat(const MassUnit& unit) const;
 
-  virtual bool HasSweatRate() const;
-  virtual SEScalarMassPerTime& GetSweatRate();
-  virtual double GetSweatRate(const MassPerTimeUnit& unit) const;
+  bool HasSweatRate() const;
+  SEScalarMassPerTime& GetSweatRate();
+  double GetSweatRate(const MassPerTimeUnit& unit) const;
 
-  virtual bool HasTotalMetabolicRate() const;
-  virtual SEScalarPower& GetTotalMetabolicRate();
-  virtual double GetTotalMetabolicRate(const PowerUnit& unit) const;
+  bool HasTotalMetabolicRate() const;
+  SEScalarPower& GetTotalMetabolicRate();
+  double GetTotalMetabolicRate(const PowerUnit& unit) const;
 
-  virtual bool HasTotalWorkRateLevel() const;
-  virtual SEScalarFraction& GetTotalWorkRateLevel();
-  virtual double GetTotalWorkRateLevel() const;
+  bool HasTotalWorkRateLevel() const;
+  SEScalarFraction& GetTotalWorkRateLevel();
+  double GetTotalWorkRateLevel() const;
 
 protected:
   SEScalarFraction* m_AchievedExerciseLevel;

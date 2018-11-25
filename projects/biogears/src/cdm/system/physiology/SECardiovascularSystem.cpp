@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
@@ -58,11 +59,13 @@ SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   m_SystemicVascularResistance = nullptr;
   m_SystolicArterialPressure = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SECardiovascularSystem::~SECardiovascularSystem()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SECardiovascularSystem::Clear()
 {
@@ -99,6 +102,7 @@ void SECardiovascularSystem::Clear()
   SAFE_DELETE(m_SystemicVascularResistance);
   SAFE_DELETE(m_SystolicArterialPressure);
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
 {
@@ -162,6 +166,7 @@ const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
     return &GetSystolicArterialPressure();
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::Load(const CDM::CardiovascularSystemData& in)
 {
@@ -230,6 +235,7 @@ bool SECardiovascularSystem::Load(const CDM::CardiovascularSystemData& in)
 
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::CardiovascularSystemData* SECardiovascularSystem::Unload() const
 {
@@ -237,6 +243,7 @@ CDM::CardiovascularSystemData* SECardiovascularSystem::Unload() const
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SECardiovascularSystem::Unload(CDM::CardiovascularSystemData& data) const
 {
@@ -303,153 +310,180 @@ void SECardiovascularSystem::Unload(CDM::CardiovascularSystemData& data) const
   if (m_SystolicArterialPressure != nullptr)
     data.SystolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArterialPressure->Unload()));
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasArterialPressure() const
 {
   return m_ArterialPressure == nullptr ? false : m_ArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetArterialPressure()
 {
   if (m_ArterialPressure == nullptr)
     m_ArterialPressure = new SEScalarPressure();
   return *m_ArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetArterialPressure(const PressureUnit& unit) const
 {
   if (m_ArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_ArterialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasBloodVolume() const
 {
   return m_BloodVolume == nullptr ? false : m_BloodVolume->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolume& SECardiovascularSystem::GetBloodVolume()
 {
   if (m_BloodVolume == nullptr)
     m_BloodVolume = new SEScalarVolume();
   return *m_BloodVolume;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetBloodVolume(const VolumeUnit& unit) const
 {
   if (m_BloodVolume == nullptr)
     return SEScalar::dNaN();
   return m_BloodVolume->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasCardiacOutput() const
 {
   return m_CardiacOutput == nullptr ? false : m_CardiacOutput->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SECardiovascularSystem::GetCardiacOutput()
 {
   if (m_CardiacOutput == nullptr)
     m_CardiacOutput = new SEScalarVolumePerTime();
   return *m_CardiacOutput;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetCardiacOutput(const VolumePerTimeUnit& unit) const
 {
   if (m_CardiacOutput == nullptr)
     return SEScalar::dNaN();
   return m_CardiacOutput->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasCardiacIndex() const
 {
   return m_CardiacIndex == nullptr ? false : m_CardiacIndex->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTimeArea& SECardiovascularSystem::GetCardiacIndex()
 {
   if (m_CardiacIndex == nullptr)
     m_CardiacIndex = new SEScalarVolumePerTimeArea();
   return *m_CardiacIndex;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetCardiacIndex(const VolumePerTimeAreaUnit& unit) const
 {
   if (m_CardiacIndex == nullptr)
     return SEScalar::dNaN();
   return m_CardiacIndex->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasCentralVenousPressure() const
 {
   return m_CentralVenousPressure == nullptr ? false : m_CentralVenousPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetCentralVenousPressure()
 {
   if (m_CentralVenousPressure == nullptr)
     m_CentralVenousPressure = new SEScalarPressure();
   return *m_CentralVenousPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetCentralVenousPressure(const PressureUnit& unit) const
 {
   if (m_CentralVenousPressure == nullptr)
     return SEScalar::dNaN();
   return m_CentralVenousPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasCerebralBloodFlow() const
 {
   return m_CerebralBloodFlow == nullptr ? false : m_CerebralBloodFlow->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SECardiovascularSystem::GetCerebralBloodFlow()
 {
   if (m_CerebralBloodFlow == nullptr)
     m_CerebralBloodFlow = new SEScalarVolumePerTime();
   return *m_CerebralBloodFlow;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetCerebralBloodFlow(const VolumePerTimeUnit& unit) const
 {
   if (m_CerebralBloodFlow == nullptr)
     return SEScalar::dNaN();
   return m_CerebralBloodFlow->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasCerebralPerfusionPressure() const
 {
   return m_CerebralPerfusionPressure == nullptr ? false : m_CerebralPerfusionPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetCerebralPerfusionPressure()
 {
   if (m_CerebralPerfusionPressure == nullptr)
     m_CerebralPerfusionPressure = new SEScalarPressure();
   return *m_CerebralPerfusionPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetCerebralPerfusionPressure(const PressureUnit& unit) const
 {
   if (m_CerebralPerfusionPressure == nullptr)
     return SEScalar::dNaN();
   return m_CerebralPerfusionPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasDiastolicArterialPressure() const
 {
   return m_DiastolicArterialPressure == nullptr ? false : m_DiastolicArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetDiastolicArterialPressure()
 {
   if (m_DiastolicArterialPressure == nullptr)
     m_DiastolicArterialPressure = new SEScalarPressure();
   return *m_DiastolicArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetDiastolicArterialPressure(const PressureUnit& unit) const
 {
   if (m_DiastolicArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_DiastolicArterialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasHeartEjectionFraction() const
 {
   return m_HeartEjectionFraction == nullptr ? false : m_HeartEjectionFraction->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SECardiovascularSystem::GetHeartEjectionFraction()
 {
   if (m_HeartEjectionFraction == nullptr)
     m_HeartEjectionFraction = new SEScalarFraction();
   return *m_HeartEjectionFraction;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetHeartEjectionFraction() const
 {
   if (m_HeartEjectionFraction == nullptr)
@@ -461,233 +495,275 @@ bool SECardiovascularSystem::HasHeartRate() const
 {
   return m_HeartRate == nullptr ? false : m_HeartRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFrequency& SECardiovascularSystem::GetHeartRate()
 {
   if (m_HeartRate == nullptr)
     m_HeartRate = new SEScalarFrequency();
   return *m_HeartRate;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetHeartRate(const FrequencyUnit& unit) const
 {
   if (m_HeartRate == nullptr)
     return SEScalar::dNaN();
   return m_HeartRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 CDM::enumHeartRhythm::value SECardiovascularSystem::GetHeartRhythm() const
 {
   return m_HeartRhythm;
 }
+//-------------------------------------------------------------------------------
 void SECardiovascularSystem::SetHeartRhythm(CDM::enumHeartRhythm::value rhythm)
 {
   m_HeartRhythm = rhythm;
 }
+//-------------------------------------------------------------------------------
 bool SECardiovascularSystem::HasHeartRhythm() const
 {
   return m_HeartRhythm == ((CDM::enumHeartRhythm::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SECardiovascularSystem::InvalidateHeartRhythm()
 {
   m_HeartRhythm = (CDM::enumHeartRhythm::value)-1;
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasHeartStrokeVolume() const
 {
   return m_HeartStrokeVolume == nullptr ? false : m_HeartStrokeVolume->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolume& SECardiovascularSystem::GetHeartStrokeVolume()
 {
   if (m_HeartStrokeVolume == nullptr)
     m_HeartStrokeVolume = new SEScalarVolume();
   return *m_HeartStrokeVolume;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetHeartStrokeVolume(const VolumeUnit& unit) const
 {
   if (m_HeartStrokeVolume == nullptr)
     return SEScalar::dNaN();
   return m_HeartStrokeVolume->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasIntracranialPressure() const
 {
   return m_IntracranialPressure == nullptr ? false : m_IntracranialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetIntracranialPressure()
 {
   if (m_IntracranialPressure == nullptr)
     m_IntracranialPressure = new SEScalarPressure();
   return *m_IntracranialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetIntracranialPressure(const PressureUnit& unit) const
 {
   if (m_IntracranialPressure == nullptr)
     return SEScalar::dNaN();
   return m_IntracranialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasMeanArterialPressure() const
 {
   return m_MeanArterialPressure == nullptr ? false : m_MeanArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetMeanArterialPressure()
 {
   if (m_MeanArterialPressure == nullptr)
     m_MeanArterialPressure = new SEScalarPressure();
   return *m_MeanArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetMeanArterialPressure(const PressureUnit& unit) const
 {
   if (m_MeanArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_MeanArterialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasMeanArterialCarbonDioxidePartialPressure() const
 {
   return m_MeanArterialCarbonDioxidePartialPressure == nullptr ? false : m_MeanArterialCarbonDioxidePartialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetMeanArterialCarbonDioxidePartialPressure()
 {
   if (m_MeanArterialCarbonDioxidePartialPressure == nullptr)
     m_MeanArterialCarbonDioxidePartialPressure = new SEScalarPressure();
   return *m_MeanArterialCarbonDioxidePartialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetMeanArterialCarbonDioxidePartialPressure(const PressureUnit& unit) const
 {
   if (m_MeanArterialCarbonDioxidePartialPressure == nullptr)
     return SEScalar::dNaN();
   return m_MeanArterialCarbonDioxidePartialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasMeanArterialCarbonDioxidePartialPressureDelta() const
 {
   return m_MeanArterialCarbonDioxidePartialPressureDelta == nullptr ? false : m_MeanArterialCarbonDioxidePartialPressureDelta->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetMeanArterialCarbonDioxidePartialPressureDelta()
 {
   if (m_MeanArterialCarbonDioxidePartialPressureDelta == nullptr)
     m_MeanArterialCarbonDioxidePartialPressureDelta = new SEScalarPressure();
   return *m_MeanArterialCarbonDioxidePartialPressureDelta;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetMeanArterialCarbonDioxidePartialPressureDelta(const PressureUnit& unit) const
 {
   if (m_MeanArterialCarbonDioxidePartialPressureDelta == nullptr)
     return SEScalar::dNaN();
   return m_MeanArterialCarbonDioxidePartialPressureDelta->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasMeanCentralVenousPressure() const
 {
   return m_MeanCentralVenousPressure == nullptr ? false : m_MeanCentralVenousPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetMeanCentralVenousPressure()
 {
   if (m_MeanCentralVenousPressure == nullptr)
     m_MeanCentralVenousPressure = new SEScalarPressure();
   return *m_MeanCentralVenousPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetMeanCentralVenousPressure(const PressureUnit& unit) const
 {
   if (m_MeanCentralVenousPressure == nullptr)
     return SEScalar::dNaN();
   return m_MeanCentralVenousPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasMeanSkinFlow() const
 {
   return m_MeanSkinFlow == nullptr ? false : m_MeanSkinFlow->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SECardiovascularSystem::GetMeanSkinFlow()
 {
   if (m_MeanSkinFlow == nullptr)
     m_MeanSkinFlow = new SEScalarVolumePerTime();
   return *m_MeanSkinFlow;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetMeanSkinFlow(const VolumePerTimeUnit& unit) const
 {
   if (m_MeanSkinFlow == nullptr)
     return SEScalar::dNaN();
   return m_MeanSkinFlow->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonaryArterialPressure() const
 {
   return m_PulmonaryArterialPressure == nullptr ? false : m_PulmonaryArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetPulmonaryArterialPressure()
 {
   if (m_PulmonaryArterialPressure == nullptr)
     m_PulmonaryArterialPressure = new SEScalarPressure();
   return *m_PulmonaryArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryArterialPressure(const PressureUnit& unit) const
 {
   if (m_PulmonaryArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_PulmonaryArterialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonaryCapillariesWedgePressure() const
 {
   return m_PulmonaryCapillariesWedgePressure == nullptr ? false : m_PulmonaryCapillariesWedgePressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetPulmonaryCapillariesWedgePressure()
 {
   if (m_PulmonaryCapillariesWedgePressure == nullptr)
     m_PulmonaryCapillariesWedgePressure = new SEScalarPressure();
   return *m_PulmonaryCapillariesWedgePressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryCapillariesWedgePressure(const PressureUnit& unit) const
 {
   if (m_PulmonaryCapillariesWedgePressure == nullptr)
     return SEScalar::dNaN();
   return m_PulmonaryCapillariesWedgePressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonaryDiastolicArterialPressure() const
 {
   return m_PulmonaryDiastolicArterialPressure == nullptr ? false : m_PulmonaryDiastolicArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetPulmonaryDiastolicArterialPressure()
 {
   if (m_PulmonaryDiastolicArterialPressure == nullptr)
     m_PulmonaryDiastolicArterialPressure = new SEScalarPressure();
   return *m_PulmonaryDiastolicArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryDiastolicArterialPressure(const PressureUnit& unit) const
 {
   if (m_PulmonaryDiastolicArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_PulmonaryDiastolicArterialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonaryMeanArterialPressure() const
 {
   return m_PulmonaryMeanArterialPressure == nullptr ? false : m_PulmonaryMeanArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetPulmonaryMeanArterialPressure()
 {
   if (m_PulmonaryMeanArterialPressure == nullptr)
     m_PulmonaryMeanArterialPressure = new SEScalarPressure();
   return *m_PulmonaryMeanArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryMeanArterialPressure(const PressureUnit& unit) const
 {
   if (m_PulmonaryMeanArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_PulmonaryMeanArterialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonaryMeanCapillaryFlow() const
 {
   return m_PulmonaryMeanCapillaryFlow == nullptr ? false : m_PulmonaryMeanCapillaryFlow->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SECardiovascularSystem::GetPulmonaryMeanCapillaryFlow()
 {
   if (m_PulmonaryMeanCapillaryFlow == nullptr)
     m_PulmonaryMeanCapillaryFlow = new SEScalarVolumePerTime();
   return *m_PulmonaryMeanCapillaryFlow;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryMeanCapillaryFlow(const VolumePerTimeUnit& unit) const
 {
   if (m_PulmonaryMeanCapillaryFlow == nullptr)
@@ -699,118 +775,143 @@ bool SECardiovascularSystem::HasPulmonaryMeanShuntFlow() const
 {
   return m_PulmonaryMeanShuntFlow == nullptr ? false : m_PulmonaryMeanShuntFlow->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SECardiovascularSystem::GetPulmonaryMeanShuntFlow()
 {
   if (m_PulmonaryMeanShuntFlow == nullptr)
     m_PulmonaryMeanShuntFlow = new SEScalarVolumePerTime();
   return *m_PulmonaryMeanShuntFlow;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryMeanShuntFlow(const VolumePerTimeUnit& unit) const
 {
   if (m_PulmonaryMeanShuntFlow == nullptr)
     return SEScalar::dNaN();
   return m_PulmonaryMeanShuntFlow->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasSystemicVascularResistance() const
 {
   return m_SystemicVascularResistance == nullptr ? false : m_SystemicVascularResistance->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFlowResistance& SECardiovascularSystem::GetSystemicVascularResistance()
 {
   if (m_SystemicVascularResistance == nullptr)
     m_SystemicVascularResistance = new SEScalarFlowResistance();
   return *m_SystemicVascularResistance;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetSystemicVascularResistance(const FlowResistanceUnit& unit) const
 {
   if (m_SystemicVascularResistance == nullptr)
     return SEScalar::dNaN();
   return m_SystemicVascularResistance->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonarySystolicArterialPressure() const
 {
   return m_PulmonarySystolicArterialPressure == nullptr ? false : m_PulmonarySystolicArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetPulmonarySystolicArterialPressure()
 {
   if (m_PulmonarySystolicArterialPressure == nullptr)
     m_PulmonarySystolicArterialPressure = new SEScalarPressure();
   return *m_PulmonarySystolicArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonarySystolicArterialPressure(const PressureUnit& unit) const
 {
   if (m_PulmonarySystolicArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_PulmonarySystolicArterialPressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonaryVascularResistance() const
 {
   return m_PulmonaryVascularResistance == nullptr ? false : m_PulmonaryVascularResistance->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFlowResistance& SECardiovascularSystem::GetPulmonaryVascularResistance()
 {
   if (m_PulmonaryVascularResistance == nullptr)
     m_PulmonaryVascularResistance = new SEScalarFlowResistance();
   return *m_PulmonaryVascularResistance;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryVascularResistance(const FlowResistanceUnit& unit) const
 {
   if (m_PulmonaryVascularResistance == nullptr)
     return SEScalar::dNaN();
   return m_PulmonaryVascularResistance->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulmonaryVascularResistanceIndex() const
 {
   return m_PulmonaryVascularResistanceIndex == nullptr ? false : m_PulmonaryVascularResistanceIndex->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressureTimePerVolumeArea& SECardiovascularSystem::GetPulmonaryVascularResistanceIndex()
 {
   if (m_PulmonaryVascularResistanceIndex == nullptr)
     m_PulmonaryVascularResistanceIndex = new SEScalarPressureTimePerVolumeArea();
   return *m_PulmonaryVascularResistanceIndex;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulmonaryVascularResistanceIndex(const PressureTimePerVolumeAreaUnit& unit) const
 {
   if (m_PulmonaryVascularResistanceIndex == nullptr)
     return SEScalar::dNaN();
   return m_PulmonaryVascularResistanceIndex->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasPulsePressure() const
 {
   return m_PulsePressure == nullptr ? false : m_PulsePressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetPulsePressure()
 {
   if (m_PulsePressure == nullptr)
     m_PulsePressure = new SEScalarPressure();
   return *m_PulsePressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetPulsePressure(const PressureUnit& unit) const
 {
   if (m_PulsePressure == nullptr)
     return SEScalar::dNaN();
   return m_PulsePressure->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SECardiovascularSystem::HasSystolicArterialPressure() const
 {
   return m_SystolicArterialPressure == nullptr ? false : m_SystolicArterialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SECardiovascularSystem::GetSystolicArterialPressure()
 {
   if (m_SystolicArterialPressure == nullptr)
     m_SystolicArterialPressure = new SEScalarPressure();
   return *m_SystolicArterialPressure;
 }
+//-------------------------------------------------------------------------------
 double SECardiovascularSystem::GetSystolicArterialPressure(const PressureUnit& unit) const
 {
   if (m_SystolicArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_SystolicArterialPressure->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+Tree<std::string> SECardiovascularSystem::GetPhysiologyRequestGraph() const
+{
+  return {};
 }
 }

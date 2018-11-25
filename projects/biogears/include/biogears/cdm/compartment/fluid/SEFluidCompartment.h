@@ -111,7 +111,7 @@ protected:
   SEScalarPressure* m_Pressure;
   SEScalarVolume* m_Volume;
 
-  std::vector<SubstanceQuantityType*> m_SubstanceQuantities;
+  std::vector<SubstanceQuantityType*>  m_SubstanceQuantities;
   std::vector<TransportSubstanceType*> m_TransportSubstances;
 
   std::vector<LinkType*> m_Links;

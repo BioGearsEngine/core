@@ -39,35 +39,36 @@ protected:
 
 public:
   SEAnesthesiaMachine(SESubstanceManager& substances);
-  virtual ~SEAnesthesiaMachine();
+  ~SEAnesthesiaMachine() override;
 
-  virtual void Clear();
+  void Clear() override;
 
-  virtual bool Load(const CDM::AnesthesiaMachineData& in);
-  virtual CDM::AnesthesiaMachineData* Unload() const;
+  bool Load(const CDM::AnesthesiaMachineData& in);
+  CDM::AnesthesiaMachineData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::AnesthesiaMachineData& data) const;
+  void Unload(CDM::AnesthesiaMachineData& data) const;
 
   /** @name StateChange
   *   @brief - This method is called when ever there is a state change
   *            Specically a new file has been loaded, configuration action, or the system reset
   *            Engine specific methodology can then update their logic.
   */
-  virtual void StateChange(){};
-  virtual void Merge(const SEAnesthesiaMachine& from);
-  virtual void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
+  virtual void StateChange() {};
+  void Merge(const SEAnesthesiaMachine& from);
+  void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
 
 public:
   bool Load(const std::string& file);
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual const std::map<CDM::enumAnesthesiaMachineEvent::value, bool>& GetEventStates() const { return m_EventState; }
-  virtual void SetEvent(CDM::enumAnesthesiaMachineEvent::value state, bool active, const SEScalarTime& time);
-  virtual bool IsEventActive(CDM::enumAnesthesiaMachineEvent::value state) const;
-  virtual double GetEventDuration(CDM::enumAnesthesiaMachineEvent::value type, const TimeUnit& unit) const;
-  virtual void UpdateEvents(const SEScalarTime& timeStep);
+  const std::map<CDM::enumAnesthesiaMachineEvent::value, bool>& GetEventStates() const { return m_EventState; }
+  void SetEvent(CDM::enumAnesthesiaMachineEvent::value state, bool active, const SEScalarTime& time);
+  bool IsEventActive(CDM::enumAnesthesiaMachineEvent::value state) const;
+  double GetEventDuration(CDM::enumAnesthesiaMachineEvent::value type, const TimeUnit& unit) const;
+  void UpdateEvents(const SEScalarTime& timeStep);
   /** @name ForwardEvents
   *  @brief - Set a callback class to invoke when any event changes
   *  @details - Note that the handler callback can and will be called in the middle of a time step
@@ -75,70 +76,70 @@ public:
   *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine
   *             data is up to date at the time the callback is invoked
   */
-  virtual void ForwardEvents(SEEventHandler* handler);
+  void ForwardEvents(SEEventHandler* handler);
 
-  virtual CDM::enumAnesthesiaMachineConnection::value GetConnection() const;
-  virtual void SetConnection(CDM::enumAnesthesiaMachineConnection::value c);
-  virtual bool HasConnection() const;
-  virtual void InvalidateConnection();
+  CDM::enumAnesthesiaMachineConnection::value GetConnection() const;
+  void SetConnection(CDM::enumAnesthesiaMachineConnection::value c);
+  bool HasConnection() const;
+  void InvalidateConnection();
 
-  virtual bool HasInletFlow() const;
-  virtual SEScalarVolumePerTime& GetInletFlow();
-  virtual double GetInletFlow(const VolumePerTimeUnit& unit) const;
+  bool HasInletFlow() const;
+  SEScalarVolumePerTime& GetInletFlow();
+  double GetInletFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasInspiratoryExpiratoryRatio() const;
-  virtual SEScalar& GetInspiratoryExpiratoryRatio();
-  virtual double GetInspiratoryExpiratoryRatio() const;
+  bool HasInspiratoryExpiratoryRatio() const;
+  SEScalar& GetInspiratoryExpiratoryRatio();
+  double GetInspiratoryExpiratoryRatio() const;
 
-  virtual bool HasOxygenFraction() const;
-  virtual SEScalarFraction& GetOxygenFraction();
-  virtual double GetOxygenFraction() const;
+  bool HasOxygenFraction() const;
+  SEScalarFraction& GetOxygenFraction();
+  double GetOxygenFraction() const;
 
-  virtual CDM::enumAnesthesiaMachineOxygenSource::value GetOxygenSource() const;
-  virtual void SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::value name);
-  virtual bool HasOxygenSource() const;
-  virtual void InvalidateOxygenSource();
+  CDM::enumAnesthesiaMachineOxygenSource::value GetOxygenSource() const;
+  void SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::value name);
+  bool HasOxygenSource() const;
+  void InvalidateOxygenSource();
 
-  virtual bool HasPositiveEndExpiredPressure() const;
-  virtual SEScalarPressure& GetPositiveEndExpiredPressure();
-  virtual double GetPositiveEndExpiredPressure(const PressureUnit& unit) const;
+  bool HasPositiveEndExpiredPressure() const;
+  SEScalarPressure& GetPositiveEndExpiredPressure();
+  double GetPositiveEndExpiredPressure(const PressureUnit& unit) const;
 
-  virtual CDM::enumAnesthesiaMachinePrimaryGas::value GetPrimaryGas() const;
-  virtual void SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::value name);
-  virtual bool HasPrimaryGas() const;
-  virtual void InvalidatePrimaryGas();
+  CDM::enumAnesthesiaMachinePrimaryGas::value GetPrimaryGas() const;
+  void SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::value name);
+  bool HasPrimaryGas() const;
+  void InvalidatePrimaryGas();
 
-  virtual bool HasRespiratoryRate() const;
-  virtual SEScalarFrequency& GetRespiratoryRate();
-  virtual double GetRespiratoryRate(const FrequencyUnit& unit) const;
+  bool HasRespiratoryRate() const;
+  SEScalarFrequency& GetRespiratoryRate();
+  double GetRespiratoryRate(const FrequencyUnit& unit) const;
 
-  virtual bool HasReliefValvePressure() const;
-  virtual SEScalarPressure& GetReliefValvePressure();
-  virtual double GetReliefValvePressure(const PressureUnit& unit) const;
+  bool HasReliefValvePressure() const;
+  SEScalarPressure& GetReliefValvePressure();
+  double GetReliefValvePressure(const PressureUnit& unit) const;
 
-  virtual bool HasVentilatorPressure() const;
-  virtual SEScalarPressure& GetVentilatorPressure();
-  virtual double GetVentilatorPressure(const PressureUnit& unit) const;
+  bool HasVentilatorPressure() const;
+  SEScalarPressure& GetVentilatorPressure();
+  double GetVentilatorPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftChamber() const;
-  virtual SEAnesthesiaMachineChamber& GetLeftChamber();
-  virtual const SEAnesthesiaMachineChamber* GetLeftChamber() const;
-  virtual void RemoveLeftChamber();
+  bool HasLeftChamber() const;
+  SEAnesthesiaMachineChamber& GetLeftChamber();
+  const SEAnesthesiaMachineChamber* GetLeftChamber() const;
+  void RemoveLeftChamber();
 
-  virtual bool HasRightChamber() const;
-  virtual SEAnesthesiaMachineChamber& GetRightChamber();
-  virtual const SEAnesthesiaMachineChamber* GetRightChamber() const;
-  virtual void RemoveRightChamber();
+  bool HasRightChamber() const;
+  SEAnesthesiaMachineChamber& GetRightChamber();
+  const SEAnesthesiaMachineChamber* GetRightChamber() const;
+  void RemoveRightChamber();
 
-  virtual bool HasOxygenBottleOne() const;
-  virtual SEAnesthesiaMachineOxygenBottle& GetOxygenBottleOne();
-  virtual const SEAnesthesiaMachineOxygenBottle* GetOxygenBottleOne() const;
-  virtual void RemoveOxygenBottleOne();
+  bool HasOxygenBottleOne() const;
+  SEAnesthesiaMachineOxygenBottle& GetOxygenBottleOne();
+  const SEAnesthesiaMachineOxygenBottle* GetOxygenBottleOne() const;
+  void RemoveOxygenBottleOne();
 
-  virtual bool HasOxygenBottleTwo() const;
-  virtual SEAnesthesiaMachineOxygenBottle& GetOxygenBottleTwo();
-  virtual const SEAnesthesiaMachineOxygenBottle* GetOxygenBottleTwo() const;
-  virtual void RemoveOxygenBottleTwo();
+  bool HasOxygenBottleTwo() const;
+  SEAnesthesiaMachineOxygenBottle& GetOxygenBottleTwo();
+  const SEAnesthesiaMachineOxygenBottle* GetOxygenBottleTwo() const;
+  void RemoveOxygenBottleTwo();
 
 protected:
   std::stringstream m_ss;

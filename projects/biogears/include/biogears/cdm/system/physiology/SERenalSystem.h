@@ -42,234 +42,235 @@ class MassPerVolumeUnit;
 class BIOGEARS_API SERenalSystem : public SESystem {
 public:
   SERenalSystem(Logger* logger);
-  virtual ~SERenalSystem();
+  ~SERenalSystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::RenalSystemData& in);
-  virtual CDM::RenalSystemData* Unload() const;
+  bool Load(const CDM::RenalSystemData& in);
+  CDM::RenalSystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::RenalSystemData& data) const;
+  void Unload(CDM::RenalSystemData& data) const;
 
 public:
-  virtual bool HasGlomerularFiltrationRate() const;
-  virtual SEScalarVolumePerTime& GetGlomerularFiltrationRate();
-  virtual double GetGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
+  bool HasGlomerularFiltrationRate() const;
+  SEScalarVolumePerTime& GetGlomerularFiltrationRate();
+  double GetGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasFiltrationFraction() const;
-  virtual SEScalarFraction& GetFiltrationFraction();
-  virtual double GetFiltrationFraction() const;
+  bool HasFiltrationFraction() const;
+  SEScalarFraction& GetFiltrationFraction();
+  double GetFiltrationFraction() const;
 
-  virtual bool HasLeftAfferentArterioleResistance() const;
-  virtual SEScalarFlowResistance& GetLeftAfferentArterioleResistance();
-  virtual double GetLeftAfferentArterioleResistance(const FlowResistanceUnit& unit) const;
+  bool HasLeftAfferentArterioleResistance() const;
+  SEScalarFlowResistance& GetLeftAfferentArterioleResistance();
+  double GetLeftAfferentArterioleResistance(const FlowResistanceUnit& unit) const;
 
-  virtual bool HasLeftBowmansCapsulesHydrostaticPressure() const;
-  virtual SEScalarPressure& GetLeftBowmansCapsulesHydrostaticPressure();
-  virtual double GetLeftBowmansCapsulesHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasLeftBowmansCapsulesHydrostaticPressure() const;
+  SEScalarPressure& GetLeftBowmansCapsulesHydrostaticPressure();
+  double GetLeftBowmansCapsulesHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftBowmansCapsulesOsmoticPressure() const;
-  virtual SEScalarPressure& GetLeftBowmansCapsulesOsmoticPressure();
-  virtual double GetLeftBowmansCapsulesOsmoticPressure(const PressureUnit& unit) const;
+  bool HasLeftBowmansCapsulesOsmoticPressure() const;
+  SEScalarPressure& GetLeftBowmansCapsulesOsmoticPressure();
+  double GetLeftBowmansCapsulesOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftEfferentArterioleResistance() const;
-  virtual SEScalarFlowResistance& GetLeftEfferentArterioleResistance();
-  virtual double GetLeftEfferentArterioleResistance(const FlowResistanceUnit& unit) const;
+  bool HasLeftEfferentArterioleResistance() const;
+  SEScalarFlowResistance& GetLeftEfferentArterioleResistance();
+  double GetLeftEfferentArterioleResistance(const FlowResistanceUnit& unit) const;
 
-  virtual bool HasLeftGlomerularCapillariesHydrostaticPressure() const;
-  virtual SEScalarPressure& GetLeftGlomerularCapillariesHydrostaticPressure();
-  virtual double GetLeftGlomerularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasLeftGlomerularCapillariesHydrostaticPressure() const;
+  SEScalarPressure& GetLeftGlomerularCapillariesHydrostaticPressure();
+  double GetLeftGlomerularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftGlomerularCapillariesOsmoticPressure() const;
-  virtual SEScalarPressure& GetLeftGlomerularCapillariesOsmoticPressure();
-  virtual double GetLeftGlomerularCapillariesOsmoticPressure(const PressureUnit& unit) const;
+  bool HasLeftGlomerularCapillariesOsmoticPressure() const;
+  SEScalarPressure& GetLeftGlomerularCapillariesOsmoticPressure();
+  double GetLeftGlomerularCapillariesOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftGlomerularFiltrationCoefficient() const;
-  virtual SEScalarVolumePerTimePressure& GetLeftGlomerularFiltrationCoefficient();
-  virtual double GetLeftGlomerularFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
+  bool HasLeftGlomerularFiltrationCoefficient() const;
+  SEScalarVolumePerTimePressure& GetLeftGlomerularFiltrationCoefficient();
+  double GetLeftGlomerularFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
 
-  virtual bool HasLeftGlomerularFiltrationRate() const;
-  virtual SEScalarVolumePerTime& GetLeftGlomerularFiltrationRate();
-  virtual double GetLeftGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
+  bool HasLeftGlomerularFiltrationRate() const;
+  SEScalarVolumePerTime& GetLeftGlomerularFiltrationRate();
+  double GetLeftGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasLeftGlomerularFiltrationSurfaceArea() const;
-  virtual SEScalarArea& GetLeftGlomerularFiltrationSurfaceArea();
-  virtual double GetLeftGlomerularFiltrationSurfaceArea(const AreaUnit& unit) const;
+  bool HasLeftGlomerularFiltrationSurfaceArea() const;
+  SEScalarArea& GetLeftGlomerularFiltrationSurfaceArea();
+  double GetLeftGlomerularFiltrationSurfaceArea(const AreaUnit& unit) const;
 
-  virtual bool HasLeftGlomerularFluidPermeability() const;
-  virtual SEScalarVolumePerTimePressureArea& GetLeftGlomerularFluidPermeability();
-  virtual double GetLeftGlomerularFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
+  bool HasLeftGlomerularFluidPermeability() const;
+  SEScalarVolumePerTimePressureArea& GetLeftGlomerularFluidPermeability();
+  double GetLeftGlomerularFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
 
-  virtual bool HasLeftFiltrationFraction() const;
-  virtual SEScalarFraction& GetLeftFiltrationFraction();
-  virtual double GetLeftFiltrationFraction() const;
+  bool HasLeftFiltrationFraction() const;
+  SEScalarFraction& GetLeftFiltrationFraction();
+  double GetLeftFiltrationFraction() const;
 
-  virtual bool HasLeftNetFiltrationPressure() const;
-  virtual SEScalarPressure& GetLeftNetFiltrationPressure();
-  virtual double GetLeftNetFiltrationPressure(const PressureUnit& unit) const;
+  bool HasLeftNetFiltrationPressure() const;
+  SEScalarPressure& GetLeftNetFiltrationPressure();
+  double GetLeftNetFiltrationPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftNetReabsorptionPressure() const;
-  virtual SEScalarPressure& GetLeftNetReabsorptionPressure();
-  virtual double GetLeftNetReabsorptionPressure(const PressureUnit& unit) const;
+  bool HasLeftNetReabsorptionPressure() const;
+  SEScalarPressure& GetLeftNetReabsorptionPressure();
+  double GetLeftNetReabsorptionPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftPeritubularCapillariesHydrostaticPressure() const;
-  virtual SEScalarPressure& GetLeftPeritubularCapillariesHydrostaticPressure();
-  virtual double GetLeftPeritubularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasLeftPeritubularCapillariesHydrostaticPressure() const;
+  SEScalarPressure& GetLeftPeritubularCapillariesHydrostaticPressure();
+  double GetLeftPeritubularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftPeritubularCapillariesOsmoticPressure() const;
-  virtual SEScalarPressure& GetLeftPeritubularCapillariesOsmoticPressure();
-  virtual double GetLeftPeritubularCapillariesOsmoticPressure(const PressureUnit& unit) const;
+  bool HasLeftPeritubularCapillariesOsmoticPressure() const;
+  SEScalarPressure& GetLeftPeritubularCapillariesOsmoticPressure();
+  double GetLeftPeritubularCapillariesOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftReabsorptionFiltrationCoefficient() const;
-  virtual SEScalarVolumePerTimePressure& GetLeftReabsorptionFiltrationCoefficient();
-  virtual double GetLeftReabsorptionFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
+  bool HasLeftReabsorptionFiltrationCoefficient() const;
+  SEScalarVolumePerTimePressure& GetLeftReabsorptionFiltrationCoefficient();
+  double GetLeftReabsorptionFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
 
-  virtual bool HasLeftReabsorptionRate() const;
-  virtual SEScalarVolumePerTime& GetLeftReabsorptionRate();
-  virtual double GetLeftReabsorptionRate(const VolumePerTimeUnit& unit) const;
+  bool HasLeftReabsorptionRate() const;
+  SEScalarVolumePerTime& GetLeftReabsorptionRate();
+  double GetLeftReabsorptionRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasLeftTubularReabsorptionFiltrationSurfaceArea() const;
-  virtual SEScalarArea& GetLeftTubularReabsorptionFiltrationSurfaceArea();
-  virtual double GetLeftTubularReabsorptionFiltrationSurfaceArea(const AreaUnit& unit) const;
+  bool HasLeftTubularReabsorptionFiltrationSurfaceArea() const;
+  SEScalarArea& GetLeftTubularReabsorptionFiltrationSurfaceArea();
+  double GetLeftTubularReabsorptionFiltrationSurfaceArea(const AreaUnit& unit) const;
 
-  virtual bool HasLeftTubularReabsorptionFluidPermeability() const;
-  virtual SEScalarVolumePerTimePressureArea& GetLeftTubularReabsorptionFluidPermeability();
-  virtual double GetLeftTubularReabsorptionFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
+  bool HasLeftTubularReabsorptionFluidPermeability() const;
+  SEScalarVolumePerTimePressureArea& GetLeftTubularReabsorptionFluidPermeability();
+  double GetLeftTubularReabsorptionFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
 
-  virtual bool HasLeftTubularHydrostaticPressure() const;
-  virtual SEScalarPressure& GetLeftTubularHydrostaticPressure();
-  virtual double GetLeftTubularHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasLeftTubularHydrostaticPressure() const;
+  SEScalarPressure& GetLeftTubularHydrostaticPressure();
+  double GetLeftTubularHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasLeftTubularOsmoticPressure() const;
-  virtual SEScalarPressure& GetLeftTubularOsmoticPressure();
-  virtual double GetLeftTubularOsmoticPressure(const PressureUnit& unit) const;
+  bool HasLeftTubularOsmoticPressure() const;
+  SEScalarPressure& GetLeftTubularOsmoticPressure();
+  double GetLeftTubularOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRenalBloodFlow() const;
-  virtual SEScalarVolumePerTime& GetRenalBloodFlow();
-  virtual double GetRenalBloodFlow(const VolumePerTimeUnit& unit) const;
+  bool HasRenalBloodFlow() const;
+  SEScalarVolumePerTime& GetRenalBloodFlow();
+  double GetRenalBloodFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasRenalPlasmaFlow() const;
-  virtual SEScalarVolumePerTime& GetRenalPlasmaFlow();
-  virtual double GetRenalPlasmaFlow(const VolumePerTimeUnit& unit) const;
+  bool HasRenalPlasmaFlow() const;
+  SEScalarVolumePerTime& GetRenalPlasmaFlow();
+  double GetRenalPlasmaFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasRenalVascularResistance() const;
-  virtual SEScalarFlowResistance& GetRenalVascularResistance();
-  virtual double GetRenalVascularResistance(const FlowResistanceUnit& unit) const;
+  bool HasRenalVascularResistance() const;
+  SEScalarFlowResistance& GetRenalVascularResistance();
+  double GetRenalVascularResistance(const FlowResistanceUnit& unit) const;
 
-  virtual bool HasRightAfferentArterioleResistance() const;
-  virtual SEScalarFlowResistance& GetRightAfferentArterioleResistance();
-  virtual double GetRightAfferentArterioleResistance(const FlowResistanceUnit& unit) const;
+  bool HasRightAfferentArterioleResistance() const;
+  SEScalarFlowResistance& GetRightAfferentArterioleResistance();
+  double GetRightAfferentArterioleResistance(const FlowResistanceUnit& unit) const;
 
-  virtual bool HasRightBowmansCapsulesHydrostaticPressure() const;
-  virtual SEScalarPressure& GetRightBowmansCapsulesHydrostaticPressure();
-  virtual double GetRightBowmansCapsulesHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasRightBowmansCapsulesHydrostaticPressure() const;
+  SEScalarPressure& GetRightBowmansCapsulesHydrostaticPressure();
+  double GetRightBowmansCapsulesHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightBowmansCapsulesOsmoticPressure() const;
-  virtual SEScalarPressure& GetRightBowmansCapsulesOsmoticPressure();
-  virtual double GetRightBowmansCapsulesOsmoticPressure(const PressureUnit& unit) const;
+  bool HasRightBowmansCapsulesOsmoticPressure() const;
+  SEScalarPressure& GetRightBowmansCapsulesOsmoticPressure();
+  double GetRightBowmansCapsulesOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightEfferentArterioleResistance() const;
-  virtual SEScalarFlowResistance& GetRightEfferentArterioleResistance();
-  virtual double GetRightEfferentArterioleResistance(const FlowResistanceUnit& unit) const;
+  bool HasRightEfferentArterioleResistance() const;
+  SEScalarFlowResistance& GetRightEfferentArterioleResistance();
+  double GetRightEfferentArterioleResistance(const FlowResistanceUnit& unit) const;
 
-  virtual bool HasRightGlomerularCapillariesHydrostaticPressure() const;
-  virtual SEScalarPressure& GetRightGlomerularCapillariesHydrostaticPressure();
-  virtual double GetRightGlomerularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasRightGlomerularCapillariesHydrostaticPressure() const;
+  SEScalarPressure& GetRightGlomerularCapillariesHydrostaticPressure();
+  double GetRightGlomerularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightGlomerularCapillariesOsmoticPressure() const;
-  virtual SEScalarPressure& GetRightGlomerularCapillariesOsmoticPressure();
-  virtual double GetRightGlomerularCapillariesOsmoticPressure(const PressureUnit& unit) const;
+  bool HasRightGlomerularCapillariesOsmoticPressure() const;
+  SEScalarPressure& GetRightGlomerularCapillariesOsmoticPressure();
+  double GetRightGlomerularCapillariesOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightGlomerularFiltrationCoefficient() const;
-  virtual SEScalarVolumePerTimePressure& GetRightGlomerularFiltrationCoefficient();
-  virtual double GetRightGlomerularFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
+  bool HasRightGlomerularFiltrationCoefficient() const;
+  SEScalarVolumePerTimePressure& GetRightGlomerularFiltrationCoefficient();
+  double GetRightGlomerularFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
 
-  virtual bool HasRightGlomerularFiltrationRate() const;
-  virtual SEScalarVolumePerTime& GetRightGlomerularFiltrationRate();
-  virtual double GetRightGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
+  bool HasRightGlomerularFiltrationRate() const;
+  SEScalarVolumePerTime& GetRightGlomerularFiltrationRate();
+  double GetRightGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasRightGlomerularFiltrationSurfaceArea() const;
-  virtual SEScalarArea& GetRightGlomerularFiltrationSurfaceArea();
-  virtual double GetRightGlomerularFiltrationSurfaceArea(const AreaUnit& unit) const;
+  bool HasRightGlomerularFiltrationSurfaceArea() const;
+  SEScalarArea& GetRightGlomerularFiltrationSurfaceArea();
+  double GetRightGlomerularFiltrationSurfaceArea(const AreaUnit& unit) const;
 
-  virtual bool HasRightGlomerularFluidPermeability() const;
-  virtual SEScalarVolumePerTimePressureArea& GetRightGlomerularFluidPermeability();
-  virtual double GetRightGlomerularFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
+  bool HasRightGlomerularFluidPermeability() const;
+  SEScalarVolumePerTimePressureArea& GetRightGlomerularFluidPermeability();
+  double GetRightGlomerularFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
 
-  virtual bool HasRightFiltrationFraction() const;
-  virtual SEScalarFraction& GetRightFiltrationFraction();
-  virtual double GetRightFiltrationFraction() const;
+  bool HasRightFiltrationFraction() const;
+  SEScalarFraction& GetRightFiltrationFraction();
+  double GetRightFiltrationFraction() const;
 
-  virtual bool HasRightNetFiltrationPressure() const;
-  virtual SEScalarPressure& GetRightNetFiltrationPressure();
-  virtual double GetRightNetFiltrationPressure(const PressureUnit& unit) const;
+  bool HasRightNetFiltrationPressure() const;
+  SEScalarPressure& GetRightNetFiltrationPressure();
+  double GetRightNetFiltrationPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightNetReabsorptionPressure() const;
-  virtual SEScalarPressure& GetRightNetReabsorptionPressure();
-  virtual double GetRightNetReabsorptionPressure(const PressureUnit& unit) const;
+  bool HasRightNetReabsorptionPressure() const;
+  SEScalarPressure& GetRightNetReabsorptionPressure();
+  double GetRightNetReabsorptionPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightPeritubularCapillariesHydrostaticPressure() const;
-  virtual SEScalarPressure& GetRightPeritubularCapillariesHydrostaticPressure();
-  virtual double GetRightPeritubularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasRightPeritubularCapillariesHydrostaticPressure() const;
+  SEScalarPressure& GetRightPeritubularCapillariesHydrostaticPressure();
+  double GetRightPeritubularCapillariesHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightPeritubularCapillariesOsmoticPressure() const;
-  virtual SEScalarPressure& GetRightPeritubularCapillariesOsmoticPressure();
-  virtual double GetRightPeritubularCapillariesOsmoticPressure(const PressureUnit& unit) const;
+  bool HasRightPeritubularCapillariesOsmoticPressure() const;
+  SEScalarPressure& GetRightPeritubularCapillariesOsmoticPressure();
+  double GetRightPeritubularCapillariesOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightReabsorptionFiltrationCoefficient() const;
-  virtual SEScalarVolumePerTimePressure& GetRightReabsorptionFiltrationCoefficient();
-  virtual double GetRightReabsorptionFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
+  bool HasRightReabsorptionFiltrationCoefficient() const;
+  SEScalarVolumePerTimePressure& GetRightReabsorptionFiltrationCoefficient();
+  double GetRightReabsorptionFiltrationCoefficient(const VolumePerTimePressureUnit& unit) const;
 
-  virtual bool HasRightReabsorptionRate() const;
-  virtual SEScalarVolumePerTime& GetRightReabsorptionRate();
-  virtual double GetRightReabsorptionRate(const VolumePerTimeUnit& unit) const;
+  bool HasRightReabsorptionRate() const;
+  SEScalarVolumePerTime& GetRightReabsorptionRate();
+  double GetRightReabsorptionRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasRightTubularReabsorptionFiltrationSurfaceArea() const;
-  virtual SEScalarArea& GetRightTubularReabsorptionFiltrationSurfaceArea();
-  virtual double GetRightTubularReabsorptionFiltrationSurfaceArea(const AreaUnit& unit) const;
+  bool HasRightTubularReabsorptionFiltrationSurfaceArea() const;
+  SEScalarArea& GetRightTubularReabsorptionFiltrationSurfaceArea();
+  double GetRightTubularReabsorptionFiltrationSurfaceArea(const AreaUnit& unit) const;
 
-  virtual bool HasRightTubularReabsorptionFluidPermeability() const;
-  virtual SEScalarVolumePerTimePressureArea& GetRightTubularReabsorptionFluidPermeability();
-  virtual double GetRightTubularReabsorptionFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
+  bool HasRightTubularReabsorptionFluidPermeability() const;
+  SEScalarVolumePerTimePressureArea& GetRightTubularReabsorptionFluidPermeability();
+  double GetRightTubularReabsorptionFluidPermeability(const VolumePerTimePressureAreaUnit& unit) const;
 
-  virtual bool HasRightTubularHydrostaticPressure() const;
-  virtual SEScalarPressure& GetRightTubularHydrostaticPressure();
-  virtual double GetRightTubularHydrostaticPressure(const PressureUnit& unit) const;
+  bool HasRightTubularHydrostaticPressure() const;
+  SEScalarPressure& GetRightTubularHydrostaticPressure();
+  double GetRightTubularHydrostaticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRightTubularOsmoticPressure() const;
-  virtual SEScalarPressure& GetRightTubularOsmoticPressure();
-  virtual double GetRightTubularOsmoticPressure(const PressureUnit& unit) const;
+  bool HasRightTubularOsmoticPressure() const;
+  SEScalarPressure& GetRightTubularOsmoticPressure();
+  double GetRightTubularOsmoticPressure(const PressureUnit& unit) const;
 
-  virtual bool HasUrinationRate() const;
-  virtual SEScalarVolumePerTime& GetUrinationRate();
-  virtual double GetUrinationRate(const VolumePerTimeUnit& unit) const;
+  bool HasUrinationRate() const;
+  SEScalarVolumePerTime& GetUrinationRate();
+  double GetUrinationRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasUrineOsmolality() const;
-  virtual SEScalarOsmolality& GetUrineOsmolality();
-  virtual double GetUrineOsmolality(const OsmolalityUnit& unit) const;
+  bool HasUrineOsmolality() const;
+  SEScalarOsmolality& GetUrineOsmolality();
+  double GetUrineOsmolality(const OsmolalityUnit& unit) const;
 
-  virtual bool HasUrineOsmolarity() const;
-  virtual SEScalarOsmolarity& GetUrineOsmolarity();
-  virtual double GetUrineOsmolarity(const OsmolarityUnit& unit) const;
+  bool HasUrineOsmolarity() const;
+  SEScalarOsmolarity& GetUrineOsmolarity();
+  double GetUrineOsmolarity(const OsmolarityUnit& unit) const;
 
-  virtual bool HasUrineProductionRate() const;
-  virtual SEScalarVolumePerTime& GetUrineProductionRate();
-  virtual double GetUrineProductionRate(const VolumePerTimeUnit& unit) const;
+  bool HasUrineProductionRate() const;
+  SEScalarVolumePerTime& GetUrineProductionRate();
+  double GetUrineProductionRate(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasUrineSpecificGravity() const;
-  virtual SEScalar& GetUrineSpecificGravity();
-  virtual double GetUrineSpecificGravity() const;
+  bool HasUrineSpecificGravity() const;
+  SEScalar& GetUrineSpecificGravity();
+  double GetUrineSpecificGravity() const;
 
-  virtual bool HasUrineVolume() const;
-  virtual SEScalarVolume& GetUrineVolume();
-  virtual double GetUrineVolume(const VolumeUnit& unit) const;
+  bool HasUrineVolume() const;
+  SEScalarVolume& GetUrineVolume();
+  double GetUrineVolume(const VolumeUnit& unit) const;
 
-  virtual bool HasUrineUreaNitrogenConcentration() const;
-  virtual SEScalarMassPerVolume& GetUrineUreaNitrogenConcentration();
-  virtual double GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit& unit) const;
+  bool HasUrineUreaNitrogenConcentration() const;
+  SEScalarMassPerVolume& GetUrineUreaNitrogenConcentration();
+  double GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit& unit) const;
 
 protected:
   SEScalarVolumePerTime* m_GlomerularFiltrationRate;

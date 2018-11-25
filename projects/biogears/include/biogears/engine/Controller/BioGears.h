@@ -43,6 +43,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEPatientAssessment;
 class BioGearsScenarioExec;
+
 enum class EngineState { NotReady = 0,
   Initialization,
   InitialStabilization,
@@ -94,14 +95,21 @@ public:
   virtual ~BioGears();
 
   EngineState GetState();
+  const EngineState GetState() const;
 
   DataTrack& GetDataTrack();
   SaturationCalculator& GetSaturationCalculator();
+  const SaturationCalculator& GetSaturationCalculator() const;
 
   BioGearsSubstances& GetSubstances();
+  const BioGearsSubstances& GetSubstances() const ;
 
   SEPatient& GetPatient();
+  const SEPatient& GetPatient() const;
+
   OverrideConfig& GetOverride();
+  const OverrideConfig& GetOverride() const;
+
   bool GetPatientAssessment(SEPatientAssessment& assessment);
 
   SEBloodChemistrySystem& GetBloodChemistry();
@@ -115,37 +123,50 @@ public:
   SERenalSystem& GetRenal();
   SERespiratorySystem& GetRespiratory();
   SETissueSystem& GetTissue();
-
   SEEnvironment& GetEnvironment();
-
   SEAnesthesiaMachine& GetAnesthesiaMachine();
-
   SEElectroCardioGram& GetECG();
-
   SEInhaler& GetInhaler();
-
   SEActionManager& GetActions();
-
   SEConditionManager& GetConditions();
-
   BioGearsCircuits& GetCircuits();
-
   BioGearsCompartments& GetCompartments();
-
   const BioGearsConfiguration& GetConfiguration();
-
   const SEScalarTime& GetEngineTime();
   const SEScalarTime& GetSimulationTime();
   const SEScalarTime& GetTimeStep();
-
   CDM::enumBioGearsAirwayMode::value GetAirwayMode();
-  void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
-
   CDM::enumOnOff::value GetIntubation();
-  void SetIntubation(CDM::enumOnOff::value s);
+
+  const SEBloodChemistrySystem& GetBloodChemistry() const;
+  const SECardiovascularSystem& GetCardiovascular() const;
+  const SEDrugSystem& GetDrugs() const;
+  const SEEndocrineSystem& GetEndocrine() const;
+  const SEEnergySystem& GetEnergy() const;
+  const SEGastrointestinalSystem& GetGastrointestinal() const;
+  const SEHepaticSystem& GetHepatic() const;
+  const SENervousSystem& GetNervous() const;
+  const SERenalSystem& GetRenal() const;
+  const SERespiratorySystem& GetRespiratory() const;
+  const SETissueSystem& GetTissue() const;
+  const SEEnvironment& GetEnvironment() const;
+  const SEAnesthesiaMachine& GetAnesthesiaMachine() const;
+  const SEElectroCardioGram& GetECG() const;
+  const SEInhaler& GetInhaler() const;
+  const SEActionManager& GetActions() const;
+  const SEConditionManager& GetConditions() const;
+  const BioGearsCircuits& GetCircuits() const;
+  const BioGearsCompartments& GetCompartments() const;
+  const BioGearsConfiguration& GetConfiguration() const;
+  const SEScalarTime& GetEngineTime() const;
+  const SEScalarTime& GetSimulationTime() const;
+  const SEScalarTime& GetTimeStep() const;
+  const CDM::enumBioGearsAirwayMode::value GetAirwayMode() const;
+  const CDM::enumOnOff::value GetIntubation() const;
 
   bool CreateCircuitsAndCompartments();
-
+  void SetIntubation(CDM::enumOnOff::value s);
+  void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
 protected:
   void SetupCardiovascular();
   void SetupRenal();

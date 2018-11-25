@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SEGastrointestinalSystem::SEGastrointestinalSystem(Logger* logger)
@@ -23,11 +24,13 @@ SEGastrointestinalSystem::SEGastrointestinalSystem(Logger* logger)
   m_ChymeAbsorptionRate = nullptr;
   m_StomachContents = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SEGastrointestinalSystem::~SEGastrointestinalSystem()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEGastrointestinalSystem::Clear()
 {
@@ -35,6 +38,7 @@ void SEGastrointestinalSystem::Clear()
   SAFE_DELETE(m_ChymeAbsorptionRate);
   SAFE_DELETE(m_StomachContents);
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
 {
@@ -50,6 +54,7 @@ const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
   }
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SEGastrointestinalSystem::Load(const CDM::GastrointestinalSystemData& in)
 {
@@ -60,6 +65,7 @@ bool SEGastrointestinalSystem::Load(const CDM::GastrointestinalSystemData& in)
     GetStomachContents().Load(in.StomachContents().get());
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::GastrointestinalSystemData* SEGastrointestinalSystem::Unload() const
 {
@@ -67,6 +73,7 @@ CDM::GastrointestinalSystemData* SEGastrointestinalSystem::Unload() const
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SEGastrointestinalSystem::Unload(CDM::GastrointestinalSystemData& data) const
 {
@@ -76,40 +83,52 @@ void SEGastrointestinalSystem::Unload(CDM::GastrointestinalSystemData& data) con
   if (m_StomachContents != nullptr)
     data.StomachContents(std::unique_ptr<CDM::NutritionData>(m_StomachContents->Unload()));
 }
+//-------------------------------------------------------------------------------
 
 bool SEGastrointestinalSystem::HasChymeAbsorptionRate() const
 {
   return m_ChymeAbsorptionRate == nullptr ? false : m_ChymeAbsorptionRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SEGastrointestinalSystem::GetChymeAbsorptionRate()
 {
   if (m_ChymeAbsorptionRate == nullptr)
     m_ChymeAbsorptionRate = new SEScalarVolumePerTime();
   return *m_ChymeAbsorptionRate;
 }
+//-------------------------------------------------------------------------------
 double SEGastrointestinalSystem::GetChymeAbsorptionRate(const VolumePerTimeUnit& unit) const
 {
   if (m_ChymeAbsorptionRate == nullptr)
     return SEScalar::dNaN();
   return m_ChymeAbsorptionRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEGastrointestinalSystem::HasStomachContents() const
 {
   return m_StomachContents == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SENutrition& SEGastrointestinalSystem::GetStomachContents()
 {
   if (m_StomachContents == nullptr)
     m_StomachContents = new SENutrition(GetLogger());
   return *m_StomachContents;
 }
+//-------------------------------------------------------------------------------
 const SENutrition* SEGastrointestinalSystem::GetStomachContents() const
 {
   return m_StomachContents;
 }
+//-------------------------------------------------------------------------------
 void SEGastrointestinalSystem::RemoveStomachContents()
 {
   SAFE_DELETE(m_StomachContents);
+}
+//-------------------------------------------------------------------------------
+Tree<std::string> SEGastrointestinalSystem::GetPhysiologyRequestGraph() const
+{
+  return {};
 }
 }

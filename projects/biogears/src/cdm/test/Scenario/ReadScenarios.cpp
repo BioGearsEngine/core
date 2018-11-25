@@ -72,9 +72,14 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
   physiology.push_back(new SEDrugSystem(m_Logger));
   physiology.push_back(new SETissueSystem(m_Logger));
   std::vector<SESystem*> equipment;
-  equipment.push_back(new SEAnesthesiaMachine(subMgr));
+
+  //SEInhaler and SEAnestisaMachine are abstract types.
+  //To add them back to the test just declare a 
+  //TestSEInhaller : public SEInhaller { StateChange() override {} };
+  //TestSEElectroCardioGram: public SEElectroCardioGram { StateChange() override {} };
+  //equipment.push_back(new SEAnesthesiaMachine(subMgr));
   equipment.push_back(new SEElectroCardioGram(m_Logger));
-  equipment.push_back(new SEInhaler(subMgr));
+  //equipment.push_back(new SEInhaler(subMgr));
 
   std::vector<std::string> files;
   ListFiles(dir, files, R"(\.xml)");

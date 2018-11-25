@@ -35,139 +35,140 @@ class PressureTimePerVolumeAreaUnit;
 class BIOGEARS_API SECardiovascularSystem : public SESystem {
 public:
   SECardiovascularSystem(Logger* logger);
-  virtual ~SECardiovascularSystem();
+  ~SECardiovascularSystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; //! Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::CardiovascularSystemData& in);
-  virtual CDM::CardiovascularSystemData* Unload() const;
+  bool Load(const CDM::CardiovascularSystemData& in);
+  CDM::CardiovascularSystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::CardiovascularSystemData& data) const;
+  void Unload(CDM::CardiovascularSystemData& data) const;
 
 public:
-  virtual bool HasArterialPressure() const;
-  virtual SEScalarPressure& GetArterialPressure();
-  virtual double GetArterialPressure(const PressureUnit& unit) const;
+  bool HasArterialPressure() const;
+  SEScalarPressure& GetArterialPressure();
+  double GetArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasBloodVolume() const;
-  virtual SEScalarVolume& GetBloodVolume();
-  virtual double GetBloodVolume(const VolumeUnit& unit) const;
+  bool HasBloodVolume() const;
+  SEScalarVolume& GetBloodVolume();
+  double GetBloodVolume(const VolumeUnit& unit) const;
 
-  virtual bool HasCardiacIndex() const;
-  virtual SEScalarVolumePerTimeArea& GetCardiacIndex();
-  virtual double GetCardiacIndex(const VolumePerTimeAreaUnit& unit) const;
+  bool HasCardiacIndex() const;
+  SEScalarVolumePerTimeArea& GetCardiacIndex();
+  double GetCardiacIndex(const VolumePerTimeAreaUnit& unit) const;
 
-  virtual bool HasCardiacOutput() const;
-  virtual SEScalarVolumePerTime& GetCardiacOutput();
-  virtual double GetCardiacOutput(const VolumePerTimeUnit& unit) const;
+  bool HasCardiacOutput() const;
+  SEScalarVolumePerTime& GetCardiacOutput();
+  double GetCardiacOutput(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasCentralVenousPressure() const;
-  virtual SEScalarPressure& GetCentralVenousPressure();
-  virtual double GetCentralVenousPressure(const PressureUnit& unit) const;
+  bool HasCentralVenousPressure() const;
+  SEScalarPressure& GetCentralVenousPressure();
+  double GetCentralVenousPressure(const PressureUnit& unit) const;
 
-  virtual bool HasCerebralBloodFlow() const;
-  virtual SEScalarVolumePerTime& GetCerebralBloodFlow();
-  virtual double GetCerebralBloodFlow(const VolumePerTimeUnit& unit) const;
+  bool HasCerebralBloodFlow() const;
+  SEScalarVolumePerTime& GetCerebralBloodFlow();
+  double GetCerebralBloodFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasCerebralPerfusionPressure() const;
-  virtual SEScalarPressure& GetCerebralPerfusionPressure();
-  virtual double GetCerebralPerfusionPressure(const PressureUnit& unit) const;
+  bool HasCerebralPerfusionPressure() const;
+  SEScalarPressure& GetCerebralPerfusionPressure();
+  double GetCerebralPerfusionPressure(const PressureUnit& unit) const;
 
-  virtual bool HasDiastolicArterialPressure() const;
-  virtual SEScalarPressure& GetDiastolicArterialPressure();
-  virtual double GetDiastolicArterialPressure(const PressureUnit& unit) const;
+  bool HasDiastolicArterialPressure() const;
+  SEScalarPressure& GetDiastolicArterialPressure();
+  double GetDiastolicArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasHeartEjectionFraction() const;
-  virtual SEScalarFraction& GetHeartEjectionFraction();
-  virtual double GetHeartEjectionFraction() const;
+  bool HasHeartEjectionFraction() const;
+  SEScalarFraction& GetHeartEjectionFraction();
+  double GetHeartEjectionFraction() const;
 
-  virtual bool HasHeartRate() const;
-  virtual SEScalarFrequency& GetHeartRate();
-  virtual double GetHeartRate(const FrequencyUnit& unit) const;
+  bool HasHeartRate() const;
+  SEScalarFrequency& GetHeartRate();
+  double GetHeartRate(const FrequencyUnit& unit) const;
 
-  virtual CDM::enumHeartRhythm::value GetHeartRhythm() const;
-  virtual void SetHeartRhythm(CDM::enumHeartRhythm::value Rhythm);
-  virtual bool HasHeartRhythm() const;
-  virtual void InvalidateHeartRhythm();
+  CDM::enumHeartRhythm::value GetHeartRhythm() const;
+  void SetHeartRhythm(CDM::enumHeartRhythm::value Rhythm);
+  bool HasHeartRhythm() const;
+  void InvalidateHeartRhythm();
 
-  virtual bool HasHeartStrokeVolume() const;
-  virtual SEScalarVolume& GetHeartStrokeVolume();
-  virtual double GetHeartStrokeVolume(const VolumeUnit& unit) const;
+  bool HasHeartStrokeVolume() const;
+  SEScalarVolume& GetHeartStrokeVolume();
+  double GetHeartStrokeVolume(const VolumeUnit& unit) const;
 
-  virtual bool HasIntracranialPressure() const;
-  virtual SEScalarPressure& GetIntracranialPressure();
-  virtual double GetIntracranialPressure(const PressureUnit& unit) const;
+  bool HasIntracranialPressure() const;
+  SEScalarPressure& GetIntracranialPressure();
+  double GetIntracranialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasMeanArterialPressure() const;
-  virtual SEScalarPressure& GetMeanArterialPressure();
-  virtual double GetMeanArterialPressure(const PressureUnit& unit) const;
+  bool HasMeanArterialPressure() const;
+  SEScalarPressure& GetMeanArterialPressure();
+  double GetMeanArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasMeanArterialCarbonDioxidePartialPressure() const;
-  virtual SEScalarPressure& GetMeanArterialCarbonDioxidePartialPressure();
-  virtual double GetMeanArterialCarbonDioxidePartialPressure(const PressureUnit& unit) const;
+  bool HasMeanArterialCarbonDioxidePartialPressure() const;
+  SEScalarPressure& GetMeanArterialCarbonDioxidePartialPressure();
+  double GetMeanArterialCarbonDioxidePartialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasMeanArterialCarbonDioxidePartialPressureDelta() const;
-  virtual SEScalarPressure& GetMeanArterialCarbonDioxidePartialPressureDelta();
-  virtual double GetMeanArterialCarbonDioxidePartialPressureDelta(const PressureUnit& unit) const;
+  bool HasMeanArterialCarbonDioxidePartialPressureDelta() const;
+  SEScalarPressure& GetMeanArterialCarbonDioxidePartialPressureDelta();
+  double GetMeanArterialCarbonDioxidePartialPressureDelta(const PressureUnit& unit) const;
 
-  virtual bool HasMeanCentralVenousPressure() const;
-  virtual SEScalarPressure& GetMeanCentralVenousPressure();
-  virtual double GetMeanCentralVenousPressure(const PressureUnit& unit) const;
+  bool HasMeanCentralVenousPressure() const;
+  SEScalarPressure& GetMeanCentralVenousPressure();
+  double GetMeanCentralVenousPressure(const PressureUnit& unit) const;
 
-  virtual bool HasMeanSkinFlow() const;
-  virtual SEScalarVolumePerTime& GetMeanSkinFlow();
-  virtual double GetMeanSkinFlow(const VolumePerTimeUnit& unit) const;
+  bool HasMeanSkinFlow() const;
+  SEScalarVolumePerTime& GetMeanSkinFlow();
+  double GetMeanSkinFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasPulmonaryArterialPressure() const;
-  virtual SEScalarPressure& GetPulmonaryArterialPressure();
-  virtual double GetPulmonaryArterialPressure(const PressureUnit& unit) const;
+  bool HasPulmonaryArterialPressure() const;
+  SEScalarPressure& GetPulmonaryArterialPressure();
+  double GetPulmonaryArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasPulmonaryCapillariesWedgePressure() const;
-  virtual SEScalarPressure& GetPulmonaryCapillariesWedgePressure();
-  virtual double GetPulmonaryCapillariesWedgePressure(const PressureUnit& unit) const;
+  bool HasPulmonaryCapillariesWedgePressure() const;
+  SEScalarPressure& GetPulmonaryCapillariesWedgePressure();
+  double GetPulmonaryCapillariesWedgePressure(const PressureUnit& unit) const;
 
-  virtual bool HasPulmonaryDiastolicArterialPressure() const;
-  virtual SEScalarPressure& GetPulmonaryDiastolicArterialPressure();
-  virtual double GetPulmonaryDiastolicArterialPressure(const PressureUnit& unit) const;
+  bool HasPulmonaryDiastolicArterialPressure() const;
+  SEScalarPressure& GetPulmonaryDiastolicArterialPressure();
+  double GetPulmonaryDiastolicArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasPulmonaryMeanArterialPressure() const;
-  virtual SEScalarPressure& GetPulmonaryMeanArterialPressure();
-  virtual double GetPulmonaryMeanArterialPressure(const PressureUnit& unit) const;
+  bool HasPulmonaryMeanArterialPressure() const;
+  SEScalarPressure& GetPulmonaryMeanArterialPressure();
+  double GetPulmonaryMeanArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasPulmonaryMeanCapillaryFlow() const;
-  virtual SEScalarVolumePerTime& GetPulmonaryMeanCapillaryFlow();
-  virtual double GetPulmonaryMeanCapillaryFlow(const VolumePerTimeUnit& unit) const;
+  bool HasPulmonaryMeanCapillaryFlow() const;
+  SEScalarVolumePerTime& GetPulmonaryMeanCapillaryFlow();
+  double GetPulmonaryMeanCapillaryFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasPulmonaryMeanShuntFlow() const;
-  virtual SEScalarVolumePerTime& GetPulmonaryMeanShuntFlow();
-  virtual double GetPulmonaryMeanShuntFlow(const VolumePerTimeUnit& unit) const;
+  bool HasPulmonaryMeanShuntFlow() const;
+  SEScalarVolumePerTime& GetPulmonaryMeanShuntFlow();
+  double GetPulmonaryMeanShuntFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasPulmonarySystolicArterialPressure() const;
-  virtual SEScalarPressure& GetPulmonarySystolicArterialPressure();
-  virtual double GetPulmonarySystolicArterialPressure(const PressureUnit& unit) const;
+  bool HasPulmonarySystolicArterialPressure() const;
+  SEScalarPressure& GetPulmonarySystolicArterialPressure();
+  double GetPulmonarySystolicArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasPulmonaryVascularResistance() const;
-  virtual SEScalarFlowResistance& GetPulmonaryVascularResistance();
-  virtual double GetPulmonaryVascularResistance(const FlowResistanceUnit& unit) const;
+  bool HasPulmonaryVascularResistance() const;
+  SEScalarFlowResistance& GetPulmonaryVascularResistance();
+  double GetPulmonaryVascularResistance(const FlowResistanceUnit& unit) const;
 
-  virtual bool HasPulmonaryVascularResistanceIndex() const;
-  virtual SEScalarPressureTimePerVolumeArea& GetPulmonaryVascularResistanceIndex();
-  virtual double GetPulmonaryVascularResistanceIndex(const PressureTimePerVolumeAreaUnit& unit) const;
+  bool HasPulmonaryVascularResistanceIndex() const;
+  SEScalarPressureTimePerVolumeArea& GetPulmonaryVascularResistanceIndex();
+  double GetPulmonaryVascularResistanceIndex(const PressureTimePerVolumeAreaUnit& unit) const;
 
-  virtual bool HasPulsePressure() const;
-  virtual SEScalarPressure& GetPulsePressure();
-  virtual double GetPulsePressure(const PressureUnit& unit) const;
+  bool HasPulsePressure() const;
+  SEScalarPressure& GetPulsePressure();
+  double GetPulsePressure(const PressureUnit& unit) const;
 
-  virtual bool HasSystolicArterialPressure() const;
-  virtual SEScalarPressure& GetSystolicArterialPressure();
-  virtual double GetSystolicArterialPressure(const PressureUnit& unit) const;
+  bool HasSystolicArterialPressure() const;
+  SEScalarPressure& GetSystolicArterialPressure();
+  double GetSystolicArterialPressure(const PressureUnit& unit) const;
 
-  virtual bool HasSystemicVascularResistance() const;
-  virtual SEScalarFlowResistance& GetSystemicVascularResistance();
-  virtual double GetSystemicVascularResistance(const FlowResistanceUnit& unit) const;
+  bool HasSystemicVascularResistance() const;
+  SEScalarFlowResistance& GetSystemicVascularResistance();
+  double GetSystemicVascularResistance(const FlowResistanceUnit& unit) const;
 
 protected:
   SEScalarPressure* m_ArterialPressure;

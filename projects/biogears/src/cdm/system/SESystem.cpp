@@ -17,26 +17,26 @@ SESystem::SESystem(Logger* logger)
   : Loggable(logger)
 {
 }
-
+//-------------------------------------------------------------------------------
 SESystem::~SESystem()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESystem::Clear()
 {
 }
-
+//-------------------------------------------------------------------------------
 bool SESystem::Load(const CDM::SystemData& in)
 {
   Clear();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void SESystem::Unload(CDM::SystemData& data) const
 {
 }
-
+//-------------------------------------------------------------------------------
 const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESystem*>* systems)
 {
   const SEScalar* s;

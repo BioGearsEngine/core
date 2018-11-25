@@ -32,8 +32,8 @@ namespace biogears {
 
 DEFINE_STATIC_STRING_EX(Version, BioGears_6 .1.1_beta);
 
-class Graph {
-public:
+namespace Graph {
+
 DEFINE_STATIC_STRING(ActiveCardiovascular);
 DEFINE_STATIC_STRING(Cardiovascular);
 DEFINE_STATIC_STRING(Renal);
@@ -47,6 +47,7 @@ DEFINE_STATIC_STRING(AnesthesiaMachine);
 
   static const std::vector<std::string>& GetValues()
   {
+    static std::vector<std::string> _values;
 	  ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(ActiveCardiovascular);
@@ -63,16 +64,17 @@ DEFINE_STATIC_STRING(AnesthesiaMachine);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class ChymeCompartment {
-public:
+namespace ChymeCompartment {
+
 DEFINE_STATIC_STRING_EX(SmallIntestine, SmallIntestineChyme);
 
   static const std::vector<std::string>& GetValues()
   {
+    static std::vector<std::string> _values;
     ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(SmallIntestine);
@@ -80,51 +82,50 @@ DEFINE_STATIC_STRING_EX(SmallIntestine, SmallIntestineChyme);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class ChymeLink {
-public:
-DEFINE_STATIC_STRING(SmallIntestineChymeToVasculature);
+namespace ChymeLink {
 
+  DEFINE_STATIC_STRING(SmallIntestineChymeToVasculature);
   static const std::vector<std::string>& GetValues()
   {
+    
+    static std::vector<std::string> _values;
     ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(SmallIntestineChymeToVasculature);
     }
     return _values;
   }
-
-protected:
-  static std::vector<std::string> _values;
 };
 
-class PulmonaryCompartment {
-public:
-DEFINE_STATIC_STRING(Mouth);
-DEFINE_STATIC_STRING(Stomach);
-DEFINE_STATIC_STRING(Carina);
-DEFINE_STATIC_STRING_EX(Lungs, PulmonaryLungs);
-DEFINE_STATIC_STRING_EX(LeftLung, LeftLungPulmonary);
-DEFINE_STATIC_STRING(LeftDeadSpace);
-DEFINE_STATIC_STRING(LeftAlveoli);
-DEFINE_STATIC_STRING_EX(RightLung, RightLungPulmonary);
-DEFINE_STATIC_STRING(RightDeadSpace);
-DEFINE_STATIC_STRING(RightAlveoli);
-DEFINE_STATIC_STRING(PleuralCavity);
-DEFINE_STATIC_STRING(LeftPleuralCavity);
-DEFINE_STATIC_STRING(RightPleuralCavity);
+namespace PulmonaryCompartment {
+  DEFINE_STATIC_STRING(Mouth);
+  DEFINE_STATIC_STRING(Stomach);
+  DEFINE_STATIC_STRING(Carina);
+  DEFINE_STATIC_STRING_EX(Lungs, PulmonaryLungs);
+  DEFINE_STATIC_STRING_EX(LeftLung, LeftLungPulmonary);
+  DEFINE_STATIC_STRING(LeftDeadSpace);
+  DEFINE_STATIC_STRING(LeftAlveoli);
+  DEFINE_STATIC_STRING_EX(RightLung, RightLungPulmonary);
+  DEFINE_STATIC_STRING(RightDeadSpace);
+  DEFINE_STATIC_STRING(RightAlveoli);
+  DEFINE_STATIC_STRING(PleuralCavity);
+  DEFINE_STATIC_STRING(LeftPleuralCavity);
+  DEFINE_STATIC_STRING(RightPleuralCavity);
 
-DEFINE_STATIC_STRING(LeftAlveoliLeak);
-DEFINE_STATIC_STRING(LeftChestLeak);
-DEFINE_STATIC_STRING(RightAlveoliLeak);
-DEFINE_STATIC_STRING(RightChestLeak);
+  DEFINE_STATIC_STRING(LeftAlveoliLeak);
+  DEFINE_STATIC_STRING(LeftChestLeak);
+  DEFINE_STATIC_STRING(RightAlveoliLeak);
+  DEFINE_STATIC_STRING(RightChestLeak);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Mouth);
       _values.push_back(Stomach);
@@ -146,34 +147,33 @@ DEFINE_STATIC_STRING(RightChestLeak);
     }
     return _values;
   }
-
-protected:
-  static std::vector<std::string> _values;
 };
 
-class PulmonaryLink {
-public:
-DEFINE_STATIC_STRING(EnvironmentToMouth);
-DEFINE_STATIC_STRING(MouthToCarina);
-DEFINE_STATIC_STRING(MouthToStomach);
-DEFINE_STATIC_STRING(CarinaToLeftDeadSpace);
-DEFINE_STATIC_STRING(LeftDeadSpaceToAlveoli);
-DEFINE_STATIC_STRING(CarinaToRightDeadSpace);
-DEFINE_STATIC_STRING(RightDeadSpaceToAlveoli);
-DEFINE_STATIC_STRING(EnvironmentToLeftChestLeak);
-DEFINE_STATIC_STRING(EnvironmentToRightChestLeak);
-DEFINE_STATIC_STRING(LeftAlveoliLeakToLeftPleural);
-DEFINE_STATIC_STRING(LeftAlveoliToLeftAlveoliLeak);
-DEFINE_STATIC_STRING(LeftChestLeakToLeftPleural);
-DEFINE_STATIC_STRING(LeftPleuralToEnvironment);
-DEFINE_STATIC_STRING(RightAlveoliLeakToRightPleural);
-DEFINE_STATIC_STRING(RightAlveoliToRightAlveoliLeak);
-DEFINE_STATIC_STRING(RightChestLeakToRightPleural);
-DEFINE_STATIC_STRING(RightPleuralToEnvironment);
+namespace PulmonaryLink {
+
+  DEFINE_STATIC_STRING(EnvironmentToMouth);
+  DEFINE_STATIC_STRING(MouthToCarina);
+  DEFINE_STATIC_STRING(MouthToStomach);
+  DEFINE_STATIC_STRING(CarinaToLeftDeadSpace);
+  DEFINE_STATIC_STRING(LeftDeadSpaceToAlveoli);
+  DEFINE_STATIC_STRING(CarinaToRightDeadSpace);
+  DEFINE_STATIC_STRING(RightDeadSpaceToAlveoli);
+  DEFINE_STATIC_STRING(EnvironmentToLeftChestLeak);
+  DEFINE_STATIC_STRING(EnvironmentToRightChestLeak);
+  DEFINE_STATIC_STRING(LeftAlveoliLeakToLeftPleural);
+  DEFINE_STATIC_STRING(LeftAlveoliToLeftAlveoliLeak);
+  DEFINE_STATIC_STRING(LeftChestLeakToLeftPleural);
+  DEFINE_STATIC_STRING(LeftPleuralToEnvironment);
+  DEFINE_STATIC_STRING(RightAlveoliLeakToRightPleural);
+  DEFINE_STATIC_STRING(RightAlveoliToRightAlveoliLeak);
+  DEFINE_STATIC_STRING(RightChestLeakToRightPleural);
+  DEFINE_STATIC_STRING(RightPleuralToEnvironment);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(EnvironmentToMouth);
       _values.push_back(MouthToCarina);
@@ -196,12 +196,10 @@ DEFINE_STATIC_STRING(RightPleuralToEnvironment);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
 };
 
-class TissueCompartment {
-public:
+namespace TissueCompartment {
+
 DEFINE_STATIC_STRING_EX(Bone, BoneTissue);
 DEFINE_STATIC_STRING_EX(Brain, BrainTissue);
 DEFINE_STATIC_STRING_EX(Fat, FatTissue);
@@ -218,7 +216,8 @@ DEFINE_STATIC_STRING_EX(Spleen, SpleenTissue);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Bone);
       _values.push_back(Brain);
@@ -237,12 +236,12 @@ DEFINE_STATIC_STRING_EX(Spleen, SpleenTissue);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class ExtravascularCompartment {
-public:
+namespace ExtravascularCompartment {
+
 DEFINE_STATIC_STRING_EX(BoneExtracellular, BoneTissueExtracellular);
 DEFINE_STATIC_STRING_EX(BrainExtracellular, BrainTissueExtracellular);
 DEFINE_STATIC_STRING_EX(FatExtracellular, FatTissueExtracellular);
@@ -273,7 +272,8 @@ DEFINE_STATIC_STRING_EX(SpleenIntracellular, SpleenTissueIntracellular);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(BoneExtracellular);
       _values.push_back(BrainExtracellular);
@@ -306,12 +306,12 @@ DEFINE_STATIC_STRING_EX(SpleenIntracellular, SpleenTissueIntracellular);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class VascularCompartment {
-public:
+namespace VascularCompartment {
+
 // Cardio
 DEFINE_STATIC_STRING(Aorta);
 DEFINE_STATIC_STRING(Heart);
@@ -376,7 +376,8 @@ DEFINE_STATIC_STRING(Ground);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Aorta);
       _values.push_back(Heart);
@@ -438,12 +439,12 @@ DEFINE_STATIC_STRING(Ground);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class VascularLink {
-public:
+namespace VascularLink {
+
 // Heart and Lungs
 DEFINE_STATIC_STRING(VenaCavaToRightHeart);
 DEFINE_STATIC_STRING(RightHeartToLeftPulmonaryArteries);
@@ -571,7 +572,8 @@ DEFINE_STATIC_STRING(RightPeritubularCapillariesToRenalVein);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(VenaCavaToRightHeart);
       _values.push_back(RightHeartToLeftPulmonaryArteries);
@@ -656,12 +658,12 @@ DEFINE_STATIC_STRING(RightPeritubularCapillariesToRenalVein);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class UrineCompartment {
-public:
+namespace UrineCompartment {
+
 DEFINE_STATIC_STRING(Ureters);
 DEFINE_STATIC_STRING(LeftUreter);
 DEFINE_STATIC_STRING(RightUreter);
@@ -669,7 +671,8 @@ DEFINE_STATIC_STRING(Bladder);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Ureters);
       _values.push_back(LeftUreter);
@@ -679,12 +682,12 @@ DEFINE_STATIC_STRING(Bladder);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class UrineLink {
-public:
+namespace UrineLink {
+
 DEFINE_STATIC_STRING(LeftTubulesToUreter);
 DEFINE_STATIC_STRING(LeftUreterToBladder);
 
@@ -696,7 +699,8 @@ DEFINE_STATIC_STRING(BladderToGroundSource);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(LeftTubulesToUreter);
       _values.push_back(LeftUreterToBladder);
@@ -708,29 +712,30 @@ DEFINE_STATIC_STRING(BladderToGroundSource);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class LymphCompartment {
-public:
+namespace LymphCompartment {
+
 DEFINE_STATIC_STRING(Lymph);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Lymph);
     }
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class LymphLink {
-public:
+namespace LymphLink {
+
 DEFINE_STATIC_STRING(BoneTissueToLymph);
 DEFINE_STATIC_STRING(BrainTissueToLymph);
 DEFINE_STATIC_STRING(FatTissueToLymph);
@@ -749,7 +754,8 @@ DEFINE_STATIC_STRING(LymphToVenaCava);
 
 static const std::vector<std::string>& GetValues()
 {
-	::biogears::ScopedFileSystemLock lock;
+  static std::vector<std::string> _values;
+  ::biogears::ScopedFileSystemLock lock;
   if (_values.empty()) {
     _values.push_back(BoneTissueToLymph);
     _values.push_back(BrainTissueToLymph);
@@ -769,12 +775,12 @@ static const std::vector<std::string>& GetValues()
   return _values;
 }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class TemperatureCompartment {
-public:
+namespace TemperatureCompartment {
+
 DEFINE_STATIC_STRING(Active);
 DEFINE_STATIC_STRING(Ambient);
 DEFINE_STATIC_STRING(Clothing);
@@ -788,7 +794,8 @@ DEFINE_STATIC_STRING(InternalGround);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Active);
       _values.push_back(Ambient);
@@ -804,12 +811,12 @@ DEFINE_STATIC_STRING(InternalGround);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class TemperatureLink {
-public:
+namespace TemperatureLink {
+
 DEFINE_STATIC_STRING(ActiveToClothing);
 DEFINE_STATIC_STRING(ClothingToEnclosure);
 DEFINE_STATIC_STRING(ClothingToEnvironment);
@@ -829,7 +836,8 @@ DEFINE_STATIC_STRING(InternalSkinToExternalSkin);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(ActiveToClothing);
       _values.push_back(ClothingToEnclosure);
@@ -851,29 +859,30 @@ DEFINE_STATIC_STRING(InternalSkinToExternalSkin);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class EnvironmentCompartment {
-public:
+namespace EnvironmentCompartment {
+
 DEFINE_STATIC_STRING(Ambient);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Ambient);
     }
     return _values;
     }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class AnesthesiaMachineCompartment {
-public:
+namespace AnesthesiaMachineCompartment {
+
 DEFINE_STATIC_STRING(AnesthesiaConnection);
 DEFINE_STATIC_STRING(ExpiratoryLimb);
 DEFINE_STATIC_STRING(GasInlet);
@@ -888,7 +897,8 @@ DEFINE_STATIC_STRING(YPiece);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(AnesthesiaConnection);
       _values.push_back(ExpiratoryLimb);
@@ -905,12 +915,12 @@ DEFINE_STATIC_STRING(YPiece);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class AnesthesiaMachineLink {
-public:
+namespace AnesthesiaMachineLink {
+
 DEFINE_STATIC_STRING(VentilatorToSelector);
 DEFINE_STATIC_STRING(SelectorToReliefValve);
 DEFINE_STATIC_STRING(SelectorToScrubber);
@@ -927,7 +937,8 @@ DEFINE_STATIC_STRING(Mask);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(VentilatorToSelector);
       _values.push_back(SelectorToReliefValve);
@@ -946,35 +957,37 @@ DEFINE_STATIC_STRING(Mask);
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class InhalerCompartment {
-public:
+namespace InhalerCompartment {
+
 DEFINE_STATIC_STRING(Mouthpiece);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Mouthpiece);
     }
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class InhalerLink {
-public:
+namespace InhalerLink {
+
 DEFINE_STATIC_STRING(EnvironmentToMouthpiece);
 DEFINE_STATIC_STRING(MouthpieceToMouth);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(EnvironmentToMouthpiece);
       _values.push_back(MouthpieceToMouth);
@@ -982,42 +995,44 @@ DEFINE_STATIC_STRING(MouthpieceToMouth);
     return _values;
   }
 
-protected:
-static std::vector<std::string> _values;
+
+
 };
 
-class MechanicalVentilatorCompartment {
-public:
+namespace MechanicalVentilatorCompartment {
+
 DEFINE_STATIC_STRING(Connection);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(Connection);
     }
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
-class MechanicalVentilatorLink {
-public:
+namespace MechanicalVentilatorLink {
+
 DEFINE_STATIC_STRING(ConnectionToMouth);
 
   static const std::vector<std::string>& GetValues()
   {
-	  ::biogears::ScopedFileSystemLock lock;
+    static std::vector<std::string> _values;
+    ::biogears::ScopedFileSystemLock lock;
     if (_values.empty()) {
       _values.push_back(ConnectionToMouth);
     }
     return _values;
   }
 
-protected:
-  static std::vector<std::string> _values;
+
+  
 };
 
 } //namespace biogears

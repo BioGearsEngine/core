@@ -23,26 +23,27 @@ class MassPerTimeUnit;
 class BIOGEARS_API SEHepaticSystem : public SESystem {
 public:
   SEHepaticSystem(Logger* logger);
-  virtual ~SEHepaticSystem();
+  ~SEHepaticSystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::HepaticSystemData& in);
-  virtual CDM::HepaticSystemData* Unload() const;
+  bool Load(const CDM::HepaticSystemData& in);
+  CDM::HepaticSystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::HepaticSystemData& data) const;
+  void Unload(CDM::HepaticSystemData& data) const;
 
 public:
-  virtual bool HasKetoneProductionRate() const;
-  virtual SEScalarAmountPerTime& GetKetoneProductionRate();
-  virtual double GetKetoneProductionRate(const AmountPerTimeUnit& unit) const;
+  bool HasKetoneProductionRate() const;
+  SEScalarAmountPerTime& GetKetoneProductionRate();
+  double GetKetoneProductionRate(const AmountPerTimeUnit& unit) const;
 
-  virtual bool HasHepaticGluconeogenesisRate() const;
-  virtual SEScalarMassPerTime& GetHepaticGluconeogenesisRate();
-  virtual double GetHepaticGluconeogenesisRate(const MassPerTimeUnit& unit) const;
+  bool HasHepaticGluconeogenesisRate() const;
+  SEScalarMassPerTime& GetHepaticGluconeogenesisRate();
+  double GetHepaticGluconeogenesisRate(const MassPerTimeUnit& unit) const;
 
 protected:
   SEScalarAmountPerTime* m_KetoneProductionRate;

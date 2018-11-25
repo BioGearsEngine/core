@@ -30,63 +30,64 @@ class VolumeUnit;
 class BIOGEARS_API SEDrugSystem : public SESystem {
 public:
   SEDrugSystem(Logger* logger);
-  virtual ~SEDrugSystem();
+  ~SEDrugSystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::DrugSystemData& in);
-  virtual CDM::DrugSystemData* Unload() const;
+  bool Load(const CDM::DrugSystemData& in);
+  CDM::DrugSystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::DrugSystemData& data) const;
+  void Unload(CDM::DrugSystemData& data) const;
 
 public:
-  virtual bool HasBronchodilationLevel() const;
-  virtual SEScalarFraction& GetBronchodilationLevel();
-  virtual double GetBronchodilationLevel() const;
+  bool HasBronchodilationLevel() const;
+  SEScalarFraction& GetBronchodilationLevel();
+  double GetBronchodilationLevel() const;
 
-  virtual bool HasHeartRateChange() const;
-  virtual SEScalarFrequency& GetHeartRateChange();
-  virtual double GetHeartRateChange(const FrequencyUnit& unit) const;
+  bool HasHeartRateChange() const;
+  SEScalarFrequency& GetHeartRateChange();
+  double GetHeartRateChange(const FrequencyUnit& unit) const;
 
-  virtual bool HasMeanBloodPressureChange() const;
-  virtual SEScalarPressure& GetMeanBloodPressureChange();
-  virtual double GetMeanBloodPressureChange(const PressureUnit& unit) const;
+  bool HasMeanBloodPressureChange() const;
+  SEScalarPressure& GetMeanBloodPressureChange();
+  double GetMeanBloodPressureChange(const PressureUnit& unit) const;
 
-  virtual bool HasNeuromuscularBlockLevel() const;
-  virtual SEScalarFraction& GetNeuromuscularBlockLevel();
-  virtual double GetNeuromuscularBlockLevel() const;
+  bool HasNeuromuscularBlockLevel() const;
+  SEScalarFraction& GetNeuromuscularBlockLevel();
+  double GetNeuromuscularBlockLevel() const;
 
-  virtual bool HasPulsePressureChange() const;
-  virtual SEScalarPressure& GetPulsePressureChange();
-  virtual double GetPulsePressureChange(const PressureUnit& unit) const;
+  bool HasPulsePressureChange() const;
+  SEScalarPressure& GetPulsePressureChange();
+  double GetPulsePressureChange(const PressureUnit& unit) const;
 
-  virtual bool HasPupillaryResponse() const;
-  virtual SEPupillaryResponse& GetPupillaryResponse();
-  virtual const SEPupillaryResponse* GetPupillaryResponse() const;
-  virtual void RemovePupillaryResponse();
+  bool HasPupillaryResponse() const;
+  SEPupillaryResponse& GetPupillaryResponse();
+  const SEPupillaryResponse* GetPupillaryResponse() const;
+  void RemovePupillaryResponse();
 
-  virtual bool HasRespirationRateChange() const;
-  virtual SEScalarFrequency& GetRespirationRateChange();
-  virtual double GetRespirationRateChange(const FrequencyUnit& unit) const;
+  bool HasRespirationRateChange() const;
+  SEScalarFrequency& GetRespirationRateChange();
+  double GetRespirationRateChange(const FrequencyUnit& unit) const;
 
-  virtual bool HasSedationLevel() const;
-  virtual SEScalarFraction& GetSedationLevel();
-  virtual double GetSedationLevel() const;
+  bool HasSedationLevel() const;
+  SEScalarFraction& GetSedationLevel();
+  double GetSedationLevel() const;
 
-  virtual bool HasTidalVolumeChange() const;
-  virtual SEScalarVolume& GetTidalVolumeChange();
-  virtual double GetTidalVolumeChange(const VolumeUnit& unit) const;
+  bool HasTidalVolumeChange() const;
+  SEScalarVolume& GetTidalVolumeChange();
+  double GetTidalVolumeChange(const VolumeUnit& unit) const;
 
-  virtual bool HasTubularPermeabilityChange() const;
-  virtual SEScalarFraction& GetTubularPermeabilityChange();
-  virtual double GetTubularPermeabilityChange() const;
+  bool HasTubularPermeabilityChange() const;
+  SEScalarFraction& GetTubularPermeabilityChange();
+  double GetTubularPermeabilityChange() const;
 
-  virtual bool HasCentralNervousResponse() const;
-  virtual SEScalarFraction& GetCentralNervousResponse();
-  virtual double GetCentralNervousResponse() const;
+  bool HasCentralNervousResponse() const;
+  SEScalarFraction& GetCentralNervousResponse();
+  double GetCentralNervousResponse() const;
 
 protected:
   SEScalarFraction* m_BronchodilationLevel;

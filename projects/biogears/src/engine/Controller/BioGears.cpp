@@ -139,7 +139,6 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   cFile.Load("BioGearsConfiguration.xml");
   m_Config->Merge(cFile);
 
-
   // Now we can check the config
   if (m_Config->WritePatientBaselineFile()) {
     std::string stableDir = "./stable/";
@@ -854,6 +853,24 @@ SERespiratorySystem& BioGears::GetRespiratory() { return *m_RespiratorySystem; }
 SETissueSystem& BioGears::GetTissue() { return *m_TissueSystem; }
 SEEnvironment& BioGears::GetEnvironment() { return *m_Environment; }
 
+const EngineState BioGears::GetState() const { return m_State; }
+const SaturationCalculator& BioGears::GetSaturationCalculator() const { return *m_SaturationCalculator; }
+const BioGearsSubstances& BioGears::GetSubstances()const { return *m_Substances; }
+const SEPatient& BioGears::GetPatient()const { return *m_Patient; }
+const OverrideConfig& BioGears::GetOverride() const { return *m_OverrideConfig; }
+const SEBloodChemistrySystem& BioGears::GetBloodChemistry() const { return *m_BloodChemistrySystem; }
+const SECardiovascularSystem& BioGears::GetCardiovascular() const { return *m_CardiovascularSystem; }
+const SEDrugSystem& BioGears::GetDrugs() const { return *m_DrugSystem; }
+const SEEndocrineSystem& BioGears::GetEndocrine() const { return *m_EndocrineSystem; }
+const SEEnergySystem& BioGears::GetEnergy()const { return *m_EnergySystem; }
+const SEGastrointestinalSystem& BioGears::GetGastrointestinal() const { return *m_GastrointestinalSystem; }
+const SEHepaticSystem& BioGears::GetHepatic()const { return *m_HepaticSystem; }
+const SENervousSystem& BioGears::GetNervous() const { return *m_NervousSystem; }
+const SERenalSystem& BioGears::GetRenal()const { return *m_RenalSystem; }
+const SERespiratorySystem& BioGears::GetRespiratory() const { return *m_RespiratorySystem; }
+const SETissueSystem& BioGears::GetTissue() const { return *m_TissueSystem; }
+const SEEnvironment& BioGears::GetEnvironment()const { return *m_Environment; }
+
 SEAnesthesiaMachine& BioGears::GetAnesthesiaMachine() { return *m_AnesthesiaMachine; }
 SEElectroCardioGram& BioGears::GetECG() { return *m_ECG; }
 SEInhaler& BioGears::GetInhaler() { return *m_Inhaler; }
@@ -867,6 +884,20 @@ const SEScalarTime& BioGears::GetSimulationTime() { return *m_SimulationTime; }
 const SEScalarTime& BioGears::GetTimeStep() { return m_Config->GetTimeStep(); }
 CDM::enumBioGearsAirwayMode::value BioGears::GetAirwayMode() { return m_AirwayMode; }
 CDM::enumOnOff::value BioGears::GetIntubation() { return m_Intubation; }
+
+const SEAnesthesiaMachine& BioGears::GetAnesthesiaMachine() const { return *m_AnesthesiaMachine; }
+const SEElectroCardioGram& BioGears::GetECG() const { return *m_ECG; }
+const SEInhaler& BioGears::GetInhaler() const { return *m_Inhaler; }
+const SEActionManager& BioGears::GetActions() const { return *m_Actions; }
+const SEConditionManager& BioGears::GetConditions() const { return *m_Conditions; }
+const BioGearsCircuits& BioGears::GetCircuits() const { return *m_Circuits; }
+const BioGearsCompartments& BioGears::GetCompartments() const { return *m_Compartments; }
+const BioGearsConfiguration& BioGears::GetConfiguration() const { return *m_Config; }
+const SEScalarTime& BioGears::GetEngineTime() const { return *m_CurrentTime; }
+const SEScalarTime& BioGears::GetSimulationTime() const { return *m_SimulationTime; }
+const SEScalarTime& BioGears::GetTimeStep() const { return m_Config->GetTimeStep(); }
+const CDM::enumBioGearsAirwayMode::value BioGears::GetAirwayMode() const { return m_AirwayMode; }
+const CDM::enumOnOff::value BioGears::GetIntubation() const { return m_Intubation; }
 
 void BioGears::AtSteadyState(EngineState state)
 {

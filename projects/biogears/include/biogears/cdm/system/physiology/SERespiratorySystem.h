@@ -32,98 +32,99 @@ class VolumeUnit;
 class BIOGEARS_API SERespiratorySystem : public SESystem {
 public:
   SERespiratorySystem(Logger* logger);
-  virtual ~SERespiratorySystem();
+  ~SERespiratorySystem() override;
 
-  virtual void Clear(); // Deletes all members
+  void Clear() override; // Deletes all members
 
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual bool Load(const CDM::RespiratorySystemData& in);
-  virtual CDM::RespiratorySystemData* Unload() const;
+  bool Load(const CDM::RespiratorySystemData& in);
+  CDM::RespiratorySystemData* Unload() const override;
 
+  Tree<std::string> GetPhysiologyRequestGraph() const override;
 protected:
-  virtual void Unload(CDM::RespiratorySystemData& data) const;
+  void Unload(CDM::RespiratorySystemData& data) const;
 
 public:
-  virtual bool HasAlveolarArterialGradient() const;
-  virtual SEScalarPressure& GetAlveolarArterialGradient();
-  virtual double GetAlveolarArterialGradient(const PressureUnit& unit) const;
+  bool HasAlveolarArterialGradient() const;
+  SEScalarPressure& GetAlveolarArterialGradient();
+  double GetAlveolarArterialGradient(const PressureUnit& unit) const;
 
-  virtual bool HasCarricoIndex() const;
-  virtual SEScalarPressure& GetCarricoIndex();
-  virtual double GetCarricoIndex(const PressureUnit& unit) const;
+  bool HasCarricoIndex() const;
+  SEScalarPressure& GetCarricoIndex();
+  double GetCarricoIndex(const PressureUnit& unit) const;
 
-  virtual bool HasEndTidalCarbonDioxideFraction() const;
-  virtual SEScalarFraction& GetEndTidalCarbonDioxideFraction();
-  virtual double GetEndTidalCarbonDioxideFraction() const;
+  bool HasEndTidalCarbonDioxideFraction() const;
+  SEScalarFraction& GetEndTidalCarbonDioxideFraction();
+  double GetEndTidalCarbonDioxideFraction() const;
 
-  virtual bool HasEndTidalCarbonDioxidePressure() const;
-  virtual SEScalarPressure& GetEndTidalCarbonDioxidePressure();
-  virtual double GetEndTidalCarbonDioxidePressure(const PressureUnit& unit) const;
+  bool HasEndTidalCarbonDioxidePressure() const;
+  SEScalarPressure& GetEndTidalCarbonDioxidePressure();
+  double GetEndTidalCarbonDioxidePressure(const PressureUnit& unit) const;
 
-  virtual bool HasExpiratoryFlow() const;
-  virtual SEScalarVolumePerTime& GetExpiratoryFlow();
-  virtual double GetExpiratoryFlow(const VolumePerTimeUnit& unit) const;
+  bool HasExpiratoryFlow() const;
+  SEScalarVolumePerTime& GetExpiratoryFlow();
+  double GetExpiratoryFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasInspiratoryExpiratoryRatio() const;
-  virtual SEScalar& GetInspiratoryExpiratoryRatio();
-  virtual double GetInspiratoryExpiratoryRatio() const;
+  bool HasInspiratoryExpiratoryRatio() const;
+  SEScalar& GetInspiratoryExpiratoryRatio();
+  double GetInspiratoryExpiratoryRatio() const;
 
-  virtual bool HasInspiratoryFlow() const;
-  virtual SEScalarVolumePerTime& GetInspiratoryFlow();
-  virtual double GetInspiratoryFlow(const VolumePerTimeUnit& unit) const;
+  bool HasInspiratoryFlow() const;
+  SEScalarVolumePerTime& GetInspiratoryFlow();
+  double GetInspiratoryFlow(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasPulmonaryCompliance() const;
-  virtual SEScalarFlowCompliance& GetPulmonaryCompliance();
-  virtual double GetPulmonaryCompliance(const FlowComplianceUnit& unit) const;
+  bool HasPulmonaryCompliance() const;
+  SEScalarFlowCompliance& GetPulmonaryCompliance();
+  double GetPulmonaryCompliance(const FlowComplianceUnit& unit) const;
 
-  virtual bool HasPulmonaryResistance() const;
-  virtual SEScalarFlowResistance& GetPulmonaryResistance();
-  virtual double GetPulmonaryResistance(const FlowResistanceUnit& unit) const;
+  bool HasPulmonaryResistance() const;
+  SEScalarFlowResistance& GetPulmonaryResistance();
+  double GetPulmonaryResistance(const FlowResistanceUnit& unit) const;
 
-  virtual bool HasRespirationDriverPressure() const;
-  virtual SEScalarPressure& GetRespirationDriverPressure();
-  virtual double GetRespirationDriverPressure(const PressureUnit& unit) const;
+  bool HasRespirationDriverPressure() const;
+  SEScalarPressure& GetRespirationDriverPressure();
+  double GetRespirationDriverPressure(const PressureUnit& unit) const;
 
-  virtual bool HasRespirationMusclePressure() const;
-  virtual SEScalarPressure& GetRespirationMusclePressure();
-  virtual double GetRespirationMusclePressure(const PressureUnit& unit) const;
+  bool HasRespirationMusclePressure() const;
+  SEScalarPressure& GetRespirationMusclePressure();
+  double GetRespirationMusclePressure(const PressureUnit& unit) const;
 
-  virtual bool HasRespirationRate() const;
-  virtual SEScalarFrequency& GetRespirationRate();
-  virtual double GetRespirationRate(const FrequencyUnit& unit) const;
+  bool HasRespirationRate() const;
+  SEScalarFrequency& GetRespirationRate();
+  double GetRespirationRate(const FrequencyUnit& unit) const;
 
-  virtual bool HasSpecificVentilation() const;
-  virtual SEScalar& GetSpecificVentilation();
-  virtual double GetSpecificVentilation() const;
+  bool HasSpecificVentilation() const;
+  SEScalar& GetSpecificVentilation();
+  double GetSpecificVentilation() const;
 
-  virtual bool HasTargetPulmonaryVentilation() const;
-  virtual SEScalarVolumePerTime& GetTargetPulmonaryVentilation();
-  virtual double GetTargetPulmonaryVentilation(const VolumePerTimeUnit& unit) const;
+  bool HasTargetPulmonaryVentilation() const;
+  SEScalarVolumePerTime& GetTargetPulmonaryVentilation();
+  double GetTargetPulmonaryVentilation(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasTidalVolume() const;
-  virtual SEScalarVolume& GetTidalVolume();
-  virtual double GetTidalVolume(const VolumeUnit& unit) const;
+  bool HasTidalVolume() const;
+  SEScalarVolume& GetTidalVolume();
+  double GetTidalVolume(const VolumeUnit& unit) const;
 
-  virtual bool HasTotalAlveolarVentilation() const;
-  virtual SEScalarVolumePerTime& GetTotalAlveolarVentilation();
-  virtual double GetTotalAlveolarVentilation(const VolumePerTimeUnit& unit) const;
+  bool HasTotalAlveolarVentilation() const;
+  SEScalarVolumePerTime& GetTotalAlveolarVentilation();
+  double GetTotalAlveolarVentilation(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasTotalDeadSpaceVentilation() const;
-  virtual SEScalarVolumePerTime& GetTotalDeadSpaceVentilation();
-  virtual double GetTotalDeadSpaceVentilation(const VolumePerTimeUnit& unit) const;
+  bool HasTotalDeadSpaceVentilation() const;
+  SEScalarVolumePerTime& GetTotalDeadSpaceVentilation();
+  double GetTotalDeadSpaceVentilation(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasTotalPulmonaryVentilation() const;
-  virtual SEScalarVolumePerTime& GetTotalPulmonaryVentilation();
-  virtual double GetTotalPulmonaryVentilation(const VolumePerTimeUnit& unit) const;
+  bool HasTotalPulmonaryVentilation() const;
+  SEScalarVolumePerTime& GetTotalPulmonaryVentilation();
+  double GetTotalPulmonaryVentilation(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasTotalLungVolume() const;
-  virtual SEScalarVolume& GetTotalLungVolume();
-  virtual double GetTotalLungVolume(const VolumeUnit& unit) const;
+  bool HasTotalLungVolume() const;
+  SEScalarVolume& GetTotalLungVolume();
+  double GetTotalLungVolume(const VolumeUnit& unit) const;
 
-  virtual bool HasTranspulmonaryPressure() const;
-  virtual SEScalarPressure& GetTranspulmonaryPressure();
-  virtual double GetTranspulmonaryPressure(const PressureUnit& unit) const;
+  bool HasTranspulmonaryPressure() const;
+  SEScalarPressure& GetTranspulmonaryPressure();
+  double GetTranspulmonaryPressure(const PressureUnit& unit) const;
 
 protected:
   SEScalarPressure* m_AlveolarArterialGradient;

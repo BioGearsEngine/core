@@ -11,7 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/container/Tree.h>
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(SystemData)
@@ -29,7 +32,7 @@ public:
 
   /** @name GetScalar
   *   @brief - A reflextion type call that will return the Scalar associated
-  *            with the string. ex. GetScalar("Hematocrit") will return the
+  *            with the string. ex. GetScalar("Hematocrit") will return the0
   *            SEScalarPercent object associated with Hematocrit
   *   @details - Note this is an expensive call as it will string compare many times
   *              This is best used, and intended for, you to dynamically prepopulate
@@ -42,11 +45,13 @@ public:
   */
   static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
 
-  virtual bool Load(const CDM::SystemData& in);
+  bool Load(const CDM::SystemData& in);
   virtual CDM::SystemData* Unload() const = 0;
 
+  virtual Tree<std::string> GetPhysiologyRequestGraph() const = 0;
+
 protected:
-  virtual void Unload(CDM::SystemData& data) const;
+  void Unload(CDM::SystemData& data) const;
 
   std::stringstream m_ss;
 };

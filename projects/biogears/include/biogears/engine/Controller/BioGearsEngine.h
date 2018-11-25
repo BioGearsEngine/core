@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License.
 // If anyone else has opinions on this, let me know
 // abray@ara.com
 #pragma warning(disable : 4251)
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 #pragma warning(pop)
 
 namespace biogears {
@@ -37,53 +37,54 @@ class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
 public:
   BioGearsEngine(Logger* logger);
   BioGearsEngine(const std::string&);
-  virtual ~BioGearsEngine();
+  ~BioGearsEngine() override;
 
-  virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
-  virtual bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "");
+  bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) override;
+  bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) override;
+  std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") override;
 
-  virtual Logger* GetLogger();
-  virtual PhysiologyEngineTrack* GetEngineTrack();
+  Logger* GetLogger() override;
+  PhysiologyEngineTrack* GetEngineTrack() override;
 
-  virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
-  virtual bool InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
+  bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
+  bool InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
 
-  virtual const PhysiologyEngineConfiguration* GetConfiguration();
+  const PhysiologyEngineConfiguration* GetConfiguration() override;
 
-  virtual double GetTimeStep(const TimeUnit& unit);
-  virtual double GetSimulationTime(const TimeUnit& unit);
+  double GetTimeStep(const TimeUnit& unit) override;
+  double GetSimulationTime(const TimeUnit& unit) override;
 
-  virtual void AdvanceModelTime();
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit);
-  virtual bool ProcessAction(const SEAction& action);
+  void AdvanceModelTime() override;
+  void AdvanceModelTime(double time, const TimeUnit& unit) override;
+  bool ProcessAction(const SEAction& action) override;
 
-  virtual SESubstanceManager& GetSubstanceManager();
-  virtual void SetEventHandler(SEEventHandler* handler);
-  virtual const SEPatient& GetPatient();
-  virtual bool GetPatientAssessment(SEPatientAssessment& assessment);
+  SESubstanceManager& GetSubstanceManager() override;
+  void SetEventHandler(SEEventHandler* handler) override;
+  const SEPatient& GetPatient() override;
+  bool GetPatientAssessment(SEPatientAssessment& assessment) override;
 
-  virtual const SEEnvironment* GetEnvironment();
-  virtual const SEBloodChemistrySystem* GetBloodChemistrySystem();
-  virtual const SECardiovascularSystem* GetCardiovascularSystem();
-  virtual const SEDrugSystem* GetDrugSystem();
-  virtual const SEEndocrineSystem* GetEndocrineSystem();
-  virtual const SEEnergySystem* GetEnergySystem();
-  virtual const SEGastrointestinalSystem* GetGastrointestinalSystem();
-  virtual const SEHepaticSystem* GetHepaticSystem();
-  virtual const SENervousSystem* GetNervousSystem();
-  virtual const SERenalSystem* GetRenalSystem();
-  virtual const SERespiratorySystem* GetRespiratorySystem();
-  virtual const SETissueSystem* GetTissueSystem();
-  virtual const SEAnesthesiaMachine* GetAnesthesiaMachine();
-  virtual const SEElectroCardioGram* GetElectroCardioGram();
-  virtual const SEInhaler* GetInhaler();
+  const SEEnvironment* GetEnvironment() override;
+  const SEBloodChemistrySystem* GetBloodChemistrySystem() override;
+  const SECardiovascularSystem* GetCardiovascularSystem() override;
+  const SEDrugSystem* GetDrugSystem() override;
+  const SEEndocrineSystem* GetEndocrineSystem() override;
+  const SEEnergySystem* GetEnergySystem() override;
+  const SEGastrointestinalSystem* GetGastrointestinalSystem() override;
+  const SEHepaticSystem* GetHepaticSystem() override;
+  const SENervousSystem* GetNervousSystem() override;
+  const SERenalSystem* GetRenalSystem() override;
+  const SERespiratorySystem* GetRespiratorySystem() override;
+  const SETissueSystem* GetTissueSystem() override;
+  const SEAnesthesiaMachine* GetAnesthesiaMachine() override;
+  const SEElectroCardioGram* GetElectroCardioGram() override;
+  const SEInhaler* GetInhaler() override;
 
-  virtual const SECompartmentManager& GetCompartments();
+  const SECompartmentManager& GetCompartments() override;
+  Tree<std::string> GetDataRequestGraph() const override;
 
 protected:
-  virtual bool IsReady();
-  virtual bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
+  bool IsReady();
+  bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
 
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;

@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 SEInhaler::SEInhaler(SESubstanceManager& substances)
@@ -30,11 +31,13 @@ SEInhaler::SEInhaler(SESubstanceManager& substances)
   m_SpacerVolume = nullptr;
   m_Substance = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 SEInhaler::~SEInhaler()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEInhaler::Clear()
 {
@@ -46,6 +49,7 @@ void SEInhaler::Clear()
   SAFE_DELETE(m_SpacerVolume);
   m_Substance = nullptr;
 }
+//-------------------------------------------------------------------------------
 
 bool SEInhaler::Load(const CDM::InhalerData& in)
 {
@@ -63,6 +67,7 @@ bool SEInhaler::Load(const CDM::InhalerData& in)
   StateChange();
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::InhalerData* SEInhaler::Unload() const
 {
@@ -70,6 +75,7 @@ CDM::InhalerData* SEInhaler::Unload() const
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SEInhaler::Unload(CDM::InhalerData& data) const
 {
@@ -84,6 +90,7 @@ void SEInhaler::Unload(CDM::InhalerData& data) const
   if (HasSubstance())
     data.Substance(m_Substance->GetName());
 }
+//-------------------------------------------------------------------------------
 
 const SEScalar* SEInhaler::GetScalar(const std::string& name)
 {
@@ -95,6 +102,7 @@ const SEScalar* SEInhaler::GetScalar(const std::string& name)
     return &GetSpacerVolume();
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 
 void SEInhaler::Merge(const SEInhaler& from)
 {
@@ -114,6 +122,7 @@ void SEInhaler::Merge(const SEInhaler& from)
       m_Substance = from.m_Substance;
   }
 }
+//-------------------------------------------------------------------------------
 
 void SEInhaler::ProcessConfiguration(const SEInhalerConfiguration& config)
 {
@@ -124,6 +133,7 @@ void SEInhaler::ProcessConfiguration(const SEInhalerConfiguration& config)
       Error("Unable to load configuration file", "SEInhaler::ProcessConfiguration");
   StateChange();
 }
+//-------------------------------------------------------------------------------
 
 bool SEInhaler::Load(const std::string& file)
 {
@@ -140,87 +150,108 @@ bool SEInhaler::Load(const std::string& file)
   }
   return Load(*pData);
 }
+//-------------------------------------------------------------------------------
 
 CDM::enumOnOff::value SEInhaler::GetState() const
 {
   return m_State;
 }
+//-------------------------------------------------------------------------------
 void SEInhaler::SetState(CDM::enumOnOff::value state)
 {
   m_State = state;
 }
+//-------------------------------------------------------------------------------
 bool SEInhaler::HasState() const
 {
   return m_State == ((CDM::enumOnOff::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SEInhaler::InvalidateState()
 {
   m_State = (CDM::enumOnOff::value)-1;
 }
+//-------------------------------------------------------------------------------
 
 bool SEInhaler::HasMeteredDose() const
 {
   return m_MeteredDose == nullptr ? false : m_MeteredDose->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMass& SEInhaler::GetMeteredDose()
 {
   if (m_MeteredDose == nullptr)
     m_MeteredDose = new SEScalarMass();
   return *m_MeteredDose;
 }
+//-------------------------------------------------------------------------------
 double SEInhaler::GetMeteredDose(const MassUnit& unit) const
 {
   if (m_MeteredDose == nullptr)
     return SEScalar::dNaN();
   return m_MeteredDose->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEInhaler::HasNozzleLoss() const
 {
   return m_NozzleLoss == nullptr ? false : m_NozzleLoss->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SEInhaler::GetNozzleLoss()
 {
   if (m_NozzleLoss == nullptr)
     m_NozzleLoss = new SEScalarFraction();
   return *m_NozzleLoss;
 }
+//-------------------------------------------------------------------------------
 double SEInhaler::GetNozzleLoss() const
 {
   if (m_NozzleLoss == nullptr)
     return SEScalar::dNaN();
   return m_NozzleLoss->GetValue();
 }
+//-------------------------------------------------------------------------------
 
 bool SEInhaler::HasSpacerVolume() const
 {
   return m_SpacerVolume == nullptr ? false : m_SpacerVolume->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolume& SEInhaler::GetSpacerVolume()
 {
   if (m_SpacerVolume == nullptr)
     m_SpacerVolume = new SEScalarVolume();
   return *m_SpacerVolume;
 }
+//-------------------------------------------------------------------------------
 double SEInhaler::GetSpacerVolume(const VolumeUnit& unit) const
 {
   if (m_SpacerVolume == nullptr)
     return SEScalar::dNaN();
   return m_SpacerVolume->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
 
 bool SEInhaler::HasSubstance() const
 {
   return m_Substance != nullptr;
 }
+//-------------------------------------------------------------------------------
 void SEInhaler::SetSubstance(const SESubstance* sub)
 {
   if (!sub->HasAerosolization())
     throw CommonDataModelException("Inhaler substance must have aerosolization data");
   m_Substance = sub;
 }
+//-------------------------------------------------------------------------------
 SESubstance* SEInhaler::GetSubstance() const
 {
   return (SESubstance*)m_Substance;
+}
+//-------------------------------------------------------------------------------
+Tree<std::string> SEInhaler::GetPhysiologyRequestGraph() const
+{
+  return {};
 }
 }

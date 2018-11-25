@@ -23,27 +23,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-std::vector<std::string> BGE::Graph::_values;
-std::vector<std::string> BGE::ChymeCompartment::_values;
-//std::vector<std::string> BGE::ChymeLink::_values;
-std::vector<std::string> BGE::PulmonaryCompartment::_values;
-std::vector<std::string> BGE::PulmonaryLink::_values;
-std::vector<std::string> BGE::TissueCompartment::_values;
-std::vector<std::string> BGE::ExtravascularCompartment::_values;
-std::vector<std::string> BGE::TemperatureCompartment::_values;
-//std::vector<std::string> BGE::TissueLink::_values;
-std::vector<std::string> BGE::VascularCompartment::_values;
-std::vector<std::string> BGE::VascularLink::_values;
-std::vector<std::string> BGE::UrineCompartment::_values;
-std::vector<std::string> BGE::UrineLink::_values;
-std::vector<std::string> BGE::EnvironmentCompartment::_values;
-std::vector<std::string> BGE::AnesthesiaMachineCompartment::_values;
-std::vector<std::string> BGE::AnesthesiaMachineLink::_values;
-std::vector<std::string> BGE::InhalerCompartment::_values;
-std::vector<std::string> BGE::InhalerLink::_values;
-std::vector<std::string> BGE::MechanicalVentilatorCompartment::_values;
-std::vector<std::string> BGE::MechanicalVentilatorLink::_values;
-
 namespace biogears {
 BioGearsCompartments::BioGearsCompartments(BioGears& bg)
   : SECompartmentManager(bg.GetSubstances())
