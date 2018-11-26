@@ -23,6 +23,26 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idAlveolarArterialGradient[] = "AlveolarArterialGradient";
+  constexpr char idCarricoIndex[] = "CarricoIndex";
+  constexpr char idEndTidalCarbonDioxideFraction[] = "EndTidalCarbonDioxideFraction";
+  constexpr char idEndTidalCarbonDioxidePressure[] = "EndTidalCarbonDioxidePressure";
+  constexpr char idExpiratoryFlow[] = "ExpiratoryFlow";
+  constexpr char idInspiratoryExpiratoryRatio[] = "InspiratoryExpiratoryRatio";
+  constexpr char idInspiratoryFlow[] = "InspiratoryFlow";
+  constexpr char idPulmonaryCompliance[] = "PulmonaryCompliance";
+  constexpr char idPulmonaryResistance[] = "PulmonaryResistance";
+  constexpr char idRespirationDriverPressure[] = "RespirationDriverPressure";
+  constexpr char idRespirationMusclePressure[] = "RespirationMusclePressure";
+  constexpr char idRespirationRate[] = "RespirationRate";
+  constexpr char idSpecificVentilation[] = "SpecificVentilation";
+  constexpr char idTargetPulmonaryVentilation[] = "TargetPulmonaryVentilation";
+  constexpr char idTidalVolume[] = "TidalVolume";
+  constexpr char idTotalAlveolarVentilation[] = "TotalAlveolarVentilation";
+  constexpr char idTotalDeadSpaceVentilation[] = "TotalDeadSpaceVentilation";
+  constexpr char idTotalLungVolume[] = "TotalLungVolume";
+  constexpr char idTotalPulmonaryVentilation[] = "TotalPulmonaryVentilation";
+  constexpr char idTranspulmonaryPressure[] = "TranspulmonaryPressure";
 SERespiratorySystem::SERespiratorySystem(Logger* logger)
   : SESystem(logger)
 {
@@ -83,45 +103,45 @@ void SERespiratorySystem::Clear()
 
 const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
 {
-  if (name.compare("AlveolarArterialGradient") == 0)
+  if (name == idAlveolarArterialGradient)
     return &GetAlveolarArterialGradient();
-  if (name.compare("CarricoIndex") == 0)
+  if (name == idCarricoIndex)
     return &GetCarricoIndex();
-  if (name.compare("EndTidalCarbonDioxideFraction") == 0)
+  if (name == idEndTidalCarbonDioxideFraction)
     return &GetEndTidalCarbonDioxideFraction();
-  if (name.compare("EndTidalCarbonDioxidePressure") == 0)
+  if (name == idEndTidalCarbonDioxidePressure)
     return &GetEndTidalCarbonDioxidePressure();
-  if (name.compare("ExpiratoryFlow") == 0)
+  if (name == idExpiratoryFlow)
     return &GetExpiratoryFlow();
-  if (name.compare("InspiratoryExpiratoryRatio") == 0)
+  if (name == idInspiratoryExpiratoryRatio)
     return &GetInspiratoryExpiratoryRatio();
-  if (name.compare("InspiratoryFlow") == 0)
+  if (name == idInspiratoryFlow)
     return &GetInspiratoryFlow();
-  if (name.compare("PulmonaryCompliance") == 0)
+  if (name == idPulmonaryCompliance)
     return &GetPulmonaryCompliance();
-  if (name.compare("PulmonaryResistance") == 0)
+  if (name == idPulmonaryResistance)
     return &GetPulmonaryResistance();
-  if (name.compare("RespirationDriverPressure") == 0)
+  if (name == idRespirationDriverPressure)
     return &GetRespirationDriverPressure();
-  if (name.compare("RespirationMusclePressure") == 0)
+  if (name == idRespirationMusclePressure)
     return &GetRespirationMusclePressure();
-  if (name.compare("RespirationRate") == 0)
+  if (name == idRespirationRate)
     return &GetRespirationRate();
-  if (name.compare("SpecificVentilation") == 0)
+  if (name == idSpecificVentilation)
     return &GetSpecificVentilation();
-  if (name.compare("TargetPulmonaryVentilation") == 0)
+  if (name == idTargetPulmonaryVentilation)
     return &GetTargetPulmonaryVentilation();
-  if (name.compare("TidalVolume") == 0)
+  if (name == idTidalVolume)
     return &GetTidalVolume();
-  if (name.compare("TotalAlveolarVentilation") == 0)
+  if (name == idTotalAlveolarVentilation)
     return &GetTotalAlveolarVentilation();
-  if (name.compare("TotalDeadSpaceVentilation") == 0)
+  if (name == idTotalDeadSpaceVentilation)
     return &GetTotalDeadSpaceVentilation();
-  if (name.compare("TotalLungVolume") == 0)
+  if (name == idTotalLungVolume)
     return &GetTotalLungVolume();
-  if (name.compare("TotalPulmonaryVentilation") == 0)
+  if (name == idTotalPulmonaryVentilation)
     return &GetTotalPulmonaryVentilation();
-  if (name.compare("TranspulmonaryPressure") == 0)
+  if (name == idTranspulmonaryPressure)
     return &GetTranspulmonaryPressure();
   return nullptr;
 }
@@ -630,6 +650,27 @@ double SERespiratorySystem::GetTranspulmonaryPressure(const PressureUnit& unit) 
 //-------------------------------------------------------------------------------
 Tree<std::string> SERespiratorySystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idAlveolarArterialGradient)
+    .emplace_back(idCarricoIndex)
+    .emplace_back(idEndTidalCarbonDioxideFraction)
+    .emplace_back(idEndTidalCarbonDioxidePressure)
+    .emplace_back(idExpiratoryFlow)
+    .emplace_back(idInspiratoryExpiratoryRatio)
+    .emplace_back(idInspiratoryFlow)
+    .emplace_back(idPulmonaryCompliance)
+    .emplace_back(idPulmonaryResistance)
+    .emplace_back(idRespirationDriverPressure)
+    .emplace_back(idRespirationMusclePressure)
+    .emplace_back(idRespirationRate)
+    .emplace_back(idSpecificVentilation)
+    .emplace_back(idTargetPulmonaryVentilation)
+    .emplace_back(idTidalVolume)
+    .emplace_back(idTotalAlveolarVentilation)
+    .emplace_back(idTotalDeadSpaceVentilation)
+    .emplace_back(idTotalLungVolume)
+    .emplace_back(idTotalPulmonaryVentilation)
+    .emplace_back(idTranspulmonaryPressure)
+  ;
 }
 }

@@ -18,6 +18,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idBaroreceptorHeartRateScale[] = "BaroreceptorHeartRateScale";
+  constexpr char idBaroreceptorHeartElastanceScale[] = "BaroreceptorHeartElastanceScale";
+  constexpr char idBaroreceptorResistanceScale[] = "BaroreceptorResistanceScale";
+  constexpr char idBaroreceptorComplianceScale[] = "BaroreceptorComplianceScale";
+  constexpr char idChemoreceptorHeartRateScale[] = "ChemoreceptorHeartRateScale";
+  constexpr char idChemoreceptorHeartElastanceScale[] = "ChemoreceptorHeartElastanceScale";
+  constexpr char idPainVisualAnalogueScale[] = "PainVisualAnalogueScale";
+  constexpr char idLeftEyePupillaryResponse[] = "LeftEyePupillaryResponse";
+  constexpr char idRightEyePupillaryResponse[] = "RightEyePupillaryResponse";
+
 SENervousSystem::SENervousSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -56,28 +66,28 @@ void SENervousSystem::Clear()
 
 const SEScalar* SENervousSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("BaroreceptorHeartRateScale") == 0)
+  if (name == idBaroreceptorHeartRateScale)
     return &GetBaroreceptorHeartRateScale();
-  if (name.compare("BaroreceptorHeartElastanceScale") == 0)
+  if (name == idBaroreceptorHeartElastanceScale)
     return &GetBaroreceptorHeartElastanceScale();
-  if (name.compare("BaroreceptorResistanceScale") == 0)
+  if (name == idBaroreceptorResistanceScale)
     return &GetBaroreceptorResistanceScale();
-  if (name.compare("BaroreceptorComplianceScale") == 0)
+  if (name == idBaroreceptorComplianceScale)
     return &GetBaroreceptorComplianceScale();
-  if (name.compare("ChemoreceptorHeartRateScale") == 0)
+  if (name == idChemoreceptorHeartRateScale)
     return &GetChemoreceptorHeartRateScale();
-  if (name.compare("ChemoreceptorHeartElastanceScale") == 0)
+  if (name == idChemoreceptorHeartElastanceScale)
     return &GetChemoreceptorHeartElastanceScale();
-  if (name.compare("PainVisualAnalogueScale") == 0)
+  if (name == idPainVisualAnalogueScale)
     return &GetPainVisualAnalogueScale();
 
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
-    if (child == "LeftEyePupillaryResponse")
+    if (child == idLeftEyePupillaryResponse)
       return GetLeftEyePupillaryResponse().GetScalar(prop);
-    if (child == "RightEyePupillaryResponse")
+    if (child == idRightEyePupillaryResponse)
       return GetRightEyePupillaryResponse().GetScalar(prop);
   }
   return nullptr;
@@ -328,6 +338,16 @@ void SENervousSystem::RemoveRightEyePupillaryResponse()
 //-------------------------------------------------------------------------------
 Tree<std::string> SENervousSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idBaroreceptorHeartRateScale)
+    .emplace_back(idBaroreceptorHeartElastanceScale)
+    .emplace_back(idBaroreceptorResistanceScale)
+    .emplace_back(idBaroreceptorComplianceScale)
+    .emplace_back(idChemoreceptorHeartRateScale)
+    .emplace_back(idChemoreceptorHeartElastanceScale)
+    .emplace_back(idPainVisualAnalogueScale)
+    .emplace_back(idLeftEyePupillaryResponse)
+    .emplace_back(idRightEyePupillaryResponse)
+  ;
 }
 }

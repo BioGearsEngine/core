@@ -58,15 +58,23 @@ public:
 
   auto begin() const -> typename child_vector::iterator;
   auto end() const -> typename child_vector::iterator;
-  
+
+
   template< class... Args >
-  decltype(auto) emplace_back( const Args&... args )
+  auto emplace_back(const Args&... args) && -> Tree&&
+  {
+    _children.emplace_back(args...);
+    return std::move(*this);
+  }
+
+  template< class... Args >
+  decltype(auto) emplace_back( const Args&... args ) &
   {
     return _children.emplace_back(args...);
   }
   
   template< class... Args >
-  decltype(auto) emplace( typename child_vector::const_iterator pos, Args&&... args )
+  decltype(auto) emplace(typename child_vector::const_iterator pos, Args&&... args)
   {
     return _children.emplace(pos, args...);
   }

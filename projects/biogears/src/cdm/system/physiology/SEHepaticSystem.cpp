@@ -17,6 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idKetoneProductionRate[] = "KetoneProductionRate";
+  constexpr char idHepaticGluconeogenesisRate[] = "HepaticGluconeogenesisRate";
+
 SEHepaticSystem::SEHepaticSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -42,9 +45,9 @@ void SEHepaticSystem::Clear()
 
 const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("KetoneProductionRate") == 0)
+  if (name == idKetoneProductionRate)
     return &GetKetoneProductionRate();
-  if (name.compare("HepaticGluconeogenesisRate") == 0)
+  if (name == idHepaticGluconeogenesisRate)
     return &GetHepaticGluconeogenesisRate();
   return nullptr;
 }
@@ -121,6 +124,9 @@ double SEHepaticSystem::GetHepaticGluconeogenesisRate(const MassPerTimeUnit& uni
 //-------------------------------------------------------------------------------
 Tree<std::string> SEHepaticSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idKetoneProductionRate)
+    .emplace_back(idHepaticGluconeogenesisRate)  
+  ;
 }
 }

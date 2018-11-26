@@ -21,6 +21,40 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
+  constexpr char idArterialBloodPH[] = "ArterialBloodPH";
+  constexpr char idArterialBloodPHBaseline[] = "ArterialBloodPHBaseline";
+  constexpr char idBloodDensity[] = "BloodDensity";
+  constexpr char idBloodSpecificHeat[] = "BloodSpecificHeat";
+  constexpr char idBloodUreaNitrogenConcentration[] = "BloodUreaNitrogenConcentration";
+  constexpr char idCarbonDioxideSaturation[] = "CarbonDioxideSaturation";
+  constexpr char idCarbonMonoxideSaturation[] = "CarbonMonoxideSaturation";
+  constexpr char idHematocrit[] = "Hematocrit";
+  constexpr char idHemoglobinContent[] = "HemoglobinContent";
+  constexpr char idOxygenSaturation[] = "OxygenSaturation";
+  constexpr char idPhosphate[] = "Phosphate";
+  constexpr char idPlasmaVolume[] = "PlasmaVolume";
+  constexpr char idPulseOximetry[] = "PulseOximetry";
+  constexpr char idRedBloodCellAcetylcholinesterase[] = "RedBloodCellAcetylcholinesterase";
+  constexpr char idRedBloodCellCount[] = "RedBloodCellCount";
+  constexpr char idShuntFraction[] = "ShuntFraction";
+  constexpr char idStrongIonDifference[] = "StrongIonDifference";
+  constexpr char idTotalBilirubin[] = "TotalBilirubin";
+  constexpr char idTotalProteinConcentration[] = "TotalProteinConcentration";
+  constexpr char idVenousBloodPH[] = "VenousBloodPH";
+  constexpr char idVolumeFractionNeutralPhospholipidInPlasma[] = "VolumeFractionNeutralPhospholipidInPlasma";
+  constexpr char idVolumeFractionNeutralLipidInPlasma[] = "VolumeFractionNeutralLipidInPlasma";
+  constexpr char idWhiteBloodCellCount[] = "WhiteBloodCellCount";
+  constexpr char idArterialCarbonDioxidePressure[] = "ArterialCarbonDioxidePressure";
+  constexpr char idArterialOxygenPressure[] = "ArterialOxygenPressure";
+  constexpr char idPulmonaryArterialCarbonDioxidePressure[] = "PulmonaryArterialCarbonDioxidePressure";
+  constexpr char idPulmonaryArterialOxygenPressure[] = "PulmonaryArterialOxygenPressure";
+  constexpr char idPulmonaryVenousCarbonDioxidePressure[] = "PulmonaryVenousCarbonDioxidePressure";
+  constexpr char idPulmonaryVenousOxygenPressure[] = "PulmonaryVenousOxygenPressure";
+  constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
+  constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
+  constexpr char idSepsisInfectionState[] = "SepsisInfectionState";
+  constexpr char idAcuteInflammatoryResponse[] = "AcuteInflammatoryResponse";
+
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
 {
@@ -112,68 +146,67 @@ void SEBloodChemistrySystem::Clear()
 
 const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 {
-  if (name.compare("ArterialBloodPH") == 0)
+  if (name == idArterialBloodPH)
     return &GetArterialBloodPH();
-  if (name.compare("ArterialBloodPHBaseline") == 0)
+  if (name == idArterialBloodPHBaseline)
     return &GetArterialBloodPHBaseline();
-  if (name.compare("BloodDensity") == 0)
+  if (name == idBloodDensity)
     return &GetBloodDensity();
-  if (name.compare("BloodSpecificHeat") == 0)
+  if (name == idBloodSpecificHeat)
     return &GetBloodSpecificHeat();
-  if (name.compare("BloodUreaNitrogenConcentration") == 0)
+  if (name == idBloodUreaNitrogenConcentration)
     return &GetBloodUreaNitrogenConcentration();
-  if (name.compare("CarbonDioxideSaturation") == 0)
+  if (name == idCarbonDioxideSaturation)
     return &GetCarbonDioxideSaturation();
-  if (name.compare("CarbonMonoxideSaturation") == 0)
+  if (name == idCarbonMonoxideSaturation)
     return &GetCarbonMonoxideSaturation();
-  if (name.compare("Hematocrit") == 0)
+  if (name == idHematocrit)
     return &GetHematocrit();
-  if (name.compare("HemoglobinContent") == 0)
+  if (name == idHemoglobinContent)
     return &GetHemoglobinContent();
-  if (name.compare("OxygenSaturation") == 0)
+  if (name == idOxygenSaturation)
     return &GetOxygenSaturation();
-  if (name.compare("Phosphate") == 0)
+  if (name == idPhosphate)
     return &GetPhosphate();
-  if (name.compare("PlasmaVolume") == 0)
+  if (name == idPlasmaVolume)
     return &GetPlasmaVolume();
-  if (name.compare("PulseOximetry") == 0)
+  if (name == idPulseOximetry)
     return &GetPulseOximetry();
-  if (name.compare("RedBloodCellAcetylcholinesterase") == 0)
+  if (name == idRedBloodCellAcetylcholinesterase)
     return &GetRedBloodCellAcetylcholinesterase();
-  if (name.compare("RedBloodCellCount") == 0)
+  if (name == idRedBloodCellCount)
     return &GetRedBloodCellCount();
-  if (name.compare("ShuntFraction") == 0)
+  if (name == idShuntFraction)
     return &GetShuntFraction();
-  if (name.compare("StrongIonDifference") == 0)
+  if (name == idStrongIonDifference)
     return &GetStrongIonDifference();
-  if (name.compare("TotalBilirubin") == 0)
+  if (name == idTotalBilirubin)
     return &GetTotalBilirubin();
-  if (name.compare("TotalProteinConcentration") == 0)
+  if (name == idTotalProteinConcentration)
     return &GetTotalProteinConcentration();
-  if (name.compare("VenousBloodPH") == 0)
+  if (name == idVenousBloodPH)
     return &GetVenousBloodPH();
-  if (name.compare("VolumeFractionNeutralPhospholipidInPlasma") == 0)
+  if (name == idVolumeFractionNeutralPhospholipidInPlasma)
     return &GetVolumeFractionNeutralPhospholipidInPlasma();
-  if (name.compare("VolumeFractionNeutralLipidInPlasma") == 0)
+  if (name == idVolumeFractionNeutralLipidInPlasma)
     return &GetVolumeFractionNeutralLipidInPlasma();
-  if (name.compare("WhiteBloodCellCount") == 0)
+  if (name == idWhiteBloodCellCount)
     return &GetWhiteBloodCellCount();
-
-  if (name.compare("ArterialCarbonDioxidePressure") == 0)
+  if (name == idArterialCarbonDioxidePressure)
     return &GetArterialCarbonDioxidePressure();
-  if (name.compare("ArterialOxygenPressure") == 0)
+  if (name == idArterialOxygenPressure)
     return &GetArterialOxygenPressure();
-  if (name.compare("PulmonaryArterialCarbonDioxidePressure") == 0)
+  if (name == idPulmonaryArterialCarbonDioxidePressure)
     return &GetPulmonaryArterialCarbonDioxidePressure();
-  if (name.compare("PulmonaryArterialOxygenPressure") == 0)
+  if (name == idPulmonaryArterialOxygenPressure)
     return &GetPulmonaryArterialOxygenPressure();
-  if (name.compare("PulmonaryVenousCarbonDioxidePressure") == 0)
+  if (name == idPulmonaryVenousCarbonDioxidePressure)
     return &GetPulmonaryVenousCarbonDioxidePressure();
-  if (name.compare("PulmonaryVenousOxygenPressure") == 0)
+  if (name == idPulmonaryVenousOxygenPressure)
     return &GetPulmonaryVenousOxygenPressure();
-  if (name.compare("VenousCarbonDioxidePressure") == 0)
+  if (name == idVenousCarbonDioxidePressure)
     return &GetVenousCarbonDioxidePressure();
-  if (name.compare("VenousOxygenPressure") == 0)
+  if (name == idVenousOxygenPressure)
     return &GetVenousOxygenPressure();
 
   //This applies to SepsisState and InflammationState values (Sepsis will be replaced eventually), as they are defined SepsisInfectionState-Pathogen, e.g.
@@ -181,10 +214,10 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   if (split != name.npos) {
     std::string prop = name.substr(split + 1, name.npos); //Get property that follows dash
     std::string parent = name.substr(0, split);
-    if (parent.compare("SepsisInfectionState") == 0) {
+    if (parent == idSepsisInfectionState) {
       return GetSepsisInfectionState().GetScalar(prop);
     }
-    if (parent.compare("AcuteInflammatoryResponse") == 0) {
+    if (parent == idAcuteInflammatoryResponse) {
       return GetAcuteInflammatoryResponse().GetScalar(prop);
     }
   }
@@ -996,6 +1029,40 @@ SEInflammationState& SEBloodChemistrySystem::GetAcuteInflammatoryResponse()
 //-------------------------------------------------------------------------------
 Tree<std::string> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idArterialBloodPH)
+    .emplace_back(idArterialBloodPHBaseline)
+    .emplace_back(idBloodDensity)
+    .emplace_back(idBloodSpecificHeat)
+    .emplace_back(idBloodUreaNitrogenConcentration)
+    .emplace_back(idCarbonDioxideSaturation)
+    .emplace_back(idCarbonMonoxideSaturation)
+    .emplace_back(idHematocrit)
+    .emplace_back(idHemoglobinContent)
+    .emplace_back(idOxygenSaturation)
+    .emplace_back(idPhosphate)
+    .emplace_back(idPlasmaVolume)
+    .emplace_back(idPulseOximetry)
+    .emplace_back(idRedBloodCellAcetylcholinesterase)
+    .emplace_back(idRedBloodCellCount)
+    .emplace_back(idShuntFraction)
+    .emplace_back(idStrongIonDifference)
+    .emplace_back(idTotalBilirubin)
+    .emplace_back(idTotalProteinConcentration)
+    .emplace_back(idVenousBloodPH)
+    .emplace_back(idVolumeFractionNeutralPhospholipidInPlasma)
+    .emplace_back(idVolumeFractionNeutralLipidInPlasma)
+    .emplace_back(idWhiteBloodCellCount)
+    .emplace_back(idArterialCarbonDioxidePressure)
+    .emplace_back(idArterialOxygenPressure)
+    .emplace_back(idPulmonaryArterialCarbonDioxidePressure)
+    .emplace_back(idPulmonaryArterialOxygenPressure)
+    .emplace_back(idPulmonaryVenousCarbonDioxidePressure)
+    .emplace_back(idPulmonaryVenousOxygenPressure)
+    .emplace_back(idVenousCarbonDioxidePressure)
+    .emplace_back(idVenousOxygenPressure)
+    .emplace_back(idSepsisInfectionState)
+    .emplace_back(idAcuteInflammatoryResponse)
+    ;
 }
 }

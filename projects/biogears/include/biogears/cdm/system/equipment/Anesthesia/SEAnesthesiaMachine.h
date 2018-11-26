@@ -41,6 +41,11 @@ public:
   SEAnesthesiaMachine(SESubstanceManager& substances);
   ~SEAnesthesiaMachine() override;
 
+  static constexpr size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
+  static constexpr char*  TypeTag() { return "SEAnesthesiaMachine"; }
+  const char* classname() const override { return TypeTag(); }
+  size_t hash_code() const override { return TypeHash(); }
+
   void Clear() override;
 
   bool Load(const CDM::AnesthesiaMachineData& in);

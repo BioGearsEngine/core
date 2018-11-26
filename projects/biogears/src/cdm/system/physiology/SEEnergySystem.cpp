@@ -24,6 +24,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idAchievedExerciseLevel[] = "AchievedExerciseLevel";
+  constexpr char idChlorideLostToSweat[] = "ChlorideLostToSweat";
+  constexpr char idCoreTemperature[] = "CoreTemperature";
+  constexpr char idCreatinineProductionRate[] = "CreatinineProductionRate";
+  constexpr char idExerciseMeanArterialPressureDelta[] = "ExerciseMeanArterialPressureDelta";
+  constexpr char idFatigueLevel[] = "FatigueLevel";
+  constexpr char idLactateProductionRate[] = "LactateProductionRate";
+  constexpr char idPotassiumLostToSweat[] = "PotassiumLostToSweat";
+  constexpr char idSkinTemperature[] = "SkinTemperature";
+  constexpr char idSodiumLostToSweat[] = "SodiumLostToSweat";
+  constexpr char idSweatRate[] = "SweatRate";
+  constexpr char idTotalMetabolicRate[] = "TotalMetabolicRate";
+  constexpr char idTotalWorkRateLevel[] = "TotalWorkRateLevel";
+
 SEEnergySystem::SEEnergySystem(Logger* logger)
   : SESystem(logger)
 {
@@ -71,31 +85,31 @@ void SEEnergySystem::Clear()
 
 const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
 {
-  if (name.compare("AchievedExerciseLevel") == 0)
+  if (name == idAchievedExerciseLevel)
     return &GetAchievedExerciseLevel();
-  if (name.compare("ChlorideLostToSweat") == 0)
+  if (name == idChlorideLostToSweat)
     return &GetChlorideLostToSweat();
-  if (name.compare("CoreTemperature") == 0)
+  if (name == idCoreTemperature)
     return &GetCoreTemperature();
-  if (name.compare("CreatinineProductionRate") == 0)
+  if (name == idCreatinineProductionRate)
     return &GetCreatinineProductionRate();
-  if (name.compare("ExerciseMeanArterialPressureDelta") == 0)
+  if (name == idExerciseMeanArterialPressureDelta)
     return &GetExerciseMeanArterialPressureDelta();
-  if (name.compare("FatigueLevel") == 0)
+  if (name == idFatigueLevel)
     return &GetFatigueLevel();
-  if (name.compare("LactateProductionRate") == 0)
+  if (name == idLactateProductionRate)
     return &GetLactateProductionRate();
-  if (name.compare("PotassiumLostToSweat") == 0)
+  if (name == idPotassiumLostToSweat)
     return &GetPotassiumLostToSweat();
-  if (name.compare("SkinTemperature") == 0)
+  if (name == idSkinTemperature)
     return &GetSkinTemperature();
-  if (name.compare("SodiumLostToSweat") == 0)
+  if (name == idSodiumLostToSweat)
     return &GetSodiumLostToSweat();
-  if (name.compare("SweatRate") == 0)
+  if (name == idSweatRate)
     return &GetSweatRate();
-  if (name.compare("TotalMetabolicRate") == 0)
+  if (name == idTotalMetabolicRate)
     return &GetTotalMetabolicRate();
-  if (name.compare("TotalWorkRateLevel") == 0)
+  if (name == idTotalWorkRateLevel)
     return &GetTotalWorkRateLevel();
   return nullptr;
 }
@@ -437,6 +451,20 @@ double SEEnergySystem::GetTotalWorkRateLevel() const
 //-------------------------------------------------------------------------------
 Tree<std::string> SEEnergySystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idAchievedExerciseLevel)
+    .emplace_back(idChlorideLostToSweat)
+    .emplace_back(idCoreTemperature)
+    .emplace_back(idCreatinineProductionRate)
+    .emplace_back(idExerciseMeanArterialPressureDelta)
+    .emplace_back(idFatigueLevel)
+    .emplace_back(idLactateProductionRate)
+    .emplace_back(idPotassiumLostToSweat)
+    .emplace_back(idSkinTemperature)
+    .emplace_back(idSodiumLostToSweat)
+    .emplace_back(idSweatRate)
+    .emplace_back(idTotalMetabolicRate)
+    .emplace_back(idTotalWorkRateLevel)
+    ;
 }
 }

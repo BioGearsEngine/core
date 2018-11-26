@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idInsulinSynthesisRate[] = "InsulinSynthesisRate";
+  constexpr char idGlucagonSynthesisRate[] = "GlucagonSynthesisRate";
+
 SEEndocrineSystem::SEEndocrineSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -40,9 +43,9 @@ void SEEndocrineSystem::Clear()
 
 const SEScalar* SEEndocrineSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("InsulinSynthesisRate") == 0)
+  if (name == idInsulinSynthesisRate)
     return &GetInsulinSynthesisRate();
-  if (name.compare("GlucagonSynthesisRate") == 0)
+  if (name == idGlucagonSynthesisRate)
     return &GetGlucagonSynthesisRate();
   return nullptr;
 }
@@ -118,6 +121,9 @@ double SEEndocrineSystem::GetGlucagonSynthesisRate(const AmountPerTimeUnit& unit
 //-------------------------------------------------------------------------------
 Tree<std::string> SEEndocrineSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idInsulinSynthesisRate)
+    .emplace_back(idGlucagonSynthesisRate);
+  ;
 }
 }

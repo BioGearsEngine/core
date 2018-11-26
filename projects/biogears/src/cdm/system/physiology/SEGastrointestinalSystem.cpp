@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idChymeAbsorptionRate[] = "ChymeAbsorptionRate";
+  constexpr char idStomachContents[] = "StomachContents";
+
 SEGastrointestinalSystem::SEGastrointestinalSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -42,14 +45,14 @@ void SEGastrointestinalSystem::Clear()
 
 const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("ChymeAbsorptionRate") == 0)
+  if (name == idChymeAbsorptionRate)
     return &GetChymeAbsorptionRate();
 
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
-    if (child == "StomachContents")
+    if (child == idStomachContents)
       return GetStomachContents().GetScalar(prop);
   }
   return nullptr;
@@ -129,6 +132,9 @@ void SEGastrointestinalSystem::RemoveStomachContents()
 //-------------------------------------------------------------------------------
 Tree<std::string> SEGastrointestinalSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string> {classname()}
+    .emplace_back(idChymeAbsorptionRate)
+    .emplace_back(idChymeAbsorptionRate)
+  ;
 }
 }

@@ -23,6 +23,27 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idCarbonDioxideProductionRate[] = "CarbonDioxideProductionRate";
+  constexpr char idDehydrationFraction[] = "DehydrationFraction";
+  constexpr char idExtracellularFluidVolume[] = "ExtracellularFluidVolume";
+  constexpr char idExtravascularFluidVolume[] = "ExtravascularFluidVolume";
+  constexpr char idIntracellularFluidPH[] = "IntracellularFluidPH";
+  constexpr char idIntracellularFluidVolume[] = "IntracellularFluidVolume";
+  constexpr char idTotalBodyFluidVolume[] = "TotalBodyFluidVolume";
+  constexpr char idOxygenConsumptionRate[] = "OxygenConsumptionRate";
+  constexpr char idRespiratoryExchangeRatio[] = "RespiratoryExchangeRatio";
+  constexpr char idLiverInsulinSetPoint[] = "LiverInsulinSetPoint";
+  constexpr char idLiverGlucagonSetPoint[] = "LiverGlucagonSetPoint";
+  constexpr char idMuscleInsulinSetPoint[] = "MuscleInsulinSetPoint";
+  constexpr char idMuscleGlucagonSetPoint[] = "MuscleGlucagonSetPoint";
+  constexpr char idFatInsulinSetPoint[] = "FatInsulinSetPoint";
+  constexpr char idFatGlucagonSetPoint[] = "FatGlucagonSetPoint";
+  constexpr char idLiverGlycogen[] = "LiverGlycogen";
+  constexpr char idMuscleGlycogen[] = "MuscleGlycogen";
+  constexpr char idStoredProtein[] = "StoredProtein";
+  constexpr char idStoredFat[] = "StoredFat";
+
+
 SETissueSystem::SETissueSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -77,43 +98,43 @@ void SETissueSystem::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SETissueSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("CarbonDioxideProductionRate") == 0)
+  if (name == idCarbonDioxideProductionRate)
     return &GetCarbonDioxideProductionRate();
-  if (name.compare("DehydrationFraction") == 0)
+  if (name == idDehydrationFraction)
     return &GetDehydrationFraction();
-  if (name.compare("ExtracellularFluidVolume") == 0)
+  if (name == idExtracellularFluidVolume)
     return &GetExtracellularFluidVolume();
-  if (name.compare("ExtravascularFluidVolume") == 0)
+  if (name == idExtravascularFluidVolume)
     return &GetExtravascularFluidVolume();
-  if (name.compare("IntracellularFluidPH") == 0)
+  if (name == idIntracellularFluidPH)
     return &GetIntracellularFluidPH();
-  if (name.compare("IntracellularFluidVolume") == 0)
+  if (name == idIntracellularFluidVolume)
     return &GetIntracellularFluidVolume();
-  if (name.compare("TotalBodyFluidVolume") == 0)
+  if (name == idTotalBodyFluidVolume)
     return &GetTotalBodyFluidVolume();
-  if (name.compare("OxygenConsumptionRate") == 0)
+  if (name == idOxygenConsumptionRate)
     return &GetOxygenConsumptionRate();
-  if (name.compare("RespiratoryExchangeRatio") == 0)
+  if (name == idRespiratoryExchangeRatio)
     return &GetRespiratoryExchangeRatio();
-  if (name.compare("LiverInsulinSetPoint") == 0)
+  if (name == idLiverInsulinSetPoint)
     return &GetLiverInsulinSetPoint();
-  if (name.compare("LiverGlucagonSetPoint") == 0)
+  if (name == idLiverGlucagonSetPoint)
     return &GetLiverGlucagonSetPoint();
-  if (name.compare("MuscleInsulinSetPoint") == 0)
+  if (name == idMuscleInsulinSetPoint)
     return &GetMuscleInsulinSetPoint();
-  if (name.compare("MuscleGlucagonSetPoint") == 0)
+  if (name == idMuscleGlucagonSetPoint)
     return &GetMuscleGlucagonSetPoint();
-  if (name.compare("FatInsulinSetPoint") == 0)
+  if (name == idFatInsulinSetPoint)
     return &GetFatInsulinSetPoint();
-  if (name.compare("FatGlucagonSetPoint") == 0)
+  if (name == idFatGlucagonSetPoint)
     return &GetFatGlucagonSetPoint();
-  if (name.compare("LiverGlycogen") == 0)
+  if (name == idLiverGlycogen)
     return &GetLiverGlycogen();
-  if (name.compare("MuscleGlycogen") == 0)
+  if (name == idMuscleGlycogen)
     return &GetMuscleGlycogen();
-  if (name.compare("StoredProtein") == 0)
+  if (name == idStoredProtein)
     return &GetStoredProtein();
-  if (name.compare("StoredFat") == 0)
+  if (name == idStoredFat)
     return &GetStoredFat();
 
   return nullptr;
@@ -578,6 +599,26 @@ double SETissueSystem::GetStoredFat(const MassUnit& unit) const
 //-------------------------------------------------------------------------------
 Tree<std::string> SETissueSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+  .emplace_back(idCarbonDioxideProductionRate)
+  .emplace_back(idDehydrationFraction)
+  .emplace_back(idExtracellularFluidVolume)
+  .emplace_back(idExtravascularFluidVolume)
+  .emplace_back(idIntracellularFluidPH)
+  .emplace_back(idIntracellularFluidVolume)
+  .emplace_back(idTotalBodyFluidVolume)
+  .emplace_back(idOxygenConsumptionRate)
+  .emplace_back(idRespiratoryExchangeRatio)
+  .emplace_back(idLiverInsulinSetPoint)
+  .emplace_back(idLiverGlucagonSetPoint)
+  .emplace_back(idMuscleInsulinSetPoint)
+  .emplace_back(idMuscleGlucagonSetPoint)
+  .emplace_back(idFatInsulinSetPoint)
+  .emplace_back(idFatGlucagonSetPoint)
+  .emplace_back(idLiverGlycogen)
+  .emplace_back(idMuscleGlycogen)
+  .emplace_back(idStoredProtein)
+  .emplace_back(idStoredFat)
+  ;
 }
 }

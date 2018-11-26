@@ -786,19 +786,18 @@ const SECompartmentManager& BioGearsEngine::GetCompartments()
 //-------------------------------------------------------------------------------
 Tree<std::string> BioGearsEngine::GetDataRequestGraph() const
 {
-  Tree<std::string> dataTree{ "" };
-  dataTree.emplace_back(GetBloodChemistry().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetCardiovascular().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetDrugs().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetEndocrine().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetEnergy().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetGastrointestinal().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetHepatic().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetNervous().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetRenal().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetRespiratory().GetPhysiologyRequestGraph());
-  dataTree.emplace_back(GetTissue().GetPhysiologyRequestGraph());
-
-  return dataTree;
+  return
+  Tree<std::string>{ "BioGearsEngine" }
+  .emplace_back(GetBloodChemistry().GetPhysiologyRequestGraph())
+  .emplace_back(GetCardiovascular().GetPhysiologyRequestGraph())
+  .emplace_back(GetDrugs().GetPhysiologyRequestGraph())
+  .emplace_back(GetEndocrine().GetPhysiologyRequestGraph())
+  .emplace_back(GetEnergy().GetPhysiologyRequestGraph())
+  .emplace_back(GetGastrointestinal().GetPhysiologyRequestGraph())
+  .emplace_back(GetHepatic().GetPhysiologyRequestGraph())
+  .emplace_back(GetNervous().GetPhysiologyRequestGraph())
+  .emplace_back(GetRenal().GetPhysiologyRequestGraph())
+  .emplace_back(GetRespiratory().GetPhysiologyRequestGraph())
+  .emplace_back(GetTissue().GetPhysiologyRequestGraph());
 }
 }

@@ -44,6 +44,11 @@ public:
   SEBloodChemistrySystem(Logger* logger);
   ~SEBloodChemistrySystem() override;
 
+  static constexpr size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
+  static constexpr char*  TypeTag() { return "SEBloodChemistrySystem"; }
+  const char* classname() const override { return TypeTag(); }
+  size_t hash_code() const override { return TypeHash(); }
+
   void Clear() override; /**< @copydoc DOXY_CDM_CLEAR */
 
   const SEScalar* GetScalar(const std::string& name) override; /**< @copydoc DOXY_CDM_GET_SCALAR */

@@ -29,6 +29,61 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+  constexpr char idGlomerularFiltrationRate[] = "GlomerularFiltrationRate";
+  constexpr char idFiltrationFraction[] = "FiltrationFraction";
+  constexpr char idLeftAfferentArterioleResistance[] = "LeftAfferentArterioleResistance";
+  constexpr char idLeftBowmansCapsulesHydrostaticPressure[] = "LeftBowmansCapsulesHydrostaticPressure";
+  constexpr char idLeftBowmansCapsulesOsmoticPressure[] = "LeftBowmansCapsulesOsmoticPressure";
+  constexpr char idLeftEfferentArterioleResistance[] = "LeftEfferentArterioleResistance";
+  constexpr char idLeftGlomerularCapillariesHydrostaticPressure[] = "LeftGlomerularCapillariesHydrostaticPressure";
+  constexpr char idLeftGlomerularCapillariesOsmoticPressure[] = "LeftGlomerularCapillariesOsmoticPressure";
+  constexpr char idLeftGlomerularFiltrationCoefficient[] = "LeftGlomerularFiltrationCoefficient";
+  constexpr char idLeftGlomerularFiltrationRate[] = "LeftGlomerularFiltrationRate";
+  constexpr char idLeftGlomerularFiltrationSurfaceArea[] = "LeftGlomerularFiltrationSurfaceArea";
+  constexpr char idLeftGlomerularFluidPermeability[] = "LeftGlomerularFluidPermeability";
+  constexpr char idLeftFiltrationFraction[] = "LeftFiltrationFraction";
+  constexpr char idLeftNetFiltrationPressure[] = "LeftNetFiltrationPressure";
+  constexpr char idLeftNetReabsorptionPressure[] = "LeftNetReabsorptionPressure";
+  constexpr char idLeftPeritubularCapillariesHydrostaticPressure[] = "LeftPeritubularCapillariesHydrostaticPressure";
+  constexpr char idLeftPeritubularCapillariesOsmoticPressure[] = "LeftPeritubularCapillariesOsmoticPressure";
+  constexpr char idLeftReabsorptionFiltrationCoefficient[] = "LeftReabsorptionFiltrationCoefficient";
+  constexpr char idLeftReabsorptionRate[] = "LeftReabsorptionRate";
+  constexpr char idLeftTubularReabsorptionFiltrationSurfaceArea[] = "LeftTubularReabsorptionFiltrationSurfaceArea";
+  constexpr char idLeftTubularReabsorptionFluidPermeability[] = "LeftTubularReabsorptionFluidPermeability";
+  constexpr char idLeftTubularHydrostaticPressure[] = "LeftTubularHydrostaticPressure";
+  constexpr char idLeftTubularOsmoticPressure[] = "LeftTubularOsmoticPressure";
+  constexpr char idRenalBloodFlow[] = "RenalBloodFlow";
+  constexpr char idRenalPlasmaFlow[] = "RenalPlasmaFlow";
+  constexpr char idRenalVascularResistance[] = "RenalVascularResistance";
+  constexpr char idRightAfferentArterioleResistance[] = "RightAfferentArterioleResistance";
+  constexpr char idRightBowmansCapsulesHydrostaticPressure[] = "RightBowmansCapsulesHydrostaticPressure";
+  constexpr char idRightBowmansCapsulesOsmoticPressure[] = "RightBowmansCapsulesOsmoticPressure";
+  constexpr char idRightEfferentArterioleResistance[] = "RightEfferentArterioleResistance";
+  constexpr char idRightGlomerularCapillariesHydrostaticPressure[] = "RightGlomerularCapillariesHydrostaticPressure";
+  constexpr char idRightGlomerularCapillariesOsmoticPressure[] = "RightGlomerularCapillariesOsmoticPressure";
+  constexpr char idRightGlomerularFiltrationCoefficient[] = "RightGlomerularFiltrationCoefficient";
+  constexpr char idRightGlomerularFiltrationRate[] = "RightGlomerularFiltrationRate";
+  constexpr char idRightGlomerularFiltrationSurfaceArea[] = "RightGlomerularFiltrationSurfaceArea";
+  constexpr char idRightGlomerularFluidPermeability[] = "RightGlomerularFluidPermeability";
+  constexpr char idRightFiltrationFraction[] = "RightFiltrationFraction";
+  constexpr char idRightNetFiltrationPressure[] = "RightNetFiltrationPressure";
+  constexpr char idRightNetReabsorptionPressure[] = "RightNetReabsorptionPressure";
+  constexpr char idRightPeritubularCapillariesHydrostaticPressure[] = "RightPeritubularCapillariesHydrostaticPressure";
+  constexpr char idRightPeritubularCapillariesOsmoticPressure[] = "RightPeritubularCapillariesOsmoticPressure";
+  constexpr char idRightReabsorptionFiltrationCoefficient[] = "RightReabsorptionFiltrationCoefficient";
+  constexpr char idRightReabsorptionRate[] = "RightReabsorptionRate";
+  constexpr char idRightTubularReabsorptionFiltrationSurfaceArea[] = "RightTubularReabsorptionFiltrationSurfaceArea";
+  constexpr char idRightTubularReabsorptionFluidPermeability[] = "RightTubularReabsorptionFluidPermeability";
+  constexpr char idRightTubularHydrostaticPressure[] = "RightTubularHydrostaticPressure";
+  constexpr char idRightTubularOsmoticPressure[] = "RightTubularOsmoticPressure";
+  constexpr char idUrinationRate[] = "UrinationRate";
+  constexpr char idUrineOsmolality[] = "UrineOsmolality";
+  constexpr char idUrineOsmolarity[] = "UrineOsmolarity";
+  constexpr char idUrineProductionRate[] = "UrineProductionRate";
+  constexpr char idUrineSpecificGravity[] = "UrineSpecificGravity";
+  constexpr char idUrineVolume[] = "UrineVolume";
+  constexpr char idUrineUreaNitrogenConcentration[] = "UrineUreaNitrogenConcentration";
+
 SERenalSystem::SERenalSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -166,117 +221,117 @@ void SERenalSystem::Clear()
 
 const SEScalar* SERenalSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("GlomerularFiltrationRate") == 0)
+  if (name == idGlomerularFiltrationRate)
     return &GetGlomerularFiltrationRate();
-  if (name.compare("FiltrationFraction") == 0)
+  if (name == idFiltrationFraction)
     return &GetFiltrationFraction();
 
-  if (name.compare("LeftAfferentArterioleResistance") == 0)
+  if (name == idLeftAfferentArterioleResistance)
     return &GetLeftAfferentArterioleResistance();
-  if (name.compare("LeftBowmansCapsulesHydrostaticPressure") == 0)
+  if (name == idLeftBowmansCapsulesHydrostaticPressure)
     return &GetLeftBowmansCapsulesHydrostaticPressure();
-  if (name.compare("LeftBowmansCapsulesOsmoticPressure") == 0)
+  if (name == idLeftBowmansCapsulesOsmoticPressure)
     return &GetLeftBowmansCapsulesOsmoticPressure();
-  if (name.compare("LeftEfferentArterioleResistance") == 0)
+  if (name == idLeftEfferentArterioleResistance)
     return &GetLeftEfferentArterioleResistance();
-  if (name.compare("LeftGlomerularCapillariesHydrostaticPressure") == 0)
+  if (name == idLeftGlomerularCapillariesHydrostaticPressure)
     return &GetLeftGlomerularCapillariesHydrostaticPressure();
-  if (name.compare("LeftGlomerularCapillariesOsmoticPressure") == 0)
+  if (name == idLeftGlomerularCapillariesOsmoticPressure)
     return &GetLeftGlomerularCapillariesOsmoticPressure();
-  if (name.compare("LeftGlomerularFiltrationCoefficient") == 0)
+  if (name == idLeftGlomerularFiltrationCoefficient)
     return &GetLeftGlomerularFiltrationCoefficient();
-  if (name.compare("LeftGlomerularFiltrationRate") == 0)
+  if (name == idLeftGlomerularFiltrationRate)
     return &GetLeftGlomerularFiltrationRate();
-  if (name.compare("LeftGlomerularFiltrationSurfaceArea") == 0)
+  if (name == idLeftGlomerularFiltrationSurfaceArea)
     return &GetLeftGlomerularFiltrationSurfaceArea();
-  if (name.compare("LeftGlomerularFluidPermeability") == 0)
+  if (name == idLeftGlomerularFluidPermeability)
     return &GetLeftGlomerularFluidPermeability();
-  if (name.compare("LeftFiltrationFraction") == 0)
+  if (name == idLeftFiltrationFraction)
     return &GetLeftFiltrationFraction();
-  if (name.compare("LeftNetFiltrationPressure") == 0)
+  if (name == idLeftNetFiltrationPressure)
     return &GetLeftNetFiltrationPressure();
-  if (name.compare("LeftNetReabsorptionPressure") == 0)
+  if (name == idLeftNetReabsorptionPressure)
     return &GetLeftNetReabsorptionPressure();
-  if (name.compare("LeftPeritubularCapillariesHydrostaticPressure") == 0)
+  if (name == idLeftPeritubularCapillariesHydrostaticPressure)
     return &GetLeftPeritubularCapillariesHydrostaticPressure();
-  if (name.compare("LeftPeritubularCapillariesOsmoticPressure") == 0)
+  if (name == idLeftPeritubularCapillariesOsmoticPressure)
     return &GetLeftPeritubularCapillariesOsmoticPressure();
-  if (name.compare("LeftReabsorptionFiltrationCoefficient") == 0)
+  if (name == idLeftReabsorptionFiltrationCoefficient)
     return &GetLeftReabsorptionFiltrationCoefficient();
-  if (name.compare("LeftReabsorptionRate") == 0)
+  if (name == idLeftReabsorptionRate)
     return &GetLeftReabsorptionRate();
-  if (name.compare("LeftTubularReabsorptionFiltrationSurfaceArea") == 0)
+  if (name == idLeftTubularReabsorptionFiltrationSurfaceArea)
     return &GetLeftTubularReabsorptionFiltrationSurfaceArea();
-  if (name.compare("LeftTubularReabsorptionFluidPermeability") == 0)
+  if (name == idLeftTubularReabsorptionFluidPermeability)
     return &GetLeftTubularReabsorptionFluidPermeability();
-  if (name.compare("LeftTubularHydrostaticPressure") == 0)
+  if (name == idLeftTubularHydrostaticPressure)
     return &GetLeftTubularHydrostaticPressure();
-  if (name.compare("LeftTubularOsmoticPressure") == 0)
+  if (name == idLeftTubularOsmoticPressure)
     return &GetLeftTubularOsmoticPressure();
 
-  if (name.compare("RenalBloodFlow") == 0)
+  if (name == idRenalBloodFlow)
     return &GetRenalBloodFlow();
-  if (name.compare("RenalPlasmaFlow") == 0)
+  if (name == idRenalPlasmaFlow)
     return &GetRenalPlasmaFlow();
-  if (name.compare("RenalVascularResistance") == 0)
+  if (name == idRenalVascularResistance)
     return &GetRenalVascularResistance();
 
-  if (name.compare("RightAfferentArterioleResistance") == 0)
+  if (name == idRightAfferentArterioleResistance)
     return &GetRightAfferentArterioleResistance();
-  if (name.compare("RightBowmansCapsulesHydrostaticPressure") == 0)
+  if (name == idRightBowmansCapsulesHydrostaticPressure)
     return &GetRightBowmansCapsulesHydrostaticPressure();
-  if (name.compare("RightBowmansCapsulesOsmoticPressure") == 0)
+  if (name == idRightBowmansCapsulesOsmoticPressure)
     return &GetRightBowmansCapsulesOsmoticPressure();
-  if (name.compare("RightEfferentArterioleResistance") == 0)
+  if (name == idRightEfferentArterioleResistance)
     return &GetRightEfferentArterioleResistance();
-  if (name.compare("RightGlomerularCapillariesHydrostaticPressure") == 0)
+  if (name == idRightGlomerularCapillariesHydrostaticPressure)
     return &GetRightGlomerularCapillariesHydrostaticPressure();
-  if (name.compare("RightGlomerularCapillariesOsmoticPressure") == 0)
+  if (name == idRightGlomerularCapillariesOsmoticPressure)
     return &GetRightGlomerularCapillariesOsmoticPressure();
-  if (name.compare("RightGlomerularFiltrationCoefficient") == 0)
+  if (name == idRightGlomerularFiltrationCoefficient)
     return &GetRightGlomerularFiltrationCoefficient();
-  if (name.compare("RightGlomerularFiltrationRate") == 0)
+  if (name == idRightGlomerularFiltrationRate)
     return &GetRightGlomerularFiltrationRate();
-  if (name.compare("RightGlomerularFiltrationSurfaceArea") == 0)
+  if (name == idRightGlomerularFiltrationSurfaceArea)
     return &GetRightGlomerularFiltrationSurfaceArea();
-  if (name.compare("RightGlomerularFluidPermeability") == 0)
+  if (name == idRightGlomerularFluidPermeability)
     return &GetRightGlomerularFluidPermeability();
-  if (name.compare("RightFiltrationFraction") == 0)
+  if (name == idRightFiltrationFraction)
     return &GetRightFiltrationFraction();
-  if (name.compare("RightNetFiltrationPressure") == 0)
+  if (name == idRightNetFiltrationPressure)
     return &GetRightNetFiltrationPressure();
-  if (name.compare("RightNetReabsorptionPressure") == 0)
+  if (name == idRightNetReabsorptionPressure)
     return &GetRightNetReabsorptionPressure();
-  if (name.compare("RightPeritubularCapillariesHydrostaticPressure") == 0)
+  if (name == idRightPeritubularCapillariesHydrostaticPressure)
     return &GetRightPeritubularCapillariesHydrostaticPressure();
-  if (name.compare("RightPeritubularCapillariesOsmoticPressure") == 0)
+  if (name == idRightPeritubularCapillariesOsmoticPressure)
     return &GetRightPeritubularCapillariesOsmoticPressure();
-  if (name.compare("RightReabsorptionFiltrationCoefficient") == 0)
+  if (name == idRightReabsorptionFiltrationCoefficient)
     return &GetRightReabsorptionFiltrationCoefficient();
-  if (name.compare("RightReabsorptionRate") == 0)
+  if (name == idRightReabsorptionRate)
     return &GetRightReabsorptionRate();
-  if (name.compare("RightTubularReabsorptionFiltrationSurfaceArea") == 0)
+  if (name == idRightTubularReabsorptionFiltrationSurfaceArea)
     return &GetRightTubularReabsorptionFiltrationSurfaceArea();
-  if (name.compare("RightTubularReabsorptionFluidPermeability") == 0)
+  if (name == idRightTubularReabsorptionFluidPermeability)
     return &GetRightTubularReabsorptionFluidPermeability();
-  if (name.compare("RightTubularHydrostaticPressure") == 0)
+  if (name == idRightTubularHydrostaticPressure)
     return &GetRightTubularHydrostaticPressure();
-  if (name.compare("RightTubularOsmoticPressure") == 0)
+  if (name == idRightTubularOsmoticPressure)
     return &GetRightTubularOsmoticPressure();
 
-  if (name.compare("UrinationRate") == 0)
+  if (name == idUrinationRate)
     return &GetUrinationRate();
-  if (name.compare("UrineOsmolality") == 0)
+  if (name == idUrineOsmolality)
     return &GetUrineOsmolality();
-  if (name.compare("UrineOsmolarity") == 0)
+  if (name == idUrineOsmolarity)
     return &GetUrineOsmolarity();
-  if (name.compare("UrineProductionRate") == 0)
+  if (name == idUrineProductionRate)
     return &GetUrineProductionRate();
-  if (name.compare("UrineSpecificGravity") == 0)
+  if (name == idUrineSpecificGravity)
     return &GetUrineSpecificGravity();
-  if (name.compare("UrineVolume") == 0)
+  if (name == idUrineVolume)
     return &GetUrineVolume();
-  if (name.compare("UrineUreaNitrogenConcentration") == 0)
+  if (name == idUrineUreaNitrogenConcentration)
     return &GetUrineUreaNitrogenConcentration();
 
   return nullptr;
@@ -1611,6 +1666,61 @@ double SERenalSystem::GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit&
 
 Tree<std::string> SERenalSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idGlomerularFiltrationRate)
+    .emplace_back(idFiltrationFraction)
+    .emplace_back(idLeftAfferentArterioleResistance)
+    .emplace_back(idLeftBowmansCapsulesHydrostaticPressure)
+    .emplace_back(idLeftBowmansCapsulesOsmoticPressure)
+    .emplace_back(idLeftEfferentArterioleResistance)
+    .emplace_back(idLeftGlomerularCapillariesHydrostaticPressure)
+    .emplace_back(idLeftGlomerularCapillariesOsmoticPressure)
+    .emplace_back(idLeftGlomerularFiltrationCoefficient)
+    .emplace_back(idLeftGlomerularFiltrationRate)
+    .emplace_back(idLeftGlomerularFiltrationSurfaceArea)
+    .emplace_back(idLeftGlomerularFluidPermeability)
+    .emplace_back(idLeftFiltrationFraction)
+    .emplace_back(idLeftNetFiltrationPressure)
+    .emplace_back(idLeftNetReabsorptionPressure)
+    .emplace_back(idLeftPeritubularCapillariesHydrostaticPressure)
+    .emplace_back(idLeftPeritubularCapillariesOsmoticPressure)
+    .emplace_back(idLeftReabsorptionFiltrationCoefficient)
+    .emplace_back(idLeftReabsorptionRate)
+    .emplace_back(idLeftTubularReabsorptionFiltrationSurfaceArea)
+    .emplace_back(idLeftTubularReabsorptionFluidPermeability)
+    .emplace_back(idLeftTubularHydrostaticPressure)
+    .emplace_back(idLeftTubularOsmoticPressure)
+    .emplace_back(idRenalBloodFlow)
+    .emplace_back(idRenalPlasmaFlow)
+    .emplace_back(idRenalVascularResistance)
+    .emplace_back(idRightAfferentArterioleResistance)
+    .emplace_back(idRightBowmansCapsulesHydrostaticPressure)
+    .emplace_back(idRightBowmansCapsulesOsmoticPressure)
+    .emplace_back(idRightEfferentArterioleResistance)
+    .emplace_back(idRightGlomerularCapillariesHydrostaticPressure)
+    .emplace_back(idRightGlomerularCapillariesOsmoticPressure)
+    .emplace_back(idRightGlomerularFiltrationCoefficient)
+    .emplace_back(idRightGlomerularFiltrationRate)
+    .emplace_back(idRightGlomerularFiltrationSurfaceArea)
+    .emplace_back(idRightGlomerularFluidPermeability)
+    .emplace_back(idRightFiltrationFraction)
+    .emplace_back(idRightNetFiltrationPressure)
+    .emplace_back(idRightNetReabsorptionPressure)
+    .emplace_back(idRightPeritubularCapillariesHydrostaticPressure)
+    .emplace_back(idRightPeritubularCapillariesOsmoticPressure)
+    .emplace_back(idRightReabsorptionFiltrationCoefficient)
+    .emplace_back(idRightReabsorptionRate)
+    .emplace_back(idRightTubularReabsorptionFiltrationSurfaceArea)
+    .emplace_back(idRightTubularReabsorptionFluidPermeability)
+    .emplace_back(idRightTubularHydrostaticPressure)
+    .emplace_back(idRightTubularOsmoticPressure)
+    .emplace_back(idUrinationRate)
+    .emplace_back(idUrineOsmolality)
+    .emplace_back(idUrineOsmolarity)
+    .emplace_back(idUrineProductionRate)
+    .emplace_back(idUrineSpecificGravity)
+    .emplace_back(idUrineVolume)
+    .emplace_back(idUrineUreaNitrogenConcentration)
+  ;
 }
 }

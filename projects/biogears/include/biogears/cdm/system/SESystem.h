@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <string>
+#include <typeinfo>
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/container/Tree.h>
@@ -27,6 +28,9 @@ class BIOGEARS_API SESystem : public Loggable {
 public:
   SESystem(Logger* logger);
   virtual ~SESystem();
+
+  virtual const char* classname() const = 0;
+  virtual size_t hash_code() const = 0;
 
   virtual void Clear(); // Deletes all members
 

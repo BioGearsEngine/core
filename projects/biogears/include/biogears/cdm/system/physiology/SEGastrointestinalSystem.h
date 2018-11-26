@@ -24,6 +24,11 @@ public:
   SEGastrointestinalSystem(Logger* logger);
   ~SEGastrointestinalSystem() override;
 
+  static constexpr size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
+  static constexpr char*  TypeTag() { return "SEGastrointestinalSystem"; }
+  const char* classname() const override { return TypeTag(); }
+  size_t hash_code() const override { return TypeHash(); }
+
   void Clear() override; // Deletes all members
 
   const SEScalar* GetScalar(const std::string& name) override;

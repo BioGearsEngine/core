@@ -25,6 +25,37 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+
+  constexpr char idArterialPressure[] = "ArterialPressure";
+  constexpr char idBloodVolume[] = "BloodVolume";
+  constexpr char idCardiacIndex[] = "CardiacIndex";
+  constexpr char idCardiacOutput[] = "CardiacOutput";
+  constexpr char idCentralVenousPressure[] = "CentralVenousPressure";
+  constexpr char idCerebralBloodFlow[] = "CerebralBloodFlow";
+  constexpr char idCerebralPerfusionPressure[] = "CerebralPerfusionPressure";
+  constexpr char idDiastolicArterialPressure[] = "DiastolicArterialPressure";
+  constexpr char idHeartEjectionFraction[] = "HeartEjectionFraction";
+  constexpr char idHeartRate[] = "HeartRate";
+  constexpr char idHeartStrokeVolume[] = "HeartStrokeVolume";
+  constexpr char idIntracranialPressure[] = "IntracranialPressure";
+  constexpr char idMeanArterialPressure[] = "MeanArterialPressure";
+  constexpr char idMeanArterialCarbonDioxidePartialPressure[] = "MeanArterialCarbonDioxidePartialPressure";
+  constexpr char idMeanArterialCarbonDioxidePartialPressureDelta[] = "MeanArterialCarbonDioxidePartialPressureDelta";
+  constexpr char idMeanCentralVenousPressure[] = "MeanCentralVenousPressure";
+  constexpr char idMeanSkinFlow[] = "MeanSkinFlow";
+  constexpr char idPulmonaryArterialPressure[] = "PulmonaryArterialPressure";
+  constexpr char idPulmonaryCapillariesWedgePressure[] = "PulmonaryCapillariesWedgePressure";
+  constexpr char idPulmonaryDiastolicArterialPressure[] = "PulmonaryDiastolicArterialPressure";
+  constexpr char idPulmonaryMeanArterialPressure[] = "PulmonaryMeanArterialPressure";
+  constexpr char idPulmonaryMeanCapillaryFlow[] = "PulmonaryMeanCapillaryFlow";
+  constexpr char idPulmonaryMeanShuntFlow[] = "PulmonaryMeanShuntFlow";
+  constexpr char idPulmonarySystolicArterialPressure[] = "PulmonarySystolicArterialPressure";
+  constexpr char idPulmonaryVascularResistance[] = "PulmonaryVascularResistance";
+  constexpr char idPulmonaryVascularResistanceIndex[] = "PulmonaryVascularResistanceIndex";
+  constexpr char idPulsePressure[] = "PulsePressure";
+  constexpr char idSystemicVascularResistance[] = "SystemicVascularResistance";
+  constexpr char idSystolicArterialPressure[] = "SystolicArterialPressure";
+
 SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -106,63 +137,63 @@ void SECardiovascularSystem::Clear()
 
 const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("ArterialPressure") == 0)
+  if (name.compare(idArterialPressure) == 0)
     return &GetArterialPressure();
-  if (name.compare("BloodVolume") == 0)
+  if (name.compare(idBloodVolume) == 0)
     return &GetBloodVolume();
-  if (name.compare("CardiacIndex") == 0)
+  if (name.compare(idCardiacIndex) == 0)
     return &GetCardiacIndex();
-  if (name.compare("CardiacOutput") == 0)
+  if (name.compare(idCardiacOutput) == 0)
     return &GetCardiacOutput();
-  if (name.compare("CentralVenousPressure") == 0)
+  if (name.compare(idCentralVenousPressure) == 0)
     return &GetCentralVenousPressure();
-  if (name.compare("CerebralBloodFlow") == 0)
+  if (name.compare(idCerebralBloodFlow) == 0)
     return &GetCerebralBloodFlow();
-  if (name.compare("CerebralPerfusionPressure") == 0)
+  if (name.compare(idCerebralPerfusionPressure) == 0)
     return &GetCerebralPerfusionPressure();
-  if (name.compare("DiastolicArterialPressure") == 0)
+  if (name.compare(idDiastolicArterialPressure) == 0)
     return &GetDiastolicArterialPressure();
-  if (name.compare("HeartEjectionFraction") == 0)
+  if (name.compare(idHeartEjectionFraction) == 0)
     return &GetHeartEjectionFraction();
-  if (name.compare("HeartRate") == 0)
+  if (name.compare(idHeartRate) == 0)
     return &GetHeartRate();
-  if (name.compare("HeartStrokeVolume") == 0)
+  if (name.compare(idHeartStrokeVolume) == 0)
     return &GetHeartStrokeVolume();
-  if (name.compare("IntracranialPressure") == 0)
+  if (name.compare(idIntracranialPressure) == 0)
     return &GetIntracranialPressure();
-  if (name.compare("MeanArterialPressure") == 0)
+  if (name.compare(idMeanArterialPressure) == 0)
     return &GetMeanArterialPressure();
-  if (name.compare("MeanArterialCarbonDioxidePartialPressure") == 0)
+  if (name.compare(idMeanArterialCarbonDioxidePartialPressure) == 0)
     return &GetMeanArterialCarbonDioxidePartialPressure();
-  if (name.compare("MeanArterialCarbonDioxidePartialPressureDelta") == 0)
+  if (name.compare(idMeanArterialCarbonDioxidePartialPressureDelta) == 0)
     return &GetMeanArterialCarbonDioxidePartialPressureDelta();
-  if (name.compare("MeanCentralVenousPressure") == 0)
+  if (name.compare(idMeanCentralVenousPressure) == 0)
     return &GetMeanCentralVenousPressure();
-  if (name.compare("MeanSkinFlow") == 0)
+  if (name.compare(idMeanSkinFlow) == 0)
     return &GetMeanSkinFlow();
-  if (name.compare("PulmonaryArterialPressure") == 0)
+  if (name.compare(idPulmonaryArterialPressure) == 0)
     return &GetPulmonaryArterialPressure();
-  if (name.compare("PulmonaryCapillariesWedgePressure") == 0)
+  if (name.compare(idPulmonaryCapillariesWedgePressure) == 0)
     return &GetPulmonaryCapillariesWedgePressure();
-  if (name.compare("PulmonaryDiastolicArterialPressure") == 0)
+  if (name.compare(idPulmonaryDiastolicArterialPressure) == 0)
     return &GetPulmonaryDiastolicArterialPressure();
-  if (name.compare("PulmonaryMeanArterialPressure") == 0)
+  if (name.compare(idPulmonaryMeanArterialPressure) == 0)
     return &GetPulmonaryMeanArterialPressure();
-  if (name.compare("PulmonaryMeanCapillaryFlow") == 0)
+  if (name.compare(idPulmonaryMeanCapillaryFlow) == 0)
     return &GetPulmonaryMeanCapillaryFlow();
-  if (name.compare("PulmonaryMeanShuntFlow") == 0)
+  if (name.compare(idPulmonaryMeanShuntFlow) == 0)
     return &GetPulmonaryMeanShuntFlow();
-  if (name.compare("PulmonarySystolicArterialPressure") == 0)
+  if (name.compare(idPulmonarySystolicArterialPressure) == 0)
     return &GetPulmonarySystolicArterialPressure();
-  if (name.compare("PulmonaryVascularResistance") == 0)
+  if (name.compare(idPulmonaryVascularResistance) == 0)
     return &GetPulmonaryVascularResistance();
-  if (name.compare("PulmonaryVascularResistanceIndex") == 0)
+  if (name.compare(idPulmonaryVascularResistanceIndex) == 0)
     return &GetPulmonaryVascularResistanceIndex();
-  if (name.compare("PulsePressure") == 0)
+  if (name.compare(idPulsePressure) == 0)
     return &GetPulsePressure();
-  if (name.compare("SystemicVascularResistance") == 0)
+  if (name.compare(idSystemicVascularResistance) == 0)
     return &GetSystemicVascularResistance();
-  if (name.compare("SystolicArterialPressure") == 0)
+  if (name.compare(idSystolicArterialPressure) == 0)
     return &GetSystolicArterialPressure();
   return nullptr;
 }
@@ -912,6 +943,36 @@ double SECardiovascularSystem::GetSystolicArterialPressure(const PressureUnit& u
 //-------------------------------------------------------------------------------
 Tree<std::string> SECardiovascularSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idArterialPressure)
+    .emplace_back(idBloodVolume)
+    .emplace_back(idCardiacIndex)
+    .emplace_back(idCardiacOutput)
+    .emplace_back(idCentralVenousPressure)
+    .emplace_back(idCerebralBloodFlow)
+    .emplace_back(idCerebralPerfusionPressure)
+    .emplace_back(idDiastolicArterialPressure)
+    .emplace_back(idHeartEjectionFraction)
+    .emplace_back(idHeartRate)
+    .emplace_back(idHeartStrokeVolume)
+    .emplace_back(idIntracranialPressure)
+    .emplace_back(idMeanArterialPressure)
+    .emplace_back(idMeanArterialCarbonDioxidePartialPressure)
+    .emplace_back(idMeanArterialCarbonDioxidePartialPressureDelta)
+    .emplace_back(idMeanCentralVenousPressure)
+    .emplace_back(idMeanSkinFlow)
+    .emplace_back(idPulmonaryArterialPressure)
+    .emplace_back(idPulmonaryCapillariesWedgePressure)
+    .emplace_back(idPulmonaryDiastolicArterialPressure)
+    .emplace_back(idPulmonaryMeanArterialPressure)
+    .emplace_back(idPulmonaryMeanCapillaryFlow)
+    .emplace_back(idPulmonaryMeanShuntFlow)
+    .emplace_back(idPulmonarySystolicArterialPressure)
+    .emplace_back(idPulmonaryVascularResistance)
+    .emplace_back(idPulmonaryVascularResistanceIndex)
+    .emplace_back(idPulsePressure)
+    .emplace_back(idSystemicVascularResistance)
+    .emplace_back(idSystolicArterialPressure)
+    ;
 }
 }

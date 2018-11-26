@@ -23,6 +23,19 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+
+  constexpr char idBronchodilationLevel[] = "BronchodilationLevel";
+constexpr char idHeartRateChange[] = "HeartRateChange";
+constexpr char idMeanBloodPressureChange[] = "MeanBloodPressureChange";
+constexpr char idNeuromuscularBlockLevel[] = "NeuromuscularBlockLevel";
+constexpr char idPulsePressureChange[] = "PulsePressureChange";
+constexpr char idRespirationRateChange[] = "RespirationRateChange";
+constexpr char idSedationLevel[] = "SedationLevel";
+constexpr char idTidalVolumeChange[] = "TidalVolumeChange";
+constexpr char idTubularPermeabilityChange[] = "TubularPermeabilityChange";
+constexpr char idCentralNervousResponse[] = "CentralNervousResponse";
+constexpr char idPupillaryResponse[] = "PupillaryResponse";
+
 SEDrugSystem::SEDrugSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -97,32 +110,32 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
 
 const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
 {
-  if (name.compare("BronchodilationLevel") == 0)
+  if (name == idBronchodilationLevel)
     return &GetBronchodilationLevel();
-  if (name.compare("HeartRateChange") == 0)
+  if (name == idHeartRateChange)
     return &GetHeartRateChange();
-  if (name.compare("MeanBloodPressureChange") == 0)
+  if (name == idMeanBloodPressureChange)
     return &GetMeanBloodPressureChange();
-  if (name.compare("NeuromuscularBlockLevel") == 0)
+  if (name == idNeuromuscularBlockLevel)
     return &GetNeuromuscularBlockLevel();
-  if (name.compare("PulsePressureChange") == 0)
+  if (name == idPulsePressureChange)
     return &GetPulsePressureChange();
-  if (name.compare("RespirationRateChange") == 0)
+  if (name == idRespirationRateChange)
     return &GetRespirationRateChange();
-  if (name.compare("SedationLevel") == 0)
+  if (name == idSedationLevel)
     return &GetSedationLevel();
-  if (name.compare("TidalVolumeChange") == 0)
+  if (name == idTidalVolumeChange)
     return &GetTidalVolumeChange();
-  if (name.compare("TubularPermeabilityChange") == 0)
+  if (name == idTubularPermeabilityChange)
     return &GetTubularPermeabilityChange();
-  if (name.compare("CentralNervousResponse") == 0)
+  if (name == idCentralNervousResponse)
     return &GetCentralNervousResponse();
 
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
-    if (child == "PupillaryResponse")
+    if (child == idPupillaryResponse)
       return GetPupillaryResponse().GetScalar(prop);
   }
 
@@ -392,6 +405,16 @@ double SEDrugSystem::GetCentralNervousResponse() const
 //-------------------------------------------------------------------------------
 Tree<std::string> SEDrugSystem::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return Tree<std::string>{classname()}
+    .emplace_back(idBronchodilationLevel)
+    .emplace_back(idHeartRateChange)
+    .emplace_back(idMeanBloodPressureChange)
+    .emplace_back(idNeuromuscularBlockLevel)
+    .emplace_back(idPulsePressureChange)
+    .emplace_back(idRespirationRateChange)
+    .emplace_back(idSedationLevel)
+    .emplace_back(idTidalVolumeChange)
+    .emplace_back(idTubularPermeabilityChange)
+    .emplace_back(idCentralNervousResponse);
 }
 }
