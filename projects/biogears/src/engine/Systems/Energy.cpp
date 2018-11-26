@@ -606,46 +606,157 @@ void Energy::ProcessOverride()
   double sodiumSweat_g = GetSodiumLostToSweat().GetValue(MassUnit::g);
   double potassiumSweat_g = GetPotassiumLostToSweat().GetValue(MassUnit::g);
   double chlorideSweat_g = GetChlorideLostToSweat().GetValue(MassUnit::g);
-  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn()) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCoreTemperatureOverride())
-      coreTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetCoreTemperatureOverride(TemperatureUnit::C);
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasSkinTemperatureOverride())
-      skinTemp_degC = m_data.GetActions().GetPatientActions().GetOverride()->GetSkinTemperatureOverride(TemperatureUnit::C);
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasTotalMetabolicOverride())
-      totalMetabolic_kcal_per_day = m_data.GetActions().GetPatientActions().GetOverride()->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
-  }
+  if (override->HasAchievedExerciseLevelOverride())
+    acheivedExercise = override->GetAchievedExerciseLevelOverride().GetValue();
+  if (override->HasCoreTemperatureOverride())
+    coreTemp_degC = override->GetCoreTemperatureOverride(TemperatureUnit::C);
+  if (override->HasCreatinineProductionRateOverride())
+    creatinine = override->GetCreatinineProductionRateOverride(AmountPerTimeUnit::mol_Per_s);
+  if (override->HasExerciseMeanArterialPressureDeltaOverride())
+    exerciseMAP_mmHg = override->GetExerciseMeanArterialPressureDeltaOverride(PressureUnit::mmHg);
+  if (override->HasFatigueLevelOverride())
+    fatigue = override->GetFatigueLevelOverride().GetValue();
+  if (override->HasLactateProductionRateOverride())
+    lactateProduction_mol_per_s = override->GetLactateProductionRateOverride(AmountPerTimeUnit::mol_Per_s);
+  if (override->HasSkinTemperatureOverride())
+    skinTemp_degC = override->GetSkinTemperatureOverride(TemperatureUnit::C);
+  if (override->HasSweatRateOverride())
+    sweatRate_g_per_s = override->GetSweatRateOverride(MassPerTimeUnit::g_Per_s);
+  if (override->HasTotalMetabolicOverride())
+    totalMetabolic_kcal_per_day = override->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
+  if (override->HasTotalWorkRateLevelOverride())
+    totalWorkRate = override->GetTotalWorkRateLevelOverride().GetValue();
+  if (override->HasSodiumLostToSweatOverride())
+    sodiumSweat_g = override->GetSodiumLostToSweatOverride(MassUnit::g);
+  if (override->HasPotassiumLostToSweatOverride())
+    potassiumSweat_g = override->GetPotassiumLostToSweatOverride(MassUnit::g);
+  if (override->HasChlorideLostToSweatOverride())
+    chlorideSweat_g = override->GetChlorideLostToSweatOverride(MassUnit::g);
+  m_data.GetEnergy().GetAchievedExerciseLevel().SetValue(acheivedExercise);
   m_data.GetEnergy().GetCoreTemperature().SetValue(coreTemp_degC, TemperatureUnit::C);
+  m_data.GetEnergy().GetCreatinineProductionRate().SetValue(creatinine, AmountPerTimeUnit::mol_Per_s);
+  m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(exerciseMAP_mmHg, PressureUnit::mmHg);
+  m_data.GetEnergy().GetFatigueLevel().SetValue(fatigue);
+  m_data.GetEnergy().GetLactateProductionRate().SetValue(lactateProduction_mol_per_s, AmountPerTimeUnit::mol_Per_s);
   m_data.GetEnergy().GetSkinTemperature().SetValue(skinTemp_degC, TemperatureUnit::C);
+  m_data.GetEnergy().GetSweatRate().SetValue(sweatRate_g_per_s, MassPerTimeUnit::g_Per_s);
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(totalMetabolic_kcal_per_day, PowerUnit::kcal_Per_day);
+  m_data.GetEnergy().GetTotalWorkRateLevel().SetValue(totalWorkRate);
+  m_data.GetEnergy().GetSodiumLostToSweat().SetValue(sodiumSweat_g, MassUnit::g);
+  m_data.GetEnergy().GetPotassiumLostToSweat().SetValue(potassiumSweat_g, MassUnit::g);
+  m_data.GetEnergy().GetChlorideLostToSweat().SetValue(chlorideSweat_g, MassUnit::g);
 }
 
 void Energy::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  double maxAcheivedExerciseOverride = 100;
+  double minAcheivedExerciseOverride = 0;
+  double currentAcheivedExerciseOverride = m_data.GetEnergy().GetAchievedExerciseLevel().GetValue();
   double maxCoreTempOverride = 200.0; //degC
   double minCoreTempOverride = 0.0; //degC
-  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Current CT, value gets changed in next check
+  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Current value, gets changed in next step
+  double maxCreatinineOverride = 100.0; // mol_Per_s
+  double minCreatinineOverride = 0.0; // mol_Per_s
+  double currentCreatinineOverride = m_data.GetEnergy().GetCreatinineProductionRate().GetValue(AmountPerTimeUnit::mol_Per_s); // Current value, gets changed in next step
+  double maxExerciseMAPOverride = 100.0; //mmHg
+  double minExerciseMAPOverride = 0.0; //mmHg
+  double currentExerciseMAPOverride = m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().GetValue(PressureUnit::mmHg); // Current value, gets changed in next step
+  double maxFatigueOverride = 100.0;
+  double minFatigueOverride = 0.0;
+  double currentFatigueOverride = m_data.GetEnergy().GetFatigueLevel().GetValue(); // Current value, gets changed in next step
+  double maxLactateOverride = 100.0; //mol per s
+  double minLactateOverride = 0.0; //mol per s
+  double currentLactateOverride = m_data.GetEnergy().GetLactateProductionRate().GetValue(AmountPerTimeUnit::mol_Per_s); // Current value, gets changed in next step
   double maxSkinTempOverride = 200.0; //degC
   double minSkinTempOverride = 0.0; //degC
-  double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Current ST, value gets changed in next check
+  double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Current value, gets changed in next step
+  double maxSweatRateOverride = 100.0; // g per s
+  double minSweatRateOverride = 0.0; // g per s
+  double currentSweatRateOverride = m_data.GetEnergy().GetSweatRate().GetValue(MassPerTimeUnit::g_Per_s); // Current value, gets changed in next step
   double maxTotalMetabolicOverride = 5000.0; //kcal/day
   double minTotalMetabolicOverride = 0.0; //kcal/day
-  double currentTotalMetabolicOverride = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day); //Current Metabolic Rate
+  double currentTotalMetabolicOverride = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day); //Current value, gets changed in next step
+  double maxTotalWorkOverride = 100.0;
+  double minTotalWorkOverride = 0.0;
+  double currentTotalWorkOverride = m_data.GetEnergy().GetTotalWorkRateLevel().GetValue(); //Current value, gets changed in next step
+  double maxSodiumSweatOverride = 100.0; // g
+  double minSodiumSweatOverride = 0.0; // g
+  double currentSodiumSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
+  double maxPotassiumSweatOverride = 100.0; // g
+  double minPotassiumSweatOverride = 0.0; //  g
+  double currentPotassiumSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
+  double maxChlorideSweatOverride = 100.0; // g
+  double minChlorideSweatOverride = 0.0; // g
+  double currentChlorideSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
+  if (override->HasAchievedExerciseLevelOverride()) {
+    currentAcheivedExerciseOverride = override->GetAchievedExerciseLevelOverride().GetValue();
+  }
   if (override->HasCoreTemperatureOverride())
     {
     currentCoreTempOverride = override->GetCoreTemperatureOverride(TemperatureUnit::C);
     }
-  if (override->HasSkinTemperatureOverride())
-    {
+  if (override->HasCreatinineProductionRateOverride()) {
+    currentCreatinineOverride = override->GetCreatinineProductionRateOverride(AmountPerTimeUnit::mol_Per_s);
+  }
+  if (override->HasExerciseMeanArterialPressureDeltaOverride()) {
+    currentExerciseMAPOverride = override->GetExerciseMeanArterialPressureDeltaOverride(PressureUnit::mmHg);
+  }
+  if (override->HasFatigueLevelOverride()) {
+    currentFatigueOverride = override->GetFatigueLevelOverride().GetValue();
+  }
+  if (override->HasLactateProductionRateOverride()) {
+    currentLactateOverride = override->GetLactateProductionRateOverride(AmountPerTimeUnit::mol_Per_s);
+  }
+  if (override->HasSkinTemperatureOverride()) {
       currentSkinTempOverride = override->GetSkinTemperatureOverride(TemperatureUnit::C);
-    }
+  }
+  if (override->HasSweatRateOverride()) {
+    currentSweatRateOverride = override->GetSweatRateOverride(MassPerTimeUnit::g_Per_s);
+  }
   if (override->HasTotalMetabolicOverride()) {
       currentTotalMetabolicOverride = override->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day);
-    }
+  }
+  if (override->HasTotalWorkRateLevelOverride()) {
+    currentTotalWorkOverride = override->GetTotalWorkRateLevelOverride().GetValue();
+  }
+  if (override->HasSodiumLostToSweatOverride()) {
+    currentSodiumSweatOverride = override->GetSodiumLostToSweatOverride(MassUnit::g);
+  }
+  if (override->HasPotassiumLostToSweatOverride()) {
+    currentPotassiumSweatOverride = override->GetPotassiumLostToSweatOverride(MassUnit::g);
+  }
+  if (override->HasChlorideLostToSweatOverride()) {
+    currentChlorideSweatOverride = override->GetChlorideLostToSweatOverride(MassUnit::g);
+  }
 
-
+  if ((currentAcheivedExerciseOverride < minAcheivedExerciseOverride || currentAcheivedExerciseOverride > maxAcheivedExerciseOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Achieved Exercise Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
   if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentCreatinineOverride < minCreatinineOverride || currentCreatinineOverride > maxCreatinineOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Creatinine Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentExerciseMAPOverride < minExerciseMAPOverride || currentExerciseMAPOverride > maxExerciseMAPOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Exercise Mean Arterial Pressure Delta Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentFatigueOverride < minFatigueOverride || currentFatigueOverride > maxFatigueOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Fatigue Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentLactateOverride < minLactateOverride || currentLactateOverride > maxLactateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Lactate Production Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
@@ -654,8 +765,33 @@ void Energy::OverrideControlLoop()
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
+  if ((currentSweatRateOverride < minSweatRateOverride || currentSweatRateOverride > maxSweatRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Sweat Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
   if ((currentTotalMetabolicOverride < minTotalMetabolicOverride || currentTotalMetabolicOverride > maxTotalMetabolicOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Total Metabolic Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentTotalWorkOverride < minTotalWorkOverride || currentTotalWorkOverride > maxTotalWorkOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Total Work Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentSodiumSweatOverride < minSodiumSweatOverride || currentSodiumSweatOverride > maxSodiumSweatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Sodium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentPotassiumSweatOverride < minPotassiumSweatOverride || currentPotassiumSweatOverride > maxPotassiumSweatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Potassium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentChlorideSweatOverride < minChlorideSweatOverride || currentChlorideSweatOverride > maxChlorideSweatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Chloride Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
