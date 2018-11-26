@@ -142,20 +142,55 @@ void Tree<Data>::children(std::vector<Tree>&& children)
 //! \return child_vector::iterator : Iterator to the first element of children
 //!
 template <typename Data>
-auto Tree<Data>::begin() const -> typename child_vector::iterator
+auto Tree<Data>::begin() noexcept -> typename child_vector::iterator
 {
   return _children.begin();
+}
+//-------------------------------------------------------------------------------
+//!
+//! \return child_vector::const_iterator : Iterator to the end() of underlying child container
+//!
+template <typename Data>
+auto Tree<Data>::end() const noexcept -> typename child_vector::const_iterator
+{
+  return _children.end();
+}
+//-------------------------------------------------------------------------------
+//!
+//! \return child_vector::const_iterator : Iterator to the first element of children
+//!
+template <typename Data>
+auto Tree<Data>::begin() const noexcept -> typename child_vector::const_iterator
+{
+  return _children.begin();
+}
+//-------------------------------------------------------------------------------
+//!
+//! \return child_vector::const_iterator : Iterator to the end() of underlying child container
+//!
+template <typename Data>
+auto Tree<Data>::cend() const noexcept -> typename child_vector::const_iterator
+{
+  return _children.cend();
+}
+//-------------------------------------------------------------------------------
+//!
+//! \return child_vector::const_iterator : Iterator to the first element of children
+//!
+template <typename Data>
+auto Tree<Data>::cbegin() const noexcept -> typename child_vector::const_iterator
+{
+  return _children.cbegin();
 }
 //-------------------------------------------------------------------------------
 //!
 //! \return child_vector::iterator : Iterator to the end() of underlying child container
 //!
 template <typename Data>
-auto Tree<Data>::end() const -> typename child_vector::iterator
+auto Tree<Data>::end() noexcept -> typename child_vector::iterator
 {
   return _children.end();
 }
-
 //-------------------------------------------------------------------------------
 //! Returns a reference to the element at specified location pos. No bounds checking is performed.
 template <typename Data>

@@ -55,6 +55,11 @@ protected:
 public:
   virtual ~Cardiovascular();
 
+  static constexpr size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
+  static constexpr char*  TypeTag() { return "Cardiovascular"; }
+  const char* classname() const override { return TypeTag(); }
+  size_t hash_code() const override { return TypeHash(); }
+
   void Clear();
 
   // Set members to a stable homeostatic state

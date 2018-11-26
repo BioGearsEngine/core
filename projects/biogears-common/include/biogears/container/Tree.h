@@ -56,9 +56,12 @@ public:
   void children( const std::vector<Tree>& );
   void children( std::vector<Tree>&& );
 
-  auto begin() const -> typename child_vector::iterator;
-  auto end() const -> typename child_vector::iterator;
-
+  auto begin()  noexcept-> typename child_vector::iterator;
+  auto end()  noexcept -> typename child_vector::iterator;
+  auto begin() const noexcept-> typename child_vector::const_iterator;
+  auto end() const noexcept-> typename child_vector::const_iterator;
+  auto cbegin() const noexcept-> typename child_vector::const_iterator;
+  auto cend() const noexcept-> typename child_vector::const_iterator;
 
   template< class... Args >
   auto emplace_back(const Args&... args) && -> Tree&&

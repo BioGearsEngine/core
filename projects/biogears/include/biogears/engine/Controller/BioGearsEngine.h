@@ -80,7 +80,7 @@ public:
   const SEInhaler* GetInhaler() override;
 
   const SECompartmentManager& GetCompartments() override;
-  Tree<std::string> GetDataRequestGraph() const override;
+  Tree<std::string> GetDataRequestGraph () const override;
 
 protected:
   bool IsReady();
