@@ -25,7 +25,7 @@ public:
   ~SEGastrointestinalSystem() override;
 
   static constexpr size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
-  static constexpr char*  TypeTag() { return "SEGastrointestinalSystem"; }
+  static constexpr char const * const  TypeTag() { return "SEGastrointestinalSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 

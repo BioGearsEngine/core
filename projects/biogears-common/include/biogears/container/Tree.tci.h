@@ -72,7 +72,7 @@ Tree<Data>::Tree(Tree&& obj)
 //!
 //!  Accessor for the value of the current node
 template <typename Data>
-auto Tree<Data>::value() const -> typename const_reference
+auto Tree<Data>::value() const -> const_reference
 {
   return _value;
 }
@@ -103,7 +103,7 @@ void Tree<Data>::value(const Data& value) &
 //!
 //! Access children of the current node directly
 template <typename Data>
-auto Tree<Data>::children() const& -> const typename child_vector&
+auto Tree<Data>::children() const& -> const child_vector&
 {
   return _children;
 }
@@ -113,9 +113,9 @@ auto Tree<Data>::children() const& -> const typename child_vector&
 //!
 //! Access children of the current node directly
 template <typename Data>
-auto Tree<Data>::children() && -> typename child_vector&
+auto Tree<Data>::children() && -> child_vector&
 {
-  return _children
+  return _children;
 }
 //-------------------------------------------------------------------------------
 //!
@@ -194,21 +194,21 @@ auto Tree<Data>::end() noexcept -> typename child_vector::iterator
 //-------------------------------------------------------------------------------
 //! Returns a reference to the element at specified location pos. No bounds checking is performed.
 template <typename Data>
-auto Tree<Data>::operator[](size_t pos) -> typename reference
+auto Tree<Data>::operator[](size_t pos) -> reference
 {
   return _children[pos];
 }
 //-------------------------------------------------------------------------------
 //! Returns a const_reference to the element at specified location pos. No bounds checking is performed.
 template <typename Data>
-auto Tree<Data>::operator[](size_t pos) const -> typename const_reference
+auto Tree<Data>::operator[](size_t pos) const -> const_reference
 {
   return _children[pos];
 }
 //-------------------------------------------------------------------------------
 //! Assignment Operator by copy
 template <typename Data>
-auto Tree<Data>::operator=(const Tree& rhs) -> typename Tree&
+auto Tree<Data>::operator=(const Tree& rhs) -> Tree&
 {
   if (&*this != &rhs)
   {
@@ -220,7 +220,7 @@ auto Tree<Data>::operator=(const Tree& rhs) -> typename Tree&
 //-------------------------------------------------------------------------------
 //! assignment Operator by move
 template <typename Data>
-auto Tree<Data>::operator=(Tree&& rhs) -> typename Tree&
+auto Tree<Data>::operator=(Tree&& rhs) -> Tree&
 {
   if( &*this != &rhs)
   {

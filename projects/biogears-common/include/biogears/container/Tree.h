@@ -29,7 +29,7 @@ namespace biogears {
 template <typename Data>
 class Tree {
 public:
-  using value_type = typename Data;
+  using value_type = Data;
   using reference = value_type&;
   using const_reference = const value_type&;
   using child_vector = std::vector<Tree<Data>>;
@@ -50,8 +50,8 @@ public:
   Tree<Data>& value(const Data&) &&;
   void  value( const Data& ) &;
 
-  auto children() const & -> const typename child_vector&;
-  auto children() && -> typename  child_vector&;
+  auto children() const & -> const child_vector&;
+  auto children() && ->  child_vector&;
 
   void children( const std::vector<Tree>& );
   void children( std::vector<Tree>&& );
@@ -82,11 +82,11 @@ public:
     return _children.emplace(pos, args...);
   }
 
-  auto operator[]( size_t pos ) -> typename reference;
-  auto operator[]( size_t pos ) const -> typename const_reference;
+  auto operator[]( size_t pos ) -> reference;
+  auto operator[]( size_t pos ) const -> const_reference;
 
-  auto operator=(const Tree&) -> typename Tree&;
-  auto operator=(Tree&&) -> typename Tree&;
+  auto operator=(const Tree&) -> Tree&;
+  auto operator=(Tree&&) -> Tree&;
 protected:
   Data _value;
   std::vector<Tree> _children;

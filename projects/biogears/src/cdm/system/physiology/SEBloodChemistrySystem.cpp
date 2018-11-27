@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/container/Tree.tci.h>
 
 namespace biogears {
   constexpr char idArterialBloodPH[] = "ArterialBloodPH";

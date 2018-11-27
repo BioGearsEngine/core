@@ -61,7 +61,7 @@ public:
   virtual ~Respiratory();
 
   static constexpr size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
-  static constexpr char*  TypeTag() { return "Respiratory"; }
+  static constexpr char const * const  TypeTag() { return "Respiratory"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
