@@ -134,7 +134,7 @@ Tree<std::string> SEGastrointestinalSystem::GetPhysiologyRequestGraph() const
 {
   return Tree<std::string> {classname()}
     .emplace_back(idChymeAbsorptionRate)
-    .emplace_back(idChymeAbsorptionRate)
+    .emplace_back(idStomachContents)
   ;
 }
 }
