@@ -832,7 +832,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tAcieved Exercise Level: ";
     HasAchievedExerciseLevelOverride() ? str << *m_AcheivedExerciseLevelOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tAcheived Exercise Level has a lower bound of X and an upper bound of Y.";
+      str << "\n\tAcheived Exercise Level has a lower bound of 0 and an upper bound of 1.";
     }
     str << std::flush;
   }
@@ -849,7 +849,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tCreatinine Production Rate: ";
     HasCreatinineProductionRateOverride() ? str << *m_CreatinineProductionRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tCreatinine Production has a lower bound of X and an upper bound of Y.";
+      str << "\n\tCreatinine Production has a lower bound of 0 mol/s and an upper bound of 100 mol/s.";
     }
     str << std::flush;
   }
@@ -857,7 +857,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tExercise MAP Delta: ";
     HasExerciseMeanArterialPressureDeltaOverride() ? str << *m_ExerciseMeanArterialPressureDeltaOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tExercise MAP Delta has a lower bound of X and an upper bound of Y.";
+      str << "\n\tExercise MAP Delta has a lower bound of 0 mmHg and an upper bound of 200 mmHg.";
     }
     str << std::flush;
   }
@@ -865,7 +865,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tFatigue Level: ";
     HasFatigueLevelOverride() ? str << *m_FatigueLevelOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tFatigue Level has a lower bound of X and an upper bound of Y.";
+      str << "\n\tFatigue Level has a lower bound of 0 and an upper bound of 1.";
     }
     str << std::flush;
   }
@@ -873,7 +873,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tLactate Production: ";
     HasLactateProductionRateOverride() ? str << *m_LactateProductionRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tLactate Production has a lower bound of X and an upper bound of Y.";
+      str << "\n\tLactate Production has a lower bound of 0 mol/s and an upper bound of 200 mol/s.";
     }
     str << std::flush;
   }
@@ -889,7 +889,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tSweat Rate: ";
     HasSweatRateOverride() ? str << *m_SweatRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tSweat Rate has a lower bound of X and an upper bound of Y.";
+      str << "\n\tSweat Rate has a lower bound of 0 g/s and an upper bound of 50 g/s.";
     }
     str << std::flush;
   }
@@ -905,7 +905,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tTotal Work Rate Level: ";
     HasTotalWorkRateLevelOverride() ? str << *m_TotalWorkRateLevelOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tTotal Work Rate Level has a lower bound of X and an upper bound of Y.";
+      str << "\n\tTotal Work Rate Level has a lower bound of 0 and an upper bound of 1.";
     }
     str << std::flush;
   }
@@ -913,7 +913,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tSodium Lost to Sweat: ";
     HasSodiumLostToSweatOverride() ? str << *m_SodiumLostToSweatOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tSodium Lost to Sweat has a lower bound of X and an upper bound of Y.";
+      str << "\n\tSodium Lost to Sweat has a lower bound of 0 g and an upper bound of 500 g.";
     }
     str << std::flush;
   }
@@ -921,7 +921,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tPotassium Lost to Sweat: ";
     HasPotassiumLostToSweatOverride() ? str << *m_PotassiumLostToSweatOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tPotassium Lost to Sweat has a lower bound of X and an upper bound of Y.";
+      str << "\n\tPotassium Lost to Sweat has a lower bound of 0 g and an upper bound of 500 g.";
     }
     str << std::flush;
   }
@@ -929,7 +929,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tChloride Lost to Sweat: ";
     HasChlorideLostToSweatOverride() ? str << *m_ChlorideLostToSweatOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tChloride Lost to Sweat has a lower bound of X and an upper bound of Y.";
+      str << "\n\tChloride Lost to Sweat has a lower bound of 0 g and an upper bound of 500 g.";
     }
     str << std::flush;
   }

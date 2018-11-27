@@ -305,11 +305,10 @@ void Energy::CalculateVitalSigns()
     m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, true, m_data.GetSimulationTime());
 
     /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
-    if (coreTemperature_degC < coreTempIrreversible_degC) {
+    if (coreTemperature_degC < coreTempIrreversible_degC && m_PatientActions->IsOverrideActionConformant()) {
       ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia and is in an irreversible state.";
       Warning(ss);
-      if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
-        m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
     }
 
   } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hypothermia) && coreTemperature_degC > 35.2) {
@@ -642,38 +641,38 @@ void Energy::OverrideControlLoop()
   double currentAcheivedExerciseOverride = 0;
   double maxCoreTempOverride = 200.0; //degC
   double minCoreTempOverride = 0.0; //degC
-  double currentCoreTempOverride = m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C); //Current value, gets changed in next step
+  double currentCoreTempOverride = 0; 
   double maxCreatinineOverride = 100.0; // mol_Per_s
   double minCreatinineOverride = 0.0; // mol_Per_s
-  double currentCreatinineOverride = 0; // Current value, gets changed in next step
-  double maxExerciseMAPOverride = 100.0; //mmHg
+  double currentCreatinineOverride = 0; 
+  double maxExerciseMAPOverride = 200.0; //mmHg
   double minExerciseMAPOverride = 0.0; //mmHg
-  double currentExerciseMAPOverride = m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().GetValue(PressureUnit::mmHg); // Current value, gets changed in next step
+  double currentExerciseMAPOverride = 0; 
   double maxFatigueOverride = 100.0;
   double minFatigueOverride = 0.0;
-  double currentFatigueOverride = m_data.GetEnergy().GetFatigueLevel().GetValue(); // Current value, gets changed in next step
-  double maxLactateOverride = 100.0; //mol per s
+  double currentFatigueOverride = 0; 
+  double maxLactateOverride = 200.0; //mol per s
   double minLactateOverride = 0.0; //mol per s
-  double currentLactateOverride = m_data.GetEnergy().GetLactateProductionRate().GetValue(AmountPerTimeUnit::mol_Per_s); // Current value, gets changed in next step
+  double currentLactateOverride = 0;
   double maxSkinTempOverride = 200.0; //degC
   double minSkinTempOverride = 0.0; //degC
-  double currentSkinTempOverride = m_data.GetEnergy().GetSkinTemperature().GetValue(TemperatureUnit::C); //Current value, gets changed in next step
-  double maxSweatRateOverride = 100.0; // g per s
+  double currentSkinTempOverride = 0; 
+  double maxSweatRateOverride = 50.0; // g per s
   double minSweatRateOverride = 0.0; // g per s
-  double currentSweatRateOverride = m_data.GetEnergy().GetSweatRate().GetValue(MassPerTimeUnit::g_Per_s); // Current value, gets changed in next step
+  double currentSweatRateOverride = 0; 
   double maxTotalMetabolicOverride = 5000.0; //kcal/day
   double minTotalMetabolicOverride = 0.0; //kcal/day
-  double currentTotalMetabolicOverride = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day); //Current value, gets changed in next step
+  double currentTotalMetabolicOverride = 0; 
   double maxTotalWorkOverride = 100.0;
   double minTotalWorkOverride = 0.0;
-  double currentTotalWorkOverride = 0; //Current value, gets changed in next step
-  double maxSodiumSweatOverride = 100.0; // g
+  double currentTotalWorkOverride = 0;
+  double maxSodiumSweatOverride = 500.0; // g
   double minSodiumSweatOverride = 0.0; // g
   double currentSodiumSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
-  double maxPotassiumSweatOverride = 100.0; // g
+  double maxPotassiumSweatOverride = 500.0; // g
   double minPotassiumSweatOverride = 0.0; //  g
   double currentPotassiumSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
-  double maxChlorideSweatOverride = 100.0; // g
+  double maxChlorideSweatOverride = 500.0; // g
   double minChlorideSweatOverride = 0.0; // g
   double currentChlorideSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
   if (override->HasAchievedExerciseLevelOverride()) {
