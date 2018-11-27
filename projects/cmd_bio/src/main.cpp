@@ -13,6 +13,7 @@
 #include "argumentparser.hpp"
 #include "ConfigFileParser.hpp"
 #include "TestDriver.h"
+#include "CDMDriver.h"
 #include <biogears/exports.h>
 
 #include <iostream>
@@ -41,16 +42,17 @@ int main(int argc, char** argv)
   namespace bg = biogears;
   ArgumentParser parser;
 
-  parser.addArgument("DATA");
-  parser.addArgument("STATES");
-  parser.addArgument("SYSTEM");
-  parser.addArgument("PATIENT");
-  parser.addArgument("DRUG");
-  parser.addArgument("VERIFICATION");
+  parser.addArgument("DATA");         // gen-data
+  parser.addArgument("STATES");       // gen-states
+  parser.addArgument("SYSTEM");       // run-system-validation
+  parser.addArgument("PATIENT");      // run-patient-validation
+  parser.addArgument("DRUG");         // run-drug-validation
+  parser.addArgument("VERIFICATION"); // run-verification
+  parser.addArgument("VALIDATION");   // run-cdm-validation
   
   parser.parse(argc,argv);
   if (argc > 1) {
-    if (parser.exists("STATES")) {
+    if (parser.exists("STATES")) { // gen-states
       biogears::StateGenerator generator{ 5 };
 
       generator.GenStates();
@@ -62,7 +64,7 @@ int main(int argc, char** argv)
       }
       generator.join();
 
-    } else if (parser.exists("DATA")) {
+    } else if (parser.exists("DATA")) { // gen-data
       std::vector<std::unique_ptr<bg::CSVToXMLConvertor>> generators;
       generators.push_back(std::make_unique<bg::SubstanceGenerator>());
       generators.push_back(std::make_unique<bg::EnvironmentGenerator>());
@@ -74,25 +76,50 @@ int main(int argc, char** argv)
         gen->parse();
         gen->save();
       }
-    } else if (parser.exists("SYSTEM")) {
+    } else if (parser.exists("SYSTEM")) { // run-system-validation
       std::vector<std::string> files = biogears::ParseConfigFile("ValidationSystemsShort.config");
       biogears::TestDriver test{ 5 };
       test.RunTests(files);
       test.run();
-    } else if (parser.exists("PATIENT")) {
+      while (!test.stop_if_empty()) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+      test.join();
+    } else if (parser.exists("PATIENT")) { // run-patient-validation
       biogears::PatientValidationGenerator generator{ 5 };
       generator.GenPatientValidation();
       generator.run();
-    } else if (parser.exists("DRUG")) {
+      while (!generator.stop_if_empty()) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+      generator.join();
+    } else if (parser.exists("DRUG")) { // run-drug-validation
       std::vector<std::string> files = biogears::ParseConfigFile("ValidationDrugsShort.config");
       biogears::TestDriver test{ 5 };
       test.RunTests(files);
       test.run();
-    } else if (parser.exists("VERIFICATION")) {
+      while (!test.stop_if_empty()) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+      test.join();
+    } else if (parser.exists("VERIFICATION")) { // run-verification
       std::vector<std::string> files = biogears::ParseConfigFile("VerificationScenariosShort.config");
       biogears::TestDriver test{ 5 };
       test.RunTests(files);
       test.run();
+      while (!test.stop_if_empty()) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+      test.join();
+    } else if (parser.exists("VALIDATION")) { // run-cdm-tests
+      std::vector<std::string> files = biogears::ParseConfigFile("CDMUnitTestsShort.config");
+      biogears::CDMDriver test { 5 };
+      test.RunCDMs(files);
+      test.run();
+      while (!test.stop_if_empty()) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+      test.join();
     } else {
       std::cout << "Input not recognized" << std::endl;
       std::cout << "Usage " + std::string(argv[0]) + ": [STATES|DATA]";
