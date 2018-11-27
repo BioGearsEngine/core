@@ -346,7 +346,7 @@ void Energy::CalculateVitalSigns()
       if (bloodPH < lowPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
-        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
+        if (m_PatientActions->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0) {
         /// \event The patient has exited the state state of metabolic acidosis
@@ -362,7 +362,7 @@ void Energy::CalculateVitalSigns()
       if (bloodPH > highPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is above 8.5, patient is experiencing extreme metabolic Alkalosis and is in an irreversible state.";
         Warning(ss);
-        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
+        if (m_PatientActions->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
 

@@ -782,7 +782,7 @@ void Cardiovascular::CalculateVitalSigns()
         m_ss << "50% of the patient's blood volume has been lost. The patient is now in an irreversible state.";
         Warning(m_ss);
         /// \irreversible Over half the patients blood volume has been lost.
-        if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
+        if (m_PatientActions->IsOverrideActionConformant())
           m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
     } else {
@@ -832,7 +832,7 @@ void Cardiovascular::CalculateVitalSigns()
       m_ss << "Asystole has occurred for " << m_patient->GetEventDuration(CDM::enumPatientEvent::Asystole, TimeUnit::s) << " seconds, patient is in irreversible state.";
       Warning(m_ss);
       /// \irreversible Heart has been in asystole for over 45 min
-      if (!m_PatientActions->IsOverrideActionOn() || m_PatientActions->IsOverrideActionConformant())
+      if (m_PatientActions->IsOverrideActionConformant())
         m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
     }
   }
