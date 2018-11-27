@@ -642,6 +642,13 @@ void BloodChemistry::Sepsis()
   if (!m_PatientActions->HasSepsis()) {
     return;
   }
+  
+  //We need to signal that there is a source of inflammation--soon this will be incorporated with Acute Inflammation Model
+  //Right now we are patching in Sepsis functionality and saving merge for a future story
+  std::vector<CDM::enumInflammationSource> sources = GetAcuteInflammatoryResponse().GetInflammationSources();
+  if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) == sources.end()) {
+    GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
+  }
   SESepsis* sep = m_PatientActions->GetSepsis();
   std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
   std::string sepComp = sep->GetCompartment() + "Tissue";
@@ -726,20 +733,12 @@ void BloodChemistry::Sepsis()
   GetSepsisInfectionState().GetAntiinflammation().IncrementValue(dAntiinflammation_Per_h * dt_hr);
 
   //Physiological response
-  double modsThreshold = 0.75;
   double wbcBaseline_ct_Per_uL = 7000.0;
 
-  //Use the change in white blood cell count to scale down the resistance of the vascular -> tissue paths
-  //The circuit needs continuous values to solve, so we cannot change reflection coefficient values (which are mapped to oncotic pressure
-  //sources) to arbitrary values.  Thus we use the linear interpolator to move coefficients from initial value of 1.0 as function of
-  //tissue integrity.
-  SEFluidCircuitPath* vascularLeak; // = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[sepComp]);
-  double resistanceBase_mmHg_s_Per_mL;// = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextResistance_mmHg_s_Per_mL; //= resistanceBase_mmHg_s_Per_mL * std::pow(10.0, -10 * (1.0 - tissueIntegrity));
-  //vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  double nextReflectionCoefficient; //= GeneralMath::LinearInterpolator(1.0, 0.05, 1.0, 0.10, tissueIntegrity);
-  //BLIM(nextReflectionCoefficient, 0.0, 1.0); //Make sure the interpolator doesn't extrapolate a bad value and give us a fraction outside range [0,1]
-  //m_data.GetCompartments().GetTissueCompartment(sep->GetCompartment() + "Tissue")->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
+  SEFluidCircuitPath* vascularLeak;
+  double resistanceBase_mmHg_s_Per_mL;
+  double nextResistance_mmHg_s_Per_mL;
+  double nextReflectionCoefficient;
 
   for (auto comp : m_data.GetCompartments().GetTissueLeafCompartments()) {
     if (comp->GetName().compare(BGE::TissueCompartment::Brain) == 0)
@@ -750,7 +749,7 @@ void BloodChemistry::Sepsis()
     vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
     resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
     nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * GeneralMath::ResistanceFunction(10.0, 1.0, 0.05, tissueIntegrity);
-    vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    //vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   }
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
@@ -772,7 +771,7 @@ void BloodChemistry::Sepsis()
   double bpThreshold = 0.75;
   double baroreceptorScale = exp(-3 * (sigmoidInput - bpThreshold));
   if (sigmoidInput >= bpThreshold) {
-    //m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(baroreceptorScale);
+    m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(baroreceptorScale);
   }
 
   //Bilirubin counts (measure of liver perfusion)
@@ -801,6 +800,9 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Perform this check after looking for inflammatory actions (otherwise we'll never process)
   if (!GetAcuteInflammatoryResponse().HasInflammationSources()) {
     return;
+  }
+  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+    return;   //Right now sepsis is done elsewhere.  Soon it will be done in this function also
   }
 
   //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.  

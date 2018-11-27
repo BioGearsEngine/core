@@ -343,10 +343,7 @@ void Nervous::CheckPainStimulus()
 
   //determine pain response from inflammation caused by burn trauma
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    double traumaLevel = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTrauma().GetValue();
-    double traumaHalfMax = 0.1;
-    //Hill function w/ shape parameter = 2, avoiding using std::pow
-    double traumaPain = (traumaLevel * traumaLevel) / ((traumaLevel * traumaLevel) + (traumaHalfMax * traumaHalfMax));
+    double traumaPain = 8.0;  //This is not scientific at all--just figure a burn is going to hurt a lot
     //Add to tempPainVAS and factor in susceptibility and drug effects
     tempPainVAS += (traumaPain * susceptabilityMapping * CNSPainBuffer);
   }
