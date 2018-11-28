@@ -1667,6 +1667,8 @@ void Respiratory::CalculateVitalSigns()
     double RespirationRate_Per_min = 0.0;
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride()) {
       RespirationRate_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
+    } else if (m_data.GetAnesthesiaMachine().HasRespiratoryRate()) {
+      RespirationRate_Per_min = m_data.GetAnesthesiaMachine().GetRespiratoryRate(FrequencyUnit::Per_min);
     } else {
       RespirationRate_Per_min = 1.0 / m_ElapsedBreathingCycleTime_min;
     }
