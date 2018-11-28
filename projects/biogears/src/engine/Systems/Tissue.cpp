@@ -2555,7 +2555,7 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
     }
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) != sources.end()) {
       double sepsisDamage = 1.0 - m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
-      double damageHalfMax = 0.4;
+      double damageHalfMax = 0.6;
       permeabilityMultiplier += 35.0 * std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2) + std::pow(damageHalfMax, 2.0));
       reflectionCoefficientSmall = reflectionCoefficientSmallBase * (1.0 - std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2.0) + std::pow(damageHalfMax, 2.0)));
     }

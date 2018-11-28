@@ -768,7 +768,7 @@ void BloodChemistry::Sepsis()
   coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
 
   //Blood pressure effects (accomplish by overriding baroreceptor resistance scale)
-  double bpThreshold = 0.75;
+  double bpThreshold = 0.6;
   double baroreceptorScale = exp(-3 * (sigmoidInput - bpThreshold));
   if (sigmoidInput >= bpThreshold) {
     m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(baroreceptorScale);
