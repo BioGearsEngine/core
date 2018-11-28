@@ -1237,9 +1237,11 @@ void Respiratory::Pneumothorax()
       if (severity > 0.0 && !m_PatientActions->HasLeftChestOcclusiveDressing()) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
-        resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
+      resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToLeftChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
-
+      if (severity == 0) {
+        m_EnvironmentToLeftChestLeak->SetNextValve(CDM::enumOpenClosed::Open);
+      }
       if (m_PatientActions->HasLeftNeedleDecompression()) {
         DoLeftNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
       }
@@ -1254,11 +1256,13 @@ void Respiratory::Pneumothorax()
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
+      if (severity == 0) {
+        m_EnvironmentToRightChestLeak->SetNextValve(CDM::enumOpenClosed::Open);
+      }
 
       if (m_PatientActions->HasRightNeedleDecompression()) {
         DoRightNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
       }
-      m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
     }
 
     if (m_PatientActions->HasLeftClosedTensionPneumothorax()) {
@@ -1270,6 +1274,9 @@ void Respiratory::Pneumothorax()
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_LeftAlveoliLeakToLeftPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
+      if (severity == 0) {
+        m_LeftAlveoliLeakToLeftPleural->SetNextValve(CDM::enumOpenClosed::Open);
+      }
 
       if (m_PatientActions->HasLeftNeedleDecompression()) {
         DoLeftNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
@@ -1282,9 +1289,14 @@ void Respiratory::Pneumothorax()
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
         resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
-      }
+      
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
+      } else {
+        //resistance_cmH2O_s_Per_L = 1000000;
+        //m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
+        m_RightAlveoliLeakToRightPleural->SetNextValve(CDM::enumOpenClosed::Open);
+      }
 
       if (m_PatientActions->HasRightNeedleDecompression()) {
         DoRightNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
