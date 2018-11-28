@@ -59,13 +59,13 @@ Tree<Data>::Tree(Tree&& obj)
 {
 }
 //-------------------------------------------------------------------------------
-//template <typename Data>
-//template< typename ... PARAMS >
-//Tree<Data>::Tree(const PARAMS&... params)
-//:_value(params...)
-//{
-//  
-//}
+template <typename Data>
+template< typename ... PARAMS >
+Tree<Data>::Tree(const PARAMS&... params)
+:_value(params...)
+{
+  
+}
 //-------------------------------------------------------------------------------
 //!
 //! \return const_refrence : A const Data& to the value of the current Node.
@@ -73,6 +73,16 @@ Tree<Data>::Tree(Tree&& obj)
 //!  Accessor for the value of the current node
 template <typename Data>
 auto Tree<Data>::value() const -> const_reference
+{
+  return _value;
+}
+//-------------------------------------------------------------------------------
+//!
+//! \return const_refrence : A const Data& to the value of the current Node.
+//!
+//!  Accessor for the value of the current node
+template <typename Data>
+auto Tree<Data>::value() -> reference
 {
   return _value;
 }
@@ -103,7 +113,7 @@ void Tree<Data>::value(const Data& value) &
 //!
 //! Access children of the current node directly
 template <typename Data>
-auto Tree<Data>::children() const& -> const child_vector&
+auto Tree<Data>::children() const -> const child_vector&
 {
   return _children;
 }
@@ -113,7 +123,7 @@ auto Tree<Data>::children() const& -> const child_vector&
 //!
 //! Access children of the current node directly
 template <typename Data>
-auto Tree<Data>::children() && -> child_vector&
+auto Tree<Data>::children() -> child_vector&
 {
   return _children;
 }

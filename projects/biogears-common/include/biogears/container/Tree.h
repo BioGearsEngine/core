@@ -41,17 +41,18 @@ public:
   Tree(Data&&);
   Tree(const Tree&);
   Tree(Tree&&);
-  //template< typename ... PARAMS >
-  //explicit Tree(const PARAMS&... params);
+  template< typename ... PARAMS >
+  explicit Tree(const PARAMS&... params);
 
   virtual ~Tree() = default;
 
   const Data& value() const;
+  Data& value();
   Tree<Data>& value(const Data&) &&;
   void  value( const Data& ) &;
 
-  auto children() const & -> const child_vector&;
-  auto children() && ->  child_vector&;
+  auto children() const  -> const child_vector&;
+  auto children() ->  child_vector&;
 
   void children( const std::vector<Tree>& );
   void children( std::vector<Tree>&& );
