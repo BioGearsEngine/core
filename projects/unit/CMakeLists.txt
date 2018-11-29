@@ -2,7 +2,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.8.0)
 CMAKE_POLICY(VERSION 3.8.0) 
 
 enable_language(CXX)
-
  option(${PROJECT_NAME}_BUILD_TEST        "Select to Build Tests." OFF)
 
 if(${PROJECT_NAME}_BUILD_TEST)
@@ -26,10 +25,8 @@ if(${PROJECT_NAME}_BUILD_TEST)
   file(GLOB_RECURSE UNITTEST_SOURCES "src/*.cpp")
   
   if(UNIT_TEST_biogears-common)
-
     file(GLOB_RECURSE BIOGEARS_COMMON_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/*.h")
     file(GLOB_RECURSE BIOGEARS_COMMON_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/*.cpp")
-
   endif()
   ##################################################################V#############
   # Step 2:     Assign source files based on control variables
@@ -62,57 +59,42 @@ list(APPEND UNIT_TEST_LIBRARIES
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
-  if(UNIT_TEST_biogears-common)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Angles "Enable test_core_angles" ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Billboard "Enable test_core_Billboard" ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentBoundedQueue "Enable test_core_ConcurrentBoundedQueue" ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentQueue "Enable test_core_ConcurrentQueue" ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentRingbuffer "Enable test_core_ConcurrentRingbuffer" ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Option "Enable test_core_Option" ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_OwningMutex "Enable test_core_OwningMutex" ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Result "Enable test_core_Result"  ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_scmp_channel "Enable test_core_scmp_channel"  ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_scsp_channel "Enable test_core_scsp_channel"  ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_StopWatch "Enable test_core_StopWatch"  ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_StopWatchf "Enable test_core_StopWatchf"  ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_string_manipulation "Enable test_core_string_manipulation"  ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ThreadPoll "Enable test_core_ThreadPoll"  ON)
-	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_WorkChannel "Enable  test_core_WorkChannel" ON )
-    
-	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Angles)
-		add_compile_definitions( DISABLE_BIOGEARS_Angles_TEST )
+  function( setup_unittest )
+  cmake_parse_arguments( "_l" 
+                        ""
+                        "GROUP"
+                        "TESTS"
+                        ${ARGN}
+                        )
+
+  if(UNIT_TEST_${_l_GROUP})
+  	  foreach ( test_name IN LISTS _l_TESTS )
+		option(UNIT_TEST_${_l_GROUP}_${test_name} "Enable test_core_angles" ON)
+		if (  NOT UNIT_TEST_${_l_GROUP}_${test_name})
+		  add_compile_definitions( DISABLE_BIOGEARS_${test_name}_TEST )
 	endif()
-	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Billboard)
-		add_compile_definitions( DISABLE_BIOGEARS_Billboard_TEST )
-	endif()
-	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentBoundedQueu)
-		add_compile_definitions( DISABLE_BIOGEARS_ConcurrentBoundedQueue_TEST )
-	endif()
-	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentQueue)
-		add_compile_definitions( DISABLE_BIOGEARS_ConcurrentQueue_TEST )
-	endif()
-	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentRingbuffer)
-		add_compile_definitions( DISABLE_BIOGEARS_Option_TEST )
-	endif()
-	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Option)
-		add_compile_definitions( DISABLE_BIOGEARS_Option_TEST )
-	endif()
-		if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_OwningMutex)
-		add_compile_definitions( DISABLE_BIOGEARS_OwningMutex_TEST )
-	endif()
-	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Result)
-		add_compile_definitions( DISABLE_BIOGEARS_Result_TEST )
-	endif()
+	  endforeach()
  endif()
+  endfunction() 
 
+  setup_unittest( GROUP biogears-common 
+                  TESTS 
+                     "Angles"
+                     "Billboard"
+                     "ConcurrentBoundedQueue"
+                     "ConcurrentQueue"
+                     "ConcurrentRingbuffer"
+                     "Option"
+                     "OwningMutex"
+                     "Result"
+                     "scmp_channel"
+                     "scsp_channel"
+                     "StopWatch"
+                     "StopWatchf" 
+                     "string_manipulation"
+                     "ThreadPoll"
+                     "WorkChannel")
 
-
-
-  if(${PROJECT_NAME}_TEST_biogears)
-    if(NOT TEST_${PROJECT_NAME}_Image)
-      add_definitions(-DDISABLE_${PROJECT_NAME}_IMAGE_TEST)
-    endif(NOT TEST_${PROJECT_NAME}_Image)
-  endif(${PROJECT_NAME}_TEST_biogears)
 
   set_target_properties(unittest PROPERTIES
                         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
