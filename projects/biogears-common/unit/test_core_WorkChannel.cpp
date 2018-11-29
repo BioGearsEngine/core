@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/threading/thread_work_channel.tci.h>
-#include <ara/container/concurrent_queue.tci.h>
+#include <biogears/threading/thread_work_channel.tci.h>
+#include <biogears/container/concurrent_queue.tci.h>
 
-#ifdef DISABLE_KALE_WorkChannel_TEST
+#ifdef DISABLE_BIOGEARS_WorkChannel_TEST
   #define TEST_FIXTURE_NAME DISABLED_WorkChannel_Fixture
 #else
   #define TEST_FIXTURE_NAME WorkChannel_Fixture
@@ -61,7 +61,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, WorkChannel_Construction)
 {
-  auto channel = ara::ThreadWorkChannel<void(void)>::make_shared();
+  auto channel = biogears::ThreadWorkChannel<void(void)>::make_shared();
   
   auto source = channel->as_source();
   auto sink   = channel->as_sink();
@@ -69,7 +69,7 @@ TEST_F(TEST_FIXTURE_NAME, WorkChannel_Construction)
 
 TEST_F(TEST_FIXTURE_NAME, WorkChannel_push_pop)
 {
-  auto channel = ara::ThreadWorkChannel<int(void)>::make_shared();
+  auto channel = biogears::ThreadWorkChannel<int(void)>::make_shared();
 
   int value = 5;
   auto source = channel->as_source();

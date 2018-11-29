@@ -3,23 +3,9 @@ CMAKE_POLICY(VERSION 3.8.0)
 
 enable_language(CXX)
 
- option(ARA_${PROJECT_NAME}_BUILD_TEST        "Select to Build Tests." OFF)
+ option(${PROJECT_NAME}_BUILD_TEST        "Select to Build Tests." OFF)
 
-if(ARA_${PROJECT_NAME}_BUILD_TEST)
-  set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
-  if(UNIX)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/unit/lib)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/unit/lib)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/unit/bin)
-  else()
-      foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-          string(TOUPPER _${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
-          set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/unit/lib")
-          set(CMAKE_PDB_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/unit/lib")
-          set(CMAKE_LIBRARY_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/unit/bin")
-          set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/unit/bin")
-      endforeach(OUTPUTCONFIG)
-  endif()
+if(${PROJECT_NAME}_BUILD_TEST)
   
   ###############################################################################
   # Unit Test
@@ -28,10 +14,9 @@ if(ARA_${PROJECT_NAME}_BUILD_TEST)
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
-  option(ARA_${PROJECT_NAME}_TEST_biogears "Test the biogears " ON)
-  if(ARA_${PROJECT_NAME}_TEST_biogears)
-    option(TEST_${PROJECT_NAME}_Function "Test the biogears function" ON)
-  endif()
+  option(UNIT_TEST_biogears "Enable libBiogears UnitTest " ON)
+  option(UNIT_TEST_biogears-common "Enable Biogears-Common UnitTest " ON)
+
   ###############################################################################
   # Requirments
   ###############################################################################
@@ -40,20 +25,27 @@ if(ARA_${PROJECT_NAME}_BUILD_TEST)
   file(GLOB_RECURSE UNITTEST_HEADERS "src/*.h")
   file(GLOB_RECURSE UNITTEST_SOURCES "src/*.cpp")
   
+  if(UNIT_TEST_biogears-common)
+
+    file(GLOB_RECURSE BIOGEARS_COMMON_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/*.h")
+    file(GLOB_RECURSE BIOGEARS_COMMON_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/*.cpp")
+
+  endif()
   ##################################################################V#############
   # Step 2:     Assign source files based on control variables
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
-  if(ARA_${PROJECT_NAME}_TEST_biogears)
+  if(${PROJECT_NAME}_TEST_biogears)
     file(GLOB_RECURSE UNITTEST_${PROJECT_NAME}_HEADERS "${bio_UNIT_DIR}/test_bio_*.h")
     file(GLOB_RECURSE UNITTEST_${PROJECT_NAME}_SOURCES "${bio_UNIT_DIR}/test_bio_*.cpp")
     list(APPEND UNIT_TEST_LIBRARIES )
-  endif(ARA_${PROJECT_NAME}_TEST_biogears)
+  endif(${PROJECT_NAME}_TEST_biogears)
   
   
 list(APPEND UNIT_TEST_LIBRARIES
   ${GTEST_BOTH_LIBRARIES}
+  
   )
 
   add_executable(unittest
@@ -61,6 +53,8 @@ list(APPEND UNIT_TEST_LIBRARIES
     ${UNITTEST_HEADERS}
     ${UNITTEST_${PROJECT_NAME}_HEADERS}
     ${UNITTEST_${PROJECT_NAME}_SOURCES}
+	${BIOGEARS_COMMON_UNITTEST_HEADERS}
+	${BIOGEARS_COMMON_UNITTEST_SOURCES}
   )
  
   ##################################################################V#############
@@ -68,11 +62,57 @@ list(APPEND UNIT_TEST_LIBRARIES
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
-  if(ARA_${PROJECT_NAME}_TEST_biogears)
+  if(UNIT_TEST_biogears-common)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Angles "Enable test_core_angles" ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Billboard "Enable test_core_Billboard" ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentBoundedQueue "Enable test_core_ConcurrentBoundedQueue" ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentQueue "Enable test_core_ConcurrentQueue" ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentRingbuffer "Enable test_core_ConcurrentRingbuffer" ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Option "Enable test_core_Option" ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_OwningMutex "Enable test_core_OwningMutex" ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_Result "Enable test_core_Result"  ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_scmp_channel "Enable test_core_scmp_channel"  ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_scsp_channel "Enable test_core_scsp_channel"  ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_StopWatch "Enable test_core_StopWatch"  ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_StopWatchf "Enable test_core_StopWatchf"  ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_string_manipulation "Enable test_core_string_manipulation"  ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_ThreadPoll "Enable test_core_ThreadPoll"  ON)
+	option(UNIT_TEST_${PROJECT_NAME}_biogears-common_WorkChannel "Enable  test_core_WorkChannel" ON )
+    
+	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Angles)
+		add_compile_definitions( DISABLE_BIOGEARS_Angles_TEST )
+	endif()
+	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Billboard)
+		add_compile_definitions( DISABLE_BIOGEARS_Billboard_TEST )
+	endif()
+	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentBoundedQueu)
+		add_compile_definitions( DISABLE_BIOGEARS_ConcurrentBoundedQueue_TEST )
+	endif()
+	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentQueue)
+		add_compile_definitions( DISABLE_BIOGEARS_ConcurrentQueue_TEST )
+	endif()
+	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_ConcurrentRingbuffer)
+		add_compile_definitions( DISABLE_BIOGEARS_Option_TEST )
+	endif()
+	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Option)
+		add_compile_definitions( DISABLE_BIOGEARS_Option_TEST )
+	endif()
+		if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_OwningMutex)
+		add_compile_definitions( DISABLE_BIOGEARS_OwningMutex_TEST )
+	endif()
+	if ( NOT UNIT_TEST_${PROJECT_NAME}_biogears-common_Result)
+		add_compile_definitions( DISABLE_BIOGEARS_Result_TEST )
+	endif()
+ endif()
+
+
+
+
+  if(${PROJECT_NAME}_TEST_biogears)
     if(NOT TEST_${PROJECT_NAME}_Image)
       add_definitions(-DDISABLE_${PROJECT_NAME}_IMAGE_TEST)
     endif(NOT TEST_${PROJECT_NAME}_Image)
-  endif(ARA_${PROJECT_NAME}_TEST_biogears)
+  endif(${PROJECT_NAME}_TEST_biogears)
 
   set_target_properties(unittest PROPERTIES
                         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
@@ -93,7 +133,7 @@ list(APPEND UNIT_TEST_LIBRARIES
   )
   endif()
 
-  if (ARA_${PROJECT_NAME}_BUILD_STATIC)
+  if (${PROJECT_NAME}_BUILD_STATIC)
     add_definitions("-D${PROJECT_NAME}_BUILT_AS_STATIC")
   endif()
 
@@ -102,4 +142,4 @@ list(APPEND UNIT_TEST_LIBRARIES
     ${bio_LIBRARIES}
     libbiogears
   )
-endif(ARA_${PROJECT_NAME}_BUILD_TEST)
+endif(${PROJECT_NAME}_BUILD_TEST)

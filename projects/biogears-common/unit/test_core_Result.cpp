@@ -20,10 +20,10 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/framework/result.tci.h>
-#include <ara/framework/option.tci.h>
+#include <biogears/framework/result.tci.h>
+#include <biogears/framework/option.tci.h>
 
-#ifdef DISABLE_KALE_Result_TEST
+#ifdef DISABLE_BIOGEARS_Result_TEST
   #define TEST_FIXTURE_NAME DISABLED_Result_Fixture
 #else
   #define TEST_FIXTURE_NAME Result_Fixture
@@ -69,14 +69,14 @@ TEST_F(TEST_FIXTURE_NAME, Result_Construction)
   };
   range struct_value = range{ 1.0, 100.0 };
   double double_value = 9.9;
-  auto doubleResult_value = ara::Result<double,int>::make(double_value);
-  auto doubleResult_null = ara::Result<double,int>::make_error();
+  auto doubleResult_value = biogears::Result<double,int>::make(double_value);
+  auto doubleResult_null = biogears::Result<double,int>::make_error();
 
-  auto structResult_value = ara::Result<range,int>::make(range{ 5.,5. });
-  auto structResult_null = ara::Result<range,int>::make_error();
+  auto structResult_value = biogears::Result<range,int>::make(range{ 5.,5. });
+  auto structResult_null = biogears::Result<range,int>::make_error();
 
-  auto pointerResult_value = ara::Result<range*,int>::make(&struct_value);
-  auto pointerResult_null = ara::Result<range*,int>::make_error();
+  auto pointerResult_value = biogears::Result<range*,int>::make(&struct_value);
+  auto pointerResult_null = biogears::Result<range*,int>::make_error();
 
   auto  some_value = structResult_value.clone();
   auto  some_null  = structResult_null.clone();
@@ -103,8 +103,8 @@ TEST_F(TEST_FIXTURE_NAME, Result_ok_err)
   };
   range struct_value = range{ 1.0, 100.0 };
   double double_value = 9.9;
-  auto doubleResult_value = ara::Result<double, int>::make(double_value);
-  auto doubleResult_null = ara::Result<double, int>::make_error();
+  auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+  auto doubleResult_null = biogears::Result<double, int>::make_error();
 
   EXPECT_FALSE(doubleResult_value.err());
   EXPECT_TRUE(doubleResult_value.ok());
@@ -128,14 +128,14 @@ TEST_F(TEST_FIXTURE_NAME, Result_bool_operator)
   };
   range struct_value = range{ 1.0, 100.0 };
   double double_value = 9.9;
-  auto doubleResult_value = ara::Result<double, int>::make(double_value);
-  auto doubleResult_null = ara::Result<double, int>::make_error();
+  auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+  auto doubleResult_null = biogears::Result<double, int>::make_error();
 
-  auto structResult_value = ara::Result<range, int>::make(range{ 5.,5. });
-  auto structResult_null = ara::Result<range, int>::make_error();
+  auto structResult_value = biogears::Result<range, int>::make(range{ 5.,5. });
+  auto structResult_null = biogears::Result<range, int>::make_error();
 
-  auto pointerResult_value = ara::Result<range*, int>::make(&struct_value);
-  auto pointerResult_null = ara::Result<range*, int>::make_error();
+  auto pointerResult_value = biogears::Result<range*, int>::make(&struct_value);
+  auto pointerResult_null = biogears::Result<range*, int>::make_error();
 
   auto  some_value = structResult_value.clone();
   auto  some_null = structResult_null.clone();
@@ -158,8 +158,8 @@ TEST_F(TEST_FIXTURE_NAME, Reslt_emplace_creation)
 {
 
   double double_value = 9.9;
-  auto doubleResult_value = ara::Result<double,int>::make(double_value);
-  auto doubleResult_null  = ara::Result<double,int>::make_error();
+  auto doubleResult_value = biogears::Result<double,int>::make(double_value);
+  auto doubleResult_null  = biogears::Result<double,int>::make_error();
 
   auto Result2 = doubleResult_value.clone();
   auto Result3 = doubleResult_value.clone();
@@ -184,8 +184,8 @@ TEST_F(TEST_FIXTURE_NAME, Result_unwrap_and_dump)
 {
 
   double double_value = 9.9;
-  auto doubleResult_value = ara::Result<double, int>::make(double_value);
-  auto doubleResult_null = ara::Result<double, int>::make_error(5);
+  auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+  auto doubleResult_null = biogears::Result<double, int>::make_error(5);
 
   auto Result2 = doubleResult_value.clone();
   auto Result3 = doubleResult_value.clone();
@@ -227,8 +227,8 @@ TEST_F(TEST_FIXTURE_NAME, Result_match)
 
   double double_value = 9.9;
   {
-    const auto doubleResult_value = ara::Result<double, int>::make(double_value);
-    const auto doubleResult_null = ara::Result<double, int>::make_error();
+    const auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+    const auto doubleResult_null = biogears::Result<double, int>::make_error();
 
     EXPECT_TRUE(doubleResult_value);
     EXPECT_TRUE(doubleResult_value.match<bool>([](const double&) { return true; }, [](void) { return false; }));
@@ -241,8 +241,8 @@ TEST_F(TEST_FIXTURE_NAME, Result_match)
 
 
   {
-    auto doubleResult_value = ara::Result<double, int>::make(double_value);
-    auto doubleResult_null = ara::Result<double, int>::make_error();
+    auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+    auto doubleResult_null = biogears::Result<double, int>::make_error();
 
     auto Result2 = doubleResult_value.clone();
     auto Result3 = doubleResult_null.clone();
@@ -264,8 +264,8 @@ TEST_F(TEST_FIXTURE_NAME, Result_match)
 
   }
 
-  auto doubleResult_value = ara::Result<double, int>::make(double_value);
-  auto doubleResult_null = ara::Result<double, int>::make_error();
+  auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+  auto doubleResult_null = biogears::Result<double, int>::make_error();
 
   char result = 'A';
   doubleResult_value.if_ok ( [&](const double&){ result = 'B'; } );
@@ -289,8 +289,8 @@ TEST_F(TEST_FIXTURE_NAME, Result_map)
 
   double double_value = 9.9;
   {
-    const auto doubleResult_value = ara::Result<double, int>::make(double_value);
-    const auto doubleResult_null = ara::Result<double, int>::make_error();
+    const auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+    const auto doubleResult_null = biogears::Result<double, int>::make_error();
 
 
     bool shared_result = false;
@@ -307,12 +307,12 @@ TEST_F(TEST_FIXTURE_NAME, Result_map)
 
 
     EXPECT_TRUE(doubleResult_value);
-    auto map_result = doubleResult_value.map<bool>( [](const double&) { return ara::Result<bool,int>::make(true); } );
+    auto map_result = doubleResult_value.map<bool>( [](const double&) { return biogears::Result<bool,int>::make(true); } );
     EXPECT_EQ(map_result.unwrap(), true);
     EXPECT_TRUE(doubleResult_value);
 
     EXPECT_FALSE(doubleResult_null);
-    map_result = doubleResult_null.map<bool>( [](const double&) {return  ara::Result<bool,int>::make(false); } );
+    map_result = doubleResult_null.map<bool>( [](const double&) {return  biogears::Result<bool,int>::make(false); } );
     EXPECT_TRUE(map_result.is_err());
     EXPECT_FALSE(doubleResult_null);
 
@@ -341,8 +341,8 @@ TEST_F(TEST_FIXTURE_NAME, Result_map)
 
 
   {
-    auto doubleResult_value = ara::Result<double, int>::make(double_value);
-    auto doubleResult_null = ara::Result<double, int>::make_error();
+    auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+    auto doubleResult_null = biogears::Result<double, int>::make_error();
 
 
     bool shared_result = false;
@@ -361,12 +361,12 @@ TEST_F(TEST_FIXTURE_NAME, Result_map)
     doubleResult_null.emplace_err(100);
 
     EXPECT_TRUE(doubleResult_value);
-    auto map_result = doubleResult_value.map<bool>([](double&&) { return ara::Result<bool, int>::make(true); });
+    auto map_result = doubleResult_value.map<bool>([](double&&) { return biogears::Result<bool, int>::make(true); });
     EXPECT_EQ(map_result.unwrap(), true);
     EXPECT_FALSE(doubleResult_value);
 
     EXPECT_FALSE(doubleResult_null);
-    map_result = doubleResult_null.map<bool>([](double&&) {return  ara::Result<bool, int>::make(false); });
+    map_result = doubleResult_null.map<bool>([](double&&) {return  biogears::Result<bool, int>::make(false); });
     EXPECT_TRUE(map_result.is_err());
     EXPECT_FALSE(doubleResult_null);
 
@@ -405,19 +405,19 @@ TEST_F(TEST_FIXTURE_NAME, Result_and_then)
 
   double double_value = 9.9;
   {
-    auto doubleResult_value = ara::Result<double, int>::make(double_value);
-    auto doubleResult_null = ara::Result<double, int>::make_error();
+    auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+    auto doubleResult_null = biogears::Result<double, int>::make_error();
 
     EXPECT_TRUE(doubleResult_value);
     auto and_then_result = doubleResult_value.and_then<bool>(
-      [](double&&)  { return ara::Result<bool, int>::make(true); }
+      [](double&&)  { return biogears::Result<bool, int>::make(true); }
       );
     EXPECT_TRUE(and_then_result.is_ok());
     EXPECT_FALSE(doubleResult_value);
 
     EXPECT_FALSE(doubleResult_null);
 		and_then_result = doubleResult_null.and_then<bool>(
-      [](double&&) { return ara::Result<bool, int>::make_error(true); }
+      [](double&&) { return biogears::Result<bool, int>::make_error(true); }
     );
     EXPECT_TRUE( and_then_result.is_err());
     EXPECT_FALSE(doubleResult_null);
@@ -426,12 +426,12 @@ TEST_F(TEST_FIXTURE_NAME, Result_and_then)
 		doubleResult_null.emplace_err(100);
 
     EXPECT_TRUE(doubleResult_value);
-    auto mand_result = doubleResult_value.mand<bool>( ara::Result<bool, int>::make(true) );
+    auto mand_result = doubleResult_value.mand<bool>( biogears::Result<bool, int>::make(true) );
     EXPECT_TRUE(mand_result.is_ok());
     EXPECT_TRUE(doubleResult_value);
 
     EXPECT_FALSE(doubleResult_null);
-		mand_result = doubleResult_null.mand<bool>(  ara::Result<bool, int>::make_error(5) );
+		mand_result = doubleResult_null.mand<bool>(  biogears::Result<bool, int>::make_error(5) );
     EXPECT_TRUE(mand_result.is_err());
     EXPECT_FALSE(doubleResult_null);
 
@@ -439,12 +439,12 @@ TEST_F(TEST_FIXTURE_NAME, Result_and_then)
 		doubleResult_null.emplace_err(100);
 
 		EXPECT_TRUE(doubleResult_value);
-		auto mor_result = doubleResult_value.mor(ara::Result<double, int>::make(0));
+		auto mor_result = doubleResult_value.mor(biogears::Result<double, int>::make(0));
 		EXPECT_TRUE(mor_result.is_ok());
 		EXPECT_FALSE(doubleResult_value);
 
 		EXPECT_FALSE(doubleResult_null);
-		mor_result = doubleResult_null.mor(ara::Result<double, int>::make_error(5));
+		mor_result = doubleResult_null.mor(biogears::Result<double, int>::make_error(5));
 		EXPECT_TRUE(mor_result.is_err());
 		EXPECT_FALSE(doubleResult_null);
   
@@ -453,7 +453,7 @@ TEST_F(TEST_FIXTURE_NAME, Result_and_then)
 
 		EXPECT_TRUE(doubleResult_value);
 		auto or_else_result = doubleResult_value.or_else<bool>(
-		[](int&&) { return ara::Result<double, bool>::make_error(false);}
+		[](int&&) { return biogears::Result<double, bool>::make_error(false);}
 		,false
 		);
 		EXPECT_TRUE(or_else_result.is_ok());
@@ -461,7 +461,7 @@ TEST_F(TEST_FIXTURE_NAME, Result_and_then)
 
 		EXPECT_FALSE(doubleResult_null);
 		or_else_result = doubleResult_null.or_else<bool>(
-		[](int&&) { return ara::Result<double, bool>::make_error(false); }
+		[](int&&) { return biogears::Result<double, bool>::make_error(false); }
 		,false
 		);
 		EXPECT_TRUE(or_else_result.is_err());
@@ -471,12 +471,12 @@ TEST_F(TEST_FIXTURE_NAME, Result_and_then)
 
   
 
-  const auto doubleResult_value = ara::Result<double, int>::make(double_value);
-  const auto doubleResult_null = ara::Result<double, int>::make_error(500);
+  const auto doubleResult_value = biogears::Result<double, int>::make(double_value);
+  const auto doubleResult_null = biogears::Result<double, int>::make_error(500);
 
   auto result = doubleResult_null.and_then<std::string>
     ([](const double&) 
-    { return ara::Result<std::string, int>::make("Divine Protector"); }
+    { return biogears::Result<std::string, int>::make("Divine Protector"); }
     );
  
   EXPECT_EQ(result.unwrap_err(), 500);
@@ -484,7 +484,7 @@ TEST_F(TEST_FIXTURE_NAME, Result_and_then)
 
   result = doubleResult_value.and_then<std::string>
     ([](const double&) 
-    { return ara::Result<std::string,int>::make("Divine Protector"); }
+    { return biogears::Result<std::string,int>::make("Divine Protector"); }
     );
 
 	EXPECT_EQ( result.unwrap(), std::string("Divine Protector"));

@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/framework/billboard.tci.h>
+#include <biogears/framework/billboard.tci.h>
 
-#ifdef DISABLE_KALE_Billboard_TEST
+#ifdef DISABLE_BIOGEARS_Billboard_TEST
   #define TEST_FIXTURE_NAME DISABLED_Billboard_Fixture
 #else
   #define TEST_FIXTURE_NAME Billboard_Fixture
@@ -68,7 +68,7 @@ TEST_F(TEST_FIXTURE_NAME, Billboard)
 	};
 	testStruct value;
 
-	ara::BillboardPair<testStruct> test_board = ara::make_billboard<testStruct>( std::move(value) );
+	biogears::BillboardPair<testStruct> test_board = biogears::make_billboard<testStruct>( std::move(value) );
 
 	auto viewer = test_board.viewer;
 	auto publisher = std::move(test_board.publisher);
@@ -94,7 +94,7 @@ TEST_F(TEST_FIXTURE_NAME, Billboard_Viewer_Copy)
 {
 
 	double value = 9.0;
-	auto test_board = ara::make_billboard<double>(value);
+	auto test_board = biogears::make_billboard<double>(value);
 
 	auto viewer = test_board.viewer;
 	auto publisher = std::move(test_board.publisher);
@@ -122,7 +122,7 @@ TEST_F(TEST_FIXTURE_NAME, Billboard_pointer_type)
 {
 
 	double value = 9.0;
-	auto test_board = ara::make_billboard<double*>(&value);
+	auto test_board = biogears::make_billboard<double*>(&value);
 
 	auto viewer = test_board.viewer;
 	auto publisher = std::move(test_board.publisher);

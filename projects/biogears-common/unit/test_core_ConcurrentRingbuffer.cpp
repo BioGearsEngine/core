@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/container/concurrent_ringbuffer.tci.h>
+#include <biogears/container/concurrent_ringbuffer.tci.h>
 
-#ifdef DISABLE_KALE_ConcurrentRingbuffer_TEST
+#ifdef DISABLE_BIOGEARS_ConcurrentRingbuffer_TEST
   #define TEST_FIXTURE_NAME DISABLED_ConcurrentRingbufferFixture
 #else
   #define TEST_FIXTURE_NAME ConcurrentRingbufferFixture
@@ -63,7 +63,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_push_pop)
 {
-  using  ara::ConcurrentRingbuffer;
+  using  biogears::ConcurrentRingbuffer;
   ConcurrentRingbuffer<int> queue(5);
 
   for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
@@ -85,7 +85,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_active)
 {
-  using  ara::ConcurrentRingbuffer;
+  using  biogears::ConcurrentRingbuffer;
   ConcurrentRingbuffer<int> queue;
 
 
@@ -99,7 +99,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_active)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_block_pop)
 {
-  using  ara::ConcurrentRingbuffer;
+  using  biogears::ConcurrentRingbuffer;
   ConcurrentRingbuffer<int> queue;
 
   auto future = std::async(std::launch::async
@@ -125,7 +125,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_shutdown)
 {
-  using  ara::ConcurrentRingbuffer;
+  using  biogears::ConcurrentRingbuffer;
   ConcurrentRingbuffer<int> queue;
 
   auto push = std::async(std::launch::async
@@ -161,7 +161,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_shutdown)
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_no_move)
 {
 
-	using  ara::ConcurrentRingbuffer;
+	using  biogears::ConcurrentRingbuffer;
 	ConcurrentRingbuffer< std::unique_ptr<double> > queue;
 
 	auto push = std::async(std::launch::async

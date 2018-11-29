@@ -21,10 +21,10 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/threading/thread_pool.h>
+#include <biogears/threading/thread_pool.h>
 
 
-#ifdef DISABLE_KALE_ThreadPool_TEST
+#ifdef DISABLE_BIOGEARS_ThreadPool_TEST
   #define TEST_FIXTURE_NAME DISABLED_ThreadPool_Fixture
 #else
   #define TEST_FIXTURE_NAME ThreadPool_Fixture
@@ -63,12 +63,12 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME,ThreadPool_Construction)
 {
-  auto pool = ara::ThreadPool(5);
+  auto pool = biogears::ThreadPool(5);
 }
 
 TEST_F(TEST_FIXTURE_NAME, ThreadPool_run)
 {
-	auto pool = ara::ThreadPool(5);
+	auto pool = biogears::ThreadPool(5);
 	pool.start();
 	pool.stop();
 	pool.join();
@@ -76,7 +76,7 @@ TEST_F(TEST_FIXTURE_NAME, ThreadPool_run)
 
 TEST_F(TEST_FIXTURE_NAME, ThreadPool_sink_source)
 {
-	auto pool = ara::ThreadPool(5);
+	auto pool = biogears::ThreadPool(5);
 	pool.start();
 
 	auto source = pool.get_source();

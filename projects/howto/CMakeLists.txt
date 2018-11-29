@@ -105,7 +105,7 @@ else()
 endif()
 ############################################################################
 # Step 1:
-#         Examples are almost never order dependent just add them as we find
+#         Examples are almost never order dependent just add them as we  find
 #         them
 ############################################################################
 if(ARA_${ROOT_PROJECT_NAME}_BUILD_HOWTOS)

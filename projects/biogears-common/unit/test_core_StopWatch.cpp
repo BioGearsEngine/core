@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/chrono/stop_watch.tci.h>
+#include <biogears/chrono/stop_watch.tci.h>
 
-#ifdef DISABLE_KALE_StopWatch_TEST
+#ifdef DISABLE_BIOGEARS_StopWatch_TEST
   #define TEST_FIXTURE_NAME DISABLED_StopWatchFixture
 #else
   #define TEST_FIXTURE_NAME StopWatchFixture
@@ -72,7 +72,7 @@ TEST_F(TEST_FIXTURE_NAME, StopWatch)
 
   using  std::this_thread::sleep_for;
 
-  using  ara::StopWatch;
+  using  biogears::StopWatch;
 
   StopWatch<milliseconds> nano_watch;
   StopWatch<seconds> sec_watch;

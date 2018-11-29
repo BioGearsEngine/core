@@ -19,7 +19,7 @@
 //!
 
 #include <biogears/framework/option.tci.h>
-#include <biogears/framework/const_propagation_pointers.h>
+#include <biogears/framework/shared_propagate_const.h>
 
 #include <mutex>
 
@@ -114,8 +114,8 @@ namespace biogears {
   };
 
   template<typename T, typename ...Args>
-  Shared_Prop_Ptr<OwningMutex<T>> make_shared_mutex(Args&& ...args) {
-    return Shared_Prop_Ptr<OwningMutex<T>>( OwningMutex<T>::InPlace::Unit
+  shared_propagate_const<OwningMutex<T>> make_shared_mutex(Args&& ...args) {
+    return shared_propagate_const<OwningMutex<T>>( OwningMutex<T>::InPlace::Unit
                                           , std::forward<Args>(args)...
                                           );
   }

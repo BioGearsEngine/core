@@ -20,10 +20,10 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/framework/option.tci.h>
-#include <ara/framework/result.tci.h>
+#include <biogears/framework/option.tci.h>
+#include <biogears/framework/result.tci.h>
 
-#ifdef DISABLE_KALE_Option_TEST
+#ifdef DISABLE_BIOGEARS_Option_TEST
   #define TEST_FIXTURE_NAME DISABLED_Option_Fixture
 #else
   #define TEST_FIXTURE_NAME Option_Fixture
@@ -69,16 +69,16 @@ TEST_F(TEST_FIXTURE_NAME, Option_Construction)
   };
   range struct_value = range{ 1.0, 100.0 };
   double double_value     = 9.9;
-  auto doubleOption_value = ara::Option<double>(double_value);
-  auto doubleOption_null = ara::Option<double>();
+  auto doubleOption_value = biogears::Option<double>(double_value);
+  auto doubleOption_null = biogears::Option<double>();
 
-  auto structOption_value = ara::Option<range>(range{5.,5.});
-  auto structOption_null = ara::Option<range>();
+  auto structOption_value = biogears::Option<range>(range{5.,5.});
+  auto structOption_null = biogears::Option<range>();
 
-  auto pointerOption_value = ara::Option<range*>(&struct_value);
-  auto pointerOption_null = ara::Option<range*>();
+  auto pointerOption_value = biogears::Option<range*>(&struct_value);
+  auto pointerOption_null = biogears::Option<range*>();
 
-  auto someOption_value = ara::Option<double>::make(1.);
+  auto someOption_value = biogears::Option<double>::make(1.);
 
   EXPECT_TRUE( doubleOption_value.is_some() );
   EXPECT_TRUE( doubleOption_null.is_none() );
@@ -103,16 +103,16 @@ TEST_F(TEST_FIXTURE_NAME, Option_bool_operator)
   };
   range struct_value = range{ 1.0, 100.0 };
   double double_value = 9.9;
-  auto doubleOption_value = ara::Option<double>(double_value);
-  auto doubleOption_null = ara::Option<double>();
+  auto doubleOption_value = biogears::Option<double>(double_value);
+  auto doubleOption_null = biogears::Option<double>();
 
-  auto structOption_value = ara::Option<range>(range{ 5.,5. });
-  auto structOption_null = ara::Option<range>();
+  auto structOption_value = biogears::Option<range>(range{ 5.,5. });
+  auto structOption_null = biogears::Option<range>();
 
-  auto pointerOption_value = ara::Option<range*>(&struct_value);
-  auto pointerOption_null = ara::Option<range*>();
+  auto pointerOption_value = biogears::Option<range*>(&struct_value);
+  auto pointerOption_null = biogears::Option<range*>();
 
-  auto someOption_value = ara::Option<double>::make(1.);
+  auto someOption_value = biogears::Option<double>::make(1.);
 
   EXPECT_TRUE(doubleOption_value);
   EXPECT_FALSE(doubleOption_null);
@@ -133,8 +133,8 @@ TEST_F(TEST_FIXTURE_NAME, Option_clone_and_assignment)
 {
 
   double double_value = 9.9;
-  auto doubleOption_value = ara::Option<double>(double_value);
-  auto doubleOption_null = ara::Option<double>();
+  auto doubleOption_value = biogears::Option<double>(double_value);
+  auto doubleOption_null = biogears::Option<double>();
 
   auto option2 = doubleOption_value.clone();
   auto option3 = doubleOption_null.clone();
@@ -152,8 +152,8 @@ TEST_F(TEST_FIXTURE_NAME, Option_unwrap_and_dump)
 
   {
     double double_value = 9.9;
-    auto doubleOption_value = ara::Option<double*>(&double_value);
-    auto doubleOption_null = ara::Option<double*>();
+    auto doubleOption_value = biogears::Option<double*>(&double_value);
+    auto doubleOption_null = biogears::Option<double*>();
 
     auto unwraped_value = doubleOption_value.unwrap();
     EXPECT_EQ(*unwraped_value, double_value);
@@ -173,7 +173,7 @@ TEST_F(TEST_FIXTURE_NAME, Option_unwrap_and_dump)
     } value = { 10., {1.,2.,3.,4.,5.} } ;
     
     range or_range{ 1., {0.,0.,0.,0.} };
-    auto option = ara::Option<range>(value);
+    auto option = biogears::Option<range>(value);
 
     
     auto r1 = option.unwrap_or(or_range);
@@ -198,8 +198,8 @@ TEST_F(TEST_FIXTURE_NAME, Option_match)
   } value = { 10., {1.,2.,3.,4.,5.} };
   {
     range or_range = { 1., {0.,0.,0.,0.} };
-    const auto option = ara::Option<range>(value);
-    const auto none = ara::Option<range>();
+    const auto option = biogears::Option<range>(value);
+    const auto none = biogears::Option<range>();
 
     auto r1 = option.match<double>([](const range&) { return 0.; }, []() { return 1.0; });
     EXPECT_EQ(r1, 0.);
@@ -214,8 +214,8 @@ TEST_F(TEST_FIXTURE_NAME, Option_match)
 
   {
     range or_range = { 1., {0.,0.,0.,0.} };
-    auto option = ara::Option<range>(value);
-    auto none = ara::Option<range>();
+    auto option = biogears::Option<range>(value);
+    auto none = biogears::Option<range>();
 
     auto r1 = option.match<double>([](const range&) { return 0.; }, []() { return 1.0; });
     EXPECT_FALSE(option);
@@ -242,8 +242,8 @@ TEST_F(TEST_FIXTURE_NAME, Option_map)
     } value = { 10., {1.,2.,3.,4.,5.} };
     {
       range or_range = { 1., {0.,0.,0.,0.} };
-      const auto option = ara::Option<range>(value);
-      const auto none = ara::Option<range>();
+      const auto option = biogears::Option<range>(value);
+      const auto none = biogears::Option<range>();
 
       auto r1 = option.map<double>( [](const range&) { return 0.; } );
       EXPECT_EQ(r1.unwrap(), 0.);
@@ -262,8 +262,8 @@ TEST_F(TEST_FIXTURE_NAME, Option_map)
 
     {
       range or_range = { 1., {0.,0.,0.,0.} };
-      auto option = ara::Option<range>(value);
-      auto none = ara::Option<range>();
+      auto option = biogears::Option<range>(value);
+      auto none = biogears::Option<range>();
 
       auto r1 = option.map<double>([](range&&) { return 0.; });
       EXPECT_EQ(r1.unwrap(), 0.);
@@ -291,35 +291,35 @@ TEST_F(TEST_FIXTURE_NAME, Option_and_then)
   } value = { 10., {1.,2.,3.,4.,5.} };
   {
     range or_range = { 1., {0.,0.,0.,0.} };
-    const auto const_option = ara::Option<range>(value);
-    auto option = ara::Option<range>(value);
+    const auto const_option = biogears::Option<range>(value);
+    auto option = biogears::Option<range>(value);
 
-    auto r1 = const_option.and_then<double> ( [](const range& val) { return ara::Option<double>( val.first); } );
+    auto r1 = const_option.and_then<double> ( [](const range& val) { return biogears::Option<double>( val.first); } );
     EXPECT_TRUE(r1);
     EXPECT_TRUE(const_option);
 
-    auto r2 = option.and_then<double>([](range&& val) { return ara::Option<double>(val.first); });
+    auto r2 = option.and_then<double>([](range&& val) { return biogears::Option<double>(val.first); });
     EXPECT_TRUE(r2);
     EXPECT_FALSE(option);
 
-    auto r3 = option.and_then<double>([](range&& val) { return ara::Option<double>(val.first); });
+    auto r3 = option.and_then<double>([](range&& val) { return biogears::Option<double>(val.first); });
     EXPECT_FALSE(r3);
     EXPECT_FALSE(option);
 
-    auto r4 = const_option.mand<double>( ara::Option<double>(5.00) );
+    auto r4 = const_option.mand<double>( biogears::Option<double>(5.00) );
     EXPECT_TRUE(r4);
     EXPECT_TRUE(const_option);
 
-    auto r5 = option.mand<double>(ara::Option<double>(105.00));
+    auto r5 = option.mand<double>(biogears::Option<double>(105.00));
     EXPECT_FALSE(r5);
     EXPECT_FALSE(option);
 
-    auto r6 = option.mor( ara::Option<range>( 95.0, std::vector<double>{} ) );
+    auto r6 = option.mor( biogears::Option<range>( 95.0, std::vector<double>{} ) );
     EXPECT_TRUE(r6);
     EXPECT_FALSE(option);
     EXPECT_EQ(95.00, r6.unwrap().first);
 
-    auto r7 = option.or_else( [](void){ return ara::Option<range>();  } );
+    auto r7 = option.or_else( [](void){ return biogears::Option<range>();  } );
     EXPECT_FALSE(r7);
     EXPECT_FALSE(option);
 

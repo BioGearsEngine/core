@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/container/concurrent_queue.tci.h>
+#include <biogears/container/concurrent_queue.tci.h>
 
-#ifdef DISABLE_KALE_ConcurrentQueue_TEST
+#ifdef DISABLE_BIOGEARS_ConcurrentQueue_TEST
   #define TEST_FIXTURE_NAME DISABLED_ConcurrentQueueFixture
 #else
   #define TEST_FIXTURE_NAME ConcurrentQueueFixture
@@ -63,7 +63,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_push_pop)
 {
-  using  ara::ConcurrentQueue;
+  using  biogears::ConcurrentQueue;
   ConcurrentQueue<int> queue;
 
   for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
@@ -79,7 +79,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_active)
 {
-  using  ara::ConcurrentQueue;
+  using  biogears::ConcurrentQueue;
   ConcurrentQueue<int> queue;
 
 
@@ -93,7 +93,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_active)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_block_pop)
 {
-  using  ara::ConcurrentQueue;
+  using  biogears::ConcurrentQueue;
   ConcurrentQueue<int> queue;
 
   auto future = std::async(std::launch::async
@@ -119,7 +119,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_shutdown)
 {
-  using  ara::ConcurrentQueue;
+  using  biogears::ConcurrentQueue;
   ConcurrentQueue<int> queue;
 
   auto push = std::async(std::launch::async

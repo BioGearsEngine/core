@@ -24,10 +24,10 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/container/concurrent_ringbuffer.tci.h>
-#include <ara/framework/scmp/scmp_channel.tci.h>
+#include <biogears/container/concurrent_ringbuffer.tci.h>
+#include <biogears/framework/scmp/scmp_channel.tci.h>
 
-#ifdef DISABLE_KALE_scmp_channel_TEST
+#ifdef DISABLE_BIOGEARS_scmp_channel_TEST
   #define TEST_FIXTURE_NAME DISABLED_scmp_channelFixture
 #else
   #define TEST_FIXTURE_NAME scmp_channelFixture
@@ -66,10 +66,10 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_push_pop)
 {
-  using  ara::scmp::Channel;
-  using  ara::scmp::Source;
+  using  biogears::scmp::Channel;
+  using  biogears::scmp::Source;
 
-  using container = ara::ConcurrentRingbuffer<int>;
+  using container = biogears::ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();
@@ -89,10 +89,10 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_active)
 {
-  using  ara::scmp::Channel;
-  using  ara::scmp::Source;
+  using  biogears::scmp::Channel;
+  using  biogears::scmp::Source;
 
-  using container = ara::ConcurrentRingbuffer<int>;
+  using container = biogears::ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();
@@ -109,10 +109,10 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_active)
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_block_pop)
 {
-  using  ara::scmp::Channel;
-  using  ara::scmp::Source;
+  using  biogears::scmp::Channel;
+  using  biogears::scmp::Source;
 
-  using container = ara::ConcurrentRingbuffer<int>;
+  using container = biogears::ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();
@@ -141,10 +141,10 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_shutdown)
 {
-  using  ara::scmp::Channel;
-  using  ara::scmp::Source;
+  using  biogears::scmp::Channel;
+  using  biogears::scmp::Source;
 
-  using container = ara::ConcurrentRingbuffer<int>;
+  using container = biogears::ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();

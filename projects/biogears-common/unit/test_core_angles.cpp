@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/math/angles.h>
+#include <biogears/math/angles.h>
 
-#ifdef DISABLE_KALE_Angles_TEST
+#ifdef DISABLE_BIOGEARS_Angles_TEST
   #define TEST_FIXTURE_NAME DISABLED_Angles_Fixture
 #else
   #define TEST_FIXTURE_NAME Angles_Fixture
@@ -65,8 +65,8 @@ void TEST_FIXTURE_NAME::TearDown()
 //! 
 TEST_F(TEST_FIXTURE_NAME, angles)
 {
-  using namespace ara;
-  using namespace ara::angle_literals;
+  using namespace biogears;
+  using namespace biogears::angle_literals;
 	{
 		float phi = 3.14159265358979323_f_rad;
 		float theta = 180_f_deg;
@@ -82,8 +82,8 @@ TEST_F(TEST_FIXTURE_NAME, angles)
 
 TEST_F(TEST_FIXTURE_NAME, angles_quaternains)
 {
-	using namespace ara;
-	using namespace ara::angle_literals;
+	using namespace biogears;
+	using namespace biogears::angle_literals;
 
 	{
 		auto first = Quaternion(1,1,1,1);
@@ -94,8 +94,8 @@ TEST_F(TEST_FIXTURE_NAME, angles_quaternains)
 
 TEST_F(TEST_FIXTURE_NAME, angles_euler)
 {
-	using namespace ara;
-	using namespace ara::angle_literals;
+	using namespace biogears;
+	using namespace biogears::angle_literals;
 
 	{
 		auto first = EulerAng(1, 1, 1);

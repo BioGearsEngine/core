@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/threading/owning_mutex.tci.h>
+#include <biogears/threading/owning_mutex.tci.h>
 
-#ifdef DISABLE_KALE_OwningMutex_TEST
+#ifdef DISABLE_BIOGEARS_OwningMutex_TEST
   #define TEST_FIXTURE_NAME DISABLED_OwningMutex_Fixture
 #else
   #define TEST_FIXTURE_NAME OwningMutex_Fixture
@@ -61,7 +61,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_Construction)
 {
-  using namespace ara;
+  using namespace biogears;
   std::string value = "Donkey_King_Country";
   OwningMutex<std::string> om1(value);
   OwningMutex<std::string> om2( std::move(value) );
@@ -71,7 +71,7 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_Construction)
 
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_Aquire)
 {
-  using namespace ara;
+  using namespace biogears;
   std::string value = "Donkey_King_Country";
   auto mutex = OwningMutex<std::string>::make(value);
 	auto acquired = mutex.acquire();
@@ -80,7 +80,7 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_Aquire)
 
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_try_aquire)
 {
-  using namespace ara;
+  using namespace biogears;
   std::string value = "Donkey_King_Country";
 
   OwningMutex<std::string> mutex(value);
@@ -94,7 +94,7 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_try_aquire)
 #ifndef __GNUC__
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_only_one)
 {
-  using namespace ara;
+  using namespace biogears;
   using namespace std::chrono_literals;
 
   std::string value = "Donkey_King_Country";
@@ -117,7 +117,7 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_only_one)
 
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_shared_mutex)
 {
-  using namespace ara;
+  using namespace biogears;
   using namespace std::chrono_literals;
   std::string value = "Donkey_King_Country";
 

@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/string/manipulation.h>
+#include <biogears/string/manipulation.h>
 
-#ifdef DISABLE_KALE_String_Mainpulation_TEST
+#ifdef DISABLE_BIOGEARS_String_Mainpulation_TEST
   #define TEST_FIXTURE_NAME DISABLED_String_Mainpulation_Fixture
 #else
   #define TEST_FIXTURE_NAME String_Mainpulation_Fixture
@@ -61,9 +61,9 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, string_asprintf)
 {
-  using namespace ara;
+  using namespace biogears;
   std::string value = "Horse Monkey";
-	auto value_2 = ara::asprintf("%s %s", "Horse", "Monkey");
+	auto value_2 = biogears::asprintf("%s %s", "Horse", "Monkey");
 	ASSERT_EQ(value, value_2);
 	ASSERT_EQ(value, value_2);
 }

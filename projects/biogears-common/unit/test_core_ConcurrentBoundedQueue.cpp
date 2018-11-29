@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>
 
-#include <ara/container/concurrent_bounded_queue.tci.h>
+#include <biogears/container/concurrent_bounded_queue.tci.h>
 
-#ifdef DISABLE_KALE_ConcurrentBoundedQueue_TEST
+#ifdef DISABLE_BIOGEARS_ConcurrentBoundedQueue_TEST
   #define TEST_FIXTURE_NAME DISABLED_ConcurrentBoundedQueueFixture
 #else
   #define TEST_FIXTURE_NAME ConcurrentBoundedQueueFixture
@@ -63,7 +63,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_push_pop)
 {
-  using  ara::ConcurrentBoundedQueue;
+  using  biogears::ConcurrentBoundedQueue;
   ConcurrentBoundedQueue<int> queue(5);
 
   for (auto i : { 0, 1, 2, 3, 4}) {
@@ -85,7 +85,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_active)
 {
-  using  ara::ConcurrentBoundedQueue;
+  using  biogears::ConcurrentBoundedQueue;
   ConcurrentBoundedQueue<int> queue(5);
 
 
@@ -99,7 +99,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_active)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_block_pop)
 {
-  using  ara::ConcurrentBoundedQueue;
+  using  biogears::ConcurrentBoundedQueue;
   ConcurrentBoundedQueue<int> queue(5);
 
   auto future = std::async(std::launch::async
@@ -125,7 +125,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_shutdown)
 {
-  using  ara::ConcurrentBoundedQueue;
+  using  biogears::ConcurrentBoundedQueue;
   ConcurrentBoundedQueue<int> queue;
 
   auto push = std::async(std::launch::async
