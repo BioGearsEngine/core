@@ -24,7 +24,6 @@ class PhysiologyEngineDynamicStabilization;
 class SEPatient;
 class SEScalarTime;
 class TimeUnit;
-class OverrideConfig;
 
 
 class BIOGEARS_API PhysiologyEngineConfiguration : public Loggable {
@@ -73,8 +72,6 @@ public:
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
   virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
 
-  // virtual bool LoadOverrideConfig(const PhysiologyEngineConfiguration* override);
-
 protected:
   bool m_Merge;
   SEElectroCardioGramInterpolator* m_ECGInterpolator;
@@ -85,7 +82,6 @@ protected:
   SEScalarTime* m_TimeStep;
   std::unique_ptr<SEPatient> m_Patient;
   std::unique_ptr<bool> m_overrideMode;
-  OverrideConfig* m_overrideConfig;
 
   CDM::enumOnOff::value m_WritePatientBaselineFile;
 };

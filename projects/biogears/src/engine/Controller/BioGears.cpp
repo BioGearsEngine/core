@@ -857,7 +857,6 @@ const EngineState BioGears::GetState() const { return m_State; }
 const SaturationCalculator& BioGears::GetSaturationCalculator() const { return *m_SaturationCalculator; }
 const BioGearsSubstances& BioGears::GetSubstances()const { return *m_Substances; }
 const SEPatient& BioGears::GetPatient()const { return *m_Patient; }
-const OverrideConfig& BioGears::GetOverride() const { return *m_OverrideConfig; }
 const SEBloodChemistrySystem& BioGears::GetBloodChemistry() const { return *m_BloodChemistrySystem; }
 const SECardiovascularSystem& BioGears::GetCardiovascular() const { return *m_CardiovascularSystem; }
 const SEDrugSystem& BioGears::GetDrugs() const { return *m_DrugSystem; }

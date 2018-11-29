@@ -107,9 +107,6 @@ public:
   SEPatient& GetPatient();
   const SEPatient& GetPatient() const;
 
-  OverrideConfig& GetOverride();
-  const OverrideConfig& GetOverride() const;
-
   bool GetPatientAssessment(SEPatientAssessment& assessment);
 
   SEBloodChemistrySystem& GetBloodChemistry();

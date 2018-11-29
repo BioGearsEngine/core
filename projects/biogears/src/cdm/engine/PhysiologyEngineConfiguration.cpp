@@ -30,7 +30,6 @@ PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   m_DynamicStabilizationCriteria = nullptr;
   m_TimeStep = nullptr;
   m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
-  m_overrideConfig = nullptr;
 }
 
 PhysiologyEngineConfiguration::~PhysiologyEngineConfiguration()
@@ -94,8 +93,6 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
       return false;
     }
   }
-
-  // m_overridedata = OverrideConfig.ReadOverrideParameters("./override/BioGearsOverride.xml");
 
   std::unique_ptr<CDM::ObjectData> sData;
   const CDM::PhysiologyEngineTimedStabilizationData* tData = nullptr;

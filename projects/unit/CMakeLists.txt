@@ -35,7 +35,7 @@ if(ARA_${PROJECT_NAME}_BUILD_TEST)
   ###############################################################################
   # Requirments
   ###############################################################################
-  find_package(GTest REQUIRED)
+  find_package(GTest)
   
   file(GLOB_RECURSE UNITTEST_HEADERS "src/*.h")
   file(GLOB_RECURSE UNITTEST_SOURCES "src/*.cpp")
@@ -83,7 +83,7 @@ list(APPEND UNIT_TEST_LIBRARIES
   target_include_directories(unittest
       PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
-      ${GTEST_INCLUDE_DIR}
+      #${GTEST_INCLUDE_DIR}
       ${bio_INCLUDE_DIR}
   )
 
