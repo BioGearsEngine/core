@@ -35,7 +35,7 @@ CDMDriver::~CDMDriver()
 void CDMDriver::RunCDMs(std::vector<std::string> files)
 {
   for (auto& testName : files) {
-    std::string outputDir = "./Validation/";
+    std::string outputDir = "./UnitTests/";
     outputDir.append(testName);
     std::function<void()> work = [=](){ biogears::RunCDMTests(testName,outputDir); };
     _pool.queue_work(work);

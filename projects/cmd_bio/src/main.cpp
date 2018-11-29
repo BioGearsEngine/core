@@ -10,18 +10,19 @@
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
 
-#include "argumentparser.hpp"
+#include "CDMDriver.h"
 #include "ConfigFileParser.hpp"
 #include "TestDriver.h"
-#include "CDMDriver.h"
+#include "argumentparser.hpp"
 #include <biogears/exports.h>
 
 #include <iostream>
 #include <string>
 #include <thread>
 
-#include "StateGenerator.h"
+#include "ScenarioDriver.h"
 #include "PatientValidationGenerator.h"
+#include "StateGenerator.h"
 #include "data/EnvironmentGenerator.h"
 #include "data/PatientGenerator.h"
 
@@ -31,66 +32,65 @@
 #include "data/CompoundGenerator.h"
 #include "data/NutritionGenerator.h"
 
+#include <biogears/cdm/utils/FileUtils.h>
+
 //!
 //! \brief Reads command line argument and executes corresponding operation
 //! \param argc : Number of command line arguments
 //! \param argv : Pointers to command line arguments
 //! \return int 0 on success, other numbers on failure
-//! 
+//!
 int main(int argc, char** argv)
 {
-  namespace bg = biogears;
   ArgumentParser parser;
 
-  parser.addArgument("DATA");         // gen-data
-  parser.addArgument("STATES");       // gen-states
-  parser.addArgument("SYSTEM");       // run-system-validation
-  parser.addArgument("PATIENT");      // run-patient-validation
-  parser.addArgument("DRUG");         // run-drug-validation
+  parser.addArgument("DATA"); // gen-data
+  parser.addArgument("STATES"); // gen-states
+  parser.addArgument("SYSTEM"); // run-system-validation
+  parser.addArgument("PATIENT"); // run-patient-validation
+  parser.addArgument("DRUG"); // run-drug-validation
   parser.addArgument("VERIFICATION"); // run-verification
-  parser.addArgument("VALIDATION");   // run-cdm-validation
-  
-  parser.parse(argc,argv);
+  parser.addArgument("VALIDATION"); // run-cdm-validation
+
+  parser.parse(argc, argv);
 
   unsigned int n = std::thread::hardware_concurrency();
 
   if (argc > 1) {
     if (parser.exists("STATES")) {
-      biogears::StateGenerator generator{ n };
-
-      generator.GenStates();
+      biogears::ScenarioDriver generator{ n };
+      std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
+      generator.LoadScenarios(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
       generator.run();
-      
-      while ( !generator.stop_if_empty() )
-      {
+      while (!generator.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
       }
       generator.join();
-
     } else if (parser.exists("DATA")) { // gen-data
-      std::vector<std::unique_ptr<bg::CSVToXMLConvertor>> generators;
-      generators.push_back(std::make_unique<bg::SubstanceGenerator>());
-      generators.push_back(std::make_unique<bg::EnvironmentGenerator>());
-      generators.push_back(std::make_unique<bg::PatientGenerator>());
-      generators.push_back(std::make_unique<bg::StabilizationGenerator>());
-      generators.push_back(std::make_unique<bg::NutritionGenerator>());
-      generators.push_back(std::make_unique<bg::CompoundGenerator>());
+      std::vector<std::unique_ptr<biogears::CSVToXMLConvertor>> generators;
+      generators.push_back(std::make_unique<biogears::SubstanceGenerator>());
+      generators.push_back(std::make_unique<biogears::EnvironmentGenerator>());
+      generators.push_back(std::make_unique<biogears::PatientGenerator>());
+      generators.push_back(std::make_unique<biogears::StabilizationGenerator>());
+      generators.push_back(std::make_unique<biogears::NutritionGenerator>());
+      generators.push_back(std::make_unique<biogears::CompoundGenerator>());
       for (auto& gen : generators) {
         gen->parse();
         gen->save();
       }
     } else if (parser.exists("SYSTEM")) { // run-system-validation
       std::vector<std::string> files = biogears::ParseConfigFile("ValidationSystemsShort.config");
-      biogears::TestDriver test{ 5 };
-      test.RunTests(files);
+      biogears::ScenarioDriver test{ n };
+      test.LoadScenarios(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
       test.run();
       while (!test.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
       }
       test.join();
     } else if (parser.exists("PATIENT")) { // run-patient-validation
-      biogears::PatientValidationGenerator generator{ 5 };
-      generator.GenPatientValidation();
+      biogears::ScenarioDriver generator{ n };
+      std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
+      generator.LoadScenarios(patients, std::string("Scenarios/Validation/Patient-Validation.xml"));
       generator.run();
       while (!generator.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -98,8 +98,8 @@ int main(int argc, char** argv)
       generator.join();
     } else if (parser.exists("DRUG")) { // run-drug-validation
       std::vector<std::string> files = biogears::ParseConfigFile("ValidationDrugsShort.config");
-      biogears::TestDriver test{ 5 };
-      test.RunTests(files);
+      biogears::ScenarioDriver test{ n };
+      test.LoadScenarios(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
       test.run();
       while (!test.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -107,8 +107,8 @@ int main(int argc, char** argv)
       test.join();
     } else if (parser.exists("VERIFICATION")) { // run-verification
       std::vector<std::string> files = biogears::ParseConfigFile("VerificationScenariosShort.config");
-      biogears::TestDriver test{ 5 };
-      test.RunTests(files);
+      biogears::ScenarioDriver test{ n };
+      test.LoadScenarios(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
       test.run();
       while (!test.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
       test.join();
     } else if (parser.exists("VALIDATION")) { // run-cdm-tests
       std::vector<std::string> files = biogears::ParseConfigFile("CDMUnitTestsShort.config");
-      biogears::CDMDriver test { 5 };
+      biogears::CDMDriver test{ n };
       test.RunCDMs(files);
       test.run();
       while (!test.stop_if_empty()) {

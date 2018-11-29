@@ -39,34 +39,8 @@ PatientValidationGenerator::~PatientValidationGenerator()
 void PatientValidationGenerator::GenPatientValidation()
 {
 
-  std::string patientFiles[] = { "Bradycardic.xml",
-                                 "Carol.xml",
-                                 "Cynthia.xml",
-                                 "DefaultFemale.xml",
-                                 "DefaultMale.xml",
-                                 "DefaultTemplateFemale.xml",
-                                 "DefaultTemplateMale.xml",
-                                 "ExtremeFemale.xml",
-                                 "ExtremeMale.xml",
-                                 "Gus.xml",
-                                 "Hassan.xml",
-                                 "Jane.xml",
-                                 "Jeff.xml",
-                                 "Joel.xml",
-                                 "Nathan.xml",
-                                 "Overweight.xml",
-                                 "Ricky.xml",
-                                 "Roy.xml",
-                                 "Soldier.xml",
-                                 "StandardFemale.xml",
-                                 "StandardMale.xml",
-                                 "Tachycardic.xml",
-                                 "ToughGirl.xml",
-                                 "ToughGuy.xml",
-                                 "Tristan.xml",
-                                 "Underweight.xml" };
-
-  for (auto& patient : patientFiles) {
+  auto patients = ListFiles("patients", R"(\.xml)");
+  for (auto& patient : patients) {
     std::function<void()> work = [=](){ biogears::runPatientScenario(patient, std::string("Scenarios/Validation/Patient-Validation.xml")); };
     _pool.queue_work(work);
   }
