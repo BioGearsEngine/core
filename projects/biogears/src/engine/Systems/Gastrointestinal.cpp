@@ -274,7 +274,6 @@ void Gastrointestinal::AtSteadyState()
 
 void Gastrointestinal::PreProcess()
 {
-  double GutSecretion_mL_Per_min = 0.0;
   if (m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().HasConsumeNutrients()) {
       // Use Default Rates if none provided
@@ -293,7 +292,6 @@ void Gastrointestinal::PreProcess()
     }
     //GastricSecretion(m_dT_s); // Move some water from the Gut EV fluids to the Stomach
     DigestNutrient();
-    GutSecretion_mL_Per_min = m_GutE3ToGroundPath->GetNextFlowSource(VolumePerTimeUnit::mL_Per_min);
   } else {
     // Reset the Gut Chyme substance to their original values
     for (auto i : m_InitialSubstanceMasses_ug) {
@@ -303,7 +301,6 @@ void Gastrointestinal::PreProcess()
   }
   ChymeSecretion(); // Secrete sodium first
   AbsorbNutrients(); // Absorb nutrients into the Blood from the small intestine chyme
- // m_data.GetDataTrack().Probe("GutSecrection", GutSecretion_mL_Per_min);
 }
 
 //--------------------------------------------------------------------------------------------------

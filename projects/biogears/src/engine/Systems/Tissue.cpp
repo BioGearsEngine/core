@@ -2425,43 +2425,25 @@ void Tissue::CalculateTissueFluidFluxes()
 /// Calculates and sets oncotic pressure on all plasma to extracellular paths
 ///
 /// \details
-/// The purpose of this function is primarily to prevent fluid build up in the bloodstream when intravenous liquids are administered
-/// in large quantities.  Dilution of blood plasma concentration should decrease the colloid oncotic pressure gradient that favors fluid
-/// retention in the vascular space.  This method is used in lieu of dynamically calculating albumin diffusion.  If we revisit albumin diffusion,
-/// we will need to revisit this function as well.  Currently, this function uses the whole body concentration of albumin in the blood
-/// and in the tissue to set oncotic pressure sources.  We are thus assuming that fluid added/removed from the body is done so uniformly
-/// from each compartment.  Future edits could include calculating pressures on a compartment by compartment basis.
+/// This function takes the albumin concentrations in the vascular and extracellular spaces of each BioGears compartment (except the brain)
+/// and uses the Landis-Pappenheimr approximation to determine osmotic pressure gradient.  Albumin concentrations are calculated in the 
+/// AlbuminTransport method
 void Tissue::CalculateOncoticPressure()
 {
   SETissueCompartment* tissue;
   SELiquidCompartment* vascular;
   SEFluidCircuitPath* vascularCOP;
   SEFluidCircuitPath* interstitialCOP;
-  double albuminMassInBlood_g = m_Albumin->GetMassInBlood(MassUnit::g);
-  //Albumin mass in tissue is only in the extracellular space because we set albumin to 0 in intracellular and do not diffuse it across cell membrane.
-  double albuminMassInTissue_g = m_Albumin->GetMassInTissue(MassUnit::g);
-  double vascularVolume_dL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::dL);
-  double interstitialVolume_dL = 0.0;
-
-  for (auto tissueVascular : m_TissueToVascular) {
-    tissue = tissueVascular.first;
-    interstitialVolume_dL += m_data.GetCompartments().GetExtracellularFluid(*tissue).GetVolume(VolumeUnit::dL);
-  }
-
-  double albuminVascularAvg_g_Per_dL = albuminMassInBlood_g / vascularVolume_dL;
-  double albuminInterstitialAvg_g_Per_dL = albuminMassInTissue_g / interstitialVolume_dL;
 
   ////In calculating oncotic pressure, we assume a linear relationship between plasma albumin concentration and total plasma protein
-  ////concentration.  We then use the Landis-Pappenheimer (LP) Equation for total protein.  In the interstitial space, we assume that
-  ////albumin is the only large protein present in significant quantities and use the correlation between albumin concentration and
-  ////oncotic pressure reported by LP.  This assumes a healthy state where no other proteins are leaking across membrane.  Thus, these
-  ////assumptions should change in hemorrhage and sepsis.
-  /// \ToDo:  Adjust protein concentration calculations to consider effect of damaged microvasculature
+  ////concentration.  We then use the Landis-Pappenheimer (LP) Equation for total protein. This assumes a healthy state where no other 
+  ////proteins are leaking across membrane.  When inflammation is present, these pressures will change as result of albumin concentration
+  ////which is determined in AlbuminTransport method
   double reflectionCoefficient = 0.0;
   double vascularOncoticPressure_mmHg = 0.0;
   double interstitialOncoticPressure_mmHg = 0.0;
-  double effectiveVascular_g_Per_dL = 0.0;
-  double effectiveInterstitial_g_Per_dL = 0.0;
+  double totalProteinVascular_g_Per_dL = 0.0;
+  double totalProteinInterstitial_g_Per_dL = 0.0;
 
   for (auto tissueVascular : m_TissueToVascular) {
     tissue = tissueVascular.first;
@@ -2473,10 +2455,10 @@ void Tissue::CalculateOncoticPressure()
     if (vascular->GetName() == BGE::VascularCompartment::RightKidney)
       vascular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
 
-    effectiveVascular_g_Per_dL = 1.6 * vascular->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-    effectiveInterstitial_g_Per_dL = 1.6 * m_data.GetCompartments().GetExtracellularFluid(*tissue).GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-    vascularOncoticPressure_mmHg = 2.1 * effectiveVascular_g_Per_dL + 0.16 * std::pow(effectiveVascular_g_Per_dL, 2) + 0.009 * std::pow(effectiveVascular_g_Per_dL, 3);
-    interstitialOncoticPressure_mmHg = 2.1 * effectiveInterstitial_g_Per_dL + 0.16 * std::pow(effectiveInterstitial_g_Per_dL, 2) + 0.009 * std::pow(effectiveInterstitial_g_Per_dL, 3);
+    totalProteinVascular_g_Per_dL = 1.6 * vascular->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+    totalProteinInterstitial_g_Per_dL = 1.6 * m_data.GetCompartments().GetExtracellularFluid(*tissue).GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+    vascularOncoticPressure_mmHg = 2.1 * totalProteinVascular_g_Per_dL + 0.16 * std::pow(totalProteinVascular_g_Per_dL, 2) + 0.009 * std::pow(totalProteinVascular_g_Per_dL, 3);
+    interstitialOncoticPressure_mmHg = 2.1 * totalProteinInterstitial_g_Per_dL + 0.16 * std::pow(totalProteinInterstitial_g_Per_dL, 2) + 0.009 * std::pow(totalProteinInterstitial_g_Per_dL, 3);
 
     if (vascular->GetName() == BGE::VascularCompartment::Gut) {
       for (auto c : vascular->GetChildren()) {
