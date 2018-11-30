@@ -19,7 +19,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
   ###############################################################################
   # Requirments
   ###############################################################################
-  find_package(GTest)
+  find_package(GTest required)
   
   file(GLOB_RECURSE UNITTEST_HEADERS "src/*.h")
   file(GLOB_RECURSE UNITTEST_SOURCES "src/*.cpp")
