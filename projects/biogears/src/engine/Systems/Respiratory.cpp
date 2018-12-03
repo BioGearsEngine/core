@@ -1293,8 +1293,6 @@ void Respiratory::Pneumothorax()
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       } else {
-        //resistance_cmH2O_s_Per_L = 1000000;
-        //m_RightAlveoliLeakToRightPleural->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
         m_RightAlveoliLeakToRightPleural->SetNextValve(CDM::enumOpenClosed::Open);
       }
 
