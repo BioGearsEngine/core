@@ -1079,10 +1079,10 @@ void SEPatientActionCollection::RemoveOverride()
 }
 bool SEPatientActionCollection::IsOverrideActionOn() const
 {
-  return (HasOverride()) && (m_OverrideAction->GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
+  return (m_OverrideAction->GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
 }
 bool SEPatientActionCollection::IsOverrideActionConformant() const
 {
-  return (HasOverride()) && (m_OverrideAction->GetOverrideConformance() == CDM::enumOnOff::On) ? true : false;
+  return (!HasOverride()) || (m_OverrideAction->GetOverrideConformance() == CDM::enumOnOff::On) ? true : false;
 }
 }

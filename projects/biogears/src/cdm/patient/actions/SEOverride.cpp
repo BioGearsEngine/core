@@ -24,9 +24,9 @@ SEOverride::SEOverride()
   : SEPatientAction()
 {
   m_OverrideSwitch = CDM::enumOnOff::Off;
+  m_OverrideConformance = CDM::enumOnOff::On;
   m_ArterialPHOR = nullptr;
   m_VenousPHOR = nullptr;
-  m_OverrideConformance = CDM::enumOnOff::Off;
   m_CardiacOutputOR = nullptr;
   m_PressureOR = nullptr;
   m_HeartRateOR = nullptr;
@@ -57,7 +57,7 @@ void SEOverride::Clear()
 {
   SEPatientAction::Clear();
   m_OverrideSwitch = CDM::enumOnOff::Off;
-  m_OverrideConformance = CDM::enumOnOff::Off;
+  m_OverrideConformance = CDM::enumOnOff::On;
   SAFE_DELETE(m_ArterialPHOR);
   SAFE_DELETE(m_VenousPHOR);
   SAFE_DELETE(m_CardiacOutputOR);
