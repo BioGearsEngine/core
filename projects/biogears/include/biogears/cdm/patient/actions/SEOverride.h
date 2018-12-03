@@ -123,9 +123,25 @@ public:
   bool HasEnergyOverride() const;
 
   //Renal
+  bool HasLeftGlomerularFiltrationRateOverride() const;
+  SEScalarVolumePerTime& GetLeftGlomerularFiltrationRateOverride();
+  double GetLeftGlomerularFiltrationRateOverride(const VolumePerTimeUnit& unit) const;
+  bool HasRenalBloodFlowOverride() const;
+  SEScalarVolumePerTime& GetRenalBloodFlowOverride();
+  double GetRenalBloodFlowOverride(const VolumePerTimeUnit& unit) const;
+  bool HasRightGlomerularFiltrationRateOverride() const;
+  SEScalarVolumePerTime& GetRightGlomerularFiltrationRateOverride();
+  double GetRightGlomerularFiltrationRateOverride(const VolumePerTimeUnit& unit) const;
   bool HasUrineProductionRateOverride() const;
   SEScalarVolumePerTime& GetUrineProductionRateOverride();
   double GetUrineProductionRateOverride(const VolumePerTimeUnit& unit) const;
+  bool HasUrineOsmolarityOverride() const;
+  SEScalarVolumePerTime& GetUrineOsmolarityOverride();
+  double GetUrineOsmolarityOverride(const VolumePerTimeUnit& unit) const;
+  bool HasUrineVolumeOverride() const;
+  SEScalarVolume& GetUrineVolumeOverride();
+  double GetUrineVolumeOverride(const VolumeUnit& unit) const;
+
   bool HasRenalOverride() const;
 
   //Respiratory
@@ -160,7 +176,12 @@ protected:
   SEScalarMass* m_SodiumLostToSweatOR;
   SEScalarMass* m_PotassiumLostToSweatOR;
   SEScalarMass* m_ChlorideLostToSweatOR;
+  SEScalarVolumePerTime* m__LeftGlomerularFiltrationOR;
+  SEScalarVolumePerTime* m_RenalBloodFlowOR;
+  SEScalarVolumePerTime* m__RightGlomerularFiltrationOR;
   SEScalarVolumePerTime* m_UrineProductionRateOR;
+  SEScalarOsmolarity* m_UrineOsmolarityOR;
+  SEScalarVolume* m_UrineVolumeOR;
   SEScalarFrequency* m_RespirationRateOR;
   SEScalarVolume* m_TidalVolumeOR;
 };
