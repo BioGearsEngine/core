@@ -113,6 +113,7 @@
 <!-- Note: Nutrition file needs to be in order, calcium, sodium, water follow the nutrients -->
 <Action xsi:type="ConsumeNutrientsData"> 
 		<Nutrition>
+      <Name>GoodMeal</Name>
 			<Carbohydrate value="26.0" unit="g"/>
 			<Fat value="30.0" unit="g"/>
 			<Protein value="6.0" unit="g"/>

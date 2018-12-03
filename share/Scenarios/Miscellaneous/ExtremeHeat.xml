@@ -78,6 +78,7 @@
 	
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<SurroundingType>Air</SurroundingType>
 			<AirVelocity value="0.1" unit="m/s"/>
 			<AmbientTemperature value="150" unit="degF"/>

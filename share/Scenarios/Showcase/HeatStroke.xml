@@ -47,6 +47,7 @@
 	<Action xsi:type="EnvironmentChangeData">
 		<Comment>Insult: Increased temperature </Comment>
 		<Conditions>
+    <Name value="LocalEnvironment" />
 			<AmbientTemperature value="20.0" unit="degC"/>
 			<MeanRadiantTemperature value="20.0" unit="degC"/>
 			<RespirationAmbientTemperature value="20.0" unit="degC"/>
@@ -92,6 +93,7 @@
 	<Action xsi:type="EnvironmentChangeData">
 		<Comment>Intervention: Remove clothing</Comment>
 		<Conditions>
+    <Name value="LocalEnvironment" />
 			<ClothingResistance value="0.5" unit="clo"/>
 		</Conditions>
 	</Action>	

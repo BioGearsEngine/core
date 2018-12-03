@@ -145,6 +145,7 @@
     <Action xsi:type="IntubationData" Type="Tracheal"/>
     <Action xsi:type="EnvironmentChangeData">
         <Conditions>
+    <Name>LocalEnvironment</Name>
 			<SurroundingType>Air</SurroundingType>
 			<AirVelocity value="0.0" unit="m/s"/>
 			<AmbientTemperature value="22.0" unit="degC"/>

@@ -105,6 +105,7 @@
 
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<SurroundingType>Water</SurroundingType>
 			<AirVelocity value="0.0" unit="m/s"/>
 			<AmbientTemperature value="35" unit="degC"/>
@@ -133,6 +134,7 @@
 	<!-- Transfer from submersion to air -->
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<SurroundingType>Air</SurroundingType>
 			<AirVelocity value="0.1" unit="m/s"/>
 			<AmbientTemperature value="37" unit="degC"/>

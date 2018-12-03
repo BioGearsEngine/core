@@ -107,6 +107,7 @@
 
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
         <FractionAmount value="0.79"/>
       </AmbientGas>

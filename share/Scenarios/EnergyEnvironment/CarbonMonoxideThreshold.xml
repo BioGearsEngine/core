@@ -92,6 +92,7 @@
   <!-- Environment with 200ppm carbon dioxide -->
   <Action xsi:type="EnvironmentChangeData">
 	<Conditions>
+    <Name>LocalEnvironment</Name>
 		<AmbientGas Name="Nitrogen">
           <FractionAmount value="0.7894"/>
         </AmbientGas>

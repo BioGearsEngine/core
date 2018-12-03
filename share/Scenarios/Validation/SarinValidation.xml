@@ -152,6 +152,7 @@
 	<!-- Environment with sarin -->
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientAerosol Name="Sarin">
 				<Concentration value="15" unit="mg/m^3"/>
 			</AmbientAerosol>
@@ -163,6 +164,7 @@
 	<!--Return to normal environment-->
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientAerosol Name="Sarin">
 				<Concentration value="0.0" unit="mg/m^3"/>
 			</AmbientAerosol>

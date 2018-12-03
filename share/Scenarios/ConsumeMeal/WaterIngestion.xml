@@ -81,6 +81,7 @@
 	
 	<Action xsi:type="ConsumeNutrientsData">
 		<Nutrition>
+      <Name>GoodMeal</Name>
 			<Water value="1.0" unit="L"/>
 		</Nutrition>       
 	</Action>  

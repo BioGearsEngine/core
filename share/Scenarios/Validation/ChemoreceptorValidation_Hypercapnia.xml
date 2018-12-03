@@ -60,6 +60,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.76"/>
 			</AmbientGas>
@@ -76,6 +77,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.7896"/>
 			</AmbientGas>
@@ -92,6 +94,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.74"/>
 			</AmbientGas>
@@ -108,6 +111,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.7896"/>
 			</AmbientGas>
@@ -124,6 +128,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.73"/>
 			</AmbientGas>
@@ -140,6 +145,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.7896"/>
 			</AmbientGas>
@@ -156,6 +162,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.72"/>
 			</AmbientGas>
@@ -172,6 +179,7 @@
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
+    <Name>LocalEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
 				<FractionAmount value="0.7896"/>
 			</AmbientGas>
