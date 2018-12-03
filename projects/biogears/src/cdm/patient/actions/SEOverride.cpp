@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarOsmolarity.h>
 
 
 namespace biogears {
@@ -43,7 +44,12 @@ SEOverride::SEOverride()
   m_SodiumLostToSweatOR = nullptr;
   m_PotassiumLostToSweatOR = nullptr;
   m_ChlorideLostToSweatOR = nullptr;
+  m__LeftGlomerularFiltrationOR = nullptr;
+  m_RenalBloodFlowOR = nullptr;
+  m__RightGlomerularFiltrationOR = nullptr;
   m_UrineProductionRateOR = nullptr;
+  m_UrineOsmolarityOR = nullptr;
+  m_UrineVolumeOR = nullptr;
   m_RespirationRateOR = nullptr;
   m_TidalVolumeOR = nullptr;
 }
@@ -76,7 +82,12 @@ void SEOverride::Clear()
   SAFE_DELETE(m_SodiumLostToSweatOR);
   SAFE_DELETE(m_PotassiumLostToSweatOR);
   SAFE_DELETE(m_ChlorideLostToSweatOR);
+  SAFE_DELETE(m__LeftGlomerularFiltrationOR);
+  SAFE_DELETE(m_RenalBloodFlowOR);
+  SAFE_DELETE(m__RightGlomerularFiltrationOR);
   SAFE_DELETE(m_UrineProductionRateOR);
+  SAFE_DELETE(m_UrineOsmolarityOR);
+  SAFE_DELETE(m_UrineVolumeOR);
   SAFE_DELETE(m_RespirationRateOR);
   SAFE_DELETE(m_TidalVolumeOR);
 }
@@ -197,10 +208,35 @@ bool SEOverride::Load(const CDM::OverrideData& in)
   } else {
     GetChlorideLostToSweatOverride().Invalidate();
   }
+  if (in.LeftGlomerularFiltrationRate().present()) {
+    GetLeftGlomerularFiltrationRateOverride().Load(in.LeftGlomerularFiltrationRate().get());
+  } else {
+    GetLeftGlomerularFiltrationRateOverride().Invalidate();
+  }
+  if (in.RenalBloodFlow().present()) {
+    GetRenalBloodFlowOverride().Load(in.RenalBloodFlow().get());
+  } else {
+    GetRenalBloodFlowOverride().Invalidate();
+  }
+  if (in.RightGlomerularFiltrationRate().present()) {
+    GetRightGlomerularFiltrationRateOverride().Load(in.RightGlomerularFiltrationRate().get());
+  } else {
+    GetRightGlomerularFiltrationRateOverride().Invalidate();
+  }
   if (in.UrineProductionRateOverride().present()) {
     GetUrineProductionRateOverride().Load(in.UrineProductionRateOverride().get());
   } else {
     GetUrineProductionRateOverride().Invalidate();
+  }
+  if (in.UrineOsmolarity().present()) {
+    GetUrineOsmolarityOverride().Load(in.UrineOsmolarity().get());
+  } else {
+    GetUrineOsmolarityOverride().Invalidate();
+  }
+  if (in.UrineVolume().present()) {
+    GetUrineVolumeOverride().Load(in.UrineVolume().get());
+  } else {
+    GetUrineVolumeOverride().Invalidate();
   }
   if (in.RespirationRateOverride().present()) {
     GetRespirationRateOverride().Load(in.RespirationRateOverride().get());
@@ -287,8 +323,23 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   if (HasChlorideLostToSweatOverride()) {
     data.ChlorideLostToSweatOverride(std::unique_ptr<CDM::ScalarMassData>(m_ChlorideLostToSweatOR->Unload()));
   }
+  if (HasLeftGlomerularFiltrationRateOverride()) {
+    data.LeftGlomerularFiltrationRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m__LeftGlomerularFiltrationOR->Unload()));
+  }
+  if (HasRenalBloodFlowOverride()) {
+    data.RenalBloodFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_RenalBloodFlowOR->Unload()));
+  }
+  if (HasRightGlomerularFiltrationRateOverride()) {
+    data.RightGlomerularFiltrationRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m__RightGlomerularFiltrationOR->Unload()));
+  }
   if (HasUrineProductionRateOverride()) {
     data.UrineProductionRateOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_UrineProductionRateOR->Unload()));
+  }
+  if (HasUrineOsmolarityOverride()) {
+    data.UrineOsmolarity(std::unique_ptr<CDM::ScalarOsmolarityData>(m_UrineOsmolarityOR->Unload()));
+  }
+  if (HasUrineVolumeOverride()) {
+    data.UrineVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_UrineVolumeOR->Unload()));
   }
   if (HasRespirationRateOverride()) {
     data.RespirationRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateOR->Unload()));
