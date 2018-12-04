@@ -22,10 +22,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
 
 class Serializer;
 
 namespace biogears {
+class OsmolalityUnit;
 class OsmolarityUnit;
 class MassUnit;
 
@@ -124,18 +126,39 @@ public:
   bool HasEnergyOverride() const;
 
   //Renal
+  bool HasLeftAfferentArterioleResistanceOverride() const;
+  SEScalarFlowResistance& GetLeftAfferentArterioleResistanceOverride();
+  double GetLeftAfferentArterioleResistanceOverride(const FlowResistanceUnit& unit) const;
   bool HasLeftGlomerularFiltrationRateOverride() const;
   SEScalarVolumePerTime& GetLeftGlomerularFiltrationRateOverride();
   double GetLeftGlomerularFiltrationRateOverride(const VolumePerTimeUnit& unit) const;
+  bool HasLeftReaborptionRateOverride() const;
+  SEScalarVolumePerTime& GetLeftReaborptionRateOverride();
+  double GetLeftReaborptionRateOverride(const VolumePerTimeUnit& unit) const;
   bool HasRenalBloodFlowOverride() const;
   SEScalarVolumePerTime& GetRenalBloodFlowOverride();
   double GetRenalBloodFlowOverride(const VolumePerTimeUnit& unit) const;
+  bool HasRenalPlasmaFlowOverride() const;
+  SEScalarVolumePerTime& GetRenalPlasmaFlowOverride();
+  double GetRenalPlasmaFlowOverride(const VolumePerTimeUnit& unit) const;
+  bool HasRightAfferentArterioleResistanceOverride() const;
+  SEScalarFlowResistance& GetRightAfferentArterioleResistanceOverride();
+  double GetRightAfferentArterioleResistanceOverride(const FlowResistanceUnit& unit) const;
   bool HasRightGlomerularFiltrationRateOverride() const;
   SEScalarVolumePerTime& GetRightGlomerularFiltrationRateOverride();
   double GetRightGlomerularFiltrationRateOverride(const VolumePerTimeUnit& unit) const;
+  bool HasRightReaborptionRateOverride() const;
+  SEScalarVolumePerTime& GetRightReaborptionRateOverride();
+  double GetRightReaborptionRateOverride(const VolumePerTimeUnit& unit) const;
+  bool HasUrinationRateOverride() const;
+  SEScalarVolumePerTime& GetUrinationRateOverride();
+  double GetUrinationRateOverride(const VolumePerTimeUnit& unit) const;
   bool HasUrineProductionRateOverride() const;
   SEScalarVolumePerTime& GetUrineProductionRateOverride();
   double GetUrineProductionRateOverride(const VolumePerTimeUnit& unit) const;
+  bool HasUrineOsmolalityOverride() const;
+  SEScalarOsmolality& GetUrineOsmolalityOverride();
+  double GetUrineOsmolalityOverride(const OsmolalityUnit& unit) const;
   bool HasUrineOsmolarityOverride() const;
   SEScalarOsmolarity& GetUrineOsmolarityOverride();
   double GetUrineOsmolarityOverride(const OsmolarityUnit& unit) const;
@@ -177,10 +200,17 @@ protected:
   SEScalarMass* m_SodiumLostToSweatOR;
   SEScalarMass* m_PotassiumLostToSweatOR;
   SEScalarMass* m_ChlorideLostToSweatOR;
+  SEScalarFlowResistance* m_LAfferentArterioleResistOR;
   SEScalarVolumePerTime* m__LeftGlomerularFiltrationOR;
+  SEScalarVolumePerTime* m_LReabsorptionRateOR;
   SEScalarVolumePerTime* m_RenalBloodFlowOR;
+  SEScalarVolumePerTime* m_RenalPlasmaOR;
+  SEScalarFlowResistance* m_RAfferentArterioleResistOR;
   SEScalarVolumePerTime* m__RightGlomerularFiltrationOR;
+  SEScalarVolumePerTime* m_RReabsorptionRateOR;
+  SEScalarVolumePerTime* m_UrinationRateOR;
   SEScalarVolumePerTime* m_UrineProductionRateOR;
+  SEScalarOsmolality* m_UrineOsmolalityOR;
   SEScalarOsmolarity* m_UrineOsmolarityOR;
   SEScalarVolume* m_UrineVolumeOR;
   SEScalarFrequency* m_RespirationRateOR;

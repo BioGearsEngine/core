@@ -471,12 +471,19 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="SodiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of sodium lost while sweating during exercise -->
                     <xs:element name="PotassiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of potassium lost while sweating during exercise --> 
                     <xs:element name="ChlorideLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->        
-					<xs:element name="LeftGlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
-					<xs:element name="RenalBloodFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Blood flow into the kidney that is not filtered into the tubules -->
-					<xs:element name="RightGlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
+					<xs:element name="LeftAfferentArterioleResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
+					<xs:element name="LeftGlomerularFiltrationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
+					<xs:element name="LeftReabsorptionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
+					<xs:element name="RenalBloodFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Blood flow into the kidney that is not filtered into the tubules -->
+					<xs:element name="RenalPlasmaFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Plasma flow into the kidney that is not filtered into the tubules -->    
+					<xs:element name="RightAfferentArterioleResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
+					<xs:element name="RightGlomerularFiltrationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
+					<xs:element name="RightReabsorptionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
+					<xs:element name="UrinationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate that fluid exits the bladder  -->
 					<xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The urine production rate. -->
-					<xs:element name="UrineOsmolarity" type="ScalarOsmolarityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the volume of the fluid -->
-					<xs:element name="UrineVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of the urine in the bladder --> 
+					<xs:element name="UrineOsmolalityOverride" type="ScalarOsmolalityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the mass of the fluid -->
+					<xs:element name="UrineOsmolarityOverride" type="ScalarOsmolarityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the volume of the fluid -->
+					<xs:element name="UrineVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of the urine in the bladder --> 
 					<xs:element name="RespirationRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of respiration. -->
 					<xs:element name="TidalVolumeOverride" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The volume of air moved into or out of the lungs during normal respiration. -->
 				</xs:sequence>  
