@@ -19,7 +19,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
   ###############################################################################
   # Requirments
   ###############################################################################
-  find_package(GTest required)
+  find_package(GTest REQUIRED)
   
   file(GLOB_RECURSE UNITTEST_HEADERS "src/*.h")
   file(GLOB_RECURSE UNITTEST_SOURCES "src/*.cpp")
@@ -40,8 +40,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
   endif(${PROJECT_NAME}_TEST_biogears)
   
   
-list(APPEND UNIT_TEST_LIBRARIES
-  ${GTEST_BOTH_LIBRARIES}
+list(APPEND UNIT_TEST_LIBRARIES GTest::GTest GTest::Main
   
   )
 
@@ -90,7 +89,6 @@ list(APPEND UNIT_TEST_LIBRARIES
                      "scmp_channel"
                      "scsp_channel"
                      "StopWatch"
-                     "StopWatchf" 
                      "string_manipulation"
                      "ThreadPoll"
                      "WorkChannel")
@@ -105,7 +103,10 @@ list(APPEND UNIT_TEST_LIBRARIES
   target_include_directories(unittest
       PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
+<<<<<<< origin/master
       #${GTEST_INCLUDE_DIR}
+=======
+>>>>>>> HEAD~32
       ${bio_INCLUDE_DIR}
   )
 
