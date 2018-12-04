@@ -593,43 +593,43 @@ void Energy::ProcessOverride()
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
   if (override->HasAchievedExerciseLevelOverride()) {
-    m_data.GetEnergy().GetAchievedExerciseLevel().SetValue(override->GetAchievedExerciseLevelOverride().GetValue());
+    GetAchievedExerciseLevel().SetValue(override->GetAchievedExerciseLevelOverride().GetValue());
     }
   if (override->HasCoreTemperatureOverride()) {
-    m_data.GetEnergy().GetCoreTemperature().SetValue(override->GetCoreTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+    GetCoreTemperature().SetValue(override->GetCoreTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
     }
   if (override->HasCreatinineProductionRateOverride()) {
-      m_data.GetEnergy().GetCreatinineProductionRate().SetValue(override->GetCreatinineProductionRateOverride(AmountPerTimeUnit::mol_Per_s), AmountPerTimeUnit::mol_Per_s);
+    GetCreatinineProductionRate().SetValue(override->GetCreatinineProductionRateOverride(AmountPerTimeUnit::mol_Per_s), AmountPerTimeUnit::mol_Per_s);
   }
   if (override->HasExerciseMeanArterialPressureDeltaOverride()) {
-    m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(override->GetExerciseMeanArterialPressureDeltaOverride(PressureUnit::mmHg), PressureUnit::mmHg);
+    GetExerciseMeanArterialPressureDelta().SetValue(override->GetExerciseMeanArterialPressureDeltaOverride(PressureUnit::mmHg), PressureUnit::mmHg);
   }
   if (override->HasFatigueLevelOverride()) {
-    m_data.GetEnergy().GetFatigueLevel().SetValue(override->GetFatigueLevelOverride().GetValue());
+    GetFatigueLevel().SetValue(override->GetFatigueLevelOverride().GetValue());
   }
   if (override->HasLactateProductionRateOverride()) {
-    m_data.GetEnergy().GetLactateProductionRate().SetValue(override->GetLactateProductionRateOverride(AmountPerTimeUnit::mol_Per_s), AmountPerTimeUnit::mol_Per_s);
+    GetLactateProductionRate().SetValue(override->GetLactateProductionRateOverride(AmountPerTimeUnit::mol_Per_s), AmountPerTimeUnit::mol_Per_s);
   }
   if (override->HasSkinTemperatureOverride()) {
-    m_data.GetEnergy().GetSkinTemperature().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+    GetSkinTemperature().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
   }
   if (override->HasSweatRateOverride()) {
-    m_data.GetEnergy().GetSweatRate().SetValue(override->GetSweatRateOverride(MassPerTimeUnit::g_Per_s), MassPerTimeUnit::g_Per_s);
+    GetSweatRate().SetValue(override->GetSweatRateOverride(MassPerTimeUnit::g_Per_s), MassPerTimeUnit::g_Per_s);
   }
   if (override->HasTotalMetabolicOverride()) {
-    m_data.GetEnergy().GetTotalMetabolicRate().SetValue(override->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day), PowerUnit::kcal_Per_day);
+    GetTotalMetabolicRate().SetValue(override->GetTotalMetabolicOverride(PowerUnit::kcal_Per_day), PowerUnit::kcal_Per_day);
   }
   if (override->HasTotalWorkRateLevelOverride()) {
-    m_data.GetEnergy().GetTotalWorkRateLevel().SetValue(override->GetTotalWorkRateLevelOverride().GetValue());
+    GetTotalWorkRateLevel().SetValue(override->GetTotalWorkRateLevelOverride().GetValue());
   }
   if (override->HasSodiumLostToSweatOverride()) {
-    m_data.GetEnergy().GetSodiumLostToSweat().SetValue(override->GetSodiumLostToSweatOverride(MassUnit::g), MassUnit::g);
+    GetSodiumLostToSweat().SetValue(override->GetSodiumLostToSweatOverride(MassUnit::g), MassUnit::g);
   }
   if (override->HasPotassiumLostToSweatOverride()) {
-    m_data.GetEnergy().GetPotassiumLostToSweat().SetValue(override->GetPotassiumLostToSweatOverride(MassUnit::g), MassUnit::g);
+    GetPotassiumLostToSweat().SetValue(override->GetPotassiumLostToSweatOverride(MassUnit::g), MassUnit::g);
   }
   if (override->HasChlorideLostToSweatOverride()) {
-    m_data.GetEnergy().GetChlorideLostToSweat().SetValue(override->GetChlorideLostToSweatOverride(MassUnit::g), MassUnit::g);
+    GetChlorideLostToSweat().SetValue(override->GetChlorideLostToSweatOverride(MassUnit::g), MassUnit::g);
   }
 }
 
@@ -668,13 +668,13 @@ void Energy::OverrideControlLoop()
   double currentTotalWorkOverride = 0;
   double maxSodiumSweatOverride = 500.0; // g
   double minSodiumSweatOverride = 0.0; // g
-  double currentSodiumSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
+  double currentSodiumSweatOverride = 0.0; //gets changed in next step
   double maxPotassiumSweatOverride = 500.0; // g
   double minPotassiumSweatOverride = 0.0; //  g
-  double currentPotassiumSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
+  double currentPotassiumSweatOverride = 0.0; //gets changed in next step
   double maxChlorideSweatOverride = 500.0; // g
   double minChlorideSweatOverride = 0.0; // g
-  double currentChlorideSweatOverride = m_data.GetEnergy().GetSodiumLostToSweat().GetValue(MassUnit::g); //Current value, gets changed in next step
+  double currentChlorideSweatOverride =0.0; //gets changed in next step
   if (override->HasAchievedExerciseLevelOverride()) {
     currentAcheivedExerciseOverride = override->GetAchievedExerciseLevelOverride().GetValue();
   }
