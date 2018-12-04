@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 class Serializer;
 
 namespace biogears {
+class OsmolarityUnit;
 class MassUnit;
 
 class BIOGEARS_API SEOverride : public SEPatientAction {
@@ -136,8 +137,8 @@ public:
   SEScalarVolumePerTime& GetUrineProductionRateOverride();
   double GetUrineProductionRateOverride(const VolumePerTimeUnit& unit) const;
   bool HasUrineOsmolarityOverride() const;
-  SEScalarVolumePerTime& GetUrineOsmolarityOverride();
-  double GetUrineOsmolarityOverride(const VolumePerTimeUnit& unit) const;
+  SEScalarOsmolarity& GetUrineOsmolarityOverride();
+  double GetUrineOsmolarityOverride(const OsmolarityUnit& unit) const;
   bool HasUrineVolumeOverride() const;
   SEScalarVolume& GetUrineVolumeOverride();
   double GetUrineVolumeOverride(const VolumeUnit& unit) const;

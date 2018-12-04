@@ -751,6 +751,60 @@ bool SEOverride::HasEnergyOverride() const
 }
 
 // Renal Overrides //
+bool SEOverride::HasLeftGlomerularFiltrationRateOverride() const
+{
+  return m__LeftGlomerularFiltrationOR == nullptr ? false : m__LeftGlomerularFiltrationOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetLeftGlomerularFiltrationRateOverride()
+{
+  if (m__LeftGlomerularFiltrationOR == nullptr) {
+    m__LeftGlomerularFiltrationOR = new SEScalarVolumePerTime();
+  }
+  return *m__LeftGlomerularFiltrationOR;
+}
+double SEOverride::GetLeftGlomerularFiltrationRateOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m__LeftGlomerularFiltrationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m__LeftGlomerularFiltrationOR->GetValue(unit);
+}
+bool SEOverride::HasRenalBloodFlowOverride() const
+{
+  return m_RenalBloodFlowOR == nullptr ? false : m_RenalBloodFlowOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetRenalBloodFlowOverride()
+{
+  if (m_RenalBloodFlowOR == nullptr) {
+    m_RenalBloodFlowOR = new SEScalarVolumePerTime();
+  }
+  return *m_RenalBloodFlowOR;
+}
+double SEOverride::GetRenalBloodFlowOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_RenalBloodFlowOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_RenalBloodFlowOR->GetValue(unit);
+}
+bool SEOverride::HasRightGlomerularFiltrationRateOverride() const
+{
+  return m__RightGlomerularFiltrationOR == nullptr ? false : m__RightGlomerularFiltrationOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetRightGlomerularFiltrationRateOverride()
+{
+  if (m__RightGlomerularFiltrationOR == nullptr) {
+    m__RightGlomerularFiltrationOR = new SEScalarVolumePerTime();
+  }
+  return *m__RightGlomerularFiltrationOR;
+}
+double SEOverride::GetRightGlomerularFiltrationRateOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m__RightGlomerularFiltrationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m__RightGlomerularFiltrationOR->GetValue(unit);
+}
 bool SEOverride::HasUrineProductionRateOverride() const
 {
   return m_UrineProductionRateOR == nullptr ? false : m_UrineProductionRateOR->IsValid();
@@ -769,10 +823,51 @@ double SEOverride::GetUrineProductionRateOverride(const VolumePerTimeUnit& unit)
   }
   return m_UrineProductionRateOR->GetValue(unit);
 }
+bool SEOverride::HasUrineOsmolarityOverride() const
+{
+  return m_UrineOsmolarityOR == nullptr ? false : m_UrineOsmolarityOR->IsValid();
+}
+SEScalarOsmolarity& SEOverride::GetUrineOsmolarityOverride()
+{
+  if (m_UrineOsmolarityOR == nullptr) {
+    m_UrineOsmolarityOR = new SEScalarOsmolarity();
+  }
+  return *m_UrineOsmolarityOR;
+}
+double SEOverride::GetUrineOsmolarityOverride(const OsmolarityUnit& unit) const
+{
+  if (m_UrineOsmolarityOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_UrineOsmolarityOR->GetValue(unit);
+}
+bool SEOverride::HasUrineVolumeOverride() const
+{
+  return m_UrineVolumeOR == nullptr ? false : m_UrineVolumeOR->IsValid();
+}
+SEScalarVolume& SEOverride::GetUrineVolumeOverride()
+{
+  if (m_UrineVolumeOR == nullptr) {
+    m_UrineVolumeOR = new SEScalarVolume();
+  }
+  return *m_UrineVolumeOR;
+}
+double SEOverride::GetUrineVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_UrineVolumeOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_UrineVolumeOR->GetValue(unit);
+}
 
 bool SEOverride::HasRenalOverride() const
 {
-  return HasUrineProductionRateOverride() ? true : false;
+  return HasLeftGlomerularFiltrationRateOverride() ? true :
+  HasRenalBloodFlowOverride() ? true :
+  HasRightGlomerularFiltrationRateOverride() ? true :
+  HasUrineProductionRateOverride() ? true : 
+  HasUrineOsmolarityOverride() ? true : 
+  HasUrineVolumeOverride() ? true : false;
 }
 
 
@@ -984,11 +1079,51 @@ void SEOverride::ToString(std::ostream& str) const
     }
     str << std::flush;
   }
+  if (HasLeftGlomerularFiltrationRateOverride()) {
+    str << "\n\tLeft Glomerular Filtration Rate: ";
+    HasLeftGlomerularFiltrationRateOverride() ? str << *m__LeftGlomerularFiltrationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tLeft Glomerular Filtration Rate has a lower bound of X mL/min and an upper bound of Y mL/min.";
+    }
+    str << std::flush;
+  }
+  if (HasRenalBloodFlowOverride()) {
+    str << "\n\tRenal Blood Flow: ";
+    HasRenalBloodFlowOverride() ? str << *m_RenalBloodFlowOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tRenal Blood Flow has a lower bound of X mL/min and an upper bound of Y mL/min.";
+    }
+    str << std::flush;
+  }
+  if (HasRightGlomerularFiltrationRateOverride()) {
+    str << "\n\tRight Glomerular Filtration Rate: ";
+    HasRightGlomerularFiltrationRateOverride() ? str << *m__RightGlomerularFiltrationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tRight Glomerular Filtration Rate has a lower bound of X mL/min and an upper bound of Y mL/min.";
+    }
+    str << std::flush;
+  }
   if (HasUrineProductionRateOverride()) {
     str << "\n\tUrine Production Rate: ";
     HasUrineProductionRateOverride() ? str << *m_UrineProductionRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tUrine Production Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
+    }
+    str << std::flush;
+  }
+  if (HasUrineOsmolarityOverride()) {
+    str << "\n\tUrine Osmolarity: ";
+    HasUrineOsmolarityOverride() ? str << *m_UrineOsmolarityOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tUrine Osmolarity has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasUrineVolumeOverride()) {
+    str << "\n\tUrine Volume: ";
+    HasUrineVolumeOverride() ? str << *m_UrineVolumeOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tUrine Volume has a lower bound of X mL and an upper bound of Y mL.";
     }
     str << std::flush;
   }
