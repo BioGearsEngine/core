@@ -66,6 +66,8 @@ def main( args):
     parser.add_argument('--skip', 
         dest='skip_count', action="store", default=10,
         help="Number of lines to skip for faster plotting")
+    parser.add_argument('--plotTime',action="store",default="s",
+        help="Time unit to use for plots (s,min,hr), default = s")
 
     args = parser.parse_args()
     _log_verbose = args.verbosity
@@ -81,12 +83,13 @@ def main( args):
     log("OUTPUT = {}".format(_output_directory),LOG_LEVEL_2)
     log("Baselines = {}".format(_baseline_directory),LOG_LEVEL_2)
     log("Recursive Mode = {}".format(args.recurse),LOG_LEVEL_2)
+    log("Plot time units = {}".format(args.plotTime),LOG_LEVEL_2)
     
     log ("Processing",LOG_LEVEL_1)
-    run_plots( args.root, args.scenario, args.skip_count, args.recurse )
+    run_plots( args.root, args.scenario, args.skip_count, args.recurse ,args.plotTime )
     
 
-def run_plots(root_dir, sources, skip_count, recurse):
+def run_plots(root_dir, sources, skip_count, recurse, plotTime):
     global _log_verbose
     log ("run_plots({0},{1},{2},{3})".format(root_dir, sources, skip_count, recurse),LOG_LEVEL_3)
     for scenario in sources:
@@ -94,15 +97,15 @@ def run_plots(root_dir, sources, skip_count, recurse):
         if( os.path.isdir(possible_scenario) ):
          if recurse:
             for file in os.listdir(possible_scenario):
-                    run_plots( possible_scenario,[file],skip_count,recurse)
+                    run_plots( possible_scenario,[file],skip_count,recurse, plotTime)
          else:
             err("{0} is a directory.\n\t Use -r for recursive mode.".format(possible_scenario),LOG_LEVEL_0)
         elif( os.path.exists(possible_scenario)):
-            plot(root_dir,scenario,skip_count)
+            plot(root_dir,scenario,skip_count, plotTime)
         else:
             err("{0} does not exist. Unable to process".format(possible_scenario),LOG_LEVEL_0)
 
-def plot(root_dir, source, skip_count):
+def plot(root_dir, source, skip_count, plotTime):
     valid_regex = '[.](txt|csv)'
     input_source = os.path.join(root_dir,source)
     basename,extension     = os.path.splitext(input_source)
@@ -136,6 +139,13 @@ def plot(root_dir, source, skip_count):
         colNames = list(dataCSV)
         #Time = x-axis by default
         xData = dataCSV['Time(s)'].values[::int(skip_count)]
+        xLabel="Time (s)"
+        if plotTime=="min":
+            xData = xData/60.0
+            xLabel='Time (min)'
+        if plotTime=="hr":
+            xData = xData / 3600.0
+            xLabel = 'Time (hr)'
         
         baseFound=False
         #Grab the zip file with the baselines, if they exist
@@ -146,6 +156,10 @@ def plot(root_dir, source, skip_count):
             baseCSV = pd.read_csv(baseZip.open(basename+'.csv'), sep=',',header=0)
             log("Found baseline file in {}".format(baseline_source),LOG_LEVEL_2)
             xBase = baseCSV['Time(s)'].values[::int(skip_count)]
+            if plotTime=="min":
+                xBase=xBase/60.0
+            if plotTime=="hr":
+                xBase=xBase/3600.0
             baseFound=True
         except FileNotFoundError:
             err("Error: Could not find baseline location: {}".format(baseline_source),LOG_LEVEL_0)
@@ -202,7 +216,7 @@ def plot(root_dir, source, skip_count):
                         err('No baseline information for {}'.format(plotCol),LOG_LEVEL_0)
                 plt.title(plotCol)
                 plt.ylim([plotMin,plotMax])
-                plt.xlabel('Time (s)')
+                plt.xlabel(xLabel)
                 plt.ylabel(plotCol + unit)
                 plt.grid()
                 plt.legend()
