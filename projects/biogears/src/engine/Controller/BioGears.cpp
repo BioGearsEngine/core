@@ -910,7 +910,6 @@ void BioGears::AtSteadyState(EngineState state)
   m_GastrointestinalSystem->AtSteadyState();
   m_HepaticSystem->AtSteadyState();
   m_RenalSystem->AtSteadyState();
-  // m_NervousSystem->AtSteadyState();
   m_EnergySystem->AtSteadyState();
   m_EndocrineSystem->AtSteadyState();
   m_DrugSystem->AtSteadyState();
@@ -930,7 +929,6 @@ void BioGears::PreProcess()
   m_GastrointestinalSystem->PreProcess();
   m_HepaticSystem->PreProcess();
   m_RenalSystem->PreProcess();
-  //m_NervousSystem->PreProcess();
   m_EnergySystem->PreProcess();
   m_EndocrineSystem->PreProcess();
   m_DrugSystem->PreProcess();
@@ -949,7 +947,6 @@ void BioGears::Process()
   m_GastrointestinalSystem->Process();
   m_HepaticSystem->Process();
   m_RenalSystem->Process();
-  // m_NervousSystem->Process();
   m_EnergySystem->Process();
   m_EndocrineSystem->Process();
   m_DrugSystem->Process();
@@ -968,7 +965,6 @@ void BioGears::PostProcess()
   m_GastrointestinalSystem->PostProcess();
   m_HepaticSystem->PostProcess();
   m_RenalSystem->PostProcess();
-  // m_NervousSystem->PostProcess();
   m_EnergySystem->PostProcess();
   m_EndocrineSystem->PostProcess();
   m_DrugSystem->PostProcess();
