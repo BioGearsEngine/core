@@ -60,16 +60,43 @@ void TEST_FIXTURE_NAME::TearDown()
 TEST_F(TEST_FIXTURE_NAME, OperatorMultiplicationAssignment)
 {
   biogears::MassUnit unit1 = biogears::MassUnit("g");
-  biogears::MassUnit unit2 = biogears::MassUnit("kg");
+  biogears::MassUnit unit2 = biogears::MassUnit("ug");
   unit1 *= unit2;
+  biogears::MassUnit unit3 = biogears::MassUnit("g");
+  biogears::MassUnit unit4 = biogears::MassUnit("ug");
+  unit4 *= unit3;
+  EXPECT_EQ(unit1,unit4); // testing commutative property
+  biogears::MassUnit unit5  = biogears::MassUnit("g");
+  biogears::MassUnit unit6  = biogears::MassUnit("ug");
+  biogears::MassUnit unit7  = biogears::MassUnit("mg");
+  biogears::MassUnit unit8  = biogears::MassUnit("g");
+  biogears::MassUnit unit9  = biogears::MassUnit("ug");
+  biogears::MassUnit unit10 = biogears::MassUnit("mg");
+  unit5  *= unit6;
+  unit5  *= unit7;
+  unit10 *= unit9;
+  unit10 *= unit8;
+  EXPECT_EQ(unit5,unit10);
 }
 
 TEST_F(TEST_FIXTURE_NAME, OperatorDivisionAssignment)
 {
-
+  biogears::MassUnit unit5 = biogears::MassUnit("g");
+  biogears::MassUnit unit6 = biogears::MassUnit("ug");
+  biogears::MassUnit unit7 = biogears::MassUnit("mg");
+  biogears::MassUnit unit8 = biogears::MassUnit("g");
+  biogears::MassUnit unit9 = biogears::MassUnit("ug");
+  biogears::MassUnit unit10 = biogears::MassUnit("mg");
+  unit7 /= unit5;
+  unit10 /= unit8;
+  EXPECT_EQ(unit7, unit10);
 }
 
 TEST_F(TEST_FIXTURE_NAME, Raise)
 {
+  biogears::MassUnit unit1 = biogears::MassUnit("g");
+  biogears::MassUnit unit2 = biogears::MassUnit("g");
+  unit1.Raise(1.0);
+  EXPECT_EQ(unit1,unit2);
 
 }

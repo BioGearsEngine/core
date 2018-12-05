@@ -2,7 +2,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.8.0)
 CMAKE_POLICY(VERSION 3.8.0) 
 
 enable_language(CXX)
- option(${PROJECT_NAME}_BUILD_TEST        "Select to Build Tests." OFF)
+find_package(GTest)
+option(${PROJECT_NAME}_BUILD_TEST        "Select to Build Tests." ${GTest_FOUND})
 
 if(${PROJECT_NAME}_BUILD_TEST)
   
