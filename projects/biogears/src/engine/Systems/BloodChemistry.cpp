@@ -779,7 +779,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double kPM = 2.5;   //Phagocytic effect of macrophages on pathogen, determined empirically
   double maxPathogen = 20.0;   //Maximum pathogen population size
   //Trauma decay
-  double kTr = 1.5;  //Determined empirically to give good results
+  double kTr = 1.25;  //Determined empirically to give good results
   //Macrophage interaction
   double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9;
   //Activate macrophage interactions
