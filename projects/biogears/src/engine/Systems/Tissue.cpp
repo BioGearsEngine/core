@@ -523,8 +523,43 @@ void Tissue::PreProcess()
 {
   CalculateTissueFluidFluxes();
   CalculateOncoticPressure();
-}
 
+  for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
+    SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
+    SEFluidCircuitPath* l = m_LymphPaths[&ex];
+    std::string name = l->GetName();
+    m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_s));
+    SEFluidCircuitPath* extraCOP = m_InterstitialCopPaths[t];
+    std::string name2 = extraCOP->GetName();
+    m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
+    m_data.GetDataTrack().Probe(name2 + "COP", extraCOP->GetNextPressureSource(PressureUnit::mmHg));
+    double albuminConcentration = ex.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+    m_data.GetDataTrack().Probe(ex.GetName() + "Albumin_g_Per_dL", albuminConcentration);
+    SELiquidCompartment* vas = m_TissueToVascular[t];
+    std::string name3 = vas->GetName();
+    SEFluidCircuitPath* vasCOP;
+    if (name3 == BGE::VascularCompartment::Gut) {
+      for (auto c : vas->GetChildren()) {
+        name3 = c->GetName();
+        vasCOP = m_VascularCopPaths[c];
+        m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+        albuminConcentration = c->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+        m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+      }
+    } else {
+      name3 = vas->GetName();
+      if (name3 == BGE::VascularCompartment::LeftKidney)
+        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftRenalArtery);
+      if (name3 == BGE::VascularCompartment::RightKidney)
+        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
+      vasCOP = m_VascularCopPaths[vas];
+      m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+      albuminConcentration = vas->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+      m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+    }
+    m_data.GetDataTrack().Probe(t->GetName() + "_Resistance", m_EndothelialResistancePaths[t]->GetNextResistance(FlowResistanceUnit::mmHg_min_Per_mL));
+  }
+ }
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Process completes substance transport by performing diffusion and alveoli transfer
@@ -805,7 +840,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_PatientActions->HasSepsis()) {
     double maxTissueDamage = 17.5;
     double severity = m_PatientActions->GetSepsis()->GetSeverity().GetValue();
-    double tissueDamageFraction = 1.0 - m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
+    double tissueDamageFraction = 1.0 - m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
     //This function is half of a Gaussian that becomes a constant background value when white blood cell count saturates.
     //The baseline of 0.2 was determined empirically to balance lactate transport / elimination with production
     //Max value is a function of severity because higher severity scenarios are shorter and we need to spike the concentration faster
@@ -2422,7 +2457,7 @@ void Tissue::CalculateTissueFluidFluxes()
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
     for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
       SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
-      double resistanceModifier = m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
+      double resistanceModifier = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
       if (t->GetName() != BGE::TissueCompartment::Brain) {
         res->GetNextResistance().SetValue(res->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resistanceModifier, FlowResistanceUnit::mmHg_min_Per_mL);
       }
@@ -2508,12 +2543,14 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
       reflectionCoefficientSmall = reflectionCoefficientSmallBase * (1.0 - std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2.0) / (std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2) + std::pow(halfMax_pg_Per_L, 2)));
     }
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) != sources.end()) {
-      double sepsisDamage = 1.0 - m_data.GetBloodChemistry().GetSepsisInfectionState().GetTissueIntegrity().GetValue();
+      double sepsisDamage = 1.0 - m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
       double damageHalfMax = 0.6;
       permeabilityMultiplier += 35.0 * std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2) + std::pow(damageHalfMax, 2.0));
       reflectionCoefficientSmall = reflectionCoefficientSmallBase * (1.0 - std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2.0) + std::pow(damageHalfMax, 2.0)));
     }
   }
+
+  m_data.GetDataTrack().Probe(tissue.GetName() + "_PSRatio", permeabilityMultiplier);
 
   double diffusivityCoefficient_mL_Per_min_kg = permeabilityMultiplier * diffusivityCoefficientBase_mL_Per_min_kg;
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);

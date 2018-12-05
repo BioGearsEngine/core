@@ -30,8 +30,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
@@ -230,7 +230,7 @@ void Nervous::PostProcess()
 /// \todo Add decompensation. Perhaps a reduction in the effect that is a function of blood volume below a threshold... and maybe time.
 void Nervous::BaroreceptorFeedback()
 {
-  if (!m_FeedbackActive){
+  if (!m_FeedbackActive) {
     return;
   }
 
@@ -259,7 +259,6 @@ void Nervous::BaroreceptorFeedback()
     painVAS *= 0.1;
     meanArterialPressureSetPoint_mmHg *= (1 + 0.65 * painVAS);
   }
-
 
   double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
   double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
@@ -313,7 +312,7 @@ void Nervous::BaroreceptorFeedback()
 void Nervous::CheckPainStimulus()
 {
   //Screen for both external pain stimulus and presence of inflammation
-  if (!m_data.GetActions().GetPatientActions().HasPainStimulus()&&!m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
+  if (!m_data.GetActions().GetPatientActions().HasPainStimulus() && !m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
     GetPainVisualAnalogueScale().SetValue(0.0);
     return;
   }
@@ -340,15 +339,18 @@ void Nervous::CheckPainStimulus()
     double CNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
     CNSPainBuffer = exp(-CNSModifier * NervousScalar);
   }
+  //assuming that sedation also causes reduction in pain (i.e. ketamine infusion)
+  if (m_data.GetDrugs().HasSedationLevel()) {
+    double sedationLevel = m_data.GetDrugs().GetSedationLevel().GetValue();
+
+  }
 
   //determine pain response from inflammation caused by burn trauma
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    double traumaPain = 8.0;  //This is not scientific at all--just figure a burn is going to hurt a lot
+    double traumaPain = 8.0; //This is not scientific at all--just figure a burn is going to hurt a lot
     //Add to tempPainVAS and factor in susceptibility and drug effects
     tempPainVAS += (traumaPain * susceptabilityMapping * CNSPainBuffer);
   }
-
-
 
   //iterate over all locations to get a cumulative stimulus and buffer them
   for (auto pain : pains) {

@@ -217,7 +217,7 @@ void BloodChemistry::AtSteadyState()
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::PreProcess()
 {
-  Sepsis(); //Need this here because "next" values are set on circuit
+  //Sepsis(); //Need this here because "next" values are set on circuit
   AcuteInflammatoryResponse();
 }
 
@@ -662,130 +662,21 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 
 void BloodChemistry::Sepsis()
 {
-  if (!HasSepsisInfectionState()) {
-    GetSepsisInfectionState().GetPathogen().SetValue(0.1);
-    GetSepsisInfectionState().GetMacrophage().SetValue(2.5);
-    GetSepsisInfectionState().GetNeutrophilResting().SetValue(0.67);
-    GetSepsisInfectionState().GetNeutrophilActive().SetValue(0.0);
-    GetSepsisInfectionState().GetTissueIntegrity().SetValue(1.0);
-    GetSepsisInfectionState().GetAntiinflammation().SetValue(0.125);
-  }
-
   if (!m_PatientActions->HasSepsis()) {
     return;
   }
   
   //We need to signal that there is a source of inflammation--soon this will be incorporated with Acute Inflammation Model
   //Right now we are patching in Sepsis functionality and saving merge for a future story
-  std::vector<CDM::enumInflammationSource> sources = GetAcuteInflammatoryResponse().GetInflammationSources();
-  if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) == sources.end()) {
-    GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
-  }
-  SESepsis* sep = m_PatientActions->GetSepsis();
-  std::map<std::string, std::string> tissueResistors = sep->GetTissueResistorMap();
-  std::string sepComp = sep->GetCompartment() + "Tissue";
-  double sepSeverity = sep->GetSeverity().GetValue();
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
-
-  //Get state parameter values
-  double pathogen = GetSepsisInfectionState().GetPathogen().GetValue();
-  double macrophage = GetSepsisInfectionState().GetMacrophage().GetValue();
-  double neutrophilResting = GetSepsisInfectionState().GetNeutrophilResting().GetValue();
-  double neutrophilActive = GetSepsisInfectionState().GetNeutrophilActive().GetValue();
-  double tissueIntegrity = GetSepsisInfectionState().GetTissueIntegrity().GetValue();
-  double antiinflammation = GetSepsisInfectionState().GetAntiinflammation().GetValue();
-
-  //Adjust time scale of parameters based off severity.  Currently set so range is 1 to 20 times baseline parameters.  Severity is squared
-  //because otherwise outputs converge too similarly at high severities
-  double timeScale = std::pow(20.0, sepSeverity * sepSeverity);
-
-  //Constants needed for Reynolds model::
-  //p = pathogen, m = non specific immune response, n = phagocytotic (neutrophil) response, d = tissue damage)
-
-  double kpg_Per_h = 2.0 * timeScale; //Pathogen growth rate
-  double kpm_Per_h = 0.6 * timeScale; //Non-specific immune response against pathogen
-  double kmp_Per_h = 0.075 * timeScale; //Rate at which non-specific response is exhausted by pathogen
-  double sm_Per_h = 0.005 * timeScale; //Source of non-specific local response
-  double um_Per_h = 0.002 * timeScale; //Decay rate of non-specific local response
-  double pInf = 20.0; //Max pathogen population (scaled to 10^6 /mL)
-  double kpn_Per_h = 1.8 * timeScale; //Rate at which phagocytes consume pathogen
-  double knp_Per_h = 0.1 * timeScale; //Activation of phagocytes by pathogen
-  double knn_Per_h = 0.01 * timeScale; //Activation of phagocytes by existing phagocytes
-  double snr_Per_h = 0.08 * timeScale; //Generation of resting phagocytes
-  double unr_Per_h = 0.12 * timeScale; //Decay rate of resting phagocytes
-  double un_Per_h = 0.05 * timeScale; //Decay rate of activated phagocytes
-  double knd_Per_h = 0.02 * timeScale; //Activation of resting phagocytes by tissue damage
-  double kdn_Per_h = 0.35 * timeScale; //Rate of tissue damage caused by active phagocytes
-  double xdn = 0.45; //Level of activated phagocytes leading to half-max tissue damage
-  double ud_Per_h = 0.25 * timeScale;
-  double cInf = 0.28; //Max anti-inflammatory response
-  double sc_Per_h = 0.0125 * timeScale; //Source of anti-inflammatory mediator
-  double kcn_Per_h = 0.04 * timeScale; //Max production rate of anti-inflammatory mediator
-  double kcnd = 48.0; //Relative effectiveness of ativates phagocytes and damaged tissue in inducing anti-inflammatory response
-  double uc_Per_h = 0.1 * timeScale; //Decay rate of anti-inflammatory mediator
-  double kdp_Per_h = 0.005 * timeScale; //Rate at which pathogen causes inflammation / tissue damage
-
-  //Antibiotic pharmacodynamics--see Regoes2004Pharmacodynamic
-
-  // double piperacillin_ug_Per_mL = m_data.GetSubstances().GetSubstance("Piperacillin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
-  double minimumInhibitoryConcentration_ug_Per_mL = 64.0;
-  double antibioticEMax = 2.5;
-  double antibioticShapeParam = 2.0;
-  double antibioticEC50 = 2.0;
-  double antibioticEffect_Per_h = 0.0;
-  if (m_data.GetSubstances().GetSubstance("Piperacillin")->HasPlasmaConcentration()) {
-    double piperacillin_ug_Per_mL = m_data.GetSubstances().GetSubstance("Piperacillin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
-    antibioticEffect_Per_h = antibioticEMax * std::pow(piperacillin_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (std::pow(antibioticEC50, antibioticShapeParam) + std::pow(piperacillin_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
-  }
-
-  //Scale down pathogen growth rate and scale up anti-inflammation response as a function of antibiotic activity
-  kpg_Per_h = kpg_Per_h - (antibioticEffect_Per_h * timeScale);
-
-  //Intermediate functions
-  double cSat = std::pow(antiinflammation / cInf, 2);
-  double fN = neutrophilActive / (1.0 + cSat);
-  double fS = std::pow(fN, 6) / (std::pow(xdn, 6) + std::pow(fN, 6));
-  double fCa = (neutrophilActive + kcnd * (1.0 - tissueIntegrity)) / (1.0 + cSat);
-
-  //Mass balances
-  double dPathogen_Per_h = kpg_Per_h * pathogen * (1.0 - pathogen / pInf) - kpm_Per_h * macrophage * pathogen - kpn_Per_h * fN * pathogen;
-  double dMacrophage_Per_h = sm_Per_h - um_Per_h * macrophage - kmp_Per_h * macrophage * pathogen;
-  double dNeutrophilResting_Per_h = snr_Per_h - unr_Per_h * neutrophilResting - (knn_Per_h * neutrophilResting * neutrophilActive + knp_Per_h * pathogen * neutrophilResting + knd_Per_h * neutrophilResting * (1.0 - tissueIntegrity)) / (1.0 + cSat);
-  double dNeutrophilActive_Per_h = (knn_Per_h * neutrophilResting * neutrophilActive + knp_Per_h * pathogen * neutrophilResting + knd_Per_h * neutrophilResting * (1.0 - tissueIntegrity)) / (1.0 + cSat) - un_Per_h * neutrophilActive;
-  double dTissueIntegrity_Per_h = ud_Per_h * (1.0 - tissueIntegrity) * (tissueIntegrity - 0.05) * tissueIntegrity - (kdn_Per_h * fS + kdp_Per_h * pathogen) * tissueIntegrity;
-  double dAntiinflammation_Per_h = sc_Per_h + (kcn_Per_h * fCa) / (1.0 + fCa) - uc_Per_h * antiinflammation;
-
-  double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
-
-  GetSepsisInfectionState().GetPathogen().IncrementValue(dPathogen_Per_h * dt_hr);
-  GetSepsisInfectionState().GetMacrophage().IncrementValue(dMacrophage_Per_h * dt_hr);
-  GetSepsisInfectionState().GetNeutrophilResting().IncrementValue(dNeutrophilResting_Per_h * dt_hr);
-  GetSepsisInfectionState().GetNeutrophilActive().IncrementValue(dNeutrophilActive_Per_h * dt_hr);
-  GetSepsisInfectionState().GetTissueIntegrity().IncrementValue(dTissueIntegrity_Per_h * dt_hr);
-  GetSepsisInfectionState().GetAntiinflammation().IncrementValue(dAntiinflammation_Per_h * dt_hr);
 
   //Physiological response
   double wbcBaseline_ct_Per_uL = 7000.0;
-
-  SEFluidCircuitPath* vascularLeak;
-  double resistanceBase_mmHg_s_Per_mL;
-  double nextResistance_mmHg_s_Per_mL;
-  double nextReflectionCoefficient;
-
-  for (auto comp : m_data.GetCompartments().GetTissueLeafCompartments()) {
-    if (comp->GetName().compare(BGE::TissueCompartment::Brain) == 0)
-      continue; //Don't mess with the brain 
-    nextReflectionCoefficient = tissueIntegrity;
-    BLIM(nextReflectionCoefficient, 0.0, 1.0);
-    comp->GetReflectionCoefficient().SetValue(nextReflectionCoefficient);
-    vascularLeak = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(tissueResistors[comp->GetName()]);
-    resistanceBase_mmHg_s_Per_mL = vascularLeak->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-    nextResistance_mmHg_s_Per_mL = resistanceBase_mmHg_s_Per_mL * GeneralMath::ResistanceFunction(10.0, 1.0, 0.05, tissueIntegrity);
-    //vascularLeak->GetNextResistance().SetValue(nextResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  }
+  double tissueIntegrity = GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+  double neutrophilActive = GetAcuteInflammatoryResponse().GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.3);
+  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.055);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
@@ -796,7 +687,7 @@ void BloodChemistry::Sepsis()
 
   //Temperature (fever) effects
   double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
-  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.05); //was *0.75, then *0.85 for max value
+  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.1);
   coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
 
   //Blood pressure effects (accomplish by overriding baroreceptor resistance scale)
@@ -821,6 +712,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   std::vector<CDM::enumInflammationSource> sources = GetAcuteInflammatoryResponse().GetInflammationSources(); //Scale Factor to speed up during debug/testing (and probably for some scenarios)
   double scaleFactor = 1.0;
   double burnTotalBodySurfaceArea = 0.0;
+  double pathogenGrowthRate = 0.0;  //Note bifurcation at kPG = 0.75
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     scaleFactor = 2.0;
@@ -829,12 +721,20 @@ void BloodChemistry::AcuteInflammatoryResponse()
       GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
     }
   }
+  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+    pathogenGrowthRate = 0.80;
+    scaleFactor = 10.0 * m_data.GetActions().GetPatientActions().GetSepsis()->GetSeverity().GetValue();
+    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) == sources.end()) {
+      GetAcuteInflammatoryResponse().GetPathogen().SetValue(1.0);
+      GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
+    }
+  }
   //Perform this check after looking for inflammatory actions (otherwise we'll never process)
   if (!GetAcuteInflammatoryResponse().HasInflammationSources()) {
     return;
   }
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    return;   //Right now sepsis is done elsewhere.  Soon it will be done in this function also
+    Sepsis();  //Process additional sepsis effects
   }
 
   //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.  
@@ -873,8 +773,11 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Model Parameters
   //Source terms
   double sM = 1.0, sN = 1.0, s6 = 0.001, s10 = 0.01;
-  //Endotoxin decay
-  double kL = 1.0;
+  //Pathogen parameters
+  double kPG = pathogenGrowthRate;
+  double kPN = 5.5;    //Phagocytic effect of activated neutrophils on pathogen, determined empirically
+  double kPM = 2.5;   //Phagocytic effect of macrophages on pathogen, determined empirically
+  double maxPathogen = 20.0;   //Maximum pathogen population size
   //Trauma decay
   double kTr = 1.5;  //Determined empirically to give good results
   //Macrophage interaction
@@ -903,7 +806,8 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
   //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05, changed kD from 0.05
   double kDB = 0.005, kD6 = 0.3, kD = 0.01, xD6 = 1.2, xDNO = 0.4;
-  double kDTR = 0.15;   //This is a base value that will be adjusted as a function of type and severity of traums
+  double kDTR = 0.15;   //This is a base value that will be adjusted as a function of type and severity of trauma
+  double kDP = 0.001;   //Pathogen causes a small amount of damage by itself
   //Temperature parameters
   double kT = 1.0, kTTnf = 1.5, nTTnf = 0.2, hTTnf = 0.75, TMax = 39.5, TMin = 37.0, kT6 = 1.5, nT6 = 0.5, hT6 = 0.75, kT10 = 0.0625, nT10 = 0.2, hT10 = 1.0;
   //Heart rate parameters
@@ -917,8 +821,8 @@ void BloodChemistry::AcuteInflammatoryResponse()
     kDTR *= burnTotalBodySurfaceArea;
   }
 
-  double dPathogen = -kL * pathogen;
-  double dTrauma = -kTr * trauma;
+  double dPathogen = kPG * pathogen * (1.0 - pathogen / maxPathogen) - pathogen * (kPM * macrophageActive + kPN * neutrophilActive);  //This is assumed to be the driving force for infection / sepsis.
+  double dTrauma = -kTr * trauma;   //This is assumed to be the driving force for burn
   double dMacrophageResting = -((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMR * (macrophageResting - sM);
   double dMacrophageActive = ((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMA * macrophageActive;
   double dNeutrophilResting = -(kNL * xNL * GeneralMath::HillActivation(pathogen, xNL, 1.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(IL6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - tissueIntegrity, xND, 2.0) + kNB * fB * kNTR * trauma) * GeneralMath::HillInhibition(IL10 + catecholamines, xN10, 2.0) * neutrophilResting - kNR * (neutrophilResting - sN);
@@ -932,7 +836,10 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dIL10 = (k10N * neutrophilActive + macrophageActive * (1 + k10A * autonomic)) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(IL6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(IL12, x1012, 4.0) + k10R) - k10 * (IL10 - s10);
   double dIL12 = k12M * macrophageActive * GeneralMath::HillInhibition(IL10, x1210, 2.0) - k12 * IL12;
   double dCa = kCATR * autonomic - kCA * catecholamines;
-  double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
+  double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma + kDP * pathogen) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
+
+
+
 
 
   //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up

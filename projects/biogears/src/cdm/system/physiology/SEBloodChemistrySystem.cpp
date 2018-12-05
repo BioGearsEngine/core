@@ -93,7 +93,6 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_PulmonaryVenousOxygenPressure = nullptr;
   m_VenousCarbonDioxidePressure = nullptr;
   m_VenousOxygenPressure = nullptr;
-  m_SepsisInfectionState = nullptr;
   m_AcuteInflammatoryResponse = nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -140,7 +139,6 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_VenousOxygenPressure);
   SAFE_DELETE(m_ArterialCarbonDioxidePressure);
   SAFE_DELETE(m_VenousCarbonDioxidePressure);
-  SAFE_DELETE(m_SepsisInfectionState);
   SAFE_DELETE(m_AcuteInflammatoryResponse);
 }
 //-------------------------------------------------------------------------------
@@ -210,14 +208,11 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   if (name == idVenousOxygenPressure)
     return &GetVenousOxygenPressure();
 
-  //This applies to SepsisState and InflammationState values (Sepsis will be replaced eventually), as they are defined SepsisInfectionState-Pathogen, e.g.
+  //This applies to InflammationState values, as they are defined AcuteInflammatoryResponse-Pathogen, e.g.
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string prop = name.substr(split + 1, name.npos); //Get property that follows dash
     std::string parent = name.substr(0, split);
-    if (parent == idSepsisInfectionState) {
-      return GetSepsisInfectionState().GetScalar(prop);
-    }
     if (parent == idAcuteInflammatoryResponse) {
       return GetAcuteInflammatoryResponse().GetScalar(prop);
     }
@@ -294,8 +289,6 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetVenousCarbonDioxidePressure().Load(in.VenousCarbonDioxidePressure().get());
   if (in.VenousOxygenPressure().present())
     GetVenousOxygenPressure().Load(in.VenousOxygenPressure().get());
-  if (in.SepsisInfectionState().present())
-    GetSepsisInfectionState().Load(in.SepsisInfectionState().get());
   if (in.AcuteInflammatoryResponse().present())
     GetAcuteInflammatoryResponse().Load(in.AcuteInflammatoryResponse().get());
   return true;
@@ -377,8 +370,6 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.VenousBloodPH(std::unique_ptr<CDM::ScalarData>(m_VenousBloodPH->Unload()));
   if (m_VenousOxygenPressure != nullptr)
     data.VenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousOxygenPressure->Unload()));
-  if (m_SepsisInfectionState != nullptr)
-    data.SepsisInfectionState(std::unique_ptr<CDM::SepsisStateData>(m_SepsisInfectionState->Unload()));
   if (m_AcuteInflammatoryResponse != nullptr)
     data.AcuteInflammatoryResponse(std::unique_ptr<CDM::InflammationStateData>(m_AcuteInflammatoryResponse->Unload()));
 }
@@ -1002,20 +993,6 @@ double SEBloodChemistrySystem::GetVenousCarbonDioxidePressure(const PressureUnit
   return m_VenousCarbonDioxidePressure->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
-bool SEBloodChemistrySystem::HasSepsisInfectionState() const
-{
-  return m_SepsisInfectionState == nullptr ? false : m_SepsisInfectionState->IsValid();
-}
-//-------------------------------------------------------------------------------
-SESepsisState& SEBloodChemistrySystem::GetSepsisInfectionState()
-{
-  if (m_SepsisInfectionState == nullptr)
-    m_SepsisInfectionState = new SESepsisState();
-  return *m_SepsisInfectionState;
-}
-//-------------------------------------------------------------------------------
-
 bool SEBloodChemistrySystem::HasAcuteInflammatoryResponse() const
 {
   return m_AcuteInflammatoryResponse == nullptr ? false : m_AcuteInflammatoryResponse->IsValid();

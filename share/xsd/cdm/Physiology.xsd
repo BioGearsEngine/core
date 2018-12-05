@@ -29,26 +29,7 @@ specific language governing permissions and limitations under the License.
         </xs:complexContent>
     </xs:complexType>
 	
-	<!--@brief State of the ODE model that tracks the growth of pathogen in the body and the associated immune response.  This information is needed by the Sepsis model and must be stored on CDM
-		so that it can be serialized and used to load Sepsis patient states at various progressions of illness.
-	-->
-   <xs:complexType name="SepsisStateData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">	
-				<xs:sequence>
-					<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Macrophage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Antiinflammation" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!--@brief State of the acute inflammation model that tracks response to an insult (pathogen, trauma).  To be used first with respect to burn model and then extended to a geneneral Sepsis model 
-	(replacing SepsisState above)
+	<!--@brief State of the acute inflammation model that tracks response to an insult (pathogen, trauma).
 	-->
 	<xs:simpleType name="enumInflammationSource">
 		<xs:restriction base="xs:string">
@@ -117,7 +98,6 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
                     <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
                     <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
-                    <xs:element name="SepsisInfectionState" type="SepsisStateData" minOccurs="0" maxOccurs="1"/><!--@brief State vector for sepsis ODE model (pathogen count, neutrophil count, damage progression, and antiinflammation level).  Stored on CDM so that Sepsis states can be serialized-->
 					<xs:element name="AcuteInflammatoryResponse" type="InflammationStateData" minOccurs="0" maxOccurs="1"/> <!--@brief State vector for general acute inflammation model representing response to infection and trauma-->
 					<!-- Substance Pressures -->
                     <xs:element name="ArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the aorta.-->
