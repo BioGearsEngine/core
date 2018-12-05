@@ -7,6 +7,6 @@
   <BodyFatFraction readOnly="false" value="0.32"/>
   <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="60"/>
   <HeartRateBaseline readOnly="false" unit="1/min" value="60"/>
-  <RespirationRateBaseline readOnly="false" unit="1/min" value="12"/>
+  <RespirationRateBaseline readOnly="false" unit="1/min" value="13"/>
   <SystolicArterialPressureBaseline readOnly="false" unit="mmHg" value="90"/>
 </Patient>
