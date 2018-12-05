@@ -56,7 +56,7 @@ shared_propagate_const<Implementation>::shared_propagate_const(PARAMS... params)
 }
 //-------------------------------------------------------------------------------
 template <class Implementation>
-shared_propagate_const<Implementation>::shared_propagate_const(nullptr_t)
+shared_propagate_const<Implementation>::shared_propagate_const(std::nullptr_t)
   : _impl(std::unique_ptr<Implementation>(nullptr))
 {
 }
