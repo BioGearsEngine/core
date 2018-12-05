@@ -33,6 +33,7 @@ public:
   static const MassUnit lb;
 };
 
+ 
 class BIOGEARS_API SEScalarMass : public SEScalarQuantity<MassUnit> {
 public:
   SEScalarMass() = default;
