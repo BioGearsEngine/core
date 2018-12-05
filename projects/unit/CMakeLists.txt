@@ -14,8 +14,9 @@ if(${PROJECT_NAME}_BUILD_TEST)
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
-  option(UNIT_TEST_biogears "Enable libBiogears UnitTest " ON)
-  option(UNIT_TEST_biogears-common "Enable Biogears-Common UnitTest " ON)
+  option(UNITTEST_biogears "Enable libBiogears UnitTest " ON)
+  option(UNITTEST_biogears-common "Enable Biogears-Common UnitTest " ON)
+  option(UNITTEST_biogears-cmd "Enable Biogears command line UnitTest " ON)
 
   ###############################################################################
   # Requirments
@@ -25,33 +26,38 @@ if(${PROJECT_NAME}_BUILD_TEST)
   file(GLOB_RECURSE UNITTEST_HEADERS "src/*.h")
   file(GLOB_RECURSE UNITTEST_SOURCES "src/*.cpp")
   
-  if(UNIT_TEST_biogears-common)
-    file(GLOB_RECURSE BIOGEARS_COMMON_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/*.h")
-    file(GLOB_RECURSE BIOGEARS_COMMON_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/*.cpp")
-  endif()
   ##################################################################V#############
   # Step 2:     Assign source files based on control variables
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
-  if(${PROJECT_NAME}_TEST_biogears)
-    file(GLOB_RECURSE UNITTEST_${PROJECT_NAME}_HEADERS "${bio_UNIT_DIR}/test_bio_*.h")
-    file(GLOB_RECURSE UNITTEST_${PROJECT_NAME}_SOURCES "${bio_UNIT_DIR}/test_bio_*.cpp")
-    list(APPEND UNIT_TEST_LIBRARIES )
-  endif(${PROJECT_NAME}_TEST_biogears)
+  if(UNITTEST_biogears-common)
+   add_source_files(BIOGEARS_COMMON_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/" "test_common*.h"  "common\\")
+   add_source_files(BIOGEARS_COMMON_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/" "test_common*.cpp"  "common\\")
+  endif()
+  if(UNITTEST_biogears)
+   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" "test_core*.h"  "core\\")
+   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" "test_core*.cpp"  "core\\")
+  endif()
+  if(UNITTEST_biogears-cmd)
+   add_source_files(BIOGEARS_CMDLINE_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/cmd_bio/unit/" "test_cmdline*.h"  "cmdline\\" )
+   add_source_files(BIOGEARS_CMDLINE_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/cmd_bio/unit/" "test_cmdline*.cpp"  "cmdline\\")
+  endif()
   
   
-list(APPEND UNIT_TEST_LIBRARIES GTest::GTest GTest::Main
+list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   
   )
 
   add_executable(unittest
     ${UNITTEST_SOURCES}
     ${UNITTEST_HEADERS}
-    ${UNITTEST_${PROJECT_NAME}_HEADERS}
-    ${UNITTEST_${PROJECT_NAME}_SOURCES}
+    ${BIOGEARS_CORE_UNITTEST_HEADERS}
+    ${BIOGEARS_CORE_UNITTEST_SOURCES}
 	${BIOGEARS_COMMON_UNITTEST_HEADERS}
 	${BIOGEARS_COMMON_UNITTEST_SOURCES}
+    ${BIOGEARS_CMDLINE_UNITTEST_HEADERS}
+    ${BIOGEARS_CMDLINE_UNITTEST_SOURCES}
   )
  
   ##################################################################V#############
@@ -67,10 +73,11 @@ list(APPEND UNIT_TEST_LIBRARIES GTest::GTest GTest::Main
                         ${ARGN}
                         )
 
-  if(UNIT_TEST_${_l_GROUP})
+  if(UNITTEST_${_l_GROUP})
   	  foreach ( test_name IN LISTS _l_TESTS )
-		option(UNIT_TEST_${_l_GROUP}_${test_name} "Enable test_core_angles" ON)
-		if (  NOT UNIT_TEST_${_l_GROUP}_${test_name})
+	  	option(UNITTEST_${_l_GROUP}_${test_name} "Enable test_core_angles" ON)
+	  	mark_as_advanced(UNITTEST_${_l_GROUP}_${test_name})
+	  	if (  NOT UNITTEST_${_l_GROUP}_${test_name})
 		  add_compile_definitions( DISABLE_BIOGEARS_${test_name}_TEST )
 	endif()
 	  endforeach()
@@ -122,7 +129,7 @@ list(APPEND UNIT_TEST_LIBRARIES GTest::GTest GTest::Main
   endif()
 
   target_link_libraries(unittest
-    ${UNIT_TEST_LIBRARIES}
+    ${UNITTEST_LIBRARIES}
     ${bio_LIBRARIES}
     libbiogears
   )
