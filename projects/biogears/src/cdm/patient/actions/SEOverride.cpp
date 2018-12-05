@@ -1285,7 +1285,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tLeft Afferent Arteriole Resistance: ";
     HasLeftAfferentArterioleResistanceOverride() ? str << *m_LAfferentArterioleResistOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tLeft Afferent Arteriole Resistance has a lower bound of X and an upper bound of Y.";
+      str << "\n\tLeft Afferent Arteriole Resistance has a lower bound of 0 mmHg min/mL and an upper bound of 1 mmHg min/mL.";
     }
     str << std::flush;
   }
@@ -1293,7 +1293,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tLeft Glomerular Filtration Rate: ";
     HasLeftGlomerularFiltrationRateOverride() ? str << *m__LeftGlomerularFiltrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tLeft Glomerular Filtration Rate has a lower bound of X mL/min and an upper bound of Y mL/min.";
+      str << "\n\tLeft Glomerular Filtration Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
     }
     str << std::flush;
   }
@@ -1301,7 +1301,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tLeft Reabsorption Rate: ";
     HasLeftReaborptionRateOverride() ? str << *m_LReabsorptionRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tLeft Reabsorption Rate has a lower bound of X mL/min and an upper bound of Y mL/min.";
+      str << "\n\tLeft Reabsorption Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
     }
     str << std::flush;
   }
@@ -1309,7 +1309,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tRenal Blood Flow: ";
     HasRenalBloodFlowOverride() ? str << *m_RenalBloodFlowOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tRenal Blood Flow has a lower bound of X mL/min and an upper bound of Y mL/min.";
+      str << "\n\tRenal Blood Flow has a lower bound of 0 mL/min and an upper bound of 3000 mL/min.";
     }
     str << std::flush;
   }
@@ -1317,7 +1317,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tRenal Plasma Flow: ";
     HasRenalPlasmaFlowOverride() ? str << *m_RenalPlasmaOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tRenal Plasma Flow has a lower bound of X mL/min and an upper bound of Y mL/min.";
+      str << "\n\tRenal Plasma Flow has a lower bound of 0 mL/min and an upper bound of 3000 mL/min.";
     }
     str << std::flush;
   }
@@ -1325,7 +1325,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tRight Afferent Arteriole Resistance: ";
     HasRightAfferentArterioleResistanceOverride() ? str << *m_RAfferentArterioleResistOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tRight Afferent Arteriole Resistance has a lower bound of X and an upper bound of Y.";
+      str << "\n\tRight Afferent Arteriole Resistance has a lower bound of 0 mmHg min/mL and an upper bound of 1 mmHg min/mL.";
     }
     str << std::flush;
   }
@@ -1333,7 +1333,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tRight Glomerular Filtration Rate: ";
     HasRightGlomerularFiltrationRateOverride() ? str << *m__RightGlomerularFiltrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tRight Glomerular Filtration Rate has a lower bound of X mL/min and an upper bound of Y mL/min.";
+      str << "\n\tRight Glomerular Filtration Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
     }
     str << std::flush;
   }
@@ -1341,7 +1341,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tRight Reabsorption Rate: ";
     HasRightReaborptionRateOverride() ? str << *m_RReabsorptionRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tRight Reabsorption Rate has a lower bound of X mL/min and an upper bound of Y mL/min.";
+      str << "\n\tRight Reabsorption Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
     }
     str << std::flush;
   }
@@ -1349,7 +1349,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tUrination Rate: ";
     HasUrinationRateOverride() ? str << *m_UrinationRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tUrination Rate has a lower bound of X mL/min and an upper bound of Y mL/min.";
+      str << "\n\tUrination Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
     }
     str << std::flush;
   }
@@ -1357,7 +1357,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tUrine Production Rate: ";
     HasUrineProductionRateOverride() ? str << *m_UrineProductionRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tUrine Production Rate has a lower bound of 0 mL/min and an upper bound of 1000 mL/min.";
+      str << "\n\tUrine Production Rate has a lower bound of 0 mL/min and an upper bound of 100 mL/min.";
     }
     str << std::flush;
   }
@@ -1365,7 +1365,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tUrine Osmolality: ";
     HasUrineOsmolalityOverride() ? str << *m_UrineOsmolalityOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tUrine Osmolality has a lower bound of X and an upper bound of Y.";
+      str << "\n\tUrine Osmolality has a lower bound of 0 mOsm/kg and an upper bound of 2000 mOsm/kg.";
     }
     str << std::flush;
   }
@@ -1373,7 +1373,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tUrine Osmolarity: ";
     HasUrineOsmolarityOverride() ? str << *m_UrineOsmolarityOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tUrine Osmolarity has a lower bound of X and an upper bound of Y.";
+      str << "\n\tUrine Osmolarity has a lower bound of 0 mOsm/L and an upper bound of 2000 mOsm/L.";
     }
     str << std::flush;
   }
@@ -1381,7 +1381,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tUrine Volume: ";
     HasUrineVolumeOverride() ? str << *m_UrineVolumeOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tUrine Volume has a lower bound of X mL and an upper bound of Y mL.";
+      str << "\n\tUrine Volume has a lower bound of 0 mL and an upper bound of 1000 mL.";
     }
     str << std::flush;
   }

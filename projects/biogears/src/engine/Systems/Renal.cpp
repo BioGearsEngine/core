@@ -1919,7 +1919,7 @@ void Renal::ProcessOverride()
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
   if (override->HasLeftAfferentArterioleResistanceOverride()) {
-    GetLeftAfferentArterioleResistance().SetValue(override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::cmH2O_s_Per_L), FlowResistanceUnit::cmH2O_s_Per_L);
+    GetLeftAfferentArterioleResistance().SetValue(override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL), FlowResistanceUnit::mmHg_min_Per_mL);
   }
   if (override->HasLeftGlomerularFiltrationRateOverride()) {
     GetLeftGlomerularFiltrationRate().SetValue(override->GetLeftGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min), VolumePerTimeUnit::mL_Per_min);
@@ -1934,7 +1934,7 @@ void Renal::ProcessOverride()
     GetRenalPlasmaFlow().SetValue(override->GetRenalPlasmaFlowOverride(VolumePerTimeUnit::mL_Per_min), VolumePerTimeUnit::mL_Per_min);
   }
   if (override->HasRightAfferentArterioleResistanceOverride()) {
-    GetRightAfferentArterioleResistance().SetValue(override->GetRightAfferentArterioleResistanceOverride(FlowResistanceUnit::cmH2O_s_Per_L), FlowResistanceUnit::cmH2O_s_Per_L);
+    GetRightAfferentArterioleResistance().SetValue(override->GetRightAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL), FlowResistanceUnit::mmHg_min_Per_mL);
   }
   if (override->HasRightGlomerularFiltrationRateOverride()) {
     GetRightGlomerularFiltrationRate().SetValue(override->GetRightGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min), VolumePerTimeUnit::mL_Per_min);
@@ -1949,10 +1949,10 @@ void Renal::ProcessOverride()
     GetUrineProductionRate().SetValue(override->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min), VolumePerTimeUnit::mL_Per_min);
   }
   if (override->HasUrineOsmolalityOverride()) {
-    GetUrineOsmolality().SetValue(override->GetUrineOsmolalityOverride(OsmolalityUnit::Osm_Per_kg), OsmolalityUnit::Osm_Per_kg);
+    GetUrineOsmolality().SetValue(override->GetUrineOsmolalityOverride(OsmolalityUnit::mOsm_Per_kg), OsmolalityUnit::mOsm_Per_kg);
   }
   if (override->HasUrineOsmolarityOverride()) {
-    GetUrineOsmolarity().SetValue(override->GetUrineOsmolarityOverride(OsmolarityUnit::Osm_Per_L), OsmolarityUnit::Osm_Per_L);
+    GetUrineOsmolarity().SetValue(override->GetUrineOsmolarityOverride(OsmolarityUnit::mOsm_Per_L), OsmolarityUnit::mOsm_Per_L);
   }
   if (override->HasUrineVolumeOverride()) {
     GetUrineVolume().SetValue(override->GetUrineVolumeOverride(VolumeUnit::mL), VolumeUnit::mL);
@@ -1962,8 +1962,8 @@ void Renal::ProcessOverride()
   void Renal::OverrideControlLoop()
   {
     auto override = m_data.GetActions().GetPatientActions().GetOverride();
-    double maxLeftAAROverride = 1000.0; //
-    double minLeftAAROverride = 0.0; //
+    double maxLeftAAROverride = 1.0; //mmHg_min_Per_mL
+    double minLeftAAROverride = 0.0; //mmHg_min_Per_mL
     double currentLeftAAROverride = 0.0; //value gets changed in next check
     double maxLeftGFROverride = 1000.0; //mL/min
     double minLeftGFROverride = 0.0; //mL/min
@@ -1971,14 +1971,14 @@ void Renal::ProcessOverride()
     double maxLeftReabsorRateOverride = 1000.0; //mL/min
     double minLeftReabsorRateOverride = 0.0; //mL/min
     double currentLeftReabsorRateOverride = 0.0; //value gets changed in next check
-    double maxRenalBloodFlowOverride = 1000.0; //mL/min
+    double maxRenalBloodFlowOverride = 3000.0; //mL/min
     double minRenalBloodFlowOverride = 0.0; //mL/min
     double currentRenalBloodFlowOverride = 0.0; //value gets changed in next check
-    double maxRenalPlasmaFlowOverride = 1000.0; //mL/min
+    double maxRenalPlasmaFlowOverride = 3000.0; //mL/min
     double minRenalPlasmaFlowOverride = 0.0; //mL/min
     double currentRenalPlasmaFlowOverride = 0.0; //value gets changed in next check
-    double maxRightAAROverride = 1000.0; //
-    double minRightAAROverride = 0.0; //
+    double maxRightAAROverride = 1.0; //mmHg_min_Per_mL
+    double minRightAAROverride = 0.0; //mmHg_min_Per_mL
     double currentRightAAROverride = 0.0; //value gets changed in next check
     double maxRightGFROverride = 1000.0; //mL/min
     double minRightGFROverride = 0.0; //mL/min
@@ -1989,20 +1989,20 @@ void Renal::ProcessOverride()
     double maxUrinationRateOverride = 1000.0; //mL/min
     double minUrinationRateOverride = 0.0; //mL/min
     double currentUrinationRateOverride = 0.0; //value gets changed in next check
-    double maxUrineProductionOverride = 1000.0; //mL/min
+    double maxUrineProductionOverride = 100.0; //mL/min
     double minUrineProductionOverride = 0.0; //mL/min
     double currentUrineProductionOverride = 0.0; //value gets changed in next check
-    double maxUrineOsmolalityOverride = 1000.0; //Osm/kg
-    double minUrineOsmolalityOverride = 0.0; //Osm/kg
+    double maxUrineOsmolalityOverride = 2000.0; //mOsm/kg
+    double minUrineOsmolalityOverride = 0.0; //mOsm/kg
     double currentUrineOsmolalityOverride = 0.0; //value gets changed in next check
-    double maxUrineOsmolarityOverride = 1000.0; // Osm/L
-    double minUrineOsmolarityOverride = 0.0; // Osm/L
+    double maxUrineOsmolarityOverride = 2000.0; // mOsm/L
+    double minUrineOsmolarityOverride = 0.0; // mOsm/L
     double currentUrineOsmolarityOverride = 0.0; //value gets changed in next check
     double maxUrineVolumeOverride = 1000.0; // mL
     double minUrineVolumeOverride = 0.0; // mL
     double currentUrineVolumeOverride = 0.0; //value gets changed in next check
     if (override->HasLeftAfferentArterioleResistanceOverride()) {
-      currentLeftAAROverride = override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::cmH2O_s_Per_L);
+      currentLeftAAROverride = override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL);
     }
     if (override->HasLeftGlomerularFiltrationRateOverride()) {
       currentLeftGFROverride = override->GetLeftGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min);
@@ -2017,7 +2017,7 @@ void Renal::ProcessOverride()
       currentRenalPlasmaFlowOverride = override->GetRenalPlasmaFlowOverride(VolumePerTimeUnit::mL_Per_min);
     }
     if (override->HasRightAfferentArterioleResistanceOverride()) {
-      currentRightAAROverride = override->GetRightAfferentArterioleResistanceOverride(FlowResistanceUnit::cmH2O_s_Per_L);
+      currentRightAAROverride = override->GetRightAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL);
     }
     if (override->HasRightGlomerularFiltrationRateOverride()) {
       currentRightGFROverride = override->GetRightGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min);
@@ -2032,10 +2032,10 @@ void Renal::ProcessOverride()
       currentUrineProductionOverride = override->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
     }
     if (override->HasUrineOsmolalityOverride()) {
-      currentUrineOsmolalityOverride = override->GetUrineOsmolalityOverride(OsmolalityUnit::Osm_Per_kg);
+      currentUrineOsmolalityOverride = override->GetUrineOsmolalityOverride(OsmolalityUnit::mOsm_Per_kg);
     }
     if (override->HasUrineOsmolarityOverride()) {
-      currentUrineOsmolarityOverride = override->GetUrineOsmolarityOverride(OsmolarityUnit::Osm_Per_L);
+      currentUrineOsmolarityOverride = override->GetUrineOsmolarityOverride(OsmolarityUnit::mOsm_Per_L);
     }
     if (override->HasUrineVolumeOverride()) {
       currentUrineVolumeOverride = override->GetUrineVolumeOverride(VolumeUnit::mL);
