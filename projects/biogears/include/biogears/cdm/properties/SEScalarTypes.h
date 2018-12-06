@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include "SEScalarForce.h"
 #include "SEScalarFraction.h"
 #include "SEScalarFrequency.h"
+#include "SEScalarHeatCapacitancePerMass.h"
 #include "SEScalarHeatResistance.h"
 #include "SEScalarHeatResistanceArea.h"
 #include "SEScalarLength.h"

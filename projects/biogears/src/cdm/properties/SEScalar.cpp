@@ -11,16 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalar.h>
+
+#include <limits>
+
 #include <biogears/cdm/utils/GeneralMath.h>
 
 namespace biogears {
-unsigned long long int SEScalar::NaN = ((unsigned long long int)255 << (8 * 7)) + ((unsigned long long int)(255 - 8) << (8 * 6)) + ((unsigned long long int)255 << (8 * 5)) + ((unsigned long long int)255 << (8 * 4)) + ((unsigned long long int)255 << (8 * 3)) + (255 << (8 * 2)) + (255 << (8 * 1)) + 255;
+double SEScalar::NaN = std::numeric_limits<double>::quiet_NaN();
 
 double SEScalar::dNaN()
 {
-  double d;
-  *(reinterpret_cast<unsigned long long int*>(&d)) = NaN;
-  return d;
+  return NaN;
 }
 
 const NoUnit NoUnit::unitless = NoUnit();

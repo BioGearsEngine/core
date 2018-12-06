@@ -91,7 +91,7 @@ public:
   virtual void ToString(std::ostream& str) const;
 
   static double dNaN();
-  static unsigned long long int NaN;
+  static double NaN;
   static bool IsZero(double value, double limit);
   static bool IsValue(double target, double value);
 

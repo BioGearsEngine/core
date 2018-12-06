@@ -19,6 +19,7 @@
 
 #include <gtest/gtest.h>
 
+#include "biogears/cdm/properties/SEScalar.h"
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
@@ -55,4 +56,24 @@ void TEST_FIXTURE_NAME::SetUp()
 
 void TEST_FIXTURE_NAME::TearDown()
 {
+}
+
+TEST_F(TEST_FIXTURE_NAME, Value)
+{
+  biogears::SEScalar scalar1;
+  ASSERT_ANY_THROW(
+    EXPECT_TRUE( std::isnan<double>(scalar1.GetValue()) )
+	);
+  scalar1.SetValue(5.0);
+  EXPECT_EQ(5.0, scalar1.GetValue());
+}
+
+TEST_F(TEST_FIXTURE_NAME, Validity)
+{
+  biogears::SEScalar scalar1;
+  //EXPECT_TRUE( std::isnan<double>(scalar1.GetValue()) );
+  EXPECT_FALSE(scalar1.IsValid());
+  scalar1.SetValue(5.0);
+  EXPECT_EQ(5.0, scalar1.GetValue());
+  EXPECT_TRUE(scalar1.IsValid());
 }
