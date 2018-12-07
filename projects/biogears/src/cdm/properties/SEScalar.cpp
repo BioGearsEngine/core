@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar.h>
 
+#include <cassert>
+#include <cmath>
 #include <limits>
 
 #include <biogears/cdm/utils/GeneralMath.h>
@@ -56,7 +58,7 @@ void SEScalar::Load(const CDM::ScalarData& in)
   SetValue(in.value());
   if (in.unit().present()) {
     std::string u = in.unit().get();
-    if ( !("unitless" == u || "" == u || u.empty()) )
+    if (!("unitless" == u || "" == u || u.empty()))
       throw CommonDataModelException("CDM::Scalar API is intended to be unitless, You are trying to load a ScalarData with a unit defined");
   }
   m_readOnly = in.readOnly();
@@ -84,8 +86,15 @@ bool SEScalar::Set(const SEScalar& s)
     std::cerr << " HALT ";
   if (!s.IsValid())
     return false;
-  if (m_readOnly)
+#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  if (m_readOnly) {
     throw CommonDataModelException("Scalar is marked read-only");
+  }
+#else
+  if (m_readOnly) {
+    return false;
+  }
+#endif
   m_value = s.m_value;
   m_isnan = (std::isnan(m_value)) ? true
                                   : false;
@@ -95,8 +104,15 @@ bool SEScalar::Set(const SEScalar& s)
 
 void SEScalar::Copy(const SEScalar& s)
 {
-  if (m_readOnly)
+#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  if (m_readOnly) {
     throw CommonDataModelException("Scalar is marked read-only");
+  }
+#else
+  if (m_readOnly) {
+    return;
+  }
+#endif
   m_value = s.m_value;
   m_isnan = s.m_isnan;
   m_isinf = s.m_isinf;
@@ -104,8 +120,15 @@ void SEScalar::Copy(const SEScalar& s)
 
 void SEScalar::Invalidate()
 {
-  if (m_readOnly)
+#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  if (m_readOnly) {
     throw CommonDataModelException("Scalar is marked read-only");
+  }
+#else
+  if (m_readOnly) {
+    return;
+  }
+#endif
   m_isnan = true;
   m_isinf = false;
   *(reinterpret_cast<unsigned long long int*>(&m_value)) = NaN;
@@ -150,9 +173,14 @@ bool SEScalar::IsReadOnly() const
 
 double SEScalar::GetValue() const
 {
-  if (!m_isnan)
-    return m_value;
-  throw CommonDataModelException("Value is NaN");
+#if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
+  if (m_isnan) {
+    throw CommonDataModelException("Value is NaN");
+  }
+#else
+  assert(std::isnormal(m_value));
+#endif
+  return m_value;
 }
 
 void SEScalar::SetValue(double d)

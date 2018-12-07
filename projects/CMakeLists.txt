@@ -1,17 +1,17 @@
 enable_language(CXX)
 
-option(ARA_${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
-option(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
-option(ARA_STAGE_RUNTIME "Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
+option(${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
+option(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
+option(STAGE_RUNTIME "Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
 
 find_path (
-  ARA_${ROOT_PROJECT_NAME}_Verification_DIR
+  ${ROOT_PROJECT_NAME}_Verification_DIR
   NAME Scenarios
   PATHS ${PROJECT_SOURCE_DIR}/../verification
   DOC "Optional directory path to a hiarchial verification filetree of baseline archives. This will be used by Java Utilities to find Baselines"
 )
 find_path (
-  ARA_${ROOT_PROJECT_NAME}_Reference_DIR
+  ${ROOT_PROJECT_NAME}_Reference_DIR
   NAME BioGears.bib
   PATHS ${PROJECT_SOURCE_DIR}/../references
   DOC "Optional directory path to a hiarchial references filetree of publication articles for documentation building"
@@ -58,7 +58,7 @@ endif()
 find_package(Java)
 find_package(JNI)
 verify_package(Log4cpp REQUIRED)
-option(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
+option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
 
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)
@@ -67,7 +67,8 @@ add_subdirectory(test_driver)
 add_subdirectory(howto)
 add_subdirectory(unit)
 add_subdirectory(cmd_bio)
-if(Java_FOUND AND ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
+
+if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
   add_subdirectory(java)
 endif()
 
@@ -75,7 +76,7 @@ endif()
 # Step 3: Global Doxygen configuration 
 #         you might need to tweak this if you have multiple doxy files
 ###############################################################################
-if(ARA_${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
+if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
     find_package(Doxygen REQUIRED)
     if(NOT DOXYGEN_FOUND)
         message(FATAL_ERROR "Doxygen is needed to build the documentation.")

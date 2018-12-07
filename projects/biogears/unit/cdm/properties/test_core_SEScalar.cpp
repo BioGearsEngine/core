@@ -16,6 +16,7 @@
 //! Unit Test for Biogears-common Config
 //!
 #include <thread>
+#include <cmath>
 
 #include <gtest/gtest.h>
 
@@ -61,9 +62,13 @@ void TEST_FIXTURE_NAME::TearDown()
 TEST_F(TEST_FIXTURE_NAME, Value)
 {
   biogears::SEScalar scalar1;
-  ASSERT_ANY_THROW(
-    EXPECT_TRUE( std::isnan<double>(scalar1.GetValue()) )
-	);
+#ifdef BIOGEARS_THROW_NAN_EXCEPTIONS
+  EXPECT_ANY_THROW(EXPECT_TRUE(std::isnan(scalar1.GetValue())));
+#elif defined (NDEBUG)
+  EXPECT_TRUE(std::isnan(scalar1.GetValue()));
+#else
+  ASSERT_DEBUG_DEATH(EXPECT_TRUE(std::isnan(scalar1.GetValue())), ".*");
+#endif
   scalar1.SetValue(5.0);
   EXPECT_EQ(5.0, scalar1.GetValue());
 }
@@ -71,7 +76,13 @@ TEST_F(TEST_FIXTURE_NAME, Value)
 TEST_F(TEST_FIXTURE_NAME, Validity)
 {
   biogears::SEScalar scalar1;
-  //EXPECT_TRUE( std::isnan<double>(scalar1.GetValue()) );
+#ifdef BIOGEARS_THROW_NAN_EXCEPTIONS
+  EXPECT_ANY_THROW(EXPECT_TRUE(std::isnan(scalar1.GetValue())));
+#elif defined (NDEBUG)
+  EXPECT_TRUE(std::isnan(scalar1.GetValue()));
+#else
+  ASSERT_DEBUG_DEATH(EXPECT_TRUE(std::isnan(scalar1.GetValue())), ".*");
+#endif
   EXPECT_FALSE(scalar1.IsValid());
   scalar1.SetValue(5.0);
   EXPECT_EQ(5.0, scalar1.GetValue());

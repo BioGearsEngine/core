@@ -25,7 +25,7 @@ set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 ###############################################################################
 # Requirments
 ###############################################################################
-if (ARA_${PREFIX}_BUILD_STATIC)
+if (${PREFIX}_BUILD_STATIC)
   add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
   add_definitions("-DARACORE_BUILT_AS_STATIC")
 endif()
@@ -60,7 +60,7 @@ list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
   list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
 endif()
 
-if (ARA_${PREFIX}_BUILD_STATIC)
+if (${PREFIX}_BUILD_STATIC)
   add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
 endif()
 
@@ -104,7 +104,7 @@ set(${PREFIX}_LIBS
 #endif()
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )
-if(ARA_STAGE_RUNTIME) 
+if(STAGE_RUNTIME) 
 add_dependencies(${PROJECT_NAME} stage_runtime)
 endif()
 

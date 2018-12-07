@@ -21,12 +21,12 @@ set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
 set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
-set(ARA_biogears_reference_file "D:/biogears/references/BioGears.bib")
+set(biogears_reference_file "D:/biogears/references/BioGears.bib")
 set(doxygen_dot_dir "C:/Program Files/graphviz-2.38/release/bin/")
 ###############################################################################
 # Requirments
 ###############################################################################
-if(ARA_Biogears_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_DOCUMENTATION)
     find_package(Perl REQUIRED)
 endif()
 ###############################################################################
@@ -142,7 +142,7 @@ add_custom_target(gen-states
     VERBATIM
     USES_TERMINAL
 )
-if(ARA_Biogears_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_DOCUMENTATION)
     add_custom_target(gen-website-docs
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
@@ -271,7 +271,7 @@ add_custom_target(biogears-gui
 
 add_dependencies(gen-states  ${PROJECT_NAME})
 add_dependencies(gen-data  ${PROJECT_NAME})
-if(ARA_Biogears_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_DOCUMENTATION)
   add_dependencies(gen-website-docs  ${PROJECT_NAME})
 endif()
 add_dependencies(run-system-validation  ${PROJECT_NAME})
@@ -289,10 +289,10 @@ add_dependencies(rebase-tests  ${PROJECT_NAME})
 add_dependencies(biogears-gui  ${PROJECT_NAME})
 
 
-if(ARA_STAGE_RUNTIME)
+if(STAGE_RUNTIME)
  add_dependencies(gen-states stage_runtime )
  add_dependencies(gen-data stage_runtime )
-if(ARA_Biogears_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_DOCUMENTATION)
  add_dependencies(gen-website-docs stage_runtime )
 endif()
  add_dependencies(run-system-validation stage_runtime )
@@ -313,7 +313,7 @@ set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
 
 set_target_properties(gen-states PROPERTIES FOLDER "Java/Generate" )
 set_target_properties(gen-data   PROPERTIES FOLDER "Java/Generate" )
-if(ARA_Biogears_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_DOCUMENTATION)
   set_target_properties(gen-website-docs   PROPERTIES FOLDER "Java/Generate" )
 endif()
 

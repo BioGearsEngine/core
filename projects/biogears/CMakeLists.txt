@@ -5,7 +5,8 @@
 ###############################################################################
 # Options
 ###############################################################################
-
+option (${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when a ReadOnly SEScalar is Modified." ON)
+option (${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
 ###############################################################################
 # Base Variables
 ###############################################################################
@@ -71,11 +72,16 @@ set(LIB${PREFIX}_JNI_SOURCES ${JNI_SRCS} ${GEN_JNI_SRCS})
 #Define Logic
 ###############################################################################
 
-if (ARA_${PREFIX}_BUILD_STATIC)
-  add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
+if (${PREFIX}_BUILD_STATIC)
+  add_compile_definitions(${PREFIX}_BUILT_AS_STATIC)
 endif()
-
-if(ARA_${PREFIX}_BUILD_STATIC)
+if(${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS)
+        add_compile_definitions(BIOGEARS_THROW_READONLY_EXCEPTIONS)
+endif()
+if(${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS )
+        add_compile_definitions(BIOGEARS_THROW_NAN_EXCEPTIONS )
+endif()
+if(${PREFIX}_BUILD_STATIC)
   add_library(lib${PROJECT_NAME} STATIC ${LIB${PREFIX}_SOURCES} ${LIB${PREFIX}_HEADERS})
   add_library(Biogears::lib${PROJECT_NAME} ALIAS lib${PROJECT_NAME})
 	set_target_properties(lib${PROJECT_NAME}
@@ -110,7 +116,7 @@ endif()
                 $<INSTALL_INTERFACE:include>
   )
   
-  if(ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
+  if(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
 	  target_include_directories(lib${PROJECT_NAME} PRIVATE ${Java_INCLUDE_DIRS})
   endif()
 
@@ -218,7 +224,7 @@ else()
   ###############################################################################
   # libBiogears_jni
   ###############################################################################
-  if(Java_FOUND AND ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
+  if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
      add_library(lib${PROJECT_NAME}_jni  SHARED ${LIB${PREFIX}_JNI_SOURCES} ${LIB${PREFIX}_JNI_HEADERS})
      add_library(Biogears::lib${PROJECT_NAME}_jni ALIAS lib${PROJECT_NAME}_jni)
   	   set_target_properties(lib${PROJECT_NAME}_jni
@@ -273,7 +279,7 @@ endif()
   )
 
 
-if(NOT ARA_${PREFIX}_BUILD_STATIC)
+if(NOT ${PREFIX}_BUILD_STATIC)
   if(WIN32)
     install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}> DESTINATION bin OPTIONAL)
   endif()

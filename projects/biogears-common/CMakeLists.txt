@@ -5,7 +5,7 @@
 ###############################################################################
 # Options
 ###############################################################################
- option(BIOGEARS_COMMON_BUILD_STATIC       "If enabled Biogears biogears_common will be built as a static library"  ON)
+ option(${ROOT_PROJECT_NAME}_COMMON_BUILD_STATIC       "If enabled Biogears biogears_common will be built as a static library"  ON)
 ###############################################################################
 # Base Variables
 ###############################################################################
@@ -57,7 +57,7 @@ list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
 endif()
 
 
-if(BIOGEARS_COMMON_BUILD_STATIC)
+if(${ROOT_PROJECT_NAME}_COMMON_BUILD_STATIC)
   add_library(lib${PROJECT_NAME} STATIC  ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
 else()
   add_library(lib${PROJECT_NAME} SHARED  ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
@@ -76,10 +76,10 @@ set_target_properties(lib${PROJECT_NAME}
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
   target_compile_definitions(lib${PROJECT_NAME} PUBLIC  ${${PREFIX}_INTERFACE_CPPFLAGS} PRIVATE ${${PREFIX}_CPPFLAGS} )
-  if (BIOGEARS_COMMON_BUILD_STATIC)
-  target_compile_definitions(lib${PROJECT_NAME} PUBLIC  "BIOGEARS_COMMON_BUILD_STATIC")
-  set(LIB_TYPE STATIC)
-endif()
+  if (${ROOT_PROJECT_NAME}_COMMON_BUILD_STATIC)
+    target_compile_definitions(lib${PROJECT_NAME} PUBLIC  "BIOGEARS_COMMON_BUILD_STATIC")
+    set(LIB_TYPE STATIC)
+  endif()
   target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
 target_include_directories(lib${PROJECT_NAME}
   PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR}
@@ -110,7 +110,7 @@ set(${PREFIX}_LIBS
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(lib${PROJECT_NAME}  ${${PREFIX}_LIBS} )
  
-if(ARA_STAGE_RUNTIME) 
+if(STAGE_RUNTIME) 
 add_dependencies(lib${PROJECT_NAME} stage_runtime)
 endif()
 

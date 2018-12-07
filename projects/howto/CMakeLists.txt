@@ -1,4 +1,4 @@
-option(ARA_${ROOT_PROJECT_NAME}_BUILD_HOWTOS     "Select to build sdk how to examples." ON)
+option(${ROOT_PROJECT_NAME}_BUILD_HOWTOS     "Select to build sdk how to examples." ON)
 
 function(add_howto name)
   ###############################################################################
@@ -82,7 +82,7 @@ function(add_howto name)
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
-    if(ARA_STAGE_RUNTIME) 
+    if(STAGE_RUNTIME) 
       add_dependencies(${TARGET_NAME} stage_runtime)
     endif()
     
@@ -108,7 +108,7 @@ endif()
 #         Examples are almost never order dependent just add them as we  find
 #         them
 ############################################################################
-if(ARA_${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
+if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   include ( ${PROJECT_SOURCE_DIR}/cmake/cmake-common_logic.cmake )
   
   find_package(Threads REQUIRED)
@@ -146,6 +146,6 @@ endif()
 
 message(STATUS "")
 
-if (NOT (Java_FOUND AND ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS) )
-  message(WARNING "SDK examples require the use of gen-states which requires ARA_${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS and a copy of the Java development kit.")
+if (NOT (Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS) )
+  message(WARNING "SDK examples require the use of gen-states which requires ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS and a copy of the Java development kit.")
 endif()

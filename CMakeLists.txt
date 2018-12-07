@@ -49,7 +49,7 @@ create_stage()
 # You likely need to add on project to stage for every executable you would like
 # to stage (AKA move dep DLLs to the run folder for debugging.
 ################################################################################
-if(ARA_${ROOT_PROJECT_NAME}_BUILD_${ROOT_PROJECT_NAME})
+if(${ROOT_PROJECT_NAME}_BUILD_${ROOT_PROJECT_NAME})
     add_dependencies(STAGE ${ROOT_PROJECT_NAME})
   if( TARGET EXISTS scenario_driver)
     add_dependencies(STAGE scenario_driver)
