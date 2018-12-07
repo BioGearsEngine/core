@@ -969,14 +969,45 @@ void BloodChemistry::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
-  double arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
-  double venousPH = m_data.GetBloodChemistry().GetVenousBloodPH().GetValue();
-  if (override->HasArterialPHOverride())
-    arterialPH = override->GetArterialPHOverride().GetValue();
-  if (override->HasVenousPHOverride())
-    venousPH = override->GetVenousPHOverride().GetValue();
-  m_data.GetBloodChemistry().GetArterialBloodPH().SetValue(arterialPH);
-  m_data.GetBloodChemistry().GetVenousBloodPH().SetValue(venousPH);
+  if (override->HasArterialPHOverride()) {
+    GetArterialBloodPH().SetValue(override->GetArterialPHOverride().GetValue());
+  }
+  if (override->HasVenousPHOverride()) {
+    GetVenousBloodPH().SetValue(override->GetVenousPHOverride().GetValue());
+  }
+  if (override->HasCO2SaturationOverride()) {
+    GetCarbonDioxideSaturation().SetValue(override->GetCO2SaturationOverride().GetValue());
+  }
+  if (override->HasCOSaturationOverride()) {
+    GetCarbonMonoxideSaturation().SetValue(override->GetCOSaturationOverride().GetValue());
+  }
+  if (override->HasO2SaturationOverride()) {
+    GetOxygenSaturation().SetValue(override->GetO2SaturationOverride().GetValue());
+  }
+  if (override->HasPhosphateOverride()) {
+    GetPhosphate().SetValue(override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL),AmountPerVolumeUnit::mmol_Per_mL);
+  }
+  if (override->HasWBCCountOverride()) {
+    GetWhiteBloodCellCount().SetValue(override->GetWBCCountOverride(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+  }
+  if (override->HasTotalBilirubinOverride()) {
+    GetTotalBilirubin().SetValue(override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasCalciumConcentrationOverride()) {
+    m_data.GetSubstances().GetCalcium().GetBloodConcentration().SetValue(override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasGlucoseConcentrationOverride()) {
+    m_data.GetSubstances().GetGlucose().GetBloodConcentration().SetValue(override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasLactateConcentrationOverride()) {
+    m_data.GetSubstances().GetLactate().GetBloodConcentration().SetValue(override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasPotassiumConcentrationOverride()) {
+    m_data.GetSubstances().GetPotassium().GetBloodConcentration().SetValue(override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasSodiumConcentrationOverride()) {
+    m_data.GetSubstances().GetSodium().GetBloodConcentration().SetValue(override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+  }
 }
 
 void BloodChemistry::OverrideControlLoop()
@@ -984,16 +1015,83 @@ void BloodChemistry::OverrideControlLoop()
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
   double maxArtPHOverride = 14.0; //Arterial pH
   double minArtPHOverride = 0.0; //Arterial pH
-  double currentArtPHOverride = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue(); //Current Arterial pH, value gets changed in next check
+  double currentArtPHOverride = GetArterialBloodPH().GetValue(); //Current Arterial pH, value gets changed in next check
   double maxVenPHOverride = 14.0; //Venous pH
   double minVenPHOverride = 0.0; //Venous pH
-  double currentVenPHOverride = m_data.GetBloodChemistry().GetVenousBloodPH().GetValue(); //Current Venous pH, value gets changed in next check
+  double currentVenPHOverride = GetVenousBloodPH().GetValue(); //Current Venous pH, value gets changed in next check
+  double maxCO2SaturationOverride = 1.0; //Carbon Dioxide Saturation
+  double minCO2SaturationOverride = 0.0; //Carbon Dioxide Saturation
+  double currentCO2SaturationOverride = 0.0; //value gets changed in next check
+  double maxCOSaturationOverride = 1.0; //Carbon Monoxide Saturation
+  double minCOSaturationOverride = 0.0; //Carbon Monoxide Saturation
+  double currentCOSaturationOverride = 0.0; //value gets changed in next check
+  double maxO2SaturationOverride = 1.0; //Oxygen Saturation
+  double minO2SaturationOverride = 0.0; //Oxygen Saturation
+  double currentO2SaturationOverride = 0.0; //value gets changed in next check
+  double maxPhosphateOverride = 1000.0; // mmol/mL
+  double minPhosphateOverride = 0.0; // mmol/mL
+  double currentPhosphateOverride = 0.0; //value gets changed in next check
+  double maxWBCCountOverride = 50000.0; // ct/uL
+  double minWBCCountOverride = 0.0; // ct/uL
+  double currentWBCCountOverride = 0.0; //value gets changed in next check
+  double maxTotalBilirubinOverride = 1000.0; // mg/dL
+  double minTotalBilirubinOverride = 0.0; // mg/dL
+  double currentTotalBilirubinOverride = 0.0; //value gets changed in next check
+  double maxCalciumConcentrationOverride = 1000.0; // mg/mL
+  double minCalciumConcentrationOverride = 0.0; // mg/mL
+  double currentCalciumConcentrationOverride = 0.0; //value gets changed in next check
+  double maxGlucoseConcentrationOverride = 1000.0; // mg/mL
+  double minGlucoseConcentrationOverride = 0.0; // mg/mL
+  double currentGlucoseConcentrationOverride = 0.0; //value gets changed in next check
+  double maxLactateConcentrationOverride = 1000.0; // mg/mL
+  double minLactateConcentrationOverride = 0.0; // mg/mL
+  double currentLactateConcentrationOverride = 0.0; //value gets changed in next check
+  double maxPotassiumConcentrationOverride = 1000.0; // mg/mL
+  double minPotassiumConcentrationOverride = 0.0; // mg/mL
+  double currentPotassiumConcentrationOverride = 0.0; //value gets changed in next check
+  double maxSodiumConcentrationOverride = 1000.0; // mg/mL
+  double minSodiumConcentrationOverride = 0.0; // mg/mL
+  double currentSodiumConcentrationOverride = 0.0; //value gets changed in next check
+
   if (override->HasArterialPHOverride()) {
     currentArtPHOverride = override->GetArterialPHOverride().GetValue();
     }
   if (override->HasVenousPHOverride()) {
       currentVenPHOverride = override->GetVenousPHOverride().GetValue();
-    } 
+    }
+  if (override->HasCO2SaturationOverride()) {
+    currentCO2SaturationOverride = override->GetCO2SaturationOverride().GetValue();
+  }
+  if (override->HasCOSaturationOverride()) {
+    currentCOSaturationOverride = override->GetCOSaturationOverride().GetValue();
+  }
+  if (override->HasO2SaturationOverride()) {
+    currentO2SaturationOverride = override->GetO2SaturationOverride().GetValue();
+  }
+  if (override->HasPhosphateOverride()) {
+    currentPhosphateOverride = override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL);
+  }
+  if (override->HasWBCCountOverride()) {
+    currentWBCCountOverride = override->GetWBCCountOverride(AmountPerVolumeUnit::mmol_Per_mL);
+  }
+  if (override->HasTotalBilirubinOverride()) {
+    currentTotalBilirubinOverride = override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasCalciumConcentrationOverride()) {
+    currentCalciumConcentrationOverride = override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasGlucoseConcentrationOverride()) {
+    currentGlucoseConcentrationOverride = override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasLactateConcentrationOverride()) {
+    currentLactateConcentrationOverride = override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasPotassiumConcentrationOverride()) {
+    currentPotassiumConcentrationOverride = override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+  }
+  if (override->HasSodiumConcentrationOverride()) {
+    currentSodiumConcentrationOverride = override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+  }
 
   if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Arterial Blood pH Override (BloodChemistry) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
@@ -1005,7 +1103,61 @@ void BloodChemistry::OverrideControlLoop()
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
+  if ((currentCO2SaturationOverride < minCO2SaturationOverride || currentCO2SaturationOverride > maxCO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "CO2 Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentCOSaturationOverride < minCOSaturationOverride || currentCOSaturationOverride > maxCOSaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "CO Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentO2SaturationOverride < minO2SaturationOverride || currentO2SaturationOverride > maxO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Oxygen Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentPhosphateOverride < minPhosphateOverride || currentPhosphateOverride > maxPhosphateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Phosphate (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentWBCCountOverride < minWBCCountOverride || currentWBCCountOverride > maxWBCCountOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "White Blood Cell Count (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentTotalBilirubinOverride < minTotalBilirubinOverride || currentTotalBilirubinOverride > maxTotalBilirubinOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Total Bilirubin (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentCalciumConcentrationOverride < minCalciumConcentrationOverride || currentCalciumConcentrationOverride > maxCalciumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Calcium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentGlucoseConcentrationOverride < minGlucoseConcentrationOverride || currentGlucoseConcentrationOverride > maxGlucoseConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Glucose Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentLactateConcentrationOverride < minLactateConcentrationOverride || currentLactateConcentrationOverride > maxLactateConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Lactate Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentPotassiumConcentrationOverride < minPotassiumConcentrationOverride || currentPotassiumConcentrationOverride > maxPotassiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Potassium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentSodiumConcentrationOverride < minSodiumConcentrationOverride || currentSodiumConcentrationOverride > maxSodiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Sodium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
   return;
 }
-
 }

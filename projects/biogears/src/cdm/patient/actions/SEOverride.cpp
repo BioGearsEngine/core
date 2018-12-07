@@ -1443,7 +1443,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tCarbon Dioxide Saturation: ";
     HasCO2SaturationOverride() ? str << *m_CO2SaturationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tCO2 Saturation has a lower bound of X and an upper bound of Y.";
+      str << "\n\tCO2 Saturation has a lower bound of 0 and an upper bound of 1.";
     }
     str << std::flush;
   }
@@ -1451,7 +1451,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tCarbon Monoxide Saturation: ";
     HasCOSaturationOverride() ? str << *m_COSaturationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tCO Saturation has a lower bound of X and an upper bound of Y.";
+      str << "\n\tCO Saturation has a lower bound of 0 and an upper bound of 1.";
     }
     str << std::flush;
   }
@@ -1459,7 +1459,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tOxygen Saturation: ";
     HasO2SaturationOverride() ? str << *m_O2SaturationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tO2 Saturation has a lower bound of X and an upper bound of Y.";
+      str << "\n\tO2 Saturation has a lower bound of 0 and an upper bound of 1.";
     }
     str << std::flush;
   }
@@ -1467,7 +1467,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tPhosphate: ";
     HasPhosphateOverride() ? str << *m_PhosphateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tPhosphate has a lower bound of X and an upper bound of Y.";
+      str << "\n\tPhosphate has a lower bound of 0 mmol/L and an upper bound of 1000 mmol/L.";
     }
     str << std::flush;
   }
@@ -1475,7 +1475,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tWhite Blood Cell Count: ";
     HasWBCCountOverride() ? str << *m_WBCCountOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tWBC Count has a lower bound of X and an upper bound of Y.";
+      str << "\n\tWBC Count has a lower bound of 0 ct/uL and an upper bound of 50000 ct/uL.";
     }
     str << std::flush;
   }
@@ -1483,7 +1483,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tTotal Bilirubin: ";
     HasTotalBilirubinOverride() ? str << *m_TotalBilirubinOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tTotal Bilirubin has a lower bound of X and an upper bound of Y.";
+      str << "\n\tTotal Bilirubin has a lower bound of X mg/dL and an upper bound of Y mg/dL.";
     }
     str << std::flush;
   }
