@@ -18,7 +18,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
-
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
 namespace biogears {
 SEOverride::SEOverride()
@@ -28,6 +29,17 @@ SEOverride::SEOverride()
   m_OverrideConformance = CDM::enumOnOff::On;
   m_ArterialPHOR = nullptr;
   m_VenousPHOR = nullptr;
+  m_CO2SaturationOR = nullptr;
+  m_COSaturationOR = nullptr;
+  m_O2SaturationOR = nullptr;
+  m_PhosphateOR = nullptr;
+  m_WBCCountOR = nullptr;
+  m_TotalBilirubinOR = nullptr;
+  m_CalciumConcentrationOR = nullptr;
+  m_GlucoseConcentrationOR = nullptr;
+  m_LactateConcentrationOR = nullptr;
+  m_PotassiumConcentrationOR = nullptr;
+  m_SodiumConcentrationOR = nullptr;
   m_CardiacOutputOR = nullptr;
   m_PressureOR = nullptr;
   m_HeartRateOR = nullptr;
@@ -72,6 +84,17 @@ void SEOverride::Clear()
   m_OverrideConformance = CDM::enumOnOff::On;
   SAFE_DELETE(m_ArterialPHOR);
   SAFE_DELETE(m_VenousPHOR);
+  SAFE_DELETE(m_CO2SaturationOR);
+  SAFE_DELETE(m_COSaturationOR);
+  SAFE_DELETE(m_O2SaturationOR);
+  SAFE_DELETE(m_PhosphateOR);
+  SAFE_DELETE(m_WBCCountOR);
+  SAFE_DELETE(m_TotalBilirubinOR);
+  SAFE_DELETE(m_CalciumConcentrationOR);
+  SAFE_DELETE(m_GlucoseConcentrationOR);
+  SAFE_DELETE(m_LactateConcentrationOR);
+  SAFE_DELETE(m_PotassiumConcentrationOR);
+  SAFE_DELETE(m_SodiumConcentrationOR);
   SAFE_DELETE(m_CardiacOutputOR);
   SAFE_DELETE(m_PressureOR);
   SAFE_DELETE(m_HeartRateOR);
@@ -143,6 +166,61 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetVenousPHOverride().Load(in.VenousBloodPHOverride().get());
   } else {
     GetVenousPHOverride().Invalidate();
+  }
+  if (in.CarbonDioxideSaturationOverride().present()) {
+    GetCO2SaturationOverride().Load(in.CarbonDioxideSaturationOverride().get());
+  } else {
+    GetCO2SaturationOverride().Invalidate();
+  }
+  if (in.CarbonMonoxideSaturationOverride().present()) {
+    GetCOSaturationOverride().Load(in.CarbonMonoxideSaturationOverride().get());
+  } else {
+    GetCOSaturationOverride().Invalidate();
+  }
+  if (in.OxygenSaturationOverride().present()) {
+    GetO2SaturationOverride().Load(in.OxygenSaturationOverride().get());
+  } else {
+    GetO2SaturationOverride().Invalidate();
+  }
+  if (in.PhosphateOverride().present()) {
+    GetPhosphateOverride().Load(in.PhosphateOverride().get());
+  } else {
+    GetPhosphateOverride().Invalidate();
+  }
+  if (in.WhiteBloodCellCountOverride().present()) {
+    GetWBCCountOverride().Load(in.WhiteBloodCellCountOverride().get());
+  } else {
+    GetWBCCountOverride().Invalidate();
+  }
+  if (in.TotalBilirubinOverride().present()) {
+    GetTotalBilirubinOverride().Load(in.TotalBilirubinOverride().get());
+  } else {
+    GetTotalBilirubinOverride().Invalidate();
+  }
+  if (in.CalciumConcentrationOverride().present()) {
+    GetCalciumConcentrationOverride().Load(in.CalciumConcentrationOverride().get());
+  } else {
+    GetCalciumConcentrationOverride().Invalidate();
+  }
+  if (in.GlucoseConcentrationOverride().present()) {
+    GetGlucoseConcentrationOverride().Load(in.GlucoseConcentrationOverride().get());
+  } else {
+    GetGlucoseConcentrationOverride().Invalidate();
+  }
+  if (in.LactateConcentrationOverride().present()) {
+    GetLactateConcentrationOverride().Load(in.LactateConcentrationOverride().get());
+  } else {
+    GetLactateConcentrationOverride().Invalidate();
+  }
+  if (in.PotassiumConcentrationOverride().present()) {
+    GetPotassiumConcentrationOverride().Load(in.PotassiumConcentrationOverride().get());
+  } else {
+    GetPotassiumConcentrationOverride().Invalidate();
+  }
+  if (in.SodiumConcentrationOverride().present()) {
+    GetSodiumConcentrationOverride().Load(in.SodiumConcentrationOverride().get());
+  } else {
+    GetSodiumConcentrationOverride().Invalidate();
   }
   if (in.CardiacOutputOverride().present()) {
     GetCardiacOutputOverride().Load(in.CardiacOutputOverride().get());
@@ -321,6 +399,39 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   if (HasVenousPHOverride()) {
     data.VenousBloodPHOverride(std::unique_ptr<CDM::ScalarData>(m_VenousPHOR->Unload()));
   }
+  if (HasCO2SaturationOverride()) {
+    data.CarbonDioxideSaturationOverride(std::unique_ptr<CDM::ScalarFractionData>(m_CO2SaturationOR->Unload()));
+  }
+  if (HasCOSaturationOverride()) {
+    data.CarbonMonoxideSaturationOverride(std::unique_ptr<CDM::ScalarFractionData>(m_COSaturationOR->Unload()));
+  }
+  if (HasO2SaturationOverride()) {
+    data.OxygenSaturationOverride(std::unique_ptr<CDM::ScalarFractionData>(m_O2SaturationOR->Unload()));
+  }
+  if (HasPhosphateOverride()) {
+    data.PhosphateOverride(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_PhosphateOR->Unload()));
+  }
+  if (HasWBCCountOverride()) {
+    data.WhiteBloodCellCountOverride(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_WBCCountOR->Unload()));
+  }
+  if (HasTotalBilirubinOverride()) {
+    data.TotalBilirubinOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalBilirubinOR->Unload()));
+  }
+  if (HasCalciumConcentrationOverride()) {
+    data.CalciumConcentrationOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_CalciumConcentrationOR->Unload()));
+  }
+  if (HasGlucoseConcentrationOverride()) {
+    data.GlucoseConcentrationOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_GlucoseConcentrationOR->Unload()));
+  }
+  if (HasLactateConcentrationOverride()) {
+    data.LactateConcentrationOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_LactateConcentrationOR->Unload()));
+  }
+  if (HasPotassiumConcentrationOverride()) {
+    data.PotassiumConcentrationOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_PotassiumConcentrationOR->Unload()));
+  }
+  if (HasSodiumConcentrationOverride()) {
+    data.SodiumConcentrationOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_SodiumConcentrationOR->Unload()));
+  }
   if (HasCardiacOutputOverride()) {
     data.CardiacOutputOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CardiacOutputOR->Unload()));
   }
@@ -483,10 +594,220 @@ double SEOverride::GetVenousPHOverride() const
   return m_VenousPHOR->GetValue();
 }
 
+bool SEOverride::HasCO2SaturationOverride() const
+{
+  return m_CO2SaturationOR == nullptr ? false : m_CO2SaturationOR->IsValid();
+}
+SEScalarFraction& SEOverride::GetCO2SaturationOverride()
+{
+  if (m_CO2SaturationOR == nullptr) {
+    m_CO2SaturationOR = new SEScalarFraction();
+  }
+  return *m_CO2SaturationOR;
+}
+double SEOverride::GetCO2SaturationOverride() const
+{
+  if (m_CO2SaturationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_CO2SaturationOR->GetValue();
+}
+bool SEOverride::HasCOSaturationOverride() const
+{
+  return m_COSaturationOR == nullptr ? false : m_COSaturationOR->IsValid();
+}
+SEScalarFraction& SEOverride::GetCOSaturationOverride()
+{
+  if (m_COSaturationOR == nullptr) {
+    m_COSaturationOR = new SEScalarFraction();
+  }
+  return *m_COSaturationOR;
+}
+double SEOverride::GetCOSaturationOverride() const
+{
+  if (m_COSaturationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_COSaturationOR->GetValue();
+}
+bool SEOverride::HasO2SaturationOverride() const
+{
+  return m_O2SaturationOR == nullptr ? false : m_O2SaturationOR->IsValid();
+}
+SEScalarFraction& SEOverride::GetO2SaturationOverride()
+{
+  if (m_O2SaturationOR == nullptr) {
+    m_O2SaturationOR = new SEScalarFraction();
+  }
+  return *m_O2SaturationOR;
+}
+double SEOverride::GetO2SaturationOverride() const
+{
+  if (m_O2SaturationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_O2SaturationOR->GetValue();
+}
+bool SEOverride::HasPhosphateOverride() const
+{
+  return m_PhosphateOR == nullptr ? false : m_PhosphateOR->IsValid();
+}
+SEScalarAmountPerVolume& SEOverride::GetPhosphateOverride()
+{
+  if (m_PhosphateOR == nullptr) {
+    m_PhosphateOR = new SEScalarAmountPerVolume();
+  }
+  return *m_PhosphateOR;
+}
+double SEOverride::GetPhosphateOverride(const AmountPerVolumeUnit& unit) const
+{
+  if (m_PhosphateOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_PhosphateOR->GetValue(unit);
+}
+bool SEOverride::HasWBCCountOverride() const
+{
+  return m_WBCCountOR == nullptr ? false : m_WBCCountOR->IsValid();
+}
+SEScalarAmountPerVolume& SEOverride::GetWBCCountOverride()
+{
+  if (m_WBCCountOR == nullptr) {
+    m_WBCCountOR = new SEScalarAmountPerVolume();
+  }
+  return *m_WBCCountOR;
+}
+double SEOverride::GetWBCCountOverride(const AmountPerVolumeUnit& unit) const
+{
+  if (m_WBCCountOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_WBCCountOR->GetValue(unit);
+}
+bool SEOverride::HasTotalBilirubinOverride() const
+{
+  return m_TotalBilirubinOR == nullptr ? false : m_TotalBilirubinOR->IsValid();
+}
+SEScalarMassPerVolume& SEOverride::GetTotalBilirubinOverride()
+{
+  if (m_TotalBilirubinOR == nullptr) {
+    m_TotalBilirubinOR = new SEScalarMassPerVolume();
+  }
+  return *m_TotalBilirubinOR;
+}
+double SEOverride::GetTotalBilirubinOverride(const MassPerVolumeUnit& unit) const
+{
+  if (m_TotalBilirubinOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_TotalBilirubinOR->GetValue(unit);
+}
+bool SEOverride::HasCalciumConcentrationOverride() const
+{
+  return m_CalciumConcentrationOR == nullptr ? false : m_CalciumConcentrationOR->IsValid();
+}
+SEScalarMassPerVolume& SEOverride::GetCalciumConcentrationOverride()
+{
+  if (m_CalciumConcentrationOR == nullptr) {
+    m_CalciumConcentrationOR = new SEScalarMassPerVolume();
+  }
+  return *m_CalciumConcentrationOR;
+}
+double SEOverride::GetCalciumConcentrationOverride(const MassPerVolumeUnit& unit) const
+{
+  if (m_CalciumConcentrationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_CalciumConcentrationOR->GetValue(unit);
+}
+bool SEOverride::HasGlucoseConcentrationOverride() const
+{
+  return m_GlucoseConcentrationOR == nullptr ? false : m_GlucoseConcentrationOR->IsValid();
+}
+SEScalarMassPerVolume& SEOverride::GetGlucoseConcentrationOverride()
+{
+  if (m_GlucoseConcentrationOR == nullptr) {
+    m_GlucoseConcentrationOR = new SEScalarMassPerVolume();
+  }
+  return *m_GlucoseConcentrationOR;
+}
+double SEOverride::GetGlucoseConcentrationOverride(const MassPerVolumeUnit& unit) const
+{
+  if (m_GlucoseConcentrationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_GlucoseConcentrationOR->GetValue(unit);
+}
+bool SEOverride::HasLactateConcentrationOverride() const
+{
+  return m_LactateConcentrationOR == nullptr ? false : m_LactateConcentrationOR->IsValid();
+}
+SEScalarMassPerVolume& SEOverride::GetLactateConcentrationOverride()
+{
+  if (m_LactateConcentrationOR == nullptr) {
+    m_LactateConcentrationOR = new SEScalarMassPerVolume();
+  }
+  return *m_LactateConcentrationOR;
+}
+double SEOverride::GetLactateConcentrationOverride(const MassPerVolumeUnit& unit) const
+{
+  if (m_LactateConcentrationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_LactateConcentrationOR->GetValue(unit);
+}
+bool SEOverride::HasPotassiumConcentrationOverride() const
+{
+  return m_PotassiumConcentrationOR == nullptr ? false : m_PotassiumConcentrationOR->IsValid();
+}
+SEScalarMassPerVolume& SEOverride::GetPotassiumConcentrationOverride()
+{
+  if (m_PotassiumConcentrationOR == nullptr) {
+    m_PotassiumConcentrationOR = new SEScalarMassPerVolume();
+  }
+  return *m_PotassiumConcentrationOR;
+}
+double SEOverride::GetPotassiumConcentrationOverride(const MassPerVolumeUnit& unit) const
+{
+  if (m_PotassiumConcentrationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_PotassiumConcentrationOR->GetValue(unit);
+}
+bool SEOverride::HasSodiumConcentrationOverride() const
+{
+  return m_SodiumConcentrationOR == nullptr ? false : m_SodiumConcentrationOR->IsValid();
+}
+SEScalarMassPerVolume& SEOverride::GetSodiumConcentrationOverride()
+{
+  if (m_SodiumConcentrationOR == nullptr) {
+    m_SodiumConcentrationOR = new SEScalarMassPerVolume();
+  }
+  return *m_SodiumConcentrationOR;
+}
+double SEOverride::GetSodiumConcentrationOverride(const MassPerVolumeUnit& unit) const
+{
+  if (m_SodiumConcentrationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_SodiumConcentrationOR->GetValue(unit);
+}
+
 bool SEOverride::HasBloodChemistryOverride() const
 {
-  return HasArterialPHOverride() 
-  || HasVenousPHOverride();
+  return HasArterialPHOverride()
+  || HasVenousPHOverride()
+  || HasCO2SaturationOverride()
+  || HasCOSaturationOverride()
+  || HasO2SaturationOverride()
+  || HasPhosphateOverride()
+  || HasWBCCountOverride()
+  || HasTotalBilirubinOverride()
+  || HasCalciumConcentrationOverride() ?
+  || HasGlucoseConcentrationOverride()
+  || HasLactateConcentrationOverride()
+  || HasPotassiumConcentrationOverride()
+  || HasSodiumConcentrationOverride();
 }
 
 // Cardiovascular Overrides //
@@ -1115,6 +1436,94 @@ void SEOverride::ToString(std::ostream& str) const
     HasVenousPHOverride() ? str << *m_VenousPHOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tVenous PH has a lower bound of 0 and an upper bound of 14.";
+    }
+    str << std::flush;
+  }
+  if (HasCO2SaturationOverride()) {
+    str << "\n\tCarbon Dioxide Saturation: ";
+    HasCO2SaturationOverride() ? str << *m_CO2SaturationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tCO2 Saturation has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasCOSaturationOverride()) {
+    str << "\n\tCarbon Monoxide Saturation: ";
+    HasCOSaturationOverride() ? str << *m_COSaturationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tCO Saturation has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasO2SaturationOverride()) {
+    str << "\n\tOxygen Saturation: ";
+    HasO2SaturationOverride() ? str << *m_O2SaturationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tO2 Saturation has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasPhosphateOverride()) {
+    str << "\n\tPhosphate: ";
+    HasPhosphateOverride() ? str << *m_PhosphateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tPhosphate has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasWBCCountOverride()) {
+    str << "\n\tWhite Blood Cell Count: ";
+    HasWBCCountOverride() ? str << *m_WBCCountOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tWBC Count has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasTotalBilirubinOverride()) {
+    str << "\n\tTotal Bilirubin: ";
+    HasTotalBilirubinOverride() ? str << *m_TotalBilirubinOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tTotal Bilirubin has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasCalciumConcentrationOverride()) {
+    str << "\n\tCalcium Concentration: ";
+    HasCalciumConcentrationOverride() ? str << *m_CalciumConcentrationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tCalcium Concentration has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasGlucoseConcentrationOverride()) {
+    str << "\n\tGlucose Concentration: ";
+    HasGlucoseConcentrationOverride() ? str << *m_GlucoseConcentrationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tGlucose Concentration has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasLactateConcentrationOverride()) {
+    str << "\n\tLactate Concentration: ";
+    HasLactateConcentrationOverride() ? str << *m_LactateConcentrationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tLactate Concentration has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasPotassiumConcentrationOverride()) {
+    str << "\n\tPotassium Concentration: ";
+    HasPotassiumConcentrationOverride() ? str << *m_PotassiumConcentrationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tPotassium Concentration has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasSodiumConcentrationOverride()) {
+    str << "\n\tSodium Concentration: ";
+    HasSodiumConcentrationOverride() ? str << *m_SodiumConcentrationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tSodium Concentration has a lower bound of X and an upper bound of Y.";
     }
     str << std::flush;
   }

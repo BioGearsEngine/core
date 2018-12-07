@@ -455,6 +455,17 @@ specific language governing permissions and limitations under the License.
 				<xs:sequence>
 					<xs:element name="ArterialBloodPHOverride" type="ScalarData" minOccurs="0" maxOccurs="1"/><!-- @brief Measure of acidity or basicity of the arterial blood. -->
 					<xs:element name="VenousBloodPHOverride" type="ScalarData" minOccurs="0" maxOccurs="1"/><!-- @brief Measure of acidity or basicity of the venous blood. -->
+					<xs:element name="CarbonDioxideSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is carbon dioxide bound.-->					
+                    <xs:element name="CarbonMonoxideSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is carbon monoxide bound.-->
+					<xs:element name="OxygenSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is oxygen bound.-->
+					<xs:element name="PhosphateOverride" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Sum of all inorganic phosphate in the blood.-->
+					<xs:element name="WhiteBloodCellCountOverride" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
+                    <xs:element name="TotalBilirubinOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
+					<xs:element name="CalciumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="GlucoseConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="LactateConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="PotassiumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="SodiumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="CardiacOutputOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief The volume of blood being pumped from the heart in a given time interval. -->
 					<xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. -->  
 					<xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of heart beat. -->					

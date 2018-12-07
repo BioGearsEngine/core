@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
@@ -24,9 +25,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-
-
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
 class Serializer;
 
@@ -68,6 +68,40 @@ public:
   bool HasVenousPHOverride() const;
   SEScalar& GetVenousPHOverride();
   double GetVenousPHOverride() const;
+  bool HasCO2SaturationOverride() const;
+  SEScalarFraction& GetCO2SaturationOverride();
+  double GetCO2SaturationOverride() const;
+  bool HasCOSaturationOverride() const;
+  SEScalarFraction& GetCOSaturationOverride();
+  double GetCOSaturationOverride() const;
+  bool HasO2SaturationOverride() const;
+  SEScalarFraction& GetO2SaturationOverride();
+  double GetO2SaturationOverride() const;
+  bool HasPhosphateOverride() const;
+  SEScalarAmountPerVolume& GetPhosphateOverride();
+  double GetPhosphateOverride(const AmountPerVolumeUnit& unit) const;
+  bool HasWBCCountOverride() const;
+  SEScalarAmountPerVolume& GetWBCCountOverride();
+  double GetWBCCountOverride(const AmountPerVolumeUnit& unit) const;
+  bool HasTotalBilirubinOverride() const;
+  SEScalarMassPerVolume& GetTotalBilirubinOverride();
+  double GetTotalBilirubinOverride(const MassPerVolumeUnit& unit) const;
+  bool HasCalciumConcentrationOverride() const;
+  SEScalarMassPerVolume& GetCalciumConcentrationOverride();
+  double GetCalciumConcentrationOverride(const MassPerVolumeUnit& unit) const;
+  bool HasGlucoseConcentrationOverride() const;
+  SEScalarMassPerVolume& GetGlucoseConcentrationOverride();
+  double GetGlucoseConcentrationOverride(const MassPerVolumeUnit& unit) const;
+  bool HasLactateConcentrationOverride() const;
+  SEScalarMassPerVolume& GetLactateConcentrationOverride();
+  double GetLactateConcentrationOverride(const MassPerVolumeUnit& unit) const;
+  bool HasPotassiumConcentrationOverride() const;
+  SEScalarMassPerVolume& GetPotassiumConcentrationOverride();
+  double GetPotassiumConcentrationOverride(const MassPerVolumeUnit& unit) const;
+  bool HasSodiumConcentrationOverride() const;
+  SEScalarMassPerVolume& GetSodiumConcentrationOverride();
+  double GetSodiumConcentrationOverride(const MassPerVolumeUnit& unit) const;
+
   bool HasBloodChemistryOverride() const;
 
   //Cardiovascular
@@ -181,6 +215,17 @@ protected:
   CDM::enumOnOff m_OverrideConformance;
   SEScalar* m_ArterialPHOR;
   SEScalar* m_VenousPHOR;
+  SEScalarFraction* m_CO2SaturationOR;
+  SEScalarFraction* m_COSaturationOR;
+  SEScalarFraction* m_O2SaturationOR;
+  SEScalarAmountPerVolume* m_PhosphateOR;
+  SEScalarAmountPerVolume* m_WBCCountOR;
+  SEScalarMassPerVolume* m_TotalBilirubinOR;
+  SEScalarMassPerVolume* m_CalciumConcentrationOR;
+  SEScalarMassPerVolume* m_GlucoseConcentrationOR;
+  SEScalarMassPerVolume* m_LactateConcentrationOR;
+  SEScalarMassPerVolume* m_PotassiumConcentrationOR;
+  SEScalarMassPerVolume* m_SodiumConcentrationOR;
   SEScalarVolumePerTime* m_CardiacOutputOR;
   SEScalarPressure* m_PressureOR;
   SEScalarFrequency* m_HeartRateOR;
