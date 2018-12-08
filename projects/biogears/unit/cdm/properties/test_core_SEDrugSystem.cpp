@@ -53,20 +53,16 @@ protected:
 
   biogears::Logger* logger;
   biogears::SEDrugSystem* ds;
-  biogears::SEScalarFraction* fraction;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
 {
   logger = new biogears::Logger;
   ds = new biogears::SEDrugSystem(logger);
-  fraction = new SEScalarFraction();
-  fraction->SetValue(1.0);
 }
 
 void TEST_FIXTURE_NAME::TearDown()
 {
-  delete fraction;
   delete ds;
   delete logger;
 }
@@ -111,7 +107,7 @@ TEST_F(TEST_FIXTURE_NAME, NeuromuscularBlockLevel)
   EXPECT_EQ(false, ds->HasNeuromuscularBlockLevel());
   ds->GetNeuromuscularBlockLevel().SetValue(1.0);
   EXPECT_EQ(true, ds->HasNeuromuscularBlockLevel());
-  EXPECT_EQ(fraction->GetValue(), ds->GetNeuromuscularBlockLevel().GetValue());
+  EXPECT_EQ(1.0, ds->GetNeuromuscularBlockLevel().GetValue());
 
   const biogears::SEDrugSystem cds(logger);
   EXPECT_EQ(false, cds.HasNeuromuscularBlockLevel());
@@ -202,8 +198,4 @@ TEST_F(TEST_FIXTURE_NAME, CentralNervousResponse)
   EXPECT_EQ(false, cds.HasCentralNervousResponse());
   auto dvalue = cds.GetCentralNervousResponse();
   EXPECT_NE(dvalue, dvalue);
-}
-TEST_F(TEST_FIXTURE_NAME, placeholder)
-{
-
 }
