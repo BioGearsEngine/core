@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 
 #include "SEScalar.h"
 #include "SEScalar0To1.h"
+#include "SEScalarAmountPerMass.h"
+#include "SEScalarAmountPerTime.h"
 #include "SEScalarAmountPerVolume.h"
 #include "SEScalarArea.h"
 #include "SEScalarEnergy.h"
