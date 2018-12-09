@@ -50,3 +50,4 @@ specific language governing permissions and limitations under the License.
 #include "SEScalarVolume.h"
 #include "SEScalarVolumePerTime.h"
 #include "SEScalarVolumePerTimeArea.h"
+#include "SEScalarVolumePerTimePressureArea.h"
