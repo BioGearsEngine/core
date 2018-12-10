@@ -1951,9 +1951,6 @@ void Renal::ProcessOverride()
   if (override->HasUrineOsmolalityOverride()) {
     GetUrineOsmolality().SetValue(override->GetUrineOsmolalityOverride(OsmolalityUnit::mOsm_Per_kg), OsmolalityUnit::mOsm_Per_kg);
   }
-  if (override->HasUrineOsmolarityOverride()) {
-    GetUrineOsmolarity().SetValue(override->GetUrineOsmolarityOverride(OsmolarityUnit::mOsm_Per_L), OsmolarityUnit::mOsm_Per_L);
-  }
   if (override->HasUrineVolumeOverride()) {
     GetUrineVolume().SetValue(override->GetUrineVolumeOverride(VolumeUnit::mL), VolumeUnit::mL);
   }
@@ -1995,9 +1992,6 @@ void Renal::ProcessOverride()
     double maxUrineOsmolalityOverride = 2000.0; //mOsm/kg
     double minUrineOsmolalityOverride = 0.0; //mOsm/kg
     double currentUrineOsmolalityOverride = 0.0; //value gets changed in next check
-    double maxUrineOsmolarityOverride = 2000.0; // mOsm/L
-    double minUrineOsmolarityOverride = 0.0; // mOsm/L
-    double currentUrineOsmolarityOverride = 0.0; //value gets changed in next check
     double maxUrineVolumeOverride = 1000.0; // mL
     double minUrineVolumeOverride = 0.0; // mL
     double currentUrineVolumeOverride = 0.0; //value gets changed in next check
@@ -2033,9 +2027,6 @@ void Renal::ProcessOverride()
     }
     if (override->HasUrineOsmolalityOverride()) {
       currentUrineOsmolalityOverride = override->GetUrineOsmolalityOverride(OsmolalityUnit::mOsm_Per_kg);
-    }
-    if (override->HasUrineOsmolarityOverride()) {
-      currentUrineOsmolarityOverride = override->GetUrineOsmolarityOverride(OsmolarityUnit::mOsm_Per_L);
     }
     if (override->HasUrineVolumeOverride()) {
       currentUrineVolumeOverride = override->GetUrineVolumeOverride(VolumeUnit::mL);
@@ -2093,11 +2084,6 @@ void Renal::ProcessOverride()
     }
     if ((currentUrineOsmolalityOverride < minUrineOsmolalityOverride || currentUrineOsmolalityOverride > maxUrineOsmolalityOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
       m_ss << "Urine Osmolality Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentUrineOsmolarityOverride < minUrineOsmolarityOverride || currentUrineOsmolarityOverride > maxUrineOsmolarityOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Urine Osmolarity Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
       Info(m_ss);
       override->SetOverrideConformance(CDM::enumOnOff::Off);
     }

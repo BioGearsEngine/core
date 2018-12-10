@@ -17,7 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarOsmolarity.h>
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
 
 
@@ -56,7 +55,6 @@ SEOverride::SEOverride()
   m_UrinationRateOR = nullptr;
   m_UrineProductionRateOR = nullptr;
   m_UrineOsmolalityOR = nullptr;
-  m_UrineOsmolarityOR = nullptr;
   m_UrineVolumeOR = nullptr;
   m_RespirationRateOR = nullptr;
   m_TidalVolumeOR = nullptr;
@@ -101,7 +99,6 @@ void SEOverride::Clear()
   SAFE_DELETE(m_UrinationRateOR);
   SAFE_DELETE(m_UrineProductionRateOR);
   SAFE_DELETE(m_UrineOsmolalityOR);
-  SAFE_DELETE(m_UrineOsmolarityOR);
   SAFE_DELETE(m_UrineVolumeOR);
   SAFE_DELETE(m_RespirationRateOR);
   SAFE_DELETE(m_TidalVolumeOR);
@@ -278,11 +275,6 @@ bool SEOverride::Load(const CDM::OverrideData& in)
   } else {
     GetUrineOsmolalityOverride().Invalidate();
   }
-  if (in.UrineOsmolarityOverride().present()) {
-    GetUrineOsmolarityOverride().Load(in.UrineOsmolarityOverride().get());
-  } else {
-    GetUrineOsmolarityOverride().Invalidate();
-  }
   if (in.UrineVolumeOverride().present()) {
     GetUrineVolumeOverride().Load(in.UrineVolumeOverride().get());
   } else {
@@ -402,9 +394,6 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   }
   if (HasUrineOsmolalityOverride()) {
     data.UrineOsmolalityOverride(std::unique_ptr<CDM::ScalarOsmolalityData>(m_UrineOsmolalityOR->Unload()));
-  }
-  if (HasUrineOsmolarityOverride()) {
-    data.UrineOsmolarityOverride(std::unique_ptr<CDM::ScalarOsmolarityData>(m_UrineOsmolarityOR->Unload()));
   }
   if (HasUrineVolumeOverride()) {
     data.UrineVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_UrineVolumeOR->Unload()));
@@ -1018,24 +1007,6 @@ double SEOverride::GetUrineOsmolalityOverride(const OsmolalityUnit& unit) const
   }
   return m_UrineOsmolalityOR->GetValue(unit);
 }
-bool SEOverride::HasUrineOsmolarityOverride() const
-{
-  return m_UrineOsmolarityOR == nullptr ? false : m_UrineOsmolarityOR->IsValid();
-}
-SEScalarOsmolarity& SEOverride::GetUrineOsmolarityOverride()
-{
-  if (m_UrineOsmolarityOR == nullptr) {
-    m_UrineOsmolarityOR = new SEScalarOsmolarity();
-  }
-  return *m_UrineOsmolarityOR;
-}
-double SEOverride::GetUrineOsmolarityOverride(const OsmolarityUnit& unit) const
-{
-  if (m_UrineOsmolarityOR == nullptr) {
-    return SEScalar::dNaN();
-  }
-  return m_UrineOsmolarityOR->GetValue(unit);
-}
 bool SEOverride::HasUrineVolumeOverride() const
 {
   return m_UrineVolumeOR == nullptr ? false : m_UrineVolumeOR->IsValid();
@@ -1068,7 +1039,6 @@ bool SEOverride::HasRenalOverride() const
   HasUrinationRateOverride() ? true :
   HasUrineProductionRateOverride() ? true :
   HasUrineOsmolalityOverride() ? true :
-  HasUrineOsmolarityOverride() ? true : 
   HasUrineVolumeOverride() ? true : false;
 }
 
@@ -1366,14 +1336,6 @@ void SEOverride::ToString(std::ostream& str) const
     HasUrineOsmolalityOverride() ? str << *m_UrineOsmolalityOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tUrine Osmolality has a lower bound of 0 mOsm/kg and an upper bound of 2000 mOsm/kg.";
-    }
-    str << std::flush;
-  }
-  if (HasUrineOsmolarityOverride()) {
-    str << "\n\tUrine Osmolarity: ";
-    HasUrineOsmolarityOverride() ? str << *m_UrineOsmolarityOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tUrine Osmolarity has a lower bound of 0 mOsm/L and an upper bound of 2000 mOsm/L.";
     }
     str << std::flush;
   }

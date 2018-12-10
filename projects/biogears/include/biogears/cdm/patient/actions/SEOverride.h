@@ -23,13 +23,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarOsmolality.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+
+
 
 class Serializer;
 
 namespace biogears {
-class OsmolalityUnit;
-class OsmolarityUnit;
-class MassUnit;
 
 class BIOGEARS_API SEOverride : public SEPatientAction {
 public:
@@ -159,9 +160,6 @@ public:
   bool HasUrineOsmolalityOverride() const;
   SEScalarOsmolality& GetUrineOsmolalityOverride();
   double GetUrineOsmolalityOverride(const OsmolalityUnit& unit) const;
-  bool HasUrineOsmolarityOverride() const;
-  SEScalarOsmolarity& GetUrineOsmolarityOverride();
-  double GetUrineOsmolarityOverride(const OsmolarityUnit& unit) const;
   bool HasUrineVolumeOverride() const;
   SEScalarVolume& GetUrineVolumeOverride();
   double GetUrineVolumeOverride(const VolumeUnit& unit) const;
@@ -211,7 +209,6 @@ protected:
   SEScalarVolumePerTime* m_UrinationRateOR;
   SEScalarVolumePerTime* m_UrineProductionRateOR;
   SEScalarOsmolality* m_UrineOsmolalityOR;
-  SEScalarOsmolarity* m_UrineOsmolarityOR;
   SEScalarVolume* m_UrineVolumeOR;
   SEScalarFrequency* m_RespirationRateOR;
   SEScalarVolume* m_TidalVolumeOR;

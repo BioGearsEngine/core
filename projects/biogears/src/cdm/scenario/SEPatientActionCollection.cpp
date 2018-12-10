@@ -1076,10 +1076,6 @@ SEOverride* SEPatientActionCollection::GetOverride()
 void SEPatientActionCollection::RemoveOverride()
 {
   SAFE_DELETE(m_OverrideAction);
-  //m_OverrideAction->Clear();
-  //m_OverrideAction = new SEOverride();
-  //m_OverrideAction->SetOverrideSwitch(CDM::enumOnOff::Off);
-  //m_OverrideAction->SetOverrideConformance(CDM::enumOnOff::On);
 }
 bool SEPatientActionCollection::IsOverrideActionOn() const
 {
