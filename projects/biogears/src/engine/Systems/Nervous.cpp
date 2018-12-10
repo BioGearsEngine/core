@@ -520,9 +520,17 @@ void Nervous::ChemoreceptorFeedback()
   //Calculate change in ventilation assuming no metabolic or drug effects
   double nextTargetVentilation_L_Per_min = m_data.GetPatient().GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min) + m_CentralVentilationDelta_L_Per_min + m_PeripheralVentilationDelta_L_Per_min;
 
-  //Apply effects of drugs that depress central nervous activity (currently morphine and fentanyl)
+  //Apply effects of opioids that depress central nervous activity (currently morphine and fentanyl)
   double drugCNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
-  nextTargetVentilation_L_Per_min *= (1.0 - drugCNSModifier);
+  if (drugCNSModifier > ZERO_APPROX) {
+    for (auto drug : m_data.GetSubstances().GetActiveSubstances()) {
+      if (drug->GetClassification() == CDM::enumSubstanceClass::Opioid) {
+        nextTargetVentilation_L_Per_min *= (1.0 - drugCNSModifier);
+        break;  //Don't evaluate more than once if for some reason we give someone morphine and fentanyl
+      }
+    }
+  }
+  
 
   //Apply metabolic effects. The modifier is tuned to achieve the correct respiratory response for near maximal exercise.
   //A linear relationship is assumed for the respiratory effects due to increased metabolic exertion
