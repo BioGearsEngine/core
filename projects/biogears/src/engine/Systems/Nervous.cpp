@@ -339,17 +339,12 @@ void Nervous::CheckPainStimulus()
     double CNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
     CNSPainBuffer = exp(-CNSModifier * NervousScalar);
   }
-  //assuming that sedation also causes reduction in pain (i.e. ketamine infusion)
-  if (m_data.GetDrugs().HasSedationLevel()) {
-    double sedationLevel = m_data.GetDrugs().GetSedationLevel().GetValue();
-
-  }
 
   //determine pain response from inflammation caused by burn trauma
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    double traumaPain = 8.0; //This is not scientific at all--just figure a burn is going to hurt a lot
-    //Add to tempPainVAS and factor in susceptibility and drug effects
-    tempPainVAS += (traumaPain * susceptabilityMapping * CNSPainBuffer);
+    double traumaPain = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    traumaPain *= 20.0;   //25% TBSA burn will give pain scale = 5, 40% TBSA will give pain scale = 8.0
+    tempPainVAS += (traumaPain * susceptabilityMapping * CNSPainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0));
   }
 
   //iterate over all locations to get a cumulative stimulus and buffer them
@@ -358,7 +353,7 @@ void Nervous::CheckPainStimulus()
     severity = p->GetSeverity().GetValue();
     painVASMapping = 10.0 * severity;
 
-    tempPainVAS += (painVASMapping * susceptabilityMapping * CNSPainBuffer) / (1 + exp(-20 * m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
+    tempPainVAS += (painVASMapping * susceptabilityMapping * CNSPainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
   }
 
   //advance time over the duration of the stimulus

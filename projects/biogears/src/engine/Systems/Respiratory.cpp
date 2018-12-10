@@ -1011,8 +1011,8 @@ void Respiratory::ProcessDriverActions()
   }
 
   //Process Pain effects
-  double painVAS = m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
-  painVAS *= 0.1; //scale to a fractional value
+  double painVAS = 0.1 * m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
+  double painModifier = 1.0 + 0.75 * (painVAS / (painVAS + 0.2)); 
 
   //Process Sepsis effects
   double sepsisModifier = 0.0;
@@ -1053,7 +1053,7 @@ void Respiratory::ProcessDriverActions()
   } else {
     m_VentilationFrequency_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min) / m_TargetTidalVolume_L;
     m_VentilationFrequency_Per_min += sepsisModifier;
-    m_VentilationFrequency_Per_min *= (1.0 + 0.65 * painVAS); //scale with pain response
+    m_VentilationFrequency_Per_min *= painModifier; 
     m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
     m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
     m_VentilationFrequency_Per_min += diffPH;
