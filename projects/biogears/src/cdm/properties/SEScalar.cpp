@@ -29,6 +29,13 @@ double SEScalar::dNaN()
 const NoUnit NoUnit::unitless = NoUnit();
 const std::string unitless = "unitless";
 
+SEScalar::SEScalar(double v)
+  : SEScalar()
+
+{
+  SetValue(v);
+}
+//-------------------------------------------------------------------------------
 SEScalar::SEScalar()
   : SEProperty()
   , m_isnan(false)
@@ -39,11 +46,13 @@ SEScalar::SEScalar()
   Clear();
 }
 
+//-------------------------------------------------------------------------------
 SEScalar::~SEScalar()
 {
   Clear();
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::Clear()
 {
   SEProperty::Clear();
@@ -51,6 +60,7 @@ void SEScalar::Clear()
   Invalidate();
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::Load(const CDM::ScalarData& in)
 {
   Clear();
@@ -64,6 +74,7 @@ void SEScalar::Load(const CDM::ScalarData& in)
   m_readOnly = in.readOnly();
 }
 
+//-------------------------------------------------------------------------------
 CDM::ScalarData* SEScalar::Unload() const
 {
   if (!IsValid())
@@ -73,6 +84,7 @@ CDM::ScalarData* SEScalar::Unload() const
   return data;
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::Unload(CDM::ScalarData& data) const
 {
   SEProperty::Unload(data);
@@ -80,6 +92,7 @@ void SEScalar::Unload(CDM::ScalarData& data) const
   data.readOnly(m_readOnly);
 }
 
+//-------------------------------------------------------------------------------
 bool SEScalar::Set(const SEScalar& s)
 {
   if (dynamic_cast<const SEUnitScalar*>(&s) != nullptr)
@@ -102,6 +115,7 @@ bool SEScalar::Set(const SEScalar& s)
   return true;
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::Copy(const SEScalar& s)
 {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
@@ -118,6 +132,7 @@ void SEScalar::Copy(const SEScalar& s)
   m_isinf = s.m_isinf;
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::Invalidate()
 {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
@@ -131,9 +146,10 @@ void SEScalar::Invalidate()
 #endif
   m_isnan = true;
   m_isinf = false;
-  *(reinterpret_cast<unsigned long long int*>(&m_value)) = NaN;
+  m_value = NaN;
 }
 
+//-------------------------------------------------------------------------------
 bool SEScalar::IsValid() const
 {
   if (m_isnan)
@@ -141,6 +157,7 @@ bool SEScalar::IsValid() const
   return true;
 }
 
+//-------------------------------------------------------------------------------
 bool SEScalar::IsZero(double limit) const
 {
   if (!IsValid())
@@ -148,6 +165,7 @@ bool SEScalar::IsZero(double limit) const
   return SEScalar::IsZero(m_value, limit);
 }
 
+//-------------------------------------------------------------------------------
 bool SEScalar::IsPositive() const
 {
   if (!IsValid())
@@ -155,6 +173,7 @@ bool SEScalar::IsPositive() const
   return m_value > 0;
 }
 
+//-------------------------------------------------------------------------------
 bool SEScalar::IsNegative() const
 {
   if (!IsValid())
@@ -162,15 +181,18 @@ bool SEScalar::IsNegative() const
   return m_value < 0;
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::SetReadOnly(bool b)
 {
   m_readOnly = b;
 }
+//-------------------------------------------------------------------------------
 bool SEScalar::IsReadOnly() const
 {
   return m_readOnly;
 }
 
+//-------------------------------------------------------------------------------
 double SEScalar::GetValue() const
 {
 #if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
@@ -178,11 +200,12 @@ double SEScalar::GetValue() const
     throw CommonDataModelException("Value is NaN");
   }
 #else
-  assert(std::isnormal(m_value));
+  assert(!std::isnan(m_value));
 #endif
   return m_value;
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::SetValue(double d)
 {
   if (m_readOnly)
@@ -194,6 +217,7 @@ void SEScalar::SetValue(double d)
   m_isinf = (std::isinf(m_value)) ? true : false;
 }
 
+//-------------------------------------------------------------------------------
 double SEScalar::Increment(const SEScalar& s)
 {
   if (!s.IsValid())
@@ -203,6 +227,7 @@ double SEScalar::Increment(const SEScalar& s)
   return m_value;
 }
 
+//-------------------------------------------------------------------------------
 double SEScalar::IncrementValue(double d)
 {
   if (!IsValid()) {
@@ -212,14 +237,59 @@ double SEScalar::IncrementValue(double d)
   SetValue(m_value + d);
   return m_value;
 }
-
-void SEScalar::Average(int cnt)
+//-------------------------------------------------------------------------------
+double SEScalar::Decrement(const SEScalar& s)
 {
-  if (!IsValid() || cnt == 0)
-    return;
-  m_value /= cnt;
+  if (!s.IsValid())
+    Invalidate();
+  else
+    IncrementValue(-1.0 * s.GetValue());
+  return m_value;
 }
-
+//-------------------------------------------------------------------------------
+double SEScalar::DecrementValue(double d)
+{
+  return IncrementValue(-1.0 * d);
+}
+//-------------------------------------------------------------------------------
+double SEScalar::Multiply(const SEScalar& s)
+{
+  if (!s.IsValid())
+    Invalidate();
+  else
+    MultiplyValue(s.GetValue());
+  return m_value;
+}
+//-------------------------------------------------------------------------------
+double SEScalar::MultiplyValue(double d)
+{
+  if (!IsValid()) {
+    SetValue(d);
+    return d;
+  }
+  SetValue(m_value * d);
+  return m_value;
+}
+//-------------------------------------------------------------------------------
+double SEScalar::Divide(const SEScalar& s)
+{
+  if (!s.IsValid())
+    Invalidate();
+  else
+    DivideValue(s.GetValue());
+  return m_value;
+}
+//-------------------------------------------------------------------------------
+double SEScalar::DivideValue(double d)
+{
+  if (!IsValid()) {
+    SetValue(1.0/d);
+    return 1/d;
+  }
+  SetValue(m_value / d);
+  return m_value;
+}
+//-------------------------------------------------------------------------------
 bool SEScalar::Equals(const SEScalar& to) const
 {
   if (m_isnan && to.m_isnan) //This Violates C++ Spec
@@ -233,11 +303,13 @@ bool SEScalar::Equals(const SEScalar& to) const
   return std::abs(GeneralMath::PercentDifference(m_value, to.m_value)) <= 1e-15;
 }
 
+//-------------------------------------------------------------------------------
 void SEScalar::ToString(std::ostream& str) const
 {
   str << m_value << std::flush;
 }
 
+//-------------------------------------------------------------------------------
 bool SEScalar::IsValue(double target, double value)
 {
   if (value < (target + 1e-10) && value > (target - 1e-10))
@@ -245,6 +317,7 @@ bool SEScalar::IsValue(double target, double value)
   return false;
 }
 
+//-------------------------------------------------------------------------------
 bool SEScalar::IsZero(double d, double limit)
 {
   if (d < limit && d > -limit)
@@ -252,6 +325,7 @@ bool SEScalar::IsZero(double d, double limit)
   return false;
 }
 
+//-------------------------------------------------------------------------------
 SEGenericScalar::SEGenericScalar(Logger* logger)
   : Loggable(logger)
 {
@@ -259,42 +333,50 @@ SEGenericScalar::SEGenericScalar(Logger* logger)
   m_UnitScalar = nullptr;
 }
 
+//-------------------------------------------------------------------------------
 bool SEGenericScalar::HasScalar()
 {
   return m_Scalar != nullptr;
 }
+//-------------------------------------------------------------------------------
 void SEGenericScalar::SetScalar(const SEScalar& s)
 {
   m_Scalar = &s;
   m_UnitScalar = dynamic_cast<const SEUnitScalar*>(m_Scalar);
 }
 
+//-------------------------------------------------------------------------------
 bool SEGenericScalar::IsValid()
 {
   return m_UnitScalar == nullptr ? m_Scalar->IsValid() : m_UnitScalar->IsValid();
 }
 
+//-------------------------------------------------------------------------------
 bool SEGenericScalar::IsInfinity()
 {
   return m_Scalar->IsInfinity();
 }
 
+//-------------------------------------------------------------------------------
 bool SEGenericScalar::HasUnit()
 {
   return m_UnitScalar != nullptr;
 }
+//-------------------------------------------------------------------------------
 const CCompoundUnit* SEGenericScalar::GetUnit()
 {
   if (m_UnitScalar == nullptr)
     return nullptr;
   return m_UnitScalar->GetUnit();
 }
+//-------------------------------------------------------------------------------
 const CCompoundUnit* SEGenericScalar::GetCompoundUnit(const std::string& unit) const
 {
   if (m_UnitScalar == nullptr)
     return nullptr;
   return m_UnitScalar->GetCompoundUnit(unit);
 }
+//-------------------------------------------------------------------------------
 bool SEGenericScalar::IsValidUnit(const CCompoundUnit& unit) const
 {
   if (m_UnitScalar == nullptr)
@@ -302,10 +384,12 @@ bool SEGenericScalar::IsValidUnit(const CCompoundUnit& unit) const
   return false;
 }
 
+//-------------------------------------------------------------------------------
 double SEGenericScalar::GetValue() const
 {
   return m_Scalar->GetValue();
 }
+//-------------------------------------------------------------------------------
 double SEGenericScalar::GetValue(const CCompoundUnit& unit) const
 {
   if (m_UnitScalar == nullptr)
@@ -313,6 +397,7 @@ double SEGenericScalar::GetValue(const CCompoundUnit& unit) const
   return m_UnitScalar->GetValue(unit);
 }
 
+//-------------------------------------------------------------------------------
 double Convert(double d, const CCompoundUnit& from, const CCompoundUnit& to)
 {
   if (&from == &to)
@@ -320,6 +405,7 @@ double Convert(double d, const CCompoundUnit& from, const CCompoundUnit& to)
   // I am assuming we are not going to do Quantity A to Quantity B Conversions
   return CUnitConversionEngine::GetEngine().QuickConvertValue(d, from, to);
 }
+//-------------------------------------------------------------------------------
 bool CompatibleUnits(const CCompoundUnit& from, const CCompoundUnit& to)
 {
   if (from == to)
@@ -334,4 +420,89 @@ bool CompatibleUnits(const CCompoundUnit& from, const CCompoundUnit& to)
     return true;
   return false;
 }
+//-------------------------------------------------------------------------------
+bool SEScalar::operator<(const SEScalar& rhs) const
+{
+  if (m_isnan || rhs.m_isnan)
+    return false;
+  return m_value < rhs.m_value;
 }
+//-------------------------------------------------------------------------------
+bool SEScalar::operator<=(const SEScalar& rhs) const
+{
+  if (m_isnan || rhs.m_isnan)
+    return false;
+  return m_value <= rhs.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalar::operator>(const SEScalar& rhs) const
+{
+  if (m_isnan || rhs.m_isnan)
+    return false;
+  return m_value > rhs.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalar::operator>=(const SEScalar& rhs) const
+{
+  if (m_isnan || rhs.m_isnan)
+    return false;
+  return m_value >= rhs.m_value;
+}
+//-------------------------------------------------------------------------------
+SEScalar SEScalar::operator+(const SEScalar& rhs) const
+{
+
+  SEScalar result;
+  result.Set(*this);
+  result.Increment(rhs);
+  return result;
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEScalar::operator+=(const SEScalar& rhs)
+{
+  Increment(rhs);
+  return *this;
+}
+//-------------------------------------------------------------------------------
+SEScalar SEScalar::operator-(const SEScalar& rhs) const
+{
+  SEScalar result;
+  result.Set(*this);
+  result.Decrement(rhs);
+  return result;
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEScalar::operator-=(const SEScalar& rhs)
+{
+  Decrement(rhs);
+  return *this;
+}
+//-------------------------------------------------------------------------------
+SEScalar SEScalar::operator/(const SEScalar& rhs) const
+{
+  SEScalar result;
+  result.Set(*this);
+  result.Divide(rhs);
+  return result;
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEScalar::operator/=(const SEScalar& rhs)
+{
+  Divide(rhs);
+  return *this;
+}
+//-------------------------------------------------------------------------------
+SEScalar SEScalar::operator*(const SEScalar& rhs) const
+{
+  SEScalar result;
+  result.Set(*this);
+  result.Multiply(rhs);
+  return result;
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEScalar::operator*=(const SEScalar& rhs)
+{
+  Multiply(rhs);
+  return *this;
+}
+} // namespace Biogears

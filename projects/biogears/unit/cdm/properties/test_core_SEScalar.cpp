@@ -88,3 +88,247 @@ TEST_F(TEST_FIXTURE_NAME, Validity)
   EXPECT_EQ(5.0, scalar1.GetValue());
   EXPECT_TRUE(scalar1.IsValid());
 }
+
+TEST_F(TEST_FIXTURE_NAME, Copy)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+
+  scalar_1.SetValue (3.0);
+  scalar_2.SetValue (2.0);
+  
+  EXPECT_EQ(scalar_1 , 3.0);
+  EXPECT_EQ(scalar_2, 2.0);
+
+  scalar_1.Copy(scalar_2);
+
+  EXPECT_EQ(scalar_1, scalar_2);
+  EXPECT_EQ(scalar_1, 2.0);
+}
+
+
+TEST_F(TEST_FIXTURE_NAME, IsPositive)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+
+  scalar_1.SetValue(3.0);
+  scalar_2.SetValue(-2.0);
+
+  EXPECT_TRUE(scalar_1.IsPositive());
+  EXPECT_FALSE(scalar_2.IsPositive());
+  EXPECT_FALSE(scalar_3.IsPositive());
+}
+
+TEST_F(TEST_FIXTURE_NAME, IsNegative)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+
+  scalar_1.SetValue(3.0);
+  scalar_2.SetValue(-2.0);
+
+  EXPECT_TRUE(scalar_1.IsPositive());
+  EXPECT_FALSE(scalar_2.IsPositive());
+  EXPECT_FALSE(scalar_3.IsPositive());
+}
+
+TEST_F(TEST_FIXTURE_NAME, IsZero)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+
+  scalar_1.SetValue(3.0);
+  scalar_2.SetValue(0);
+
+  EXPECT_FALSE(scalar_1.IsZero());
+  EXPECT_TRUE(scalar_2.IsZero());
+  EXPECT_FALSE(scalar_3.IsZero());
+}
+
+
+TEST_F(TEST_FIXTURE_NAME, ReadOnly)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+
+  scalar_1.SetValue(3.0);
+  scalar_2.SetValue(0);
+  scalar_1.SetReadOnly(true);
+  scalar_2.SetReadOnly(false);
+
+  EXPECT_TRUE(scalar_1.IsReadOnly());
+  EXPECT_FALSE(scalar_2.IsReadOnly());
+
+#if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
+  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.SetValue(5.5)));
+  EXPECT_FALSE(scalar_2.SetValue(5.5));
+
+  scalar_2.SetValue(45.);
+  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.Copy(scalar_2)));
+  EXPECT_NE(scalar_1, scalar_2);
+  EXPECT_TRUE(scalar_2.Copy(scalar_1));
+  EXPECT_EQ(scalar_1, scalar_2);
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_TRUE(scalar_2.IsValid());
+
+  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.Invalidate()));
+  EXPECT_FALSE(scalar_2.Invalidate());
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_FALSE(scalar_2.IsValid());
+#else
+  EXPECT_FALSE(scalar_1.Set(scalar_2));
+  EXPECT_TRUE(scalar_2.Set(scalar_1));
+
+  scalar_2.SetValue(45.);
+  scalar_1.Copy(scalar_2);
+  EXPECT_NE(scalar_1, scalar_2);
+
+  scalar_2.Copy(scalar_1);
+  EXPECT_EQ(scalar_1, scalar_2);
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_TRUE(scalar_2.IsValid());
+
+  scalar_1.Invalidate();
+  scalar_2.Invalidate();
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_FALSE(scalar_2.IsValid());
+#endif
+}
+
+TEST_F(TEST_FIXTURE_NAME, Incrament)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+
+  scalar_1.SetValue(3.0);
+  scalar_2.SetValue(0.);
+  scalar_3.SetValue(10.);
+  
+  scalar_2.Increment(scalar_1);
+  EXPECT_EQ(scalar_2, 3.0);
+  scalar_2.IncrementValue(scalar_3.GetValue());
+  EXPECT_EQ(scalar_2, 13.0);
+  scalar_2+=scalar_2;
+  EXPECT_EQ(scalar_2, 26.0);
+
+  EXPECT_EQ(scalar_1+scalar_2+scalar_3, 13.0 + 26.0);
+  EXPECT_EQ(scalar_1+10.0+scalar_2, 13.0 + 26.0);
+
+  EXPECT_EQ(scalar_1, 3.0);
+  EXPECT_EQ(scalar_2, 26.0);
+  EXPECT_EQ(scalar_3, 10.0);
+
+}
+TEST_F(TEST_FIXTURE_NAME, Decrement)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+
+  scalar_1.SetValue(3.0);
+  scalar_2.SetValue(0.);
+  scalar_3.SetValue(10.);
+
+  scalar_2.Decrement(scalar_1);
+  EXPECT_EQ(scalar_2, -3.0);
+  scalar_2.DecrementValue(scalar_3.GetValue());
+  EXPECT_EQ(scalar_2, -13.0);
+  scalar_2+=scalar_2;
+  EXPECT_EQ(scalar_2, -26);
+  scalar_2 -= scalar_2;
+  EXPECT_EQ(scalar_2, 0);
+
+
+  EXPECT_EQ(scalar_1 - scalar_2 - scalar_3, 3 -0 - 10 );
+  EXPECT_EQ(scalar_1 - 10.0 - scalar_2, 3 - 10 - -0);
+
+  EXPECT_EQ(scalar_1, 3.0);
+  EXPECT_EQ(scalar_2, 0);
+  EXPECT_EQ(scalar_3, 10.0);
+}
+
+TEST_F(TEST_FIXTURE_NAME, Multiply)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+  biogears::SEScalar scalar_4;
+
+  scalar_1.SetValue(0.0);
+  scalar_2.SetValue(1.0);
+  scalar_3.SetValue(2.0);
+  scalar_4.SetValue(100.0);
+
+  scalar_4.Multiply(scalar_2);
+  EXPECT_EQ( 0.0, scalar_4*scalar_1);
+  EXPECT_EQ(scalar_4, 100.0);
+
+  scalar_2.Multiply(scalar_3);
+  EXPECT_EQ(scalar_2, scalar_3);
+  scalar_2 *= scalar_3;
+  scalar_2 *= scalar_3;
+  EXPECT_EQ(scalar_2, 8.0);
+
+  EXPECT_EQ(1000.0, scalar_4 * 10);
+  EXPECT_EQ(1000.0, 10 * scalar_4);
+}
+
+TEST_F(TEST_FIXTURE_NAME, Divide)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+  biogears::SEScalar scalar_4;
+
+  scalar_1.SetValue(0.0);
+  scalar_2.SetValue(1.0);
+  scalar_3.SetValue(2.0);
+  scalar_4.SetValue(100.0);
+
+  scalar_4.Divide(scalar_3);
+  EXPECT_EQ(50.0, scalar_4/scalar_2);
+  EXPECT_EQ(scalar_4, 50.0);
+
+  scalar_2.Divide(scalar_3);
+  EXPECT_EQ(0.5, scalar_2);
+  scalar_2 /= scalar_3;
+  scalar_2 /= scalar_3;
+  EXPECT_NEAR(scalar_2.GetValue(), 0.125, 0.0001);
+
+  EXPECT_EQ(5.0, scalar_4 / 10);
+  EXPECT_EQ(0.2, 10 / scalar_4);
+  EXPECT_TRUE(!std::isnormal((scalar_4 / scalar_1).GetValue()));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Boolean_Operators)
+{
+  biogears::SEScalar scalar_1{ 0.0 };
+  biogears::SEScalar scalar_2{ 1.0 };
+  biogears::SEScalar scalar_3{ 2.0 };
+  biogears::SEScalar scalar_4{ 4.0 };
+  EXPECT_TRUE(scalar_1 == scalar_1);
+  EXPECT_TRUE(scalar_1 != scalar_2);
+  EXPECT_TRUE(scalar_1 < scalar_2);
+  EXPECT_TRUE(scalar_2 <= scalar_3);
+  EXPECT_TRUE(scalar_4 > scalar_3);
+  EXPECT_TRUE(scalar_3 >= scalar_2);
+}
+
+TEST_F(TEST_FIXTURE_NAME, Nan)
+{
+  biogears::SEScalar scalar_1;
+
+  EXPECT_TRUE( std::isnan(scalar_1.dNaN()) );
+  EXPECT_NE(scalar_1.NaN, scalar_1.NaN);
+}
+

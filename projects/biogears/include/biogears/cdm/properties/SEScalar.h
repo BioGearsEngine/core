@@ -39,6 +39,8 @@ protected:
 
 public:
   SEScalar();
+  SEScalar(double);
+
   virtual ~SEScalar();
 
   virtual void Clear();
@@ -83,8 +85,12 @@ public:
 
   double Increment(const SEScalar& s);
   double IncrementValue(double d);
-
-  void Average(int cnt);
+  double Decrement(const SEScalar& s);
+  double DecrementValue(double d);
+  double Multiply(const SEScalar& s);
+  double MultiplyValue(double d);
+  double Divide(const SEScalar& s);
+  double DivideValue(double d);
 
   bool Equals(const SEScalar& to) const;
 
@@ -96,22 +102,50 @@ public:
   static bool IsValue(double target, double value);
 
   static const std::string unitless;
-};
 
-inline std::ostream& operator<<(std::ostream& out, const SEScalar* s)
-{
+  bool operator<(const SEScalar& rhs) const;
+  bool operator<=(const SEScalar& rhs) const;
+  bool operator>(const SEScalar& rhs) const;
+  bool operator>=(const SEScalar& rhs) const;
+
+  bool operator==(const SEScalar& rhs) const { return Equals(rhs); }
+  bool operator!=(const SEScalar& rhs) const { return !Equals(rhs); }
+
+  SEScalar operator+(const SEScalar& rhs) const;
+  SEScalar& operator+=(const SEScalar& rhs);
+  SEScalar operator-(const SEScalar& rhs) const;
+  SEScalar& operator-=(const SEScalar& rhs);
+  SEScalar operator/(const SEScalar& rhs) const;
+  SEScalar& operator/=(const SEScalar& rhs);
+  SEScalar operator*(const SEScalar& rhs) const;
+  SEScalar& operator*=(const SEScalar& rhs);
+};
+//-------------------------------------------------------------------------------
+inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Increment(rhs); };
+inline SEScalar operator-(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Decrement(rhs); };
+inline SEScalar operator/(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Divide(rhs); };
+inline SEScalar operator*(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Multiply(rhs); };
+inline bool operator<(double lhs, const SEScalar& rhs)  { return SEScalar{ lhs } < rhs; };
+inline bool operator<=(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } <= rhs; };
+inline bool operator>(double lhs, const SEScalar& rhs)  { return SEScalar{ lhs } > rhs; };
+inline bool operator>=(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } >= rhs; };
+inline bool operator==(double lhs, const SEScalar& rhs){  return rhs == lhs;}
+inline bool operator!=(double lhs, const SEScalar& rhs){  return rhs != lhs;}
+//-------------------------------------------------------------------------------
+inline std::ostream& operator<<(std::ostream& out, const SEScalar* s){
   if (s == nullptr)
     out << SEScalar::NaN << std::flush;
   else
     (*s).ToString(out);
   return out;
 }
+//-------------------------------------------------------------------------------
 inline std::ostream& operator<<(std::ostream& out, const SEScalar& s)
 {
   s.ToString(out);
   return out;
 }
-
+//-------------------------------------------------------------------------------
 /**
  * @brief - An interface to be used for gaining access to a scalar with any unit type
  * @details - This interface allows you to have a pointer to a scalar with units
@@ -140,6 +174,8 @@ public:
 protected:
   virtual const CCompoundUnit* GetCompoundUnit(const std::string& unit) const = 0;
 };
+
+//-------------------------------------------------------------------------------
 
 template <typename Unit>
 class SEScalarQuantity : public SEUnitScalar {
@@ -194,7 +230,7 @@ public:
 protected:
   const Unit* m_unit;
 };
-
+//-------------------------------------------------------------------------------
 // I created this class for use in connecting DataRequests to SEScalars for the PhysiologyEngineTrack class
 /**
  * @brief If you want to querry what a scalar is and don't know what scalar type you have...
@@ -224,7 +260,7 @@ protected:
   const SEScalar* m_Scalar;
   const SEUnitScalar* m_UnitScalar;
 };
-
+//-------------------------------------------------------------------------------
 BIOGEARS_API double Convert(double d, const CCompoundUnit& from, const CCompoundUnit& to);
 BIOGEARS_API bool CompatibleUnits(const CCompoundUnit& u1, const CCompoundUnit& u2);
 
@@ -235,6 +271,7 @@ inline void Override(const SEScalar& from, SEScalar& to)
   to.Set(from);
   to.SetReadOnly(b);
 }
+//-------------------------------------------------------------------------------
 template <class Unit>
 inline void Override(const SEScalarQuantity<Unit>& from, SEScalarQuantity<Unit>& to)
 {
@@ -243,7 +280,7 @@ inline void Override(const SEScalarQuantity<Unit>& from, SEScalarQuantity<Unit>&
   to.Set(from);
   to.SetReadOnly(b);
 }
-
+//-------------------------------------------------------------------------------
 inline void ValueOverride(SEScalar& s, double value)
 {
   bool b = s.IsReadOnly();
@@ -251,6 +288,7 @@ inline void ValueOverride(SEScalar& s, double value)
   s.SetValue(value);
   s.SetReadOnly(b);
 }
+//-------------------------------------------------------------------------------
 template <class Unit>
 inline void ValueOverride(SEScalarQuantity<Unit>& s, double value, const Unit& unit)
 {
@@ -259,7 +297,7 @@ inline void ValueOverride(SEScalarQuantity<Unit>& s, double value, const Unit& u
   s.SetValue(value, unit);
   s.SetReadOnly(b);
 }
-
+//-------------------------------------------------------------------------------
 inline void IncrementOverride(SEScalar& s, double value)
 {
   bool b = s.IsReadOnly();
@@ -267,6 +305,7 @@ inline void IncrementOverride(SEScalar& s, double value)
   s.IncrementValue(value);
   s.SetReadOnly(b);
 }
+//-------------------------------------------------------------------------------
 template <class Unit>
 inline void IncrementOverride(SEScalarQuantity<Unit>& s, double value, const Unit& unit)
 {
@@ -275,5 +314,6 @@ inline void IncrementOverride(SEScalarQuantity<Unit>& s, double value, const Uni
   s.IncrementValue(value, unit);
   s.SetReadOnly(b);
 }
+//-------------------------------------------------------------------------------
 }
 #include <biogears/cdm/properties/SEScalar.inl>
