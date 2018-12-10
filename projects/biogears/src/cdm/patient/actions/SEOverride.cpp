@@ -1483,7 +1483,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tTotal Bilirubin: ";
     HasTotalBilirubinOverride() ? str << *m_TotalBilirubinOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tTotal Bilirubin has a lower bound of X mg/dL and an upper bound of Y mg/dL.";
+      str << "\n\tTotal Bilirubin has a lower bound of 0 mg/dL and an upper bound of 500 mg/dL.";
     }
     str << std::flush;
   }
@@ -1491,7 +1491,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tCalcium Concentration: ";
     HasCalciumConcentrationOverride() ? str << *m_CalciumConcentrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tCalcium Concentration has a lower bound of X and an upper bound of Y.";
+      str << "\n\tCalcium Concentration has a lower bound of 0 mg/dL and an upper bound of 500 mg/dL.";
     }
     str << std::flush;
   }
@@ -1499,7 +1499,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tGlucose Concentration: ";
     HasGlucoseConcentrationOverride() ? str << *m_GlucoseConcentrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tGlucose Concentration has a lower bound of X and an upper bound of Y.";
+      str << "\n\tGlucose Concentration has a lower bound of 0 mg/dL and an upper bound of 1000 mg/dL.";
     }
     str << std::flush;
   }
@@ -1507,7 +1507,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tLactate Concentration: ";
     HasLactateConcentrationOverride() ? str << *m_LactateConcentrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tLactate Concentration has a lower bound of X and an upper bound of Y.";
+      str << "\n\tLactate Concentration has a lower bound of 0 mg/dL (0 mmol/L) and an upper bound of 1000 mg/dL (111 mmol/L).";
     }
     str << std::flush;
   }
@@ -1515,7 +1515,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tPotassium Concentration: ";
     HasPotassiumConcentrationOverride() ? str << *m_PotassiumConcentrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tPotassium Concentration has a lower bound of X and an upper bound of Y.";
+      str << "\n\tPotassium Concentration has a lower bound of 0 mg/dL and an upper bound of 500 mg/dL.";
     }
     str << std::flush;
   }
@@ -1523,7 +1523,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tSodium Concentration: ";
     HasSodiumConcentrationOverride() ? str << *m_SodiumConcentrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tSodium Concentration has a lower bound of X and an upper bound of Y.";
+      str << "\n\tSodium Concentration has a lower bound of 0 mg/dL and an upper bound of 500 mg/dL.";
     }
     str << std::flush;
   }
