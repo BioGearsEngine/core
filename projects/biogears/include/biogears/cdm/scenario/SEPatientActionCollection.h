@@ -185,8 +185,6 @@ public:
   bool HasOverride() const;
   SEOverride* GetOverride();
   void RemoveOverride();
-  bool IsOverrideActionOn() const;
-  bool IsOverrideActionConformant() const;
 
 protected:
   bool IsValid(const SEPatientAction& action);

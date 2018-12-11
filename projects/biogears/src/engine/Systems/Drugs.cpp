@@ -590,7 +590,7 @@ void Drugs::CalculateDrugEffects()
       }
     }
 
-    if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && !m_data.GetActions().GetPatientActions().IsOverrideActionConformant())
+    if (m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionOn() && !m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionConformant())
     {
       if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
         {

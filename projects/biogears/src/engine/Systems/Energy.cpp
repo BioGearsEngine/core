@@ -272,7 +272,7 @@ void Energy::Process()
 //--------------------------------------------------------------------------------------------------
 void Energy::PostProcess()
 {
-  if ((m_data.GetActions().GetPatientActions().IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+  if ((m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasEnergyOverride()) {
       ProcessOverride();
     }
@@ -305,7 +305,7 @@ void Energy::CalculateVitalSigns()
     m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, true, m_data.GetSimulationTime());
 
     /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
-    if (coreTemperature_degC < coreTempIrreversible_degC && m_PatientActions->IsOverrideActionConformant()) {
+    if (coreTemperature_degC < coreTempIrreversible_degC && m_PatientActions->GetOverride()->IsOverrideActionConformant()) {
       ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia and is in an irreversible state.";
       Warning(ss);
       m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
@@ -346,7 +346,7 @@ void Energy::CalculateVitalSigns()
       if (bloodPH < lowPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
-        if (m_PatientActions->IsOverrideActionConformant())
+        if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0) {
         /// \event The patient has exited the state state of metabolic acidosis
@@ -362,7 +362,7 @@ void Energy::CalculateVitalSigns()
       if (bloodPH > highPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is above 8.5, patient is experiencing extreme metabolic Alkalosis and is in an irreversible state.";
         Warning(ss);
-        if (m_PatientActions->IsOverrideActionConformant())
+        if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
 
@@ -716,67 +716,93 @@ void Energy::OverrideControlLoop()
     currentChlorideSweatOverride = override->GetChlorideLostToSweatOverride(MassUnit::g);
   }
 
-  if ((currentAcheivedExerciseOverride < minAcheivedExerciseOverride || currentAcheivedExerciseOverride > maxAcheivedExerciseOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentAcheivedExerciseOverride < minAcheivedExerciseOverride 
+    || currentAcheivedExerciseOverride > maxAcheivedExerciseOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Achieved Exercise Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentCoreTempOverride < minCoreTempOverride || currentCoreTempOverride > maxCoreTempOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentCoreTempOverride < minCoreTempOverride 
+    || currentCoreTempOverride > maxCoreTempOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentCreatinineOverride < minCreatinineOverride || currentCreatinineOverride > maxCreatinineOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentCreatinineOverride < minCreatinineOverride 
+    || currentCreatinineOverride > maxCreatinineOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Creatinine Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentExerciseMAPOverride < minExerciseMAPOverride || currentExerciseMAPOverride > maxExerciseMAPOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentExerciseMAPOverride < minExerciseMAPOverride 
+    || currentExerciseMAPOverride > maxExerciseMAPOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Exercise Mean Arterial Pressure Delta Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentFatigueOverride < minFatigueOverride || currentFatigueOverride > maxFatigueOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentFatigueOverride < minFatigueOverride 
+    || currentFatigueOverride > maxFatigueOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Fatigue Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentLactateOverride < minLactateOverride || currentLactateOverride > maxLactateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentLactateOverride < minLactateOverride 
+    || currentLactateOverride > maxLactateOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Lactate Production Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentSkinTempOverride < minSkinTempOverride || currentSkinTempOverride > maxSkinTempOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentSkinTempOverride < minSkinTempOverride 
+    || currentSkinTempOverride > maxSkinTempOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentSweatRateOverride < minSweatRateOverride || currentSweatRateOverride > maxSweatRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentSweatRateOverride < minSweatRateOverride 
+    || currentSweatRateOverride > maxSweatRateOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Sweat Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentTotalMetabolicOverride < minTotalMetabolicOverride || currentTotalMetabolicOverride > maxTotalMetabolicOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTotalMetabolicOverride < minTotalMetabolicOverride 
+    || currentTotalMetabolicOverride > maxTotalMetabolicOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Total Metabolic Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentTotalWorkOverride < minTotalWorkOverride || currentTotalWorkOverride > maxTotalWorkOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTotalWorkOverride < minTotalWorkOverride 
+    || currentTotalWorkOverride > maxTotalWorkOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Total Work Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentSodiumSweatOverride < minSodiumSweatOverride || currentSodiumSweatOverride > maxSodiumSweatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentSodiumSweatOverride < minSodiumSweatOverride 
+    || currentSodiumSweatOverride > maxSodiumSweatOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Sodium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentPotassiumSweatOverride < minPotassiumSweatOverride || currentPotassiumSweatOverride > maxPotassiumSweatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentPotassiumSweatOverride < minPotassiumSweatOverride 
+    || currentPotassiumSweatOverride > maxPotassiumSweatOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Potassium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
-  if ((currentChlorideSweatOverride < minChlorideSweatOverride || currentChlorideSweatOverride > maxChlorideSweatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentChlorideSweatOverride < minChlorideSweatOverride 
+    || currentChlorideSweatOverride > maxChlorideSweatOverride) 
+    && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Chloride Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);

@@ -541,7 +541,7 @@ void Respiratory::Process()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::PostProcess()
 {
-  if (m_data.GetActions().GetPatientActions().IsOverrideActionOn() && m_data.GetState() == EngineState::Active) {
+  if (m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionOn() && m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasRespiratoryOverride()) {
       ProcessOverride();
     }
@@ -1810,7 +1810,7 @@ void Respiratory::CalculateVitalSigns()
         ss << "Arterial blood pH is  " << m_LastCardiacCycleBloodPH << ". This is below 6.5, Patient is experiencing extreme respiratory Acidosis and is in an irreversible state.";
         Warning(ss);
         /// \irreversible Extreme respiratory Acidosis: blood pH below 6.5.
-        if (m_PatientActions->IsOverrideActionConformant())
+        if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
     } else if (m_LastCardiacCycleBloodPH >= 7.38 && m_ArterialCO2PartialPressure_mmHg < 44.0) {
@@ -1830,7 +1830,7 @@ void Respiratory::CalculateVitalSigns()
         ss << "Arterial blood pH is  " << m_LastCardiacCycleBloodPH << ". This is above 8.5, Patient is experiencing extreme respiratory Alkalosis and is in an irreversible state.";
         Warning(ss);
         /// \irreversible Extreme respiratory Alkalosis: blood pH above 8.5.
-        if (m_PatientActions->IsOverrideActionConformant())
+        if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
       }
     } else if (m_LastCardiacCycleBloodPH <= 7.43 && m_ArterialCO2PartialPressure_mmHg > 39.0) {

@@ -175,6 +175,8 @@ public:
   double GetTidalVolumeOverride(const VolumeUnit& unit) const;
   bool HasRespiratoryOverride() const;
 
+  bool SEOverride::IsOverrideActionOn() const;
+  bool SEOverride::IsOverrideActionConformant() const;
   virtual void ToString(std::ostream& str) const;
 
 protected:

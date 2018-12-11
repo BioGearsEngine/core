@@ -119,10 +119,13 @@ bool SEOverride::IsValid() const
 
 bool SEOverride::IsActive() const
 {
-  if (!HasOverrideSwitch() || !HasOverrideConformance()) {
+  if (!HasOverrideSwitch() 
+    || !HasOverrideConformance()) {
     return false;
   }
-  return (GetOverrideSwitch() == CDM::enumOnOff::On && (GetOverrideConformance() == CDM::enumOnOff::On || GetOverrideConformance() == CDM::enumOnOff::Off));
+  return (GetOverrideSwitch() == CDM::enumOnOff::On 
+    && (GetOverrideConformance() == CDM::enumOnOff::On 
+    || GetOverrideConformance() == CDM::enumOnOff::Off));
 }
 
 bool SEOverride::Load(const CDM::OverrideData& in)
@@ -1087,6 +1090,17 @@ bool SEOverride::HasRespiratoryOverride() const
 }
 
 
+bool SEOverride::IsOverrideActionOn() const
+{
+  return (HasOverrideSwitch() 
+    && GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
+}
+bool SEOverride::IsOverrideActionConformant() const
+{
+  return (!HasOverrideConformance()) 
+    || (GetOverrideConformance() == CDM::enumOnOff::On) ? true : false;
+}
+
 void SEOverride::ToString(std::ostream& str) const
 {
   str << "Patient Action : Override Parameter";
@@ -1098,7 +1112,8 @@ void SEOverride::ToString(std::ostream& str) const
   HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
   str << "\n\tConformant: ";
   HasOverrideConformance() ? str << GetOverrideConformance() : str << "Not Set";
-  if (GetOverrideConformance() == CDM::enumOnOff::Off && GetOverrideSwitch() == CDM::enumOnOff::On) {
+  if (GetOverrideConformance() == CDM::enumOnOff::Off 
+    && GetOverrideSwitch() == CDM::enumOnOff::On) {
     str << ("\n\tOverride has turned conformance off. Outputs no longer resemble validated parameters.");
   }
   if (HasArterialPHOverride()) {
