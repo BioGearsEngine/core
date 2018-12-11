@@ -11,34 +11,33 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API MassUnit : public CCompoundUnit {
 public:
-  MassUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
-  virtual ~MassUnit() = default;
-
-  static bool IsValidUnit(const std::string& unit);
-  static const MassUnit& GetCompoundUnit(const std::string& unit);
-
   static const MassUnit ug;
   static const MassUnit mg;
   static const MassUnit g;
   static const MassUnit kg;
   static const MassUnit lb;
-};
 
- 
-class BIOGEARS_API SEScalarMass : public SEScalarQuantity<MassUnit> {
-public:
-  SEScalarMass() = default;
-  virtual ~SEScalarMass() = default;
+  MassUnit(const std::string& u)
+    : CCompoundUnit(u)
+  {  }
+  virtual ~MassUnit() = default;
 
-  CDM::ScalarMassData* Unload() const override;
-};
+  static bool IsValidUnit(const std::string& unit);
+  static const MassUnit& GetCompoundUnit(const std::string& unit);
+
+  };
+
+  class BIOGEARS_API SEScalarMass : public SEScalarQuantity<MassUnit> {
+  public:
+    SEScalarMass() = default;
+    virtual ~SEScalarMass() = default;
+
+    CDM::ScalarMassData* Unload() const override;
+  };
 }

@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarQuantity.h>
 
 namespace biogears {
 class BIOGEARS_API AmountPerVolumeUnit : public CCompoundUnit {

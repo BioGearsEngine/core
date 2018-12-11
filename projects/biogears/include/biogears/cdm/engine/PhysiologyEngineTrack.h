@@ -17,9 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEGenericScalar.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 #include <biogears/cdm/utils/DataTrack.h>
-
 namespace biogears {
 class SESystem;
 class SEPatient;
@@ -44,6 +44,7 @@ enum class CompartmentUpdate { None,
   Molarity,
   PartialPressure,
   Saturation };
+
 class SEDataRequestScalar : public SEGenericScalar {
 public:
   SEDataRequestScalar(Logger* logger)

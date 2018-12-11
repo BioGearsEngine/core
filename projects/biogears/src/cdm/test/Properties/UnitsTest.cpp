@@ -61,13 +61,8 @@ void CommonDataModelTest::UnitsTest(const std::string& sOutputDirectory)
 
     SEScalarAmount amount;
     amount.SetValue(1.0, AmountUnit::GetCompoundUnit("mol"));
+    amount.SetValue(5.0, AmountUnit::GetCompoundUnit("mol"));
 
-    ((SEUnitScalar&)amount).SetValue(5.0, AmountUnit::GetCompoundUnit("mol"));
-    try {
-      ((SEUnitScalar&)amount).SetValue(5.0, AmountPerVolumeUnit::GetCompoundUnit("mol/L"));
-    } catch (CommonDataModelException ex) {
-      // i am expexting this
-    }
 
     SEScalarAmountPerVolume amountPerVolume;
     amountPerVolume.SetValue(1.0, AmountPerVolumeUnit::GetCompoundUnit("mol/L"));

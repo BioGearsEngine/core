@@ -9,13 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#pragma once
 
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
-
-#define ZERO_APPROX 1e-10
 #define OPEN_RESISTANCE 1e100
+
 namespace biogears {
 template <CIRCUIT_TEMPLATE>
 SECircuit<CIRCUIT_TYPES>::SECircuit(const std::string& name, Logger* logger)

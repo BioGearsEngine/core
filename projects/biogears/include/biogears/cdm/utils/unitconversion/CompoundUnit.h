@@ -272,7 +272,9 @@ public:
   void ParseString(const std::string& unitString);
 
   std::string GetString() const { return m_strUnit; }
-
+  operator std::string() {
+    return GetString();
+  }
   // Auxiliary output routine
   std::ostream& PrintSelf(std::ostream& output) const;
 
@@ -311,9 +313,7 @@ inline CCompoundUnit pow(const CCompoundUnit& baseref, CCompoundUnitElement::Exp
 }
 
 inline CCompoundUnit sqrt(const CCompoundUnit& argref)
-{
-  return pow(argref, 0.5);
-}
+{ return pow(argref,0.5);  }
 
 inline std::ostream& operator<<(std::ostream& out, const CCompoundUnit& ccu)
 {
@@ -329,4 +329,7 @@ inline std::ostream& operator<<(std::ostream& out, const CCompoundUnit* ccu)
     out << ccu->GetString();
   return out;
 }
+//-------------------------------------------------------------------------------
+ double BIOGEARS_API Convert(double d, const CCompoundUnit& from, const CCompoundUnit& to);
+ bool BIOGEARS_API CompatibleUnits(const CCompoundUnit& from, const CCompoundUnit& to);
 }

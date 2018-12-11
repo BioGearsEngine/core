@@ -64,7 +64,6 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 //#define PROBE_BLOOD_GASES
 #define GAS_ONLY_PRODCOM
-#define ZERO_APPROX 1e-10
 
 namespace biogears {
 double Tissue::m_hepaticCO2Produced_mol;

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
+#include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>

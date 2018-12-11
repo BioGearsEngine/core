@@ -469,10 +469,11 @@ void Gastrointestinal::DigestNutrient()
 //--------------------------------------------------------------------------------------------------
 double Gastrointestinal::DigestNutrient(SEUnitScalar& totalAmt, SEUnitScalar& rate, bool mass, double duration_s)
 {
+  //TODO:sawhite:Overload DigestNutrients to a ScalarMass or a ScalarVolume in second paramter and drop third paramater
   double digestedAmt = 0;
   if (totalAmt.IsValid()) {
-    double t = totalAmt.GetValue(mass ? (const CCompoundUnit&)MassUnit::g : (const CCompoundUnit&)VolumeUnit::mL);
-    digestedAmt = rate.GetValue(mass ? (const CCompoundUnit&)MassPerTimeUnit::g_Per_s : (const CCompoundUnit&)VolumePerTimeUnit::mL_Per_s) * duration_s;
+    double t = totalAmt.GetValue((mass) ? MassUnit::g.GetString() : VolumeUnit::mL.GetString());
+    digestedAmt = rate.GetValue( (mass) ? MassPerTimeUnit::g_Per_s.GetString() : VolumePerTimeUnit::mL_Per_s.GetString()) * duration_s;
     if (t <= digestedAmt) {
       digestedAmt = t;
       if (m_DecrementNutrients) { // Decrement stomach contents only if we are running (not stabilizing)
@@ -482,7 +483,7 @@ double Gastrointestinal::DigestNutrient(SEUnitScalar& totalAmt, SEUnitScalar& ra
       }
     } else {
       if (m_DecrementNutrients) // Decrement stomach content only if we are running (not stabilizing)
-        totalAmt.IncrementValue(-digestedAmt, mass ? (const CCompoundUnit&)MassUnit::g : (const CCompoundUnit&)VolumeUnit::mL);
+        totalAmt.IncrementValue(-digestedAmt, (mass) ? MassUnit::g.GetString() : VolumeUnit::mL.GetString());
     }
   }
   return digestedAmt;

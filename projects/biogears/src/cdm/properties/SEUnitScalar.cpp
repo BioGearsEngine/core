@@ -10,30 +10,22 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#pragma once
-#include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/cdm/properties/SEUnitScalar.h>
 
 namespace biogears {
-class BIOGEARS_API ElectricChargeUnit : public CCompoundUnit {
-public:
-  ElectricChargeUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
-  virtual ~ElectricChargeUnit() = default;
-
-  static bool IsValidUnit(const std::string& unit);
-  static const ElectricChargeUnit& GetCompoundUnit(const std::string& unit);
-
-  static const ElectricChargeUnit C;
-};
-
-class BIOGEARS_API SEScalarElectricCharge : public SEScalarQuantity<ElectricChargeUnit> {
-public:
-  SEScalarElectricCharge() = default;
-  virtual ~SEScalarElectricCharge() = default;
-
-  CDM::ScalarElectricChargeData* Unload() const override;
-};
+//------------------------------------------------------------------------------
+SEUnitScalar::SEUnitScalar()
+  : SEScalar()
+{
+}
+//------------------------------------------------------------------------------
+SEUnitScalar::SEUnitScalar(const SEUnitScalar& obj)
+  : SEScalar(obj)
+{
+}
+//------------------------------------------------------------------------------
+SEUnitScalar::~SEUnitScalar()
+{
+  //TODO:Convert Unit PTR to a shared_ptr or a non reference
+}
 }

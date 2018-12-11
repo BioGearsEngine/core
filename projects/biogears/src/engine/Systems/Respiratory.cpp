@@ -647,7 +647,7 @@ void Respiratory::ProcessAerosolSubstances()
     } else
       subQ->GetMass().IncrementValue(-mouthDepositied_ug, MassUnit::ug);
     subQ->Balance(BalanceLiquidBy::Mass);
-    mouthTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(mouthDepositied_ug, MassUnit::ug);
+    mouthTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(mouthDepositied_ug, MassUnit::ug).GetValue(MassUnit::ug);
     mouthResistanceModifier += mouthTotalDepositied_ug * inflammationCoefficient;
     //Carina
     subQ = m_AerosolCarina->GetSubstanceQuantities()[i];
@@ -658,7 +658,7 @@ void Respiratory::ProcessAerosolSubstances()
     } else
       subQ->GetMass().IncrementValue(-carinaDepositied_ug, MassUnit::ug);
     subQ->Balance(BalanceLiquidBy::Mass);
-    carinaTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(carinaDepositied_ug, MassUnit::ug);
+    carinaTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(carinaDepositied_ug, MassUnit::ug).GetValue(MassUnit::ug);
     carinaResistanceModifier += carinaTotalDepositied_ug * inflammationCoefficient;
     //Left DeadSpace
     subQ = m_AerosolLeftDeadSpace->GetSubstanceQuantities()[i];
@@ -669,7 +669,7 @@ void Respiratory::ProcessAerosolSubstances()
     } else
       subQ->GetMass().IncrementValue(-leftDeadSpaceDepositied_ug, MassUnit::ug);
     subQ->Balance(BalanceLiquidBy::Mass);
-    leftDeadSpaceTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(leftDeadSpaceDepositied_ug, MassUnit::ug);
+    leftDeadSpaceTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(leftDeadSpaceDepositied_ug, MassUnit::ug).GetValue(MassUnit::ug);
     leftDeadSpaceResistanceModifier += leftDeadSpaceTotalDepositied_ug * inflammationCoefficient;
     //Left Alveoli
     subQ = m_AerosolLeftAlveoli->GetSubstanceQuantities()[i];
@@ -680,7 +680,7 @@ void Respiratory::ProcessAerosolSubstances()
     } else
       subQ->GetMass().IncrementValue(-leftAlveoliDepositied_ug, MassUnit::ug);
     subQ->Balance(BalanceLiquidBy::Mass);
-    leftAlveoliTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(leftAlveoliDepositied_ug, MassUnit::ug);
+    leftAlveoliTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(leftAlveoliDepositied_ug, MassUnit::ug).GetValue(MassUnit::ug);
     leftAlveoliResistanceModifier += leftAlveoliTotalDepositied_ug * inflammationCoefficient;
     //Right DeadSpace
     subQ = m_AerosolRightDeadSpace->GetSubstanceQuantities()[i];
@@ -691,7 +691,7 @@ void Respiratory::ProcessAerosolSubstances()
     } else
       subQ->GetMass().IncrementValue(-rightDeadSpaceDepositied_ug, MassUnit::ug);
     subQ->Balance(BalanceLiquidBy::Mass);
-    rightDeadSpaceTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(rightDeadSpaceDepositied_ug, MassUnit::ug);
+    rightDeadSpaceTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(rightDeadSpaceDepositied_ug, MassUnit::ug).GetValue(MassUnit::ug);
     rightDeadSpaceResistanceModifier += rightDeadSpaceTotalDepositied_ug * inflammationCoefficient;
     //Right Alveoli
     subQ = m_AerosolRightAlveoli->GetSubstanceQuantities()[i];
@@ -702,7 +702,7 @@ void Respiratory::ProcessAerosolSubstances()
     } else
       subQ->GetMass().IncrementValue(-rightAlveoliDepositied_ug, MassUnit::ug);
     subQ->Balance(BalanceLiquidBy::Mass);
-    rightAlveoliTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(rightAlveoliDepositied_ug, MassUnit::ug);
+    rightAlveoliTotalDepositied_ug = subQ->GetMassDeposited().IncrementValue(rightAlveoliDepositied_ug, MassUnit::ug).GetValue(MassUnit::ug);
     rightAlveoliResistanceModifier += rightAlveoliTotalDepositied_ug * inflammationCoefficient;
 
     // Apply the BronchioleModifier dilation effect

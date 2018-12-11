@@ -200,7 +200,7 @@ void PhysiologyEngineTrack::PullData()
       if (ds->HasUnit()) {
         if (dr->GetUnit() == nullptr)
           dr->SetUnit(*ds->GetUnit());
-        m_DataTrack.Probe(ds->Heading, ds->GetValue(*dr->GetUnit()));
+        m_DataTrack.Probe(ds->Heading, ds->GetValue( dr->GetUnit()->GetString() ));
       } else
         m_DataTrack.Probe(ds->Heading, ds->GetValue());
     } else if (ds->IsInfinity())

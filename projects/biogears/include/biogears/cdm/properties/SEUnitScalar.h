@@ -11,29 +11,25 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
+
+#include <biogears/cdm/properties/SEScalar.h>
 
 namespace biogears {
-class BIOGEARS_API ElectricChargeUnit : public CCompoundUnit {
+class BIOGEARS_API SEUnitScalar : public SEScalar {
 public:
-  ElectricChargeUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
-  virtual ~ElectricChargeUnit() = default;
+  SEUnitScalar();
+  SEUnitScalar(const SEUnitScalar&);
 
-  static bool IsValidUnit(const std::string& unit);
-  static const ElectricChargeUnit& GetCompoundUnit(const std::string& unit);
+  ~SEUnitScalar() override;
 
-  static const ElectricChargeUnit C;
-};
+  void ToString(std::ostream& str) const override = 0;
+  
+  virtual const CCompoundUnit* GetUnit() const = 0;
+  virtual const CCompoundUnit* GetCompoundUnit(const std::string& unit) const = 0;
+  virtual double GetValue (const std::string& unit) const = 0;
 
-class BIOGEARS_API SEScalarElectricCharge : public SEScalarQuantity<ElectricChargeUnit> {
-public:
-  SEScalarElectricCharge() = default;
-  virtual ~SEScalarElectricCharge() = default;
+  virtual SEUnitScalar& IncrementValue(double d, const std::string& unit) = 0;
+  virtual SEUnitScalar& DecrementValue(double d, const std::string& unit) = 0;
 
-  CDM::ScalarElectricChargeData* Unload() const override;
 };
 }

@@ -323,7 +323,7 @@ bool PhysiologyEngineDynamicStabilization::Merge()
 // This basically tests the current property with the target property and if they are in a window of acceptance
 bool PropertyConvergence::Test(double time_s)
 {
-  double v = !m_DataRequestScalar.HasUnit() ? m_DataRequestScalar.GetValue() : m_DataRequestScalar.GetValue(*m_DataRequestScalar.GetUnit());
+  double v = !m_DataRequestScalar.HasUnit() ? m_DataRequestScalar.GetValue() : m_DataRequestScalar.GetValue(m_DataRequestScalar.GetUnit()->GetString());
   if (std::isnan(m_Target)) {
     m_Target = v;
     return false; // Initially target will be NaN until it is pulled for the first time

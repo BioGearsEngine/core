@@ -17,9 +17,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
-//#define VERBOSE
-#define ZERO_APPROX 1e-10
-
 namespace biogears {
 template <typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit>
 SESubstanceTransporter<GraphType, FluxUnit, QuantityUnit, ExtensiveUnit, IntensiveUnit>::SESubstanceTransporter(const FluxUnit& fUnit,

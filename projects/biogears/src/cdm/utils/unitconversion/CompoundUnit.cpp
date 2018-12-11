@@ -681,4 +681,27 @@ std::ostream& CCompoundUnit::PrintSelf(std::ostream& output) const
   } // for each element
   return output;
 }
+//-------------------------------------------------------------------------------
+double Convert(double d, const CCompoundUnit& from, const CCompoundUnit& to)
+{
+  if (from == to)
+    return d;
+  // I am assuming we are not going to do Quantity A to Quantity B Conversions
+  return CUnitConversionEngine::GetEngine().QuickConvertValue(d, from, to);
+}
+//-------------------------------------------------------------------------------
+bool CompatibleUnits(const CCompoundUnit& from, const CCompoundUnit& to)
+{
+  if (from == to)
+    return true;
+  if (from.GetDimension() == to.GetDimension())
+    return true;
+  // See if the quantity types (Dimensions) are convertable
+  double fromExp;
+  CCompoundUnit mappingUnit;
+  CUnitConversionEngine& uce = CUnitConversionEngine::GetEngine();
+  if (uce.GetQuantityConversionParams(from.GetDimension(), to.GetDimension(), fromExp, mappingUnit))
+    return true;
+  return false;
+}
 }
