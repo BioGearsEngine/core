@@ -1028,18 +1028,18 @@ double SEOverride::GetUrineVolumeOverride(const VolumeUnit& unit) const
 
 bool SEOverride::HasRenalOverride() const
 {
-  return HasLeftAfferentArterioleResistanceOverride() ? true :
-  HasLeftGlomerularFiltrationRateOverride() ? true :
-  HasLeftReaborptionRateOverride() ? true :
-  HasRenalBloodFlowOverride() ? true :
-  HasRenalPlasmaFlowOverride() ? true :
-  HasRightAfferentArterioleResistanceOverride() ? true :
-  HasRightGlomerularFiltrationRateOverride() ? true :
-  HasRightReaborptionRateOverride() ? true :
-  HasUrinationRateOverride() ? true :
-  HasUrineProductionRateOverride() ? true :
-  HasUrineOsmolalityOverride() ? true :
-  HasUrineVolumeOverride() ? true : false;
+  return HasLeftAfferentArterioleResistanceOverride() ||
+  HasLeftGlomerularFiltrationRateOverride() ||
+  HasLeftReaborptionRateOverride() ||
+  HasRenalBloodFlowOverride() ||
+  HasRenalPlasmaFlowOverride() ||
+  HasRightAfferentArterioleResistanceOverride() ||
+  HasRightGlomerularFiltrationRateOverride() ||
+  HasRightReaborptionRateOverride() ||
+  HasUrinationRateOverride() ||
+  HasUrineProductionRateOverride() ||
+  HasUrineOsmolalityOverride() ||
+  HasUrineVolumeOverride();
 }
 
 
