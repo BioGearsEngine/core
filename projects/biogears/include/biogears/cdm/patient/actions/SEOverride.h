@@ -60,7 +60,6 @@ public:
   void SetOverrideConformance(CDM::enumOnOff::value valid);
   bool HasOverrideConformance() const;
   void InvalidateOverrideConformance();
-  bool IsOverrideConformant();
 
   //Blood Chemistry
   bool HasArterialPHOverride() const;
@@ -175,8 +174,6 @@ public:
   double GetTidalVolumeOverride(const VolumeUnit& unit) const;
   bool HasRespiratoryOverride() const;
 
-  bool SEOverride::IsOverrideActionOn() const;
-  bool SEOverride::IsOverrideActionConformant() const;
   virtual void ToString(std::ostream& str) const;
 
 protected:

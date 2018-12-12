@@ -506,7 +506,8 @@ void Renal::Process()
 void Renal::PostProcess()
 {
   //Circuit PostProcessing is done on the entire circulatory circuit elsewhere
-  if (m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionOn() && m_data.GetState() == EngineState::Active) {
+  if (m_data.GetActions().GetPatientActions().HasOverride()
+      && m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasRenalOverride()) {
       ProcessOverride();
     }

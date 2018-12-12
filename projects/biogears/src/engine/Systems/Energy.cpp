@@ -272,7 +272,8 @@ void Energy::Process()
 //--------------------------------------------------------------------------------------------------
 void Energy::PostProcess()
 {
-  if ((m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionOn()) && m_data.GetState() == EngineState::Active) {
+  if (m_data.GetActions().GetPatientActions().HasOverride()
+      && m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasEnergyOverride()) {
       ProcessOverride();
     }
@@ -305,10 +306,16 @@ void Energy::CalculateVitalSigns()
     m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, true, m_data.GetSimulationTime());
 
     /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
-    if (coreTemperature_degC < coreTempIrreversible_degC && m_PatientActions->GetOverride()->IsOverrideActionConformant()) {
-      ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia and is in an irreversible state.";
+    if (coreTemperature_degC < coreTempIrreversible_degC) {
+      ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia.";
       Warning(ss);
-      m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      if (!m_PatientActions->HasOverride()) {
+        m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      } else {
+        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        }
+      }
     }
 
   } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hypothermia) && coreTemperature_degC > 35.2) {
@@ -346,8 +353,13 @@ void Energy::CalculateVitalSigns()
       if (bloodPH < lowPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
-        if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
+        if (!m_PatientActions->HasOverride()) {
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        } else {
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          }
+        }
       } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0) {
         /// \event The patient has exited the state state of metabolic acidosis
         m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAcidosis, false, m_data.GetSimulationTime());
@@ -362,8 +374,13 @@ void Energy::CalculateVitalSigns()
       if (bloodPH > highPh) {
         ss << " Arterial blood PH is " << bloodPH << ". This is above 8.5, patient is experiencing extreme metabolic Alkalosis and is in an irreversible state.";
         Warning(ss);
-        if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
+        if (!m_PatientActions->HasOverride()) {
           m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        } else {
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          }
+        }
       }
 
       else if (bloodPH < 7.42 && bloodBicarbonate_mmol_Per_L < 25.0) {

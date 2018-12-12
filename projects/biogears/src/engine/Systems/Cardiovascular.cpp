@@ -680,7 +680,8 @@ void Cardiovascular::Process()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PostProcess()
 {
-  if (m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionOn() && m_data.GetState() == EngineState::Active) {
+  if (m_data.GetActions().GetPatientActions().HasOverride() 
+    && m_data.GetState() == EngineState::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) 
     {
       ProcessOverride();
@@ -800,8 +801,13 @@ void Cardiovascular::CalculateVitalSigns()
         m_ss << "50% of the patient's blood volume has been lost. The patient is now in an irreversible state.";
         Warning(m_ss);
         /// \irreversible Over half the patients blood volume has been lost.
-        if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
+        if (!m_PatientActions->HasOverride()) {
           m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        } else {
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+            m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          }
+        }
       }
     } else {
       m_patient->SetEvent(CDM::enumPatientEvent::HypovolemicShock, false, m_data.GetSimulationTime());
@@ -834,10 +840,18 @@ void Cardiovascular::CalculateVitalSigns()
     }
     ///\event Patient: Asystole: Heart Rate has fallen below minimum value and is being set to 0.
     // @cite guinness2005lowest
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27 && m_data.GetActions().GetPatientActions().GetOverride()->IsOverrideActionConformant()) {
-      m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
-      SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27) { 
+      if (!m_PatientActions->HasOverride()) {
+        m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
+        SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
+      } else {
+        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+          m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
+          SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
+        }
+      }
     }
+ 
   }
 
   // Irreversible state if asystole persists.
@@ -850,8 +864,13 @@ void Cardiovascular::CalculateVitalSigns()
       m_ss << "Asystole has occurred for " << m_patient->GetEventDuration(CDM::enumPatientEvent::Asystole, TimeUnit::s) << " seconds, patient is in irreversible state.";
       Warning(m_ss);
       /// \irreversible Heart has been in asystole for over 45 min
-      if (m_PatientActions->GetOverride()->IsOverrideActionConformant())
+      if (!m_PatientActions->HasOverride()) {
         m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      } else {
+        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+          m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        }
+      }
     }
   }
 
@@ -1868,7 +1887,8 @@ void Cardiovascular::CalculateHeartRate()
   // The time that the flow actually decreased below the threshold was last time slice (when m_HeartFlowDetected
   // was set back to false), so we need to subtract one time step from the interval.
   double HeartRate_Per_s = 0.0;
-  if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
+  if (m_data.GetActions().GetPatientActions().HasOverride()
+    && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
     HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
   } else {
     HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);

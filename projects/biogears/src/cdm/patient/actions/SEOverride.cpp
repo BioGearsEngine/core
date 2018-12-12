@@ -119,13 +119,7 @@ bool SEOverride::IsValid() const
 
 bool SEOverride::IsActive() const
 {
-  if (!HasOverrideSwitch() 
-    || !HasOverrideConformance()) {
-    return false;
-  }
-  return (GetOverrideSwitch() == CDM::enumOnOff::On 
-    && (GetOverrideConformance() == CDM::enumOnOff::On 
-    || GetOverrideConformance() == CDM::enumOnOff::Off));
+  return (GetOverrideSwitch() == CDM::enumOnOff::On);
 }
 
 bool SEOverride::Load(const CDM::OverrideData& in)
@@ -443,10 +437,6 @@ void SEOverride::InvalidateOverrideConformance()
 {
   m_OverrideConformance = (CDM::enumOnOff::Off);
 }
-bool SEOverride::IsOverrideConformant()
-{
-  return (m_OverrideConformance == CDM::enumOnOff::On) ? true : false;
-}
 
 // Blood Chemistry Overrides //
 bool SEOverride::HasArterialPHOverride() const
@@ -488,7 +478,8 @@ double SEOverride::GetVenousPHOverride() const
 
 bool SEOverride::HasBloodChemistryOverride() const
 {
-  return HasArterialPHOverride() ? true : HasVenousPHOverride() ? true : false;
+  return HasArterialPHOverride() 
+  || HasVenousPHOverride();
 }
 
 // Cardiovascular Overrides //
@@ -549,10 +540,9 @@ double SEOverride::GetHeartRateOverride(const FrequencyUnit& unit) const
 
 bool SEOverride::HasCardiovascularOverride() const
 {
-  return HasCardiacOutputOverride() ? true :
-  HasMAPOverride() ? true : 
-  HasHeartRateOverride() ? true :
-  false;
+  return HasCardiacOutputOverride() ||
+  HasMAPOverride() ||
+  HasHeartRateOverride();
  
 }
 
@@ -794,20 +784,19 @@ double SEOverride::GetChlorideLostToSweatOverride(const MassUnit& unit) const
 
 bool SEOverride::HasEnergyOverride() const
 {
-  return HasAchievedExerciseLevelOverride() ||
-  HasCoreTemperatureOverride() ||
-  HasCreatinineProductionRateOverride() || 
-  HasExerciseMeanArterialPressureDeltaOverride() ||
-  HasFatigueLevelOverride() ||
-  HasLactateProductionRateOverride() ||
-  HasSkinTemperatureOverride() ||
-  HasSweatRateOverride() ||
-  HasTotalMetabolicOverride() || 
-  HasTotalWorkRateLevelOverride() ||
-  HasSodiumLostToSweatOverride() ||
-  HasPotassiumLostToSweatOverride() || 
-  HasChlorideLostToSweatOverride() ? true :
-  false;
+  return HasAchievedExerciseLevelOverride() 
+  || HasCoreTemperatureOverride() 
+  || HasCreatinineProductionRateOverride() 
+  || HasExerciseMeanArterialPressureDeltaOverride() 
+  || HasFatigueLevelOverride() 
+  || HasLactateProductionRateOverride() 
+  || HasSkinTemperatureOverride() 
+  || HasSweatRateOverride() 
+  || HasTotalMetabolicOverride() 
+  || HasTotalWorkRateLevelOverride() 
+  || HasSodiumLostToSweatOverride() 
+  || HasPotassiumLostToSweatOverride() 
+  || HasChlorideLostToSweatOverride();
 }
 
 // Renal Overrides //
@@ -1086,20 +1075,10 @@ double SEOverride::GetTidalVolumeOverride(const VolumeUnit& unit) const
 
 bool SEOverride::HasRespiratoryOverride() const
 {
-  return HasRespirationRateOverride() ? true : HasTidalVolumeOverride() ? true : false;
+  return HasRespirationRateOverride() 
+    || HasTidalVolumeOverride();
 }
 
-
-bool SEOverride::IsOverrideActionOn() const
-{
-  return (HasOverrideSwitch() 
-    && GetOverrideSwitch() == CDM::enumOnOff::On) ? true : false;
-}
-bool SEOverride::IsOverrideActionConformant() const
-{
-  return (!HasOverrideConformance()) 
-    || (GetOverrideConformance() == CDM::enumOnOff::On) ? true : false;
-}
 
 void SEOverride::ToString(std::ostream& str) const
 {
