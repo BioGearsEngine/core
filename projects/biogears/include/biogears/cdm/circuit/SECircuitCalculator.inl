@@ -9,12 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#pragma once
 
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
 #pragma warning(push, 0)  

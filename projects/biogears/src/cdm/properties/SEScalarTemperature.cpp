@@ -59,7 +59,7 @@ double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
 {
   if (std::isnan(m_value))
     throw CommonDataModelException("Value is NaN");
-  if (::isinf(m_value))
+  if (std::isinf(m_value))
     return m_value;
   if (m_unit == &unit)
     return m_value;
