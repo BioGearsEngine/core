@@ -33,9 +33,6 @@ public:
 class BIOGEARS_API SEScalar : public SEProperty {
 protected:
   double m_value;
-
-  bool m_isnan;
-  bool m_isinf;
   bool m_readOnly;
 
 public:
@@ -72,7 +69,7 @@ public:
   void Copy(const SEScalar& s);
 
   virtual bool IsValid() const;
-  bool IsInfinity() const { return m_isinf; }
+  bool IsInfinity() const { return std::isinf(m_value); }
 
   bool IsPositive() const;
   bool IsNegative() const;

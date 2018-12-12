@@ -63,17 +63,14 @@ void SEScalarQuantity<Unit>::Clear()
 template <typename Unit>
 void SEScalarQuantity<Unit>::Invalidate()
 {
+  if (m_readOnly) {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-  if (m_readOnly) {
     throw CommonDataModelException("Scalar is marked read-only");
-  }
+  
 #else
-  if (m_readOnly) {
     return;
-  }
 #endif
-  m_isnan = true;
-  m_isinf = false;
+  }
   m_value = NaN;
   m_unit = nullptr;
 }
@@ -81,11 +78,9 @@ void SEScalarQuantity<Unit>::Invalidate()
 template <typename Unit>
 bool SEScalarQuantity<Unit>::IsValid() const
 {
-  if (m_isnan)
-    return false;
   if (m_unit == nullptr)
     return false;
-  return true;
+  return !std::isnan(m_value);
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -122,13 +117,19 @@ void SEScalarQuantity<Unit>::Unload(CDM::ScalarData& data) const
 template <typename Unit>
 bool SEScalarQuantity<Unit>::Set(const SEScalarQuantity<Unit>& s)
 {
-  if (m_readOnly)
-    throw CommonDataModelException("Scalar is marked read-only");
-  if (!s.IsValid())
+  if (!s.IsValid()) {
     return false;
+  }
+#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  if (m_readOnly) {
+    throw CommonDataModelException("Scalar is marked read-only");
+  }
+#else
+  if (m_readOnly) {
+    return false;
+  }
+#endif
   m_value = s.m_value;
-  m_isnan = (std::isnan(m_value)) ? true : false;
-  m_isinf = (std::isinf(m_value)) ? true : false;
   m_unit = s.m_unit;
   return true;
 }
@@ -136,27 +137,29 @@ bool SEScalarQuantity<Unit>::Set(const SEScalarQuantity<Unit>& s)
 template <typename Unit>
 void SEScalarQuantity<Unit>::Copy(const SEScalarQuantity<Unit>& s)
 {
+  if (m_readOnly) {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-  if (m_readOnly) {
     throw CommonDataModelException("Scalar is marked read-only");
-  }
+
 #else
-  if (m_readOnly) {
     return;
-  }
 #endif
+  }
   m_value = s.m_value;
-  m_isnan = s.m_isnan;
-  m_isinf = s.m_isinf;
   m_unit = s.m_unit;
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 {
-  if (m_isnan)
+#if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
+  if (std::isnan(m_value)) {
     throw CommonDataModelException("Value is NaN");
-  if (m_isinf)
+  }
+#else
+  assert(!std::isnan(m_value));
+#endif
+  if (std::isinf(m_value))
     return m_value;
   if (m_value == 0)
     return m_value;
@@ -168,10 +171,14 @@ double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const std::string& unit) const
 {
-  if (m_isnan) {
+#if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
+  if (std::isnan(m_value)) {
     throw CommonDataModelException("Value is NaN");
   }
-  if (m_isinf) {
+#else
+  assert(!std::isnan(m_value));
+#endif
+  if (std::isinf(m_value)) {
     return m_value;
   }
   if (m_value == 0) {
@@ -186,11 +193,14 @@ double SEScalarQuantity<Unit>::GetValue(const std::string& unit) const
 template <typename Unit>
 void SEScalarQuantity<Unit>::SetValue(double d, const Unit& unit)
 {
-  if (m_readOnly)
+  if (m_readOnly) {
+#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
     throw CommonDataModelException("Scalar is marked read-only");
+#else
+    return;
+#endif
+  }
   m_value = d;
-  m_isnan = (std::isnan(m_value)) ? true : false;
-  m_isinf = (std::isinf(m_value)) ? true : false;
   m_unit = &unit;
 }
 //-------------------------------------------------------------------------------
@@ -199,13 +209,13 @@ bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& to) const
 {
   if (m_unit == nullptr)
     return false;
-  if (m_isnan && to.m_isnan)
+  if (std::isnan(m_value) && std::isnan(to.m_value)) //This Violates C++ Spec
     return true;
-  if (m_isnan || to.m_isnan)
+  if (std::isnan(m_value) || std::isnan(to.m_value))
     return false;
-  if (m_isinf && to.m_isinf)
+  if (std::isinf(m_value) && std::isinf(to.m_value)) //This implies -> -inf == +inf
     return true;
-  if (m_isinf || to.m_isinf)
+  if (std::isinf(m_value) || std::isinf(to.m_value))
     return false;
   double t = to.GetValue(*m_unit);
   return std::abs(GeneralMath::PercentDifference(m_value, t)) <= 1e-15;
@@ -220,7 +230,7 @@ const Unit* SEScalarQuantity<Unit>::GetCompoundUnit(const std::string& unit) con
 template <typename Unit>
 void SEScalarQuantity<Unit>::ToString(std::ostream& str) const
 {
-  if (m_isnan || m_isinf)
+  if (std::isnan(m_value) || std::isinf(m_value))
     str << m_value;
   else
     str << m_value << "(" << *m_unit << ")";
@@ -274,7 +284,7 @@ auto SEScalarQuantity<Unit>::DecrementValue(double d, const std::string& unit) -
 template <typename Unit>
 auto SEScalarQuantity<Unit>::DecrementValue(double d, const Unit& unit) -> SEScalarQuantity&
 {
-  return IncrementValue(-m_value, unit);
+  return IncrementValue(-d, unit);
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -373,7 +383,7 @@ template <typename Unit>
 auto SEScalarQuantity<Unit>::operator-(const SEScalarQuantity& rhs) const -> SEScalarQuantity
 {
   SEScalarQuantity result{ *this };
-  return result.Increment(rhs);
+  return result.Decrement(rhs);
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>

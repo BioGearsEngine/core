@@ -57,9 +57,9 @@ const TemperatureUnit& TemperatureUnit::GetCompoundUnit(const std::string& unit)
 
 double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
 {
-  if (m_isnan)
+  if (std::isnan(m_value))
     throw CommonDataModelException("Value is NaN");
-  if (m_isinf)
+  if (::isinf(m_value))
     return m_value;
   if (m_unit == &unit)
     return m_value;

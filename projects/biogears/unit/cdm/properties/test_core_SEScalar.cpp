@@ -130,9 +130,9 @@ TEST_F(TEST_FIXTURE_NAME, IsNegative)
   scalar_1.SetValue(3.0);
   scalar_2.SetValue(-2.0);
 
-  EXPECT_TRUE(scalar_1.IsPositive());
-  EXPECT_FALSE(scalar_2.IsPositive());
-  EXPECT_FALSE(scalar_3.IsPositive());
+  EXPECT_FALSE(scalar_1.IsNegative());
+  EXPECT_TRUE(scalar_2.IsNegative());
+  EXPECT_FALSE(scalar_3.IsNegative());
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsZero)
@@ -164,7 +164,7 @@ TEST_F(TEST_FIXTURE_NAME, ReadOnly)
   EXPECT_TRUE(scalar_1.IsReadOnly());
   EXPECT_FALSE(scalar_2.IsReadOnly());
 
-#if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
+#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
   EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.SetValue(5.5)));
   EXPECT_FALSE(scalar_2.SetValue(5.5));
 
@@ -316,12 +316,23 @@ TEST_F(TEST_FIXTURE_NAME, Boolean_Operators)
   biogears::SEScalar scalar_2{ 1.0 };
   biogears::SEScalar scalar_3{ 2.0 };
   biogears::SEScalar scalar_4{ 4.0 };
+
   EXPECT_TRUE(scalar_1 == scalar_1);
+  EXPECT_FALSE(scalar_1 == scalar_2);
   EXPECT_TRUE(scalar_1 != scalar_2);
+  EXPECT_FALSE(scalar_1 != scalar_1);
+
   EXPECT_TRUE(scalar_1 < scalar_2);
+  EXPECT_FALSE(scalar_2 < scalar_1);
+
   EXPECT_TRUE(scalar_2 <= scalar_3);
+  EXPECT_FALSE(scalar_3 <= scalar_2);
+
   EXPECT_TRUE(scalar_4 > scalar_3);
+  EXPECT_FALSE(scalar_3 > scalar_4);
+
   EXPECT_TRUE(scalar_3 >= scalar_2);
+  EXPECT_FALSE(scalar_2 >= scalar_3);
 }
 
 TEST_F(TEST_FIXTURE_NAME, Nan)

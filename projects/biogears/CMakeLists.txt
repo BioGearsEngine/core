@@ -54,6 +54,7 @@ add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.h"   "Headers\\Private\
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
 
 add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.h"  "Headers\\Public\\")
+add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.inl"  "Headers\\Public\\")
 #Biogears JNI
 add_source_files(PUBLIC_JNI_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/jni/include "*.h"  "Headers\\Public\\")
 add_source_files(JNI_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/jni/src "*cpp" "Sources\\")
