@@ -68,25 +68,25 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, KetoneProductionRate)
 {
-  EXPECT_EQ(false, es->HasKetoneProductionRate());
+  EXPECT_FALSE( es->HasKetoneProductionRate());
   es->GetKetoneProductionRate().SetValue(1.0,AmountPerTimeUnit::mmol_Per_min);
-  EXPECT_EQ(true, es->HasKetoneProductionRate());
+  EXPECT_TRUE( es->HasKetoneProductionRate());
   EXPECT_EQ(1.0, es->GetKetoneProductionRate(AmountPerTimeUnit::mmol_Per_min));
 
   const biogears::SEHepaticSystem ces(logger);
-  EXPECT_EQ(false, ces.HasKetoneProductionRate());
+  EXPECT_FALSE( ces.HasKetoneProductionRate());
   auto dvalue = ces.GetKetoneProductionRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, HepaticGluconeogenesisRate)
 {
-  EXPECT_EQ(false, es->HasHepaticGluconeogenesisRate());
+  EXPECT_FALSE( es->HasHepaticGluconeogenesisRate());
   es->GetHepaticGluconeogenesisRate().SetValue(1.0, MassPerTimeUnit::g_Per_day);
-  EXPECT_EQ(true, es->HasHepaticGluconeogenesisRate());
+  EXPECT_TRUE( es->HasHepaticGluconeogenesisRate());
   EXPECT_EQ(1.0, es->GetHepaticGluconeogenesisRate().GetValue(MassPerTimeUnit::g_Per_day));
 
   const biogears::SEHepaticSystem cds(logger);
-  EXPECT_EQ(false, cds.HasHepaticGluconeogenesisRate());
+  EXPECT_FALSE( cds.HasHepaticGluconeogenesisRate());
   auto dvalue = cds.GetHepaticGluconeogenesisRate(MassPerTimeUnit::g_Per_day);
   EXPECT_NE(dvalue, dvalue);
 }

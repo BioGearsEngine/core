@@ -68,24 +68,24 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, ChymeAbsorptionRate)
 {
-  EXPECT_EQ(false, es->HasChymeAbsorptionRate());
+  EXPECT_FALSE( es->HasChymeAbsorptionRate());
   es->GetChymeAbsorptionRate().SetValue(1.0,VolumePerTimeUnit::L_Per_day);
-  EXPECT_EQ(true, es->HasChymeAbsorptionRate());
+  EXPECT_TRUE( es->HasChymeAbsorptionRate());
   EXPECT_EQ(1.0, es->GetChymeAbsorptionRate(VolumePerTimeUnit::L_Per_day));
 
   const biogears::SEGastrointestinalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasChymeAbsorptionRate());
+  EXPECT_FALSE( ces.HasChymeAbsorptionRate());
   auto dvalue = ces.GetChymeAbsorptionRate(VolumePerTimeUnit::L_Per_day);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, StomachContents)
 {
-  EXPECT_EQ(false, es->HasStomachContents());
+  EXPECT_FALSE( es->HasStomachContents());
   es->GetStomachContents();
-  EXPECT_EQ(true, es->HasStomachContents());
+  EXPECT_TRUE( es->HasStomachContents());
 
   const biogears::SEGastrointestinalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasStomachContents());
+  EXPECT_FALSE( ces.HasStomachContents());
   auto dvalue = ces.GetStomachContents();
   EXPECT_EQ(NULL, dvalue);
 }

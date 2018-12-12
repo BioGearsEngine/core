@@ -68,205 +68,205 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, ExtracellularFluidVolume)
 {
-  EXPECT_EQ(false, es->HasExtracellularFluidVolume());
+  EXPECT_FALSE( es->HasExtracellularFluidVolume());
   es->GetExtracellularFluidVolume().SetValue(1.0,VolumeUnit::L);
-  EXPECT_EQ(true, es->HasExtracellularFluidVolume());
+  EXPECT_TRUE( es->HasExtracellularFluidVolume());
   EXPECT_EQ(1.0, es->GetExtracellularFluidVolume(VolumeUnit::L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasExtracellularFluidVolume());
+  EXPECT_FALSE( ces.HasExtracellularFluidVolume());
   auto dvalue = ces.GetExtracellularFluidVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ExtravascularFluidVolume)
 {
-  EXPECT_EQ(false, es->HasExtravascularFluidVolume());
+  EXPECT_FALSE( es->HasExtravascularFluidVolume());
   es->GetExtravascularFluidVolume().SetValue(1.0,VolumeUnit::L);
-  EXPECT_EQ(true, es->HasExtravascularFluidVolume());
+  EXPECT_TRUE( es->HasExtravascularFluidVolume());
   EXPECT_EQ(1.0, es->GetExtravascularFluidVolume(VolumeUnit::L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasExtravascularFluidVolume());
+  EXPECT_FALSE( ces.HasExtravascularFluidVolume());
   auto dvalue = ces.GetExtravascularFluidVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, IntracellularFluidVolume)
 {
-  EXPECT_EQ(false, es->HasIntracellularFluidVolume());
+  EXPECT_FALSE( es->HasIntracellularFluidVolume());
   es->GetIntracellularFluidVolume().SetValue(1.0,VolumeUnit::L);
-  EXPECT_EQ(true, es->HasIntracellularFluidVolume());
+  EXPECT_TRUE( es->HasIntracellularFluidVolume());
   EXPECT_EQ(1.0, es->GetIntracellularFluidVolume(VolumeUnit::L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasIntracellularFluidVolume());
+  EXPECT_FALSE( ces.HasIntracellularFluidVolume());
   auto dvalue = ces.GetIntracellularFluidVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalBodyFluidVolume)
 {
-  EXPECT_EQ(false, es->HasTotalBodyFluidVolume());
+  EXPECT_FALSE( es->HasTotalBodyFluidVolume());
   es->GetTotalBodyFluidVolume().SetValue(1.0,VolumeUnit::L);
-  EXPECT_EQ(true, es->HasTotalBodyFluidVolume());
+  EXPECT_TRUE( es->HasTotalBodyFluidVolume());
   EXPECT_EQ(1.0, es->GetTotalBodyFluidVolume(VolumeUnit::L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasTotalBodyFluidVolume());
+  EXPECT_FALSE( ces.HasTotalBodyFluidVolume());
   auto dvalue = ces.GetTotalBodyFluidVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, CarbonDioxideProductionRate)
 {
-  EXPECT_EQ(false, es->HasCarbonDioxideProductionRate());
+  EXPECT_FALSE( es->HasCarbonDioxideProductionRate());
   es->GetCarbonDioxideProductionRate().SetValue(1.0,VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasCarbonDioxideProductionRate());
+  EXPECT_TRUE( es->HasCarbonDioxideProductionRate());
   EXPECT_EQ(1.0, es->GetCarbonDioxideProductionRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasCarbonDioxideProductionRate());
+  EXPECT_FALSE( ces.HasCarbonDioxideProductionRate());
   auto dvalue = ces.GetCarbonDioxideProductionRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, OxygenConsumptionRate)
 {
-  EXPECT_EQ(false, es->HasOxygenConsumptionRate());
+  EXPECT_FALSE( es->HasOxygenConsumptionRate());
   es->GetOxygenConsumptionRate().SetValue(1.0,VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasOxygenConsumptionRate());
+  EXPECT_TRUE( es->HasOxygenConsumptionRate());
   EXPECT_EQ(1.0, es->GetOxygenConsumptionRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasOxygenConsumptionRate());
+  EXPECT_FALSE( ces.HasOxygenConsumptionRate());
   auto dvalue = ces.GetOxygenConsumptionRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LiverInsulinSetPoint)
 {
-  EXPECT_EQ(false, es->HasLiverInsulinSetPoint());
+  EXPECT_FALSE( es->HasLiverInsulinSetPoint());
   es->GetLiverInsulinSetPoint().SetValue(1.0,AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, es->HasLiverInsulinSetPoint());
+  EXPECT_TRUE( es->HasLiverInsulinSetPoint());
   EXPECT_EQ(1.0, es->GetLiverInsulinSetPoint(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLiverInsulinSetPoint());
+  EXPECT_FALSE( ces.HasLiverInsulinSetPoint());
   auto dvalue = ces.GetLiverInsulinSetPoint(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, MuscleInsulinSetPoint)
 {
-  EXPECT_EQ(false, es->HasMuscleInsulinSetPoint());
+  EXPECT_FALSE( es->HasMuscleInsulinSetPoint());
   es->GetMuscleInsulinSetPoint().SetValue(1.0,AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, es->HasMuscleInsulinSetPoint());
+  EXPECT_TRUE( es->HasMuscleInsulinSetPoint());
   EXPECT_EQ(1.0, es->GetMuscleInsulinSetPoint(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasMuscleInsulinSetPoint());
+  EXPECT_FALSE( ces.HasMuscleInsulinSetPoint());
   auto dvalue = ces.GetMuscleInsulinSetPoint(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, FatInsulinSetPoint)
 {
-  EXPECT_EQ(false, es->HasFatInsulinSetPoint());
+  EXPECT_FALSE( es->HasFatInsulinSetPoint());
   es->GetFatInsulinSetPoint().SetValue(1.0,AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, es->HasFatInsulinSetPoint());
+  EXPECT_TRUE( es->HasFatInsulinSetPoint());
   EXPECT_EQ(1.0, es->GetFatInsulinSetPoint(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasFatInsulinSetPoint());
+  EXPECT_FALSE( ces.HasFatInsulinSetPoint());
   auto dvalue = ces.GetFatInsulinSetPoint(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LiverGlucagonSetPoint)
 {
-  EXPECT_EQ(false, es->HasLiverGlucagonSetPoint());
+  EXPECT_FALSE( es->HasLiverGlucagonSetPoint());
   es->GetLiverGlucagonSetPoint().SetValue(1.0,MassPerVolumeUnit::kg_Per_L);
-  EXPECT_EQ(true, es->HasLiverGlucagonSetPoint());
+  EXPECT_TRUE( es->HasLiverGlucagonSetPoint());
   EXPECT_EQ(1.0, es->GetLiverGlucagonSetPoint(MassPerVolumeUnit::kg_Per_L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLiverGlucagonSetPoint());
+  EXPECT_FALSE( ces.HasLiverGlucagonSetPoint());
   auto dvalue = ces.GetLiverGlucagonSetPoint(MassPerVolumeUnit::kg_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, MuscleGlucagonSetPoint)
 {
-  EXPECT_EQ(false, es->HasMuscleGlucagonSetPoint());
+  EXPECT_FALSE( es->HasMuscleGlucagonSetPoint());
   es->GetMuscleGlucagonSetPoint().SetValue(1.0,MassPerVolumeUnit::kg_Per_L);
-  EXPECT_EQ(true, es->HasMuscleGlucagonSetPoint());
+  EXPECT_TRUE( es->HasMuscleGlucagonSetPoint());
   EXPECT_EQ(1.0, es->GetMuscleGlucagonSetPoint(MassPerVolumeUnit::kg_Per_L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasMuscleGlucagonSetPoint());
+  EXPECT_FALSE( ces.HasMuscleGlucagonSetPoint());
   auto dvalue = ces.GetMuscleGlucagonSetPoint(MassPerVolumeUnit::kg_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, FatGlucagonSetPoint)
 {
-  EXPECT_EQ(false, es->HasFatGlucagonSetPoint());
+  EXPECT_FALSE( es->HasFatGlucagonSetPoint());
   es->GetFatGlucagonSetPoint().SetValue(1.0,MassPerVolumeUnit::kg_Per_L);
-  EXPECT_EQ(true, es->HasFatGlucagonSetPoint());
+  EXPECT_TRUE( es->HasFatGlucagonSetPoint());
   EXPECT_EQ(1.0, es->GetFatGlucagonSetPoint(MassPerVolumeUnit::kg_Per_L));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasFatGlucagonSetPoint());
+  EXPECT_FALSE( ces.HasFatGlucagonSetPoint());
   auto dvalue = ces.GetFatGlucagonSetPoint(MassPerVolumeUnit::kg_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, StoredProtein)
 {
-  EXPECT_EQ(false, es->HasStoredProtein());
+  EXPECT_FALSE( es->HasStoredProtein());
   es->GetStoredProtein().SetValue(1.0,MassUnit::kg);
-  EXPECT_EQ(true, es->HasStoredProtein());
+  EXPECT_TRUE( es->HasStoredProtein());
   EXPECT_EQ(1.0, es->GetStoredProtein(MassUnit::kg));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasStoredProtein());
+  EXPECT_FALSE( ces.HasStoredProtein());
   auto dvalue = ces.GetStoredProtein(MassUnit::kg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, StoredFat)
 {
-  EXPECT_EQ(false, es->HasStoredFat());
+  EXPECT_FALSE( es->HasStoredFat());
   es->GetStoredFat().SetValue(1.0,MassUnit::kg);
-  EXPECT_EQ(true, es->HasStoredFat());
+  EXPECT_TRUE( es->HasStoredFat());
   EXPECT_EQ(1.0, es->GetStoredFat(MassUnit::kg));
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasStoredFat());
+  EXPECT_FALSE( ces.HasStoredFat());
   auto dvalue = ces.GetStoredFat(MassUnit::kg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, DehydrationFraction)
 {
-  EXPECT_EQ(false, es->HasDehydrationFraction());
+  EXPECT_FALSE( es->HasDehydrationFraction());
   es->GetDehydrationFraction().SetValue(1.0);
-  EXPECT_EQ(true, es->HasDehydrationFraction());
+  EXPECT_TRUE( es->HasDehydrationFraction());
   EXPECT_EQ(1.0, es->GetDehydrationFraction().GetValue());
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasDehydrationFraction());
+  EXPECT_FALSE( ces.HasDehydrationFraction());
   auto dvalue = ces.GetDehydrationFraction();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, IntracellularFluidPH)
 {
-  EXPECT_EQ(false, es->HasIntracellularFluidPH());
+  EXPECT_FALSE( es->HasIntracellularFluidPH());
   es->GetIntracellularFluidPH().SetValue(1.0);
-  EXPECT_EQ(true, es->HasIntracellularFluidPH());
+  EXPECT_TRUE( es->HasIntracellularFluidPH());
   EXPECT_EQ(1.0, es->GetIntracellularFluidPH().GetValue());
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasIntracellularFluidPH());
+  EXPECT_FALSE( ces.HasIntracellularFluidPH());
   auto dvalue = ces.GetIntracellularFluidPH();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RespiratoryExchangeRatio)
 {
-  EXPECT_EQ(false, es->HasRespiratoryExchangeRatio());
+  EXPECT_FALSE( es->HasRespiratoryExchangeRatio());
   es->GetRespiratoryExchangeRatio().SetValue(1.0);
-  EXPECT_EQ(true, es->HasRespiratoryExchangeRatio());
+  EXPECT_TRUE( es->HasRespiratoryExchangeRatio());
   EXPECT_EQ(1.0, es->GetRespiratoryExchangeRatio().GetValue());
 
   const biogears::SETissueSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRespiratoryExchangeRatio());
+  EXPECT_FALSE( ces.HasRespiratoryExchangeRatio());
   auto dvalue = ces.GetRespiratoryExchangeRatio();
   EXPECT_NE(dvalue, dvalue);
 }

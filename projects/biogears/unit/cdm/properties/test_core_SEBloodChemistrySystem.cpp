@@ -68,357 +68,357 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, ArterialBloodPH)
 {
-  EXPECT_EQ(false, bcs->HasArterialBloodPH());
+  EXPECT_FALSE( bcs->HasArterialBloodPH());
   bcs->GetArterialBloodPH().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasArterialBloodPH());
+  EXPECT_TRUE( bcs->HasArterialBloodPH());
   EXPECT_EQ(1.0, bcs->GetArterialBloodPH().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasArterialBloodPH());
+  EXPECT_FALSE( cbcs.HasArterialBloodPH());
   auto dvalue = cbcs.GetArterialBloodPH();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, BloodDensity)
 {
-  EXPECT_EQ(false, bcs->HasBloodDensity());
+  EXPECT_FALSE( bcs->HasBloodDensity());
   bcs->GetBloodDensity().SetValue(1.0,MassPerVolumeUnit::kg_Per_m3);
-  EXPECT_EQ(true, bcs->HasBloodDensity());
+  EXPECT_TRUE( bcs->HasBloodDensity());
   EXPECT_EQ(1.0,bcs->GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasBloodDensity());
+  EXPECT_FALSE( cbcs.HasBloodDensity());
   auto dvalue = cbcs.GetBloodDensity(MassPerVolumeUnit::kg_Per_m3);
   EXPECT_NE(dvalue,dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ArterialBloodPHBaseline)
 {
-  EXPECT_EQ(false, bcs->HasArterialBloodPHBaseline());
+  EXPECT_FALSE( bcs->HasArterialBloodPHBaseline());
   bcs->GetArterialBloodPHBaseline().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasArterialBloodPHBaseline());
+  EXPECT_TRUE( bcs->HasArterialBloodPHBaseline());
   EXPECT_EQ(1.0, bcs->GetArterialBloodPHBaseline().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasArterialBloodPHBaseline());
+  EXPECT_FALSE( cbcs.HasArterialBloodPHBaseline());
   auto dvalue = cbcs.GetArterialBloodPHBaseline();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, VenousBloodPH)
 {
-  EXPECT_EQ(false, bcs->HasVenousBloodPH());
+  EXPECT_FALSE( bcs->HasVenousBloodPH());
   bcs->GetVenousBloodPH().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasVenousBloodPH());
+  EXPECT_TRUE( bcs->HasVenousBloodPH());
   EXPECT_EQ(1.0, bcs->GetVenousBloodPH().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasVenousBloodPH());
+  EXPECT_FALSE( cbcs.HasVenousBloodPH());
   auto dvalue = cbcs.GetVenousBloodPH();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, BloodSpecificHeat)
 {
-  EXPECT_EQ(false, bcs->HasBloodSpecificHeat());
+  EXPECT_FALSE( bcs->HasBloodSpecificHeat());
   bcs->GetBloodSpecificHeat().SetValue(1.0,HeatCapacitancePerMassUnit::J_Per_K_kg);
-  EXPECT_EQ(true, bcs->HasBloodSpecificHeat());
+  EXPECT_TRUE( bcs->HasBloodSpecificHeat());
   EXPECT_EQ(1.0, bcs->GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasBloodSpecificHeat());
+  EXPECT_FALSE( cbcs.HasBloodSpecificHeat());
   auto dvalue = cbcs.GetBloodSpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, BloodUreaNitrogenConcentration)
 {
-  EXPECT_EQ(false, bcs->HasBloodUreaNitrogenConcentration());
+  EXPECT_FALSE( bcs->HasBloodUreaNitrogenConcentration());
   bcs->GetBloodUreaNitrogenConcentration().SetValue(1.0, MassPerVolumeUnit::kg_Per_m3);
-  EXPECT_EQ(true, bcs->HasBloodUreaNitrogenConcentration());
+  EXPECT_TRUE( bcs->HasBloodUreaNitrogenConcentration());
   EXPECT_EQ(1.0, bcs->GetBloodUreaNitrogenConcentration().GetValue(MassPerVolumeUnit::kg_Per_m3));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasBloodUreaNitrogenConcentration());
+  EXPECT_FALSE( cbcs.HasBloodUreaNitrogenConcentration());
   auto dvalue = cbcs.GetBloodUreaNitrogenConcentration(MassPerVolumeUnit::kg_Per_m3);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, CarbonDioxideSaturation)
 {
-  EXPECT_EQ(false, bcs->HasCarbonDioxideSaturation());
+  EXPECT_FALSE( bcs->HasCarbonDioxideSaturation());
   bcs->GetCarbonDioxideSaturation().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasCarbonDioxideSaturation());
+  EXPECT_TRUE( bcs->HasCarbonDioxideSaturation());
   EXPECT_EQ(1.0, bcs->GetCarbonDioxideSaturation().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasCarbonDioxideSaturation());
+  EXPECT_FALSE( cbcs.HasCarbonDioxideSaturation());
   auto dvalue = cbcs.GetCarbonDioxideSaturation();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, CarbonMonoxideSaturation)
 {
-  EXPECT_EQ(false, bcs->HasCarbonMonoxideSaturation());
+  EXPECT_FALSE( bcs->HasCarbonMonoxideSaturation());
   bcs->GetCarbonMonoxideSaturation().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasCarbonMonoxideSaturation());
+  EXPECT_TRUE( bcs->HasCarbonMonoxideSaturation());
   EXPECT_EQ(1.0, bcs->GetCarbonMonoxideSaturation().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasCarbonMonoxideSaturation());
+  EXPECT_FALSE( cbcs.HasCarbonMonoxideSaturation());
   auto dvalue = cbcs.GetCarbonMonoxideSaturation();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, Hematocrit)
 {
-  EXPECT_EQ(false, bcs->HasHematocrit());
+  EXPECT_FALSE( bcs->HasHematocrit());
   bcs->GetHematocrit().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasHematocrit());
+  EXPECT_TRUE( bcs->HasHematocrit());
   EXPECT_EQ(1.0, bcs->GetHematocrit().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasHematocrit());
+  EXPECT_FALSE( cbcs.HasHematocrit());
   auto dvalue = cbcs.GetHematocrit();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, HemoglobinContent)
 {
-  EXPECT_EQ(false, bcs->HasHemoglobinContent());
+  EXPECT_FALSE( bcs->HasHemoglobinContent());
   bcs->GetHemoglobinContent().SetValue(1.0, MassUnit::g);
-  EXPECT_EQ(true, bcs->HasHemoglobinContent());
+  EXPECT_TRUE( bcs->HasHemoglobinContent());
   EXPECT_EQ(1.0, bcs->GetHemoglobinContent().GetValue(MassUnit::g));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasHemoglobinContent());
+  EXPECT_FALSE( cbcs.HasHemoglobinContent());
   auto dvalue = cbcs.GetHemoglobinContent(MassUnit::g);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, OxygenSaturation)
 {
-  EXPECT_EQ(false, bcs->HasOxygenSaturation());
+  EXPECT_FALSE( bcs->HasOxygenSaturation());
   bcs->GetOxygenSaturation().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasOxygenSaturation());
+  EXPECT_TRUE( bcs->HasOxygenSaturation());
   EXPECT_EQ(1.0, bcs->GetOxygenSaturation().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasOxygenSaturation());
+  EXPECT_FALSE( cbcs.HasOxygenSaturation());
   auto dvalue = cbcs.GetOxygenSaturation();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, Phosphate)
 {
-  EXPECT_EQ(false, bcs->HasPhosphate());
+  EXPECT_FALSE( bcs->HasPhosphate());
   bcs->GetPhosphate().SetValue(1.0, AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, bcs->HasPhosphate());
+  EXPECT_TRUE( bcs->HasPhosphate());
   EXPECT_EQ(1.0, bcs->GetPhosphate().GetValue(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasPhosphate());
+  EXPECT_FALSE( cbcs.HasPhosphate());
   auto dvalue = cbcs.GetPhosphate(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PlasmaVolume)
 {
-  EXPECT_EQ(false, bcs->HasPlasmaVolume());
+  EXPECT_FALSE( bcs->HasPlasmaVolume());
   bcs->GetPlasmaVolume().SetValue(1.0, VolumeUnit::L);
-  EXPECT_EQ(true, bcs->HasPlasmaVolume());
+  EXPECT_TRUE( bcs->HasPlasmaVolume());
   EXPECT_EQ(1.0, bcs->GetPlasmaVolume().GetValue(VolumeUnit::L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasPlasmaVolume());
+  EXPECT_FALSE( cbcs.HasPlasmaVolume());
   auto dvalue = cbcs.GetPlasmaVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PulseOximetry)
 {
-  EXPECT_EQ(false, bcs->HasPulseOximetry());
+  EXPECT_FALSE( bcs->HasPulseOximetry());
   bcs->GetPulseOximetry().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasPulseOximetry());
+  EXPECT_TRUE( bcs->HasPulseOximetry());
   EXPECT_EQ(1.0, bcs->GetPulseOximetry().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasPulseOximetry());
+  EXPECT_FALSE( cbcs.HasPulseOximetry());
   auto dvalue = cbcs.GetPulseOximetry();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RedBloodAcetylcholinesterase)
 {
-  EXPECT_EQ(false, bcs->HasRedBloodCellAcetylcholinesterase());
+  EXPECT_FALSE( bcs->HasRedBloodCellAcetylcholinesterase());
   bcs->GetRedBloodCellAcetylcholinesterase().SetValue(1.0,AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, bcs->HasRedBloodCellAcetylcholinesterase());
+  EXPECT_TRUE( bcs->HasRedBloodCellAcetylcholinesterase());
   EXPECT_EQ(1.0, bcs->GetRedBloodCellAcetylcholinesterase().GetValue(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasRedBloodCellAcetylcholinesterase());
+  EXPECT_FALSE( cbcs.HasRedBloodCellAcetylcholinesterase());
   auto dvalue = cbcs.GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RedBloodCellCount)
 {
-  EXPECT_EQ(false, bcs->HasRedBloodCellCount());
+  EXPECT_FALSE( bcs->HasRedBloodCellCount());
   bcs->GetRedBloodCellCount().SetValue(1.0,AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, bcs->HasRedBloodCellCount());
+  EXPECT_TRUE( bcs->HasRedBloodCellCount());
   EXPECT_EQ(1.0, bcs->GetRedBloodCellCount().GetValue(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasRedBloodCellCount());
+  EXPECT_FALSE( cbcs.HasRedBloodCellCount());
   auto dvalue = cbcs.GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ShuntFraction)
 {
-  EXPECT_EQ(false, bcs->HasShuntFraction());
+  EXPECT_FALSE( bcs->HasShuntFraction());
   bcs->GetShuntFraction().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasShuntFraction());
+  EXPECT_TRUE( bcs->HasShuntFraction());
   EXPECT_EQ(1.0, bcs->GetShuntFraction().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasShuntFraction());
+  EXPECT_FALSE( cbcs.HasShuntFraction());
   auto dvalue = cbcs.GetShuntFraction();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, StrongIonDifference)
 {
-  EXPECT_EQ(false, bcs->HasStrongIonDifference());
+  EXPECT_FALSE( bcs->HasStrongIonDifference());
   bcs->GetStrongIonDifference().SetValue(1.0,AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, bcs->HasStrongIonDifference());
+  EXPECT_TRUE( bcs->HasStrongIonDifference());
   EXPECT_EQ(1.0, bcs->GetStrongIonDifference().GetValue(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasStrongIonDifference());
+  EXPECT_FALSE( cbcs.HasStrongIonDifference());
   auto dvalue = cbcs.GetStrongIonDifference(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalBilirubin)
 {
-  EXPECT_EQ(false, bcs->HasTotalBilirubin());
+  EXPECT_FALSE( bcs->HasTotalBilirubin());
   bcs->GetTotalBilirubin().SetValue(1.0,MassPerVolumeUnit::g_Per_L);
-  EXPECT_EQ(true, bcs->HasTotalBilirubin());
+  EXPECT_TRUE( bcs->HasTotalBilirubin());
   EXPECT_EQ(1.0, bcs->GetTotalBilirubin().GetValue(MassPerVolumeUnit::g_Per_L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasTotalBilirubin());
+  EXPECT_FALSE( cbcs.HasTotalBilirubin());
   auto dvalue = cbcs.GetTotalBilirubin(MassPerVolumeUnit::g_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalProteinConcentration)
 {
-  EXPECT_EQ(false, bcs->HasTotalProteinConcentration());
+  EXPECT_FALSE( bcs->HasTotalProteinConcentration());
   bcs->GetTotalProteinConcentration().SetValue(1.0,MassPerVolumeUnit::g_Per_L);
-  EXPECT_EQ(true, bcs->HasTotalProteinConcentration());
+  EXPECT_TRUE( bcs->HasTotalProteinConcentration());
   EXPECT_EQ(1.0, bcs->GetTotalProteinConcentration().GetValue(MassPerVolumeUnit::g_Per_L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasTotalProteinConcentration());
+  EXPECT_FALSE( cbcs.HasTotalProteinConcentration());
   auto dvalue = cbcs.GetTotalProteinConcentration(MassPerVolumeUnit::g_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, FractionNeutralLipidInPlasma)
 {
-  EXPECT_EQ(false, bcs->HasVolumeFractionNeutralLipidInPlasma());
+  EXPECT_FALSE( bcs->HasVolumeFractionNeutralLipidInPlasma());
   bcs->GetVolumeFractionNeutralLipidInPlasma().SetValue(1.0);
-  EXPECT_EQ(true, bcs->HasVolumeFractionNeutralLipidInPlasma());
+  EXPECT_TRUE( bcs->HasVolumeFractionNeutralLipidInPlasma());
   EXPECT_EQ(1.0, bcs->GetVolumeFractionNeutralLipidInPlasma().GetValue());
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasVolumeFractionNeutralLipidInPlasma());
+  EXPECT_FALSE( cbcs.HasVolumeFractionNeutralLipidInPlasma());
   auto dvalue = cbcs.GetVolumeFractionNeutralLipidInPlasma();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, WhiteBloodCellCount)
 {
-  EXPECT_EQ(false, bcs->HasWhiteBloodCellCount());
+  EXPECT_FALSE( bcs->HasWhiteBloodCellCount());
   bcs->GetWhiteBloodCellCount().SetValue(1.0,AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(true, bcs->HasWhiteBloodCellCount());
+  EXPECT_TRUE( bcs->HasWhiteBloodCellCount());
   EXPECT_EQ(1.0, bcs->GetWhiteBloodCellCount().GetValue(AmountPerVolumeUnit::ct_Per_L));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasWhiteBloodCellCount());
+  EXPECT_FALSE( cbcs.HasWhiteBloodCellCount());
   auto dvalue = cbcs.GetWhiteBloodCellCount(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ArterialCarbonDioxidePressure)
 {
-  EXPECT_EQ(false, bcs->HasArterialCarbonDioxidePressure());
+  EXPECT_FALSE( bcs->HasArterialCarbonDioxidePressure());
   bcs->GetArterialCarbonDioxidePressure().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, bcs->HasArterialCarbonDioxidePressure());
+  EXPECT_TRUE( bcs->HasArterialCarbonDioxidePressure());
   EXPECT_EQ(1.0, bcs->GetArterialCarbonDioxidePressure().GetValue(PressureUnit::Pa));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasArterialCarbonDioxidePressure());
+  EXPECT_FALSE( cbcs.HasArterialCarbonDioxidePressure());
   auto dvalue = cbcs.GetArterialCarbonDioxidePressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ArterialOxygenPressure)
 {
-  EXPECT_EQ(false, bcs->HasArterialOxygenPressure());
+  EXPECT_FALSE( bcs->HasArterialOxygenPressure());
   bcs->GetArterialOxygenPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, bcs->HasArterialOxygenPressure());
+  EXPECT_TRUE( bcs->HasArterialOxygenPressure());
   EXPECT_EQ(1.0, bcs->GetArterialOxygenPressure().GetValue(PressureUnit::Pa));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasArterialOxygenPressure());
+  EXPECT_FALSE( cbcs.HasArterialOxygenPressure());
   auto dvalue = cbcs.GetArterialOxygenPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PulmonaryArterialOxygenPressure)
 {
-  EXPECT_EQ(false, bcs->HasPulmonaryArterialOxygenPressure());
+  EXPECT_FALSE( bcs->HasPulmonaryArterialOxygenPressure());
   bcs->GetPulmonaryArterialOxygenPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, bcs->HasPulmonaryArterialOxygenPressure());
+  EXPECT_TRUE( bcs->HasPulmonaryArterialOxygenPressure());
   EXPECT_EQ(1.0, bcs->GetPulmonaryArterialOxygenPressure().GetValue(PressureUnit::Pa));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasPulmonaryArterialOxygenPressure());
+  EXPECT_FALSE( cbcs.HasPulmonaryArterialOxygenPressure());
   auto dvalue = cbcs.GetPulmonaryArterialOxygenPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PulmonaryVenousCarbonDioxidePressure)
 {
-  EXPECT_EQ(false, bcs->HasPulmonaryVenousCarbonDioxidePressure());
+  EXPECT_FALSE( bcs->HasPulmonaryVenousCarbonDioxidePressure());
   bcs->GetPulmonaryVenousCarbonDioxidePressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, bcs->HasPulmonaryVenousCarbonDioxidePressure());
+  EXPECT_TRUE( bcs->HasPulmonaryVenousCarbonDioxidePressure());
   EXPECT_EQ(1.0, bcs->GetPulmonaryVenousCarbonDioxidePressure().GetValue(PressureUnit::Pa));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasPulmonaryVenousCarbonDioxidePressure());
+  EXPECT_FALSE( cbcs.HasPulmonaryVenousCarbonDioxidePressure());
   auto dvalue = cbcs.GetPulmonaryVenousCarbonDioxidePressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PulmonaryVenousOxygenPressure)
 {
-  EXPECT_EQ(false, bcs->HasPulmonaryVenousOxygenPressure());
+  EXPECT_FALSE( bcs->HasPulmonaryVenousOxygenPressure());
   bcs->GetPulmonaryVenousOxygenPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, bcs->HasPulmonaryVenousOxygenPressure());
+  EXPECT_TRUE( bcs->HasPulmonaryVenousOxygenPressure());
   EXPECT_EQ(1.0, bcs->GetPulmonaryVenousOxygenPressure().GetValue(PressureUnit::Pa));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasPulmonaryVenousOxygenPressure());
+  EXPECT_FALSE( cbcs.HasPulmonaryVenousOxygenPressure());
   auto dvalue = cbcs.GetPulmonaryVenousOxygenPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, VenousOxygenPressure)
 {
-  EXPECT_EQ(false, bcs->HasVenousOxygenPressure());
+  EXPECT_FALSE( bcs->HasVenousOxygenPressure());
   bcs->GetVenousOxygenPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, bcs->HasVenousOxygenPressure());
+  EXPECT_TRUE( bcs->HasVenousOxygenPressure());
   EXPECT_EQ(1.0, bcs->GetVenousOxygenPressure().GetValue(PressureUnit::Pa));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasVenousOxygenPressure());
+  EXPECT_FALSE( cbcs.HasVenousOxygenPressure());
   auto dvalue = cbcs.GetVenousOxygenPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, VenousCarbonDioxidePressure)
 {
-  EXPECT_EQ(false, bcs->HasVenousCarbonDioxidePressure());
+  EXPECT_FALSE( bcs->HasVenousCarbonDioxidePressure());
   bcs->GetVenousCarbonDioxidePressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, bcs->HasVenousCarbonDioxidePressure());
+  EXPECT_TRUE( bcs->HasVenousCarbonDioxidePressure());
   EXPECT_EQ(1.0, bcs->GetVenousCarbonDioxidePressure().GetValue(PressureUnit::Pa));
 
   const biogears::SEBloodChemistrySystem cbcs(logger);
-  EXPECT_EQ(false, cbcs.HasVenousCarbonDioxidePressure());
+  EXPECT_FALSE( cbcs.HasVenousCarbonDioxidePressure());
   auto dvalue = cbcs.GetVenousCarbonDioxidePressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, AcuteInflammatoryResponse)
 {
   //todo:lmarin: Spruce this up after Matt's changes are fully in
-  EXPECT_EQ(false, bcs->HasAcuteInflammatoryResponse());
+  EXPECT_FALSE( bcs->HasAcuteInflammatoryResponse());
 //  bcs->GetAcuteInflammatoryResponse().InitializeState();
-//  EXPECT_EQ(true, bcs->HasAcuteInflammatoryResponse());
+//  EXPECT_TRUE( bcs->HasAcuteInflammatoryResponse());
 }
 

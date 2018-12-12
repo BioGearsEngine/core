@@ -68,25 +68,25 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, InsulinSynthesisRate)
 {
-  EXPECT_EQ(false, es->HasInsulinSynthesisRate());
+  EXPECT_FALSE( es->HasInsulinSynthesisRate());
   es->GetInsulinSynthesisRate().SetValue(1.0,AmountPerTimeUnit::mmol_Per_min);
-  EXPECT_EQ(true, es->HasInsulinSynthesisRate());
+  EXPECT_TRUE( es->HasInsulinSynthesisRate());
   EXPECT_EQ(1.0, es->GetInsulinSynthesisRate(AmountPerTimeUnit::mmol_Per_min));
 
   const biogears::SEEndocrineSystem ces(logger);
-  EXPECT_EQ(false, ces.HasInsulinSynthesisRate());
+  EXPECT_FALSE( ces.HasInsulinSynthesisRate());
   auto dvalue = ces.GetInsulinSynthesisRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, GlucagonSynthesisRate)
 {
-  EXPECT_EQ(false, es->HasGlucagonSynthesisRate());
+  EXPECT_FALSE( es->HasGlucagonSynthesisRate());
   es->GetGlucagonSynthesisRate().SetValue(1.0, AmountPerTimeUnit::mmol_Per_min);
-  EXPECT_EQ(true, es->HasGlucagonSynthesisRate());
+  EXPECT_TRUE( es->HasGlucagonSynthesisRate());
   EXPECT_EQ(1.0, es->GetGlucagonSynthesisRate(AmountPerTimeUnit::mmol_Per_min));
 
   const biogears::SEEndocrineSystem ces(logger);
-  EXPECT_EQ(false, ces.HasGlucagonSynthesisRate());
+  EXPECT_FALSE( ces.HasGlucagonSynthesisRate());
   auto dvalue = ces.GetGlucagonSynthesisRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }

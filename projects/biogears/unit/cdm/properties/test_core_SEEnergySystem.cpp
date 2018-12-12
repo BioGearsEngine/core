@@ -68,157 +68,157 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, AchievedExerciseLevel)
 {
-  EXPECT_EQ(false, ds->HasAchievedExerciseLevel());
+  EXPECT_FALSE( ds->HasAchievedExerciseLevel());
   ds->GetAchievedExerciseLevel().SetValue(1.0);
-  EXPECT_EQ(true, ds->HasAchievedExerciseLevel());
+  EXPECT_TRUE( ds->HasAchievedExerciseLevel());
   EXPECT_EQ(1.0, ds->GetAchievedExerciseLevel().GetValue());
   
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasAchievedExerciseLevel());
+  EXPECT_FALSE( cds.HasAchievedExerciseLevel());
   auto dvalue = cds.GetAchievedExerciseLevel();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ChlorideLostToSweat)
 {
-  EXPECT_EQ(false, ds->HasChlorideLostToSweat());
+  EXPECT_FALSE( ds->HasChlorideLostToSweat());
   ds->GetChlorideLostToSweat().SetValue(1.0, MassUnit::g);
-  EXPECT_EQ(true, ds->HasChlorideLostToSweat());
+  EXPECT_TRUE( ds->HasChlorideLostToSweat());
   EXPECT_EQ(1.0, ds->GetChlorideLostToSweat().GetValue(MassUnit::g));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasChlorideLostToSweat());
+  EXPECT_FALSE( cds.HasChlorideLostToSweat());
   auto dvalue = cds.GetChlorideLostToSweat(MassUnit::g);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, CoreTemperature)
 {
-  EXPECT_EQ(false, ds->HasCoreTemperature());
+  EXPECT_FALSE( ds->HasCoreTemperature());
   ds->GetCoreTemperature().SetValue(1.0, TemperatureUnit::C);
-  EXPECT_EQ(true, ds->HasCoreTemperature());
+  EXPECT_TRUE( ds->HasCoreTemperature());
   EXPECT_EQ(1.0, ds->GetCoreTemperature().GetValue(TemperatureUnit::C));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasCoreTemperature());
+  EXPECT_FALSE( cds.HasCoreTemperature());
   auto dvalue = cds.GetCoreTemperature(TemperatureUnit::C);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, CreatinineProductionRate)
 {
-  EXPECT_EQ(false, ds->HasCreatinineProductionRate());
+  EXPECT_FALSE( ds->HasCreatinineProductionRate());
   ds->GetCreatinineProductionRate().SetValue(1.0, AmountPerTimeUnit::mmol_Per_min);
-  EXPECT_EQ(true, ds->HasCreatinineProductionRate());
+  EXPECT_TRUE( ds->HasCreatinineProductionRate());
   EXPECT_EQ(1.0, ds->GetCreatinineProductionRate().GetValue(AmountPerTimeUnit::mmol_Per_min));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasCreatinineProductionRate());
+  EXPECT_FALSE( cds.HasCreatinineProductionRate());
   auto dvalue = cds.GetCreatinineProductionRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ExerciseMeanArterialPressureDelta)
 {
-  EXPECT_EQ(false, ds->HasExerciseMeanArterialPressureDelta());
+  EXPECT_FALSE( ds->HasExerciseMeanArterialPressureDelta());
   ds->GetExerciseMeanArterialPressureDelta().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, ds->HasExerciseMeanArterialPressureDelta());
+  EXPECT_TRUE( ds->HasExerciseMeanArterialPressureDelta());
   EXPECT_EQ(1.0, ds->GetExerciseMeanArterialPressureDelta().GetValue(PressureUnit::Pa));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasExerciseMeanArterialPressureDelta());
+  EXPECT_FALSE( cds.HasExerciseMeanArterialPressureDelta());
   auto dvalue = cds.GetExerciseMeanArterialPressureDelta(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, FatigueLevel)
 {
-  EXPECT_EQ(false, ds->HasFatigueLevel());
+  EXPECT_FALSE( ds->HasFatigueLevel());
   ds->GetFatigueLevel().SetValue(1.0);
-  EXPECT_EQ(true, ds->HasFatigueLevel());
+  EXPECT_TRUE( ds->HasFatigueLevel());
   EXPECT_EQ(1.0, ds->GetFatigueLevel().GetValue());
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasFatigueLevel());
+  EXPECT_FALSE( cds.HasFatigueLevel());
   auto dvalue = cds.GetFatigueLevel();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LactateProductionRate)
 {
-  EXPECT_EQ(false, ds->HasLactateProductionRate());
+  EXPECT_FALSE( ds->HasLactateProductionRate());
   ds->GetLactateProductionRate().SetValue(1.0, AmountPerTimeUnit::mmol_Per_min);
-  EXPECT_EQ(true, ds->HasLactateProductionRate());
+  EXPECT_TRUE( ds->HasLactateProductionRate());
   EXPECT_EQ(1.0, ds->GetLactateProductionRate().GetValue(AmountPerTimeUnit::mmol_Per_min));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasLactateProductionRate());
+  EXPECT_FALSE( cds.HasLactateProductionRate());
   auto dvalue = cds.GetLactateProductionRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PotassiumLostToSweat)
 {
-  EXPECT_EQ(false, ds->HasPotassiumLostToSweat());
+  EXPECT_FALSE( ds->HasPotassiumLostToSweat());
   ds->GetPotassiumLostToSweat().SetValue(1.0, MassUnit::g);
-  EXPECT_EQ(true, ds->HasPotassiumLostToSweat());
+  EXPECT_TRUE( ds->HasPotassiumLostToSweat());
   EXPECT_EQ(1.0, ds->GetPotassiumLostToSweat().GetValue(MassUnit::g));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasPotassiumLostToSweat());
+  EXPECT_FALSE( cds.HasPotassiumLostToSweat());
   auto dvalue = cds.GetPotassiumLostToSweat(MassUnit::g);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, SkinTemperature)
 {
-  EXPECT_EQ(false, ds->HasSkinTemperature());
+  EXPECT_FALSE( ds->HasSkinTemperature());
   ds->GetSkinTemperature().SetValue(1.0, TemperatureUnit::C);
-  EXPECT_EQ(true, ds->HasSkinTemperature());
+  EXPECT_TRUE( ds->HasSkinTemperature());
   EXPECT_EQ(1.0, ds->GetSkinTemperature().GetValue(TemperatureUnit::C));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasSkinTemperature());
+  EXPECT_FALSE( cds.HasSkinTemperature());
   auto dvalue = cds.GetSkinTemperature(TemperatureUnit::C);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, SodiumLostToSweat)
 {
-  EXPECT_EQ(false, ds->HasSodiumLostToSweat());
+  EXPECT_FALSE( ds->HasSodiumLostToSweat());
   ds->GetSodiumLostToSweat().SetValue(1.0, MassUnit::g);
-  EXPECT_EQ(true, ds->HasSodiumLostToSweat());
+  EXPECT_TRUE( ds->HasSodiumLostToSweat());
   EXPECT_EQ(1.0, ds->GetSodiumLostToSweat().GetValue(MassUnit::g));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasSodiumLostToSweat());
+  EXPECT_FALSE( cds.HasSodiumLostToSweat());
   auto dvalue = cds.GetSodiumLostToSweat(MassUnit::g);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, SweatRate)
 {
-  EXPECT_EQ(false, ds->HasSweatRate());
+  EXPECT_FALSE( ds->HasSweatRate());
   ds->GetSweatRate().SetValue(1.0, MassPerTimeUnit::g_Per_day);
-  EXPECT_EQ(true, ds->HasSweatRate());
+  EXPECT_TRUE( ds->HasSweatRate());
   EXPECT_EQ(1.0, ds->GetSweatRate().GetValue(MassPerTimeUnit::g_Per_day));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasSweatRate());
+  EXPECT_FALSE( cds.HasSweatRate());
   auto dvalue = cds.GetSweatRate(MassPerTimeUnit::g_Per_day);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalMetabolicRate)
 {
-  EXPECT_EQ(false, ds->HasTotalMetabolicRate());
+  EXPECT_FALSE( ds->HasTotalMetabolicRate());
   ds->GetTotalMetabolicRate().SetValue(1.0, PowerUnit::BTU_Per_hr);
-  EXPECT_EQ(true, ds->HasTotalMetabolicRate());
+  EXPECT_TRUE( ds->HasTotalMetabolicRate());
   EXPECT_EQ(1.0, ds->GetTotalMetabolicRate().GetValue(PowerUnit::BTU_Per_hr));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasTotalMetabolicRate());
+  EXPECT_FALSE( cds.HasTotalMetabolicRate());
   auto dvalue = cds.GetTotalMetabolicRate(PowerUnit::BTU_Per_hr);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalWorkRateLevel)
 {
-  EXPECT_EQ(false, ds->HasTotalWorkRateLevel());
+  EXPECT_FALSE( ds->HasTotalWorkRateLevel());
   ds->GetTotalWorkRateLevel().SetValue(1.0);
-  EXPECT_EQ(true, ds->HasTotalWorkRateLevel());
+  EXPECT_TRUE( ds->HasTotalWorkRateLevel());
   EXPECT_EQ(1.0, ds->GetTotalWorkRateLevel().GetValue());
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_EQ(false, cds.HasTotalWorkRateLevel());
+  EXPECT_FALSE( cds.HasTotalWorkRateLevel());
   auto dvalue = cds.GetTotalWorkRateLevel();
   EXPECT_NE(dvalue, dvalue);
 }

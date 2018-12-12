@@ -68,111 +68,111 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, BaroreceptorHeartRateScale)
 {
-  EXPECT_EQ(false, es->HasBaroreceptorHeartRateScale());
+  EXPECT_FALSE( es->HasBaroreceptorHeartRateScale());
   es->GetBaroreceptorHeartRateScale().SetValue(1.0);
-  EXPECT_EQ(true, es->HasBaroreceptorHeartRateScale());
+  EXPECT_TRUE( es->HasBaroreceptorHeartRateScale());
   EXPECT_EQ(1.0, es->GetBaroreceptorHeartRateScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasBaroreceptorHeartRateScale());
+  EXPECT_FALSE( ces.HasBaroreceptorHeartRateScale());
   auto dvalue = ces.GetBaroreceptorHeartRateScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, BaroreceptorHeartElastanceScale)
 {
-  EXPECT_EQ(false, es->HasBaroreceptorHeartElastanceScale());
+  EXPECT_FALSE( es->HasBaroreceptorHeartElastanceScale());
   es->GetBaroreceptorHeartElastanceScale().SetValue(1.0);
-  EXPECT_EQ(true, es->HasBaroreceptorHeartElastanceScale());
+  EXPECT_TRUE( es->HasBaroreceptorHeartElastanceScale());
   EXPECT_EQ(1.0, es->GetBaroreceptorHeartElastanceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasBaroreceptorHeartElastanceScale());
+  EXPECT_FALSE( ces.HasBaroreceptorHeartElastanceScale());
   auto dvalue = ces.GetBaroreceptorHeartElastanceScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, BaroreceptorResistanceScale)
 {
-  EXPECT_EQ(false, es->HasBaroreceptorResistanceScale());
+  EXPECT_FALSE( es->HasBaroreceptorResistanceScale());
   es->GetBaroreceptorResistanceScale().SetValue(1.0);
-  EXPECT_EQ(true, es->HasBaroreceptorResistanceScale());
+  EXPECT_TRUE( es->HasBaroreceptorResistanceScale());
   EXPECT_EQ(1.0, es->GetBaroreceptorResistanceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasBaroreceptorResistanceScale());
+  EXPECT_FALSE( ces.HasBaroreceptorResistanceScale());
   auto dvalue = ces.GetBaroreceptorResistanceScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, BaroreceptorComplianceScale)
 {
-  EXPECT_EQ(false, es->HasBaroreceptorComplianceScale());
+  EXPECT_FALSE( es->HasBaroreceptorComplianceScale());
   es->GetBaroreceptorComplianceScale().SetValue(1.0);
-  EXPECT_EQ(true, es->HasBaroreceptorComplianceScale());
+  EXPECT_TRUE( es->HasBaroreceptorComplianceScale());
   EXPECT_EQ(1.0, es->GetBaroreceptorComplianceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasBaroreceptorComplianceScale());
+  EXPECT_FALSE( ces.HasBaroreceptorComplianceScale());
   auto dvalue = ces.GetBaroreceptorComplianceScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ChemoreceptorHeartRateScale)
 {
-  EXPECT_EQ(false, es->HasChemoreceptorHeartRateScale());
+  EXPECT_FALSE( es->HasChemoreceptorHeartRateScale());
   es->GetChemoreceptorHeartRateScale().SetValue(1.0);
-  EXPECT_EQ(true, es->HasChemoreceptorHeartRateScale());
+  EXPECT_TRUE( es->HasChemoreceptorHeartRateScale());
   EXPECT_EQ(1.0, es->GetChemoreceptorHeartRateScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasChemoreceptorHeartRateScale());
+  EXPECT_FALSE( ces.HasChemoreceptorHeartRateScale());
   auto dvalue = ces.GetChemoreceptorHeartRateScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ChemoreceptorHeartElastanceScale)
 {
-  EXPECT_EQ(false, es->HasChemoreceptorHeartElastanceScale());
+  EXPECT_FALSE( es->HasChemoreceptorHeartElastanceScale());
   es->GetChemoreceptorHeartElastanceScale().SetValue(1.0);
-  EXPECT_EQ(true, es->HasChemoreceptorHeartElastanceScale());
+  EXPECT_TRUE( es->HasChemoreceptorHeartElastanceScale());
   EXPECT_EQ(1.0, es->GetChemoreceptorHeartElastanceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasChemoreceptorHeartElastanceScale());
+  EXPECT_FALSE( ces.HasChemoreceptorHeartElastanceScale());
   auto dvalue = ces.GetChemoreceptorHeartElastanceScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PainVisualAnalogueScale)
 {
-  EXPECT_EQ(false, es->HasPainVisualAnalogueScale());
+  EXPECT_FALSE( es->HasPainVisualAnalogueScale());
   es->GetPainVisualAnalogueScale().SetValue(1.0);
-  EXPECT_EQ(true, es->HasPainVisualAnalogueScale());
+  EXPECT_TRUE( es->HasPainVisualAnalogueScale());
   EXPECT_EQ(1.0, es->GetPainVisualAnalogueScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasPainVisualAnalogueScale());
+  EXPECT_FALSE( ces.HasPainVisualAnalogueScale());
   auto dvalue = ces.GetPainVisualAnalogueScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftEyePupillaryResponse)
 {
-  EXPECT_EQ(false, es->HasLeftEyePupillaryResponse());
+  EXPECT_FALSE( es->HasLeftEyePupillaryResponse());
   es->GetLeftEyePupillaryResponse();
-  EXPECT_EQ(true, es->HasLeftEyePupillaryResponse());
+  EXPECT_TRUE( es->HasLeftEyePupillaryResponse());
   es->RemoveLeftEyePupillaryResponse();
-  EXPECT_EQ(false, es->HasLeftEyePupillaryResponse());
+  EXPECT_FALSE( es->HasLeftEyePupillaryResponse());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftEyePupillaryResponse());
+  EXPECT_FALSE( ces.HasLeftEyePupillaryResponse());
   auto dvalue = ces.GetLeftEyePupillaryResponse(); // so this returns a NULL instead of a nan
   EXPECT_EQ(NULL, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightEyePupillaryResponse)
 {
-  EXPECT_EQ(false, es->HasRightEyePupillaryResponse());
+  EXPECT_FALSE( es->HasRightEyePupillaryResponse());
   es->GetRightEyePupillaryResponse();
-  EXPECT_EQ(true, es->HasRightEyePupillaryResponse());
+  EXPECT_TRUE( es->HasRightEyePupillaryResponse());
   es->RemoveRightEyePupillaryResponse();
-  EXPECT_EQ(false, es->HasRightEyePupillaryResponse());
+  EXPECT_FALSE( es->HasRightEyePupillaryResponse());
 
   const biogears::SENervousSystem cds(logger);
-  EXPECT_EQ(false, cds.HasRightEyePupillaryResponse());
+  EXPECT_FALSE( cds.HasRightEyePupillaryResponse());
   auto dvalue = cds.GetRightEyePupillaryResponse(); // so this returns a NULL instead of a nan
   EXPECT_EQ(NULL, dvalue);
 }

@@ -68,613 +68,613 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, GlomerularFiltrationRate)
 {
-  EXPECT_EQ(false, es->HasGlomerularFiltrationRate());
+  EXPECT_FALSE( es->HasGlomerularFiltrationRate());
   es->GetGlomerularFiltrationRate().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasGlomerularFiltrationRate());
+  EXPECT_TRUE( es->HasGlomerularFiltrationRate());
   EXPECT_EQ(1.0, es->GetGlomerularFiltrationRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasGlomerularFiltrationRate());
+  EXPECT_FALSE( ces.HasGlomerularFiltrationRate());
   auto dvalue = ces.GetGlomerularFiltrationRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, FiltrationFraction)
 {
-  EXPECT_EQ(false, es->HasFiltrationFraction());
+  EXPECT_FALSE( es->HasFiltrationFraction());
   es->GetFiltrationFraction().SetValue(1.0);
-  EXPECT_EQ(true, es->HasFiltrationFraction());
+  EXPECT_TRUE( es->HasFiltrationFraction());
   EXPECT_EQ(1.0, es->GetFiltrationFraction().GetValue());
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasFiltrationFraction());
+  EXPECT_FALSE( ces.HasFiltrationFraction());
   auto dvalue = ces.GetFiltrationFraction();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftAfferentArterioleResistance)
 {
-  EXPECT_EQ(false, es->HasLeftAfferentArterioleResistance());
+  EXPECT_FALSE( es->HasLeftAfferentArterioleResistance());
   es->GetLeftAfferentArterioleResistance().SetValue(1.0, FlowResistanceUnit::Pa_s_Per_m3);
-  EXPECT_EQ(true, es->HasLeftAfferentArterioleResistance());
+  EXPECT_TRUE( es->HasLeftAfferentArterioleResistance());
   EXPECT_EQ(1.0, es->GetLeftAfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftAfferentArterioleResistance());
+  EXPECT_FALSE( ces.HasLeftAfferentArterioleResistance());
   auto dvalue = ces.GetLeftAfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftBowmansCapsulesHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasLeftBowmansCapsulesHydrostaticPressure());
+  EXPECT_FALSE( es->HasLeftBowmansCapsulesHydrostaticPressure());
   es->GetLeftBowmansCapsulesHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftBowmansCapsulesHydrostaticPressure());
+  EXPECT_TRUE( es->HasLeftBowmansCapsulesHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetLeftBowmansCapsulesHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftBowmansCapsulesHydrostaticPressure());
+  EXPECT_FALSE( ces.HasLeftBowmansCapsulesHydrostaticPressure());
   auto dvalue = ces.GetLeftBowmansCapsulesHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftBowmansCapsulesOsmoticPressure)
 {
-  EXPECT_EQ(false, es->HasLeftBowmansCapsulesOsmoticPressure());
+  EXPECT_FALSE( es->HasLeftBowmansCapsulesOsmoticPressure());
   es->GetLeftBowmansCapsulesOsmoticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftBowmansCapsulesOsmoticPressure());
+  EXPECT_TRUE( es->HasLeftBowmansCapsulesOsmoticPressure());
   EXPECT_EQ(1.0, es->GetLeftBowmansCapsulesOsmoticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftBowmansCapsulesOsmoticPressure());
+  EXPECT_FALSE( ces.HasLeftBowmansCapsulesOsmoticPressure());
   auto dvalue = ces.GetLeftBowmansCapsulesOsmoticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftEfferentArterioleResistance)
 {
-  EXPECT_EQ(false, es->HasLeftEfferentArterioleResistance());
+  EXPECT_FALSE( es->HasLeftEfferentArterioleResistance());
   es->GetLeftEfferentArterioleResistance().SetValue(1.0, FlowResistanceUnit::Pa_s_Per_m3);
-  EXPECT_EQ(true, es->HasLeftEfferentArterioleResistance());
+  EXPECT_TRUE( es->HasLeftEfferentArterioleResistance());
   EXPECT_EQ(1.0, es->GetLeftEfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftEfferentArterioleResistance());
+  EXPECT_FALSE( ces.HasLeftEfferentArterioleResistance());
   auto dvalue = ces.GetLeftEfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftGlomerularCapillariesHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasLeftGlomerularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( es->HasLeftGlomerularCapillariesHydrostaticPressure());
   es->GetLeftGlomerularCapillariesHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftGlomerularCapillariesHydrostaticPressure());
+  EXPECT_TRUE( es->HasLeftGlomerularCapillariesHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetLeftGlomerularCapillariesHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftGlomerularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( ces.HasLeftGlomerularCapillariesHydrostaticPressure());
   auto dvalue = ces.GetLeftGlomerularCapillariesHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftGlomerularCapillariesOsmoticPressure)
 {
-  EXPECT_EQ(false, es->HasLeftGlomerularCapillariesOsmoticPressure());
+  EXPECT_FALSE( es->HasLeftGlomerularCapillariesOsmoticPressure());
   es->GetLeftGlomerularCapillariesOsmoticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftGlomerularCapillariesOsmoticPressure());
+  EXPECT_TRUE( es->HasLeftGlomerularCapillariesOsmoticPressure());
   EXPECT_EQ(1.0, es->GetLeftGlomerularCapillariesOsmoticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftGlomerularCapillariesOsmoticPressure());
+  EXPECT_FALSE( ces.HasLeftGlomerularCapillariesOsmoticPressure());
   auto dvalue = ces.GetLeftGlomerularCapillariesOsmoticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftGlomerularFiltrationCoefficient)
 {
-  EXPECT_EQ(false, es->HasLeftGlomerularFiltrationCoefficient());
+  EXPECT_FALSE( es->HasLeftGlomerularFiltrationCoefficient());
   es->GetLeftGlomerularFiltrationCoefficient().SetValue(1.0, VolumePerTimePressureUnit::L_Per_min_mmHg);
-  EXPECT_EQ(true, es->HasLeftGlomerularFiltrationCoefficient());
+  EXPECT_TRUE( es->HasLeftGlomerularFiltrationCoefficient());
   EXPECT_EQ(1.0, es->GetLeftGlomerularFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftGlomerularFiltrationCoefficient());
+  EXPECT_FALSE( ces.HasLeftGlomerularFiltrationCoefficient());
   auto dvalue = ces.GetLeftGlomerularFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftReabsorptionFiltrationCoefficient)
 {
-  EXPECT_EQ(false, es->HasLeftReabsorptionFiltrationCoefficient());
+  EXPECT_FALSE( es->HasLeftReabsorptionFiltrationCoefficient());
   es->GetLeftReabsorptionFiltrationCoefficient().SetValue(1.0, VolumePerTimePressureUnit::L_Per_min_mmHg);
-  EXPECT_EQ(true, es->HasLeftReabsorptionFiltrationCoefficient());
+  EXPECT_TRUE( es->HasLeftReabsorptionFiltrationCoefficient());
   EXPECT_EQ(1.0, es->GetLeftReabsorptionFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftReabsorptionFiltrationCoefficient());
+  EXPECT_FALSE( ces.HasLeftReabsorptionFiltrationCoefficient());
   auto dvalue = ces.GetLeftReabsorptionFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightGlomerularFiltrationCoefficient)
 {
-  EXPECT_EQ(false, es->HasRightGlomerularFiltrationCoefficient());
+  EXPECT_FALSE( es->HasRightGlomerularFiltrationCoefficient());
   es->GetRightGlomerularFiltrationCoefficient().SetValue(1.0, VolumePerTimePressureUnit::L_Per_min_mmHg);
-  EXPECT_EQ(true, es->HasRightGlomerularFiltrationCoefficient());
+  EXPECT_TRUE( es->HasRightGlomerularFiltrationCoefficient());
   EXPECT_EQ(1.0, es->GetRightGlomerularFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightGlomerularFiltrationCoefficient());
+  EXPECT_FALSE( ces.HasRightGlomerularFiltrationCoefficient());
   auto dvalue = ces.GetRightGlomerularFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightReabsorptionFiltrationCoefficient)
 {
-  EXPECT_EQ(false, es->HasRightReabsorptionFiltrationCoefficient());
+  EXPECT_FALSE( es->HasRightReabsorptionFiltrationCoefficient());
   es->GetRightReabsorptionFiltrationCoefficient().SetValue(1.0, VolumePerTimePressureUnit::L_Per_min_mmHg);
-  EXPECT_EQ(true, es->HasRightReabsorptionFiltrationCoefficient());
+  EXPECT_TRUE( es->HasRightReabsorptionFiltrationCoefficient());
   EXPECT_EQ(1.0, es->GetRightReabsorptionFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightReabsorptionFiltrationCoefficient());
+  EXPECT_FALSE( ces.HasRightReabsorptionFiltrationCoefficient());
   auto dvalue = ces.GetRightReabsorptionFiltrationCoefficient(VolumePerTimePressureUnit::L_Per_min_mmHg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftGlomerularFiltrationSurfaceArea)
 {
-  EXPECT_EQ(false, es->HasLeftGlomerularFiltrationSurfaceArea());
+  EXPECT_FALSE( es->HasLeftGlomerularFiltrationSurfaceArea());
   es->GetLeftGlomerularFiltrationSurfaceArea().SetValue(1.0, AreaUnit::m2);
-  EXPECT_EQ(true, es->HasLeftGlomerularFiltrationSurfaceArea());
+  EXPECT_TRUE( es->HasLeftGlomerularFiltrationSurfaceArea());
   EXPECT_EQ(1.0, es->GetLeftGlomerularFiltrationSurfaceArea(AreaUnit::m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftGlomerularFiltrationSurfaceArea());
+  EXPECT_FALSE( ces.HasLeftGlomerularFiltrationSurfaceArea());
   auto dvalue = ces.GetLeftGlomerularFiltrationSurfaceArea(AreaUnit::m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftTubularReabsorptionFiltrationSurfaceArea)
 {
-  EXPECT_EQ(false, es->HasLeftTubularReabsorptionFiltrationSurfaceArea());
+  EXPECT_FALSE( es->HasLeftTubularReabsorptionFiltrationSurfaceArea());
   es->GetLeftTubularReabsorptionFiltrationSurfaceArea().SetValue(1.0, AreaUnit::m2);
-  EXPECT_EQ(true, es->HasLeftTubularReabsorptionFiltrationSurfaceArea());
+  EXPECT_TRUE( es->HasLeftTubularReabsorptionFiltrationSurfaceArea());
   EXPECT_EQ(1.0, es->GetLeftTubularReabsorptionFiltrationSurfaceArea(AreaUnit::m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftTubularReabsorptionFiltrationSurfaceArea());
+  EXPECT_FALSE( ces.HasLeftTubularReabsorptionFiltrationSurfaceArea());
   auto dvalue = ces.GetLeftTubularReabsorptionFiltrationSurfaceArea(AreaUnit::m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightGlomerularFiltrationSurfaceArea)
 {
-  EXPECT_EQ(false, es->HasRightGlomerularFiltrationSurfaceArea());
+  EXPECT_FALSE( es->HasRightGlomerularFiltrationSurfaceArea());
   es->GetRightGlomerularFiltrationSurfaceArea().SetValue(1.0, AreaUnit::m2);
-  EXPECT_EQ(true, es->HasRightGlomerularFiltrationSurfaceArea());
+  EXPECT_TRUE( es->HasRightGlomerularFiltrationSurfaceArea());
   EXPECT_EQ(1.0, es->GetRightGlomerularFiltrationSurfaceArea(AreaUnit::m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightGlomerularFiltrationSurfaceArea());
+  EXPECT_FALSE( ces.HasRightGlomerularFiltrationSurfaceArea());
   auto dvalue = ces.GetRightGlomerularFiltrationSurfaceArea(AreaUnit::m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightTubularReabsorptionFiltrationSurfaceArea)
 {
-  EXPECT_EQ(false, es->HasRightTubularReabsorptionFiltrationSurfaceArea());
+  EXPECT_FALSE( es->HasRightTubularReabsorptionFiltrationSurfaceArea());
   es->GetRightTubularReabsorptionFiltrationSurfaceArea().SetValue(1.0, AreaUnit::m2);
-  EXPECT_EQ(true, es->HasRightTubularReabsorptionFiltrationSurfaceArea());
+  EXPECT_TRUE( es->HasRightTubularReabsorptionFiltrationSurfaceArea());
   EXPECT_EQ(1.0, es->GetRightTubularReabsorptionFiltrationSurfaceArea(AreaUnit::m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightTubularReabsorptionFiltrationSurfaceArea());
+  EXPECT_FALSE( ces.HasRightTubularReabsorptionFiltrationSurfaceArea());
   auto dvalue = ces.GetRightTubularReabsorptionFiltrationSurfaceArea(AreaUnit::m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftGlomerularFluidPermeability)
 {
-  EXPECT_EQ(false, es->HasLeftGlomerularFluidPermeability());
+  EXPECT_FALSE( es->HasLeftGlomerularFluidPermeability());
   es->GetLeftGlomerularFluidPermeability().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-  EXPECT_EQ(true, es->HasLeftGlomerularFluidPermeability());
+  EXPECT_TRUE( es->HasLeftGlomerularFluidPermeability());
   EXPECT_EQ(1.0, es->GetLeftGlomerularFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftGlomerularFluidPermeability());
+  EXPECT_FALSE( ces.HasLeftGlomerularFluidPermeability());
   auto dvalue = ces.GetLeftGlomerularFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftTubularReabsorptionFluidPermeability)
 {
-  EXPECT_EQ(false, es->HasLeftTubularReabsorptionFluidPermeability());
+  EXPECT_FALSE( es->HasLeftTubularReabsorptionFluidPermeability());
   es->GetLeftTubularReabsorptionFluidPermeability().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-  EXPECT_EQ(true, es->HasLeftTubularReabsorptionFluidPermeability());
+  EXPECT_TRUE( es->HasLeftTubularReabsorptionFluidPermeability());
   EXPECT_EQ(1.0, es->GetLeftTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftTubularReabsorptionFluidPermeability());
+  EXPECT_FALSE( ces.HasLeftTubularReabsorptionFluidPermeability());
   auto dvalue = ces.GetLeftTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightGlomerularFluidPermeability)
 {
-  EXPECT_EQ(false, es->HasRightGlomerularFluidPermeability());
+  EXPECT_FALSE( es->HasRightGlomerularFluidPermeability());
   es->GetRightGlomerularFluidPermeability().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-  EXPECT_EQ(true, es->HasRightGlomerularFluidPermeability());
+  EXPECT_TRUE( es->HasRightGlomerularFluidPermeability());
   EXPECT_EQ(1.0, es->GetRightGlomerularFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightGlomerularFluidPermeability());
+  EXPECT_FALSE( ces.HasRightGlomerularFluidPermeability());
   auto dvalue = ces.GetRightGlomerularFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightTubularReabsorptionFluidPermeability)
 {
-  EXPECT_EQ(false, es->HasRightTubularReabsorptionFluidPermeability());
+  EXPECT_FALSE( es->HasRightTubularReabsorptionFluidPermeability());
   es->GetRightTubularReabsorptionFluidPermeability().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-  EXPECT_EQ(true, es->HasRightTubularReabsorptionFluidPermeability());
+  EXPECT_TRUE( es->HasRightTubularReabsorptionFluidPermeability());
   EXPECT_EQ(1.0, es->GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightTubularReabsorptionFluidPermeability());
+  EXPECT_FALSE( ces.HasRightTubularReabsorptionFluidPermeability());
   auto dvalue = ces.GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftNetFiltrationPressure)
 {
-  EXPECT_EQ(false, es->HasLeftNetFiltrationPressure());
+  EXPECT_FALSE( es->HasLeftNetFiltrationPressure());
   es->GetLeftNetFiltrationPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftNetFiltrationPressure());
+  EXPECT_TRUE( es->HasLeftNetFiltrationPressure());
   EXPECT_EQ(1.0, es->GetLeftNetFiltrationPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftNetFiltrationPressure());
+  EXPECT_FALSE( ces.HasLeftNetFiltrationPressure());
   auto dvalue = ces.GetLeftNetFiltrationPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftNetReabsorptionPressure)
 {
-  EXPECT_EQ(false, es->HasLeftNetReabsorptionPressure());
+  EXPECT_FALSE( es->HasLeftNetReabsorptionPressure());
   es->GetLeftNetReabsorptionPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftNetReabsorptionPressure());
+  EXPECT_TRUE( es->HasLeftNetReabsorptionPressure());
   EXPECT_EQ(1.0, es->GetLeftNetReabsorptionPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftNetReabsorptionPressure());
+  EXPECT_FALSE( ces.HasLeftNetReabsorptionPressure());
   auto dvalue = ces.GetLeftNetReabsorptionPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftPeritubularCapillariesHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasLeftPeritubularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( es->HasLeftPeritubularCapillariesHydrostaticPressure());
   es->GetLeftPeritubularCapillariesHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftPeritubularCapillariesHydrostaticPressure());
+  EXPECT_TRUE( es->HasLeftPeritubularCapillariesHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetLeftPeritubularCapillariesHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftPeritubularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( ces.HasLeftPeritubularCapillariesHydrostaticPressure());
   auto dvalue = ces.GetLeftPeritubularCapillariesHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftTubularHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasLeftTubularHydrostaticPressure());
+  EXPECT_FALSE( es->HasLeftTubularHydrostaticPressure());
   es->GetLeftTubularHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftTubularHydrostaticPressure());
+  EXPECT_TRUE( es->HasLeftTubularHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetLeftTubularHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftTubularHydrostaticPressure());
+  EXPECT_FALSE( ces.HasLeftTubularHydrostaticPressure());
   auto dvalue = ces.GetLeftTubularHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftTubularOsmoticPressure)
 {
-  EXPECT_EQ(false, es->HasLeftTubularOsmoticPressure());
+  EXPECT_FALSE( es->HasLeftTubularOsmoticPressure());
   es->GetLeftTubularOsmoticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasLeftTubularOsmoticPressure());
+  EXPECT_TRUE( es->HasLeftTubularOsmoticPressure());
   EXPECT_EQ(1.0, es->GetLeftTubularOsmoticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftTubularOsmoticPressure());
+  EXPECT_FALSE( ces.HasLeftTubularOsmoticPressure());
   auto dvalue = ces.GetLeftTubularOsmoticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightBowmansCapsulesHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasRightBowmansCapsulesHydrostaticPressure());
+  EXPECT_FALSE( es->HasRightBowmansCapsulesHydrostaticPressure());
   es->GetRightBowmansCapsulesHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightBowmansCapsulesHydrostaticPressure());
+  EXPECT_TRUE( es->HasRightBowmansCapsulesHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetRightBowmansCapsulesHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightBowmansCapsulesHydrostaticPressure());
+  EXPECT_FALSE( ces.HasRightBowmansCapsulesHydrostaticPressure());
   auto dvalue = ces.GetRightBowmansCapsulesHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightBowmansCapsulesOsmoticPressure)
 {
-  EXPECT_EQ(false, es->HasRightBowmansCapsulesOsmoticPressure());
+  EXPECT_FALSE( es->HasRightBowmansCapsulesOsmoticPressure());
   es->GetRightBowmansCapsulesOsmoticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightBowmansCapsulesOsmoticPressure());
+  EXPECT_TRUE( es->HasRightBowmansCapsulesOsmoticPressure());
   EXPECT_EQ(1.0, es->GetRightBowmansCapsulesOsmoticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightBowmansCapsulesOsmoticPressure());
+  EXPECT_FALSE( ces.HasRightBowmansCapsulesOsmoticPressure());
   auto dvalue = ces.GetRightBowmansCapsulesOsmoticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightGlomerularCapillariesHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasRightGlomerularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( es->HasRightGlomerularCapillariesHydrostaticPressure());
   es->GetRightGlomerularCapillariesHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightGlomerularCapillariesHydrostaticPressure());
+  EXPECT_TRUE( es->HasRightGlomerularCapillariesHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetRightGlomerularCapillariesHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightGlomerularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( ces.HasRightGlomerularCapillariesHydrostaticPressure());
   auto dvalue = ces.GetRightGlomerularCapillariesHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightGlomerularCapillariesOsmoticPressure)
 {
-  EXPECT_EQ(false, es->HasRightGlomerularCapillariesOsmoticPressure());
+  EXPECT_FALSE( es->HasRightGlomerularCapillariesOsmoticPressure());
   es->GetRightGlomerularCapillariesOsmoticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightGlomerularCapillariesOsmoticPressure());
+  EXPECT_TRUE( es->HasRightGlomerularCapillariesOsmoticPressure());
   EXPECT_EQ(1.0, es->GetRightGlomerularCapillariesOsmoticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightGlomerularCapillariesOsmoticPressure());
+  EXPECT_FALSE( ces.HasRightGlomerularCapillariesOsmoticPressure());
   auto dvalue = ces.GetRightGlomerularCapillariesOsmoticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightNetFiltrationPressure)
 {
-  EXPECT_EQ(false, es->HasRightNetFiltrationPressure());
+  EXPECT_FALSE( es->HasRightNetFiltrationPressure());
   es->GetRightNetFiltrationPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightNetFiltrationPressure());
+  EXPECT_TRUE( es->HasRightNetFiltrationPressure());
   EXPECT_EQ(1.0, es->GetRightNetFiltrationPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightNetFiltrationPressure());
+  EXPECT_FALSE( ces.HasRightNetFiltrationPressure());
   auto dvalue = ces.GetRightNetFiltrationPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightNetReabsorptionPressure)
 {
-  EXPECT_EQ(false, es->HasRightNetReabsorptionPressure());
+  EXPECT_FALSE( es->HasRightNetReabsorptionPressure());
   es->GetRightNetReabsorptionPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightNetReabsorptionPressure());
+  EXPECT_TRUE( es->HasRightNetReabsorptionPressure());
   EXPECT_EQ(1.0, es->GetRightNetReabsorptionPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightNetReabsorptionPressure());
+  EXPECT_FALSE( ces.HasRightNetReabsorptionPressure());
   auto dvalue = ces.GetRightNetReabsorptionPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightPeritubularCapillariesHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasRightPeritubularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( es->HasRightPeritubularCapillariesHydrostaticPressure());
   es->GetRightPeritubularCapillariesHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightPeritubularCapillariesHydrostaticPressure());
+  EXPECT_TRUE( es->HasRightPeritubularCapillariesHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetRightPeritubularCapillariesHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightPeritubularCapillariesHydrostaticPressure());
+  EXPECT_FALSE( ces.HasRightPeritubularCapillariesHydrostaticPressure());
   auto dvalue = ces.GetRightPeritubularCapillariesHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightPeritubularCapillariesOsmoticPressure)
 {
-  EXPECT_EQ(false, es->HasRightPeritubularCapillariesOsmoticPressure());
+  EXPECT_FALSE( es->HasRightPeritubularCapillariesOsmoticPressure());
   es->GetRightPeritubularCapillariesOsmoticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightPeritubularCapillariesOsmoticPressure());
+  EXPECT_TRUE( es->HasRightPeritubularCapillariesOsmoticPressure());
   EXPECT_EQ(1.0, es->GetRightPeritubularCapillariesOsmoticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightPeritubularCapillariesOsmoticPressure());
+  EXPECT_FALSE( ces.HasRightPeritubularCapillariesOsmoticPressure());
   auto dvalue = ces.GetRightPeritubularCapillariesOsmoticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightTubularHydrostaticPressure)
 {
-  EXPECT_EQ(false, es->HasRightTubularHydrostaticPressure());
+  EXPECT_FALSE( es->HasRightTubularHydrostaticPressure());
   es->GetRightTubularHydrostaticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightTubularHydrostaticPressure());
+  EXPECT_TRUE( es->HasRightTubularHydrostaticPressure());
   EXPECT_EQ(1.0, es->GetRightTubularHydrostaticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightTubularHydrostaticPressure());
+  EXPECT_FALSE( ces.HasRightTubularHydrostaticPressure());
   auto dvalue = ces.GetRightTubularHydrostaticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightTubularOsmoticPressure)
 {
-  EXPECT_EQ(false, es->HasRightTubularOsmoticPressure());
+  EXPECT_FALSE( es->HasRightTubularOsmoticPressure());
   es->GetRightTubularOsmoticPressure().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRightTubularOsmoticPressure());
+  EXPECT_TRUE( es->HasRightTubularOsmoticPressure());
   EXPECT_EQ(1.0, es->GetRightTubularOsmoticPressure(PressureUnit::Pa));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightTubularOsmoticPressure());
+  EXPECT_FALSE( ces.HasRightTubularOsmoticPressure());
   auto dvalue = ces.GetRightTubularOsmoticPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftReabsorptionRate)
 {
-  EXPECT_EQ(false, es->HasLeftReabsorptionRate());
+  EXPECT_FALSE( es->HasLeftReabsorptionRate());
   es->GetLeftReabsorptionRate().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasLeftReabsorptionRate());
+  EXPECT_TRUE( es->HasLeftReabsorptionRate());
   EXPECT_EQ(1.0, es->GetLeftReabsorptionRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftReabsorptionRate());
+  EXPECT_FALSE( ces.HasLeftReabsorptionRate());
   auto dvalue = ces.GetLeftReabsorptionRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RenalBloodFlow)
 {
-  EXPECT_EQ(false, es->HasRenalBloodFlow());
+  EXPECT_FALSE( es->HasRenalBloodFlow());
   es->GetRenalBloodFlow().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasRenalBloodFlow());
+  EXPECT_TRUE( es->HasRenalBloodFlow());
   EXPECT_EQ(1.0, es->GetRenalBloodFlow(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRenalBloodFlow());
+  EXPECT_FALSE( ces.HasRenalBloodFlow());
   auto dvalue = ces.GetRenalBloodFlow(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RenalPlasmaFlow)
 {
-  EXPECT_EQ(false, es->HasRenalPlasmaFlow());
+  EXPECT_FALSE( es->HasRenalPlasmaFlow());
   es->GetRenalPlasmaFlow().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasRenalPlasmaFlow());
+  EXPECT_TRUE( es->HasRenalPlasmaFlow());
   EXPECT_EQ(1.0, es->GetRenalPlasmaFlow(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRenalPlasmaFlow());
+  EXPECT_FALSE( ces.HasRenalPlasmaFlow());
   auto dvalue = ces.GetRenalPlasmaFlow(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightGlomerularFiltrationRate)
 {
-  EXPECT_EQ(false, es->HasRightGlomerularFiltrationRate());
+  EXPECT_FALSE( es->HasRightGlomerularFiltrationRate());
   es->GetRightGlomerularFiltrationRate().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasRightGlomerularFiltrationRate());
+  EXPECT_TRUE( es->HasRightGlomerularFiltrationRate());
   EXPECT_EQ(1.0, es->GetRightGlomerularFiltrationRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightGlomerularFiltrationRate());
+  EXPECT_FALSE( ces.HasRightGlomerularFiltrationRate());
   auto dvalue = ces.GetRightGlomerularFiltrationRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightReabsorptionRate)
 {
-  EXPECT_EQ(false, es->HasRightReabsorptionRate());
+  EXPECT_FALSE( es->HasRightReabsorptionRate());
   es->GetRightReabsorptionRate().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasRightReabsorptionRate());
+  EXPECT_TRUE( es->HasRightReabsorptionRate());
   EXPECT_EQ(1.0, es->GetRightReabsorptionRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightReabsorptionRate());
+  EXPECT_FALSE( ces.HasRightReabsorptionRate());
   auto dvalue = ces.GetRightReabsorptionRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, UrinationRate)
 {
-  EXPECT_EQ(false, es->HasUrinationRate());
+  EXPECT_FALSE( es->HasUrinationRate());
   es->GetUrinationRate().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasUrinationRate());
+  EXPECT_TRUE( es->HasUrinationRate());
   EXPECT_EQ(1.0, es->GetUrinationRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasUrinationRate());
+  EXPECT_FALSE( ces.HasUrinationRate());
   auto dvalue = ces.GetUrinationRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, UrineProductionRate)
 {
-  EXPECT_EQ(false, es->HasUrineProductionRate());
+  EXPECT_FALSE( es->HasUrineProductionRate());
   es->GetUrineProductionRate().SetValue(1.0, VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasUrineProductionRate());
+  EXPECT_TRUE( es->HasUrineProductionRate());
   EXPECT_EQ(1.0, es->GetUrineProductionRate(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasUrineProductionRate());
+  EXPECT_FALSE( ces.HasUrineProductionRate());
   auto dvalue = ces.GetUrineProductionRate(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RenalVascularResistance)
 {
-  EXPECT_EQ(false, es->HasRenalVascularResistance());
+  EXPECT_FALSE( es->HasRenalVascularResistance());
   es->GetRenalVascularResistance().SetValue(1.0, FlowResistanceUnit::Pa_s_Per_m3);
-  EXPECT_EQ(true, es->HasRenalVascularResistance());
+  EXPECT_TRUE( es->HasRenalVascularResistance());
   EXPECT_EQ(1.0, es->GetRenalVascularResistance(FlowResistanceUnit::Pa_s_Per_m3));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRenalVascularResistance());
+  EXPECT_FALSE( ces.HasRenalVascularResistance());
   auto dvalue = ces.GetRenalVascularResistance(FlowResistanceUnit::Pa_s_Per_m3);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightAfferentArterioleResistance)
 {
-  EXPECT_EQ(false, es->HasRightAfferentArterioleResistance());
+  EXPECT_FALSE( es->HasRightAfferentArterioleResistance());
   es->GetRightAfferentArterioleResistance().SetValue(1.0, FlowResistanceUnit::Pa_s_Per_m3);
-  EXPECT_EQ(true, es->HasRightAfferentArterioleResistance());
+  EXPECT_TRUE( es->HasRightAfferentArterioleResistance());
   EXPECT_EQ(1.0, es->GetRightAfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightAfferentArterioleResistance());
+  EXPECT_FALSE( ces.HasRightAfferentArterioleResistance());
   auto dvalue = ces.GetRightAfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightEfferentArterioleResistance)
 {
-  EXPECT_EQ(false, es->HasRightEfferentArterioleResistance());
+  EXPECT_FALSE( es->HasRightEfferentArterioleResistance());
   es->GetRightEfferentArterioleResistance().SetValue(1.0, FlowResistanceUnit::Pa_s_Per_m3);
-  EXPECT_EQ(true, es->HasRightEfferentArterioleResistance());
+  EXPECT_TRUE( es->HasRightEfferentArterioleResistance());
   EXPECT_EQ(1.0, es->GetRightEfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightEfferentArterioleResistance());
+  EXPECT_FALSE( ces.HasRightEfferentArterioleResistance());
   auto dvalue = ces.GetRightEfferentArterioleResistance(FlowResistanceUnit::Pa_s_Per_m3);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, UrineOsmolality)
 {
-  EXPECT_EQ(false, es->HasUrineOsmolality());
+  EXPECT_FALSE( es->HasUrineOsmolality());
   es->GetUrineOsmolality().SetValue(1.0, OsmolalityUnit::Osm_Per_kg);
-  EXPECT_EQ(true, es->HasUrineOsmolality());
+  EXPECT_TRUE( es->HasUrineOsmolality());
   EXPECT_EQ(1.0, es->GetUrineOsmolality(OsmolalityUnit::Osm_Per_kg));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasUrineOsmolality());
+  EXPECT_FALSE( ces.HasUrineOsmolality());
   auto dvalue = ces.GetUrineOsmolality(OsmolalityUnit::Osm_Per_kg);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, UrineVolume)
 {
-  EXPECT_EQ(false, es->HasUrineVolume());
+  EXPECT_FALSE( es->HasUrineVolume());
   es->GetUrineVolume().SetValue(1.0, VolumeUnit::L);
-  EXPECT_EQ(true, es->HasUrineVolume());
+  EXPECT_TRUE( es->HasUrineVolume());
   EXPECT_EQ(1.0, es->GetUrineVolume(VolumeUnit::L));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasUrineVolume());
+  EXPECT_FALSE( ces.HasUrineVolume());
   auto dvalue = ces.GetUrineVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, UrineUreaNitrogenConcentration)
 {
-  EXPECT_EQ(false, es->HasUrineUreaNitrogenConcentration());
+  EXPECT_FALSE( es->HasUrineUreaNitrogenConcentration());
   es->GetUrineUreaNitrogenConcentration().SetValue(1.0, MassPerVolumeUnit::kg_Per_L);
-  EXPECT_EQ(true, es->HasUrineUreaNitrogenConcentration());
+  EXPECT_TRUE( es->HasUrineUreaNitrogenConcentration());
   EXPECT_EQ(1.0, es->GetUrineUreaNitrogenConcentration(MassPerVolumeUnit::kg_Per_L));
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasUrineUreaNitrogenConcentration());
+  EXPECT_FALSE( ces.HasUrineUreaNitrogenConcentration());
   auto dvalue = ces.GetUrineUreaNitrogenConcentration(MassPerVolumeUnit::kg_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, LeftFiltrationFraction)
 {
-  EXPECT_EQ(false, es->HasLeftFiltrationFraction());
+  EXPECT_FALSE( es->HasLeftFiltrationFraction());
   es->GetLeftFiltrationFraction().SetValue(1.0);
-  EXPECT_EQ(true, es->HasLeftFiltrationFraction());
+  EXPECT_TRUE( es->HasLeftFiltrationFraction());
   EXPECT_EQ(1.0, es->GetLeftFiltrationFraction().GetValue());
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasLeftFiltrationFraction());
+  EXPECT_FALSE( ces.HasLeftFiltrationFraction());
   auto dvalue = ces.GetLeftFiltrationFraction();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RightFiltrationFraction)
 {
-  EXPECT_EQ(false, es->HasRightFiltrationFraction());
+  EXPECT_FALSE( es->HasRightFiltrationFraction());
   es->GetRightFiltrationFraction().SetValue(1.0);
-  EXPECT_EQ(true, es->HasRightFiltrationFraction());
+  EXPECT_TRUE( es->HasRightFiltrationFraction());
   EXPECT_EQ(1.0, es->GetRightFiltrationFraction().GetValue());
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasRightFiltrationFraction());
+  EXPECT_FALSE( ces.HasRightFiltrationFraction());
   auto dvalue = ces.GetRightFiltrationFraction();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, UrineSpecificGravity)
 {
-  EXPECT_EQ(false, es->HasUrineSpecificGravity());
+  EXPECT_FALSE( es->HasUrineSpecificGravity());
   es->GetUrineSpecificGravity().SetValue(1.0);
-  EXPECT_EQ(true, es->HasUrineSpecificGravity());
+  EXPECT_TRUE( es->HasUrineSpecificGravity());
   EXPECT_EQ(1.0, es->GetUrineSpecificGravity().GetValue());
 
   const biogears::SERenalSystem ces(logger);
-  EXPECT_EQ(false, ces.HasUrineSpecificGravity());
+  EXPECT_FALSE( ces.HasUrineSpecificGravity());
   auto dvalue = ces.GetUrineSpecificGravity();
   EXPECT_NE(dvalue, dvalue);
 }

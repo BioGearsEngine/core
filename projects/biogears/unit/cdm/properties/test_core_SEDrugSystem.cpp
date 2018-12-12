@@ -68,134 +68,134 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, BronchodilationLevel)
 {
-  EXPECT_EQ(false,ds->HasBronchodilationLevel());
+  EXPECT_FALSE(ds->HasBronchodilationLevel());
   ds->GetBronchodilationLevel().SetValue(1.0);
-  EXPECT_EQ(true,ds->HasBronchodilationLevel());
+  EXPECT_TRUE(ds->HasBronchodilationLevel());
   EXPECT_EQ(1.0,ds->GetBronchodilationLevel().GetValue());
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasBronchodilationLevel());
+  EXPECT_FALSE( cds.HasBronchodilationLevel());
   auto dvalue = cds.GetBronchodilationLevel();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, HeartRateChange)
 {
-  EXPECT_EQ(false, ds->HasHeartRateChange());
+  EXPECT_FALSE( ds->HasHeartRateChange());
   ds->GetHeartRateChange().SetValue(1.0,FrequencyUnit::Hz);
-  EXPECT_EQ(true, ds->HasHeartRateChange());
+  EXPECT_TRUE( ds->HasHeartRateChange());
   EXPECT_EQ(1.0, ds->GetHeartRateChange(FrequencyUnit::Hz));
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasHeartRateChange());
+  EXPECT_FALSE( cds.HasHeartRateChange());
   auto dvalue = cds.GetHeartRateChange(FrequencyUnit::Hz);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, MeanBloodPressureChange)
 {
-  EXPECT_EQ(false, ds->HasMeanBloodPressureChange());
+  EXPECT_FALSE( ds->HasMeanBloodPressureChange());
   ds->GetMeanBloodPressureChange().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, ds->HasMeanBloodPressureChange());
+  EXPECT_TRUE( ds->HasMeanBloodPressureChange());
   EXPECT_EQ(1.0, ds->GetMeanBloodPressureChange(PressureUnit::Pa));
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasMeanBloodPressureChange());
+  EXPECT_FALSE( cds.HasMeanBloodPressureChange());
   auto dvalue = cds.GetMeanBloodPressureChange(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, NeuromuscularBlockLevel)
 {
-  EXPECT_EQ(false, ds->HasNeuromuscularBlockLevel());
+  EXPECT_FALSE( ds->HasNeuromuscularBlockLevel());
   ds->GetNeuromuscularBlockLevel().SetValue(1.0);
-  EXPECT_EQ(true, ds->HasNeuromuscularBlockLevel());
+  EXPECT_TRUE( ds->HasNeuromuscularBlockLevel());
   EXPECT_EQ(1.0, ds->GetNeuromuscularBlockLevel().GetValue());
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasNeuromuscularBlockLevel());
+  EXPECT_FALSE( cds.HasNeuromuscularBlockLevel());
   auto dvalue = cds.GetNeuromuscularBlockLevel();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PulsePressureChange)
 {
-  EXPECT_EQ(false, ds->HasPulsePressureChange());
+  EXPECT_FALSE( ds->HasPulsePressureChange());
   ds->GetPulsePressureChange().SetValue(1.0, PressureUnit::Pa);
-  EXPECT_EQ(true, ds->HasPulsePressureChange());
+  EXPECT_TRUE( ds->HasPulsePressureChange());
   EXPECT_EQ(1.0, ds->GetPulsePressureChange(PressureUnit::Pa));
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasPulsePressureChange());
+  EXPECT_FALSE( cds.HasPulsePressureChange());
   auto dvalue = cds.GetPulsePressureChange(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PupillaryResponse)
 {
-  EXPECT_EQ(false, ds->HasPupillaryResponse());
+  EXPECT_FALSE( ds->HasPupillaryResponse());
   ds->GetPupillaryResponse();
-  EXPECT_EQ(true, ds->HasPupillaryResponse());
+  EXPECT_TRUE( ds->HasPupillaryResponse());
   ds->RemovePupillaryResponse();
-  EXPECT_EQ(false, ds->HasPupillaryResponse());
+  EXPECT_FALSE( ds->HasPupillaryResponse());
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasPupillaryResponse());
+  EXPECT_FALSE( cds.HasPupillaryResponse());
   auto dvalue = cds.GetPupillaryResponse(); // so this returns a NULL instead of a nan
   EXPECT_EQ(NULL, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RespirationRateChange)
 {
-  EXPECT_EQ(false, ds->HasRespirationRateChange());
+  EXPECT_FALSE( ds->HasRespirationRateChange());
   ds->GetRespirationRateChange().SetValue(1.0, FrequencyUnit::Hz);
-  EXPECT_EQ(true, ds->HasRespirationRateChange());
+  EXPECT_TRUE( ds->HasRespirationRateChange());
   EXPECT_EQ(1.0, ds->GetRespirationRateChange(FrequencyUnit::Hz));
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasRespirationRateChange());
+  EXPECT_FALSE( cds.HasRespirationRateChange());
   auto dvalue = cds.GetRespirationRateChange(FrequencyUnit::Hz);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, SedationLevel)
 {
-  EXPECT_EQ(false, ds->HasSedationLevel());
+  EXPECT_FALSE( ds->HasSedationLevel());
   ds->GetSedationLevel().SetValue(1.0);
-  EXPECT_EQ(true, ds->HasSedationLevel());
+  EXPECT_TRUE( ds->HasSedationLevel());
   EXPECT_EQ(1.0, ds->GetSedationLevel().GetValue());
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasSedationLevel());
+  EXPECT_FALSE( cds.HasSedationLevel());
   auto dvalue = cds.GetSedationLevel();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TidalVolumeChange)
 {
-  EXPECT_EQ(false, ds->HasTidalVolumeChange());
+  EXPECT_FALSE( ds->HasTidalVolumeChange());
   ds->GetTidalVolumeChange().SetValue(1.0,VolumeUnit::L);
-  EXPECT_EQ(true, ds->HasTidalVolumeChange());
+  EXPECT_TRUE( ds->HasTidalVolumeChange());
   EXPECT_EQ(1.0, ds->GetTidalVolumeChange(VolumeUnit::L));
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasTidalVolumeChange());
+  EXPECT_FALSE( cds.HasTidalVolumeChange());
   auto dvalue = cds.GetTidalVolumeChange(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TubularPermeabilityChange)
 {
-  EXPECT_EQ(false, ds->HasTubularPermeabilityChange());
+  EXPECT_FALSE( ds->HasTubularPermeabilityChange());
   ds->GetTubularPermeabilityChange().SetValue(1.0);
-  EXPECT_EQ(true, ds->HasTubularPermeabilityChange());
+  EXPECT_TRUE( ds->HasTubularPermeabilityChange());
   EXPECT_EQ(1.0, ds->GetTubularPermeabilityChange().GetValue());
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasTubularPermeabilityChange());
+  EXPECT_FALSE( cds.HasTubularPermeabilityChange());
   auto dvalue = cds.GetTubularPermeabilityChange();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, CentralNervousResponse)
 {
-  EXPECT_EQ(false, ds->HasCentralNervousResponse());
+  EXPECT_FALSE( ds->HasCentralNervousResponse());
   ds->GetCentralNervousResponse().SetValue(1.0);
-  EXPECT_EQ(true, ds->HasCentralNervousResponse());
+  EXPECT_TRUE( ds->HasCentralNervousResponse());
   EXPECT_EQ(1.0, ds->GetCentralNervousResponse().GetValue());
 
   const biogears::SEDrugSystem cds(logger);
-  EXPECT_EQ(false, cds.HasCentralNervousResponse());
+  EXPECT_FALSE( cds.HasCentralNervousResponse());
   auto dvalue = cds.GetCentralNervousResponse();
   EXPECT_NE(dvalue, dvalue);
 }

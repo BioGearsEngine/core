@@ -68,229 +68,229 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 TEST_F(TEST_FIXTURE_NAME, AlveolarArterialGradient)
 {
-  EXPECT_EQ(false, es->HasAlveolarArterialGradient());
+  EXPECT_FALSE( es->HasAlveolarArterialGradient());
   es->GetAlveolarArterialGradient().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasAlveolarArterialGradient());
+  EXPECT_TRUE( es->HasAlveolarArterialGradient());
   EXPECT_EQ(1.0, es->GetAlveolarArterialGradient(PressureUnit::Pa));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasAlveolarArterialGradient());
+  EXPECT_FALSE( ces.HasAlveolarArterialGradient());
   auto dvalue = ces.GetAlveolarArterialGradient(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, CarricoIndex)
 {
-  EXPECT_EQ(false, es->HasCarricoIndex());
+  EXPECT_FALSE( es->HasCarricoIndex());
   es->GetCarricoIndex().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasCarricoIndex());
+  EXPECT_TRUE( es->HasCarricoIndex());
   EXPECT_EQ(1.0, es->GetCarricoIndex(PressureUnit::Pa));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasCarricoIndex());
+  EXPECT_FALSE( ces.HasCarricoIndex());
   auto dvalue = ces.GetCarricoIndex(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, EndTidalCarbonDioxidePressure)
 {
-  EXPECT_EQ(false, es->HasEndTidalCarbonDioxidePressure());
+  EXPECT_FALSE( es->HasEndTidalCarbonDioxidePressure());
   es->GetEndTidalCarbonDioxidePressure().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasEndTidalCarbonDioxidePressure());
+  EXPECT_TRUE( es->HasEndTidalCarbonDioxidePressure());
   EXPECT_EQ(1.0, es->GetEndTidalCarbonDioxidePressure(PressureUnit::Pa));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasEndTidalCarbonDioxidePressure());
+  EXPECT_FALSE( ces.HasEndTidalCarbonDioxidePressure());
   auto dvalue = ces.GetEndTidalCarbonDioxidePressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RespirationDriverPressure)
 {
-  EXPECT_EQ(false, es->HasRespirationDriverPressure());
+  EXPECT_FALSE( es->HasRespirationDriverPressure());
   es->GetRespirationDriverPressure().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRespirationDriverPressure());
+  EXPECT_TRUE( es->HasRespirationDriverPressure());
   EXPECT_EQ(1.0, es->GetRespirationDriverPressure(PressureUnit::Pa));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasRespirationDriverPressure());
+  EXPECT_FALSE( ces.HasRespirationDriverPressure());
   auto dvalue = ces.GetRespirationDriverPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RespirationMusclePressure)
 {
-  EXPECT_EQ(false, es->HasRespirationMusclePressure());
+  EXPECT_FALSE( es->HasRespirationMusclePressure());
   es->GetRespirationMusclePressure().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasRespirationMusclePressure());
+  EXPECT_TRUE( es->HasRespirationMusclePressure());
   EXPECT_EQ(1.0, es->GetRespirationMusclePressure(PressureUnit::Pa));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasRespirationMusclePressure());
+  EXPECT_FALSE( ces.HasRespirationMusclePressure());
   auto dvalue = ces.GetRespirationMusclePressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TranspulmonaryPressure)
 {
-  EXPECT_EQ(false, es->HasTranspulmonaryPressure());
+  EXPECT_FALSE( es->HasTranspulmonaryPressure());
   es->GetTranspulmonaryPressure().SetValue(1.0,PressureUnit::Pa);
-  EXPECT_EQ(true, es->HasTranspulmonaryPressure());
+  EXPECT_TRUE( es->HasTranspulmonaryPressure());
   EXPECT_EQ(1.0, es->GetTranspulmonaryPressure(PressureUnit::Pa));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasTranspulmonaryPressure());
+  EXPECT_FALSE( ces.HasTranspulmonaryPressure());
   auto dvalue = ces.GetTranspulmonaryPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, ExpiratoryFlow)
 {
-  EXPECT_EQ(false, es->HasExpiratoryFlow());
+  EXPECT_FALSE( es->HasExpiratoryFlow());
   es->GetExpiratoryFlow().SetValue(1.0,VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasExpiratoryFlow());
+  EXPECT_TRUE( es->HasExpiratoryFlow());
   EXPECT_EQ(1.0, es->GetExpiratoryFlow(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasExpiratoryFlow());
+  EXPECT_FALSE( ces.HasExpiratoryFlow());
   auto dvalue = ces.GetExpiratoryFlow(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, InspiratoryFlow)
 {
-  EXPECT_EQ(false, es->HasInspiratoryFlow());
+  EXPECT_FALSE( es->HasInspiratoryFlow());
   es->GetInspiratoryFlow().SetValue(1.0,VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasInspiratoryFlow());
+  EXPECT_TRUE( es->HasInspiratoryFlow());
   EXPECT_EQ(1.0, es->GetInspiratoryFlow(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasInspiratoryFlow());
+  EXPECT_FALSE( ces.HasInspiratoryFlow());
   auto dvalue = ces.GetInspiratoryFlow(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TargetPulmonaryVentilation)
 {
-  EXPECT_EQ(false, es->HasTargetPulmonaryVentilation());
+  EXPECT_FALSE( es->HasTargetPulmonaryVentilation());
   es->GetTargetPulmonaryVentilation().SetValue(1.0,VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasTargetPulmonaryVentilation());
+  EXPECT_TRUE( es->HasTargetPulmonaryVentilation());
   EXPECT_EQ(1.0, es->GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasTargetPulmonaryVentilation());
+  EXPECT_FALSE( ces.HasTargetPulmonaryVentilation());
   auto dvalue = ces.GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalAlveolarVentilation)
 {
-  EXPECT_EQ(false, es->HasTotalAlveolarVentilation());
+  EXPECT_FALSE( es->HasTotalAlveolarVentilation());
   es->GetTotalAlveolarVentilation().SetValue(1.0,VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasTotalAlveolarVentilation());
+  EXPECT_TRUE( es->HasTotalAlveolarVentilation());
   EXPECT_EQ(1.0, es->GetTotalAlveolarVentilation(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasTotalAlveolarVentilation());
+  EXPECT_FALSE( ces.HasTotalAlveolarVentilation());
   auto dvalue = ces.GetTotalAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalDeadSpaceVentilation)
 {
-  EXPECT_EQ(false, es->HasTotalDeadSpaceVentilation());
+  EXPECT_FALSE( es->HasTotalDeadSpaceVentilation());
   es->GetTotalDeadSpaceVentilation().SetValue(1.0,VolumePerTimeUnit::L_Per_min);
-  EXPECT_EQ(true, es->HasTotalDeadSpaceVentilation());
+  EXPECT_TRUE( es->HasTotalDeadSpaceVentilation());
   EXPECT_EQ(1.0, es->GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasTotalDeadSpaceVentilation());
+  EXPECT_FALSE( ces.HasTotalDeadSpaceVentilation());
   auto dvalue = ces.GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TidalVolume)
 {
-  EXPECT_EQ(false, es->HasTidalVolume());
+  EXPECT_FALSE( es->HasTidalVolume());
   es->GetTidalVolume().SetValue(1.0,VolumeUnit::L);
-  EXPECT_EQ(true, es->HasTidalVolume());
+  EXPECT_TRUE( es->HasTidalVolume());
   EXPECT_EQ(1.0, es->GetTidalVolume(VolumeUnit::L));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasTidalVolume());
+  EXPECT_FALSE( ces.HasTidalVolume());
   auto dvalue = ces.GetTidalVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, TotalLungVolume)
 {
-  EXPECT_EQ(false, es->HasTotalLungVolume());
+  EXPECT_FALSE( es->HasTotalLungVolume());
   es->GetTotalLungVolume().SetValue(1.0,VolumeUnit::L);
-  EXPECT_EQ(true, es->HasTotalLungVolume());
+  EXPECT_TRUE( es->HasTotalLungVolume());
   EXPECT_EQ(1.0, es->GetTotalLungVolume(VolumeUnit::L));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasTotalLungVolume());
+  EXPECT_FALSE( ces.HasTotalLungVolume());
   auto dvalue = ces.GetTotalLungVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PulmonaryCompliance)
 {
-  EXPECT_EQ(false, es->HasPulmonaryCompliance());
+  EXPECT_FALSE( es->HasPulmonaryCompliance());
   es->GetPulmonaryCompliance().SetValue(1.0,FlowComplianceUnit::L_Per_cmH2O);
-  EXPECT_EQ(true, es->HasPulmonaryCompliance());
+  EXPECT_TRUE( es->HasPulmonaryCompliance());
   EXPECT_EQ(1.0, es->GetPulmonaryCompliance(FlowComplianceUnit::L_Per_cmH2O));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasPulmonaryCompliance());
+  EXPECT_FALSE( ces.HasPulmonaryCompliance());
   auto dvalue = ces.GetPulmonaryCompliance(FlowComplianceUnit::L_Per_cmH2O);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PulmonaryResistance)
 {
-  EXPECT_EQ(false, es->HasPulmonaryResistance());
+  EXPECT_FALSE( es->HasPulmonaryResistance());
   es->GetPulmonaryResistance().SetValue(1.0,FlowResistanceUnit::Pa_s_Per_m3);
-  EXPECT_EQ(true, es->HasPulmonaryResistance());
+  EXPECT_TRUE( es->HasPulmonaryResistance());
   EXPECT_EQ(1.0, es->GetPulmonaryResistance(FlowResistanceUnit::Pa_s_Per_m3));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasPulmonaryResistance());
+  EXPECT_FALSE( ces.HasPulmonaryResistance());
   auto dvalue = ces.GetPulmonaryResistance(FlowResistanceUnit::Pa_s_Per_m3);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, RespirationRate)
 {
-  EXPECT_EQ(false, es->HasRespirationRate());
+  EXPECT_FALSE( es->HasRespirationRate());
   es->GetRespirationRate().SetValue(1.0,FrequencyUnit::Hz);
-  EXPECT_EQ(true, es->HasRespirationRate());
+  EXPECT_TRUE( es->HasRespirationRate());
   EXPECT_EQ(1.0, es->GetRespirationRate(FrequencyUnit::Hz));
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasRespirationRate());
+  EXPECT_FALSE( ces.HasRespirationRate());
   auto dvalue = ces.GetRespirationRate(FrequencyUnit::Hz);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, EndTidalCarbonDioxideFraction)
 {
-  EXPECT_EQ(false, es->HasEndTidalCarbonDioxideFraction());
+  EXPECT_FALSE( es->HasEndTidalCarbonDioxideFraction());
   es->GetEndTidalCarbonDioxideFraction().SetValue(1.0);
-  EXPECT_EQ(true, es->HasEndTidalCarbonDioxideFraction());
+  EXPECT_TRUE( es->HasEndTidalCarbonDioxideFraction());
   EXPECT_EQ(1.0, es->GetEndTidalCarbonDioxideFraction().GetValue());
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasEndTidalCarbonDioxideFraction());
+  EXPECT_FALSE( ces.HasEndTidalCarbonDioxideFraction());
   auto dvalue = ces.GetEndTidalCarbonDioxideFraction();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, InspiratoryExpiratoryRatio)
 {
-  EXPECT_EQ(false, es->HasInspiratoryExpiratoryRatio());
+  EXPECT_FALSE( es->HasInspiratoryExpiratoryRatio());
   es->GetInspiratoryExpiratoryRatio().SetValue(1.0);
-  EXPECT_EQ(true, es->HasInspiratoryExpiratoryRatio());
+  EXPECT_TRUE( es->HasInspiratoryExpiratoryRatio());
   EXPECT_EQ(1.0, es->GetInspiratoryExpiratoryRatio().GetValue());
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasInspiratoryExpiratoryRatio());
+  EXPECT_FALSE( ces.HasInspiratoryExpiratoryRatio());
   auto dvalue = ces.GetInspiratoryExpiratoryRatio();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, SpecificVentilation)
 {
-  EXPECT_EQ(false, es->HasSpecificVentilation());
+  EXPECT_FALSE( es->HasSpecificVentilation());
   es->GetSpecificVentilation().SetValue(1.0);
-  EXPECT_EQ(true, es->HasSpecificVentilation());
+  EXPECT_TRUE( es->HasSpecificVentilation());
   EXPECT_EQ(1.0, es->GetSpecificVentilation().GetValue());
 
   const biogears::SERespiratorySystem ces(logger);
-  EXPECT_EQ(false, ces.HasSpecificVentilation());
+  EXPECT_FALSE( ces.HasSpecificVentilation());
   auto dvalue = ces.GetSpecificVentilation();
   EXPECT_NE(dvalue, dvalue);
 }
