@@ -127,21 +127,21 @@ genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/runtime/jar/javax.mail-1.6.1.jar
     )
 set (allocation_args "-Xms64M" "-Xmx1G" "-Xmn64M" "-Xss4m")
-set (args "")
-add_custom_target(gen-data
-    COMMAND ${CMAKE_COMMAND} -E echo "${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath \"${java_classpath}\"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}"
-    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    VERBATIM
-    USES_TERMINAL
-)
-set (args "InitialPatientStates.config")
-add_custom_target(gen-states
-    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.TestDriver ${args}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    VERBATIM
-    USES_TERMINAL
-)
+#set (args "")
+#add_custom_target(gen-data
+#    COMMAND ${CMAKE_COMMAND} -E echo "${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath \"${java_classpath}\"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}"
+#    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}
+#    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+#    VERBATIM
+#    USES_TERMINAL
+#)
+#set (args "InitialPatientStates.config")
+#add_custom_target(gen-states
+#    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+#    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+#    VERBATIM
+#    USES_TERMINAL
+#)
 if(Biogears_BUILD_DOCUMENTATION)
     add_custom_target(gen-website-docs
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
@@ -269,8 +269,8 @@ add_custom_target(biogears-gui
     USES_TERMINAL
 )
 
-add_dependencies(gen-states  ${PROJECT_NAME})
-add_dependencies(gen-data  ${PROJECT_NAME})
+#add_dependencies(gen-states  ${PROJECT_NAME})
+#add_dependencies(gen-data  ${PROJECT_NAME})
 if(Biogears_BUILD_DOCUMENTATION)
   add_dependencies(gen-website-docs  ${PROJECT_NAME})
 endif()
@@ -290,8 +290,8 @@ add_dependencies(biogears-gui  ${PROJECT_NAME})
 
 
 if(STAGE_RUNTIME)
- add_dependencies(gen-states stage_runtime )
- add_dependencies(gen-data stage_runtime )
+ #add_dependencies(gen-states stage_runtime )
+ #add_dependencies(gen-data stage_runtime )
 if(Biogears_BUILD_DOCUMENTATION)
  add_dependencies(gen-website-docs stage_runtime )
 endif()
@@ -311,8 +311,8 @@ endif()
 endif()
 set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
 
-set_target_properties(gen-states PROPERTIES FOLDER "Java/Generate" )
-set_target_properties(gen-data   PROPERTIES FOLDER "Java/Generate" )
+#set_target_properties(gen-states PROPERTIES FOLDER "Java/Generate" )
+#set_target_properties(gen-data   PROPERTIES FOLDER "Java/Generate" )
 if(Biogears_BUILD_DOCUMENTATION)
   set_target_properties(gen-website-docs   PROPERTIES FOLDER "Java/Generate" )
 endif()
