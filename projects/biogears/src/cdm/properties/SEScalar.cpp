@@ -128,7 +128,6 @@ void SEScalar::Invalidate()
   if (m_readOnly) {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
     throw CommonDataModelException("Scalar is marked read-only");
-  }
 #else
     return;
 #endif
@@ -184,7 +183,7 @@ bool SEScalar::IsReadOnly() const
 double SEScalar::GetValue() const
 {
 #if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
-  if (m_isnan) {
+  if (!IsValid()) {
     throw CommonDataModelException("Value is NaN");
   }
 #else
@@ -316,7 +315,7 @@ bool SEScalar::IsZero(double d, double limit)
 //-------------------------------------------------------------------------------
 bool SEScalar::operator<(const SEScalar& rhs) const
 {
-  if ( !IsValid() || !rhs.IsValid()) {
+  if (!IsValid() || !rhs.IsValid()) {
     return false;
   }
   return m_value < rhs.m_value;
@@ -324,7 +323,7 @@ bool SEScalar::operator<(const SEScalar& rhs) const
 //-------------------------------------------------------------------------------
 bool SEScalar::operator<=(const SEScalar& rhs) const
 {
-  if ( !IsValid() || !rhs.IsValid()) {
+  if (!IsValid() || !rhs.IsValid()) {
     return false;
   }
   return m_value <= rhs.m_value;
@@ -332,7 +331,7 @@ bool SEScalar::operator<=(const SEScalar& rhs) const
 //-------------------------------------------------------------------------------
 bool SEScalar::operator>(const SEScalar& rhs) const
 {
-  if ( !IsValid() || !rhs.IsValid()) {
+  if (!IsValid() || !rhs.IsValid()) {
     return false;
   }
   return m_value > rhs.m_value;
@@ -340,7 +339,7 @@ bool SEScalar::operator>(const SEScalar& rhs) const
 //-------------------------------------------------------------------------------
 bool SEScalar::operator>=(const SEScalar& rhs) const
 {
-  if ( !IsValid() || !rhs.IsValid()) {
+  if (!IsValid() || !rhs.IsValid()) {
     return false;
   }
   return m_value >= rhs.m_value;
