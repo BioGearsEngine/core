@@ -2128,7 +2128,7 @@ double Tissue::MoveMassByConvection(SELiquidCompartment& source, SELiquidCompart
 {
   const SELiquidSubstanceQuantity* sSubQ = source.GetSubstanceQuantity(sub);
   const SELiquidSubstanceQuantity* tSubQ = target.GetSubstanceQuantity(sub);
-  m_LymphPaths;
+
   double fluidFlow_mL_Per_s = m_LymphPaths[&source]->GetFlow(VolumePerTimeUnit::mL_Per_s);
 
   double amountIncrement_ug = fluidFlow_mL_Per_s * sSubQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL) * timestep_s;
