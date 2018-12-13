@@ -52,10 +52,10 @@ protected:
   virtual void Unload(CDM::OverrideData& data) const;
 
 public:
-  CDM::enumOnOff::value GetOverrideSwitch() const;
-  void SetOverrideSwitch(CDM::enumOnOff::value state);
-  bool HasOverrideSwitch() const;
-  void InvalidateOverrideSwitch();
+  CDM::enumOnOff::value GetOverrideState() const;
+  void SetOverrideState(CDM::enumOnOff::value state);
+  bool HasOverrideState() const;
+  void InvalidateOverrideState();
   CDM::enumOnOff::value GetOverrideConformance() const;
   void SetOverrideConformance(CDM::enumOnOff::value valid);
   bool HasOverrideConformance() const;
@@ -177,7 +177,7 @@ public:
   virtual void ToString(std::ostream& str) const;
 
 protected:
-  CDM::enumOnOff m_OverrideSwitch;
+  CDM::enumOnOff m_OverrideState;
   CDM::enumOnOff m_OverrideConformance;
   SEScalar* m_ArterialPHOR;
   SEScalar* m_VenousPHOR;

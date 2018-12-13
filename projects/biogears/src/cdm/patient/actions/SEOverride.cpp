@@ -24,7 +24,7 @@ namespace biogears {
 SEOverride::SEOverride()
   : SEPatientAction()
 {
-  m_OverrideSwitch = CDM::enumOnOff::Off;
+  m_OverrideState = CDM::enumOnOff::Off;
   m_OverrideConformance = CDM::enumOnOff::On;
   m_ArterialPHOR = nullptr;
   m_VenousPHOR = nullptr;
@@ -68,7 +68,7 @@ SEOverride::~SEOverride()
 void SEOverride::Clear()
 {
   SEPatientAction::Clear();
-  m_OverrideSwitch = CDM::enumOnOff::Off;
+  m_OverrideState = CDM::enumOnOff::Off;
   m_OverrideConformance = CDM::enumOnOff::On;
   SAFE_DELETE(m_ArterialPHOR);
   SAFE_DELETE(m_VenousPHOR);
@@ -106,11 +106,11 @@ void SEOverride::Clear()
 
 bool SEOverride::IsValid() const
 {
-  if (!HasOverrideSwitch()) {
+  if (!HasOverrideState()) {
     Error("Override must have state.");
     return false;
   }
-  if (GetOverrideSwitch() == CDM::enumOnOff::On) {
+  if (GetOverrideState() == CDM::enumOnOff::On) {
     return true;
   } else {
     return false;
@@ -119,13 +119,13 @@ bool SEOverride::IsValid() const
 
 bool SEOverride::IsActive() const
 {
-  return (GetOverrideSwitch() == CDM::enumOnOff::On);
+  return (GetOverrideState() == CDM::enumOnOff::On);
 }
 
 bool SEOverride::Load(const CDM::OverrideData& in)
 {
   SEPatientAction::Clear();
-  SetOverrideSwitch(in.State());
+  SetOverrideState(in.State());
   SetOverrideConformance(in.Conformant());
   if (in.ArterialBloodPHOverride().present()) {
     GetArterialPHOverride().Load(in.ArterialBloodPHOverride().get());
@@ -302,8 +302,8 @@ CDM::OverrideData* SEOverride::Unload() const
 void SEOverride::Unload(CDM::OverrideData& data) const
 {
   SEPatientAction::Unload(data);
-  if (HasOverrideSwitch()) {
-    data.State(m_OverrideSwitch);
+  if (HasOverrideState()) {
+    data.State(m_OverrideState);
   }
   if (HasOverrideConformance()) {
     data.Conformant(m_OverrideConformance);
@@ -403,22 +403,22 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   }
 }
 
-CDM::enumOnOff::value SEOverride::GetOverrideSwitch() const
+CDM::enumOnOff::value SEOverride::GetOverrideState() const
 {
-  return m_OverrideSwitch;
+  return m_OverrideState;
 }
-void SEOverride::SetOverrideSwitch(CDM::enumOnOff::value state)
+void SEOverride::SetOverrideState(CDM::enumOnOff::value state)
 {
-  m_OverrideSwitch = state;
+  m_OverrideState = state;
 }
-bool SEOverride::HasOverrideSwitch() const
+bool SEOverride::HasOverrideState() const
 {
-  return (m_OverrideSwitch == CDM::enumOnOff::Off) ? true : 
-  (m_OverrideSwitch == CDM::enumOnOff::On) ? true : false;
+  return (m_OverrideState == CDM::enumOnOff::Off) ? true : 
+  (m_OverrideState == CDM::enumOnOff::On) ? true : false;
 }
-void SEOverride::InvalidateOverrideSwitch()
+void SEOverride::InvalidateOverrideState()
 {
-  m_OverrideSwitch = (CDM::enumOnOff::Off);
+  m_OverrideState = (CDM::enumOnOff::Off);
 }
 CDM::enumOnOff::value SEOverride::GetOverrideConformance() const
 {
@@ -1088,11 +1088,11 @@ void SEOverride::ToString(std::ostream& str) const
   }
 
   str << "\n\tState: ";
-  HasOverrideSwitch() ? str << GetOverrideSwitch() : str << "Not Set";
+  HasOverrideState() ? str << GetOverrideState() : str << "Not Set";
   str << "\n\tConformant: ";
   HasOverrideConformance() ? str << GetOverrideConformance() : str << "Not Set";
   if (GetOverrideConformance() == CDM::enumOnOff::Off 
-    && GetOverrideSwitch() == CDM::enumOnOff::On) {
+    && GetOverrideState() == CDM::enumOnOff::On) {
     str << ("\n\tOverride has turned conformance off. Outputs no longer resemble validated parameters.");
   }
   if (HasArterialPHOverride()) {
