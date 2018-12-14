@@ -605,7 +605,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
 
     //Sepsis check
     if (GetAcuteInflammatoryResponse().HasInflammationSources() && GetAcuteInflammatoryResponse().GetPathogen().GetValue() > ZERO_APPROX) {
-      double systolicBP = m_Patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
+      double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
       double urineOutput_mL_Per_hr_kg = m_data.GetRenal().GetUrineProductionRate(VolumePerTimeUnit::mL_Per_hr) / m_Patient->GetWeight(MassUnit::kg);
       if (systolicBP <= 90.0 && urineOutput_mL_Per_hr_kg <= 0.5) {
         patient.SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
