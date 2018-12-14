@@ -565,6 +565,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
         m_ss << " The patient has Severe Acute Respiratory Distress";
         break;
+      case CDM::enumPatientEvent::SevereSepsis:
+        m_ss << " The patient has severe sepsis";
+        break;
       case CDM::enumPatientEvent::Tachycardia:
         m_ss << " Patient has Tachycardia";
         break;
@@ -700,6 +703,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
         m_ss << " Patient no longer has a Severe Acute Respiratory Distress";
+        break;
+      case CDM::enumPatientEvent::SevereSepsis:
+        m_ss << " Patient no longer has severe sepsis";
         break;
       case CDM::enumPatientEvent::Tachycardia:
         m_ss << " Patient no longer has Tachycardia";
