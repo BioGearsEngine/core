@@ -112,7 +112,6 @@ void DynamicSepsis::SetSepsis(std::string& location, double& sev)
 {
   m_sepsis->SetCompartment(location);
   m_sepsis->GetSeverity().SetValue(sev);
-  m_sepsis->BuildTissueResistorMap();
   m_mutex.lock();
   m_bg->ProcessAction(*m_sepsis);
   m_mutex.unlock();

@@ -49,14 +49,10 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void BuildTissueResistorMap();
-  virtual const std::map<std::string, std::string>& GetTissueResistorMap() const;
-
   virtual void ToString(std::ostream& str) const;
 
 protected:
   std::string m_Compartment;
   SEScalar0To1* m_Severity;
-  std::map<std::string, std::string> m_TissueResistorMap;
 };
 }

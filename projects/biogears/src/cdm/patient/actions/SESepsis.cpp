@@ -34,7 +34,6 @@ void SESepsis::Clear()
 {
   SEPatientAction::Clear();
   m_Compartment = "";
-  m_TissueResistorMap.clear();
   SAFE_DELETE(m_Severity);
 }
 
@@ -53,8 +52,6 @@ bool SESepsis::Load(const CDM::SepsisData& in)
   SEPatientAction::Load(in);
   m_Compartment = in.Compartment();
   GetSeverity().Load(in.Severity());
-  BuildTissueResistorMap();
-
   return true;
 }
 
@@ -100,27 +97,6 @@ SEScalar0To1& SESepsis::GetSeverity()
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
-}
-
-const std::map<std::string, std::string>& SESepsis::GetTissueResistorMap() const
-{
-  return m_TissueResistorMap;
-}
-
-void SESepsis::BuildTissueResistorMap()
-{
-  m_TissueResistorMap["BoneTissue"] = "BoneE1ToBoneE2";
-  m_TissueResistorMap["FatTissue"] = "FatE1ToFatE2";
-  m_TissueResistorMap["GutTissue"] = "GutE1ToGutE2";
-  m_TissueResistorMap["LeftKidneyTissue"] = "LeftKidneyE1ToLeftKidneyE2";
-  m_TissueResistorMap["LeftLungTissue"] = "LeftLungE1ToLeftLungE2";
-  m_TissueResistorMap["LiverTissue"] = "LiverE1ToLiverE2";
-  m_TissueResistorMap["MuscleTissue"] = "MuscleE1ToMuscleE2";
-  m_TissueResistorMap["MyocardiumTissue"] = "MyocardiumE1ToMyocardiumE2";
-  m_TissueResistorMap["RightKidneyTissue"] = "RightKidneyE1ToRightKidneyE2";
-  m_TissueResistorMap["RightLungTissue"] = "RightLungE1ToRightLungE2";
-  m_TissueResistorMap["SkinTissue"] = "SkinE1ToSkinE2";
-  m_TissueResistorMap["SpleenTissue"] = "SpleenE1ToSpleenE2";
 }
 
 void SESepsis::ToString(std::ostream& str) const
