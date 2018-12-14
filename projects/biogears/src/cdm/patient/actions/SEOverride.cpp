@@ -104,10 +104,20 @@ void SEOverride::Clear()
   SAFE_DELETE(m_TidalVolumeOR);
 }
 
+  
 bool SEOverride::IsValid() const
 {
-  if ((GetOverrideState() == CDM::enumOnOff::On || GetOverrideState() == CDM::enumOnOff::Off)
-      && (GetOverrideConformance() == CDM::enumOnOff::On || GetOverrideConformance() == CDM::enumOnOff::Off)) {
+  if ((GetOverrideState() == CDM::enumOnOff::On)
+      && (HasOverrideConformance())) {
+    if (HasBloodChemistryOverride()
+      || HasCardiovascularOverride()
+      || HasEnergyOverride()
+      || HasRenalOverride()
+      || HasRespiratoryOverride()) {
+      return true;
+    }
+  } else if ((GetOverrideState() == CDM::enumOnOff::Off)
+             && (HasOverrideConformance())) {
     return true;
   } else {
     return false;
