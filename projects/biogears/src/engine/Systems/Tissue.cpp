@@ -523,6 +523,44 @@ void Tissue::PreProcess()
 {
   CalculateTissueFluidFluxes();
   CalculateOncoticPressure();
+
+   //Lots of debug tracking
+  for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
+    SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
+    SEFluidCircuitPath* l = m_LymphPaths[&ex];
+    std::string name = l->GetName();
+    m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_min));
+    SEFluidCircuitPath* extraCOP = m_InterstitialCopPaths[t];
+    std::string name2 = extraCOP->GetName();
+    m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
+    m_data.GetDataTrack().Probe(name2 + "COP", extraCOP->GetNextPressureSource(PressureUnit::mmHg));
+    double albuminConcentration = ex.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+    m_data.GetDataTrack().Probe(ex.GetName() + "Albumin_g_Per_dL", albuminConcentration);
+    SELiquidCompartment* vas = m_TissueToVascular[t];
+    std::string name3 = vas->GetName();
+    SEFluidCircuitPath* vasCOP;
+    if (name3 == BGE::VascularCompartment::Gut) {
+      for (auto c : vas->GetChildren()) {
+        name3 = c->GetName();
+        vasCOP = m_VascularCopPaths[c];
+        m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+        albuminConcentration = c->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+        m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+      }
+    } else {
+      name3 = vas->GetName();
+      if (name3 == BGE::VascularCompartment::LeftKidney)
+        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftRenalArtery);
+      if (name3 == BGE::VascularCompartment::RightKidney)
+        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
+      vasCOP = m_VascularCopPaths[vas];
+      m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
+      albuminConcentration = vas->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
+      m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
+    }
+    m_data.GetDataTrack().Probe(t->GetName() + "_Resistance", m_EndothelialResistancePaths[t]->GetNextResistance(FlowResistanceUnit::mmHg_min_Per_mL));
+
+  }
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -2485,8 +2523,6 @@ void Tissue::CalculateOncoticPressure()
 
 double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartment& extra, SETissueCompartment& tissue, double timestep_s)
 {
-  double alphaSmall = 0.9;
-  double alphaLarge = 1.0 - alphaSmall;
   double diffusivityCoefficientBase_mL_Per_min_kg = 0.03306;
   double reflectionCoefficientSmallBase = 0.954;
   double reflectionCoefficientLargeBase = 0.097;
@@ -2495,7 +2531,7 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
   double fluidFlux_mL_Per_min = m_InterstitialCopPaths[&tissue]->GetFlow(VolumePerTimeUnit::mL_Per_min);
   double tissueMass_kg = tissue.GetTotalMass(MassUnit::kg);
   double permeabilityMultiplier = 1.0;
-
+  double scaleFactor = 1.0;
   //We need to increase albumin permeability when there is inflammation
   if (m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
     std::vector<CDM::enumInflammationSource> sources = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetInflammationSources();
@@ -2507,10 +2543,14 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
       reflectionCoefficientSmall = reflectionCoefficientSmallBase * (1.0 - std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2.0) / (std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2) + std::pow(halfMax_pg_Per_L, 2)));
     }
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) != sources.end()) {
-      double sepsisDamage = 1.0 - m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
-      double damageHalfMax = 0.6;
-      permeabilityMultiplier += 35.0 * std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2) + std::pow(damageHalfMax, 2.0));
-      reflectionCoefficientSmall = reflectionCoefficientSmallBase * (1.0 - std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2.0) + std::pow(damageHalfMax, 2.0)));
+      double tissueIntegrity = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+      double damageHalfMax = 0.2;
+     // permeabilityMultiplier += 35.0 * std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2) + std::pow(damageHalfMax, 2.0));
+      //reflectionCoefficientSmall = reflectionCoefficientSmallBase * std::exp(5.0 * (tissueIntegrity-1));
+      reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
+      if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+        scaleFactor = 10.0 * m_data.GetActions().GetPatientActions().GetSepsis()->GetSeverity().GetValue();
+      }
     }
   }
 
@@ -2520,12 +2560,20 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 
   double albuminVascular_ug_Per_mL = vascular.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   double albuminExtracellular_ug_Per_mL = extra.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
-  double averageAlbumin_ug_Per_mL = (albuminVascular_ug_Per_mL + albuminExtracellular_ug_Per_mL) / 2.0;
 
-  double diffusiveLarge_ug_Per_min = diffusivityCoefficient_mL_Per_min_kg * tissueMass_kg * (albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL);
-  double convectiveSmall_ug_Per_min = (1.0 - reflectionCoefficientSmall) * alphaSmall * fluidFlux_mL_Per_min * averageAlbumin_ug_Per_mL;
 
-  double moved_ug = (diffusiveLarge_ug_Per_min + convectiveSmall_ug_Per_min) / 60.0 * timestep_s;
+  double peclet = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) / (diffusivityCoefficient_mL_Per_min_kg * tissueMass_kg);
+
+ // double diffusiveTest = diffusivityCoefficient_mL_Per_min_kg * tissueMass_kg * (1.0 - albuminExtracellular_ug_Per_mL / albuminVascular_ug_Per_mL) * peclet / (std::exp(peclet) - 1.0);
+ // double convectiveTest = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall);
+  double totalTest = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) * ((albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL * std::exp(-peclet)) / (1.0 - std::exp(-peclet)));
+
+
+  m_data.GetDataTrack().Probe(tissue.GetName() + "TotalTest", totalTest);
+  m_data.GetDataTrack().Probe(tissue.GetName() + "Reflection", reflectionCoefficientSmall);
+
+
+  double moved_ug = totalTest / 60.0 * timestep_s;
 
   if (moved_ug > 0) {
     if (moved_ug > vascular.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug)) {
@@ -2534,14 +2582,8 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
     DistributeMassbyVolumeWeighted(extra, *m_Albumin, moved_ug, MassUnit::ug);
     DistributeMassbyMassWeighted(vascular, *m_Albumin, -moved_ug, MassUnit::ug);
   } else {
-    if (-moved_ug > extra.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug)) {
-      moved_ug = -extra.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug);
-    }
-    DistributeMassbyMassWeighted(extra, *m_Albumin, moved_ug, MassUnit::ug);
-    DistributeMassbyVolumeWeighted(vascular, *m_Albumin, -moved_ug, MassUnit::ug);
+    moved_ug = 0.0;
   }
-
-  //Experimental section
 
   return moved_ug;
 }

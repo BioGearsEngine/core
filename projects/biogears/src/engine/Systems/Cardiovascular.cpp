@@ -380,7 +380,7 @@ void Cardiovascular::SetUp()
   m_systemicResistancePaths.clear();
   m_systemicCompliancePaths.clear();
   m_tissueResistancePaths.clear();
-  
+
   std::vector<SEFluidCircuitNode*> venousNodes;
   SEFluidCircuitNode* aorta = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Aorta1);
   SEFluidCircuitNode* ground = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Ground);
@@ -425,8 +425,6 @@ void Cardiovascular::SetUp()
   m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::RightLungE1ToRightLungE2));
   m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::SkinE1ToSkinE2));
   m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::SpleenE1ToSpleenE2));
-
-
 
   m_PatientActions = &m_data.GetActions().GetPatientActions();
 }
@@ -1007,15 +1005,15 @@ void Cardiovascular::TraumaticBrainInjury()
   //These multipliers are chosen to result in ICP > 25 mmHg and CBF < 1.8 mL/s
   //The commented out values are from the unit test; not sure why they have to be scaled by .5 in engine to get good response
   //double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 4.87814, severity);
-  double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 2.4, severity);  //2.43907
+  double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 2.4, severity); //2.43907
   //double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 30.7993, severity);
   double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 15.0, severity); //15.3997
 
   //We don't want to shoot the resistances up to their new values in a single time step because this causes very sharp changes in cerebral metrics
   //Use a simple proportional control to ramp up to target resistances.  Time constant determined empirically based on previous baselines
-  double timeConstant_s = 300.0 * severity;  //Otherwise the low severity scenarios go too slowly
+  double timeConstant_s = 300.0 * severity; //Otherwise the low severity scenarios go too slowly
   if (severity < ZERO_APPROX) {
-    timeConstant_s = 300.0;  //This function should not get evaluated once the TBI is removed, but put this here just in case something changes so we don't get a divide by 0 NaN
+    timeConstant_s = 300.0; //This function should not get evaluated once the TBI is removed, but put this here just in case something changes so we don't get a divide by 0 NaN
   }
   double targetUpstream = m_pBrainResistanceUpstream->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL) * usMult;
   double lastUpstream = m_pBrainResistanceUpstream->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1026,8 +1024,6 @@ void Cardiovascular::TraumaticBrainInjury()
 
   m_pBrainResistanceDownstream->GetNextResistance().SetValue(lastDownstream + downstreamDelta, FlowResistanceUnit::mmHg_s_Per_mL);
   m_pBrainResistanceUpstream->GetNextResistance().SetValue(lastUpstream + upstreamDelta, FlowResistanceUnit::mmHg_s_Per_mL);
-  
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1590,7 +1586,6 @@ void Cardiovascular::TuneCircuit()
       m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
       //return; //Skip stabelization for debugging
 
-
       map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
       systolic_mmHg = GetSystolicArterialPressure(PressureUnit::mmHg);
       diastolic_mmHg = GetDiastolicArterialPressure(PressureUnit::mmHg);
@@ -1931,7 +1926,6 @@ void Cardiovascular::ProcessOverride()
     GetSystolicArterialPressure().SetValue(override->GetSystolicArterialPressureOverride(PressureUnit::mmHg), PressureUnit::mmHg);
   }
 }
-
 
 void Cardiovascular::OverrideControlLoop()
 {

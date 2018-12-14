@@ -1019,7 +1019,7 @@ void Respiratory::ProcessDriverActions()
   if (m_PatientActions->HasSepsis()) {
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
     double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
-    sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.1);
+    sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.3);
   }
 
   //Apply modifiers to tidal volume.  Cardiac arrest and neuromuscular block are multiplicative while drug change is additive
