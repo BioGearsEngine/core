@@ -59,7 +59,7 @@ int main(int argc, char** argv)
   if (argc > 1) {
     if (parser.exists("STATES")) {
       biogears::ScenarioDriver generator{ n };
-      std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
+      std::vector<std::string> patients = biogears::ParseConfigFile("patientListShort.config");
       generator.LoadScenarios(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
       generator.run();
       while (!generator.stop_if_empty()) {
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
       test.join();
     } else if (parser.exists("PATIENT")) { // run-patient-validation
       biogears::ScenarioDriver generator{ n };
-      std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
+      std::vector<std::string> patients = biogears::ParseConfigFile("patientListShort.config");
       generator.LoadScenarios(patients, std::string("Scenarios/Validation/Patient-Validation.xml"));
       generator.run();
       while (!generator.stop_if_empty()) {
