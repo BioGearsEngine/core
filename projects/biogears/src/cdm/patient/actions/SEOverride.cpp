@@ -106,11 +106,8 @@ void SEOverride::Clear()
 
 bool SEOverride::IsValid() const
 {
-  if (!HasOverrideState()) {
-    Error("Override must have state.");
-    return false;
-  }
-  if (GetOverrideState() == CDM::enumOnOff::On) {
+  if ((GetOverrideState() == CDM::enumOnOff::On || GetOverrideState() == CDM::enumOnOff::Off)
+      && (GetOverrideConformance() == CDM::enumOnOff::On || GetOverrideConformance() == CDM::enumOnOff::Off)) {
     return true;
   } else {
     return false;
