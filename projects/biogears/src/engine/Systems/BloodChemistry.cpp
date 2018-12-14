@@ -395,8 +395,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
             if (m_PatientActions->GetOverride()->GetOverrideConformance()==CDM::enumOnOff::On) {
               patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
             }
-          }
-          
+          }          
         }
       } else if (patient.IsEventActive(CDM::enumPatientEvent::Hypercapnia) && arterialCarbonDioxide_mmHg < (hypercapniaFlag - 3)) {
         /// \event Patient: End Hypercapnia. The carbon dioxide partial pressure has fallen below 57 mmHg. The patient is no longer considered to be hypercapnic.
@@ -603,6 +602,19 @@ void BloodChemistry::CheckBloodSubstanceLevels()
       /// The brain is getting oxygen.
       patient.SetEvent(CDM::enumPatientEvent::MyocardiumOxygenDeficit, false, m_data.GetSimulationTime());
     }
+
+    //Sepsis check
+    if (GetAcuteInflammatoryResponse().HasInflammationSources() && GetAcuteInflammatoryResponse().GetPathogen().GetValue() > ZERO_APPROX) {
+      double systolicBP = m_Patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
+      double urineOutput_mL_Per_hr_kg = m_data.GetRenal().GetUrineProductionRate(VolumePerTimeUnit::mL_Per_hr) / m_Patient->GetWeight(MassUnit::kg);
+      if (systolicBP <= 90.0 && urineOutput_mL_Per_hr_kg <= 0.5) {
+        patient.SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
+      }
+      if (patient.IsEventActive(CDM::enumPatientEvent::SevereSepsis) && systolicBP > 95.0 && urineOutput_mL_Per_hr_kg > 0.75) {
+        //Give a little buffer on the BP and use the upper range of target urine output to decide when to turn this off
+        patient.SetEvent(CDM::enumPatientEvent::SevereSepsis, false, m_data.GetSimulationTime());
+      }
+    }
   }
 }
 
@@ -665,7 +677,7 @@ void BloodChemistry::Sepsis()
   if (!m_PatientActions->HasSepsis()) {
     return;
   }
-  
+
   //We need to signal that there is a source of inflammation--soon this will be incorporated with Acute Inflammation Model
   //Right now we are patching in Sepsis functionality and saving merge for a future story
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
@@ -687,14 +699,13 @@ void BloodChemistry::Sepsis()
 
   //Temperature (fever) effects
   double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
-  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.1);
+  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.3);
   coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
 
   //Blood pressure effects (accomplish by overriding baroreceptor resistance scale)
-  double bpThreshold = 0.6;
-  double baroreceptorScale = exp(-3 * (sigmoidInput - bpThreshold));
-  if (sigmoidInput >= bpThreshold) {
-    m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(baroreceptorScale);
+  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::SevereSepsis)) {
+    double duration_min = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::min);
+    m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(std::exp(-duration_min / 60.0));
   }
 
   //Bilirubin counts (measure of liver perfusion)
@@ -709,21 +720,29 @@ void BloodChemistry::Sepsis()
 void BloodChemistry::AcuteInflammatoryResponse()
 {
   //Handle all inflammation actions here instead of creating one action for each.  We can filter based on "InflammationSource"
-  std::vector<CDM::enumInflammationSource> sources = GetAcuteInflammatoryResponse().GetInflammationSources(); //Scale Factor to speed up during debug/testing (and probably for some scenarios)
-  double scaleFactor = 1.0;
+  std::vector<CDM::enumInflammationSource> sources = GetAcuteInflammatoryResponse().GetInflammationSources();
+  //Values that we will change depending on what the source of the inflammation is
+  double scaleFactor = 1.0; //Scale Factor to speed up during debug/testing (and probably for some scenarios)
   double burnTotalBodySurfaceArea = 0.0;
-  double pathogenGrowthRate = 0.0;  //Note bifurcation at kPG = 0.75
+  double pathogenGrowthRate = 0.0; //Note bifurcation at approximately kpg = 1.6
+  double damageHalfMax = 0.0;
+  double damageRecovery = 0.0;
+
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     scaleFactor = 2.0;
-    if(std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
-      GetAcuteInflammatoryResponse().GetTrauma().SetValue(10.0 * burnTotalBodySurfaceArea);  //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen 
+    damageHalfMax = 1.2;
+    damageRecovery = 0.01;
+    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
+      GetAcuteInflammatoryResponse().GetTrauma().SetValue(10.0 * burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
       GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
     }
   }
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    pathogenGrowthRate = 0.80;
+    pathogenGrowthRate = 2.5;
     scaleFactor = 10.0 * m_data.GetActions().GetPatientActions().GetSepsis()->GetSeverity().GetValue();
+    damageHalfMax = 0.5;
+    damageRecovery = 0.05;
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) == sources.end()) {
       GetAcuteInflammatoryResponse().GetPathogen().SetValue(1.0);
       GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
@@ -734,10 +753,10 @@ void BloodChemistry::AcuteInflammatoryResponse()
     return;
   }
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    Sepsis();  //Process additional sepsis effects
+    Sepsis(); //Process additional sepsis effects
   }
 
-  //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.  
+  //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.
   //We will store them with those units (for outputs), but they need to be scaled back down to dimensionless values to use in model equations
   double tnfScale = 35000.0;
   double nitrateScale = 1000.0;
@@ -775,17 +794,20 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double sM = 1.0, sN = 1.0, s6 = 0.001, s10 = 0.01;
   //Pathogen parameters
   double kPG = pathogenGrowthRate;
-  double kPN = 5.5;    //Phagocytic effect of activated neutrophils on pathogen, determined empirically
-  double kPM = 2.5;   //Phagocytic effect of macrophages on pathogen, determined empirically
-  double maxPathogen = 20.0;   //Maximum pathogen population size
+  double kPN = 4.0; //Phagocytic effect of activated neutrophils on pathogen, determined empirically
+  double sB = 0.0075; //Source of non-specific immune response
+  double kPB = 0.461; //Rate that non-specific response eliminates pathogen
+  double uB = 0.0023; //Decay rate of non-specific immune response
+  double kBP = 0.0001; //Rate at which non-specific response exhausted by pathogen
+  double maxPathogen = 20.0; //Maximum pathogen population size
   //Trauma decay
-  double kTr = 1.5;  //Determined empirically to give good results
+  double kTr = 1.5; //Determined empirically to give good results
   //Macrophage interaction
-  double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9;
+  double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 0.25, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
   //Activate macrophage interactions
   double kMANO = 0.2, kMA = 0.2;
   //Neutrophil interactions
-  double kNL = 0.15, kNTNF = 0.2, kN6 = 0.557, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 15.0, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2, xNNO = 0.5;
+  double kNL = 0.15, kNTNF = 0.2, kN6 = 0.557, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 15.0, xNTNF = 2.0, xN6 = 1.0, xND = 0.1, xN10 = 0.2, xNNO = 0.5; //xND was 0.4 for burn
   //Inducible NOS
   double kINOSN = 1.5, kINOSM = 0.1, kINOSEC = 0.1, kINOS6 = 2.0, kINOSd = 0.05, kINOS = 0.101, xINOS10 = 0.1, xINOSTNF = 0.05, xINOS6 = 0.1, xINOSNO = 0.3;
   //E NOS
@@ -805,9 +827,9 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Blood pressure
   double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
   //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05, changed kD from 0.05
-  double kDB = 0.005, kD6 = 0.3, kD = 0.01, xD6 = 1.2, xDNO = 0.4;
-  double kDTR = 0.15;   //This is a base value that will be adjusted as a function of type and severity of trauma
-  double kDP = 0.001;   //Pathogen causes a small amount of damage by itself
+  double kDB = 0.005, kD6 = 0.3, kD = damageRecovery, xD6 = damageHalfMax, xDNO = 0.4;
+  double kDTR = 0.15; //This is a base value that will be adjusted as a function of type and severity of trauma
+  double kDP = 0.001; //Pathogen causes a small amount of damage by itself
   //Temperature parameters
   double kT = 1.0, kTTnf = 1.5, nTTnf = 0.2, hTTnf = 0.75, TMax = 39.5, TMin = 37.0, kT6 = 1.5, nT6 = 0.5, hT6 = 0.75, kT10 = 0.0625, nT10 = 0.2, hT10 = 1.0;
   //Heart rate parameters
@@ -821,8 +843,8 @@ void BloodChemistry::AcuteInflammatoryResponse()
     kDTR *= burnTotalBodySurfaceArea;
   }
 
-  double dPathogen = kPG * pathogen * (1.0 - pathogen / maxPathogen) - pathogen * (kPM * macrophageActive + kPN * neutrophilActive);  //This is assumed to be the driving force for infection / sepsis.
-  double dTrauma = -kTr * trauma;   //This is assumed to be the driving force for burn
+  double dPathogen = kPG * pathogen * (1.0 - pathogen / maxPathogen) - pathogen * kPN * neutrophilActive - sB * kPB * pathogen / (uB + kBP * pathogen); //This is assumed to be the driving force for infection / sepsis.
+  double dTrauma = -kTr * trauma; //This is assumed to be the driving force for burn
   double dMacrophageResting = -((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMR * (macrophageResting - sM);
   double dMacrophageActive = ((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMA * macrophageActive;
   double dNeutrophilResting = -(kNL * xNL * GeneralMath::HillActivation(pathogen, xNL, 1.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(IL6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - tissueIntegrity, xND, 2.0) + kNB * fB * kNTR * trauma) * GeneralMath::HillInhibition(IL10 + catecholamines, xN10, 2.0) * neutrophilResting - kNR * (neutrophilResting - sN);
@@ -833,14 +855,15 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dNO3 = kNO3 * (nitricOxide - NO3);
   double dTNF = (kTNFN * neutrophilActive + kTNFM * macrophageActive) * GeneralMath::HillInhibition(IL10 + catecholamines, xTNF10, 2.0) * GeneralMath::HillInhibition(IL6, xTNF6, 3.0) - kTNF * TNF;
   double dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) + k6 * (s6 - IL6);
+  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+    //Chow et al did not report their IL6 equation correctly.  They left out IL6 inhibition of itself (though they had parameters for it listed).  Adding this self-inhibition reproduces more faithfully the results they report
+    //However, the burn model was tuned before this ommission was causght.  Putting it in for Sepsis and will re-tune for burn later, but don't want to cause delay on that project by messing around too much here.
+    dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) * GeneralMath::HillInhibition(IL6, x66, 4.0) + k6 * (s6 - IL6);
+  }
   double dIL10 = (k10N * neutrophilActive + macrophageActive * (1 + k10A * autonomic)) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(IL6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(IL12, x1012, 4.0) + k10R) - k10 * (IL10 - s10);
   double dIL12 = k12M * macrophageActive * GeneralMath::HillInhibition(IL10, x1210, 2.0) - k12 * IL12;
   double dCa = kCATR * autonomic - kCA * catecholamines;
   double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma + kDP * pathogen) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
-
-
-
-
 
   //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up
   GetAcuteInflammatoryResponse().GetPathogen().IncrementValue(dPathogen * dt_hr * scaleFactor);
@@ -962,7 +985,7 @@ void BloodChemistry::OverrideControlLoop()
 
   if (override->HasArterialPHOverride()) {
     currentArtPHOverride = override->GetArterialPHOverride().GetValue();
-    }
+  }
   if (override->HasVenousPHOverride()) {
       currentVenPHOverride = override->GetVenousPHOverride().GetValue();
     }

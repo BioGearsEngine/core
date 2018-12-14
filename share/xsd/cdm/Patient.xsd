@@ -79,6 +79,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="StartOfExhale"/><!--<< @brief Patient is starting to exhale. -->
       <xs:enumeration value="StartOfInhale"/><!--<< @brief Patient is starting to inhale. -->
       <xs:enumeration value="SevereAcuteRespiratoryDistress"/><!--<< @brief Severe impairment of the alveoli, reducing gas exchange within the lungs. (CarricoIndex [0,100] mmHg)-->
+	  <xs:enumeration value="SevereSepsis"/><!--<< @brief Sepsis accompanied by systolic pressure < 90 and urine output < 0.5 mL/kg/hr-->
       <xs:enumeration value="Tachycardia"/><!--<< @brief The heart rate is elevated above 100 beats per minute. -->
       <xs:enumeration value="Tachypnea"/><!--<< @brief A breathing rate above 20 breaths per minute. --> 
     </xs:restriction>
