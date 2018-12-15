@@ -83,10 +83,10 @@ public:
   */
   void ForwardEvents(SEEventHandler* handler);
 
-  CDM::enumAnesthesiaMachineConnection::value GetConnection() const;
-  void SetConnection(CDM::enumAnesthesiaMachineConnection::value c);
-  bool HasConnection() const;
-  void InvalidateConnection();
+  virtual CDM::enumAnesthesiaMachineConnection::value GetConnection() const;
+  virtual void SetConnection(CDM::enumAnesthesiaMachineConnection::value c);
+  virtual bool HasConnection() const;
+  virtual void InvalidateConnection();
 
   bool HasInletFlow() const;
   SEScalarVolumePerTime& GetInletFlow();
