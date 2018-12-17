@@ -7,7 +7,7 @@
   <Height readOnly="false" unit="in" value="72"/>
   <BodyFatFraction readOnly="false" value="0.18"/>
   <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="60"/>
-  <HeartRateBaseline readOnly="false" unit="1/min" value="110"/>
+  <HeartRateBaseline readOnly="false" unit="1/min" value="109"/>
   <RespirationRateBaseline readOnly="false" unit="1/min" value="18"/>
   <SystolicArterialPressureBaseline readOnly="false" unit="mmHg" value="90"/>
 </Patient>
