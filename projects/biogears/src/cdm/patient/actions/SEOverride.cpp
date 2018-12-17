@@ -803,7 +803,7 @@ bool SEOverride::HasBloodChemistryOverride() const
   || HasPhosphateOverride()
   || HasWBCCountOverride()
   || HasTotalBilirubinOverride()
-  || HasCalciumConcentrationOverride() ?
+  || HasCalciumConcentrationOverride()
   || HasGlucoseConcentrationOverride()
   || HasLactateConcentrationOverride()
   || HasPotassiumConcentrationOverride()
