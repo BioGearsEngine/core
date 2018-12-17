@@ -10,7 +10,7 @@ BodyFatFraction,0.21,0.28,,,0.25,0.15,0.18,0.18,0.18,0.18,0.18,0.18,0.18,0.18,0.
 Systemic Targets To Tune Engine To,,,,,,,,,,,,,,,,,,,,
 BloodVolumeBaseline,,,,,,,,,,,,,,,,,,,,
 BasalMetabolicRate,,,,,,,,,,,,,,,,,,,,
-HeartRateBaseline,72 bpm,72 bpm,,,72 bpm,72 bpm,110 bpm,50 bpm,72 bpm,93 bpm,109 bpm,72 bpm,100 bpm,109 bpm,84 bpm,72 bpm,72 bpm,72 bpm,60 bpm,100 bpm
+HeartRateBaseline,72 bpm,72 bpm,,,72 bpm,72 bpm,109 bpm,50 bpm,72 bpm,93 bpm,109 bpm,72 bpm,100 bpm,109 bpm,84 bpm,72 bpm,72 bpm,72 bpm,60 bpm,100 bpm
 SystolicArterialPressureBaseline,114 mmHg,114 mmHg,,,114 mmHg,114 mmHg,114 mmHg,114 mmHg,114 mmHg,90 mmHg,120 mmHg,114 mmHg,120 mmHg,90 mmHg,114 mmHg,114 mmHg,114 mmHg,114 mmHg,90 mmHg,120 mmHg
 DiastolicArterialPressureBaseline,73.5 mmHg,73.5 mmHg,,,73.5 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,60 mmHg,80 mmHg,73.5 mmHg,80 mmHg,60 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,73.5 mmHg,60 mmHg,80 mmHg
 RespirationRateBaseline,16 bpm,16 bpm,,,16 bpm,16 bpm,20 bpm,12 bpm,18 bpm,14 bpm,15 bpm,16 bpm,16 bpm,18 bpm,16 bpm,16 bpm,18 bpm,18 bpm,12 bpm,20 bpm
