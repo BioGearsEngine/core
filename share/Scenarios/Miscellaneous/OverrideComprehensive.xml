@@ -88,9 +88,9 @@
 		<Time value="2" unit="min"/>		
 	</Action>
 	<Action xsi:type="OverrideData" State="On" Conformant="On">
+		<LactateConcentrationOverride value="0.2" unit="mg/dL"/>
 		<AchievedExerciseLevelOverride value="0.5"/>
 		<CoreTemperatureOverride value="31" unit="degC"/>
-		<CreatinineProductionRateOverride value="50" unit="mol/s"/>
 		<FatigueLevelOverride value="0.5"/>
 		<SkinTemperatureOverride value="29" unit="degC"/>
 		<SweatRateOverride value="10" unit="g/s"/>
@@ -115,6 +115,15 @@
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="6" unit="min"/>		
+	</Action>
+	<Action xsi:type="OverrideData" State="Off" Conformant="On"> </Action>
+	<Action xsi:type="OverrideData" State="On" Conformant="On">
+		<RenalBloodFlowOverride value="10" unit="mL/min"/>		
+		<UrineProductionRateOverride value="0.4" unit="mL/min"/>	
+		<UrineOsmolalityOverride value="13" unit="mOsm/kg"/>	
+	</Action>
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="3" unit="min"/>		
 	</Action>
 	<Action xsi:type="OverrideData" State="On" Conformant="On">
 		<MeanArterialPressureOverride value="100" unit="mmHg"/>	
