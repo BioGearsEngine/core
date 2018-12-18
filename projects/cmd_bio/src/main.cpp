@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     if (parser.exists("STATES")) {
       biogears::ScenarioDriver generator{ n };
       std::vector<std::string> patients = biogears::ParseConfigFile("patientListShort.config");
-      generator.LoadScenarios(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
+      generator.LoadPatients(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
       generator.run();
       while (!generator.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     } else if (parser.exists("SYSTEM")) { // run-system-validation
       std::vector<std::string> files = biogears::ParseConfigFile("ValidationSystemsShort.config");
       biogears::ScenarioDriver test{ n };
-      test.LoadScenarios(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
+      test.LoadPatients(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
       test.run();
       while (!test.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     } else if (parser.exists("PATIENT")) { // run-patient-validation
       biogears::ScenarioDriver generator{ n };
       std::vector<std::string> patients = biogears::ParseConfigFile("patientListShort.config");
-      generator.LoadScenarios(patients, std::string("Scenarios/Validation/Patient-Validation.xml"));
+      generator.LoadPatients(patients, std::string("Scenarios/Validation/Patient-Validation.xml"));
       generator.run();
       while (!generator.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
     } else if (parser.exists("DRUG")) { // run-drug-validation
       std::vector<std::string> files = biogears::ParseConfigFile("ValidationDrugsShort.config");
       biogears::ScenarioDriver test{ n };
-      test.LoadScenarios(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
+      test.LoadScenarios(files);
       test.run();
       while (!test.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
     } else if (parser.exists("VERIFICATION")) { // run-verification
       std::vector<std::string> files = biogears::ParseConfigFile("VerificationScenariosShort.config");
       biogears::ScenarioDriver test{ n };
-      test.LoadScenarios(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
+      test.LoadScenarios(files);
       test.run();
       while (!test.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));

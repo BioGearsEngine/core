@@ -38,13 +38,22 @@ ScenarioDriver::~ScenarioDriver()
 //!
 //! \brief Iterates through patientFiles, creates a lambda function for each item, and passes those functions to a thread pool
 //!
-void ScenarioDriver::LoadScenarios(std::vector<std::string> files, std::string xml)
+void ScenarioDriver::LoadPatients(std::vector<std::string> files, std::string xml)
 {
   for (auto& patient : files) {
     std::function<void()> work = [=]() { biogears::runScenario(patient, xml); };
     _pool.queue_work(work);
   }
 }
+
+void ScenarioDriver::LoadScenarios(std::vector<std::string> files)
+{
+  for (auto& patient : files) {
+    std::function<void()> work = [=]() { biogears::runScenario("StandardMale.xml", patient); };
+    _pool.queue_work(work);
+  }
+}
+
 //-------------------------------------------------------------------------------
 
 //!

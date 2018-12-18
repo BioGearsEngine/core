@@ -22,7 +22,8 @@ public:
   ScenarioDriver(ScenarioDriver&&) = default;
   ~ScenarioDriver() override;
 
-  void LoadScenarios(std::vector<std::string> patients, std::string xml);
+  void LoadPatients(std::vector<std::string> patients, std::string xml);
+  void LoadScenarios(std::vector<std::string> patients);
 
   void run() override;
   void stop() override;

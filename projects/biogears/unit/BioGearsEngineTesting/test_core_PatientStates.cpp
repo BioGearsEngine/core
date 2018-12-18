@@ -30,11 +30,10 @@
 #include <iostream>
 #include <string>
 
-
-#ifdef DISABLE_BIOGEARS_Override_TEST
-#define TEST_FIXTURE_NAME DISABLED_Override_Fixture
+#ifdef DISABLE_BIOGEARS_PatientStates_TEST
+#define TEST_FIXTURE_NAME DISABLED_PatientStates_Fixture
 #else
-#define TEST_FIXTURE_NAME Override_Fixture
+#define TEST_FIXTURE_NAME PatientStates_Fixture
 #endif
 
 using namespace biogears;
@@ -58,7 +57,6 @@ protected:
   // before the destructor).
   virtual void TearDown();
   biogears::Logger* logger;
-
 };
 
 void TEST_FIXTURE_NAME::SetUp()
@@ -69,19 +67,14 @@ void TEST_FIXTURE_NAME::TearDown()
 {
 }
 
-TEST_F(TEST_FIXTURE_NAME, Override_On_Off)
+TEST_F(TEST_FIXTURE_NAME, StandardMale)
 {
-  std::string patientXML{ "patients/StandardMale.xml" };
-  std::string patientLog{ "OverrideTestResults.log" };
-  std::string patientResults{ "OverrideTestResults.csv" };
-
-  std::unique_ptr<PhysiologyEngine> eng;
-  eng = CreateBioGearsEngine(patientLog);
-  DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
-  BioGearsScenario sce(eng->GetSubstanceManager());
-  sce.Load("/Scenarios/OverrideTest.xml");
-  sce.GetInitialParameters().SetPatientFile(patientXML);
-  BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
-  EXPECT_TRUE(exec->Execute(sce, patientResults, nullptr));
-  delete exec;
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToAsthma.log");
+  bg->GetLogger()->Info("HowToAsthmaAttack");
+  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
 }
