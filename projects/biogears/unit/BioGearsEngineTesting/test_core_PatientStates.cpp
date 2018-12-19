@@ -66,15 +66,291 @@ void TEST_FIXTURE_NAME::SetUp()
 void TEST_FIXTURE_NAME::TearDown()
 {
 }
-
+TEST_F(TEST_FIXTURE_NAME, Bradycardic)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  if (!bg->LoadState("./states/Bradycardic@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Carol)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("CarolPatientUnitTest.log");
+  bg->GetLogger()->Info("Carol Patient Unit Test");
+  if (!bg->LoadState("./states/Carol@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Cynthia)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("CynthiaPatientUnitTest.log");
+  bg->GetLogger()->Info("Cynthia Patient Unit Test");
+  if (!bg->LoadState("./states/Cynthia@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, DefaultFemale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("DefaultFemalePatientUnitTest.log");
+  bg->GetLogger()->Info("Default Female Patient Unit Test");
+  if (!bg->LoadState("./states/DefaultFemale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, DefaultMale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("DefaultMalePatientUnitTest.log");
+  bg->GetLogger()->Info("Default Male Patient Unit Test");
+  if (!bg->LoadState("./states/DefaultMale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, DefaultTemplateFemale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("DefaultTemplateFemalePatientUnitTest.log");
+  bg->GetLogger()->Info("Default Template Female Patient Unit Test");
+  if (!bg->LoadState("./states/DefaultTemplateFemale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, DefaultTemplateMale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("DefaultTemplateMalePatientUnitTest.log");
+  bg->GetLogger()->Info("Default Template Male Patient Unit Test");
+  if (!bg->LoadState("./states/DefaultTemplateMale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, ExtremeFemale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("ExtremeFemalePatientUnitTest.log");
+  bg->GetLogger()->Info("Extreme Female Patient Unit Test");
+  if (!bg->LoadState("./states/ExtremeFemale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, ExtremeMale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("ExtremeMalePatientUnitTest.log");
+  bg->GetLogger()->Info("Extreme Male Patient Unit Test");
+  if (!bg->LoadState("./states/ExtremeMale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Gus)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("GusPatientUnitTest.log");
+  bg->GetLogger()->Info("Gus Patient Unit Test");
+  if (!bg->LoadState("./states/Gus@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Hassan)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HassanPatientUnitTest.log");
+  bg->GetLogger()->Info("Hassan Patient Unit Test");
+  if (!bg->LoadState("./states/Hassan@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Jane)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("JanePatientUnitTest.log");
+  bg->GetLogger()->Info("Jane Patient Unit Test");
+  if (!bg->LoadState("./states/Jane@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Jeff)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("JeffPatientUnitTest.log");
+  bg->GetLogger()->Info("Jeff Patient Unit Test");
+  if (!bg->LoadState("./states/Jeff@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Joel)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("JoelPatientUnitTest.log");
+  bg->GetLogger()->Info("Joel Patient Unit Test");
+  if (!bg->LoadState("./states/Joel@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Nathan)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("NathanPatientUnitTest.log");
+  bg->GetLogger()->Info("Nathan Patient Unit Test");
+  if (!bg->LoadState("./states/Nathan@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Rick)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("RickPatientUnitTest.log");
+  bg->GetLogger()->Info("Rick Patient Unit Test");
+  if (!bg->LoadState("./states/Rick@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Soldier)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("SoldierPatientUnitTest.log");
+  bg->GetLogger()->Info("Soldier Patient Unit Test");
+  if (!bg->LoadState("./states/Soldier@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, StandardFemale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("StandardFemalePatientUnitTest.log");
+  bg->GetLogger()->Info("Standard Female Patient Unit Test");
+  if (!bg->LoadState("./states/StandardFemale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
 TEST_F(TEST_FIXTURE_NAME, StandardMale)
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToAsthma.log");
-  bg->GetLogger()->Info("HowToAsthmaAttack");
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("StandardMalePatientUnitTest.log");
+  bg->GetLogger()->Info("Standard Male Patient Unit Test");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Tachycardic)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("TachycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Tachycardic Patient Unit Test");
+  if (!bg->LoadState("./states/Tachycardic@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, ToughGirl)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("ToughGirlPatientUnitTest.log");
+  bg->GetLogger()->Info("HowToAsthmaAttack");
+  if (!bg->LoadState("./states/ToughGirl@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, ToughGuy)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("ToughGuyPatientUnitTest.log");
+  bg->GetLogger()->Info("Tough Guy Patient Unit Test");
+  if (!bg->LoadState("./states/ToughGuy@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Tristan)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("TristanPatientUnitTest.log");
+  bg->GetLogger()->Info("HowToAsthmaAttack");
+  if (!bg->LoadState("./states/Tristan@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+TEST_F(TEST_FIXTURE_NAME, Underweight)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("UnderweightPatientUnitTest.log");
+  bg->GetLogger()->Info("HowToAsthmaAttack");
+  if (!bg->LoadState("./states/Underweight@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
   EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
 }
