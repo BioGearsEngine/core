@@ -105,15 +105,27 @@ public:
   bool HasBloodChemistryOverride() const;
 
   //Cardiovascular
+  bool HasBloodVolumeOverride() const;
+  SEScalarVolume& GetBloodVolumeOverride();
+  double GetBloodVolumeOverride(const VolumeUnit& unit) const;
   bool HasCardiacOutputOverride() const;
   SEScalarVolumePerTime& GetCardiacOutputOverride();
   double GetCardiacOutputOverride(const VolumePerTimeUnit& unit) const;
+  bool HasDiastolicArterialPressureOverride() const;
+  SEScalarPressure& GetDiastolicArterialPressureOverride();
+  double GetDiastolicArterialPressureOverride(const PressureUnit& unit) const;
   bool HasMAPOverride() const;
   SEScalarPressure& GetMAPOverride();
   double GetMAPOverride(const PressureUnit& unit) const;
   bool HasHeartRateOverride() const;
   SEScalarFrequency& GetHeartRateOverride();
   double GetHeartRateOverride(const FrequencyUnit& unit) const;
+  bool HasHeartStrokeVolumeOverride() const;
+  SEScalarVolume& GetHeartStrokeVolumeOverride();
+  double GetHeartStrokeVolumeOverride(const VolumeUnit& unit) const;
+  bool HasSystolicArterialPressureOverride() const;
+  SEScalarPressure& GetSystolicArterialPressureOverride();
+  double GetSystolicArterialPressureOverride(const PressureUnit& unit) const;
   bool HasCardiovascularOverride() const;
 
   //Energy
@@ -226,9 +238,13 @@ protected:
   SEScalarMassPerVolume* m_LactateConcentrationOR;
   SEScalarMassPerVolume* m_PotassiumConcentrationOR;
   SEScalarMassPerVolume* m_SodiumConcentrationOR;
+  SEScalarVolume* m_BloodVolumeOR;
   SEScalarVolumePerTime* m_CardiacOutputOR;
-  SEScalarPressure* m_PressureOR;
+  SEScalarPressure* m_DiastolicArtPressureOR;
+  SEScalarPressure* m_MeanArtPressureOR;
   SEScalarFrequency* m_HeartRateOR;
+  SEScalarVolume* m_HeartStrokeVolumeOR;
+  SEScalarPressure* m_SystolicArtPressureOR;
   SEScalarFraction* m_AcheivedExerciseLevelOR;
   SEScalarTemperature* m_CoreTemperatureOR;
   SEScalarAmountPerTime* m_CreatinineProductionRateOR;

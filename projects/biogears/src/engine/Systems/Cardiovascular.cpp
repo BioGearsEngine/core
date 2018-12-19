@@ -1909,45 +1909,88 @@ void Cardiovascular::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
-  double cardiacoutput_mL_per_min = m_data.GetCardiovascular().GetCardiacOutput().GetValue(VolumePerTimeUnit::L_Per_min);
-  double map_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure().GetValue(PressureUnit::mmHg);
-  double hr_bpm = m_data.GetCardiovascular().GetHeartRate().GetValue(FrequencyUnit::Per_min);
+  if (override->HasBloodVolumeOverride()) {
+    GetBloodVolume().SetValue(override->GetBloodVolumeOverride(VolumeUnit::L), VolumeUnit::L);
+  }
   if (override->HasCardiacOutputOverride()) {
-    cardiacoutput_mL_per_min = override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
-    }
+    GetCardiacOutput().SetValue(override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min),VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasDiastolicArterialPressureOverride()) {
+    GetDiastolicArterialPressure().SetValue(override->GetDiastolicArterialPressureOverride(PressureUnit::mmHg), PressureUnit::mmHg);
+  }
   if (override->HasMAPOverride()) {
-      map_mmHg = override->GetMAPOverride(PressureUnit::mmHg);
-    }
+    GetMeanArterialPressure().SetValue(override->GetMAPOverride(PressureUnit::mmHg), PressureUnit::mmHg);
+  }
   if (override->HasHeartRateOverride()) {
-    hr_bpm = override->GetHeartRateOverride(FrequencyUnit::Per_min);
-    }
-  m_data.GetCardiovascular().GetCardiacOutput().SetValue(cardiacoutput_mL_per_min, VolumePerTimeUnit::L_Per_min);
-  m_data.GetCardiovascular().GetMeanArterialPressure().SetValue(map_mmHg, PressureUnit::mmHg);
-  m_data.GetCardiovascular().GetHeartRate().SetValue(hr_bpm, FrequencyUnit::Per_min);
+    GetHeartRate().SetValue(override->GetHeartRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
+  }
+  if (override->HasHeartStrokeVolumeOverride()) {
+    GetHeartStrokeVolume().SetValue(override->GetHeartStrokeVolumeOverride(VolumeUnit::mL), VolumeUnit::mL);
+  }
+  if (override->HasSystolicArterialPressureOverride()) {
+    GetSystolicArterialPressure().SetValue(override->GetSystolicArterialPressureOverride(PressureUnit::mmHg), PressureUnit::mmHg);
+  }
 }
 
 
 void Cardiovascular::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  double maxBloodVolumeOverride = 1000.0; //L
+  double minBloodVolumeOverride = 0.0; //L
+  double currentBloodVolumeOverride = 0.0; //value gets changed in next check
   double maxCardiacOutput = 100.0; //L/min
   double minCardiacOutput = 0.0; //L/min
-  double currentCardiacOutput = m_data.GetCardiovascular().GetCardiacOutput().GetValue(VolumePerTimeUnit::L_Per_min);
+  double currentCardiacOutput = 0.0; //value gets changed in next check
+  double maxDiastolicArtPressureOverride = 1000.0; //L
+  double minDiastolicArtPressureOverride = 0.0; //L
+  double currentDiastolicArtPressureOverride = 0.0; //value gets changed in next check
   double maxMAPOverride = 105.0; //mmHg
   double minMAPOverride = 60.0; //mmHg
   double currentMAPOverride = 85.0; //Average MAP, value gets changed in next check
   double maxHROverride = 240.0; //bpm, max estimate of patient's max age related heart is [220-age_yr] so override provides a huge buffer above this estimate
   double minHROverride = 30.0; //bpm, lowest achievable is 27 before asystole starts to end runs
   double currentHROverride = 80.0; //Average HR, value gets changed in next check
-  if (override->HasCardiacOutputOverride())
+  double maxHeartStrokeVolumeOverride = 1000.0; //L
+  double minHeartStrokeVolumeOverride = 0.0; //L
+  double currentHeartStrokeVolumeOverride = 0.0; //value gets changed in next check
+  double maxSystolicArtPressureOverride = 1000.0; //L
+  double minSystolicArtPressureOverride = 0.0; //L
+  double currentSystolicArtPressureOverride = 0.0; //value gets changed in next check
+  if (override->HasBloodVolumeOverride()) {
+    currentBloodVolumeOverride = override->GetBloodVolumeOverride(VolumeUnit::L);
+  }
+  if (override->HasCardiacOutputOverride()) {
     currentCardiacOutput = override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
-  if (override->HasMAPOverride())
+  }
+  if (override->HasDiastolicArterialPressureOverride()) {
+    currentDiastolicArtPressureOverride = override->GetDiastolicArterialPressureOverride(PressureUnit::mmHg);
+  }
+  if (override->HasMAPOverride()) {
     currentMAPOverride = override->GetMAPOverride(PressureUnit::mmHg);
-  if (override->HasHeartRateOverride())
+  }
+  if (override->HasHeartRateOverride()) {
     currentHROverride = override->GetHeartRateOverride(FrequencyUnit::Per_min);
+  }
+  if (override->HasHeartStrokeVolumeOverride()) {
+    currentHeartStrokeVolumeOverride = override->GetHeartStrokeVolumeOverride(VolumeUnit::mL);
+  }
+  if (override->HasSystolicArterialPressureOverride()) {
+    currentSystolicArtPressureOverride = override->GetSystolicArterialPressureOverride(PressureUnit::mmHg);
+  }
 
+  if ((currentBloodVolumeOverride < minBloodVolumeOverride || currentBloodVolumeOverride > maxBloodVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Blood Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
   if ((currentCardiacOutput < minCardiacOutput || currentCardiacOutput > maxCardiacOutput) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Cardiac Output Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentDiastolicArtPressureOverride < minDiastolicArtPressureOverride || currentDiastolicArtPressureOverride > maxDiastolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Diastolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
@@ -1958,6 +2001,16 @@ void Cardiovascular::OverrideControlLoop()
   }
   if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentHeartStrokeVolumeOverride < minHeartStrokeVolumeOverride || currentHeartStrokeVolumeOverride > maxHeartStrokeVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Heart Stroke Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentSystolicArtPressureOverride < minSystolicArtPressureOverride || currentSystolicArtPressureOverride > maxSystolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Systolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }

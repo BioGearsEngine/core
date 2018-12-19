@@ -466,9 +466,13 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="LactateConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="PotassiumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="SodiumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="BloodVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total volume of fluid within the cardiovascular system.-->
 					<xs:element name="CardiacOutputOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief The volume of blood being pumped from the heart in a given time interval. -->
+					<xs:element name="DiastolicArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The minimum pressure in the aorta over the course of a cardiac cycle.-->
 					<xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. -->  
-					<xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of heart beat. -->					
+					<xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of heart beat. -->	
+					<xs:element name="HeartStrokeVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of blood pumped from the left ventricle in one contraction.-->
+					<xs:element name="SystolicArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The maximum pressure in the aorta over the course of a cardiac cycle.-->
 					<xs:element name="AchievedExerciseLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief The fraction of how much of the requested exercise the patient is able to achieve. 1.0 means the the patient is performing at the requested level. Nan is the patient is not exercising (no Action)-->
                     <xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The internal body temperature.-->
                     <xs:element name="CreatinineProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The generation of creatinine in the muscle tissue per -->                    

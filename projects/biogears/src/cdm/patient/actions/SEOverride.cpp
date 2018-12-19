@@ -40,9 +40,13 @@ SEOverride::SEOverride()
   m_LactateConcentrationOR = nullptr;
   m_PotassiumConcentrationOR = nullptr;
   m_SodiumConcentrationOR = nullptr;
+  m_BloodVolumeOR = nullptr;
   m_CardiacOutputOR = nullptr;
-  m_PressureOR = nullptr;
+  m_DiastolicArtPressureOR = nullptr;
+  m_MeanArtPressureOR = nullptr;
   m_HeartRateOR = nullptr;
+  m_HeartStrokeVolumeOR = nullptr;
+  m_SystolicArtPressureOR = nullptr;
   m_AcheivedExerciseLevelOR = nullptr;
   m_CoreTemperatureOR = nullptr;
   m_CreatinineProductionRateOR = nullptr;
@@ -95,9 +99,13 @@ void SEOverride::Clear()
   SAFE_DELETE(m_LactateConcentrationOR);
   SAFE_DELETE(m_PotassiumConcentrationOR);
   SAFE_DELETE(m_SodiumConcentrationOR);
+  SAFE_DELETE(m_BloodVolumeOR);
   SAFE_DELETE(m_CardiacOutputOR);
-  SAFE_DELETE(m_PressureOR);
+  SAFE_DELETE(m_DiastolicArtPressureOR);
+  SAFE_DELETE(m_MeanArtPressureOR);
   SAFE_DELETE(m_HeartRateOR);
+  SAFE_DELETE(m_HeartStrokeVolumeOR);
+  SAFE_DELETE(m_SystolicArtPressureOR);
   SAFE_DELETE(m_AcheivedExerciseLevelOR);
   SAFE_DELETE(m_CoreTemperatureOR);
   SAFE_DELETE(m_CreatinineProductionRateOR);
@@ -221,11 +229,20 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetSodiumConcentrationOverride().Load(in.SodiumConcentrationOverride().get());
   } else {
     GetSodiumConcentrationOverride().Invalidate();
+  if (in.BloodVolumeOverride().present()) {
+    GetBloodVolumeOverride().Load(in.BloodVolumeOverride().get());
+  } else {
+    GetBloodVolumeOverride().Invalidate();
   }
   if (in.CardiacOutputOverride().present()) {
     GetCardiacOutputOverride().Load(in.CardiacOutputOverride().get());
   } else {
     GetCardiacOutputOverride().Invalidate();
+  }
+  if (in.DiastolicArterialPressureOverride().present()) {
+    GetDiastolicArterialPressureOverride().Load(in.DiastolicArterialPressureOverride().get());
+  } else {
+    GetDiastolicArterialPressureOverride().Invalidate();
   }
   if (in.MeanArterialPressureOverride().present()) {
     GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
@@ -236,6 +253,16 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetHeartRateOverride().Load(in.HeartRateOverride().get());
   } else {
     GetHeartRateOverride().Invalidate();
+  }
+  if (in.HeartStrokeVolumeOverride().present()) {
+    GetHeartStrokeVolumeOverride().Load(in.HeartStrokeVolumeOverride().get());
+  } else {
+    GetHeartStrokeVolumeOverride().Invalidate();
+  }
+  if (in.SystolicArterialPressureOverride().present()) {
+    GetSystolicArterialPressureOverride().Load(in.SystolicArterialPressureOverride().get());
+  } else {
+    GetSystolicArterialPressureOverride().Invalidate();
   }
   if (in.AchievedExerciseLevelOverride().present()) {
     GetAchievedExerciseLevelOverride().Load(in.AchievedExerciseLevelOverride().get());
@@ -431,15 +458,26 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   }
   if (HasSodiumConcentrationOverride()) {
     data.SodiumConcentrationOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_SodiumConcentrationOR->Unload()));
+  if (HasBloodVolumeOverride()) {
+    data.BloodVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_BloodVolumeOR->Unload()));
   }
   if (HasCardiacOutputOverride()) {
     data.CardiacOutputOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CardiacOutputOR->Unload()));
   }
+  if (HasDiastolicArterialPressureOverride()) {
+    data.DiastolicArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_DiastolicArtPressureOR->Unload()));
+  }
   if (HasMAPOverride()) {
-    data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_PressureOR->Unload()));
+    data.MeanArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArtPressureOR->Unload()));
   }
   if (HasHeartRateOverride()) {
     data.HeartRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateOR->Unload()));
+  }
+  if (HasHeartStrokeVolumeOverride()) {
+    data.HeartStrokeVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_HeartStrokeVolumeOR->Unload()));
+  }
+  if (HasSystolicArterialPressureOverride()) {
+    data.SystolicArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArtPressureOR->Unload()));
   }
   if (HasAchievedExerciseLevelOverride()) {
     data.AchievedExerciseLevelOverride(std::unique_ptr<CDM::ScalarFractionData>(m_AcheivedExerciseLevelOR->Unload()));
@@ -811,6 +849,25 @@ bool SEOverride::HasBloodChemistryOverride() const
 }
 
 // Cardiovascular Overrides //
+bool SEOverride::HasBloodVolumeOverride() const
+{
+  return m_BloodVolumeOR == nullptr ? false : m_BloodVolumeOR->IsValid();
+}
+SEScalarVolume& SEOverride::GetBloodVolumeOverride()
+{
+  if (m_BloodVolumeOR == nullptr) {
+    m_BloodVolumeOR = new SEScalarVolume();
+  }
+  return *m_BloodVolumeOR;
+}
+double SEOverride::GetBloodVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_BloodVolumeOR == nullptr)
+  {
+    return SEScalar::dNaN();
+  }
+  return m_BloodVolumeOR->GetValue(unit);
+}
 bool SEOverride::HasCardiacOutputOverride() const
 {
   return m_CardiacOutputOR == nullptr ? false : m_CardiacOutputOR->IsValid();
@@ -829,23 +886,41 @@ double SEOverride::GetCardiacOutputOverride(const VolumePerTimeUnit& unit) const
   }
   return m_CardiacOutputOR->GetValue(unit);
 }
+bool SEOverride::HasDiastolicArterialPressureOverride() const
+{
+  return m_DiastolicArtPressureOR == nullptr ? false : m_DiastolicArtPressureOR->IsValid();
+}
+SEScalarPressure& SEOverride::GetDiastolicArterialPressureOverride()
+{
+  if (m_DiastolicArtPressureOR == nullptr) {
+    m_DiastolicArtPressureOR = new SEScalarPressure();
+  }
+  return *m_DiastolicArtPressureOR;
+}
+double SEOverride::GetDiastolicArterialPressureOverride(const PressureUnit& unit) const
+{
+  if (m_DiastolicArtPressureOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_DiastolicArtPressureOR->GetValue(unit);
+}
 bool SEOverride::HasMAPOverride() const
 {
-  return m_PressureOR == nullptr ? false : m_PressureOR->IsValid();
+  return m_MeanArtPressureOR == nullptr ? false : m_MeanArtPressureOR->IsValid();
 }
 SEScalarPressure& SEOverride::GetMAPOverride()
 {
-  if (m_PressureOR == nullptr) {
-    m_PressureOR = new SEScalarPressure();
+  if (m_MeanArtPressureOR == nullptr) {
+    m_MeanArtPressureOR = new SEScalarPressure();
   }
-  return *m_PressureOR;
+  return *m_MeanArtPressureOR;
 }
 double SEOverride::GetMAPOverride(const PressureUnit& unit) const
 {
-  if (m_PressureOR == nullptr) {
+  if (m_MeanArtPressureOR == nullptr) {
     return SEScalar::dNaN();
   }
-  return m_PressureOR->GetValue(unit);
+  return m_MeanArtPressureOR->GetValue(unit);
 }
 bool SEOverride::HasHeartRateOverride() const
 {
@@ -865,12 +940,52 @@ double SEOverride::GetHeartRateOverride(const FrequencyUnit& unit) const
   }
   return m_HeartRateOR->GetValue(unit);
 }
+bool SEOverride::HasHeartStrokeVolumeOverride() const
+{
+  return m_HeartStrokeVolumeOR == nullptr ? false : m_HeartStrokeVolumeOR->IsValid();
+}
+SEScalarVolume& SEOverride::GetHeartStrokeVolumeOverride()
+{
+  if (m_HeartStrokeVolumeOR == nullptr) {
+    m_HeartStrokeVolumeOR = new SEScalarVolume();
+  }
+  return *m_HeartStrokeVolumeOR;
+}
+double SEOverride::GetHeartStrokeVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_HeartStrokeVolumeOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_HeartStrokeVolumeOR->GetValue(unit);
+}
+bool SEOverride::HasSystolicArterialPressureOverride() const
+{
+  return m_SystolicArtPressureOR == nullptr ? false : m_SystolicArtPressureOR->IsValid();
+}
+SEScalarPressure& SEOverride::GetSystolicArterialPressureOverride()
+{
+  if (m_SystolicArtPressureOR == nullptr) {
+    m_SystolicArtPressureOR = new SEScalarPressure();
+  }
+  return *m_SystolicArtPressureOR;
+}
+double SEOverride::GetSystolicArterialPressureOverride(const PressureUnit& unit) const
+{
+  if (m_SystolicArtPressureOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_SystolicArtPressureOR->GetValue(unit);
+}
 
 bool SEOverride::HasCardiovascularOverride() const
 {
-  return HasCardiacOutputOverride() ||
-  HasMAPOverride() ||
-  HasHeartRateOverride();
+  return HasBloodVolumeOverride()
+  || HasCardiacOutputOverride()
+  || HasDiastolicArterialPressureOverride()
+  || HasMAPOverride()
+  || HasHeartRateOverride()
+  || HasHeartStrokeVolumeOverride()
+  || HasSystolicArterialPressureOverride();
  
 }
 
@@ -1348,18 +1463,18 @@ double SEOverride::GetUrineVolumeOverride(const VolumeUnit& unit) const
 
 bool SEOverride::HasRenalOverride() const
 {
-  return HasLeftAfferentArterioleResistanceOverride() ||
-  HasLeftGlomerularFiltrationRateOverride() ||
-  HasLeftReaborptionRateOverride() ||
-  HasRenalBloodFlowOverride() ||
-  HasRenalPlasmaFlowOverride() ||
-  HasRightAfferentArterioleResistanceOverride() ||
-  HasRightGlomerularFiltrationRateOverride() ||
-  HasRightReaborptionRateOverride() ||
-  HasUrinationRateOverride() ||
-  HasUrineProductionRateOverride() ||
-  HasUrineOsmolalityOverride() ||
-  HasUrineVolumeOverride();
+  return HasLeftAfferentArterioleResistanceOverride()
+  || HasLeftGlomerularFiltrationRateOverride()
+  || HasLeftReaborptionRateOverride()
+  || HasRenalBloodFlowOverride()
+  || HasRenalPlasmaFlowOverride()
+  || HasRightAfferentArterioleResistanceOverride()
+  || HasRightGlomerularFiltrationRateOverride()
+  || HasRightReaborptionRateOverride()
+  || HasUrinationRateOverride()
+  || HasUrineProductionRateOverride()
+  || HasUrineOsmolalityOverride()
+  || HasUrineVolumeOverride();
 }
 
 
@@ -1404,7 +1519,7 @@ double SEOverride::GetTidalVolumeOverride(const VolumeUnit& unit) const
 bool SEOverride::HasRespiratoryOverride() const
 {
   return HasRespirationRateOverride() 
-    || HasTidalVolumeOverride();
+  || HasTidalVolumeOverride();
 }
 
 
@@ -1524,6 +1639,11 @@ void SEOverride::ToString(std::ostream& str) const
     HasSodiumConcentrationOverride() ? str << *m_SodiumConcentrationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tSodium Concentration has a lower bound of 0 mg/dL and an upper bound of 500 mg/dL.";
+  if (HasBloodVolumeOverride()) {
+    str << "\n\tBlood Volume: ";
+    HasBloodVolumeOverride() ? str << *m_BloodVolumeOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tBlood Volume has a lower bound of X and an upper bound of Y.";
     }
     str << std::flush;
   }
@@ -1535,10 +1655,18 @@ void SEOverride::ToString(std::ostream& str) const
     }
     str << std::flush;
   }
+  if (HasDiastolicArterialPressureOverride()) {
+    str << "\n\tDiastolic Arterial Pressure: ";
+    HasDiastolicArterialPressureOverride() ? str << *m_DiastolicArtPressureOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tDiastolic Arterial Pressure has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
   if (HasMAPOverride())
   {
     str << "\n\tMean Arterial Pressure: ";
-    HasMAPOverride() ? str << *m_PressureOR : str << "Not Set";
+    HasMAPOverride() ? str << *m_MeanArtPressureOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tMean Arterial Pressure has a lower bound of 60 mmHg and an upper bound of 105 mmHg.";
     } else {
@@ -1553,6 +1681,22 @@ void SEOverride::ToString(std::ostream& str) const
       str << "\n\tHeart Rate has a lower bound of 30 bpm and an upper bound of 240 bpm.";
     } else {
       str << "\n\tPharmacodynamics have been turned off due to conformance being turned off.";
+    }
+    str << std::flush;
+  }
+  if (HasHeartStrokeVolumeOverride()) {
+    str << "\n\tHeart Stroke Volume: ";
+    HasHeartStrokeVolumeOverride() ? str << *m_HeartStrokeVolumeOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tHeart Stroke Volume has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasSystolicArterialPressureOverride()) {
+    str << "\n\tSystolic Arterial Pressure: ";
+    HasSystolicArterialPressureOverride() ? str << *m_SystolicArtPressureOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tSystolic Arterial Pressure has a lower bound of X and an upper bound of Y.";
     }
     str << std::flush;
   }
