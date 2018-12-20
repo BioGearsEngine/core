@@ -127,6 +127,7 @@
 	</Action>
 	<Action xsi:type="OverrideData" State="On" Conformant="On">
 		<MeanArterialPressureOverride value="100" unit="mmHg"/>	
+		<BloodVolumeOverride value="5.9" unit="L"/>
 		<ExerciseMeanArterialPressureDeltaOverride value="100" unit="mmHg"/>
 		<LactateProductionRateOverride value="50" unit="mol/s"/>
 		<SodiumLostToSweatOverride value="500" unit="g"/>	

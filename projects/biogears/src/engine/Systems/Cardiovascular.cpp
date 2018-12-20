@@ -1936,14 +1936,14 @@ void Cardiovascular::ProcessOverride()
 void Cardiovascular::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
-  double maxBloodVolumeOverride = 1000.0; //L
+  double maxBloodVolumeOverride = 25.0; //L
   double minBloodVolumeOverride = 0.0; //L
   double currentBloodVolumeOverride = 0.0; //value gets changed in next check
   double maxCardiacOutput = 100.0; //L/min
   double minCardiacOutput = 0.0; //L/min
   double currentCardiacOutput = 0.0; //value gets changed in next check
-  double maxDiastolicArtPressureOverride = 1000.0; //L
-  double minDiastolicArtPressureOverride = 0.0; //L
+  double maxDiastolicArtPressureOverride = 200.0; //mmHg
+  double minDiastolicArtPressureOverride = 0.0; //mmHg
   double currentDiastolicArtPressureOverride = 0.0; //value gets changed in next check
   double maxMAPOverride = 105.0; //mmHg
   double minMAPOverride = 60.0; //mmHg
@@ -1951,11 +1951,11 @@ void Cardiovascular::OverrideControlLoop()
   double maxHROverride = 240.0; //bpm, max estimate of patient's max age related heart is [220-age_yr] so override provides a huge buffer above this estimate
   double minHROverride = 30.0; //bpm, lowest achievable is 27 before asystole starts to end runs
   double currentHROverride = 80.0; //Average HR, value gets changed in next check
-  double maxHeartStrokeVolumeOverride = 1000.0; //L
-  double minHeartStrokeVolumeOverride = 0.0; //L
+  double maxHeartStrokeVolumeOverride = 5000.0; //mL
+  double minHeartStrokeVolumeOverride = 0.0; //mL
   double currentHeartStrokeVolumeOverride = 0.0; //value gets changed in next check
-  double maxSystolicArtPressureOverride = 1000.0; //L
-  double minSystolicArtPressureOverride = 0.0; //L
+  double maxSystolicArtPressureOverride = 300.0; //mmHg
+  double minSystolicArtPressureOverride = 0.0; //mmHg
   double currentSystolicArtPressureOverride = 0.0; //value gets changed in next check
   if (override->HasBloodVolumeOverride()) {
     currentBloodVolumeOverride = override->GetBloodVolumeOverride(VolumeUnit::L);
