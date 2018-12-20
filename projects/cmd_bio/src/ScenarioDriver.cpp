@@ -23,7 +23,7 @@
 
 //
 namespace biogears {
-int runScenario(const std::string patient, std::string XMLString);
+int runScenario(std::string patient, std::string XMLString);
 
 //-------------------------------------------------------------------------------
 ScenarioDriver::ScenarioDriver(size_t thread_count)
@@ -62,9 +62,13 @@ void ScenarioDriver::LoadScenarios(std::vector<std::string> files)
 //! \param XMLString : a path to the xml scenario being used
 //! \return int 0 if no exceptions were encountered, otherwise 1
 //!
-int runScenario(const std::string patient, std::string XMLString)
+int runScenario(std::string patient, std::string XMLString)
 {
-  std::string patientXML(patient);
+
+  std::cout << "'"<<patient<<"'\n";
+  std::cout << "'"<<XMLString<<"'";
+
+  std::string patientXML(trim(patient));
 
   std::string patientLog = "-" + patientXML;
   patientLog = findAndReplace(patientLog, ".xml", ".log");
@@ -72,8 +76,8 @@ int runScenario(const std::string patient, std::string XMLString)
   std::string patientResults = "-" + patientXML;
   patientResults = findAndReplace(patientResults, ".xml", "Results.csv");
 
-  std::string logFile(patient);
-  std::string outputFile(patient);
+  std::string logFile(trim(patient));
+  std::string outputFile(trim(patient));
   logFile = findAndReplace(logFile, ".xml", "Results.log");
   outputFile = findAndReplace(outputFile, ".xml", "Results.csv");
 
@@ -86,8 +90,8 @@ int runScenario(const std::string patient, std::string XMLString)
   }
   DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
   BioGearsScenario sce(eng->GetSubstanceManager());
-  sce.Load(XMLString);
-  sce.GetInitialParameters().SetPatientFile(patientXML);
+  sce.Load(trim(XMLString));
+  sce.GetInitialParameters().SetPatientFile(trim(patientXML));
 
   BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
   exec->Execute(sce, outputFile, nullptr);
