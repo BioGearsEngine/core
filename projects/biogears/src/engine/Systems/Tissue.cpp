@@ -551,6 +551,12 @@ void Tissue::Process()
 //--------------------------------------------------------------------------------------------------
 void Tissue::PostProcess()
 {
+  if (m_data.GetActions().GetPatientActions().HasOverride()
+      && m_data.GetState() == EngineState::Active) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasTissueOverride()) {
+      ProcessOverride();
+    }
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -2513,4 +2519,110 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 
   return moved_ug;
 }
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// determine override requirements from user defined inputs
+///
+/// \details
+/// User specified override outputs that are specific to the cardiovascular system are implemented here.
+/// If overrides aren't present for this system then this function will not be called during preprocess.
+//--------------------------------------------------------------------------------------------------
+void Tissue::ProcessOverride()
+{
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  OverrideControlLoop();
+  if (override->HasExtravascularFluidVolumeOverride()) {
+    GetExtravascularFluidVolume().SetValue(override->GetExtravascularFluidVolumeOverride(VolumeUnit::L), VolumeUnit::L);
+  }
+  if (override->HasIntracellularFluidVolumeOverride()) {
+    GetIntracellularFluidVolume().SetValue(override->GetIntracellularFluidVolumeOverride(VolumeUnit::L), VolumeUnit::L);
+  }
+  if (override->HasLiverGlycogenOverride()) {
+    GetLiverGlycogen().SetValue(override->GetLiverGlycogenOverride(MassUnit::g), MassUnit::g);
+  }
+  if (override->HasMuscleGlycogenOverride()) {
+    GetMuscleGlycogen().SetValue(override->GetMuscleGlycogenOverride(MassUnit::g), MassUnit::g);
+  }
+  if (override->HasStoredProteinOverride()) {
+    GetStoredProtein().SetValue(override->GetStoredProteinOverride(MassUnit::g), MassUnit::g);
+  }
+  if (override->HasStoredFatOverride()) {
+    GetStoredFat().SetValue(override->GetStoredFatOverride(MassUnit::g), MassUnit::g);
+  }
+}
+
+void Tissue::OverrideControlLoop()
+{
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  double maxExtravascularFluidVolumeOverride = 1000.0; //L
+  double minExtravascularFluidVolumeOverride = 0.0; //L
+  double currentExtravascularFluidVolumeOverride = 0.0; //value gets changed in next check
+  double maxIntracellularFluidVolumeOverride = 1000.0; //L
+  double minIntracellularFluidVolumeOverride = 0.0; //L
+  double currentIntracellularFluidVolumeOverride = 0.0; //value gets changed in next check
+  double maxLiverGlycogenOverride = 1000.0; //g
+  double minLiverGlycogenOverride = 0.0; //g
+  double currentLiverGlycogenOverride = 0.0; //value gets changed in next check
+  double maxMuscleGlycogenOverride = 1000.0; //g
+  double minMuscleGlycogenOverride = 0.0; //g
+  double currentMuscleGlycogenOverride = 0.0; //value gets changed in next check
+  double maxStoredProteinOverride = 1000.0; //g
+  double minStoredProteinOverride = 0.0; //g
+  double currentStoredProteinOverride = 0.0; //value gets changed in next check
+  double maxStoredFatOverride = 1000.0; //g
+  double minStoredFatOverride = 0.0; //g
+  double currentStoredFatOverride = 0.0; //value gets changed in next check
+  if (override->HasExtravascularFluidVolumeOverride()) {
+    currentExtravascularFluidVolumeOverride = override->GetExtravascularFluidVolumeOverride(VolumeUnit::L);
+  }
+  if (override->HasIntracellularFluidVolumeOverride()) {
+    currentIntracellularFluidVolumeOverride = override->GetIntracellularFluidVolumeOverride(VolumeUnit::L);
+  }
+  if (override->HasLiverGlycogenOverride()) {
+    currentLiverGlycogenOverride = override->GetLiverGlycogenOverride(MassUnit::g);
+  }
+  if (override->HasMuscleGlycogenOverride()) {
+    currentMuscleGlycogenOverride = override->GetMuscleGlycogenOverride(MassUnit::g);
+  }
+  if (override->HasStoredProteinOverride()) {
+    currentStoredProteinOverride = override->GetStoredProteinOverride(MassUnit::g);
+  }
+  if (override->HasStoredFatOverride()) {
+    currentStoredFatOverride = override->GetStoredFatOverride(MassUnit::g);
+  }
+
+  if ((currentExtravascularFluidVolumeOverride < minExtravascularFluidVolumeOverride || currentExtravascularFluidVolumeOverride > maxExtravascularFluidVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Extravascular Fluid Volume Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentIntracellularFluidVolumeOverride < minIntracellularFluidVolumeOverride || currentIntracellularFluidVolumeOverride > maxIntracellularFluidVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Intracellular Fluid Volume Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentLiverGlycogenOverride < minLiverGlycogenOverride || currentLiverGlycogenOverride > maxLiverGlycogenOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Liver Glycogen Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentMuscleGlycogenOverride < minMuscleGlycogenOverride || currentMuscleGlycogenOverride > maxMuscleGlycogenOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Muscle Glycogen Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentStoredProteinOverride < minStoredProteinOverride || currentStoredProteinOverride > maxStoredProteinOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Stored Protein Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentStoredFatOverride < minStoredFatOverride || currentStoredFatOverride > maxStoredFatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Stored Fat Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  return;
+}
+
 }

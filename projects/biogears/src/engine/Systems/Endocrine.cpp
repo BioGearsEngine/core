@@ -28,8 +28,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -156,6 +156,12 @@ void Endocrine::Process()
 //--------------------------------------------------------------------------------------------------
 void Endocrine::PostProcess()
 {
+  if (m_data.GetActions().GetPatientActions().HasOverride()
+      && m_data.GetState() == EngineState::Active) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasEndocrineOverride()) {
+      ProcessOverride();
+    }
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -314,5 +320,54 @@ void Endocrine::ReleaseEpinephrine()
 
   m_rKidneyEpinephrine->GetMass().IncrementValue(0.5 * epinephrineRelease_ug, MassUnit::ug);
   m_lKidneyEpinephrine->GetMass().IncrementValue(0.5 * epinephrineRelease_ug, MassUnit::ug);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// determine override requirements from user defined inputs
+///
+/// \details
+/// User specified override outputs that are specific to the cardiovascular system are implemented here.
+/// If overrides aren't present for this system then this function will not be called during preprocess.
+//--------------------------------------------------------------------------------------------------
+void Endocrine::ProcessOverride()
+{
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  OverrideControlLoop();
+  if (override->HasInsulinSynthesisRateOverride()) {
+    GetInsulinSynthesisRate().SetValue(override->GetInsulinSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min), AmountPerTimeUnit::pmol_Per_min);
+  }
+  if (override->HasGlucagonSynthesisRateOverride()) {
+    GetGlucagonSynthesisRate().SetValue(override->GetGlucagonSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min), AmountPerTimeUnit::pmol_Per_min);
+  }
+}
+
+void Endocrine::OverrideControlLoop()
+{
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  double maxInsulinSynthesisOverride = 10.0; //pmol_Per_min
+  double minInsulinSynthesisOverride = 0.0; //pmol_Per_min
+  double currentInsulinSynthesisOverride = 0.0; //value gets changed in next check
+  double maxGlucagonSynthesisOverride = 10.0; //pmol_Per_min
+  double minGlucagonSynthesisOverride = 0.0; //pmol_Per_min
+  double currentGlucagonSynthesisOverride = 0.0; //value gets changed in next check
+  if (override->HasInsulinSynthesisRateOverride()) {
+    currentInsulinSynthesisOverride = override->GetInsulinSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min);
+  }
+  if (override->HasGlucagonSynthesisRateOverride()) {
+    currentGlucagonSynthesisOverride = override->GetGlucagonSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min);
+  }
+
+  if ((currentInsulinSynthesisOverride < minInsulinSynthesisOverride || currentInsulinSynthesisOverride > maxInsulinSynthesisOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Insulin Synthesis Rate Override (Endocrine) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentGlucagonSynthesisOverride < minGlucagonSynthesisOverride || currentGlucagonSynthesisOverride > maxGlucagonSynthesisOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Glucagon Synthesis Rate Override (Endocrine) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  return;
 }
 }

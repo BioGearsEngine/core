@@ -2185,33 +2185,125 @@ void Respiratory::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
   OverrideControlLoop();
-  double rr_per_min = m_data.GetRespiratory().GetRespirationRate().GetValue(FrequencyUnit::Per_min);
-  double tidalvolume_mL = m_data.GetRespiratory().GetTidalVolume().GetValue(VolumeUnit::mL);
-  if (override->HasRespirationRateOverride())
-    rr_per_min = override->GetRespirationRateOverride(FrequencyUnit::Per_min);
-  if (override->HasTidalVolumeOverride())
-    tidalvolume_mL = override->GetTidalVolumeOverride(VolumeUnit::mL);
 
-  m_data.GetRespiratory().GetRespirationRate().SetValue(rr_per_min, FrequencyUnit::Per_min);
+  if (override->HasExpiratoryFlowOverride()) {
+    GetExpiratoryFlow().SetValue(override->GetExpiratoryFlowOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasInspiratoryFlowOverride()) {
+    GetInspiratoryFlow().SetValue(override->GetInspiratoryFlowOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasPulmonaryComplianceOverride()) {
+    GetPulmonaryCompliance().SetValue(override->GetPulmonaryComplianceOverride(FlowComplianceUnit::L_Per_cmH2O), FlowComplianceUnit::L_Per_cmH2O);
+  }
+  if (override->HasPulmonaryResistanceOverride()) {
+    GetPulmonaryResistance().SetValue(override->GetPulmonaryResistanceOverride(FlowResistanceUnit::cmH2O_s_Per_L), FlowResistanceUnit::cmH2O_s_Per_L);
+  }
+  if (override->HasRespirationRateOverride()) {
+    GetRespirationRate().SetValue(override->GetRespirationRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
+  }
+  if (override->HasTidalVolumeOverride()) {
+    GetTidalVolume().SetValue(override->GetTidalVolumeOverride(VolumeUnit::mL), VolumeUnit::mL);
+  }
+  if (override->HasTargetPulmonaryVentilationOverride()) {
+    GetTargetPulmonaryVentilation().SetValue(override->GetTargetPulmonaryVentilationOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasTotalAlveolarVentilationOverride()) {
+    GetTotalAlveolarVentilation().SetValue(override->GetTotalAlveolarVentilationOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasTotalLungVolumeOverride()) {
+    GetTotalLungVolume().SetValue(override->GetTotalLungVolumeOverride(VolumeUnit::L), VolumeUnit::L);
+  }
+  if (override->HasTotalPulmonaryVentilationOverride()) {
+    GetTotalPulmonaryVentilation().SetValue(override->GetTotalPulmonaryVentilationOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
+  }
   //m_Patient->GetRespirationRateBaseline().SetValue(rr_per_min, FrequencyUnit::Per_min);
-  m_data.GetRespiratory().GetTidalVolume().SetValue(tidalvolume_mL, VolumeUnit::mL);
 }
 
 void Respiratory::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  double maxExpiratoryFlowOverride = 1000.0; // L/min
+  double minExpiratoryFlowOverride = 0.0; // L/min
+  double currentExpiratoryFlowOverride = 0.0; // value gets changed in next check
+  double maxInspiratoryFlowOverride = 1000.0; // L/min
+  double minInspiratoryFlowOverride = 0.0; // L/min
+  double currentInspiratoryFlowOverride = 0.0; // value gets changed in next check
+  double maxPulmonaryComplianceOverride = 1000.0; // L_Per_cmH2O
+  double minPulmonaryComplianceOverride = 0.0; // L_Per_cmH2O
+  double currentPulmonaryComplianceOverride = 0.0; // value gets changed in next check
+  double maxPulmonaryResistanceOverride = 1000.0; // cmH2O_s_Per_L
+  double minPulmonaryResistanceOverride = 0.0; // cmH2O_s_Per_L
+  double currentPulmonaryResistanceOverride = 0.0; // value gets changed in next check
   double maxRROverride = 60.0; //respiration rate in breaths per min
   double minRROverride = 0.0; //respiration rate in breaths per min
   double currentRROverride = 12.0; //Average RR, value gets changed in next check
   double maxTVOverride = 10000.0; //Tidal volume in mL
   double minTVOverride = 0.0; //Tidal volume in mL
   double currentTVOverride = m_data.GetRespiratory().GetTidalVolume().GetValue(VolumeUnit::mL); //Current Tidal Volume, value gets changed in next check
-  if (override->HasRespirationRateOverride())
+  double maxTargetPulmonaryVentilationOverride = 1000.0; // L/min
+  double minTargetPulmonaryVentilationOverride = 0.0; // L/min
+  double currentTargetPulmonaryVentilationOverride = 0.0; // value gets changed in next check
+  double maxTotalAlveolarVentilationOverride = 1000.0; // L/min
+  double minTotalAlveolarVentilationOverride = 0.0; // L/min
+  double currentTotalAlveolarVentilationOverride = 0.0; // value gets changed in next check
+  double maxTotalLungVolumeOverride = 1000.0; // L
+  double minTotalLungVolumeOverride = 0.0; // L
+  double currentTotalLungVolumeOverride = 0.0; // value gets changed in next check
+  double maxTotalPulmonaryVentilationOverride = 1000.0; // L/min
+  double minTotalPulmonaryVentilationOverride = 0.0; // L/min
+  double currentTotalPulmonaryVentilationOverride = 0.0; // value gets changed in next check
+  if (override->HasExpiratoryFlowOverride()) {
+    currentExpiratoryFlowOverride = override->GetExpiratoryFlowOverride(VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasInspiratoryFlowOverride()) {
+    currentInspiratoryFlowOverride = override->GetInspiratoryFlowOverride(VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasPulmonaryComplianceOverride()) {
+    currentPulmonaryComplianceOverride = override->GetPulmonaryComplianceOverride(FlowComplianceUnit::L_Per_cmH2O);
+  }
+  if (override->HasPulmonaryResistanceOverride()) {
+    currentPulmonaryResistanceOverride = override->GetPulmonaryResistanceOverride(FlowResistanceUnit::cmH2O_s_Per_L);
+  }
+  if (override->HasRespirationRateOverride()) {
     currentRROverride = override->GetRespirationRateOverride(FrequencyUnit::Per_min);
-  if (override->HasTidalVolumeOverride())
+  }
+  if (override->HasTidalVolumeOverride()) {
     currentTVOverride = override->GetTidalVolumeOverride(VolumeUnit::mL);
+  }
+  if (override->HasTargetPulmonaryVentilationOverride()) {
+    currentTargetPulmonaryVentilationOverride = override->GetTargetPulmonaryVentilationOverride(VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasTotalAlveolarVentilationOverride()) {
+    currentTotalAlveolarVentilationOverride = override->GetTotalAlveolarVentilationOverride(VolumePerTimeUnit::L_Per_min);
+  }
+  if (override->HasTotalLungVolumeOverride()) {
+    currentTotalLungVolumeOverride = override->GetTotalLungVolumeOverride(VolumeUnit::L);
+  }
+  if (override->HasTotalPulmonaryVentilationOverride()) {
+    currentTotalPulmonaryVentilationOverride = override->GetTotalPulmonaryVentilationOverride(VolumePerTimeUnit::L_Per_min);
+  }
 
 
+  if ((currentExpiratoryFlowOverride < minExpiratoryFlowOverride || currentExpiratoryFlowOverride > maxExpiratoryFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Expiratory Flow Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentInspiratoryFlowOverride < minInspiratoryFlowOverride || currentInspiratoryFlowOverride > maxInspiratoryFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Inspiratory Flow Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentPulmonaryComplianceOverride < minPulmonaryComplianceOverride || currentPulmonaryComplianceOverride > maxPulmonaryComplianceOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Pulmonary Compliance Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentPulmonaryResistanceOverride < minPulmonaryResistanceOverride || currentPulmonaryResistanceOverride > maxPulmonaryResistanceOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Pulmonary Resistance Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
   if ((currentRROverride < minRROverride || currentRROverride > maxRROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Respiration Rate Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
@@ -2219,6 +2311,26 @@ void Respiratory::OverrideControlLoop()
   }
   if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
     m_ss << "Tidal Volume (Respiratory) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentTargetPulmonaryVentilationOverride < minTargetPulmonaryVentilationOverride || currentTargetPulmonaryVentilationOverride > maxTargetPulmonaryVentilationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Target Pulmonary Ventilation Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentTotalAlveolarVentilationOverride < minTotalAlveolarVentilationOverride || currentTotalAlveolarVentilationOverride > maxTotalAlveolarVentilationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Total Alveolar Ventilation Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentTotalLungVolumeOverride < minTotalLungVolumeOverride || currentTotalLungVolumeOverride > maxTotalLungVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Total Lung Volume Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentTotalPulmonaryVentilationOverride < minTotalPulmonaryVentilationOverride || currentTotalPulmonaryVentilationOverride > maxTotalPulmonaryVentilationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Total Pulmonary Ventilation Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }

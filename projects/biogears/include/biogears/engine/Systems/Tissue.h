@@ -121,6 +121,10 @@ protected:
   double SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double extraK_mM, double potential_V);
   double CalciumPump(double intraCa_M);
 
+  //Override
+  void ProcessOverride();
+  void OverrideControlLoop();
+
   // Serializable member variables (Set in Initialize and in schema)
   double m_RestingPatientMass_kg;
   double m_RestingFluidMass_kg;
