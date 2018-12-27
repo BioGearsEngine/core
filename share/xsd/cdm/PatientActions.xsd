@@ -473,6 +473,8 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of heart beat. -->	
 					<xs:element name="HeartStrokeVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of blood pumped from the left ventricle in one contraction.-->
 					<xs:element name="SystolicArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The maximum pressure in the aorta over the course of a cardiac cycle.-->
+					<xs:element name="InsulinSynthesisRateOverride" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Insulin production rate. -->
+                    <xs:element name="GlucagonSynthesisRateOverride" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Glucagon production rate. -->
 					<xs:element name="AchievedExerciseLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief The fraction of how much of the requested exercise the patient is able to achieve. 1.0 means the the patient is performing at the requested level. Nan is the patient is not exercising (no Action)-->
                     <xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The internal body temperature.-->
                     <xs:element name="CreatinineProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The generation of creatinine in the muscle tissue per -->                    
@@ -498,8 +500,23 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The urine production rate. -->
 					<xs:element name="UrineOsmolalityOverride" type="ScalarOsmolalityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the mass of the fluid -->
 					<xs:element name="UrineVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of the urine in the bladder --> 
+					<xs:element name="UrineUreaNitrogenConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scaled concentration of Urea in the bladder  -->
+					<xs:element name="ExpiratoryFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Instantaneous airflow out of the lungs (negative value when inhaling)-->
+                    <xs:element name="InspiratoryFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
+                    <xs:element name="PulmonaryComplianceOverride" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total compliance of the lungs.-->
+                    <xs:element name="PulmonaryResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total resistance to airflow through the lungs.-->             
 					<xs:element name="RespirationRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of respiration. -->
 					<xs:element name="TidalVolumeOverride" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The volume of air moved into or out of the lungs during normal respiration. -->
+					<xs:element name="TargetPulmonaryVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief The target ventilation determined by the chemoreceptor method in the Nervous system, used by Respiratory to drive Respiration-->
+                    <xs:element name="TotalAlveolarVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The air flow to the alveoli.-->
+                    <xs:element name="TotalLungVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total volume of air within the lungs at any given time.-->
+                    <xs:element name="TotalPulmonaryVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The flow rate representing the exchange of air between the lungs and ambient air.-->
+					<xs:element name="ExtravascularFluidVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total fluid volume outside of the blood vessels. -->
+					<xs:element name="IntracellularFluidVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of fluid in the cells outside of the blood vessels. --> 
+					<xs:element name="LiverGlycogenOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The glucose stored as glycogen in the liver tissue. -->
+                    <xs:element name="MuscleGlycogenOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The glucose stored as glycogen in the muscle tissue. -->
+                    <xs:element name="StoredProteinOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The amino acids stored as protein in the muscle tissue. -->
+                    <xs:element name="StoredFatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The triacylglycerol stored in the fat tissue. -->
 				</xs:sequence>  
 				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
 				<xs:attribute name="Conformant" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->

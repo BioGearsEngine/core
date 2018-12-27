@@ -47,6 +47,8 @@ SEOverride::SEOverride()
   m_HeartRateOR = nullptr;
   m_HeartStrokeVolumeOR = nullptr;
   m_SystolicArtPressureOR = nullptr;
+  m_InsulinSynthesisRateOR = nullptr;
+  m_GlucagonSynthesisRateOR = nullptr;
   m_AcheivedExerciseLevelOR = nullptr;
   m_CoreTemperatureOR = nullptr;
   m_CreatinineProductionRateOR = nullptr;
@@ -72,8 +74,23 @@ SEOverride::SEOverride()
   m_UrineProductionRateOR = nullptr;
   m_UrineOsmolalityOR = nullptr;
   m_UrineVolumeOR = nullptr;
+  m_UrineUreaNitrogenConcentrationOverrideOR = nullptr;
+  m_ExpiratoryFlowOR = nullptr;
+  m_InspiratoryFlowOR = nullptr;
+  m_PulmonaryComplianceOR = nullptr;
+  m_PulmonaryResistanceOR = nullptr;
   m_RespirationRateOR = nullptr;
   m_TidalVolumeOR = nullptr;
+  m_TargetPulmonaryVentilationOR = nullptr;
+  m_TotalAlveolarVentilationOR = nullptr;
+  m_TotalLungVolumeOR = nullptr;
+  m_TotalPulmonaryVentilationOR = nullptr;
+  m_ExtravascularFluidVolumeOR = nullptr;
+  m_IntracellularFluidVolumeOR = nullptr;
+  m_LiverGlycogenOR = nullptr;
+  m_MuscleGlycogenOR = nullptr;
+  m_StoredProteinOR = nullptr;
+  m_StoredFatOR = nullptr;
 }
 
 SEOverride::~SEOverride()
@@ -106,6 +123,8 @@ void SEOverride::Clear()
   SAFE_DELETE(m_HeartRateOR);
   SAFE_DELETE(m_HeartStrokeVolumeOR);
   SAFE_DELETE(m_SystolicArtPressureOR);
+  SAFE_DELETE(m_InsulinSynthesisRateOR);
+  SAFE_DELETE(m_GlucagonSynthesisRateOR);
   SAFE_DELETE(m_AcheivedExerciseLevelOR);
   SAFE_DELETE(m_CoreTemperatureOR);
   SAFE_DELETE(m_CreatinineProductionRateOR);
@@ -131,8 +150,23 @@ void SEOverride::Clear()
   SAFE_DELETE(m_UrineProductionRateOR);
   SAFE_DELETE(m_UrineOsmolalityOR);
   SAFE_DELETE(m_UrineVolumeOR);
+  SAFE_DELETE(m_UrineUreaNitrogenConcentrationOverrideOR);
+  SAFE_DELETE(m_ExpiratoryFlowOR);
+  SAFE_DELETE(m_InspiratoryFlowOR);
+  SAFE_DELETE(m_PulmonaryComplianceOR);
+  SAFE_DELETE(m_PulmonaryResistanceOR);
   SAFE_DELETE(m_RespirationRateOR);
   SAFE_DELETE(m_TidalVolumeOR);
+  SAFE_DELETE(m_TargetPulmonaryVentilationOR);
+  SAFE_DELETE(m_TotalAlveolarVentilationOR);
+  SAFE_DELETE(m_TotalLungVolumeOR);
+  SAFE_DELETE(m_TotalPulmonaryVentilationOR);
+  SAFE_DELETE(m_ExtravascularFluidVolumeOR);
+  SAFE_DELETE(m_IntracellularFluidVolumeOR);
+  SAFE_DELETE(m_LiverGlycogenOR);
+  SAFE_DELETE(m_MuscleGlycogenOR);
+  SAFE_DELETE(m_StoredProteinOR);
+  SAFE_DELETE(m_StoredFatOR);
 }
 
 bool SEOverride::IsValid() const
@@ -141,9 +175,11 @@ bool SEOverride::IsValid() const
       && (HasOverrideConformance())) {
     if (HasBloodChemistryOverride()
         || HasCardiovascularOverride()
+        || HasEndocrineOverride()
         || HasEnergyOverride()
         || HasRenalOverride()
-        || HasRespiratoryOverride()) {
+        || HasRespiratoryOverride()
+        || HasTissueOverride()) {
       return true;
     }
   } else if ((GetOverrideState() == CDM::enumOnOff::Off)
@@ -264,6 +300,16 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetSystolicArterialPressureOverride().Load(in.SystolicArterialPressureOverride().get());
   } else {
     GetSystolicArterialPressureOverride().Invalidate();
+  }
+  if (in.InsulinSynthesisRateOverride().present()) {
+    GetInsulinSynthesisRateOverride().Load(in.InsulinSynthesisRateOverride().get());
+  } else {
+    GetInsulinSynthesisRateOverride().Invalidate();
+  }
+  if (in.GlucagonSynthesisRateOverride().present()) {
+    GetGlucagonSynthesisRateOverride().Load(in.GlucagonSynthesisRateOverride().get());
+  } else {
+    GetGlucagonSynthesisRateOverride().Invalidate();
   }
   if (in.AchievedExerciseLevelOverride().present()) {
     GetAchievedExerciseLevelOverride().Load(in.AchievedExerciseLevelOverride().get());
@@ -390,6 +436,31 @@ bool SEOverride::Load(const CDM::OverrideData& in)
   } else {
     GetUrineVolumeOverride().Invalidate();
   }
+  if (in.UrineUreaNitrogenConcentrationOverride().present()) {
+    GetUrineUreaNitrogenConcentrationOverride().Load(in.UrineUreaNitrogenConcentrationOverride().get());
+  } else {
+    GetUrineUreaNitrogenConcentrationOverride().Invalidate();
+  }
+  if (in.ExpiratoryFlowOverride().present()) {
+    GetExpiratoryFlowOverride().Load(in.ExpiratoryFlowOverride().get());
+  } else {
+    GetExpiratoryFlowOverride().Invalidate();
+  }
+  if (in.InspiratoryFlowOverride().present()) {
+    GetInspiratoryFlowOverride().Load(in.InspiratoryFlowOverride().get());
+  } else {
+    GetInspiratoryFlowOverride().Invalidate();
+  }
+  if (in.PulmonaryComplianceOverride().present()) {
+    GetPulmonaryComplianceOverride().Load(in.PulmonaryComplianceOverride().get());
+  } else {
+    GetPulmonaryComplianceOverride().Invalidate();
+  }
+  if (in.PulmonaryResistanceOverride().present()) {
+    GetPulmonaryResistanceOverride().Load(in.PulmonaryResistanceOverride().get());
+  } else {
+    GetPulmonaryResistanceOverride().Invalidate();
+  }
   if (in.RespirationRateOverride().present()) {
     GetRespirationRateOverride().Load(in.RespirationRateOverride().get());
   } else {
@@ -399,6 +470,56 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetTidalVolumeOverride().Load(in.TidalVolumeOverride().get());
   } else {
     GetTidalVolumeOverride().Invalidate();
+  }
+  if (in.TargetPulmonaryVentilationOverride().present()) {
+    GetTargetPulmonaryVentilationOverride().Load(in.TargetPulmonaryVentilationOverride().get());
+  } else {
+    GetTargetPulmonaryVentilationOverride().Invalidate();
+  }
+  if (in.TotalAlveolarVentilationOverride().present()) {
+    GetTotalAlveolarVentilationOverride().Load(in.TotalAlveolarVentilationOverride().get());
+  } else {
+    GetTotalAlveolarVentilationOverride().Invalidate();
+  }
+  if (in.TotalLungVolumeOverride().present()) {
+    GetTotalLungVolumeOverride().Load(in.TotalLungVolumeOverride().get());
+  } else {
+    GetTotalLungVolumeOverride().Invalidate();
+  }
+  if (in.TotalPulmonaryVentilationOverride().present()) {
+    GetTotalPulmonaryVentilationOverride().Load(in.TotalPulmonaryVentilationOverride().get());
+  } else {
+    GetTotalPulmonaryVentilationOverride().Invalidate();
+  }
+  if (in.ExtravascularFluidVolumeOverride().present()) {
+    GetExtravascularFluidVolumeOverride().Load(in.ExtravascularFluidVolumeOverride().get());
+  } else {
+    GetExtravascularFluidVolumeOverride().Invalidate();
+  }
+  if (in.IntracellularFluidVolumeOverride().present()) {
+    GetIntracellularFluidVolumeOverride().Load(in.IntracellularFluidVolumeOverride().get());
+  } else {
+    GetIntracellularFluidVolumeOverride().Invalidate();
+  }
+  if (in.LiverGlycogenOverride().present()) {
+    GetLiverGlycogenOverride().Load(in.LiverGlycogenOverride().get());
+  } else {
+    GetLiverGlycogenOverride().Invalidate();
+  }
+  if (in.MuscleGlycogenOverride().present()) {
+    GetMuscleGlycogenOverride().Load(in.MuscleGlycogenOverride().get());
+  } else {
+    GetMuscleGlycogenOverride().Invalidate();
+  }
+  if (in.StoredProteinOverride().present()) {
+    GetStoredProteinOverride().Load(in.StoredProteinOverride().get());
+  } else {
+    GetStoredProteinOverride().Invalidate();
+  }
+  if (in.StoredFatOverride().present()) {
+    GetStoredFatOverride().Load(in.StoredFatOverride().get());
+  } else {
+    GetStoredFatOverride().Invalidate();
   }
   //SEPatientAction::Load(in);
   //return true;
@@ -481,6 +602,13 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   if (HasSystolicArterialPressureOverride()) {
     data.SystolicArterialPressureOverride(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArtPressureOR->Unload()));
   }
+  if (HasInsulinSynthesisRateOverride())
+  {
+    data.InsulinSynthesisRateOverride(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_InsulinSynthesisRateOR->Unload()));
+  }
+  if (HasGlucagonSynthesisRateOverride()) {
+    data.GlucagonSynthesisRateOverride(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_GlucagonSynthesisRateOR->Unload()));
+  }
   if (HasAchievedExerciseLevelOverride()) {
     data.AchievedExerciseLevelOverride(std::unique_ptr<CDM::ScalarFractionData>(m_AcheivedExerciseLevelOR->Unload()));
   }
@@ -553,11 +681,56 @@ void SEOverride::Unload(CDM::OverrideData& data) const
   if (HasUrineVolumeOverride()) {
     data.UrineVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_UrineVolumeOR->Unload()));
   }
+  if (HasUrineUreaNitrogenConcentrationOverride()) {
+    data.UrineUreaNitrogenConcentrationOverride(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_UrineUreaNitrogenConcentrationOverrideOR->Unload()));
+  }
+  if (HasExpiratoryFlowOverride()) {
+    data.ExpiratoryFlowOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_ExpiratoryFlowOR->Unload()));
+  }
+  if (HasInspiratoryFlowOverride()) {
+    data.InspiratoryFlowOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_InspiratoryFlowOR->Unload()));
+  }
+  if (HasPulmonaryComplianceOverride()) {
+    data.PulmonaryComplianceOverride(std::unique_ptr<CDM::ScalarFlowComplianceData>(m_PulmonaryComplianceOR->Unload()));
+  }
+  if (HasPulmonaryResistanceOverride()) {
+    data.PulmonaryResistanceOverride(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_PulmonaryResistanceOR->Unload()));
+  }
   if (HasRespirationRateOverride()) {
     data.RespirationRateOverride(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateOR->Unload()));
   }
   if (HasTidalVolumeOverride()) {
     data.TidalVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeOR->Unload()));
+  }
+  if (HasTargetPulmonaryVentilationOverride()) {
+    data.TargetPulmonaryVentilationOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TargetPulmonaryVentilationOR->Unload()));
+  }
+  if (HasTotalAlveolarVentilationOverride()) {
+    data.TotalAlveolarVentilationOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalAlveolarVentilationOR->Unload()));
+  }
+  if (HasTotalLungVolumeOverride()) {
+    data.TotalLungVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalLungVolumeOR->Unload()));
+  }
+  if (HasTotalPulmonaryVentilationOverride()) {
+    data.TotalPulmonaryVentilationOverride(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalPulmonaryVentilationOR->Unload()));
+  }
+  if (HasExtravascularFluidVolumeOverride()) {
+    data.ExtravascularFluidVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_ExtravascularFluidVolumeOR->Unload()));
+  }
+  if (HasIntracellularFluidVolumeOverride()) {
+    data.IntracellularFluidVolumeOverride(std::unique_ptr<CDM::ScalarVolumeData>(m_IntracellularFluidVolumeOR->Unload()));
+  }
+  if (HasLiverGlycogenOverride()) {
+    data.LiverGlycogenOverride(std::unique_ptr<CDM::ScalarMassData>(m_LiverGlycogenOR->Unload()));
+  }
+  if (HasMuscleGlycogenOverride()) {
+    data.MuscleGlycogenOverride(std::unique_ptr<CDM::ScalarMassData>(m_MuscleGlycogenOR->Unload()));
+  }
+  if (HasStoredProteinOverride()) {
+    data.StoredProteinOverride(std::unique_ptr<CDM::ScalarMassData>(m_StoredProteinOR->Unload()));
+  }
+  if (HasStoredFatOverride()) {
+    data.StoredFatOverride(std::unique_ptr<CDM::ScalarMassData>(m_StoredFatOR->Unload()));
   }
 }
 
@@ -985,6 +1158,50 @@ bool SEOverride::HasCardiovascularOverride() const
     || HasHeartRateOverride()
     || HasHeartStrokeVolumeOverride()
     || HasSystolicArterialPressureOverride();
+}
+
+// Endocrine Overrides //
+bool SEOverride::HasInsulinSynthesisRateOverride() const
+{
+  return m_InsulinSynthesisRateOR == nullptr ? false : m_InsulinSynthesisRateOR->IsValid();
+}
+SEScalarAmountPerTime& SEOverride::GetInsulinSynthesisRateOverride()
+{
+  if (m_InsulinSynthesisRateOR == nullptr) {
+    m_InsulinSynthesisRateOR = new SEScalarAmountPerTime();
+  }
+  return *m_InsulinSynthesisRateOR;
+}
+double SEOverride::GetInsulinSynthesisRateOverride(const AmountPerTimeUnit& unit) const
+{
+  if (m_InsulinSynthesisRateOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_InsulinSynthesisRateOR->GetValue(unit);
+}
+bool SEOverride::HasGlucagonSynthesisRateOverride() const
+{
+  return m_GlucagonSynthesisRateOR == nullptr ? false : m_GlucagonSynthesisRateOR->IsValid();
+}
+SEScalarAmountPerTime& SEOverride::GetGlucagonSynthesisRateOverride()
+{
+  if (m_GlucagonSynthesisRateOR == nullptr) {
+    m_GlucagonSynthesisRateOR = new SEScalarAmountPerTime();
+  }
+  return *m_GlucagonSynthesisRateOR;
+}
+double SEOverride::GetGlucagonSynthesisRateOverride(const AmountPerTimeUnit& unit) const
+{
+  if (m_GlucagonSynthesisRateOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_GlucagonSynthesisRateOR->GetValue(unit);
+}
+
+bool SEOverride::HasEndocrineOverride() const
+{
+  return HasInsulinSynthesisRateOverride()
+    || HasGlucagonSynthesisRateOverride();
 }
 
 // Energy Overrides //
@@ -1458,6 +1675,24 @@ double SEOverride::GetUrineVolumeOverride(const VolumeUnit& unit) const
   }
   return m_UrineVolumeOR->GetValue(unit);
 }
+bool SEOverride::HasUrineUreaNitrogenConcentrationOverride() const
+{
+  return m_UrineUreaNitrogenConcentrationOverrideOR == nullptr ? false : m_UrineUreaNitrogenConcentrationOverrideOR->IsValid();
+}
+SEScalarMassPerVolume& SEOverride::GetUrineUreaNitrogenConcentrationOverride()
+{
+  if (m_UrineUreaNitrogenConcentrationOverrideOR == nullptr) {
+    m_UrineUreaNitrogenConcentrationOverrideOR = new SEScalarMassPerVolume();
+  }
+  return *m_UrineUreaNitrogenConcentrationOverrideOR;
+}
+double SEOverride::GetUrineUreaNitrogenConcentrationOverride(const MassPerVolumeUnit& unit) const
+{
+  if (m_UrineUreaNitrogenConcentrationOverrideOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_UrineUreaNitrogenConcentrationOverrideOR->GetValue(unit);
+}
 
 bool SEOverride::HasRenalOverride() const
 {
@@ -1472,10 +1707,83 @@ bool SEOverride::HasRenalOverride() const
     || HasUrinationRateOverride()
     || HasUrineProductionRateOverride()
     || HasUrineOsmolalityOverride()
-    || HasUrineVolumeOverride();
+    || HasUrineVolumeOverride()
+    || HasUrineUreaNitrogenConcentrationOverride();
 }
 
 // Respiratory Overrides //
+bool SEOverride::HasExpiratoryFlowOverride() const
+{
+  return m_ExpiratoryFlowOR == nullptr ? false : m_ExpiratoryFlowOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetExpiratoryFlowOverride()
+{
+  if (m_ExpiratoryFlowOR == nullptr) {
+    m_ExpiratoryFlowOR = new SEScalarVolumePerTime();
+  }
+  return *m_ExpiratoryFlowOR;
+}
+double SEOverride::GetExpiratoryFlowOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_ExpiratoryFlowOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_ExpiratoryFlowOR->GetValue(unit);
+}
+bool SEOverride::HasInspiratoryFlowOverride() const
+{
+  return m_InspiratoryFlowOR == nullptr ? false : m_InspiratoryFlowOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetInspiratoryFlowOverride()
+{
+  if (m_InspiratoryFlowOR == nullptr) {
+    m_InspiratoryFlowOR = new SEScalarVolumePerTime();
+  }
+  return *m_InspiratoryFlowOR;
+}
+double SEOverride::GetInspiratoryFlowOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_InspiratoryFlowOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_InspiratoryFlowOR->GetValue(unit);
+}
+bool SEOverride::HasPulmonaryComplianceOverride() const
+{
+  return m_PulmonaryComplianceOR == nullptr ? false : m_PulmonaryComplianceOR->IsValid();
+}
+SEScalarFlowCompliance& SEOverride::GetPulmonaryComplianceOverride()
+{
+  if (m_PulmonaryComplianceOR == nullptr) {
+    m_PulmonaryComplianceOR = new SEScalarFlowCompliance();
+  }
+  return *m_PulmonaryComplianceOR;
+}
+double SEOverride::GetPulmonaryComplianceOverride(const FlowComplianceUnit& unit) const
+{
+  if (m_PulmonaryComplianceOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_PulmonaryComplianceOR->GetValue(unit);
+}
+bool SEOverride::HasPulmonaryResistanceOverride() const
+{
+  return m_PulmonaryResistanceOR == nullptr ? false : m_PulmonaryResistanceOR->IsValid();
+}
+SEScalarFlowResistance& SEOverride::GetPulmonaryResistanceOverride()
+{
+  if (m_PulmonaryResistanceOR == nullptr) {
+    m_PulmonaryResistanceOR = new SEScalarFlowResistance();
+  }
+  return *m_PulmonaryResistanceOR;
+}
+double SEOverride::GetPulmonaryResistanceOverride(const FlowResistanceUnit& unit) const
+{
+  if (m_PulmonaryResistanceOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_PulmonaryResistanceOR->GetValue(unit);
+}
 bool SEOverride::HasRespirationRateOverride() const
 {
   return m_RespirationRateOR == nullptr ? false : m_RespirationRateOR->IsValid();
@@ -1512,13 +1820,214 @@ double SEOverride::GetTidalVolumeOverride(const VolumeUnit& unit) const
   }
   return m_TidalVolumeOR->GetValue(unit);
 }
+bool SEOverride::HasTargetPulmonaryVentilationOverride() const
+{
+  return m_TargetPulmonaryVentilationOR == nullptr ? false : m_TargetPulmonaryVentilationOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetTargetPulmonaryVentilationOverride()
+{
+  if (m_TargetPulmonaryVentilationOR == nullptr) {
+    m_TargetPulmonaryVentilationOR = new SEScalarVolumePerTime();
+  }
+  return *m_TargetPulmonaryVentilationOR;
+}
+double SEOverride::GetTargetPulmonaryVentilationOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_TargetPulmonaryVentilationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_TargetPulmonaryVentilationOR->GetValue(unit);
+}
+bool SEOverride::HasTotalAlveolarVentilationOverride() const
+{
+  return m_TotalAlveolarVentilationOR == nullptr ? false : m_TotalAlveolarVentilationOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetTotalAlveolarVentilationOverride()
+{
+  if (m_TotalAlveolarVentilationOR == nullptr) {
+    m_TotalAlveolarVentilationOR = new SEScalarVolumePerTime();
+  }
+  return *m_TotalAlveolarVentilationOR;
+}
+double SEOverride::GetTotalAlveolarVentilationOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_TotalAlveolarVentilationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_TotalAlveolarVentilationOR->GetValue(unit);
+}
+bool SEOverride::HasTotalLungVolumeOverride() const
+{
+  return m_TotalLungVolumeOR == nullptr ? false : m_TotalLungVolumeOR->IsValid();
+}
+SEScalarVolume& SEOverride::GetTotalLungVolumeOverride()
+{
+  if (m_TotalLungVolumeOR == nullptr) {
+    m_TotalLungVolumeOR = new SEScalarVolume();
+  }
+  return *m_TotalLungVolumeOR;
+}
+double SEOverride::GetTotalLungVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_TotalLungVolumeOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_TotalLungVolumeOR->GetValue(unit);
+}
+bool SEOverride::HasTotalPulmonaryVentilationOverride() const
+{
+  return m_TotalPulmonaryVentilationOR == nullptr ? false : m_TotalPulmonaryVentilationOR->IsValid();
+}
+SEScalarVolumePerTime& SEOverride::GetTotalPulmonaryVentilationOverride()
+{
+  if (m_TotalPulmonaryVentilationOR == nullptr) {
+    m_TotalPulmonaryVentilationOR = new SEScalarVolumePerTime();
+  }
+  return *m_TotalPulmonaryVentilationOR;
+}
+double SEOverride::GetTotalPulmonaryVentilationOverride(const VolumePerTimeUnit& unit) const
+{
+  if (m_TotalPulmonaryVentilationOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_TotalPulmonaryVentilationOR->GetValue(unit);
+}
 
 bool SEOverride::HasRespiratoryOverride() const
 {
-  return HasRespirationRateOverride()
-    || HasTidalVolumeOverride();
+  return HasExpiratoryFlowOverride()
+    || HasInspiratoryFlowOverride()
+    || HasPulmonaryComplianceOverride()
+    || HasPulmonaryResistanceOverride()
+    || HasRespirationRateOverride()
+    || HasTidalVolumeOverride()
+    || HasTargetPulmonaryVentilationOverride()
+    || HasTotalAlveolarVentilationOverride()
+    || HasTotalLungVolumeOverride()
+    || HasTotalPulmonaryVentilationOverride();
 }
 
+// Tissue Overrides //
+bool SEOverride::HasExtravascularFluidVolumeOverride() const
+{
+  return m_ExtravascularFluidVolumeOR == nullptr ? false : m_ExtravascularFluidVolumeOR->IsValid();
+}
+SEScalarVolume& SEOverride::GetExtravascularFluidVolumeOverride()
+{
+  if (m_ExtravascularFluidVolumeOR == nullptr) {
+    m_ExtravascularFluidVolumeOR = new SEScalarVolume();
+  }
+  return *m_ExtravascularFluidVolumeOR;
+}
+double SEOverride::GetExtravascularFluidVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_ExtravascularFluidVolumeOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_ExtravascularFluidVolumeOR->GetValue(unit);
+}
+bool SEOverride::HasIntracellularFluidVolumeOverride() const
+{
+  return m_IntracellularFluidVolumeOR == nullptr ? false : m_IntracellularFluidVolumeOR->IsValid();
+}
+SEScalarVolume& SEOverride::GetIntracellularFluidVolumeOverride()
+{
+  if (m_IntracellularFluidVolumeOR == nullptr) {
+    m_IntracellularFluidVolumeOR = new SEScalarVolume();
+  }
+  return *m_IntracellularFluidVolumeOR;
+}
+double SEOverride::GetIntracellularFluidVolumeOverride(const VolumeUnit& unit) const
+{
+  if (m_IntracellularFluidVolumeOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_IntracellularFluidVolumeOR->GetValue(unit);
+}
+bool SEOverride::HasLiverGlycogenOverride() const
+{
+  return m_LiverGlycogenOR == nullptr ? false : m_LiverGlycogenOR->IsValid();
+}
+SEScalarMass& SEOverride::GetLiverGlycogenOverride()
+{
+  if (m_LiverGlycogenOR == nullptr) {
+    m_LiverGlycogenOR = new SEScalarMass();
+  }
+  return *m_LiverGlycogenOR;
+}
+double SEOverride::GetLiverGlycogenOverride(const MassUnit& unit) const
+{
+  if (m_LiverGlycogenOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_LiverGlycogenOR->GetValue(unit);
+}
+bool SEOverride::HasMuscleGlycogenOverride() const
+{
+  return m_MuscleGlycogenOR == nullptr ? false : m_MuscleGlycogenOR->IsValid();
+}
+SEScalarMass& SEOverride::GetMuscleGlycogenOverride()
+{
+  if (m_MuscleGlycogenOR == nullptr) {
+    m_MuscleGlycogenOR = new SEScalarMass();
+  }
+  return *m_MuscleGlycogenOR;
+}
+double SEOverride::GetMuscleGlycogenOverride(const MassUnit& unit) const
+{
+  if (m_MuscleGlycogenOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_MuscleGlycogenOR->GetValue(unit);
+}
+bool SEOverride::HasStoredProteinOverride() const
+{
+  return m_StoredProteinOR == nullptr ? false : m_StoredProteinOR->IsValid();
+}
+SEScalarMass& SEOverride::GetStoredProteinOverride()
+{
+  if (m_StoredProteinOR == nullptr) {
+    m_StoredProteinOR = new SEScalarMass();
+  }
+  return *m_StoredProteinOR;
+}
+double SEOverride::GetStoredProteinOverride(const MassUnit& unit) const
+{
+  if (m_StoredProteinOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_StoredProteinOR->GetValue(unit);
+}
+bool SEOverride::HasStoredFatOverride() const
+{
+  return m_StoredFatOR == nullptr ? false : m_StoredFatOR->IsValid();
+}
+SEScalarMass& SEOverride::GetStoredFatOverride()
+{
+  if (m_StoredFatOR == nullptr) {
+    m_StoredFatOR = new SEScalarMass();
+  }
+  return *m_StoredFatOR;
+}
+double SEOverride::GetStoredFatOverride(const MassUnit& unit) const
+{
+  if (m_StoredFatOR == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_StoredFatOR->GetValue(unit);
+}
+
+bool SEOverride::HasTissueOverride() const
+{
+  return HasExtravascularFluidVolumeOverride()
+    || HasIntracellularFluidVolumeOverride()
+    || HasLiverGlycogenOverride()
+    || HasMuscleGlycogenOverride()
+    || HasStoredProteinOverride()
+    || HasStoredFatOverride();
+}
+
+// String //
 void SEOverride::ToString(std::ostream& str) const
 {
   str << "Patient Action : Override Parameter";
@@ -1695,6 +2204,22 @@ void SEOverride::ToString(std::ostream& str) const
     HasSystolicArterialPressureOverride() ? str << *m_SystolicArtPressureOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tSystolic Arterial Pressure has a lower bound of 0 mmHg and an upper bound of 300 mmHg.";
+    }
+    str << std::flush;
+  }
+  if (HasInsulinSynthesisRateOverride()) {
+    str << "\n\tInsulin Synthesis Rate: ";
+    HasInsulinSynthesisRateOverride() ? str << *m_InsulinSynthesisRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tInsulin Synthesis Rate has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasGlucagonSynthesisRateOverride()) {
+    str << "\n\tGlucagon Synthesis Rate: ";
+    HasGlucagonSynthesisRateOverride() ? str << *m_GlucagonSynthesisRateOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tGlucagon Synthesis Rate has a lower bound of X and an upper bound of Y.";
     }
     str << std::flush;
   }
@@ -1898,6 +2423,46 @@ void SEOverride::ToString(std::ostream& str) const
     }
     str << std::flush;
   }
+  if (HasUrineUreaNitrogenConcentrationOverride()) {
+    str << "\n\tUrine Urea Nitrogen Concentration: ";
+    HasUrineUreaNitrogenConcentrationOverride() ? str << *m_UrineUreaNitrogenConcentrationOverrideOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tUrine Urea Nitrogen Concentration has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasExpiratoryFlowOverride()) {
+    str << "\n\tExpiratory Flow: ";
+    HasExpiratoryFlowOverride() ? str << *m_ExpiratoryFlowOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tExpiratory Flow has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasInspiratoryFlowOverride()) {
+    str << "\n\tInspiratory Flow: ";
+    HasInspiratoryFlowOverride() ? str << *m_InspiratoryFlowOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tInspiratory Flow has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasPulmonaryComplianceOverride()) {
+    str << "\n\tPulmonary Compliance: ";
+    HasPulmonaryComplianceOverride() ? str << *m_PulmonaryComplianceOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tPulmonary Compliance has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasPulmonaryResistanceOverride()) {
+    str << "\n\tPulmonary Resistance: ";
+    HasPulmonaryResistanceOverride() ? str << *m_PulmonaryResistanceOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tPulmonary Resistance has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
   if (HasRespirationRateOverride()) {
     str << "\n\tRespiration Rate: ";
     HasRespirationRateOverride() ? str << *m_RespirationRateOR : str << "Not Set";
@@ -1911,6 +2476,86 @@ void SEOverride::ToString(std::ostream& str) const
     HasTidalVolumeOverride() ? str << *m_TidalVolumeOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
       str << "\n\tTidal Volume has a lower bound of 0 mL and an upper bound of 10000 mL.";
+    }
+    str << std::flush;
+  }
+  if (HasTargetPulmonaryVentilationOverride()) {
+    str << "\n\tTarget Pulmonary Ventilation: ";
+    HasTargetPulmonaryVentilationOverride() ? str << *m_TargetPulmonaryVentilationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tTarget Pulmonary Ventilation has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasTotalAlveolarVentilationOverride()) {
+    str << "\n\tTotal Alveolar Ventilation: ";
+    HasTotalAlveolarVentilationOverride() ? str << *m_TotalAlveolarVentilationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tTotal Alveolar Ventilation has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasTotalLungVolumeOverride()) {
+    str << "\n\tTotal Lung Volume: ";
+    HasTotalLungVolumeOverride() ? str << *m_TotalLungVolumeOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tTotal Lung Volume has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasTotalPulmonaryVentilationOverride()) {
+    str << "\n\tTotal Pulmonary Ventilation: ";
+    HasTotalPulmonaryVentilationOverride() ? str << *m_TotalPulmonaryVentilationOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tTotal Pulmonary Ventilation has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasExtravascularFluidVolumeOverride()) {
+    str << "\n\tExtravascular Fluid Volume: ";
+    HasExtravascularFluidVolumeOverride() ? str << *m_ExtravascularFluidVolumeOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tExtravascular Fluid Volume has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasIntracellularFluidVolumeOverride()) {
+    str << "\n\tIntracellular Fluid Volume: ";
+    HasIntracellularFluidVolumeOverride() ? str << *m_IntracellularFluidVolumeOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tIntracellular Fluid Volume has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasLiverGlycogenOverride()) {
+    str << "\n\tLiver Glycogen: ";
+    HasLiverGlycogenOverride() ? str << *m_LiverGlycogenOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tLiver Glycogen has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasMuscleGlycogenOverride()) {
+    str << "\n\tMuscle Glycogen: ";
+    HasMuscleGlycogenOverride() ? str << *m_MuscleGlycogenOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tMuscle Glycogen has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasStoredProteinOverride()) {
+    str << "\n\tStored Protein: ";
+    HasStoredProteinOverride() ? str << *m_StoredProteinOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tStored Protein has a lower bound of X and an upper bound of Y.";
+    }
+    str << std::flush;
+  }
+  if (HasStoredFatOverride()) {
+    str << "\n\tStored Fat: ";
+    HasStoredFatOverride() ? str << *m_StoredFatOR : str << "Not Set";
+    if (m_OverrideConformance == CDM::enumOnOff::On) {
+      str << "\n\tStored Fat has a lower bound of X and an upper bound of Y.";
     }
     str << std::flush;
   }

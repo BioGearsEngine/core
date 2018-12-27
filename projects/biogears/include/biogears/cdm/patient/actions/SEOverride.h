@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
@@ -128,6 +129,15 @@ public:
   double GetSystolicArterialPressureOverride(const PressureUnit& unit) const;
   bool HasCardiovascularOverride() const;
 
+  //Endocrine
+  bool HasInsulinSynthesisRateOverride() const;
+  SEScalarAmountPerTime& GetInsulinSynthesisRateOverride();
+  double GetInsulinSynthesisRateOverride(const AmountPerTimeUnit& unit) const;
+  bool HasGlucagonSynthesisRateOverride() const;
+  SEScalarAmountPerTime& GetGlucagonSynthesisRateOverride();
+  double GetGlucagonSynthesisRateOverride(const AmountPerTimeUnit& unit) const;
+  bool HasEndocrineOverride() const;
+
   //Energy
   bool HasAchievedExerciseLevelOverride() const;
   SEScalarFraction& GetAchievedExerciseLevelOverride();
@@ -208,19 +218,69 @@ public:
   bool HasUrineVolumeOverride() const;
   SEScalarVolume& GetUrineVolumeOverride();
   double GetUrineVolumeOverride(const VolumeUnit& unit) const;
+  bool HasUrineUreaNitrogenConcentrationOverride() const;
+  SEScalarMassPerVolume& GetUrineUreaNitrogenConcentrationOverride();
+  double GetUrineUreaNitrogenConcentrationOverride(const MassPerVolumeUnit& unit) const;
 
   bool HasRenalOverride() const;
 
   //Respiratory
+  bool HasExpiratoryFlowOverride() const;
+  SEScalarVolumePerTime& GetExpiratoryFlowOverride();
+  double GetExpiratoryFlowOverride(const VolumePerTimeUnit& unit) const;
+  bool HasInspiratoryFlowOverride() const;
+  SEScalarVolumePerTime& GetInspiratoryFlowOverride();
+  double GetInspiratoryFlowOverride(const VolumePerTimeUnit& unit) const;
+  bool HasPulmonaryComplianceOverride() const;
+  SEScalarFlowCompliance& GetPulmonaryComplianceOverride();
+  double GetPulmonaryComplianceOverride(const FlowComplianceUnit& unit) const;
+  bool HasPulmonaryResistanceOverride() const;
+  SEScalarFlowResistance& GetPulmonaryResistanceOverride();
+  double GetPulmonaryResistanceOverride(const FlowResistanceUnit& unit) const;
   bool HasRespirationRateOverride() const;
   SEScalarFrequency& GetRespirationRateOverride();
   double GetRespirationRateOverride(const FrequencyUnit& unit) const;
   bool HasTidalVolumeOverride() const;
   SEScalarVolume& GetTidalVolumeOverride();
   double GetTidalVolumeOverride(const VolumeUnit& unit) const;
+  bool HasTargetPulmonaryVentilationOverride() const;
+  SEScalarVolumePerTime& GetTargetPulmonaryVentilationOverride();
+  double GetTargetPulmonaryVentilationOverride(const VolumePerTimeUnit& unit) const;
+  bool HasTotalAlveolarVentilationOverride() const;
+  SEScalarVolumePerTime& GetTotalAlveolarVentilationOverride();
+  double GetTotalAlveolarVentilationOverride(const VolumePerTimeUnit& unit) const;
+  bool HasTotalLungVolumeOverride() const;
+  SEScalarVolume& GetTotalLungVolumeOverride();
+  double GetTotalLungVolumeOverride(const VolumeUnit& unit) const;
+  bool HasTotalPulmonaryVentilationOverride() const;
+  SEScalarVolumePerTime& GetTotalPulmonaryVentilationOverride();
+  double GetTotalPulmonaryVentilationOverride(const VolumePerTimeUnit& unit) const;
+
   bool HasRespiratoryOverride() const;
 
-  virtual void ToString(std::ostream& str) const override;
+  //Tissue
+  bool HasExtravascularFluidVolumeOverride() const;
+  SEScalarVolume& GetExtravascularFluidVolumeOverride();
+  double GetExtravascularFluidVolumeOverride(const VolumeUnit& unit) const;
+  bool HasIntracellularFluidVolumeOverride() const;
+  SEScalarVolume& GetIntracellularFluidVolumeOverride();
+  double GetIntracellularFluidVolumeOverride(const VolumeUnit& unit) const;
+  bool HasLiverGlycogenOverride() const;
+  SEScalarMass& GetLiverGlycogenOverride();
+  double GetLiverGlycogenOverride(const MassUnit& unit) const;
+  bool HasMuscleGlycogenOverride() const;
+  SEScalarMass& GetMuscleGlycogenOverride();
+  double GetMuscleGlycogenOverride(const MassUnit& unit) const;
+  bool HasStoredProteinOverride() const;
+  SEScalarMass& GetStoredProteinOverride();
+  double GetStoredProteinOverride(const MassUnit& unit) const;
+  bool HasStoredFatOverride() const;
+  SEScalarMass& GetStoredFatOverride();
+  double GetStoredFatOverride(const MassUnit& unit) const;
+
+  bool HasTissueOverride() const;
+
+  virtual void ToString(std::ostream& str) const;
 
 protected:
   CDM::enumOnOff m_OverrideState;
@@ -245,6 +305,8 @@ protected:
   SEScalarFrequency* m_HeartRateOR;
   SEScalarVolume* m_HeartStrokeVolumeOR;
   SEScalarPressure* m_SystolicArtPressureOR;
+  SEScalarAmountPerTime* m_InsulinSynthesisRateOR;
+  SEScalarAmountPerTime* m_GlucagonSynthesisRateOR;
   SEScalarFraction* m_AcheivedExerciseLevelOR;
   SEScalarTemperature* m_CoreTemperatureOR;
   SEScalarAmountPerTime* m_CreatinineProductionRateOR;
@@ -270,7 +332,22 @@ protected:
   SEScalarVolumePerTime* m_UrineProductionRateOR;
   SEScalarOsmolality* m_UrineOsmolalityOR;
   SEScalarVolume* m_UrineVolumeOR;
+  SEScalarMassPerVolume* m_UrineUreaNitrogenConcentrationOverrideOR;
+  SEScalarVolumePerTime* m_ExpiratoryFlowOR;
+  SEScalarVolumePerTime* m_InspiratoryFlowOR;
+  SEScalarFlowCompliance* m_PulmonaryComplianceOR;
+  SEScalarFlowResistance* m_PulmonaryResistanceOR;
   SEScalarFrequency* m_RespirationRateOR;
   SEScalarVolume* m_TidalVolumeOR;
+  SEScalarVolumePerTime* m_TargetPulmonaryVentilationOR;
+  SEScalarVolumePerTime* m_TotalAlveolarVentilationOR;
+  SEScalarVolume* m_TotalLungVolumeOR;
+  SEScalarVolumePerTime* m_TotalPulmonaryVentilationOR;
+  SEScalarVolume* m_ExtravascularFluidVolumeOR;
+  SEScalarVolume* m_IntracellularFluidVolumeOR;
+  SEScalarMass* m_LiverGlycogenOR;
+  SEScalarMass* m_MuscleGlycogenOR;
+  SEScalarMass* m_StoredProteinOR;
+  SEScalarMass* m_StoredFatOR;
 };
 }
