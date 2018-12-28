@@ -2564,14 +2564,14 @@ void Tissue::OverrideControlLoop()
   double maxLiverGlycogenOverride = 1000.0; //g
   double minLiverGlycogenOverride = 0.0; //g
   double currentLiverGlycogenOverride = 0.0; //value gets changed in next check
-  double maxMuscleGlycogenOverride = 1000.0; //g
+  double maxMuscleGlycogenOverride = 2000.0; //g
   double minMuscleGlycogenOverride = 0.0; //g
   double currentMuscleGlycogenOverride = 0.0; //value gets changed in next check
-  double maxStoredProteinOverride = 1000.0; //g
+  double maxStoredProteinOverride = 5000.0; //g
   double minStoredProteinOverride = 0.0; //g
   double currentStoredProteinOverride = 0.0; //value gets changed in next check
-  double maxStoredFatOverride = 1000.0; //g
-  double minStoredFatOverride = 0.0; //g
+  double maxStoredFatOverride = 5000.0; //g
+  double minStoredFatOverride = 0.0; //g // Zero will cause irreversible state
   double currentStoredFatOverride = 0.0; //value gets changed in next check
   if (override->HasExtravascularFluidVolumeOverride()) {
     currentExtravascularFluidVolumeOverride = override->GetExtravascularFluidVolumeOverride(VolumeUnit::L);

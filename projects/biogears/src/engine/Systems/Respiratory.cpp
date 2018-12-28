@@ -2246,7 +2246,7 @@ void Respiratory::OverrideControlLoop()
   double maxTotalAlveolarVentilationOverride = 1000.0; // L/min
   double minTotalAlveolarVentilationOverride = 0.0; // L/min
   double currentTotalAlveolarVentilationOverride = 0.0; // value gets changed in next check
-  double maxTotalLungVolumeOverride = 1000.0; // L
+  double maxTotalLungVolumeOverride = 500.0; // L
   double minTotalLungVolumeOverride = 0.0; // L
   double currentTotalLungVolumeOverride = 0.0; // value gets changed in next check
   double maxTotalPulmonaryVentilationOverride = 1000.0; // L/min

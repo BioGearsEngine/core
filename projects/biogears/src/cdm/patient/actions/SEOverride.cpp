@@ -2211,7 +2211,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tInsulin Synthesis Rate: ";
     HasInsulinSynthesisRateOverride() ? str << *m_InsulinSynthesisRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tInsulin Synthesis Rate has a lower bound of X and an upper bound of Y.";
+      str << "\n\tInsulin Synthesis Rate has a lower bound of 0 pmol/min and an upper bound of 10 pmol/min.";
     }
     str << std::flush;
   }
@@ -2219,7 +2219,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tGlucagon Synthesis Rate: ";
     HasGlucagonSynthesisRateOverride() ? str << *m_GlucagonSynthesisRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tGlucagon Synthesis Rate has a lower bound of X and an upper bound of Y.";
+      str << "\n\tGlucagon Synthesis Rate has a lower bound of 0 pmol/min and an upper bound of 10 pmol/min.";
     }
     str << std::flush;
   }
@@ -2427,7 +2427,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tUrine Urea Nitrogen Concentration: ";
     HasUrineUreaNitrogenConcentrationOverride() ? str << *m_UrineUreaNitrogenConcentrationOverrideOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tUrine Urea Nitrogen Concentration has a lower bound of X and an upper bound of Y.";
+      str << "\n\tUrine Urea Nitrogen Concentration has a lower bound of 0 g/L and an upper bound of 100 g/L.";
     }
     str << std::flush;
   }
@@ -2435,7 +2435,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tExpiratory Flow: ";
     HasExpiratoryFlowOverride() ? str << *m_ExpiratoryFlowOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tExpiratory Flow has a lower bound of X and an upper bound of Y.";
+      str << "\n\tExpiratory Flow has a lower bound of 0 L/min and an upper bound of 1000 L/min.";
     }
     str << std::flush;
   }
@@ -2443,7 +2443,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tInspiratory Flow: ";
     HasInspiratoryFlowOverride() ? str << *m_InspiratoryFlowOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tInspiratory Flow has a lower bound of X and an upper bound of Y.";
+      str << "\n\tInspiratory Flow has a lower bound of 0 L/min and an upper bound of 1000 L/min.";
     }
     str << std::flush;
   }
@@ -2451,7 +2451,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tPulmonary Compliance: ";
     HasPulmonaryComplianceOverride() ? str << *m_PulmonaryComplianceOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tPulmonary Compliance has a lower bound of X and an upper bound of Y.";
+      str << "\n\tPulmonary Compliance has a lower bound of 0 L/cmH2O and an upper bound of 1000 L/cmH20.";
     }
     str << std::flush;
   }
@@ -2459,7 +2459,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tPulmonary Resistance: ";
     HasPulmonaryResistanceOverride() ? str << *m_PulmonaryResistanceOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tPulmonary Resistance has a lower bound of X and an upper bound of Y.";
+      str << "\n\tPulmonary Resistance has a lower bound of 0 cmH2O*s/L and an upper bound of 1000 cmH2O*s/L.";
     }
     str << std::flush;
   }
@@ -2483,7 +2483,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tTarget Pulmonary Ventilation: ";
     HasTargetPulmonaryVentilationOverride() ? str << *m_TargetPulmonaryVentilationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tTarget Pulmonary Ventilation has a lower bound of X and an upper bound of Y.";
+      str << "\n\tTarget Pulmonary Ventilation has a lower bound of 0 L/min and an upper bound of 1000 L/min.";
     }
     str << std::flush;
   }
@@ -2491,7 +2491,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tTotal Alveolar Ventilation: ";
     HasTotalAlveolarVentilationOverride() ? str << *m_TotalAlveolarVentilationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tTotal Alveolar Ventilation has a lower bound of X and an upper bound of Y.";
+      str << "\n\tTotal Alveolar Ventilation has a lower bound of 0 L/min and an upper bound of 1000 L/min.";
     }
     str << std::flush;
   }
@@ -2499,7 +2499,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tTotal Lung Volume: ";
     HasTotalLungVolumeOverride() ? str << *m_TotalLungVolumeOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tTotal Lung Volume has a lower bound of X and an upper bound of Y.";
+      str << "\n\tTotal Lung Volume has a lower bound of 0 L and an upper bound of 500 L.";
     }
     str << std::flush;
   }
@@ -2507,7 +2507,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tTotal Pulmonary Ventilation: ";
     HasTotalPulmonaryVentilationOverride() ? str << *m_TotalPulmonaryVentilationOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tTotal Pulmonary Ventilation has a lower bound of X and an upper bound of Y.";
+      str << "\n\tTotal Pulmonary Ventilation has a lower bound of 0 L/min and an upper bound of 1000 L/min.";
     }
     str << std::flush;
   }
@@ -2515,7 +2515,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tExtravascular Fluid Volume: ";
     HasExtravascularFluidVolumeOverride() ? str << *m_ExtravascularFluidVolumeOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tExtravascular Fluid Volume has a lower bound of X and an upper bound of Y.";
+      str << "\n\tExtravascular Fluid Volume has a lower bound of 0 L and an upper bound of 1000 L.";
     }
     str << std::flush;
   }
@@ -2523,7 +2523,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tIntracellular Fluid Volume: ";
     HasIntracellularFluidVolumeOverride() ? str << *m_IntracellularFluidVolumeOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tIntracellular Fluid Volume has a lower bound of X and an upper bound of Y.";
+      str << "\n\tIntracellular Fluid Volume has a lower bound of 0 L and an upper bound of 1000 L.";
     }
     str << std::flush;
   }
@@ -2531,7 +2531,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tLiver Glycogen: ";
     HasLiverGlycogenOverride() ? str << *m_LiverGlycogenOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tLiver Glycogen has a lower bound of X and an upper bound of Y.";
+      str << "\n\tLiver Glycogen has a lower bound of 0 g and an upper bound of 1000 g.";
     }
     str << std::flush;
   }
@@ -2539,7 +2539,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tMuscle Glycogen: ";
     HasMuscleGlycogenOverride() ? str << *m_MuscleGlycogenOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tMuscle Glycogen has a lower bound of X and an upper bound of Y.";
+      str << "\n\tMuscle Glycogen has a lower bound of 0 g and an upper bound of 2000 g.";
     }
     str << std::flush;
   }
@@ -2547,7 +2547,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tStored Protein: ";
     HasStoredProteinOverride() ? str << *m_StoredProteinOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tStored Protein has a lower bound of X and an upper bound of Y.";
+      str << "\n\tStored Protein has a lower bound of 0 g and an upper bound of 5000 g.";
     }
     str << std::flush;
   }
@@ -2555,7 +2555,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tStored Fat: ";
     HasStoredFatOverride() ? str << *m_StoredFatOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tStored Fat has a lower bound of X and an upper bound of Y.";
+      str << "\n\tStored Fat has a lower bound of 0 g and an upper bound of 5000 g.";
     }
     str << std::flush;
   }
