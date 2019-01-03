@@ -638,9 +638,25 @@ void Drugs::CalculateDrugEffects()
     pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
   }
 
+  
+ //Sepsis Effects
+  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+    double nitricOxideBaseline = 0.05;
+    double nitricOxide = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetNitricOxide().GetValue() - nitricOxideBaseline;
+    LLIM(nitricOxide, 0.0);
+    double nitricOxideEC50 = 0.4;
+    double nitricOxideBPMod = -0.3;
+    double nitricOxideHRMod = 0.3;
+    double nitricOxideBPChange = nitricOxideBPMod * std::pow(nitricOxide, 2.0) / (std::pow(nitricOxide, 2.0) + std::pow(nitricOxideEC50, 2.0));
+    double nitricOxideHRChange = nitricOxideHRMod * std::pow(nitricOxide, 2.0) / (std::pow(nitricOxide, 2.0) + std::pow(nitricOxideEC50, 2.0));
+    deltaHeartRate_Per_min += nitricOxideHRChange * m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min);
+    deltaSystolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
+    deltaDiastolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
+  }
+
+
   //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
   double deltaMeanPressure_mmHg = (2 * deltaDiastolicBP_mmHg + deltaSystolicBP_mmHg) / 3;
-
   double deltaPulsePressure_mmHg = (deltaSystolicBP_mmHg - deltaDiastolicBP_mmHg);
 
   //Set values on the CDM System Values

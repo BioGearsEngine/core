@@ -525,7 +525,7 @@ void Tissue::PreProcess()
   CalculateOncoticPressure();
 
    //Lots of debug tracking
-  for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
+ /* for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
     SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
     SEFluidCircuitPath* l = m_LymphPaths[&ex];
     std::string name = l->GetName();
@@ -560,7 +560,7 @@ void Tissue::PreProcess()
     }
     m_data.GetDataTrack().Probe(t->GetName() + "_Resistance", m_EndothelialResistancePaths[t]->GetNextResistance(FlowResistanceUnit::mmHg_min_Per_mL));
 
-  }
+  }*/
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -2465,6 +2465,7 @@ void Tissue::CalculateTissueFluidFluxes()
       }
     }
   }
+  ///\ToDo:  Use derivative of P-V relationship in Himeno2015Mechanisms to update lymph compliance as volume changes
 }
 
 /// --------------------------------------------------------------------------------------------------
@@ -2569,8 +2570,8 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
   double totalTest = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) * ((albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL * std::exp(-peclet)) / (1.0 - std::exp(-peclet)));
 
 
-  m_data.GetDataTrack().Probe(tissue.GetName() + "TotalTest", totalTest);
-  m_data.GetDataTrack().Probe(tissue.GetName() + "Reflection", reflectionCoefficientSmall);
+ /* m_data.GetDataTrack().Probe(tissue.GetName() + "TotalTest", totalTest);
+  m_data.GetDataTrack().Probe(tissue.GetName() + "Reflection", reflectionCoefficientSmall);*/
 
 
   double moved_ug = totalTest / 60.0 * timestep_s;

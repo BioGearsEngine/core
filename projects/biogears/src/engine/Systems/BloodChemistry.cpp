@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
-
+#include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -602,19 +602,6 @@ void BloodChemistry::CheckBloodSubstanceLevels()
       /// The brain is getting oxygen.
       patient.SetEvent(CDM::enumPatientEvent::MyocardiumOxygenDeficit, false, m_data.GetSimulationTime());
     }
-
-    //Sepsis check
-    if (GetAcuteInflammatoryResponse().HasInflammationSources() && GetAcuteInflammatoryResponse().GetPathogen().GetValue() > ZERO_APPROX) {
-      double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
-      double urineOutput_mL_Per_hr_kg = m_data.GetRenal().GetUrineProductionRate(VolumePerTimeUnit::mL_Per_hr) / m_Patient->GetWeight(MassUnit::kg);
-      if (systolicBP <= 90.0 && urineOutput_mL_Per_hr_kg <= 0.5) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
-      }
-      if (patient.IsEventActive(CDM::enumPatientEvent::SevereSepsis) && systolicBP > 95.0 && urineOutput_mL_Per_hr_kg > 0.75) {
-        //Give a little buffer on the BP and use the upper range of target urine output to decide when to turn this off
-        patient.SetEvent(CDM::enumPatientEvent::SevereSepsis, false, m_data.GetSimulationTime());
-      }
-    }
   }
 }
 
@@ -688,7 +675,7 @@ void BloodChemistry::Sepsis()
   double neutrophilActive = GetAcuteInflammatoryResponse().GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.055);
+  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.075);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
@@ -699,13 +686,15 @@ void BloodChemistry::Sepsis()
 
   //Temperature (fever) effects
   double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
-  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.3);
+  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.4);
   coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
 
   //Blood pressure effects (accomplish by overriding baroreceptor resistance scale)
   if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::SevereSepsis)) {
-    double duration_min = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::min);
-    m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(std::exp(-duration_min / 60.0));
+    double duration_hr = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::hr);
+    double bpScaleMin = 1.00;
+    double bpScale = 0.4 * std::exp(-2*duration_hr) + bpScaleMin;
+    //m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(bpScale);
   }
 
   //Bilirubin counts (measure of liver perfusion)
@@ -731,7 +720,6 @@ void BloodChemistry::AcuteInflammatoryResponse()
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     scaleFactor = 2.0;
-    damageHalfMax = 1.2;
     damageRecovery = 0.01;
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
       GetAcuteInflammatoryResponse().GetTrauma().SetValue(10.0 * burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
@@ -739,23 +727,30 @@ void BloodChemistry::AcuteInflammatoryResponse()
     }
   }
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    pathogenGrowthRate = 2.5;
-    scaleFactor = 10.0 * m_data.GetActions().GetPatientActions().GetSepsis()->GetSeverity().GetValue();
-    damageHalfMax = 0.5;
+    pathogenGrowthRate = 3.5;
+    scaleFactor = 5.0 * m_data.GetActions().GetPatientActions().GetSepsis()->GetSeverity().GetValue();
     damageRecovery = 0.05;
+    damageHalfMax = 0.25;
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) == sources.end()) {
       GetAcuteInflammatoryResponse().GetPathogen().SetValue(1.0);
       GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
+    }
+    Sepsis(); //Process additional sepsis effects
+    //Check for presence of antibiotic and scale pathogen growth accordingly
+    if (m_data.GetSubstances().GetSubstance("Piperacillin")->HasPlasmaConcentration()) {
+      double minimumInhibitoryConcentration_ug_Per_mL = 64.0;
+      double antibioticEMax = 3.0;
+      double antibioticShapeParam = 2.0;
+      double antibioticEC50 = 3.0;
+      double piperacillin_ug_Per_mL = m_data.GetSubstances().GetSubstance("Piperacillin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
+      double antibioticEffect_Per_h = antibioticEMax * std::pow(piperacillin_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam) / (std::pow(antibioticEC50, antibioticShapeParam) + std::pow(piperacillin_ug_Per_mL / minimumInhibitoryConcentration_ug_Per_mL, antibioticShapeParam));
+      pathogenGrowthRate = pathogenGrowthRate - antibioticEffect_Per_h;
     }
   }
   //Perform this check after looking for inflammatory actions (otherwise we'll never process)
   if (!GetAcuteInflammatoryResponse().HasInflammationSources()) {
     return;
   }
-  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    Sepsis(); //Process additional sepsis effects
-  }
-
   //Unit scales--TNF, nitrate, IL6, and IL10 are scaled in Chow2005Acute so that there outputs are in units of pg/L.
   //We will store them with those units (for outputs), but they need to be scaled back down to dimensionless values to use in model equations
   double tnfScale = 35000.0;
@@ -803,11 +798,11 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Trauma decay
   double kTr = 1.5; //Determined empirically to give good results
   //Macrophage interaction
-  double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 0.25, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
+  double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
   //Activate macrophage interactions
   double kMANO = 0.2, kMA = 0.2;
   //Neutrophil interactions
-  double kNL = 0.15, kNTNF = 0.2, kN6 = 0.557, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 15.0, xNTNF = 2.0, xN6 = 1.0, xND = 0.1, xN10 = 0.2, xNNO = 0.5; //xND was 0.4 for burn
+  double kNL = 0.15, kNTNF = 0.2, kN6 = 0.557, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 15.0, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2, xNNO = 0.5; //xND was 0.4 for burn
   //Inducible NOS
   double kINOSN = 1.5, kINOSM = 0.1, kINOSEC = 0.1, kINOS6 = 2.0, kINOSd = 0.05, kINOS = 0.101, xINOS10 = 0.1, xINOSTNF = 0.05, xINOS6 = 0.1, xINOSNO = 0.3;
   //E NOS
@@ -826,7 +821,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
   //Blood pressure
   double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
-  //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05, changed kD from 0.05
+  //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05,
   double kDB = 0.005, kD6 = 0.3, kD = damageRecovery, xD6 = damageHalfMax, xDNO = 0.4;
   double kDTR = 0.15; //This is a base value that will be adjusted as a function of type and severity of trauma
   double kDP = 0.001; //Pathogen causes a small amount of damage by itself
@@ -855,15 +850,19 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dNO3 = kNO3 * (nitricOxide - NO3);
   double dTNF = (kTNFN * neutrophilActive + kTNFM * macrophageActive) * GeneralMath::HillInhibition(IL10 + catecholamines, xTNF10, 2.0) * GeneralMath::HillInhibition(IL6, xTNF6, 3.0) - kTNF * TNF;
   double dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) + k6 * (s6 - IL6);
-  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    //Chow et al did not report their IL6 equation correctly.  They left out IL6 inhibition of itself (though they had parameters for it listed).  Adding this self-inhibition reproduces more faithfully the results they report
-    //However, the burn model was tuned before this ommission was causght.  Putting it in for Sepsis and will re-tune for burn later, but don't want to cause delay on that project by messing around too much here.
-    dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) * GeneralMath::HillInhibition(IL6, x66, 4.0) + k6 * (s6 - IL6);
-  }
   double dIL10 = (k10N * neutrophilActive + macrophageActive * (1 + k10A * autonomic)) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(IL6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(IL12, x1012, 4.0) + k10R) - k10 * (IL10 - s10);
   double dIL12 = k12M * macrophageActive * GeneralMath::HillInhibition(IL10, x1210, 2.0) - k12 * IL12;
   double dCa = kCATR * autonomic - kCA * catecholamines;
   double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma + kDP * pathogen) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
+
+  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+    //Chow et al did not report their IL6 equation correctly.  They left out IL6 inhibition of itself (though they had parameters for it listed).  Adding this self-inhibition reproduces more faithfully the results they report
+    //However, the burn model was tuned before this ommission was causght.  Putting it in for Sepsis and will re-tune for burn later, but don't want to cause delay on that project by messing around too much here.
+    dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) * GeneralMath::HillInhibition(IL6, x66, 4.0) + k6 * (s6 - IL6);
+    //Also slightly adjusting this function for sepsis.  Will revisit with burn later, don't want to mess burn up while it's in a good spot
+    xDNO = 0.5;
+    dTissueIntegrity = kD * (1.0 - tissueIntegrity) - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma + kDP * pathogen) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
+  }
 
   //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up
   GetAcuteInflammatoryResponse().GetPathogen().IncrementValue(dPathogen * dt_hr * scaleFactor);

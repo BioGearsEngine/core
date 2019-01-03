@@ -252,6 +252,17 @@ void Nervous::BaroreceptorFeedback()
       ///\TODO:  Look into a better way to implement drug classification search
     }
   }
+  //Sepsis effects
+  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+    if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::SevereSepsis)){
+      double severeSepsisDuration_hr = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::hr);
+      m_normalizedAlphaResistance = m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() * std::exp(-severeSepsisDuration_hr); 
+    } else {
+      double restoringFactor = 0.1;
+      m_normalizedAlphaResistance += (restoringFactor * (m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() - m_normalizedAlphaResistance));
+    }
+    
+  }
 
   //Neurological effects of pain action
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {

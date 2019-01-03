@@ -1455,6 +1455,16 @@ void Renal::CalculateVitalSigns()
         /// \event Patient: Ends when the sodium excretion rate falls below 14.0 mg/min \cite moss2013hormonal
         m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, false, m_data.GetSimulationTime());
       }
+
+      if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+        double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+        if (systolicBP <= 100.0 && m_urineProductionRate_mL_Per_min_runningAvg.Value() <= 0.5) {
+          m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
+        }
+        if (m_patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis) && m_urineProductionRate_mL_Per_min_runningAvg.Value() >=0.55 && systolicBP > 90.0) {
+          m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, false, m_data.GetSimulationTime());
+        }
+      }
     }
 
     //reset at start of cardiac cycle

@@ -1816,7 +1816,6 @@ void Cardiovascular::AdjustVascularTone()
   //The baroreceptor response adjusts the systemic resistances and compliances according to the multiplier calculated in Nervous.cpp
   double UpdatedResistance_mmHg_s_Per_mL = 0.0;
   double UpdatedCompliance_mL_Per_mmHg = 0.0;
-  double totalResistanceChange_mmHg_s_Per_mL = 0.0;
   double totalComplianceChange_mL_Per_mmHg = 0.0;
   if (m_data.GetNervous().HasBaroreceptorResistanceScale()) {
     for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
@@ -1859,9 +1858,7 @@ void Cardiovascular::AdjustVascularTone()
       }
       UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
       UpdatedResistance_mmHg_s_Per_mL += ResistanceChange * UpdatedResistance_mmHg_s_Per_mL / GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-      if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-        UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
-      }
+      LLIM(UpdatedResistance_mmHg_s_Per_mL, m_minIndividialSystemicResistance__mmHg_s_Per_mL);
       Path->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
   }
