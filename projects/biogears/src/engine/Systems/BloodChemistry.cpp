@@ -714,7 +714,6 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double scaleFactor = 1.0; //Scale Factor to speed up during debug/testing (and probably for some scenarios)
   double burnTotalBodySurfaceArea = 0.0;
   double pathogenGrowthRate = 0.0; //Note bifurcation at approximately kpg = 1.6
-  double damageHalfMax = 0.0;
   double damageRecovery = 0.0;
 
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
@@ -730,7 +729,6 @@ void BloodChemistry::AcuteInflammatoryResponse()
     pathogenGrowthRate = 3.5;
     scaleFactor = 5.0 * m_data.GetActions().GetPatientActions().GetSepsis()->GetSeverity().GetValue();
     damageRecovery = 0.05;
-    damageHalfMax = 0.25;
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) == sources.end()) {
       GetAcuteInflammatoryResponse().GetPathogen().SetValue(1.0);
       GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
@@ -738,7 +736,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
     Sepsis(); //Process additional sepsis effects
     //Check for presence of antibiotic and scale pathogen growth accordingly
     if (m_data.GetSubstances().GetSubstance("Piperacillin")->HasPlasmaConcentration()) {
-      double minimumInhibitoryConcentration_ug_Per_mL = 64.0;
+      double minimumInhibitoryConcentration_ug_Per_mL = 16.0;
       double antibioticEMax = 3.0;
       double antibioticShapeParam = 2.0;
       double antibioticEC50 = 3.0;
@@ -822,7 +820,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Blood pressure
   double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
   //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05,
-  double kDB = 0.005, kD6 = 0.3, kD = damageRecovery, xD6 = damageHalfMax, xDNO = 0.4;
+  double kDB = 0.005, kD6 = 0.3, kD = damageRecovery, xD6 = 0.25, xDNO = 0.5;
   double kDTR = 0.15; //This is a base value that will be adjusted as a function of type and severity of trauma
   double kDP = 0.001; //Pathogen causes a small amount of damage by itself
   //Temperature parameters
@@ -839,6 +837,10 @@ void BloodChemistry::AcuteInflammatoryResponse()
   }
 
   double dPathogen = kPG * pathogen * (1.0 - pathogen / maxPathogen) - pathogen * kPN * neutrophilActive - sB * kPB * pathogen / (uB + kBP * pathogen); //This is assumed to be the driving force for infection / sepsis.
+  if (m_data.GetSubstances().GetSubstance("Piperacillin")->HasPlasmaConcentration() && pathogen < 0.001) {
+    //Since pathogen decreases exponentially it will never actually hit 0.  Make sure it can't rebound when population becomes 0.1% of initial pop
+    dPathogen = 0.0;
+  }
   double dTrauma = -kTr * trauma; //This is assumed to be the driving force for burn
   double dMacrophageResting = -((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMR * (macrophageResting - sM);
   double dMacrophageActive = ((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(pathogen, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - tissueIntegrity, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(IL6, xM6, 2.0)) + kMTR * trauma + kMB * fB) * macrophageResting * GeneralMath::HillInhibition(IL10 + catecholamines, xM10, 2.0) - kMA * macrophageActive;
@@ -849,20 +851,12 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double dENOS = kENOSEC * GeneralMath::HillInhibition(TNF, xENOSTNF, 1.0) * GeneralMath::HillInhibition(pathogen, xENOSL, 1.0) * GeneralMath::HillInhibition(trauma, xENOSTR, 4.0) - kENOS * eNOS;
   double dNO3 = kNO3 * (nitricOxide - NO3);
   double dTNF = (kTNFN * neutrophilActive + kTNFM * macrophageActive) * GeneralMath::HillInhibition(IL10 + catecholamines, xTNF10, 2.0) * GeneralMath::HillInhibition(IL6, xTNF6, 3.0) - kTNF * TNF;
-  double dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) + k6 * (s6 - IL6);
+  double dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) * GeneralMath::HillInhibition(IL6, x66, 4.0) + k6 * (s6 - IL6);
   double dIL10 = (k10N * neutrophilActive + macrophageActive * (1 + k10A * autonomic)) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(IL6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(IL12, x1012, 4.0) + k10R) - k10 * (IL10 - s10);
   double dIL12 = k12M * macrophageActive * GeneralMath::HillInhibition(IL10, x1210, 2.0) - k12 * IL12;
   double dCa = kCATR * autonomic - kCA * catecholamines;
-  double dTissueIntegrity = kD * (1.0 - tissueIntegrity) * tissueIntegrity - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma + kDP * pathogen) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
-
-  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    //Chow et al did not report their IL6 equation correctly.  They left out IL6 inhibition of itself (though they had parameters for it listed).  Adding this self-inhibition reproduces more faithfully the results they report
-    //However, the burn model was tuned before this ommission was causght.  Putting it in for Sepsis and will re-tune for burn later, but don't want to cause delay on that project by messing around too much here.
-    dIL6 = (k6N * neutrophilActive + macrophageActive) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(nitricOxide, x6NO, 2.0)) * GeneralMath::HillInhibition(IL10 + catecholamines, x610, 2.0) * GeneralMath::HillInhibition(IL6, x66, 4.0) + k6 * (s6 - IL6);
-    //Also slightly adjusting this function for sepsis.  Will revisit with burn later, don't want to mess burn up while it's in a good spot
-    xDNO = 0.5;
-    dTissueIntegrity = kD * (1.0 - tissueIntegrity) - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma + kDP * pathogen) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
-  }
+  double dTissueIntegrity = kD * (1.0 - tissueIntegrity) - tissueIntegrity * (kDB * fB + kD6 * GeneralMath::HillActivation(IL6, xD6, 2.0) + kDTR * trauma + kDP * pathogen) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(nitricOxide, 2.0)));
+ 
 
   //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up
   GetAcuteInflammatoryResponse().GetPathogen().IncrementValue(dPathogen * dt_hr * scaleFactor);

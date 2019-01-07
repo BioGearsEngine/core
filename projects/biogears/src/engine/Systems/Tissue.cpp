@@ -2524,38 +2524,20 @@ void Tissue::CalculateOncoticPressure()
 
 double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartment& extra, SETissueCompartment& tissue, double timestep_s)
 {
-  double diffusivityCoefficientBase_mL_Per_min_kg = 0.03306;
+  double diffusivityCoefficient_mL_Per_min_kg = 0.03306;
   double reflectionCoefficientSmallBase = 0.954;
   double reflectionCoefficientLargeBase = 0.097;
   double reflectionCoefficientLarge = reflectionCoefficientLargeBase;
   double reflectionCoefficientSmall = reflectionCoefficientSmallBase;
   double fluidFlux_mL_Per_min = m_InterstitialCopPaths[&tissue]->GetFlow(VolumePerTimeUnit::mL_Per_min);
   double tissueMass_kg = tissue.GetTotalMass(MassUnit::kg);
-  double permeabilityMultiplier = 1.0;
-  double scaleFactor = 1.0;
+
   //We need to increase albumin permeability when there is inflammation
   if (m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
-    std::vector<CDM::enumInflammationSource> sources = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetInflammationSources();
-    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) != sources.end()) {
-      double il6Baseline_pg_Per_L = 17.0;
-      double il6_pg_Per_L = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetInterleukin6().GetValue();
-      double halfMax_pg_Per_L = 3000.0;
-      permeabilityMultiplier += 35.0 * std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2.0) / (std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2) + std::pow(halfMax_pg_Per_L, 2.0));
-      reflectionCoefficientSmall = reflectionCoefficientSmallBase * (1.0 - std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2.0) / (std::pow(il6_pg_Per_L - il6Baseline_pg_Per_L, 2) + std::pow(halfMax_pg_Per_L, 2)));
-    }
-    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) != sources.end()) {
       double tissueIntegrity = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
-      double damageHalfMax = 0.2;
-     // permeabilityMultiplier += 35.0 * std::pow(sepsisDamage, 2.0) / (std::pow(sepsisDamage, 2) + std::pow(damageHalfMax, 2.0));
-      //reflectionCoefficientSmall = reflectionCoefficientSmallBase * std::exp(5.0 * (tissueIntegrity-1));
       reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
-      if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-        scaleFactor = 10.0 * m_data.GetActions().GetPatientActions().GetSepsis()->GetSeverity().GetValue();
-      }
-    }
   }
 
-  double diffusivityCoefficient_mL_Per_min_kg = permeabilityMultiplier * diffusivityCoefficientBase_mL_Per_min_kg;
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);
   BLIM(reflectionCoefficientLarge, 0.0, 1.0);
 
@@ -2564,17 +2546,9 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 
 
   double peclet = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) / (diffusivityCoefficient_mL_Per_min_kg * tissueMass_kg);
+  double albuminFlux_ug_Per_min = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) * ((albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL * std::exp(-peclet)) / (1.0 - std::exp(-peclet)));
 
- // double diffusiveTest = diffusivityCoefficient_mL_Per_min_kg * tissueMass_kg * (1.0 - albuminExtracellular_ug_Per_mL / albuminVascular_ug_Per_mL) * peclet / (std::exp(peclet) - 1.0);
- // double convectiveTest = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall);
-  double totalTest = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) * ((albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL * std::exp(-peclet)) / (1.0 - std::exp(-peclet)));
-
-
- /* m_data.GetDataTrack().Probe(tissue.GetName() + "TotalTest", totalTest);
-  m_data.GetDataTrack().Probe(tissue.GetName() + "Reflection", reflectionCoefficientSmall);*/
-
-
-  double moved_ug = totalTest / 60.0 * timestep_s;
+  double moved_ug = albuminFlux_ug_Per_min / 60.0 * timestep_s;
 
   if (moved_ug > 0) {
     if (moved_ug > vascular.GetSubstanceQuantity(*m_Albumin)->GetMass(MassUnit::ug)) {
