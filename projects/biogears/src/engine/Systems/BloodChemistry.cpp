@@ -675,7 +675,7 @@ void BloodChemistry::Sepsis()
   double neutrophilActive = GetAcuteInflammatoryResponse().GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.075);
+  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.25);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
@@ -688,14 +688,6 @@ void BloodChemistry::Sepsis()
   double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
   double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.4);
   coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
-
-  //Blood pressure effects (accomplish by overriding baroreceptor resistance scale)
-  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::SevereSepsis)) {
-    double duration_hr = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::hr);
-    double bpScaleMin = 1.00;
-    double bpScale = 0.4 * std::exp(-2*duration_hr) + bpScaleMin;
-    //m_data.GetNervous().GetBaroreceptorResistanceScale().SetValue(bpScale);
-  }
 
   //Bilirubin counts (measure of liver perfusion)
   double baselineBilirubin_mg_Per_dL = 0.70;
@@ -721,7 +713,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
     scaleFactor = 2.0;
     damageRecovery = 0.01;
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
-      GetAcuteInflammatoryResponse().GetTrauma().SetValue(10.0 * burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
+      GetAcuteInflammatoryResponse().GetTrauma().SetValue(5.0 * burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
       GetAcuteInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
     }
   }
@@ -821,7 +813,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
   //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05,
   double kDB = 0.005, kD6 = 0.3, kD = damageRecovery, xD6 = 0.25, xDNO = 0.5;
-  double kDTR = 0.15; //This is a base value that will be adjusted as a function of type and severity of trauma
+  double kDTR = 0.0; //This is a base value that will be adjusted as a function of type and severity of trauma
   double kDP = 0.001; //Pathogen causes a small amount of damage by itself
   //Temperature parameters
   double kT = 1.0, kTTnf = 1.5, nTTnf = 0.2, hTTnf = 0.75, TMax = 39.5, TMin = 37.0, kT6 = 1.5, nT6 = 0.5, hT6 = 0.75, kT10 = 0.0625, nT10 = 0.2, hT10 = 1.0;
@@ -833,7 +825,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   //Adjust parameters depending on inflammation source
   if (burnTotalBodySurfaceArea != 0) {
     //Rate at which burn causes damage varies on the severity of the burn.  A larger burn causes a bigger initial hit to tissue damage
-    kDTR *= burnTotalBodySurfaceArea;
+    kDTR = burnTotalBodySurfaceArea;
   }
 
   double dPathogen = kPG * pathogen * (1.0 - pathogen / maxPathogen) - pathogen * kPN * neutrophilActive - sB * kPB * pathogen / (uB + kBP * pathogen); //This is assumed to be the driving force for infection / sepsis.

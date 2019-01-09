@@ -524,8 +524,8 @@ void Tissue::PreProcess()
   CalculateTissueFluidFluxes();
   CalculateOncoticPressure();
 
-   //Lots of debug tracking
- /* for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
+  //Lots of debug tracking
+  /* for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
     SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
     SEFluidCircuitPath* l = m_LymphPaths[&ex];
     std::string name = l->GetName();
@@ -837,19 +837,15 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   }
   //Patients with sepsis have elevated lactate levels (i.e. increased anaerobic activity) because of poor oxygen perfusion to tissues
   //Assume that the muscles are most effected by this deficit and increase the anaerobic fraction as a function of sepsis progression
-  //Skip over this if there is antibiotic because antibiotic decreases white blood cell count, and if left to its own devices the lactate
-  //levels would spike up again because of how they are tied to the wbc count
   if (m_PatientActions->HasSepsis()) {
-    double maxTissueDamage = 17.5;
-    double severity = m_PatientActions->GetSepsis()->GetSeverity().GetValue();
-    double tissueDamageFraction = 1.0 - m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
-    //This function is half of a Gaussian that becomes a constant background value when white blood cell count saturates.
-    //The baseline of 0.2 was determined empirically to balance lactate transport / elimination with production
-    //Max value is a function of severity because higher severity scenarios are shorter and we need to spike the concentration faster
-    //We also need the production to slack off or else we will just keep pumping out lactate indefinitely
-    hypoperfusedFraction = severity * exp(-std::pow(tissueDamageFraction / 0.5, 2)) + 0.25;
+    //Making this so that highest severity increases levels by 50% like the COPD function above, time scale seems about right.  Lower increases for lower severities because those
+    //scenarios will have more time to accumulate lactate
+    mandatoryMuscleAnaerobicFraction *= (1.0 + m_PatientActions->GetSepsis()->GetSeverity().GetValue() / 2.0);
+    //If we get to severe sepsis but do not have lactic acidosis yet, ramp up fraction another 50% (theoretical max = 0.1 * (1.5)^2 = 0.225)
+    if (m_Patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis)&&!m_Patient->IsEventActive(CDM::enumPatientEvent::LacticAcidosis)) {
+        mandatoryMuscleAnaerobicFraction *=1.5;
+    }
   }
-
   //Reusable values for looping
   SELiquidCompartment* vascular;
   SELiquidSubstanceQuantity* TissueO2;
@@ -1023,11 +1019,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       muscleMandatoryAnaerobicNeededEnergy_kcal = mandatoryMuscleAnaerobicFraction * tissueNeededEnergy_kcal;
       tissueNeededEnergy_kcal -= muscleMandatoryAnaerobicNeededEnergy_kcal;
       tissueNeededEnergy_kcal += exerciseEnergyRequested_kcal;
-
-      if (m_PatientActions->HasSepsis()) {
-        //Overwrite the mandatory anaerobic energy requirement to simulate metabolic effects of poor oxygen transfer to tissue
-        muscleMandatoryAnaerobicNeededEnergy_kcal = tissueNeededEnergy_kcal * hypoperfusedFraction;
-      }
 
       double creatinineProductionRate_mg_Per_s = 2.0e-5; /// \todo Creatinine production rate should be a function of muscle mass.
       intracellular.GetSubstanceQuantity(*m_Creatinine)->GetMass().IncrementValue(creatinineProductionRate_mg_Per_s * m_Dt_s, MassUnit::mg);
@@ -1790,10 +1781,10 @@ void Tissue::ManageSubstancesAndSaturation()
   // Currently, substances are not where they need to be, we will hard code this for now until we fix them
   /// \todo Remove SetBodyState hardcode and replace with computed values after substance redux is complete
   m_data.GetSaturationCalculator().SetBodyState(albuminConcentration,
-    m_data.GetBloodChemistry().GetHematocrit(),
-    m_data.GetEnergy().GetCoreTemperature(),
-    m_data.GetBloodChemistry().GetStrongIonDifference(),
-    m_data.GetBloodChemistry().GetPhosphate());
+                                                m_data.GetBloodChemistry().GetHematocrit(),
+                                                m_data.GetEnergy().GetCoreTemperature(),
+                                                m_data.GetBloodChemistry().GetStrongIonDifference(),
+                                                m_data.GetBloodChemistry().GetPhosphate());
   for (SELiquidCompartment* cmpt : m_data.GetCompartments().GetVascularLeafCompartments()) {
     if (cmpt->HasVolume()) {
       m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*cmpt);
@@ -2474,7 +2465,7 @@ void Tissue::CalculateTissueFluidFluxes()
 ///
 /// \details
 /// This function takes the albumin concentrations in the vascular and extracellular spaces of each BioGears compartment (except the brain)
-/// and uses the Landis-Pappenheimr approximation to determine osmotic pressure gradient.  Albumin concentrations are calculated in the 
+/// and uses the Landis-Pappenheimr approximation to determine osmotic pressure gradient.  Albumin concentrations are calculated in the
 /// AlbuminTransport method
 void Tissue::CalculateOncoticPressure()
 {
@@ -2484,7 +2475,7 @@ void Tissue::CalculateOncoticPressure()
   SEFluidCircuitPath* interstitialCOP;
 
   ////In calculating oncotic pressure, we assume a linear relationship between plasma albumin concentration and total plasma protein
-  ////concentration.  We then use the Landis-Pappenheimer (LP) Equation for total protein. This assumes a healthy state where no other 
+  ////concentration.  We then use the Landis-Pappenheimer (LP) Equation for total protein. This assumes a healthy state where no other
   ////proteins are leaking across membrane.  When inflammation is present, these pressures will change as result of albumin concentration
   ////which is determined in AlbuminTransport method
   double reflectionCoefficient = 0.0;
@@ -2534,8 +2525,8 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 
   //We need to increase albumin permeability when there is inflammation
   if (m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
-      double tissueIntegrity = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
-      reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
+    double tissueIntegrity = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+    reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
   }
 
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);
@@ -2543,7 +2534,6 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 
   double albuminVascular_ug_Per_mL = vascular.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   double albuminExtracellular_ug_Per_mL = extra.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
-
 
   double peclet = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) / (diffusivityCoefficient_mL_Per_min_kg * tissueMass_kg);
   double albuminFlux_ug_Per_min = fluidFlux_mL_Per_min * (1.0 - reflectionCoefficientSmall) * ((albuminVascular_ug_Per_mL - albuminExtracellular_ug_Per_mL * std::exp(-peclet)) / (1.0 - std::exp(-peclet)));
