@@ -79,9 +79,11 @@ private:
   // Actions/Conditions
   void Exercise();
 
+protected:
   void ProcessOverride();
   void OverrideControlLoop();
 
+private:
   // These are both part of the consume meal condition.
   //void Dehydration(double time); // Need to revisit
 

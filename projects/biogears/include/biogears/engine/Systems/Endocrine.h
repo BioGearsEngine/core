@@ -70,10 +70,13 @@ private:
   void SynthesizeInsulin();
   void SynthesizeGlucagon();
   void ReleaseEpinephrine();
+
+protected:  
   //Override
   void ProcessOverride();
   void OverrideControlLoop();
 
+private:
   // Serializable member variables (Set in Initialize and in schema)
 
   // Stateless member variable (Set in SetUp())

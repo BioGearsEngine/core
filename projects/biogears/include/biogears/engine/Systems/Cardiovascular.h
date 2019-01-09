@@ -92,12 +92,10 @@ private:
   /**/ void AdjustVascularTone();
   /**/ void BeginCardiacCycle();
   /**/ void CalculateHeartElastance();
-  void ProcessOverride();
   
   // IF STABILIZING
   void TuneCircuit();
   /**/ void TunePaths(double systemicResistanceScale, double systemicComplianceScale, double aortaResistanceScale, double aortaComplianceScale, double rightHeartResistanceScale, double venaCavaComplianceScale);
-  /**/ void OverrideControlLoop();
   // ELSE
   void MetabolicToneResponse();
   void ProcessActions();
@@ -114,6 +112,13 @@ private:
   void CalculateVitalSigns();
   /**/ void CalculateHeartRate();
   /**/ void RecordAndResetCardiacCycle();
+
+protected:
+  // Override
+  void ProcessOverride();
+  void OverrideControlLoop();
+
+private:
 
   // Serializable member variables (Set in Initialize and in schema)
   //Driver

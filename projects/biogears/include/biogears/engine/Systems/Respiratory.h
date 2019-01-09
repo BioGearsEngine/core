@@ -133,9 +133,12 @@ private:
   //Process
   void CalculateVitalSigns();
 
-  //Override
+protected:
+  // Override
   void ProcessOverride();
   void OverrideControlLoop();
+
+private:
 
   // Serializable member variables (Set in Initialize and in schema)
   //   Initial patient values
