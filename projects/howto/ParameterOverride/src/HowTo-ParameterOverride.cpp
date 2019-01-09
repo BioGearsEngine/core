@@ -21,6 +21,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/cdm/patient/actions/SEOverride.h>
 
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/cdm/patient/actions/SESubstanceBolus.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/scenario/SEPatientActionCollection.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -67,9 +73,11 @@ void HowToParameterOverride()
   tracker.AdvanceModelTime(30);
 
   // Create an SEParameterOverride object
-  // Set a parameter severity (based on individual parameter units.)	
+  // Set a parameter change (based on individual parameter units.)	
   SEOverride override;
-  override.GetHeartRateOverride.SetValue(70,CDM::FrequencyUnit::bpm);
+  override.SetOverrideState(CDM::enumOnOff::On);
+  override.SetOverrideConformance(CDM::enumOnOff::Off);
+  override.GetHeartRateOverride().SetValue(70, FrequencyUnit::Per_min);
   bg->ProcessAction(override);
   bg->GetLogger()->Info("Overriding BioGears Parameter.");
 
