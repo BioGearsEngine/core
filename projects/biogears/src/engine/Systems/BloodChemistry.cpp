@@ -710,7 +710,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
 
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-    scaleFactor = 2.0;
+    scaleFactor = 3.0;
     damageRecovery = 0.01;
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
       GetAcuteInflammatoryResponse().GetTrauma().SetValue(5.0 * burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
@@ -786,7 +786,7 @@ void BloodChemistry::AcuteInflammatoryResponse()
   double kBP = 0.0001; //Rate at which non-specific response exhausted by pathogen
   double maxPathogen = 20.0; //Maximum pathogen population size
   //Trauma decay
-  double kTr = 1.5; //Determined empirically to give good results
+  double kTr = 2.0; //Determined empirically to give good results
   //Macrophage interaction
   double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
   //Activate macrophage interactions
