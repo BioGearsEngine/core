@@ -882,7 +882,11 @@ void BloodChemistry::AcuteInflammatoryResponse()
 void BloodChemistry::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+
+#ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
+#endif
+  
   if (override->HasArterialPHOverride()) {
     GetArterialBloodPH().SetValue(override->GetArterialPHOverride().GetValue());
   }
@@ -924,47 +928,49 @@ void BloodChemistry::ProcessOverride()
   }
 }
 
+//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
 void BloodChemistry::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
-  double maxArtPHOverride = 14.0; //Arterial pH
-  double minArtPHOverride = 0.0; //Arterial pH
+  constexpr double maxArtPHOverride = 14.0; //Arterial pH
+  constexpr double minArtPHOverride = 0.0; //Arterial pH
+  constexpr double maxVenPHOverride = 14.0; //Venous pH
+  constexpr double minVenPHOverride = 0.0; //Venous pH
+  constexpr double maxCO2SaturationOverride = 1.0; //Carbon Dioxide Saturation
+  constexpr double minCO2SaturationOverride = 0.0; //Carbon Dioxide Saturation
+  constexpr double maxCOSaturationOverride = 1.0; //Carbon Monoxide Saturation
+  constexpr double minCOSaturationOverride = 0.0; //Carbon Monoxide Saturation
+  constexpr double maxO2SaturationOverride = 1.0; //Oxygen Saturation
+  constexpr double minO2SaturationOverride = 0.0; //Oxygen Saturation
+  constexpr double maxPhosphateOverride = 1000.0; // mmol/mL
+  constexpr double minPhosphateOverride = 0.0; // mmol/mL
+  constexpr double maxWBCCountOverride = 50000.0; // ct/uL
+  constexpr double minWBCCountOverride = 0.0; // ct/uL
+  constexpr double maxTotalBilirubinOverride = 500.0; // mg/dL
+  constexpr double minTotalBilirubinOverride = 0.0; // mg/dL
+  constexpr double maxCalciumConcentrationOverride = 500.0; // mg/dL
+  constexpr double minCalciumConcentrationOverride = 0.0; // mg/dL
+  constexpr double maxGlucoseConcentrationOverride = 1000.0; // mg/dL
+  constexpr double minGlucoseConcentrationOverride = 0.0; // mg/dL
+  constexpr double maxLactateConcentrationOverride = 1000.0; // mg/dL
+  constexpr double minLactateConcentrationOverride = 0.0; // mg/dL
+  constexpr double maxPotassiumConcentrationOverride = 500.0; // mg/mL
+  constexpr double minPotassiumConcentrationOverride = 0.0; // mg/mL
+  constexpr double maxSodiumConcentrationOverride = 500.0; // mg/mL
+  constexpr double minSodiumConcentrationOverride = 0.0; // mg/mL
+
   double currentArtPHOverride = GetArterialBloodPH().GetValue(); //Current Arterial pH, value gets changed in next check
-  double maxVenPHOverride = 14.0; //Venous pH
-  double minVenPHOverride = 0.0; //Venous pH
   double currentVenPHOverride = GetVenousBloodPH().GetValue(); //Current Venous pH, value gets changed in next check
-  double maxCO2SaturationOverride = 1.0; //Carbon Dioxide Saturation
-  double minCO2SaturationOverride = 0.0; //Carbon Dioxide Saturation
   double currentCO2SaturationOverride = 0.0; //value gets changed in next check
-  double maxCOSaturationOverride = 1.0; //Carbon Monoxide Saturation
-  double minCOSaturationOverride = 0.0; //Carbon Monoxide Saturation
   double currentCOSaturationOverride = 0.0; //value gets changed in next check
-  double maxO2SaturationOverride = 1.0; //Oxygen Saturation
-  double minO2SaturationOverride = 0.0; //Oxygen Saturation
   double currentO2SaturationOverride = 0.0; //value gets changed in next check
-  double maxPhosphateOverride = 1000.0; // mmol/mL
-  double minPhosphateOverride = 0.0; // mmol/mL
   double currentPhosphateOverride = 0.0; //value gets changed in next check
-  double maxWBCCountOverride = 50000.0; // ct/uL
-  double minWBCCountOverride = 0.0; // ct/uL
   double currentWBCCountOverride = 0.0; //value gets changed in next check
-  double maxTotalBilirubinOverride = 500.0; // mg/dL
-  double minTotalBilirubinOverride = 0.0; // mg/dL
   double currentTotalBilirubinOverride = 0.0; //value gets changed in next check
-  double maxCalciumConcentrationOverride = 500.0; // mg/dL
-  double minCalciumConcentrationOverride = 0.0; // mg/dL
   double currentCalciumConcentrationOverride = 0.0; //value gets changed in next check
-  double maxGlucoseConcentrationOverride = 1000.0; // mg/dL
-  double minGlucoseConcentrationOverride = 0.0; // mg/dL
   double currentGlucoseConcentrationOverride = 0.0; //value gets changed in next check
-  double maxLactateConcentrationOverride = 1000.0; // mg/dL
-  double minLactateConcentrationOverride = 0.0; // mg/dL
   double currentLactateConcentrationOverride = 0.0; //value gets changed in next check
-  double maxPotassiumConcentrationOverride = 500.0; // mg/mL
-  double minPotassiumConcentrationOverride = 0.0; // mg/mL
   double currentPotassiumConcentrationOverride = 0.0; //value gets changed in next check
-  double maxSodiumConcentrationOverride = 500.0; // mg/mL
-  double minSodiumConcentrationOverride = 0.0; // mg/mL
   double currentSodiumConcentrationOverride = 0.0; //value gets changed in next check
 
   if (override->HasArterialPHOverride()) {

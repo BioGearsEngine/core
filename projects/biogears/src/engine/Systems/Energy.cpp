@@ -608,7 +608,11 @@ void Energy::CalculateBasalMetabolicRate()
 void Energy::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+
+#ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
+#endif
+ 
   if (override->HasAchievedExerciseLevelOverride()) {
     GetAchievedExerciseLevel().SetValue(override->GetAchievedExerciseLevelOverride().GetValue());
     }
@@ -650,48 +654,52 @@ void Energy::ProcessOverride()
   }
 }
 
+//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
 void Energy::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
-  double maxAcheivedExerciseOverride = 100;
-  double minAcheivedExerciseOverride = 0;
-  double currentAcheivedExerciseOverride = 0;
-  double maxCoreTempOverride = 200.0; //degC
-  double minCoreTempOverride = 0.0; //degC
-  double currentCoreTempOverride = 0; 
-  double maxCreatinineOverride = 100.0; // mol_Per_s
-  double minCreatinineOverride = 0.0; // mol_Per_s
-  double currentCreatinineOverride = 0; 
-  double maxExerciseMAPOverride = 200.0; //mmHg
-  double minExerciseMAPOverride = 0.0; //mmHg
-  double currentExerciseMAPOverride = 0; 
-  double maxFatigueOverride = 100.0;
-  double minFatigueOverride = 0.0;
-  double currentFatigueOverride = 0; 
-  double maxLactateOverride = 200.0; //mol per s
-  double minLactateOverride = 0.0; //mol per s
-  double currentLactateOverride = 0;
-  double maxSkinTempOverride = 200.0; //degC
-  double minSkinTempOverride = 0.0; //degC
-  double currentSkinTempOverride = 0; 
-  double maxSweatRateOverride = 50.0; // g per s
-  double minSweatRateOverride = 0.0; // g per s
-  double currentSweatRateOverride = 0; 
-  double maxTotalMetabolicOverride = 5000.0; //kcal/day
-  double minTotalMetabolicOverride = 0.0; //kcal/day
-  double currentTotalMetabolicOverride = 0; 
-  double maxTotalWorkOverride = 100.0;
-  double minTotalWorkOverride = 0.0;
-  double currentTotalWorkOverride = 0;
-  double maxSodiumSweatOverride = 500.0; // g
-  double minSodiumSweatOverride = 0.0; // g
+
+  constexpr double maxAcheivedExerciseOverride = 100;
+  constexpr double minAcheivedExerciseOverride = 0;
+  constexpr double maxCoreTempOverride = 200.0; //degC
+  constexpr double minCoreTempOverride = 0.0; //degC
+  constexpr double maxCreatinineOverride = 100.0; // mol_Per_s
+  constexpr double minCreatinineOverride = 0.0; // mol_Per_s
+  constexpr double maxExerciseMAPOverride = 200.0; //mmHg
+  constexpr double minExerciseMAPOverride = 0.0; //mmHg
+  constexpr double maxFatigueOverride = 100.0;
+  constexpr double minFatigueOverride = 0.0;
+  constexpr double maxLactateOverride = 200.0; //mol per s
+  constexpr double minLactateOverride = 0.0; //mol per s
+  constexpr double maxSkinTempOverride = 200.0; //degC
+  constexpr double minSkinTempOverride = 0.0; //degC
+  constexpr double maxSweatRateOverride = 50.0; // g per s
+  constexpr double minSweatRateOverride = 0.0; // g per s
+  constexpr double maxTotalMetabolicOverride = 5000.0; //kcal/day
+  constexpr double minTotalMetabolicOverride = 0.0; //kcal/day
+  constexpr double maxTotalWorkOverride = 100.0;
+  constexpr double minTotalWorkOverride = 0.0;
+  constexpr double maxSodiumSweatOverride = 500.0; // g
+  constexpr double minSodiumSweatOverride = 0.0; // g
+  constexpr double maxPotassiumSweatOverride = 500.0; // g
+  constexpr double minPotassiumSweatOverride = 0.0; //  g
+  constexpr double maxChlorideSweatOverride = 500.0; // g
+  constexpr double minChlorideSweatOverride = 0.0; // g
+
+  double currentAcheivedExerciseOverride = 0; //gets changed in next step
+  double currentCoreTempOverride = 0; //gets changed in next step
+  double currentCreatinineOverride = 0; //gets changed in next step
+  double currentExerciseMAPOverride = 0; //gets changed in next step
+  double currentFatigueOverride = 0; //gets changed in next step
+  double currentLactateOverride = 0; //gets changed in next step
+  double currentSkinTempOverride = 0; //gets changed in next step
+  double currentSweatRateOverride = 0; //gets changed in next step
+  double currentTotalMetabolicOverride = 0; //gets changed in next step
+  double currentTotalWorkOverride = 0; //gets changed in next step
   double currentSodiumSweatOverride = 0.0; //gets changed in next step
-  double maxPotassiumSweatOverride = 500.0; // g
-  double minPotassiumSweatOverride = 0.0; //  g
   double currentPotassiumSweatOverride = 0.0; //gets changed in next step
-  double maxChlorideSweatOverride = 500.0; // g
-  double minChlorideSweatOverride = 0.0; // g
   double currentChlorideSweatOverride =0.0; //gets changed in next step
+
   if (override->HasAchievedExerciseLevelOverride()) {
     currentAcheivedExerciseOverride = override->GetAchievedExerciseLevelOverride().GetValue();
   }

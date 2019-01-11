@@ -1944,7 +1944,11 @@ void Renal::CalculateFluidPermeability()
 void Renal::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+
+#ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
+#endif
+
   if (override->HasLeftAfferentArterioleResistanceOverride()) {
     GetLeftAfferentArterioleResistance().SetValue(override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL), FlowResistanceUnit::mmHg_min_Per_mL);
   }
@@ -1986,48 +1990,52 @@ void Renal::ProcessOverride()
   }
 }
 
+//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
   void Renal::OverrideControlLoop()
   {
     auto override = m_data.GetActions().GetPatientActions().GetOverride();
-    double maxLeftAAROverride = 1.0; //mmHg_min_Per_mL
-    double minLeftAAROverride = 0.0; //mmHg_min_Per_mL
+
+    constexpr double maxLeftAAROverride = 1.0; //mmHg_min_Per_mL
+    constexpr double minLeftAAROverride = 0.0; //mmHg_min_Per_mL
+    constexpr double maxLeftGFROverride = 1000.0; //mL/min
+    constexpr double minLeftGFROverride = 0.0; //mL/min
+    constexpr double maxLeftReabsorRateOverride = 1000.0; //mL/min
+    constexpr double minLeftReabsorRateOverride = 0.0; //mL/min
+    constexpr double maxRenalBloodFlowOverride = 3000.0; //mL/min
+    constexpr double minRenalBloodFlowOverride = 0.0; //mL/min
+    constexpr double maxRenalPlasmaFlowOverride = 3000.0; //mL/min
+    constexpr double minRenalPlasmaFlowOverride = 0.0; //mL/min
+    constexpr double maxRightAAROverride = 1.0; //mmHg_min_Per_mL
+    constexpr double minRightAAROverride = 0.0; //mmHg_min_Per_mL
+    constexpr double maxRightGFROverride = 1000.0; //mL/min
+    constexpr double minRightGFROverride = 0.0; //mL/min
+    constexpr double maxRightReabsorRateOverride = 1000.0; //mL/min
+    constexpr double minRightReabsorRateOverride = 0.0; //mL/min
+    constexpr double maxUrinationRateOverride = 1000.0; //mL/min
+    constexpr double minUrinationRateOverride = 0.0; //mL/min
+    constexpr double maxUrineProductionOverride = 100.0; //mL/min
+    constexpr double minUrineProductionOverride = 0.0; //mL/min
+    constexpr double maxUrineOsmolalityOverride = 2000.0; //mOsm/kg
+    constexpr double minUrineOsmolalityOverride = 0.0; //mOsm/kg
+    constexpr double maxUrineVolumeOverride = 1000.0; // mL
+    constexpr double minUrineVolumeOverride = 0.0; // mL
+    constexpr double maxUrineUreaNitrogenOverride = 100.0; // g/L
+    constexpr double minUrineUreaNitrogenOverride = 0.0; // g/L
+
     double currentLeftAAROverride = 0.0; //value gets changed in next check
-    double maxLeftGFROverride = 1000.0; //mL/min
-    double minLeftGFROverride = 0.0; //mL/min
     double currentLeftGFROverride = 0.0; //value gets changed in next check
-    double maxLeftReabsorRateOverride = 1000.0; //mL/min
-    double minLeftReabsorRateOverride = 0.0; //mL/min
     double currentLeftReabsorRateOverride = 0.0; //value gets changed in next check
-    double maxRenalBloodFlowOverride = 3000.0; //mL/min
-    double minRenalBloodFlowOverride = 0.0; //mL/min
     double currentRenalBloodFlowOverride = 0.0; //value gets changed in next check
-    double maxRenalPlasmaFlowOverride = 3000.0; //mL/min
-    double minRenalPlasmaFlowOverride = 0.0; //mL/min
     double currentRenalPlasmaFlowOverride = 0.0; //value gets changed in next check
-    double maxRightAAROverride = 1.0; //mmHg_min_Per_mL
-    double minRightAAROverride = 0.0; //mmHg_min_Per_mL
     double currentRightAAROverride = 0.0; //value gets changed in next check
-    double maxRightGFROverride = 1000.0; //mL/min
-    double minRightGFROverride = 0.0; //mL/min
     double currentRightGFROverride = 0.0; //value gets changed in next check
-    double maxRightReabsorRateOverride = 1000.0; //mL/min
-    double minRightReabsorRateOverride = 0.0; //mL/min
     double currentRightReabsorRateOverride = 0.0; //value gets changed in next check
-    double maxUrinationRateOverride = 1000.0; //mL/min
-    double minUrinationRateOverride = 0.0; //mL/min
     double currentUrinationRateOverride = 0.0; //value gets changed in next check
-    double maxUrineProductionOverride = 100.0; //mL/min
-    double minUrineProductionOverride = 0.0; //mL/min
     double currentUrineProductionOverride = 0.0; //value gets changed in next check
-    double maxUrineOsmolalityOverride = 2000.0; //mOsm/kg
-    double minUrineOsmolalityOverride = 0.0; //mOsm/kg
     double currentUrineOsmolalityOverride = 0.0; //value gets changed in next check
-    double maxUrineVolumeOverride = 1000.0; // mL
-    double minUrineVolumeOverride = 0.0; // mL
     double currentUrineVolumeOverride = 0.0; //value gets changed in next check
-    double maxUrineUreaNitrogenOverride = 100.0; // g/L
-    double minUrineUreaNitrogenOverride = 0.0; // g/L
     double currentUrineUreaNitrogenOverride = 0.0; //value gets changed in next check
+
     if (override->HasLeftAfferentArterioleResistanceOverride()) {
       currentLeftAAROverride = override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL);
     }

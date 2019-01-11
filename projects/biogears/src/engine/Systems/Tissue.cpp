@@ -2531,7 +2531,11 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
 void Tissue::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+
+#ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
+#endif
+
   if (override->HasExtravascularFluidVolumeOverride()) {
     GetExtravascularFluidVolume().SetValue(override->GetExtravascularFluidVolumeOverride(VolumeUnit::L), VolumeUnit::L);
   }
@@ -2552,27 +2556,31 @@ void Tissue::ProcessOverride()
   }
 }
 
+//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
 void Tissue::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
-  double maxExtravascularFluidVolumeOverride = 1000.0; //L
-  double minExtravascularFluidVolumeOverride = 0.0; //L
+
+  constexpr double maxExtravascularFluidVolumeOverride = 1000.0; //L
+  constexpr double minExtravascularFluidVolumeOverride = 0.0; //L
+  constexpr double maxIntracellularFluidVolumeOverride = 1000.0; //L
+  constexpr double minIntracellularFluidVolumeOverride = 0.0; //L
+  constexpr double maxLiverGlycogenOverride = 1000.0; //g
+  constexpr double minLiverGlycogenOverride = 0.0; //g
+  constexpr double maxMuscleGlycogenOverride = 2000.0; //g
+  constexpr double minMuscleGlycogenOverride = 0.0; //g
+  constexpr double maxStoredProteinOverride = 5000.0; //g
+  constexpr double minStoredProteinOverride = 0.0; //g
+  constexpr double maxStoredFatOverride = 5000.0; //g
+  constexpr double minStoredFatOverride = 0.0; //g // Zero will cause irreversible state
+
   double currentExtravascularFluidVolumeOverride = 0.0; //value gets changed in next check
-  double maxIntracellularFluidVolumeOverride = 1000.0; //L
-  double minIntracellularFluidVolumeOverride = 0.0; //L
   double currentIntracellularFluidVolumeOverride = 0.0; //value gets changed in next check
-  double maxLiverGlycogenOverride = 1000.0; //g
-  double minLiverGlycogenOverride = 0.0; //g
   double currentLiverGlycogenOverride = 0.0; //value gets changed in next check
-  double maxMuscleGlycogenOverride = 2000.0; //g
-  double minMuscleGlycogenOverride = 0.0; //g
   double currentMuscleGlycogenOverride = 0.0; //value gets changed in next check
-  double maxStoredProteinOverride = 5000.0; //g
-  double minStoredProteinOverride = 0.0; //g
   double currentStoredProteinOverride = 0.0; //value gets changed in next check
-  double maxStoredFatOverride = 5000.0; //g
-  double minStoredFatOverride = 0.0; //g // Zero will cause irreversible state
   double currentStoredFatOverride = 0.0; //value gets changed in next check
+
   if (override->HasExtravascularFluidVolumeOverride()) {
     currentExtravascularFluidVolumeOverride = override->GetExtravascularFluidVolumeOverride(VolumeUnit::L);
   }

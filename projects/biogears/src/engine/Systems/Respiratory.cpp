@@ -2184,7 +2184,10 @@ void Respiratory::TuneCircuit()
 void Respiratory::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+
+#ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
+#endif
 
   if (override->HasExpiratoryFlowOverride()) {
     GetExpiratoryFlow().SetValue(override->GetExpiratoryFlowOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
@@ -2219,39 +2222,42 @@ void Respiratory::ProcessOverride()
   //m_Patient->GetRespirationRateBaseline().SetValue(rr_per_min, FrequencyUnit::Per_min);
 }
 
+//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
 void Respiratory::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
-  double maxExpiratoryFlowOverride = 1000.0; // L/min
-  double minExpiratoryFlowOverride = 0.0; // L/min
+  constexpr double maxExpiratoryFlowOverride = 1000.0; // L/min
+  constexpr double minExpiratoryFlowOverride = 0.0; // L/min
+  constexpr double maxInspiratoryFlowOverride = 1000.0; // L/min
+  constexpr double minInspiratoryFlowOverride = 0.0; // L/min
+  constexpr double maxPulmonaryComplianceOverride = 1000.0; // L_Per_cmH2O
+  constexpr double minPulmonaryComplianceOverride = 0.0; // L_Per_cmH2O
+  constexpr double maxPulmonaryResistanceOverride = 1000.0; // cmH2O_s_Per_L
+  constexpr double minPulmonaryResistanceOverride = 0.0; // cmH2O_s_Per_L
+  constexpr double maxRROverride = 60.0; //respiration rate in breaths per min
+  constexpr double minRROverride = 0.0; //respiration rate in breaths per min
+  constexpr double maxTVOverride = 10000.0; //Tidal volume in mL
+  constexpr double minTVOverride = 0.0; //Tidal volume in mL
+  constexpr double maxTargetPulmonaryVentilationOverride = 1000.0; // L/min
+  constexpr double minTargetPulmonaryVentilationOverride = 0.0; // L/min
+  constexpr double maxTotalAlveolarVentilationOverride = 1000.0; // L/min
+  constexpr double minTotalAlveolarVentilationOverride = 0.0; // L/min
+  constexpr double maxTotalLungVolumeOverride = 500.0; // L
+  constexpr double minTotalLungVolumeOverride = 0.0; // L
+  constexpr double maxTotalPulmonaryVentilationOverride = 1000.0; // L/min
+  constexpr double minTotalPulmonaryVentilationOverride = 0.0; // L/min
+  
   double currentExpiratoryFlowOverride = 0.0; // value gets changed in next check
-  double maxInspiratoryFlowOverride = 1000.0; // L/min
-  double minInspiratoryFlowOverride = 0.0; // L/min
   double currentInspiratoryFlowOverride = 0.0; // value gets changed in next check
-  double maxPulmonaryComplianceOverride = 1000.0; // L_Per_cmH2O
-  double minPulmonaryComplianceOverride = 0.0; // L_Per_cmH2O
   double currentPulmonaryComplianceOverride = 0.0; // value gets changed in next check
-  double maxPulmonaryResistanceOverride = 1000.0; // cmH2O_s_Per_L
-  double minPulmonaryResistanceOverride = 0.0; // cmH2O_s_Per_L
   double currentPulmonaryResistanceOverride = 0.0; // value gets changed in next check
-  double maxRROverride = 60.0; //respiration rate in breaths per min
-  double minRROverride = 0.0; //respiration rate in breaths per min
   double currentRROverride = 12.0; //Average RR, value gets changed in next check
-  double maxTVOverride = 10000.0; //Tidal volume in mL
-  double minTVOverride = 0.0; //Tidal volume in mL
   double currentTVOverride = m_data.GetRespiratory().GetTidalVolume().GetValue(VolumeUnit::mL); //Current Tidal Volume, value gets changed in next check
-  double maxTargetPulmonaryVentilationOverride = 1000.0; // L/min
-  double minTargetPulmonaryVentilationOverride = 0.0; // L/min
   double currentTargetPulmonaryVentilationOverride = 0.0; // value gets changed in next check
-  double maxTotalAlveolarVentilationOverride = 1000.0; // L/min
-  double minTotalAlveolarVentilationOverride = 0.0; // L/min
   double currentTotalAlveolarVentilationOverride = 0.0; // value gets changed in next check
-  double maxTotalLungVolumeOverride = 500.0; // L
-  double minTotalLungVolumeOverride = 0.0; // L
   double currentTotalLungVolumeOverride = 0.0; // value gets changed in next check
-  double maxTotalPulmonaryVentilationOverride = 1000.0; // L/min
-  double minTotalPulmonaryVentilationOverride = 0.0; // L/min
   double currentTotalPulmonaryVentilationOverride = 0.0; // value gets changed in next check
+  
   if (override->HasExpiratoryFlowOverride()) {
     currentExpiratoryFlowOverride = override->GetExpiratoryFlowOverride(VolumePerTimeUnit::L_Per_min);
   }

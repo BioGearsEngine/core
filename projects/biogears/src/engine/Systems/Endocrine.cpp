@@ -333,7 +333,11 @@ void Endocrine::ReleaseEpinephrine()
 void Endocrine::ProcessOverride()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
+
+#ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
+#endif
+ 
   if (override->HasInsulinSynthesisRateOverride()) {
     GetInsulinSynthesisRate().SetValue(override->GetInsulinSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min), AmountPerTimeUnit::pmol_Per_min);
   }
@@ -342,15 +346,19 @@ void Endocrine::ProcessOverride()
   }
 }
 
+//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
 void Endocrine::OverrideControlLoop()
 {
   auto override = m_data.GetActions().GetPatientActions().GetOverride();
-  double maxInsulinSynthesisOverride = 10.0; //pmol_Per_min
-  double minInsulinSynthesisOverride = 0.0; //pmol_Per_min
+
+  constexpr double maxInsulinSynthesisOverride = 10.0; //pmol_Per_min
+  constexpr double minInsulinSynthesisOverride = 0.0; //pmol_Per_min
+  constexpr double maxGlucagonSynthesisOverride = 10.0; //pmol_Per_min
+  constexpr double minGlucagonSynthesisOverride = 0.0; //pmol_Per_min
+
   double currentInsulinSynthesisOverride = 0.0; //value gets changed in next check
-  double maxGlucagonSynthesisOverride = 10.0; //pmol_Per_min
-  double minGlucagonSynthesisOverride = 0.0; //pmol_Per_min
   double currentGlucagonSynthesisOverride = 0.0; //value gets changed in next check
+
   if (override->HasInsulinSynthesisRateOverride()) {
     currentInsulinSynthesisOverride = override->GetInsulinSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min);
   }

@@ -5,8 +5,11 @@
 ###############################################################################
 # Options
 ###############################################################################
+
 option (${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when a ReadOnly SEScalar is Modified." ON)
 option (${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
+option (${ROOT_PROJECT_NAME}_USE_OVERRIDE_CONTROL       "When enabled Biogears will control the ranges of override"  OFF)
+
 ###############################################################################
 # Base Variables
 ###############################################################################
@@ -86,7 +89,9 @@ if(${PREFIX}_BUILD_STATIC)
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     CXX_STANDARD 14
     )
-
+   if(Biogears_USE_OVERRIDE_CONTROL)
+      target_compile_definitions( lib${PROJECT_NAME} PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
+   endif()
   if(WIN32)
     list(APPEND ${PREFIX}_CPPFLAGS _SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX $ENV{PARALLEL_COMPILE} )
   elseif(CMAKE_COMPILER_IS_GNUCXX)
@@ -195,12 +200,17 @@ else()
   target_compile_definitions(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
   target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
+
     if(${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS)
         target_compile_definitions(lib${PROJECT_NAME} PUBLIC BIOGEARS_THROW_READONLY_EXCEPTIONS)
   endif()
    if(${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS )
         target_compile_definitions(lib${PROJECT_NAME} PUBLIC BIOGEARS_THROW_NAN_EXCEPTIONS )
   endif()
+	if(${ROOT_PROJECT_NAME}_USE_OVERRIDE_CONTROL)
+	  target_compile_definitions( lib${PROJECT_NAME}  PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
+  endif()
+
   target_include_directories(lib${PROJECT_NAME} 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} 
       INTERFACE 
