@@ -217,7 +217,6 @@ void BloodChemistry::AtSteadyState()
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::PreProcess()
 {
-  //Sepsis(); //Need this here because "next" values are set on circuit
   AcuteInflammatoryResponse();
 }
 
