@@ -21,7 +21,8 @@ class SEScalar;
 
 class BIOGEARS_API SECompartmentLink : public Loggable {
 protected:
-  SECompartmentLink(const std::string& nam, Logger* logger);
+  SECompartmentLink(const char* name, Logger* logger);
+  SECompartmentLink(const std::string& name, Logger* logger);
 
 public:
   virtual ~SECompartmentLink();
@@ -36,7 +37,9 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
 
+  virtual const SEScalar* GetScalar(const char* name) = 0;
   virtual const SEScalar* GetScalar(const std::string& name) = 0;
 
 protected:

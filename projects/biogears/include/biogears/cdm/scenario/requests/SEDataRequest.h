@@ -29,7 +29,7 @@ protected:
   SEDataRequest(const SEDecimalFormat* dfault = nullptr);
 
 public:
-  virtual ~SEDataRequest();
+  virtual ~SEDataRequest() override;
 
   virtual void Clear(); //clear memory
 
@@ -44,12 +44,15 @@ public:
 
   // The System Property Name
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();
 
   // The Requested Unit String
-  virtual std::string GetRequestedUnit() const;
+  virtual const char* GetRequestedUnit() const;
+  virtual void SetRequestedUnit(const char* unit);
   virtual void SetRequestedUnit(const std::string& unit);
   virtual bool HasRequestedUnit() const;
   virtual void InvalidateRequestedUnit();
@@ -63,7 +66,9 @@ public:
   virtual bool HasUnit() const;
   virtual void InvalidateUnit();
 
+  virtual void Set(const char* name, const char* unit = "");
   virtual void Set(const std::string& name, const std::string& unit = "");
+  virtual void Set(const char* name, const CCompoundUnit& unit);
   virtual void Set(const std::string& name, const CCompoundUnit& unit);
 
 protected:

@@ -849,46 +849,46 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
     //Track everything
     if (i % trackSkipper == 0) {
       for (SELiquidCompartment* c : Graph.GetCompartments()) {
-        trk.Track(c->GetName() + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
-        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
-        trk.Track(c->GetName() + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_UreaConcentration_mg_per_dL", time, c->GetSubstanceQuantity(urea)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
+        trk.Track(std::string{c->GetName()} + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
+        trk.Track(std::string{c->GetName()} + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_UreaConcentration_mg_per_dL", time, c->GetSubstanceQuantity(urea)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
 
-        //trk.Track(c->GetName() + "_Volume_mL", time, c->GetVolume(VolumeUnit::mL));
-        //trk.Track(c->GetName() + "_CompartmentInFlow_mL_per_min", time, c->GetInFlow(VolumePerTimeUnit::mL_Per_min));
-        //trk.Track(c->GetName() + "_CompartmentOutFlow_mL_per_min", time, c->GetOutFlow(VolumePerTimeUnit::mL_Per_min));
+        //trk.Track(std::string{c->GetName()} + "_Volume_mL", time, c->GetVolume(VolumeUnit::mL));
+        //trk.Track(std::string{c->GetName()} + "_CompartmentInFlow_mL_per_min", time, c->GetInFlow(VolumePerTimeUnit::mL_Per_min));
+        //trk.Track(std::string{c->GetName()} + "_CompartmentOutFlow_mL_per_min", time, c->GetOutFlow(VolumePerTimeUnit::mL_Per_min));
       }
       for (SELiquidCompartment* c : extracellularCompartments) {
-        trk.Track(c->GetName() + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
-        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
-        trk.Track(c->GetName() + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_UreaConcentration_mg_per_dL", time, c->GetSubstanceQuantity(urea)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
+        trk.Track(std::string{c->GetName()} + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
+        trk.Track(std::string{c->GetName()} + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_UreaConcentration_mg_per_dL", time, c->GetSubstanceQuantity(urea)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
       }
       for (SELiquidCompartment* c : intracellularCompartments) {
-        trk.Track(c->GetName() + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
-        trk.Track(c->GetName() + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
-        trk.Track(c->GetName() + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
-        trk.Track(c->GetName() + "_UreaConcentration_mg_per_dL", time, c->GetSubstanceQuantity(urea)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_AminoAcidConcentration_mg_per_dL", time, c->GetSubstanceQuantity(aminoAcids)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_GlucoseConcentration_mg_per_dL", time, c->GetSubstanceQuantity(glucose)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_TriacyglycerolConcentration_mg_per_dL", time, c->GetSubstanceQuantity(triacylglycerol)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_InsulinMolarity_pmol_per_L", time, c->GetSubstanceQuantity(insulin)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9);
+        trk.Track(std::string{c->GetName()} + "_GlucagonConcentration_pg_per_mL", time, c->GetSubstanceQuantity(glucagon)->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9);
+        trk.Track(std::string{c->GetName()} + "_LactateConcentration_mg_per_dL", time, c->GetSubstanceQuantity(lactate)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_KetonesConcentration_mg_per_dL", time, c->GetSubstanceQuantity(ketones)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_CreatinineConcentration_mg_per_dL", time, c->GetSubstanceQuantity(creatinine)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
+        trk.Track(std::string{c->GetName()} + "_UreaConcentration_mg_per_dL", time, c->GetSubstanceQuantity(urea)->GetConcentration(MassPerVolumeUnit::mg_Per_dL));
       }
 
-      trk.Track(cSmallIntestineChyme->GetName() + "_ProteinMass_g", time, cSmallIntestineChyme->GetSubstanceQuantity(aminoAcids)->GetMass(MassUnit::g));
-      trk.Track(cSmallIntestineChyme->GetName() + "_CarbsMass_g", time, cSmallIntestineChyme->GetSubstanceQuantity(glucose)->GetMass(MassUnit::g));
-      trk.Track(cSmallIntestineChyme->GetName() + "_FatMass_g", time, cSmallIntestineChyme->GetSubstanceQuantity(triacylglycerol)->GetMass(MassUnit::g));
+      trk.Track(std::string{cSmallIntestineChyme->GetName()} + "_ProteinMass_g", time, cSmallIntestineChyme->GetSubstanceQuantity(aminoAcids)->GetMass(MassUnit::g));
+      trk.Track(std::string{cSmallIntestineChyme->GetName()} + "_CarbsMass_g", time, cSmallIntestineChyme->GetSubstanceQuantity(glucose)->GetMass(MassUnit::g));
+      trk.Track(std::string{cSmallIntestineChyme->GetName()} + "_FatMass_g", time, cSmallIntestineChyme->GetSubstanceQuantity(triacylglycerol)->GetMass(MassUnit::g));
 
       trk.Track("LiverGlycogenMass_g", time, liverGlycogen_g);
       trk.Track("MuscleGlycogenMass_g", time, muscleGlycogen_g);
@@ -939,7 +939,7 @@ void BioGearsEngineTest::NutrientDiffusion(std::vector<SELiquidCompartment*>& va
     //for each active substance
     for (SESubstance* sub : bg.GetSubstances().GetActiveSubstances()) {
       //We have to make an exception for the brain and TAGs, since TAG can't cross blood-brain barrier
-      if (sub->GetName() == "Triacylglycerol" && ECtissueCompartment->GetName().find("Brain") != std::string::npos)
+      if (sub->GetName() == "Triacylglycerol"  && ECtissueCompartment->GetName().find("Brain") != std::string::npos)
         continue;
 
       //Gases get moved by instant diffusion

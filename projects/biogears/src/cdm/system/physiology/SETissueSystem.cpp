@@ -96,6 +96,11 @@ void SETissueSystem::Clear()
   SAFE_DELETE(m_StoredFat);
 }
 //-------------------------------------------------------------------------------
+const SEScalar* SETissueSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SETissueSystem::GetScalar(const std::string& name)
 {
   if (name == idCarbonDioxideProductionRate)
@@ -597,9 +602,9 @@ double SETissueSystem::GetStoredFat(const MassUnit& unit) const
   return m_StoredFat->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SETissueSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SETissueSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
   .emplace_back(idCarbonDioxideProductionRate)
   .emplace_back(idDehydrationFraction)
   .emplace_back(idExtracellularFluidVolume)

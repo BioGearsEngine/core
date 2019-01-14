@@ -15,33 +15,44 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
+SECompartmentLink::SECompartmentLink(const char* name, Logger* logger)
+  : SECompartmentLink(std::string{ name }, logger)
+{
+}
+//-------------------------------------------------------------------------------
 SECompartmentLink::SECompartmentLink(const std::string& name, Logger* logger)
   : Loggable(logger)
   , m_Name(name)
 {
 }
-
+//-------------------------------------------------------------------------------
 SECompartmentLink::~SECompartmentLink()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SECompartmentLink::Clear()
 {
 }
-
+//-------------------------------------------------------------------------------
 bool SECompartmentLink::Load(const CDM::CompartmentLinkData& in, SECircuitManager* circuits)
 {
   Clear();
   return true;
 }
+//-------------------------------------------------------------------------------
 void SECompartmentLink::Unload(CDM::CompartmentLinkData& data)
 {
   data.Name(m_Name);
 }
-
+//-------------------------------------------------------------------------------
 std::string SECompartmentLink::GetName() const
 {
   return m_Name;
+}
+//-------------------------------------------------------------------------------
+const char* SECompartmentLink::GetName_cStr() const
+{
+  return m_Name.c_str();
 }
 }

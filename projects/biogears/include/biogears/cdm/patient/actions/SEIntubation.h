@@ -18,18 +18,18 @@ namespace biogears {
 class BIOGEARS_API SEIntubation : public SEPatientAction {
 public:
   SEIntubation();
-  virtual ~SEIntubation();
+  virtual ~SEIntubation() override;
 
   static constexpr const char* TypeTag() { return "SEIntubation"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;;
+  virtual bool IsActive() const override;;
 
   virtual bool Load(const CDM::IntubationData& in);
-  virtual CDM::IntubationData* Unload() const;
+  virtual CDM::IntubationData* Unload() const override;;
 
 protected:
   virtual void Unload(CDM::IntubationData& data) const;
@@ -40,7 +40,7 @@ public:
   virtual bool HasType() const;
   virtual void InvalidateType();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;;
 
 protected:
   CDM::enumIntubationType::value m_Type;

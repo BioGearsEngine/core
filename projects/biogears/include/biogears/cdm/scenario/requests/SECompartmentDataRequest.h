@@ -29,26 +29,27 @@ protected:
 public:
   virtual ~SECompartmentDataRequest();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
   virtual bool Load(const CDM::CompartmentDataRequestData& in);
-  virtual CDM::CompartmentDataRequestData* Unload() const = 0;
+  virtual CDM::CompartmentDataRequestData* Unload() const override= 0 ;
 
-protected:
-  virtual void Unload(CDM::CompartmentDataRequestData& data) const;
-
-public:
   virtual size_t HashCode();
 
-  virtual std::string GetCompartment() const;
+  virtual const char* GetCompartment() const;
+  virtual void SetCompartment(const char* name);
   virtual void SetCompartment(const std::string& name);
   virtual bool HasCompartment() const;
   virtual void InvalidateCompartment();
 
+  virtual void Set(const char* cmpt, const char* name, const char* unit = "");
   virtual void Set(const std::string& cmpt, const std::string& name, const std::string& unit = "");
+  virtual void Set(const char* cmpt, const char* name, const CCompoundUnit& unit);
   virtual void Set(const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
 
 protected:
+  virtual void Unload(CDM::CompartmentDataRequestData& data) const;
+
   std::string m_Compartment;
 };
 }

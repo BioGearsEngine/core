@@ -21,18 +21,18 @@ class SEAppliedTemperature;
 class BIOGEARS_API SEThermalApplication : public SEEnvironmentAction {
 public:
   SEThermalApplication();
-  virtual ~SEThermalApplication();
+  virtual ~SEThermalApplication() override;
 
   static constexpr const char* TypeTag() { return "SEThermalApplication"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ThermalApplicationData& in);
-  virtual CDM::ThermalApplicationData* Unload() const;
+  virtual CDM::ThermalApplicationData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::ThermalApplicationData& data) const;
@@ -50,7 +50,7 @@ public:
   virtual SEAppliedTemperature& GetAppliedTemperature();
   virtual void RemoveAppliedTemperature();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   bool m_ClearContents;

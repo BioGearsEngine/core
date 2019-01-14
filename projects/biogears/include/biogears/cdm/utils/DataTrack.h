@@ -88,6 +88,7 @@ public:
 
   // Creates the file and writes the headers to that file
   void CreateFile(const char* fileName, std::ofstream& newFile); // TODO C++11
+  void CreateFile(const std::string& fileName, std::ofstream& newFile); // TODO C++11
   // Write all the track to a file
   void WriteTrackToFile(const char* fileName);
   // Writes data from the provided headings to the file, in the order things were tracked

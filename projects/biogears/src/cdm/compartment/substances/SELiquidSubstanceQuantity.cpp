@@ -46,21 +46,22 @@ SELiquidSubstanceQuantity::SELiquidSubstanceQuantity(SESubstance& sub, SELiquidC
   m_isO2 = false;
   m_isCO2 = false;
   m_isCO = false;
-  if (sub.GetName() == "Oxygen")
+  if (sub.GetName()  == "Oxygen")
     m_isO2 = true;
-  else if (sub.GetName() == "CarbonMonoxide")
+  else if (sub.GetName()  == "CarbonMonoxide")
     m_isCO = true;
-  else if (sub.GetName() == "CarbonDioxide")
+  else if (sub.GetName()  == "CarbonDioxide")
     m_isCO2 = true;
 
   if (m_Substance.GetState() != CDM::enumSubstanceState::Gas)
     GetPartialPressure().SetReadOnly(true); // Cannot have a partial pressure of a non gas
 }
-
+//-----------------------------------------------------------------------------
 SELiquidSubstanceQuantity::~SELiquidSubstanceQuantity()
 {
   Clear();
 }
+//-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::Invalidate()
 {
   if (m_Concentration != nullptr)
@@ -78,7 +79,7 @@ void SELiquidSubstanceQuantity::Invalidate()
   if (m_Saturation != nullptr)
     m_Saturation->Invalidate();
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::Clear()
 {
   SAFE_DELETE(m_Concentration);
@@ -91,7 +92,7 @@ void SELiquidSubstanceQuantity::Clear()
   SAFE_DELETE(m_Saturation);
   m_Children.clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::Load(const CDM::LiquidSubstanceQuantityData& in)
 {
   SESubstanceQuantity::Load(in);
@@ -115,14 +116,14 @@ bool SELiquidSubstanceQuantity::Load(const CDM::LiquidSubstanceQuantityData& in)
   }
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::LiquidSubstanceQuantityData* SELiquidSubstanceQuantity::Unload()
 {
   CDM::LiquidSubstanceQuantityData* data = new CDM::LiquidSubstanceQuantityData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::Unload(CDM::LiquidSubstanceQuantityData& data)
 {
   SESubstanceQuantity::Unload(data);
@@ -144,7 +145,7 @@ void SELiquidSubstanceQuantity::Unload(CDM::LiquidSubstanceQuantityData& data)
   if (HasSaturation())
     data.Saturation(std::unique_ptr<CDM::ScalarFractionData>(GetSaturation().Unload()));
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::SetToZero()
 {
   GetConcentration().SetValue(0, MassPerVolumeUnit::mg_Per_mL);
@@ -158,7 +159,12 @@ void SELiquidSubstanceQuantity::SetToZero()
   GetMassDeposited().SetValue(0, MassUnit::mg);
   GetMassExcreted().SetValue(0, MassUnit::mg);
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SELiquidSubstanceQuantity::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SELiquidSubstanceQuantity::GetScalar(const std::string& name)
 {
   if (name.compare("Concentration") == 0)
@@ -179,7 +185,7 @@ const SEScalar* SELiquidSubstanceQuantity::GetScalar(const std::string& name)
     return &GetSaturation();
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::Balance(BalanceLiquidBy by)
 {
   SEScalarVolume& volume = m_Compartment.GetVolume();
@@ -243,7 +249,7 @@ void SELiquidSubstanceQuantity::Balance(BalanceLiquidBy by)
   }
   // Note we do not set saturation, that is done by the acid/base binding after transport
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasConcentration() const
 {
   if (!m_Children.empty()) {
@@ -254,6 +260,7 @@ bool SELiquidSubstanceQuantity::HasConcentration() const
   }
   return (m_Concentration == nullptr) ? false : m_Concentration->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SELiquidSubstanceQuantity::GetConcentration()
 {
   if (m_Concentration == nullptr)
@@ -268,6 +275,7 @@ SEScalarMassPerVolume& SELiquidSubstanceQuantity::GetConcentration()
   }
   return *m_Concentration;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetConcentration(const MassPerVolumeUnit& unit) const
 {
   if (!m_Children.empty()) {
@@ -279,7 +287,7 @@ double SELiquidSubstanceQuantity::GetConcentration(const MassPerVolumeUnit& unit
     return SEScalar::dNaN();
   return m_Concentration->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasMass() const
 {
   if (!m_Children.empty()) {
@@ -290,6 +298,7 @@ bool SELiquidSubstanceQuantity::HasMass() const
   }
   return (m_Mass == nullptr) ? false : m_Mass->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SELiquidSubstanceQuantity::GetMass()
 {
   if (m_Mass == nullptr)
@@ -304,6 +313,7 @@ SEScalarMass& SELiquidSubstanceQuantity::GetMass()
   }
   return *m_Mass;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetMass(const MassUnit& unit) const
 {
   if (!m_Children.empty()) {
@@ -317,58 +327,64 @@ double SELiquidSubstanceQuantity::GetMass(const MassUnit& unit) const
     return SEScalar::dNaN();
   return m_Mass->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasMassCleared() const
 {
   return (m_MassCleared == nullptr) ? false : m_MassCleared->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SELiquidSubstanceQuantity::GetMassCleared()
 {
   if (m_MassCleared == nullptr)
     m_MassCleared = new SEScalarMass();
   return *m_MassCleared;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetMassCleared(const MassUnit& unit) const
 {
   if (m_MassCleared == nullptr)
     return SEScalar::dNaN();
   return m_MassCleared->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasMassDeposited() const
 {
   return (m_MassDeposited == nullptr) ? false : m_MassDeposited->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SELiquidSubstanceQuantity::GetMassDeposited()
 {
   if (m_MassDeposited == nullptr)
     m_MassDeposited = new SEScalarMass();
   return *m_MassDeposited;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetMassDeposited(const MassUnit& unit) const
 {
   if (m_MassDeposited == nullptr)
     return SEScalar::dNaN();
   return m_MassDeposited->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasMassExcreted() const
 {
   return (m_MassExcreted == nullptr) ? false : m_MassCleared->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SELiquidSubstanceQuantity::GetMassExcreted()
 {
   if (m_MassExcreted == nullptr)
     m_MassExcreted = new SEScalarMass();
   return *m_MassExcreted;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetMassExcreted(const MassUnit& unit) const
 {
   if (m_MassExcreted == nullptr)
     return SEScalar::dNaN();
   return m_MassExcreted->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasMolarity() const
 {
   if (!m_Children.empty()) {
@@ -379,6 +395,7 @@ bool SELiquidSubstanceQuantity::HasMolarity() const
   }
   return (m_Molarity == nullptr) ? false : m_Molarity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarAmountPerVolume& SELiquidSubstanceQuantity::GetMolarity()
 {
   if (m_Molarity == nullptr)
@@ -395,6 +412,7 @@ SEScalarAmountPerVolume& SELiquidSubstanceQuantity::GetMolarity()
   }
   return *m_Molarity;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetMolarity(const AmountPerVolumeUnit& unit) const
 {
   if (!m_Children.empty()) {
@@ -407,7 +425,7 @@ double SELiquidSubstanceQuantity::GetMolarity(const AmountPerVolumeUnit& unit) c
     return SEScalar::dNaN();
   return m_Molarity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasPartialPressure() const
 {
   if (!m_Children.empty()) {
@@ -418,6 +436,7 @@ bool SELiquidSubstanceQuantity::HasPartialPressure() const
   }
   return (m_PartialPressure == nullptr) ? false : m_PartialPressure->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SELiquidSubstanceQuantity::GetPartialPressure()
 {
   if (m_PartialPressure == nullptr)
@@ -432,6 +451,7 @@ SEScalarPressure& SELiquidSubstanceQuantity::GetPartialPressure()
   }
   return *m_PartialPressure;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetPartialPressure(const PressureUnit& unit) const
 {
   if (!m_Children.empty()) {
@@ -447,7 +467,7 @@ double SELiquidSubstanceQuantity::GetPartialPressure(const PressureUnit& unit) c
     return SEScalar::dNaN();
   return m_PartialPressure->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::HasSaturation() const
 {
   if (!m_isO2 && !m_isCO2 && !m_isCO)
@@ -497,6 +517,7 @@ bool SELiquidSubstanceQuantity::HasSaturation() const
   }
   return (m_Saturation == nullptr) ? false : m_Saturation->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SELiquidSubstanceQuantity::GetSaturation()
 {
   if (!m_isO2 && !m_isCO2 && !m_isCO)
@@ -510,6 +531,7 @@ SEScalarFraction& SELiquidSubstanceQuantity::GetSaturation()
   }
   return *m_Saturation;
 }
+//-----------------------------------------------------------------------------
 double SELiquidSubstanceQuantity::GetSaturation() const
 {
   if (!m_isO2 && !m_isCO2 && !m_isCO) {
@@ -549,6 +571,7 @@ double SELiquidSubstanceQuantity::GetSaturation() const
     return SEScalar::dNaN();
   return m_Saturation->GetValue();
 }
+//-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::SetHemoglobins(SESubstance& Hb, SESubstance& HbO2, SESubstance& HbCO2, SESubstance& HbO2CO2, SESubstance& HbCO)
 {
   if (!m_isO2 && !m_isCO2 && !m_isCO)
@@ -561,10 +584,11 @@ void SELiquidSubstanceQuantity::SetHemoglobins(SESubstance& Hb, SESubstance& HbO
   for (SELiquidSubstanceQuantity* child : m_Children)
     child->SetHemoglobins(Hb, HbO2, HbCO2, HbO2CO2, HbCO);
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::AddChild(SELiquidSubstanceQuantity& subQ)
 {
   if (!Contains(m_Children, subQ))
     m_Children.push_back(&subQ);
 }
+//-----------------------------------------------------------------------------
 }

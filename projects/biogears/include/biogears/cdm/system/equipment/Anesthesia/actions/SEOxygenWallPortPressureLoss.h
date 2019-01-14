@@ -19,25 +19,25 @@ class SEScalar0To1;
 class BIOGEARS_API SEOxygenWallPortPressureLoss : public SEAnesthesiaMachineAction {
 public:
   SEOxygenWallPortPressureLoss();
-  virtual ~SEOxygenWallPortPressureLoss();
+  virtual ~SEOxygenWallPortPressureLoss() override;
 
   static constexpr const char* TypeTag() { return "SEOxygenWallPortPressureLoss"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
   virtual bool Load(const CDM::OxygenWallPortPressureLossData& in);
-  virtual CDM::OxygenWallPortPressureLossData* Unload() const;
+  virtual CDM::OxygenWallPortPressureLossData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::OxygenWallPortPressureLossData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   CDM::enumOnOff::value m_State;

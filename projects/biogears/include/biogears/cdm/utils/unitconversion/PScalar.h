@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 
 namespace biogears{
-class CPScalar {
+class BIOGEARS_API CPScalar {
 public:
   // Default ctor
   CPScalar()
@@ -36,12 +36,9 @@ public:
   }
 
   // Construct from value and string unit spec
-  CPScalar(double val, const std::string& unitSpec)
-    : m_dValue(val)
-    , m_CCU(unitSpec)
-  {
-    // Do nothing
-  }
+  CPScalar(double val, const char* unitSpec);
+  // Construct from value and string unit spec
+  CPScalar(double val, const std::string& unitSpec);
 
   // Construct from value. No units.
   explicit CPScalar(double val)
@@ -51,13 +48,11 @@ public:
   }
 
   // Construct from string unit. Initial value is 1.0 so that we can multiply by a pure
+// unit specification.
+  CPScalar(const char* unitSpec);
+  // Construct from string unit. Initial value is 1.0 so that we can multiply by a pure
   // unit specification.
-  CPScalar(const std::string& unitSpec)
-    : m_dValue(1.0)
-    , m_CCU(unitSpec)
-  {
-    // Do nothing
-  }
+  CPScalar(const std::string& unitSpec);
 
   // Copy ctor
   CPScalar(const CPScalar& src)
@@ -276,15 +271,9 @@ public:
   }
 
   // Convert this object to a new set of units
-  CPScalar& ConvertTo(const std::string& unitSpec)
-  {
-    CUnitConversionEngine& uce = CUnitConversionEngine::GetEngine();
-    CCompoundUnit newUnit(unitSpec);
-    double newval = uce.ConvertValue(m_dValue, m_CCU, newUnit);
-    m_CCU = newUnit;
-    m_dValue = newval;
-    return *this;
-  }
+  CPScalar& ConvertTo(const char* unitSpec);
+  // Convert this object to a new set of units
+  CPScalar& ConvertTo(const std::string& unitSpec);
 
   // Convert this object to a new set of units
   CPScalar& ConvertTo(const CCompoundUnit& newUnit)

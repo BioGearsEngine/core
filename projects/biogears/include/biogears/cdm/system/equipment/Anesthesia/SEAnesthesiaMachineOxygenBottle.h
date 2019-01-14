@@ -43,6 +43,7 @@ protected:
   virtual void Merge(const SEAnesthesiaMachineOxygenBottle& from);
 
 public:
+  virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool HasVolume() const;

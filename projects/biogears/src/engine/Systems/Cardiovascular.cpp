@@ -1722,7 +1722,7 @@ void Cardiovascular::TuneCircuit()
       bloodVolumeBaseline_mL += c->GetVolume(VolumeUnit::mL);
       c->Balance(BalanceLiquidBy::Concentration);
       if (m_CirculatoryGraph->GetCompartment(c->GetName()) == nullptr)
-        Info("Cardiovascular Graph does not have cmpt " + c->GetName());
+        Info(std::string{"Cardiovascular Graph does not have cmpt "} + c->GetName());
       if (c->HasSubstanceQuantity(m_data.GetSubstances().GetHb())) // Unit testing does not have any Hb
         m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*c); //so don't do this if we don't have Hb
     }
@@ -1856,7 +1856,7 @@ void Cardiovascular::AdjustVascularTone()
     for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
       if (!Path->HasNextResistance())
         continue;
-      if ((Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1) || (Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2)) {
+      if ( Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1 || Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2) {
         continue;
       }
       UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);

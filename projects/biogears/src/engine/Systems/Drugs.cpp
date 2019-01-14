@@ -11,13 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Drugs.h>
 
-#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
-#include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
-#include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
-#include <biogears/cdm/system/physiology/SEEnergySystem.h>
-#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
@@ -41,9 +37,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
+#include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
+#include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
+#include <biogears/cdm/system/physiology/SEEnergySystem.h>
+#include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -266,7 +266,7 @@ void Drugs::AdministerSubstanceBolus()
       break;
     default:
       /// \error Error: Unavailable Administration Route
-      Error("Unavailable Bolus Administration Route for substance " + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
+      Error(std::string{ "Unavailable Bolus Administration Route for substance " } + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
       completedBolus.push_back(b.first); // Remove it
       continue;
     }
@@ -400,13 +400,13 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->Balance(BalanceLiquidBy::Mass);
     }
 
-    if ((compound->GetName().compare("Saline") == 0) || (compound->GetName().compare("RingersLactate") == 0) || (compound->GetName().compare("Antibiotic") == 0)) //Note: Saline and ringers lactate have different densities than pure water
+    if ( compound->GetName() == "Saline" || compound->GetName() == "RingersLactate" || compound->GetName() == "Antibiotic") //Note: Saline and ringers lactate have different densities than pure water
     {
       SEScalarTemperature& ambientTemp = m_data.GetEnvironment().GetConditions().GetAmbientTemperature();
       SEScalarMassPerVolume densityFluid;
       GeneralMath::CalculateWaterDensity(ambientTemp, densityFluid);
       densityFluid_kg_Per_mL = densityFluid.GetValue(MassPerVolumeUnit::kg_Per_mL);
-    } else if (compound->GetName().compare("Blood") == 0)
+    } else if (compound->GetName() == "Blood")
       densityFluid_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
     patientMass_kg += volumeToAdminister_mL * densityFluid_kg_Per_mL;
   }
@@ -591,10 +591,8 @@ void Drugs::CalculateDrugEffects()
     }
 
     if (m_data.GetActions().GetPatientActions().HasOverride() 
-      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance()==CDM::enumOnOff::Off)
-    {
-      if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride())
-        {
+        && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+      if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
           pd.GetDiastolicPressureModifier().SetValue(0.0);
           pd.GetSystolicPressureModifier().SetValue(0.0);
         }
@@ -733,7 +731,7 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
       sub->GetEffectSiteConcentration().SetValue(effectConcentration, MassPerVolumeUnit::ug_Per_mL);
     }
 
-    if ((sub->GetName() == "Sarin") && (m_data.GetSubstances().IsActive(*m_Sarin)))
+    if (sub->GetName() == "Sarin" && (m_data.GetSubstances().IsActive(*m_Sarin)))
       SarinKinetics();
   }
 }

@@ -397,16 +397,16 @@ void Tissue::SetUp()
   // this will put out a warning
   for (SETissueCompartment* tissue : m_data.GetCompartments().GetTissueLeafCompartments()) {
     if (m_TissueToVascular.find(tissue) == m_TissueToVascular.end() || m_TissueToVascular[tissue] == nullptr)
-      Warning("Tissue found a tissue compartment that is not mapped to a vascular compartment  : " + tissue->GetName());
+      Warning("Tissue found a tissue compartment that is not mapped to a vascular compartment  : " + std::string{ tissue->GetName() });
     /*if (m_VascularCopPaths.find(tissue) == m_VascularCopPaths.end() || m_VascularCopPaths[tissue] == nullptr)
       Warning("Tissue found a tissue compartment that does not have a vascular colloid oncotic pressure path  : " + tissue->GetName());*/
     if (m_InterstitialCopPaths.find(tissue) == m_InterstitialCopPaths.end() || m_InterstitialCopPaths[tissue] == nullptr)
-      Warning("Tissue found a tissue compartment that does not have an interstitial colloid oncotic pressure path  : " + tissue->GetName());
+      Warning("Tissue found a tissue compartment that does not have an interstitial colloid oncotic pressure path  : " + std::string{ tissue->GetName() });
     if (m_ExtraToIntraPaths.find(tissue) == m_ExtraToIntraPaths.end() || m_ExtraToIntraPaths[tissue] == nullptr)
-      Warning("Tissue found a tissue compartment that does not an extracellular to intracellular path  : " + tissue->GetName());
+      Warning("Tissue found a tissue compartment that does not an extracellular to intracellular path  : " + std::string{ tissue->GetName() });
     if (m_LeftLungTissue != tissue && m_RightLungTissue != tissue) { // We don't use the lungs in the consumption/production methodology
       if (!Contains(m_ConsumptionProdutionTissues, (*tissue)))
-        Warning("Tissue found a tissue compartment that it is not using in Consumption/Production : " + tissue->GetName());
+        Warning("Tissue found a tissue compartment that it is not using in Consumption/Production : " + std::string{ tissue->GetName() });
     }
   }
 }
@@ -597,7 +597,7 @@ void Tissue::CalculateDiffusion()
       else {
 
         //We have to make an exception for the brain and TAGs, since TAG can't cross blood-brain barrier
-        if (sub->GetName() == "Triacylglycerol" && extracellular.GetName().find("Brain") != std::string::npos)
+        if (sub->GetName() == "Triacylglycerol" && std::string{ extracellular.GetName() }.find("Brain") != std::string::npos)
           continue;
 
         //Gases get moved by instant diffusion
@@ -1255,7 +1255,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       tissueNeededEnergy_kcal = 0;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
-        m_AnaerobicTissues.append(tissue->GetName() + " ");
+        m_AnaerobicTissues.append(std::string{ tissue->GetName() } +" ");
     }
     //If we'll use up all the glucose
     else if (tissueNeededEnergy_kcal > 0) {
@@ -1266,7 +1266,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       tissueNeededEnergy_kcal -= glucoseToConsume_mol * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
-        m_AnaerobicTissues.append(tissue->GetName() + " ");
+        m_AnaerobicTissues.append(std::string{ tissue->GetName() }+" ");
     }
 
     //Muscles can convert glycogen anaerobically, too
@@ -1283,7 +1283,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         nonbrainNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
-          m_AnaerobicTissues.append(tissue->GetName() + " ");
+          m_AnaerobicTissues.append(std::string{ tissue->GetName() }+" ");
         muscleMandatoryAnaerobicNeededEnergy_kcal = 0;
         tissueNeededEnergy_kcal = 0;
       }
@@ -1296,7 +1296,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         tissueNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
-          m_AnaerobicTissues.append(tissue->GetName() + " ");
+          m_AnaerobicTissues.append(std::string{ tissue->GetName() } +" ");
         tissueNeededEnergy_kcal += muscleMandatoryAnaerobicNeededEnergy_kcal; //add the still-needed mandatory anaerobic energy back to muscle's needed energy for tracking of the deficit
       }
     }
@@ -1862,18 +1862,18 @@ double Tissue::PerfusionLimitedDiffusion(SETissueCompartment& tissue, SELiquidCo
   //Calculate Diffusion
   SELiquidSubstanceQuantity* vSubQ = vascular.GetSubstanceQuantity(sub);
   if (vSubQ == nullptr)
-    throw CommonDataModelException("No Vascular Substance Quantity found for substance " + sub.GetName());
+    throw CommonDataModelException("No Vascular Substance Quantity found for substance " + std::string{ sub.GetName() });
   double VascularFlow_m_LPer_s = vascular.GetInFlow(VolumePerTimeUnit::mL_Per_s);
   double VascularConcentration_ug_Per_mL = vSubQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
 
   SELiquidSubstanceQuantity* tSubQ = intracellular.GetSubstanceQuantity(sub);
   if (tSubQ == nullptr)
-    throw CommonDataModelException("No Tissue-Intracellular Substance Quantity found for substance " + sub.GetName());
+    throw CommonDataModelException("No Tissue-Intracellular Substance Quantity found for substance " + std::string{ sub.GetName() });
   SEScalarMassPerVolume tissueConcentration;
   GeneralMath::CalculateConcentration(tSubQ->GetMass(), tissue.GetMatrixVolume(), tissueConcentration, m_Logger);
   double TissueConcentration_ug_Per_mL = tissueConcentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
   double MassIncrement_ug = 0;
-  if (!partitionCoeff == 0) {
+  if (!(partitionCoeff == 0)) {
     MassIncrement_ug = VascularFlow_m_LPer_s * timestep_s * (VascularConcentration_ug_Per_mL - (TissueConcentration_ug_Per_mL / partitionCoeff));
   } else {
     MassIncrement_ug = 0;
@@ -1929,7 +1929,7 @@ void Tissue::AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonar
   SEGasSubstanceQuantity* pSubQ = pulmonary.GetSubstanceQuantity(sub);
   SELiquidSubstanceQuantity* vSubQ = vascular.GetSubstanceQuantity(sub);
   if (pSubQ == nullptr || vSubQ == nullptr)
-    throw CommonDataModelException("No Substance Quantity found for substance " + sub.GetName());
+    throw CommonDataModelException("No Substance Quantity found for substance " + std::string{ sub.GetName() });
 
   double PressureGradient_mmHg = pSubQ->GetPartialPressure(PressureUnit::mmHg) - vSubQ->GetPartialPressure(PressureUnit::mmHg);
 

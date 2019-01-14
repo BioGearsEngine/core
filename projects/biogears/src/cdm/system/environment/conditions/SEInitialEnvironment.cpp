@@ -31,24 +31,24 @@ namespace biogears {
 		m_Conditions = nullptr;
 		InvalidateConditionsFile();
 	}
-
+  //-----------------------------------------------------------------------------
 	SEInitialEnvironment::~SEInitialEnvironment()
 	{
 		Clear();
 	}
-
+  //-----------------------------------------------------------------------------
 	void SEInitialEnvironment::Clear()
 	{
 		SEEnvironmentCondition::Clear();
 		InvalidateConditionsFile();
 		SAFE_DELETE(m_Conditions);
 	}
-
+  //-----------------------------------------------------------------------------
 	bool SEInitialEnvironment::IsValid() const
 	{
 		return SEEnvironmentCondition::IsValid() && (HasConditions() || HasConditionsFile());
 	}
-
+  //-----------------------------------------------------------------------------
 	bool SEInitialEnvironment::Load(const CDM::InitialEnvironmentData& in)
 	{
 		SEEnvironmentCondition::Load(in);
@@ -58,13 +58,14 @@ namespace biogears {
 			GetConditions().Load(in.Conditions().get());
 		return true;
 	}
-
+  //-----------------------------------------------------------------------------
 	CDM::InitialEnvironmentData* SEInitialEnvironment::Unload() const
 	{
 		CDM::InitialEnvironmentData* data = new CDM::InitialEnvironmentData();
 		Unload(*data);
 		return data;
 	}
+  //-----------------------------------------------------------------------------
 	void SEInitialEnvironment::Unload(CDM::InitialEnvironmentData& data) const
 	{
 		SEEnvironmentCondition::Unload(data);
@@ -73,11 +74,12 @@ namespace biogears {
 		else if (HasConditionsFile())
 			data.ConditionsFile(m_ConditionsFile);
 	}
-
+  //-----------------------------------------------------------------------------
 	bool SEInitialEnvironment::HasConditions() const
 	{
 		return m_Conditions != nullptr;
 	}
+  //-----------------------------------------------------------------------------
 	SEEnvironmentalConditions& SEInitialEnvironment::GetConditions()
 	{
 		m_ConditionsFile = "";
@@ -85,30 +87,44 @@ namespace biogears {
 			m_Conditions = new SEEnvironmentalConditions(m_Substances);
 		return *m_Conditions;
 	}
+  //-----------------------------------------------------------------------------
 	const SEEnvironmentalConditions* SEInitialEnvironment::GetConditions() const
 	{
 		return m_Conditions;
 	}
-
+  //-----------------------------------------------------------------------------
 	std::string SEInitialEnvironment::GetConditionsFile() const
 	{
 		return m_ConditionsFile;
 	}
+  //-----------------------------------------------------------------------------
+	const char* SEInitialEnvironment::GetConditionsFile_cStr() const
+	{
+		return m_ConditionsFile.c_str();
+	}
+  //-----------------------------------------------------------------------------
+  void SEInitialEnvironment::SetConditionsFile(const char* fileName)
+	{
+    return SetConditionsFile(std::string{ fileName });
+	}
+  //-----------------------------------------------------------------------------
 	void SEInitialEnvironment::SetConditionsFile(const std::string& fileName)
 	{
 		if (m_Conditions != nullptr)
 			SAFE_DELETE(m_Conditions);
 		m_ConditionsFile = fileName;
 	}
+  //-----------------------------------------------------------------------------
 	bool SEInitialEnvironment::HasConditionsFile() const
 	{
 		return m_ConditionsFile.empty() ? false : true;
 	}
+  //-----------------------------------------------------------------------------
 	void SEInitialEnvironment::InvalidateConditionsFile()
 	{
 		m_ConditionsFile = "";
 	}
-
+  //-----------------------------------------------------------------------------
 	void SEInitialEnvironment::ToString(std::ostream& str) const
 	{
 		str << "Environment Change";
@@ -149,4 +165,5 @@ namespace biogears {
 		}
 		str << std::flush;
 	}
+  //-----------------------------------------------------------------------------
 }

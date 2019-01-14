@@ -47,11 +47,12 @@ public:
   *              This is best used, and intended for, you to dynamically prepopulate
   *              a mapping data structure that will help access what you need
   */
+  const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
   bool Load(const CDM::InhalerData& in);
   CDM::InhalerData* Unload() const override;
-  Tree<std::string> GetPhysiologyRequestGraph() const override;
+  Tree<const char*> GetPhysiologyRequestGraph() const override;
 protected:
   void Unload(CDM::InhalerData& data) const;
 

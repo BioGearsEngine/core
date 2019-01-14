@@ -16,6 +16,16 @@ namespace biogears {
 const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
 
+AreaUnit::AreaUnit(const char* u)
+  : AreaUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+AreaUnit::AreaUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarAreaData* SEScalarArea::Unload() const
 {
   if (!IsValid())
@@ -24,24 +34,35 @@ CDM::ScalarAreaData* SEScalarArea::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool AreaUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool AreaUnit::IsValidUnit(const char* unit)
 {
-  if (cm2.GetString().compare(unit) == 0)
+  if (strcmp(cm2.GetString(), unit) == 0)
     return true;
-  if (m2.GetString().compare(unit) == 0)
+  if (strcmp(m2.GetString(), unit) == 0)
     return true;
   return false;
 }
-
-const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool AreaUnit::IsValidUnit(const std::string& unit)
 {
-  if (cm2.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const AreaUnit& AreaUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(cm2.GetString(), unit) == 0)
     return cm2;
-  if (m2.GetString().compare(unit) == 0)
+  if (strcmp(m2.GetString(), unit) == 0)
     return m2;
   std::stringstream err;
   err << unit << " is not a valid Area unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

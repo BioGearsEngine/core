@@ -39,7 +39,8 @@ protected:
 public:
   virtual size_t HashCode() const;
 
-  virtual std::string GetCompartment() const;
+  virtual const char* GetCompartment() const;
+  virtual void SetCompartment(const char* name);
   virtual void SetCompartment(const std::string& name);
   virtual bool HasCompartment() const;
   virtual void InvalidateCompartment();
@@ -49,9 +50,13 @@ public:
   virtual bool HasSubstance() const;
   virtual void InvalidateSubstance();
 
+  virtual void Set(const SESubstance& substance, const char* name, const CCompoundUnit& unit);
   virtual void Set(const SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
+  virtual void Set(const SESubstance& substance, const char* name, const char* unit = "");
   virtual void Set(const SESubstance& substance, const std::string& name, const std::string& unit = "");
+  virtual void Set(const SESubstance& substance, const char* cmpt, const char* name, const CCompoundUnit& unit);
   virtual void Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
+  virtual void Set(const SESubstance& substance, const char* cmpt, const char* name, const char* unit = "");
   virtual void Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const std::string& unit = "");
 
 protected:

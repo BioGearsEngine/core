@@ -42,7 +42,11 @@ void SEGastrointestinalSystem::Clear()
   SAFE_DELETE(m_StomachContents);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEGastrointestinalSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
 {
   if (name == idChymeAbsorptionRate)
@@ -130,11 +134,12 @@ void SEGastrointestinalSystem::RemoveStomachContents()
   SAFE_DELETE(m_StomachContents);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEGastrointestinalSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SEGastrointestinalSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string> {classname()}
+  return Tree<const char*> {classname()}
     .emplace_back(idChymeAbsorptionRate)
     .emplace_back(idStomachContents)
   ;
 }
+//-------------------------------------------------------------------------------
 }

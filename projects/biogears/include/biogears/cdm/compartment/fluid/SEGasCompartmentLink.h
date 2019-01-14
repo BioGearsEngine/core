@@ -22,10 +22,8 @@ class BIOGEARS_API SEGasCompartmentLink : public SEFluidCompartmentLink<SEGasTra
   friend class SECompartmentManager;
 
 protected:
-  SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment& tgt, const std::string& name)
-    : SEFluidCompartmentLink(src, tgt, name)
-  {
-  }
+  SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment& tgt, const char* name);
+  SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment& tgt, const std::string& name);
 
 public:
   SEGasCompartmentLink() = default;

@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 
 using namespace biogears;
-
+using namespace ScenarioDriver;
 bool BioGearsScenarioDriver::Configure(int argc, char* argv[])
 {
     if (argc <= 1)

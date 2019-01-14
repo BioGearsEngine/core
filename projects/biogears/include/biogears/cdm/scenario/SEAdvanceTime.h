@@ -20,14 +20,14 @@ class TimeUnit;
 class BIOGEARS_API SEAdvanceTime : public SEAction {
 public:
   SEAdvanceTime();
-  virtual ~SEAdvanceTime();
+  virtual ~SEAdvanceTime() override;
 
   static constexpr const char* TypeTag() { return "SEAdvanceTime"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::AdvanceTimeData& in);
   virtual CDM::AdvanceTimeData* Unload() const;
@@ -36,7 +36,7 @@ protected:
   virtual void Unload(CDM::AdvanceTimeData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
   virtual bool HasTime() const;
   virtual SEScalarTime& GetTime();

@@ -48,7 +48,8 @@ public:
   virtual bool HasConfiguration() const;
   virtual void InvalidateConfiguration();
 
-  virtual std::string GetPatientFile() const;
+  virtual const char* GetPatientFile() const;
+  virtual void SetPatientFile(const char* patientFile);
   virtual void SetPatientFile(const std::string& patientFile);
   virtual bool HasPatientFile() const;
   virtual void InvalidatePatientFile();

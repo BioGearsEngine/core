@@ -27,19 +27,19 @@ class CUnitDimension;
 class CQuantityTypeDescriptor {
 public:
   // Ctor for a fundamental quantity
+  CQuantityTypeDescriptor(const char* name, int fundIdx, bool twentyLog);
   CQuantityTypeDescriptor(const std::string& name, int fundIdx, bool twentyLog);
 
   // Ctor for a derived quantity
+  CQuantityTypeDescriptor(const char* name, CCompoundUnit* expansion, bool twentyLog);
   CQuantityTypeDescriptor(const std::string& name, CCompoundUnit* expansion, bool twentyLog);
 
   // Need dtor to free the expansion
   ~CQuantityTypeDescriptor();
 
   // Return the name of this quantity type
-  const std::string& GetName() const
-  {
-    return m_sName;
-  }
+  std::string GetName() const;
+  const char* GetName_cStr() const;
 
   // Return the "fundamental index". This value is a unique monotonically-increasing
   // numeric identifier given to each quantity type that designates a fundamental

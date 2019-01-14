@@ -53,7 +53,11 @@ struct PhysiologyEngineException : public CommonDataModelException {
     : CommonDataModelException("Physiology Engine Error")
   {
   }
-
+  PhysiologyEngineException(const char* _Message)
+    : CommonDataModelException(_Message)
+  {
+    
+  }
   PhysiologyEngineException(const std::string& _Message)
     : CommonDataModelException(_Message)
   {
@@ -72,6 +76,7 @@ public:
   //! Return value indicates engine was able to load provided state file.
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
+  virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) = 0;
   virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) = 0;
 
   //!-------------------------------------------------------------------------------------------------
@@ -91,6 +96,7 @@ public:
   //! State object will be returned.
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
+  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const char* file = "") = 0;
   virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") = 0;
 
   //!-------------------------------------------------------------------------------------------------
@@ -102,6 +108,7 @@ public:
   //! Some combinations of patients and conditions may prevent the engine from stabilizing
   //!
   //!-------------------------------------------------------------------------------------------------
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
   virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
 
   //!-------------------------------------------------------------------------------------------------
@@ -320,6 +327,6 @@ public:
   //! \brief
   //! Return a Graph of DataRequest that the current PhysiologyEngine Supports.
   //!-------------------------------------------------------------------------------------------------
-  virtual Tree<std::string> GetDataRequestGraph() const = 0;
+  virtual Tree<const char*> GetDataRequestGraph() const = 0;
 };
 }

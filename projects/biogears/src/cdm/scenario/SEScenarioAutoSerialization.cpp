@@ -24,12 +24,12 @@ SEScenarioAutoSerialization::SEScenarioAutoSerialization(Logger* logger)
   m_Directory = "";
   m_FileName = "";
 }
-
+//-----------------------------------------------------------------------------
 SEScenarioAutoSerialization::~SEScenarioAutoSerialization()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::Clear()
 {
   SAFE_DELETE(m_Period);
@@ -39,7 +39,7 @@ void SEScenarioAutoSerialization::Clear()
   m_Directory = "";
   m_FileName = "";
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::IsValid() const
 {
   if (!HasPeriod())
@@ -58,7 +58,7 @@ bool SEScenarioAutoSerialization::IsValid() const
     return false;
   return true;
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::Load(const CDM::ScenarioAutoSerializationData& in)
 {
   Clear();
@@ -70,12 +70,14 @@ bool SEScenarioAutoSerialization::Load(const CDM::ScenarioAutoSerializationData&
   SetFileName(in.FileName());
   return true;
 }
+//-----------------------------------------------------------------------------
 CDM::ScenarioAutoSerializationData* SEScenarioAutoSerialization::Unload() const
 {
   CDM::ScenarioAutoSerializationData* data(new CDM::ScenarioAutoSerializationData());
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::Unload(CDM::ScenarioAutoSerializationData& data) const
 {
   if (HasPeriod())
@@ -91,106 +93,134 @@ void SEScenarioAutoSerialization::Unload(CDM::ScenarioAutoSerializationData& dat
   if (HasFileName())
     data.FileName(m_FileName);
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::HasPeriod() const
 {
   return m_Period == nullptr ? false : m_Period->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTime& SEScenarioAutoSerialization::GetPeriod()
 {
   if (m_Period == nullptr)
     m_Period = new SEScalarTime();
   return *m_Period;
 }
+//-----------------------------------------------------------------------------
 double SEScenarioAutoSerialization::GetPeriod(const TimeUnit& unit) const
 {
   if (m_Period == nullptr)
     return SEScalar::dNaN();
   return m_Period->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumOnOff::value SEScenarioAutoSerialization::GetPeriodTimeStamps() const
 {
   return m_PeriodTimeStamps;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::SetPeriodTimeStamps(CDM::enumOnOff::value v)
 {
   m_PeriodTimeStamps = v;
 }
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::HasPeriodTimeStamps() const
 {
   return m_PeriodTimeStamps == ((CDM::enumOnOff::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::InvalidatePeriodTimeStamps()
 {
   m_PeriodTimeStamps = (CDM::enumOnOff::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumOnOff::value SEScenarioAutoSerialization::GetAfterActions() const
 {
   return m_AfterActions;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::SetAfterActions(CDM::enumOnOff::value v)
 {
   m_AfterActions = v;
 }
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::HasAfterActions() const
 {
   return m_AfterActions == ((CDM::enumOnOff::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::InvalidateAfterActions()
 {
   m_AfterActions = (CDM::enumOnOff::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumOnOff::value SEScenarioAutoSerialization::GetReloadState() const
 {
   return m_ReloadState;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::SetReloadState(CDM::enumOnOff::value v)
 {
   m_ReloadState = v;
 }
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::HasReloadState() const
 {
   return m_ReloadState == ((CDM::enumOnOff::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::InvalidateReloadState()
 {
   m_ReloadState = (CDM::enumOnOff::value)-1;
 }
-
-std::string SEScenarioAutoSerialization::GetDirectory() const
+//-----------------------------------------------------------------------------
+const char* SEScenarioAutoSerialization::GetDirectory() const
 {
-  return m_Directory;
+  return m_Directory.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEScenarioAutoSerialization::SetDirectory(const char* dir)
+{
+  m_Directory = dir;
+}
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::SetDirectory(const std::string& dir)
 {
   m_Directory = dir;
 }
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::HasDirectory() const
 {
   return m_Directory.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::InvalidateDirectory()
 {
   m_Directory = "";
 }
-
-std::string SEScenarioAutoSerialization::GetFileName() const
+//-----------------------------------------------------------------------------
+const char* SEScenarioAutoSerialization::GetFileName() const
 {
-  return m_FileName;
+  return m_FileName.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEScenarioAutoSerialization::SetFileName(const char* name)
+{
+  m_FileName = name;
+}
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::SetFileName(const std::string& name)
 {
   m_FileName = name;
 }
+//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::HasFileName() const
 {
   return m_FileName.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioAutoSerialization::InvalidateFileName()
 {
   m_FileName = "";
 }
+  //-----------------------------------------------------------------------------
 }

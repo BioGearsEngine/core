@@ -16,6 +16,16 @@ namespace biogears {
 const EnergyPerAmountUnit EnergyPerAmountUnit::kcal_Per_mol("kcal/mol");
 const EnergyPerAmountUnit EnergyPerAmountUnit::kJ_Per_mol("kJ/mol");
 
+EnergyPerAmountUnit::EnergyPerAmountUnit(const char* u)
+  : EnergyPerAmountUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+EnergyPerAmountUnit::EnergyPerAmountUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarEnergyPerAmountData* SEScalarEnergyPerAmount::Unload() const
 {
   if (!IsValid())
@@ -24,24 +34,35 @@ CDM::ScalarEnergyPerAmountData* SEScalarEnergyPerAmount::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool EnergyPerAmountUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool EnergyPerAmountUnit::IsValidUnit(const char* unit)
 {
-  if (kcal_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_mol.GetString(), unit) == 0)
     return true;
-  if (kJ_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(kJ_Per_mol.GetString(), unit) == 0)
     return true;
   return false;
 }
-
-const EnergyPerAmountUnit& EnergyPerAmountUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool EnergyPerAmountUnit::IsValidUnit(const std::string& unit)
 {
-  if (kcal_Per_mol.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const EnergyPerAmountUnit& EnergyPerAmountUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(kcal_Per_mol.GetString(), unit) == 0)
     return kcal_Per_mol;
-  if (kJ_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(kJ_Per_mol.GetString(), unit) == 0)
     return kJ_Per_mol;
   std::stringstream err;
   err << unit << " is not a valid EnergyPerAmount unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const EnergyPerAmountUnit& EnergyPerAmountUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

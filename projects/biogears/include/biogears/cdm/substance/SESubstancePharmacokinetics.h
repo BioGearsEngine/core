@@ -30,6 +30,7 @@ public:
   virtual bool IsValid() const;
 
   virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name);
 
   virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
   virtual CDM::SubstancePharmacokineticsData* Unload() const;
@@ -43,9 +44,13 @@ public:
   virtual const SESubstancePhysicochemicals* GetPhysicochemicals() const;
 
   virtual bool HasTissueKinetics() const;
+  virtual bool HasTissueKinetics(const char* name) const;
   virtual bool HasTissueKinetics(const std::string& name) const;
+  virtual SESubstanceTissuePharmacokinetics& GetTissueKinetics(const char* name);
   virtual SESubstanceTissuePharmacokinetics& GetTissueKinetics(const std::string& name);
+  virtual const SESubstanceTissuePharmacokinetics* GetTissueKinetics(const char* name) const;
   virtual const SESubstanceTissuePharmacokinetics* GetTissueKinetics(const std::string& name) const;
+  virtual void RemoveTissueKinetics(const char* name);
   virtual void RemoveTissueKinetics(const std::string& name);
 
 protected:

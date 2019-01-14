@@ -36,9 +36,11 @@ public:
   virtual bool HasUnit();
   virtual const CCompoundUnit* GetUnit();
   virtual bool IsValidUnit(const CCompoundUnit& unit) const;
+  virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const;
   virtual const CCompoundUnit* GetCompoundUnit(const std::string& unit) const;
 
   virtual double GetValue() const;
+  virtual double GetValue(const char* unit) const;
   virtual double GetValue(const std::string& unit) const;
 
 protected:

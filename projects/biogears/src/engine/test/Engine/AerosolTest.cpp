@@ -211,7 +211,7 @@ void BioGearsEngineTest::SizeIndependentDepositionEfficencyCoefficientsTest(SETe
   TimingProfile pTimer;
   pTimer.Start("Test");
   SETestCase& tc1 = suite.CreateTestCase();
-  tc1.SetName(substance.GetName() + "SIDECo");
+  tc1.SetName(std::string{ substance.GetName() } +"SIDECo");
 
   BioGears bg(m_Logger);
   const SizeIndependentDepositionEfficencyCoefficient& SIDECoeff = bg.GetSubstances().GetSizeIndependentDepositionEfficencyCoefficient(substance);
@@ -249,7 +249,7 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
   pTimer.Start("Test");
   double PercentTolerance = 0.1;
   SETestCase& tc = suite.CreateTestCase();
-  tc.SetName(substance.GetName() + "DepositionFraction");
+  tc.SetName(std::string{substance.GetName()} + "DepositionFraction");
 
   BioGears bg(m_Logger);
   bg.GetPatient().Load("./patients/StandardMale.xml");
@@ -442,7 +442,7 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
     trk.Track("RightAlveoliParticulateDeposited_ug", time, rightAlveoliParticulate == nullptr ? 0 : rightAlveoliParticulate->GetMassDeposited(MassUnit::ug));
 
     if (i == 0)
-      trk.CreateFile(std::string("./UnitTests/BioGearsTests/" + substance.GetName() + "DepositionFraction.csv").c_str(), file);
+      trk.CreateFile((std::string{ "./UnitTests/BioGearsTests/" } +substance.GetName() + "DepositionFraction.csv").c_str(), file);
     trk.StreamTrackToFile(file);
 
     time += deltaT_s;

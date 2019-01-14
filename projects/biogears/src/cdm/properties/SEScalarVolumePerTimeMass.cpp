@@ -19,6 +19,16 @@ const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_min_kg("mL/min kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_s_kg("mL/s kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::uL_Per_min_kg("uL/min kg");
 
+VolumePerTimeMassUnit::VolumePerTimeMassUnit(const char* u)
+  : VolumePerTimeMassUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimeMassUnit::VolumePerTimeMassUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimeMassData* SEScalarVolumePerTimeMass::Unload() const
 {
   if (!IsValid())
@@ -27,36 +37,47 @@ CDM::ScalarVolumePerTimeMassData* SEScalarVolumePerTimeMass::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool VolumePerTimeMassUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimeMassUnit::IsValidUnit(const char* unit)
 {
-  if (L_Per_s_g.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_s_g.GetString(),unit) == 0)
     return true;
-  if (mL_Per_s_g.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_g.GetString(),unit) == 0)
     return true;
-  if (mL_Per_min_kg.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_min_kg.GetString(),unit) == 0)
     return true;
-  if (mL_Per_s_kg.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_kg.GetString(),unit) == 0)
     return true;
-  if (uL_Per_min_kg.GetString().compare(unit) == 0)
+  if (strcmp(uL_Per_min_kg.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimeMassUnit::IsValidUnit(const std::string& unit)
 {
-  if (L_Per_s_g.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(L_Per_s_g.GetString(),unit) == 0)
     return L_Per_s_g;
-  if (mL_Per_s_g.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_g.GetString(),unit) == 0)
     return mL_Per_s_g;
-  if (mL_Per_min_kg.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_min_kg.GetString(),unit) == 0)
     return mL_Per_min_kg;
-  if (mL_Per_s_kg.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_kg.GetString(),unit) == 0)
     return mL_Per_s_kg;
-  if (uL_Per_min_kg.GetString().compare(unit) == 0)
+  if (strcmp(uL_Per_min_kg.GetString(),unit) == 0)
     return uL_Per_min_kg;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimeMass unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

@@ -19,6 +19,9 @@ namespace biogears {
 //--------------------------------------------------------------------------------------------------
 class Task {
 public:
+  Task() = default;
+  Task(const Task&) = default;
+  virtual ~Task() = default;
   virtual void Run() = 0;
 };
 }

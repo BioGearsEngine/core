@@ -46,12 +46,12 @@ SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
   m_OxygenBottleTwo = nullptr;
   m_EventHandler = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEAnesthesiaMachine::~SEAnesthesiaMachine()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::Clear()
 {
   SESystem::Clear();
@@ -74,7 +74,7 @@ void SEAnesthesiaMachine::Clear()
   SAFE_DELETE(m_OxygenBottleOne);
   SAFE_DELETE(m_OxygenBottleTwo);
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::Merge(const SEAnesthesiaMachine& from)
 {
   if (from.HasConnection())
@@ -102,7 +102,7 @@ void SEAnesthesiaMachine::Merge(const SEAnesthesiaMachine& from)
   MERGE_CHILD(OxygenBottleOne);
   MERGE_CHILD(OxygenBottleTwo);
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config)
 {
   if (config.HasConfiguration())
@@ -112,7 +112,7 @@ void SEAnesthesiaMachine::ProcessConfiguration(const SEAnesthesiaMachineConfigur
       Error("Unable to load configuration file", "SEAnesthesiaMachine::ProcessConfiguration");
   StateChange();
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::Load(const std::string& file)
 {
   CDM::AnesthesiaMachineData* pData;
@@ -128,7 +128,7 @@ bool SEAnesthesiaMachine::Load(const std::string& file)
   }
   return Load(*pData);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::Load(const CDM::AnesthesiaMachineData& in)
 {
   SESystem::Load(in);
@@ -174,14 +174,14 @@ bool SEAnesthesiaMachine::Load(const CDM::AnesthesiaMachineData& in)
   StateChange();
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::AnesthesiaMachineData* SEAnesthesiaMachine::Unload() const
 {
   CDM::AnesthesiaMachineData* data = new CDM::AnesthesiaMachineData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::Unload(CDM::AnesthesiaMachineData& data) const
 {
   SESystem::Unload(data);
@@ -230,7 +230,12 @@ void SEAnesthesiaMachine::Unload(CDM::AnesthesiaMachineData& data) const
     data.ActiveEvent().push_back(std::unique_ptr<CDM::ActiveAnesthesiaMachineEventData>(eData));
   }
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SEAnesthesiaMachine::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachine::GetScalar(const std::string& name)
 {
   if (name == "InletFlow")
@@ -264,7 +269,7 @@ const SEScalar* SEAnesthesiaMachine::GetScalar(const std::string& name)
 
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::SetEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime& time)
 {
   bool b = false; // Default is off
@@ -311,7 +316,7 @@ void SEAnesthesiaMachine::SetEvent(CDM::enumAnesthesiaMachineEvent::value type, 
   if (m_EventHandler != nullptr)
     m_EventHandler->HandleAnesthesiaMachineEvent(type, active, &time);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::IsEventActive(CDM::enumAnesthesiaMachineEvent::value type) const
 {
   auto b = m_EventState.find(type);
@@ -319,7 +324,7 @@ bool SEAnesthesiaMachine::IsEventActive(CDM::enumAnesthesiaMachineEvent::value t
     return false;
   return b->second;
 }
-
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetEventDuration(CDM::enumAnesthesiaMachineEvent::value type, const TimeUnit& unit) const
 {
   auto i = m_EventDuration_s.find(type);
@@ -327,266 +332,303 @@ double SEAnesthesiaMachine::GetEventDuration(CDM::enumAnesthesiaMachineEvent::va
     return 0;
   return Convert(i->second, TimeUnit::s, unit);
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::UpdateEvents(const SEScalarTime& timeStep)
 {
   for (auto itr : m_EventDuration_s)
     itr.second += timeStep.GetValue(TimeUnit::s);
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::ForwardEvents(SEEventHandler* handler)
 {
   m_EventHandler = handler;
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::SetConnection(CDM::enumAnesthesiaMachineConnection::value c)
 {
   m_Connection = c;
 }
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasConnection() const
 {
   return m_Connection == ((CDM::enumAnesthesiaMachineConnection::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 CDM::enumAnesthesiaMachineConnection::value SEAnesthesiaMachine::GetConnection() const
 {
   return m_Connection;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::InvalidateConnection()
 {
   m_Connection = (CDM::enumAnesthesiaMachineConnection::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasInletFlow() const
 {
   return m_InletFlow == nullptr ? false : m_InletFlow->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolumePerTime& SEAnesthesiaMachine::GetInletFlow()
 {
   if (m_InletFlow == nullptr)
     m_InletFlow = new SEScalarVolumePerTime();
   return *m_InletFlow;
 }
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetInletFlow(const VolumePerTimeUnit& unit) const
 {
   if (m_InletFlow == nullptr)
     return SEScalar::dNaN();
   return m_InletFlow->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasInspiratoryExpiratoryRatio() const
 {
   return m_InspiratoryExpiratoryRatio == nullptr ? false : m_InspiratoryExpiratoryRatio->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SEAnesthesiaMachine::GetInspiratoryExpiratoryRatio()
 {
   if (m_InspiratoryExpiratoryRatio == nullptr)
     m_InspiratoryExpiratoryRatio = new SEScalar();
   return *m_InspiratoryExpiratoryRatio;
 }
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetInspiratoryExpiratoryRatio() const
 {
   if (m_InspiratoryExpiratoryRatio == nullptr)
     return SEScalar::dNaN();
   return m_InspiratoryExpiratoryRatio->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasOxygenFraction() const
 {
   return m_OxygenFraction == nullptr ? false : m_OxygenFraction->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SEAnesthesiaMachine::GetOxygenFraction()
 {
   if (m_OxygenFraction == nullptr)
     m_OxygenFraction = new SEScalarFraction();
   return *m_OxygenFraction;
 }
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetOxygenFraction() const
 {
   if (m_OxygenFraction == nullptr)
     return SEScalar::dNaN();
   return m_OxygenFraction->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumAnesthesiaMachineOxygenSource::value SEAnesthesiaMachine::GetOxygenSource() const
 {
   return m_OxygenSource;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::value src)
 {
   m_OxygenSource = src;
 }
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasOxygenSource() const
 {
   return m_OxygenSource == ((CDM::enumAnesthesiaMachineOxygenSource::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::InvalidateOxygenSource()
 {
   m_OxygenSource = (CDM::enumAnesthesiaMachineOxygenSource::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasPositiveEndExpiredPressure() const
 {
   return m_PositiveEndExpiredPressure == nullptr ? false : m_PositiveEndExpiredPressure->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SEAnesthesiaMachine::GetPositiveEndExpiredPressure()
 {
   if (m_PositiveEndExpiredPressure == nullptr)
     m_PositiveEndExpiredPressure = new SEScalarPressure();
   return *m_PositiveEndExpiredPressure;
 }
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetPositiveEndExpiredPressure(const PressureUnit& unit) const
 {
   if (m_PositiveEndExpiredPressure == nullptr)
     return SEScalar::dNaN();
   return m_PositiveEndExpiredPressure->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumAnesthesiaMachinePrimaryGas::value SEAnesthesiaMachine::GetPrimaryGas() const
 {
   return m_PrimaryGas;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::value gas)
 {
   m_PrimaryGas = gas;
 }
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasPrimaryGas() const
 {
   return m_PrimaryGas == ((CDM::enumAnesthesiaMachinePrimaryGas::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::InvalidatePrimaryGas()
 {
   m_PrimaryGas = (CDM::enumAnesthesiaMachinePrimaryGas::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasRespiratoryRate() const
 {
   return m_RespiratoryRate == nullptr ? false : m_RespiratoryRate->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFrequency& SEAnesthesiaMachine::GetRespiratoryRate()
 {
   if (m_RespiratoryRate == nullptr)
     m_RespiratoryRate = new SEScalarFrequency();
   return *m_RespiratoryRate;
 }
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetRespiratoryRate(const FrequencyUnit& unit) const
 {
   if (m_RespiratoryRate == nullptr)
     return SEScalar::dNaN();
   return m_RespiratoryRate->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasReliefValvePressure() const
 {
   return m_ReliefValvePressure == nullptr ? false : m_ReliefValvePressure->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SEAnesthesiaMachine::GetReliefValvePressure()
 {
   if (m_ReliefValvePressure == nullptr)
     m_ReliefValvePressure = new SEScalarPressure();
   return *m_ReliefValvePressure;
 }
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetReliefValvePressure(const PressureUnit& unit) const
 {
   if (m_ReliefValvePressure == nullptr)
     return SEScalar::dNaN();
   return m_ReliefValvePressure->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasVentilatorPressure() const
 {
   return m_VentilatorPressure == nullptr ? false : m_VentilatorPressure->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SEAnesthesiaMachine::GetVentilatorPressure()
 {
   if (m_VentilatorPressure == nullptr)
     m_VentilatorPressure = new SEScalarPressure();
   return *m_VentilatorPressure;
 }
+//-----------------------------------------------------------------------------
 double SEAnesthesiaMachine::GetVentilatorPressure(const PressureUnit& unit) const
 {
   if (m_VentilatorPressure == nullptr)
     return SEScalar::dNaN();
   return m_VentilatorPressure->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasLeftChamber() const
 {
   return m_LeftChamber == nullptr ? false : true;
 }
+//-----------------------------------------------------------------------------
 SEAnesthesiaMachineChamber& SEAnesthesiaMachine::GetLeftChamber()
 {
   if (m_LeftChamber == nullptr)
     m_LeftChamber = new SEAnesthesiaMachineChamber(m_Substances);
   return *m_LeftChamber;
 }
+//-----------------------------------------------------------------------------
 const SEAnesthesiaMachineChamber* SEAnesthesiaMachine::GetLeftChamber() const
 {
   return m_LeftChamber;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::RemoveLeftChamber()
 {
   SAFE_DELETE(m_LeftChamber);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasRightChamber() const
 {
   return m_RightChamber == nullptr ? false : true;
 }
+//-----------------------------------------------------------------------------
 SEAnesthesiaMachineChamber& SEAnesthesiaMachine::GetRightChamber()
 {
   if (m_RightChamber == nullptr)
     m_RightChamber = new SEAnesthesiaMachineChamber(m_Substances);
   return *m_RightChamber;
 }
+//-----------------------------------------------------------------------------
 const SEAnesthesiaMachineChamber* SEAnesthesiaMachine::GetRightChamber() const
 {
   return m_RightChamber;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::RemoveRightChamber()
 {
   SAFE_DELETE(m_RightChamber);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasOxygenBottleOne() const
 {
   return m_OxygenBottleOne == nullptr ? false : true;
 }
+//-----------------------------------------------------------------------------
 SEAnesthesiaMachineOxygenBottle& SEAnesthesiaMachine::GetOxygenBottleOne()
 {
   if (m_OxygenBottleOne == nullptr)
     m_OxygenBottleOne = new SEAnesthesiaMachineOxygenBottle(GetLogger());
   return *m_OxygenBottleOne;
 }
+//-----------------------------------------------------------------------------
 const SEAnesthesiaMachineOxygenBottle* SEAnesthesiaMachine::GetOxygenBottleOne() const
 {
   return m_OxygenBottleOne;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::RemoveOxygenBottleOne()
 {
   SAFE_DELETE(m_OxygenBottleOne);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::HasOxygenBottleTwo() const
 {
   return m_OxygenBottleTwo == nullptr ? false : true;
 }
+//-----------------------------------------------------------------------------
 SEAnesthesiaMachineOxygenBottle& SEAnesthesiaMachine::GetOxygenBottleTwo()
 {
   if (m_OxygenBottleTwo == nullptr)
     m_OxygenBottleTwo = new SEAnesthesiaMachineOxygenBottle(GetLogger());
   return *m_OxygenBottleTwo;
 }
+//-----------------------------------------------------------------------------
 const SEAnesthesiaMachineOxygenBottle* SEAnesthesiaMachine::GetOxygenBottleTwo() const
 {
   return m_OxygenBottleTwo;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::RemoveOxygenBottleTwo()
 {
   SAFE_DELETE(m_OxygenBottleTwo);
 }
-Tree<std::string> SEAnesthesiaMachine::GetPhysiologyRequestGraph() const
+//-----------------------------------------------------------------------------
+Tree<const char*> SEAnesthesiaMachine::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return {""};
 }
+//-----------------------------------------------------------------------------
 
 }

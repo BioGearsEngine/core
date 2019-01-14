@@ -47,12 +47,12 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_Urinate = nullptr;
   m_OverrideAction = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEPatientActionCollection::~SEPatientActionCollection()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::Clear()
 {
   RemoveAcuteStress();
@@ -88,7 +88,7 @@ void SEPatientActionCollection::Clear()
   DELETE_MAP_SECOND(m_SubstanceInfusions);
   DELETE_MAP_SECOND(m_SubstanceCompoundInfusions);
 }
-
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
 {
   if (HasAcuteStress())
@@ -160,7 +160,7 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasOverride())
     to.push_back((GetOverride()->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action)
 {
   if (!IsValid(action))
@@ -170,7 +170,7 @@ bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action)
   delete bind;
   return b;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& action)
 {
   const CDM::PatientAssessmentRequestData* patientAss = dynamic_cast<const CDM::PatientAssessmentRequestData*>(&action);
@@ -561,7 +561,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   Error("Unsupported Action");
   return false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::IsValid(const SEPatientAction& action)
 {
   if (!action.IsValid()) {
@@ -570,315 +570,376 @@ bool SEPatientActionCollection::IsValid(const SEPatientAction& action)
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasAcuteStress() const
 {
   return m_AcuteStress == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEAcuteStress* SEPatientActionCollection::GetAcuteStress() const
 {
   return m_AcuteStress;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveAcuteStress()
 {
   SAFE_DELETE(m_AcuteStress);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasAirwayObstruction() const
 {
   return m_AirwayObstruction == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEAirwayObstruction* SEPatientActionCollection::GetAirwayObstruction() const
 {
   return m_AirwayObstruction;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveAirwayObstruction()
 {
   SAFE_DELETE(m_AirwayObstruction);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasApnea() const
 {
   return m_Apnea == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEApnea* SEPatientActionCollection::GetApnea() const
 {
   return m_Apnea;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveApnea()
 {
   SAFE_DELETE(m_Apnea);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasAsthmaAttack() const
 {
   return m_AsthmaAttack == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEAsthmaAttack* SEPatientActionCollection::GetAsthmaAttack() const
 {
   return m_AsthmaAttack;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveAsthmaAttack()
 {
   SAFE_DELETE(m_AsthmaAttack);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasBrainInjury() const
 {
   return m_BrainInjury == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEBrainInjury* SEPatientActionCollection::GetBrainInjury() const
 {
   return m_BrainInjury;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveBrainInjury()
 {
   SAFE_DELETE(m_BrainInjury);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasBronchoconstriction() const
 {
   return m_Bronchoconstriction == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEBronchoconstriction* SEPatientActionCollection::GetBronchoconstriction() const
 {
   return m_Bronchoconstriction;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveBronchoconstriction()
 {
   SAFE_DELETE(m_Bronchoconstriction);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasBurnWound() const
 {
   return m_BurnWound == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEBurnWound* SEPatientActionCollection::GetBurnWound() const
 {
   return m_BurnWound;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveBurnWound()
 {
   SAFE_DELETE(m_BurnWound);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasCardiacArrest() const
 {
   return m_CardiacArrest == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SECardiacArrest* SEPatientActionCollection::GetCardiacArrest() const
 {
   return m_CardiacArrest;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveCardiacArrest()
 {
   SAFE_DELETE(m_CardiacArrest);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasChestCompression() const
 {
   return m_ChestCompression == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveChestCompression()
 {
   SAFE_DELETE(m_ChestCompression);
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasChestCompressionForce() const
 {
   return m_ChestCompression == nullptr ? false : dynamic_cast<SEChestCompressionForce*>(m_ChestCompression) != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEChestCompressionForce* SEPatientActionCollection::GetChestCompressionForce() const
 {
   return dynamic_cast<SEChestCompressionForce*>(m_ChestCompression);
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasChestCompressionForceScale() const
 {
   return m_ChestCompression == nullptr ? false : dynamic_cast<SEChestCompressionForceScale*>(m_ChestCompression) != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEChestCompressionForceScale* SEPatientActionCollection::GetChestCompressionForceScale() const
 {
   return dynamic_cast<SEChestCompressionForceScale*>(m_ChestCompression);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasChestOcclusiveDressing() const
 {
   return m_LeftChestOcclusiveDressing != nullptr || m_RightChestOcclusiveDressing != nullptr ? true : false;
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasLeftChestOcclusiveDressing() const
 {
   return m_LeftChestOcclusiveDressing != nullptr ? true : false;
 }
+//-------------------------------------------------------------------------------
 SEChestOcclusiveDressing* SEPatientActionCollection::GetLeftChestOcclusiveDressing() const
 {
   return m_LeftChestOcclusiveDressing;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveLeftChestOcclusiveDressing()
 {
   SAFE_DELETE(m_LeftChestOcclusiveDressing);
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasRightChestOcclusiveDressing() const
 {
   return m_RightChestOcclusiveDressing != nullptr ? true : false;
 }
+//-------------------------------------------------------------------------------
 SEChestOcclusiveDressing* SEPatientActionCollection::GetRightChestOcclusiveDressing() const
 {
   return m_RightChestOcclusiveDressing;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveRightChestOcclusiveDressing()
 {
   SAFE_DELETE(m_RightChestOcclusiveDressing);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasConsciousRespiration() const
 {
   return m_ConsciousRespiration == nullptr ? false : m_ConsciousRespiration->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEConsciousRespiration* SEPatientActionCollection::GetConsciousRespiration() const
 {
   return m_ConsciousRespiration;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveConsciousRespiration()
 {
   SAFE_DELETE(m_ConsciousRespiration);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasConsumeNutrients() const
 {
   return m_ConsumeNutrients == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEConsumeNutrients* SEPatientActionCollection::GetConsumeNutrients() const
 {
   return m_ConsumeNutrients;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveConsumeNutrients()
 {
   SAFE_DELETE(m_ConsumeNutrients);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasExercise() const
 {
   return m_Exercise == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEExercise* SEPatientActionCollection::GetExercise() const
 {
   return m_Exercise;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveExercise()
 {
   SAFE_DELETE(m_Exercise);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasHemorrhage() const
 {
   return m_Hemorrhages.empty() ? false : true;
 }
+//-------------------------------------------------------------------------------
 const std::map<std::string, SEHemorrhage*>& SEPatientActionCollection::GetHemorrhages() const
 {
   return m_Hemorrhages;
 }
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveHemorrhage(const char* cmpt)
+{
+  RemoveHemorrhage(std::string{ cmpt });
+}
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveHemorrhage(const std::string& cmpt)
 {
   SEHemorrhage* h = m_Hemorrhages[cmpt];
   m_Hemorrhages.erase(cmpt);
   SAFE_DELETE(h);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasIntubation() const
 {
   return m_Intubation == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEIntubation* SEPatientActionCollection::GetIntubation() const
 {
   return m_Intubation;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveIntubation()
 {
   SAFE_DELETE(m_Intubation);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasMechanicalVentilation() const
 {
   return m_MechanicalVentilation == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEMechanicalVentilation* SEPatientActionCollection::GetMechanicalVentilation() const
 {
   return m_MechanicalVentilation;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveMechanicalVentilation()
 {
   SAFE_DELETE(m_MechanicalVentilation);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasNeedleDecompression() const
 {
   return m_LeftNeedleDecompression != nullptr || m_RightNeedleDecompression ? true : false;
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasLeftNeedleDecompression() const
 {
   return m_LeftNeedleDecompression == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SENeedleDecompression* SEPatientActionCollection::GetLeftNeedleDecompression() const
 {
   return m_LeftNeedleDecompression;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveLeftNeedleDecompression()
 {
   SAFE_DELETE(m_LeftNeedleDecompression);
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasRightNeedleDecompression() const
 {
   return m_RightNeedleDecompression == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SENeedleDecompression* SEPatientActionCollection::GetRightNeedleDecompression() const
 {
   return m_RightNeedleDecompression;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveRightNeedleDecompression()
 {
   SAFE_DELETE(m_RightNeedleDecompression);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasPainStimulus() const
 {
   return m_PainStimuli.empty() ? false : true;
 }
+//-------------------------------------------------------------------------------
 const std::map<std::string, SEPainStimulus*>& SEPatientActionCollection::GetPainStimuli() const
 {
   return m_PainStimuli;
 }
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemovePainStimulus(const char* cmpt)
+{
+  RemovePainStimulus(std::string{ cmpt });
+}
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemovePainStimulus(const std::string& cmpt)
 {
   SEPainStimulus* p = m_PainStimuli[cmpt];
   m_PainStimuli.erase(cmpt);
   SAFE_DELETE(p);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasPericardialEffusion() const
 {
   return m_PericardialEffusion == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEPericardialEffusion* SEPatientActionCollection::GetPericardialEffusion() const
 {
   return m_PericardialEffusion;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemovePericardialEffusion()
 {
   SAFE_DELETE(m_PericardialEffusion);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasSepsis() const
 {
   return m_Sepsis == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SESepsis* SEPatientActionCollection::GetSepsis() const
 {
   return m_Sepsis;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSepsis()
 {
   SAFE_DELETE(m_Sepsis);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasTensionPneumothorax() const
 {
   if (m_LeftOpenTensionPneumothorax != nullptr) //&&m_LeftOpenTensionPneumothorax->IsValid())// TODO
@@ -891,88 +952,103 @@ bool SEPatientActionCollection::HasTensionPneumothorax() const
     return true;
   return false;
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasLeftOpenTensionPneumothorax() const
 {
   return m_LeftOpenTensionPneumothorax == nullptr ? false : true; //m_LeftOpenTensionPneumothorax->IsValid();//TODO
 }
+//-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetLeftOpenTensionPneumothorax() const
 {
   return m_LeftOpenTensionPneumothorax;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveLeftOpenTensionPneumothorax()
 {
   SAFE_DELETE(m_LeftOpenTensionPneumothorax);
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasLeftClosedTensionPneumothorax() const
 {
   return m_LeftClosedTensionPneumothorax == nullptr ? false : true; //m_LeftClosedTensionPneumothorax->IsValid();//TODO
 }
+//-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetLeftClosedTensionPneumothorax() const
 {
   return m_LeftClosedTensionPneumothorax;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveLeftClosedTensionPneumothorax()
 {
   SAFE_DELETE(m_LeftClosedTensionPneumothorax);
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasRightOpenTensionPneumothorax() const
 {
   return m_RightOpenTensionPneumothorax == nullptr ? false : true; //m_RightOpenTensionPneumothorax->IsValid();//TODO
 }
+//-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetRightOpenTensionPneumothorax() const
 {
   return m_RightOpenTensionPneumothorax;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveRightOpenTensionPneumothorax()
 {
   SAFE_DELETE(m_RightOpenTensionPneumothorax);
 }
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasRightClosedTensionPneumothorax() const
 {
   return m_RightClosedTensionPneumothorax == nullptr ? false : true; //m_RightClosedTensionPneumothorax->IsValid();//TODO
 }
+//-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetRightClosedTensionPneumothorax() const
 {
   return m_RightClosedTensionPneumothorax;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveRightClosedTensionPneumothorax()
 {
   SAFE_DELETE(m_RightClosedTensionPneumothorax);
 }
-
+//-------------------------------------------------------------------------------
 const std::map<const SESubstance*, SESubstanceBolus*>& SEPatientActionCollection::GetSubstanceBoluses() const
 {
   return m_SubstanceBolus;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceBolus(const SESubstance& sub)
 {
   SESubstanceBolus* b = m_SubstanceBolus[&sub];
   m_SubstanceBolus.erase(&sub);
   SAFE_DELETE(b);
 }
-
+//-------------------------------------------------------------------------------
 const std::map<const SESubstance*, SESubstanceInfusion*>& SEPatientActionCollection::GetSubstanceInfusions() const
 {
   return m_SubstanceInfusions;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceInfusion(const SESubstance& sub)
 {
   SESubstanceInfusion* si = m_SubstanceInfusions[&sub];
   m_SubstanceInfusions.erase(&sub);
   SAFE_DELETE(si);
 }
-
+//-------------------------------------------------------------------------------
 const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& SEPatientActionCollection::GetSubstanceCompoundInfusions() const
 {
   return m_SubstanceCompoundInfusions;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceCompoundInfusion(const SESubstanceCompound& cSub)
 {
   SESubstanceCompoundInfusion* sci = m_SubstanceCompoundInfusions[&cSub];
   m_SubstanceCompoundInfusions.erase(&cSub);
   SAFE_DELETE(sci);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::AdministerSubstance(const CDM::SubstanceAdministrationData& subAdmin)
 {
   const CDM::SubstanceBolusData* bolus = dynamic_cast<const CDM::SubstanceBolusData*>(&subAdmin);
@@ -1047,31 +1123,35 @@ bool SEPatientActionCollection::AdministerSubstance(const CDM::SubstanceAdminist
   }
   return false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasUrinate() const
 {
   return m_Urinate == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEUrinate* SEPatientActionCollection::GetUrinate() const
 {
   return m_Urinate;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveUrinate()
 {
   SAFE_DELETE(m_Urinate);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasOverride() const
 {
   return m_OverrideAction == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEOverride* SEPatientActionCollection::GetOverride()
 {
   return m_OverrideAction;
 }
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveOverride()
 {
   SAFE_DELETE(m_OverrideAction);
 }
-
+//-------------------------------------------------------------------------------
 }

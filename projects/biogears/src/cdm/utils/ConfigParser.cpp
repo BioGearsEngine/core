@@ -39,6 +39,15 @@ std::string ConfigSet::GetValue(const std::string& key) const
   }
 }
 
+const char* ConfigSet::GetValue(const char* key) const
+{
+  if (!HasKey(key)) {
+    return "";
+  } else {
+    return m_keyValues.find(key)->second.c_str();
+  }
+}
+
 ConfigParser::ConfigParser(const std::string& configFilePath)
 {
   ParseConfigFile(configFilePath);

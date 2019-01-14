@@ -34,6 +34,8 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();
@@ -53,20 +55,21 @@ public:
   PhysiologyEngineTimedStabilization(Logger* logger);
   virtual ~PhysiologyEngineTimedStabilization();
 
-  virtual void Clear();
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::PhysiologyEngineTimedStabilizationData& in);
-  virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const;
+  virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const;
 
 public:
-  virtual bool Load(const std::string& file);
+  virtual bool Load(const char* file) override;
+  virtual bool Load(const std::string& file) override;
 
-  virtual bool StabilizeRestingState(PhysiologyEngine& engine);
-  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine);
-  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions);
+  virtual bool StabilizeRestingState(PhysiologyEngine& engine) override;
+  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) override;
+  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) override;
 
   virtual SEScalarTime& GetRestingStabilizationTime();
   virtual double GetRestingStabilizationTime(const TimeUnit& unit) const;
@@ -75,10 +78,14 @@ public:
   virtual SEScalarTime& GetFeedbackStabilizationTime();
   virtual double GetFeedbackStabilizationTime(const TimeUnit& unit) const;
 
+  virtual bool HasConditionCriteria(const  char* name) const;
   virtual bool HasConditionCriteria(const std::string& name) const;
+  virtual void RemoveConditionCriteria(const char* name);
   virtual void RemoveConditionCriteria(const std::string& name);
   virtual const std::vector<PhysiologyEngineTimedStabilizationCriteria*>& GetConditionCriteria() const;
+  virtual PhysiologyEngineTimedStabilizationCriteria& GetConditionCriteria(const char* name);
   virtual PhysiologyEngineTimedStabilizationCriteria& GetConditionCriteria(const std::string& name);
+  virtual PhysiologyEngineTimedStabilizationCriteria* GetConditionCriteria(const char* name) const;
   virtual PhysiologyEngineTimedStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
 
 protected:

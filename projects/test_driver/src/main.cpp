@@ -30,11 +30,11 @@ int main(int argc, char* argv[])
     std::string type = argv[1];
     std::string test= argv[2];
     std::string dir = argv[3];
-    if (type.compare("CDM") == 0) {
+    if (type =="CDM") {
       CommonDataModelTest executor;
       executor.GetLogger()->LogToConsole(true);
       executor.RunTest(test, dir);
-    } else if(type.compare("BGE")==0) {
+    } else if(type =="BGE") {
       BioGearsEngineTest executor;
       executor.RunTest(test, dir);
     } else {

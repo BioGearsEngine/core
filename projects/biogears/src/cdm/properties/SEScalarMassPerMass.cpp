@@ -16,6 +16,16 @@ namespace biogears {
 const MassPerMassUnit MassPerMassUnit::ug_Per_kg("ug/kg");
 const MassPerMassUnit MassPerMassUnit::mg_Per_g("mg/g");
 
+MassPerMassUnit::MassPerMassUnit(const char* u)
+  : MassPerMassUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+MassPerMassUnit::MassPerMassUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerMassData* SEScalarMassPerMass::Unload() const
 {
   if (!IsValid())
@@ -24,24 +34,35 @@ CDM::ScalarMassPerMassData* SEScalarMassPerMass::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool MassPerMassUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerMassUnit::IsValidUnit(const char* unit)
 {
-  if (ug_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_kg.GetString(),unit) == 0)
     return true;
-  if (mg_Per_g.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_g.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const MassPerMassUnit& MassPerMassUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerMassUnit::IsValidUnit(const std::string& unit)
 {
-  if (ug_Per_kg.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const MassPerMassUnit& MassPerMassUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(ug_Per_kg.GetString(),unit) == 0)
     return ug_Per_kg;
-  if (mg_Per_g.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_g.GetString(),unit) == 0)
     return mg_Per_g;
   std::stringstream err;
   err << unit << " is not a valid MassPerMass unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const MassPerMassUnit& MassPerMassUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

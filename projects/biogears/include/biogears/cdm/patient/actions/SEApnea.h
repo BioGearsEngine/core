@@ -20,18 +20,18 @@ class SEScalar0To1;
 class BIOGEARS_API SEApnea : public SEPatientAction {
 public:
   SEApnea();
-  virtual ~SEApnea();
+  virtual ~SEApnea() override;
 
   static constexpr const char* TypeTag() { return "SEApena"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ApneaData& in);
-  virtual CDM::ApneaData* Unload() const;
+  virtual CDM::ApneaData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::ApneaData& data) const;
@@ -40,7 +40,7 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Severity;

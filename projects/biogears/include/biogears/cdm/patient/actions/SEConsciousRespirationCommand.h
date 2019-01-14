@@ -33,6 +33,8 @@ protected:
 
 public:
   virtual std::string GetComment() const;
+  virtual const char* GetComment_cStr() const;
+  virtual void SetComment(const char* comment);
   virtual void SetComment(const std::string& comment);
   virtual bool HasComment() const;
   virtual void InvalidateComment();

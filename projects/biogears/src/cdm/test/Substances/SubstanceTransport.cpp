@@ -83,9 +83,9 @@ void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirecto
   // Make our paths, remember to create your NodeCompartments before you create PathLinks
   SELiquidCompartmentLink& GroundToCmpt1 = cmptMgr.CreateLiquidLink(GroundCmpt, Cmpt1, groundToNode1.GetName());
   GroundToCmpt1.MapPath(groundToNode1);
-  SELiquidCompartmentLink& Cmpt1ToCmpt2 = cmptMgr.CreateLiquidLink(Cmpt1, Cmpt2, Cmpt1.GetName() + "To" + Cmpt2.GetName());
+  SELiquidCompartmentLink& Cmpt1ToCmpt2 = cmptMgr.CreateLiquidLink(Cmpt1, Cmpt2, std::string{ Cmpt1.GetName() } +"To" + Cmpt2.GetName());
   Cmpt1ToCmpt2.MapPath(Node1ToNode2); // Need to map it yourself, CDM does not know where you want to put it...
-  SELiquidCompartmentLink& Cmpt2ToGround = cmptMgr.CreateLiquidLink(Cmpt2, GroundCmpt, Cmpt2.GetName() + "To" + GroundCmpt.GetName());
+  SELiquidCompartmentLink& Cmpt2ToGround = cmptMgr.CreateLiquidLink(Cmpt2, GroundCmpt, std::string{ Cmpt2.GetName() } +"To" + GroundCmpt.GetName());
   Cmpt2ToGround.MapPath(Node2ToGround); // Need to map it yourself, CDM does not know where you want to put it...
   graph->AddLink(GroundToCmpt1);
   graph->AddLink(Cmpt1ToCmpt2);
@@ -102,16 +102,16 @@ void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirecto
   while (time < 10.0) {
     double totalMass = 0.0;
     for (SELiquidCompartment* cmpt : graph->GetCompartments()) {
-      outTrk.Probe(cmpt->GetName() + "Mass(g)", cmpt->GetSubstanceQuantity(*CO2)->GetMass(MassUnit::g));
-      outTrk.Probe(cmpt->GetName() + "Concentration(g/L)", cmpt->GetSubstanceQuantity(*CO2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
-      outTrk.Probe(cmpt->GetName() + "Volume(L)", cmpt->GetVolume(VolumeUnit::L));
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Mass(g)", cmpt->GetSubstanceQuantity(*CO2)->GetMass(MassUnit::g));
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Concentration(g/L)", cmpt->GetSubstanceQuantity(*CO2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Volume(L)", cmpt->GetVolume(VolumeUnit::L));
       totalMass += cmpt->GetSubstanceQuantity(*CO2)->GetMass(MassUnit::g);
     }
     for (SELiquidCompartmentLink* link : graph->GetLinks()) {
       if (link->HasFlow())
-        outTrk.Probe(link->GetName() + "Flow(L/s)", link->GetFlow(VolumePerTimeUnit::L_Per_s));
+        outTrk.Probe(std::string{ link->GetName()  }+ "Flow(L/s)", link->GetFlow(VolumePerTimeUnit::L_Per_s));
       else
-        outTrk.Probe(link->GetName() + "Flow(L/s)", 0);
+        outTrk.Probe(std::string{ link->GetName()  }+ "Flow(L/s)", 0);
     }
     outTrk.Probe("TotalMass(g)", totalMass);
     if (time == 0)
@@ -279,17 +279,17 @@ void CommonDataModelTest::LiquidTransportTest(const std::string& rptDirectory)
     CircuitCalculator.PostProcess(circuit);
 
     for (SELiquidCompartmentLink* link : graph->GetLinks()) {
-      outTrk.Probe(link->GetName() + "Flow", link->GetFlow(VolumePerTimeUnit::mL_Per_s));
+      outTrk.Probe(std::string{ link->GetName()  }+ "Flow", link->GetFlow(VolumePerTimeUnit::mL_Per_s));
     }
     for (SELiquidCompartment* cmpt : graph->GetCompartments()) {
-      outTrk.Probe(cmpt->GetName() + "Volume", cmpt->HasVolume() ? cmpt->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "Pressure", cmpt->HasPressure() ? cmpt->GetPressure(PressureUnit::mmHg) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Volume", cmpt->HasVolume() ? cmpt->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Pressure", cmpt->HasPressure() ? cmpt->GetPressure(PressureUnit::mmHg) : SEScalar::dNaN());
       SELiquidSubstanceQuantity* CO2Q = cmpt->GetSubstanceQuantity(*CO2);
       SELiquidSubstanceQuantity* HbQ = cmpt->GetSubstanceQuantity(*Hb);
-      outTrk.Probe(cmpt->GetName() + "MassCO2", CO2Q->HasMass() ? CO2Q->GetMass(MassUnit::mg) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "MassHb", HbQ->HasMass() ? HbQ->GetMass(MassUnit::mg) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "ConcentrationCO2", CO2Q->HasConcentration() ? CO2Q->GetConcentration(MassPerVolumeUnit::mg_Per_mL) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "ConcentrationHb", HbQ->HasConcentration() ? HbQ->GetConcentration(MassPerVolumeUnit::mg_Per_mL) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "MassCO2", CO2Q->HasMass() ? CO2Q->GetMass(MassUnit::mg) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "MassHb", HbQ->HasMass() ? HbQ->GetMass(MassUnit::mg) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "ConcentrationCO2", CO2Q->HasConcentration() ? CO2Q->GetConcentration(MassPerVolumeUnit::mg_Per_mL) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "ConcentrationHb", HbQ->HasConcentration() ? HbQ->GetConcentration(MassPerVolumeUnit::mg_Per_mL) : SEScalar::dNaN());
     }
 
     if (!serialized && time > 8.0) {
@@ -450,20 +450,20 @@ void CommonDataModelTest::GasTransportTest(const std::string& rptDirectory)
     CircuitCalculator.PostProcess(circuit);
 
     for (SEGasCompartmentLink* link : graph->GetLinks()) {
-      outTrk.Probe(link->GetName() + "Flow", link->GetFlow(VolumePerTimeUnit::mL_Per_s));
+      outTrk.Probe(std::string{ link->GetName()  }+ "Flow", link->GetFlow(VolumePerTimeUnit::mL_Per_s));
     }
     for (SEGasCompartment* cmpt : graph->GetCompartments()) {
-      outTrk.Probe(cmpt->GetName() + "Volume", cmpt->HasVolume() ? cmpt->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "Pressure", cmpt->HasPressure() ? cmpt->GetPressure(PressureUnit::mmHg) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Volume", cmpt->HasVolume() ? cmpt->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Pressure", cmpt->HasPressure() ? cmpt->GetPressure(PressureUnit::mmHg) : SEScalar::dNaN());
       SEGasSubstanceQuantity* O2Q = cmpt->GetSubstanceQuantity(*O2);
-      outTrk.Probe(cmpt->GetName() + "O2-Volume", O2Q->HasVolume() ? O2Q->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "O2-VolumeFraction", O2Q->HasVolumeFraction() ? O2Q->GetVolumeFraction().GetValue() : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "O2-Volume", O2Q->HasVolume() ? O2Q->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "O2-VolumeFraction", O2Q->HasVolumeFraction() ? O2Q->GetVolumeFraction().GetValue() : SEScalar::dNaN());
       SEGasSubstanceQuantity* CO2Q = cmpt->GetSubstanceQuantity(*CO2);
-      outTrk.Probe(cmpt->GetName() + "CO2-Volume", CO2Q->HasVolume() ? CO2Q->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "CO2-VolumeFraction", CO2Q->HasVolumeFraction() ? CO2Q->GetVolumeFraction().GetValue() : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "CO2-Volume", CO2Q->HasVolume() ? CO2Q->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "CO2-VolumeFraction", CO2Q->HasVolumeFraction() ? CO2Q->GetVolumeFraction().GetValue() : SEScalar::dNaN());
       // Delete this when rebaselined
-      outTrk.Probe(cmpt->GetName() + "Volume", CO2Q->HasVolume() ? CO2Q->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
-      outTrk.Probe(cmpt->GetName() + "VolumeFraction", CO2Q->HasVolumeFraction() ? CO2Q->GetVolumeFraction().GetValue() : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "Volume", CO2Q->HasVolume() ? CO2Q->GetVolume(VolumeUnit::mL) : SEScalar::dNaN());
+      outTrk.Probe(std::string{ cmpt->GetName() }+ "VolumeFraction", CO2Q->HasVolumeFraction() ? CO2Q->GetVolumeFraction().GetValue() : SEScalar::dNaN());
     }
 
     if (!serialized && time > 8.0) {

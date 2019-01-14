@@ -19,6 +19,16 @@ const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_mL("mmHg min/mL");
 const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_L("mmHg min/L");
 const FlowResistanceUnit FlowResistanceUnit::Pa_s_Per_m3("Pa s/m^3");
 
+FlowResistanceUnit::FlowResistanceUnit(const char* u)
+  : FlowResistanceUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+FlowResistanceUnit::FlowResistanceUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarFlowResistanceData* SEScalarFlowResistance::Unload() const
 {
   if (!IsValid())
@@ -27,36 +37,47 @@ CDM::ScalarFlowResistanceData* SEScalarFlowResistance::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool FlowResistanceUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool FlowResistanceUnit::IsValidUnit(const char* unit)
 {
-  if (cmH2O_s_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(cmH2O_s_Per_L.GetString(),unit) == 0)
     return true;
-  if (mmHg_s_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_s_Per_mL.GetString(),unit) == 0)
     return true;
-  if (mmHg_min_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_min_Per_mL.GetString(),unit) == 0)
     return true;
-  if (mmHg_min_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_min_Per_L.GetString(),unit) == 0)
     return true;
-  if (Pa_s_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(Pa_s_Per_m3.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const FlowResistanceUnit& FlowResistanceUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool FlowResistanceUnit::IsValidUnit(const std::string& unit)
 {
-  if (cmH2O_s_Per_L.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const FlowResistanceUnit& FlowResistanceUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(cmH2O_s_Per_L.GetString(),unit) == 0)
     return cmH2O_s_Per_L;
-  if (mmHg_s_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_s_Per_mL.GetString(),unit) == 0)
     return mmHg_s_Per_mL;
-  if (mmHg_min_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_min_Per_mL.GetString(),unit) == 0)
     return mmHg_min_Per_mL;
-  if (mmHg_min_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_min_Per_L.GetString(),unit) == 0)
     return mmHg_min_Per_L;
-  if (Pa_s_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(Pa_s_Per_m3.GetString(),unit) == 0)
     return Pa_s_Per_m3;
   std::stringstream err;
   err << unit << " is not a valid FlowResistance unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const FlowResistanceUnit& FlowResistanceUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+  //-----------------------------------------------------------------------------
 }

@@ -26,12 +26,12 @@ SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
   m_LogP = nullptr;
   m_OralAbsorptionRateConstant = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SESubstancePhysicochemicals::~SESubstancePhysicochemicals()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::Clear()
 {
   SAFE_DELETE(m_AcidDissociationConstant);
@@ -42,7 +42,7 @@ void SESubstancePhysicochemicals::Clear()
   SAFE_DELETE(m_LogP);
   SAFE_DELETE(m_OralAbsorptionRateConstant);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::IsValid() const
 {
   if (!HasAcidDissociationConstant())
@@ -59,7 +59,12 @@ bool SESubstancePhysicochemicals::IsValid() const
     return false;
   return true;
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SESubstancePhysicochemicals::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name)
 {
   if (name.compare("AcidDissociationConstant") == 0)
@@ -75,7 +80,7 @@ const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name)
 
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::Load(const CDM::SubstancePhysicochemicalData& in)
 {
   Clear();
@@ -91,7 +96,7 @@ bool SESubstancePhysicochemicals::Load(const CDM::SubstancePhysicochemicalData& 
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::SubstancePhysicochemicalData* SESubstancePhysicochemicals::Unload() const
 {
   if (!IsValid())
@@ -100,7 +105,7 @@ CDM::SubstancePhysicochemicalData* SESubstancePhysicochemicals::Unload() const
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data) const
 {
   if (HasAcidDissociationConstant())
@@ -118,79 +123,89 @@ void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data
   if (HasOralAbsorptionRateConstant())
     data.OralAbsorptionRateConstant(std::unique_ptr<CDM::ScalarData>(m_OralAbsorptionRateConstant->Unload()));
 };
-
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasAcidDissociationConstant() const
 {
   return (m_AcidDissociationConstant == nullptr) ? false : m_AcidDissociationConstant->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetAcidDissociationConstant()
 {
   if (m_AcidDissociationConstant == nullptr)
     m_AcidDissociationConstant = new SEScalar();
   return *m_AcidDissociationConstant;
 }
+//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetAcidDissociationConstant() const
 {
   if (m_AcidDissociationConstant == nullptr)
     return SEScalar::dNaN();
   return m_AcidDissociationConstant->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumSubstanceBindingProtein::value SESubstancePhysicochemicals::GetBindingProtein() const
 {
   return m_BindingProtein;
 }
+//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::SetBindingProtein(CDM::enumSubstanceBindingProtein::value protein)
 {
   m_BindingProtein = protein;
 }
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasBindingProtein() const
 {
   return m_BindingProtein == ((CDM::enumSubstanceBindingProtein::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::InvalidateBindingProtein()
 {
   m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasBloodPlasmaRatio() const
 {
   return (m_BloodPlasmaRatio == nullptr) ? false : m_BloodPlasmaRatio->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetBloodPlasmaRatio()
 {
   if (m_BloodPlasmaRatio == nullptr)
     m_BloodPlasmaRatio = new SEScalar();
   return *m_BloodPlasmaRatio;
 }
+//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetBloodPlasmaRatio() const
 {
   if (m_BloodPlasmaRatio == nullptr)
     return SEScalar::dNaN();
   return m_BloodPlasmaRatio->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasFractionUnboundInPlasma() const
 {
   return (m_FractionUnboundInPlasma == nullptr) ? false : m_FractionUnboundInPlasma->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SESubstancePhysicochemicals::GetFractionUnboundInPlasma()
 {
   if (m_FractionUnboundInPlasma == nullptr)
     m_FractionUnboundInPlasma = new SEScalarFraction();
   return *m_FractionUnboundInPlasma;
 }
+//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetFractionUnboundInPlasma() const
 {
   if (m_FractionUnboundInPlasma == nullptr)
     return SEScalar::dNaN();
   return m_FractionUnboundInPlasma->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumSubstanceIonicState::value SESubstancePhysicochemicals::GetIonicState() const
 {
   return m_IonicState;
 }
+//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::SetIonicState(CDM::enumSubstanceIonicState::value state)
 {
   m_IonicState = state;
@@ -199,33 +214,38 @@ bool SESubstancePhysicochemicals::HasIonicState() const
 {
   return m_IonicState == ((CDM::enumSubstanceIonicState::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::InvalidateIonicState()
 {
   m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasLogP() const
 {
   return (m_LogP == nullptr) ? false : m_LogP->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetLogP()
 {
   if (m_LogP == nullptr)
     m_LogP = new SEScalar();
   return *m_LogP;
 }
+//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetLogP() const
 {
   if (m_LogP == nullptr)
     return SEScalar::dNaN();
   return m_LogP->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasOralAbsorptionRateConstant() const
 {
   return (m_OralAbsorptionRateConstant == nullptr) ? false : m_OralAbsorptionRateConstant->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetOralAbsorptionRateConstant()
+//-----------------------------------------------------------------------------
 {
   if (m_OralAbsorptionRateConstant == nullptr)
     m_OralAbsorptionRateConstant = new SEScalar();
@@ -237,4 +257,5 @@ double SESubstancePhysicochemicals::GetOralAbsorptionRateConstant() const
     return SEScalar::dNaN();
   return m_OralAbsorptionRateConstant->GetValue();
 }
+//-----------------------------------------------------------------------------
 }

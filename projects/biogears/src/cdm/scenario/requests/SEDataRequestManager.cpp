@@ -21,12 +21,32 @@ SEDataRequestManager::SEDataRequestManager(Logger* logger)
   m_OverrideDecimalFormatting = nullptr;
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 SEDataRequestManager::~SEDataRequestManager()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
+const char * SEDataRequestManager::GetResultFilename_cStr() const
+{
+  return m_ResultsFile.c_str();
+}
+//-----------------------------------------------------------------------------
+std::string SEDataRequestManager::GetResultFilename() const
+{
+  return m_ResultsFile;
+}
+//-----------------------------------------------------------------------------
+void SEDataRequestManager::SetResultsFilename(const char* name)
+{
+  m_ResultsFile = name;
+}
+//-----------------------------------------------------------------------------
+void SEDataRequestManager::SetResultsFilename(const std::string& name)
+{
+  m_ResultsFile = name;
+}
+//-----------------------------------------------------------------------------
 void SEDataRequestManager::Clear()
 {
   m_SamplesPerSecond = 0; // Sample every time step
@@ -34,7 +54,7 @@ void SEDataRequestManager::Clear()
   SAFE_DELETE(m_DefaultDecimalFormatting);
   SAFE_DELETE(m_OverrideDecimalFormatting);
 }
-
+//-----------------------------------------------------------------------------
 bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceManager& subMgr)
 {
   Clear();
@@ -57,14 +77,14 @@ bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceMana
   }
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::DataRequestsData* SEDataRequestManager::Unload() const
 {
   CDM::DataRequestsData* data = new CDM::DataRequestsData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEDataRequestManager::Unload(CDM::DataRequestsData& data) const
 {
   data.SamplesPerSecond(m_SamplesPerSecond);
@@ -77,93 +97,104 @@ void SEDataRequestManager::Unload(CDM::DataRequestsData& data) const
   for (SEDataRequest* dr : m_Requests)
     data.DataRequest().push_back(std::unique_ptr<CDM::DataRequestData>(dr->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEDataRequestManager::HasDefaultDecimalFormatting() const
 {
   return m_DefaultDecimalFormatting != nullptr;
 }
+//-----------------------------------------------------------------------------
 SEDecimalFormat& SEDataRequestManager::GetDefaultDecimalFormatting()
 {
   if (m_DefaultDecimalFormatting == nullptr)
     m_DefaultDecimalFormatting = new SEDecimalFormat();
   return *m_DefaultDecimalFormatting;
 }
+//-----------------------------------------------------------------------------
 void SEDataRequestManager::RemoveDefaultDecimalFormatting()
 {
   SAFE_DELETE(m_DefaultDecimalFormatting);
 }
-
+//-----------------------------------------------------------------------------
 bool SEDataRequestManager::HasOverrideDecimalFormatting() const
 {
   return m_OverrideDecimalFormatting != nullptr;
 }
+//-----------------------------------------------------------------------------
 SEDecimalFormat& SEDataRequestManager::GetOverrideDecimalFormatting()
 {
   if (m_OverrideDecimalFormatting == nullptr)
     m_OverrideDecimalFormatting = new SEDecimalFormat();
   return *m_OverrideDecimalFormatting;
 }
+//-----------------------------------------------------------------------------
 void SEDataRequestManager::RemoveOverrideDecimalFormatting()
 {
   SAFE_DELETE(m_OverrideDecimalFormatting);
 }
-
+//-----------------------------------------------------------------------------
 SEEnvironmentDataRequest& SEDataRequestManager::CreateEnvironmentDataRequest(const SEDecimalFormat* dfault)
 {
   SEEnvironmentDataRequest* dr = new SEEnvironmentDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
+//-----------------------------------------------------------------------------
 SEEquipmentDataRequest& SEDataRequestManager::CreateEquipmentDataRequest(const SEDecimalFormat* dfault)
 {
   SEEquipmentDataRequest* dr = new SEEquipmentDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
+//-----------------------------------------------------------------------------
 SEPatientDataRequest& SEDataRequestManager::CreatePatientDataRequest(const SEDecimalFormat* dfault)
 {
   SEPatientDataRequest* dr = new SEPatientDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
+//-----------------------------------------------------------------------------
 SEPhysiologyDataRequest& SEDataRequestManager::CreatePhysiologyDataRequest(const SEDecimalFormat* dfault)
 {
   SEPhysiologyDataRequest* dr = new SEPhysiologyDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
+//-----------------------------------------------------------------------------
 SESubstanceDataRequest& SEDataRequestManager::CreateSubstanceDataRequest(const SEDecimalFormat* dfault)
 {
   SESubstanceDataRequest* dr = new SESubstanceDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
-
+//-----------------------------------------------------------------------------
 SEGasCompartmentDataRequest& SEDataRequestManager::CreateGasCompartmentDataRequest(const SEDecimalFormat* dfault)
 {
   SEGasCompartmentDataRequest* dr = new SEGasCompartmentDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
+//-----------------------------------------------------------------------------
 SELiquidCompartmentDataRequest& SEDataRequestManager::CreateLiquidCompartmentDataRequest(const SEDecimalFormat* dfault)
 {
   SELiquidCompartmentDataRequest* dr = new SELiquidCompartmentDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
+//-----------------------------------------------------------------------------
 SEThermalCompartmentDataRequest& SEDataRequestManager::CreateThermalCompartmentDataRequest(const SEDecimalFormat* dfault)
 {
   SEThermalCompartmentDataRequest* dr = new SEThermalCompartmentDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
+//-----------------------------------------------------------------------------
 SETissueCompartmentDataRequest& SEDataRequestManager::CreateTissueCompartmentDataRequest(const SEDecimalFormat* dfault)
 {
   SETissueCompartmentDataRequest* dr = new SETissueCompartmentDataRequest(dfault);
   m_Requests.push_back(dr);
   return *dr;
 }
-
+//-----------------------------------------------------------------------------
 SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& data, SESubstanceManager& substances, const SEDecimalFormat* dfault)
 {
   const CDM::DataRequestData* drData = &data;
@@ -226,4 +257,5 @@ SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& dat
     substances.GetLogger()->Error("Unsupported DataRequest Received", "SEDataRequest::newFromBind");
   return nullptr;
 }
+//-----------------------------------------------------------------------------
 }

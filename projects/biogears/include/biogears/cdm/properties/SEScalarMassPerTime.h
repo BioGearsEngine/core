@@ -17,13 +17,14 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API MassPerTimeUnit : public CCompoundUnit {
 public:
-  MassPerTimeUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
+  MassPerTimeUnit(const char* u);
+  MassPerTimeUnit(const std::string& u);
+
   virtual ~MassPerTimeUnit() = default;
 
+  static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
+  static const MassPerTimeUnit& GetCompoundUnit(const char* unit);
   static const MassPerTimeUnit& GetCompoundUnit(const std::string& unit);
 
   static const MassPerTimeUnit g_Per_s;

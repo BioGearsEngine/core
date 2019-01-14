@@ -11,22 +11,28 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 
+#include <biogears/cdm/compartment/SECompartmentGraph.inl>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
-#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
-#include <biogears/cdm/compartment/SECompartmentGraph.inl>
 
 namespace biogears {
+SEGasCompartment::SEGasCompartment(const char* name, Logger* logger)
+  : SEGasCompartment(std::string{ name }, logger)
+{
+}
+//-------------------------------------------------------------------------------
 SEGasCompartment::SEGasCompartment(const std::string& name, Logger* logger)
   : SEFluidCompartment(name, logger)
 {
 }
+//-------------------------------------------------------------------------------
 SEGasCompartment::~SEGasCompartment()
 {
 }
-
+//-------------------------------------------------------------------------------
 bool SEGasCompartment::Load(const CDM::GasCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
 {
   if (!SEFluidCompartment::Load(in, circuits))
@@ -35,7 +41,7 @@ bool SEGasCompartment::Load(const CDM::GasCompartmentData& in, SESubstanceManage
     for (const CDM::GasSubstanceQuantityData& d : in.SubstanceQuantity()) {
       SESubstance* sub = subMgr.GetSubstance(d.Substance());
       if (sub == nullptr) {
-        Error("Could not find a substance for " + d.Substance());
+        Error("Could not find a substance for " + std::string{ d.Substance() });
         return false;
       }
       CreateSubstanceQuantity(*sub).Load(d);
@@ -44,26 +50,28 @@ bool SEGasCompartment::Load(const CDM::GasCompartmentData& in, SESubstanceManage
   }
   return true;
 }
+//-------------------------------------------------------------------------------
 CDM::GasCompartmentData* SEGasCompartment::Unload()
 {
   CDM::GasCompartmentData* data = new CDM::GasCompartmentData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SEGasCompartment::Unload(CDM::GasCompartmentData& data)
 {
   SEFluidCompartment::Unload(data);
   for (SEGasSubstanceQuantity* subQ : m_SubstanceQuantities)
     data.SubstanceQuantity().push_back(std::unique_ptr<CDM::GasSubstanceQuantityData>(subQ->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 void SEGasCompartment::StateChange()
 {
   m_Leaves.clear();
   FindLeaves<SEGasCompartment>(*this, m_Leaves);
   m_Nodes.StateChange();
 }
-
+//-------------------------------------------------------------------------------
 void SEGasCompartment::Balance(BalanceGasBy by)
 {
   if (!m_FluidChildren.empty())
@@ -118,13 +126,13 @@ void SEGasCompartment::Balance(BalanceGasBy by)
           GeneralMath::CalculatePartialPressureInGas(subQ->GetVolumeFraction(), GetPressure(), subQ->GetPartialPressure(), m_Logger);
       }
       if (!SEScalar::IsZero(1 - totalFraction, ZERO_APPROX))
-        Fatal(GetName() + " Compartment's volume fractions do not sum up to 1");
+        Fatal(std::string{ GetName() } +" Compartment's volume fractions do not sum up to 1");
     }
     break;
   }
   }
 }
-
+//-------------------------------------------------------------------------------
 void SEGasCompartment::AddChild(SEGasCompartment& child)
 {
   if (HasNodeMapping()) {
@@ -138,7 +146,7 @@ void SEGasCompartment::AddChild(SEGasCompartment& child)
   for (SEGasSubstanceQuantity* subQ : m_SubstanceQuantities)
     subQ->AddChild(child.CreateSubstanceQuantity(subQ->GetSubstance()));
 }
-
+//-------------------------------------------------------------------------------
 SEGasSubstanceQuantity& SEGasCompartment::CreateSubstanceQuantity(SESubstance& substance)
 {
   SEGasSubstanceQuantity* subQ = GetSubstanceQuantity(substance);
@@ -154,4 +162,5 @@ SEGasSubstanceQuantity& SEGasCompartment::CreateSubstanceQuantity(SESubstance& s
   }
   return *subQ;
 }
+//-------------------------------------------------------------------------------
 }

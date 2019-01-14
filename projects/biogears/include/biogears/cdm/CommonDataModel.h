@@ -65,10 +65,17 @@ struct CommonDataModelException : public std::runtime_error {
   {
   }
 
+  CommonDataModelException(const char* _Message)
+    : std::runtime_error(_Message)
+  {
+  }
+
   CommonDataModelException(const std::string& _Message)
     : std::runtime_error(_Message)
   {
   }
+
+  ~CommonDataModelException() override = default;
 };
 }
 // Basics

@@ -21,18 +21,18 @@ SECompartmentSubstanceDataRequest::SECompartmentSubstanceDataRequest(const SEDec
 {
   m_Substance = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SECompartmentSubstanceDataRequest::~SECompartmentSubstanceDataRequest()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Clear()
 {
   SECompartmentDataRequest::Clear();
   m_Substance = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 size_t SECompartmentSubstanceDataRequest::HashCode()
 {
   size_t h = SECompartmentDataRequest::HashCode();
@@ -40,7 +40,7 @@ size_t SECompartmentSubstanceDataRequest::HashCode()
     h += std::hash<std::string>()(m_Substance->GetName());
   return h;
 }
-
+//-----------------------------------------------------------------------------
 bool SECompartmentSubstanceDataRequest::Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances)
 {
   SECompartmentDataRequest::Load(in);
@@ -48,31 +48,39 @@ bool SECompartmentSubstanceDataRequest::Load(const CDM::CompartmentSubstanceData
     SetSubstance(substances.GetSubstance(in.Substance().get()));
   return true;
 }
-
+//-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Unload(CDM::CompartmentSubstanceDataRequestData& data) const
 {
   SECompartmentDataRequest::Unload(data);
   if (HasSubstance())
     data.Substance(m_Substance->GetName());
 }
-
+//-----------------------------------------------------------------------------
 SESubstance* SECompartmentSubstanceDataRequest::GetSubstance() const
 {
   return m_Substance;
 }
+//-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::SetSubstance(SESubstance* substance)
 {
   m_Substance = substance;
 }
+//-----------------------------------------------------------------------------
 bool SECompartmentSubstanceDataRequest::HasSubstance() const
 {
   return m_Substance == nullptr ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::InvalidateSubstance()
 {
   m_Substance = nullptr;
 }
-
+//-----------------------------------------------------------------------------
+void SECompartmentSubstanceDataRequest::Set(const char* cmpt, SESubstance& substance, const char* name, const char* unit)
+{
+  Set(std::string{ cmpt }, substance, std::string{ name }, std::string{ unit });
+}
+  //-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit)
 {
   m_Compartment = cmpt;
@@ -81,7 +89,12 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
   m_RequestedUnit = unit;
   m_Unit = nullptr;
 }
-
+//-----------------------------------------------------------------------------
+void SECompartmentSubstanceDataRequest::Set(const char* cmpt, SESubstance& substance, const char* name, const CCompoundUnit& unit)
+{
+  Set(std::string{ cmpt }, substance, std::string{ name }, unit);
+}
+  //-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit)
 {
   m_Compartment = cmpt;
@@ -90,4 +103,5 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
   m_RequestedUnit = "";
   m_Unit = &unit;
 }
+//-----------------------------------------------------------------------------
 }

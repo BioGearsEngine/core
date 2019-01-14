@@ -20,6 +20,16 @@ const LengthUnit LengthUnit::um("um");
 const LengthUnit LengthUnit::in("in");
 const LengthUnit LengthUnit::ft("ft");
 
+LengthUnit::LengthUnit(const char* u)
+  : LengthUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+LengthUnit::LengthUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarLengthData* SEScalarLength::Unload() const
 {
   if (!IsValid())
@@ -28,40 +38,51 @@ CDM::ScalarLengthData* SEScalarLength::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool LengthUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool LengthUnit::IsValidUnit(const char* unit)
 {
-  if (m.GetString().compare(unit) == 0)
+  if (strcmp(m.GetString(),unit) == 0)
     return true;
-  if (cm.GetString().compare(unit) == 0)
+  if (strcmp(cm.GetString(),unit) == 0)
     return true;
-  if (mm.GetString().compare(unit) == 0)
+  if (strcmp(mm.GetString(),unit) == 0)
     return true;
-  if (um.GetString().compare(unit) == 0)
+  if (strcmp(um.GetString(),unit) == 0)
     return true;
-  if (in.GetString().compare(unit) == 0)
+  if (strcmp(in.GetString(),unit) == 0)
     return true;
-  if (ft.GetString().compare(unit) == 0)
+  if (strcmp(ft.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const LengthUnit& LengthUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool LengthUnit::IsValidUnit(const std::string& unit)
 {
-  if (m.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const LengthUnit& LengthUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(m.GetString(),unit) == 0)
     return m;
-  if (cm.GetString().compare(unit) == 0)
+  if (strcmp(cm.GetString(),unit) == 0)
     return cm;
-  if (mm.GetString().compare(unit) == 0)
+  if (strcmp(mm.GetString(),unit) == 0)
     return mm;
-  if (um.GetString().compare(unit) == 0)
+  if (strcmp(um.GetString(),unit) == 0)
     return um;
-  if (in.GetString().compare(unit) == 0)
+  if (strcmp(in.GetString(),unit) == 0)
     return in;
-  if (ft.GetString().compare(unit) == 0)
+  if (strcmp(ft.GetString(),unit) == 0)
     return ft;
   std::stringstream err;
   err << unit << " is not a valid Length unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const LengthUnit& LengthUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

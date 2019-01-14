@@ -17,40 +17,40 @@ SEChronicVentricularSystolicDysfunction::SEChronicVentricularSystolicDysfunction
   : SEChronicHeartFailure()
 {
 }
-
+//-----------------------------------------------------------------------------
 SEChronicVentricularSystolicDysfunction::~SEChronicVentricularSystolicDysfunction()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEChronicVentricularSystolicDysfunction::Clear()
 {
   SEChronicHeartFailure::Clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SEChronicVentricularSystolicDysfunction::IsValid() const
 {
   return SEChronicHeartFailure::IsValid();
 }
-
+//-----------------------------------------------------------------------------
 bool SEChronicVentricularSystolicDysfunction::Load(const CDM::ChronicVentricularSystolicDysfunctionData& in)
 {
   SEChronicHeartFailure::Load(in);
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::ChronicVentricularSystolicDysfunctionData* SEChronicVentricularSystolicDysfunction::Unload() const
 {
   CDM::ChronicVentricularSystolicDysfunctionData* data(new CDM::ChronicVentricularSystolicDysfunctionData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEChronicVentricularSystolicDysfunction::Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const
 {
   SEChronicHeartFailure::Unload(data);
 }
-
+//-----------------------------------------------------------------------------
 void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Ventricular Systolic Dysfunction Heart Failure";
@@ -58,4 +58,5 @@ void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

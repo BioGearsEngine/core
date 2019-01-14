@@ -25,19 +25,19 @@ SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger)
   m_InflammationCoefficient = nullptr;
   m_ParticulateSizeDistribution = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SESubstanceAerosolization::~SESubstanceAerosolization()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SESubstanceAerosolization::Clear()
 {
   SAFE_DELETE(m_BronchioleModifier);
   SAFE_DELETE(m_InflammationCoefficient);
   SAFE_DELETE(m_ParticulateSizeDistribution);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::IsValid() const
 {
   if (!HasBronchioleModifier())
@@ -48,7 +48,12 @@ bool SESubstanceAerosolization::IsValid() const
     return false;
   return true;
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SESubstanceAerosolization::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
 {
   if (name.compare("BronchioleModifier") == 0)
@@ -57,7 +62,7 @@ const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
     return &GetInflammationCoefficient();
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::Load(const CDM::SubstanceAerosolizationData& in)
 {
   Clear();
@@ -66,7 +71,7 @@ bool SESubstanceAerosolization::Load(const CDM::SubstanceAerosolizationData& in)
   GetParticulateSizeDistribution().Load(in.ParticulateSizeDistribution());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::SubstanceAerosolizationData* SESubstanceAerosolization::Unload() const
 {
   if (!IsValid())
@@ -75,7 +80,7 @@ CDM::SubstanceAerosolizationData* SESubstanceAerosolization::Unload() const
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SESubstanceAerosolization::Unload(CDM::SubstanceAerosolizationData& data) const
 {
   if (HasBronchioleModifier())
@@ -85,53 +90,60 @@ void SESubstanceAerosolization::Unload(CDM::SubstanceAerosolizationData& data) c
   if (HasParticulateSizeDistribution())
     data.ParticulateSizeDistribution(std::unique_ptr<CDM::HistogramFractionVsLengthData>(m_ParticulateSizeDistribution->Unload()));
 };
-
+//-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasBronchioleModifier() const
 {
   return (m_BronchioleModifier == nullptr) ? false : m_BronchioleModifier->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarNeg1To1& SESubstanceAerosolization::GetBronchioleModifier()
 {
   if (m_BronchioleModifier == nullptr)
     m_BronchioleModifier = new SEScalarNeg1To1();
   return *m_BronchioleModifier;
 }
+//-----------------------------------------------------------------------------
 double SESubstanceAerosolization::GetBronchioleModifier() const
 {
   if (m_BronchioleModifier == nullptr)
     return SEScalar::dNaN();
   return m_BronchioleModifier->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasInflammationCoefficient() const
 {
   return (m_InflammationCoefficient == nullptr) ? false : m_InflammationCoefficient->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar0To1& SESubstanceAerosolization::GetInflammationCoefficient()
 {
   if (m_InflammationCoefficient == nullptr)
     m_InflammationCoefficient = new SEScalar0To1();
   return *m_InflammationCoefficient;
 }
+//-----------------------------------------------------------------------------
 double SESubstanceAerosolization::GetInflammationCoefficient() const
 {
   if (m_InflammationCoefficient == nullptr)
     return SEScalar::dNaN();
   return m_InflammationCoefficient->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasParticulateSizeDistribution() const
 {
   return (m_ParticulateSizeDistribution == nullptr) ? false : m_ParticulateSizeDistribution->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEHistogramFractionVsLength& SESubstanceAerosolization::GetParticulateSizeDistribution()
 {
   if (m_ParticulateSizeDistribution == nullptr)
     m_ParticulateSizeDistribution = new SEHistogramFractionVsLength();
   return *m_ParticulateSizeDistribution;
 }
+//-----------------------------------------------------------------------------
 const SEHistogramFractionVsLength* SESubstanceAerosolization::GetParticulateSizeDistribution() const
 {
   return m_ParticulateSizeDistribution;
 }
+//-----------------------------------------------------------------------------
 }

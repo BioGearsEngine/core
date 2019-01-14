@@ -14,16 +14,26 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 
 namespace biogears {
+SEThermalCircuit::SEThermalCircuit(const char* name, SECircuitManager& mgr)
+  :SEThermalCircuit(std::string{name},mgr)
+  {}
+//-------------------------------------------------------------------------------
 SEThermalCircuit::SEThermalCircuit(const std::string& name, SECircuitManager& mgr)
   : SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }
+//-------------------------------------------------------------------------------
 SEThermalCircuit::~SEThermalCircuit()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
+SEThermalCircuitNode& SEThermalCircuit::CreateNode(const char* name)
+{
+  return CreateNode(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEThermalCircuitNode& SEThermalCircuit::CreateNode(const std::string& name)
 {
   SEThermalCircuitNode* node = m_Mgr.GetThermalNode(name);
@@ -32,6 +42,12 @@ SEThermalCircuitNode& SEThermalCircuit::CreateNode(const std::string& name)
   AddNode(*node);
   return *node;
 }
+//-------------------------------------------------------------------------------
+SEThermalCircuitPath& SEThermalCircuit::CreatePath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const char* name)
+{
+  return CreatePath(src, tgt, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEThermalCircuitPath& SEThermalCircuit::CreatePath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name)
 {
   SEThermalCircuitPath* path = m_Mgr.GetThermalPath(name);
@@ -40,7 +56,7 @@ SEThermalCircuitPath& SEThermalCircuit::CreatePath(SEThermalCircuitNode& src, SE
   AddPath(*path);
   return *path;
 }
-
+//-------------------------------------------------------------------------------
 void SEThermalCircuit::AddCircuit(SEThermalCircuit& circuit)
 {
   for (SEThermalCircuitNode* node : circuit.GetNodes())
@@ -50,4 +66,5 @@ void SEThermalCircuit::AddCircuit(SEThermalCircuit& circuit)
   for (SEThermalCircuitNode* node : circuit.GetReferenceNodes())
     AddReferenceNode(*node);
 }
+//-------------------------------------------------------------------------------
 }

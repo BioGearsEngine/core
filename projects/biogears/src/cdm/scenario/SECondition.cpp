@@ -32,17 +32,17 @@ SECondition::SECondition()
 {
   m_Comment = "";
 }
-
+//-------------------------------------------------------------------------------
 SECondition::~SECondition()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SECondition::Clear()
 {
   m_Comment = "";
 }
-
+//-------------------------------------------------------------------------------
 SECondition* SECondition::newFromBind(const CDM::ConditionData& data, SESubstanceManager& substances)
 {
   // Could speed up case by testing Patient Conditions vs another type
@@ -124,7 +124,7 @@ SECondition* SECondition::newFromBind(const CDM::ConditionData& data, SESubstanc
     substances.GetLogger()->Error("Unsupported Condition Received", "SECondition::newFromBind");
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 bool SECondition::Load(const CDM::ConditionData& in)
 {
   Clear();
@@ -132,34 +132,48 @@ bool SECondition::Load(const CDM::ConditionData& in)
     m_Comment = in.Comment().get();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ConditionData* SECondition::Unload() const
 {
   CDM::ConditionData* data = new CDM::ConditionData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SECondition::Unload(CDM::ConditionData& data) const
 {
   if (HasComment())
     data.Comment(m_Comment);
 }
-
+//-------------------------------------------------------------------------------
+const char* SECondition::GetComment_cStr() const
+{
+  return m_Comment.c_str();
+}
+  //-------------------------------------------------------------------------------
 std::string SECondition::GetComment() const
 {
   return m_Comment;
 }
+//-------------------------------------------------------------------------------
+void SECondition::SetComment(const char* comment)
+{
+  m_Comment = comment;
+}
+//-------------------------------------------------------------------------------
 void SECondition::SetComment(const std::string& comment)
 {
   m_Comment = comment;
 }
+//-------------------------------------------------------------------------------
 bool SECondition::HasComment() const
 {
   return m_Comment.empty() ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SECondition::InvalidateComment()
 {
   m_Comment = "";
 }
+//-------------------------------------------------------------------------------
 }

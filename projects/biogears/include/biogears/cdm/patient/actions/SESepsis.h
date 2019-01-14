@@ -24,32 +24,34 @@ class SEScalar;
 class BIOGEARS_API SESepsis : public SEPatientAction {
 public:
   SESepsis();
-  virtual ~SESepsis();
+  virtual ~SESepsis() override;
 
   static constexpr const char* TypeTag() { return "SESepsis"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::SepsisData& in);
-  virtual CDM::SepsisData* Unload() const;
+  virtual CDM::SepsisData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::SepsisData& data) const;
 
 public:
+  virtual const char* GetCompartment_cStr() const;
   virtual std::string GetCompartment() const;
   virtual bool HasCompartment() const;
+  virtual void SetCompartment(const char* name);
   virtual void SetCompartment(const std::string& name);
   virtual void InvalidateCompartment();
 
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   std::string m_Compartment;

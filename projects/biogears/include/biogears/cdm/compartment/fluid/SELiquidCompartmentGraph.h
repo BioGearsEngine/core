@@ -25,11 +25,11 @@ class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph
   friend class SECompartmentManager;
 
 protected:
-  SELiquidCompartmentGraph(const std::string& name, Logger* logger)
-    : SECompartmentTransportGraph(name, logger){};
+  SELiquidCompartmentGraph(const char* name, Logger* logger);
+  SELiquidCompartmentGraph(const std::string& name, Logger* logger);
 
 public:
-  virtual ~SELiquidCompartmentGraph() {}
+  virtual ~SELiquidCompartmentGraph() override;
 
   void AddGraph(SELiquidCompartmentGraph& graph);
 
@@ -40,6 +40,6 @@ protected:
   virtual void Unload(CDM::LiquidCompartmentGraphData& data);
 
 protected:
-  void BalanceByIntensive();
+  void BalanceByIntensive() override;
 };
 }

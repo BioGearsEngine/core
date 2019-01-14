@@ -42,4 +42,50 @@ static void TestMyAPI()
 	s1.ConvertTo(s2);
 }
 */
+// Construct from value and string unit spec
+  CPScalar::CPScalar(double val, const char* unitSpec)
+    : m_dValue(val)
+    , m_CCU(unitSpec)
+  {
+    // Do nothing
+  }
+  // Construct from value and string unit spec
+  CPScalar::CPScalar(double val, const std::string& unitSpec)
+    : m_dValue(val)
+    , m_CCU(unitSpec)
+  {
+    // Do nothing
+  }
+
+  // Construct from string unit. Initial value is 1.0 so that we can multiply by a pure
+// unit specification.
+  CPScalar::CPScalar(const char* unitSpec)
+    : m_dValue(1.0)
+    , m_CCU(unitSpec)
+  {
+    // Do nothing
+  }
+  // Construct from string unit. Initial value is 1.0 so that we can multiply by a pure
+  // unit specification.
+  CPScalar::CPScalar(const std::string& unitSpec)
+    : m_dValue(1.0)
+    , m_CCU(unitSpec)
+  {
+    // Do nothing
+  }
+  // Convert this object to a new set of units
+  CPScalar& CPScalar::ConvertTo(const char* unitSpec)
+  {
+    return ConvertTo(std::string{ unitSpec });
+  }
+  // Convert this object to a new set of units
+  CPScalar& CPScalar::ConvertTo(const std::string& unitSpec)
+  {
+    CUnitConversionEngine& uce = CUnitConversionEngine::GetEngine();
+    CCompoundUnit newUnit(unitSpec);
+    double newval = uce.ConvertValue(m_dValue, m_CCU, newUnit);
+    m_CCU = newUnit;
+    m_dValue = newval;
+    return *this;
+  }
 }

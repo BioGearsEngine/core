@@ -37,6 +37,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "ChronicRenalStenosis"; }
+  virtual const char* GetName_cStr() const { return "ChronicRenalStenosis"; }
 
   virtual bool HasLeftKidneySeverity() const;
   virtual SEScalar0To1& GetLeftKidneySeverity();

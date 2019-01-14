@@ -17,6 +17,16 @@ const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_min_m2("mL/min m^2");
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_s_m2("mL/s m^2");
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::L_Per_min_m2("L/min m^2");
 
+VolumePerTimeAreaUnit::VolumePerTimeAreaUnit(const char* u)
+  : VolumePerTimeAreaUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimeAreaUnit::VolumePerTimeAreaUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimeAreaData* SEScalarVolumePerTimeArea::Unload() const
 {
   if (!IsValid())
@@ -25,28 +35,39 @@ CDM::ScalarVolumePerTimeAreaData* SEScalarVolumePerTimeArea::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool VolumePerTimeAreaUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimeAreaUnit::IsValidUnit(const char* unit)
 {
-  if (mL_Per_min_m2.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_min_m2.GetString(),unit) == 0)
     return true;
-  if (mL_Per_s_m2.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_m2.GetString(),unit) == 0)
     return true;
-  if (L_Per_min_m2.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_min_m2.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const VolumePerTimeAreaUnit& VolumePerTimeAreaUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimeAreaUnit::IsValidUnit(const std::string& unit)
 {
-  if (mL_Per_min_m2.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const VolumePerTimeAreaUnit& VolumePerTimeAreaUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(mL_Per_min_m2.GetString(),unit) == 0)
     return mL_Per_min_m2;
-  if (mL_Per_s_m2.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_m2.GetString(),unit) == 0)
     return mL_Per_s_m2;
-  if (L_Per_min_m2.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_min_m2.GetString(),unit) == 0)
     return L_Per_min_m2;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimeArea unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const VolumePerTimeAreaUnit& VolumePerTimeAreaUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

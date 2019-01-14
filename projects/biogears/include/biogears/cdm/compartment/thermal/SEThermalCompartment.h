@@ -29,23 +29,24 @@ class BIOGEARS_API SEThermalCompartment : public SECompartment {
   friend class SECompartmentGraph;
 
 protected:
+  SEThermalCompartment(const char* name, Logger* logger);
   SEThermalCompartment(const std::string& name, Logger* logger);
-
 public:
-  virtual ~SEThermalCompartment();
+  virtual ~SEThermalCompartment() override;
 
-  virtual void Clear();
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::ThermalCompartmentData* Unload();
+  virtual CDM::ThermalCompartmentData* Unload() override;
 
 protected:
   virtual void Unload(CDM::ThermalCompartmentData& data);
 
 public:
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const std::string& name) override;
+  virtual const SEScalar* GetScalar(const char* name) override;
 
-  virtual bool HasChildren() const { return !m_Children.empty(); }
+  virtual bool HasChildren() const override { return !m_Children.empty(); }
   virtual const std::vector<SEThermalCompartment*>& GetChildren() { return m_Children; }
   virtual const std::vector<SEThermalCompartment*>& GetLeaves() { return m_Leaves; }
 
@@ -53,7 +54,7 @@ public:
   virtual SECompartmentNodes<THERMAL_COMPARTMENT_NODE>& GetNodeMapping() { return m_Nodes; }
   virtual void MapNode(SEThermalCircuitNode& node);
 
-  virtual void StateChange();
+  virtual void StateChange() override;
 
   virtual bool HasHeatTransferRateIn() const;
   virtual const SEScalarPower& GetHeatTransferRateIn();
@@ -76,6 +77,7 @@ public:
   virtual void RemoveLinks();
   virtual const std::vector<SEThermalCompartmentLink*>& GetLinks();
 
+  virtual bool HasChild(const char* name);
   virtual bool HasChild(const std::string& name);
   virtual void AddChild(SEThermalCompartment& child);
 

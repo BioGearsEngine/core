@@ -17,6 +17,16 @@ const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
 const ForceUnit ForceUnit::dyn("dyn");
 
+ForceUnit::ForceUnit(const char* u)
+  : ForceUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+ForceUnit::ForceUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarForceData* SEScalarForce::Unload() const
 {
   if (!IsValid())
@@ -25,28 +35,39 @@ CDM::ScalarForceData* SEScalarForce::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool ForceUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ForceUnit::IsValidUnit(const char* unit)
 {
-  if (N.GetString().compare(unit) == 0)
+  if (strcmp(N.GetString(),unit) == 0)
     return true;
-  if (lbf.GetString().compare(unit) == 0)
+  if (strcmp(lbf.GetString(),unit) == 0)
     return true;
-  if (dyn.GetString().compare(unit) == 0)
+  if (strcmp(dyn.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const ForceUnit& ForceUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ForceUnit::IsValidUnit(const std::string& unit)
 {
-  if (N.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const ForceUnit& ForceUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(N.GetString(),unit) == 0)
     return N;
-  if (lbf.GetString().compare(unit) == 0)
+  if (strcmp(lbf.GetString(),unit) == 0)
     return lbf;
-  if (dyn.GetString().compare(unit) == 0)
+  if (strcmp(dyn.GetString(),unit) == 0)
     return dyn;
   std::stringstream err;
   err << unit << " is not a valid Force unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const ForceUnit& ForceUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

@@ -142,7 +142,11 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_AcuteInflammatoryResponse);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEBloodChemistrySystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 {
   if (name == idArterialBloodPH)
@@ -1005,9 +1009,9 @@ SEInflammationState& SEBloodChemistrySystem::GetAcuteInflammatoryResponse()
   return *m_AcuteInflammatoryResponse;
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idArterialBloodPH)
     .emplace_back(idArterialBloodPHBaseline)
     .emplace_back(idBloodDensity)

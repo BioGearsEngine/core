@@ -73,6 +73,8 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();
@@ -90,13 +92,20 @@ public:
   virtual double GetMaximumAllowedStabilizationTime(const TimeUnit& unit) const;
 
   virtual const std::vector<PropertyConvergence*>& GetPropertyConvergence() const;
+  virtual PropertyConvergence& CreateSystemPropertyConvergence(double percentError, const char* name);
   virtual PropertyConvergence& CreateSystemPropertyConvergence(double percentError, const std::string& name);
 
+  virtual PropertyConvergence& CreateGasCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name);
   virtual PropertyConvergence& CreateGasCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name);
+  virtual PropertyConvergence& CreateGasCompartmentPropertyConvergence(double percentError, const char* cmpt, SESubstance& substance, const char* name);
   virtual PropertyConvergence& CreateGasCompartmentPropertyConvergence(double percentError, const std::string& cmpt, SESubstance& substance, const std::string& name);
+  virtual PropertyConvergence& CreateLiquidCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name);
   virtual PropertyConvergence& CreateLiquidCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name);
+  virtual PropertyConvergence& CreateLiquidCompartmentPropertyConvergence(double percentError, const char* cmpt, SESubstance& substance, const char* name);
   virtual PropertyConvergence& CreateLiquidCompartmentPropertyConvergence(double percentError, const std::string& cmpt, SESubstance& substance, const std::string& name);
-  virtual PropertyConvergence& CreateThermalCompartmentPropertyConvergence(double percentError, const std::string& cmpt, std::string& name);
+  virtual PropertyConvergence& CreateThermalCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name);
+  virtual PropertyConvergence& CreateThermalCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name);
+  virtual PropertyConvergence& CreateTissueCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name);
   virtual PropertyConvergence& CreateTissueCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name);
 
 protected:
@@ -141,20 +150,21 @@ public:
   PhysiologyEngineDynamicStabilization(Logger* logger);
   virtual ~PhysiologyEngineDynamicStabilization();
 
-  virtual void Clear();
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationData& in);
-  virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const;
+  virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const;
 
 public:
-  virtual bool Load(const std::string& file);
+  virtual bool Load(const char* file) override;
+  virtual bool Load(const std::string& file) override;
 
-  virtual bool StabilizeRestingState(PhysiologyEngine& engine);
-  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine);
-  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions);
+  virtual bool StabilizeRestingState(PhysiologyEngine& engine) override;
+  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) override;
+  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) override;
 
   virtual PhysiologyEngineDynamicStabilizationCriteria& GetRestingCriteria();
   virtual const PhysiologyEngineDynamicStabilizationCriteria& GetRestingCriteria() const;
@@ -163,9 +173,11 @@ public:
   virtual PhysiologyEngineDynamicStabilizationCriteria& GetFeedbackCriteria();
   virtual const PhysiologyEngineDynamicStabilizationCriteria* GetFeedbackCriteria() const;
 
+  virtual void RemoveConditionCriteria(const char* name);
   virtual void RemoveConditionCriteria(const std::string& name);
   virtual void AddConditionCriteria(PhysiologyEngineDynamicStabilizationCriteria& criteria);
   virtual const std::vector<PhysiologyEngineDynamicStabilizationCriteria*>& GetConditionCriteria() const;
+  virtual PhysiologyEngineDynamicStabilizationCriteria* GetConditionCriteria(const char* name) const;
   virtual PhysiologyEngineDynamicStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
 
 protected:

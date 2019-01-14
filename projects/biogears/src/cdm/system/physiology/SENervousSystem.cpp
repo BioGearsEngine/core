@@ -63,7 +63,11 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_PainVisualAnalogueScale);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SENervousSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SENervousSystem::GetScalar(const std::string& name)
 {
   if (name == idBaroreceptorHeartRateScale)
@@ -336,9 +340,9 @@ void SENervousSystem::RemoveRightEyePupillaryResponse()
   SAFE_DELETE(m_RightEyePupillaryResponse);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SENervousSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idBaroreceptorHeartRateScale)
     .emplace_back(idBaroreceptorHeartElastanceScale)
     .emplace_back(idBaroreceptorResistanceScale)

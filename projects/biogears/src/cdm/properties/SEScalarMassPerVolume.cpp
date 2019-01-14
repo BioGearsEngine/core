@@ -29,6 +29,16 @@ const MassPerVolumeUnit MassPerVolumeUnit::mg_Per_dL("mg/dL");
 const MassPerVolumeUnit MassPerVolumeUnit::kg_Per_mL("kg/mL");
 const MassPerVolumeUnit MassPerVolumeUnit::kg_Per_L("kg/L");
 
+MassPerVolumeUnit::MassPerVolumeUnit(const char* u)
+  : MassPerVolumeUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+MassPerVolumeUnit::MassPerVolumeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerVolumeData* SEScalarMassPerVolume::Unload() const
 {
   if (!IsValid())
@@ -37,72 +47,83 @@ CDM::ScalarMassPerVolumeData* SEScalarMassPerVolume::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool MassPerVolumeUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerVolumeUnit::IsValidUnit(const char* unit)
 {
-  if (g_Per_dL.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_dL.GetString(),unit) == 0)
     return true;
-  if (g_Per_cm3.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_cm3.GetString(),unit) == 0)
     return true;
-  if (g_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_m3.GetString(),unit) == 0)
     return true;
-  if (ug_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_mL.GetString(),unit) == 0)
     return true;
-  if (mg_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_m3.GetString(),unit) == 0)
     return true;
-  if (kg_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_m3.GetString(),unit) == 0)
     return true;
-  if (ug_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_L.GetString(),unit) == 0)
     return true;
-  if (g_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_L.GetString(),unit) == 0)
     return true;
-  if (g_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_mL.GetString(),unit) == 0)
     return true;
-  if (mg_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_mL.GetString(),unit) == 0)
     return true;
-  if (mg_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_L.GetString(),unit) == 0)
     return true;
-  if (mg_Per_dL.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_dL.GetString(),unit) == 0)
     return true;
-  if (kg_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_mL.GetString(),unit) == 0)
     return true;
-  if (kg_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_L.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerVolumeUnit::IsValidUnit(const std::string& unit)
 {
-  if (g_Per_dL.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(g_Per_dL.GetString(),unit) == 0)
     return g_Per_dL;
-  if (g_Per_cm3.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_cm3.GetString(),unit) == 0)
     return g_Per_cm3;
-  if (g_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_m3.GetString(),unit) == 0)
     return g_Per_m3;
-  if (ug_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_mL.GetString(),unit) == 0)
     return ug_Per_mL;
-  if (mg_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_m3.GetString(),unit) == 0)
     return mg_Per_m3;
-  if (kg_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_m3.GetString(),unit) == 0)
     return kg_Per_m3;
-  if (ug_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_L.GetString(),unit) == 0)
     return ug_Per_L;
-  if (g_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_L.GetString(),unit) == 0)
     return g_Per_L;
-  if (g_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_mL.GetString(),unit) == 0)
     return g_Per_mL;
-  if (mg_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_mL.GetString(),unit) == 0)
     return mg_Per_mL;
-  if (mg_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_L.GetString(),unit) == 0)
     return mg_Per_L;
-  if (mg_Per_dL.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_dL.GetString(),unit) == 0)
     return mg_Per_dL;
-  if (kg_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_mL.GetString(),unit) == 0)
     return kg_Per_mL;
-  if (kg_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_L.GetString(),unit) == 0)
     return kg_Per_L;
   std::stringstream err;
   err << unit << " is not a valid MassPerVolume unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

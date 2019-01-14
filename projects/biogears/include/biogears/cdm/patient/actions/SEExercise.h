@@ -21,18 +21,18 @@ class SEScalar;
 class BIOGEARS_API SEExercise : public SEPatientAction {
 public:
   SEExercise();
-  virtual ~SEExercise();
+  virtual ~SEExercise() override;
 
   static constexpr const char* TypeTag() { return "SEExercise"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ExerciseData& in);
-  virtual CDM::ExerciseData* Unload() const;
+  virtual CDM::ExerciseData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;
@@ -43,7 +43,7 @@ public:
   virtual bool HasDesiredWorkRate() const;
   virtual SEScalar& GetDesiredWorkRate();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Intensity;

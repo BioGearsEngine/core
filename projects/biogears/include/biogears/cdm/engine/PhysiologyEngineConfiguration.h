@@ -42,6 +42,7 @@ protected:
   void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
 
 public:
+  virtual bool Load(const char* file);
   virtual bool Load(const std::string& file);
 
   virtual bool HasECGInterpolator() const;

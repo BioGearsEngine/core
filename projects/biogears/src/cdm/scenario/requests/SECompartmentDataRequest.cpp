@@ -19,55 +19,71 @@ SECompartmentDataRequest::SECompartmentDataRequest(const SEDecimalFormat* dfault
 {
   m_Compartment = "";
 }
-
+//-------------------------------------------------------------------------------
 SECompartmentDataRequest::~SECompartmentDataRequest()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Clear()
 {
   SEDataRequest::Clear();
   m_Compartment = "";
 }
-
+//-------------------------------------------------------------------------------
 size_t SECompartmentDataRequest::HashCode()
 {
   size_t h = SEDataRequest::HashCode();
   h += std::hash<std::string>()(m_Compartment);
   return h;
 }
-
+//-------------------------------------------------------------------------------
 bool SECompartmentDataRequest::Load(const CDM::CompartmentDataRequestData& in)
 {
   SEDataRequest::Load(in);
   SetCompartment(in.Compartment());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Unload(CDM::CompartmentDataRequestData& data) const
 {
   SEDataRequest::Unload(data);
   data.Compartment(m_Compartment);
 }
-
-std::string SECompartmentDataRequest::GetCompartment() const
+//-------------------------------------------------------------------------------
+const char* SECompartmentDataRequest::GetCompartment() const
 {
-  return m_Compartment;
+  return m_Compartment.c_str();
 }
+//-------------------------------------------------------------------------------
+void SECompartmentDataRequest::SetCompartment(const char* name)
+{
+  m_Compartment = name;
+}
+//-------------------------------------------------------------------------------
 void SECompartmentDataRequest::SetCompartment(const std::string& name)
 {
   m_Compartment = name;
 }
+//-------------------------------------------------------------------------------
 bool SECompartmentDataRequest::HasCompartment() const
 {
   return !m_Compartment.empty();
 }
+//-------------------------------------------------------------------------------
 void SECompartmentDataRequest::InvalidateCompartment()
 {
   m_Compartment = "";
 }
-
+//-------------------------------------------------------------------------------
+void SECompartmentDataRequest::Set(const char* cmpt, const char* name, const char* unit)
+{
+  m_Compartment = cmpt;
+  m_Name = name;
+  m_RequestedUnit = unit;
+  m_Unit = nullptr;
+}
+//-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& name, const std::string& unit)
 {
   m_Compartment = cmpt;
@@ -75,7 +91,15 @@ void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& n
   m_RequestedUnit = unit;
   m_Unit = nullptr;
 }
-
+//-------------------------------------------------------------------------------
+void SECompartmentDataRequest::Set(const char* cmpt, const char* name, const CCompoundUnit& unit)
+{
+  m_Compartment = cmpt;
+  m_Name = name;
+  m_RequestedUnit = "";
+  m_Unit = &unit;
+}
+//-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& name, const CCompoundUnit& unit)
 {
   m_Compartment = cmpt;
@@ -83,4 +107,5 @@ void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& n
   m_RequestedUnit = "";
   m_Unit = &unit;
 }
+//-------------------------------------------------------------------------------
 }

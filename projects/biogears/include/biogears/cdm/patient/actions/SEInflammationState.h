@@ -32,6 +32,7 @@ public:
   virtual bool IsValid();
 
   void InitializeState();
+  virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
 protected:

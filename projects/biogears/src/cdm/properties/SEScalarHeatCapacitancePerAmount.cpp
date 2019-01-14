@@ -15,6 +15,16 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const HeatCapacitancePerAmountUnit HeatCapacitancePerAmountUnit::J_Per_K_mol("J/K mol");
 
+HeatCapacitancePerAmountUnit::HeatCapacitancePerAmountUnit(const char* u)
+  : HeatCapacitancePerAmountUnit(std::string{ u })
+{
+}
+//---------------------`---------------------------------------------------------
+HeatCapacitancePerAmountUnit::HeatCapacitancePerAmountUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//---------------------`---------------------------------------------------------
 CDM::ScalarHeatCapacitancePerAmountData* SEScalarHeatCapacitancePerAmount::Unload() const
 {
   if (!IsValid())
@@ -23,20 +33,32 @@ CDM::ScalarHeatCapacitancePerAmountData* SEScalarHeatCapacitancePerAmount::Unloa
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool HeatCapacitancePerAmountUnit::IsValidUnit(const std::string& unit)
+//---------------------`---------------------------------------------------------
+bool HeatCapacitancePerAmountUnit::IsValidUnit(const char* unit)
 {
-  if (J_Per_K_mol.GetString().compare(unit) == 0)
+  if (strcmp(J_Per_K_mol.GetString(),unit) == 0)
     return true;
   return false;
+  
 }
-
-const HeatCapacitancePerAmountUnit& HeatCapacitancePerAmountUnit::GetCompoundUnit(const std::string& unit)
+//---------------------`---------------------------------------------------------
+bool HeatCapacitancePerAmountUnit::IsValidUnit(const std::string& unit)
 {
-  if (J_Per_K_mol.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//---------------------`---------------------------------------------------------
+const HeatCapacitancePerAmountUnit& HeatCapacitancePerAmountUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(J_Per_K_mol.GetString(),unit) == 0)
     return J_Per_K_mol;
   std::stringstream err;
   err << unit << " is not a valid HeatCapacitancePerAmount unit";
   throw CommonDataModelException(err.str());
 }
+//---------------------`---------------------------------------------------------
+const HeatCapacitancePerAmountUnit& HeatCapacitancePerAmountUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//---------------------`---------------------------------------------------------
 }

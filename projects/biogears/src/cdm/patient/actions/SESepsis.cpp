@@ -11,12 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESepsis.h>
 
-#include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/properties/SEScalarTypes.h>
-
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
-
 
 SESepsis::SESepsis()
   : SEPatientAction()
@@ -24,29 +22,29 @@ SESepsis::SESepsis()
   m_Compartment = ""; //User input, location of hemorrhage
   m_Severity = nullptr; //User input, initial rate of bleeding
 }
-
+//-------------------------------------------------------------------------------
 SESepsis::~SESepsis()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESepsis::Clear()
 {
   SEPatientAction::Clear();
   m_Compartment = "";
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SESepsis::IsValid() const
 {
   return SEPatientAction::IsValid() && HasCompartment() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SESepsis::IsActive() const
 {
   return IsValid() ? !(m_Severity->GetValue() < ZERO_APPROX) : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SESepsis::Load(const CDM::SepsisData& in)
 {
   SEPatientAction::Load(in);
@@ -54,14 +52,14 @@ bool SESepsis::Load(const CDM::SepsisData& in)
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SepsisData* SESepsis::Unload() const
 {
   CDM::SepsisData* data(new CDM::SepsisData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESepsis::Unload(CDM::SepsisData& data) const
 {
   SEPatientAction::Unload(data);
@@ -70,35 +68,49 @@ void SESepsis::Unload(CDM::SepsisData& data) const
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
+const char* SESepsis::GetCompartment_cStr() const
+{
+  return m_Compartment.c_str();
+}
+//-------------------------------------------------------------------------------
 std::string SESepsis::GetCompartment() const
 {
   return m_Compartment;
 }
+//-------------------------------------------------------------------------------
 bool SESepsis::HasCompartment() const
 {
   return !m_Compartment.empty();
 }
+//-------------------------------------------------------------------------------
 void SESepsis::InvalidateCompartment()
 {
   m_Compartment = "";
 }
+//-------------------------------------------------------------------------------
+void SESepsis::SetCompartment(const char* name)
+{
+  return SetCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SESepsis::SetCompartment(const std::string& name)
 {
   m_Compartment = name;
 }
-
+//-------------------------------------------------------------------------------
 bool SESepsis::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SESepsis::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SESepsis::ToString(std::ostream& str) const
 {
   str << "Patient Action : Sepsis";
@@ -110,5 +122,5 @@ void SESepsis::ToString(std::ostream& str) const
   HasCompartment() ? str << GetCompartment() : str << "No Compartment Set";
   str << std::flush;
 }
-
+//-------------------------------------------------------------------------------
 }

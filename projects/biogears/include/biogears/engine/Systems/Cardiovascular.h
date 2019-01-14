@@ -52,7 +52,7 @@ protected:
   BioGears& m_data;
 
 public:
-  virtual ~Cardiovascular();
+  virtual ~Cardiovascular() override;;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
   static constexpr char const * const  TypeTag() { return "Cardiovascular"; }
@@ -66,7 +66,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsCardiovascularSystemData& in);
-  virtual CDM::BioGearsCardiovascularSystemData* Unload() const;
+  virtual CDM::BioGearsCardiovascularSystemData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::BioGearsCardiovascularSystemData& data) const;
@@ -75,10 +75,10 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState();
-  void PreProcess();
-  void Process();
-  void PostProcess();
+  void AtSteadyState() override;
+  void PreProcess() override;
+  void Process() override;
+  void PostProcess() override;
 
 private:
   //Condition Methods

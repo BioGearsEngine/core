@@ -22,8 +22,8 @@ class BIOGEARS_API SEFluidCircuitNode : public SECircuitNode<FLUID_CIRCUIT_NODE>
   friend class SECircuitManager;
 
 protected:
+  SEFluidCircuitNode(const char* name, Logger* logger);
   SEFluidCircuitNode(const std::string& name, Logger* logger);
-
 public:
   virtual ~SEFluidCircuitNode();
 

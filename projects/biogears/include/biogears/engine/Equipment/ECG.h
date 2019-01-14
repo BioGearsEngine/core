@@ -35,33 +35,33 @@ protected:
   BioGears& m_data;
 
 public:
-  virtual ~ECG();
+  virtual ~ECG() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
   static constexpr char const * const  TypeTag() { return "ECG"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear();
+  void Clear() override;
 
   // Set members to a stable homeostatic state
-  void Initialize();
+  void Initialize() override;
 
   // Load a state
   virtual bool Load(const CDM::BioGearsElectroCardioGramData& in);
-  virtual CDM::BioGearsElectroCardioGramData* Unload() const;
+  virtual CDM::BioGearsElectroCardioGramData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::BioGearsElectroCardioGramData& data) const;
 
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
-  void SetUp();
+  void SetUp() override;
 
 public:
   // main driver function responsible for calling the various ECG functions:
-  void PreProcess();
-  void Process();
-  void PostProcess();
+  void PreProcess() override;
+  void Process() override;
+  void PostProcess() override;
 
 protected:
   // Serializable member variables (Set in Initialize and in schema)

@@ -21,19 +21,19 @@ SESubstanceCompound::SESubstanceCompound(Logger* logger)
 {
   m_Name = "";
 }
-
+//-----------------------------------------------------------------------------
 SESubstanceCompound::~SESubstanceCompound()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SESubstanceCompound::Clear()
 {
   m_Name = "";
   DELETE_VECTOR(m_Components);
   m_cComponents.clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr)
 {
   Clear();
@@ -61,14 +61,14 @@ bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESub
   }
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::SubstanceCompoundData* SESubstanceCompound::Unload() const
 {
   CDM::SubstanceCompoundData* data = new CDM::SubstanceCompoundData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
 {
   if (HasName())
@@ -78,28 +78,42 @@ void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
     data.Component().push_back(*m_Components.at(i)->Unload());
   }
 };
-
+//-----------------------------------------------------------------------------
 std::string SESubstanceCompound::GetName() const
 {
   return m_Name;
 }
+//-----------------------------------------------------------------------------
+const char* SESubstanceCompound::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
+void SESubstanceCompound::SetName(const char* name)
+{
+  m_Name = name;
+}
+//-----------------------------------------------------------------------------
 void SESubstanceCompound::SetName(const std::string& name)
 {
   m_Name = name;
 }
+//-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasName() const
 {
   return m_Name.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SESubstanceCompound::InvalidateName()
 {
   m_Name = "";
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasComponent() const
 {
   return m_Components.size() == 0 ? false : true;
 }
+//-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasComponent(const SESubstance& substance) const
 {
   for (SESubstanceConcentration* q : m_Components) {
@@ -108,14 +122,17 @@ bool SESubstanceCompound::HasComponent(const SESubstance& substance) const
   }
   return false;
 }
+//-----------------------------------------------------------------------------
 const std::vector<SESubstanceConcentration*>& SESubstanceCompound::GetComponents()
 {
   return m_Components;
 }
+//-----------------------------------------------------------------------------
 const std::vector<const SESubstanceConcentration*>& SESubstanceCompound::GetComponents() const
 {
   return m_cComponents;
 }
+//-----------------------------------------------------------------------------
 const SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& substance)
 {
   for (SESubstanceConcentration* sq : m_Components) {
@@ -128,6 +145,7 @@ const SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& s
   m_cComponents.push_back(sq);
   return *sq;
 }
+//-----------------------------------------------------------------------------
 const SESubstanceConcentration* SESubstanceCompound::GetComponent(SESubstance& substance) const
 {
   for (SESubstanceConcentration* sq : m_Components) {
@@ -136,6 +154,7 @@ const SESubstanceConcentration* SESubstanceCompound::GetComponent(SESubstance& s
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
 void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
 {
   unsigned int i = 0;
@@ -148,4 +167,5 @@ void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
     i++;
   }
 }
+//-----------------------------------------------------------------------------
 }

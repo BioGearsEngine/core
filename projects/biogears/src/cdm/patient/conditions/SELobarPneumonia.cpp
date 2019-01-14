@@ -21,12 +21,12 @@ SELobarPneumonia::SELobarPneumonia()
   m_LeftLungAffected = nullptr;
   m_RightLungAffected = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SELobarPneumonia::~SELobarPneumonia()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SELobarPneumonia::Clear()
 {
   SEPatientCondition::Clear();
@@ -34,12 +34,12 @@ void SELobarPneumonia::Clear()
   SAFE_DELETE(m_LeftLungAffected);
   SAFE_DELETE(m_RightLungAffected);
 }
-
+//-----------------------------------------------------------------------------
 bool SELobarPneumonia::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasSeverity() && HasLeftLungAffected() && HasRightLungAffected();
 }
-
+//-----------------------------------------------------------------------------
 bool SELobarPneumonia::Load(const CDM::LobarPneumoniaData& in)
 {
   SEPatientCondition::Load(in);
@@ -48,14 +48,14 @@ bool SELobarPneumonia::Load(const CDM::LobarPneumoniaData& in)
   GetRightLungAffected().Load(in.RightLungAffected());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::LobarPneumoniaData* SELobarPneumonia::Unload() const
 {
   CDM::LobarPneumoniaData* data(new CDM::LobarPneumoniaData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SELobarPneumonia::Unload(CDM::LobarPneumoniaData& data) const
 {
   SEPatientCondition::Unload(data);
@@ -66,40 +66,43 @@ void SELobarPneumonia::Unload(CDM::LobarPneumoniaData& data) const
   if (m_RightLungAffected != nullptr)
     data.RightLungAffected(std::unique_ptr<CDM::Scalar0To1Data>(m_RightLungAffected->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SELobarPneumonia::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar0To1& SELobarPneumonia::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-----------------------------------------------------------------------------
 bool SELobarPneumonia::HasLeftLungAffected() const
 {
   return m_LeftLungAffected == nullptr ? false : m_LeftLungAffected->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar0To1& SELobarPneumonia::GetLeftLungAffected()
 {
   if (m_LeftLungAffected == nullptr)
     m_LeftLungAffected = new SEScalar0To1();
   return *m_LeftLungAffected;
 }
-
+//-----------------------------------------------------------------------------
 bool SELobarPneumonia::HasRightLungAffected() const
 {
   return m_RightLungAffected == nullptr ? false : m_RightLungAffected->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar0To1& SELobarPneumonia::GetRightLungAffected()
 {
   if (m_RightLungAffected == nullptr)
     m_RightLungAffected = new SEScalar0To1();
   return *m_RightLungAffected;
 }
-
+//-----------------------------------------------------------------------------
 void SELobarPneumonia::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Lobar Pneumonia";
@@ -113,4 +116,5 @@ void SELobarPneumonia::ToString(std::ostream& str) const
   HasRightLungAffected() ? str << *m_RightLungAffected : str << "NaN";
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

@@ -11,24 +11,30 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 
 namespace biogears {
+SELiquidCompartment::SELiquidCompartment(const char* name, Logger* logger)
+  : SELiquidCompartment(std::string{ name }, logger)
+{
+}
+//-----------------------------------------------------------------------------
 SELiquidCompartment::SELiquidCompartment(const std::string& name, Logger* logger)
   : SEFluidCompartment(name, logger)
 {
   m_pH = nullptr;
   m_WaterVolumeFraction = nullptr;
 }
+//-----------------------------------------------------------------------------
 SELiquidCompartment::~SELiquidCompartment()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidCompartment::Clear()
 {
   SEFluidCompartment::Clear();
@@ -36,7 +42,7 @@ void SELiquidCompartment::Clear()
   SAFE_DELETE(m_WaterVolumeFraction);
   m_Children.clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidCompartment::Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
 {
   if (!SEFluidCompartment::Load(in, circuits))
@@ -45,7 +51,7 @@ bool SELiquidCompartment::Load(const CDM::LiquidCompartmentData& in, SESubstance
     for (const CDM::LiquidSubstanceQuantityData& d : in.SubstanceQuantity()) {
       SESubstance* sub = subMgr.GetSubstance(d.Substance());
       if (sub == nullptr) {
-        Error("Could not find a substance for " + d.Substance());
+        Error("Could not find a substance for " + std::string{ d.Substance() });
         return false;
       }
       CreateSubstanceQuantity(*sub).Load(d);
@@ -58,12 +64,14 @@ bool SELiquidCompartment::Load(const CDM::LiquidCompartmentData& in, SESubstance
   }
   return true;
 }
+//-----------------------------------------------------------------------------
 CDM::LiquidCompartmentData* SELiquidCompartment::Unload()
 {
   CDM::LiquidCompartmentData* data = new CDM::LiquidCompartmentData();
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 void SELiquidCompartment::Unload(CDM::LiquidCompartmentData& data)
 {
   SEFluidCompartment::Unload(data);
@@ -74,7 +82,12 @@ void SELiquidCompartment::Unload(CDM::LiquidCompartmentData& data)
   if (HasWaterVolumeFraction())
     data.WaterVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(GetWaterVolumeFraction().Unload()));
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SELiquidCompartment::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SELiquidCompartment::GetScalar(const std::string& name)
 {
   const SEScalar* s = SEFluidCompartment::GetScalar(name);
@@ -86,14 +99,14 @@ const SEScalar* SELiquidCompartment::GetScalar(const std::string& name)
     return &GetWaterVolumeFraction();
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidCompartment::StateChange()
 {
   m_Leaves.clear();
   FindLeaves<SELiquidCompartment>(*this, m_Leaves);
   m_Nodes.StateChange();
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidCompartment::Balance(BalanceLiquidBy by)
 {
   for (SELiquidSubstanceQuantity* subQ : m_SubstanceQuantities) {
@@ -105,11 +118,12 @@ void SELiquidCompartment::Balance(BalanceLiquidBy by)
       subQ->Balance(by);
   }
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidCompartment::HasPH() const
 {
   return m_pH == nullptr ? false : m_pH->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SELiquidCompartment::GetPH()
 {
   if (m_pH == nullptr)
@@ -121,6 +135,7 @@ SEScalar& SELiquidCompartment::GetPH()
   }
   return *m_pH;
 }
+//-----------------------------------------------------------------------------
 double SELiquidCompartment::GetPH() const
 {
   if (!m_Children.empty()) {
@@ -134,11 +149,12 @@ double SELiquidCompartment::GetPH() const
     return SEScalar::dNaN();
   return m_pH->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SELiquidCompartment::HasWaterVolumeFraction() const
 {
   return m_WaterVolumeFraction == nullptr ? false : m_WaterVolumeFraction->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SELiquidCompartment::GetWaterVolumeFraction()
 {
   if (m_WaterVolumeFraction == nullptr)
@@ -150,6 +166,7 @@ SEScalarFraction& SELiquidCompartment::GetWaterVolumeFraction()
   }
   return *m_WaterVolumeFraction;
 }
+//-----------------------------------------------------------------------------
 double SELiquidCompartment::GetWaterVolumeFraction() const
 {
   if (!m_Children.empty()) {
@@ -162,7 +179,7 @@ double SELiquidCompartment::GetWaterVolumeFraction() const
     return SEScalar::dNaN();
   return m_WaterVolumeFraction->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 void SELiquidCompartment::AddChild(SELiquidCompartment& child)
 {
   if (HasNodeMapping()) {
@@ -176,7 +193,7 @@ void SELiquidCompartment::AddChild(SELiquidCompartment& child)
   for (SELiquidSubstanceQuantity* subQ : m_SubstanceQuantities)
     subQ->AddChild(child.CreateSubstanceQuantity(subQ->GetSubstance()));
 }
-
+//-----------------------------------------------------------------------------
 SELiquidSubstanceQuantity& SELiquidCompartment::CreateSubstanceQuantity(SESubstance& substance)
 {
   SELiquidSubstanceQuantity* subQ = GetSubstanceQuantity(substance);
@@ -192,4 +209,5 @@ SELiquidSubstanceQuantity& SELiquidCompartment::CreateSubstanceQuantity(SESubsta
   }
   return *subQ;
 }
+//-----------------------------------------------------------------------------
 }

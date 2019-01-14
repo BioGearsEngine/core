@@ -19,18 +19,18 @@ class SEScalar0To1;
 class BIOGEARS_API SEYPieceDisconnect : public SEAnesthesiaMachineAction {
 public:
   SEYPieceDisconnect();
-  virtual ~SEYPieceDisconnect();
+  virtual ~SEYPieceDisconnect() override;
 
   static constexpr const char* TypeTag() { return "SEYPeiceDisconnect"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::YPieceDisconnectData& in);
-  virtual CDM::YPieceDisconnectData* Unload() const;
+  virtual CDM::YPieceDisconnectData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::YPieceDisconnectData& data) const;
@@ -39,7 +39,7 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Severity;

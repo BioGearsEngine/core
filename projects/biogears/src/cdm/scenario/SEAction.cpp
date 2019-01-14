@@ -66,17 +66,17 @@ SEAction::SEAction()
 {
   m_Comment = "";
 }
-
+//-----------------------------------------------------------------------------
 SEAction::~SEAction()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEAction::Clear()
 {
   m_Comment = "";
 }
-
+//-----------------------------------------------------------------------------
 SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager& substances)
 {
   std::stringstream ss;
@@ -447,7 +447,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
     substances.GetLogger()->Error("Unsupported Action Received", "SEAction::newFromBind");
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 bool SEAction::Load(const CDM::ActionData& in)
 {
   Clear();
@@ -455,40 +455,51 @@ bool SEAction::Load(const CDM::ActionData& in)
     m_Comment = in.Comment().get();
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::ActionData* SEAction::Unload() const
 {
   CDM::ActionData* data = new CDM::ActionData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEAction::Unload(CDM::ActionData& data) const
 {
   if (HasComment())
     data.Comment(m_Comment);
 }
-
-std::string SEAction::GetComment() const
+//-----------------------------------------------------------------------------
+const char* SEAction::GetComment() const
 {
-  return m_Comment;
+  return m_Comment.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEAction::SetComment(const char* comment)
+{
+  m_Comment = comment;
+}
+//-----------------------------------------------------------------------------
 void SEAction::SetComment(const std::string& comment)
 {
   m_Comment = comment;
 }
+//-----------------------------------------------------------------------------
 bool SEAction::HasComment() const
 {
   return m_Comment.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEAction::InvalidateComment()
 {
   m_Comment = "";
 }
-std::string SEAction::ToString() const
+//-----------------------------------------------------------------------------
+const char* SEAction::ToString() const
 {
   std::stringstream ss;
   this->ToString(ss);
-  return ss.str();
+  m_StringRepresnetation = ss.str();
+  return m_StringRepresnetation.c_str();
 }
+//-----------------------------------------------------------------------------
 }

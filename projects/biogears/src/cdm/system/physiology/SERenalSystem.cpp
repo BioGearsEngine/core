@@ -218,7 +218,11 @@ void SERenalSystem::Clear()
   SAFE_DELETE(m_UrineUreaNitrogenConcentration);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SERenalSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SERenalSystem::GetScalar(const std::string& name)
 {
   if (name == idGlomerularFiltrationRate)
@@ -1664,9 +1668,9 @@ double SERenalSystem::GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit&
 }
 //-------------------------------------------------------------------------------
 
-Tree<std::string> SERenalSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SERenalSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idGlomerularFiltrationRate)
     .emplace_back(idFiltrationFraction)
     .emplace_back(idLeftAfferentArterioleResistance)

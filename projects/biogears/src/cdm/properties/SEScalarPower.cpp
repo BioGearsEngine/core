@@ -20,6 +20,16 @@ const PowerUnit PowerUnit::kcal_Per_day("kcal/day");
 const PowerUnit PowerUnit::J_Per_s("J/s");
 const PowerUnit PowerUnit::BTU_Per_hr("BTU/hr");
 
+PowerUnit::PowerUnit(const char* u)
+  : PowerUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+PowerUnit::PowerUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarPowerData* SEScalarPower::Unload() const
 {
   if (!IsValid())
@@ -28,40 +38,51 @@ CDM::ScalarPowerData* SEScalarPower::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool PowerUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool PowerUnit::IsValidUnit(const char* unit)
 {
-  if (W.GetString().compare(unit) == 0)
+  if (strcmp(W.GetString(),unit) == 0)
     return true;
-  if (kcal_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_s.GetString(),unit) == 0)
     return true;
-  if (kcal_Per_hr.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_hr.GetString(),unit) == 0)
     return true;
-  if (kcal_Per_day.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_day.GetString(),unit) == 0)
     return true;
-  if (J_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(J_Per_s.GetString(),unit) == 0)
     return true;
-  if (BTU_Per_hr.GetString().compare(unit) == 0)
+  if (strcmp(BTU_Per_hr.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const PowerUnit& PowerUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool PowerUnit::IsValidUnit(const std::string& unit)
 {
-  if (W.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const PowerUnit& PowerUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(W.GetString(),unit) == 0)
     return W;
-  if (kcal_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_s.GetString(),unit) == 0)
     return kcal_Per_s;
-  if (kcal_Per_hr.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_hr.GetString(),unit) == 0)
     return kcal_Per_hr;
-  if (kcal_Per_day.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_day.GetString(),unit) == 0)
     return kcal_Per_day;
-  if (J_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(J_Per_s.GetString(),unit) == 0)
     return J_Per_s;
-  if (BTU_Per_hr.GetString().compare(unit) == 0)
+  if (strcmp(BTU_Per_hr.GetString(),unit) == 0)
     return BTU_Per_hr;
   std::stringstream err;
   err << unit << " is not a valid Power unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const PowerUnit& PowerUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

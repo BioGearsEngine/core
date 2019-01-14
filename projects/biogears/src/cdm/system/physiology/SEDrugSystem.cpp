@@ -107,7 +107,11 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
   return true;
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEDrugSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
 {
   if (name == idBronchodilationLevel)
@@ -403,9 +407,9 @@ double SEDrugSystem::GetCentralNervousResponse() const
   return m_CentralNervousResponse->GetValue();
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEDrugSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SEDrugSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idBronchodilationLevel)
     .emplace_back(idHeartRateChange)
     .emplace_back(idMeanBloodPressureChange)

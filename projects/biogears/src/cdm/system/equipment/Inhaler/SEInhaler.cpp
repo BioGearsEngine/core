@@ -91,7 +91,11 @@ void SEInhaler::Unload(CDM::InhalerData& data) const
     data.Substance(m_Substance->GetName());
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEInhaler::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEInhaler::GetScalar(const std::string& name)
 {
   if (name.compare("MeteredDose") == 0)
@@ -250,8 +254,8 @@ SESubstance* SEInhaler::GetSubstance() const
   return (SESubstance*)m_Substance;
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEInhaler::GetPhysiologyRequestGraph() const
+Tree<const char*> SEInhaler::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return {""};
 }
 }

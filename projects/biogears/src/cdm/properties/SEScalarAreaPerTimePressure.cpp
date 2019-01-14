@@ -26,32 +26,43 @@ CDM::ScalarAreaPerTimePressureData* SEScalarAreaPerTimePressure::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool AreaPerTimePressureUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool AreaPerTimePressureUnit::IsValidUnit(const char* unit)
 {
-  if (m2_Per_s_mmHg.GetString().compare(unit) == 0)
+  if (strcmp(m2_Per_s_mmHg.GetString(),unit) == 0)
     return true;
-  if (cm2_Per_s_mmHg.GetString().compare(unit) == 0)
+  if (strcmp(cm2_Per_s_mmHg.GetString(),unit) == 0)
     return true;
-  if (m2_Per_min_mmHg.GetString().compare(unit) == 0)
+  if (strcmp(m2_Per_min_mmHg.GetString(),unit) == 0)
     return true;
-  if (cm2_Per_min_mmHg.GetString().compare(unit) == 0)
+  if (strcmp(cm2_Per_min_mmHg.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool AreaPerTimePressureUnit::IsValidUnit(const std::string& unit)
 {
-  if (m2_Per_s_mmHg.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(m2_Per_s_mmHg.GetString(),unit) == 0)
     return m2_Per_s_mmHg;
-  if (cm2_Per_s_mmHg.GetString().compare(unit) == 0)
+  if (strcmp(cm2_Per_s_mmHg.GetString(),unit) == 0)
     return cm2_Per_s_mmHg;
-  if (m2_Per_min_mmHg.GetString().compare(unit) == 0)
+  if (strcmp(m2_Per_min_mmHg.GetString(),unit) == 0)
     return m2_Per_min_mmHg;
-  if (cm2_Per_min_mmHg.GetString().compare(unit) == 0)
+  if (strcmp(cm2_Per_min_mmHg.GetString(),unit) == 0)
     return cm2_Per_min_mmHg;
   std::stringstream err;
   err << unit << " is not a valid AreaPerTimePressure unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+  //-----------------------------------------------------------------------------
 }

@@ -35,6 +35,8 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();

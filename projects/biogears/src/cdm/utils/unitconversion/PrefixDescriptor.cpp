@@ -15,15 +15,22 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 #include <biogears/cdm/utils/unitconversion/PrefixDescriptor.h>
 namespace biogears {
-  CPrefixDescriptor::CPrefixDescriptor(std::string name, std::string sym, double scaleFac)
+CPrefixDescriptor::CPrefixDescriptor(const char* name, const char* sym, double scaleFac)
+  : CPrefixDescriptor(std::string{ name }, std::string{ sym }, scaleFac)
+{
+}
+CPrefixDescriptor::CPrefixDescriptor(const std::string& name, const std::string& sym, double scaleFac)
   : m_strName(name)
   , m_cSym(sym[0])
   , m_dScaleFac(scaleFac)
 {
   // All done already
 }
-
-CPrefixDescriptor::CPrefixDescriptor(std::string name, char sym, double scaleFac)
+CPrefixDescriptor::CPrefixDescriptor(const char* name, char sym, double scaleFac)
+  : CPrefixDescriptor(std::string{ name }, sym, scaleFac)
+{
+}
+CPrefixDescriptor::CPrefixDescriptor(const std::string& name, char sym, double scaleFac)
   : m_strName(name)
   , m_cSym(sym)
   , m_dScaleFac(scaleFac)
@@ -31,9 +38,14 @@ CPrefixDescriptor::CPrefixDescriptor(std::string name, char sym, double scaleFac
   // All done already
 }
 
-const std::string& CPrefixDescriptor::GetName() const
+std::string CPrefixDescriptor::GetName() const
 {
   return m_strName;
+};
+
+const char* CPrefixDescriptor::GetName_cStr() const
+{
+  return m_strName.c_str();
 };
 
 char CPrefixDescriptor::GetSymbol() const

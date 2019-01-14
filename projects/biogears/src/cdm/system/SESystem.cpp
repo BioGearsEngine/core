@@ -49,4 +49,9 @@ const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESyste
   }
   return nullptr;
 }
+//-------------------------------------------------------------------------------
+const SEScalar* SESystem::GetScalar(const char* name, std::vector<SESystem*>* systems)
+{
+  return GetScalar( std::string{ name }, systems);
+}
 }

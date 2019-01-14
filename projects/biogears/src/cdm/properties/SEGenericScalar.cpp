@@ -59,6 +59,11 @@ namespace biogears {
     else { return m_UnitScalar->GetUnit(); };
   }
   //-------------------------------------------------------------------------------
+  const CCompoundUnit* SEGenericScalar::GetCompoundUnit(const char* unit) const
+  {
+    return GetCompoundUnit( std::string{ unit });
+  }
+  //-------------------------------------------------------------------------------
   const CCompoundUnit* SEGenericScalar::GetCompoundUnit(const std::string& unit) const
   {
     if (m_UnitScalar == nullptr)
@@ -76,7 +81,14 @@ namespace biogears {
   //-------------------------------------------------------------------------------
   double SEGenericScalar::GetValue() const
   {
-    return m_Scalar->GetValue();
+    return (m_Scalar) ? m_Scalar->GetValue() : m_UnitScalar->GetValue();;
+  }
+  //-------------------------------------------------------------------------------
+  double SEGenericScalar::GetValue(const char* unit) const
+  {
+    if (m_UnitScalar == nullptr)
+      return SEScalar::dNaN();
+    return m_UnitScalar->GetValue(unit);
   }
   //-------------------------------------------------------------------------------
   double SEGenericScalar::GetValue(const std::string& unit) const

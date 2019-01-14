@@ -21,6 +21,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <FLUID_COMPARTMENT_TEMPLATE>
+SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const char* name, Logger* logger)
+  : SEFluidCompartment(std::string{ name }, logger)
+{
+}
+//-----------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_TEMPLATE>
 SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const std::string& name, Logger* logger)
   : SECompartment(name, logger)
   , m_Nodes(logger)
@@ -30,12 +36,13 @@ SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const std::strin
   m_Pressure = nullptr;
   m_Volume = nullptr;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::~SEFluidCompartment()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Clear()
 {
@@ -49,7 +56,7 @@ void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Clear()
   DELETE_VECTOR(m_SubstanceQuantities);
   m_Nodes.Clear();
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits)
 {
@@ -66,7 +73,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Load(const CDM::FluidCompartme
     for (auto name : in.Node()) {
       SEFluidCircuitNode* node = circuits->GetFluidNode(name);
       if (node == nullptr) {
-        Error("Compartment is mapped to circuit node, " + name + ", but provided circuit manager did not have that node");
+        Error("Compartment is mapped to circuit node, " + std::string{ name } +", but provided circuit manager did not have that node");
         return false;
       }
       MapNode(*node);
@@ -79,6 +86,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Load(const CDM::FluidCompartme
   }
   return true;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Unload(CDM::FluidCompartmentData& data)
 {
@@ -97,7 +105,25 @@ void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Unload(CDM::FluidCompartmentDa
   if (HasVolume())
     data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(GetVolume().Unload()));
 }
-
+//-----------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_TEMPLATE>
+std::string SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetName() const
+{
+  return m_Name;
+}
+//-----------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_TEMPLATE>
+const char* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_TEMPLATE>
+const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const std::string& name)
 {
@@ -111,7 +137,7 @@ const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const std
     return &GetVolume();
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::MapNode(SEFluidCircuitNode& node)
 {
@@ -120,7 +146,7 @@ void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::MapNode(SEFluidCircuitNode& no
   else
     m_Nodes.MapNode(node);
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasInFlow() const
 {
@@ -131,6 +157,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasInFlow() const
       return true;
   return false;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 const SEScalarVolumePerTime& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetInFlow()
 {
@@ -144,6 +171,7 @@ const SEScalarVolumePerTime& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetInF
   m_InFlow->SetReadOnly(true);
   return *m_InFlow;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetInFlow(const VolumePerTimeUnit& unit) const
 {
@@ -151,7 +179,7 @@ double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetInFlow(const VolumePerTim
     return SEScalar::dNaN();
   return Convert(CalculateInFlow_mL_Per_s(), VolumePerTimeUnit::mL_Per_s, unit);
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasOutFlow() const
 {
@@ -162,6 +190,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasOutFlow() const
       return true;
   return false;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 const SEScalarVolumePerTime& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetOutFlow()
 {
@@ -175,6 +204,7 @@ const SEScalarVolumePerTime& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetOut
   m_OutFlow->SetReadOnly(true);
   return *m_OutFlow;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetOutFlow(const VolumePerTimeUnit& unit) const
 {
@@ -182,7 +212,7 @@ double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetOutFlow(const VolumePerTi
     return SEScalar::dNaN();
   return Convert(CalculateOutFlow_mL_Per_s(), VolumePerTimeUnit::mL_Per_s, unit);
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::CalculateInFlow_mL_Per_s() const
 {
@@ -204,7 +234,7 @@ double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::CalculateInFlow_mL_Per_s() c
     flow_mL_Per_s = 0; // This number is something like x.e-12, which we treat as 0
   return flow_mL_Per_s;
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::CalculateOutFlow_mL_Per_s() const
 {
@@ -226,7 +256,7 @@ double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::CalculateOutFlow_mL_Per_s() 
     flow_mL_Per_s = 0; // This number is something like x.e-12, which we treat as 0
   return flow_mL_Per_s;
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasPressure() const
 {
@@ -240,6 +270,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasPressure() const
   }
   return m_Pressure == nullptr ? false : m_Pressure->IsValid();
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 SEScalarPressure& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetPressure()
 {
@@ -263,6 +294,7 @@ SEScalarPressure& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetPressure()
   }
   return *m_Pressure;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetPressure(const PressureUnit& unit) const
 {
@@ -296,7 +328,7 @@ double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetPressure(const PressureUn
     return SEScalar::dNaN();
   return m_Pressure->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasVolume() const
 {
@@ -310,6 +342,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasVolume() const
   }
   return m_Volume == nullptr ? false : m_Volume->IsValid();
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 SEScalarVolume& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetVolume()
 {
@@ -327,6 +360,7 @@ SEScalarVolume& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetVolume()
   }
   return *m_Volume;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetVolume(const VolumeUnit& unit) const
 {
@@ -343,12 +377,13 @@ double SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetVolume(const VolumeUnit& 
     return SEScalar::dNaN();
   return m_Volume->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasSubstanceQuantities() const
 {
   return !m_SubstanceQuantities.empty();
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasSubstanceQuantity(const SESubstance& substance) const
 {
@@ -358,7 +393,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasSubstanceQuantity(const SES
   }
   return false;
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 SubstanceQuantityType* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetSubstanceQuantity(const SESubstance& substance) const
 {
@@ -368,11 +403,13 @@ SubstanceQuantityType* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetSubstance
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 const std::vector<SubstanceQuantityType*>& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetSubstanceQuantities() const
 {
   return m_SubstanceQuantities;
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::RemoveSubstanceQuantity(const SESubstance& substance)
 {
@@ -385,6 +422,7 @@ void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::RemoveSubstanceQuantity(const 
     }
   }
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::ZeroSubstanceQuantities()
 {
@@ -392,7 +430,7 @@ void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::ZeroSubstanceQuantities()
     sq->SetToZero();
   }
 }
-
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::AddLink(LinkType& link)
 {
@@ -405,22 +443,31 @@ void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::AddLink(LinkType& link)
       m_IncomingLinks.push_back(&link);
   }
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::RemoveLink(LinkType& link)
 {
   Remove(m_Links, &link);
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::RemoveLinks()
 {
   m_Links.clear();
 }
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 const std::vector<LinkType*>& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetLinks()
 {
   return m_Links;
 }
-
+//-----------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_TEMPLATE>
+bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasChild(const char* name)
+{
+  return HasChild( std::string{ name } );
+}
+//-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasChild(const std::string& name)
 {
@@ -430,4 +477,5 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasChild(const std::string& na
   }
   return false;
 }
+//-----------------------------------------------------------------------------
 }

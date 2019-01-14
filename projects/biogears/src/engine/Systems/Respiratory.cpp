@@ -1177,7 +1177,8 @@ void Respiratory::Intubation()
     m_data.SetIntubation(CDM::enumOnOff::On);
     SEIntubation* intubation = m_PatientActions->GetIntubation();
     switch (intubation->GetType()) {
-    case CDM::enumIntubationType::Tracheal: { // The proper way to intubate
+    case CDM::enumIntubationType::Tracheal: { 
+     // The proper way to intubate
       // Airway mode handles this case by default
       break;
     }
@@ -1198,6 +1199,8 @@ void Respiratory::Intubation()
       m_CarinaToRightAnatomicDeadSpace->GetNextResistance().SetValue(m_dRespOpenResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       break;
     }
+    default:
+      break;
     }
   } else {
     m_data.SetIntubation(CDM::enumOnOff::Off);

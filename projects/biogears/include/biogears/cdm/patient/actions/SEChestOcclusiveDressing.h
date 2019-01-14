@@ -18,19 +18,19 @@ namespace biogears {
 class BIOGEARS_API SEChestOcclusiveDressing : public SEPatientAction {
 public:
   SEChestOcclusiveDressing();
-  virtual ~SEChestOcclusiveDressing();
+  virtual ~SEChestOcclusiveDressing() override;
 
   static constexpr const char* TypeTag() { return "SEChestOcclusiveDressing"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
   virtual bool Load(const CDM::ChestOcclusiveDressingData& in);
-  virtual CDM::ChestOcclusiveDressingData* Unload() const;
+  virtual CDM::ChestOcclusiveDressingData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::ChestOcclusiveDressingData& data) const;
@@ -41,7 +41,7 @@ public:
   virtual bool HasSide() const;
   virtual void InvalidateSide();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   CDM::enumSide::value m_Side;

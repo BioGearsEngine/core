@@ -24,6 +24,7 @@ namespace biogears {
 template <CIRCUIT_TEMPLATE>
 class SECircuit : public Loggable {
 public:
+  SECircuit(const char* name, Logger* logger);
   SECircuit(const std::string& name, Logger* logger);
   virtual ~SECircuit();
 
@@ -37,6 +38,7 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
 
   virtual bool HasReferenceNode() const;
   virtual bool IsReferenceNode(NodeType& node) const;
@@ -46,22 +48,30 @@ public:
   // Nodes //
   virtual void AddNode(NodeType& node);
   virtual bool HasNode(NodeType& node);
+  virtual bool HasNode(const char* name);
   virtual bool HasNode(const std::string& name);
+  virtual NodeType* GetNode(const char* name);
   virtual NodeType* GetNode(const std::string& name);
+  virtual const NodeType* GetNode(const char* name) const;
   virtual const NodeType* GetNode(const std::string& name) const;
   virtual const std::vector<NodeType*>& GetNodes() const;
   virtual void RemoveNode(const NodeType& node);
+  virtual void RemoveNode(const char* name);
   virtual void RemoveNode(const std::string& name);
   size_t GetCalculatorIndex(const NodeType& node) const; // Does not count the reference node
 
   // Paths //
   virtual void AddPath(PathType& node);
   virtual bool HasPath(PathType& node);
+  virtual bool HasPath(const char* name);
   virtual bool HasPath(const std::string& name);
+  virtual PathType* GetPath(const char* name);
   virtual PathType* GetPath(const std::string& name);
+  virtual const PathType* GetPath(const char* name) const;
   virtual const PathType* GetPath(const std::string& name) const;
   virtual const std::vector<PathType*>& GetPaths() const;
   virtual void RemovePath(const PathType& path);
+  virtual void RemovePath(const char* name);
   virtual void RemovePath(const std::string& name);
   virtual const std::vector<PathType*>& GetValvePaths();
   virtual const std::vector<PathType*>& GetPolarizedElementPaths();

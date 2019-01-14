@@ -199,6 +199,7 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
       carbsMass_g += increment_g;
       fatMass_g += increment_g;
       break;
+    default:
       break;
     }
 

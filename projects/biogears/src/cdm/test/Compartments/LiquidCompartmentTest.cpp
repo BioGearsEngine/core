@@ -282,28 +282,28 @@ void CommonDataModelTest::TestLiquidHierarchyFlows(SETestSuite& testSuite, SESub
 void CommonDataModelTest::TestFlow(SETestCase& testCase, SELiquidCompartment& cmpt, double inflow_mL_Per_s, double outflow_mL_Per_s)
 {
   if (!cmpt.HasInFlow())
-    testCase.AddFailure(cmpt.GetName() + " does not have Inflow");
+    testCase.AddFailure(std::string{ cmpt.GetName() }+ " does not have Inflow");
   if (!cmpt.HasOutFlow())
-    testCase.AddFailure(cmpt.GetName() + " does not have Outflow");
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+    testCase.AddFailure(std::string{ cmpt.GetName() }+ " does not have Outflow");
+  m_ss << std::string{ cmpt.GetName() }+ " Inflow : " << cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetInFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
+  m_ss << std::string{ cmpt.GetName() }+ " Inflow : " << cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. inflow_mL_Per_s " << inflow_mL_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s), inflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << inflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  m_ss << std::string{ cmpt.GetName() }+ " Outflow : " << cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetOutFlow(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
+  m_ss << std::string{ cmpt.GetName() }+ " Outflow : " << cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " vs. outflow_mL_Per_s " << outflow_mL_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s), outflow_mL_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetOutFlow().GetValue(VolumePerTimeUnit::mL_Per_s) << " expected " << outflow_mL_Per_s;
@@ -384,7 +384,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
   L2C0_N2->GetConcentration().SetValue(L2C0_N2_mg_Per_mL, MassPerVolumeUnit::mg_Per_mL);
   L2C0_N2->Balance(BalanceLiquidBy::Concentration);
   if (!L2C0_N2->HasMass())
-    testCase.AddFailure("Mass was not set from Concentration Balance");
+    testCase.AddFailure( std::string{"Mass was not set from Concentration Balance"});
 
   SELiquidSubstanceQuantity* L2C1_N2 = L2C1->GetSubstanceQuantity(*N2);
   double L2C1_N2_mg = 100;
@@ -392,7 +392,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
   L2C1_N2->Balance(BalanceLiquidBy::Mass);
   // Make sure Balance By Mass works (Note Balance does not compute saturation)
   if (!L2C1_N2->HasConcentration())
-    testCase.AddFailure("Concentration was not set from Mass Balance");
+    testCase.AddFailure( std::string{"Concentration was not set from Mass Balance"});
 
   SELiquidSubstanceQuantity* L2C2_N2 = L2C2->GetSubstanceQuantity(*N2);
   L2C2_N2->GetConcentration().SetValue(5, MassPerVolumeUnit::mg_Per_mL);
@@ -550,7 +550,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
     testCase.AddFailure(m_ss);
   }
   if (!L2C0_N2->HasMolarity())
-    testCase.AddFailure("Molarity was not set from Concentration Balance");
+    testCase.AddFailure( std::string{"Molarity was not set from Concentration Balance"});
   double L2C0_N2_mmol_Per_mL = L2C0_N2_mg_Per_mL / N2->GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
   if ((GeneralMath::PercentTolerance(L2C0_N2->GetMolarity(AmountPerVolumeUnit::mmol_Per_mL), L2C0_N2_mmol_Per_mL)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " N2 const Molarity is not correct : " << L2C0_N2->GetMolarity(AmountPerVolumeUnit::mmol_Per_mL) << " expected " << L2C0_N2_mmol_Per_mL;
@@ -561,7 +561,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
     testCase.AddFailure(m_ss);
   }
   if (!L2C0_N2->HasPartialPressure())
-    testCase.AddFailure("PartialPressure was not set from Concentration Balance");
+    testCase.AddFailure( std::string{"PartialPressure was not set from Concentration Balance"});
   GeneralMath::CalculatePartialPressureInLiquid(*N2, L2C0_N2->GetConcentration(), partialPressure);
   if (GeneralMath::PercentTolerance(L2C0_N2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " N2 const PartialPressure is not correct : " << L2C0_N2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
@@ -582,7 +582,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
     testCase.AddFailure(m_ss);
   }
   if (!L2C1_N2->HasMolarity())
-    testCase.AddFailure("Molarity was not set from Mass Balance");
+    testCase.AddFailure( std::string{"Molarity was not set from Mass Balance"});
   double L2C1_N2_mmol_Per_mL = L2C1_N2_concentration_mg_Per_mL / N2->GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
   if ((GeneralMath::PercentTolerance(L2C1_N2->GetMolarity(AmountPerVolumeUnit::mmol_Per_mL), L2C1_N2_mmol_Per_mL)) > m_PercentTolerance) {
     m_ss << L2C1->GetName() << " N2 const Molarity is not correct : " << L2C1_N2->GetMolarity(AmountPerVolumeUnit::mmol_Per_mL) << " expected " << L2C1_N2_mmol_Per_mL;
@@ -593,7 +593,7 @@ void CommonDataModelTest::TestLiquidHierarchy(SETestSuite& testSuite, SESubstanc
     testCase.AddFailure(m_ss);
   }
   if (!L2C1_N2->HasPartialPressure())
-    testCase.AddFailure("PartialPressure was not set from Mass Balance");
+    testCase.AddFailure( std::string{"PartialPressure was not set from Mass Balance"});
   GeneralMath::CalculatePartialPressureInLiquid(*N2, L2C1_N2->GetConcentration(), partialPressure);
   if (GeneralMath::PercentTolerance(L2C1_N2->GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " N2 const PartialPressure is not correct : " << L2C1_N2->GetPartialPressure(PressureUnit::mmHg) << " expected " << partialPressure;
@@ -875,7 +875,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
   L2C0_Hb->Balance(BalanceLiquidBy::Molarity);
   // Check Balance worked correctly
   if (!L2C0_Hb->HasMass())
-    testCase.AddFailure("Mass was not set from Molarity Balance");
+    testCase.AddFailure( std::string{"Mass was not set from Molarity Balance"});
   double L2C0_Hb_mg = L2C0_Hb_mmol_Per_L * Hb->GetMolarMass(MassPerAmountUnit::mg_Per_mmol) * L2C0_L;
   if (GeneralMath::PercentTolerance(L2C0_Hb->GetMass(MassUnit::mg), L2C0_Hb_mg) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " Hb const Mass is not correct : " << L2C0_Hb->GetMass(MassUnit::mg) << " expected " << L2C0_Hb_mg;
@@ -886,7 +886,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
     testCase.AddFailure(m_ss);
   }
   if (!L2C0_Hb->HasConcentration())
-    testCase.AddFailure("Concentration was not set from Molarity Balance");
+    testCase.AddFailure( std::string{"Concentration was not set from Molarity Balance"});
   double L2C0_Hb_mg_Per_L = L2C0_Hb_mg / L2C0_L;
   if (GeneralMath::PercentTolerance(L2C0_Hb->GetConcentration(MassPerVolumeUnit::mg_Per_L), L2C0_Hb_mg_Per_L) > m_PercentTolerance) {
     m_ss << L2C0->GetName() << " Hb const Concentration is not correct : " << L2C0_Hb->GetConcentration(MassPerVolumeUnit::mg_Per_L) << " expected " << L2C0_Hb_mg_Per_L;
@@ -897,7 +897,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
     testCase.AddFailure(m_ss);
   }
   if (L2C0_Hb->HasPartialPressure())
-    testCase.AddFailure("Hb is not a Liquid, but has a partial pressure");
+    testCase.AddFailure( std::string{"Hb is not a Liquid, but has a partial pressure"});
 
   SELiquidSubstanceQuantity* L2C0_HbO2 = L2C0->GetSubstanceQuantity(*HbO2);
   L2C0_HbO2->GetMolarity().SetValue(L2C0_HbO2_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
@@ -995,7 +995,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
 
   double L1C0_O2_saturation = (L2C0_HbO2_mmol + L2C0_HbO2CO2_mmol + L2C1_HbO2_mmol + L2C1_HbO2CO2_mmol) / (L2C0_total_mmol + L2C1_total_mmol);
   if (!L1C0_O2->HasSaturation())
-    testCase.AddFailure("L1C0_O2 does not have saturation");
+    testCase.AddFailure( std::string{"L1C0_O2 does not have saturation"});
   m_ss << "L1C0_O2_saturation : " << const_cast<const SELiquidSubstanceQuantity*>(L1C0_O2)->GetSaturation() << " vs. L1C0_O2_saturation " << L1C0_O2_saturation;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidSubstanceQuantity*>(L1C0_O2)->GetSaturation(), L1C0_O2_saturation) > m_PercentTolerance) {
@@ -1010,7 +1010,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
   }
   double L1C0_CO2_saturation = (L2C0_HbCO2_mmol + L2C0_HbO2CO2_mmol + L2C1_HbCO2_mmol + L2C1_HbO2CO2_mmol) / (L2C0_total_mmol + L2C1_total_mmol);
   if (!L1C0_CO2->HasSaturation())
-    testCase.AddFailure("L1C0_CO2 does not have saturation");
+    testCase.AddFailure( std::string{"L1C0_CO2 does not have saturation"});
   m_ss << "L1C0_CO2_saturation : " << const_cast<const SELiquidSubstanceQuantity*>(L1C0_CO2)->GetSaturation() << " vs. L1C0_CO2_saturation " << L1C0_CO2_saturation;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidSubstanceQuantity*>(L1C0_CO2)->GetSaturation(), L1C0_CO2_saturation) > m_PercentTolerance) {
@@ -1026,7 +1026,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
 
   double L1C1_O2_saturation = (L2C2_HbO2_mmol + L2C2_HbO2CO2_mmol + L2C3_HbO2_mmol + L2C3_HbO2CO2_mmol) / (L2C2_total_mmol + L2C3_total_mmol);
   if (!L1C1_O2->HasSaturation())
-    testCase.AddFailure("L1C1_O2 does not have saturation");
+    testCase.AddFailure( std::string{"L1C1_O2 does not have saturation"});
   m_ss << "L1C1_O2_saturation : " << const_cast<const SELiquidSubstanceQuantity*>(L1C1_O2)->GetSaturation() << " vs. L1C1_O2_saturation " << L1C1_O2_saturation;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidSubstanceQuantity*>(L1C1_O2)->GetSaturation(), L1C1_O2_saturation) > m_PercentTolerance) {
@@ -1041,7 +1041,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
   }
   double L1C1_CO2_saturation = (L2C2_HbCO2_mmol + L2C2_HbO2CO2_mmol + L2C3_HbCO2_mmol + L2C3_HbO2CO2_mmol) / (L2C2_total_mmol + L2C3_total_mmol);
   if (!L1C1_CO2->HasSaturation())
-    testCase.AddFailure("L1C1_CO2 does not have saturation");
+    testCase.AddFailure( std::string{"L1C1_CO2 does not have saturation"});
   m_ss << "L1C1_CO2_saturation : " << const_cast<const SELiquidSubstanceQuantity*>(L1C1_CO2)->GetSaturation() << " vs. L1C1_CO2_saturation " << L1C1_CO2_saturation;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidSubstanceQuantity*>(L1C1_CO2)->GetSaturation(), L1C1_CO2_saturation) > m_PercentTolerance) {
@@ -1057,7 +1057,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
 
   double L0C0_O2_saturation = (L2C0_HbO2_mmol + L2C0_HbO2CO2_mmol + L2C1_HbO2_mmol + L2C1_HbO2CO2_mmol + L2C2_HbO2_mmol + L2C2_HbO2CO2_mmol + L2C3_HbO2_mmol + L2C3_HbO2CO2_mmol) / (L2C0_total_mmol + L2C1_total_mmol + L2C2_total_mmol + L2C3_total_mmol);
   if (!L0C0_O2->HasSaturation())
-    testCase.AddFailure("L0C0_O2 does not have saturation");
+    testCase.AddFailure( std::string{"L0C0_O2 does not have saturation"});
   m_ss << "L0C0_O2_saturation : " << const_cast<const SELiquidSubstanceQuantity*>(L0C0_O2)->GetSaturation() << " vs. L0C0_O2_saturation " << L0C0_O2_saturation;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidSubstanceQuantity*>(L0C0_O2)->GetSaturation(), L0C0_O2_saturation) > m_PercentTolerance) {
@@ -1072,7 +1072,7 @@ void CommonDataModelTest::TestLiquidHierarchySaturation(SETestSuite& testSuite, 
   }
   double L0C0_CO2_saturation = (L2C0_HbCO2_mmol + L2C0_HbO2CO2_mmol + L2C1_HbCO2_mmol + L2C1_HbO2CO2_mmol + L2C2_HbCO2_mmol + L2C2_HbO2CO2_mmol + L2C3_HbCO2_mmol + L2C3_HbO2CO2_mmol) / (L2C0_total_mmol + L2C1_total_mmol + L2C2_total_mmol + L2C3_total_mmol);
   if (!L0C0_CO2->HasSaturation())
-    testCase.AddFailure("L0C0_CO2 does not have saturation");
+    testCase.AddFailure( std::string{"L0C0_CO2 does not have saturation"});
   m_ss << "L0C0_CO2_saturation : " << const_cast<const SELiquidSubstanceQuantity*>(L0C0_CO2)->GetSaturation() << " vs. L0C0_CO2_saturation " << L0C0_CO2_saturation;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(const_cast<const SELiquidSubstanceQuantity*>(L0C0_CO2)->GetSaturation(), L0C0_CO2_saturation) > m_PercentTolerance) {
@@ -1162,7 +1162,7 @@ void CommonDataModelTest::CheckLiquidPressureAndVolume(SETestCase& testCase, SEL
 void CommonDataModelTest::TestLiquidSubstanceQuantity(SETestCase& testCase, SELiquidCompartment& cmpt, SELiquidSubstanceQuantity& subQ, double totalMass_mg, double totalVolume_mL)
 {
   if (!subQ.HasMass())
-    testCase.AddFailure("Mass was not set on " + cmpt.GetName());
+    testCase.AddFailure( std::string{"Mass was not set on "} + cmpt.GetName());
   if (GeneralMath::PercentTolerance(subQ.GetMass(MassUnit::mg), totalMass_mg) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 const Mass is not correct : " << subQ.GetMass(MassUnit::mg) << " expected " << totalMass_mg;
     testCase.AddFailure(m_ss);
@@ -1172,7 +1172,7 @@ void CommonDataModelTest::TestLiquidSubstanceQuantity(SETestCase& testCase, SELi
     testCase.AddFailure(m_ss);
   }
   if (!subQ.HasConcentration())
-    testCase.AddFailure("Concentration was not set on  " + cmpt.GetName());
+    testCase.AddFailure( std::string{"Concentration was not set on  "} + cmpt.GetName());
   double mg_Per_mL = totalMass_mg / totalVolume_mL;
   if (GeneralMath::PercentTolerance(subQ.GetConcentration(MassPerVolumeUnit::mg_Per_mL), mg_Per_mL) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 const Concentration is not correct : " << subQ.GetConcentration(MassPerVolumeUnit::mg_Per_mL) << " expected " << mg_Per_mL;
@@ -1183,7 +1183,7 @@ void CommonDataModelTest::TestLiquidSubstanceQuantity(SETestCase& testCase, SELi
     testCase.AddFailure(m_ss);
   }
   if (!subQ.HasMolarity())
-    testCase.AddFailure("Molarity was not set on  " + cmpt.GetName());
+    testCase.AddFailure( std::string{"Molarity was not set on  "} + cmpt.GetName());
   double mmol_Per_mL = mg_Per_mL / subQ.GetSubstance().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
   if (GeneralMath::PercentTolerance(subQ.GetMolarity(AmountPerVolumeUnit::mmol_Per_mL), mmol_Per_mL) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " N2 const Molarity is not correct : " << subQ.GetMolarity(AmountPerVolumeUnit::mmol_Per_mL) << " expected " << mmol_Per_mL;
@@ -1194,7 +1194,7 @@ void CommonDataModelTest::TestLiquidSubstanceQuantity(SETestCase& testCase, SELi
     testCase.AddFailure(m_ss);
   }
   if (!subQ.HasPartialPressure())
-    testCase.AddFailure("PartialPressure was not set on  " + cmpt.GetName());
+    testCase.AddFailure( std::string{"PartialPressure was not set on  "} + cmpt.GetName());
   SEScalarPressure partialPressure;
   GeneralMath::CalculatePartialPressureInLiquid(subQ.GetSubstance(), subQ.GetConcentration(), partialPressure);
   if (GeneralMath::PercentTolerance(subQ.GetPartialPressure(PressureUnit::mmHg), partialPressure.GetValue(PressureUnit::mmHg)) > m_PercentTolerance) {
@@ -1238,10 +1238,10 @@ void CommonDataModelTest::TestUpdateLiquidLinks(SETestSuite& testSuite, SESubsta
   double inflowScalar = venaCava.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
 
   if (GeneralMath::PercentTolerance(inflow, (IV2venaCava.GetFlow(VolumePerTimeUnit::mL_Per_s) + veins2venaCava.GetFlow(VolumePerTimeUnit::mL_Per_s))) > m_PercentTolerance)
-    testCase.AddFailure("Initial Vena Cava inflow is not the correct sum");
+    testCase.AddFailure( std::string{"Initial Vena Cava inflow is not the correct sum"});
 
   if (GeneralMath::PercentTolerance(inflow, inflowScalar) > m_PercentTolerance)
-    testCase.AddFailure("Inflow retrieved using GetInFlow() and GetValue() are not equal in the initial test");
+    testCase.AddFailure( std::string{"Inflow retrieved using GetInFlow() and GetValue() are not equal in the initial test"});
 
   // Now make a graph that doesn't have the IV connected to the Vena Cava
   SELiquidCompartmentGraph& normalGraph = cmptMgr.CreateLiquidGraph("NormalGraph");
@@ -1257,10 +1257,10 @@ void CommonDataModelTest::TestUpdateLiquidLinks(SETestSuite& testSuite, SESubsta
   inflowScalar = venaCava.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
 
   if (GeneralMath::PercentTolerance(inflow, veins2venaCava.GetFlow(VolumePerTimeUnit::mL_Per_s)) > m_PercentTolerance)
-    testCase.AddFailure("Vena Cava inflow is not the veinous flow after first graph update");
+    testCase.AddFailure( std::string{"Vena Cava inflow is not the veinous flow after first graph update"});
 
   if (GeneralMath::PercentTolerance(inflow, inflowScalar) > m_PercentTolerance)
-    testCase.AddFailure("Inflow retrieved using GetInFlow() and GetValue() are not equal after the first graph update");
+    testCase.AddFailure( std::string{"Inflow retrieved using GetInFlow() and GetValue() are not equal after the first graph update"});
 
   // Now make a graph that connects the IV bag to the vena cava
   SELiquidCompartmentGraph& ivGraph = cmptMgr.CreateLiquidGraph("IVGraph");
@@ -1277,10 +1277,10 @@ void CommonDataModelTest::TestUpdateLiquidLinks(SETestSuite& testSuite, SESubsta
   inflowScalar = venaCava.GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
 
   if (GeneralMath::PercentTolerance(inflow, (IV2venaCava.GetFlow(VolumePerTimeUnit::mL_Per_s) + veins2venaCava.GetFlow(VolumePerTimeUnit::mL_Per_s))) > m_PercentTolerance)
-    testCase.AddFailure("Vena Cava inflow is not the sum of IV and veinous flow after second graph update");
+    testCase.AddFailure( std::string{"Vena Cava inflow is not the sum of IV and veinous flow after second graph update"});
 
   if (GeneralMath::PercentTolerance(inflow, inflowScalar) > m_PercentTolerance)
-    testCase.AddFailure("Inflow retrieved using GetInFlow() and GetValue() are not equal after the second graph update");
+    testCase.AddFailure( std::string{"Inflow retrieved using GetInFlow() and GetValue() are not equal after the second graph update"});
 
   testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Test"), TimeUnit::s);
 }

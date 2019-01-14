@@ -414,9 +414,9 @@ void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProdu
         totalMass += tisIntra.GetSubstanceQuantity(*sub)->GetMass(MassUnit::g);
       }
       if (sub->GetName() == "Hemoglobin")
-        trk.Track("Unbound" + sub->GetName() + "_TotalMass_" + "g", time, totalMass);
+        trk.Track(std::string{ "Unbound" } +sub->GetName() + "_TotalMass_" + "g", time, totalMass);
       else
-        trk.Track(sub->GetName() + "_TotalMass_" + "g", time, totalMass);
+        trk.Track(std::string{ sub->GetName() } +"_TotalMass_" + "g", time, totalMass);
     }
 
     //Total Hb
@@ -432,8 +432,8 @@ void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProdu
       SELiquidSubstanceQuantity* sqCO2 = cmpt->GetSubstanceQuantity(CO2);
       SELiquidSubstanceQuantity* sqHbCO2 = cmpt->GetSubstanceQuantity(HbCO2);
       SELiquidSubstanceQuantity* sqHCO3 = cmpt->GetSubstanceQuantity(HCO3);
-      trk.Track(cmpt->GetName() + "_TotalOxygenMolarConcentration_mmol_per_L", time, sqO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
-      trk.Track(cmpt->GetName() + "_TotalCarbonDioxideMolarConcentration_mmol_per_L", time, sqCO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbCO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
+      trk.Track(std::string{ cmpt->GetName() } +"_TotalOxygenMolarConcentration_mmol_per_L", time, sqO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
+      trk.Track(std::string{ cmpt->GetName() } +"_TotalCarbonDioxideMolarConcentration_mmol_per_L", time, sqCO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbCO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + sqHbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
     }
 
     if (usingDiffusion) {
@@ -460,8 +460,8 @@ void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProdu
         for (auto ion : ions) {
           intraConcentration_mM = tisIntra.GetSubstanceQuantity(*ion)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
           extraConcentration_mM = tisExtra.GetSubstanceQuantity(*ion)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
-          trk.Track(ion->GetName() + "_IntracellularConcentration_mmol_Per_L", time, intraConcentration_mM);
-          trk.Track(ion->GetName() + "_ExtracellularConcentration_mmol_Per_L", time, extraConcentration_mM);
+          trk.Track(std::string{ion->GetName()} + "_IntracellularConcentration_mmol_Per_L", time, intraConcentration_mM);
+          trk.Track(std::string{ion->GetName()} + "_ExtracellularConcentration_mmol_Per_L", time, extraConcentration_mM);
         }
       }
     }

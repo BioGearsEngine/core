@@ -68,7 +68,7 @@ namespace biogears {
       virtual void consume(T&) override= 0;
       virtual auto consume() -> T override = 0;
 
-      virtual size_t unsafe_size() const = 0;
+      virtual size_t unsafe_size() const override = 0;
 
       virtual void abort() = 0;
       virtual void shutdown() = 0;

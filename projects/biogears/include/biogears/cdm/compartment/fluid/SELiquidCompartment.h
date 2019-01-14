@@ -30,23 +30,25 @@ class BIOGEARS_API SELiquidCompartment : public SEFluidCompartment<SELiquidCompa
   friend class SELiquidSubstanceQuantity;
 
 protected:
+  SELiquidCompartment(const char* name, Logger* logger);
   SELiquidCompartment(const std::string& name, Logger* logger);
 
 public:
   virtual ~SELiquidCompartment();
 
-  virtual void Clear();
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::LiquidCompartmentData* Unload();
+  virtual CDM::LiquidCompartmentData* Unload() override;
 
 protected:
   virtual void Unload(CDM::LiquidCompartmentData& data);
 
 public:
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) override;
+  virtual const SEScalar* GetScalar(const std::string& name) override;
 
-  virtual void StateChange();
+  virtual void StateChange() override;
 
   virtual void Balance(BalanceLiquidBy by); // Balance all substances based on a specific property
 

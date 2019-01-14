@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
+#include <biogears/cdm/utils/unitconversion/PScalar.h>
 
 using namespace biogears;
 extern "C" JNIEXPORT jlong JNICALL Java_mil_tatrc_physiology_datamodel_testing_CDMUnitTestDriver_nativeAllocate(JNIEnv* env, jobject obj)

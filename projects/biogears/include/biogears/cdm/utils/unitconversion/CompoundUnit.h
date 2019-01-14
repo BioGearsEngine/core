@@ -61,51 +61,13 @@ class BIOGEARS_API CCompoundUnit {
   typedef std::vector<CCompoundUnitElement> CUEVecType;
 public:
   // Default ctor
-  CCompoundUnit()
-    : m_CUD(nullptr)
-    , m_dBigness(1.0)
-    , m_bStaleBigness(true)
-    , m_bStaleDimension(true)
-    , m_bDBFlag(false)
-    , m_bExplicitDBFlag(false)
-    , m_bExplicitNonDBFlag(false){};
-
+  CCompoundUnit();
   // Construct directly from a unit string specification
-  CCompoundUnit(const std::string& unitString)
-    : m_CUD(nullptr)
-    , m_dBigness(1.0)
-    , m_bStaleBigness(true)
-    , m_bStaleDimension(true)
-    , m_bDBFlag(false)
-    , m_bExplicitDBFlag(false)
-    , m_bExplicitNonDBFlag(false)
-  {
-    ParseString(unitString);
-  }
-
+  CCompoundUnit(const char* unitString);
+  // Construct directly from a unit string specification
+  CCompoundUnit(const std::string& unitString);
   // Copy ctor
-  CCompoundUnit(const CCompoundUnit& src) // Copy constructor
-    : m_CUEVec(src.m_CUEVec)
-    , m_dBigness(src.m_dBigness)
-    , m_bStaleBigness(src.m_bStaleBigness)
-    , m_strUnit(src.m_strUnit)
-    , m_bStaleDimension(src.m_bStaleDimension)
-    , m_bDBFlag(src.m_bDBFlag)
-    , m_bExplicitDBFlag(src.m_bExplicitDBFlag)
-    , m_bExplicitNonDBFlag(src.m_bExplicitNonDBFlag)
-  {
-    // In the initializer list, I'm assuming that initializing one vector with another
-    // copies the vector correctly. For the CUnitDimension object, we can't just
-    // initialize our pointer with the src's pointer, because each CCompoundUnit owns its
-    // CUnitDimension object, so we need to invoke the copy constructor on the
-    // CUnitDimension. Unfortunately, since the pointer might be nullptr, we can't simply
-    // do this in the initializer list.
-    if (src.m_CUD == nullptr) {
-      m_CUD = nullptr;
-    } else {
-      m_CUD = new CUnitDimension(*src.m_CUD);
-    }
-  };
+  CCompoundUnit(const CCompoundUnit& src);
 
   // dtor
   virtual ~CCompoundUnit()
@@ -206,6 +168,7 @@ public:
   // Is this CompoundUnit dimensionally-compatible with a pre-defined
   // quantity type?
   bool IsOfType(int quantityTypeID);
+  bool IsOfType(const char* quantityName);
   bool IsOfType(const std::string& quantityName);
 
   // Is this CompoundUnit dimensionless
@@ -269,9 +232,11 @@ public:
   }
 
   // Build up my internals from a string specification.
+  void ParseString(const char* unitString);
   void ParseString(const std::string& unitString);
 
-  std::string GetString() const { return m_strUnit; }
+  const char* GetString() const;
+
   operator std::string() {
     return GetString();
   }

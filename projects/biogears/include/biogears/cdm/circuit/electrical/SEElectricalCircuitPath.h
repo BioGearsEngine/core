@@ -27,6 +27,7 @@ class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectr
 
 protected:
   SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name);
+  SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name);
 
 public:
   virtual ~SEElectricalCircuitPath();

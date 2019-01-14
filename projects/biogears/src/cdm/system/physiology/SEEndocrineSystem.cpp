@@ -40,7 +40,11 @@ void SEEndocrineSystem::Clear()
   SAFE_DELETE(m_GlucagonSynthesisRate);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEEndocrineSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEEndocrineSystem::GetScalar(const std::string& name)
 {
   if (name == idInsulinSynthesisRate)
@@ -119,9 +123,9 @@ double SEEndocrineSystem::GetGlucagonSynthesisRate(const AmountPerTimeUnit& unit
   return m_GlucagonSynthesisRate->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEEndocrineSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SEEndocrineSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idInsulinSynthesisRate)
     .emplace_back(idGlucagonSynthesisRate);
   ;

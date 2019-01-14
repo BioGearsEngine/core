@@ -22,12 +22,14 @@ class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFl
 
 protected:
   SEFluidCircuit(const std::string& name, SECircuitManager& mgr);
-
+  SEFluidCircuit(const char* name, SECircuitManager& mgr);
 public:
   virtual ~SEFluidCircuit();
 
   SEFluidCircuitNode& CreateNode(const std::string& name);
+  SEFluidCircuitNode& CreateNode(const char* name);
   SEFluidCircuitPath& CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name);
+  SEFluidCircuitPath& CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const char* name);
 
   void AddCircuit(SEFluidCircuit& circuit);
 

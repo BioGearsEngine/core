@@ -25,6 +25,7 @@ class CCompoundUnit;
 
 class CQuantityConversionDescriptor {
 public:
+  CQuantityConversionDescriptor(double fromExp, const char* mappingUnit);
   CQuantityConversionDescriptor(double fromExp, const std::string& mappingUnit);
 
   ~CQuantityConversionDescriptor();

@@ -33,9 +33,11 @@ protected:
   virtual void Unload(CDM::SubstanceTissuePharmacokineticsData& data) const;
 
 public:
+  const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
 
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
 
   virtual bool HasPartitionCoefficient() const;
   virtual SEScalar& GetPartitionCoefficient();

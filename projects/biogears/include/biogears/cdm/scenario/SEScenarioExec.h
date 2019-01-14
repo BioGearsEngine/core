@@ -36,7 +36,9 @@ public:
 
   virtual void Cancel();
 
+  virtual bool Execute(const char* scenarioFile, const char* resultsFile, SEScenarioCustomExec* cExec = nullptr);
   virtual bool Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
+  virtual bool Execute(const SEScenario& scenario, const char* resultsFile, SEScenarioCustomExec* cExec = nullptr);
   virtual bool Execute(const SEScenario& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
 
 protected:

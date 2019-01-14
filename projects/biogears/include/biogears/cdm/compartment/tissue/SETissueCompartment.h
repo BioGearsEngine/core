@@ -33,6 +33,7 @@ class BIOGEARS_API SETissueCompartment : public SECompartment {
   friend class SECompartmentManager;
 
 protected:
+  SETissueCompartment(const char* name, Logger* logger);
   SETissueCompartment(const std::string& name, Logger* logger);
 
 public:
@@ -47,6 +48,7 @@ protected:
   virtual void Unload(CDM::TissueCompartmentData& data);
 
 public:
+  virtual const SEScalar* GetScalar(const char* name) override;
   virtual const SEScalar* GetScalar(const std::string& name) override;
 
   virtual bool HasChildren() const override { return !m_Children.empty(); } // Children on tissue is not supported at this time

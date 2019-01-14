@@ -15,6 +15,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Circuit.hxx>
 
 namespace biogears {
+  template <CIRCUIT_PATH_TEMPLATE>
+  SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name)
+    : SECircuitPath(src, tgt, std::string{ name })
+{}
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const std::string& name)
   : Loggable(src.GetLogger())
@@ -40,12 +45,12 @@ SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, 
   m_NextPotentialSource = nullptr;
   m_PotentialSourceBaseline = nullptr;
   m_ValveBreakdownPotential = nullptr;
-  m_Switch = (CDM::enumOpenClosed::value)-1;
-  m_Valve = (CDM::enumOpenClosed::value)-1;
-  m_NextSwitch = (CDM::enumOpenClosed::value)-1;
-  m_NextValve = (CDM::enumOpenClosed::value)-1;
-  m_NextPolarizedState = (CDM::enumOpenClosed::value)-1;
-  m_PolarizedState = (CDM::enumOpenClosed::value)-1;
+  m_Switch = (CDM::enumOpenClosed::value) - 1;
+  m_Valve = (CDM::enumOpenClosed::value) - 1;
+  m_NextSwitch = (CDM::enumOpenClosed::value) - 1;
+  m_NextValve = (CDM::enumOpenClosed::value) - 1;
+  m_NextPolarizedState = (CDM::enumOpenClosed::value) - 1;
+  m_PolarizedState = (CDM::enumOpenClosed::value) - 1;
 
   m_NumElements = 0;
   m_NumNextElements = 0;
@@ -56,13 +61,13 @@ SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, 
     Fatal(ss);
   }
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 SECircuitPath<CIRCUIT_PATH_TYPES>::~SECircuitPath()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::Clear()
 {
@@ -91,7 +96,7 @@ void SECircuitPath<CIRCUIT_PATH_TYPES>::Clear()
   SAFE_DELETE(m_PotentialSourceBaseline);
   SAFE_DELETE(m_ValveBreakdownPotential);
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::Load(const CDM::CircuitPathData& in)
 {
@@ -110,6 +115,7 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::Load(const CDM::CircuitPathData& in)
     SetNextPolarizedState(in.NextPolarizedState().get());
   return true;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::Unload(CDM::CircuitPathData& data) const
 {
@@ -129,24 +135,31 @@ void SECircuitPath<CIRCUIT_PATH_TYPES>::Unload(CDM::CircuitPathData& data) const
   if (HasNextPolarizedState())
     data.NextPolarizedState(m_NextPolarizedState);
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 std::string SECircuitPath<CIRCUIT_PATH_TYPES>::GetName() const
 {
   return m_Name;
 }
-
+//-------------------------------------------------------------------------------
+template <CIRCUIT_PATH_TEMPLATE>
+const char* SECircuitPath<CIRCUIT_PATH_TYPES>::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 SECircuitNode<PotentialScalar, QuantityScalar>& SECircuitPath<CIRCUIT_PATH_TYPES>::GetSourceNode() const
 {
   return m_SourceNode;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 SECircuitNode<PotentialScalar, QuantityScalar>& SECircuitPath<CIRCUIT_PATH_TYPES>::GetTargetNode() const
 {
   return m_TargetNode;
 }
-
+//-------------------------------------------------------------------------------
 /////////////////////////
 // Valves and Switches //
 /////////////////////////
@@ -195,33 +208,37 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasValidElements() const
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CDM::enumOpenClosed::value SECircuitPath<CIRCUIT_PATH_TYPES>::GetSwitch() const
 {
   return m_Switch;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::SetSwitch(CDM::enumOpenClosed::value state)
 {
   m_Switch = state;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::FlipSwitch()
 {
   m_Switch = (m_Switch == CDM::enumOpenClosed::Open) ? CDM::enumOpenClosed::Closed : CDM::enumOpenClosed::Open;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasSwitch() const
 {
   return m_Switch == (CDM::enumOpenClosed::value)-1 ? false : true;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::InvalidateSwitch()
 {
   m_Switch = (CDM::enumOpenClosed::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CDM::enumOpenClosed::value SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextSwitch() const
 {
@@ -232,126 +249,145 @@ void SECircuitPath<CIRCUIT_PATH_TYPES>::SetNextSwitch(CDM::enumOpenClosed::value
 {
   m_NextSwitch = state;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::FlipNextSwitch()
 {
   m_NextSwitch = (m_NextSwitch == CDM::enumOpenClosed::Open) ? CDM::enumOpenClosed::Closed : CDM::enumOpenClosed::Open;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextSwitch() const
 {
   return m_NextSwitch == (CDM::enumOpenClosed::value)-1 ? false : true;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::InvalidateNextSwitch()
 {
   m_NextSwitch = (CDM::enumOpenClosed::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CDM::enumOpenClosed::value SECircuitPath<CIRCUIT_PATH_TYPES>::GetValve() const
 {
   return m_Valve;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::SetValve(CDM::enumOpenClosed::value state)
 {
   m_Valve = state;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::FlipValve()
 {
   m_Valve = (m_Valve == CDM::enumOpenClosed::Open) ? CDM::enumOpenClosed::Closed : CDM::enumOpenClosed::Open;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasValve() const
 {
   return m_Valve == (CDM::enumOpenClosed::value)-1 ? false : true;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::InvalidateValve()
 {
   m_Valve = (CDM::enumOpenClosed::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CDM::enumOpenClosed::value SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextValve() const
 {
   return m_NextValve;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::SetNextValve(CDM::enumOpenClosed::value state)
 {
   m_NextValve = state;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::FlipNextValve()
 {
   m_NextValve = (m_NextValve == CDM::enumOpenClosed::Open) ? CDM::enumOpenClosed::Closed : CDM::enumOpenClosed::Open;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextValve() const
 {
   return m_NextValve == (CDM::enumOpenClosed::value)-1 ? false : true;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::InvalidateNextValve()
 {
   m_NextValve = (CDM::enumOpenClosed::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CDM::enumOpenClosed::value SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextPolarizedState() const
 {
   return m_NextPolarizedState;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::SetNextPolarizedState(CDM::enumOpenClosed::value state)
 {
   m_NextPolarizedState = state;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::FlipNextPolarizedState()
 {
   m_NextPolarizedState = (m_NextPolarizedState == CDM::enumOpenClosed::Open) ? CDM::enumOpenClosed::Closed : CDM::enumOpenClosed::Open;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextPolarizedState() const
 {
   return m_NextPolarizedState == (CDM::enumOpenClosed::value)-1 ? false : true;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::InvalidateNextPolarizedState()
 {
   m_NextPolarizedState = (CDM::enumOpenClosed::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CDM::enumOpenClosed::value SECircuitPath<CIRCUIT_PATH_TYPES>::GetPolarizedState() const
 {
   return m_PolarizedState;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::SetPolarizedState(CDM::enumOpenClosed::value state)
 {
   m_PolarizedState = state;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::FlipPolarizedState()
 {
   m_PolarizedState = (m_PolarizedState == CDM::enumOpenClosed::Open) ? CDM::enumOpenClosed::Closed : CDM::enumOpenClosed::Open;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasPolarizedState() const
 {
   return m_PolarizedState == (CDM::enumOpenClosed::value)-1 ? false : true;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 void SECircuitPath<CIRCUIT_PATH_TYPES>::InvalidatePolarizedState()
 {
   m_PolarizedState = (CDM::enumOpenClosed::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 /////////////////
 //  Resistance //
 /////////////////
@@ -360,6 +396,7 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasResistance() const
 {
   return m_Resistance == nullptr ? false : m_Resistance->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 ResistanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetResistance()
 {
@@ -367,11 +404,13 @@ ResistanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetResistance()
     m_Resistance = new ResistanceScalar();
   return *m_Resistance;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextResistance() const
 {
   return m_NextResistance == nullptr ? false : m_NextResistance->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 ResistanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextResistance()
 {
@@ -379,11 +418,13 @@ ResistanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextResistance()
     m_NextResistance = new ResistanceScalar();
   return *m_NextResistance;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasResistanceBaseline() const
 {
   return m_ResistanceBaseline == nullptr ? false : m_ResistanceBaseline->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 ResistanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetResistanceBaseline()
 {
@@ -391,7 +432,7 @@ ResistanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetResistanceBaseline()
     m_ResistanceBaseline = new ResistanceScalar();
   return *m_ResistanceBaseline;
 }
-
+//-------------------------------------------------------------------------------
 ///////////////////////
 // Capacitance Types //
 ///////////////////////
@@ -400,6 +441,7 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasCapacitance() const
 {
   return m_Capacitance == nullptr ? false : m_Capacitance->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CapacitanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetCapacitance()
 {
@@ -407,11 +449,13 @@ CapacitanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetCapacitance()
     m_Capacitance = new CapacitanceScalar();
   return *m_Capacitance;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextCapacitance() const
 {
   return m_NextCapacitance == nullptr ? false : m_NextCapacitance->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CapacitanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextCapacitance()
 {
@@ -419,11 +463,13 @@ CapacitanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextCapacitance()
     m_NextCapacitance = new CapacitanceScalar();
   return *m_NextCapacitance;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasCapacitanceBaseline() const
 {
   return m_CapacitanceBaseline == nullptr ? false : m_CapacitanceBaseline->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 CapacitanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetCapacitanceBaseline()
 {
@@ -431,7 +477,7 @@ CapacitanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetCapacitanceBaseline()
     m_CapacitanceBaseline = new CapacitanceScalar();
   return *m_CapacitanceBaseline;
 }
-
+//-------------------------------------------------------------------------------
 //////////////////////
 // Inductance Types //
 //////////////////////
@@ -440,6 +486,7 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasInductance() const
 {
   return m_Inductance == nullptr ? false : m_Inductance->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 InductanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetInductance()
 {
@@ -447,11 +494,13 @@ InductanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetInductance()
     m_Inductance = new InductanceScalar();
   return *m_Inductance;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextInductance() const
 {
   return m_NextInductance == nullptr ? false : m_NextInductance->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 InductanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextInductance()
 {
@@ -459,11 +508,13 @@ InductanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextInductance()
     m_NextInductance = new InductanceScalar();
   return *m_NextInductance;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasInductanceBaseline() const
 {
   return m_InductanceBaseline == nullptr ? false : m_InductanceBaseline->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 InductanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetInductanceBaseline()
 {
@@ -471,7 +522,7 @@ InductanceScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetInductanceBaseline()
     m_InductanceBaseline = new InductanceScalar();
   return *m_InductanceBaseline;
 }
-
+//-------------------------------------------------------------------------------
 ////////////////
 // Flux Types //
 ////////////////
@@ -480,6 +531,7 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasFlux() const
 {
   return m_Flux == nullptr ? false : m_Flux->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetFlux()
 {
@@ -487,11 +539,13 @@ FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetFlux()
     m_Flux = new FluxScalar();
   return *m_Flux;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextFlux() const
 {
   return m_NextFlux == nullptr ? false : m_NextFlux->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextFlux()
 {
@@ -499,11 +553,13 @@ FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextFlux()
     m_NextFlux = new FluxScalar();
   return *m_NextFlux;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasFluxSource() const
 {
   return m_FluxSource == nullptr ? false : m_FluxSource->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetFluxSource()
 {
@@ -511,11 +567,13 @@ FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetFluxSource()
     m_FluxSource = new FluxScalar();
   return *m_FluxSource;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextFluxSource() const
 {
   return m_NextFluxSource == nullptr ? false : m_NextFluxSource->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextFluxSource()
 {
@@ -523,11 +581,13 @@ FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextFluxSource()
     m_NextFluxSource = new FluxScalar();
   return *m_NextFluxSource;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasFluxSourceBaseline() const
 {
   return m_FluxSourceBaseline == nullptr ? false : m_FluxSourceBaseline->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetFluxSourceBaseline()
 {
@@ -535,7 +595,7 @@ FluxScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetFluxSourceBaseline()
     m_FluxSourceBaseline = new FluxScalar();
   return *m_FluxSourceBaseline;
 }
-
+//-------------------------------------------------------------------------------
 /////////////////////
 // Potential Types //
 /////////////////////
@@ -544,6 +604,7 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasPotentialSource() const
 {
   return m_PotentialSource == nullptr ? false : m_PotentialSource->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetPotentialSource()
 {
@@ -551,11 +612,13 @@ PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetPotentialSource()
     m_PotentialSource = new PotentialScalar();
   return *m_PotentialSource;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasNextPotentialSource() const
 {
   return m_NextPotentialSource == nullptr ? false : m_NextPotentialSource->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextPotentialSource()
 {
@@ -563,11 +626,13 @@ PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetNextPotentialSource()
     m_NextPotentialSource = new PotentialScalar();
   return *m_NextPotentialSource;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasPotentialSourceBaseline() const
 {
   return m_PotentialSourceBaseline == nullptr ? false : m_PotentialSourceBaseline->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetPotentialSourceBaseline()
 {
@@ -575,11 +640,13 @@ PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetPotentialSourceBaseline()
     m_PotentialSourceBaseline = new PotentialScalar();
   return *m_PotentialSourceBaseline;
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 bool SECircuitPath<CIRCUIT_PATH_TYPES>::HasValveBreakdownPotential() const
 {
   return m_ValveBreakdownPotential == nullptr ? false : m_ValveBreakdownPotential->IsValid();
 }
+//-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetValveBreakdownPotential()
 {
@@ -587,4 +654,5 @@ PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetValveBreakdownPotential()
     m_ValveBreakdownPotential = new PotentialScalar();
   return *m_ValveBreakdownPotential;
 }
+//-------------------------------------------------------------------------------
 }

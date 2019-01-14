@@ -21,12 +21,15 @@ class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData, 
   friend class SECircuitManager;
 
 protected:
+  SEThermalCircuit(const char* name, SECircuitManager& mgr);
   SEThermalCircuit(const std::string& name, SECircuitManager& mgr);
 
 public:
-  virtual ~SEThermalCircuit();
+  virtual ~SEThermalCircuit() override;
 
+  SEThermalCircuitNode& CreateNode(const char* name);
   SEThermalCircuitNode& CreateNode(const std::string& name);
+  SEThermalCircuitPath& CreatePath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const char* name);
   SEThermalCircuitPath& CreatePath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name);
 
   void AddCircuit(SEThermalCircuit& circuit);

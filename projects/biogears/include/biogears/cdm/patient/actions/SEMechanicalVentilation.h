@@ -29,18 +29,18 @@ class BIOGEARS_API SEMechanicalVentilation : public SEPatientAction {
 protected:
 public:
   SEMechanicalVentilation();
-  virtual ~SEMechanicalVentilation();
+  virtual ~SEMechanicalVentilation() override;
 
   static constexpr const char* TypeTag() { return "SEMechanicalVentilation"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr);
-  virtual CDM::MechanicalVentilationData* Unload() const;
+  virtual CDM::MechanicalVentilationData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::MechanicalVentilationData& data) const;
@@ -68,7 +68,7 @@ public:
   void RemoveGasFraction(const SESubstance& substance);
   void RemoveGasFractions();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   std::stringstream m_ss;

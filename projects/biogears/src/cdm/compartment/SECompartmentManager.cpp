@@ -85,12 +85,12 @@ void SECompartmentManager::Clear()
   for (auto& cData : in.type##Link()) {                                                                              \
     auto* src = Get##type##Compartment(cData.SourceCompartment());                                                   \
     if (src == nullptr) {                                                                                            \
-      Error("Unable to find source compartment " + cData.SourceCompartment() + " for link " + cData.Name().c_str()); \
+      Error("Unable to find source compartment " + std::string{cData.SourceCompartment()} + " for link " + cData.Name().c_str()); \
       return false;                                                                                                  \
     }                                                                                                                \
     auto* tgt = Get##type##Compartment(cData.TargetCompartment());                                                   \
     if (src == nullptr) {                                                                                            \
-      Error("Unable to find target compartment " + cData.TargetCompartment() + " for link " + cData.Name().c_str()); \
+      Error("Unable to find target compartment " + std::string{cData.TargetCompartment()} + " for link " + cData.Name().c_str()); \
       return false;                                                                                                  \
     }                                                                                                                \
     if (!Create##type##Link(*src, *tgt, cData.Name()).Load(cData, circuits))                                         \
@@ -102,7 +102,7 @@ void SECompartmentManager::Clear()
     for (auto name : cData.Child()) {                                           \
       auto* child = Get##type##Compartment(name);                               \
       if (child == nullptr) {                                                   \
-        Error("Could not find child " + name + " for node " + cmpt->GetName()); \
+        Error("Could not find child " + std::string{name} + " for node " + cmpt->GetName()); \
         return false;                                                           \
       }                                                                         \
       cmpt->AddChild(*child);                                                   \
@@ -117,7 +117,7 @@ void SECompartmentManager::Clear()
   for (auto subName : in.type##Substance()) {          \
     SESubstance* sub = m_subMgr.GetSubstance(subName); \
     if (sub == nullptr) {                              \
-      Error("Could not find substance " + subName);    \
+      Error("Could not find substance " + std::string{subName});    \
       return false;                                    \
     }                                                  \
     Add##type##CompartmentSubstance(*sub);             \
@@ -148,12 +148,14 @@ bool SECompartmentManager::Load(const CDM::CompartmentManagerData& in, SECircuit
   StateChange();
   return true;
 }
+//-------------------------------------------------------------------------------
 CDM::CompartmentManagerData* SECompartmentManager::Unload() const
 {
   CDM::CompartmentManagerData* data = new CDM::CompartmentManagerData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SECompartmentManager::Unload(CDM::CompartmentManagerData& data) const
 {
   for (SELiquidCompartment* cmpt : m_LiquidCompartments)
@@ -182,7 +184,12 @@ void SECompartmentManager::Unload(CDM::CompartmentManagerData& data) const
   for (SETissueCompartment* cmpt : m_TissueCompartments)
     data.TissueCompartment().push_back(std::unique_ptr<CDM::TissueCompartmentData>(cmpt->Unload()));
 }
-
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasCompartment(CDM::enumCompartmentType::value type, const char* name) const
+{
+  return HasCompartment(type, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasCompartment(CDM::enumCompartmentType::value type, const std::string& name) const
 {
   switch (type) {
@@ -194,9 +201,17 @@ bool SECompartmentManager::HasCompartment(CDM::enumCompartmentType::value type, 
     return HasThermalCompartment(name);
   case CDM::enumCompartmentType::Tissue:
     return HasTissueCompartment(name);
+  default:
+    return false;
   }
   return false;
 }
+//-------------------------------------------------------------------------------
+SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::value type, const char* name)
+{
+  return GetCompartment(type, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::value type, const std::string& name)
 {
   switch (type) {
@@ -208,9 +223,17 @@ SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::va
     return GetThermalCompartment(name);
   case CDM::enumCompartmentType::Tissue:
     return GetTissueCompartment(name);
+  default:
+    return nullptr;
   }
   return nullptr;
 }
+//-------------------------------------------------------------------------------
+const SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::value type, const char* name) const
+{
+  return GetCompartment(type, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentType::value type, const std::string& name) const
 {
   switch (type) {
@@ -222,18 +245,30 @@ const SECompartment* SECompartmentManager::GetCompartment(CDM::enumCompartmentTy
     return GetThermalCompartment(name);
   case CDM::enumCompartmentType::Tissue:
     return GetTissueCompartment(name);
+  default:
+    return nullptr;
   }
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 //////////////////////
 // GAS COMPARTMENTS //
 //////////////////////
-
+SEGasCompartment& SECompartmentManager::CreateGasCompartment(const char* name)
+{
+  return CreateGasCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEGasCompartment& SECompartmentManager::CreateGasCompartment(const std::string& name)
 {
   return CreateCompartment<SEGasCompartment>(name, m_GasName2Compartments, &m_GasSubstances);
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteGasCompartment(const char* name)
+{
+  return DeleteGasCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteGasCompartment(const std::string& name)
 {
   SEGasCompartment* cmpt = GetGasCompartment(name);
@@ -246,30 +281,62 @@ void SECompartmentManager::DeleteGasCompartment(const std::string& name)
     SAFE_DELETE(cmpt);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasGasCompartment(const char* name) const
+{
+  return HasGasCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasGasCompartment(const std::string& name) const
 {
   return HasCompartment<SEGasCompartment>(name, m_GasName2Compartments);
 }
+//-------------------------------------------------------------------------------
+SEGasCompartment* SECompartmentManager::GetGasCompartment(const char* name)
+{
+  return GetGasCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEGasCompartment* SECompartmentManager::GetGasCompartment(const std::string& name)
 {
   return GetCompartment<SEGasCompartment>(name, m_GasName2Compartments);
 }
+//-------------------------------------------------------------------------------
+const SEGasCompartment* SECompartmentManager::GetGasCompartment(const char* name) const
+{
+  return GetGasCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEGasCompartment* SECompartmentManager::GetGasCompartment(const std::string& name) const
 {
   return GetCompartment<SEGasCompartment>(name, m_GasName2Compartments);
 }
+//-------------------------------------------------------------------------------
 const std::vector<SEGasCompartment*>& SECompartmentManager::GetGasCompartments()
 {
   return m_GasCompartments;
 }
+//-------------------------------------------------------------------------------
 const std::vector<SEGasCompartment*>& SECompartmentManager::GetGasLeafCompartments()
 {
   return m_GasLeafCompartments;
 }
+//-------------------------------------------------------------------------------
+SEGasCompartmentLink& SECompartmentManager::CreateGasLink(SEGasCompartment& src, SEGasCompartment& tgt, const char* name)
+{
+  return CreateGasLink(src, tgt, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEGasCompartmentLink& SECompartmentManager::CreateGasLink(SEGasCompartment& src, SEGasCompartment& tgt, const std::string& name)
 {
   return CreateLink<SEGasCompartmentLink, SEGasCompartment>(src, tgt, name, m_GasName2Links);
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteGasLink(const char* name)
+{
+  return DeleteGasLink(std::string{ name });
+}
+  //-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteGasLink(const std::string& name)
 {
   SEGasCompartmentLink* link = GetGasLink(name);
@@ -281,22 +348,46 @@ void SECompartmentManager::DeleteGasLink(const std::string& name)
     SAFE_DELETE(link);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasGasLink(const char* name) const
+{
+  return HasGasLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasGasLink(const std::string& name) const
 {
   return HasLink<SEGasCompartmentLink>(name, m_GasName2Links);
 }
+//-------------------------------------------------------------------------------
+SEGasCompartmentLink* SECompartmentManager::GetGasLink(const char* name)
+{
+  return GetGasLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEGasCompartmentLink* SECompartmentManager::GetGasLink(const std::string& name)
 {
   return GetLink<SEGasCompartmentLink>(name, m_GasName2Links);
 }
+//-------------------------------------------------------------------------------
+const SEGasCompartmentLink* SECompartmentManager::GetGasLink(const char* name) const
+{
+  return GetGasLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEGasCompartmentLink* SECompartmentManager::GetGasLink(const std::string& name) const
 {
   return GetLink<SEGasCompartmentLink>(name, m_GasName2Links);
 }
+//-------------------------------------------------------------------------------
 const std::vector<SEGasCompartmentLink*>& SECompartmentManager::GetGasLinks()
 {
   return m_GasLinks;
+}//-------------------------------------------------------------------------------
+SEGasCompartmentGraph& SECompartmentManager::CreateGasGraph(const char* name)
+{
+  return CreateGasGraph(std::string{ name });
 }
+//-------------------------------------------------------------------------------
 SEGasCompartmentGraph& SECompartmentManager::CreateGasGraph(const std::string& name)
 {
   SEGasCompartmentGraph* graph = nullptr;
@@ -313,6 +404,12 @@ SEGasCompartmentGraph& SECompartmentManager::CreateGasGraph(const std::string& n
   }
   return *graph;
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteGasGraph(const char* name)
+{
+  return DeleteGasGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteGasGraph(const std::string& name)
 {
   SEGasCompartmentGraph* graph = GetGasGraph(name);
@@ -322,10 +419,22 @@ void SECompartmentManager::DeleteGasGraph(const std::string& name)
     SAFE_DELETE(graph);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasGasGraph(const char* name) const
+{
+  return HasGasGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasGasGraph(const std::string& name) const
 {
   return m_GasName2Graphs.find(name) != end(m_GasName2Graphs);
 }
+//-------------------------------------------------------------------------------
+SEGasCompartmentGraph* SECompartmentManager::GetGasGraph(const char* name)
+{
+  return GetGasGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEGasCompartmentGraph* SECompartmentManager::GetGasGraph(const std::string& name)
 {
   auto it = m_GasName2Graphs.find(name);
@@ -333,6 +442,12 @@ SEGasCompartmentGraph* SECompartmentManager::GetGasGraph(const std::string& name
     return it->second;
   return nullptr;
 }
+//-------------------------------------------------------------------------------
+const SEGasCompartmentGraph* SECompartmentManager::GetGasGraph(const char* name) const
+{
+  return GetGasGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEGasCompartmentGraph* SECompartmentManager::GetGasGraph(const std::string& name) const
 {
   auto it = m_GasName2Graphs.find(name);
@@ -340,10 +455,12 @@ const SEGasCompartmentGraph* SECompartmentManager::GetGasGraph(const std::string
     return it->second;
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 const std::vector<SEGasCompartmentGraph*>& SECompartmentManager::GetGasGraphs()
 {
   return m_GasGraphs;
 }
+//-------------------------------------------------------------------------------
 void SECompartmentManager::AddGasCompartmentSubstance(SESubstance& s)
 {
   if (!Contains(m_GasSubstances, s)) {
@@ -354,19 +471,30 @@ void SECompartmentManager::AddGasCompartmentSubstance(SESubstance& s)
     }
   }
 }
+//-------------------------------------------------------------------------------
 const std::vector<SESubstance*>& SECompartmentManager::GetGasCompartmentSubstances() const
 {
   return m_GasSubstances;
 }
-
+//-------------------------------------------------------------------------------
 /////////////////////////
 // LIQUID COMPARTMENTS //
 /////////////////////////
-
+SELiquidCompartment& SECompartmentManager::CreateLiquidCompartment(const char* name)
+{
+  return CreateLiquidCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SELiquidCompartment& SECompartmentManager::CreateLiquidCompartment(const std::string& name)
 {
   return CreateCompartment<SELiquidCompartment>(name, m_LiquidName2Compartments, &m_LiquidSubstances);
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteLiquidCompartment(const char* name)
+{
+  return DeleteLiquidCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteLiquidCompartment(const std::string& name)
 {
   SELiquidCompartment* cmpt = GetLiquidCompartment(name);
@@ -379,30 +507,62 @@ void SECompartmentManager::DeleteLiquidCompartment(const std::string& name)
     SAFE_DELETE(cmpt);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasLiquidCompartment(const char* name) const
+{
+  return HasLiquidCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasLiquidCompartment(const std::string& name) const
 {
   return HasCompartment<SELiquidCompartment>(name, m_LiquidName2Compartments);
 }
+//-------------------------------------------------------------------------------
+SELiquidCompartment* SECompartmentManager::GetLiquidCompartment(const char* name)
+{
+  return GetLiquidCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SELiquidCompartment* SECompartmentManager::GetLiquidCompartment(const std::string& name)
 {
   return GetCompartment<SELiquidCompartment>(name, m_LiquidName2Compartments);
 }
+//-------------------------------------------------------------------------------
+const SELiquidCompartment* SECompartmentManager::GetLiquidCompartment(const char* name) const
+{
+  return GetLiquidCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SELiquidCompartment* SECompartmentManager::GetLiquidCompartment(const std::string& name) const
 {
   return GetCompartment<SELiquidCompartment>(name, m_LiquidName2Compartments);
 }
+//-------------------------------------------------------------------------------
 const std::vector<SELiquidCompartment*>& SECompartmentManager::GetLiquidCompartments()
 {
   return m_LiquidCompartments;
 }
+//-------------------------------------------------------------------------------
 const std::vector<SELiquidCompartment*>& SECompartmentManager::GetLiquidLeafCompartments()
 {
   return m_LiquidLeafCompartments;
 }
+//-------------------------------------------------------------------------------
+SELiquidCompartmentLink& SECompartmentManager::CreateLiquidLink(SELiquidCompartment& src, SELiquidCompartment& tgt, const char* name)
+{
+  return CreateLiquidLink(src, tgt, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SELiquidCompartmentLink& SECompartmentManager::CreateLiquidLink(SELiquidCompartment& src, SELiquidCompartment& tgt, const std::string& name)
 {
   return CreateLink<SELiquidCompartmentLink, SELiquidCompartment>(src, tgt, name, m_LiquidName2Links);
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteLiquidLink(const char* name)
+{
+  return DeleteLiquidLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteLiquidLink(const std::string& name)
 {
   SELiquidCompartmentLink* link = GetLiquidLink(name);
@@ -414,22 +574,47 @@ void SECompartmentManager::DeleteLiquidLink(const std::string& name)
     SAFE_DELETE(link);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasLiquidLink(const char* name) const
+{
+  return HasLiquidLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasLiquidLink(const std::string& name) const
 {
   return HasLink<SELiquidCompartmentLink>(name, m_LiquidName2Links);
 }
+//-------------------------------------------------------------------------------
+SELiquidCompartmentLink* SECompartmentManager::GetLiquidLink(const char* name)
+{
+  return GetLiquidLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SELiquidCompartmentLink* SECompartmentManager::GetLiquidLink(const std::string& name)
 {
   return GetLink<SELiquidCompartmentLink>(name, m_LiquidName2Links);
 }
+//-------------------------------------------------------------------------------
+const SELiquidCompartmentLink* SECompartmentManager::GetLiquidLink(const char* name) const
+{
+  return GetLiquidLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SELiquidCompartmentLink* SECompartmentManager::GetLiquidLink(const std::string& name) const
 {
   return GetLink<SELiquidCompartmentLink>(name, m_LiquidName2Links);
 }
+//-------------------------------------------------------------------------------
 const std::vector<SELiquidCompartmentLink*>& SECompartmentManager::GetLiquidLinks()
 {
   return m_LiquidLinks;
 }
+//-------------------------------------------------------------------------------
+SELiquidCompartmentGraph& SECompartmentManager::CreateLiquidGraph(const char* name)
+{
+  return CreateLiquidGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SELiquidCompartmentGraph& SECompartmentManager::CreateLiquidGraph(const std::string& name)
 {
   SELiquidCompartmentGraph* graph = nullptr;
@@ -446,6 +631,12 @@ SELiquidCompartmentGraph& SECompartmentManager::CreateLiquidGraph(const std::str
   }
   return *graph;
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteLiquidGraph(const char* name)
+{
+  return DeleteLiquidGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteLiquidGraph(const std::string& name)
 {
   SELiquidCompartmentGraph* graph = GetLiquidGraph(name);
@@ -455,10 +646,22 @@ void SECompartmentManager::DeleteLiquidGraph(const std::string& name)
     SAFE_DELETE(graph);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasLiquidGraph(const char* name) const
+{
+  return HasLiquidGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasLiquidGraph(const std::string& name) const
 {
   return m_LiquidName2Graphs.find(name) != end(m_LiquidName2Graphs);
 }
+//-------------------------------------------------------------------------------
+SELiquidCompartmentGraph* SECompartmentManager::GetLiquidGraph(const char* name)
+{
+  return GetLiquidGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SELiquidCompartmentGraph* SECompartmentManager::GetLiquidGraph(const std::string& name)
 {
   auto it = m_LiquidName2Graphs.find(name);
@@ -466,6 +669,12 @@ SELiquidCompartmentGraph* SECompartmentManager::GetLiquidGraph(const std::string
     return it->second;
   return nullptr;
 }
+//-------------------------------------------------------------------------------
+const SELiquidCompartmentGraph* SECompartmentManager::GetLiquidGraph(const char* name) const
+{
+  return GetLiquidGraph(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SELiquidCompartmentGraph* SECompartmentManager::GetLiquidGraph(const std::string& name) const
 {
   auto it = m_LiquidName2Graphs.find(name);
@@ -473,10 +682,12 @@ const SELiquidCompartmentGraph* SECompartmentManager::GetLiquidGraph(const std::
     return it->second;
   return nullptr;
 }
+//-------------------------------------------------------------------------------
 const std::vector<SELiquidCompartmentGraph*>& SECompartmentManager::GetLiquidGraphs()
 {
   return m_LiquidGraphs;
 }
+//-------------------------------------------------------------------------------
 void SECompartmentManager::AddLiquidCompartmentSubstance(SESubstance& s)
 {
   if (!Contains(m_LiquidSubstances, s)) {
@@ -487,19 +698,31 @@ void SECompartmentManager::AddLiquidCompartmentSubstance(SESubstance& s)
     }
   }
 }
+//-------------------------------------------------------------------------------
 const std::vector<SESubstance*>& SECompartmentManager::GetLiquidCompartmentSubstances() const
 {
   return m_LiquidSubstances;
 }
+//-------------------------------------------------------------------------------
 
 //////////////////////////
 // THERMAL COMPARTMENTS //
 //////////////////////////
-
+SEThermalCompartment& SECompartmentManager::CreateThermalCompartment(const char* name)
+{
+  return CreateThermalCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEThermalCompartment& SECompartmentManager::CreateThermalCompartment(const std::string& name)
 {
   return CreateCompartment<SEThermalCompartment>(name, m_ThermalName2Compartments, nullptr);
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteThermalCompartment(const char* name)
+{
+  return DeleteThermalCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteThermalCompartment(const std::string& name)
 {
   SEThermalCompartment* cmpt = GetThermalCompartment(name);
@@ -510,30 +733,62 @@ void SECompartmentManager::DeleteThermalCompartment(const std::string& name)
     SAFE_DELETE(cmpt);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasThermalCompartment(const char* name) const
+{
+  return HasThermalCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasThermalCompartment(const std::string& name) const
 {
   return HasCompartment<SEThermalCompartment>(name, m_ThermalName2Compartments);
 }
+//-------------------------------------------------------------------------------
+SEThermalCompartment* SECompartmentManager::GetThermalCompartment(const char* name)
+{
+  return GetThermalCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEThermalCompartment* SECompartmentManager::GetThermalCompartment(const std::string& name)
 {
   return GetCompartment<SEThermalCompartment>(name, m_ThermalName2Compartments);
 }
+//-------------------------------------------------------------------------------
+const SEThermalCompartment* SECompartmentManager::GetThermalCompartment(const char* name) const
+{
+  return GetThermalCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEThermalCompartment* SECompartmentManager::GetThermalCompartment(const std::string& name) const
 {
   return GetCompartment<SEThermalCompartment>(name, m_ThermalName2Compartments);
 }
+//-------------------------------------------------------------------------------
 const std::vector<SEThermalCompartment*>& SECompartmentManager::GetThermalCompartments()
 {
   return m_ThermalCompartments;
 }
+//-------------------------------------------------------------------------------
 const std::vector<SEThermalCompartment*>& SECompartmentManager::GetThermalLeafCompartments()
 {
   return m_ThermalLeafCompartments;
 }
+//-------------------------------------------------------------------------------
+SEThermalCompartmentLink& SECompartmentManager::CreateThermalLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name)
+{
+  return CreateThermalLink(src, tgt, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEThermalCompartmentLink& SECompartmentManager::CreateThermalLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const std::string& name)
 {
   return CreateLink<SEThermalCompartmentLink, SEThermalCompartment>(src, tgt, name, m_ThermalName2Links);
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteThermalLink(const char* name)
+{
+  return DeleteThermalLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteThermalLink(const std::string& name)
 {
   SEThermalCompartmentLink* link = GetThermalLink(name);
@@ -543,27 +798,51 @@ void SECompartmentManager::DeleteThermalLink(const std::string& name)
     SAFE_DELETE(link);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasThermalLink(const char* name) const
+{
+  return HasThermalLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasThermalLink(const std::string& name) const
 {
   return HasLink<SEThermalCompartmentLink>(name, m_ThermalName2Links);
 }
+//-------------------------------------------------------------------------------
+SEThermalCompartmentLink* SECompartmentManager::GetThermalLink(const char* name)
+{
+  return GetThermalLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEThermalCompartmentLink* SECompartmentManager::GetThermalLink(const std::string& name)
 {
   return GetLink<SEThermalCompartmentLink>(name, m_ThermalName2Links);
 }
+//-------------------------------------------------------------------------------
+const SEThermalCompartmentLink* SECompartmentManager::GetThermalLink(const char* name) const
+{
+  return GetThermalLink(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEThermalCompartmentLink* SECompartmentManager::GetThermalLink(const std::string& name) const
 {
   return GetLink<SEThermalCompartmentLink>(name, m_ThermalName2Links);
 }
+//-------------------------------------------------------------------------------
 const std::vector<SEThermalCompartmentLink*>& SECompartmentManager::GetThermalLinks()
 {
   return m_ThermalLinks;
 }
+//-------------------------------------------------------------------------------
 
 /////////////////////////
 // TISSUE COMPARTMENTS //
 /////////////////////////
-
+SETissueCompartment& SECompartmentManager::CreateTissueCompartment(const char* name)
+{
+  return CreateTissueCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SETissueCompartment& SECompartmentManager::CreateTissueCompartment(const std::string& name)
 {
   if (HasTissueCompartment(name))
@@ -573,6 +852,12 @@ SETissueCompartment& SECompartmentManager::CreateTissueCompartment(const std::st
   m_TissueName2Compartments[name] = tissue;
   return *tissue;
 }
+//-------------------------------------------------------------------------------
+void SECompartmentManager::DeleteTissueCompartment(const char* name)
+{
+  return DeleteTissueCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void SECompartmentManager::DeleteTissueCompartment(const std::string& name)
 {
   SETissueCompartment* cmpt = GetTissueCompartment(name);
@@ -583,27 +868,47 @@ void SECompartmentManager::DeleteTissueCompartment(const std::string& name)
     SAFE_DELETE(cmpt);
   }
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentManager::HasTissueCompartment(const char* name) const
+{
+  return HasTissueCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool SECompartmentManager::HasTissueCompartment(const std::string& name) const
 {
   return HasCompartment<SETissueCompartment>(name, m_TissueName2Compartments);
 }
+//-------------------------------------------------------------------------------
+SETissueCompartment* SECompartmentManager::GetTissueCompartment(const char* name)
+{
+  return GetTissueCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SETissueCompartment* SECompartmentManager::GetTissueCompartment(const std::string& name)
 {
   return GetCompartment<SETissueCompartment>(name, m_TissueName2Compartments);
 }
+//-------------------------------------------------------------------------------
+const SETissueCompartment* SECompartmentManager::GetTissueCompartment(const char* name) const
+{
+  return GetTissueCompartment(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SETissueCompartment* SECompartmentManager::GetTissueCompartment(const std::string& name) const
 {
   return GetCompartment<SETissueCompartment>(name, m_TissueName2Compartments);
 }
+//-------------------------------------------------------------------------------
 const std::vector<SETissueCompartment*>& SECompartmentManager::GetTissueCompartments()
 {
   return m_TissueCompartments;
 }
+//-------------------------------------------------------------------------------
 const std::vector<SETissueCompartment*>& SECompartmentManager::GetTissueLeafCompartments()
 {
   return m_TissueLeafCompartments;
 }
-
+//-------------------------------------------------------------------------------
 ///////////////////////
 // General Utilities //
 ///////////////////////
@@ -683,7 +988,7 @@ void SECompartmentManager::StateChange()
 
   UpdateLinks();
 }
-
+//-------------------------------------------------------------------------------
 // These methods UpdateLink methods are used to set what links you want a comparmtent to use to calculate its InFlow and OutFlow
 // By default, it will add all links to all compartments that are either a source or target to the link.
 // If you set up multiple graphs for various configurations, you really only want the inflow/outflow for compartments associated with the active graph
@@ -703,17 +1008,17 @@ void SECompartmentManager::UpdateLinks()
   UpdateLinks<SEGasCompartment, SEGasCompartmentLink>(m_GasCompartments, m_GasLinks);
   UpdateLinks<SEThermalCompartment, SEThermalCompartmentLink>(m_ThermalCompartments, m_ThermalLinks);
 }
-
+//-------------------------------------------------------------------------------
 void SECompartmentManager::UpdateLinks(SEGasCompartmentGraph& graph)
 {
   UpdateLinks<SEGasCompartment, SEGasCompartmentLink>(graph.GetCompartments(), graph.GetLinks());
 }
-
+//-------------------------------------------------------------------------------
 void SECompartmentManager::UpdateLinks(SELiquidCompartmentGraph& graph)
 {
   UpdateLinks<SELiquidCompartment, SELiquidCompartmentLink>(graph.GetCompartments(), graph.GetLinks());
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType, typename LinkType>
 void SECompartmentManager::UpdateLinks(const std::vector<CompartmentType*>& compartments, const std::vector<LinkType*>& links) const
 {
@@ -738,7 +1043,7 @@ void SECompartmentManager::UpdateLinks(const std::vector<CompartmentType*>& comp
     }
   }
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType, typename LinkType>
 void SECompartmentManager::GetChildLinks(CompartmentType* pnt, CompartmentType* child) const
 {
@@ -759,7 +1064,7 @@ void SECompartmentManager::GetChildLinks(CompartmentType* pnt, CompartmentType* 
     }
   }
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType>
 void SECompartmentManager::FindLeaves(CompartmentType* cmpt, std::vector<CompartmentType*>& leaves) const
 {
@@ -772,7 +1077,7 @@ void SECompartmentManager::FindLeaves(CompartmentType* cmpt, std::vector<Compart
     }
   }
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType>
 CompartmentType& SECompartmentManager::CreateCompartment(const std::string& name, std::map<std::string, CompartmentType*>& name2cmpt, std::vector<SESubstance*>* substances)
 {
@@ -791,13 +1096,13 @@ CompartmentType& SECompartmentManager::CreateCompartment(const std::string& name
   }
   return *cmpt;
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType>
 bool SECompartmentManager::HasCompartment(const std::string& name, const std::map<std::string, CompartmentType*>& name2cmpt) const
 {
   return name2cmpt.find(name) != name2cmpt.end();
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType>
 CompartmentType* SECompartmentManager::GetCompartment(const std::string& name, std::map<std::string, CompartmentType*>& name2cmpt) const
 {
@@ -806,7 +1111,7 @@ CompartmentType* SECompartmentManager::GetCompartment(const std::string& name, s
     return it->second;
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType>
 const CompartmentType* SECompartmentManager::GetCompartment(const std::string& name, const std::map<std::string, CompartmentType*>& name2cmpt) const
 {
@@ -815,7 +1120,7 @@ const CompartmentType* SECompartmentManager::GetCompartment(const std::string& n
     return it->second;
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 template <typename LinkType, typename CompartmentType>
 LinkType& SECompartmentManager::CreateLink(CompartmentType& src, CompartmentType& tgt, const std::string& name, std::map<std::string, LinkType*>& name2link) const
 {
@@ -834,13 +1139,13 @@ LinkType& SECompartmentManager::CreateLink(CompartmentType& src, CompartmentType
   }
   return *link;
 }
-
+//-------------------------------------------------------------------------------
 template <typename LinkType>
 bool SECompartmentManager::HasLink(const std::string& name, const std::map<std::string, LinkType*>& name2link) const
 {
   return name2link.find(name) != end(name2link);
 }
-
+//-------------------------------------------------------------------------------
 template <typename LinkType>
 LinkType* SECompartmentManager::GetLink(const std::string& name, std::map<std::string, LinkType*>& name2link) const
 {
@@ -849,7 +1154,7 @@ LinkType* SECompartmentManager::GetLink(const std::string& name, std::map<std::s
     return it->second;
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 template <typename LinkType>
 const LinkType* SECompartmentManager::GetLink(const std::string& name, const std::map<std::string, LinkType*>& name2link) const
 {
@@ -858,7 +1163,7 @@ const LinkType* SECompartmentManager::GetLink(const std::string& name, const std
     return it->second;
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType>
 void SECompartmentManager::SetSubstances(CompartmentType& cmpt, std::vector<SESubstance*>& substances) const
 {
@@ -882,7 +1187,7 @@ void SECompartmentManager::SetSubstances(CompartmentType& cmpt, std::vector<SESu
     }
   }
 }
-
+//-------------------------------------------------------------------------------
 template <typename CompartmentType>
 void SECompartmentManager::AddSubstance(SESubstance& s, CompartmentType& cmpt) const
 {
@@ -893,4 +1198,5 @@ void SECompartmentManager::AddSubstance(SESubstance& s, CompartmentType& cmpt) c
   if (lsubQ != nullptr && (&s == m_O2 || &s == m_CO2 || &s == m_CO))
     lsubQ->SetHemoglobins(*m_Hb, *m_HbO2, *m_HbCO2, *m_HbO2CO2, *m_HbCO);
 }
+//-------------------------------------------------------------------------------
 }

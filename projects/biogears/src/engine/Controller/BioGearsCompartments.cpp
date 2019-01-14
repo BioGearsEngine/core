@@ -169,13 +169,13 @@ void BioGearsCompartments::StateChange()
     m_ExtracellularFluid.clear();
     m_IntracellularFluid.clear();
     for (SETissueCompartment* t : m_TissueLeafCompartments) {
-      cmpt = GetLiquidCompartment(t->GetName() + "Extracellular");
+      cmpt = GetLiquidCompartment(std::string{ t->GetName() }+"Extracellular");
       if (cmpt == nullptr)
-        Fatal("Could not find the tissue " + t->GetName() + " Extracellular compartment");
+        Fatal(std::string{ "Could not find the tissue " }+t->GetName() + " Extracellular compartment");
       m_ExtracellularFluid[t] = cmpt;
-      cmpt = GetLiquidCompartment(t->GetName() + "Intracellular");
+      cmpt = GetLiquidCompartment(std::string{ t->GetName() }+"Intracellular");
       if (cmpt == nullptr)
-        Fatal("Could not find the tissue " + t->GetName() + " Intracellular compartment");
+        Fatal(std::string{ "Could not find the tissue " }+t->GetName() + " Intracellular compartment");
       m_IntracellularFluid[t] = cmpt;
     }
   }

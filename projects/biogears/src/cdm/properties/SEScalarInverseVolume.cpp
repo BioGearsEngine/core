@@ -16,6 +16,16 @@ namespace biogears {
 const InverseVolumeUnit InverseVolumeUnit::Inverse_L("1/L");
 const InverseVolumeUnit InverseVolumeUnit::Inverse_mL("1/mL");
 
+InverseVolumeUnit::InverseVolumeUnit(const char* u)
+  : InverseVolumeUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+InverseVolumeUnit::InverseVolumeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarInverseVolumeData* SEScalarInverseVolume::Unload() const
 {
   if (!IsValid())
@@ -24,24 +34,35 @@ CDM::ScalarInverseVolumeData* SEScalarInverseVolume::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool InverseVolumeUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool InverseVolumeUnit::IsValidUnit(const char* unit)
 {
-  if (Inverse_L.GetString().compare(unit) == 0)
+  if (strcmp(Inverse_L.GetString(),unit) == 0)
     return true;
-  if (Inverse_mL.GetString().compare(unit) == 0)
+  if (strcmp(Inverse_mL.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool InverseVolumeUnit::IsValidUnit(const std::string& unit)
 {
-  if (Inverse_L.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(Inverse_L.GetString(),unit) == 0)
     return Inverse_L;
-  if (Inverse_mL.GetString().compare(unit) == 0)
+  if (strcmp(Inverse_mL.GetString(),unit) == 0)
     return Inverse_mL;
   std::stringstream err;
   err << unit << " is not a valid Volume unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

@@ -49,6 +49,7 @@ public:
 
   virtual void Clear();
 
+  virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool Load(const CDM::SubstanceData& in);
@@ -59,6 +60,8 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();

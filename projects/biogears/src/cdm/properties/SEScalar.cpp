@@ -186,8 +186,6 @@ double SEScalar::GetValue() const
   if (!IsValid()) {
     throw CommonDataModelException("Value is NaN");
   }
-#else
-  assert(!std::isnan(m_value));
 #endif
   return m_value;
 }

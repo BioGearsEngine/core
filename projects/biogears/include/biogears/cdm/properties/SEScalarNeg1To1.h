@@ -25,7 +25,7 @@ public:
 
   using SEScalar::GetValue;
   double GetValue(const NoUnit& unitless) const;
-  void SetValue(double d);
+  void SetValue(double d) override;
   void SetValue(double d, const NoUnit& unitless);
 };
 }

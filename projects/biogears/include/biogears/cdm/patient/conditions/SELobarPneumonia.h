@@ -34,6 +34,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "LobarPneumonia"; }
+  virtual const char* GetName_cStr() const { return "LobarPneumonia"; }
 
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();

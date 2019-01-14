@@ -23,13 +23,18 @@ public:
   ~SEUnitScalar() override;
 
   void ToString(std::ostream& str) const override = 0;
-  
+
   virtual const CCompoundUnit* GetUnit() const = 0;
+  virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const std::string& unit) const = 0;
-  virtual double GetValue (const std::string& unit) const = 0;
+  virtual double GetValue() const override ;
+  virtual double GetValue(const char* unit) const = 0;
+  virtual double GetValue(const std::string& unit) const = 0;
 
+  virtual SEUnitScalar& IncrementValue(double d, const char* unit) = 0;
   virtual SEUnitScalar& IncrementValue(double d, const std::string& unit) = 0;
+  virtual SEUnitScalar& DecrementValue(double d, const char* unit) = 0;
   virtual SEUnitScalar& DecrementValue(double d, const std::string& unit) = 0;
-
+  
 };
 }

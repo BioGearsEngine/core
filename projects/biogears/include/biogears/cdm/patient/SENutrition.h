@@ -40,13 +40,17 @@ protected:
   virtual void Unload(CDM::NutritionData& data) const;
 
 public:
+  const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
 
+  bool Load(const char* nutritionFile);
   bool Load(const std::string& nutritionFile);
 
   void Increment(const SENutrition& from);
 
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();

@@ -28,6 +28,7 @@ public:
 
   virtual void Clear(); // Deletes all members
 
+  virtual bool LoadWaveforms(const char* file, const SEScalarTime* timeStep = nullptr);
   virtual bool LoadWaveforms(const std::string& file, const SEScalarTime* timeStep = nullptr);
   virtual bool Load(const CDM::ElectroCardioGramWaveformInterpolatorData& in);
   virtual CDM::ElectroCardioGramWaveformInterpolatorData* Unload() const;

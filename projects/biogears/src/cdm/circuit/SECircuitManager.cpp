@@ -21,18 +21,19 @@ SECircuitManager::SECircuitManager(Logger* logger)
   : Loggable(logger)
 {
 }
+//-------------------------------------------------------------------------------
 SECircuitManager::~SECircuitManager()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SECircuitManager::Clear()
 {
   m_ElectricalLedger.Clear();
   m_FluidLedger.Clear();
   m_ThermalLedger.Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
 {
   Clear();
@@ -41,12 +42,12 @@ bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
   for (const CDM::ElectricalCircuitPathData& p : in.ElectricalPath()) {
     SEElectricalCircuitNode* src = GetNode(p.SourceNode(), m_ElectricalLedger);
     if (src == nullptr) {
-      Error("Could not find source node " + p.SourceNode() + " from path " + p.Name().c_str());
+      Error(std::string{ "Could not find source node " } + std::string{ p.SourceNode() } +" from path " + p.Name().c_str());
       return false;
     }
     SEElectricalCircuitNode* tgt = GetNode(p.TargetNode(), m_ElectricalLedger);
     if (tgt == nullptr) {
-      Error("Could not find target node " + p.TargetNode() + " from path " + p.Name().c_str());
+      Error(std::string{"Could not find target node "} + std::string{ p.TargetNode() } + " from path " + p.Name().c_str());
       return false;
     }
     CreatePath<ELECTRICAL_LEDGER_TYPES>(*src, *tgt, p.Name(), m_ElectricalLedger).Load(p);
@@ -59,12 +60,12 @@ bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
   for (const CDM::FluidCircuitPathData& p : in.FluidPath()) {
     SEFluidCircuitNode* src = GetNode(p.SourceNode(), m_FluidLedger);
     if (src == nullptr) {
-      Error("Could not find source node " + p.SourceNode() + " from path " + p.Name().c_str());
+      Error(std::string{"Could not find source node "} + std::string{ p.SourceNode() } + " from path " + p.Name().c_str());
       return false;
     }
     SEFluidCircuitNode* tgt = GetNode(p.TargetNode(), m_FluidLedger);
     if (tgt == nullptr) {
-      Error("Could not find target node " + p.TargetNode() + " from path " + p.Name().c_str());
+      Error(std::string{"Could not find target node "} + std::string{ p.TargetNode() } + " from path " + p.Name().c_str());
       return false;
     }
     CreatePath<FLUID_LEDGER_TYPES>(*src, *tgt, p.Name(), m_FluidLedger).Load(p);
@@ -77,12 +78,12 @@ bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
   for (const CDM::ThermalCircuitPathData& p : in.ThermalPath()) {
     SEThermalCircuitNode* src = GetNode(p.SourceNode(), m_ThermalLedger);
     if (src == nullptr) {
-      Error("Could not find source node " + p.SourceNode() + " from path " + p.Name().c_str());
+      Error(std::string{"Could not find source node "} + std::string{ p.SourceNode() } + " from path " + p.Name().c_str());
       return false;
     }
     SEThermalCircuitNode* tgt = GetNode(p.TargetNode(), m_ThermalLedger);
     if (tgt == nullptr) {
-      Error("Could not find target node " + p.TargetNode() + " from path " + p.Name().c_str());
+      Error(std::string{"Could not find target node "} + std::string{ p.TargetNode() } + " from path " + p.Name().c_str());
       return false;
     }
     CreatePath<THERMAL_LEDGER_TYPES>(*src, *tgt, p.Name(), m_ThermalLedger).Load(p);
@@ -92,12 +93,14 @@ bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
 
   return true;
 }
+//-------------------------------------------------------------------------------
 CDM::CircuitManagerData* SECircuitManager::Unload() const
 {
   CDM::CircuitManagerData* data = new CDM::CircuitManagerData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SECircuitManager::Unload(CDM::CircuitManagerData& data) const
 {
   for (auto itr : m_ElectricalLedger.nodes)
@@ -121,14 +124,14 @@ void SECircuitManager::Unload(CDM::CircuitManagerData& data) const
   for (auto itr : m_ThermalLedger.circuits)
     data.ThermalCircuit().push_back(std::unique_ptr<CDM::ThermalCircuitData>(itr.second->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 void SECircuitManager::SetReadOnly(bool b)
 {
   SetReadOnlyElectrical(b);
   SetReadOnlyFluid(b);
   SetReadOnlyThermal(b);
 }
-
+//-------------------------------------------------------------------------------
 void SECircuitManager::SetReadOnlyElectrical(bool b)
 {
   for (auto nItr : m_ElectricalLedger.nodes) {
@@ -166,7 +169,7 @@ void SECircuitManager::SetReadOnlyElectrical(bool b)
       pItr.second->GetPotentialSource().SetReadOnly(b);
   }
 }
-
+//-------------------------------------------------------------------------------
 void SECircuitManager::SetReadOnlyFluid(bool b)
 {
   for (auto nItr : m_FluidLedger.nodes) {
@@ -204,7 +207,7 @@ void SECircuitManager::SetReadOnlyFluid(bool b)
       pItr.second->GetPotentialSource().SetReadOnly(b);
   }
 }
-
+//-------------------------------------------------------------------------------
 void SECircuitManager::SetReadOnlyThermal(bool b)
 {
   for (auto nItr : m_ThermalLedger.nodes) {
@@ -242,4 +245,5 @@ void SECircuitManager::SetReadOnlyThermal(bool b)
       pItr.second->GetPotentialSource().SetReadOnly(b);
   }
 }
+//-------------------------------------------------------------------------------
 }

@@ -22,13 +22,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
+SEGasCompartmentGraph::SEGasCompartmentGraph(const char* name, Logger* logger)
+  : SEGasCompartmentGraph(std::string{ name }, logger)
+{
+}
+//-----------------------------------------------------------------------------
+SEGasCompartmentGraph::SEGasCompartmentGraph(const std::string& name, Logger* logger)
+
+  : SECompartmentTransportGraph(name, logger){};
+//-----------------------------------------------------------------------------
 bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
   m_Name = in.Name();
   for (auto name : in.Compartment()) {
     SEGasCompartment* cmpt = cmptMgr.GetGasCompartment(name);
     if (cmpt == nullptr) {
-      Error("Could not find compartment " + name + " for graph " + m_Name);
+      Error("Could not find compartment " + std::string{ name } +" for graph " + m_Name);
       return false;
     }
     AddCompartment(*cmpt);
@@ -36,19 +45,21 @@ bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompa
   for (auto name : in.Link()) {
     SEGasCompartmentLink* link = cmptMgr.GetGasLink(name);
     if (link == nullptr) {
-      Error("Could not find link " + name + " for graph " + m_Name);
+      Error("Could not find link " + std::string{ name } +" for graph " + m_Name);
       return false;
     }
     AddLink(*link);
   }
   return true;
 }
+//-----------------------------------------------------------------------------
 CDM::GasCompartmentGraphData* SEGasCompartmentGraph::Unload()
 {
   CDM::GasCompartmentGraphData* data = new CDM::GasCompartmentGraphData();
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::Unload(CDM::GasCompartmentGraphData& data)
 {
   data.Name(m_Name);
@@ -57,7 +68,7 @@ void SEGasCompartmentGraph::Unload(CDM::GasCompartmentGraphData& data)
   for (SEGasCompartmentLink* link : m_CompartmentLinks)
     data.Link().push_back(link->GetName());
 }
-
+//-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::BalanceByIntensive()
 {
   for (auto cmpt : GetCompartments()) {
@@ -87,7 +98,7 @@ void SEGasCompartmentGraph::BalanceByIntensive()
     cmpt->Balance(BalanceGasBy::VolumeFraction);
   }
 }
-
+//-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::AddGraph(SEGasCompartmentGraph& graph)
 {
   for (SEGasCompartment* cmpt : graph.GetCompartments())
@@ -95,4 +106,5 @@ void SEGasCompartmentGraph::AddGraph(SEGasCompartmentGraph& graph)
   for (SEGasCompartmentLink* lnk : graph.GetLinks())
     AddLink(*lnk);
 }
+//-----------------------------------------------------------------------------
 }

@@ -37,6 +37,7 @@ protected:
   virtual void Unload(CDM::AppliedTemperatureData& data) const;
 
 public:
+  virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool HasTemperature() const;

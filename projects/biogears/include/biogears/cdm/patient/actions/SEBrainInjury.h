@@ -20,18 +20,18 @@ class SEScalar0To1;
 class BIOGEARS_API SEBrainInjury : public SEPatientAction {
 public:
   SEBrainInjury();
-  virtual ~SEBrainInjury();
+  virtual ~SEBrainInjury() override;
 
   static constexpr const char* TypeTag() { return "SEBrainInjury"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::BrainInjuryData& in);
-  virtual CDM::BrainInjuryData* Unload() const;
+  virtual CDM::BrainInjuryData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::BrainInjuryData& data) const;
@@ -45,7 +45,7 @@ public:
   virtual bool HasType() const;
   virtual void InvalidateType();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Severity;

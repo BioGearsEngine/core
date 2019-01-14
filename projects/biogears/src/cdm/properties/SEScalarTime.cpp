@@ -22,6 +22,16 @@ const TimeUnit TimeUnit::day("day");
 const TimeUnit TimeUnit::yr("yr");
 #pragma pop_macro("Time")
 
+TimeUnit::TimeUnit(const char* u)
+  : TimeUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+TimeUnit::TimeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarTimeData* SEScalarTime::Unload() const
 {
   if (!IsValid())
@@ -30,36 +40,47 @@ CDM::ScalarTimeData* SEScalarTime::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool TimeUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool TimeUnit::IsValidUnit(const char* unit)
 {
-  if (s.GetString().compare(unit) == 0)
+  if (strcmp(s.GetString(),unit) == 0)
     return true;
-  if (min.GetString().compare(unit) == 0)
+  if (strcmp(min.GetString(),unit) == 0)
     return true;
-  if (hr.GetString().compare(unit) == 0)
+  if (strcmp(hr.GetString(),unit) == 0)
     return true;
-  if (day.GetString().compare(unit) == 0)
+  if (strcmp(day.GetString(),unit) == 0)
     return true;
-  if (yr.GetString().compare(unit) == 0)
+  if (strcmp(yr.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const TimeUnit& TimeUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool TimeUnit::IsValidUnit(const std::string& unit)
 {
-  if (s.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const TimeUnit& TimeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(s.GetString(),unit) == 0)
     return s;
-  if (min.GetString().compare(unit) == 0)
+  if (strcmp(min.GetString(),unit) == 0)
     return min;
-  if (hr.GetString().compare(unit) == 0)
+  if (strcmp(hr.GetString(),unit) == 0)
     return hr;
-  if (day.GetString().compare(unit) == 0)
+  if (strcmp(day.GetString(),unit) == 0)
     return day;
-  if (yr.GetString().compare(unit) == 0)
+  if (strcmp(yr.GetString(),unit) == 0)
     return yr;
   std::stringstream err;
   err << unit << " is not a valid Amount unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const TimeUnit& TimeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

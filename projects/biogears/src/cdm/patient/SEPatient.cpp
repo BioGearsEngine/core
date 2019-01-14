@@ -58,12 +58,17 @@ SEPatient::SEPatient(Logger* logger)
   m_TotalLungCapacity = nullptr;
   m_VitalCapacity = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEPatient::~SEPatient()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
+bool SEPatient::Load(const char* patientFile)
+{
+  return Load(std::string{ patientFile });
+}
+//-----------------------------------------------------------------------------
 bool SEPatient::Load(const std::string& patientFile)
 {
   CDM::PatientData* pData;
@@ -79,7 +84,7 @@ bool SEPatient::Load(const std::string& patientFile)
   }
   return Load(*pData);
 }
-
+//-----------------------------------------------------------------------------
 void SEPatient::Clear()
 {
   m_EventHandler = nullptr;
@@ -120,7 +125,12 @@ void SEPatient::Clear()
   SAFE_DELETE(m_TotalLungCapacity);
   SAFE_DELETE(m_VitalCapacity);
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SEPatient::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SEPatient::GetScalar(const std::string& name)
 {
   if (name.compare("Age") == 0)
@@ -189,7 +199,7 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
 
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::Load(const CDM::PatientData& in)
 {
   Clear();
@@ -301,14 +311,14 @@ bool SEPatient::Load(const CDM::PatientData& in)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::PatientData* SEPatient::Unload() const
 {
   CDM::PatientData* data = new CDM::PatientData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEPatient::Unload(CDM::PatientData& data) const
 {
   if (HasName()) {
@@ -430,7 +440,7 @@ void SEPatient::Unload(CDM::PatientData& data) const
     data.ActiveEvent().push_back(std::unique_ptr<CDM::ActivePatientEventData>(eData));
   }
 };
-
+//-----------------------------------------------------------------------------
 void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
 {
   bool b = false; // Default is off
@@ -734,7 +744,7 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
     m_EventHandler->HandlePatientEvent(type, active, &time);
   }
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::IsEventActive(CDM::enumPatientEvent::value type) const
 {
   auto i = m_EventState.find(type);
@@ -743,7 +753,7 @@ bool SEPatient::IsEventActive(CDM::enumPatientEvent::value type) const
   }
   return i->second;
 }
-
+//-----------------------------------------------------------------------------
 double SEPatient::GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const
 {
   auto i = m_EventDuration_s.find(type);
@@ -752,73 +762,93 @@ double SEPatient::GetEventDuration(CDM::enumPatientEvent::value type, const Time
   }
   return Convert(i->second, TimeUnit::s, unit);
 }
-
+//-----------------------------------------------------------------------------
 void SEPatient::UpdateEvents(const SEScalarTime& timeStep)
 {
   for (auto& itr : m_EventDuration_s)
     itr.second += timeStep.GetValue(TimeUnit::s);
 }
-
+//-----------------------------------------------------------------------------
 void SEPatient::ForwardEvents(SEEventHandler* handler) const
 {
   m_EventHandler = handler;
 }
-
+//-----------------------------------------------------------------------------
 std::string SEPatient::GetName() const
 {
   return m_Name;
 }
+//-----------------------------------------------------------------------------
+const char* SEPatient::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
+void SEPatient::SetName(const char* name)
+{
+  m_Name = name;
+}
+//-----------------------------------------------------------------------------
 void SEPatient::SetName(const std::string& name)
 {
   m_Name = name;
 }
+  //-----------------------------------------------------------------------------
 bool SEPatient::HasName() const
 {
   return m_Name.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEPatient::InvalidateName()
 {
   m_Name = "";
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumSex::value SEPatient::GetGender() const
 {
   return m_Sex;
 }
+//-----------------------------------------------------------------------------
 void SEPatient::SetGender(CDM::enumSex::value sex)
 {
   m_Sex = sex;
 }
+//-----------------------------------------------------------------------------
 bool SEPatient::HasGender() const
 {
   return m_Sex == ((CDM::enumSex::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEPatient::InvalidateGender()
 {
   m_Sex = (CDM::enumSex::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 [[deprecated("Use GetGender instead")]] CDM::enumSex::value SEPatient::GetSex() const
 {
   return m_Sex;
 }
+//-----------------------------------------------------------------------------
 [[deprecated("Use SetGender instead")]] void SEPatient::SetSex(CDM::enumSex::value sex)
 {
   m_Sex = sex;
 }
+//-----------------------------------------------------------------------------
 [[deprecated("Use HasGender instead")]] bool SEPatient::HasSex() const
 {
   return m_Sex == ((CDM::enumSex::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 [[deprecated("Use InvalidateGender instead")]] void SEPatient::InvalidateSex()
 {
   m_Sex = (CDM::enumSex::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasAge() const
 {
   return m_Age == nullptr ? false : m_Age->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTime& SEPatient::GetAge()
 {
   if (m_Age == nullptr) {
@@ -826,6 +856,7 @@ SEScalarTime& SEPatient::GetAge()
   }
   return *m_Age;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetAge(const TimeUnit& unit) const
 {
   if (m_Age == nullptr) {
@@ -833,11 +864,12 @@ double SEPatient::GetAge(const TimeUnit& unit) const
   }
   return m_Age->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasWeight() const
 {
   return m_Weight == nullptr ? false : m_Weight->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SEPatient::GetWeight()
 {
   if (m_Weight == nullptr) {
@@ -845,6 +877,7 @@ SEScalarMass& SEPatient::GetWeight()
   }
   return *m_Weight;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetWeight(const MassUnit& unit) const
 {
   if (m_Weight == nullptr) {
@@ -852,11 +885,12 @@ double SEPatient::GetWeight(const MassUnit& unit) const
   }
   return m_Weight->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasHeight() const
 {
   return m_Height == nullptr ? false : m_Height->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarLength& SEPatient::GetHeight()
 {
   if (m_Height == nullptr) {
@@ -864,6 +898,7 @@ SEScalarLength& SEPatient::GetHeight()
   }
   return *m_Height;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetHeight(const LengthUnit& unit) const
 {
   if (m_Height == nullptr) {
@@ -871,11 +906,12 @@ double SEPatient::GetHeight(const LengthUnit& unit) const
   }
   return m_Height->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasAlveoliSurfaceArea() const
 {
   return m_AlveoliSurfaceArea == nullptr ? false : m_AlveoliSurfaceArea->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarArea& SEPatient::GetAlveoliSurfaceArea()
 {
   if (m_AlveoliSurfaceArea == nullptr) {
@@ -883,6 +919,7 @@ SEScalarArea& SEPatient::GetAlveoliSurfaceArea()
   }
   return *m_AlveoliSurfaceArea;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetAlveoliSurfaceArea(const AreaUnit& unit) const
 {
   if (m_AlveoliSurfaceArea == nullptr) {
@@ -890,11 +927,12 @@ double SEPatient::GetAlveoliSurfaceArea(const AreaUnit& unit) const
   }
   return m_AlveoliSurfaceArea->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasBasalMetabolicRate() const
 {
   return m_BasalMetabolicRate == nullptr ? false : m_BasalMetabolicRate->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPower& SEPatient::GetBasalMetabolicRate()
 {
   if (m_BasalMetabolicRate == nullptr) {
@@ -902,6 +940,7 @@ SEScalarPower& SEPatient::GetBasalMetabolicRate()
   }
   return *m_BasalMetabolicRate;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetBasalMetabolicRate(const PowerUnit& unit) const
 {
   if (m_BasalMetabolicRate == nullptr) {
@@ -909,11 +948,12 @@ double SEPatient::GetBasalMetabolicRate(const PowerUnit& unit) const
   }
   return m_BasalMetabolicRate->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasBloodVolumeBaseline() const
 {
   return m_BloodVolumeBaseline == nullptr ? false : m_BloodVolumeBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetBloodVolumeBaseline()
 {
   if (m_BloodVolumeBaseline == nullptr) {
@@ -921,6 +961,7 @@ SEScalarVolume& SEPatient::GetBloodVolumeBaseline()
   }
   return *m_BloodVolumeBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetBloodVolumeBaseline(const VolumeUnit& unit) const
 {
   if (m_BloodVolumeBaseline == nullptr) {
@@ -928,11 +969,12 @@ double SEPatient::GetBloodVolumeBaseline(const VolumeUnit& unit) const
   }
   return m_BloodVolumeBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasBodyDensity() const
 {
   return m_BodyDensity == nullptr ? false : m_BodyDensity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SEPatient::GetBodyDensity()
 {
   if (m_BodyDensity == nullptr) {
@@ -940,6 +982,7 @@ SEScalarMassPerVolume& SEPatient::GetBodyDensity()
   }
   return *m_BodyDensity;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetBodyDensity(const MassPerVolumeUnit& unit) const
 {
   if (m_BodyDensity == nullptr) {
@@ -947,11 +990,12 @@ double SEPatient::GetBodyDensity(const MassPerVolumeUnit& unit) const
   }
   return m_BodyDensity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasBodyFatFraction() const
 {
   return m_BodyFatFraction == nullptr ? false : m_BodyFatFraction->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SEPatient::GetBodyFatFraction()
 {
   if (m_BodyFatFraction == nullptr) {
@@ -959,6 +1003,7 @@ SEScalarFraction& SEPatient::GetBodyFatFraction()
   }
   return *m_BodyFatFraction;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetBodyFatFraction() const
 {
   if (m_BodyFatFraction == nullptr) {
@@ -966,11 +1011,12 @@ double SEPatient::GetBodyFatFraction() const
   }
   return m_BodyFatFraction->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasDiastolicArterialPressureBaseline() const
 {
   return m_DiastolicArterialPressureBaseline == nullptr ? false : m_DiastolicArterialPressureBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SEPatient::GetDiastolicArterialPressureBaseline()
 {
   if (m_DiastolicArterialPressureBaseline == nullptr) {
@@ -978,6 +1024,7 @@ SEScalarPressure& SEPatient::GetDiastolicArterialPressureBaseline()
   }
   return *m_DiastolicArterialPressureBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetDiastolicArterialPressureBaseline(const PressureUnit& unit) const
 {
   if (m_DiastolicArterialPressureBaseline == nullptr) {
@@ -985,11 +1032,12 @@ double SEPatient::GetDiastolicArterialPressureBaseline(const PressureUnit& unit)
   }
   return m_DiastolicArterialPressureBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasExpiratoryReserveVolume() const
 {
   return m_ExpiratoryReserveVolume == nullptr ? false : m_ExpiratoryReserveVolume->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetExpiratoryReserveVolume()
 {
   if (m_ExpiratoryReserveVolume == nullptr) {
@@ -997,6 +1045,7 @@ SEScalarVolume& SEPatient::GetExpiratoryReserveVolume()
   }
   return *m_ExpiratoryReserveVolume;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetExpiratoryReserveVolume(const VolumeUnit& unit) const
 {
   if (m_ExpiratoryReserveVolume == nullptr) {
@@ -1004,11 +1053,12 @@ double SEPatient::GetExpiratoryReserveVolume(const VolumeUnit& unit) const
   }
   return m_ExpiratoryReserveVolume->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasFunctionalResidualCapacity() const
 {
   return m_FunctionalResidualCapacity == nullptr ? false : m_FunctionalResidualCapacity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetFunctionalResidualCapacity()
 {
   if (m_FunctionalResidualCapacity == nullptr) {
@@ -1016,6 +1066,7 @@ SEScalarVolume& SEPatient::GetFunctionalResidualCapacity()
   }
   return *m_FunctionalResidualCapacity;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetFunctionalResidualCapacity(const VolumeUnit& unit) const
 {
   if (m_FunctionalResidualCapacity == nullptr) {
@@ -1023,11 +1074,12 @@ double SEPatient::GetFunctionalResidualCapacity(const VolumeUnit& unit) const
   }
   return m_FunctionalResidualCapacity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasHeartRateBaseline() const
 {
   return m_HeartRateBaseline == nullptr ? false : m_HeartRateBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFrequency& SEPatient::GetHeartRateBaseline()
 {
   if (m_HeartRateBaseline == nullptr) {
@@ -1035,6 +1087,7 @@ SEScalarFrequency& SEPatient::GetHeartRateBaseline()
   }
   return *m_HeartRateBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetHeartRateBaseline(const FrequencyUnit& unit) const
 {
   if (m_HeartRateBaseline == nullptr) {
@@ -1042,11 +1095,12 @@ double SEPatient::GetHeartRateBaseline(const FrequencyUnit& unit) const
   }
   return m_HeartRateBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasHeartRateMaximum() const
 {
   return m_HeartRateMaximum == nullptr ? false : m_HeartRateMaximum->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFrequency& SEPatient::GetHeartRateMaximum()
 {
   if (m_HeartRateMaximum == nullptr) {
@@ -1054,6 +1108,7 @@ SEScalarFrequency& SEPatient::GetHeartRateMaximum()
   }
   return *m_HeartRateMaximum;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetHeartRateMaximum(const FrequencyUnit& unit) const
 {
   if (m_HeartRateMaximum == nullptr) {
@@ -1061,11 +1116,12 @@ double SEPatient::GetHeartRateMaximum(const FrequencyUnit& unit) const
   }
   return m_HeartRateMaximum->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasHeartRateMinimum() const
 {
   return m_HeartRateMinimum == nullptr ? false : m_HeartRateMinimum->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFrequency& SEPatient::GetHeartRateMinimum()
 {
   if (m_HeartRateMinimum == nullptr) {
@@ -1073,6 +1129,7 @@ SEScalarFrequency& SEPatient::GetHeartRateMinimum()
   }
   return *m_HeartRateMinimum;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetHeartRateMinimum(const FrequencyUnit& unit) const
 {
   if (m_HeartRateMinimum == nullptr) {
@@ -1080,28 +1137,31 @@ double SEPatient::GetHeartRateMinimum(const FrequencyUnit& unit) const
   }
   return m_HeartRateMinimum->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasHyperhidrosis() const
 {
   return m_Hyperhidrosis == nullptr ? false : m_Hyperhidrosis->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarNeg1To1& SEPatient::GetHyperhidrosis()
 {
   if (m_Hyperhidrosis == nullptr)
     m_Hyperhidrosis = new SEScalarNeg1To1();
   return *m_Hyperhidrosis;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetHyperhidrosis() const
 {
   if (m_Hyperhidrosis == nullptr)
     return SEScalar::dNaN();
   return m_Hyperhidrosis->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasInspiratoryCapacity() const
 {
   return m_InspiratoryCapacity == nullptr ? false : m_InspiratoryCapacity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetInspiratoryCapacity()
 {
   if (m_InspiratoryCapacity == nullptr) {
@@ -1109,6 +1169,7 @@ SEScalarVolume& SEPatient::GetInspiratoryCapacity()
   }
   return *m_InspiratoryCapacity;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetInspiratoryCapacity(const VolumeUnit& unit) const
 {
   if (m_InspiratoryCapacity == nullptr) {
@@ -1116,11 +1177,12 @@ double SEPatient::GetInspiratoryCapacity(const VolumeUnit& unit) const
   }
   return m_InspiratoryCapacity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasInspiratoryReserveVolume() const
 {
   return m_InspiratoryReserveVolume == nullptr ? false : m_InspiratoryReserveVolume->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetInspiratoryReserveVolume()
 {
   if (m_InspiratoryReserveVolume == nullptr) {
@@ -1128,6 +1190,7 @@ SEScalarVolume& SEPatient::GetInspiratoryReserveVolume()
   }
   return *m_InspiratoryReserveVolume;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetInspiratoryReserveVolume(const VolumeUnit& unit) const
 {
   if (m_InspiratoryReserveVolume == nullptr) {
@@ -1135,11 +1198,12 @@ double SEPatient::GetInspiratoryReserveVolume(const VolumeUnit& unit) const
   }
   return m_InspiratoryReserveVolume->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasLeanBodyMass() const
 {
   return m_LeanBodyMass == nullptr ? false : m_LeanBodyMass->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SEPatient::GetLeanBodyMass()
 {
   if (m_LeanBodyMass == nullptr) {
@@ -1147,6 +1211,7 @@ SEScalarMass& SEPatient::GetLeanBodyMass()
   }
   return *m_LeanBodyMass;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetLeanBodyMass(const MassUnit& unit) const
 {
   if (m_LeanBodyMass == nullptr) {
@@ -1154,11 +1219,12 @@ double SEPatient::GetLeanBodyMass(const MassUnit& unit) const
   }
   return m_LeanBodyMass->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasMaxWorkRate() const
 {
   return m_MaxWorkRate == nullptr ? false : m_MaxWorkRate->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPower& SEPatient::GetMaxWorkRate()
 {
   if (m_MaxWorkRate == nullptr) {
@@ -1166,6 +1232,7 @@ SEScalarPower& SEPatient::GetMaxWorkRate()
   }
   return *m_MaxWorkRate;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetMaxWorkRate(const PowerUnit& unit) const
 {
   if (m_MaxWorkRate == nullptr) {
@@ -1173,11 +1240,12 @@ double SEPatient::GetMaxWorkRate(const PowerUnit& unit) const
   }
   return m_MaxWorkRate->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasMuscleMass() const
 {
   return m_MuscleMass == nullptr ? false : m_MuscleMass->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SEPatient::GetMuscleMass()
 {
   if (m_MuscleMass == nullptr) {
@@ -1185,6 +1253,7 @@ SEScalarMass& SEPatient::GetMuscleMass()
   }
   return *m_MuscleMass;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetMuscleMass(const MassUnit& unit) const
 {
   if (m_MuscleMass == nullptr) {
@@ -1192,11 +1261,12 @@ double SEPatient::GetMuscleMass(const MassUnit& unit) const
   }
   return m_MuscleMass->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasMeanArterialPressureBaseline() const
 {
   return m_MeanArterialPressureBaseline == nullptr ? false : m_MeanArterialPressureBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SEPatient::GetMeanArterialPressureBaseline()
 {
   if (m_MeanArterialPressureBaseline == nullptr) {
@@ -1204,6 +1274,7 @@ SEScalarPressure& SEPatient::GetMeanArterialPressureBaseline()
   }
   return *m_MeanArterialPressureBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetMeanArterialPressureBaseline(const PressureUnit& unit) const
 {
   if (m_MeanArterialPressureBaseline == nullptr) {
@@ -1211,28 +1282,31 @@ double SEPatient::GetMeanArterialPressureBaseline(const PressureUnit& unit) cons
   }
   return m_MeanArterialPressureBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasPainSusceptibility() const
 {
   return m_PainSusceptibility == nullptr ? false : m_PainSusceptibility->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarNeg1To1& SEPatient::GetPainSusceptibility()
 {
   if (m_PainSusceptibility == nullptr)
     m_PainSusceptibility = new SEScalarNeg1To1();
   return *m_PainSusceptibility;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetPainSusceptibility() const
 {
   if (m_PainSusceptibility == nullptr)
     return SEScalar::dNaN();
   return m_PainSusceptibility->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasResidualVolume() const
 {
   return m_ResidualVolume == nullptr ? false : m_ResidualVolume->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetResidualVolume()
 {
   if (m_ResidualVolume == nullptr) {
@@ -1240,6 +1314,7 @@ SEScalarVolume& SEPatient::GetResidualVolume()
   }
   return *m_ResidualVolume;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetResidualVolume(const VolumeUnit& unit) const
 {
   if (m_ResidualVolume == nullptr) {
@@ -1247,11 +1322,12 @@ double SEPatient::GetResidualVolume(const VolumeUnit& unit) const
   }
   return m_ResidualVolume->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasRespirationRateBaseline() const
 {
   return m_RespirationRateBaseline == nullptr ? false : m_RespirationRateBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFrequency& SEPatient::GetRespirationRateBaseline()
 {
   if (m_RespirationRateBaseline == nullptr) {
@@ -1259,6 +1335,7 @@ SEScalarFrequency& SEPatient::GetRespirationRateBaseline()
   }
   return *m_RespirationRateBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetRespirationRateBaseline(const FrequencyUnit& unit) const
 {
   if (m_RespirationRateBaseline == nullptr) {
@@ -1266,11 +1343,12 @@ double SEPatient::GetRespirationRateBaseline(const FrequencyUnit& unit) const
   }
   return m_RespirationRateBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasRightLungRatio() const
 {
   return m_RightLungRatio == nullptr ? false : m_RightLungRatio->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SEPatient::GetRightLungRatio()
 {
   if (m_RightLungRatio == nullptr) {
@@ -1278,6 +1356,7 @@ SEScalarFraction& SEPatient::GetRightLungRatio()
   }
   return *m_RightLungRatio;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetRightLungRatio() const
 {
   if (m_RightLungRatio == nullptr) {
@@ -1285,11 +1364,12 @@ double SEPatient::GetRightLungRatio() const
   }
   return m_RightLungRatio->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasSkinSurfaceArea() const
 {
   return m_SkinSurfaceArea == nullptr ? false : m_SkinSurfaceArea->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarArea& SEPatient::GetSkinSurfaceArea()
 {
   if (m_SkinSurfaceArea == nullptr) {
@@ -1297,6 +1377,7 @@ SEScalarArea& SEPatient::GetSkinSurfaceArea()
   }
   return *m_SkinSurfaceArea;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetSkinSurfaceArea(const AreaUnit& unit) const
 {
   if (m_SkinSurfaceArea == nullptr) {
@@ -1304,11 +1385,12 @@ double SEPatient::GetSkinSurfaceArea(const AreaUnit& unit) const
   }
   return m_SkinSurfaceArea->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasSystolicArterialPressureBaseline() const
 {
   return m_SystolicArterialPressureBaseline == nullptr ? false : m_SystolicArterialPressureBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SEPatient::GetSystolicArterialPressureBaseline()
 {
   if (m_SystolicArterialPressureBaseline == nullptr) {
@@ -1316,6 +1398,7 @@ SEScalarPressure& SEPatient::GetSystolicArterialPressureBaseline()
   }
   return *m_SystolicArterialPressureBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetSystolicArterialPressureBaseline(const PressureUnit& unit) const
 {
   if (m_SystolicArterialPressureBaseline == nullptr) {
@@ -1323,11 +1406,12 @@ double SEPatient::GetSystolicArterialPressureBaseline(const PressureUnit& unit) 
   }
   return m_SystolicArterialPressureBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasTotalVentilationBaseline() const
 {
   return m_TotalVentilationBaseline == nullptr ? false : m_TotalVentilationBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolumePerTime& SEPatient::GetTotalVentilationBaseline()
 {
   if (m_TotalVentilationBaseline == nullptr) {
@@ -1335,6 +1419,7 @@ SEScalarVolumePerTime& SEPatient::GetTotalVentilationBaseline()
   }
   return *m_TotalVentilationBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetTotalVentilationBaseline(const VolumePerTimeUnit& unit) const
 {
   if (m_TotalVentilationBaseline == nullptr) {
@@ -1342,11 +1427,12 @@ double SEPatient::GetTotalVentilationBaseline(const VolumePerTimeUnit& unit) con
   }
   return m_TotalVentilationBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasTidalVolumeBaseline() const
 {
   return m_TidalVolumeBaseline == nullptr ? false : m_TidalVolumeBaseline->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetTidalVolumeBaseline()
 {
   if (m_TidalVolumeBaseline == nullptr) {
@@ -1354,6 +1440,7 @@ SEScalarVolume& SEPatient::GetTidalVolumeBaseline()
   }
   return *m_TidalVolumeBaseline;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetTidalVolumeBaseline(const VolumeUnit& unit) const
 {
   if (m_TidalVolumeBaseline == nullptr) {
@@ -1361,11 +1448,12 @@ double SEPatient::GetTidalVolumeBaseline(const VolumeUnit& unit) const
   }
   return m_TidalVolumeBaseline->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasTotalLungCapacity() const
 {
   return m_TotalLungCapacity == nullptr ? false : m_TotalLungCapacity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetTotalLungCapacity()
 {
   if (m_TotalLungCapacity == nullptr) {
@@ -1373,6 +1461,7 @@ SEScalarVolume& SEPatient::GetTotalLungCapacity()
   }
   return *m_TotalLungCapacity;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetTotalLungCapacity(const VolumeUnit& unit) const
 {
   if (m_TotalLungCapacity == nullptr) {
@@ -1380,11 +1469,12 @@ double SEPatient::GetTotalLungCapacity(const VolumeUnit& unit) const
   }
   return m_TotalLungCapacity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEPatient::HasVitalCapacity() const
 {
   return m_VitalCapacity == nullptr ? false : m_VitalCapacity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEPatient::GetVitalCapacity()
 {
   if (m_VitalCapacity == nullptr) {
@@ -1392,6 +1482,7 @@ SEScalarVolume& SEPatient::GetVitalCapacity()
   }
   return *m_VitalCapacity;
 }
+//-----------------------------------------------------------------------------
 double SEPatient::GetVitalCapacity(const VolumeUnit& unit) const
 {
   if (m_VitalCapacity == nullptr) {
@@ -1399,4 +1490,5 @@ double SEPatient::GetVitalCapacity(const VolumeUnit& unit) const
   }
   return m_VitalCapacity->GetValue(unit);
 }
+  //-----------------------------------------------------------------------------
 }

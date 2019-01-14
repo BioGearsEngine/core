@@ -48,27 +48,27 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear();
+  void Clear() override;
 
   // Set members to a stable homeostatic state
-  void Initialize();
+  void Initialize() override;
 
   // Load a state
   virtual bool Load(const CDM::BioGearsAnesthesiaMachineData& in);
-  virtual CDM::BioGearsAnesthesiaMachineData* Unload() const;
+  virtual CDM::BioGearsAnesthesiaMachineData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::BioGearsAnesthesiaMachineData& data) const;
 
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
-  void SetUp();
+  void SetUp() override;
 
 public:
-  void StateChange();
+  void StateChange() override;
 
-  void PreProcess();
-  void Process();
-  void PostProcess();
+  void PreProcess() override;
+  void Process() override;
+  void PostProcess() override;
 
   void CalculateScrubber();
 

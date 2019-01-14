@@ -27,12 +27,12 @@ SEScenarioInitialParameters::SEScenarioInitialParameters(SESubstanceManager& sub
   m_Patient = nullptr;
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 SEScenarioInitialParameters::~SEScenarioInitialParameters()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::Clear()
 {
   m_PatientFile = "";
@@ -40,7 +40,7 @@ void SEScenarioInitialParameters::Clear()
   SAFE_DELETE(m_Configuration);
   DELETE_VECTOR(m_Conditions);
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::Load(const CDM::ScenarioInitialParametersData& in)
 {
   Clear();
@@ -65,14 +65,14 @@ bool SEScenarioInitialParameters::Load(const CDM::ScenarioInitialParametersData&
 
   return IsValid();
 }
-
+//-----------------------------------------------------------------------------
 CDM::ScenarioInitialParametersData* SEScenarioInitialParameters::Unload() const
 {
   CDM::ScenarioInitialParametersData* data = new CDM::ScenarioInitialParametersData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::Unload(CDM::ScenarioInitialParametersData& data) const
 {
   if (HasPatientFile())
@@ -84,55 +84,68 @@ void SEScenarioInitialParameters::Unload(CDM::ScenarioInitialParametersData& dat
   if (HasConfiguration())
     data.Configuration(std::unique_ptr<CDM::PhysiologyEngineConfigurationData>(m_Configuration->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::IsValid() const
 {
   if (!HasPatientFile() && HasPatient())
     return false;
   return true;
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::HasConfiguration() const
 {
   return m_Configuration != nullptr;
 }
+//-----------------------------------------------------------------------------
 PhysiologyEngineConfiguration& SEScenarioInitialParameters::GetConfiguration()
 {
   if (m_Configuration == nullptr)
     m_Configuration = new PhysiologyEngineConfiguration(GetLogger());
   return *m_Configuration;
 }
+//-----------------------------------------------------------------------------
 const PhysiologyEngineConfiguration* SEScenarioInitialParameters::GetConfiguration() const
 {
   return m_Configuration;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetConfiguration(const PhysiologyEngineConfiguration& config)
 {
   CDM_COPY((&config), (&GetConfiguration()));
 }
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::InvalidateConfiguration()
 {
   SAFE_DELETE(m_Configuration);
 }
-
-std::string SEScenarioInitialParameters::GetPatientFile() const
+//-----------------------------------------------------------------------------
+const char* SEScenarioInitialParameters::GetPatientFile() const
 {
-  return m_PatientFile;
+  return m_PatientFile.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEScenarioInitialParameters::SetPatientFile(const char* patientFile)
+{
+  InvalidatePatient();
+  m_PatientFile = patientFile;
+}
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetPatientFile(const std::string& patientFile)
 {
   InvalidatePatient();
   m_PatientFile = patientFile;
 }
+//-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::HasPatientFile() const
 {
   return m_PatientFile.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::InvalidatePatientFile()
 {
   m_PatientFile = "";
 }
-
+//-----------------------------------------------------------------------------
 SEPatient& SEScenarioInitialParameters::GetPatient()
 {
   InvalidatePatientFile();
@@ -140,31 +153,37 @@ SEPatient& SEScenarioInitialParameters::GetPatient()
     m_Patient = new SEPatient(GetLogger());
   return *m_Patient;
 }
+//-----------------------------------------------------------------------------
 const SEPatient* SEScenarioInitialParameters::GetPatient() const
 {
   return m_Patient;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetPatient(const SEPatient& patient)
 {
   CDM_COPY((&patient), (&GetPatient()));
 }
+//-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::HasPatient() const
 {
   return m_Patient != nullptr;
 }
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::InvalidatePatient()
 {
   SAFE_DELETE(m_Patient);
 }
-
+//-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::AddCondition(const SECondition& c)
 {
   CDM::ConditionData* bind = c.Unload();
   m_Conditions.push_back(SECondition::newFromBind(*bind, m_SubMgr));
   delete bind;
 }
+//-----------------------------------------------------------------------------
 const std::vector<SECondition*>& SEScenarioInitialParameters::GetConditions() const
 {
   return m_Conditions;
 }
+  //-----------------------------------------------------------------------------
 }

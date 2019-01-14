@@ -39,12 +39,13 @@ public:
 
   void Clear() override; // Deletes all members
 
+  const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
   bool Load(const CDM::TissueSystemData& in);
   CDM::TissueSystemData* Unload() const override;
 
-  Tree<std::string> GetPhysiologyRequestGraph() const override;
+  Tree<const char*> GetPhysiologyRequestGraph() const override;
 protected:
   void Unload(CDM::TissueSystemData& data) const;
 

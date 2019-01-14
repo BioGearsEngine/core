@@ -12,10 +12,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/scenario/SEScenario.h>
-#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
+#include <biogears/cdm/scenario/SEScenario.h>
+#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 
 namespace biogears {
 SEScenario::SEScenario(SESubstanceManager& subMgr)
@@ -27,12 +27,12 @@ SEScenario::SEScenario(SESubstanceManager& subMgr)
   m_AutoSerialization = nullptr;
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 SEScenario::~SEScenario()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEScenario::Clear()
 {
   m_Name = "";
@@ -43,7 +43,7 @@ void SEScenario::Clear()
   DELETE_VECTOR(m_Actions);
   m_DataRequestMgr.Clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenario::Load(const CDM::ScenarioData& in)
 {
   Clear();
@@ -70,14 +70,14 @@ bool SEScenario::Load(const CDM::ScenarioData& in)
   }
   return IsValid();
 }
-
+//-----------------------------------------------------------------------------
 CDM::ScenarioData* SEScenario::Unload() const
 {
   CDM::ScenarioData* data = new CDM::ScenarioData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEScenario::Unload(CDM::ScenarioData& data) const
 {
   data.Name(m_Name);
@@ -92,7 +92,12 @@ void SEScenario::Unload(CDM::ScenarioData& data) const
   for (SEAction* a : m_Actions)
     data.Action().push_back(std::unique_ptr<CDM::ActionData>(a->Unload()));
 }
-
+//-----------------------------------------------------------------------------
+bool SEScenario::Load(const char* scenarioFile)
+{
+  return Load(std::string{ scenarioFile });
+}
+//-----------------------------------------------------------------------------
 bool SEScenario::Load(const std::string& scenarioFile)
 {
   CDM::ScenarioData* pData;
@@ -108,7 +113,7 @@ bool SEScenario::Load(const std::string& scenarioFile)
   }
   return Load(*pData);
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenario::IsValid() const
 {
   if (HasInitialParameters()) {
@@ -119,75 +124,114 @@ bool SEScenario::IsValid() const
     return false;
   return true;
 }
-
+//-----------------------------------------------------------------------------
 std::string SEScenario::GetName() const
 {
   return m_Name;
 }
+//-----------------------------------------------------------------------------
+const char* SEScenario::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
+void SEScenario::SetName(const char* name)
+{
+  m_Name = name;
+}
+//-----------------------------------------------------------------------------
 void SEScenario::SetName(const std::string& name)
 {
   m_Name = name;
 }
+//-----------------------------------------------------------------------------
 bool SEScenario::HasName() const
 {
   return m_Name.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenario::InvalidateName()
 {
   m_Name = "";
 }
-
-std::string SEScenario::GetPatientFile() const
+//-----------------------------------------------------------------------------
+const char* SEScenario::GetPatientFile() const
 {
-  return m_PatientFile;
+  return m_PatientFile.c_str();
 }
-void SEScenario::SetPatientFile(const std::string& PatientFile) {
+//-----------------------------------------------------------------------------
+void SEScenario::SetPatientFile(const char* PatientFile)
+{
   m_PatientFile = PatientFile;
 }
+//-----------------------------------------------------------------------------
+void SEScenario::SetPatientFile(const std::string& PatientFile)
+{
+  m_PatientFile = PatientFile;
+}
+//-----------------------------------------------------------------------------
 bool SEScenario::HasPatientFile() const
 {
   return m_PatientFile.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenario::InvalidatePatientFile()
 {
   m_PatientFile = "";
 }
-
-std::string SEScenario::GetDescription() const
+//-----------------------------------------------------------------------------
+const char* SEScenario::GetDescription() const
 {
-  return m_Description;
+  return m_Description.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEScenario::SetDescription(const char* desc)
+{
+  m_Description = desc;
+}
+//-----------------------------------------------------------------------------
 void SEScenario::SetDescription(const std::string& desc)
 {
   m_Description = desc;
 }
+//-----------------------------------------------------------------------------
 bool SEScenario::HasDescription() const
 {
   return m_Description.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenario::InvalidateDescription()
 {
   m_Description = "";
 }
-
-std::string SEScenario::GetEngineStateFile() const
+//-----------------------------------------------------------------------------
+const char* SEScenario::GetEngineStateFile() const
 {
-  return m_EngineStateFile;
+  return m_EngineStateFile.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEScenario::SetEngineStateFile(const char* file)
+{
+  InvalidateInitialParameters();
+  m_EngineStateFile = file;
+}
+//-----------------------------------------------------------------------------
 void SEScenario::SetEngineStateFile(const std::string& file)
 {
   InvalidateInitialParameters();
   m_EngineStateFile = file;
 }
+//-----------------------------------------------------------------------------
 bool SEScenario::HasEngineStateFile() const
 {
   return m_EngineStateFile.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEScenario::InvalidateEngineStateFile()
 {
   m_EngineStateFile = "";
 }
-
+//-----------------------------------------------------------------------------
 SEScenarioInitialParameters& SEScenario::GetInitialParameters()
 {
   InvalidateEngineStateFile();
@@ -195,66 +239,72 @@ SEScenarioInitialParameters& SEScenario::GetInitialParameters()
     m_InitialParameters = new SEScenarioInitialParameters(m_SubMgr);
   return *m_InitialParameters;
 }
+//-----------------------------------------------------------------------------
 const SEScenarioInitialParameters* SEScenario::GetInitialParameters() const
 {
   return m_InitialParameters;
 }
+//-----------------------------------------------------------------------------
 bool SEScenario::HasInitialParameters() const
 {
   return m_InitialParameters != nullptr;
 }
+//-----------------------------------------------------------------------------
 void SEScenario::InvalidateInitialParameters()
 {
   SAFE_DELETE(m_InitialParameters);
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenario::HasAutoSerialization() const
 {
   return m_AutoSerialization == nullptr ? false : m_AutoSerialization->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 SEScenarioAutoSerialization& SEScenario::GetAutoSerialization()
 {
   if (m_AutoSerialization == nullptr)
     m_AutoSerialization = new SEScenarioAutoSerialization(GetLogger());
   return *m_AutoSerialization;
 }
-
+//-----------------------------------------------------------------------------
 const SEScenarioAutoSerialization* SEScenario::GetAutoSerialization() const
 {
   return m_AutoSerialization;
 }
+//-----------------------------------------------------------------------------
 void SEScenario::RemoveAutoSerialization()
 {
   SAFE_DELETE(m_AutoSerialization);
 }
-
+//-----------------------------------------------------------------------------
 void SEScenario::AddAction(const SEAction& a)
 {
   CDM::ActionData* bind = a.Unload();
   m_Actions.push_back(SEAction::newFromBind(*bind, m_SubMgr));
   delete bind;
 }
+//-----------------------------------------------------------------------------
 bool SEScenario::AddActionAfter(const SEAction& ref, const SEAction& after)
 {
   bool success = false;
-  auto refItr = std::find( m_Actions.begin(), m_Actions.end(), &ref);
-  if(refItr != m_Actions.end())
-  {
+  auto refItr = std::find(m_Actions.begin(), m_Actions.end(), &ref);
+  if (refItr != m_Actions.end()) {
     CDM::ActionData* bind = after.Unload();
-    m_Actions.insert( refItr, SEAction::newFromBind(*bind, m_SubMgr));  
+    m_Actions.insert(refItr, SEAction::newFromBind(*bind, m_SubMgr));
     delete bind;
     success = true;
   }
   return success;
 }
+//-----------------------------------------------------------------------------
 void SEScenario::ClearActions()
 {
   DELETE_VECTOR(m_Actions);
 }
+//-----------------------------------------------------------------------------
 const std::vector<SEAction*>& SEScenario::GetActions() const
 {
   return m_Actions;
 }
-
+  //-----------------------------------------------------------------------------
 }

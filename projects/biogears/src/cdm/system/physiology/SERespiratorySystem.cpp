@@ -100,7 +100,11 @@ void SERespiratorySystem::Clear()
   SAFE_DELETE(m_TranspulmonaryPressure);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SERespiratorySystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
 {
   if (name == idAlveolarArterialGradient)
@@ -648,9 +652,9 @@ double SERespiratorySystem::GetTranspulmonaryPressure(const PressureUnit& unit) 
   return m_TranspulmonaryPressure->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SERespiratorySystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idAlveolarArterialGradient)
     .emplace_back(idCarricoIndex)
     .emplace_back(idEndTidalCarbonDioxideFraction)

@@ -781,6 +781,8 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
   case RESPIRATORY_ALKALOSIS:
     testCase.SetName("RespiratoryAlkalosis");
     break;
+  default:
+    break;
   };
 
   //Create the compartment

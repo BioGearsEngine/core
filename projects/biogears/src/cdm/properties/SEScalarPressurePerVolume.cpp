@@ -16,6 +16,16 @@ namespace biogears {
 const PressurePerVolumeUnit PressurePerVolumeUnit::mmHg_Per_mL("mmHg/mL");
 const PressurePerVolumeUnit PressurePerVolumeUnit::cmH2O_Per_mL("cmH2O/mL");
 
+PressurePerVolumeUnit::PressurePerVolumeUnit(const char* u)
+  : PressurePerVolumeUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+PressurePerVolumeUnit::PressurePerVolumeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarPressurePerVolumeData* SEScalarPressurePerVolume::Unload() const
 {
   if (!IsValid())
@@ -24,24 +34,35 @@ CDM::ScalarPressurePerVolumeData* SEScalarPressurePerVolume::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool PressurePerVolumeUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool PressurePerVolumeUnit::IsValidUnit(const char* unit)
 {
-  if (mmHg_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_Per_mL.GetString(),unit) == 0)
     return true;
-  if (cmH2O_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(cmH2O_Per_mL.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const PressurePerVolumeUnit& PressurePerVolumeUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool PressurePerVolumeUnit::IsValidUnit(const std::string& unit)
 {
-  if (mmHg_Per_mL.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const PressurePerVolumeUnit& PressurePerVolumeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(mmHg_Per_mL.GetString(),unit) == 0)
     return mmHg_Per_mL;
-  if (cmH2O_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(cmH2O_Per_mL.GetString(),unit) == 0)
     return cmH2O_Per_mL;
   std::stringstream err;
   err << unit << " is not a valid PressurePerVolume unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const PressurePerVolumeUnit& PressurePerVolumeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

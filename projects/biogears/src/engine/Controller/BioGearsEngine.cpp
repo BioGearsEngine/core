@@ -55,6 +55,12 @@ BioGearsEngine::BioGearsEngine(Logger* logger)
   m_DataTrack = &m_EngineTrack.GetDataTrack();
 }
 //-------------------------------------------------------------------------------
+BioGearsEngine::BioGearsEngine(const char* logFileName)
+  :BioGearsEngine(std::string{logFileName})
+{
+  
+}
+//-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const std::string& logFileName)
   : BioGears(logFileName)
   , m_EngineTrack(*this)
@@ -76,6 +82,11 @@ Logger* BioGearsEngine::GetLogger()
 PhysiologyEngineTrack* BioGearsEngine::GetEngineTrack()
 {
   return &m_EngineTrack;
+}
+//-------------------------------------------------------------------------------
+bool BioGearsEngine::LoadState(const char*file, const SEScalarTime* simTime)
+{
+  return LoadState(std::string{ file }, simTime);
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
@@ -344,6 +355,11 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   return true; // return CheckDataRequirements/IsValid() or something
 }
 //-------------------------------------------------------------------------------
+std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const char* file)
+{
+  return SaveState(std::string{ file });
+}
+//-------------------------------------------------------------------------------
 std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const std::string& file)
 {
   std::unique_ptr<CDM::PhysiologyEngineStateData> state(new CDM::BioGearsStateData());
@@ -412,6 +428,11 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
   }
 
   return state;
+}
+//-------------------------------------------------------------------------------
+bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
+{
+  return InitializeEngine(std::string{ patientFile }, conditions, config);
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
@@ -784,10 +805,10 @@ const SECompartmentManager& BioGearsEngine::GetCompartments()
   return BioGears::GetCompartments();
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> BioGearsEngine::GetDataRequestGraph() const
+Tree<const char*> BioGearsEngine::GetDataRequestGraph() const
 {
   return
-  Tree<std::string>{ "BioGearsEngine" }
+  Tree<const char*>{ "BioGearsEngine" }
   .emplace_back(GetBloodChemistry().GetPhysiologyRequestGraph())
   .emplace_back(GetCardiovascular().GetPhysiologyRequestGraph())
   .emplace_back(GetDrugs().GetPhysiologyRequestGraph())

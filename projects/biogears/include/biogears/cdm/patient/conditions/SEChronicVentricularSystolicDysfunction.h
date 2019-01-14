@@ -35,6 +35,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "ChronicVentricularSystolicDysfunction"; }
+  virtual const char* GetName_cStr() const { return "ChronicVentricularSystolicDysfunction"; }
 
   virtual void ToString(std::ostream& str) const;
 

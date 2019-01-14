@@ -80,9 +80,12 @@ void SEEnergySystem::Clear()
   SAFE_DELETE(m_SweatRate);
   SAFE_DELETE(m_TotalMetabolicRate);
   SAFE_DELETE(m_TotalWorkRateLevel);
+}//-------------------------------------------------------------------------------
+const SEScalar* SEEnergySystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-
 const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
 {
   if (name == idAchievedExerciseLevel)
@@ -449,9 +452,9 @@ double SEEnergySystem::GetTotalWorkRateLevel() const
   return m_TotalWorkRateLevel->GetValue();
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEEnergySystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SEEnergySystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idAchievedExerciseLevel)
     .emplace_back(idChlorideLostToSweat)
     .emplace_back(idCoreTemperature)

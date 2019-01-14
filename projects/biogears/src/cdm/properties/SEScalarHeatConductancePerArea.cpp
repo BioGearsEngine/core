@@ -17,6 +17,16 @@ const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_K("W/m^2 K
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_C("W/m^2 degC");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C("BTU/hr ft^2 degC");
 
+HeatConductancePerAreaUnit::HeatConductancePerAreaUnit(const char* u)
+  : HeatConductancePerAreaUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+HeatConductancePerAreaUnit::HeatConductancePerAreaUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatConductancePerAreaData* SEScalarHeatConductancePerArea::Unload() const
 {
   if (!IsValid())
@@ -25,28 +35,39 @@ CDM::ScalarHeatConductancePerAreaData* SEScalarHeatConductancePerArea::Unload() 
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool HeatConductancePerAreaUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool HeatConductancePerAreaUnit::IsValidUnit(const char* unit)
 {
-  if (W_Per_m2_K.GetString().compare(unit) == 0)
+  if (strcmp(W_Per_m2_K.GetString(),unit) == 0)
     return true;
-  if (W_Per_m2_C.GetString().compare(unit) == 0)
+  if (strcmp(W_Per_m2_C.GetString(),unit) == 0)
     return true;
-  if (BTU_Per_hr_ft2_C.GetString().compare(unit) == 0)
+  if (strcmp(BTU_Per_hr_ft2_C.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const HeatConductancePerAreaUnit& HeatConductancePerAreaUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool HeatConductancePerAreaUnit::IsValidUnit(const std::string& unit)
 {
-  if (W_Per_m2_K.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const HeatConductancePerAreaUnit& HeatConductancePerAreaUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(W_Per_m2_K.GetString(),unit) == 0)
     return W_Per_m2_K;
-  if (W_Per_m2_C.GetString().compare(unit) == 0)
+  if (strcmp(W_Per_m2_C.GetString(),unit) == 0)
     return W_Per_m2_C;
-  if (BTU_Per_hr_ft2_C.GetString().compare(unit) == 0)
+  if (strcmp(BTU_Per_hr_ft2_C.GetString(),unit) == 0)
     return BTU_Per_hr_ft2_C;
   std::stringstream err;
   err << unit << " is not a valid HeatConductancePerArea unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const HeatConductancePerAreaUnit& HeatConductancePerAreaUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

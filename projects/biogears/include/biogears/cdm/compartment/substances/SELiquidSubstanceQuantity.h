@@ -34,18 +34,19 @@ protected:
 public:
   virtual ~SELiquidSubstanceQuantity();
 
-  virtual void Clear();
-  virtual void Invalidate();
+  virtual void Clear() override;
+  virtual void Invalidate() override;
 
   virtual bool Load(const CDM::LiquidSubstanceQuantityData& in);
-  virtual CDM::LiquidSubstanceQuantityData* Unload();
+  virtual CDM::LiquidSubstanceQuantityData* Unload() override;
 
 protected:
   virtual void Unload(CDM::LiquidSubstanceQuantityData& data);
 
 public:
   virtual void SetToZero();
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) override;
+  virtual const SEScalar* GetScalar(const std::string& name) override;
 
   virtual void Balance(BalanceLiquidBy e); // Balance Substance based on a specific property
 
@@ -85,11 +86,11 @@ public:
 protected:
   virtual void AddChild(SELiquidSubstanceQuantity& subQ);
 
-  virtual bool HasExtensive() const { return HasMass(); }
-  virtual SEScalarMass& GetExtensive() { return GetMass(); }
+  virtual bool HasExtensive() const override { return HasMass(); }
+  virtual SEScalarMass& GetExtensive() override  { return GetMass(); }
 
-  virtual bool HasIntensive() const { return HasConcentration(); }
-  virtual SEScalarMassPerVolume& GetIntensive() { return GetConcentration(); }
+  virtual bool HasIntensive() const override  { return HasConcentration(); }
+  virtual SEScalarMassPerVolume& GetIntensive() override  { return GetConcentration(); }
 
   SEScalarMassPerVolume* m_Concentration;
   SEScalarMass* m_Mass;

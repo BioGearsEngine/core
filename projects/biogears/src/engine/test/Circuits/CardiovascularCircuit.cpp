@@ -235,18 +235,18 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   for (SEFluidCircuitPath* p : cvCircuit.GetPaths()) {
     if (p->HasComplianceBaseline()) {
       auto unit = p->GetComplianceBaseline().GetUnit();
-      cvCompBaseTrk.Track(p->GetName() + "_" + unit->GetString(), 0, p->GetComplianceBaseline().GetValue(*unit));
+      cvCompBaseTrk.Track(std::string{ p->GetName() } + "_" + unit->GetString(), 0, p->GetComplianceBaseline().GetValue(*unit));
     }
 
     if (p->HasResistanceBaseline()) {
       auto unit = p->GetResistanceBaseline().GetUnit();
-      cvResBaseTrk.Track(p->GetName() + "_" + unit->GetString(), 0, p->GetResistanceBaseline().GetValue(*unit));
+      cvResBaseTrk.Track(std::string{ p->GetName() } + "_" + unit->GetString(), 0, p->GetResistanceBaseline().GetValue(*unit));
     }
   }
 
   cv.Initialize();
-  if (connectRenal)
-    ((Renal&)bg.GetRenal());
+  //if (connectRenal)
+  //  ((Renal&)bg.GetRenal());
 
   DataTrack cvGraphTrk;
   std::ofstream cvGraphFile;
@@ -369,8 +369,8 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
           SELiquidSubstanceQuantity* CO2 = cmpt->GetSubstanceQuantity(bg.GetSubstances().GetCO2());
           SELiquidSubstanceQuantity* HbCO2 = cmpt->GetSubstanceQuantity(bg.GetSubstances().GetHbCO2());
           SELiquidSubstanceQuantity* HCO3 = cmpt->GetSubstanceQuantity(bg.GetSubstances().GetHCO3());
-          cvGraphTrk.Track(cmpt->GetName() + "_TotalOxygenMolarConcentration_mmol_per_L", time_s, O2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
-          cvGraphTrk.Track(cmpt->GetName() + "_TotalCarbonDioxideMolarConcentration_mmol_per_L", time_s, CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbCO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
+          cvGraphTrk.Track(std::string{ cmpt->GetName() }+"_TotalOxygenMolarConcentration_mmol_per_L", time_s, O2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
+          cvGraphTrk.Track(std::string{ cmpt->GetName() } +"_TotalCarbonDioxideMolarConcentration_mmol_per_L", time_s, CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbCO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + HbO2CO2->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
         }
       } else {
         /*double N2_ug = venaCavaN2->GetMass(MassUnit::ug);
@@ -433,35 +433,35 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
       for (SELiquidCompartment* cmpt : cvGraph.GetCompartments()) {
         if (cmpt->HasPressure()) {
           auto unit = cmpt->GetPressure().GetUnit();
-          cvGraphPresTrk.Track(cmpt->GetName() + "_Pressure_" + unit->GetString(), time_s, cmpt->GetPressure().GetValue(*unit));
+          cvGraphPresTrk.Track(std::string{ cmpt->GetName() } +"_Pressure_" + unit->GetString(), time_s, cmpt->GetPressure().GetValue(*unit));
         }
         if (cmpt->HasVolume()) {
           auto unit = cmpt->GetVolume().GetUnit();
-          cvGraphVolTrk.Track(cmpt->GetName() + "_Volume_" + unit->GetString(), time_s, cmpt->GetVolume().GetValue(*unit));
+          cvGraphVolTrk.Track(std::string{ cmpt->GetName() } +"_Volume_" + unit->GetString(), time_s, cmpt->GetVolume().GetValue(*unit));
         }
       }
 
       for (SELiquidCompartmentLink* link : cvGraph.GetLinks()) {
         if (link->HasFlow()) {
           auto unit = link->GetFlow().GetUnit();
-          cvGraphFlowTrk.Track(link->GetName() + "_Flow_" + unit->GetString(), time_s, link->GetFlow(*unit));
+          cvGraphFlowTrk.Track(std::string{ link->GetName() } + "_Flow_" + unit->GetString(), time_s, link->GetFlow(*unit));
         }
       }
 
       for (SEFluidCircuitNode* n : cvCircuit.GetNodes()) {
         if (n->HasNextPressure()) {
           auto unit = n->GetNextPressure().GetUnit();
-          cvPressureTrk.Track(n->GetName() + "_" + unit->GetString(), time_s, n->GetNextPressure().GetValue(*unit));
+          cvPressureTrk.Track(std::string{ n->GetName() } + "_" + unit->GetString(), time_s, n->GetNextPressure().GetValue(*unit));
         }
         if (n->HasNextVolume()) {
           auto unit = n->GetNextVolume().GetUnit();
           double volume = n->GetNextVolume().GetValue(*unit);
           if (volume < 0)
-            bg.GetLogger()->Error("Negative volume for : " + n->GetName());
-          cvVolumeTrk.Track(n->GetName() + "_" + unit->GetString(), time_s, volume);
+            bg.GetLogger()->Error(std::string{ "Negative volume for : " }+n->GetName());
+          cvVolumeTrk.Track(std::string{ n->GetName() } + "_" + unit->GetString(), time_s, volume);
           if (n->HasVolumeBaseline()) {
             double baseVolume = n->GetVolumeBaseline().GetValue(*unit);
-            cvNormVolumeTrk.Track(n->GetName() + "_" + unit->GetString(), time_s, volume / baseVolume);
+            cvNormVolumeTrk.Track(std::string{ n->GetName() } + "_" + unit->GetString(), time_s, volume / baseVolume);
           }
         }
       }
@@ -469,13 +469,13 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
         if (p->HasNextFlow()) {
           if (p->HasComplianceBaseline()) {
             auto unit = p->GetNextFlow().GetUnit();
-            cvCompFlowTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
+            cvCompFlowTrk.Track(std::string{ p->GetName() } + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
           } else if (p->HasResistanceBaseline()) {
             auto unit = p->GetNextFlow().GetUnit();
-            cvResFlowTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
+            cvResFlowTrk.Track(std::string{ p->GetName() } + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
           } else {
             auto unit = p->GetNextFlow().GetUnit();
-            cvFlowTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
+            cvFlowTrk.Track(std::string{ p->GetName() } + "_" + unit->GetString(), time_s, p->GetNextFlow().GetValue(*unit));
           }
         }
       }
@@ -521,10 +521,10 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
     for (SEFluidCircuitPath* p : cvCircuit.GetPaths()) {
       if (p->HasComplianceBaseline()) {
         auto unit = p->GetComplianceBaseline().GetUnit();
-        cvCompTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetComplianceBaseline().GetValue(*unit));
+        cvCompTrk.Track(std::string{ p->GetName() } + "_" + unit->GetString(), time_s, p->GetComplianceBaseline().GetValue(*unit));
       } else if (p->HasResistanceBaseline()) {
         auto unit = p->GetResistanceBaseline().GetUnit();
-        cvResTrk.Track(p->GetName() + "_" + unit->GetString(), time_s, p->GetResistanceBaseline().GetValue(*unit));
+        cvResTrk.Track(std::string{ p->GetName() } + "_" + unit->GetString(), time_s, p->GetResistanceBaseline().GetValue(*unit));
       }
     }
 

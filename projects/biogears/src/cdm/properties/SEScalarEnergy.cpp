@@ -18,6 +18,16 @@ const EnergyUnit EnergyUnit::mJ("mJ");
 const EnergyUnit EnergyUnit::kJ("kJ");
 const EnergyUnit EnergyUnit::kcal("kcal");
 
+EnergyUnit::EnergyUnit(const char* u)
+  : EnergyUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+EnergyUnit::EnergyUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarEnergyData* SEScalarEnergy::Unload() const
 {
   if (!IsValid())
@@ -26,32 +36,43 @@ CDM::ScalarEnergyData* SEScalarEnergy::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool EnergyUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool EnergyUnit::IsValidUnit(const char* unit)
 {
-  if (J.GetString().compare(unit) == 0)
+  if (strcmp(J.GetString(),unit) == 0)
     return true;
-  if (mJ.GetString().compare(unit) == 0)
+  if (strcmp(mJ.GetString(),unit) == 0)
     return true;
-  if (kJ.GetString().compare(unit) == 0)
+  if (strcmp(kJ.GetString(),unit) == 0)
     return true;
-  if (kcal.GetString().compare(unit) == 0)
+  if (strcmp(kcal.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const EnergyUnit& EnergyUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool EnergyUnit::IsValidUnit(const std::string& unit)
 {
-  if (J.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const EnergyUnit& EnergyUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(J.GetString(),unit) == 0)
     return J;
-  if (mJ.GetString().compare(unit) == 0)
+  if (strcmp(mJ.GetString(),unit) == 0)
     return mJ;
-  if (kJ.GetString().compare(unit) == 0)
+  if (strcmp(kJ.GetString(),unit) == 0)
     return kJ;
-  if (kcal.GetString().compare(unit) == 0)
+  if (strcmp(kcal.GetString(),unit) == 0)
     return kcal;
   std::stringstream err;
   err << unit << " is not a valid Energy unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const EnergyUnit& EnergyUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

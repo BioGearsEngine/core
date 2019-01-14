@@ -18,15 +18,15 @@ namespace biogears {
 class BIOGEARS_API SESubstanceAdministration : public SEPatientAction {
 public:
   SESubstanceAdministration();
-  virtual ~SESubstanceAdministration();
+  virtual ~SESubstanceAdministration() override;
 
   static constexpr const char* TypeTag() { return "SESubstanceAdministration"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::SubstanceAdministrationData& in);
 

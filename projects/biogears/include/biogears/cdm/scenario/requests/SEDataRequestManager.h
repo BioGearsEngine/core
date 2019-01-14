@@ -42,8 +42,10 @@ protected:
 
 public:
   bool HasResultsFilename() const { return !m_ResultsFile.empty(); }
-  std::string GetResultFilename() const { return m_ResultsFile; }
-  void SetResultsFilename(const std::string& name) { m_ResultsFile = name; }
+  std::string GetResultFilename() const;
+  const char * GetResultFilename_cStr() const;
+  void SetResultsFilename(const char* name);
+  void SetResultsFilename(const std::string& name);
 
   double GetSamplesPerSecond() const { return m_SamplesPerSecond; }
   void SetSamplesPerSecond(double num) { m_SamplesPerSecond = num; }

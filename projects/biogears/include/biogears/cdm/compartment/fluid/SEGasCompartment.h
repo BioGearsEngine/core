@@ -25,6 +25,7 @@ class BIOGEARS_API SEGasCompartment : public SEFluidCompartment<SEGasCompartment
   friend class SECompartmentManager;
 
 protected:
+  SEGasCompartment(const char* name, Logger* logger);
   SEGasCompartment(const std::string& name, Logger* logger);
 
 public:

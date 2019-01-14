@@ -15,6 +15,16 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricChargeUnit ElectricChargeUnit::C("C");
 
+ElectricChargeUnit::ElectricChargeUnit(const char* u)
+  : ElectricChargeUnit(std::string(u))
+{
+}
+//-----------------------------------------------------------------------------
+ElectricChargeUnit::ElectricChargeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarElectricChargeData* SEScalarElectricCharge::Unload() const
 {
   if (!IsValid())
@@ -23,20 +33,31 @@ CDM::ScalarElectricChargeData* SEScalarElectricCharge::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool ElectricChargeUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricChargeUnit::IsValidUnit(const char* unit)
 {
-  if (C.GetString().compare(unit) == 0)
+  if (strcmp(C.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricChargeUnit::IsValidUnit(const std::string& unit)
 {
-  if (C.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(C.GetString(),unit) == 0)
     return C;
   std::stringstream err;
   err << unit << " is not a valid ElectricCharge unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

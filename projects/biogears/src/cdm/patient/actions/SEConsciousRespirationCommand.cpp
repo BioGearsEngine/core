@@ -17,54 +17,68 @@ SEConsciousRespirationCommand::SEConsciousRespirationCommand()
 {
   m_Comment = "";
 }
-
+//-------------------------------------------------------------------------------
 SEConsciousRespirationCommand::~SEConsciousRespirationCommand()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEConsciousRespirationCommand::Clear()
 {
   m_Comment = "";
 }
-
+//-------------------------------------------------------------------------------
 bool SEConsciousRespirationCommand::Load(const CDM::ConsciousRespirationCommandData& in)
 {
   if (in.Comment().present())
     m_Comment = in.Comment().get();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void SEConsciousRespirationCommand::Unload(CDM::ConsciousRespirationCommandData& data) const
 {
   if (HasComment())
     data.Comment(m_Comment);
 }
-
+//-------------------------------------------------------------------------------
 bool SEConsciousRespirationCommand::IsValid() const
 {
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SEConsciousRespirationCommand::IsActive() const
 {
   return true;
 }
-
+//-------------------------------------------------------------------------------
 std::string SEConsciousRespirationCommand::GetComment() const
 {
   return m_Comment;
 }
+  //-------------------------------------------------------------------------------
+const char* SEConsciousRespirationCommand::GetComment_cStr() const
+{
+  return m_Comment.c_str();
+}
+//-------------------------------------------------------------------------------
+void SEConsciousRespirationCommand::SetComment(const char* comment)
+{
+  m_Comment = comment;
+}
+//-------------------------------------------------------------------------------
 void SEConsciousRespirationCommand::SetComment(const std::string& comment)
 {
   m_Comment = comment;
 }
+//-------------------------------------------------------------------------------
 bool SEConsciousRespirationCommand::HasComment() const
 {
   return m_Comment.empty() ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SEConsciousRespirationCommand::InvalidateComment()
 {
   m_Comment = "";
 }
+//-------------------------------------------------------------------------------
 }

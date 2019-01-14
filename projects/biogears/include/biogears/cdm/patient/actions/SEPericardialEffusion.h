@@ -20,18 +20,18 @@ class SEScalarVolumePerTime;
 class BIOGEARS_API SEPericardialEffusion : public SEPatientAction {
 public:
   SEPericardialEffusion();
-  virtual ~SEPericardialEffusion();
+  virtual ~SEPericardialEffusion() override;
 
   static constexpr const char* TypeTag() { return "SEPericardialEffusion"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::PericardialEffusionData& in);
-  virtual CDM::PericardialEffusionData* Unload() const;
+  virtual CDM::PericardialEffusionData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::PericardialEffusionData& data) const;
@@ -40,7 +40,7 @@ public:
   virtual bool HasEffusionRate() const;
   virtual SEScalarVolumePerTime& GetEffusionRate();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalarVolumePerTime* m_EffusionRate;

@@ -30,6 +30,7 @@ class SECircuitPath : public Loggable {
   friend class SECircuit;
 
 protected:
+  SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name);
   SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const std::string& name);
 
 public:
@@ -45,6 +46,7 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
 
   virtual SECircuitNode<CIRCUIT_NODE_TYPES>& GetSourceNode() const;
   virtual SECircuitNode<CIRCUIT_NODE_TYPES>& GetTargetNode() const;

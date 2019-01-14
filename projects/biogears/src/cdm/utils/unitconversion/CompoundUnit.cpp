@@ -14,12 +14,70 @@ specific language governing permissions and limitations under the License.
 /// @file CompoundUnit.cpp
 /// @author Chris Volpe
 //----------------------------------------------------------------------------
+#include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 #include <biogears/cdm/utils/unitconversion/UnitStringLexer.h>
-#include <biogears/cdm/utils/Logger.h>
 //----------------------------------------------------------------------------
 namespace biogears {
+// Default ctor
+CCompoundUnit::CCompoundUnit()
+  : m_CUD(nullptr)
+  , m_dBigness(1.0)
+  , m_bStaleBigness(true)
+  , m_bStaleDimension(true)
+  , m_bDBFlag(false)
+  , m_bExplicitDBFlag(false)
+  , m_bExplicitNonDBFlag(false){};
+//----------------------------------------------------------------------------
+// Construct directly from a unit string specification
+CCompoundUnit::CCompoundUnit(const char* unitString)
+  : CCompoundUnit(std::string{ unitString })
+{
+}
+//----------------------------------------------------------------------------
+// Construct directly from a unit string specification
+CCompoundUnit::CCompoundUnit(const std::string& unitString)
+  : m_CUD(nullptr)
+  , m_dBigness(1.0)
+  , m_bStaleBigness(true)
+  , m_bStaleDimension(true)
+  , m_bDBFlag(false)
+  , m_bExplicitDBFlag(false)
+  , m_bExplicitNonDBFlag(false)
+{
+  ParseString(unitString);
+}
+//----------------------------------------------------------------------------
+// Copy ctor
+CCompoundUnit::CCompoundUnit(const CCompoundUnit& src) // Copy constructor
+  : m_CUEVec(src.m_CUEVec)
+  , m_dBigness(src.m_dBigness)
+  , m_bStaleBigness(src.m_bStaleBigness)
+  , m_strUnit(src.m_strUnit)
+  , m_bStaleDimension(src.m_bStaleDimension)
+  , m_bDBFlag(src.m_bDBFlag)
+  , m_bExplicitDBFlag(src.m_bExplicitDBFlag)
+  , m_bExplicitNonDBFlag(src.m_bExplicitNonDBFlag)
+{
+  // In the initializer list, I'm assuming that initializing one vector with another
+  // copies the vector correctly. For the CUnitDimension object, we can't just
+  // initialize our pointer with the src's pointer, because each CCompoundUnit owns its
+  // CUnitDimension object, so we need to invoke the copy constructor on the
+  // CUnitDimension. Unfortunately, since the pointer might be nullptr, we can't simply
+  // do this in the initializer list.
+  if (src.m_CUD == nullptr) {
+    m_CUD = nullptr;
+  } else {
+    m_CUD = new CUnitDimension(*src.m_CUD);
+  }
+}
+//----------------------------------------------------------------------------
+void CCompoundUnit::ParseString(const char* unitString)
+{
+  ParseString(std::string{ unitString });
+}
+//----------------------------------------------------------------------------
 void CCompoundUnit::ParseString(const std::string& unitString)
 {
   // Start with a clean slate
@@ -568,7 +626,11 @@ bool CCompoundUnit::IsOfType(int quantityTypeID)
     return GetDimension()->IsFundamentalQuantity(static_cast<size_t>(qtFID));
   }
 }
-
+//----------------------------------------------------------------------------
+bool CCompoundUnit::IsOfType(const char* quantityName)
+{
+  return IsOfType(std::string{ quantityName });
+}
 //----------------------------------------------------------------------------
 bool CCompoundUnit::IsOfType(const std::string& quantityName)
 {
@@ -580,7 +642,11 @@ bool CCompoundUnit::IsOfType(const std::string& quantityName)
     return IsOfType(qtID);
   }
 }
-
+//----------------------------------------------------------------------------
+const char* CCompoundUnit::GetString() const
+{
+  return m_strUnit.c_str();
+}
 //----------------------------------------------------------------------------
 std::ostream& CCompoundUnit::PrintSelf(std::ostream& output) const
 {
@@ -681,7 +747,7 @@ std::ostream& CCompoundUnit::PrintSelf(std::ostream& output) const
   } // for each element
   return output;
 }
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 double Convert(double d, const CCompoundUnit& from, const CCompoundUnit& to)
 {
   if (from == to)
@@ -689,7 +755,7 @@ double Convert(double d, const CCompoundUnit& from, const CCompoundUnit& to)
   // I am assuming we are not going to do Quantity A to Quantity B Conversions
   return CUnitConversionEngine::GetEngine().QuickConvertValue(d, from, to);
 }
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 bool CompatibleUnits(const CCompoundUnit& from, const CCompoundUnit& to)
 {
   if (from == to)

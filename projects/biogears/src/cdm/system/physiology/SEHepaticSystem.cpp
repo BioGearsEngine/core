@@ -17,8 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-  constexpr char idKetoneProductionRate[] = "KetoneProductionRate";
-  constexpr char idHepaticGluconeogenesisRate[] = "HepaticGluconeogenesisRate";
+constexpr char idKetoneProductionRate[] = "KetoneProductionRate";
+constexpr char idHepaticGluconeogenesisRate[] = "HepaticGluconeogenesisRate";
 
 SEHepaticSystem::SEHepaticSystem(Logger* logger)
   : SESystem(logger)
@@ -42,7 +42,11 @@ void SEHepaticSystem::Clear()
   SAFE_DELETE(m_HepaticGluconeogenesisRate);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEHepaticSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
 {
   if (name == idKetoneProductionRate)
@@ -122,11 +126,10 @@ double SEHepaticSystem::GetHepaticGluconeogenesisRate(const MassPerTimeUnit& uni
   return m_HepaticGluconeogenesisRate->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEHepaticSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SEHepaticSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{ classname() }
     .emplace_back(idKetoneProductionRate)
-    .emplace_back(idHepaticGluconeogenesisRate)  
-  ;
+    .emplace_back(idHepaticGluconeogenesisRate);
 }
 }

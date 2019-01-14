@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-
 namespace biogears {
 SEAnesthesiaMachineChamber::SEAnesthesiaMachineChamber(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
@@ -98,7 +97,11 @@ void SEAnesthesiaMachineChamber::Merge(const SEAnesthesiaMachineChamber& from)
   }
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const std::string& name)
 {
   if (name == "SubstanceFraction")
@@ -178,5 +181,4 @@ void SEAnesthesiaMachineChamber::ToString(std::ostream& str) const
   else
     str << "Action not specified properly" << std::flush;
 }
-
 }

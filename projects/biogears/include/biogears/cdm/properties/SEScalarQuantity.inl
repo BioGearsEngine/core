@@ -89,7 +89,9 @@ void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in)
   this->Clear();
   SEProperty::Load(in);
   if (in.unit().present())
+  {
     this->SetValue(in.value(), Unit::GetCompoundUnit(in.unit().get()));
+  }
   else
     throw CommonDataModelException("ScalarQuantity attempted to load a ScalarData with no unit, must have a unit.");
   m_readOnly = in.readOnly();
@@ -169,6 +171,12 @@ double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
+double SEScalarQuantity<Unit>::GetValue(const char* unit) const
+{
+  return GetValue(std::string{ unit });
+}
+//-------------------------------------------------------------------------------
+template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const std::string& unit) const
 {
 #if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
@@ -222,6 +230,12 @@ bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& to) const
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
+const Unit* SEScalarQuantity<Unit>::GetCompoundUnit(const char* unit) const
+{
+  return &Unit::GetCompoundUnit(unit);
+}
+//-------------------------------------------------------------------------------
+template <typename Unit>
 const Unit* SEScalarQuantity<Unit>::GetCompoundUnit(const std::string& unit) const
 {
   return &Unit::GetCompoundUnit(unit);
@@ -245,6 +259,12 @@ auto SEScalarQuantity<Unit>::Increment(const SEScalarQuantity<Unit>& s) -> SESca
     this->IncrementValue(s.m_value, *s.m_unit);
   }
   return *this;
+}
+//-------------------------------------------------------------------------------
+template <typename Unit>
+auto SEScalarQuantity<Unit>::IncrementValue(double d, const char* unit)->SEScalarQuantity&
+{
+  return IncrementValue(d, std::string{ unit });
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -273,6 +293,12 @@ auto SEScalarQuantity<Unit>::Decrement(const SEScalarQuantity& s) -> SEScalarQua
     this->IncrementValue(-s.m_value, *s.m_unit);
   }
   return *this;
+}
+//-------------------------------------------------------------------------------
+template <typename Unit>
+auto SEScalarQuantity<Unit>::DecrementValue(double d, const char* unit)->SEScalarQuantity&
+{
+  return DecrementValue(d, std::string{ unit });
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>

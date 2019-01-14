@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include "TestDriver.h"
 #include "Verification.h"
 
+#ifdef ANDROID
 namespace std {
   template <typename T>
   std::string to_string( T value ) {
@@ -25,8 +26,12 @@ namespace std {
     return ss.str();
   }
 }
-namespace
+#endif
+
+namespace test_driver
 {
+
+  std::mutex RunScenarioTask::ms_constructionMutex;
 
 const std::string subjectKey = "subject";
 const std::string senderKey = "sender";
@@ -59,6 +64,7 @@ std::vector<std::string> ParseRecipients(const std::string& recipients)
 }
 
 using namespace biogears;
+using namespace test_driver;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// This function is called when the task is executed, it creates a BioGearsEngine and executes the scenario
@@ -69,6 +75,7 @@ void RunScenarioTask::RunScenarioTask::Run()
 	std::string logFile = m_scenarioFile;
 	logFile = Replace(logFile, "verification", "bin");
 	logFile = Replace(logFile, ".xml", ".log");
+
 
 	// Set up the verification output file
 	std::string dataFile = m_scenarioFile;

@@ -32,6 +32,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "Starvation"; }
+  virtual const char* GetName_cStr() const { return "Starvation"; }
 
   virtual bool HasTimeSinceMeal() const;
   virtual SEScalarTime& GetTimeSinceMeal();

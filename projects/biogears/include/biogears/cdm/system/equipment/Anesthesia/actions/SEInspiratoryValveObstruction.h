@@ -19,18 +19,18 @@ class SEScalar0To1;
 class BIOGEARS_API SEInspiratoryValveObstruction : public SEAnesthesiaMachineAction {
 public:
   SEInspiratoryValveObstruction();
-  virtual ~SEInspiratoryValveObstruction();
+  virtual ~SEInspiratoryValveObstruction() override;
 
   static constexpr const char* TypeTag() { return "SEInspiratoryValveObstruction"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::InspiratoryValveObstructionData& in);
-  virtual CDM::InspiratoryValveObstructionData* Unload() const;
+  virtual CDM::InspiratoryValveObstructionData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::InspiratoryValveObstructionData& data) const;
@@ -39,7 +39,7 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Severity;

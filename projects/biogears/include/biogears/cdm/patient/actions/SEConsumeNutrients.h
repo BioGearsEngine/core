@@ -21,18 +21,18 @@ namespace biogears {
 class BIOGEARS_API SEConsumeNutrients : public SEPatientAction {
 public:
   SEConsumeNutrients();
-  virtual ~SEConsumeNutrients();
+  virtual ~SEConsumeNutrients() override;
 
   static constexpr const char* TypeTag() { return "SEconsumeNutrients"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ConsumeNutrientsData& in);
-  virtual CDM::ConsumeNutrientsData* Unload() const;
+  virtual CDM::ConsumeNutrientsData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::ConsumeNutrientsData& data) const;
@@ -43,11 +43,13 @@ public:
   const SENutrition* GetNutrition() const;
 
   virtual std::string GetNutritionFile() const;
+  virtual const char* GetNutritionFile_cStr() const;
+  virtual void SetNutritionFile(const char* fileName);
   virtual void SetNutritionFile(const std::string& fileName);
   virtual bool HasNutritionFile() const;
   virtual void InvalidateNutritionFile();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SENutrition* m_Nutrition;

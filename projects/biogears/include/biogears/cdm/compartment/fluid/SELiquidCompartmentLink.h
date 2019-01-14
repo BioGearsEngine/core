@@ -22,13 +22,11 @@ class SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportE
   friend class SECompartmentManager;
 
 protected:
-  SELiquidCompartmentLink(SELiquidCompartment& src, SELiquidCompartment& tgt, const std::string& name)
-    : SEFluidCompartmentLink(src, tgt, name)
-  {
-  }
+  SELiquidCompartmentLink(SELiquidCompartment& src, SELiquidCompartment& tgt, const char* name);
+  SELiquidCompartmentLink(SELiquidCompartment& src, SELiquidCompartment& tgt, const std::string& name);
 
 public:
-  ~SELiquidCompartmentLink() = default;
+  ~SELiquidCompartmentLink() override = default;
 
   virtual CDM::LiquidCompartmentLinkData* Unload() override;
 };

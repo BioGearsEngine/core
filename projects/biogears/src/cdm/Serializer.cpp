@@ -26,6 +26,16 @@ Serializer* Serializer::m_me = nullptr;
 bool Serializer::m_Initialized = false;
 std::unique_ptr<xercesc::XMLGrammarPool> Serializer::m_GrammerPool;
 
+bool ErrorHandler::failed() const
+{
+  return failed_;
+}
+//-----------------------------------------------------------------------------
+const char* ErrorHandler::getError()
+{
+  return error_.str().c_str();
+}
+//-----------------------------------------------------------------------------
 bool ErrorHandler::handleError(const xercesc::DOMError& err)
 {
   bool warn(err.getSeverity() == DOMError::DOM_SEVERITY_WARNING);
@@ -51,17 +61,17 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 Serializer::Serializer()
 {
 }
-
+//-----------------------------------------------------------------------------
 Serializer::~Serializer()
 {
   m_GrammerPool.release();
   xercesc::XMLPlatformUtils::Terminate();
 }
-
+//-----------------------------------------------------------------------------
 bool Serializer::Initialize(Logger* logger)
 {
   if (m_Initialized)
@@ -101,7 +111,7 @@ bool Serializer::Initialize(Logger* logger)
   m_Initialized = true;
   return true;
 }
-
+//-----------------------------------------------------------------------------
 DOMLSParser* Serializer::CreateParser(Logger* logger) const
 {
   const XMLCh ls_id[] = { chLatin_L, chLatin_S, chNull };
@@ -153,7 +163,12 @@ DOMLSParser* Serializer::CreateParser(Logger* logger) const
 
   return parser;
 }
-
+//-----------------------------------------------------------------------------
+std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logger* logger)
+{
+  return ReadFile( std::string{ xmlFile }, logger);
+}
+//-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
 {
   ScopedFileSystemLock lock;
@@ -220,4 +235,5 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   logger->Error(err);
   return obj;
 }
+//-----------------------------------------------------------------------------
 }

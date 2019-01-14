@@ -24,10 +24,14 @@ specific language governing permissions and limitations under the License.
 namespace biogears{
 class CPrefixDescriptor {
 public:
-  CPrefixDescriptor(std::string name, std::string sym, double scaleFac);
-  CPrefixDescriptor(std::string name, char sym, double scaleFac);
+  CPrefixDescriptor(const char* name, const char* sym, double scaleFac);
+  CPrefixDescriptor(const char* name, char sym, double scaleFac);
+  CPrefixDescriptor(const std::string& name, const std::string& sym, double scaleFac);
+  CPrefixDescriptor(const std::string& name, char sym, double scaleFac);
 
-  const std::string& GetName() const;
+  std::string GetName() const;
+  const char* GetName_cStr() const;
+
   char GetSymbol() const;
   double  GetScaleFactor() const;
 

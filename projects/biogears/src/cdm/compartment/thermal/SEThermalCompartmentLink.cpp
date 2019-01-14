@@ -10,11 +10,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
+#include <biogears/cdm/compartment/SECompartmentGraph.inl>
 
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 
 namespace biogears {
+SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name)
+  : SEThermalCompartmentLink(src, tgt, std::string{ name })
+{
+}
+//-------------------------------------------------------------------------------
 SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const std::string& name)
   : SECompartmentLink(name, src.GetLogger())
   , m_SourceCmpt(src)
@@ -23,22 +29,23 @@ SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SE
   m_HeatTransferRate = nullptr;
   m_Path = nullptr;
 }
+//-------------------------------------------------------------------------------
 SEThermalCompartmentLink::~SEThermalCompartmentLink()
 {
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalCompartmentLink::Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits)
 {
   if (!SECompartmentLink::Load(in, circuits))
     return false;
   if (in.Path().present()) {
     if (circuits == nullptr) {
-      Error("Link is mapped to circuit path, " + in.Path().get() + ", but no circuit manager was provided, cannot load");
+      Error("Link is mapped to circuit path, " + std::string{ in.Path().get() } +", but no circuit manager was provided, cannot load");
       return false;
     }
     SEThermalCircuitPath* path = circuits->GetThermalPath(in.Path().get());
     if (path == nullptr) {
-      Error("Link is mapped to circuit path, " + in.Path().get() + ", but provided circuit manager did not have that path");
+      Error("Link is mapped to circuit path, " + std::string{ in.Path().get() }+", but provided circuit manager did not have that path");
       return false;
     }
     MapPath(*path);
@@ -48,12 +55,14 @@ bool SEThermalCompartmentLink::Load(const CDM::ThermalCompartmentLinkData& in, S
   }
   return true;
 }
+//-------------------------------------------------------------------------------
 CDM::ThermalCompartmentLinkData* SEThermalCompartmentLink::Unload()
 {
   CDM::ThermalCompartmentLinkData* data = new CDM::ThermalCompartmentLinkData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SEThermalCompartmentLink::Unload(CDM::ThermalCompartmentLinkData& data)
 {
   SECompartmentLink::Unload(data);
@@ -65,26 +74,32 @@ void SEThermalCompartmentLink::Unload(CDM::ThermalCompartmentLinkData& data)
   if (HasHeatTransferRate())
     data.HeatTransferRate(std::unique_ptr<CDM::ScalarPowerData>(GetHeatTransferRate().Unload()));
 }
-
+//-------------------------------------------------------------------------------
 void SEThermalCompartmentLink::Clear()
 {
   m_Path = nullptr;
   SAFE_DELETE(m_HeatTransferRate);
 }
-
+//-------------------------------------------------------------------------------
+const SEScalar* SEThermalCompartmentLink::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEThermalCompartmentLink::GetScalar(const std::string& name)
 {
   if (name.compare("HeatTransferRate") == 0)
     return &GetHeatTransferRate();
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalCompartmentLink::HasHeatTransferRate() const
 {
   if (m_Path != nullptr)
     return m_Path->HasNextHeatTransferRate();
   return m_HeatTransferRate == nullptr ? false : m_HeatTransferRate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPower& SEThermalCompartmentLink::GetHeatTransferRate()
 {
   if (m_Path != nullptr)
@@ -93,6 +108,7 @@ SEScalarPower& SEThermalCompartmentLink::GetHeatTransferRate()
     m_HeatTransferRate = new SEScalarPower();
   return *m_HeatTransferRate;
 }
+//-------------------------------------------------------------------------------
 double SEThermalCompartmentLink::GetHeatTransferRate(const PowerUnit& unit) const
 {
   if (m_Path != nullptr)
@@ -101,4 +117,20 @@ double SEThermalCompartmentLink::GetHeatTransferRate(const PowerUnit& unit) cons
     return SEScalar::dNaN();
   return m_HeatTransferRate->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
+}//namespace biogears
+
+namespace biogears {
+SEThermalCompartmentGraph::SEThermalCompartmentGraph(const char* name, Logger* logger)
+  : SECompartmentGraph(std::string{ name }, logger)
+{
 }
+//-----------------------------------------------------------------------------
+SEThermalCompartmentGraph::SEThermalCompartmentGraph(const std::string& name, Logger* logger)
+  : SECompartmentGraph(name, logger){};
+//-----------------------------------------------------------------------------
+SEThermalCompartmentGraph::~SEThermalCompartmentGraph()
+{
+}
+//-----------------------------------------------------------------------------
+} //namespace biogears

@@ -40,33 +40,33 @@ protected:
   BioGears& m_data;
 
 public:
-  virtual ~Hepatic();
+  virtual ~Hepatic() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
   static constexpr char const * const  TypeTag() { return "Hepatic"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear();
+  void Clear() override;
 
   // Set members to a stable homeostatic state
-  void Initialize();
+  void Initialize() override;
 
   // Load a state
   virtual bool Load(const CDM::BioGearsHepaticSystemData& in);
-  virtual CDM::BioGearsHepaticSystemData* Unload() const;
+  virtual CDM::BioGearsHepaticSystemData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::BioGearsHepaticSystemData& data) const;
 
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
-  void SetUp();
+  void SetUp() override;
 
 public:
-  void AtSteadyState();
-  void PreProcess();
-  void Process();
-  void PostProcess();
+  void AtSteadyState() override;
+  void PreProcess() override;
+  void Process() override;
+  void PostProcess() override;
   static double CalculateRelativeHormoneChange(double insulinSetPoint_pmol_Per_L, double glucagonSetPoint_pg_Per_mL, SELiquidSubstanceQuantity* currentInsulin, SELiquidSubstanceQuantity* currentGlucagon, BioGears& m_data);
 
 protected:

@@ -18,6 +18,16 @@ const EnergyPerMassUnit EnergyPerMassUnit::kJ_Per_kg("kJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::mJ_Per_kg("mJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::kcal_Per_kg("kcal/kg");
 
+EnergyPerMassUnit::EnergyPerMassUnit(const char* u)
+  : EnergyPerMassUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+EnergyPerMassUnit::EnergyPerMassUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarEnergyPerMassData* SEScalarEnergyPerMass::Unload() const
 {
   if (!IsValid())
@@ -26,32 +36,43 @@ CDM::ScalarEnergyPerMassData* SEScalarEnergyPerMass::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool EnergyPerMassUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool EnergyPerMassUnit::IsValidUnit(const char* unit)
 {
-  if (J_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(J_Per_kg.GetString(), unit) == 0)
     return true;
-  if (kJ_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(kJ_Per_kg.GetString(), unit) == 0)
     return true;
-  if (mJ_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(mJ_Per_kg.GetString(), unit) == 0)
     return true;
-  if (kcal_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_kg.GetString(), unit) == 0)
     return true;
   return false;
 }
-
-const EnergyPerMassUnit& EnergyPerMassUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool EnergyPerMassUnit::IsValidUnit(const std::string& unit)
 {
-  if (J_Per_kg.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const EnergyPerMassUnit& EnergyPerMassUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(J_Per_kg.GetString(), unit) == 0)
     return J_Per_kg;
-  if (kJ_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(kJ_Per_kg.GetString(), unit) == 0)
     return kJ_Per_kg;
-  if (mJ_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(mJ_Per_kg.GetString(), unit) == 0)
     return mJ_Per_kg;
-  if (kcal_Per_kg.GetString().compare(unit) == 0)
+  if (strcmp(kcal_Per_kg.GetString(), unit) == 0)
     return kcal_Per_kg;
   std::stringstream err;
   err << unit << " is not a valid EnergyPerMass unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const EnergyPerMassUnit& EnergyPerMassUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

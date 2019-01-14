@@ -18,6 +18,16 @@ const TemperatureUnit TemperatureUnit::C("degC");
 const TemperatureUnit TemperatureUnit::K("K");
 const TemperatureUnit TemperatureUnit::R("degR");
 
+TemperatureUnit::TemperatureUnit(const char* u)
+  : TemperatureUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+TemperatureUnit::TemperatureUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarTemperatureData* SEScalarTemperature::Unload() const
 {
   if (!IsValid())
@@ -26,35 +36,45 @@ CDM::ScalarTemperatureData* SEScalarTemperature::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool TemperatureUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool TemperatureUnit::IsValidUnit(const char* unit)
 {
-  if (F.GetString().compare(unit) == 0)
+  if (strcmp(F.GetString(),unit) == 0)
     return true;
-  if (C.GetString().compare(unit) == 0)
+  if (strcmp(C.GetString(),unit) == 0)
     return true;
-  if (K.GetString().compare(unit) == 0)
+  if (strcmp(K.GetString(),unit) == 0)
     return true;
-  if (R.GetString().compare(unit) == 0)
+  if (strcmp(R.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const TemperatureUnit& TemperatureUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool TemperatureUnit::IsValidUnit(const std::string& unit)
 {
-  if (F.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const TemperatureUnit& TemperatureUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(F.GetString(),unit) == 0)
     return F;
-  if (C.GetString().compare(unit) == 0)
+  if (strcmp(C.GetString(),unit) == 0)
     return C;
-  if (K.GetString().compare(unit) == 0)
+  if (strcmp(K.GetString(),unit) == 0)
     return K;
-  if (R.GetString().compare(unit) == 0)
+  if (strcmp(R.GetString(),unit) == 0)
     return R;
   std::stringstream err;
   err << unit << " is not a valid Temperature unit";
   throw CommonDataModelException(err.str());
 }
-
+//-------------------------------------------------------------------------------
+const TemperatureUnit& TemperatureUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
 {
   if (std::isnan(m_value))
@@ -65,4 +85,5 @@ double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
     return m_value;
   return Convert(m_value, *m_unit, unit);
 }
+//-------------------------------------------------------------------------------
 }

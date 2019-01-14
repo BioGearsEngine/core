@@ -17,13 +17,14 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API ElectricCapacitanceUnit : public CCompoundUnit {
 public:
-  ElectricCapacitanceUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
+  ElectricCapacitanceUnit(const char* u);
+  ElectricCapacitanceUnit(const std::string& u);
+
   virtual ~ElectricCapacitanceUnit() = default;
 
+  static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
+  static const ElectricCapacitanceUnit& GetCompoundUnit(const char* unit);
   static const ElectricCapacitanceUnit& GetCompoundUnit(const std::string& unit);
 
   static const ElectricCapacitanceUnit F;

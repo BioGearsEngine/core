@@ -12,13 +12,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 #include <biogears/cdm/properties/SEScalarEnergy.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 namespace biogears {
+SEThermalCompartment::SEThermalCompartment(const char* name, Logger* logger)
+  : SEThermalCompartment(std::string{ name }, logger)
+{
+}
+//-----------------------------------------------------------------------------
 SEThermalCompartment::SEThermalCompartment(const std::string& name, Logger* logger)
   : SECompartment(name, logger)
   , m_Nodes(logger)
@@ -28,12 +33,12 @@ SEThermalCompartment::SEThermalCompartment(const std::string& name, Logger* logg
   m_Heat = nullptr;
   m_Temperature = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEThermalCompartment::~SEThermalCompartment()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::Clear()
 {
   SECompartment::Clear();
@@ -45,7 +50,7 @@ void SEThermalCompartment::Clear()
   m_Children.clear();
   m_Nodes.Clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SEThermalCompartment::Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits)
 {
   if (!SECompartment::Load(in, circuits))
@@ -61,7 +66,7 @@ bool SEThermalCompartment::Load(const CDM::ThermalCompartmentData& in, SECircuit
     for (auto name : in.Node()) {
       SEThermalCircuitNode* node = circuits->GetThermalNode(name);
       if (node == nullptr) {
-        Error("Compartment is mapped to circuit node, " + name + ", but provided circuit manager did not have that node");
+        Error("Compartment is mapped to circuit node, " + std::string{ name } +", but provided circuit manager did not have that node");
         return false;
       }
       MapNode(*node);
@@ -74,12 +79,14 @@ bool SEThermalCompartment::Load(const CDM::ThermalCompartmentData& in, SECircuit
   }
   return true;
 }
+//-----------------------------------------------------------------------------
 CDM::ThermalCompartmentData* SEThermalCompartment::Unload()
 {
   CDM::ThermalCompartmentData* data = new CDM::ThermalCompartmentData();
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::Unload(CDM::ThermalCompartmentData& data)
 {
   SECompartment::Unload(data);
@@ -97,7 +104,12 @@ void SEThermalCompartment::Unload(CDM::ThermalCompartmentData& data)
   if (HasTemperature())
     data.Temperature(std::unique_ptr<CDM::ScalarTemperatureData>(GetTemperature().Unload()));
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SEThermalCompartment::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SEThermalCompartment::GetScalar(const std::string& name)
 {
   if (name.compare("HeatTransferRateIn") == 0)
@@ -110,14 +122,14 @@ const SEScalar* SEThermalCompartment::GetScalar(const std::string& name)
     return &GetTemperature();
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::StateChange()
 {
   m_Leaves.clear();
   FindLeaves<SEThermalCompartment>(*this, m_Leaves);
   m_Nodes.StateChange();
 }
-
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::MapNode(SEThermalCircuitNode& node)
 {
   if (HasChildren())
@@ -125,7 +137,7 @@ void SEThermalCompartment::MapNode(SEThermalCircuitNode& node)
   else
     m_Nodes.MapNode(node);
 }
-
+//-----------------------------------------------------------------------------
 bool SEThermalCompartment::HasHeat() const
 {
   if (m_Nodes.HasMapping())
@@ -138,6 +150,7 @@ bool SEThermalCompartment::HasHeat() const
   }
   return m_Heat == nullptr ? false : m_Heat->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarEnergy& SEThermalCompartment::GetHeat()
 {
   if (m_Nodes.HasMapping())
@@ -154,6 +167,7 @@ SEScalarEnergy& SEThermalCompartment::GetHeat()
   }
   return *m_Heat;
 }
+//-----------------------------------------------------------------------------
 double SEThermalCompartment::GetHeat(const EnergyUnit& unit) const
 {
   if (m_Nodes.HasMapping())
@@ -169,7 +183,7 @@ double SEThermalCompartment::GetHeat(const EnergyUnit& unit) const
     return SEScalar::dNaN();
   return m_Heat->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEThermalCompartment::HasTemperature() const
 {
   if (m_Nodes.HasMapping())
@@ -182,6 +196,7 @@ bool SEThermalCompartment::HasTemperature() const
   }
   return m_Temperature == nullptr ? false : m_Temperature->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTemperature& SEThermalCompartment::GetTemperature()
 {
   if (m_Nodes.HasMapping())
@@ -203,6 +218,7 @@ SEScalarTemperature& SEThermalCompartment::GetTemperature()
   }
   return *m_Temperature;
 }
+//-----------------------------------------------------------------------------
 double SEThermalCompartment::GetTemperature(const TemperatureUnit& unit) const
 {
   if (!HasTemperature())
@@ -235,7 +251,7 @@ double SEThermalCompartment::GetTemperature(const TemperatureUnit& unit) const
     return SEScalar::dNaN();
   return m_Temperature->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEThermalCompartment::HasHeatTransferRateIn() const
 {
   if (m_Links.empty())
@@ -245,6 +261,7 @@ bool SEThermalCompartment::HasHeatTransferRateIn() const
       return true;
   return false;
 }
+//-----------------------------------------------------------------------------
 const SEScalarPower& SEThermalCompartment::GetHeatTransferRateIn()
 {
 
@@ -258,13 +275,14 @@ const SEScalarPower& SEThermalCompartment::GetHeatTransferRateIn()
   m_HeatTransferRateIn->SetReadOnly(true);
   return *m_HeatTransferRateIn;
 }
+//-----------------------------------------------------------------------------
 double SEThermalCompartment::GetHeatTransferRateIn(const PowerUnit& unit) const
 {
   if (m_Links.empty())
     return SEScalar::dNaN();
   return Convert(CalculateInFlow_W(), PowerUnit::W, unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEThermalCompartment::HasHeatTransferRateOut() const
 {
   if (m_Links.empty())
@@ -274,6 +292,7 @@ bool SEThermalCompartment::HasHeatTransferRateOut() const
       return true;
   return false;
 }
+//-----------------------------------------------------------------------------
 const SEScalarPower& SEThermalCompartment::GetHeatTransferRateOut()
 {
   if (m_HeatTransferRateOut == nullptr)
@@ -286,13 +305,14 @@ const SEScalarPower& SEThermalCompartment::GetHeatTransferRateOut()
   m_HeatTransferRateOut->SetReadOnly(true);
   return *m_HeatTransferRateOut;
 }
+//-----------------------------------------------------------------------------
 double SEThermalCompartment::GetHeatTransferRateOut(const PowerUnit& unit) const
 {
   if (m_Links.empty())
     return SEScalar::dNaN();
   return Convert(CalculateOutFlow_W(), PowerUnit::W, unit);
 }
-
+//-----------------------------------------------------------------------------
 double SEThermalCompartment::CalculateInFlow_W() const
 {
   double flow_W = 0;
@@ -314,7 +334,7 @@ double SEThermalCompartment::CalculateInFlow_W() const
     flow_W = 0; // This number is something like x.e-12, which we treat as 0
   return flow_W;
 }
-
+//-----------------------------------------------------------------------------
 double SEThermalCompartment::CalculateOutFlow_W() const
 {
   double flow_W = 0;
@@ -336,7 +356,7 @@ double SEThermalCompartment::CalculateOutFlow_W() const
     flow_W = 0; // This number is something like x.e-12, which we treat as 0
   return flow_W;
 }
-
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::AddLink(SEThermalCompartmentLink& link)
 {
   if (!Contains(m_Links, link)) {
@@ -348,19 +368,27 @@ void SEThermalCompartment::AddLink(SEThermalCompartmentLink& link)
       m_IncomingLinks.push_back(&link);
   }
 }
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::RemoveLink(SEThermalCompartmentLink& link)
 {
   Remove(m_Links, &link);
 }
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::RemoveLinks()
 {
   m_Links.clear();
 }
+//-----------------------------------------------------------------------------
 const std::vector<SEThermalCompartmentLink*>& SEThermalCompartment::GetLinks()
 {
   return m_Links;
 }
-
+//-----------------------------------------------------------------------------
+bool SEThermalCompartment::HasChild(const char* name)
+{
+  return HasChild(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 bool SEThermalCompartment::HasChild(const std::string& name)
 {
   for (SEThermalCompartment* cmpt : m_Children) {
@@ -369,6 +397,7 @@ bool SEThermalCompartment::HasChild(const std::string& name)
   }
   return false;
 }
+//-----------------------------------------------------------------------------
 void SEThermalCompartment::AddChild(SEThermalCompartment& child)
 {
   if (HasNodeMapping()) {
@@ -379,4 +408,5 @@ void SEThermalCompartment::AddChild(SEThermalCompartment& child)
     return;
   m_Children.push_back(&child);
 }
+//-----------------------------------------------------------------------------
 }

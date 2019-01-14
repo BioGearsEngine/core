@@ -21,23 +21,23 @@ SEImpairedAlveolarExchange::SEImpairedAlveolarExchange()
   m_ImpairedSurfaceArea = nullptr;
   m_ImpairedFraction = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEImpairedAlveolarExchange::~SEImpairedAlveolarExchange()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEImpairedAlveolarExchange::Clear()
 {
   SAFE_DELETE(m_ImpairedSurfaceArea);
   SAFE_DELETE(m_ImpairedFraction);
 }
-
+//-----------------------------------------------------------------------------
 bool SEImpairedAlveolarExchange::IsValid() const
 {
   return HasImpairedFraction() || HasImpairedSurfaceArea();
 }
-
+//-----------------------------------------------------------------------------
 bool SEImpairedAlveolarExchange::Load(const CDM::ImpairedAlveolarExchangeData& in)
 {
   if (in.ImpairedSurfaceArea().present())
@@ -46,8 +46,9 @@ bool SEImpairedAlveolarExchange::Load(const CDM::ImpairedAlveolarExchangeData& i
     GetImpairedFraction().Load(in.ImpairedFraction().get());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::ImpairedAlveolarExchangeData* SEImpairedAlveolarExchange::Unload() const
+//-----------------------------------------------------------------------------
 {
   CDM::ImpairedAlveolarExchangeData* data = new CDM::ImpairedAlveolarExchangeData();
   Unload(*data);
@@ -60,41 +61,45 @@ void SEImpairedAlveolarExchange::Unload(CDM::ImpairedAlveolarExchangeData& data)
   if (HasImpairedFraction())
     data.ImpairedFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_ImpairedFraction->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEImpairedAlveolarExchange::HasImpairedSurfaceArea() const
 {
   return m_ImpairedSurfaceArea == nullptr ? false : m_ImpairedSurfaceArea->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarArea& SEImpairedAlveolarExchange::GetImpairedSurfaceArea()
 {
   if (m_ImpairedSurfaceArea == nullptr)
     m_ImpairedSurfaceArea = new SEScalarArea();
   return *m_ImpairedSurfaceArea;
 }
+//-----------------------------------------------------------------------------
 double SEImpairedAlveolarExchange::GetImpairedSurfaceArea(const AreaUnit& unit) const
 {
   if (m_ImpairedSurfaceArea == nullptr)
     return SEScalar::dNaN();
   return m_ImpairedSurfaceArea->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEImpairedAlveolarExchange::HasImpairedFraction() const
 {
   return m_ImpairedFraction == nullptr ? false : m_ImpairedFraction->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar0To1& SEImpairedAlveolarExchange::GetImpairedFraction()
 {
   if (m_ImpairedFraction == nullptr)
     m_ImpairedFraction = new SEScalar0To1();
   return *m_ImpairedFraction;
 }
+//-----------------------------------------------------------------------------
 double SEImpairedAlveolarExchange::GetImpairedFraction() const
 {
   if (m_ImpairedFraction == nullptr)
     return SEScalar::dNaN();
   return m_ImpairedFraction->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 void SEImpairedAlveolarExchange::ToString(std::ostream& str) const
 {
   str << "Impaired Alveoli Exchange :";
@@ -105,4 +110,5 @@ void SEImpairedAlveolarExchange::ToString(std::ostream& str) const
 
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

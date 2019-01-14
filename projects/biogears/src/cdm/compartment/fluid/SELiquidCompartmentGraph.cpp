@@ -20,13 +20,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
+  SELiquidCompartmentGraph::SELiquidCompartmentGraph(const char* name, Logger* logger)
+    : SELiquidCompartmentGraph(std::string{ name }, logger) {};
+
+  SELiquidCompartmentGraph::SELiquidCompartmentGraph(const std::string& name, Logger* logger)
+    : SECompartmentTransportGraph(name, logger) {};
+
+  SELiquidCompartmentGraph::~SELiquidCompartmentGraph() {}
+
 bool SELiquidCompartmentGraph::Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
   m_Name = in.Name();
   for (auto name : in.Compartment()) {
     SELiquidCompartment* cmpt = cmptMgr.GetLiquidCompartment(name);
     if (cmpt == nullptr) {
-      Error("Could not find compartment " + name + " for graph " + m_Name);
+      Error("Could not find compartment " + std::string{ name } +" for graph " + m_Name);
       return false;
     }
     AddCompartment(*cmpt);
@@ -34,7 +42,7 @@ bool SELiquidCompartmentGraph::Load(const CDM::LiquidCompartmentGraphData& in, S
   for (auto name : in.Link()) {
     SELiquidCompartmentLink* link = cmptMgr.GetLiquidLink(name);
     if (link == nullptr) {
-      Error("Could not find link " + name + " for graph " + m_Name);
+      Error("Could not find link " + std::string{ name } +" for graph " + m_Name);
       return false;
     }
     AddLink(*link);

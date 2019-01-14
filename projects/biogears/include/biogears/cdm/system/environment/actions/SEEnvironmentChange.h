@@ -18,17 +18,17 @@ namespace biogears {
 class BIOGEARS_API SEEnvironmentChange : public SEEnvironmentAction {
 public:
   SEEnvironmentChange(SESubstanceManager& substances);
-  virtual ~SEEnvironmentChange();
+  virtual ~SEEnvironmentChange() override;
 
   static constexpr const char* TypeTag() { return "SEEnvironmentChange"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::EnvironmentChangeData& in);
-  virtual CDM::EnvironmentChangeData* Unload() const;
+  virtual CDM::EnvironmentChangeData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::EnvironmentChangeData& data) const;
@@ -38,12 +38,13 @@ public:
   virtual SEEnvironmentalConditions& GetConditions();
   virtual const SEEnvironmentalConditions* GetConditions() const;
 
-  virtual std::string GetConditionsFile() const;
+  virtual const char* GetConditionsFile() const;
+  virtual void SetConditionsFile(const char* fileName);
   virtual void SetConditionsFile(const std::string& fileName);
   virtual bool HasConditionsFile() const;
   virtual void InvalidateConditionsFile();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SESubstanceManager& m_Substances;

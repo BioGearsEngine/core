@@ -17,13 +17,14 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API FrequencyUnit : public CCompoundUnit {
 public:
-  FrequencyUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
+  FrequencyUnit(const char* u);
+  FrequencyUnit(const std::string& u);
+
   virtual ~FrequencyUnit() = default;
 
+  static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
+  static const FrequencyUnit& GetCompoundUnit(const char* unit);
   static const FrequencyUnit& GetCompoundUnit(const std::string& unit);
 
   static const FrequencyUnit Per_min;

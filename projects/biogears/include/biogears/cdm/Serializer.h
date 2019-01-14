@@ -35,8 +35,8 @@ namespace biogears {
 class BIOGEARS_API Serializer {
 public:
   static void Destroy() { SAFE_DELETE(m_me); }
+  static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger* logger);
   static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
-
 private:
   Serializer();
   virtual ~Serializer();
@@ -57,8 +57,8 @@ public:
   {
   }
 
-  bool failed() const { return failed_; }
-  std::string getError() { return error_.str(); }
+  bool failed() const;
+  const char* getError();
 
   virtual bool handleError(const xercesc::DOMError& err);
 

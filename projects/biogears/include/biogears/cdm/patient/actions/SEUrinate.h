@@ -19,24 +19,24 @@ namespace biogears {
 class BIOGEARS_API SEUrinate : public SEPatientAction {
 public:
   SEUrinate();
-  virtual ~SEUrinate();
+  virtual ~SEUrinate() override;
 
   static constexpr const char* TypeTag() { return "SEUrinate"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::UrinateData& in);
-  virtual CDM::UrinateData* Unload() const;
+  virtual CDM::UrinateData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::UrinateData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
 };

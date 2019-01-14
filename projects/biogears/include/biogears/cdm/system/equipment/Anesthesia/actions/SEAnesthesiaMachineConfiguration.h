@@ -20,17 +20,17 @@ class SESubstanceManager;
 class BIOGEARS_API SEAnesthesiaMachineConfiguration : public SEAnesthesiaMachineAction {
 public:
   SEAnesthesiaMachineConfiguration(SESubstanceManager& substances);
-  virtual ~SEAnesthesiaMachineConfiguration();
+  virtual ~SEAnesthesiaMachineConfiguration() override;
 
   static constexpr const char* TypeTag() { return "SEAnesthesiaMachineConfiguration"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::AnesthesiaMachineConfigurationData& in);
-  virtual CDM::AnesthesiaMachineConfigurationData* Unload() const;
+  virtual CDM::AnesthesiaMachineConfigurationData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::AnesthesiaMachineConfigurationData& data) const;
@@ -40,12 +40,13 @@ public:
   SEAnesthesiaMachine& GetConfiguration();
   const SEAnesthesiaMachine* GetConfiguration() const;
 
-  virtual std::string GetConfigurationFile() const;
+  virtual const char* GetConfigurationFile() const;
+  virtual void SetConfigurationFile(const char* fileName);
   virtual void SetConfigurationFile(const std::string& fileName);
   virtual bool HasConfigurationFile() const;
   virtual void InvalidateConfigurationFile();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SESubstanceManager& m_Substances;

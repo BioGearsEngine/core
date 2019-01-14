@@ -75,7 +75,11 @@ void SEEnvironment::Clear()
   SAFE_DELETE(m_SkinHeatLoss);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEEnvironment::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEEnvironment::GetScalar(const std::string& name)
 {
   if (name.compare("ConvectiveHeatLoss") == 0)
@@ -146,7 +150,11 @@ bool SEEnvironment::Load(const CDM::EnvironmentData& in)
   return true;
 }
 //-------------------------------------------------------------------------------
-
+bool SEEnvironment::Load(const char* patientFile)
+{
+  return Load(std::string(patientFile));
+}
+//-------------------------------------------------------------------------------
 bool SEEnvironment::Load(const std::string& patientFile)
 {
   CDM::EnvironmentData* pData;
@@ -250,6 +258,17 @@ bool SEEnvironment::ProcessChange(const SEEnvironmentChange& change)
 std::string SEEnvironment::GetName() const
 {
   return m_Name;
+}
+//-------------------------------------------------------------------------------
+
+const char* SEEnvironment::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-------------------------------------------------------------------------------
+void SEEnvironment::SetName(const char* name)
+{
+  m_Name = name;
 }
 //-------------------------------------------------------------------------------
 void SEEnvironment::SetName(const std::string& name)
@@ -519,8 +538,8 @@ double SEEnvironment::GetSkinHeatLoss(const PowerUnit& unit) const
   return m_SkinHeatLoss->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEEnvironment::GetPhysiologyRequestGraph() const
+Tree<const char*> SEEnvironment::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return {""};
 }
 }

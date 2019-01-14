@@ -26,7 +26,7 @@ public:
 
   bool HasKey(const std::string& key) const;
   std::string GetValue(const std::string& key) const;
-
+  const char* GetValue(const char* key) const;
 private:
   std::map<std::string, std::string> m_keyValues;
 };

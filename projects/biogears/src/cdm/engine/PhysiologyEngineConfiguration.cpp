@@ -31,12 +31,12 @@ PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   m_TimeStep = nullptr;
   m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
 }
-
+//-----------------------------------------------------------------------------
 PhysiologyEngineConfiguration::~PhysiologyEngineConfiguration()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::Clear()
 {
   SAFE_DELETE(m_ECGInterpolator);
@@ -45,14 +45,19 @@ void PhysiologyEngineConfiguration::Clear()
 
   m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
 }
-
+//-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 {
   m_Merge = true;
   CDM_COPY((&from), this);
   m_Merge = false;
 }
-
+//-----------------------------------------------------------------------------
+bool PhysiologyEngineConfiguration::Load(const char* file)
+{
+  return Load(std::string{ file });
+}
+//-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::Load(const std::string& file)
 {
   // if file does not exist, we stick with defaults
@@ -70,7 +75,7 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
   }
   return Load(*pData);
 }
-
+//-----------------------------------------------------------------------------
 
 bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& in)
 {
@@ -123,14 +128,14 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::PhysiologyEngineConfigurationData* PhysiologyEngineConfiguration::Unload() const
 {
   CDM::PhysiologyEngineConfigurationData* data(new CDM::PhysiologyEngineConfigurationData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationData& data) const
 {
   if (HasECGInterpolator())
@@ -142,44 +147,51 @@ void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationDat
   if (HasWritePatientBaselineFile())
     data.WritePatientBaselineFile(m_WritePatientBaselineFile);
 }
-
+//-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasECGInterpolator() const
 {
   return m_ECGInterpolator != nullptr;
 }
+//-----------------------------------------------------------------------------
 SEElectroCardioGramInterpolator& PhysiologyEngineConfiguration::GetECGInterpolator()
 {
   if (m_ECGInterpolator == nullptr)
     m_ECGInterpolator = new SEElectroCardioGramInterpolator(GetLogger());
   return *m_ECGInterpolator;
 }
+//-----------------------------------------------------------------------------
 const SEElectroCardioGramInterpolator* PhysiologyEngineConfiguration::GetECGInterpolator() const
 {
   return m_ECGInterpolator;
 }
+//-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::RemoveECGInterpolator()
 {
   SAFE_DELETE(m_ECGInterpolator);
 }
-
+//-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasStabilizationCriteria() const
 {
   return m_StabilizationCriteria != nullptr;
 }
+//-----------------------------------------------------------------------------
 PhysiologyEngineStabilization* PhysiologyEngineConfiguration::GetStabilizationCriteria()
 {
   return m_StabilizationCriteria;
 }
+//-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::RemoveStabilizationCriteria()
 {
   SAFE_DELETE(m_TimedStabilizationCriteria);
   SAFE_DELETE(m_DynamicStabilizationCriteria);
   m_StabilizationCriteria = nullptr; // Generic pointer used to point to one of the above pointers
 }
+//-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasTimedStabilizationCriteria() const
 {
   return m_TimedStabilizationCriteria != nullptr;
 }
+//-----------------------------------------------------------------------------
 PhysiologyEngineTimedStabilization& PhysiologyEngineConfiguration::GetTimedStabilizationCriteria()
 {
   RemoveDynamicStabilizationCriteria();
@@ -189,20 +201,24 @@ PhysiologyEngineTimedStabilization& PhysiologyEngineConfiguration::GetTimedStabi
   }
   return *m_TimedStabilizationCriteria;
 }
+//-----------------------------------------------------------------------------
 const PhysiologyEngineTimedStabilization* PhysiologyEngineConfiguration::GetTimedStabilizationCriteria() const
 {
   return m_TimedStabilizationCriteria;
 }
+//-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::RemoveTimedStabilizationCriteria()
 {
   if (m_StabilizationCriteria == m_TimedStabilizationCriteria)
     m_StabilizationCriteria = nullptr;
   SAFE_DELETE(m_TimedStabilizationCriteria);
 }
+//-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasDynamicStabilizationCriteria() const
 {
   return m_DynamicStabilizationCriteria != nullptr;
 }
+//-----------------------------------------------------------------------------
 PhysiologyEngineDynamicStabilization& PhysiologyEngineConfiguration::GetDynamicStabilizationCriteria()
 {
   RemoveTimedStabilizationCriteria();
@@ -212,31 +228,36 @@ PhysiologyEngineDynamicStabilization& PhysiologyEngineConfiguration::GetDynamicS
   }
   return *m_DynamicStabilizationCriteria;
 }
+//-----------------------------------------------------------------------------
 const PhysiologyEngineDynamicStabilization* PhysiologyEngineConfiguration::GetDynamicStabilizationCriteria() const
 {
   return m_DynamicStabilizationCriteria;
 }
+//-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::RemoveDynamicStabilizationCriteria()
 {
   if (m_StabilizationCriteria == m_DynamicStabilizationCriteria)
     m_StabilizationCriteria = nullptr;
   SAFE_DELETE(m_DynamicStabilizationCriteria);
 }
-
+//-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasTimeStep() const
 {
   return m_TimeStep == nullptr ? false : m_TimeStep->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTime& PhysiologyEngineConfiguration::GetTimeStep()
 {
   if (m_TimeStep == nullptr)
     m_TimeStep = new SEScalarTime();
   return *m_TimeStep;
 }
+//-----------------------------------------------------------------------------
 double PhysiologyEngineConfiguration::GetTimeStep(const TimeUnit& unit) const
 {
   if (m_TimeStep == nullptr)
     return SEScalar::dNaN();
   return m_TimeStep->GetValue(unit);
 }
+//-----------------------------------------------------------------------------
 }

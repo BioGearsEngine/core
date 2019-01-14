@@ -20,18 +20,18 @@ namespace biogears {
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {
 public:
   SEPainStimulus();
-  virtual ~SEPainStimulus();
+  virtual ~SEPainStimulus() override;
 
   static constexpr const char* TypeTag() { return "SEPainStimulus"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::PainStimulusData& in);
-  virtual CDM::PainStimulusData* Unload() const;
+  virtual CDM::PainStimulusData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::PainStimulusData& data) const;
@@ -41,10 +41,12 @@ public:
   virtual SEScalar0To1& GetSeverity();
 
   virtual bool HasLocation() const;
+  virtual const char* GetLocation_cStr() const;
   virtual std::string GetLocation() const;
+  virtual void SetLocation(const char* name);
   virtual void SetLocation(const std::string& name);
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Severity;

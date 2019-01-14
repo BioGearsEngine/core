@@ -15,6 +15,16 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const MassPerAreaTimeUnit MassPerAreaTimeUnit::g_Per_cm2_s("g/cm^2 s");
 
+MassPerAreaTimeUnit::MassPerAreaTimeUnit(const char* u)
+  : MassPerAreaTimeUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+MassPerAreaTimeUnit::MassPerAreaTimeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerAreaTimeData* SEScalarMassPerAreaTime::Unload() const
 {
   if (!IsValid())
@@ -23,20 +33,31 @@ CDM::ScalarMassPerAreaTimeData* SEScalarMassPerAreaTime::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool MassPerAreaTimeUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerAreaTimeUnit::IsValidUnit(const char* unit)
 {
-  if (g_Per_cm2_s.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_cm2_s.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const MassPerAreaTimeUnit& MassPerAreaTimeUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerAreaTimeUnit::IsValidUnit(const std::string& unit)
 {
-  if (g_Per_cm2_s.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const MassPerAreaTimeUnit& MassPerAreaTimeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(g_Per_cm2_s.GetString(),unit) == 0)
     return g_Per_cm2_s;
   std::stringstream err;
   err << unit << " is not a valid MassPerAreaTime unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const MassPerAreaTimeUnit& MassPerAreaTimeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

@@ -11,20 +11,28 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/circuit/SECombinedCircuit.h>
-#include <biogears/cdm/stdafx.h>
+
 
 namespace biogears {
+
+template <COMBINED_CIRCUIT_TEMPLATE>
+SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::SECombinedCircuit(const char* name, Logger* logger)
+  : SECombinedCircuit(std::string{ name }, logger)
+{
+}
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::SECombinedCircuit(const std::string& name, Logger* logger)
   : CircuitType(name, logger)
 {
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::~SECombinedCircuit()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Clear()
 {
@@ -37,7 +45,7 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Clear()
   m_Circuits.clear();
   CircuitType::Clear();
 }
-
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 bool SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Load(const CombinedCircuitBindType& in)
 { // Note we don't call SECircuit::Load, we will do things ourselves, OUR way (sometimes, parents just don't understand...)
@@ -95,6 +103,7 @@ bool SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Load(const CombinedCircuitBindTy
   StateChange();
   return true;
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 CombinedCircuitBindType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload() const
 {
@@ -102,6 +111,7 @@ CombinedCircuitBindType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload() con
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload(CombinedCircuitBindType& data) const
 { // Note we don't call SECircuit::Load, we will do things ourselves, OUR way (sometimes, parents just don't understand...)
@@ -121,7 +131,7 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload(CombinedCircuitBindType& 
   for (auto s : m_RemovedPaths)
     data.RemovedPath().push_back(s);
 }
-
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::AddCircuit(CircuitType& c)
 {
@@ -144,6 +154,7 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::AddCircuit(CircuitType& c)
   m_Circuits[c.GetName()] = &c;
   StateChange();
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemoveCircuit(CircuitType& c)
 {
@@ -152,7 +163,14 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemoveCircuit(CircuitType& c)
   // Make sure we update the removed nodes/paths lists as well
   Fatal("Unimplemented method :: SECombinedCircuit::RemoveCircuit"); // I am being lazy...
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
+CircuitType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetCircuit(const char* name)
+{
+  return GetCircuit(std::string{ name });
+}
+//-----------------------------------------------------------------------------
+  template <COMBINED_CIRCUIT_TEMPLATE>
 CircuitType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetCircuit(const std::string& name)
 {
   auto c = m_Circuits.find(name);
@@ -160,7 +178,13 @@ CircuitType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetCircuit(const std::st
     return nullptr;
   return c->second;
 }
-
+//-----------------------------------------------------------------------------
+template <COMBINED_CIRCUIT_TEMPLATE>
+NodeType& SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::CreateNode(const char* name)
+{
+  return CreateNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 NodeType& SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::CreateNode(const std::string& name)
 {
@@ -168,6 +192,13 @@ NodeType& SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::CreateNode(const std::strin
   m_LinkNodes.push_back(&n);
   return n;
 }
+//-----------------------------------------------------------------------------
+template <COMBINED_CIRCUIT_TEMPLATE>
+NodeType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetNode(const char* name) const
+{
+  return GetNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 NodeType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetNode(const std::string& name) const
 {
@@ -177,6 +208,7 @@ NodeType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetNode(const std::string& 
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeleteNode(const NodeType& node)
 {
@@ -192,7 +224,14 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeleteNode(const NodeType& node)
   }
   Warning(GetName() + " does not own node " + node.GetName() + ", node is not deleted");
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
+void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeleteNode(const char* name)
+{
+  DeleteNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
+  template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeleteNode(const std::string& name)
 {
   size_t i = 0;
@@ -207,6 +246,7 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeleteNode(const std::string& na
   }
   Warning(GetName() + " does not own node " + name + ", node is not deleted");
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemoveNode(const NodeType& node)
 {
@@ -221,6 +261,13 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemoveNode(const NodeType& node)
   }
   Warning(GetName() + " does not have node " + node.GetName() + ", node is not removed");
 }
+//-----------------------------------------------------------------------------
+template <COMBINED_CIRCUIT_TEMPLATE>
+void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemoveNode(const char* name)
+{
+  RemoveNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemoveNode(const std::string& name)
 {
@@ -235,7 +282,13 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemoveNode(const std::string& na
   }
   Warning(GetName() + " does not have node " + name + ", node is not removed");
 }
-
+//-----------------------------------------------------------------------------
+template <COMBINED_CIRCUIT_TEMPLATE>
+PathType& SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::CreatePath(NodeType& src, NodeType& tgt, const char* name)
+{
+  return CreatePath(src, tgt, std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 PathType& SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::CreatePath(NodeType& src, NodeType& tgt, const std::string& name)
 {
@@ -243,8 +296,15 @@ PathType& SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::CreatePath(NodeType& src, N
   m_LinkPaths.push_back(&p);
   return p;
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
-PathType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetPath(const std::string& name) const
+PathType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetPath(const char* path) const
+{
+  return GetPath(std::string{ name });
+}
+//-----------------------------------------------------------------------------
+template <COMBINED_CIRCUIT_TEMPLATE>
+PathType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetPath(const std::string& path) const
 {
   for (PathType* p : m_Paths) {
     if (p->GetName() == name)
@@ -252,6 +312,7 @@ PathType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::GetPath(const std::string& 
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeletePath(const PathType& path)
 {
@@ -267,6 +328,13 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeletePath(const PathType& path)
   }
   Warning(GetName() + " does not own path " + path.GetName() + ", path is not deleted");
 }
+//-----------------------------------------------------------------------------
+template <COMBINED_CIRCUIT_TEMPLATE>
+void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeletePath(const char* name)
+{
+  DeletePath(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeletePath(const std::string& name)
 {
@@ -282,6 +350,7 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::DeletePath(const std::string& na
   }
   Warning(GetName() + " does not own path " + name + ", path is not deleted");
 }
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemovePath(const PathType& path)
 {
@@ -296,6 +365,13 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemovePath(const PathType& path)
   }
   Warning(GetName() + " does not have path " + path.GetName() + ", path is not removed");
 }
+//-----------------------------------------------------------------------------
+template <COMBINED_CIRCUIT_TEMPLATE>
+void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemovePath(const char* name)
+{
+  RemovePath(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemovePath(const std::string& name)
 {
@@ -310,4 +386,5 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::RemovePath(const std::string& na
   }
   Warning(GetName() + " does not have path " + name + ", path is not removed");
 }
+//-----------------------------------------------------------------------------
 }

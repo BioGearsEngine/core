@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
 CDM_BIND_DECL(TestCase)
 
-namespace biogears{
+namespace biogears {
 class SETestSuite;
 
 class BIOGEARS_API SETestCase : public Loggable {
@@ -40,6 +40,7 @@ protected:
 public:
   void SetName(const std::string& name);
   std::string GetName() const;
+  const char* GetName_cStr() const;
   SEScalarTime& GetDuration();
   void AddFailure(std::stringstream& msg);
   void AddFailure(const std::string& err);

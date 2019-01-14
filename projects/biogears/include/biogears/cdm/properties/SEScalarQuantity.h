@@ -32,21 +32,25 @@ public:
   void Invalidate() override;
   bool IsValid() const override;
 
-  virtual void Load(const CDM::ScalarData& in);
-  virtual CDM::ScalarData* Unload() const;
+  virtual void Load(const CDM::ScalarData& in) override;
+  virtual CDM::ScalarData* Unload() const override;
 
   virtual bool Set(const SEScalarQuantity<Unit>& s);
   void Copy(const SEScalarQuantity<Unit>& s);
 
   void SetValue(double d, const Unit& unit);
   virtual double GetValue(const Unit& unit) const;
+
+  double GetValue(const char* unit) const override;
   double GetValue(const std::string& unit) const override;
 
   const Unit* GetUnit() const override;
 
+  SEScalarQuantity& IncrementValue(double d, const char* unit) override;
   SEScalarQuantity& IncrementValue(double d, const std::string& unit) override;
   SEScalarQuantity& IncrementValue(double d, const Unit& unit);
   SEScalarQuantity& Increment(const SEScalarQuantity& s);
+  SEScalarQuantity& DecrementValue(double d, const char* unit) override;
   SEScalarQuantity& DecrementValue(double d, const std::string& unit) override;
   SEScalarQuantity& DecrementValue(double d, const Unit& unit);
   SEScalarQuantity& Decrement(const SEScalarQuantity& s);
@@ -74,11 +78,12 @@ public:
 
   virtual bool Equals(const SEScalarQuantity<Unit>& to) const;
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
+  const Unit* GetCompoundUnit(const char* unit) const override;
   const Unit* GetCompoundUnit(const std::string& unit) const override;
 protected:
-  virtual void Unload(CDM::ScalarData& s) const;
+  virtual void Unload(CDM::ScalarData& s) const override;
 
 
 protected:

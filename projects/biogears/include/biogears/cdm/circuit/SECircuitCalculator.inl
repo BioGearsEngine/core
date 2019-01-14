@@ -223,14 +223,14 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
           //Initial source pressure is not defined, assume it's the same as the reference
           ValueOverride<PotentialUnit>(nSrc->GetPotential(), 0.0, m_PotentialUnit);
           ///\error Warning: Initial compliance source pressure is not defined, assuming it is the reference pressure.
-          Warning("Initial capacitance source potential is not defined for " + nSrc->GetName() + ", assuming it is the reference potential.");
+          Warning("Initial capacitance source potential is not defined for " + std::string{ nSrc->GetName() } +", assuming it is the reference potential.");
         }
 
         if (!nTgt->HasPotential()) {
           //Initial target pressure is not defined, assume it's the same as the reference
           ValueOverride<PotentialUnit>(nTgt->GetPotential(), 0.0, m_PotentialUnit);
           ///\error Warning: Initial compliance target pressure is not defined, assuming it is the reference pressure.
-          Warning("Initial capacitance target potential is not defined for " + nTgt->GetName() + ", assuming it is the reference potential.");
+          Warning("Initial capacitance target potential is not defined for " + std::string{ nTgt->GetName() }+", assuming it is the reference potential.");
         }
 
         //We need to handle the first time through when there is no Current value
@@ -240,7 +240,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
           dStartingCompliance = p->GetNextCapacitance().GetValue(m_CapacitanceUnit);
           if (dStartingCompliance < 0.0) {
             /// \error Fatal: Capacitance cannot be negative
-            Fatal("Capacitance is negative for " + p->GetName());
+            Fatal("Capacitance is negative for " + std::string{ p->GetName() });
           }
         }
 
@@ -265,26 +265,26 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
           //Initial flow is not defined, assume it's 0
           ValueOverride<FluxUnit>(p->GetFlux(), 0.0, m_FluxUnit);
           ///\error Warning: Initial inductance is not defined, assuming it is 0.
-          Warning("Initial inductance is not defined for " + p->GetName() + ", assuming it is 0.");
+          Warning("Initial inductance is not defined for " + std::string{ p->GetName() }+", assuming it is 0.");
         }
 
         if (!nSrc->HasPotential()) {
           //Initial source pressure is not defined, assume it's the same as the reference
           ValueOverride<PotentialUnit>(nSrc->GetPotential(), 0.0, m_PotentialUnit);
           ///\error Warning: Initial inductance source pressure is not defined, assuming it is the reference pressure.
-          Warning("Initial inductance source pressure is not defined " + nSrc->GetName() + ", assuming it is the reference pressure.");
+          Warning("Initial inductance source pressure is not defined " + std::string{ nSrc->GetName() }+", assuming it is the reference pressure.");
         }
         if (!nTgt->HasPotential()) {
           //Initial source pressure is not defined, assume it's the same as the reference
           ValueOverride<PotentialUnit>(nTgt->GetPotential(), 0.0, m_PotentialUnit);
           ///\error Warning: Initial inductance target pressure is not defined, assuming it is the reference pressure.
-          Warning("Initial inductance target pressure is not defined " + nTgt->GetName() + ", assuming it is the reference pressure.");
+          Warning("Initial inductance target pressure is not defined " + std::string{ nTgt->GetName() } +", assuming it is the reference pressure.");
         }
 
         double pInductance = p->GetNextInductance().GetValue(m_InductanceUnit);
         if (pInductance < 0.0) {
           /// \error Fatal: Inductance cannot be negative
-          Fatal("Inductance is negative for " + p->GetName());
+          Fatal("Inductance is negative for " + std::string{ p->GetName() });
         }
 
         double dMultiplier = m_dT_s / (2 * pInductance);

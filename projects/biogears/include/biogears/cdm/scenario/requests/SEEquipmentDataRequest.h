@@ -28,7 +28,7 @@ protected:
 public:
   virtual ~SEEquipmentDataRequest();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
   virtual bool Load(const CDM::EquipmentDataRequestData& in);
   virtual CDM::EquipmentDataRequestData* Unload() const override;
@@ -37,7 +37,8 @@ protected:
   virtual void Unload(CDM::EquipmentDataRequestData& data) const;
 
 public:
-  virtual std::string GetType() const;
+  virtual const char* GetType() const;
+  virtual void SetType(const char* t);
   virtual void SetType(const std::string& t);
   virtual bool HasType() const;
   virtual void InvalidateType();

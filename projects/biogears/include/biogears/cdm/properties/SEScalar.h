@@ -47,14 +47,9 @@ public:
   Note that this does not affect bounds
   */
   virtual void Invalidate();
-
   virtual void Load(const CDM::ScalarData& in);
   virtual CDM::ScalarData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::ScalarData& s) const;
-
-public:
   /**
    * Copies ONLY the value and unit
    * ONLY if the provided scalar is valid.
@@ -74,12 +69,12 @@ public:
   bool IsPositive() const;
   bool IsNegative() const;
   bool IsZero(double limit = ZERO_APPROX) const;
-
+  
   void SetReadOnly(bool b);
   bool IsReadOnly() const;
 
-  double GetValue() const;
-  void SetValue(double d);
+  virtual double GetValue() const;
+  virtual void SetValue(double d);
 
   double Increment(const SEScalar& s);
   double IncrementValue(double d);
@@ -117,6 +112,9 @@ public:
   SEScalar& operator/=(const SEScalar& rhs);
   SEScalar operator*(const SEScalar& rhs) const;
   SEScalar& operator*=(const SEScalar& rhs);
+
+protected:
+  virtual void Unload(CDM::ScalarData& s) const;
 };
 //-------------------------------------------------------------------------------
 inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Increment(rhs); };

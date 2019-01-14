@@ -24,18 +24,18 @@ class SEScalar;
 class BIOGEARS_API SEBurnWound : public SEPatientAction {
 public:
   SEBurnWound();
-  virtual ~SEBurnWound();
+  virtual ~SEBurnWound() override;
 
   static constexpr const char* TypeTag() { return "SEBurnWound"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::BurnWoundData& in);
-  virtual CDM::BurnWoundData* Unload() const;
+  virtual CDM::BurnWoundData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::BurnWoundData& data) const;
@@ -47,7 +47,7 @@ public:
   virtual bool HasInflammation() const;
   virtual void SetInflammation(bool activate);
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   bool m_Inflammation;

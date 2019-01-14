@@ -35,11 +35,16 @@ SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
   m_Cancel = false;
   m_CustomExec = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEScenarioExec::~SEScenarioExec()
 {
 }
-
+//-----------------------------------------------------------------------------
+bool SEScenarioExec::Execute(const char* scenarioFile, const char* resultsFile, SEScenarioCustomExec* cExec)
+{
+  return Execute(std::string{ scenarioFile }, std::string{ resultsFile }, cExec);
+}
+//-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec)
 {
   try {
@@ -76,7 +81,12 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
   }
   return false;
 }
-
+//-----------------------------------------------------------------------------
+bool SEScenarioExec::Execute(const SEScenario& scenario, const char* resultsFile, SEScenarioCustomExec* cExec)
+{
+  return Execute(scenario, std::string{ resultsFile }, cExec);
+}
+//-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(const SEScenario& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec)
 {
   if (!scenario.IsValid()) {
@@ -145,12 +155,12 @@ bool SEScenarioExec::Execute(const SEScenario& scenario, const std::string& resu
   }
   return false;
 }
-
+//-----------------------------------------------------------------------------
 void SEScenarioExec::Cancel()
 {
   m_Cancel = true;
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioExec::ProcessActions(const SEScenario& scenario)
 {
   Info("Executing Scenario");
@@ -298,9 +308,10 @@ bool SEScenarioExec::ProcessActions(const SEScenario& scenario)
 
   return !err;
 }
-
+//-----------------------------------------------------------------------------
 bool SEScenarioExec::ProcessAction(const SEAction& action)
 {
   return m_Engine.ProcessAction(action);
 }
+  //-----------------------------------------------------------------------------
 }

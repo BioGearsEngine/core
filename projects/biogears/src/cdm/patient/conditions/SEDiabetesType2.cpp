@@ -20,24 +20,24 @@ SEDiabetesType2::SEDiabetesType2()
   m_InsulinProductionSeverity = nullptr;
   m_InsulinResistanceSeverity = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEDiabetesType2::~SEDiabetesType2()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEDiabetesType2::Clear()
 {
   SEPatientCondition::Clear();
   SAFE_DELETE(m_InsulinProductionSeverity);
   SAFE_DELETE(m_InsulinResistanceSeverity);
 }
-
+//-----------------------------------------------------------------------------
 bool SEDiabetesType2::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasInsulinProductionSeverity() && HasInsulinResistanceSeverity();
 }
-
+//-----------------------------------------------------------------------------
 bool SEDiabetesType2::Load(const CDM::DiabetesType2Data& in)
 {
   SEPatientCondition::Load(in);
@@ -45,14 +45,14 @@ bool SEDiabetesType2::Load(const CDM::DiabetesType2Data& in)
   GetInsulinResistanceSeverity().Load(in.InsulinResistanceSeverity());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::DiabetesType2Data* SEDiabetesType2::Unload() const
 {
   CDM::DiabetesType2Data* data(new CDM::DiabetesType2Data());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEDiabetesType2::Unload(CDM::DiabetesType2Data& data) const
 {
   SEPatientCondition::Unload(data);
@@ -61,31 +61,31 @@ void SEDiabetesType2::Unload(CDM::DiabetesType2Data& data) const
   if (m_InsulinResistanceSeverity != nullptr)
     data.InsulinResistanceSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_InsulinResistanceSeverity->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEDiabetesType2::HasInsulinProductionSeverity() const
 {
   return m_InsulinProductionSeverity == nullptr ? false : m_InsulinProductionSeverity->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 SEScalar0To1& SEDiabetesType2::GetInsulinProductionSeverity()
 {
   if (m_InsulinProductionSeverity == nullptr)
     m_InsulinProductionSeverity = new SEScalar0To1();
   return *m_InsulinProductionSeverity;
 }
-
+//-----------------------------------------------------------------------------
 bool SEDiabetesType2::HasInsulinResistanceSeverity() const
 {
   return m_InsulinResistanceSeverity == nullptr ? false : m_InsulinResistanceSeverity->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 SEScalar0To1& SEDiabetesType2::GetInsulinResistanceSeverity()
 {
   if (m_InsulinResistanceSeverity == nullptr)
     m_InsulinResistanceSeverity = new SEScalar0To1();
   return *m_InsulinResistanceSeverity;
 }
-
+//-----------------------------------------------------------------------------
 void SEDiabetesType2::ToString(std::ostream& str) const
 {
   str << "Patient Condition : DiabetesType2";
@@ -97,4 +97,5 @@ void SEDiabetesType2::ToString(std::ostream& str) const
   HasInsulinResistanceSeverity() ? str << m_InsulinResistanceSeverity : str << "NaN";
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

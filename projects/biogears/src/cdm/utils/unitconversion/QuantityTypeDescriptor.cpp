@@ -16,10 +16,15 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 #include <biogears/cdm/utils/unitconversion/QuantityTypeDescriptor.h>
 
-#include <biogears/cdm/utils/unitconversion/UnitDimension.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
+#include <biogears/cdm/utils/unitconversion/UnitDimension.h>
 //----------------------------------------------------------------------------
 namespace biogears {
+CQuantityTypeDescriptor::CQuantityTypeDescriptor(const char* name, int fundIdx, bool twentyLog)
+  : CQuantityTypeDescriptor(std::string{ name }, fundIdx, twentyLog)
+{
+}
+//----------------------------------------------------------------------------
 CQuantityTypeDescriptor::CQuantityTypeDescriptor(const std::string& name, int fundIdx, bool twentyLog)
   : m_sName(name)
   , m_iFundIdx(fundIdx)
@@ -31,7 +36,11 @@ CQuantityTypeDescriptor::CQuantityTypeDescriptor(const std::string& name, int fu
   m_CUD = new CUnitDimension();
   (*m_CUD)[m_iFundIdx] = 1.0;
 }
-
+//----------------------------------------------------------------------------
+CQuantityTypeDescriptor::CQuantityTypeDescriptor(const char* name, CCompoundUnit* expansion, bool twentyLog)
+  : CQuantityTypeDescriptor(std::string{ name }, expansion, twentyLog)
+{
+}
 //----------------------------------------------------------------------------
 CQuantityTypeDescriptor::CQuantityTypeDescriptor(const std::string& name, CCompoundUnit* expansion, bool twentyLog)
   : m_sName(name)
@@ -55,5 +64,17 @@ CQuantityTypeDescriptor::~CQuantityTypeDescriptor()
     delete m_CUExpansion;
   }
   delete m_CUD;
+}
+//----------------------------------------------------------------------------
+// Return the name of this quantity type
+std::string CQuantityTypeDescriptor::GetName() const
+{
+  return m_sName;
+}
+//----------------------------------------------------------------------------
+// Return the name of this quantity type
+const char* CQuantityTypeDescriptor::GetName_cStr() const
+{
+  return m_sName.c_str();
 }
 }

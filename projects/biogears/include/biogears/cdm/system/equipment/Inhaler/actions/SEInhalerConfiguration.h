@@ -21,17 +21,17 @@ class SESubstanceManager;
 class BIOGEARS_API SEInhalerConfiguration : public SEInhalerAction {
 public:
   SEInhalerConfiguration(SESubstanceManager& substances);
-  virtual ~SEInhalerConfiguration();
+  virtual ~SEInhalerConfiguration() override;
   
   static constexpr const char* TypeTag() { return "SEInhalerConfiguration"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::InhalerConfigurationData& in);
-  virtual CDM::InhalerConfigurationData* Unload() const;
+  virtual CDM::InhalerConfigurationData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::InhalerConfigurationData& data) const;
@@ -41,12 +41,14 @@ public:
   SEInhaler& GetConfiguration();
   const SEInhaler* GetConfiguration() const;
 
+  virtual const char* GetConfigurationFile_cStr() const;
   virtual std::string GetConfigurationFile() const;
+  virtual void SetConfigurationFile(const char* fileName);
   virtual void SetConfigurationFile(const std::string& fileName);
   virtual bool HasConfigurationFile() const;
   virtual void InvalidateConfigurationFile();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SESubstanceManager& m_Substances;

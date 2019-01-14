@@ -22,12 +22,12 @@ SEActionManager::SEActionManager(SESubstanceManager& substances)
   , m_Substances(substances)
 {
 }
-
+//-------------------------------------------------------------------------------
 SEActionManager::~SEActionManager()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEActionManager::Clear()
 {
   m_PatientActions.Clear();
@@ -36,7 +36,7 @@ void SEActionManager::Clear()
   m_InhalerActions.Clear();
   m_ProcessedActions.clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEActionManager::ProcessAction(const CDM::ActionData& in)
 {
   const CDM::PatientActionData* pAction = dynamic_cast<const CDM::PatientActionData*>(&in);
@@ -54,7 +54,7 @@ bool SEActionManager::ProcessAction(const CDM::ActionData& in)
   Error("Unknown Action Type");
   return false;
 }
-
+//-------------------------------------------------------------------------------
 void SEActionManager::Unload(std::vector<CDM::ActionData*>& to)
 {
   m_PatientActions.Unload(to);
@@ -62,7 +62,7 @@ void SEActionManager::Unload(std::vector<CDM::ActionData*>& to)
   m_EnvironmentActions.Unload(to);
   m_InhalerActions.Unload(to);
 }
-
+//-------------------------------------------------------------------------------
 bool SEActionManager::ProcessAction(const SEAction& action)
 {
   // Store the action data. This is intended to be able to
@@ -86,4 +86,5 @@ bool SEActionManager::ProcessAction(const SEAction& action)
   Error("Unsupported Action");
   return false;
 }
+//-------------------------------------------------------------------------------
 }

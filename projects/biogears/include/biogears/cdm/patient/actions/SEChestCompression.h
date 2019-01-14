@@ -18,15 +18,15 @@ namespace biogears {
 class BIOGEARS_API SEChestCompression : public SEPatientAction {
 public:
   SEChestCompression();
-  virtual ~SEChestCompression();
+  virtual ~SEChestCompression() override;
 
   static constexpr const char* TypeTag() { return "SEChestCompression"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ChestCompressionData& in);
 
@@ -34,7 +34,7 @@ protected:
   virtual void Unload(CDM::ChestCompressionData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const = 0;
+  virtual void ToString(std::ostream& str) const  override= 0;
 
 protected:
 };

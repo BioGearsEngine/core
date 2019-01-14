@@ -183,6 +183,11 @@ void Logger::Warning(std::ostream& msg, const std::string& origin)
   Warning(ss.str(), origin);
 }
 
+void Loggable::Error(const char* msg, const char* origin) const
+{
+  Error(std::string{ msg }, std::string{ origin });
+}
+
 void Logger::Error(const std::string& msg, const std::string& origin)
 {
   m_Log->error(FormatLogMessage(msg, origin));
@@ -231,7 +236,7 @@ Loggable::~Loggable() {}
 
 Logger* Loggable::GetLogger() const { return m_Logger; }
 
-void Loggable::Error(const std::string& msg, const std::string& origin) const
+void Loggable::Error(const std::string msg, const std::string origin) const
 {
   if (m_Logger)
     m_Logger->Error(msg, origin);

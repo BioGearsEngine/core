@@ -13,13 +13,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
 namespace biogears {
+SEElectricalCircuitPath::SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name)
+  : SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>(src, tgt, name)
+  , m_ElectricalSourceNode(src)
+  , m_ElectricalTargetNode(tgt)
+{
+}
 SEElectricalCircuitPath::SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name)
   : SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>(src, tgt, name)
   , m_ElectricalSourceNode(src)
   , m_ElectricalTargetNode(tgt)
 {
 }
-
 SEElectricalCircuitPath::~SEElectricalCircuitPath()
 {
 }

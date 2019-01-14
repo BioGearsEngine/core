@@ -25,6 +25,16 @@ const MassPerAmountUnit MassPerAmountUnit::ug_Per_mol("ug/mol");
 const MassPerAmountUnit MassPerAmountUnit::ug_Per_ct("ug/ct");
 const MassPerAmountUnit MassPerAmountUnit::pg_Per_ct("pg/ct");
 
+MassPerAmountUnit::MassPerAmountUnit(const char* u)
+  : MassPerAmountUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+MassPerAmountUnit::MassPerAmountUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerAmountData* SEScalarMassPerAmount::Unload() const
 {
   if (!IsValid())
@@ -33,60 +43,71 @@ CDM::ScalarMassPerAmountData* SEScalarMassPerAmount::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool MassPerAmountUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerAmountUnit::IsValidUnit(const char* unit)
 {
-  if (g_Per_ct.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_ct.GetString(),unit) == 0)
     return true;
-  if (g_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_mol.GetString(),unit) == 0)
     return true;
-  if (g_Per_mmol.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_mmol.GetString(),unit) == 0)
     return true;
-  if (g_Per_umol.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_umol.GetString(),unit) == 0)
     return true;
-  if (mg_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_mol.GetString(),unit) == 0)
     return true;
-  if (mg_Per_mmol.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_mmol.GetString(),unit) == 0)
     return true;
-  if (kg_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_mol.GetString(),unit) == 0)
     return true;
-  if (ug_Per_mmol.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_mmol.GetString(),unit) == 0)
     return true;
-  if (ug_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_mol.GetString(),unit) == 0)
     return true;
-  if (ug_Per_ct.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_ct.GetString(),unit) == 0)
     return true;
-  if (pg_Per_ct.GetString().compare(unit) == 0)
+  if (strcmp(pg_Per_ct.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassPerAmountUnit::IsValidUnit(const std::string& unit)
 {
-  if (g_Per_ct.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(g_Per_ct.GetString(),unit) == 0)
     return g_Per_ct;
-  if (g_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_mol.GetString(),unit) == 0)
     return g_Per_mol;
-  if (g_Per_mmol.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_mmol.GetString(),unit) == 0)
     return g_Per_mmol;
-  if (g_Per_umol.GetString().compare(unit) == 0)
+  if (strcmp(g_Per_umol.GetString(),unit) == 0)
     return g_Per_umol;
-  if (mg_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_mol.GetString(),unit) == 0)
     return mg_Per_mol;
-  if (mg_Per_mmol.GetString().compare(unit) == 0)
+  if (strcmp(mg_Per_mmol.GetString(),unit) == 0)
     return mg_Per_mmol;
-  if (kg_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(kg_Per_mol.GetString(),unit) == 0)
     return kg_Per_mol;
-  if (ug_Per_mmol.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_mmol.GetString(),unit) == 0)
     return ug_Per_mmol;
-  if (ug_Per_mol.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_mol.GetString(),unit) == 0)
     return ug_Per_mol;
-  if (ug_Per_ct.GetString().compare(unit) == 0)
+  if (strcmp(ug_Per_ct.GetString(),unit) == 0)
     return ug_Per_ct;
-  if (pg_Per_ct.GetString().compare(unit) == 0)
+  if (strcmp(pg_Per_ct.GetString(),unit) == 0)
     return pg_Per_ct;
   std::stringstream err;
   err << unit << " is not a valid MassPerAmount unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

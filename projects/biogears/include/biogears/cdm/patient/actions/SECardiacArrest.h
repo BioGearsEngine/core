@@ -18,25 +18,25 @@ namespace biogears {
 class BIOGEARS_API SECardiacArrest : public SEPatientAction {
 public:
   SECardiacArrest();
-  virtual ~SECardiacArrest();
+  virtual ~SECardiacArrest() override;
 
   static constexpr const char* TypeTag() { return "SECardiacArrest"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
   virtual bool Load(const CDM::CardiacArrestData& in);
-  virtual CDM::CardiacArrestData* Unload() const;
+  virtual CDM::CardiacArrestData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::CardiacArrestData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   CDM::enumOnOff::value m_State;

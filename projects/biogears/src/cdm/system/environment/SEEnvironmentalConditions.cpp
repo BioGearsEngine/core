@@ -41,12 +41,12 @@ SEEnvironmentalConditions::SEEnvironmentalConditions(SESubstanceManager& substan
   m_RelativeHumidity = nullptr;
   m_RespirationAmbientTemperature = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEEnvironmentalConditions::~SEEnvironmentalConditions()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::Clear()
 {
   m_SurroundingType = CDM::enumSurroundingType::value(-1);
@@ -66,7 +66,12 @@ void SEEnvironmentalConditions::Clear()
   DELETE_VECTOR(m_AmbientAerosols);
   m_cAmbientAerosols.clear();
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SEEnvironmentalConditions::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name)
 {
   if (name.compare("AirDensity") == 0)
@@ -90,7 +95,7 @@ const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name)
   // I did not support for getting a specific gas/aerosol scalars due to lack of coffee
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::Load(const CDM::EnvironmentalConditionsData& in)
 {
   Clear();
@@ -151,14 +156,14 @@ bool SEEnvironmentalConditions::Load(const CDM::EnvironmentalConditionsData& in)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::EnvironmentalConditionsData* SEEnvironmentalConditions::Unload() const
 {
   CDM::EnvironmentalConditionsData* data = new CDM::EnvironmentalConditionsData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::Unload(CDM::EnvironmentalConditionsData& data) const
 {
   if (HasName()) {
@@ -194,7 +199,7 @@ void SEEnvironmentalConditions::Unload(CDM::EnvironmentalConditionsData& data) c
   for (SESubstanceConcentration* sc : m_AmbientAerosols)
     data.AmbientAerosol().push_back(std::unique_ptr<CDM::SubstanceConcentrationData>(sc->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
 {
   if (from.HasSurroundingType())
@@ -246,7 +251,12 @@ void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
     }
   }
 }
-
+//-----------------------------------------------------------------------------
+bool SEEnvironmentalConditions::Load(const char* environmentFile)
+{
+  return Load(std::string{ environmentFile });
+}
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::Load(const std::string& environmentFile)
 {
   CDM::EnvironmentalConditionsData* eData;
@@ -270,198 +280,233 @@ bool SEEnvironmentalConditions::Load(const std::string& environmentFile)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 std::string SEEnvironmentalConditions::GetName() const
 {
   return m_Name;
 }
+//-----------------------------------------------------------------------------
+const char* SEEnvironmentalConditions::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
+void SEEnvironmentalConditions::SetName(const char* name)
+{
+  m_Name = name;
+}
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::SetName(const std::string& name)
 {
   m_Name = name;
 }
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasName() const
 {
   return m_Name.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::InvalidateName()
 {
   m_Name = "";
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumSurroundingType::value SEEnvironmentalConditions::GetSurroundingType() const
 {
   return m_SurroundingType;
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::SetSurroundingType(CDM::enumSurroundingType::value state)
 {
   m_SurroundingType = state;
 }
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasSurroundingType() const
 {
   return m_SurroundingType == ((CDM::enumSurroundingType::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::InvalidateSurroundingType()
 {
   m_SurroundingType = (CDM::enumSurroundingType::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAirDensity() const
 {
   return m_AirDensity == nullptr ? false : m_AirDensity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SEEnvironmentalConditions::GetAirDensity()
 {
   if (m_AirDensity == nullptr)
     m_AirDensity = new SEScalarMassPerVolume();
   return *m_AirDensity;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetAirDensity(const MassPerVolumeUnit& unit) const
 {
   if (m_AirDensity == nullptr)
     return SEScalar::dNaN();
   return m_AirDensity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAirVelocity() const
 {
   return m_AirVelocity == nullptr ? false : m_AirVelocity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarLengthPerTime& SEEnvironmentalConditions::GetAirVelocity()
 {
   if (m_AirVelocity == nullptr)
     m_AirVelocity = new SEScalarLengthPerTime();
   return *m_AirVelocity;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetAirVelocity(const LengthPerTimeUnit& unit) const
 {
   if (m_AirVelocity == nullptr)
     return SEScalar::dNaN();
   return m_AirVelocity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAmbientTemperature() const
 {
   return m_AmbientTemperature == nullptr ? false : m_AmbientTemperature->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTemperature& SEEnvironmentalConditions::GetAmbientTemperature()
 {
   if (m_AmbientTemperature == nullptr)
     m_AmbientTemperature = new SEScalarTemperature();
   return *m_AmbientTemperature;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetAmbientTemperature(const TemperatureUnit& unit) const
 {
   if (m_AmbientTemperature == nullptr)
     return SEScalar::dNaN();
   return m_AmbientTemperature->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAtmosphericPressure() const
 {
   return m_AtmosphericPressure == nullptr ? false : m_AtmosphericPressure->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SEEnvironmentalConditions::GetAtmosphericPressure()
 {
   if (m_AtmosphericPressure == nullptr)
     m_AtmosphericPressure = new SEScalarPressure();
   return *m_AtmosphericPressure;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetAtmosphericPressure(const PressureUnit& unit) const
 {
   if (m_AtmosphericPressure == nullptr)
     return SEScalar::dNaN();
   return m_AtmosphericPressure->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasClothingResistance() const
 {
   return m_ClothingResistance == nullptr ? false : m_ClothingResistance->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarHeatResistanceArea& SEEnvironmentalConditions::GetClothingResistance()
 {
   if (m_ClothingResistance == nullptr)
     m_ClothingResistance = new SEScalarHeatResistanceArea();
   return *m_ClothingResistance;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetClothingResistance(const HeatResistanceAreaUnit& unit) const
 {
   if (m_ClothingResistance == nullptr)
     return SEScalar::dNaN();
   return m_ClothingResistance->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasEmissivity() const
 {
   return m_Emissivity == nullptr ? false : m_Emissivity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SEEnvironmentalConditions::GetEmissivity()
 {
   if (m_Emissivity == nullptr)
     m_Emissivity = new SEScalarFraction();
   return *m_Emissivity;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetEmissivity() const
 {
   if (m_Emissivity == nullptr)
     return SEScalar::dNaN();
   return m_Emissivity->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasMeanRadiantTemperature() const
 {
   return m_MeanRadiantTemperature == nullptr ? false : m_MeanRadiantTemperature->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTemperature& SEEnvironmentalConditions::GetMeanRadiantTemperature()
 {
   if (m_MeanRadiantTemperature == nullptr)
     m_MeanRadiantTemperature = new SEScalarTemperature();
   return *m_MeanRadiantTemperature;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetMeanRadiantTemperature(const TemperatureUnit& unit) const
 {
   if (m_MeanRadiantTemperature == nullptr)
     return SEScalar::dNaN();
   return m_MeanRadiantTemperature->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasRelativeHumidity() const
 {
   return m_RelativeHumidity == nullptr ? false : m_RelativeHumidity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SEEnvironmentalConditions::GetRelativeHumidity()
 {
   if (m_RelativeHumidity == nullptr)
     m_RelativeHumidity = new SEScalarFraction();
   return *m_RelativeHumidity;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetRelativeHumidity() const
 {
   if (m_RelativeHumidity == nullptr)
     return SEScalar::dNaN();
   return m_RelativeHumidity->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasRespirationAmbientTemperature() const
 {
   return m_RespirationAmbientTemperature == nullptr ? false : m_RespirationAmbientTemperature->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTemperature& SEEnvironmentalConditions::GetRespirationAmbientTemperature()
 {
   if (m_RespirationAmbientTemperature == nullptr)
     m_RespirationAmbientTemperature = new SEScalarTemperature();
   return *m_RespirationAmbientTemperature;
 }
+//-----------------------------------------------------------------------------
 double SEEnvironmentalConditions::GetRespirationAmbientTemperature(const TemperatureUnit& unit) const
 {
   if (m_RespirationAmbientTemperature == nullptr)
     return SEScalar::dNaN();
   return m_RespirationAmbientTemperature->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAmbientGas() const
 {
   return m_AmbientGases.size() == 0 ? false : true;
 }
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAmbientGas(const SESubstance& s) const
 {
   for (const SESubstanceFraction* sf : m_AmbientGases) {
@@ -470,14 +515,17 @@ bool SEEnvironmentalConditions::HasAmbientGas(const SESubstance& s) const
   }
   return false;
 }
+//-----------------------------------------------------------------------------
 const std::vector<SESubstanceFraction*>& SEEnvironmentalConditions::GetAmbientGases()
 {
   return m_AmbientGases;
 }
+//-----------------------------------------------------------------------------
 const std::vector<const SESubstanceFraction*>& SEEnvironmentalConditions::GetAmbientGases() const
 {
   return m_cAmbientGases;
 }
+//-----------------------------------------------------------------------------
 SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstance& s)
 {
   for (SESubstanceFraction* sf : m_AmbientGases) {
@@ -490,6 +538,7 @@ SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstance& s)
   m_cAmbientGases.push_back(sf);
   return *sf;
 }
+//-----------------------------------------------------------------------------
 const SESubstanceFraction* SEEnvironmentalConditions::GetAmbientGas(const SESubstance& s) const
 {
   const SESubstanceFraction* sf = nullptr;
@@ -500,6 +549,7 @@ const SESubstanceFraction* SEEnvironmentalConditions::GetAmbientGas(const SESubs
   }
   return sf;
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::RemoveAmbientGas(const SESubstance& s)
 {
   const SESubstanceFraction* sf;
@@ -512,16 +562,18 @@ void SEEnvironmentalConditions::RemoveAmbientGas(const SESubstance& s)
     }
   }
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::RemoveAmbientGases()
 {
   DELETE_VECTOR(m_AmbientGases);
   m_cAmbientGases.clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAmbientAerosol() const
 {
   return m_AmbientAerosols.size() == 0 ? false : true;
 }
+//-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::HasAmbientAerosol(const SESubstance& substance) const
 {
   for (const SESubstanceConcentration* sc : m_AmbientAerosols) {
@@ -530,14 +582,17 @@ bool SEEnvironmentalConditions::HasAmbientAerosol(const SESubstance& substance) 
   }
   return false;
 }
+//-----------------------------------------------------------------------------
 const std::vector<SESubstanceConcentration*>& SEEnvironmentalConditions::GetAmbientAerosols()
 {
   return m_AmbientAerosols;
 }
+//-----------------------------------------------------------------------------
 const std::vector<const SESubstanceConcentration*>& SEEnvironmentalConditions::GetAmbientAerosols() const
 {
   return m_cAmbientAerosols;
 }
+//-----------------------------------------------------------------------------
 SESubstanceConcentration& SEEnvironmentalConditions::GetAmbientAerosol(SESubstance& substance)
 {
   for (SESubstanceConcentration* sc : m_AmbientAerosols) {
@@ -550,6 +605,7 @@ SESubstanceConcentration& SEEnvironmentalConditions::GetAmbientAerosol(SESubstan
   m_cAmbientAerosols.push_back(sc);
   return *sc;
 }
+//-----------------------------------------------------------------------------
 const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(const SESubstance& substance) const
 {
   const SESubstanceConcentration* sc = nullptr;
@@ -560,6 +616,7 @@ const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(con
   }
   return sc;
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::RemoveAmbientAerosol(const SESubstance& substance)
 {
   const SESubstanceConcentration* sc;
@@ -572,9 +629,11 @@ void SEEnvironmentalConditions::RemoveAmbientAerosol(const SESubstance& substanc
     }
   }
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::RemoveAmbientAerosols()
 {
   DELETE_VECTOR(m_AmbientAerosols);
   m_cAmbientAerosols.clear();
 }
+//-----------------------------------------------------------------------------
 }

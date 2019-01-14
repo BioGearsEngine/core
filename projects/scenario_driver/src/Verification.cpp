@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 #include <tuple>
 
+#ifdef ANDROID
 namespace std {
   template <typename T>
   std::string to_string( T value ) {
@@ -23,7 +24,11 @@ namespace std {
     return ss.str();
   }
 }
-namespace {
+#endif 
+
+namespace scenario_driver{
+
+std::mutex RunScenarioTask::ms_constructionMutex;
 
 const std::string subjectKey = "subject";
 const std::string senderKey = "sender";
@@ -52,15 +57,10 @@ std::vector<std::string> ParseRecipients(const std::string& recipients)
 
   return recipientList;
 }
-}
 
-using namespace biogears;
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// This function is called when the task is executed, it creates a BioGearsEngine and executes the scenario
-//--------------------------------------------------------------------------------------------------
 void RunScenarioTask::Run()
 {
+  using namespace biogears;
 	// Set up the log file
 	std::string logFile = m_scenarioFile;
 	logFile = Replace(logFile, "verification", "bin");
@@ -102,6 +102,14 @@ void RunScenarioTask::Run()
 		std::cerr << "Unable to run scenario " << m_scenarioFile << std::endl;
 	}
 }
+}
+
+using namespace biogears;
+using namespace scenario_driver;
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// This function is called when the task is executed, it creates a BioGearsEngine and executes the scenario
+//--------------------------------------------------------------------------------------------------
 
 Verification::Verification(const std::string& configFile, RunMode mode)
   : m_configFile(configFile)

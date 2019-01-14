@@ -46,7 +46,7 @@ bool SETestErrorStatistics::Load(const CDM::TestErrorStatisticsData& in)
   std::string dData;
   for (unsigned int i = 0; i < in.Differences().size(); i++) {
     dData = (std::string)in.Differences().at(i);
-    if (dData != nullptr)
+    if (!dData.empty())
       m_Differences.push_back(dData);
   }
   m_ComputedPropertyID = in.ComputedPropertyID();
@@ -78,7 +78,7 @@ void SETestErrorStatistics::Unload(CDM::TestErrorStatisticsData& data) const
   std::string dData;
   for (unsigned int i = 0; i < m_Differences.size(); i++) {
     dData = m_Differences.at(i);
-    if (dData != nullptr)
+    if (!dData.empty())
       data.Differences().push_back(dData);
   }
   if (!m_ComputedPropertyID.empty())

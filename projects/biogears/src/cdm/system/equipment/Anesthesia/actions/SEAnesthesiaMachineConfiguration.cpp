@@ -30,24 +30,24 @@ SEAnesthesiaMachineConfiguration::SEAnesthesiaMachineConfiguration(SESubstanceMa
   m_Configuration = nullptr;
   InvalidateConfigurationFile();
 }
-
+//-----------------------------------------------------------------------------
 SEAnesthesiaMachineConfiguration::~SEAnesthesiaMachineConfiguration()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::Clear()
 {
   SEAnesthesiaMachineAction::Clear();
   InvalidateConfigurationFile();
   SAFE_DELETE(m_Configuration);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && (HasConfiguration() || HasConfigurationFile());
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::Load(const CDM::AnesthesiaMachineConfigurationData& in)
 {
   SEAnesthesiaMachineAction::Load(in);
@@ -57,13 +57,14 @@ bool SEAnesthesiaMachineConfiguration::Load(const CDM::AnesthesiaMachineConfigur
     GetConfiguration().Load(in.Configuration().get());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::AnesthesiaMachineConfigurationData* SEAnesthesiaMachineConfiguration::Unload() const
 {
   CDM::AnesthesiaMachineConfigurationData* data = new CDM::AnesthesiaMachineConfigurationData();
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::Unload(CDM::AnesthesiaMachineConfigurationData& data) const
 {
   SEAnesthesiaMachineAction::Unload(data);
@@ -72,11 +73,12 @@ void SEAnesthesiaMachineConfiguration::Unload(CDM::AnesthesiaMachineConfiguratio
   else if (HasConfigurationFile())
     data.ConfigurationFile(m_ConfigurationFile);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::HasConfiguration() const
 {
   return m_Configuration != nullptr;
 }
+//-----------------------------------------------------------------------------
 SEAnesthesiaMachine& SEAnesthesiaMachineConfiguration::GetConfiguration()
 {
   m_ConfigurationFile = "";
@@ -84,30 +86,39 @@ SEAnesthesiaMachine& SEAnesthesiaMachineConfiguration::GetConfiguration()
     m_Configuration = new SEAnesthesiaMachine(m_Substances);
   return *m_Configuration;
 }
+//-----------------------------------------------------------------------------
 const SEAnesthesiaMachine* SEAnesthesiaMachineConfiguration::GetConfiguration() const
 {
   return m_Configuration;
 }
-
-std::string SEAnesthesiaMachineConfiguration::GetConfigurationFile() const
+//-----------------------------------------------------------------------------
+const char* SEAnesthesiaMachineConfiguration::GetConfigurationFile() const
 {
-  return m_ConfigurationFile;
+  return m_ConfigurationFile.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEAnesthesiaMachineConfiguration::SetConfigurationFile(const char* fileName)
+{
+  SetConfigurationFile(std::string{ fileName });
+}
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::SetConfigurationFile(const std::string& fileName)
 {
   if (m_Configuration != nullptr)
     SAFE_DELETE(m_Configuration);
   m_ConfigurationFile = fileName;
 }
+//-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::HasConfigurationFile() const
 {
   return m_ConfigurationFile.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::InvalidateConfigurationFile()
 {
   m_ConfigurationFile = "";
 }
-
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Configuration";
@@ -164,4 +175,5 @@ void SEAnesthesiaMachineConfiguration::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
+  //-----------------------------------------------------------------------------
 }

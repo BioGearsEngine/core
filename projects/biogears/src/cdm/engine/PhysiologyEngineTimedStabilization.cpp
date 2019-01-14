@@ -26,12 +26,14 @@ bool PhysiologyEngineTimedStabilization::StabilizeRestingState(PhysiologyEngine&
     return true; //No stabilization time requested
   return Stabilize(engine, GetRestingStabilizationTime());
 }
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::StabilizeFeedbackState(PhysiologyEngine& engine)
 {
   if (!HasFeedbackStabilizationTime())
     return true; //No stabilization time requested
   return Stabilize(engine, GetFeedbackStabilizationTime());
 }
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions)
 {
   if (conditions.empty())
@@ -52,6 +54,7 @@ bool PhysiologyEngineTimedStabilization::StabilizeConditions(PhysiologyEngine& e
   time.SetValue(maxTime_s, TimeUnit::s);
   return Stabilize(engine, time);
 }
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, const SEScalarTime& time)
 {
   double sTime_s = time.GetValue(TimeUnit::s);
@@ -122,19 +125,19 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
   GetStabilizationDuration().SetValue(m_currentTime_s, TimeUnit::s);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilization::PhysiologyEngineTimedStabilization(Logger* logger)
   : PhysiologyEngineStabilization(logger)
 {
   m_FeedbackStabilizationTime = nullptr;
   GetStabilizationDuration().SetValue(0, TimeUnit::s);
 }
-
+//-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilization::~PhysiologyEngineTimedStabilization()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::Clear()
 {
   PhysiologyEngineStabilization::Clear();
@@ -142,7 +145,7 @@ void PhysiologyEngineTimedStabilization::Clear()
   SAFE_DELETE(m_FeedbackStabilizationTime);
   DELETE_VECTOR(m_ConditionCriteria);
 }
-
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const CDM::PhysiologyEngineTimedStabilizationData& in)
 {
   PhysiologyEngineStabilization::Load(in);
@@ -156,14 +159,14 @@ bool PhysiologyEngineTimedStabilization::Load(const CDM::PhysiologyEngineTimedSt
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::PhysiologyEngineTimedStabilizationData* PhysiologyEngineTimedStabilization::Unload() const
 {
   CDM::PhysiologyEngineTimedStabilizationData* data(new CDM::PhysiologyEngineTimedStabilizationData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const
 {
   PhysiologyEngineStabilization::Unload(data);
@@ -174,7 +177,12 @@ void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabil
     data.ConditionStabilization().push_back(std::unique_ptr<CDM::PhysiologyEngineTimedConditionStabilizationData>(cc->Unload()));
   }
 }
-
+//-------------------------------------------------------------------------------
+bool PhysiologyEngineTimedStabilization::Load(const char* file)
+{
+  return Load(std::string{ file });
+}
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const std::string& file)
 {
   CDM::PhysiologyEngineTimedStabilizationData* pData;
@@ -190,33 +198,41 @@ bool PhysiologyEngineTimedStabilization::Load(const std::string& file)
   }
   return Load(*pData);
 }
-
+//-------------------------------------------------------------------------------
 SEScalarTime& PhysiologyEngineTimedStabilization::GetRestingStabilizationTime()
 {
   return m_RestingStabilizationTime;
 }
+//-------------------------------------------------------------------------------
 double PhysiologyEngineTimedStabilization::GetRestingStabilizationTime(const TimeUnit& unit) const
 {
   return m_RestingStabilizationTime.GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::HasFeedbackStabilizationTime() const
 {
   return m_FeedbackStabilizationTime == nullptr ? false : m_FeedbackStabilizationTime->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& PhysiologyEngineTimedStabilization::GetFeedbackStabilizationTime()
 {
   if (m_FeedbackStabilizationTime == nullptr)
     m_FeedbackStabilizationTime = new SEScalarTime();
   return *m_FeedbackStabilizationTime;
 }
+//-------------------------------------------------------------------------------
 double PhysiologyEngineTimedStabilization::GetFeedbackStabilizationTime(const TimeUnit& unit) const
 {
   if (!HasFeedbackStabilizationTime())
     return SEScalar::dNaN();
   return m_FeedbackStabilizationTime->GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
+bool PhysiologyEngineTimedStabilization::HasConditionCriteria(const char* name) const
+{
+  return HasConditionCriteria(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::HasConditionCriteria(const std::string& name) const
 {
   for (PhysiologyEngineTimedStabilizationCriteria* c : m_ConditionCriteria) {
@@ -225,6 +241,12 @@ bool PhysiologyEngineTimedStabilization::HasConditionCriteria(const std::string&
   }
   return false;
 }
+//-------------------------------------------------------------------------------
+void PhysiologyEngineTimedStabilization::RemoveConditionCriteria(const char* name)
+{
+  return RemoveConditionCriteria(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::RemoveConditionCriteria(const std::string& name)
 {
   for (auto itr = m_ConditionCriteria.begin(); itr != m_ConditionCriteria.end(); itr++) {
@@ -236,6 +258,12 @@ void PhysiologyEngineTimedStabilization::RemoveConditionCriteria(const std::stri
     }
   }
 }
+//-------------------------------------------------------------------------------
+PhysiologyEngineTimedStabilizationCriteria& PhysiologyEngineTimedStabilization::GetConditionCriteria(const char* name)
+{
+  return GetConditionCriteria(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilizationCriteria& PhysiologyEngineTimedStabilization::GetConditionCriteria(const std::string& name)
 {
   for (auto itr = m_ConditionCriteria.begin(); itr != m_ConditionCriteria.end(); itr++) {
@@ -247,6 +275,12 @@ PhysiologyEngineTimedStabilizationCriteria& PhysiologyEngineTimedStabilization::
   m_ConditionCriteria.push_back(criteria);
   return *criteria;
 }
+//-------------------------------------------------------------------------------
+PhysiologyEngineTimedStabilizationCriteria* PhysiologyEngineTimedStabilization::GetConditionCriteria(const char* name) const
+{
+  return GetConditionCriteria(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilizationCriteria* PhysiologyEngineTimedStabilization::GetConditionCriteria(const std::string& name) const
 {
   for (auto itr = m_ConditionCriteria.begin(); itr != m_ConditionCriteria.end(); itr++) {
@@ -255,12 +289,12 @@ PhysiologyEngineTimedStabilizationCriteria* PhysiologyEngineTimedStabilization::
   }
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 const std::vector<PhysiologyEngineTimedStabilizationCriteria*>& PhysiologyEngineTimedStabilization::GetConditionCriteria() const
 {
   return m_ConditionCriteria;
 }
-
+//-------------------------------------------------------------------------------
 //////////////////////////////////////////////////
 // PhysiologyEngineTimedStabilizationCriteria //
 //////////////////////////////////////////////////
@@ -270,18 +304,18 @@ PhysiologyEngineTimedStabilizationCriteria::PhysiologyEngineTimedStabilizationCr
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilizationCriteria::~PhysiologyEngineTimedStabilizationCriteria()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilizationCriteria::Clear()
 {
   InvalidateName();
   m_Time.Invalidate();
 }
-
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilizationCriteria::Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in)
 {
   Clear();
@@ -289,47 +323,64 @@ bool PhysiologyEngineTimedStabilizationCriteria::Load(const CDM::PhysiologyEngin
   GetTime().Load(in.Time());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::PhysiologyEngineTimedConditionStabilizationData* PhysiologyEngineTimedStabilizationCriteria::Unload() const
 {
   CDM::PhysiologyEngineTimedConditionStabilizationData* data(new CDM::PhysiologyEngineTimedConditionStabilizationData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilizationCriteria::Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const
 {
   data.Name(m_Name);
   data.Time(std::unique_ptr<CDM::ScalarTimeData>(GetTime().Unload()));
 }
-
+//-------------------------------------------------------------------------------
 std::string PhysiologyEngineTimedStabilizationCriteria::GetName() const
 {
   return m_Name;
 }
+//-------------------------------------------------------------------------------
+const char* PhysiologyEngineTimedStabilizationCriteria::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-------------------------------------------------------------------------------
+void PhysiologyEngineTimedStabilizationCriteria::SetName(const char* name)
+{
+  m_Name = name;
+}
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilizationCriteria::SetName(const std::string& name)
 {
   m_Name = name;
 }
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilizationCriteria::HasName() const
 {
-  return m_Name == nullptr || m_Name.empty() ? false : true;
+  return  m_Name.empty() ? false : true;
 }
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilizationCriteria::InvalidateName()
 {
   m_Name = "";
 }
-
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilizationCriteria::HasTime()
 {
   return m_Time.IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& PhysiologyEngineTimedStabilizationCriteria::GetTime()
 {
   return m_Time;
 }
+//-------------------------------------------------------------------------------
 const SEScalarTime& PhysiologyEngineTimedStabilizationCriteria::GetTime() const
 {
   return m_Time;
 }
+//-------------------------------------------------------------------------------
+
 }

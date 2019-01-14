@@ -123,7 +123,11 @@ void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
     data.Lead12ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead12ElectricPotential->Unload()));
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEElectroCardioGram::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEElectroCardioGram::GetScalar(const std::string& name)
 {
   if (name.compare("Lead1ElectricPotential") == 0)
@@ -393,8 +397,8 @@ double SEElectroCardioGram::GetLead12ElectricPotential(const ElectricPotentialUn
   return m_Lead12ElectricPotential->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SEElectroCardioGram::GetPhysiologyRequestGraph() const
+Tree<const char*> SEElectroCardioGram::GetPhysiologyRequestGraph() const
 {
-  return {};
+  return {""};
 }
 }

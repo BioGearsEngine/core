@@ -25,6 +25,7 @@ template <COMPARTMENT_GRAPH_TEMPLATE>
 class SECompartmentGraph : public Loggable {
 protected:
   SECompartmentGraph(const std::string& name, Logger* logger);
+  SECompartmentGraph(const char* name, Logger* logger);
 
 public:
   virtual ~SECompartmentGraph();
@@ -33,19 +34,26 @@ public:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
 
   virtual void AddCompartment(CompartmentType& cmpt);
+  virtual CompartmentType* GetCompartment(const char* name);
   virtual CompartmentType* GetCompartment(const std::string& name);
+  virtual const CompartmentType* GetCompartment(const char* name) const;
   virtual const CompartmentType* GetCompartment(const std::string& name) const;
   virtual const std::vector<CompartmentType*>& GetCompartments() const;
   virtual void RemoveCompartment(const CompartmentType& cmpt);
+  virtual void RemoveCompartment(const char* name);
   virtual void RemoveCompartment(const std::string& name);
 
+  virtual CompartmentLinkType* GetLink(const char* name);
   virtual void AddLink(CompartmentLinkType& link);
   virtual CompartmentLinkType* GetLink(const std::string& name);
+  virtual const CompartmentLinkType* GetLink(const char* name) const;
   virtual const CompartmentLinkType* GetLink(const std::string& name) const;
   virtual const std::vector<CompartmentLinkType*>& GetLinks() const;
   virtual void RemoveLink(const CompartmentLinkType& link);
+  virtual void RemoveLink(const char* name);
   virtual void RemoveLink(const std::string& name);
 
 protected:

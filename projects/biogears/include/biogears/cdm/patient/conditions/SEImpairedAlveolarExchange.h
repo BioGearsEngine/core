@@ -35,6 +35,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "ImpairedAlveolarExchange"; }
+  virtual const char* GetName_cStr() const { return "ImpairedAlveolarExchange"; }
 
   virtual bool HasImpairedSurfaceArea() const;
   virtual SEScalarArea& GetImpairedSurfaceArea();

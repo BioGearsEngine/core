@@ -19,6 +19,16 @@ AmountPerVolumeUnit AmountPerVolumeUnit::mmol_Per_mL("mmol/mL");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_L("ct/L");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_uL("ct/uL");
 
+AmountPerVolumeUnit::AmountPerVolumeUnit(const char* u)
+  : AmountPerVolumeUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+AmountPerVolumeUnit::AmountPerVolumeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarAmountPerVolumeData* SEScalarAmountPerVolume::Unload() const
 {
   if (!IsValid())
@@ -27,40 +37,51 @@ CDM::ScalarAmountPerVolumeData* SEScalarAmountPerVolume::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool AmountPerVolumeUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool AmountPerVolumeUnit::IsValidUnit(const char* unit)
 {
-  if (mol_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mol_Per_L.GetString(),unit) == 0)
     return true;
-  if (mol_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mol_Per_mL.GetString(),unit) == 0)
     return true;
-  if (mmol_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mmol_Per_L.GetString(),unit) == 0)
     return true;
-  if (mmol_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmol_Per_mL.GetString(),unit) == 0)
     return true;
-  if (ct_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(ct_Per_L.GetString(),unit) == 0)
     return true;
-  if (ct_Per_uL.GetString().compare(unit) == 0)
+  if (strcmp(ct_Per_uL.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool AmountPerVolumeUnit::IsValidUnit(const std::string& unit)
 {
-  if (mol_Per_L.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(mol_Per_L.GetString(),unit) == 0)
     return mol_Per_L;
-  if (mol_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mol_Per_mL.GetString(),unit) == 0)
     return mol_Per_mL;
-  if (mmol_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mmol_Per_L.GetString(),unit) == 0)
     return mmol_Per_L;
-  if (mmol_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmol_Per_mL.GetString(),unit) == 0)
     return mmol_Per_mL;
-  if (ct_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(ct_Per_L.GetString(),unit) == 0)
     return ct_Per_L;
-  if (ct_Per_uL.GetString().compare(unit) == 0)
+  if (strcmp(ct_Per_uL.GetString(),unit) == 0)
     return ct_Per_uL;
   std::stringstream err;
   err << unit << " is not a valid AmountPerVolume unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

@@ -23,6 +23,7 @@ class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink {
   friend class SECompartmentManager;
 
 protected:
+  SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name);
   SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const std::string& name);
 
 public:
@@ -37,6 +38,7 @@ protected:
   virtual void Unload(CDM::ThermalCompartmentLinkData& data);
 
 public:
+  virtual const SEScalar* GetScalar(const char* name) override;
   virtual const SEScalar* GetScalar(const std::string& name) override;
 
   virtual bool HasHeatTransferRate() const;
@@ -64,13 +66,11 @@ protected:
 }
 
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
-namespace biogears
-{
+namespace biogears {
 class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment, SEThermalCompartmentLink> {
 public:
-  SEThermalCompartmentGraph(const std::string& name, Logger* logger)
-    : SECompartmentGraph(name, logger){};
-
-  virtual ~SEThermalCompartmentGraph() = default;
+  SEThermalCompartmentGraph(const char* name, Logger* logger);
+  SEThermalCompartmentGraph(const std::string& name, Logger* logger);
+  virtual ~SEThermalCompartmentGraph() override;
 };
 }

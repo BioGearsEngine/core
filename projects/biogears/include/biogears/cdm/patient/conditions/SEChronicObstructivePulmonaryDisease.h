@@ -37,6 +37,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "ChronicObstructivePulmonaryDisease"; }
+  virtual const char* GetName_cStr() const { return "ChronicObstructivePulmonaryDisease"; }
 
   virtual bool HasBronchitisSeverity() const;
   virtual SEScalar0To1& GetBronchitisSeverity();

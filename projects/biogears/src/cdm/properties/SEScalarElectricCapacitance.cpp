@@ -15,6 +15,16 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricCapacitanceUnit ElectricCapacitanceUnit::F("F");
 
+ElectricCapacitanceUnit::ElectricCapacitanceUnit(const char* u)
+  : ElectricCapacitanceUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+ElectricCapacitanceUnit::ElectricCapacitanceUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarElectricCapacitanceData* SEScalarElectricCapacitance::Unload() const
 {
   if (!IsValid())
@@ -23,20 +33,31 @@ CDM::ScalarElectricCapacitanceData* SEScalarElectricCapacitance::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool ElectricCapacitanceUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricCapacitanceUnit::IsValidUnit(const char* unit)
 {
-  if (F.GetString().compare(unit) == 0)
+  if (strcmp(F.GetString(), unit) == 0)
     return true;
   return false;
 }
-
-const ElectricCapacitanceUnit& ElectricCapacitanceUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricCapacitanceUnit::IsValidUnit(const std::string& unit)
 {
-  if (F.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const ElectricCapacitanceUnit& ElectricCapacitanceUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(F.GetString(), unit) == 0)
     return F;
   std::stringstream err;
   err << unit << " is not a valid ElectricCapacitance unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const ElectricCapacitanceUnit& ElectricCapacitanceUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

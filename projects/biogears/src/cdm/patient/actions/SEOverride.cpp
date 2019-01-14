@@ -152,6 +152,7 @@ bool SEOverride::IsValid() const
   } else {
     return false;
   }
+  return false;
 }
 
 bool SEOverride::IsActive() const

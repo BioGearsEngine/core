@@ -20,18 +20,18 @@ class SEScalar0To1;
 class BIOGEARS_API SETensionPneumothorax : public SEPatientAction {
 public:
   SETensionPneumothorax();
-  virtual ~SETensionPneumothorax();
+  virtual ~SETensionPneumothorax() override;
 
   static constexpr const char* TypeTag() { return "SETensionPneumothorax"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::TensionPneumothoraxData& in);
-  virtual CDM::TensionPneumothoraxData* Unload() const;
+  virtual CDM::TensionPneumothoraxData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::TensionPneumothoraxData& data) const;
@@ -50,7 +50,7 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   CDM::enumPneumothoraxType::value m_Type;

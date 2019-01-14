@@ -19,18 +19,18 @@ class SEScalar0To1;
 class BIOGEARS_API SETubeCuffLeak : public SEAnesthesiaMachineAction {
 public:
   SETubeCuffLeak();
-  virtual ~SETubeCuffLeak();
+  virtual ~SETubeCuffLeak() override;
 
   static constexpr const char* TypeTag() { return "SETubeCuffLeak"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::TubeCuffLeakData& in);
-  virtual CDM::TubeCuffLeakData* Unload() const;
+  virtual CDM::TubeCuffLeakData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::TubeCuffLeakData& data) const;
@@ -39,7 +39,7 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Severity;

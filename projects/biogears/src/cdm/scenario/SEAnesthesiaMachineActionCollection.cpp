@@ -41,12 +41,12 @@ SEAnesthesiaMachineActionCollection::SEAnesthesiaMachineActionCollection(SESubst
   m_VentilatorPressureLoss = nullptr;
   m_YPieceDisconnect = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEAnesthesiaMachineActionCollection::~SEAnesthesiaMachineActionCollection()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::Clear()
 {
   // State
@@ -66,7 +66,7 @@ void SEAnesthesiaMachineActionCollection::Clear()
   RemoveVentilatorPressureLoss();
   RemoveYPieceDisconnect();
 }
-
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::Unload(std::vector<CDM::ActionData*>& to)
 {
   if (HasConfiguration())
@@ -96,7 +96,7 @@ void SEAnesthesiaMachineActionCollection::Unload(std::vector<CDM::ActionData*>& 
   if (HasYPieceDisconnect())
     to.push_back(GetYPieceDisconnect()->Unload());
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::ProcessAction(const SEAnesthesiaMachineAction& action)
 {
   if (!IsValid(action))
@@ -106,7 +106,7 @@ bool SEAnesthesiaMachineActionCollection::ProcessAction(const SEAnesthesiaMachin
   delete bind;
   return b;
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::ProcessAction(const CDM::AnesthesiaMachineActionData& action)
 {
   const CDM::AnesthesiaMachineConfigurationData* config = dynamic_cast<const CDM::AnesthesiaMachineConfigurationData*>(&action);
@@ -264,7 +264,7 @@ bool SEAnesthesiaMachineActionCollection::ProcessAction(const CDM::AnesthesiaMac
   Error("Unsupported Action");
   return false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::IsValid(const SEAnesthesiaMachineAction& action)
 {
   if (!action.IsValid()) {
@@ -273,173 +273,200 @@ bool SEAnesthesiaMachineActionCollection::IsValid(const SEAnesthesiaMachineActio
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasConfiguration() const
 {
   return m_Configuration == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEAnesthesiaMachineConfiguration* SEAnesthesiaMachineActionCollection::GetConfiguration() const
 {
   return m_Configuration;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveConfiguration()
 {
   SAFE_DELETE(m_Configuration);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasOxygenTankPressureLoss() const
 {
   return m_OxygenTankPressureLoss == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEOxygenTankPressureLoss* SEAnesthesiaMachineActionCollection::GetOxygenTankPressureLoss() const
 {
   return m_OxygenTankPressureLoss;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveOxygenTankPressureLoss()
 {
   SAFE_DELETE(m_OxygenTankPressureLoss);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasOxygenWallPortPressureLoss()
 {
   return m_OxygenWallPortPressureLoss == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEOxygenWallPortPressureLoss* SEAnesthesiaMachineActionCollection::GetOxygenWallPortPressureLoss()
 {
   return m_OxygenWallPortPressureLoss;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveOxygenWallPortPressureLoss()
 {
   SAFE_DELETE(m_OxygenWallPortPressureLoss);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasExpiratoryValveLeak() const
 {
   return m_ExpiratoryValveLeak == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEExpiratoryValveLeak* SEAnesthesiaMachineActionCollection::GetExpiratoryValveLeak() const
 {
   return m_ExpiratoryValveLeak;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveExpiratoryValveLeak()
 {
   SAFE_DELETE(m_ExpiratoryValveLeak);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasExpiratoryValveObstruction() const
 {
   return m_ExpiratoryValveObstruction == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEExpiratoryValveObstruction* SEAnesthesiaMachineActionCollection::GetExpiratoryValveObstruction() const
 {
   return m_ExpiratoryValveObstruction;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveExpiratoryValveObstruction()
 {
   SAFE_DELETE(m_ExpiratoryValveObstruction);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasInspiratoryValveLeak() const
 {
   return m_InspiratoryValveLeak == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEInspiratoryValveLeak* SEAnesthesiaMachineActionCollection::GetInspiratoryValveLeak() const
 {
   return m_InspiratoryValveLeak;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveInspiratoryValveLeak()
 {
   SAFE_DELETE(m_InspiratoryValveLeak);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasInspiratoryValveObstruction() const
 {
   return m_InspiratoryValveObstruction == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEInspiratoryValveObstruction* SEAnesthesiaMachineActionCollection::GetInspiratoryValveObstruction() const
 {
   return m_InspiratoryValveObstruction;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveInspiratoryValveObstruction()
 {
   SAFE_DELETE(m_InspiratoryValveObstruction);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasMaskLeak() const
 {
   return m_MaskLeak == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEMaskLeak* SEAnesthesiaMachineActionCollection::GetMaskLeak() const
 {
   return m_MaskLeak;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveMaskLeak()
 {
   SAFE_DELETE(m_MaskLeak);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasSodaLimeFailure() const
 {
   return m_SodaLimeFailure == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SESodaLimeFailure* SEAnesthesiaMachineActionCollection::GetSodaLimeFailure() const
 {
   return m_SodaLimeFailure;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveSodaLimeFailure()
 {
   SAFE_DELETE(m_SodaLimeFailure);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasTubeCuffLeak() const
 {
   return m_TubeCuffLeak == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SETubeCuffLeak* SEAnesthesiaMachineActionCollection::GetTubeCuffLeak() const
 {
   return m_TubeCuffLeak;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveTubeCuffLeak()
 {
   SAFE_DELETE(m_TubeCuffLeak);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasVaporizerFailure() const
 {
   return m_VaporizerFailure == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEVaporizerFailure* SEAnesthesiaMachineActionCollection::GetVaporizerFailure() const
 {
   return m_VaporizerFailure;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveVaporizerFailure()
 {
   SAFE_DELETE(m_VaporizerFailure);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasVentilatorPressureLoss() const
 {
   return m_VentilatorPressureLoss == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEVentilatorPressureLoss* SEAnesthesiaMachineActionCollection::GetVentilatorPressureLoss() const
 {
   return m_VentilatorPressureLoss;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveVentilatorPressureLoss()
 {
   SAFE_DELETE(m_VentilatorPressureLoss);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::HasYPieceDisconnect() const
 {
   return m_YPieceDisconnect == nullptr ? false : true;
 }
+//-------------------------------------------------------------------------------
 SEYPieceDisconnect* SEAnesthesiaMachineActionCollection::GetYPieceDisconnect() const
 {
   return m_YPieceDisconnect;
 }
+//-------------------------------------------------------------------------------
 void SEAnesthesiaMachineActionCollection::RemoveYPieceDisconnect()
 {
   SAFE_DELETE(m_YPieceDisconnect);
 }
+//-------------------------------------------------------------------------------
 }

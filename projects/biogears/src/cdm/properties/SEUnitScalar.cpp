@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEUnitScalar.h>
 
 namespace biogears {
-//------------------------------------------------------------------------------
 SEUnitScalar::SEUnitScalar()
   : SEScalar()
 {
@@ -27,5 +26,10 @@ SEUnitScalar::SEUnitScalar(const SEUnitScalar& obj)
 SEUnitScalar::~SEUnitScalar()
 {
   //TODO:Convert Unit PTR to a shared_ptr or a non reference
+}
+//------------------------------------------------------------------------------
+double SEUnitScalar::GetValue() const
+{
+  return GetValue(GetUnit()->GetString());
 }
 }

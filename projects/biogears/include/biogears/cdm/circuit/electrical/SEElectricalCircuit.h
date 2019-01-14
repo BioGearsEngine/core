@@ -23,13 +23,14 @@ class BIOGEARS_API SEElectricalCircuit : public SECircuit<CDM::ElectricalCircuit
 
 protected:
   SEElectricalCircuit(const std::string& name, SECircuitManager& mgr);
-
+  SEElectricalCircuit(const char* name, SECircuitManager& mgr);
 public:
   virtual ~SEElectricalCircuit();
 
   SEElectricalCircuitNode& CreateNode(const std::string& name);
+  SEElectricalCircuitNode& CreateNode(const char* name);
   SEElectricalCircuitPath& CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name);
-
+  SEElectricalCircuitPath& CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name);
   void AddCircuit(SEElectricalCircuit& circuit);
 
 protected:

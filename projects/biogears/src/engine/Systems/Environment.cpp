@@ -167,6 +167,7 @@ void Environment::SetUp()
 //--------------------------------------------------------------------------------------------------
 void Environment::StateChange()
 {
+  using namespace std::string_literals;
   if (m_AmbientGases == nullptr || m_AmbientAerosols == nullptr)
     return;
 
@@ -203,7 +204,7 @@ void Environment::StateChange()
   for (auto s : GetConditions().GetAmbientAerosols()) {
     SESubstance& sub = s->GetSubstance();
     if (!sub.HasAerosolization()) {
-      Error("Ignoring environment aerosol as it does not have any aerosol data : " + sub.GetName());
+      Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.GetName());
       continue;
     }
     m_data.GetSubstances().AddActiveSubstance(sub);

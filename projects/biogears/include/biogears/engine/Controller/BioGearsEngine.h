@@ -36,16 +36,20 @@ namespace biogears {
 class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
 public:
   BioGearsEngine(Logger* logger);
+  BioGearsEngine(const char*);
   BioGearsEngine(const std::string&);
   ~BioGearsEngine() override;
 
+  bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
   bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) override;
   bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) override;
+  std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const char* file ) override;
   std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") override;
 
   Logger* GetLogger() override;
   PhysiologyEngineTrack* GetEngineTrack() override;
 
+  bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
   bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
   bool InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
 
@@ -80,7 +84,7 @@ public:
   const SEInhaler* GetInhaler() override;
 
   const SECompartmentManager& GetCompartments() override;
-  Tree<std::string> GetDataRequestGraph () const override;
+  Tree<const char*> GetDataRequestGraph () const override;
 
 protected:
   bool IsReady();

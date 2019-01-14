@@ -23,12 +23,14 @@ public:
   static const MassUnit kg;
   static const MassUnit lb;
 
-  MassUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {  }
+  MassUnit(const char* u);
+  MassUnit(const std::string& u);
+
   virtual ~MassUnit() = default;
 
+  static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
+  static const MassUnit& GetCompoundUnit(const char* unit);
   static const MassUnit& GetCompoundUnit(const std::string& unit);
 
   };

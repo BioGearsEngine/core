@@ -15,6 +15,16 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
 
+ElectricInductanceUnit::ElectricInductanceUnit(const char* u)
+  : ElectricInductanceUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+ElectricInductanceUnit::ElectricInductanceUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarElectricInductanceData* SEScalarElectricInductance::Unload() const
 {
   if (!IsValid())
@@ -23,20 +33,31 @@ CDM::ScalarElectricInductanceData* SEScalarElectricInductance::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool ElectricInductanceUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricInductanceUnit::IsValidUnit(const char* unit)
 {
-  if (H.GetString().compare(unit) == 0)
+  if (strcmp(H.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricInductanceUnit::IsValidUnit(const std::string& unit)
 {
-  if (H.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(H.GetString(),unit) == 0)
     return H;
   std::stringstream err;
   err << unit << " is not a valid ElectricInductance unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+  //-----------------------------------------------------------------------------
 }

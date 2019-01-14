@@ -14,17 +14,24 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
+SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const char* name, Logger* logger)
+  : SECompartmentTransportGraph(std::string{ name }, logger)
+{
+}
+//-------------------------------------------------------------------------------
+template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const std::string& name, Logger* logger)
   : SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>(name, logger)
 {
-
 }
+//-------------------------------------------------------------------------------
 
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::~SECompartmentTransportGraph()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 void SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::Clear()
@@ -39,6 +46,21 @@ void SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::Clear()
   m_TargetEdgeMap.clear();
   m_SourceEdgeMap.clear();
 }
+//-------------------------------------------------------------------------------
+
+template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
+std::string SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::GetName() const
+{
+  return this->m_Name;
+}
+//-------------------------------------------------------------------------------
+
+template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
+const char* SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::GetName_cStr() const
+{
+  return this->m_Name.c_str();
+}
+//-------------------------------------------------------------------------------
 
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 void SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::StateChange()
@@ -77,6 +99,7 @@ void SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::StateChange
     m_VertexIndicies[c] = i++;
   }
 }
+//-------------------------------------------------------------------------------
 
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 size_t SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::GetVertexIndex(const GraphVertexType& v) const
@@ -88,11 +111,13 @@ size_t SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::GetVertex
   }
   return itr->second;
 }
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 const std::vector<GraphVertexType*>& SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::GetVerticies() const
 {
   return m_Verticies;
 }
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 const std::vector<GraphEdgeType*>* SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::GetSourceEdges(const GraphVertexType& v) const
 {
@@ -101,6 +126,7 @@ const std::vector<GraphEdgeType*>* SECompartmentTransportGraph<COMPARTMENT_TRANS
     return nullptr;
   return itr->second;
 }
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 const std::vector<GraphEdgeType*>* SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::GetTargetEdges(const GraphVertexType& v) const
 {
@@ -109,4 +135,5 @@ const std::vector<GraphEdgeType*>* SECompartmentTransportGraph<COMPARTMENT_TRANS
     return nullptr;
   return itr->second;
 }
+//-------------------------------------------------------------------------------
 }

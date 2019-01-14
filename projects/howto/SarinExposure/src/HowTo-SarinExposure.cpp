@@ -114,7 +114,7 @@ void HowToSarinExposure()
     if ((bg->GetSimulationTime(TimeUnit::min) > exposureTime + 1) && (SarinActive == CDM::enumOnOff::On)) {
       conditions.RemoveAmbientAerosol(*Sarin);
       bg->ProcessAction(env);
-      bg->GetLogger()->Info(std::stringstream() << Sarin->GetName() + " removed from environment");
+      bg->GetLogger()->Info(std::stringstream() << std::string{ Sarin->GetName() } +" removed from environment");
       SarinActive = CDM::enumOnOff::Off;
     }
 

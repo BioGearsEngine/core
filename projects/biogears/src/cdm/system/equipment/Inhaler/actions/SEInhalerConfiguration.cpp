@@ -11,13 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
-
-#include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 
 namespace biogears {
 SEInhalerConfiguration::SEInhalerConfiguration(SESubstanceManager& substances)
@@ -27,24 +26,24 @@ SEInhalerConfiguration::SEInhalerConfiguration(SESubstanceManager& substances)
   m_Configuration = nullptr;
   InvalidateConfigurationFile();
 }
-
+//-----------------------------------------------------------------------------
 SEInhalerConfiguration::~SEInhalerConfiguration()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEInhalerConfiguration::Clear()
 {
   SEInhalerAction::Clear();
   InvalidateConfigurationFile();
   SAFE_DELETE(m_Configuration);
 }
-
+//-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::IsValid() const
 {
   return SEInhalerAction::IsValid() && (HasConfiguration() || HasConfigurationFile());
 }
-
+//-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::Load(const CDM::InhalerConfigurationData& in)
 {
   SEInhalerAction::Load(in);
@@ -54,13 +53,14 @@ bool SEInhalerConfiguration::Load(const CDM::InhalerConfigurationData& in)
     GetConfiguration().Load(in.Configuration().get());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::InhalerConfigurationData* SEInhalerConfiguration::Unload() const
 {
   CDM::InhalerConfigurationData* data = new CDM::InhalerConfigurationData();
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 void SEInhalerConfiguration::Unload(CDM::InhalerConfigurationData& data) const
 {
   SEInhalerAction::Unload(data);
@@ -69,11 +69,12 @@ void SEInhalerConfiguration::Unload(CDM::InhalerConfigurationData& data) const
   else if (HasConfigurationFile())
     data.ConfigurationFile(m_ConfigurationFile);
 }
-
+//-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::HasConfiguration() const
 {
   return m_Configuration != nullptr;
 }
+//-----------------------------------------------------------------------------
 SEInhaler& SEInhalerConfiguration::GetConfiguration()
 {
   m_ConfigurationFile = "";
@@ -81,30 +82,44 @@ SEInhaler& SEInhalerConfiguration::GetConfiguration()
     m_Configuration = new SEInhaler(m_Substances);
   return *m_Configuration;
 }
+//-----------------------------------------------------------------------------
 const SEInhaler* SEInhalerConfiguration::GetConfiguration() const
 {
   return m_Configuration;
 }
-
+//-----------------------------------------------------------------------------
+const char* SEInhalerConfiguration::GetConfigurationFile_cStr() const
+{
+  return m_ConfigurationFile.c_str();
+}
+//-----------------------------------------------------------------------------
 std::string SEInhalerConfiguration::GetConfigurationFile() const
 {
   return m_ConfigurationFile;
 }
+//-----------------------------------------------------------------------------
+void SEInhalerConfiguration::SetConfigurationFile(const char* fileName)
+{
+  SetConfigurationFile(std::string{ fileName });
+}
+//-----------------------------------------------------------------------------
 void SEInhalerConfiguration::SetConfigurationFile(const std::string& fileName)
 {
   if (m_Configuration != nullptr)
     SAFE_DELETE(m_Configuration);
   m_ConfigurationFile = fileName;
 }
+//-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::HasConfigurationFile() const
 {
   return m_ConfigurationFile.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEInhalerConfiguration::InvalidateConfigurationFile()
 {
   m_ConfigurationFile = "";
 }
-
+//-----------------------------------------------------------------------------
 void SEInhalerConfiguration::ToString(std::ostream& str) const
 {
   str << "Inhaler Configuration";
@@ -127,4 +142,5 @@ void SEInhalerConfiguration::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

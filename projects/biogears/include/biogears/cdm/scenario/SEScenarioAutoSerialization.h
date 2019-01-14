@@ -53,12 +53,14 @@ public:
   virtual void InvalidateReloadState();
 
   virtual bool HasDirectory() const;
-  virtual std::string GetDirectory() const;
+  virtual const char* GetDirectory() const;
+  virtual void SetDirectory(const char* dir);
   virtual void SetDirectory(const std::string& dir);
   virtual void InvalidateDirectory();
 
   virtual bool HasFileName() const;
-  virtual std::string GetFileName() const;
+  virtual const char* GetFileName() const;
+  virtual void SetFileName(const char* dir);
   virtual void SetFileName(const std::string& dir);
   virtual void InvalidateFileName();
 

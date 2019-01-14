@@ -30,6 +30,7 @@ public:
   virtual bool LoadSubstanceDirectory();
 
   virtual const std::vector<SESubstance*>& GetSubstances() const;
+  virtual SESubstance* GetSubstance(const char* name) const;
   virtual SESubstance* GetSubstance(const std::string& name) const;
   virtual void AddSubstance(SESubstance& substance);
 
@@ -44,6 +45,7 @@ public:
   virtual const std::vector<SESubstance*>& GetActiveLiquids() const;
 
   virtual const std::vector<SESubstanceCompound*>& GetCompounds() const;
+  virtual SESubstanceCompound* GetCompound(const char* name) const;
   virtual SESubstanceCompound* GetCompound(const std::string& name) const;
   virtual void AddCompound(SESubstanceCompound& compound);
 
@@ -53,6 +55,7 @@ public:
   virtual void RemoveActiveCompound(SESubstanceCompound& compound);
   virtual void RemoveActiveCompounds(const std::vector<SESubstanceCompound*>& compounds);
 
+  virtual SESubstance* ReadSubstanceFile(const char* xmlFile);
   virtual SESubstance* ReadSubstanceFile(const std::string& xmlFile);
 
 protected:

@@ -20,16 +20,16 @@ SEHemorrhage::SEHemorrhage()
   : SEPatientAction()
 {
   m_Compartment = ""; //User input, location of hemorrhage
-  m_MCIS;
+  //m_MCIS;
   m_InitialRate = nullptr; //User input, initial rate of bleeding
   m_BleedResistance = nullptr; //Maps input to resistance on bleeding path from specified compartment
 }
-
+//-----------------------------------------------------------------------------
 SEHemorrhage::~SEHemorrhage()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEHemorrhage::Clear()
 {
   SEPatientAction::Clear();
@@ -39,17 +39,17 @@ void SEHemorrhage::Clear()
   SAFE_DELETE(m_InitialRate);
   SAFE_DELETE(m_BleedResistance);
 }
-
+//-----------------------------------------------------------------------------
 bool SEHemorrhage::IsValid() const
 {
   return SEPatientAction::IsValid() && HasCompartment() && HasInitialRate();
 }
-
+//-----------------------------------------------------------------------------
 bool SEHemorrhage::IsActive() const
 {
   return IsValid() ? !(m_InitialRate->GetValue(VolumePerTimeUnit::mL_Per_min) <= ZERO_APPROX) : false;
 }
-
+//-----------------------------------------------------------------------------
 bool SEHemorrhage::Load(const CDM::HemorrhageData& in)
 {
   SEPatientAction::Load(in);
@@ -71,14 +71,14 @@ bool SEHemorrhage::Load(const CDM::HemorrhageData& in)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::HemorrhageData* SEHemorrhage::Unload() const
 {
   CDM::HemorrhageData* data(new CDM::HemorrhageData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEHemorrhage::Unload(CDM::HemorrhageData& data) const
 {
   SEPatientAction::Unload(data);
@@ -87,7 +87,7 @@ void SEHemorrhage::Unload(CDM::HemorrhageData& data) const
   if (HasInitialRate())
     data.InitialRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_InitialRate->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 void SEHemorrhage::SetMCIS()
 {
   bool found = false;
@@ -125,44 +125,59 @@ void SEHemorrhage::SetMCIS()
     m_MCIS.insert(m_MCIS.end(), { 2, 6, 4, 0 });
   }
 }
+//-----------------------------------------------------------------------------
 bool SEHemorrhage::HasMCIS() const
 {
   return !m_MCIS.empty();
 }
-
+//-----------------------------------------------------------------------------
+const char* SEHemorrhage::GetCompartment_cStr() const
+{
+  return m_Compartment.c_str();
+}
+//-----------------------------------------------------------------------------
 std::string SEHemorrhage::GetCompartment() const
 {
   return m_Compartment;
 }
+//-----------------------------------------------------------------------------
 bool SEHemorrhage::HasCompartment() const
 {
   return !m_Compartment.empty();
 }
+//-----------------------------------------------------------------------------
+void SEHemorrhage::SetCompartment(const char* name)
+{
+  return SetCompartment(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 void SEHemorrhage::SetCompartment(const std::string& name)
 {
   m_Compartment = name;
 }
-
+//-----------------------------------------------------------------------------
 void SEHemorrhage::InvalidateCompartment()
 {
   m_Compartment = "";
 }
-
+//-----------------------------------------------------------------------------
 bool SEHemorrhage::HasInitialRate() const
 {
   return m_InitialRate == nullptr ? false : true;
 }
+//-----------------------------------------------------------------------------
 SEScalarVolumePerTime& SEHemorrhage::GetInitialRate()
 {
   if (m_InitialRate == nullptr)
     m_InitialRate = new SEScalarVolumePerTime();
   return *m_InitialRate;
 }
-
+//-----------------------------------------------------------------------------
 bool SEHemorrhage::HasBleedResistance() const
 {
   return m_BleedResistance == nullptr ? false : true;
 }
+//-----------------------------------------------------------------------------
 SEScalarFlowResistance& SEHemorrhage::GetBleedResistance()
 {
   if (m_BleedResistance == nullptr) {
@@ -170,7 +185,7 @@ SEScalarFlowResistance& SEHemorrhage::GetBleedResistance()
   }
   return *m_BleedResistance;
 }
-
+//-----------------------------------------------------------------------------
 void SEHemorrhage::ToString(std::ostream& str) const
 {
   if (m_InitialRate->GetValue(VolumePerTimeUnit::mL_Per_min) < ZERO_APPROX) {
@@ -194,4 +209,5 @@ void SEHemorrhage::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

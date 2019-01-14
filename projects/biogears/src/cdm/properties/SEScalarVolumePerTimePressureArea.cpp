@@ -16,6 +16,16 @@ namespace biogears {
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2("mL/min mmHg m^2");
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2("mL/s mmHg m^2");
 
+VolumePerTimePressureAreaUnit::VolumePerTimePressureAreaUnit(const char* u)
+  : VolumePerTimePressureAreaUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimePressureAreaUnit::VolumePerTimePressureAreaUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimePressureAreaData* SEScalarVolumePerTimePressureArea::Unload() const
 {
   if (!IsValid())
@@ -24,24 +34,35 @@ CDM::ScalarVolumePerTimePressureAreaData* SEScalarVolumePerTimePressureArea::Unl
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool VolumePerTimePressureAreaUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimePressureAreaUnit::IsValidUnit(const char* unit)
 {
-  if (mL_Per_min_mmHg_m2.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_min_mmHg_m2.GetString(), unit) == 0)
     return true;
-  if (mL_Per_s_mmHg_m2.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_mmHg_m2.GetString(), unit) == 0)
     return true;
   return false;
 }
-
-const VolumePerTimePressureAreaUnit& VolumePerTimePressureAreaUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimePressureAreaUnit::IsValidUnit(const std::string& unit)
 {
-  if (mL_Per_min_mmHg_m2.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const VolumePerTimePressureAreaUnit& VolumePerTimePressureAreaUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(mL_Per_min_mmHg_m2.GetString(), unit) == 0)
     return mL_Per_min_mmHg_m2;
-  if (mL_Per_s_mmHg_m2.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s_mmHg_m2.GetString(), unit) == 0)
     return mL_Per_s_mmHg_m2;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimePressureArea unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const VolumePerTimePressureAreaUnit& VolumePerTimePressureAreaUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

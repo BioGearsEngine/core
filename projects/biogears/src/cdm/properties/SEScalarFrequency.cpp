@@ -17,6 +17,16 @@ const FrequencyUnit FrequencyUnit::Per_min("1/min");
 const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
 
+FrequencyUnit::FrequencyUnit(const char* u)
+  : FrequencyUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+FrequencyUnit::FrequencyUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarFrequencyData* SEScalarFrequency::Unload() const
 {
   if (!IsValid())
@@ -25,28 +35,39 @@ CDM::ScalarFrequencyData* SEScalarFrequency::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool FrequencyUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool FrequencyUnit::IsValidUnit(const char* unit)
 {
-  if (Per_min.GetString().compare(unit) == 0)
+  if (strcmp(Per_min.GetString(),unit) == 0)
     return true;
-  if (Per_s.GetString().compare(unit) == 0)
+  if (strcmp(Per_s.GetString(),unit) == 0)
     return true;
-  if (Hz.GetString().compare(unit) == 0)
+  if (strcmp(Hz.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool FrequencyUnit::IsValidUnit(const std::string& unit)
 {
-  if (Per_min.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(Per_min.GetString(),unit) == 0)
     return Per_min;
-  if (Per_s.GetString().compare(unit) == 0)
+  if (strcmp(Per_s.GetString(),unit) == 0)
     return Per_s;
-  if (Hz.GetString().compare(unit) == 0)
+  if (strcmp(Hz.GetString(),unit) == 0)
     return Hz;
   std::stringstream err;
   err << unit << " is not a valid Frequency unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

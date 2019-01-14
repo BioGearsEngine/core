@@ -39,8 +39,11 @@ public:
   virtual bool IsValid() const { return true; }
 
   virtual std::string GetName() const = 0;
+  virtual const char* GetName_cStr() const = 0;
 
   virtual std::string GetComment() const;
+  virtual const char* GetComment_cStr() const;
+  virtual void SetComment(const char* comment);
   virtual void SetComment(const std::string& comment);
   virtual bool HasComment() const;
   virtual void InvalidateComment();

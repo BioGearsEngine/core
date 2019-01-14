@@ -14,16 +14,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 
 namespace biogears {
+SEFluidCircuit::SEFluidCircuit(const char* name, SECircuitManager& mgr)
+  : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger())
+  , m_Mgr(mgr)
+{
+}
+//-----------------------------------------------------------------------------
 SEFluidCircuit::SEFluidCircuit(const std::string& name, SECircuitManager& mgr)
   : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }
+//-----------------------------------------------------------------------------
 SEFluidCircuit::~SEFluidCircuit()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
+SEFluidCircuitNode& SEFluidCircuit::CreateNode(const char* name)
+{
+  return CreateNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 SEFluidCircuitNode& SEFluidCircuit::CreateNode(const std::string& name)
 {
   SEFluidCircuitNode* node = m_Mgr.GetFluidNode(name);
@@ -32,6 +44,12 @@ SEFluidCircuitNode& SEFluidCircuit::CreateNode(const std::string& name)
   AddNode(*node);
   return *node;
 }
+//-----------------------------------------------------------------------------
+SEFluidCircuitPath& SEFluidCircuit::CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const char* name)
+{
+  return CreatePath(src, tgt, std::string{ name });
+}
+//-----------------------------------------------------------------------------
 SEFluidCircuitPath& SEFluidCircuit::CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name)
 {
   SEFluidCircuitPath* path = m_Mgr.GetFluidPath(name);
@@ -40,7 +58,7 @@ SEFluidCircuitPath& SEFluidCircuit::CreatePath(SEFluidCircuitNode& src, SEFluidC
   AddPath(*path);
   return *path;
 }
-
+//-----------------------------------------------------------------------------
 void SEFluidCircuit::AddCircuit(SEFluidCircuit& circuit)
 {
   for (SEFluidCircuitNode* node : circuit.GetNodes())
@@ -50,4 +68,5 @@ void SEFluidCircuit::AddCircuit(SEFluidCircuit& circuit)
   for (SEFluidCircuitNode* node : circuit.GetReferenceNodes())
     AddReferenceNode(*node);
 }
+//-----------------------------------------------------------------------------
 }

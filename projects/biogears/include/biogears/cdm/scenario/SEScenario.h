@@ -38,25 +38,31 @@ protected:
   void Unload(CDM::ScenarioData& data) const;
 
 public:
+  bool Load(const char* scenarioFile);
   bool Load(const std::string& scenarioFile);
   bool IsValid() const;
 
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();
 
-  virtual std::string GetPatientFile() const;
+  virtual const char* GetPatientFile() const;
+  virtual void SetPatientFile(const char* PatientFile);
   virtual void SetPatientFile(const std::string& PatientFile);
   virtual bool HasPatientFile() const;
   virtual void InvalidatePatientFile();
 
-  virtual std::string GetDescription() const;
+  virtual const char* GetDescription() const;
+  virtual void SetDescription(const char* desc);
   virtual void SetDescription(const std::string& desc);
   virtual bool HasDescription() const;
   virtual void InvalidateDescription();
 
-  virtual std::string GetEngineStateFile() const;
+  virtual const char* GetEngineStateFile() const;
+  virtual void SetEngineStateFile(const char* file);
   virtual void SetEngineStateFile(const std::string& file);
   virtual bool HasEngineStateFile() const;
   virtual void InvalidateEngineStateFile();

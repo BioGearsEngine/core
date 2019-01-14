@@ -37,6 +37,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "ChronicPericardialEffusion"; }
+  virtual const char* GetName_cStr() const { return "ChronicPericardialEffusion"; }
 
   virtual bool HasAccumulatedVolume() const;
   virtual SEScalarVolume& GetAccumulatedVolume();

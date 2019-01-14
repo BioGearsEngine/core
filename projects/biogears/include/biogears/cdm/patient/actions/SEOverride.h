@@ -40,13 +40,13 @@ public:
   static constexpr const char* TypeTag() { return "SEOverride"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::OverrideData& in);
-  virtual CDM::OverrideData* Unload() const;
+  virtual CDM::OverrideData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::OverrideData& data) const;
@@ -220,7 +220,7 @@ public:
   double GetTidalVolumeOverride(const VolumeUnit& unit) const;
   bool HasRespiratoryOverride() const;
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   CDM::enumOnOff m_OverrideState;

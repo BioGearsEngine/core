@@ -63,7 +63,11 @@ void SEAnesthesiaMachineOxygenBottle::Merge(const SEAnesthesiaMachineOxygenBottl
   COPY_PROPERTY(Volume);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const std::string& name)
 {
   if (name == "Volume")

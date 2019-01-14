@@ -270,28 +270,28 @@ void CommonDataModelTest::TestThermalFlowHierarchy(SETestSuite& testSuite, SESub
 void CommonDataModelTest::TestFlow(SETestCase& testCase, SEThermalCompartment& cmpt, double inflow_kcal_Per_s, double outflow_kcal_Per_s)
 {
   if (!cmpt.HasHeatTransferRateIn())
-    testCase.AddFailure(cmpt.GetName() + " does not have Inflow");
+    testCase.AddFailure(std::string{ cmpt.GetName() }+ " does not have Inflow");
   if (!cmpt.HasHeatTransferRateOut())
-    testCase.AddFailure(cmpt.GetName() + " does not have Outflow");
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+    testCase.AddFailure(std::string{ cmpt.GetName() }+ " does not have Outflow");
+  m_ss << std::string{ cmpt.GetName() }+ " Inflow : " << cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetHeatTransferRateIn(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Inflow : " << cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
+  m_ss << std::string{ cmpt.GetName() }+ " Inflow : " << cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " vs. inflow_kcal_Per_s " << inflow_kcal_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s), inflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const InFlow is not correct : " << cmpt.GetHeatTransferRateIn().GetValue(PowerUnit::kcal_Per_s) << " expected " << inflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  m_ss << std::string{ cmpt.GetName() }+ " Outflow : " << cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetHeatTransferRateOut(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;
     testCase.AddFailure(m_ss);
   }
-  m_ss << cmpt.GetName() + " Outflow : " << cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
+  m_ss << std::string{ cmpt.GetName() }+ " Outflow : " << cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " vs. outflow_kcal_Per_s " << outflow_kcal_Per_s;
   Info(m_ss);
   if (GeneralMath::PercentTolerance(cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s), outflow_kcal_Per_s) > m_PercentTolerance) {
     m_ss << cmpt.GetName() << " const OutFlow is not correct : " << cmpt.GetHeatTransferRateOut().GetValue(PowerUnit::kcal_Per_s) << " expected " << outflow_kcal_Per_s;

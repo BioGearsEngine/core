@@ -31,24 +31,24 @@ SEEnvironmentChange::SEEnvironmentChange(SESubstanceManager& substances)
   m_Conditions = nullptr;
   InvalidateConditionsFile();
 }
-
+//-----------------------------------------------------------------------------
 SEEnvironmentChange::~SEEnvironmentChange()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEEnvironmentChange::Clear()
 {
   SEEnvironmentAction::Clear();
   InvalidateConditionsFile();
   SAFE_DELETE(m_Conditions);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentChange::IsValid() const
 {
   return SEEnvironmentAction::IsValid() && (HasConditions() || HasConditionsFile());
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in)
 {
   SEEnvironmentAction::Load(in);
@@ -58,14 +58,14 @@ bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in)
     GetConditions().Load(in.Conditions().get());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::EnvironmentChangeData* SEEnvironmentChange::Unload() const
 {
   CDM::EnvironmentChangeData* data = new CDM::EnvironmentChangeData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEEnvironmentChange::Unload(CDM::EnvironmentChangeData& data) const
 {
   SEEnvironmentAction::Unload(data);
@@ -74,11 +74,12 @@ void SEEnvironmentChange::Unload(CDM::EnvironmentChangeData& data) const
   else if (HasConditionsFile())
     data.ConditionsFile(m_ConditionsFile);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEnvironmentChange::HasConditions() const
 {
   return m_Conditions != nullptr;
 }
+//-----------------------------------------------------------------------------
 SEEnvironmentalConditions& SEEnvironmentChange::GetConditions()
 {
   m_ConditionsFile = "";
@@ -86,30 +87,39 @@ SEEnvironmentalConditions& SEEnvironmentChange::GetConditions()
     m_Conditions = new SEEnvironmentalConditions(m_Substances);
   return *m_Conditions;
 }
+//-----------------------------------------------------------------------------
 const SEEnvironmentalConditions* SEEnvironmentChange::GetConditions() const
 {
   return m_Conditions;
 }
-
-std::string SEEnvironmentChange::GetConditionsFile() const
+//-----------------------------------------------------------------------------
+const char* SEEnvironmentChange::GetConditionsFile() const
 {
-  return m_ConditionsFile;
+  return m_ConditionsFile.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEEnvironmentChange::SetConditionsFile(const char* fileName)
+{
+  SetConditionsFile(std::string{ fileName });
+}
+//-----------------------------------------------------------------------------
 void SEEnvironmentChange::SetConditionsFile(const std::string& fileName)
 {
   if (m_Conditions != nullptr)
     SAFE_DELETE(m_Conditions);
   m_ConditionsFile = fileName;
 }
+//-----------------------------------------------------------------------------
 bool SEEnvironmentChange::HasConditionsFile() const
 {
   return m_ConditionsFile.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SEEnvironmentChange::InvalidateConditionsFile()
 {
   m_ConditionsFile = "";
 }
-
+//-----------------------------------------------------------------------------
 void SEEnvironmentChange::ToString(std::ostream& str) const
 {
   str << "Environment Action : Environment Change";
@@ -150,4 +160,5 @@ void SEEnvironmentChange::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

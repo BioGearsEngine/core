@@ -50,7 +50,7 @@ bool SETestSuite::Load(const CDM::TestSuite& in)
   std::string sData;
   for (unsigned int i = 0; i < in.Requirement().size(); i++) {
     sData = (std::string)in.Requirement().at(i);
-    if (sData != nullptr)
+    if (!sData.empty())
       m_Requirements.push_back(sData);
   }
 
@@ -93,7 +93,7 @@ void SETestSuite::Unload(CDM::TestSuite& data) const
   std::string sData;
   for (unsigned int i = 0; i < m_Requirements.size(); i++) {
     sData = m_Requirements.at(i);
-    if (sData != nullptr)
+    if (!sData.empty())
       data.Requirement().push_back(sData);
   }
   for (unsigned int i = 0; i < m_SuiteEqualError.size(); i++) {
@@ -124,6 +124,10 @@ std::string SETestSuite::GetName() const
   return m_Name;
 }
 
+const char* SETestSuite::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
 void SETestSuite::PerformSuite(bool performed)
 {
   m_Performed = performed;

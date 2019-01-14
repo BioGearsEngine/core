@@ -21,30 +21,31 @@ SETestCase::SETestCase(Logger* logger)
 {
   SETestCase("default", logger);
 }
+//-----------------------------------------------------------------------------
 SETestCase::SETestCase(const std::string& name, Logger* logger)
   : Loggable(logger)
 {
   m_Name = name;
 }
-
+//-----------------------------------------------------------------------------
 SETestCase::~SETestCase()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SETestCase::Clear()
 {
   m_Failure.clear();
   DELETE_VECTOR(m_CaseEqualsErrors);
 }
-
+//-----------------------------------------------------------------------------
 void SETestCase::Reset()
 {
   m_Failure.clear();
   m_Duration.SetValue(0, TimeUnit::s);
   DELETE_VECTOR(m_CaseEqualsErrors);
 }
-
+//-----------------------------------------------------------------------------
 bool SETestCase::Load(const CDM::TestCase& in)
 {
   Reset();
@@ -69,14 +70,14 @@ bool SETestCase::Load(const CDM::TestCase& in)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 std::unique_ptr<CDM::TestCase> SETestCase::Unload() const
 {
   std::unique_ptr<CDM::TestCase> data(new CDM::TestCase());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SETestCase::Unload(CDM::TestCase& data) const
 {
   data.Name(m_Name);
@@ -91,46 +92,55 @@ void SETestCase::Unload(CDM::TestCase& data) const
     data.CaseEqualError().push_back(*m_CaseEqualsErrors.at(i)->Unload());
   }
 }
-
+//-----------------------------------------------------------------------------
 void SETestCase::SetName(const std::string& Name)
 {
   m_Name = Name;
 }
-
+//-----------------------------------------------------------------------------
 std::string SETestCase::GetName() const
 {
   return m_Name;
 }
-
+//-----------------------------------------------------------------------------
+const char* SETestCase::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
 SEScalarTime& SETestCase::GetDuration()
 {
   return m_Duration;
 }
-
+//-----------------------------------------------------------------------------
 void SETestCase::AddFailure(std::stringstream& err)
 {
   AddFailure(err.str());
   err.str("");
   err.clear();
 }
+//-----------------------------------------------------------------------------
 void SETestCase::AddFailure(const std::string& err)
 {
   m_Failure.push_back(err);
   Error(err);
 }
+//-----------------------------------------------------------------------------
 const std::vector<std::string>& SETestCase::GetFailures()
 {
   return m_Failure;
 }
-
+//-----------------------------------------------------------------------------
 SETestErrorStatistics& SETestCase::CreateErrorStatistic()
 {
   SETestErrorStatistics* err = new SETestErrorStatistics(GetLogger());
   m_CaseEqualsErrors.push_back(err);
   return *err;
 }
+//-----------------------------------------------------------------------------
 const std::vector<SETestErrorStatistics*>& SETestCase::GetErrorStatistics() const
 {
   return m_CaseEqualsErrors;
 }
+//-----------------------------------------------------------------------------
 }

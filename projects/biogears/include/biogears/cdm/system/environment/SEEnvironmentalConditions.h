@@ -52,12 +52,16 @@ public:
   virtual void Clear();
 
   virtual bool Load(const CDM::EnvironmentalConditionsData& in);
+  virtual bool Load(const char* environmentFile);
   virtual bool Load(const std::string& environmentFile);
   virtual CDM::EnvironmentalConditionsData* Unload() const;
 
+  virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
+  virtual void SetName(const char* name);
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();

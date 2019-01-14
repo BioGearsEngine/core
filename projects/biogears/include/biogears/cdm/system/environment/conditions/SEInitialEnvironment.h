@@ -32,12 +32,15 @@ protected:
 
 public:
   virtual std::string GetName() const { return "InitialEnvironment"; }
+  virtual const char* GetName_cStr() const { return "InitialEnvironment"; }
 
   virtual bool HasConditions() const;
   virtual SEEnvironmentalConditions& GetConditions();
   virtual const SEEnvironmentalConditions* GetConditions() const;
 
   virtual std::string GetConditionsFile() const;
+  virtual const char* GetConditionsFile_cStr() const;
+  virtual void SetConditionsFile(const char* fileName);
   virtual void SetConditionsFile(const std::string& fileName);
   virtual bool HasConditionsFile() const;
   virtual void InvalidateConditionsFile();

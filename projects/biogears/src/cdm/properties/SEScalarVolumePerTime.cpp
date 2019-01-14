@@ -22,6 +22,16 @@ const VolumePerTimeUnit VolumePerTimeUnit::m3_Per_s("m^3/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_min("mL/min");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_hr("mL/hr");
 
+VolumePerTimeUnit::VolumePerTimeUnit(const char* u)
+  : VolumePerTimeUnit(std::string{ u })
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimeUnit::VolumePerTimeUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimeData* SEScalarVolumePerTime::Unload() const
 {
   if (!IsValid())
@@ -30,48 +40,59 @@ CDM::ScalarVolumePerTimeData* SEScalarVolumePerTime::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool VolumePerTimeUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimeUnit::IsValidUnit(const char* unit)
 {
-  if (L_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_s.GetString(),unit) == 0)
     return true;
-  if (mL_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s.GetString(),unit) == 0)
     return true;
-  if (mL_Per_day.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_day.GetString(),unit) == 0)
     return true;
-  if (L_Per_day.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_day.GetString(),unit) == 0)
     return true;
-  if (L_Per_min.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_min.GetString(),unit) == 0)
     return true;
-  if (m3_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(m3_Per_s.GetString(),unit) == 0)
     return true;
-  if (mL_Per_min.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_min.GetString(),unit) == 0)
     return true;
-  if (mL_Per_hr.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_hr.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const VolumePerTimeUnit& VolumePerTimeUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool VolumePerTimeUnit::IsValidUnit(const std::string& unit)
 {
-  if (L_Per_s.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const VolumePerTimeUnit& VolumePerTimeUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(L_Per_s.GetString(),unit) == 0)
     return L_Per_s;
-  if (mL_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_s.GetString(),unit) == 0)
     return mL_Per_s;
-  if (mL_Per_day.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_day.GetString(),unit) == 0)
     return mL_Per_day;
-  if (L_Per_day.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_day.GetString(),unit) == 0)
     return L_Per_day;
-  if (L_Per_min.GetString().compare(unit) == 0)
+  if (strcmp(L_Per_min.GetString(),unit) == 0)
     return L_Per_min;
-  if (m3_Per_s.GetString().compare(unit) == 0)
+  if (strcmp(m3_Per_s.GetString(),unit) == 0)
     return m3_Per_s;
-  if (mL_Per_min.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_min.GetString(),unit) == 0)
     return mL_Per_min;
-  if (mL_Per_hr.GetString().compare(unit) == 0)
+  if (strcmp(mL_Per_hr.GetString(),unit) == 0)
     return mL_Per_hr;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTime unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const VolumePerTimeUnit& VolumePerTimeUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

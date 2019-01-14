@@ -134,7 +134,11 @@ void SECardiovascularSystem::Clear()
   SAFE_DELETE(m_SystolicArterialPressure);
 }
 //-------------------------------------------------------------------------------
-
+const SEScalar* SECardiovascularSystem::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name } );
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
 {
   if (name.compare(idArterialPressure) == 0)
@@ -941,9 +945,9 @@ double SECardiovascularSystem::GetSystolicArterialPressure(const PressureUnit& u
   return m_SystolicArterialPressure->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-Tree<std::string> SECardiovascularSystem::GetPhysiologyRequestGraph() const
+Tree<const char*> SECardiovascularSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<std::string>{classname()}
+  return Tree<const char*>{classname()}
     .emplace_back(idArterialPressure)
     .emplace_back(idBloodVolume)
     .emplace_back(idCardiacIndex)

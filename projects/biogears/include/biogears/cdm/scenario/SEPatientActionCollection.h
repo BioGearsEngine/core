@@ -119,6 +119,7 @@ public:
 
   bool HasHemorrhage() const;
   const std::map<std::string, SEHemorrhage*>& GetHemorrhages() const;
+  void RemoveHemorrhage(const char* cmpt);
   void RemoveHemorrhage(const std::string& cmpt);
 
   bool HasIntubation() const;
@@ -141,6 +142,7 @@ public:
 
   bool HasPainStimulus() const;
   const std::map<std::string, SEPainStimulus*>& GetPainStimuli() const;
+  void RemovePainStimulus(const char* loc);
   void RemovePainStimulus(const std::string& loc);
 
   bool HasPericardialEffusion() const;

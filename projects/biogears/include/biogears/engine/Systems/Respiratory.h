@@ -58,33 +58,33 @@ protected:
   BioGears& m_data;
 
 public:
-  virtual ~Respiratory();
+  virtual ~Respiratory() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
   static constexpr char const * const  TypeTag() { return "Respiratory"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear();
+  void Clear() override;
 
   // Set members to a stable homeostatic state
-  void Initialize();
+  void Initialize() override;
 
   // Load a state
   virtual bool Load(const CDM::BioGearsRespiratorySystemData& in);
-  virtual CDM::BioGearsRespiratorySystemData* Unload() const;
+  virtual CDM::BioGearsRespiratorySystemData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::BioGearsRespiratorySystemData& data) const;
 
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
-  void SetUp();
+  void SetUp() override;
 
 public:
-  void AtSteadyState();
-  void PreProcess();
-  void Process();
-  void PostProcess();
+  void AtSteadyState() override;
+  void PreProcess() override;
+  void Process() override;
+  void PostProcess() override;
 
   bool CalculatePulmonaryFunctionTest(SEPulmonaryFunctionTest& pft);
 

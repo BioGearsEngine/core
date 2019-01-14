@@ -40,6 +40,7 @@ protected:
   virtual void Unload(CDM::ActiveHeatingData& data) const;
 
 public:
+  virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool HasPower() const;

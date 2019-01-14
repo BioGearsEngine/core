@@ -16,6 +16,16 @@ namespace biogears {
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
+ElectricPotentialUnit::ElectricPotentialUnit(const char* u)
+  : ElectricPotentialUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+ElectricPotentialUnit::ElectricPotentialUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
 {
   if (!IsValid())
@@ -24,24 +34,35 @@ CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool ElectricPotentialUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricPotentialUnit::IsValidUnit(const char* unit)
 {
-  if (V.GetString().compare(unit) == 0)
+  if (strcmp(V.GetString(),unit) == 0)
     return true;
-  if (mV.GetString().compare(unit) == 0)
+  if (strcmp(mV.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool ElectricPotentialUnit::IsValidUnit(const std::string& unit)
 {
-  if (V.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(V.GetString(),unit) == 0)
     return V;
-  if (mV.GetString().compare(unit) == 0)
+  if (strcmp(mV.GetString(),unit) == 0)
     return mV;
   std::stringstream err;
   err << unit << " is not a valid Electric Potential unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+  //-----------------------------------------------------------------------------
 }

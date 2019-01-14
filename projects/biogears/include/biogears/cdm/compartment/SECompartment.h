@@ -30,10 +30,11 @@ class SECircuitManager;
 
 class BIOGEARS_API SECompartment : public Loggable {
 protected:
+  SECompartment(const char* name, Logger* logger);
   SECompartment(const std::string& name, Logger* logger);
 
 public:
-  virtual ~SECompartment();
+  virtual ~SECompartment() override;
 
   virtual void Clear();
 
@@ -45,7 +46,9 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
 
+  virtual const SEScalar* GetScalar(const char* name) = 0;
   virtual const SEScalar* GetScalar(const std::string& name) = 0;
 
   virtual bool HasChildren() const = 0; // Compartments with children contain 'read only' scalars

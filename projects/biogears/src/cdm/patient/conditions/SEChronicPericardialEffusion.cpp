@@ -19,56 +19,56 @@ SEChronicPericardialEffusion::SEChronicPericardialEffusion()
 {
   m_AccumulatedVolume = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEChronicPericardialEffusion::~SEChronicPericardialEffusion()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEChronicPericardialEffusion::Clear()
 {
   SEPatientCondition::Clear();
   SAFE_DELETE(m_AccumulatedVolume);
 }
-
+//-----------------------------------------------------------------------------
 bool SEChronicPericardialEffusion::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasAccumulatedVolume();
 }
-
+//-----------------------------------------------------------------------------
 bool SEChronicPericardialEffusion::Load(const CDM::ChronicPericardialEffusionData& in)
 {
   SEPatientCondition::Load(in);
   GetAccumulatedVolume().Load(in.AccumulatedVolume());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::ChronicPericardialEffusionData* SEChronicPericardialEffusion::Unload() const
 {
   CDM::ChronicPericardialEffusionData* data(new CDM::ChronicPericardialEffusionData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEChronicPericardialEffusion::Unload(CDM::ChronicPericardialEffusionData& data) const
 {
   SEPatientCondition::Unload(data);
   if (m_AccumulatedVolume != nullptr)
     data.AccumulatedVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_AccumulatedVolume->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEChronicPericardialEffusion::HasAccumulatedVolume() const
 {
   return m_AccumulatedVolume == nullptr ? false : m_AccumulatedVolume->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 SEScalarVolume& SEChronicPericardialEffusion::GetAccumulatedVolume()
 {
   if (m_AccumulatedVolume == nullptr)
     m_AccumulatedVolume = new SEScalarVolume();
   return *m_AccumulatedVolume;
 }
-
+//-----------------------------------------------------------------------------
 void SEChronicPericardialEffusion::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Pericardial Effusion";
@@ -76,4 +76,5 @@ void SEChronicPericardialEffusion::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

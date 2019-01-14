@@ -17,13 +17,14 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API OsmolarityUnit : public CCompoundUnit {
 public:
-  OsmolarityUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
+  OsmolarityUnit(const char* u);
+  OsmolarityUnit(const std::string& u);
+
   virtual ~OsmolarityUnit() = default;
 
+  static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
+  static const OsmolarityUnit& GetCompoundUnit(const char* unit);
   static const OsmolarityUnit& GetCompoundUnit(const std::string& unit);
 
   static const OsmolarityUnit Osm_Per_L;

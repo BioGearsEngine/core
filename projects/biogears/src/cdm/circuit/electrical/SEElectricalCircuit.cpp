@@ -19,10 +19,22 @@ SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManag
   , m_Mgr(mgr)
 {
 }
+//-------------------------------------------------------------------------------
+SEElectricalCircuit::SEElectricalCircuit(const char* name, SECircuitManager& mgr)
+  : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
+  , m_Mgr(mgr)
+{
+}
+//-------------------------------------------------------------------------------
 SEElectricalCircuit::~SEElectricalCircuit()
 {
 }
-
+//-------------------------------------------------------------------------------
+SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const char* name)
+{
+  return CreateNode(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const std::string& name)
 {
   SEElectricalCircuitNode* node = m_Mgr.GetElectricalNode(name);
@@ -31,6 +43,12 @@ SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const std::string& name
   AddNode(*node);
   return *node;
 }
+//-------------------------------------------------------------------------------
+SEElectricalCircuitPath& SEElectricalCircuit::CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name)
+{
+  return CreatePath(src, tgt, std::string{ name });
+}
+//-------------------------------------------------------------------------------
 SEElectricalCircuitPath& SEElectricalCircuit::CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name)
 {
   SEElectricalCircuitPath* path = m_Mgr.GetElectricalPath(name);
@@ -39,7 +57,7 @@ SEElectricalCircuitPath& SEElectricalCircuit::CreatePath(SEElectricalCircuitNode
   AddPath(*path);
   return *path;
 }
-
+//-------------------------------------------------------------------------------
 void SEElectricalCircuit::AddCircuit(SEElectricalCircuit& circuit)
 {
   for (SEElectricalCircuitNode* node : circuit.GetNodes())
@@ -49,4 +67,5 @@ void SEElectricalCircuit::AddCircuit(SEElectricalCircuit& circuit)
   for (SEElectricalCircuitNode* node : circuit.GetReferenceNodes())
     AddReferenceNode(*node);
 }
+//-------------------------------------------------------------------------------
 }

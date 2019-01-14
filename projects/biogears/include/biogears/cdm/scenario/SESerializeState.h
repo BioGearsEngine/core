@@ -20,23 +20,23 @@ namespace biogears {
 class BIOGEARS_API SESerializeState : public SEAction {
 public:
   SESerializeState();
-  virtual ~SESerializeState();
+  virtual ~SESerializeState() override;
 
   static constexpr const char* TypeTag() { return "SESerializeState"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::SerializeStateData& in);
-  virtual CDM::SerializeStateData* Unload() const;
+  virtual CDM::SerializeStateData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::SerializeStateData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
   virtual CDM::enumSerializationType::value GetType() const;
   virtual void SetType(CDM::enumSerializationType::value t);
@@ -45,6 +45,8 @@ public:
 
   virtual bool HasFilename() const;
   virtual std::string GetFilename() const;
+  virtual const char* GetFilename_cStr() const;
+  virtual void SetFilename(const char* filename);
   virtual void SetFilename(const std::string& filename);
   virtual void InvalidateFilename();
 

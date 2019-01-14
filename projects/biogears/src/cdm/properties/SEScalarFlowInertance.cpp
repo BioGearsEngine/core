@@ -19,6 +19,16 @@ const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_mL("cmH2O s^2/mL");
 const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_L("cmH2O s^2/L");
 const FlowInertanceUnit FlowInertanceUnit::Pa_s2_Per_m3("Pa s^2/m^3");
 
+FlowInertanceUnit::FlowInertanceUnit(const char* u)
+  : FlowInertanceUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+FlowInertanceUnit::FlowInertanceUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarFlowInertanceData* SEScalarFlowInertance::Unload() const
 {
   if (!IsValid())
@@ -27,36 +37,47 @@ CDM::ScalarFlowInertanceData* SEScalarFlowInertance::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool FlowInertanceUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool FlowInertanceUnit::IsValidUnit(const char* unit)
 {
-  if (mmHg_s2_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_s2_Per_mL.GetString(), unit) == 0)
     return true;
-  if (mmHg_s2_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_s2_Per_L.GetString(), unit) == 0)
     return true;
-  if (cmH2O_s2_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(cmH2O_s2_Per_mL.GetString(), unit) == 0)
     return true;
-  if (cmH2O_s2_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(cmH2O_s2_Per_L.GetString(), unit) == 0)
     return true;
-  if (Pa_s2_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(Pa_s2_Per_m3.GetString(), unit) == 0)
     return true;
   return false;
 }
-
-const FlowInertanceUnit& FlowInertanceUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool FlowInertanceUnit::IsValidUnit(const std::string& unit)
 {
-  if (mmHg_s2_Per_mL.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const FlowInertanceUnit& FlowInertanceUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(mmHg_s2_Per_mL.GetString(), unit) == 0)
     return mmHg_s2_Per_mL;
-  if (mmHg_s2_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(mmHg_s2_Per_L.GetString(), unit) == 0)
     return mmHg_s2_Per_L;
-  if (cmH2O_s2_Per_mL.GetString().compare(unit) == 0)
+  if (strcmp(cmH2O_s2_Per_mL.GetString(), unit) == 0)
     return cmH2O_s2_Per_mL;
-  if (cmH2O_s2_Per_L.GetString().compare(unit) == 0)
+  if (strcmp(cmH2O_s2_Per_L.GetString(), unit) == 0)
     return cmH2O_s2_Per_L;
-  if (Pa_s2_Per_m3.GetString().compare(unit) == 0)
+  if (strcmp(Pa_s2_Per_m3.GetString(), unit) == 0)
     return Pa_s2_Per_m3;
   std::stringstream err;
   err << unit << " is not a valid FlowInertance unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const FlowInertanceUnit& FlowInertanceUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
 }

@@ -54,6 +54,7 @@ public:
   virtual ~SESubstanceTransportVertex() {}
 
   virtual std::string GetName() const = 0;
+  virtual const char* GetName_cStr() const = 0;
 
 protected:
   virtual bool HasQuantity() const = 0;
@@ -74,6 +75,7 @@ public:
   virtual ~SESubstanceTransportEdge() {}
 
   virtual std::string GetName() const = 0;
+  virtual const char* GetName_cStr() const = 0;
 
 protected:
   virtual bool HasFlux() const = 0;

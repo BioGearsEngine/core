@@ -33,6 +33,7 @@ public:
   virtual void Clear();
   virtual bool IsValid() const;
 
+  virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
   virtual bool Load(const CDM::SubstancePharmacodynamicsData& in);

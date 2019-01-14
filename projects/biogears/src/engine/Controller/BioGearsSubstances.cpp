@@ -1072,7 +1072,7 @@ void BioGearsSubstances::CalculateGenericClearance(double volumeCleared_mL, SELi
 {
   SELiquidSubstanceQuantity* subQ = cmpt.GetSubstanceQuantity(sub);
   if (subQ == nullptr)
-    throw CommonDataModelException("No Substance Quantity found for substance " + sub.GetName());
+    throw CommonDataModelException(std::string{ "No Substance Quantity found for substance " } +sub.GetName());
   //GetMass and Concentration from the compartment
   double mass_ug = subQ->GetMass(MassUnit::ug);
   double concentration_ug_Per_mL = subQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
@@ -1111,7 +1111,7 @@ void BioGearsSubstances::CalculateGenericClearance(double VolumeCleared_mL, SETi
 {
   SELiquidSubstanceQuantity* subQ = m_data.GetCompartments().GetIntracellularFluid(tissue).GetSubstanceQuantity(sub);
   if (subQ == nullptr)
-    throw CommonDataModelException("No Substance Quantity found for substance " + sub.GetName());
+    throw CommonDataModelException(std::string{"No Substance Quantity found for substance"} + sub.GetName());
   //GetMass and Concentration from the compartment
   double mass_ug = subQ->GetMass(MassUnit::ug);
   double concentration_ug_Per_mL;
@@ -1151,7 +1151,7 @@ void BioGearsSubstances::CalculateGenericExcretion(double VascularFlow_mL_Per_s,
 {
   SELiquidSubstanceQuantity* subQ = m_data.GetCompartments().GetIntracellularFluid(tissue).GetSubstanceQuantity(sub);
   if (subQ == nullptr)
-    throw CommonDataModelException("No Substance Quantity found for substance " + sub.GetName());
+    throw CommonDataModelException(std::string{"No Substance Quantity found for substance"} + sub.GetName());
   double concentration_ug_Per_mL;
   SEScalarMassPerVolume concentration;
   if (sub.HasPK()) {
@@ -1304,13 +1304,13 @@ void BioGearsSubstances::SetSubstanceMolarity(SESubstance& sub, const std::vecto
   SELiquidCompartment* extracellular = nullptr;
 
   for (SETissueCompartment* cmpt : cmpts) {
-    intracellular = m_data.GetCompartments().GetLiquidCompartment(cmpt->GetName() + "Intracellular");
+    intracellular = m_data.GetCompartments().GetLiquidCompartment(std::string{ cmpt->GetName() }+"Intracellular");
     if (intracellular != nullptr) {
       intracellular->GetSubstanceQuantity(sub)->GetMolarity().Set(intracellularMolarity);
       intracellular->GetSubstanceQuantity(sub)->Balance(BalanceLiquidBy::Molarity);
     }
 
-    extracellular = m_data.GetCompartments().GetLiquidCompartment(cmpt->GetName() + "Extracellular");
+    extracellular = m_data.GetCompartments().GetLiquidCompartment(std::string{ cmpt->GetName() } +"Extracellular");
     if (extracellular != nullptr) {
       extracellular->GetSubstanceQuantity(sub)->GetMolarity().Set(extracellularMolarity);
       extracellular->GetSubstanceQuantity(sub)->Balance(BalanceLiquidBy::Molarity);

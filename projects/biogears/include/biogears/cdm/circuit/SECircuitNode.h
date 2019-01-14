@@ -30,6 +30,7 @@ class SECircuitNode : public Loggable {
   friend class SECircuit;
 
 protected:
+  SECircuitNode(const char* name, Logger* logger);
   SECircuitNode(const std::string& name, Logger* logger);
 
 public:
@@ -45,6 +46,7 @@ protected:
 
 public:
   virtual std::string GetName() const;
+  virtual const char* GetName_cStr() const;
 
   virtual bool HasPotential() const;
   virtual PotentialScalar& GetPotential();

@@ -38,6 +38,7 @@ protected:
 public:
   void SetName(const std::string& Name);
   std::string GetName() const;
+  const char* GetName_cStr() const;
 
   void PerformSuite(bool Performed);
   bool PerformedSuite();

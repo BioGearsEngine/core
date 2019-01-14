@@ -16,6 +16,16 @@ namespace biogears {
 AmountPerMassUnit AmountPerMassUnit::ct_Per_g("ct/g");
 AmountPerMassUnit AmountPerMassUnit::ct_Per_ug("ct/ug");
 
+AmountPerMassUnit::AmountPerMassUnit(const char* u)
+  : AmountPerMassUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+AmountPerMassUnit::AmountPerMassUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarAmountPerMassData* SEScalarAmountPerMass::Unload() const
 {
   if (!IsValid())
@@ -24,23 +34,39 @@ CDM::ScalarAmountPerMassData* SEScalarAmountPerMass::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
+bool AmountPerMassUnit::IsValidUnit(const char* unit)
+{
+  return IsValidUnit(std::string{ unit });
+}
+//-----------------------------------------------------------------------------
 bool AmountPerMassUnit::IsValidUnit(const std::string& unit)
 {
-  if (ct_Per_g.GetString().compare(unit) == 0)
+  std::string ct_Per_g_str = ct_Per_g.GetString();
+  std::string ct_Per_ug_str = ct_Per_ug.GetString();
+  if (ct_Per_g_str == unit)
     return true;
-  if (ct_Per_ug.GetString().compare(unit) == 0)
+  if (ct_Per_ug_str == unit)
     return true;
   return false;
 }
+//-----------------------------------------------------------------------------
+const AmountPerMassUnit& AmountPerMassUnit::GetCompoundUnit(const char* unit)
+{
+  return GetCompoundUnit(std::string{ unit });
+}
+//-----------------------------------------------------------------------------
 const AmountPerMassUnit& AmountPerMassUnit::GetCompoundUnit(const std::string& unit)
 {
-  if (ct_Per_g.GetString().compare(unit) == 0)
+  std::string ct_Per_g_str = ct_Per_g.GetString();
+  std::string ct_Per_ug_str = ct_Per_ug.GetString();
+  if (ct_Per_g_str == unit)
     return ct_Per_g;
-  if (ct_Per_ug.GetString().compare(unit) == 0)
+  if (ct_Per_ug_str == unit)
     return ct_Per_ug;
   std::stringstream err;
   err << unit << " is not a valid AmountPerMass unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
 }

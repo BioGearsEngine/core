@@ -15,24 +15,29 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 SEPupillaryResponse::SEPupillaryResponse(Logger* logger)
-  :  m_ReactivityModifier (nullptr)
-  ,m_ShapeModifier(nullptr)
-  ,m_SizeModifier(nullptr)
+  : m_ReactivityModifier(nullptr)
+  , m_ShapeModifier(nullptr)
+  , m_SizeModifier(nullptr)
 {
 }
-
+//-----------------------------------------------------------------------------
 SEPupillaryResponse::~SEPupillaryResponse()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEPupillaryResponse::Clear()
 {
   SAFE_DELETE(m_ReactivityModifier);
   SAFE_DELETE(m_ShapeModifier);
   SAFE_DELETE(m_SizeModifier);
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SEPupillaryResponse::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SEPupillaryResponse::GetScalar(const std::string& name)
 {
   if (name.compare("ReactivityModifier") == 0)
@@ -43,7 +48,7 @@ const SEScalar* SEPupillaryResponse::GetScalar(const std::string& name)
     return &GetSizeModifier();
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 bool SEPupillaryResponse::Load(const CDM::PupillaryResponseData& in)
 {
   if (in.ReactivityModifier().present())
@@ -54,14 +59,14 @@ bool SEPupillaryResponse::Load(const CDM::PupillaryResponseData& in)
     GetSizeModifier().Load(in.SizeModifier().get());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::PupillaryResponseData* SEPupillaryResponse::Unload() const
 {
   CDM::PupillaryResponseData* data = new CDM::PupillaryResponseData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEPupillaryResponse::Unload(CDM::PupillaryResponseData& data) const
 {
   if (m_ReactivityModifier != nullptr)
@@ -71,11 +76,12 @@ void SEPupillaryResponse::Unload(CDM::PupillaryResponseData& data) const
   if (m_SizeModifier != nullptr)
     data.SizeModifier(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_SizeModifier->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEPupillaryResponse::HasReactivityModifier() const
 {
   return m_ReactivityModifier == nullptr ? false : m_ReactivityModifier->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarNeg1To1& SEPupillaryResponse::GetReactivityModifier()
 {
   if (m_ReactivityModifier == nullptr) {
@@ -84,6 +90,7 @@ SEScalarNeg1To1& SEPupillaryResponse::GetReactivityModifier()
 
   return *m_ReactivityModifier;
 }
+//-----------------------------------------------------------------------------
 double SEPupillaryResponse::GetReactivityModifier() const
 {
   if (m_ReactivityModifier == nullptr) {
@@ -92,11 +99,12 @@ double SEPupillaryResponse::GetReactivityModifier() const
 
   return m_ReactivityModifier->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEPupillaryResponse::HasShapeModifier() const
 {
   return m_ShapeModifier == nullptr ? false : m_ShapeModifier->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarNeg1To1& SEPupillaryResponse::GetShapeModifier()
 {
   if (m_ShapeModifier == nullptr) {
@@ -105,6 +113,7 @@ SEScalarNeg1To1& SEPupillaryResponse::GetShapeModifier()
 
   return *m_ShapeModifier;
 }
+//-----------------------------------------------------------------------------
 double SEPupillaryResponse::GetShapeModifier() const
 {
   if (m_ShapeModifier == nullptr) {
@@ -113,11 +122,12 @@ double SEPupillaryResponse::GetShapeModifier() const
 
   return m_ShapeModifier->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SEPupillaryResponse::HasSizeModifier() const
 {
   return m_SizeModifier == nullptr ? false : m_SizeModifier->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarNeg1To1& SEPupillaryResponse::GetSizeModifier()
 {
   if (m_SizeModifier == nullptr) {
@@ -126,6 +136,7 @@ SEScalarNeg1To1& SEPupillaryResponse::GetSizeModifier()
 
   return *m_SizeModifier;
 }
+//-----------------------------------------------------------------------------
 double SEPupillaryResponse::GetSizeModifier() const
 {
   if (m_SizeModifier == nullptr) {
@@ -134,4 +145,5 @@ double SEPupillaryResponse::GetSizeModifier() const
 
   return m_SizeModifier->GetValue();
 }
+//-----------------------------------------------------------------------------
 }

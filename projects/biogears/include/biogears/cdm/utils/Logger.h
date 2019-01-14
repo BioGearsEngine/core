@@ -48,7 +48,8 @@ protected:
   virtual void Warning(std::stringstream& msg, const std::string& origin = empty) const;
   virtual void Warning(std::ostream& msg, const std::string& origin = empty) const;
 
-  virtual void Error(const std::string& msg, const std::string& origin = empty) const;
+  virtual void Error(const char* msg, const char* origin = "") const;
+  virtual void Error(const std::string msg, const std::string origin = empty) const;
   virtual void Error(std::stringstream& msg, const std::string& origin = empty) const;
   virtual void Error(std::ostream& msg, const std::string& origin = empty) const;
 

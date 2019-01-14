@@ -19,6 +19,14 @@ const MassUnit MassUnit::mg("mg");
 const MassUnit MassUnit::kg("kg");
 const MassUnit MassUnit::lb("lb");
 
+MassUnit::MassUnit(const char* u)
+  : MassUnit(std::string{ u })
+{  }
+//-------------------------------------------------------------------------------
+MassUnit::MassUnit(const std::string& u)
+  : CCompoundUnit(u)
+{  }
+//-------------------------------------------------------------------------------
 CDM::ScalarMassData* SEScalarMass::Unload() const
 {
   if (!IsValid())
@@ -27,36 +35,47 @@ CDM::ScalarMassData* SEScalarMass::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool MassUnit::IsValidUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassUnit::IsValidUnit(const char* unit)
 {
-  if (g.GetString().compare(unit) == 0)
+  if (strcmp(g.GetString(),unit) == 0)
     return true;
-  if (ug.GetString().compare(unit) == 0)
+  if (strcmp(ug.GetString(),unit) == 0)
     return true;
-  if (mg.GetString().compare(unit) == 0)
+  if (strcmp(mg.GetString(),unit) == 0)
     return true;
-  if (kg.GetString().compare(unit) == 0)
+  if (strcmp(kg.GetString(),unit) == 0)
     return true;
-  if (lb.GetString().compare(unit) == 0)
+  if (strcmp(lb.GetString(),unit) == 0)
     return true;
   return false;
 }
-
-const MassUnit& MassUnit::GetCompoundUnit(const std::string& unit)
+//-------------------------------------------------------------------------------
+bool MassUnit::IsValidUnit(const std::string& unit)
 {
-  if (g.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
+const MassUnit& MassUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(g.GetString(),unit) == 0)
     return g;
-  if (ug.GetString().compare(unit) == 0)
+  if (strcmp(ug.GetString(),unit) == 0)
     return ug;
-  if (mg.GetString().compare(unit) == 0)
+  if (strcmp(mg.GetString(),unit) == 0)
     return mg;
-  if (kg.GetString().compare(unit) == 0)
+  if (strcmp(kg.GetString(),unit) == 0)
     return kg;
-  if (lb.GetString().compare(unit) == 0)
+  if (strcmp(lb.GetString(),unit) == 0)
     return lb;
   std::stringstream err;
   err << unit << " is not a valid Mass unit";
   throw CommonDataModelException(err.str());
 }
+//-------------------------------------------------------------------------------
+const MassUnit& MassUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(unit.c_str());
+}
+//-------------------------------------------------------------------------------
 }

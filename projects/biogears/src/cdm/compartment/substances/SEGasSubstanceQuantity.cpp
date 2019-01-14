@@ -31,11 +31,12 @@ SEGasSubstanceQuantity::SEGasSubstanceQuantity(SESubstance& sub, SEGasCompartmen
   if (m_Substance.GetState() != CDM::enumSubstanceState::Gas)
     Fatal("The substance for a Gas Substance quantity must be a gas");
 }
-
+//-------------------------------------------------------------------------------
 SEGasSubstanceQuantity::~SEGasSubstanceQuantity()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::Invalidate()
 {
   if (m_PartialPressure != nullptr)
@@ -45,7 +46,7 @@ void SEGasSubstanceQuantity::Invalidate()
   if (m_VolumeFraction != nullptr)
     m_VolumeFraction->Invalidate();
 }
-
+//-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::Clear()
 {
   SAFE_DELETE(m_PartialPressure);
@@ -53,7 +54,7 @@ void SEGasSubstanceQuantity::Clear()
   SAFE_DELETE(m_VolumeFraction);
   m_Children.clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEGasSubstanceQuantity::Load(const CDM::GasSubstanceQuantityData& in)
 {
   SESubstanceQuantity::Load(in);
@@ -67,14 +68,14 @@ bool SEGasSubstanceQuantity::Load(const CDM::GasSubstanceQuantityData& in)
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::GasSubstanceQuantityData* SEGasSubstanceQuantity::Unload()
 {
   CDM::GasSubstanceQuantityData* data = new CDM::GasSubstanceQuantityData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::Unload(CDM::GasSubstanceQuantityData& data)
 {
   SESubstanceQuantity::Unload(data);
@@ -86,14 +87,19 @@ void SEGasSubstanceQuantity::Unload(CDM::GasSubstanceQuantityData& data)
   if (HasVolumeFraction())
     data.VolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(GetVolumeFraction().Unload()));
 }
-
+//-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::SetToZero()
 {
   GetPartialPressure().SetValue(0, PressureUnit::mmHg);
   GetVolume().SetValue(0, VolumeUnit::mL);
   GetVolumeFraction().SetValue(0);
 }
-
+//-------------------------------------------------------------------------------
+const SEScalar* SEGasSubstanceQuantity::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-------------------------------------------------------------------------------
 const SEScalar* SEGasSubstanceQuantity::GetScalar(const std::string& name)
 {
   if (name.compare("PartialPressure") == 0)
@@ -104,7 +110,7 @@ const SEScalar* SEGasSubstanceQuantity::GetScalar(const std::string& name)
     return &GetVolumeFraction();
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 bool SEGasSubstanceQuantity::HasPartialPressure() const
 {
   if (!m_Children.empty()) {
@@ -115,6 +121,7 @@ bool SEGasSubstanceQuantity::HasPartialPressure() const
   }
   return (m_PartialPressure == nullptr) ? false : m_PartialPressure->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarPressure& SEGasSubstanceQuantity::GetPartialPressure()
 {
   if (m_PartialPressure == nullptr)
@@ -129,6 +136,7 @@ SEScalarPressure& SEGasSubstanceQuantity::GetPartialPressure()
   }
   return *m_PartialPressure;
 }
+//-------------------------------------------------------------------------------
 double SEGasSubstanceQuantity::GetPartialPressure(const PressureUnit& unit) const
 {
   if (!m_Children.empty()) {
@@ -144,7 +152,7 @@ double SEGasSubstanceQuantity::GetPartialPressure(const PressureUnit& unit) cons
     return SEScalar::dNaN();
   return m_PartialPressure->GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 bool SEGasSubstanceQuantity::HasVolume() const
 {
   if (!m_Children.empty()) {
@@ -155,6 +163,7 @@ bool SEGasSubstanceQuantity::HasVolume() const
   }
   return (m_Volume == nullptr) ? false : m_Volume->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolume& SEGasSubstanceQuantity::GetVolume()
 {
   if (m_Volume == nullptr)
@@ -169,6 +178,7 @@ SEScalarVolume& SEGasSubstanceQuantity::GetVolume()
   }
   return *m_Volume;
 }
+//-------------------------------------------------------------------------------
 double SEGasSubstanceQuantity::GetVolume(const VolumeUnit& unit) const
 {
   if (!m_Children.empty()) {
@@ -182,7 +192,7 @@ double SEGasSubstanceQuantity::GetVolume(const VolumeUnit& unit) const
     return SEScalar::dNaN();
   return m_Volume->GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 bool SEGasSubstanceQuantity::HasVolumeFraction() const
 {
   if (!m_Children.empty()) {
@@ -193,6 +203,7 @@ bool SEGasSubstanceQuantity::HasVolumeFraction() const
   }
   return (m_VolumeFraction == nullptr) ? false : m_VolumeFraction->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SEGasSubstanceQuantity::GetVolumeFraction()
 {
   if (m_VolumeFraction == nullptr)
@@ -207,6 +218,7 @@ SEScalarFraction& SEGasSubstanceQuantity::GetVolumeFraction()
   }
   return *m_VolumeFraction;
 }
+//-------------------------------------------------------------------------------
 double SEGasSubstanceQuantity::GetVolumeFraction() const
 {
   if (!m_Children.empty()) {
@@ -218,10 +230,11 @@ double SEGasSubstanceQuantity::GetVolumeFraction() const
     return SEScalar::dNaN();
   return m_VolumeFraction->GetValue();
 }
-
+//-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::AddChild(SEGasSubstanceQuantity& subQ)
 {
   if (!Contains(m_Children, subQ))
     m_Children.push_back(&subQ);
 }
+//-------------------------------------------------------------------------------
 }

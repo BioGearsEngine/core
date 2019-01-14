@@ -47,38 +47,46 @@ using namespace biogears;
     {
     }
     virtual ~TestUnit() = default;
-
-
-    static bool IsValidUnit(const std::string& unit) {
-      if (g.GetString().compare(unit) == 0)
+      
+    static bool IsValidUnit(const char* unit) {
+      if (strcmp(g.GetString(),unit) == 0)
         return true;
-      if (ug.GetString().compare(unit) == 0)
+      if (strcmp(ug.GetString(),unit) == 0)
         return true;
-      if (mg.GetString().compare(unit) == 0)
+      if (strcmp(mg.GetString(),unit) == 0)
         return true;
-      if (kg.GetString().compare(unit) == 0)
+      if (strcmp(kg.GetString(),unit) == 0)
         return true;
-      if (lb.GetString().compare(unit) == 0)
+      if (strcmp(lb.GetString(),unit) == 0)
         return true;
       return false;
     }
-    static const TestUnit& GetCompoundUnit(const std::string& unit)
+
+    static bool IsValidUnit(const std::string& unit) {
+      return IsValidUnit(unit.c_str());
+    }
+
+    static const TestUnit& GetCompoundUnit(const char* unit)
     {
-      if (g.GetString().compare(unit) == 0)
+      if (strcmp(g.GetString(),unit) == 0)
         return g;
-      if (ug.GetString().compare(unit) == 0)
+      if (strcmp(ug.GetString(),unit) == 0)
         return ug;
-      if (mg.GetString().compare(unit) == 0)
+      if (strcmp(mg.GetString(),unit) == 0)
         return mg;
-      if (kg.GetString().compare(unit) == 0)
+      if (strcmp(kg.GetString(),unit) == 0)
         return kg;
-      if (lb.GetString().compare(unit) == 0)
+      if (strcmp(lb.GetString(),unit) == 0)
         return lb;
       std::stringstream err;
       err << unit << " is not a valid Mass unit";
       throw CommonDataModelException(err.str());
     }
 
+    static const TestUnit& GetCompoundUnit(const std::string& unit)
+    {
+      return GetCompoundUnit(unit.c_str());
+    }
   };
 
   const TestUnit TestUnit::ug = TestUnit{ "ug" };
@@ -124,11 +132,11 @@ protected:
 
   // Code here will be called immediately after the constructor (right
   // before each test).
-  virtual void SetUp();
+  virtual void SetUp() override;
 
   // Code here will be called immediately after each test (right
   // before the destructor).
-  virtual void TearDown();
+  virtual void TearDown() override;
 
   TestUnit lbs{ "lb" };
 

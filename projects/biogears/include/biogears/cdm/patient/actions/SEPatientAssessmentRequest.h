@@ -18,18 +18,18 @@ namespace biogears {
 class BIOGEARS_API SEPatientAssessmentRequest : public SEPatientAction {
 public:
   SEPatientAssessmentRequest();
-  virtual ~SEPatientAssessmentRequest();
+  virtual ~SEPatientAssessmentRequest() override;
 
   static constexpr const char* TypeTag() { return "SEPatientAssessmentRequest"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::PatientAssessmentRequestData& in);
-  virtual CDM::PatientAssessmentRequestData* Unload() const;
+  virtual CDM::PatientAssessmentRequestData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::PatientAssessmentRequestData& data) const;
@@ -40,7 +40,7 @@ public:
   virtual bool HasType() const;
   virtual void InvalidateType();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   CDM::enumPatientAssessment::value m_Type;

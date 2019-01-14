@@ -20,56 +20,56 @@ SEStarvation::SEStarvation()
 {
   m_TimeSinceMeal = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEStarvation::~SEStarvation()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEStarvation::Clear()
 {
   SEPatientCondition::Clear();
   SAFE_DELETE(m_TimeSinceMeal);
 }
-
+//-----------------------------------------------------------------------------
 bool SEStarvation::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasTimeSinceMeal();
 }
-
+//-----------------------------------------------------------------------------
 bool SEStarvation::Load(const CDM::StarvationData& in)
 {
   SEPatientCondition::Load(in);
   GetTimeSinceMeal().Load(in.TimeSinceMeal());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::StarvationData* SEStarvation::Unload() const
 {
   CDM::StarvationData* data(new CDM::StarvationData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEStarvation::Unload(CDM::StarvationData& data) const
 {
   SEPatientCondition::Unload(data);
   if (m_TimeSinceMeal != nullptr)
     data.TimeSinceMeal(std::unique_ptr<CDM::ScalarTimeData>(m_TimeSinceMeal->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEStarvation::HasTimeSinceMeal() const
 {
   return m_TimeSinceMeal == nullptr ? false : m_TimeSinceMeal->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 SEScalarTime& SEStarvation::GetTimeSinceMeal()
 {
   if (m_TimeSinceMeal == nullptr)
     m_TimeSinceMeal = new SEScalarTime();
   return *m_TimeSinceMeal;
 }
-
+//-----------------------------------------------------------------------------
 void SEStarvation::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Starvation";
@@ -77,4 +77,5 @@ void SEStarvation::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

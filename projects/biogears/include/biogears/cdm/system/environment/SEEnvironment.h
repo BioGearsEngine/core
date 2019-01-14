@@ -43,10 +43,11 @@ public:
   void Clear() override;
 
   bool Load(const CDM::EnvironmentData& in);
+  bool Load(const char* patientFile);
   bool Load(const std::string& patientFile);
 
-  CDM::EnvironmentData* Unload() const;
-  Tree<std::string> GetPhysiologyRequestGraph() const override;
+  CDM::EnvironmentData* Unload() const override;
+  Tree<const char*> GetPhysiologyRequestGraph() const override;
   /** @name ProcessChange
   * @brief - Will change this class as directed by the Action
   */
@@ -65,9 +66,12 @@ public:
   virtual void StateChange() = 0;
 
 public:
+  const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
   std::string GetName() const;
+  const char* GetName_cStr() const;
+  void SetName(const char* name);
   void SetName(const std::string& name);
   bool HasName() const;
   void InvalidateName();

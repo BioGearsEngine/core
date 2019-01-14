@@ -19,18 +19,18 @@ class SEScalar0To1;
 class BIOGEARS_API SESodaLimeFailure : public SEAnesthesiaMachineAction {
 public:
   SESodaLimeFailure();
-  virtual ~SESodaLimeFailure();
+  virtual ~SESodaLimeFailure() override;
 
   static constexpr const char* TypeTag() { return "SESodaLimeFailure"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear();
+  virtual void Clear() override;
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::SodaLimeFailureData& in);
-  virtual CDM::SodaLimeFailureData* Unload() const;
+  virtual CDM::SodaLimeFailureData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::SodaLimeFailureData& data) const;
@@ -39,7 +39,7 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Severity;

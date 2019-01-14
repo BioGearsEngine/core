@@ -38,12 +38,12 @@ bool TestDriver::Configure(int argc, char* argv[])
   if (file.find(".xml") != std::string::npos)
   {
     m_file = file;
-    m_mode = RunMode::Scenario;
+    m_mode = test_driver::RunMode::Scenario;
   }
   else if (file.find(".config") != std::string::npos)
   {
     m_file = file;
-    m_mode = RunMode::Verification;
+    m_mode = test_driver::RunMode::Verification;
   }
   else
   {
@@ -64,11 +64,11 @@ bool TestDriver::Configure(int argc, char* argv[])
 
 void TestDriver::Run()
 {
-  if (m_mode == RunMode::Scenario)
+  if (m_mode == test_driver::RunMode::Scenario)
   {
     RunScenario();
   }
-  else if (m_mode == RunMode::Verification)
+  else if (m_mode == test_driver::RunMode::Verification)
   {
     RunVerification();
   }

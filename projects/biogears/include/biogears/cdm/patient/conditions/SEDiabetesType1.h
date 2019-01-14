@@ -37,6 +37,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "DiabetesType1"; }
+  virtual const char* GetName_cStr() const { return "DiabetesType1"; }
 
   virtual bool HasInsulinProductionSeverity() const;
   virtual SEScalar0To1& GetInsulinProductionSeverity();

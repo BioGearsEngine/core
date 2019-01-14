@@ -23,10 +23,11 @@ namespace biogears {
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 class SECompartmentTransportGraph : public GraphType, public SECompartmentGraph<COMPARTMENT_GRAPH_TYPES> {
 public:
+  SECompartmentTransportGraph(const char* name, Logger* logger);
   SECompartmentTransportGraph(const std::string& name, Logger* logger);
   virtual ~SECompartmentTransportGraph();
 
-  virtual void Clear();
+  virtual void Clear() override;
   /*
   virtual bool Load(const BindType& in);
   virtual BindType* Unload() = 0;
@@ -35,16 +36,17 @@ protected:
 */
 
 public:
-  virtual std::string GetName() const { return this->m_Name; }
+  virtual std::string GetName() const override;
+  virtual const char* GetName_cStr() const override;
 
   virtual void StateChange();
 
 protected:
-  virtual void BalanceByIntensive() = 0;
-  virtual size_t GetVertexIndex(const GraphVertexType& v) const;
-  virtual const std::vector<GraphVertexType*>& GetVerticies() const;
-  virtual const std::vector<GraphEdgeType*>* GetSourceEdges(const GraphVertexType& v) const;
-  virtual const std::vector<GraphEdgeType*>* GetTargetEdges(const GraphVertexType& v) const;
+  virtual void BalanceByIntensive() override= 0;
+  virtual size_t GetVertexIndex(const GraphVertexType& v) const override;
+  virtual const std::vector<GraphVertexType*>& GetVerticies() const override;
+  virtual const std::vector<GraphEdgeType*>* GetSourceEdges(const GraphVertexType& v) const override;
+  virtual const std::vector<GraphEdgeType*>* GetTargetEdges(const GraphVertexType& v) const override;
 
   std::vector<GraphVertexType*> m_Verticies;
   std::map<const GraphVertexType*, size_t> m_VertexIndicies;

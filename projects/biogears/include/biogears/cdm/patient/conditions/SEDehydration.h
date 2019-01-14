@@ -37,6 +37,7 @@ protected:
 
 public:
   virtual std::string GetName() const { return "Dehydration"; }
+  virtual const char* GetName_cStr() const { return "Dehydration"; }
 
   virtual bool HasDehydrationFraction() const;
   virtual SEScalar0To1& GetDehydrationFraction();

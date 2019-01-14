@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 #include <sstream>
   
-namespace
+namespace scenario_driver
 {
 
   enum class ScenarioRunType
@@ -41,14 +41,12 @@ namespace
     {
     }
 
+    virtual ~RunScenarioTask() override {};
     virtual void Run() override;
 
   private:
     std::string m_scenarioFile;     ///< The scenario file to run when this task is executed
   };
-
-  std::mutex RunScenarioTask::ms_constructionMutex;
-
 }
 
 struct VerificationSet
@@ -79,7 +77,7 @@ public:
 private:
   void BuildVerificationSets();
   void GenerateVerificationSummary(const VerificationSet& verificationSet, unsigned int groupNumber) const;
-  ScenarioRunType GetRunType(const std::string& scenarioName) const;
+  scenario_driver::ScenarioRunType GetRunType(const std::string& scenarioName) const;
 
   std::string m_configFile;
   biogears::ConfigParser m_parser;

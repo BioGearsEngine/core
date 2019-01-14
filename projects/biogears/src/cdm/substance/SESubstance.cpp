@@ -61,12 +61,12 @@ SESubstance::SESubstance(Logger* logger)
   m_PK = nullptr;
   m_PD = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SESubstance::~SESubstance()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SESubstance::Clear()
 {
   m_Name = "";
@@ -100,7 +100,12 @@ void SESubstance::Clear()
   SAFE_DELETE(m_PK);
   SAFE_DELETE(m_PD);
 }
-
+//-----------------------------------------------------------------------------
+const SEScalar* SESubstance::GetScalar(const char* name)
+{
+  return GetScalar(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 const SEScalar* SESubstance::GetScalar(const std::string& name)
 {
   if (name.compare("Density") == 0)
@@ -161,7 +166,7 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
 
   return nullptr;
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::Load(const CDM::SubstanceData& in)
 {
   Clear();
@@ -228,14 +233,14 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::SubstanceData* SESubstance::Unload() const
 {
   CDM::SubstanceData* data = new CDM::SubstanceData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SESubstance::Unload(CDM::SubstanceData& data) const
 {
   if (HasName()) {
@@ -299,454 +304,524 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
   if (HasPD())
     data.Pharmacodynamics(std::unique_ptr<CDM::SubstancePharmacodynamicsData>(m_PD->Unload()));
 };
-
+//-----------------------------------------------------------------------------
 std::string SESubstance::GetName() const
 {
   return m_Name;
 }
+//-----------------------------------------------------------------------------
+const char* SESubstance::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
+void SESubstance::SetName(const char* name)
+{
+  m_Name = name;
+}
+//-----------------------------------------------------------------------------
 void SESubstance::SetName(const std::string& name)
 {
   m_Name = name;
 }
+//-----------------------------------------------------------------------------
 bool SESubstance::HasName() const
 {
   return m_Name.empty() ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::InvalidateName()
 {
   m_Name = "";
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumSubstanceState::value SESubstance::GetState() const
 {
   return m_State;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::SetState(CDM::enumSubstanceState::value state)
 {
   m_State = state;
 }
+//-----------------------------------------------------------------------------
 bool SESubstance::HasState() const
 {
   return m_State == ((CDM::enumSubstanceState::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::InvalidateState()
 {
   m_State = (CDM::enumSubstanceState::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumSubstanceClass::value SESubstance::GetClassification() const
 {
   return m_Classification;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::SetClassification(CDM::enumSubstanceClass::value subClass)
 {
   m_Classification = subClass;
 }
+//-----------------------------------------------------------------------------
 bool SESubstance::HasClassification() const
 {
   return m_Classification == ((CDM::enumSubstanceState::value)-1) ? false : true;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::InvalidateClassification()
 {
   m_Classification = (CDM::enumSubstanceClass::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasDensity() const
 {
   return (m_Density == nullptr) ? false : m_Density->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetDensity()
 {
   if (m_Density == nullptr)
     m_Density = new SEScalarMassPerVolume();
   return *m_Density;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetDensity(const MassPerVolumeUnit& unit) const
 {
   if (m_Density == nullptr)
     return SEScalar::dNaN();
   return m_Density->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasMolarMass() const
 {
   return (m_MolarMass == nullptr) ? false : m_MolarMass->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerAmount& SESubstance::GetMolarMass()
 {
   if (m_MolarMass == nullptr)
     m_MolarMass = new SEScalarMassPerAmount();
   return *m_MolarMass;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetMolarMass(const MassPerAmountUnit& unit) const
 {
   if (m_MolarMass == nullptr)
     return SEScalar::dNaN();
   return m_MolarMass->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasMaximumDiffusionFlux() const
 {
   return (m_MaximumDiffusionFlux == nullptr) ? false : m_MaximumDiffusionFlux->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerAreaTime& SESubstance::GetMaximumDiffusionFlux()
 {
   if (m_MaximumDiffusionFlux == nullptr)
     m_MaximumDiffusionFlux = new SEScalarMassPerAreaTime();
   return *m_MaximumDiffusionFlux;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetMaximumDiffusionFlux(const MassPerAreaTimeUnit& unit) const
 {
   if (m_MaximumDiffusionFlux == nullptr)
     return SEScalar::dNaN();
   return m_MaximumDiffusionFlux->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasMichaelisCoefficient() const
 {
   return (m_MichaelisCoefficient == nullptr) ? false : m_MichaelisCoefficient->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SESubstance::GetMichaelisCoefficient()
 {
   if (m_MichaelisCoefficient == nullptr)
     m_MichaelisCoefficient = new SEScalar();
   return *m_MichaelisCoefficient;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetMichaelisCoefficient() const
 {
   if (m_MichaelisCoefficient == nullptr)
     return SEScalar::dNaN();
   return m_MichaelisCoefficient->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasMembraneResistance() const
 {
   return (m_MembraneResistance == nullptr) ? false : m_MembraneResistance->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarElectricResistance& SESubstance::GetMembraneResistance()
 {
   if (m_MembraneResistance == nullptr)
     m_MembraneResistance = new SEScalarElectricResistance();
   return *m_MembraneResistance;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetMembraneResistance(const ElectricResistanceUnit& unit) const
 {
   if (m_MembraneResistance == nullptr)
     return SEScalarElectricResistance::dNaN();
   return m_MembraneResistance->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasAerosolization() const
 {
   return (m_Aerosolization != nullptr && m_Aerosolization->IsValid());
 }
+//-----------------------------------------------------------------------------
 SESubstanceAerosolization& SESubstance::GetAerosolization()
 {
   if (m_Aerosolization == nullptr)
     m_Aerosolization = new SESubstanceAerosolization(GetLogger());
   return *m_Aerosolization;
 }
+//-----------------------------------------------------------------------------
 const SESubstanceAerosolization* SESubstance::GetAerosolization() const
 {
   return m_Aerosolization;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::RemoveAerosolization()
 {
   SAFE_DELETE(m_Aerosolization);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasBloodConcentration() const
 {
   return (m_BloodConcentration == nullptr) ? false : m_BloodConcentration->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetBloodConcentration()
 {
   if (m_BloodConcentration == nullptr)
     m_BloodConcentration = new SEScalarMassPerVolume();
   return *m_BloodConcentration;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetBloodConcentration(const MassPerVolumeUnit& unit) const
 {
   if (m_BloodConcentration == nullptr)
     return SEScalar::dNaN();
   return m_BloodConcentration->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasMassInBody() const
 {
   return (m_MassInBody == nullptr) ? false : m_MassInBody->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetMassInBody()
 {
   if (m_MassInBody == nullptr)
     m_MassInBody = new SEScalarMass();
   return *m_MassInBody;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetMassInBody(const MassUnit& unit) const
 {
   if (m_MassInBody == nullptr)
     return SEScalar::dNaN();
   return m_MassInBody->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasMassInBlood() const
 {
   return (m_MassInBlood == nullptr) ? false : m_MassInBlood->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetMassInBlood()
 {
   if (m_MassInBlood == nullptr)
     m_MassInBlood = new SEScalarMass();
   return *m_MassInBlood;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetMassInBlood(const MassUnit& unit) const
 {
   if (m_MassInBlood == nullptr)
     return SEScalar::dNaN();
   return m_MassInBlood->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasMassInTissue() const
 {
   return (m_MassInTissue == nullptr) ? false : m_MassInTissue->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetMassInTissue()
 {
   if (m_MassInTissue == nullptr)
     m_MassInTissue = new SEScalarMass();
   return *m_MassInTissue;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetMassInTissue(const MassUnit& unit) const
 {
   if (m_MassInTissue == nullptr)
     return SEScalar::dNaN();
   return m_MassInTissue->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasPlasmaConcentration() const
 {
   return (m_PlasmaConcentration == nullptr) ? false : m_PlasmaConcentration->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetPlasmaConcentration()
 {
   if (m_PlasmaConcentration == nullptr)
     m_PlasmaConcentration = new SEScalarMassPerVolume();
   return *m_PlasmaConcentration;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetPlasmaConcentration(const MassPerVolumeUnit& unit) const
 {
   if (m_PlasmaConcentration == nullptr)
     return SEScalar::dNaN();
   return m_PlasmaConcentration->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasEffectSiteConcentration() const
 {
   return (m_EffectSiteConcentration == nullptr) ? false : m_EffectSiteConcentration->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetEffectSiteConcentration()
 {
   if (m_EffectSiteConcentration == nullptr)
     m_EffectSiteConcentration = new SEScalarMassPerVolume();
   return *m_EffectSiteConcentration;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetEffectSiteConcentration(const MassPerVolumeUnit& unit) const
 {
   if (m_EffectSiteConcentration == nullptr)
     return SEScalar::dNaN();
   return m_EffectSiteConcentration->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasSystemicMassCleared() const
 {
   return (m_SystemicMassCleared == nullptr) ? false : m_SystemicMassCleared->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetSystemicMassCleared()
 {
   if (m_SystemicMassCleared == nullptr)
     m_SystemicMassCleared = new SEScalarMass();
   return *m_SystemicMassCleared;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetSystemicMassCleared(const MassUnit& unit) const
 {
   if (m_SystemicMassCleared == nullptr)
     return SEScalar::dNaN();
   return m_SystemicMassCleared->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasTissueConcentration() const
 {
   return (m_TissueConcentration == nullptr) ? false : m_TissueConcentration->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetTissueConcentration()
 {
   if (m_TissueConcentration == nullptr)
     m_TissueConcentration = new SEScalarMassPerVolume();
   return *m_TissueConcentration;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetTissueConcentration(const MassPerVolumeUnit& unit) const
 {
   if (m_TissueConcentration == nullptr)
     return SEScalar::dNaN();
   return m_TissueConcentration->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasAlveolarTransfer() const
 {
   return m_AlveolarTransfer == nullptr ? false : m_AlveolarTransfer->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolumePerTime& SESubstance::GetAlveolarTransfer()
 {
   if (m_AlveolarTransfer == nullptr)
     m_AlveolarTransfer = new SEScalarVolumePerTime();
   return *m_AlveolarTransfer;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetAlveolarTransfer(const VolumePerTimeUnit& unit) const
 {
   if (m_AlveolarTransfer == nullptr)
     return SEScalar::dNaN();
   return m_AlveolarTransfer->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasDiffusingCapacity() const
 {
   return m_DiffusingCapacity == nullptr ? false : m_DiffusingCapacity->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarVolumePerTimePressure& SESubstance::GetDiffusingCapacity()
 {
   if (m_DiffusingCapacity == nullptr)
     m_DiffusingCapacity = new SEScalarVolumePerTimePressure();
   return *m_DiffusingCapacity;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetDiffusingCapacity(const VolumePerTimePressureUnit& unit) const
 {
   if (m_DiffusingCapacity == nullptr)
     return SEScalar::dNaN();
   return m_DiffusingCapacity->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasEndTidalFraction() const
 {
   return (m_EndTidalFraction == nullptr) ? false : m_EndTidalFraction->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarFraction& SESubstance::GetEndTidalFraction()
 {
   if (m_EndTidalFraction == nullptr)
     m_EndTidalFraction = new SEScalarFraction();
   return *m_EndTidalFraction;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetEndTidalFraction() const
 {
   if (m_EndTidalFraction == nullptr)
     return SEScalar::dNaN();
   return m_EndTidalFraction->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasEndTidalPressure() const
 {
   return (m_EndTidalPressure == nullptr) ? false : m_EndTidalPressure->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarPressure& SESubstance::GetEndTidalPressure()
 {
   if (m_EndTidalPressure == nullptr)
     m_EndTidalPressure = new SEScalarPressure();
   return *m_EndTidalPressure;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetEndTidalPressure(const PressureUnit& unit) const
 {
   if (m_EndTidalPressure == nullptr)
     return SEScalar::dNaN();
   return m_EndTidalPressure->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasRelativeDiffusionCoefficient() const
 {
   return (m_RelativeDiffusionCoefficient == nullptr) ? false : m_RelativeDiffusionCoefficient->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalar& SESubstance::GetRelativeDiffusionCoefficient()
 {
   if (m_RelativeDiffusionCoefficient == nullptr)
     m_RelativeDiffusionCoefficient = new SEScalar();
   return *m_RelativeDiffusionCoefficient;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetRelativeDiffusionCoefficient() const
 {
   if (m_RelativeDiffusionCoefficient == nullptr)
     return SEScalar::dNaN();
   return m_RelativeDiffusionCoefficient->GetValue();
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasSolubilityCoefficient() const
 {
   return (m_SolubilityCoefficient == nullptr) ? false : m_SolubilityCoefficient->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarInversePressure& SESubstance::GetSolubilityCoefficient()
 {
   if (m_SolubilityCoefficient == nullptr)
     m_SolubilityCoefficient = new SEScalarInversePressure();
   return *m_SolubilityCoefficient;
 }
+//-----------------------------------------------------------------------------
 double SESubstance::GetSolubilityCoefficient(const InversePressureUnit& unit) const
 {
   if (m_SolubilityCoefficient == nullptr)
     return SEScalar::dNaN();
   return m_SolubilityCoefficient->GetValue(unit);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasClearance() const
 {
   return (m_Clearance != nullptr && m_Clearance->IsValid());
 }
+//-----------------------------------------------------------------------------
 SESubstanceClearance& SESubstance::GetClearance()
 {
   if (m_Clearance == nullptr)
     m_Clearance = new SESubstanceClearance(GetLogger());
   return *m_Clearance;
 }
+//-----------------------------------------------------------------------------
 const SESubstanceClearance* SESubstance::GetClearance() const
 {
   return m_Clearance;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::RemoveClearance()
 {
   SAFE_DELETE(m_Clearance);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasPK() const
 {
   return (m_PK != nullptr && m_PK->IsValid());
 }
+//-----------------------------------------------------------------------------
 SESubstancePharmacokinetics& SESubstance::GetPK()
 {
   if (m_PK == nullptr)
     m_PK = new SESubstancePharmacokinetics(GetLogger());
   return *m_PK;
 }
+//-----------------------------------------------------------------------------
 const SESubstancePharmacokinetics* SESubstance::GetPK() const
 {
   return m_PK;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::RemovePK()
 {
   SAFE_DELETE(m_PK);
 }
-
+//-----------------------------------------------------------------------------
 bool SESubstance::HasPD() const
 {
   return (m_PD != nullptr && m_PD->IsValid());
 }
+//-----------------------------------------------------------------------------
 SESubstancePharmacodynamics& SESubstance::GetPD()
 {
   if (m_PD == nullptr)
     m_PD = new SESubstancePharmacodynamics(GetLogger());
   return *m_PD;
 }
+//-----------------------------------------------------------------------------
 const SESubstancePharmacodynamics* SESubstance::GetPD() const
 {
   return m_PD;
 }
+//-----------------------------------------------------------------------------
 void SESubstance::RemovePD()
 {
   SAFE_DELETE(m_PD);
 }
+//-----------------------------------------------------------------------------
 }

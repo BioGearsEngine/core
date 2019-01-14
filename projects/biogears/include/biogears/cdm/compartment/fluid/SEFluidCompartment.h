@@ -42,6 +42,7 @@ class SEFluidCompartment : public SECompartment, public VertexType {
   friend class SECompartmentGraph;
 
 protected:
+  SEFluidCompartment(const char* name, Logger* logger);
   SEFluidCompartment(const std::string& name, Logger* logger);
 
 public:
@@ -50,14 +51,16 @@ public:
   void Clear() override;
 
   virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
-  CDM::FluidCompartmentData* Unload() override= 0;
+  CDM::FluidCompartmentData* Unload() override = 0;
 
 protected:
   virtual void Unload(CDM::FluidCompartmentData& data);
 
 public:
-  std::string GetName() const override { return m_Name; }
+  std::string GetName() const override;
+  const char* GetName_cStr() const override;
 
+  const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
   bool HasChildren() const override { return !m_FluidChildren.empty(); }
@@ -93,18 +96,19 @@ public:
   virtual void RemoveLinks();
   virtual const std::vector<LinkType*>& GetLinks();
 
+  virtual bool HasChild(const char* name);
   virtual bool HasChild(const std::string& name);
 
 protected:
   virtual void RemoveSubstanceQuantity(const SESubstance& substance);
 
-  virtual bool HasQuantity() const { return HasVolume(); }
-  virtual SEScalarVolume& GetQuantity() { return GetVolume(); }
+  virtual bool HasQuantity() const  override{ return HasVolume(); }
+  virtual SEScalarVolume& GetQuantity() override { return GetVolume(); }
 
   virtual double CalculateInFlow_mL_Per_s() const;
   virtual double CalculateOutFlow_mL_Per_s() const;
 
-  virtual std::vector<TransportSubstanceType*>& GetTransportSubstances() { return m_TransportSubstances; }
+  virtual std::vector<TransportSubstanceType*>& GetTransportSubstances()  override { return m_TransportSubstances; }
 
   SEScalarVolumePerTime* m_InFlow;
   SEScalarVolumePerTime* m_OutFlow;

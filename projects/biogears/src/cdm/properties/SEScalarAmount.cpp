@@ -15,7 +15,17 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const AmountUnit AmountUnit::mol("mol");
 const AmountUnit AmountUnit::pmol("pmol");
-
+//-----------------------------------------------------------------------------
+AmountUnit::AmountUnit(const char* u)
+  : AmountUnit(std::string{ u })
+{
+}
+//-----------------------------------------------------------------------------
+AmountUnit::AmountUnit(const std::string& u)
+  : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
 CDM::ScalarAmountData* SEScalarAmount::Unload() const
 {
   if (!IsValid())
@@ -24,23 +34,35 @@ CDM::ScalarAmountData* SEScalarAmount::Unload() const
   SEScalarQuantity::Unload(*data);
   return data;
 }
-
-bool AmountUnit::IsValidUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool AmountUnit::IsValidUnit(const char* unit)
 {
-  if (mol.GetString().compare(unit) == 0)
+  if (strcmp(mol.GetString(),unit) == 0)
     return true;
-  if (pmol.GetString().compare(unit) == 0)
+  if (strcmp(pmol.GetString(),unit) == 0)
     return true;
   return false;
 }
-const AmountUnit& AmountUnit::GetCompoundUnit(const std::string& unit)
+//-----------------------------------------------------------------------------
+bool AmountUnit::IsValidUnit(const std::string& unit)
 {
-  if (mol.GetString().compare(unit) == 0)
+  return IsValidUnit(unit.c_str());
+}
+//-----------------------------------------------------------------------------
+const AmountUnit& AmountUnit::GetCompoundUnit(const char* unit)
+{
+  if (strcmp(mol.GetString(),unit) == 0)
     return mol;
-  if (pmol.GetString().compare(unit) == 0)
+  if (strcmp(pmol.GetString(),unit) == 0)
     return pmol;
   std::stringstream err;
   err << unit << " is not a valid Amount unit";
   throw CommonDataModelException(err.str());
 }
+//-----------------------------------------------------------------------------
+const AmountUnit& AmountUnit::GetCompoundUnit(const std::string& unit)
+{
+  return GetCompoundUnit(  unit.c_str() );
+}
+//-----------------------------------------------------------------------------
 }

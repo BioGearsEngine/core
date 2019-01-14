@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <set>
 
-namespace
+namespace test_driver
 {
   enum class RunMode
   {
@@ -41,5 +41,5 @@ private:
 
   std::string m_file;
   std::set<std::string> m_arguments;
-  RunMode m_mode = RunMode::Invalid;
+  test_driver::RunMode m_mode = test_driver::RunMode::Invalid;
 };

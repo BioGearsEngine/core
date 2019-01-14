@@ -9,7 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#pragma once
+#ifndef TEST_DRIVER_VERIFICATION_H
+#define TEST_DRIVER_VERIFICATION_H
 
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/ConfigParser.h>
@@ -21,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 #include <sstream>
   
-namespace
+namespace test_driver
 {
 
   enum class ScenarioRunType
@@ -46,8 +47,6 @@ namespace
   private:
     std::string m_scenarioFile;     ///< The scenario file to run when this task is executed
   };
-
-  std::mutex RunScenarioTask::ms_constructionMutex;
 
 }
 
@@ -79,7 +78,7 @@ public:
 private:
   void BuildVerificationSets();
   void GenerateVerificationSummary(const VerificationSet& verificationSet, unsigned int groupNumber) const;
-  ScenarioRunType GetRunType(const std::string& scenarioName) const;
+  test_driver::ScenarioRunType GetRunType(const std::string& scenarioName) const;
 
   std::string m_configFile;
   biogears::ConfigParser m_parser;
@@ -89,3 +88,5 @@ private:
   unsigned int m_verificationSummaryCount = 0;
   RunMode m_mode = RunMode::Default;
 };
+
+#endif //TEST_DRIVER_VERIFICATION_H

@@ -50,13 +50,14 @@ public:
 
   void Clear() override; /**< @copydoc DOXY_CDM_CLEAR */
 
+  const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override; /**< @copydoc DOXY_CDM_GET_SCALAR */
 
   /**  @name Serialization */ //@{
   bool Load(const CDM::BloodChemistrySystemData& in); /**< @copydoc DOXY_CDM_LOAD */
   CDM::BloodChemistrySystemData* Unload() const override; /**< @copydoc DOXY_CDM_UNLOAD */
 
-  Tree<std::string> GetPhysiologyRequestGraph() const override;
+  Tree<const char*> GetPhysiologyRequestGraph() const override;
 protected:
   void Unload(CDM::BloodChemistrySystemData& data) const; /**< @copydoc DOXY_CDM_UNLOAD_TO */ //@}
 public:

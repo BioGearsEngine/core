@@ -18,18 +18,25 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <CIRCUIT_TEMPLATE>
+SECircuit<CIRCUIT_TYPES>::SECircuit(const char* name, Logger* logger)
+  : Loggable(logger)
+  , m_Name(name)
+{
+}
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
 SECircuit<CIRCUIT_TYPES>::SECircuit(const std::string& name, Logger* logger)
   : Loggable(logger)
   , m_Name(name)
 {
 }
-
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 SECircuit<CIRCUIT_TYPES>::~SECircuit()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::Clear()
 {
@@ -49,7 +56,7 @@ void SECircuit<CIRCUIT_TYPES>::Clear()
   m_ValvePaths.clear();
   m_PolarizedElementPaths.clear();
 }
-
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::Load(const CircuitBindType& in, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths)
 { // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
@@ -82,6 +89,7 @@ bool SECircuit<CIRCUIT_TYPES>::Load(const CircuitBindType& in, const std::map<st
   StateChange();
   return true;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 CircuitBindType* SECircuit<CIRCUIT_TYPES>::Unload() const
 {
@@ -89,6 +97,7 @@ CircuitBindType* SECircuit<CIRCUIT_TYPES>::Unload() const
   Unload(*data);
   return data;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::Unload(CircuitBindType& data) const
 {
@@ -102,7 +111,7 @@ void SECircuit<CIRCUIT_TYPES>::Unload(CircuitBindType& data) const
   for (auto* p : m_Paths)
     data.Path().push_back(p->GetName());
 }
-
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::StateChange()
 {
@@ -196,18 +205,25 @@ void SECircuit<CIRCUIT_TYPES>::StateChange()
     Fatal("There are too many assumed state options.  The Circuit solver can only handle up to 64 Diodes and Polar Elements in a single circuit (i.e. ~1.8e19 possible combinations).");
   }
 }
-
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 std::string SECircuit<CIRCUIT_TYPES>::GetName() const
 {
   return m_Name;
 }
-
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+const char* SECircuit<CIRCUIT_TYPES>::GetName_cStr() const
+{
+  return m_Name.c_str();
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::HasReferenceNode() const
 {
   return !m_ReferenceNodes.empty();
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::IsReferenceNode(NodeType& node) const
 {
@@ -216,11 +232,13 @@ bool SECircuit<CIRCUIT_TYPES>::IsReferenceNode(NodeType& node) const
       return true;
   return false;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const std::vector<NodeType*>& SECircuit<CIRCUIT_TYPES>::GetReferenceNodes() const
 {
   return m_ReferenceNodes;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::AddReferenceNode(NodeType& node)
 {
@@ -237,7 +255,7 @@ void SECircuit<CIRCUIT_TYPES>::AddReferenceNode(NodeType& node)
   if (!Contains(m_ReferenceNodes, node))
     m_ReferenceNodes.push_back(&node);
 }
-
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::AddNode(NodeType& node)
 {
@@ -249,11 +267,25 @@ bool SECircuit<CIRCUIT_TYPES>::HasNode(NodeType& node)
 {
   return Contains(m_Nodes, node);
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+bool SECircuit<CIRCUIT_TYPES>::HasNode(const char* name)
+{
+  return HasNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::HasNode(const std::string& name)
 {
   return GetNode(name) != nullptr;
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const char* name)
+{
+  return GetNode(std::string(name));
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const std::string& name)
 {
@@ -263,6 +295,13 @@ NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const std::string& name)
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+const NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const char* name) const
+{
+  return GetNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const std::string& name) const
 {
@@ -272,11 +311,13 @@ const NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const std::string& name) const
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const std::vector<NodeType*>& SECircuit<CIRCUIT_TYPES>::GetNodes() const
 {
   return m_Nodes;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::RemoveNode(const NodeType& node)
 {
@@ -289,6 +330,13 @@ void SECircuit<CIRCUIT_TYPES>::RemoveNode(const NodeType& node)
     i++;
   }
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+void SECircuit<CIRCUIT_TYPES>::RemoveNode(const char* name)
+{
+  RemoveNode(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::RemoveNode(const std::string& name)
 {
@@ -301,33 +349,49 @@ void SECircuit<CIRCUIT_TYPES>::RemoveNode(const std::string& name)
     i++;
   }
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 size_t SECircuit<CIRCUIT_TYPES>::GetCalculatorIndex(const NodeType& node) const
 {
   auto itr = m_CalculatorIndex.find(&node);
   if (itr == m_CalculatorIndex.end()) {
-    Error("Node " + node.GetName() + " is not in Calculator Index Map.");
+    Error("Node " + std::string{ node.GetName() } +" is not in Calculator Index Map.");
     return -1;
   }
   return itr->second;
 }
-
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::AddPath(PathType& path)
 {
   if (!Contains(m_Paths, path))
     m_Paths.push_back(&path);
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::HasPath(PathType& path)
 {
   return Contains(m_Paths, path);
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+bool SECircuit<CIRCUIT_TYPES>::HasPath(const char* name)
+{
+  return HasPath(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::HasPath(const std::string& name)
 {
   return GetPath(name) != nullptr;
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const char* name)
+{
+  return GetPath(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const std::string& name)
 {
@@ -337,6 +401,13 @@ PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const std::string& name)
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+const PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const char* name) const
+{
+  return  GetPath(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const std::string& name) const
 {
@@ -346,11 +417,13 @@ const PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const std::string& name) const
   }
   return nullptr;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const std::vector<PathType*>& SECircuit<CIRCUIT_TYPES>::GetPaths() const
 {
   return m_Paths;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::RemovePath(const PathType& path)
 {
@@ -363,6 +436,13 @@ void SECircuit<CIRCUIT_TYPES>::RemovePath(const PathType& path)
     i++;
   }
 }
+//-----------------------------------------------------------------------------
+template <CIRCUIT_TEMPLATE>
+void SECircuit<CIRCUIT_TYPES>::RemovePath(const char* name)
+{
+  RemovePath(std::string{ name });
+}
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::RemovePath(const std::string& name)
 {
@@ -375,11 +455,13 @@ void SECircuit<CIRCUIT_TYPES>::RemovePath(const std::string& name)
     i++;
   }
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const std::vector<PathType*>& SECircuit<CIRCUIT_TYPES>::GetValvePaths()
 {
   return m_ValvePaths;
 }
+//-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const std::vector<PathType*>& SECircuit<CIRCUIT_TYPES>::GetPolarizedElementPaths()
 {
@@ -397,7 +479,6 @@ const std::vector<PathType*>& SECircuit<CIRCUIT_TYPES>::GetPolarizedElementPaths
 ///
 /// \details
 /// Finds all paths where the input node is the target node. Returns a vector of the paths.
-//--------------------------------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const std::vector<PathType*>* SECircuit<CIRCUIT_TYPES>::GetTargetPaths(const NodeType& node) const
 {
@@ -420,7 +501,6 @@ const std::vector<PathType*>* SECircuit<CIRCUIT_TYPES>::GetTargetPaths(const Nod
 ///
 /// \details
 /// Finds all paths where the input node is the source node. Returns a vector of the paths.
-//--------------------------------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 const std::vector<PathType*>* SECircuit<CIRCUIT_TYPES>::GetSourcePaths(const NodeType& node) const
 {

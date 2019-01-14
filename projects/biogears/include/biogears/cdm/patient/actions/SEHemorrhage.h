@@ -24,25 +24,27 @@ class SEScalarVolumePerTime;
 class BIOGEARS_API SEHemorrhage : public SEPatientAction {
 public:
   SEHemorrhage();
-  virtual ~SEHemorrhage();
+  virtual ~SEHemorrhage() override;
 
   static constexpr const char* TypeTag() { return "SEHemorrhage"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::HemorrhageData& in);
-  virtual CDM::HemorrhageData* Unload() const;
+  virtual CDM::HemorrhageData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::HemorrhageData& data) const;
 
 public:
+  virtual const char* GetCompartment_cStr() const;
   virtual std::string GetCompartment() const;
   virtual bool HasCompartment() const;
+  virtual void SetCompartment(const char* name);
   virtual void SetCompartment(const std::string& name);
   virtual void InvalidateCompartment();
 
@@ -56,7 +58,7 @@ public:
   virtual bool HasBleedResistance() const;
   virtual SEScalarFlowResistance& GetBleedResistance();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   std::string m_Compartment;

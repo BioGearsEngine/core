@@ -25,18 +25,18 @@ protected:
   SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
 
 public:
-  virtual ~SECompartmentSubstanceDataRequest();
+  virtual ~SECompartmentSubstanceDataRequest() override;
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
   virtual bool Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances);
-  virtual CDM::CompartmentSubstanceDataRequestData* Unload() const = 0;
+  virtual CDM::CompartmentSubstanceDataRequestData* Unload() const override = 0;
 
 protected:
   virtual void Unload(CDM::CompartmentSubstanceDataRequestData& data) const;
 
 public:
-  virtual size_t HashCode();
+  virtual size_t HashCode() override;
 
   virtual SESubstance* GetSubstance() const;
   virtual void SetSubstance(SESubstance* sub);
@@ -44,9 +44,10 @@ public:
   virtual void InvalidateSubstance();
 
   using SECompartmentDataRequest::Set;
+  virtual void Set(const char* cmpt, SESubstance& substance, const char* name, const char* unit = "");
   virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit = "");
+  virtual void Set(const char* cmpt, SESubstance& substance, const char* name, const CCompoundUnit& unit);
   virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
-
 protected:
   SESubstance* m_Substance;
 };

@@ -24,18 +24,18 @@ class SEUseInhaler;
 class BIOGEARS_API SEConsciousRespiration : public SEPatientAction {
 public:
   SEConsciousRespiration();
-  virtual ~SEConsciousRespiration();
+  virtual ~SEConsciousRespiration() override;
 
   static constexpr const char* TypeTag() { return "SEConsciousRespiration"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances);
-  virtual CDM::ConsciousRespirationData* Unload() const;
+  virtual CDM::ConsciousRespirationData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::ConsciousRespirationData& data) const;
@@ -51,7 +51,7 @@ public:
   virtual SEBreathHold& AddBreathHold();
   virtual SEUseInhaler& AddUseInhaler();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   bool m_ClearCommands;

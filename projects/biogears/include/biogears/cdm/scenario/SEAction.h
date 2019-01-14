@@ -43,15 +43,18 @@ protected:
   void Unload(CDM::ActionData& data) const;
 
 public:
-  virtual std::string GetComment() const;
+  virtual const char* GetComment() const;
+  virtual void SetComment(const char* comment);
   virtual void SetComment(const std::string& comment);
   virtual bool HasComment() const;
   virtual void InvalidateComment();
 
   virtual void ToString(std::ostream& str) const = 0;
-  virtual std::string ToString() const;
+  virtual const char* ToString() const;
+ 
 protected:
   std::string m_Comment;
+  mutable std::string m_StringRepresnetation; //<Cached Value of the last called to ToString();
 };
 
 inline std::ostream& operator<<(std::ostream& out, const SEAction& a)

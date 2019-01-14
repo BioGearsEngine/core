@@ -19,56 +19,56 @@ SEDehydration::SEDehydration()
 {
   m_DehydrationFraction = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEDehydration::~SEDehydration()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEDehydration::Clear()
 {
   SEPatientCondition::Clear();
   SAFE_DELETE(m_DehydrationFraction);
 }
-
+//-----------------------------------------------------------------------------
 bool SEDehydration::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasDehydrationFraction();
 }
-
+//-----------------------------------------------------------------------------
 bool SEDehydration::Load(const CDM::DehydrationData& in)
 {
   SEPatientCondition::Load(in);
   GetDehydrationFraction().Load(in.DehydrationFraction());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::DehydrationData* SEDehydration::Unload() const
 {
   CDM::DehydrationData* data(new CDM::DehydrationData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEDehydration::Unload(CDM::DehydrationData& data) const
 {
   SEPatientCondition::Unload(data);
   if (m_DehydrationFraction != nullptr)
     data.DehydrationFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_DehydrationFraction->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 bool SEDehydration::HasDehydrationFraction() const
 {
   return m_DehydrationFraction == nullptr ? false : m_DehydrationFraction->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 SEScalar0To1& SEDehydration::GetDehydrationFraction()
 {
   if (m_DehydrationFraction == nullptr)
     m_DehydrationFraction = new SEScalar0To1();
   return *m_DehydrationFraction;
 }
-
+//-----------------------------------------------------------------------------
 void SEDehydration::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Dehydration";
@@ -78,4 +78,5 @@ void SEDehydration::ToString(std::ostream& str) const
   HasDehydrationFraction() ? str << m_DehydrationFraction : str << "NaN";
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
 }

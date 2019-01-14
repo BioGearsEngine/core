@@ -23,6 +23,11 @@ specific language governing permissions and limitations under the License.
 
 //----------------------------------------------------------------------------
 namespace biogears {
+CQuantityConversionDescriptor::CQuantityConversionDescriptor(double fromExp, const char* mappingUnit)
+  :CQuantityConversionDescriptor(fromExp, std::string{ mappingUnit })
+{
+    
+}
 CQuantityConversionDescriptor::CQuantityConversionDescriptor(double fromExp, const std::string& mappingUnit)
   : m_dFromExponent(fromExp)
 {

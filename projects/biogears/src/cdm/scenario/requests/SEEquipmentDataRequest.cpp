@@ -19,53 +19,62 @@ SEEquipmentDataRequest::SEEquipmentDataRequest(const SEDecimalFormat* dfault)
 {
   m_Type = "";
 }
-
+//-----------------------------------------------------------------------------
 SEEquipmentDataRequest::~SEEquipmentDataRequest()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEEquipmentDataRequest::Clear()
 {
   SEDataRequest::Clear();
   m_Type = "";
 }
-
+//-----------------------------------------------------------------------------
 bool SEEquipmentDataRequest::Load(const CDM::EquipmentDataRequestData& in)
 {
   SEDataRequest::Load(in);
   SetType(in.Type());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::EquipmentDataRequestData* SEEquipmentDataRequest::Unload() const
 {
   CDM::EquipmentDataRequestData* data = new CDM::EquipmentDataRequestData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEEquipmentDataRequest::Unload(CDM::EquipmentDataRequestData& data) const
 {
   SEDataRequest::Unload(data);
   if (HasType())
     data.Type(m_Type);
 }
-
+//-----------------------------------------------------------------------------
 bool SEEquipmentDataRequest::HasType() const
 {
   return !(m_Type.empty());
 }
-std::string SEEquipmentDataRequest::GetType() const
+//-----------------------------------------------------------------------------
+const char* SEEquipmentDataRequest::GetType() const
 {
-  return m_Type;
+  return m_Type.c_str();
 }
+//-----------------------------------------------------------------------------
+void SEEquipmentDataRequest::SetType(const char* Type)
+{
+  m_Type = Type;
+}
+//-----------------------------------------------------------------------------
 void SEEquipmentDataRequest::SetType(const std::string& Type)
 {
   m_Type = Type;
 }
+//-----------------------------------------------------------------------------
 void SEEquipmentDataRequest::InvalidateType()
 {
   m_Type = "";
 }
+//-----------------------------------------------------------------------------
 }
