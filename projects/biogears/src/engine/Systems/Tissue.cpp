@@ -523,44 +523,6 @@ void Tissue::PreProcess()
 {
   CalculateTissueFluidFluxes();
   CalculateOncoticPressure();
-
-  //Lots of debug tracking
-  /* for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
-    SELiquidCompartment& ex = m_data.GetCompartments().GetExtracellularFluid(*t);
-    SEFluidCircuitPath* l = m_LymphPaths[&ex];
-    std::string name = l->GetName();
-    m_data.GetDataTrack().Probe(name, l->GetNextFlow(VolumePerTimeUnit::mL_Per_min));
-    SEFluidCircuitPath* extraCOP = m_InterstitialCopPaths[t];
-    std::string name2 = extraCOP->GetName();
-    m_data.GetDataTrack().Probe(name2 + "Flow", extraCOP->GetFlow(VolumePerTimeUnit::mL_Per_min));
-    m_data.GetDataTrack().Probe(name2 + "COP", extraCOP->GetNextPressureSource(PressureUnit::mmHg));
-    double albuminConcentration = ex.GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-    m_data.GetDataTrack().Probe(ex.GetName() + "Albumin_g_Per_dL", albuminConcentration);
-    SELiquidCompartment* vas = m_TissueToVascular[t];
-    std::string name3 = vas->GetName();
-    SEFluidCircuitPath* vasCOP;
-    if (name3 == BGE::VascularCompartment::Gut) {
-      for (auto c : vas->GetChildren()) {
-        name3 = c->GetName();
-        vasCOP = m_VascularCopPaths[c];
-        m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
-        albuminConcentration = c->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-        m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
-      }
-    } else {
-      name3 = vas->GetName();
-      if (name3 == BGE::VascularCompartment::LeftKidney)
-        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftRenalArtery);
-      if (name3 == BGE::VascularCompartment::RightKidney)
-        vas = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery);
-      vasCOP = m_VascularCopPaths[vas];
-      m_data.GetDataTrack().Probe(name3 + "COP", vasCOP->GetNextPressureSource(PressureUnit::mmHg));
-      albuminConcentration = vas->GetSubstanceQuantity(*m_Albumin)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-      m_data.GetDataTrack().Probe(name3 + "Albumin_g_Per_dL", albuminConcentration);
-    }
-    m_data.GetDataTrack().Probe(t->GetName() + "_Resistance", m_EndothelialResistancePaths[t]->GetNextResistance(FlowResistanceUnit::mmHg_min_Per_mL));
-
-  }*/
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
