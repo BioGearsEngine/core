@@ -441,8 +441,7 @@ auto SEScalarQuantity<Unit>::operator*(const SEScalar& rhs) const -> SEScalarQua
 template <typename Unit>
 auto SEScalarQuantity<Unit>::operator*=(const SEScalar& rhs) -> SEScalarQuantity&
 {
-  SEScalarQuantity result{ *this };
-  return result.Multiply(rhs);
+  return this->Multiply(rhs);
 }
 
 } //namespace biogears
