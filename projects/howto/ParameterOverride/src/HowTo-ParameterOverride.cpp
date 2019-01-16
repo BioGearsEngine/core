@@ -74,9 +74,10 @@ void HowToParameterOverride()
 
   // Create an SEParameterOverride object
   // Set a parameter change (based on individual parameter units.)	
+  // Does ordering matter? Unlike in a scenario action call, the ordering does not matter for SDK calls
   SEOverride override;
   override.SetOverrideState(CDM::enumOnOff::On);
-  override.SetOverrideConformance(CDM::enumOnOff::Off);
+  override.SetOverrideConformance(CDM::enumOnOff::On);
   override.GetHeartRateOverride().SetValue(70, FrequencyUnit::Per_min);
   bg->ProcessAction(override);
   bg->GetLogger()->Info("Overriding BioGears Parameter.");
@@ -92,5 +93,58 @@ void HowToParameterOverride()
   bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
   bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
 
+  // Turn off and add another, this time with conformance off. NOTE: unlike in a patient action, here the heart rate override must be cleared to not be listed in the logger
+  override.SetOverrideState(CDM::enumOnOff::Off);
+  override.SetOverrideConformance(CDM::enumOnOff::On);
+  override.GetHeartRateOverride().Clear();
+  bg->ProcessAction(override);
+  bg->GetLogger()->Info("Override Turning Off.");
+
+  // Advance time
+  tracker.AdvanceModelTime(30);
+
+  bg->GetLogger()->Info(std::stringstream() << "The override has been off for 30s...");
+  bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
+  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
+
+  override.SetOverrideState(CDM::enumOnOff::On);
+  override.SetOverrideConformance(CDM::enumOnOff::Off);
+  override.GetRespirationRateOverride().SetValue(20, FrequencyUnit::Per_min);
+  override.GetHeartRateOverride().SetValue(90, FrequencyUnit::Per_min);
+  bg->ProcessAction(override);
+  bg->GetLogger()->Info("Overriding BioGears Parameter.");
+
+  // Advance time
+  tracker.AdvanceModelTime(90);
+
+  bg->GetLogger()->Info(std::stringstream() << "The override has been in place for 90s...");
+  bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
+  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
+
+  // Adding an override parameter while keeping the last override in place. Do NOT turn off the override, just add to it with an on call
+  override.SetOverrideState(CDM::enumOnOff::On);
+  override.SetOverrideConformance(CDM::enumOnOff::Off);
+  override.GetTidalVolumeOverride().SetValue(650, VolumeUnit::mL);
+  bg->ProcessAction(override);
+  bg->GetLogger()->Info("Overriding BioGears Parameter.");
+
+  // Advance time
+  tracker.AdvanceModelTime(90);
+
+  bg->GetLogger()->Info(std::stringstream() << "The override has been in place for 90s...");
+  bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
+  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
 
 }
