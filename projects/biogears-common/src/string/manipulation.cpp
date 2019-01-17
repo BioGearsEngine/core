@@ -18,6 +18,7 @@
 #include <biogears/string/manipulation.h>
 
 #include <algorithm>
+#include <sstream>
 
 using std::vector;
 using std::string;
@@ -39,27 +40,46 @@ namespace ara {
   //----------------------------------------------------------------------------
   double parse_double_or(double alt, const std::string& txt) {
     double x = alt;
+    #ifndef ANDROID
     try {
       x = std::stod(txt);
     } catch (...) {}
+    #else
+      std::stringstream ss;
+      ss << txt;
+      ss >> x;
+    #endif
+
     return x;
   }
 
   //----------------------------------------------------------------------------
   float parse_float_or(float alt, const std::string& txt) {
     float x = alt;
+    #ifndef ANDROID
     try {
       x = std::stof(txt);
     } catch (...) {}
+    #else
+      std::stringstream ss;
+      ss << txt;
+      ss >> x;
+    #endif
     return x;
   }
 
   //----------------------------------------------------------------------------
   int parse_int_or(int alt, const std::string& txt) {
     int x = alt;
+    #ifndef ANDROID
     try {
       x = std::stoi(txt);
     } catch (...) {}
+    #else
+      std::stringstream ss;
+      ss << txt;
+      ss >> x;
+    #endif
     return x;
   }
 

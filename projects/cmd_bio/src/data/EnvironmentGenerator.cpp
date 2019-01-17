@@ -15,7 +15,17 @@
 
 #include <fstream>
 #include <iostream>
-
+#include <cstdlib>
+#ifdef ANDROID
+  namespace std {
+    static double std::stod(const std::string& value, std::size_t* pos = 0){
+      char **end = value.c_str();
+      double result= std::strold(value.c_str(), end); 
+      *pos = *end - value.c_str();
+      return result;
+    }
+  }
+#endif
 namespace biogears {
 std::string ConvertTemperatureUnit(std::string unit);
 
@@ -140,7 +150,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     size_t pos = 0;
     try {
       av_data.value(std::stod(value, &pos));
-	  av_data.unit(ConvertTemperatureUnit(trim(value.substr(pos))));
+	    av_data.unit(ConvertTemperatureUnit(trim(value.substr(pos))));
       environment.AirVelocity(av_data);
     } catch (std::exception e) {
       rValue = false;

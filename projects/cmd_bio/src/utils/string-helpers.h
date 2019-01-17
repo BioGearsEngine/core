@@ -21,6 +21,20 @@
 #include <regex>
 #include <string>
 
+#ifdef ANDROID
+#include <cstdlib>
+  namespace std {
+  static double stod(const std::string& value, std::size_t* pos = 0){
+      std::stringstream ss;
+      ss << value;
+      double result;
+      ss >> result;
+     if(pos)
+      *pos = ss.tellp();
+      return result;
+    }
+  }
+#endif
 namespace biogears {
 //!
 //! \brief Replaces all instances of the string toReplace in the string S with the string replaceWith 

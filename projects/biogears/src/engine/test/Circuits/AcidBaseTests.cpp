@@ -1027,6 +1027,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
       strValues.push_back(substr);
     }
 
+#ifndef ANDROID
     O2_sat = std::stod(strValues[0]);
     CO2_sat = std::stod(strValues[2]);
     CO2PartialPressure_mmHg = (std::stod(strValues[3]) * 44.01) / (1000 * 0.0013815);
@@ -1034,6 +1035,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
     HCO3_mmol_Per_L = std::stod(strValues[4]);
     pH = std::stod(strValues[5]);
     volume_mL = 1000.0;
+#endif
   }
 
   //set compartment values (same as InitializeBloodGases):

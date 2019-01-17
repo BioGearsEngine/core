@@ -15,6 +15,14 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 #include <tuple>
 
+namespace std {
+  template <typename T>
+  std::string to_string( T value ) {
+    std::stringstream ss;
+    ss << value;
+    return ss.str();
+  }
+}
 namespace {
 
 const std::string subjectKey = "subject";

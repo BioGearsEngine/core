@@ -99,7 +99,11 @@ void SEDecimalFormat::SetStream(std::ofstream& s)
 {
   switch (m_Notation) {
   case DecimalNotation::Default:
-    s << std::defaultfloat << std::setprecision(m_Precision);
+    s 
+    #ifndef ANDROID
+      << std::defaultfloat 
+    #endif
+      << std::setprecision(m_Precision);
     break;
   case DecimalNotation::Fixed:
     s << std::fixed << std::setprecision(m_Precision);

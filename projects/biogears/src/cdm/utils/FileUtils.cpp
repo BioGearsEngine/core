@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <regex>
 #include <dirent.h>
+#include <cstdio>
 
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
 

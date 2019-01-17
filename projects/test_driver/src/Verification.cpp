@@ -17,6 +17,14 @@ specific language governing permissions and limitations under the License.
 #include "TestDriver.h"
 #include "Verification.h"
 
+namespace std {
+  template <typename T>
+  std::string to_string( T value ) {
+    std::stringstream ss;
+    ss << value;
+    return ss.str();
+  }
+}
 namespace
 {
 
