@@ -90,8 +90,8 @@ namespace tatrc {
   namespace physiology {
     namespace biogears {
 
-      class Circuits {
-      public:
+      namespace Circuits {
+      
         DEFINE_STATIC_STRING(FullCardiovascular);
         DEFINE_STATIC_STRING(Cardiovascular);
         DEFINE_STATIC_STRING(Renal);
@@ -109,20 +109,20 @@ namespace tatrc {
       // Chyme Circuit Enums //
       ///////////////////////////
 
-      class ChymeNode {
-      public:
+      namespace ChymeNode {
+      
         DEFINE_STATIC_STRING(SmallIntestineC1);
       };
 
-      class ChymePath {
-      public:
+      namespace ChymePath {
+      
         DEFINE_STATIC_STRING(SmallIntestineC1ToSmallIntestine1);
         DEFINE_STATIC_STRING(GroundToSmallIntestineC1);
         DEFINE_STATIC_STRING(GutE3ToGroundGI);
       };
 
-      class RespiratoryNode {
-      public:
+      namespace RespiratoryNode {
+      
         DEFINE_STATIC_STRING(Carina);
 
         DEFINE_STATIC_STRING(LeftAlveoli);
@@ -145,8 +145,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(RespiratoryMuscle);
       };
 
-      class RespiratoryPath {
-      public:
+      namespace RespiratoryPath {
+      
         DEFINE_STATIC_STRING(CarinaToLeftAnatomicDeadSpace);
         DEFINE_STATIC_STRING(CarinaToRightAnatomicDeadSpace);
 
@@ -185,8 +185,8 @@ namespace tatrc {
       // Anesthesia Machine Circuit Enums //
       //////////////////////////////////////
 
-      class AnesthesiaMachineNode {
-      public:
+      namespace AnesthesiaMachineNode {
+      
         DEFINE_STATIC_STRING(AnesthesiaConnection);
         DEFINE_STATIC_STRING(ExpiratoryLimb);
         DEFINE_STATIC_STRING(GasInlet);
@@ -200,8 +200,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(YPiece);
       };
 
-      class AnesthesiaMachinePath {
-      public:
+      namespace AnesthesiaMachinePath {
+      
         DEFINE_STATIC_STRING(EnvironmentToVentilator);
         DEFINE_STATIC_STRING(EnvironmentToReliefValve);
         DEFINE_STATIC_STRING(VentilatorToVentilatorConnection);
@@ -220,8 +220,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(SelectorToEnvironment);
       };
 
-      class CombinedAnesthesiaMachinePath {
-      public:
+      namespace CombinedAnesthesiaMachinePath {
+      
         DEFINE_STATIC_STRING(AnesthesiaConnectionToMouth);
         DEFINE_STATIC_STRING(GroundConnection);
       };
@@ -230,13 +230,13 @@ namespace tatrc {
       // Inhaler Circuit Enums //
       ///////////////////////////
 
-      class InhalerNode {
-      public:
+      namespace InhalerNode {
+      
         DEFINE_STATIC_STRING(Mouthpiece);
       };
 
-      class InhalerPath {
-      public:
+      namespace InhalerPath {
+      
         DEFINE_STATIC_STRING(EnvironmentToMouthpiece);
         DEFINE_STATIC_STRING(MouthpieceToMouth);
       };
@@ -245,13 +245,13 @@ namespace tatrc {
       // Mechanical Ventilator Circuit Enums //
       ////////////////////////////////////////
 
-      class MechanicalVentilatorNode {
-      public:
+      namespace MechanicalVentilatorNode {
+      
         DEFINE_STATIC_STRING_EX(Connection, MechanicalVentilatorConnection);
       };
 
-      class MechanicalVentilatorPath {
-      public:
+      namespace MechanicalVentilatorPath {
+      
         DEFINE_STATIC_STRING_EX(ConnectionToMouth, MechanicalVentilatorConnectionToMouth);
         DEFINE_STATIC_STRING_EX(GroundToConnection, MechanicalVentilatorGroundToConnection);
       };
@@ -260,8 +260,8 @@ namespace tatrc {
       // Environment Gas Circuit Enums //
       ///////////////////////////////////
 
-      class EnvironmentNode {
-      public:
+      namespace EnvironmentNode {
+      
         DEFINE_STATIC_STRING(Ambient);
       };
 
@@ -269,8 +269,8 @@ namespace tatrc {
       // External Temperature Circuit Enums //
       ///////////////////////////////////////////
 
-      class ExternalTemperatureNode {
-      public:
+      namespace ExternalTemperatureNode {
+      
         DEFINE_STATIC_STRING(Active);
         DEFINE_STATIC_STRING(Clothing);
         DEFINE_STATIC_STRING(Enclosure);
@@ -280,8 +280,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Ambient);
       };
 
-      class ExternalTemperaturePath {
-      public:
+      namespace ExternalTemperaturePath {
+      
         DEFINE_STATIC_STRING(ActiveToClothing);
         DEFINE_STATIC_STRING(ClothingToEnclosure);
         DEFINE_STATIC_STRING(ClothingToEnvironment);
@@ -298,15 +298,15 @@ namespace tatrc {
       // Internal Temperature Circuit Enums //
       ////////////////////////////////////////
 
-      class InternalTemperatureNode {
-      public:
+      namespace InternalTemperatureNode {
+      
         DEFINE_STATIC_STRING(InternalCore);
         DEFINE_STATIC_STRING(InternalSkin);
         DEFINE_STATIC_STRING(InternalGround);
       };
 
-      class InternalTemperaturePath {
-      public:
+      namespace InternalTemperaturePath {
+      
         DEFINE_STATIC_STRING(GroundToInternalCore);
         DEFINE_STATIC_STRING(InternalCoreToInternalSkin);
         DEFINE_STATIC_STRING(InternalCoreToGround);
@@ -317,14 +317,14 @@ namespace tatrc {
       // Combined Temperature Circuit Enums //
       ////////////////////////////////////////
 
-      class CombinedTemperaturePath {
-      public:
+      namespace CombinedTemperaturePath {
+      
         DEFINE_STATIC_STRING(InternalCoreToExternalCore);
         DEFINE_STATIC_STRING(InternalSkinToExternalSkin);
       };
 
-      class CardiovascularNode {
-      public:
+      namespace CardiovascularNode {
+      
         DEFINE_STATIC_STRING(RightHeart1);
         DEFINE_STATIC_STRING(RightHeart2);
         DEFINE_STATIC_STRING(RightHeart3);
@@ -406,8 +406,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Ground);
       };
 
-      class CardiovascularPath {
-      public:
+      namespace CardiovascularPath {
+      
         // Heart and Lungs
         DEFINE_STATIC_STRING(VenaCavaToRightHeart2);
         DEFINE_STATIC_STRING(RightHeart2ToRightHeart1);
@@ -550,8 +550,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(VenaCavaBleed);
       };
 
-      class TissueNode {
-      public:
+      namespace TissueNode {
+      
         DEFINE_STATIC_STRING(BoneE1);
         DEFINE_STATIC_STRING(BoneE2);
         DEFINE_STATIC_STRING(BoneE3);
@@ -634,8 +634,7 @@ namespace tatrc {
         DEFINE_STATIC_STRING(SpleenL2);
       };
 
-      class TissuePath {
-      public:
+      namespace TissuePath {
         DEFINE_STATIC_STRING(BoneVToBoneE1);
         DEFINE_STATIC_STRING(BoneE1ToBoneE2);
         DEFINE_STATIC_STRING(BoneE2ToBoneE3);
@@ -774,8 +773,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(SpleenToLymphValve);
       };
 
-      class RenalNode {
-      public:
+      namespace RenalNode {
+      
         // Blood
         DEFINE_STATIC_STRING(RightAortaConnection);
         DEFINE_STATIC_STRING(RightRenalArtery);
@@ -817,8 +816,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Ground);
       };
 
-      class RenalPath {
-      public:
+      namespace RenalPath {
+      
         DEFINE_STATIC_STRING(RightAortaConnectionToRenalArtery);
         DEFINE_STATIC_STRING(RightRenalArteryToAfferentArteriole);
         DEFINE_STATIC_STRING(RightRenalArteryCompliance);
@@ -865,13 +864,12 @@ namespace tatrc {
         DEFINE_STATIC_STRING(BladderToGroundUrinate);
       };
 
-      class DigestionNode {
-      public:
+      namespace DigestionNode {
         DEFINE_STATIC_STRING(GutChyme);
       };
 
-      class DigestionPath {
-      public:
+      namespace DigestionPath {
+      
         DEFINE_STATIC_STRING(GutChymeToSmallIntestineVascular);
       };
     } //namespace biogears

@@ -59,10 +59,10 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear();
+  void Clear() override;
 
   // Set members to a stable homeostatic state
-  void Initialize();
+  void Initialize() override;
 
   // Load a state
   virtual bool Load(const CDM::BioGearsCardiovascularSystemData& in);
@@ -72,7 +72,7 @@ protected:
   virtual void Unload(CDM::BioGearsCardiovascularSystemData& data) const;
 
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
-  void SetUp();
+  void SetUp() override;
 
 public:
   void AtSteadyState();

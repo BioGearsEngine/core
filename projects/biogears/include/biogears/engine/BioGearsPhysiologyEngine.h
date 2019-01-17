@@ -47,24 +47,20 @@ DEFINE_STATIC_STRING(AnesthesiaMachine);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-	  ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(ActiveCardiovascular);
-      _values.push_back(Cardiovascular);
-      _values.push_back(Renal);
-      _values.push_back(Respiratory);
-      _values.push_back(RespiratoryAndAnesthesiaMachine);
-      _values.push_back(RespiratoryAndInhaler);
-      _values.push_back(RespiratoryAndMechanicalVentilator);
-      _values.push_back(Aerosol);
-      _values.push_back(AerosolAndInhaler);
-      _values.push_back(AnesthesiaMachine);
-    }
+    static std::vector<std::string> _values = {
+      ActiveCardiovascular
+      ,Cardiovascular
+      ,Renal
+      ,Respiratory
+      ,RespiratoryAndAnesthesiaMachine
+      ,RespiratoryAndInhaler
+      ,RespiratoryAndMechanicalVentilator
+      ,Aerosol
+      ,AerosolAndInhaler
+      ,AnesthesiaMachine
+    };
     return _values;
   }
-
-
   
 };
 
@@ -74,16 +70,11 @@ DEFINE_STATIC_STRING_EX(SmallIntestine, SmallIntestineChyme);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(SmallIntestine);
-    }
+    static std::vector<std::string> _values = {
+      SmallIntestine
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace ChymeLink {
@@ -92,11 +83,9 @@ namespace ChymeLink {
   static const std::vector<std::string>& GetValues()
   {
     
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(SmallIntestineChymeToVasculature);
-    }
+    static std::vector<std::string> _values = {
+      SmallIntestineChymeToVasculature
+    };
     return _values;
   }
 };
@@ -124,27 +113,25 @@ namespace PulmonaryCompartment {
   static const std::vector<std::string>& GetValues()
   {
     
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Mouth);
-      _values.push_back(Stomach);
-      _values.push_back(Carina);
-      _values.push_back(Lungs);
-      _values.push_back(LeftLung);
-      _values.push_back(LeftDeadSpace);
-      _values.push_back(LeftAlveoli);
-      _values.push_back(RightLung);
-      _values.push_back(RightDeadSpace);
-      _values.push_back(RightAlveoli);
-      _values.push_back(PleuralCavity);
-      _values.push_back(LeftPleuralCavity);
-      _values.push_back(RightPleuralCavity);
-      _values.push_back(LeftAlveoliLeak);
-      _values.push_back(LeftChestLeak);
-      _values.push_back(RightAlveoliLeak);
-      _values.push_back(RightChestLeak);
-    }
+    static std::vector<std::string> _values = {
+      Mouth
+      ,Stomach
+      ,Carina
+      ,Lungs
+      ,LeftLung
+      ,LeftDeadSpace
+      ,LeftAlveoli
+      ,RightLung
+      ,RightDeadSpace
+      ,RightAlveoli
+      ,PleuralCavity
+      ,LeftPleuralCavity
+      ,RightPleuralCavity
+      ,LeftAlveoliLeak
+      ,LeftChestLeak
+      ,RightAlveoliLeak
+      ,RightChestLeak
+    };
     return _values;
   }
 };
@@ -172,27 +159,25 @@ namespace PulmonaryLink {
   static const std::vector<std::string>& GetValues()
   {
     
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(EnvironmentToMouth);
-      _values.push_back(MouthToCarina);
-      _values.push_back(MouthToStomach);
-      _values.push_back(CarinaToLeftDeadSpace);
-      _values.push_back(LeftDeadSpaceToAlveoli);
-      _values.push_back(CarinaToRightDeadSpace);
-      _values.push_back(RightDeadSpaceToAlveoli);
-      _values.push_back(EnvironmentToLeftChestLeak);
-      _values.push_back(EnvironmentToRightChestLeak);
-      _values.push_back(LeftAlveoliLeakToLeftPleural);
-      _values.push_back(LeftAlveoliToLeftAlveoliLeak);
-      _values.push_back(LeftChestLeakToLeftPleural);
-      _values.push_back(LeftPleuralToEnvironment);
-      _values.push_back(RightAlveoliLeakToRightPleural);
-      _values.push_back(RightAlveoliToRightAlveoliLeak);
-      _values.push_back(RightChestLeakToRightPleural);
-      _values.push_back(RightPleuralToEnvironment);
-    }
+    static std::vector<std::string> _values = {
+      EnvironmentToMouth
+      ,MouthToCarina
+      ,MouthToStomach
+      ,CarinaToLeftDeadSpace
+      ,LeftDeadSpaceToAlveoli
+      ,CarinaToRightDeadSpace
+      ,RightDeadSpaceToAlveoli
+      ,EnvironmentToLeftChestLeak
+      ,EnvironmentToRightChestLeak
+      ,LeftAlveoliLeakToLeftPleural
+      ,LeftAlveoliToLeftAlveoliLeak
+      ,LeftChestLeakToLeftPleural
+      ,LeftPleuralToEnvironment
+      ,RightAlveoliLeakToRightPleural
+      ,RightAlveoliToRightAlveoliLeak
+      ,RightChestLeakToRightPleural
+      ,RightPleuralToEnvironment
+    };
     return _values;
   }
 
@@ -216,28 +201,23 @@ DEFINE_STATIC_STRING_EX(Spleen, SpleenTissue);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Bone);
-      _values.push_back(Brain);
-      _values.push_back(Fat);
-      _values.push_back(Gut);
-      _values.push_back(LeftKidney);
-      _values.push_back(LeftLung);
-      _values.push_back(Liver);
-      _values.push_back(Muscle);
-      _values.push_back(Myocardium);
-      _values.push_back(RightKidney);
-      _values.push_back(RightLung);
-      _values.push_back(Skin);
-      _values.push_back(Spleen);
-    }
+    static std::vector<std::string> _values = {
+      Bone
+      ,Brain
+      ,Fat
+      ,Gut
+      ,LeftKidney
+      ,LeftLung
+      ,Liver
+      ,Muscle
+      ,Myocardium
+      ,RightKidney
+      ,RightLung
+      ,Skin
+      ,Spleen
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace ExtravascularCompartment {
@@ -272,42 +252,36 @@ DEFINE_STATIC_STRING_EX(SpleenIntracellular, SpleenTissueIntracellular);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(BoneExtracellular);
-      _values.push_back(BrainExtracellular);
-      _values.push_back(FatExtracellular);
-      _values.push_back(GutExtracellular);
-      _values.push_back(LeftKidneyExtracellular);
-      _values.push_back(LeftLungExtracellular);
-      _values.push_back(LiverExtracellular);
-      _values.push_back(MuscleExtracellular);
-      _values.push_back(MyocardiumExtracellular);
-      _values.push_back(RightKidneyExtracellular);
-      _values.push_back(RightLungExtracellular);
-      _values.push_back(SkinExtracellular);
-      _values.push_back(SpleenExtracellular);
-
-      _values.push_back(BoneIntracellular);
-      _values.push_back(BrainIntracellular);
-      _values.push_back(FatIntracellular);
-      _values.push_back(GutIntracellular);
-      _values.push_back(LeftKidneyIntracellular);
-      _values.push_back(LeftLungIntracellular);
-      _values.push_back(LiverIntracellular);
-      _values.push_back(MuscleIntracellular);
-      _values.push_back(MyocardiumIntracellular);
-      _values.push_back(RightKidneyIntracellular);
-      _values.push_back(RightLungIntracellular);
-      _values.push_back(SkinIntracellular);
-      _values.push_back(SpleenIntracellular);
-    }
+    static std::vector<std::string> _values = {
+       BoneExtracellular
+      ,BrainExtracellular
+      ,FatExtracellular
+      ,GutExtracellular
+      ,LeftKidneyExtracellular
+      ,LeftLungExtracellular
+      ,LiverExtracellular
+      ,MuscleExtracellular
+      ,MyocardiumExtracellular
+      ,RightKidneyExtracellular
+      ,RightLungExtracellular
+      ,SkinExtracellular
+      ,SpleenExtracellular
+      ,BoneIntracellular
+      ,BrainIntracellular
+      ,FatIntracellular
+      ,GutIntracellular
+      ,LeftKidneyIntracellular
+      ,LeftLungIntracellular
+      ,LiverIntracellular
+      ,MuscleIntracellular
+      ,MyocardiumIntracellular
+      ,RightKidneyIntracellular
+      ,RightLungIntracellular
+      ,SkinIntracellular
+      ,SpleenIntracellular
+    };
     return _values;
   }
-
-
-  
 };
 
 namespace VascularCompartment {
@@ -376,71 +350,66 @@ DEFINE_STATIC_STRING(Ground);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Aorta);
-      _values.push_back(Heart);
-      _values.push_back(Myocardium);
-      _values.push_back(LeftHeart);
-      _values.push_back(RightHeart);
-      _values.push_back(Pericardium);
-      _values.push_back(VenaCava);
-      _values.push_back(PulmonaryArteries);
-      _values.push_back(PulmonaryCapillaries);
-      _values.push_back(PulmonaryVeins);
-      _values.push_back(Lungs);
-      _values.push_back(LeftLung);
-      _values.push_back(LeftPulmonaryArteries);
-      _values.push_back(LeftPulmonaryCapillaries);
-      _values.push_back(LeftPulmonaryVeins);
-      _values.push_back(RightLung);
-      _values.push_back(RightPulmonaryArteries);
-      _values.push_back(RightPulmonaryCapillaries);
-      _values.push_back(RightPulmonaryVeins);
-      _values.push_back(Kidneys);
-      _values.push_back(LeftKidney);
-      _values.push_back(LeftRenalArtery);
-      _values.push_back(LeftNephron);
-      _values.push_back(LeftAfferentArteriole);
-      _values.push_back(LeftGlomerularCapillaries);
-      _values.push_back(LeftEfferentArteriole);
-      _values.push_back(LeftPeritubularCapillaries);
-      _values.push_back(LeftBowmansCapsules);
-      _values.push_back(LeftTubules);
-      _values.push_back(LeftRenalVein);
-      _values.push_back(RightKidney);
-      _values.push_back(RightRenalArtery);
-      _values.push_back(RightNephron);
-      _values.push_back(RightAfferentArteriole);
-      _values.push_back(RightGlomerularCapillaries);
-      _values.push_back(RightEfferentArteriole);
-      _values.push_back(RightPeritubularCapillaries);
-      _values.push_back(RightBowmansCapsules);
-      _values.push_back(RightTubules);
-      _values.push_back(RightRenalVein);
-      _values.push_back(Bone);
-      _values.push_back(Brain);
-      _values.push_back(Fat);
-      _values.push_back(Gut);
-      _values.push_back(Splanchnic);
-      _values.push_back(SmallIntestine);
-      _values.push_back(LargeIntestine);
-      _values.push_back(Liver);
-      _values.push_back(Spleen);
-      _values.push_back(Skin);
-      _values.push_back(Muscle);
-      _values.push_back(LeftArm);
-      _values.push_back(LeftLeg);
-      _values.push_back(RightArm);
-      _values.push_back(RightLeg);
-      //_values.push_back(Ground);
-    }
+    static std::vector<std::string> _values = {
+      Aorta
+      ,Heart
+      ,Myocardium
+      ,LeftHeart
+      ,RightHeart
+      ,Pericardium
+      ,VenaCava
+      ,PulmonaryArteries
+      ,PulmonaryCapillaries
+      ,PulmonaryVeins
+      ,Lungs
+      ,LeftLung
+      ,LeftPulmonaryArteries
+      ,LeftPulmonaryCapillaries
+      ,LeftPulmonaryVeins
+      ,RightLung
+      ,RightPulmonaryArteries
+      ,RightPulmonaryCapillaries
+      ,RightPulmonaryVeins
+      ,Kidneys
+      ,LeftKidney
+      ,LeftRenalArtery
+      ,LeftNephron
+      ,LeftAfferentArteriole
+      ,LeftGlomerularCapillaries
+      ,LeftEfferentArteriole
+      ,LeftPeritubularCapillaries
+      ,LeftBowmansCapsules
+      ,LeftTubules
+      ,LeftRenalVein
+      ,RightKidney
+      ,RightRenalArtery
+      ,RightNephron
+      ,RightAfferentArteriole
+      ,RightGlomerularCapillaries
+      ,RightEfferentArteriole
+      ,RightPeritubularCapillaries
+      ,RightBowmansCapsules
+      ,RightTubules
+      ,RightRenalVein
+      ,Bone
+      ,Brain
+      ,Fat
+      ,Gut
+      ,Splanchnic
+      ,SmallIntestine
+      ,LargeIntestine
+      ,Liver
+      ,Spleen
+      ,Skin
+      ,Muscle
+      ,LeftArm
+      ,LeftLeg
+      ,RightArm
+      ,RightLeg
+      //,Ground
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace VascularLink {
@@ -572,94 +541,89 @@ DEFINE_STATIC_STRING(RightPeritubularCapillariesToRenalVein);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(VenaCavaToRightHeart);
-      _values.push_back(RightHeartToLeftPulmonaryArteries);
-      _values.push_back(LeftPulmonaryArteriesToCapillaries);
-      _values.push_back(LeftPulmonaryArteriesToVeins);
-      _values.push_back(LeftPulmonaryCapillariesToVeins);
-      _values.push_back(LeftPulmonaryVeinsToLeftHeart);
-      _values.push_back(RightHeartToRightPulmonaryArteries);
-      _values.push_back(RightPulmonaryArteriesToCapillaries);
-      _values.push_back(RightPulmonaryArteriesToVeins);
-      _values.push_back(RightPulmonaryCapillariesToVeins);
-      _values.push_back(RightPulmonaryVeinsToLeftHeart);
-      _values.push_back(LeftHeartToAorta);
-      _values.push_back(AortaToBone);
-      _values.push_back(BoneToVenaCava);
-      _values.push_back(AortaToBrain);
-      _values.push_back(BrainToVenaCava);
-      _values.push_back(AortaToFat);
-      _values.push_back(FatToVenaCava);
-      _values.push_back(AortaToLargeIntestine);
-      _values.push_back(LargeIntestineToLiver);
-      _values.push_back(AortaToLeftArm);
-      _values.push_back(LeftArmToVenaCava);
-      _values.push_back(AortaToLeftKidney);
-      _values.push_back(LeftKidneyToVenaCava);
-      _values.push_back(AortaToLeftLeg);
-      _values.push_back(LeftLegToVenaCava);
-      _values.push_back(AortaToLiver);
-      _values.push_back(LiverToVenaCava);
-      _values.push_back(AortaToMuscle);
-      _values.push_back(MuscleToVenaCava);
-      _values.push_back(AortaToMyocardium);
-      _values.push_back(MyocardiumToVenaCava);
-      _values.push_back(AortaToRightArm);
-      _values.push_back(RightArmToVenaCava);
-      _values.push_back(AortaToRightKidney);
-      _values.push_back(RightKidneyToVenaCava);
-      _values.push_back(AortaToRightLeg);
-      _values.push_back(RightLegToVenaCava);
-      _values.push_back(AortaToSkin);
-      _values.push_back(SkinToVenaCava);
-      _values.push_back(AortaToSmallIntestine);
-      _values.push_back(SmallIntestineToLiver);
-      _values.push_back(AortaToSplanchnic);
-      _values.push_back(SplanchnicToLiver);
-      _values.push_back(AortaToSpleen);
-      _values.push_back(SpleenToLiver);
+    static std::vector<std::string> _values = {
+      VenaCavaToRightHeart
+      ,RightHeartToLeftPulmonaryArteries
+      ,LeftPulmonaryArteriesToCapillaries
+      ,LeftPulmonaryArteriesToVeins
+      ,LeftPulmonaryCapillariesToVeins
+      ,LeftPulmonaryVeinsToLeftHeart
+      ,RightHeartToRightPulmonaryArteries
+      ,RightPulmonaryArteriesToCapillaries
+      ,RightPulmonaryArteriesToVeins
+      ,RightPulmonaryCapillariesToVeins
+      ,RightPulmonaryVeinsToLeftHeart
+      ,LeftHeartToAorta
+      ,AortaToBone
+      ,BoneToVenaCava
+      ,AortaToBrain
+      ,BrainToVenaCava
+      ,AortaToFat
+      ,FatToVenaCava
+      ,AortaToLargeIntestine
+      ,LargeIntestineToLiver
+      ,AortaToLeftArm
+      ,LeftArmToVenaCava
+      ,AortaToLeftKidney
+      ,LeftKidneyToVenaCava
+      ,AortaToLeftLeg
+      ,LeftLegToVenaCava
+      ,AortaToLiver
+      ,LiverToVenaCava
+      ,AortaToMuscle
+      ,MuscleToVenaCava
+      ,AortaToMyocardium
+      ,MyocardiumToVenaCava
+      ,AortaToRightArm
+      ,RightArmToVenaCava
+      ,AortaToRightKidney
+      ,RightKidneyToVenaCava
+      ,AortaToRightLeg
+      ,RightLegToVenaCava
+      ,AortaToSkin
+      ,SkinToVenaCava
+      ,AortaToSmallIntestine
+      ,SmallIntestineToLiver
+      ,AortaToSplanchnic
+      ,SplanchnicToLiver
+      ,AortaToSpleen
+      ,SpleenToLiver
 
-      _values.push_back(BoneVascularToTissue);
-      _values.push_back(BrainVascularToTissue);
-      _values.push_back(FatVascularToTissue);
-      _values.push_back(SmallIntestineVascularToTissue);
-      _values.push_back(LargeIntestineVascularToTissue);
-      _values.push_back(SplanchnicVascularToTissue);
-      _values.push_back(LeftKidneyVascularToTissue);
-      _values.push_back(LeftLungVascularToTissue);
-      _values.push_back(LiverVascularToTissue);
-      _values.push_back(MuscleVascularToTissue);
-      _values.push_back(MyocardiumVascularToTissue);
-      _values.push_back(RightKidneyVascularToTissue);
-      _values.push_back(RightLungVascularToTissue);
-      _values.push_back(SkinVascularToTissue);
-      _values.push_back(SpleenVascularToTissue);
+      ,BoneVascularToTissue
+      ,BrainVascularToTissue
+      ,FatVascularToTissue
+      ,SmallIntestineVascularToTissue
+      ,LargeIntestineVascularToTissue
+      ,SplanchnicVascularToTissue
+      ,LeftKidneyVascularToTissue
+      ,LeftLungVascularToTissue
+      ,LiverVascularToTissue
+      ,MuscleVascularToTissue
+      ,MyocardiumVascularToTissue
+      ,RightKidneyVascularToTissue
+      ,RightLungVascularToTissue
+      ,SkinVascularToTissue
+      ,SpleenVascularToTissue
 
-      _values.push_back(LeftRenalArteryToAfferentArteriole);
-      _values.push_back(LeftAfferentArterioleToGlomerularCapillaries);
-      _values.push_back(LeftGlomerularCapillariesToEfferentArteriole);
-      _values.push_back(LeftGlomerularCapillariesToBowmansCapsules);
-      _values.push_back(LeftBowmansCapsulesToTubules);
-      _values.push_back(LeftTubulesToPeritubularCapillaries);
-      _values.push_back(LeftEfferentArterioleToPeritubularCapillaries);
-      _values.push_back(LeftPeritubularCapillariesToRenalVein);
-      _values.push_back(RightRenalArteryToAfferentArteriole);
-      _values.push_back(RightAfferentArterioleToGlomerularCapillaries);
-      _values.push_back(RightGlomerularCapillariesToEfferentArteriole);
-      _values.push_back(RightGlomerularCapillariesToBowmansCapsules);
-      _values.push_back(RightBowmansCapsulesToTubules);
-      _values.push_back(RightTubulesToPeritubularCapillaries);
-      _values.push_back(RightEfferentArterioleToPeritubularCapillaries);
-      _values.push_back(RightPeritubularCapillariesToRenalVein);
-    }
+      ,LeftRenalArteryToAfferentArteriole
+      ,LeftAfferentArterioleToGlomerularCapillaries
+      ,LeftGlomerularCapillariesToEfferentArteriole
+      ,LeftGlomerularCapillariesToBowmansCapsules
+      ,LeftBowmansCapsulesToTubules
+      ,LeftTubulesToPeritubularCapillaries
+      ,LeftEfferentArterioleToPeritubularCapillaries
+      ,LeftPeritubularCapillariesToRenalVein
+      ,RightRenalArteryToAfferentArteriole
+      ,RightAfferentArterioleToGlomerularCapillaries
+      ,RightGlomerularCapillariesToEfferentArteriole
+      ,RightGlomerularCapillariesToBowmansCapsules
+      ,RightBowmansCapsulesToTubules
+      ,RightTubulesToPeritubularCapillaries
+      ,RightEfferentArterioleToPeritubularCapillaries
+      ,RightPeritubularCapillariesToRenalVein
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace UrineCompartment {
@@ -671,19 +635,14 @@ DEFINE_STATIC_STRING(Bladder);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Ureters);
-      _values.push_back(LeftUreter);
-      _values.push_back(RightUreter);
-      _values.push_back(Bladder);
-    }
+    static std::vector<std::string> _values = {
+      Ureters
+      ,LeftUreter
+      ,RightUreter
+      ,Bladder
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace UrineLink {
@@ -699,21 +658,16 @@ DEFINE_STATIC_STRING(BladderToGroundSource);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(LeftTubulesToUreter);
-      _values.push_back(LeftUreterToBladder);
-      _values.push_back(RightTubulesToUreter);
-      _values.push_back(RightUreterToBladder);
-      _values.push_back(BladderToGround);
-      _values.push_back(BladderToGroundSource);
-    }
+    static std::vector<std::string> _values = {
+      LeftTubulesToUreter
+      ,LeftUreterToBladder
+      ,RightTubulesToUreter
+      ,RightUreterToBladder
+      ,BladderToGround
+      ,BladderToGroundSource
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace LymphCompartment {
@@ -722,16 +676,11 @@ DEFINE_STATIC_STRING(Lymph);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Lymph);
-    }
+    static std::vector<std::string> _values = {
+      Lymph
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace LymphLink {
@@ -754,24 +703,22 @@ DEFINE_STATIC_STRING(LymphToVenaCava);
 
 static const std::vector<std::string>& GetValues()
 {
-  static std::vector<std::string> _values;
-  ::biogears::ScopedFileSystemLock lock;
-  if (_values.empty()) {
-    _values.push_back(BoneTissueToLymph);
-    _values.push_back(BrainTissueToLymph);
-    _values.push_back(FatTissueToLymph);
-    _values.push_back(GutTissueToLymph);
-    _values.push_back(LeftKidneyTissueToLymph);
-    _values.push_back(LeftLungTissueToLymph);
-    _values.push_back(LiverTissueToLymph);
-    _values.push_back(MuscleTissueToLymph);
-    _values.push_back(MyocardiumTissueToLymph);
-    _values.push_back(RightKidneyTissueToLymph);
-    _values.push_back(RightLungTissueToLymph);
-    _values.push_back(SkinTissueToLymph);
-    _values.push_back(SpleenTissueToLymph);
-    _values.push_back(LymphToVenaCava);
-  }
+  static std::vector<std::string> _values = {
+     BoneTissueToLymph
+    ,BrainTissueToLymph
+    ,FatTissueToLymph
+    ,GutTissueToLymph
+    ,LeftKidneyTissueToLymph
+    ,LeftLungTissueToLymph
+    ,LiverTissueToLymph
+    ,MuscleTissueToLymph
+    ,MyocardiumTissueToLymph
+    ,RightKidneyTissueToLymph
+    ,RightLungTissueToLymph
+    ,SkinTissueToLymph
+    ,SpleenTissueToLymph
+    ,LymphToVenaCava
+  };
   return _values;
 }
 
@@ -794,25 +741,20 @@ DEFINE_STATIC_STRING(InternalGround);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Active);
-      _values.push_back(Ambient);
-      _values.push_back(Clothing);
-      _values.push_back(Enclosure);
-      _values.push_back(ExternalCore);
-      _values.push_back(ExternalSkin);
-      _values.push_back(ExternalGround);
-      _values.push_back(InternalCore);
-      _values.push_back(InternalSkin);
-      _values.push_back(InternalGround);
-    }
+    static std::vector<std::string> _values = {
+      Active
+      ,Ambient
+      ,Clothing
+      ,Enclosure
+      ,ExternalCore
+      ,ExternalSkin
+      ,ExternalGround
+      ,InternalCore
+      ,InternalSkin
+      ,InternalGround
+    };
     return _values;
-  }
-
-
-  
+  } 
 };
 
 namespace TemperatureLink {
@@ -836,31 +778,26 @@ DEFINE_STATIC_STRING(InternalSkinToExternalSkin);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(ActiveToClothing);
-      _values.push_back(ClothingToEnclosure);
-      _values.push_back(ClothingToEnvironment);
-      _values.push_back(ExternalCoreToGround);
-      _values.push_back(GroundToActive);
-      _values.push_back(GroundToClothing);
-      _values.push_back(GroundToEnclosure);
-      _values.push_back(GroundToEnvironment);
-      _values.push_back(ExternalSkinToGround);
-      _values.push_back(ExternalSkinToClothing);
-      _values.push_back(GroundToInternalCore);
-      _values.push_back(InternalCoreToInternalSkin);
-      _values.push_back(InternalCoreToGround);
-      _values.push_back(InternalSkinToGround);
-      _values.push_back(InternalCoreToExternalCore);
-      _values.push_back(InternalSkinToExternalSkin);
-    }
+    static std::vector<std::string> _values = {
+      ActiveToClothing
+      ,ClothingToEnclosure
+      ,ClothingToEnvironment
+      ,ExternalCoreToGround
+      ,GroundToActive
+      ,GroundToClothing
+      ,GroundToEnclosure
+      ,GroundToEnvironment
+      ,ExternalSkinToGround
+      ,ExternalSkinToClothing
+      ,GroundToInternalCore
+      ,InternalCoreToInternalSkin
+      ,InternalCoreToGround
+      ,InternalSkinToGround
+      ,InternalCoreToExternalCore
+      ,InternalSkinToExternalSkin
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace EnvironmentCompartment {
@@ -869,16 +806,11 @@ DEFINE_STATIC_STRING(Ambient);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Ambient);
-    }
+    static std::vector<std::string> _values = {
+      Ambient
+    };
     return _values;
-    }
-
-
-  
+    }  
 };
 
 namespace AnesthesiaMachineCompartment {
@@ -897,26 +829,21 @@ DEFINE_STATIC_STRING(YPiece);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(AnesthesiaConnection);
-      _values.push_back(ExpiratoryLimb);
-      _values.push_back(GasInlet);
-      _values.push_back(GasSource);
-      _values.push_back(InspiratoryLimb);
-      _values.push_back(ReliefValve);
-      _values.push_back(Scrubber);
-      _values.push_back(Selector);
-      _values.push_back(Ventilator);
-      _values.push_back(VentilatorConnection);
-      _values.push_back(YPiece);
-    }
+    static std::vector<std::string> _values = {
+      AnesthesiaConnection
+      ,ExpiratoryLimb
+      ,GasInlet
+      ,GasSource
+      ,InspiratoryLimb
+      ,ReliefValve
+      ,Scrubber
+      ,Selector
+      ,Ventilator
+      ,VentilatorConnection
+      ,YPiece
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace AnesthesiaMachineLink {
@@ -937,28 +864,23 @@ DEFINE_STATIC_STRING(Mask);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(VentilatorToSelector);
-      _values.push_back(SelectorToReliefValve);
-      _values.push_back(SelectorToScrubber);
-      _values.push_back(ScrubberToGasInlet);
-      _values.push_back(Exhaust);
-      _values.push_back(GasSourceToGasInlet);
-      _values.push_back(GasInletToInspiratoryLimb);
-      _values.push_back(InspiratoryLimbToYPiece);
-      _values.push_back(YPieceToExpiratoryLimb);
-      _values.push_back(ExpiratoryLimbToSelector);
-      _values.push_back(YPieceToAnesthesiaConnection);
-      _values.push_back(AnesthesiaConnectionLeak);
-      _values.push_back(Mask);
-    }
+    static std::vector<std::string> _values = {
+      VentilatorToSelector
+      ,SelectorToReliefValve
+      ,SelectorToScrubber
+      ,ScrubberToGasInlet
+      ,Exhaust
+      ,GasSourceToGasInlet
+      ,GasInletToInspiratoryLimb
+      ,InspiratoryLimbToYPiece
+      ,YPieceToExpiratoryLimb
+      ,ExpiratoryLimbToSelector
+      ,YPieceToAnesthesiaConnection
+      ,AnesthesiaConnectionLeak
+      ,Mask
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace InhalerCompartment {
@@ -967,16 +889,11 @@ DEFINE_STATIC_STRING(Mouthpiece);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Mouthpiece);
-    }
+    static std::vector<std::string> _values = {
+      Mouthpiece
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace InhalerLink {
@@ -986,17 +903,12 @@ DEFINE_STATIC_STRING(MouthpieceToMouth);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(EnvironmentToMouthpiece);
-      _values.push_back(MouthpieceToMouth);
-    }
+    static std::vector<std::string> _values = {
+      EnvironmentToMouthpiece
+      ,MouthpieceToMouth
+    };
     return _values;
   }
-
-
-
 };
 
 namespace MechanicalVentilatorCompartment {
@@ -1005,16 +917,11 @@ DEFINE_STATIC_STRING(Connection);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(Connection);
-    }
+    static std::vector<std::string> _values = {
+      Connection
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 namespace MechanicalVentilatorLink {
@@ -1023,16 +930,11 @@ DEFINE_STATIC_STRING(ConnectionToMouth);
 
   static const std::vector<std::string>& GetValues()
   {
-    static std::vector<std::string> _values;
-    ::biogears::ScopedFileSystemLock lock;
-    if (_values.empty()) {
-      _values.push_back(ConnectionToMouth);
-    }
+    static std::vector<std::string> _values = {
+      ConnectionToMouth
+    };
     return _values;
-  }
-
-
-  
+  }  
 };
 
 } //namespace biogears
