@@ -126,31 +126,31 @@ genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/runtime/jar/jdom-2.0.2.jar
         ${PROJECT_BINARY_DIR}/runtime/jar/javax.mail-1.6.1.jar
     )
-
+set (allocation_args "-Xms64M" "-Xmx1G" "-Xmn64M" "-Xss4m")
 set (args "")
 add_custom_target(gen-data
-    COMMAND ${CMAKE_COMMAND} -E echo "${Java_JAVA_EXECUTABLE} -classpath \"${java_classpath}\"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}"
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}
+    COMMAND ${CMAKE_COMMAND} -E echo "${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath \"${java_classpath}\"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}"
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.datamodel.dataset.DataSetReader ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 set (args "InitialPatientStates.config")
 add_custom_target(gen-states
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 if(ARA_Biogears_BUILD_DOCUMENTATION)
     add_custom_target(gen-website-docs
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx
-        COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRun.config
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRun.config
         COMMAND cd doc    #I hate windows
         COMMAND cd doxygen 
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
@@ -161,8 +161,8 @@ if(ARA_Biogears_BUILD_DOCUMENTATION)
 endif()
 set (args "ValidationSystems.config" )
 add_custom_target(run-system-validation
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -170,22 +170,22 @@ add_custom_target(run-system-validation
 #This can be deleted later, I took its functionality and stuck it in the previous command, not getting rid of it yet just in case
 #set (args "")
 #add_custom_target(report-system-validation
-#    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation ${args}
+#    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation ${args}
 #    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
 #    VERBATIM
 #    USES_TERMINAL
 #)
 set (args "ValidationPatients.config")
 add_custom_target(run-patient-validation
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.PatientValidation
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.PatientValidation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 set (args "ValidationDrugs.config")
 add_custom_target(run-drug-validation
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -193,7 +193,7 @@ add_custom_target(run-drug-validation
 
 set (args "VerificationScenarios.config")
 add_custom_target(run-verification
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -201,7 +201,7 @@ add_custom_target(run-verification
 
 set (args "DebugRun.config")
 add_custom_target(run-debug
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"    mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"    mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -209,28 +209,28 @@ add_custom_target(run-debug
 
 set (args "PlotRun.config")
 add_custom_target(run-plots
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 set (args "DebugPlots.config")
 add_custom_target(run-debug-plots
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 set (args "CDMUnitTests.config")
 add_custom_target(run-cdm-tests
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 set (args "BGEUnitTests.config")
 add_custom_target(run-bge-tests
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -241,21 +241,21 @@ add_custom_target(run-bge-tests
 
 set (args "ALL true")
 add_custom_target(rebase-scenarios
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.Rebase ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.Rebase ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 set (args "DebugRun.config true")
 add_custom_target(rebase-debug
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.Rebase ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.Rebase ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
 set (args "ALL false")
 add_custom_target(rebase-tests
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"    mil.tatrc.physiology.utilities.testing ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"    mil.tatrc.physiology.utilities.testing ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
@@ -263,7 +263,7 @@ add_custom_target(rebase-tests
 
 set (args "")
 add_custom_target(biogears-gui
-    COMMAND ${Java_JAVA_EXECUTABLE} -classpath "${java_classpath}"   mil.tatrc.physiology.biogears.gui.BioGearsGUI ${args}
+    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.biogears.gui.BioGearsGUI ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
