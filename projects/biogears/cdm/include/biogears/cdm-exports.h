@@ -15,13 +15,15 @@ specific language governing permissions and limitations under the License.
 
 #if defined(__clang__)
   #define BIOGEARS_CDM_API
-#elif defined(__gnu_linux__)
+#elif defined(__gnu_linux__) 
   #define BIOGEARS_CDM_API __attribute__ ((visibility ("default")))
-#else
+#elif defined(_WIN32)
   //#include <biogears/string-exports.h>
   //#ifdef biogears_cdm_EXPORTS
     #define BIOGEARS_CDM_API __declspec(dllexport)
   //#else
     //#define BIOGEARS_CDM_API __declspec(dllimport)
   //#endif
+#else 
+  #define BIOGEARS_CDM_API
 #endif

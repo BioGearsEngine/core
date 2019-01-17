@@ -14,13 +14,15 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #if defined(__clang__)
-#define BIOGEARS_JNI_API
+  #define BIOGEARS_JNI_API
 #elif defined(__gnu_linux__)
-#define BIOGEARS_JNI_API __attribute__ ((visibility ("default")))
-#else
-#ifdef biogears_jni_EXPORTS
-#define BIOGEARS_JNI_API __declspec(dllexport)
-#else
-#define BIOGEARS_JNI_API __declspec(dllimport)
-#endif
+  #define BIOGEARS_JNI_API __attribute__ ((visibility ("default")))
+#elif defined(_WIN32)
+  #ifdef biogears_jni_EXPORTS
+    #define BIOGEARS_JNI_API __declspec(dllexport)
+  #else
+    #define BIOGEARS_JNI_API __declspec(dllimport)
+  #endif
+#else 
+  #define BIOGEARS_JNI_API
 #endif
