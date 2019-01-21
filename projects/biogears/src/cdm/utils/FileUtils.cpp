@@ -84,7 +84,7 @@ bool CreateFilePath(const std::string& path)
   return true;
 }
 
-void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& regex)
+void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& regex, bool recurse)
 {
   DIR* d;
   dirent* ent;
@@ -104,16 +104,17 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
         if ( std::regex_search(filename,mask) )
           files.push_back(filename);
       } else {
-        ListFiles(filename, files, regex);
+        if(recurse)
+        {  ListFiles(filename, files, regex , recurse);  }
       }
     }
   }
 }
 
-std::vector<std::string> ListFiles(const std::string& dir, const std::string& regex)
+std::vector<std::string> ListFiles(const std::string& dir, const std::string& regex, bool recurse)
 {
   std::vector<std::string> files;
-  ListFiles(dir, files, regex);
+  ListFiles(dir, files, regex, recurse);
   return files;
 }
 

@@ -41,8 +41,8 @@ struct dirent;
 namespace biogears {
 bool BIOGEARS_API CreateFilePath(const std::string&);
 std::string BIOGEARS_API Replace(const std::string& original, const std::string& replace, const std::string& withThis);
-void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "");
-std::vector<std::string> BIOGEARS_API ListFiles(const std::string& dir, const std::string&regex);
+void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "", bool recurse = true);
+std::vector<std::string> BIOGEARS_API ListFiles(const std::string& dir, const std::string&regex, bool recurse = true);
 
 std::string BIOGEARS_API GetCurrentWorkingDirectory();
 void BIOGEARS_API DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories = true);

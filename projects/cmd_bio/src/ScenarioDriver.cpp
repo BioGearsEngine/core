@@ -64,10 +64,6 @@ void ScenarioDriver::LoadScenarios(std::vector<std::string> files)
 //!
 int runScenario(const std::string& patient, std::string XMLString)
 {
-
-  std::cout << "'"<<patient<<"'\n";
-  std::cout << "'"<<XMLString<<"'";
-
   std::string patientXML(trim(patient));
 
   std::string patientLog = "-" + patientXML;

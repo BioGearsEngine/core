@@ -59,8 +59,8 @@ int main(int argc, char** argv)
   if (argc > 1) {
     if (parser.exists("STATES")) {
       biogears::ScenarioDriver generator{ thread_count };
-      std::vector<std::string> patients = biogears::ParseConfigFile("patientListShort.config");
-      generator.LoadPatients(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
+      std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
+       generator.LoadPatients(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
       generator.run();
       while (!generator.stop_if_empty()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
       test.join();
     } else if (parser.exists("PATIENT")) { // run-patient-validation
       biogears::ScenarioDriver generator{ thread_count };
-      std::vector<std::string> patients = biogears::ParseConfigFile("patientListShort.config");
+      std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
       generator.LoadPatients(patients, std::string("Scenarios/Validation/Patient-Validation.xml"));
       generator.run();
       while (!generator.stop_if_empty()) {
