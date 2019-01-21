@@ -23,7 +23,7 @@
 
 //
 namespace biogears {
-int runScenario(std::string patient, std::string XMLString);
+int runScenario(const std::string& patient, std::string XMLString);
 
 //-------------------------------------------------------------------------------
 ScenarioDriver::ScenarioDriver(size_t thread_count)
@@ -62,7 +62,7 @@ void ScenarioDriver::LoadScenarios(std::vector<std::string> files)
 //! \param XMLString : a path to the xml scenario being used
 //! \return int 0 if no exceptions were encountered, otherwise 1
 //!
-int runScenario(std::string patient, std::string XMLString)
+int runScenario(const std::string& patient, std::string XMLString)
 {
 
   std::cout << "'"<<patient<<"'\n";

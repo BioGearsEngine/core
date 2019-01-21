@@ -68,6 +68,19 @@ inline std::string& ltrim(std::string& str, const std::string& chars = "\t\n\v\f
   str.erase(0, str.find_first_not_of(chars));
   return str;
 }
+    //-------------------------------------------------------------------------------
+//!
+//! \brief Trims all leading whitespaces of string str
+//! \param str : string to be trimmed
+//! \param chars : whitespace characters
+//! \return resulting string
+//! 
+inline std::string ltrim(const std::string& input, const std::string& chars = "\t\n\v\f\r ")
+{
+  std::string str(input);
+  str.erase(0, str.find_first_not_of(chars));
+  return str;
+}
 //-------------------------------------------------------------------------------
 //!
 //! \brief Trims all trailing whitespace of string str
@@ -77,6 +90,19 @@ inline std::string& ltrim(std::string& str, const std::string& chars = "\t\n\v\f
 //! 
 inline std::string& rtrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
 {
+  str.erase(str.find_last_not_of(chars) + 1);
+  return str;
+}
+//-------------------------------------------------------------------------------
+//!
+//! \brief Trims all trailing whitespace of string str
+//! \param str : string to be trimmed
+//! \param chars : whitespace characters
+//! \return resulting string
+//! 
+inline std::string rtrim(const std::string& input, const std::string& chars = "\t\n\v\f\r ")
+{
+  std::string str(input);
   str.erase(str.find_last_not_of(chars) + 1);
   return str;
 }
@@ -100,6 +126,18 @@ inline std::string& trim(std::string&& str, const std::string&& chars = "\t\n\v\
 //! 
 inline std::string& trim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
 {
+  return ltrim(rtrim(str, chars), chars);
+}
+//-------------------------------------------------------------------------------
+//!
+//! \brief Trims all leading and trailing whitespace of string str
+//! \param str : string to be trimmed
+//! \param chars :whitespace characters
+//! \return resulting string
+//! 
+inline std::string trim(const std::string& input, const std::string& chars = "\t\n\v\f\r ")
+{
+  std::string str(input);
   return ltrim(rtrim(str, chars), chars);
 }
 //-------------------------------------------------------------------------------
