@@ -73,15 +73,6 @@ set(LIB${PREFIX}_JNI_SOURCES ${JNI_SRCS} ${GEN_JNI_SRCS})
 #Define Logic
 ###############################################################################
 
-if (${PREFIX}_BUILD_STATIC)
-  add_compile_definitions(${PREFIX}_BUILT_AS_STATIC)
-endif()
-if(${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS)
-        add_compile_definitions(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-endif()
-if(${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS )
-        add_compile_definitions(BIOGEARS_THROW_NAN_EXCEPTIONS )
-endif()
 if(${PREFIX}_BUILD_STATIC)
   add_library(lib${PROJECT_NAME} STATIC ${LIB${PREFIX}_SOURCES} ${LIB${PREFIX}_HEADERS})
   add_library(Biogears::lib${PROJECT_NAME} ALIAS lib${PROJECT_NAME})
@@ -97,7 +88,7 @@ if(${PREFIX}_BUILD_STATIC)
     )
 
   if(WIN32)
-    list(APPEND ${PREFIX}_CPPFLAGS "_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" $ENV{PARALLEL_COMPILE} )
+    list(APPEND ${PREFIX}_CPPFLAGS _SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX $ENV{PARALLEL_COMPILE} )
   elseif(CMAKE_COMPILER_IS_GNUCXX)
     list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
     list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
@@ -106,10 +97,15 @@ endif()
   ###############################################################################
   # COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  target_compile_definitions(lib${PROJECT_NAME} PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
+  target_compile_definitions(lib${PROJECT_NAME} PUBLIC ${PREFIX}_BUILT_AS_STATIC ${${PREFIX}_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
   target_compile_definitions(lib${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
-  
+  if(${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS)
+        target_compile_definitions(lib${PROJECT_NAME} PUBLIC BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  endif()
+   if(${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS )
+        target_compile_definitions(lib${PROJECT_NAME} PUBLIC BIOGEARS_THROW_NAN_EXCEPTIONS )
+  endif()
   target_include_directories(lib${PROJECT_NAME}
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR}
       INTERFACE $<BUILD_INTERFACE:${${PREFIX}_GENERATED_INCLUDE_DIR}> 
@@ -152,7 +148,7 @@ else()
   ###############################################################################
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" > )
+  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX > )
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME}_cdm PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
@@ -195,11 +191,16 @@ else()
   ###############################################################################
   # libBiogears COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" > )
+  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX > )
   target_compile_definitions(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
   target_compile_definitions(lib${PROJECT_NAME}  PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
-  
+    if(${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS)
+        target_compile_definitions(lib${PROJECT_NAME} PUBLIC BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  endif()
+   if(${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS )
+        target_compile_definitions(lib${PROJECT_NAME} PUBLIC BIOGEARS_THROW_NAN_EXCEPTIONS )
+  endif()
   target_include_directories(lib${PROJECT_NAME} 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} 
       INTERFACE 
@@ -241,7 +242,7 @@ else()
   ###############################################################################
   # libBiogears_jni COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
-  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:"_SCL_SECURE_NO_WARNINGS" "_CRT_SECURE_NO_WARNINGS" "NOMINMAX" > )
+  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX > )
   target_compile_definitions(lib${PROJECT_NAME}_jni  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
   target_compile_definitions(lib${PROJECT_NAME}_jni  PRIVATE ${${PREFIX}_CPPFLAGS} )
   target_compile_options(lib${PROJECT_NAME}_jni PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
