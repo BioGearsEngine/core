@@ -20,7 +20,7 @@
 #include <gtest/gtest.h>
 
 #ifdef DISABLE_BIOGEARS_cmd_bio_TEST
-  #define TEST_FIXTURE_NAME DISABLED_Angles_Fixture
+  #define TEST_FIXTURE_NAME DISABLED_cmd_bio_Fixture
 #else
   #define TEST_FIXTURE_NAME cmd_bio_Fixture
 #endif

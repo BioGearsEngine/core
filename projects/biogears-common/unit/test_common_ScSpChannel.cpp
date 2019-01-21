@@ -8,8 +8,7 @@
 //- the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 //- CONDITIONS OF ANY KIND, either express or implied. See the License for the
 //-  specific language governing permissions and limitations under the License.
-//-------------------------------------------------------------------------------------------e
-
+//-------------------------------------------------------------------------------------------
 
 //!
 //! @author David Lee
@@ -25,12 +24,12 @@
 #include <gtest/gtest.h>
 
 #include <biogears/container/concurrent_ringbuffer.tci.h>
-#include <biogears/framework/scmp/scmp_channel.tci.h>
+#include <biogears/framework/scsp/scsp_channel.tci.h>
 
-#ifdef DISABLE_BIOGEARS_scmp_channel_TEST
-  #define TEST_FIXTURE_NAME DISABLED_scmp_channelFixture
+#ifdef DISABLE_BIOGEARS_ScSpChannel_TEST
+  #define TEST_FIXTURE_NAME DISABLED_ScSpChannelFixture
 #else
-  #define TEST_FIXTURE_NAME scmp_channelFixture
+  #define TEST_FIXTURE_NAME ScSpChannelFixture
 #endif
 
 
@@ -64,21 +63,21 @@ void TEST_FIXTURE_NAME::TearDown()
 
 }
 
-TEST_F(TEST_FIXTURE_NAME, scmp_channel_push_pop)
+TEST_F(TEST_FIXTURE_NAME, scsp_channel_push_pop)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using  biogears::scsp::Channel;
+  using  biogears::scsp::Source;
 
   using container = biogears::ConcurrentRingbuffer<int>;
 
-  Channel<container> channel{ 5 };
+  Channel<container> channel{5};
   auto  source = channel.as_source();
   for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
 
     if (i < 5) {
-      EXPECT_FALSE(source.insert(i));
+      EXPECT_FALSE(source->insert(i));
     } else {
-      EXPECT_TRUE(source.insert(i));
+      EXPECT_TRUE(source->insert(i));
     }
   }
 
@@ -87,10 +86,10 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_push_pop)
   }
 }
 
-TEST_F(TEST_FIXTURE_NAME, scmp_channel_active)
+TEST_F(TEST_FIXTURE_NAME, scsp_channel_active)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using  biogears::scsp::Channel;
+  using  biogears::scsp::Source;
 
   using container = biogears::ConcurrentRingbuffer<int>;
 
@@ -100,17 +99,17 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_active)
 
   EXPECT_TRUE(channel.active());
   channel.abort();
-  EXPECT_TRUE(source.active());
+  EXPECT_TRUE(source->active());
   channel.shutdown();
-  EXPECT_FALSE(source.active());
+  EXPECT_FALSE(source->active());
   EXPECT_FALSE(channel.active());
 
 }
 
-TEST_F(TEST_FIXTURE_NAME, scmp_channel_block_pop)
+TEST_F(TEST_FIXTURE_NAME, scsp_channel_block_pop)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using  biogears::scsp::Channel;
+  using  biogears::scsp::Source;
 
   using container = biogears::ConcurrentRingbuffer<int>;
 
@@ -118,11 +117,10 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_block_pop)
   auto  source = channel.as_source();
 
   auto future = std::async(std::launch::async
-  , [=]() mutable {
-    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })
-    {
+  , [channel=std::move(source)]() {
+    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
       std::this_thread::sleep_for(std::chrono::milliseconds(16));
-      source.insert(i);
+      channel->insert(i);
     }
 
   });
@@ -139,22 +137,21 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_block_pop)
 
 }
 
-TEST_F(TEST_FIXTURE_NAME, scmp_channel_shutdown)
+TEST_F(TEST_FIXTURE_NAME, scsp_channel_shutdown)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using  biogears::scsp::Channel;
+  using  biogears::scsp::Source;
 
   using container = biogears::ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();
-  auto  second_source = source;
+
   auto push = std::async(std::launch::async
-  , [second_source]() mutable {
-    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })
-    {
-      std::this_thread::sleep_for(std::chrono::milliseconds(32));
-      second_source.insert(0);
+  , [channel=std::move(source)]() {
+    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(16));
+      EXPECT_FALSE(channel->insert(i));
     }
 
   });

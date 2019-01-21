@@ -22,10 +22,10 @@
 
 #include <biogears/string/manipulation.h>
 
-#ifdef DISABLE_BIOGEARS_String_Mainpulation_TEST
-  #define TEST_FIXTURE_NAME DISABLED_String_Mainpulation_Fixture
+#ifdef DISABLE_BIOGEARS_StringMainpulation_TEST
+  #define TEST_FIXTURE_NAME DISABLED_StringMainpulation_Fixture
 #else
-  #define TEST_FIXTURE_NAME String_Mainpulation_Fixture
+  #define TEST_FIXTURE_NAME StringMainpulation_Fixture
 #endif
 
 

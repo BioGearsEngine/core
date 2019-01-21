@@ -14,7 +14,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
-  option(UNITTEST_biogears "Enable libBiogears UnitTest " ON)
+  option(UNITTEST_biogears-core "Enable libBiogears UnitTest " ON)
   option(UNITTEST_biogears-common "Enable Biogears-Common UnitTest " ON)
   option(UNITTEST_biogears-cmd "Enable Biogears command line UnitTest " ON)
 
@@ -35,7 +35,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
    add_source_files(BIOGEARS_COMMON_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/" "test_common*.h"  "common\\")
    add_source_files(BIOGEARS_COMMON_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/" "test_common*.cpp"  "common\\")
   endif()
-  if(UNITTEST_biogears)
+  if(UNITTEST_biogears-core)
    add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" "test_core*.h"  "core\\")
    add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" "test_core*.cpp"  "core\\")
   endif()
@@ -84,24 +84,22 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
  endif()
   endfunction() 
 
+  set(COMMON_TEST_LIST ${BIOGEARS_COMMON_UNITTEST_SOURCES})
+  list(TRANSFORM COMMON_TEST_LIST REPLACE ".*\\/test_common_(.*).cpp" "\\1")
   setup_unittest( GROUP biogears-common 
                   TESTS 
-                     "Angles"
-                     "Billboard"
-                     "ConcurrentBoundedQueue"
-                     "ConcurrentQueue"
-                     "ConcurrentRingbuffer"
-                     "Option"
-                     "OwningMutex"
-                     "Result"
-                     "scmp_channel"
-                     "scsp_channel"
-                     "StopWatch"
-                     "string_manipulation"
-                     "ThreadPoll"
-                     "WorkChannel")
-
-
+                    ${COMMON_TEST_LIST})
+  set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
+  list(TRANSFORM CORE_TEST_LIST REPLACE ".*\\/test_core_(.*).cpp" "\\1")
+  setup_unittest( GROUP biogears-core
+                  TESTS 
+                    ${CORE_TEST_LIST})
+  set(CMDLINE_TEST_LIST ${BIOGEARS_CMDLINE_UNITTEST_SOURCES})
+  list(TRANSFORM CMDLINE_TEST_LIST REPLACE ".*\\/test_cmdline_(.*).cpp" "\\1")
+  setup_unittest( GROUP biogears-cmd 
+                  TESTS 
+                    ${CMDLINE_TEST_LIST})
+ 
   set_target_properties(unittest PROPERTIES
                         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
                         CXX_STANDARD 14
@@ -111,10 +109,6 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   target_include_directories(unittest
       PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
-<<<<<<< origin/master
-      #${GTEST_INCLUDE_DIR}
-=======
->>>>>>> HEAD~32
       ${bio_INCLUDE_DIR}
   )
 
