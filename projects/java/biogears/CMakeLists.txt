@@ -289,7 +289,7 @@ add_dependencies(rebase-tests  ${PROJECT_NAME})
 add_dependencies(biogears-gui  ${PROJECT_NAME})
 
 
-if(STAGE_RUNTIME)
+if(${ROOT_PROJECT_NAME}_STAGE_RUNTIME)
  #add_dependencies(gen-states stage_runtime )
  #add_dependencies(gen-data stage_runtime )
 if(Biogears_BUILD_DOCUMENTATION)
