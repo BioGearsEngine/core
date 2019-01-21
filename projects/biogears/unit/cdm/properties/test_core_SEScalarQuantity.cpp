@@ -255,20 +255,20 @@ TEST_F(TEST_FIXTURE_NAME, ReadOnly)
   EXPECT_FALSE(v_2.IsReadOnly());
 
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-  EXPECT_ANY_THROW(EXPECT_TRUE(v_1.SetValue(5.5, TestUnit::g)));
-  EXPECT_FALSE(v_2.SetValue(5.5, TestUnit::g));
+  EXPECT_ANY_THROW(v_1.SetValue(5.5, TestUnit::g));
+  EXPECT_NO_THROW(v_2.SetValue(5.5, TestUnit::g));
 
   v_2.SetValue(45., TestUnit::g);
-  EXPECT_ANY_THROW(EXPECT_TRUE(v_1.Copy(v_2)));
+  EXPECT_ANY_THROW(v_1.Copy(v_2));
   EXPECT_NE(v_1, v_2);
-  EXPECT_TRUE(v_2.Copy(v_1));
+  EXPECT_NO_THROW(v_2.Copy(v_1));
   EXPECT_EQ(v_1, v_2);
 
   EXPECT_TRUE(v_1.IsValid());
   EXPECT_TRUE(v_2.IsValid());
 
-  EXPECT_ANY_THROW(EXPECT_TRUE(v_1.Invalidate()));
-  EXPECT_FALSE(v_2.Invalidate());
+  EXPECT_ANY_THROW(v_1.Invalidate());
+  EXPECT_NO_THROW(v_2.Invalidate());
 
   EXPECT_TRUE(v_1.IsValid());
   EXPECT_FALSE(v_2.IsValid());

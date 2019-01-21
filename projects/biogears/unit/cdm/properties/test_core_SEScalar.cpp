@@ -165,20 +165,20 @@ TEST_F(TEST_FIXTURE_NAME, ReadOnly)
   EXPECT_FALSE(scalar_2.IsReadOnly());
 
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.SetValue(5.5)));
-  EXPECT_FALSE(scalar_2.SetValue(5.5));
+  EXPECT_ANY_THROW( scalar_1.SetValue(5.5) );
+  EXPECT_NO_THROW( scalar_2.SetValue(5.5) );
 
   scalar_2.SetValue(45.);
-  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.Copy(scalar_2)));
+  EXPECT_ANY_THROW(scalar_1.Copy(scalar_2) );
   EXPECT_NE(scalar_1, scalar_2);
-  EXPECT_TRUE(scalar_2.Copy(scalar_1));
+  EXPECT_NO_THROW(scalar_2.Copy(scalar_1));
   EXPECT_EQ(scalar_1, scalar_2);
 
   EXPECT_TRUE(scalar_1.IsValid());
   EXPECT_TRUE(scalar_2.IsValid());
 
-  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.Invalidate()));
-  EXPECT_FALSE(scalar_2.Invalidate());
+  EXPECT_ANY_THROW(scalar_1.Invalidate());
+  EXPECT_NO_THROW(scalar_2.Invalidate());
 
   EXPECT_TRUE(scalar_1.IsValid());
   EXPECT_FALSE(scalar_2.IsValid());
