@@ -491,7 +491,7 @@ void Renal::PreProcess()
 void Renal::Process()
 {
   //Circuit Processing is done on the entire circulatory circuit elsewhere
-  CalculateActiveTransport();
+  CalculateActiveTransport();  
   CalculateVitalSigns();
 }
 
@@ -533,6 +533,7 @@ void Renal::CalculateUltrafiltrationFeedback()
   SEFluidCircuitPath* glomerularOsmoticSourcePath = nullptr;
   SEFluidCircuitPath* bowmansOsmoticSourcePath = nullptr;
   SEFluidCircuitPath* filterResistancePath = nullptr;
+  SELiquidCompartment* glomerularCapillaries = nullptr;
   double permeability_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
   double surfaceArea_m2 = 0.0;
 
@@ -546,6 +547,7 @@ void Renal::CalculateUltrafiltrationFeedback()
 
       glomerularOsmoticSourcePath = m_leftGlomerularOsmoticSourcePath;
       bowmansOsmoticSourcePath = m_leftBowmansOsmoticSourcePath;
+      glomerularCapillaries = m_leftGlomerular;
     } else {
       //RIGHT
       filterResistancePath = m_rightGlomerularFilterResistancePath;
@@ -554,6 +556,7 @@ void Renal::CalculateUltrafiltrationFeedback()
 
       glomerularOsmoticSourcePath = m_rightGlomerularOsmoticSourcePath;
       bowmansOsmoticSourcePath = m_rightBowmansOsmoticSourcePath;
+      glomerularCapillaries = m_rightGlomerular;
     }
 
     //Set the filter resistance based on its physical properties
@@ -573,7 +576,7 @@ void Renal::CalculateUltrafiltrationFeedback()
     //This is the osmotic pressure effect
     ///\todo turn on colloid osmotic pressure once substances have been handled properly (and GI)
     // CACHE THIS SUBSTANCE QUANTITY IN SETUP
-    //CalculateColloidOsmoticPressure(glomerularNode->GetSubstanceQuantity(m_albumin)->GetNextConcentration(), glomerularOsmoticSourcePath->GetNextPressureSource());
+    //CalculateColloidOsmoticPressure(glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), glomerularOsmoticSourcePath->GetNextPressureSource());
     //CalculateColloidOsmoticPressure(bowmansNode->GetSubstanceQuantity(m_albumin)->GetNextConcentration(), bowmansOsmoticSourcePath->GetNextPressureSource());
   }
 }
@@ -604,6 +607,8 @@ void Renal::CalculateReabsorptionFeedback()
   SEFluidCircuitPath* peritubularOsmoticSourcePath = nullptr;
   SEFluidCircuitPath* tubulesOsmoticSourcePath = nullptr;
   SEFluidCircuitPath* filterResistancePath = nullptr;
+  SELiquidCompartment* peritubularCapillaries = nullptr;
+  SELiquidCompartment* renalInterstitial = nullptr;
   double filterResistance_mmHg_s_Per_mL = 0.0;
   double permeability_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
   double surfaceArea_m2 = 0.0;
@@ -618,6 +623,8 @@ void Renal::CalculateReabsorptionFeedback()
 
       peritubularOsmoticSourcePath = m_leftPeritubularOsmoticSourcePath;
       tubulesOsmoticSourcePath = m_leftTubulesOsmoticSourcePath;
+      peritubularCapillaries = m_leftPeritubular;
+      renalInterstitial = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LeftKidneyExtracellular);
     } else {
       //RIGHT
       filterResistancePath = m_rightReabsorptionResistancePath;
@@ -626,6 +633,8 @@ void Renal::CalculateReabsorptionFeedback()
 
       peritubularOsmoticSourcePath = m_rightPeritubularOsmoticSourcePath;
       tubulesOsmoticSourcePath = m_rightTubulesOsmoticSourcePath;
+      peritubularCapillaries = m_rightPeritubular;
+      renalInterstitial = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightKidneyExtracellular);
     }
 
     //Set the filter resistance based on its physical properties
@@ -642,9 +651,10 @@ void Renal::CalculateReabsorptionFeedback()
     //This is the osmotic pressure effect
     ///\todo turn on colloid osmotic pressure once substances have been handled properly (and GI)
     // CACHE THIS SUBSTANCE QUANTITY IN SETUP
-    //CalculateColloidOsmoticPressure(peritubularNode->GetSubstanceQuantity(m_albumin)->GetNextConcentration(), peritubularOsmoticSourcePath->GetNextPressureSource());
+    //CalculateColloidOsmoticPressure(peritubularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), peritubularOsmoticSourcePath->GetNextPressureSource());
     //Since we're not modeling the interstitial space, we'll just always keep this side constant
     //We just won't touch it and let it use the baseline value
+    //CalculateColloidOsmoticPressure(renalInterstitial->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), tubulesOsmoticSourcePath->GetNextPressureSource());
     tubulesOsmoticSourcePath->GetNextPressureSource().SetValue(-15.0, PressureUnit::mmHg);
   }
 }
@@ -1461,7 +1471,7 @@ void Renal::CalculateVitalSigns()
         if (systolicBP <= 100.0 && m_urineProductionRate_mL_Per_min_runningAvg.Value() <= 0.5) {
           m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
         }
-        if (m_patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis) && m_urineProductionRate_mL_Per_min_runningAvg.Value() >=0.55 && systolicBP > 90.0) {
+        if (m_patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis) && m_urineProductionRate_mL_Per_min_runningAvg.Value() >= 0.55 && systolicBP > 90.0) {
           m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, false, m_data.GetSimulationTime());
         }
       }
@@ -1503,25 +1513,31 @@ void Renal::Urinate()
 
   //Now deal with the action
   if (m_Urinating) {
-    //Stop urinating when the bladder volume drops below 1.0 mL
-    if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) < 1.0) {
-      m_Urinating = false;
-      //The urethra resistances will use the baselines value of an open switch to stop the flow
+    ////Stop urinating when the bladder volume drops below 1.0 mL
+    //if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) < 1.0) {
+    //  m_Urinating = false;
+    //  //The urethra resistances will use the baselines value of an open switch to stop the flow
 
-      //Turn off the event
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::FunctionalIncontinence)) {
-        m_patient->SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, false, m_data.GetSimulationTime());
+    //  //Turn off the event
+    //  if (m_patient->IsEventActive(CDM::enumPatientEvent::FunctionalIncontinence)) {
+    //    m_patient->SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, false, m_data.GetSimulationTime());
+    //  }
+    //} else {
+    //  //Prevent anything from leaving except for what's in the bladder
+    //  m_leftUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    //  m_rightUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    //  //Reduce the urethra resistance to urinate
+    //  //Use a urethra resistance based on the validated urination flow
+    //  //R = (4 mmHg - 0 mmHg) / 22 mL/s = 0.182
+    //  m_urethraPath->GetNextResistance().SetValue(0.01, FlowResistanceUnit::mmHg_s_Per_mL); //0.182
+    //}
+    m_bladderNode->GetNextVolume().SetValue(1.0, VolumeUnit::mL);
+    for (auto sub : m_data.GetSubstances().GetActiveSubstances()) {
+      if (m_bladder->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug) > ZERO_APPROX) {
+        m_bladder->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Concentration);
       }
-    } else {
-      //Prevent anything from leaving except for what's in the bladder
-      m_leftUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-      m_rightUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-
-      //Reduce the urethra resistance to urinate
-      //Use a urethra resistance based on the validated urination flow
-      //R = (4 mmHg - 0 mmHg) / 22 mL/s = 0.182
-      m_urethraPath->GetNextResistance().SetValue(0.182, FlowResistanceUnit::mmHg_s_Per_mL);
     }
+    m_Urinating = false;
 
     GetUrinationRate().Set(m_urethraPath->GetNextFlow());
   }
@@ -1967,142 +1983,142 @@ void Renal::ProcessOverride()
   }
 }
 
-  void Renal::OverrideControlLoop()
-  {
-    auto override = m_data.GetActions().GetPatientActions().GetOverride();
-    double maxLeftAAROverride = 1.0; //mmHg_min_Per_mL
-    double minLeftAAROverride = 0.0; //mmHg_min_Per_mL
-    double currentLeftAAROverride = 0.0; //value gets changed in next check
-    double maxLeftGFROverride = 1000.0; //mL/min
-    double minLeftGFROverride = 0.0; //mL/min
-    double currentLeftGFROverride = 0.0; //value gets changed in next check
-    double maxLeftReabsorRateOverride = 1000.0; //mL/min
-    double minLeftReabsorRateOverride = 0.0; //mL/min
-    double currentLeftReabsorRateOverride = 0.0; //value gets changed in next check
-    double maxRenalBloodFlowOverride = 3000.0; //mL/min
-    double minRenalBloodFlowOverride = 0.0; //mL/min
-    double currentRenalBloodFlowOverride = 0.0; //value gets changed in next check
-    double maxRenalPlasmaFlowOverride = 3000.0; //mL/min
-    double minRenalPlasmaFlowOverride = 0.0; //mL/min
-    double currentRenalPlasmaFlowOverride = 0.0; //value gets changed in next check
-    double maxRightAAROverride = 1.0; //mmHg_min_Per_mL
-    double minRightAAROverride = 0.0; //mmHg_min_Per_mL
-    double currentRightAAROverride = 0.0; //value gets changed in next check
-    double maxRightGFROverride = 1000.0; //mL/min
-    double minRightGFROverride = 0.0; //mL/min
-    double currentRightGFROverride = 0.0; //value gets changed in next check
-    double maxRightReabsorRateOverride = 1000.0; //mL/min
-    double minRightReabsorRateOverride = 0.0; //mL/min
-    double currentRightReabsorRateOverride = 0.0; //value gets changed in next check
-    double maxUrinationRateOverride = 1000.0; //mL/min
-    double minUrinationRateOverride = 0.0; //mL/min
-    double currentUrinationRateOverride = 0.0; //value gets changed in next check
-    double maxUrineProductionOverride = 100.0; //mL/min
-    double minUrineProductionOverride = 0.0; //mL/min
-    double currentUrineProductionOverride = 0.0; //value gets changed in next check
-    double maxUrineOsmolalityOverride = 2000.0; //mOsm/kg
-    double minUrineOsmolalityOverride = 0.0; //mOsm/kg
-    double currentUrineOsmolalityOverride = 0.0; //value gets changed in next check
-    double maxUrineVolumeOverride = 1000.0; // mL
-    double minUrineVolumeOverride = 0.0; // mL
-    double currentUrineVolumeOverride = 0.0; //value gets changed in next check
-    if (override->HasLeftAfferentArterioleResistanceOverride()) {
-      currentLeftAAROverride = override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL);
-    }
-    if (override->HasLeftGlomerularFiltrationRateOverride()) {
-      currentLeftGFROverride = override->GetLeftGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasLeftReaborptionRateOverride()) {
-      currentLeftReabsorRateOverride = override->GetLeftReaborptionRateOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasRenalBloodFlowOverride()) {
-      currentRenalBloodFlowOverride = override->GetRenalBloodFlowOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasRenalPlasmaFlowOverride()) {
-      currentRenalPlasmaFlowOverride = override->GetRenalPlasmaFlowOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasRightAfferentArterioleResistanceOverride()) {
-      currentRightAAROverride = override->GetRightAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL);
-    }
-    if (override->HasRightGlomerularFiltrationRateOverride()) {
-      currentRightGFROverride = override->GetRightGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasRightReaborptionRateOverride()) {
-      currentRightReabsorRateOverride = override->GetRightReaborptionRateOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasUrinationRateOverride()) {
-      currentUrinationRateOverride = override->GetUrinationRateOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasUrineProductionRateOverride()) {
-      currentUrineProductionOverride = override->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
-    }
-    if (override->HasUrineOsmolalityOverride()) {
-      currentUrineOsmolalityOverride = override->GetUrineOsmolalityOverride(OsmolalityUnit::mOsm_Per_kg);
-    }
-    if (override->HasUrineVolumeOverride()) {
-      currentUrineVolumeOverride = override->GetUrineVolumeOverride(VolumeUnit::mL);
-    }
-
-    if ((currentLeftAAROverride < minLeftAAROverride || currentLeftAAROverride > maxLeftAAROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Left Afferent Arteriole Resistance Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentLeftGFROverride < minLeftGFROverride || currentLeftGFROverride > maxLeftGFROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Left Glomerular Filtration Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentLeftReabsorRateOverride < minLeftReabsorRateOverride || currentLeftReabsorRateOverride > maxLeftReabsorRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Left Reabsorption Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentRenalBloodFlowOverride < minRenalBloodFlowOverride || currentRenalBloodFlowOverride > maxRenalBloodFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Renal Blood Flow (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentRenalPlasmaFlowOverride < minRenalPlasmaFlowOverride || currentRenalPlasmaFlowOverride > maxRenalPlasmaFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Renal Plasma Flow Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentRightAAROverride < minRightAAROverride || currentRightAAROverride > maxRightAAROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Right Afferent Arteriole Resistance Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentRightGFROverride < minRightGFROverride || currentRightGFROverride > maxRightGFROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Right Glomerular Filtration Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentRightReabsorRateOverride < minRightReabsorRateOverride || currentRightReabsorRateOverride > maxRightReabsorRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Right Reabsorption Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentUrinationRateOverride < minUrinationRateOverride || currentUrinationRateOverride > maxUrinationRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Urination Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Urine Production Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentUrineOsmolalityOverride < minUrineOsmolalityOverride || currentUrineOsmolalityOverride > maxUrineOsmolalityOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Urine Osmolality Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    if ((currentUrineVolumeOverride < minUrineVolumeOverride || currentUrineVolumeOverride > maxUrineVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "Urine Volume Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
-    return;
+void Renal::OverrideControlLoop()
+{
+  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  double maxLeftAAROverride = 1.0; //mmHg_min_Per_mL
+  double minLeftAAROverride = 0.0; //mmHg_min_Per_mL
+  double currentLeftAAROverride = 0.0; //value gets changed in next check
+  double maxLeftGFROverride = 1000.0; //mL/min
+  double minLeftGFROverride = 0.0; //mL/min
+  double currentLeftGFROverride = 0.0; //value gets changed in next check
+  double maxLeftReabsorRateOverride = 1000.0; //mL/min
+  double minLeftReabsorRateOverride = 0.0; //mL/min
+  double currentLeftReabsorRateOverride = 0.0; //value gets changed in next check
+  double maxRenalBloodFlowOverride = 3000.0; //mL/min
+  double minRenalBloodFlowOverride = 0.0; //mL/min
+  double currentRenalBloodFlowOverride = 0.0; //value gets changed in next check
+  double maxRenalPlasmaFlowOverride = 3000.0; //mL/min
+  double minRenalPlasmaFlowOverride = 0.0; //mL/min
+  double currentRenalPlasmaFlowOverride = 0.0; //value gets changed in next check
+  double maxRightAAROverride = 1.0; //mmHg_min_Per_mL
+  double minRightAAROverride = 0.0; //mmHg_min_Per_mL
+  double currentRightAAROverride = 0.0; //value gets changed in next check
+  double maxRightGFROverride = 1000.0; //mL/min
+  double minRightGFROverride = 0.0; //mL/min
+  double currentRightGFROverride = 0.0; //value gets changed in next check
+  double maxRightReabsorRateOverride = 1000.0; //mL/min
+  double minRightReabsorRateOverride = 0.0; //mL/min
+  double currentRightReabsorRateOverride = 0.0; //value gets changed in next check
+  double maxUrinationRateOverride = 1000.0; //mL/min
+  double minUrinationRateOverride = 0.0; //mL/min
+  double currentUrinationRateOverride = 0.0; //value gets changed in next check
+  double maxUrineProductionOverride = 100.0; //mL/min
+  double minUrineProductionOverride = 0.0; //mL/min
+  double currentUrineProductionOverride = 0.0; //value gets changed in next check
+  double maxUrineOsmolalityOverride = 2000.0; //mOsm/kg
+  double minUrineOsmolalityOverride = 0.0; //mOsm/kg
+  double currentUrineOsmolalityOverride = 0.0; //value gets changed in next check
+  double maxUrineVolumeOverride = 1000.0; // mL
+  double minUrineVolumeOverride = 0.0; // mL
+  double currentUrineVolumeOverride = 0.0; //value gets changed in next check
+  if (override->HasLeftAfferentArterioleResistanceOverride()) {
+    currentLeftAAROverride = override->GetLeftAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL);
   }
+  if (override->HasLeftGlomerularFiltrationRateOverride()) {
+    currentLeftGFROverride = override->GetLeftGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasLeftReaborptionRateOverride()) {
+    currentLeftReabsorRateOverride = override->GetLeftReaborptionRateOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasRenalBloodFlowOverride()) {
+    currentRenalBloodFlowOverride = override->GetRenalBloodFlowOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasRenalPlasmaFlowOverride()) {
+    currentRenalPlasmaFlowOverride = override->GetRenalPlasmaFlowOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasRightAfferentArterioleResistanceOverride()) {
+    currentRightAAROverride = override->GetRightAfferentArterioleResistanceOverride(FlowResistanceUnit::mmHg_min_Per_mL);
+  }
+  if (override->HasRightGlomerularFiltrationRateOverride()) {
+    currentRightGFROverride = override->GetRightGlomerularFiltrationRateOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasRightReaborptionRateOverride()) {
+    currentRightReabsorRateOverride = override->GetRightReaborptionRateOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasUrinationRateOverride()) {
+    currentUrinationRateOverride = override->GetUrinationRateOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasUrineProductionRateOverride()) {
+    currentUrineProductionOverride = override->GetUrineProductionRateOverride(VolumePerTimeUnit::mL_Per_min);
+  }
+  if (override->HasUrineOsmolalityOverride()) {
+    currentUrineOsmolalityOverride = override->GetUrineOsmolalityOverride(OsmolalityUnit::mOsm_Per_kg);
+  }
+  if (override->HasUrineVolumeOverride()) {
+    currentUrineVolumeOverride = override->GetUrineVolumeOverride(VolumeUnit::mL);
+  }
+
+  if ((currentLeftAAROverride < minLeftAAROverride || currentLeftAAROverride > maxLeftAAROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Left Afferent Arteriole Resistance Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentLeftGFROverride < minLeftGFROverride || currentLeftGFROverride > maxLeftGFROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Left Glomerular Filtration Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentLeftReabsorRateOverride < minLeftReabsorRateOverride || currentLeftReabsorRateOverride > maxLeftReabsorRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Left Reabsorption Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentRenalBloodFlowOverride < minRenalBloodFlowOverride || currentRenalBloodFlowOverride > maxRenalBloodFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Renal Blood Flow (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentRenalPlasmaFlowOverride < minRenalPlasmaFlowOverride || currentRenalPlasmaFlowOverride > maxRenalPlasmaFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Renal Plasma Flow Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentRightAAROverride < minRightAAROverride || currentRightAAROverride > maxRightAAROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Right Afferent Arteriole Resistance Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentRightGFROverride < minRightGFROverride || currentRightGFROverride > maxRightGFROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Right Glomerular Filtration Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentRightReabsorRateOverride < minRightReabsorRateOverride || currentRightReabsorRateOverride > maxRightReabsorRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Right Reabsorption Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentUrinationRateOverride < minUrinationRateOverride || currentUrinationRateOverride > maxUrinationRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Urination Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Urine Production Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentUrineOsmolalityOverride < minUrineOsmolalityOverride || currentUrineOsmolalityOverride > maxUrineOsmolalityOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Urine Osmolality Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  if ((currentUrineVolumeOverride < minUrineVolumeOverride || currentUrineVolumeOverride > maxUrineVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+    m_ss << "Urine Volume Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+    Info(m_ss);
+    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  }
+  return;
+}
 }
