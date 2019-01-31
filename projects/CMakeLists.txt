@@ -144,6 +144,7 @@ add_subdirectory(test_driver)
 add_subdirectory(howto)
 add_subdirectory(unit)
 add_subdirectory(cmd_bio)
+add_subdirectory(circuit_test)
 
 if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
   add_subdirectory(java)
