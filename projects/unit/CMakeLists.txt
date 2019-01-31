@@ -17,6 +17,8 @@ if(${PROJECT_NAME}_BUILD_TEST)
   option(UNITTEST_biogears-core "Enable libBiogears UnitTest " ON)
   option(UNITTEST_biogears-common "Enable Biogears-Common UnitTest " ON)
   option(UNITTEST_biogears-cmd "Enable Biogears command line UnitTest " ON)
+  option(UNITTEST_biogears-circuit "Enable Biogears circuit UnitTest " ON)
+
 
   ###############################################################################
   # Requirments
@@ -43,7 +45,10 @@ if(${PROJECT_NAME}_BUILD_TEST)
    add_source_files(BIOGEARS_CMDLINE_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/cmd_bio/unit/" "test_cmdline*.h"  "cmdline\\" )
    add_source_files(BIOGEARS_CMDLINE_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/cmd_bio/unit/" "test_cmdline*.cpp"  "cmdline\\")
   endif()
-  
+  if(UNITTEST_biogears-circuit)
+   add_source_files(BIOGEARS_CIRCUIT_UNITTEST_HEADERS "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" "test_circuit*.h"  "circuit\\" )
+   add_source_files(BIOGEARS_CIRCUIT_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" "test_circuit*.cpp"  "circuit\\")
+  endif()  
   
 list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   
@@ -58,6 +63,8 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
 	${BIOGEARS_COMMON_UNITTEST_SOURCES}
     ${BIOGEARS_CMDLINE_UNITTEST_HEADERS}
     ${BIOGEARS_CMDLINE_UNITTEST_SOURCES}
+    ${BIOGEARS_CIRCUIT_UNITTEST_HEADERS}
+    ${BIOGEARS_CIRCUIT_UNITTEST_SOURCES}
   )
  
   ##################################################################V#############
@@ -112,6 +119,7 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   target_include_directories(unittest
       PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
+      ${GTEST_INCLUDE_DIR}
       ${bio_INCLUDE_DIR}
   )
 
