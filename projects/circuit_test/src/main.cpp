@@ -33,7 +33,7 @@
 
 
 
-void main(int argc,char* argv)
+int main(int argc,char** argv)
 {
   biogears::BioGearsCircuitTester* anesthesia_bct = new biogears::BioGearsCircuitTester("Anesthesia.log");
   biogears::BioGearsCircuitTester* cardiovascular_bct = new biogears::BioGearsCircuitTester("Cardiovascular.log");
