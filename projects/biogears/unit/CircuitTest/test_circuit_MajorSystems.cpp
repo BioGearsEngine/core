@@ -82,7 +82,7 @@ TEST_F(TEST_FIXTURE_NAME, Cardiovascular)
   SEFluidCircuitCalculator fcc{ &m_Logger };
 
   EXPECT_NO_THROW(fcc.Process(cardiovascular, 1.0));
-  EXPECT_NO_THROW(fcc.PostProcess(cardiovascular));
+  EXPECT_NO_THROW(fcc.PostProcess(cardiovascular)); 
 }
 
 TEST_F(TEST_FIXTURE_NAME, Environment) //Placeholder until I can get a working Environment circuit

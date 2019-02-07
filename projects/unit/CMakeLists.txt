@@ -113,7 +113,6 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
                         FOLDER Other
                         PROJECT_LABEL "Unit Test"
                         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-                        
                       )
 
   target_include_directories(unittest
