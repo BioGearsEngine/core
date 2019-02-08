@@ -1056,7 +1056,7 @@ void Respiratory::ProcessDriverActions()
     m_VentilationFrequency_Per_min *= painModifier; 
     m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
     m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
-    m_VentilationFrequency_Per_min += diffPH;
+   // m_VentilationFrequency_Per_min += diffPH;
   }
 
   //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation

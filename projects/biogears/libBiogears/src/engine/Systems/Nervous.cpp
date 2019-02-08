@@ -520,7 +520,7 @@ void Nervous::ChemoreceptorFeedback()
   } else {
     gasInteraction = 1.4;
   }
-  double psi = (psiNum / psiDen) * (gasInteraction * log(arterialCO2Pressure_mmHg / m_ArterialCarbonDioxideSetPoint_mmHg) + tuningFactor);
+  double psi = (psiNum / psiDen) * (gasInteraction * std::log(arterialCO2Pressure_mmHg / m_ArterialCarbonDioxideSetPoint_mmHg) + tuningFactor);
 
   if (m_data.GetState() < EngineState::AtSecondaryStableState) {
     //This value is continuously updated during stabilization.  When system reaches steady state, it is used to reset the value of m_ChemoreceptorFiringRate_Hz

@@ -177,21 +177,25 @@ def plot(root_dir, source, skip_count, plotTime):
             if( not yData.size ):
                 log("Error: Column is empty did you provide a non resonable skip_count?", LOG_LEVEL_0)
             else:
-                yRange = max(yData)-min(yData)
-                #For most scenarios, set plot min to 0 and set upper boundary 25% above max value
-                if yRange > 0:
-                    if min(yData) >=0:
-                        plotMin = 0.0
-                        plotMax = 1.25 * max(yData)
+                try:
+                    yRange = max(yData)-min(yData)
+                    #For most scenarios, set plot min to 0 and set upper boundary 25% above max value
+                    if yRange > 0:
+                        if min(yData) >=0:
+                            plotMin = 0.0
+                            plotMax = 1.25 * max(yData)
+                        else:
+                            #We have negative values somewhere, so lets just take 25% above and below
+                            plotMin = min(yData)-0.25*abs(min(yData))
+                            plotMax = max(yData) + 0.25*abs(max(yData))
                     else:
-                        #We have negative values somewhere, so lets just take 25% above and below
-                        plotMin = min(yData)-0.25*abs(min(yData))
-                        plotMax = max(yData) + 0.25*abs(max(yData))
-                else:
-                    #This means we're probably plotting a bunch of zeros...
-                    plotMin = yData[0] - 5
-                    plotMax = yData[0] + 5
-            
+                        #This means we're probably plotting a bunch of zeros...
+                        plotMin = yData[0] - 5
+                        plotMax = yData[0] + 5
+                except TypeError:
+                    err('Non-numeric data, setting range 0-100', LOG_LEVEL_1)
+                    plotMin = 0
+                    plotMax= 100
                 #Extract unit--assuming they are specified in parentheses
                 unitIndex = col.find('(')
                 if(unitIndex == -1):
