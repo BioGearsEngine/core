@@ -1228,7 +1228,7 @@ void Respiratory::Pneumothorax()
 {
   if (m_PatientActions->HasTensionPneumothorax()) {
     // Minimum flow resistance for the chest cavity or alveoli leak
-    double dPneumoMinFlowResistance_cmH2O_s_Per_L = 20.0;
+    double dPneumoMinFlowResistance_cmH2O_s_Per_L = 10.0;
     // Maximum flow resistance for the chest cavity or alveoli leak
     double dPneumoMaxFlowResistance_cmH2O_s_Per_L = m_dDefaultOpenResistance_cmH2O_s_Per_L;
     // Flow resistance for the decompression needle, if used
