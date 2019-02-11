@@ -802,6 +802,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     mandatoryMuscleAnaerobicFraction *= 1.5; //50% increase
   }
+
   //Patients with sepsis have elevated lactate levels (i.e. increased anaerobic activity) because of poor oxygen perfusion to tissues
   //Assume that the muscles are most effected by this deficit and increase the anaerobic fraction as a function of sepsis progression
   if (m_PatientActions->HasSepsis()) {
@@ -809,8 +810,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     //scenarios will have more time to accumulate lactate
     mandatoryMuscleAnaerobicFraction *= (1.0 + m_PatientActions->GetSepsis()->GetSeverity().GetValue() / 2.0);
     //If we get to severe sepsis but do not have lactic acidosis yet, ramp up fraction another 50% (theoretical max = 0.1 * (1.5)^2 = 0.225)
-    if (m_Patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis)&&!m_Patient->IsEventActive(CDM::enumPatientEvent::LacticAcidosis)) {
-        mandatoryMuscleAnaerobicFraction *=1.5;
+    if (m_Patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis) && !m_Patient->IsEventActive(CDM::enumPatientEvent::LacticAcidosis)) {
+      mandatoryMuscleAnaerobicFraction *= 1.5;
     }
   }
   //Reusable values for looping
@@ -857,6 +858,18 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     if (vascular->HasInFlow() && totalFlowRate_mL_Per_min > 0) {
       BloodFlowFraction = vascular->GetInFlow(VolumePerTimeUnit::mL_Per_min) / totalFlowRate_mL_Per_min;
     }
+
+    double energyDeficity_kcal = 0.0;
+    if (m_PatientActions->HasHemorrhage()) {
+      double maxBleedingRate_mL_Per_min = 200.0;  //This would cause 50% blood loss in 12-15 minutes
+      double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
+      double maxDeficitFraction = 0.15;
+      double maxMuscleAnaerobicFraction = 1.0;
+      energyDeficity_kcal = maxDeficitFraction * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min * nonbrainNeededEnergy_kcal;
+      mandatoryMuscleAnaerobicFraction = maxMuscleAnaerobicFraction * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
+    }
+
+    nonbrainNeededEnergy_kcal += energyDeficity_kcal;
 
     //First, we'll handle brain consumption/production, since it's special
     //Brain can only consume glucose and ketones
@@ -1261,7 +1274,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       tissueNeededEnergy_kcal = 0;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
-        m_AnaerobicTissues.append(std::string{ tissue->GetName() } +" ");
+        m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
     }
     //If we'll use up all the glucose
     else if (tissueNeededEnergy_kcal > 0) {
@@ -1272,7 +1285,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       tissueNeededEnergy_kcal -= glucoseToConsume_mol * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
-        m_AnaerobicTissues.append(std::string{ tissue->GetName() }+" ");
+        m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
     }
 
     //Muscles can convert glycogen anaerobically, too
@@ -1289,7 +1302,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         nonbrainNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
-          m_AnaerobicTissues.append(std::string{ tissue->GetName() }+" ");
+          m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
         muscleMandatoryAnaerobicNeededEnergy_kcal = 0;
         tissueNeededEnergy_kcal = 0;
       }
@@ -1302,7 +1315,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         tissueNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
-          m_AnaerobicTissues.append(std::string{ tissue->GetName() } +" ");
+          m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
         tissueNeededEnergy_kcal += muscleMandatoryAnaerobicNeededEnergy_kcal; //add the still-needed mandatory anaerobic energy back to muscle's needed energy for tracking of the deficit
       }
     }
@@ -1744,7 +1757,7 @@ void Tissue::CheckGlycogenLevels()
 void Tissue::ManageSubstancesAndSaturation()
 {
   SEScalarMassPerVolume albuminConcentration;
-  albuminConcentration.SetValue(45.0, MassPerVolumeUnit::g_Per_L);
+  albuminConcentration = m_data.GetSubstances().GetAlbumin().GetBloodConcentration();
   // Currently, substances are not where they need to be, we will hard code this for now until we fix them
   /// \todo Remove SetBodyState hardcode and replace with computed values after substance redux is complete
   m_data.GetSaturationCalculator().SetBodyState(albuminConcentration,
