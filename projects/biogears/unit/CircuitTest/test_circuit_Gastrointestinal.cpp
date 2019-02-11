@@ -179,35 +179,35 @@ TEST_F(TEST_FIXTURE_NAME, ExternalTemperature_Circuit)
   lExternalSkinToClothing.MapPath(EnvironmentSkinToClothingPath);
 }
 
-TEST_F(TEST_FIXTURE_NAME, InternalTemperature_Circuit)
-{
-  biogears::BioGears bg("ExternalTemperatureCircuitTest.log");
-  biogears::Logger logger;
-  auto m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(bg));
-  auto m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(bg));
-  auto m_Patient = std::unique_ptr<SEPatient>(new SEPatient(&logger));
-  auto m_Substances = std::unique_ptr<BioGearsSubstances>(new BioGearsSubstances(bg));
-  auto m_Config = std::unique_ptr<BioGearsConfiguration>(new BioGearsConfiguration(*m_Substances));
-  SEThermalCircuit& cIntemperature = m_Circuits->GetInternalTemperatureCircuit();
+//TEST_F(TEST_FIXTURE_NAME, InternalTemperature_Circuit)
+//{
+//  biogears::BioGears bg("ExternalTemperatureCircuitTest.log");
+//  biogears::Logger logger;
+//  auto m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(bg));
+//  auto m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(bg));
+//  auto m_Patient = std::unique_ptr<SEPatient>(new SEPatient(&logger));
+//  auto m_Substances = std::unique_ptr<BioGearsSubstances>(new BioGearsSubstances(bg));
+//  auto m_Config = std::unique_ptr<BioGearsConfiguration>(new BioGearsConfiguration(*m_Substances));
+//  SEThermalCircuit& cIntemperature = m_Circuits->GetInternalTemperatureCircuit();
 
-  SEThermalCircuitNode& Core = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalCore);
-  Core.GetTemperature().SetValue(37.0, TemperatureUnit::C);
+//  SEThermalCircuitNode& Core = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalCore);
+//  Core.GetTemperature().SetValue(37.0, TemperatureUnit::C);
   // Peripheral Temperature
-  SEThermalCircuitNode& Skin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalSkin);
-  Skin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
-  SEThermalCircuitNode& Ground = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalGround);
-  Ground.GetTemperature().SetValue(0.0, TemperatureUnit::K);
-  Ground.GetNextTemperature().SetValue(0.0, TemperatureUnit::K);
-  cIntemperature.AddReferenceNode(Ground);
+//  SEThermalCircuitNode& Skin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalSkin);
+//  Skin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+//  SEThermalCircuitNode& Ground = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalGround);
+//  Ground.GetTemperature().SetValue(0.0, TemperatureUnit::K);
+//  Ground.GetNextTemperature().SetValue(0.0, TemperatureUnit::K);
+//  cIntemperature.AddReferenceNode(Ground);
   /*Metabolic heat generation, leading to a heat source into the core*/
-  SEThermalCircuitPath& TemperatureGroundToCore = cIntemperature.CreatePath(Ground, Core, BGE::InternalTemperaturePath::GroundToInternalCore);
-  TemperatureGroundToCore.GetHeatSourceBaseline().SetValue(0.0, PowerUnit::W);
+//  SEThermalCircuitPath& TemperatureGroundToCore = cIntemperature.CreatePath(Ground, Core, BGE::InternalTemperaturePath::GroundToInternalCore);
+//  TemperatureGroundToCore.GetHeatSourceBaseline().SetValue(0.0, PowerUnit::W);
   /*Conduction and convection leading a resistance of heat flow from the core to the skin*/
-  SEThermalCircuitPath& CoreToSkin = cIntemperature.CreatePath(Core, Skin, BGE::InternalTemperaturePath::InternalCoreToInternalSkin);
-  CoreToSkin.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
+  //SEThermalCircuitPath& CoreToSkin = cIntemperature.CreatePath(Core, Skin, BGE::InternalTemperaturePath::InternalCoreToInternalSkin);
+  //  CoreToSkin.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
 
-  double skinMassFraction = 0.09; //0.09 is fraction of mass that the skin takes up in a typical human /cite herman2006physics
-  SEThermalCircuitPath& CoreToTemperatureGround = cIntemperature.CreatePath(Core, Ground, BGE::InternalTemperaturePath::InternalCoreToGround);
+//  double skinMassFraction = 0.09; //0.09 is fraction of mass that the skin takes up in a typical human /cite herman2006physics
+  //  SEThermalCircuitPath& CoreToTemperatureGround = cIntemperature.CreatePath(Core, Ground, BGE::InternalTemperaturePath::InternalCoreToGround);
   //CoreToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * m_Config.GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  Core.GetHeatBaseline().SetValue(CoreToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * Core.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-}
+  //  Core.GetHeatBaseline().SetValue(CoreToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * Core.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
+  //}
