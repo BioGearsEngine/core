@@ -9,14 +9,15 @@
 
 //
 #include "CDMDriver.h"
-#include "utils/string-helpers.h"
+#include "../utils/string-helpers.h"
+#include "../utils/Config.h"
 #include <iostream>
 #include <vector>
 #include <string>
 
 //
 namespace biogears {
-int RunCDMTests(const std::string testName, const std::string outputDir);
+int RunCDMTests(const Executor& );
 
 //-------------------------------------------------------------------------------
 CDMDriver::CDMDriver(size_t thread_count)
@@ -32,13 +33,10 @@ CDMDriver::~CDMDriver()
 //!
 //! \brief Iterates through patientFiles, creates a lambda function for each item, and passes those functions to a thread pool
 //! 
-void CDMDriver::RunCDMs(std::vector<std::string> files)
+void CDMDriver::RunCDMs(const Config& runs)
 {
-  for (auto& testName : files) {
-    std::string outputDir = "./UnitTests/";
-    outputDir.append(testName);
-    std::function<void()> work = [=](){ biogears::RunCDMTests(testName,outputDir); };
-    _pool.queue_work(work);
+  for (auto& test : runs) {
+    std::function<void()> work = [=](){ biogears::RunCDMTests(test.second); };
   }
 }
 //-------------------------------------------------------------------------------
@@ -49,16 +47,16 @@ void CDMDriver::RunCDMs(std::vector<std::string> files)
 //! \param outputDir : a path to the output directory
 //! \return int 0 if no exceptions were encountered, otherwise 1
 //!
-int RunCDMTests(const std::string testName, const std::string outputDir)
+int RunCDMTests(const Executor& test)
 {
   CommonDataModelTest* executor;
   try {
     executor = new CommonDataModelTest;
-  } catch (std::exception e) {
+  } catch (const std::exception& e) {
     std::cout << e.what();
     return 1;
   }
-  executor->RunTest(testName, outputDir);
+  executor->RunTest(test.Name(), test.Computed());
   delete executor;
   return 0;
 }

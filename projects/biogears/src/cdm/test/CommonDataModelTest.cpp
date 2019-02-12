@@ -44,20 +44,18 @@ CommonDataModelTest::~CommonDataModelTest()
 
 bool CommonDataModelTest::RunTest(const std::string& testName, const std::string& sOutputDirectory)
 {
+  const std::string variant_name = testName + "Test"; 
   try {
     //If you find the test name, run it
     if (cdmMap.find(testName) != cdmMap.end()) {
       testFunction func = cdmMap.at(testName);
       (this->*func)(sOutputDirectory);
       return true;
-    } else {
-      //Try to find the function with "Test" appended; run it if found
-      if (cdmMap.find(testName + "Test") != cdmMap.end()) {
-        testFunction func = cdmMap.at(testName + "Test");
+    } else if (cdmMap.find(variant_name) != cdmMap.end()) {
+        testFunction func = cdmMap.at(variant_name);
         (this->*func)(sOutputDirectory);
         return true;
-      }
-
+    } else {
       m_ss << "Could not find " << testName << " or " << testName << "Test in CommonDataModelTest." << std::endl;
       Error(m_ss);
       return false;

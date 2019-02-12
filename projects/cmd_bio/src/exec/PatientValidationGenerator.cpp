@@ -16,7 +16,7 @@
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 
 #include "PatientValidationGenerator.h"
-#include "utils/string-helpers.h"
+#include "../utils/string-helpers.h"
 #include <iostream>
 #include <string>
 //

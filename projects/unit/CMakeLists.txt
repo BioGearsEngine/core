@@ -104,7 +104,10 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
                         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
                         CXX_STANDARD 14
                         FOLDER Other
-                        PROJECT_LABEL "Unit Test")
+                        PROJECT_LABEL "Unit Test"
+                        VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+                        
+                      )
 
   target_include_directories(unittest
       PRIVATE

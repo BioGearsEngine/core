@@ -4,6 +4,8 @@
 #include <biogears/threading/thread_pool.h>
 #include <biogears/threading/runnable.h>
 
+#include "../utils/Config.h"
+
 namespace biogears
 {
   class CDMDriver : biogears::Runnable
@@ -14,7 +16,7 @@ namespace biogears
     CDMDriver(CDMDriver&&) = default;
     ~CDMDriver() override;
 
-    void RunCDMs(std::vector<std::string> files);
+    void RunCDMs(const Config& runs);
    
     void run()  override;
     void stop() override;
