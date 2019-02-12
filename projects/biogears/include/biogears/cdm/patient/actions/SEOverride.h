@@ -280,7 +280,7 @@ public:
 
   bool HasTissueOverride() const;
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   CDM::enumOnOff m_OverrideState;
