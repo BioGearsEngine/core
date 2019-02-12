@@ -68,6 +68,10 @@ public:
   SEScalarAmountPerTime& GetCreatinineProductionRate();
   double GetCreatinineProductionRate(const AmountPerTimeUnit& unit) const;
 
+  bool HasEnergyDeficit() const;
+  SEScalarPower& GetEnergyDeficit();
+  double GetEnergyDeficit(const PowerUnit& unit) const;
+
   bool HasExerciseMeanArterialPressureDelta() const;
   SEScalarPressure& GetExerciseMeanArterialPressureDelta();
   double GetExerciseMeanArterialPressureDelta(const PressureUnit& unit) const;
@@ -109,6 +113,7 @@ protected:
   SEScalarMass* m_ChlorideLostToSweat;
   SEScalarTemperature* m_CoreTemperature;
   SEScalarAmountPerTime* m_CreatinineProductionRate;
+  SEScalarPower* m_EnergyDeficit;
   SEScalarPressure* m_ExerciseMeanArterialPressureDelta;
   SEScalarFraction* m_FatigueLevel;
   SEScalarAmountPerTime* m_LactateProductionRate;

@@ -753,8 +753,9 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double BMR_kcal_Per_s = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::kcal_Per_s);
   double baseEnergyRequested_kcal = BMR_kcal_Per_s * time_s;
   double exerciseEnergyRequested_kcal = (TMR_kcal_Per_s - BMR_kcal_Per_s) * time_s;
+  double hypoperfusionDeficit_kcal = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s;
   double brainNeededEnergy_kcal = .2 * baseEnergyRequested_kcal; //brain requires a roughly constant 20% of basal energy regardless of exercise \cite raichle2002appraising
-  double nonbrainNeededEnergy_kcal = baseEnergyRequested_kcal - brainNeededEnergy_kcal + exerciseEnergyRequested_kcal;
+  double nonbrainNeededEnergy_kcal = baseEnergyRequested_kcal - brainNeededEnergy_kcal + exerciseEnergyRequested_kcal + hypoperfusionDeficit_kcal;
   double brainEnergyDeficit_kcal = 0;
   double nonbrainEnergyDeficit_kcal = 0;
   double totalO2Consumed_mol = 0;
@@ -794,15 +795,13 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double AA_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_AA / 387.189; //Alanine heat of combustion is 1.62 MJ/mol \cite livesey1984energy
   double ketones_CellularEfficiency = glucose_CellularEfficiency; //Assuming the same as glucose
   double mandatoryMuscleAnaerobicFraction = .1; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
-  double hypoperfusedFraction = 0.0; //This value represents the proportion of a tissue that is not receiving sufficient oxygen due to hypoperfusion (i.e. during sepsis)
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = 1200; //see Energy::Exercise
-
+  double energyDeficit_kcal = 0.0;
   //Patients with COPD show higher levels of anaerobic metabolism \cite mathur1999cerebral \cite engelen2000factors
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     mandatoryMuscleAnaerobicFraction *= 1.5; //50% increase
   }
-
   //Patients with sepsis have elevated lactate levels (i.e. increased anaerobic activity) because of poor oxygen perfusion to tissues
   //Assume that the muscles are most effected by this deficit and increase the anaerobic fraction as a function of sepsis progression
   if (m_PatientActions->HasSepsis()) {
@@ -814,6 +813,12 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       mandatoryMuscleAnaerobicFraction *= 1.5;
     }
   }
+  if (m_PatientActions->HasHemorrhage()) {
+    double maxBleedingRate_mL_Per_min = 200.0;
+    double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
+    mandatoryMuscleAnaerobicFraction = bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
+  }
+
   //Reusable values for looping
   SELiquidCompartment* vascular;
   SELiquidSubstanceQuantity* TissueO2;
@@ -859,17 +864,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       BloodFlowFraction = vascular->GetInFlow(VolumePerTimeUnit::mL_Per_min) / totalFlowRate_mL_Per_min;
     }
 
-    double energyDeficity_kcal = 0.0;
-    if (m_PatientActions->HasHemorrhage()) {
-      double maxBleedingRate_mL_Per_min = 200.0;  //This would cause 50% blood loss in 12-15 minutes
-      double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
-      double maxDeficitFraction = 0.15;
-      double maxMuscleAnaerobicFraction = 1.0;
-      energyDeficity_kcal = maxDeficitFraction * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min * nonbrainNeededEnergy_kcal;
-      mandatoryMuscleAnaerobicFraction = maxMuscleAnaerobicFraction * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
-    }
 
-    nonbrainNeededEnergy_kcal += energyDeficity_kcal;
 
     //First, we'll handle brain consumption/production, since it's special
     //Brain can only consume glucose and ketones
@@ -1414,7 +1409,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     m_FatigueRunningAverage.Reset();
     m_FatigueRunningAverage.Reset();
   }
-
   //Useful debugging information
   //m_data.GetDataTrack().Probe("InstantaneousBrainEnergyDeficit_kcal", brainEnergyDeficit_kcal);
   //m_data.GetDataTrack().Probe("InstantaneousNonBrainEnergyDeficit_kcal", nonbrainEnergyDeficit_kcal);

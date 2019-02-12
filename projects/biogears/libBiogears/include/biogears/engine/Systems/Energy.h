@@ -80,6 +80,7 @@ private:
   void Exercise();
 
 protected:
+  void ManageEnergyDeficit();
   void ProcessOverride();
   void OverrideControlLoop();
 

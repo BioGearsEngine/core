@@ -992,9 +992,6 @@ void Respiratory::ProcessDriverActions()
   double NMBModifier = 1.0;
   double SedationModifier = 1.0;
 
-  //PH imbalance parameters
-  double arterialPH;
-  double scalingFactor = 560.0;
 
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
     NMBModifier = 0.0;
@@ -1033,14 +1030,6 @@ void Respiratory::ProcessDriverActions()
     m_data.GetBloodChemistry().GetArterialBloodPHBaseline().SetValue(m_arterialPHBaseline);
   }
 
-  //compute the ph difference
-  m_arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPHBaseline().GetValue();
-  arterialPH = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
-  double diffPH = scalingFactor * (arterialPH - m_arterialPHBaseline) / m_arterialPHBaseline;
-
-  //don't let negatives effect changes
-  diffPH = std::max(diffPH, 0.0);
-
   //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications.  The Respiration Rate will make up for the Alveoli Ventilation difference
   double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
   double dMaximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);
@@ -1056,7 +1045,6 @@ void Respiratory::ProcessDriverActions()
     m_VentilationFrequency_Per_min *= painModifier; 
     m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
     m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
-   // m_VentilationFrequency_Per_min += diffPH;
   }
 
   //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation

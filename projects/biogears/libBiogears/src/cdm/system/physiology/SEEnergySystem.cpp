@@ -20,23 +20,24 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/container/Tree.tci.h>
+#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
-  constexpr char idAchievedExerciseLevel[] = "AchievedExerciseLevel";
-  constexpr char idChlorideLostToSweat[] = "ChlorideLostToSweat";
-  constexpr char idCoreTemperature[] = "CoreTemperature";
-  constexpr char idCreatinineProductionRate[] = "CreatinineProductionRate";
-  constexpr char idExerciseMeanArterialPressureDelta[] = "ExerciseMeanArterialPressureDelta";
-  constexpr char idFatigueLevel[] = "FatigueLevel";
-  constexpr char idLactateProductionRate[] = "LactateProductionRate";
-  constexpr char idPotassiumLostToSweat[] = "PotassiumLostToSweat";
-  constexpr char idSkinTemperature[] = "SkinTemperature";
-  constexpr char idSodiumLostToSweat[] = "SodiumLostToSweat";
-  constexpr char idSweatRate[] = "SweatRate";
-  constexpr char idTotalMetabolicRate[] = "TotalMetabolicRate";
-  constexpr char idTotalWorkRateLevel[] = "TotalWorkRateLevel";
+constexpr char idAchievedExerciseLevel[] = "AchievedExerciseLevel";
+constexpr char idChlorideLostToSweat[] = "ChlorideLostToSweat";
+constexpr char idCoreTemperature[] = "CoreTemperature";
+constexpr char idCreatinineProductionRate[] = "CreatinineProductionRate";
+constexpr char idEnergyDeficit[] = "EnergyDeficit";
+constexpr char idExerciseMeanArterialPressureDelta[] = "ExerciseMeanArterialPressureDelta";
+constexpr char idFatigueLevel[] = "FatigueLevel";
+constexpr char idLactateProductionRate[] = "LactateProductionRate";
+constexpr char idPotassiumLostToSweat[] = "PotassiumLostToSweat";
+constexpr char idSkinTemperature[] = "SkinTemperature";
+constexpr char idSodiumLostToSweat[] = "SodiumLostToSweat";
+constexpr char idSweatRate[] = "SweatRate";
+constexpr char idTotalMetabolicRate[] = "TotalMetabolicRate";
+constexpr char idTotalWorkRateLevel[] = "TotalWorkRateLevel";
 
 SEEnergySystem::SEEnergySystem(Logger* logger)
   : SESystem(logger)
@@ -45,6 +46,7 @@ SEEnergySystem::SEEnergySystem(Logger* logger)
   m_ChlorideLostToSweat = nullptr;
   m_CoreTemperature = nullptr;
   m_CreatinineProductionRate = nullptr;
+  m_EnergyDeficit = nullptr;
   m_ExerciseMeanArterialPressureDelta = nullptr;
   m_FatigueLevel = nullptr;
   m_LactateProductionRate = nullptr;
@@ -71,6 +73,7 @@ void SEEnergySystem::Clear()
   SAFE_DELETE(m_ChlorideLostToSweat);
   SAFE_DELETE(m_CoreTemperature);
   SAFE_DELETE(m_CreatinineProductionRate);
+  SAFE_DELETE(m_EnergyDeficit);
   SAFE_DELETE(m_ExerciseMeanArterialPressureDelta);
   SAFE_DELETE(m_FatigueLevel);
   SAFE_DELETE(m_LactateProductionRate);
@@ -80,7 +83,7 @@ void SEEnergySystem::Clear()
   SAFE_DELETE(m_SweatRate);
   SAFE_DELETE(m_TotalMetabolicRate);
   SAFE_DELETE(m_TotalWorkRateLevel);
-}//-------------------------------------------------------------------------------
+} //-------------------------------------------------------------------------------
 const SEScalar* SEEnergySystem::GetScalar(const char* name)
 {
   return GetScalar(std::string{ name });
@@ -96,6 +99,8 @@ const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
     return &GetCoreTemperature();
   if (name == idCreatinineProductionRate)
     return &GetCreatinineProductionRate();
+  if (name == idEnergyDeficit)
+    return &GetEnergyDeficit();
   if (name == idExerciseMeanArterialPressureDelta)
     return &GetExerciseMeanArterialPressureDelta();
   if (name == idFatigueLevel)
@@ -130,6 +135,8 @@ bool SEEnergySystem::Load(const CDM::EnergySystemData& in)
     GetCoreTemperature().Load(in.CoreTemperature().get());
   if (in.CreatinineProductionRate().present())
     GetCreatinineProductionRate().Load(in.CreatinineProductionRate().get());
+  if (in.EnergyDeficit().present())
+    GetEnergyDeficit().Load(in.EnergyDeficit().get());
   if (in.ExerciseMeanArterialPressureDelta().present())
     GetExerciseMeanArterialPressureDelta().Load(in.ExerciseMeanArterialPressureDelta().get());
   if (in.FatigueLevel().present())
@@ -173,6 +180,8 @@ void SEEnergySystem::Unload(CDM::EnergySystemData& data) const
     data.CoreTemperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperature->Unload()));
   if (m_CreatinineProductionRate != nullptr)
     data.CreatinineProductionRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_CreatinineProductionRate->Unload()));
+  if (m_EnergyDeficit != nullptr)
+    data.EnergyDeficit(std::unique_ptr<CDM::ScalarPowerData>(m_EnergyDeficit->Unload()));
   if (m_ExerciseMeanArterialPressureDelta != nullptr)
     data.ExerciseMeanArterialPressureDelta(std::unique_ptr<CDM::ScalarPressureData>(m_ExerciseMeanArterialPressureDelta->Unload()));
   if (m_FatigueLevel != nullptr)
@@ -272,6 +281,25 @@ double SEEnergySystem::GetCreatinineProductionRate(const AmountPerTimeUnit& unit
   return m_CreatinineProductionRate->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
+bool SEEnergySystem::HasEnergyDeficit() const
+{
+  return m_EnergyDeficit == nullptr ? false : m_EnergyDeficit->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPower& SEEnergySystem::GetEnergyDeficit()
+{
+  if (m_EnergyDeficit == nullptr)
+    m_EnergyDeficit = new SEScalarPower();
+  return *m_EnergyDeficit;
+}
+//-------------------------------------------------------------------------------
+double SEEnergySystem::GetEnergyDeficit(const PowerUnit& unit) const
+{
+  if (m_EnergyDeficit == nullptr)
+    return SEScalar::dNaN();
+  return m_EnergyDeficit->GetValue(unit);
+
+}
 
 bool SEEnergySystem::HasExerciseMeanArterialPressureDelta() const
 {
@@ -454,7 +482,7 @@ double SEEnergySystem::GetTotalWorkRateLevel() const
 //-------------------------------------------------------------------------------
 Tree<const char*> SEEnergySystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
+  return Tree<const char*>{ classname() }
     .emplace_back(idAchievedExerciseLevel)
     .emplace_back(idChlorideLostToSweat)
     .emplace_back(idCoreTemperature)
@@ -467,7 +495,6 @@ Tree<const char*> SEEnergySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idSodiumLostToSweat)
     .emplace_back(idSweatRate)
     .emplace_back(idTotalMetabolicRate)
-    .emplace_back(idTotalWorkRateLevel)
-    ;
+    .emplace_back(idTotalWorkRateLevel);
 }
 }

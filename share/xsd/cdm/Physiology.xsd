@@ -228,7 +228,8 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="TotalWorkRateLevel" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The current patient work rate above basal over the maximum work rate capable by the patient -->
                     <xs:element name="SodiumLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of sodium lost while sweating during exercise -->
                     <xs:element name="PotassiumLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of potassium lost while sweating during exercise --> 
-                    <xs:element name="ChlorideLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->                    
+                    <xs:element name="ChlorideLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->      
+					<xs:element name="EnergyDeficit" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<<@brief Tracks a gap in energy supply/demand caused by pathophysiological states, like hypoperfusion-->
                 </xs:sequence>    
             </xs:extension>
         </xs:complexContent>
