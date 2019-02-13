@@ -32,6 +32,7 @@ namespace biogears {
   constexpr char idHematocrit[] = "Hematocrit";
   constexpr char idHemoglobinContent[] = "HemoglobinContent";
   constexpr char idOxygenSaturation[] = "OxygenSaturation";
+  constexpr char idOxygenVenousSaturation[] = "OxygenVenousSaturation";
   constexpr char idPhosphate[] = "Phosphate";
   constexpr char idPlasmaVolume[] = "PlasmaVolume";
   constexpr char idPulseOximetry[] = "PulseOximetry";
@@ -71,6 +72,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_Hematocrit = nullptr;
   m_HemoglobinContent = nullptr;
   m_OxygenSaturation = nullptr;
+  m_OxygenVenousSaturation = nullptr;
   m_Phosphate = nullptr;
   m_PlasmaVolume = nullptr;
   m_PulseOximetry = nullptr;
@@ -117,6 +119,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_Hematocrit);
   SAFE_DELETE(m_HemoglobinContent);
   SAFE_DELETE(m_OxygenSaturation);
+  SAFE_DELETE(m_OxygenVenousSaturation);
   SAFE_DELETE(m_Phosphate);
   SAFE_DELETE(m_PlasmaVolume);
   SAFE_DELETE(m_PulseOximetry);
@@ -169,6 +172,8 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     return &GetHemoglobinContent();
   if (name == idOxygenSaturation)
     return &GetOxygenSaturation();
+  if (name == idOxygenVenousSaturation)
+    return &GetOxygenVenousSaturation();
   if (name == idPhosphate)
     return &GetPhosphate();
   if (name == idPlasmaVolume)
@@ -250,6 +255,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetHemoglobinContent().Load(in.HemoglobinContent().get());
   if (in.OxygenSaturation().present())
     GetOxygenSaturation().Load(in.OxygenSaturation().get());
+  if (in.OxygenVenousSaturation().present())
+    GetOxygenVenousSaturation().Load(in.OxygenVenousSaturation().get());
   if (in.Phosphate().present())
     GetPhosphate().Load(in.Phosphate().get());
   if (in.PlasmaVolume().present())
@@ -331,6 +338,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.HemoglobinContent(std::unique_ptr<CDM::ScalarMassData>(m_HemoglobinContent->Unload()));
   if (m_OxygenSaturation != nullptr)
     data.OxygenSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_OxygenSaturation->Unload()));
+  if (m_OxygenVenousSaturation != nullptr)
+    data.OxygenVenousSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_OxygenVenousSaturation->Unload()));
   if (m_Phosphate != nullptr)
     data.Phosphate(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_Phosphate->Unload()));
   if (m_PlasmaVolume != nullptr)
@@ -596,6 +605,25 @@ double SEBloodChemistrySystem::GetOxygenSaturation() const
   if (m_OxygenSaturation == nullptr)
     return SEScalar::dNaN();
   return m_OxygenSaturation->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEBloodChemistrySystem::HasOxygenVenousSaturation() const
+{
+  return m_OxygenVenousSaturation == nullptr ? false : m_OxygenVenousSaturation->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarFraction& SEBloodChemistrySystem::GetOxygenVenousSaturation()
+{
+  if (m_OxygenVenousSaturation == nullptr)
+    m_OxygenVenousSaturation = new SEScalarFraction();
+  return *m_OxygenVenousSaturation;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetOxygenVenousSaturation() const
+{
+  if (m_OxygenVenousSaturation == nullptr)
+    return SEScalar::dNaN();
+  return m_OxygenVenousSaturation->GetValue();
 }
 //-------------------------------------------------------------------------------
 

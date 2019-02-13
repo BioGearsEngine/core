@@ -86,6 +86,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="Hematocrit" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume percentage of red blood cells in the blood.-->
                     <xs:element name="HemoglobinContent" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of hemoglobin in the blood.-->
                     <xs:element name="OxygenSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is oxygen bound.-->
+					<xs:element name="OxygenVenousSaturation" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief Fraction of hemoglobin oxygen bound in vena cava, cited as indicator for shock risk-->
                     <xs:element name="Phosphate" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Sum of all inorganic phosphate in the blood.-->
                     <xs:element name="PlasmaVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of the plasma.-->
                     <xs:element name="PulseOximetry" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin with bound oxygen as measured optically, which can include Carbon Monoxide.-->

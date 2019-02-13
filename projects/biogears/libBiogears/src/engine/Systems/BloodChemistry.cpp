@@ -233,6 +233,7 @@ void BloodChemistry::Process()
 {
   //Push the compartment values of O2 and CO2 partial pressures on the corresponding system data.
   GetOxygenSaturation().Set(m_aortaO2->GetSaturation());
+  GetOxygenVenousSaturation().Set(m_venaCavaO2->GetSaturation());
   GetCarbonDioxideSaturation().Set(m_aortaCO2->GetSaturation());
   if (m_aortaCO == nullptr && m_data.GetSubstances().IsActive(m_data.GetSubstances().GetCO()))
     m_aortaCO = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO());

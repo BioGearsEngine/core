@@ -28,6 +28,7 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                   Unit="L"          Precision="2"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenVenousSaturation"            Unit="unitless"    Precision="3"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideSaturation"           Unit="unitless"    Precision="3"/>  
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"     Unit="unitless"    Precision="4"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"          Unit="L/min"       Precision="2"/>  
@@ -89,8 +90,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightUreter"                Name="InFlow"   Unit="mL/min" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                 Name="InFlow"   Unit="mL/min" Precision="2"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="BloodConcentration" Unit="mg/dL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature" Substance="Lactate" Name="Concentration" Unit="mg/dL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Lactate" Name="Concentration" Unit="mg/dL" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Substance="Lactate" Name="Molarity" Unit="mmol/L" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="StrongIonDifference" Unit="mmol/L" Precision="3"/>
 	
   </DataRequests>
     

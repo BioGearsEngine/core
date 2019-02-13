@@ -167,6 +167,16 @@ public:
   double GetOxygenSaturation() const;
   //@}
 
+  /** @name OxygenSaturation
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_OxygenVenousSaturation
+   *  @{*/
+  /// %Test if member has been allocated
+  bool HasOxygenVenousSaturation() const;
+  /// Get member class, allocate if nullptr
+  SEScalarFraction& GetOxygenVenousSaturation();
+  double GetOxygenVenousSaturation() const;
+  //@}
+
   /** @name Phosphate
   *  @brief @copybrief Physiology_BloodChemistrySystemData_Phosphate
   *  @{*/
@@ -373,6 +383,7 @@ protected:
   SEScalarFraction* m_Hematocrit;
   SEScalarMass* m_HemoglobinContent;
   SEScalarFraction* m_OxygenSaturation;
+  SEScalarFraction* m_OxygenVenousSaturation;
   SEScalarAmountPerVolume* m_Phosphate;
   SEScalarVolume* m_PlasmaVolume;
   SEScalarFraction* m_PulseOximetry;
