@@ -5,20 +5,31 @@
 #include <fstream>
 #include <list>
 #include <regex>
+#include <sstream>
 
 namespace biogears {
 
 std::string error_context;
 Tokenizer::token_list::iterator token_end;
-std::string handle_assignment(Tokenizer::token_list::iterator&);
-Executor handle_driver_definition(Tokenizer::token_list::iterator& tokenItr);
+bool handle_assignment(Tokenizer::token_list::iterator&, std::string& rhs);
+bool handle_assignment(Tokenizer::token_list::iterator&, bool& rhs);
+bool handle_assignment(Tokenizer::token_list::iterator&, int& rhs);
+bool handle_assignment(Tokenizer::token_list::iterator&, double& rhs);
+bool handle_driver_definition(Tokenizer::token_list::iterator&, Executor& rhs);
 bool handle_bool_string(const std::string&, bool&);
 bool handle_double_string(const std::string&, double&);
 bool handle_integral_string(const std::string&, int&);
 bool handle_driver_string(const std::string&, EDriver&);
-bool handle_tick_string(Tokenizer::token_list::iterator&, std::string& string);
-bool handle_quote_string(Tokenizer::token_list::iterator&, std::string& string);
-std::list<std::string> split_token_on_word_boundry(std::string word);
+bool handle_tick_string(Tokenizer::token_list::iterator&, std::string&);
+bool handle_quote_string(Tokenizer::token_list::iterator&, std::string&);
+bool handle_email_list(const std::string&, std::vector<std::string>&);
+bool handle_delimited_list(const std::string&, const std::string, std::vector<std::string>&);
+bool validate_email_string(const std::string&);
+bool validate_server_address(const std::string&);
+bool grab_next_word_or_fail(Tokenizer::token_list::iterator&);
+bool grab_next_symbol_or_fail(Tokenizer::token_list::iterator&);
+bool goble_until_next_given(Tokenizer::token_list::iterator&, Token&, Tokenizer::token_list&);
+std::list<std::string> split_token_on_word_boundry(std::string);
 
 Executor::Executor(std::string n, EDriver d)
   : name(n)
@@ -181,82 +192,66 @@ bool Config::process(Tokenizer&& tokens)
 
     std::map<std::string, Executor> symbol_table;
 
+    bool valid_state = true;
+    if (tokenItr->type == ETokenClass::Newline || tokenItr->type == ETokenClass::Whitespace) {
+      continue;
+    }
     if (symbol_table.find("token") != symbol_table.end()) {
       //TODO:Process Symbol
     } else if (token == "subject") {
       error_context = token;
-      auto value = handle_assignment(tokenItr);
-      if (value.empty()) {
-        return false;
-      } else {
-        _email_subject = value;
-      }
+      valid_state &= handle_assignment(tokenItr, _email_subject);
+    } else if (token == "recepients") {
+      error_context = token;
+      std::string recipents;
+      valid_state &= handle_assignment(tokenItr, recipents);
+      valid_state &= handle_email_list(recipents, _email_receipients);
+    } else if (token == "sender") {
+      error_context = token;
+      valid_state &= handle_assignment(tokenItr, _email_sender_address);
+      valid_state &= validate_email_string(_email_sender_address);
+    } else if (token == "smtp") {
+      error_context = token;
+      valid_state &= handle_assignment(tokenItr, _email_smtp_server);
+      valid_state &= validate_server_address(_email_smtp_server);
+    } else if (token == "smtp_password") {
+      error_context = token;
+      valid_state &= handle_assignment(tokenItr, _email_smtp_password);
+    } else if (token == "smtp_username") {
+      error_context = token;
+      valid_state &= handle_assignment(tokenItr, _email_smtp_user);
     } else if (token == "sendemail") {
       error_context = token;
-      auto value = handle_assignment(tokenItr);
-      if (value.empty()) {
-        return false;
-      } else {
-        if (!handle_bool_string(value, _send_email)) {
-          return false;
-        }
-      }
+      valid_state &= handle_assignment(tokenItr, _send_email);
     } else if (token == "executetests") {
       error_context = token;
-      auto value = handle_assignment(tokenItr);
-      if (value.empty()) {
-        return false;
-      } else {
-        if (!handle_bool_string(value, _execute_tests)) {
-          return false;
-        }
-      }
+      valid_state &= handle_assignment(tokenItr, _execute_tests);
     } else if (token == "plotresults") {
       error_context = token;
-      auto value = handle_assignment(tokenItr);
-      if (value.empty()) {
-        return false;
-      } else {
-        if (!handle_bool_string(value, _plot_results)) {
-          return false;
-        }
-      }
+      valid_state &= handle_assignment(tokenItr, _plot_results);
     } else if (token == "percentdifference") {
       error_context = token;
-      auto value = handle_assignment(tokenItr);
-      if (value.empty()) {
-        return false;
-      } else {
-        if (!handle_double_string(value, _percent_difference)) {
-          return false;
-        }
-      }
+      valid_state &= handle_assignment(tokenItr, _percent_difference);
     } else if (token == "threads") {
       error_context = token;
-      auto value = handle_assignment(tokenItr);
-      if (value.empty()) {
-        return false;
-      } else {
-        if (!handle_integral_string(value, _threads)) {
-          return false;
-        }
-      }
+      valid_state &= handle_assignment(tokenItr, _threads);
     } else if (token == "@group") {
       ++tokenItr;
       if (tokenItr != tokens.end()) {
         _current_group = tokenItr->value;
       } else {
         std::cerr << "Expected token after @group but found nothing.\n";
-        return false;
+        valid_state &= false;
       }
-    } else if (token == "Driver") {
-      Executor ex = handle_driver_definition(tokenItr);
-      if (EDriver::Undefined == ex.Driver()) {
-        return false;
-      }
+    } else if (token == "driver") {
+      Executor ex{ "Undefined", EDriver::Undefined };
+      valid_state &= handle_driver_definition(tokenItr, ex);
     } else {
       std::cerr << "Unable to process " << token << ".\n";
-      return false;
+      valid_state &= false;
+    }
+    if (!valid_state) {
+      return valid_state;
     }
   }
   return true;
@@ -284,107 +279,179 @@ std::list<std::string> split_token_on_word_boundry(std::string token)
   return result;
 }
 //-----------------------------------------------------------------------------
-std::string handle_assignment(Tokenizer::token_list::iterator& tokenItr)
+bool handle_assignment(Tokenizer::token_list::iterator& tokenItr, std::string& rhs)
 {
-  std::string value;
+  rhs = "";
   auto next = tokenItr;
   ++next;
   if (*next == "=") {
     ++next;
-    if ( handle_quote_string(next, value) ) {
+    if (handle_quote_string(next, rhs)) {
       tokenItr = next;
-    } else if ( handle_tick_string(next, value)) {
+    } else if (handle_tick_string(next, rhs)) {
       tokenItr = next;
     } else {
-      value += next->value;
+      while (next->type != ETokenClass::Newline) {
+        if (next == token_end) {
+          std::cerr << "Error: Expected closing \", but none was found after " << error_context << ".\n";
+          tokenItr = next;
+          return false;
+        }
+        rhs += next->value;
+        ++next;
+      }
       tokenItr = next;
     }
   } else {
     std::cerr << "Error: Expected = after " << *tokenItr << "but " << *next << "was found instead.\n";
   }
-  return value;
+  return true;
 }
 //-----------------------------------------------------------------------------
-Executor handle_driver_definition(Tokenizer::token_list::iterator& tokenItr)
+bool handle_assignment(Tokenizer::token_list::iterator& tokenItr, bool& rhs)
 {
-
-  auto current = tokenItr;
-  auto next = tokenItr;
-  std::advance(current, 1);
-  std::advance(next, 2);
-
-  std::string token = current->value;
-  if ((*next)[0] == '{') {
-    token += next->value;
-    std::advance(next, 1);
+  std::string token;
+  if (handle_assignment(tokenItr, token)) {
+    return handle_bool_string(token, rhs);
+  } else {
+    return false;
   }
-  const std::regex driver_def_rx(R"((\w+)\s*{)");
-  std::smatch matches;
-  if (std::regex_match(next->value, matches, driver_def_rx)) {
-    std::string name = matches[0];
-    EDriver driver = EDriver::Undefined;
-    current = next;
-    token = current->value;
-    std::transform(token.begin(), token.end(), token.begin(), ::tolower);
+}
+//-----------------------------------------------------------------------------
+bool handle_assignment(Tokenizer::token_list::iterator& tokenItr, int& rhs)
+{
+  std::string token;
+  if (handle_assignment(tokenItr, token)) {
+    return handle_integral_string(token, rhs);
+  } else {
+    return false;
+  }
+}
+//-----------------------------------------------------------------------------
+bool handle_assignment(Tokenizer::token_list::iterator& tokenItr, double& rhs)
+{
+  std::string token;
+  if (handle_assignment(tokenItr, token)) {
+    return handle_double_string(token, rhs);
+  } else {
+    return false;
+  }
+}
+//-----------------------------------------------------------------------------
+bool handle_driver_definition(Tokenizer::token_list::iterator& tokenItr, Executor& executor)
+{
+  std::string driver_name;
+  EDriver parent_driver = EDriver::Undefined;
+  auto next = tokenItr;
+  bool done_prcessing_definition = false;
+  bool done_grabing_paramaters = false;
+  Tokenizer::token_list paramaters;
 
-    if (token == "driver") {
-      std::advance(next, 1);
-      token = next->value;
-      std::advance(next, 1);
-      std::transform(token.begin(), token.end(), token.begin(), ::tolower);
-      if (!handle_driver_string(token, driver)) {
-        return { "Error", EDriver::Undefined };
+  enum class ParseMode { ID,
+                         PARENT,
+                         OPTIONS } current_mode
+    = ParseMode::ID;
+  while (!done_prcessing_definition) {
+    ++next;
+    if (next == token_end) {
+      std::cerr << "Error: Unexpected EOF after " << error_context << "\n";
+      return false;
+    }
+    if (current_mode == ParseMode::ID) {
+      if (grab_next_word_or_fail(next)) {
+        driver_name = next->value;
+        current_mode = ParseMode::PARENT;
+      } else {
+        std::cerr << "Error: Keyword Driver must be followed by a vaklid ID \n";
+        return false;
       }
-      Executor result{ name, driver };
-      std::list<std::string> token_buffer;
-      current = next;
-      std::advance(next, 1);
-      token_buffer = split_token_on_word_boundry(current->value);
-      while (token_buffer.size()) {
-        token = token_buffer.front();
-        std::transform(token.begin(), token.end(), token.begin(), ::tolower);
-        if (token == "option") {
-          if (token_buffer.size() == 1) {
-            auto v = split_token_on_word_boundry(next->value);
-            token_buffer.insert(token_buffer.end(), v.begin(), v.end());
-            std::advance(next, 1);
+    } else if (current_mode == ParseMode::PARENT) {
+      if (grab_next_symbol_or_fail(next)) {
+        if (next->value == ":") {
+          if (grab_next_word_or_fail(next)) {
+            if (!handle_driver_string(next->value, parent_driver)) {
+              std::cerr << "Error: Invalid Driver Name " << next->value << " found after : for Driver " << driver_name << "\n";
+            }
+            if (grab_next_symbol_or_fail(next)) {
+              if (next->value == "{") {
+                current_mode = ParseMode::OPTIONS;
+              } else {
+                std::cerr << "Error: Driver  " << driver_name << ": " << next->value << "must be followed by valid option block"
+                          << next->value << " found instead\n";
+                return false;
+              }
+            } else {
+              std::cerr << "Error: Driver  " << driver_name << ": must be followed by a valid parent class"
+                        << "\n";
+              return false;
+            }
+          } else {
+            std::cerr << "Error: Driver  " << driver_name << ": must be followed by a valid parent class"
+                      << "\n";
+            return false;
           }
-          token_buffer.pop_front();
-          token = token_buffer.front();
-          std::transform(token.begin(), token.end(), token.begin(), ::tolower);
-          if (token == "fastplot") {
-            result.PlotStyle(EPlotStyle::FastPlot);
-          } else if (token == "fullplot") {
-            result.PlotStyle(EPlotStyle::FullPlot);
-          } else if (token == "fastploterrors") {
-            result.PlotStyle(EPlotStyle::FastPlotErrors);
-          } else if (token == "fullploterrors") {
-            result.PlotStyle(EPlotStyle::FullPlotErrors);
-          } else if (token == "memoryfastplot") {
-            result.PlotStyle(EPlotStyle::MemoryFastPlot);
-          } else if (token == "baselines") {
-            result.Baselines();
-          } else if (token == "computed") {
-            result.Baselines();
-          } else if (token == "results") {
-            result.Results({});
-          }
-
-        } else if (token == "}") {
-          return result;
+        } else if (next->value == "{") {
+          current_mode = ParseMode::OPTIONS;
+          parent_driver = EDriver::ScenarioTestDriver;
         } else {
-          std::cerr << "Error: Expected Option or } but " << *current << "found.\n";
+          std::cerr << "Error: DriverID  " << driver_name << " must be followed by a parent class : <Parent> or a definition {}"
+                    << "\n";
+          return false;
         }
-
-        auto v = split_token_on_word_boundry(next->value);
-        token_buffer.insert(token_buffer.end(), v.begin(), v.end());
-        std::advance(next, 1);
+      } else {
+        std::cerr << "Error: DriverID  " << driver_name << " must be followed by a parent class : <Parent> or a definition {}"
+                  << "\n";
+        return false;
+      }
+    } else if (current_mode == ParseMode::OPTIONS) {
+      auto definition_tokens = Tokenizer::token_list{};
+      auto token = Token{ ETokenClass::Symbol, '}' };
+      if (goble_until_next_given(next, token, definition_tokens)) {
+        executor = Executor{ driver_name, parent_driver };
+        done_prcessing_definition = true;
+      } else {
+        std::cerr << "Error: Unexpected EOF after { for Driver  " << driver_name
+                  << "\n";
       }
     }
-  } else {
-    std::cout << "Error: Malformed Driver definition. Expected <id> {, but found " << token << ".\n";
-    return { "Error", EDriver::Undefined };
   }
+  tokenItr = next;
+
+  for (auto itr = paramaters.begin(); itr != paramaters.end(); ++itr) {
+    std::string token = itr->value;
+    std::transform(token.begin(), token.end(), token.begin(), ::tolower);
+
+    if (itr->value == "option") {
+      continue;
+    }
+    if (token == "fastplot") {
+      executor.PlotStyle(EPlotStyle::FastPlot);
+    } else if (token == "fullplot") {
+      executor.PlotStyle(EPlotStyle::FullPlot);
+    } else if (token == "fastploterrors") {
+      executor.PlotStyle(EPlotStyle::FastPlotErrors);
+    } else if (token == "fullploterrors") {
+      executor.PlotStyle(EPlotStyle::FullPlotErrors);
+    } else if (token == "memoryfastplot") {
+      executor.PlotStyle(EPlotStyle::MemoryFastPlot);
+    } else if (token == "baselines") {
+      std::string baselines;
+      handle_assignment(itr,baselines);
+      executor.Baselines(baselines);
+    } else if (token == "computed") {
+      std::string computed;
+      handle_assignment(itr,computed);
+      executor.Baselines();
+    } else if (token == "results") {
+      std::string results;
+      std::vector<std::string> results_list;
+      handle_assignment(itr,results);
+      handle_delimited_list(results,",", results_list);
+      executor.Results(results_list);
+    }
+  }
+
+  return true;
 }
 //-----------------------------------------------------------------------------
 bool handle_bool_string(const std::string& token, bool& result)
@@ -452,7 +519,7 @@ bool handle_tick_string(Tokenizer::token_list::iterator& itr, std::string& value
       value += next->value;
       ++next;
       if (next == token_end) {
-        std::cerr << "Error: Expected closing \", but none was found after " << error_context << ".\n";
+        std::cerr << "Error: Expected closing ', but none was found after " << error_context << ".\n";
         return false;
       }
     }
@@ -466,7 +533,7 @@ bool handle_tick_string(Tokenizer::token_list::iterator& itr, std::string& value
 //-----------------------------------------------------------------------------
 bool handle_quote_string(Tokenizer::token_list::iterator& itr, std::string& value)
 {
-    auto next = itr;
+  auto next = itr;
   value.clear();
   if (*itr == "\"") {
     ++next;
@@ -483,6 +550,38 @@ bool handle_quote_string(Tokenizer::token_list::iterator& itr, std::string& valu
   }
   itr = next;
   return true;
+}
+//-----------------------------------------------------------------------------
+bool handle_email_list(const std::string& token, std::vector<std::string>& result)
+{
+
+  constexpr char delimiter = ';';
+  size_t start = 0;
+  size_t end = token.find(delimiter, start);
+
+  std::string address;
+  std::stringstream stream(token);
+  while (std::getline(stream, address, ';')) {
+    if (!address.empty() && validate_email_string(address)) {
+
+      result.push_back(address);
+    }
+  }
+  return true;
+}
+//-----------------------------------------------------------------------------
+bool validate_email_string(const std::string& token)
+{
+  std::regex rx{ R"REGEX(^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$)REGEX" };
+  return std::regex_match(token, rx);
+}
+//-----------------------------------------------------------------------------
+bool validate_server_address(const std::string& token)
+{
+  auto ip_rx = std::regex{ R"REGEX(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)REGEX" };
+  auto hostname_rx = std::regex{ R"REGEX(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$)REGEX" };
+
+  return std::regex_match(token, ip_rx) || std::regex_match(token, hostname_rx);
 }
 //-----------------------------------------------------------------------------
 void Config::clear()
@@ -510,4 +609,68 @@ auto Config::end() const -> const_iterator
   return _execs.end();
 }
 //-----------------------------------------------------------------------------
+bool grab_next_word_or_fail(Tokenizer::token_list::iterator& itr)
+{
+  auto next = itr;
+  do {
+    ++next;
+    if (next == token_end) {
+      std::cerr << "Error: Unexpected EOF after " << error_context << "\n";
+
+    } else if (next->type == ETokenClass::Whitespace) {
+      continue;
+    } else if (next->type == ETokenClass::Newline) {
+      continue;
+    } else if (next->type == ETokenClass::Word) {
+      itr = next;
+      return true;
+    } else {
+      return false;
+    }
+  } while (next != token_end);
+  return false;
+}
+//-----------------------------------------------------------------------------
+bool grab_next_symbol_or_fail(Tokenizer::token_list::iterator& itr)
+{
+  auto next = itr;
+  do {
+    ++next;
+    if (next == token_end) {
+      std::cerr << "Error: Unexpected EOF after " << error_context << "\n";
+    } else if (next->type == ETokenClass::Whitespace) {
+      continue;
+    } else if (next->type == ETokenClass::Newline) {
+      continue;
+    } else if (next->type == ETokenClass::Symbol) {
+      itr = next;
+      return true;
+    } else {
+      return false;
+    }
+  } while (next != token_end);
+  return false;
+}
+//-----------------------------------------------------------------------------
+bool goble_until_next_given(Tokenizer::token_list::iterator& itr, Token& token, Tokenizer::token_list& list)
+{
+  auto next = itr;
+  do {
+    ++next;
+    if (next == token_end) {
+      std::cerr << "Error: Unexpected EOF after " << error_context << "\n";
+    } else if (next->type == token.type && next->value == token.value) {
+      itr = next;
+      return true;
+    } else {
+      list.emplace_back(*next);
+    }
+  } while (next != token_end);
+  return false;
+}
+//-------------------------------------------------------------------------------
+bool handle_delimited_list(const std::string&, const std::string, std::vector<std::string>&)
+{
+  
+}
 }

@@ -30,12 +30,12 @@ struct Token {
   ETokenClass type;
   std::string value;
 
-  explicit Token();
+  Token();
   explicit Token(const ETokenClass c, const std::string& s);
   explicit Token(const ETokenClass c, const char s);
 
-  explicit Token(const Token& obj) = default;
-  explicit Token(Token&& obj) = default;
+  Token(const Token& obj) = default;
+  Token(Token&& obj) = default;
   Token& operator=(const Token& obj) = default;
   Token& operator=(Token&& obj) = default;
 

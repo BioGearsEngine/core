@@ -113,6 +113,7 @@ bool Tokenizer::tokenize(std::istream& os)
     if (line.empty()) {
       continue;
     }
+    line += "\n";
     Token workItem{ ETokenClass::Undefined, "" };
     for (auto itr = line.begin(); itr != line.end(); ++itr) {
       auto& cur = *itr;
@@ -134,22 +135,18 @@ bool Tokenizer::tokenize(std::istream& os)
         } else {
           _tokens.emplace_back(ETokenClass::Symbol, cur);
         }
-      } 
-      else if (cur == '\n') {
+      } else if (cur == '\n') {
         _tokens.push_back(workItem);
         _tokens.emplace_back(ETokenClass::Newline, cur);
         workItem = Token();
-      } 
-      else if (workItem.type != ETokenClass::Whitespace && std::isspace(cur)) {
+      } else if (workItem.type != ETokenClass::Whitespace && std::isspace(cur)) {
         _tokens.push_back(workItem);
-        workItem = Token(ETokenClass::Whitespace,cur);
-      } 
-      else if (cur == '#') {
+        workItem = Token(ETokenClass::Whitespace, cur);
+      } else if (cur == '#') {
         _tokens.push_back(workItem);
         workItem = Token();
         break;
-      } 
-      else if (workItem.type == ETokenClass::Whitespace) {
+      } else if (workItem.type == ETokenClass::Whitespace) {
         if (std::isspace(cur)) {
           workItem.value.push_back(cur);
         } else if (std::isalpha(cur)) {
@@ -163,8 +160,7 @@ bool Tokenizer::tokenize(std::istream& os)
           _tokens.emplace_back(ETokenClass::Symbol, cur);
           workItem = Token();
         }
-      } 
-      else if (workItem.type == ETokenClass::Number) {
+      } else if (workItem.type == ETokenClass::Number) {
         if (std::isdigit(cur)) {
           workItem.value.push_back(cur);
         } else if (std::isalpha(cur)) {
@@ -175,13 +171,14 @@ bool Tokenizer::tokenize(std::istream& os)
           _tokens.emplace_back(ETokenClass::Symbol, cur);
           workItem = Token();
         }
-      } 
-      else if (workItem.type == ETokenClass::Word) {
+      } else if (workItem.type == ETokenClass::Word) {
         if (std::isalnum(cur)) {
           workItem.value.push_back(cur);
-        }  else {
+        } else if ( cur == '_' ) {
+          workItem.value.push_back(cur);
+        } else {
           _tokens.push_back(workItem);
-          _tokens.emplace_back( ETokenClass::Symbol, cur );
+          _tokens.emplace_back(ETokenClass::Symbol, cur);
           workItem = Token();
         }
       }
