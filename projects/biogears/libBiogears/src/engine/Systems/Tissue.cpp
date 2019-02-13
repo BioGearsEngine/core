@@ -797,7 +797,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double mandatoryMuscleAnaerobicFraction = .1; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = 1200; //see Energy::Exercise
-  double energyDeficit_kcal = 0.0;
+
   //Patients with COPD show higher levels of anaerobic metabolism \cite mathur1999cerebral \cite engelen2000factors
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     mandatoryMuscleAnaerobicFraction *= 1.5; //50% increase
@@ -816,7 +816,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_PatientActions->HasHemorrhage()) {
     double maxBleedingRate_mL_Per_min = 200.0;
     double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
-    mandatoryMuscleAnaerobicFraction = bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
+    mandatoryMuscleAnaerobicFraction = 0.8 * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
   }
 
   //Reusable values for looping

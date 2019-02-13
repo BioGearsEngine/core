@@ -243,7 +243,6 @@ void BloodChemistry::Process()
     GetPulseOximetry().Set(GetOxygenSaturation());
   }
 
-  m_data.GetDataTrack().Probe("VenaCava-O2Sat", m_venaCavaO2->GetSaturation().GetValue());
   // This Hemoglobin Content is the mass of the hemoglobin only, not the hemoglobin and bound gas.
   // So we have to take our 4 Hb species masses and remove the mass of the gas.
   // Step 1) Get the mass of the bound species, which includes the mass of the bound gas.

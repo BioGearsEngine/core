@@ -16,4 +16,10 @@
   <Component Name="Calcium">
     <Concentration readOnly="false" unit="g/dL" value="0.006"/>
   </Component>
+  <Component Name="Oxygen">
+    <Concentration readOnly="false" unit="g/L" value="0.0314"/>
+  </Component>
+  <Component Name="CarbonDioxide">
+    <Concentration readOnly="false" unit="g/L" value="0.715"/>
+  </Component>
 </SubstanceCompound>
