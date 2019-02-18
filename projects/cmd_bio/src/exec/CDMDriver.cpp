@@ -36,7 +36,7 @@ CDMDriver::~CDMDriver()
 void CDMDriver::RunCDMs(const Config& runs)
 {
   for (auto& test : runs) {
-    std::function<void()> work = [=](){ biogears::RunCDMTests(test.second); };
+    std::function<void()> work = [=](){ biogears::RunCDMTests(test); };
   }
 }
 //-------------------------------------------------------------------------------

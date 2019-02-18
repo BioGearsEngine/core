@@ -191,6 +191,8 @@ int main(int argc, char** argv)
   if (args.MultiWordFound("SCENARIO")) {
     for (auto& arg : args.MultiWord("SCENARIO")) {
       biogears::Config config {arg};
+      biogears::CDMDriver driver { thread_count };
+      
     }
   }
 

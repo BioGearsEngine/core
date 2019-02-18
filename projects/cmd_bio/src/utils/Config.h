@@ -30,6 +30,7 @@ enum class EPlotStyle {FastPlot //Plot every nth data point (hardcoded)
 };
 class Executor {
 public:
+  Executor();
   Executor(std::string name, EDriver driver);
 
   std::string Name() const;
@@ -38,6 +39,7 @@ public:
   bool NoCompare() const;
   std::string Baselines() const;
   std::string Computed() const;
+  std::string Group() const;
   std::vector<std::string> Results() const;
 
   Executor& Name(const std::string&) &&;
@@ -46,6 +48,7 @@ public:
   Executor& NoCompare(bool) &&;
   Executor& Baselines(const std::string&) &&;
   Executor& Computed(const std::string&) &&;
+  Executor& Group(const std::string&) &&;
   Executor& Results(const std::vector<std::string>&) &&;
 
   std::string Name(const std::string&) &;
@@ -54,6 +57,7 @@ public:
   bool NoCompare(bool) &;
   std::string Baselines(const std::string&) &;
   std::string Computed(const std::string&) &;
+  std::string Group(const std::string&) &;
   std::vector<std::string> Results(const std::vector<std::string>&) &;
 
   Executor& push_back_results(const std::string&) &&;
@@ -66,6 +70,7 @@ private:
   std::string name;
   std::string baselines;
   std::string computed;
+  std::string group;
   std::vector<std::string> results;
 };
 
@@ -79,9 +84,9 @@ public:
   bool load(std::string filepath);
   void clear();
   //TODO: Create our own Iterator Class which acts just like a Executor*
-  using executor_map = std::map<std::string, Executor>;
-  using iterator = executor_map::iterator;
-  using const_iterator = executor_map::const_iterator;
+  using executor_vector = std::vector<Executor>;
+  using iterator = executor_vector::iterator;
+  using const_iterator = executor_vector::const_iterator;
 
   iterator begin();
   const_iterator begin() const;
@@ -105,7 +110,7 @@ private:
   bool _plot_results;
   double _percent_difference;
   std::string _current_group;
-  executor_map _execs;
+  std::vector<Executor> _execs;
 };
 }
 
