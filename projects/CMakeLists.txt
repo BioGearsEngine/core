@@ -51,7 +51,28 @@ else()
     endforeach(OUTPUTCONFIG)
 endif()
 ###############################################################################
-# STAGE RUNTIME
+# Step 2: Project Includes are generally order dependent.  So manually maintain
+#         this list
+###############################################################################
+
+find_package(Java)
+find_package(JNI)
+verify_package(Log4cpp REQUIRED)
+#option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
+
+add_subdirectory(biogears-common)
+add_subdirectory(biogears)
+add_subdirectory(scenario_driver)
+add_subdirectory(test_driver)
+add_subdirectory(howto)
+add_subdirectory(unit)
+add_subdirectory(cmd_bio)
+add_subdirectory(circuit_profiler)
+
+#if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
+#  add_subdirectory(java)
+#endif()
+
 ###############################################################################
 add_custom_command(
     OUTPUT  ${PROJECT_BINARY_DIR}/runtime 

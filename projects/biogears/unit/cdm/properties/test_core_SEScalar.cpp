@@ -151,59 +151,59 @@ TEST_F(TEST_FIXTURE_NAME, IsZero)
 
 
 
-//TEST_F(TEST_FIXTURE_NAME, ReadOnly)
-//{
-//  biogears::SEScalar scalar_1;
-//  biogears::SEScalar scalar_2;
-//  biogears::SEScalar scalar_3;
-//
-//  scalar_1.SetValue(3.0);
-//  scalar_2.SetValue(0);
-//  scalar_1.SetReadOnly(true);
-//  scalar_2.SetReadOnly(false);
-//
-//  EXPECT_TRUE(scalar_1.IsReadOnly());
-//  EXPECT_FALSE(scalar_2.IsReadOnly());
-//
-//#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-//  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.SetValue(5.5)));
-//  EXPECT_FALSE(scalar_2.SetValue(5.5));
-//
-//  scalar_2.SetValue(45.);
-//  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.Copy(scalar_2)));
-//  EXPECT_NE(scalar_1, scalar_2);
-//  EXPECT_TRUE(scalar_2.Copy(scalar_1));
-//  EXPECT_EQ(scalar_1, scalar_2);
-//
-//  EXPECT_TRUE(scalar_1.IsValid());
-//  EXPECT_TRUE(scalar_2.IsValid());
-//
-//  EXPECT_ANY_THROW(EXPECT_TRUE(scalar_1.Invalidate()));
-//  EXPECT_FALSE(scalar_2.Invalidate());
-//
-//  EXPECT_TRUE(scalar_1.IsValid());
-//  EXPECT_FALSE(scalar_2.IsValid());
-//#else
-//  EXPECT_FALSE(scalar_1.Set(scalar_2));
-//  EXPECT_TRUE(scalar_2.Set(scalar_1));
-//
-//  scalar_2.SetValue(45.);
-//  scalar_1.Copy(scalar_2);
-//  EXPECT_NE(scalar_1, scalar_2);
-//
-//  scalar_2.Copy(scalar_1);
-//  EXPECT_EQ(scalar_1, scalar_2);
-//
-//  EXPECT_TRUE(scalar_1.IsValid());
-//  EXPECT_TRUE(scalar_2.IsValid());
-//
-//  scalar_1.Invalidate();
-//  scalar_2.Invalidate();
-//
-//  EXPECT_TRUE(scalar_1.IsValid());
-//  EXPECT_FALSE(scalar_2.IsValid());
-//#endif
-//}
+TEST_F(TEST_FIXTURE_NAME, ReadOnly)
+{
+  biogears::SEScalar scalar_1;
+  biogears::SEScalar scalar_2;
+  biogears::SEScalar scalar_3;
+
+  scalar_1.SetValue(3.0);
+  scalar_2.SetValue(0);
+  scalar_1.SetReadOnly(true);
+  scalar_2.SetReadOnly(false);
+
+  EXPECT_TRUE(scalar_1.IsReadOnly());
+  EXPECT_FALSE(scalar_2.IsReadOnly());
+
+#if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  EXPECT_ANY_THROW(scalar_1.SetValue(5.5));
+  EXPECT_NO_THROW(scalar_2.SetValue(5.5));
+
+  scalar_2.SetValue(45.);
+  EXPECT_ANY_THROW(scalar_1.Copy(scalar_2));
+  EXPECT_NE(scalar_1, scalar_2);
+  EXPECT_NO_THROW(scalar_2.Copy(scalar_1));
+  EXPECT_EQ(scalar_1, scalar_2);
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_TRUE(scalar_2.IsValid());
+
+  EXPECT_ANY_THROW(scalar_1.Invalidate());
+  EXPECT_NO_THROW(scalar_2.Invalidate());
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_FALSE(scalar_2.IsValid());
+#else
+  EXPECT_FALSE(scalar_1.Set(scalar_2));
+  EXPECT_TRUE(scalar_2.Set(scalar_1));
+
+  scalar_2.SetValue(45.);
+  scalar_1.Copy(scalar_2);
+  EXPECT_NE(scalar_1, scalar_2);
+
+  scalar_2.Copy(scalar_1);
+  EXPECT_EQ(scalar_1, scalar_2);
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_TRUE(scalar_2.IsValid());
+
+  scalar_1.Invalidate();
+  scalar_2.Invalidate();
+
+  EXPECT_TRUE(scalar_1.IsValid());
+  EXPECT_FALSE(scalar_2.IsValid());
+#endif
+}
 
 TEST_F(TEST_FIXTURE_NAME, Incrament)
 {

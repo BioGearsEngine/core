@@ -10,7 +10,7 @@ cmake_policy(VERSION 3.8.0)
 ###############################################################################
 # Base Variables
 ###############################################################################
-set(PROJECT_NAME circuit_test)
+set(PROJECT_NAME circuit_profiler)
 set(PREFIX bio)
 
 set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
