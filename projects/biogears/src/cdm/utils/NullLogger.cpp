@@ -12,7 +12,10 @@ log4cpp::Priority::Value NullLogger::GetLogLevel()
 }
 void NullLogger::SetLogTime(const SEScalarTime* time) {}
 void NullLogger::SetForward(LoggerForward* forward) {}
-bool NullLogger::HasForward() {}
+bool NullLogger::HasForward()
+{
+  return false;
+}
 void NullLogger::Debug(const std::string& msg, const std::string& origin) {}
 void NullLogger::Debug(std::ostream& msg, const std::string& origin) {}
 void NullLogger::Debug(std::stringstream& msg, const std::string& origin) {}

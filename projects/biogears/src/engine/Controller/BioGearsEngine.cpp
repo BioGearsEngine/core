@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
+
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 {
   return std::make_unique<BioGearsEngine>(logger);
