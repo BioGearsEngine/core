@@ -1,8 +1,9 @@
 #include <biogears/cdm/utils/NullLogger.h>
 
 namespace biogears {
-const std::string Loggable::empty("");
+
 NullLogger::NullLogger(const std::string& logFilename) : Logger("NullLogger") {}
+NullLogger::~NullLogger() {}
 void NullLogger::LogToConsole(bool b) {}
 void NullLogger::ResetLogFile(const std::string& logFilename) {}
 void NullLogger::SetLogLevel(log4cpp::Priority::Value priority) {}
