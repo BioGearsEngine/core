@@ -50,30 +50,9 @@ else()
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/bin")
     endforeach(OUTPUTCONFIG)
 endif()
-###############################################################################
-# Step 2: Project Includes are generally order dependent.  So manually maintain
-#         this list
-###############################################################################
-
-find_package(Java)
-find_package(JNI)
-verify_package(Log4cpp REQUIRED)
-#option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
-
-add_subdirectory(biogears-common)
-add_subdirectory(biogears)
-add_subdirectory(scenario_driver)
-add_subdirectory(test_driver)
-add_subdirectory(howto)
-add_subdirectory(unit)
-add_subdirectory(cmd_bio)
-add_subdirectory(circuit_profiler)
-
-#if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
-#  add_subdirectory(java)
-#endif()
-
-###############################################################################
+##################################################################################
+#STAGE RUNTIME LOGIC
+##################################################################################
 add_custom_command(
     OUTPUT  ${PROJECT_BINARY_DIR}/runtime 
     COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
@@ -165,7 +144,7 @@ add_subdirectory(test_driver)
 add_subdirectory(howto)
 add_subdirectory(unit)
 add_subdirectory(cmd_bio)
-add_subdirectory(circuit_test)
+add_subdirectory(circuit_profiler)
 
 if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
   add_subdirectory(java)

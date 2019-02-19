@@ -32,10 +32,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Equipment/ECG.h>
+#include "biogears/cdm/utils/NullLogger.h"
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
-
+std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
+{
+  return std::make_unique<BioGearsEngine>(logger);
+}
+//-------------------------------------------------------------------------------
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string logfile)
 {
   return std::make_unique<BioGearsEngine>(logfile);
@@ -43,32 +48,27 @@ std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string logfile
 //-------------------------------------------------------------------------------
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const char* logfile)
 {
-  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile));
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
-{
-  return std::make_unique<BioGearsEngine>(logger);
+  return std::make_unique<BioGearsEngine>(logfile);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, const std::string logfile)
 {
-  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile, working_dir));
+  return std::make_unique<BioGearsEngine>(logfile, working_dir);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, const char* logfile)
 {
-  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile, working_dir));
+  return std::make_unique<BioGearsEngine>(logfile, working_dir);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, biogears::Logger* logger)
 {
-  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger, working_dir));
+  return std::make_unique<BioGearsEngine>(logger, working_dir);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, biogears::Logger* logger)
 {
-  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger, working_dir));
+  return std::make_unique<BioGearsEngine>(logger, working_dir);
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger)
