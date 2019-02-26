@@ -57,6 +57,7 @@ if(NOT Log4cpp_FOUND)
   FIND_PACKAGE_HANDLE_STANDARD_ARGS(Log4cpp
                                     REQUIRED_VARS Log4cpp_LIBRARY_DEBUG 
                                                   Log4cpp_LIBRARY_RELEASE 
+                                                  #Log4cpp_LIBRARY_RELWITHDEBINFO
                                                   Log4cpp_INCLUDE_DIR
                                     )
   
@@ -66,6 +67,10 @@ if(NOT Log4cpp_FOUND)
           PROPERTIES
           IMPORTED_LOCATION ${Log4cpp_LIBRARY_RELEASE}
           IMPORTED_LOCATION_DEBUG ${Log4cpp_LIBRARY_DEBUG}
+          #
+          IMPORTED_LOCATION_RELWITHDEBINFO ${Log4cpp_LIBRARY_RELEASE}
+          IMPORTED_IMPLIB_RELWITHDEBINFO ${Log4cpp_LIBRARY_RELEASE}
+          #
           IMPORTED_IMPLIB_DEBUG   ${Log4cpp_LIBRARY_DEBUG}
           IMPORTED_IMPLIB         ${Log4cpp_LIBRARY_RELEASE}
           INTERFACE_INCLUDE_DIRECTORIES
