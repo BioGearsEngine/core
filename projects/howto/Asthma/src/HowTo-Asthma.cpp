@@ -32,8 +32,8 @@ using namespace biogears;
 void HowToAsthma() 
 {
   // Create the engine and load the patient
-	Logger logger( "HowToAsthma.log", "C:/Users/sawhite/desktop/");
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine( "C:/Users/sawhite/desktop/log_testing/runtime/", &logger);
+	Logger logger( "HowToAsthma.log");
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine( "C:/Users/sawhite/Desktop/log_testing/runtime/", &logger);
   bg->GetLogger()->Info("HowToAsthmaAttack");
 	if (!bg->LoadState( GetCurrentWorkingDirectory() + "states/StandardMale@0s.xml"))
   {

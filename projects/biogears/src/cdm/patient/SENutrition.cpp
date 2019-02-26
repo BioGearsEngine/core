@@ -203,7 +203,7 @@ bool SENutrition::Load(const std::string& nutritionFile)
   std::unique_ptr<CDM::ObjectData> data;
 
   std::string nFile = nutritionFile;
-  if (nFile.find("/nutrition") == std::string::npos) {
+  if (nFile.find("nutrition/") == std::string::npos) {
     nFile = "./nutrition/";
     nFile += nutritionFile;
   }

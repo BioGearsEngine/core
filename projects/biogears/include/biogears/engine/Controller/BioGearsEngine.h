@@ -35,15 +35,19 @@ namespace biogears {
 //--------------------------------------------------------------------------------------------------
 class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
 public:
-  BioGearsEngine(Logger* logger, const std::string& working_dir );
-  BioGearsEngine(const char*, const char* );
-  BioGearsEngine(const std::string&, const std::string& working_dir );
+  //-------------------------------------------------------------------------------
+  BioGearsEngine(Logger* logger);
+  BioGearsEngine(const char* logFileName);
+  BioGearsEngine(const std::string& logFileName);
+  BioGearsEngine(Logger* logger, const std::string& working_dir);
+  BioGearsEngine(const char*, const char*);
+  BioGearsEngine(const std::string&, const std::string& working_dir);
   virtual ~BioGearsEngine() override;
 
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
   virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) override;
   virtual bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) override;
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const char* file ) override;
+  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const char* file) override;
   virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") override;
 
   virtual Logger* GetLogger() override;
@@ -56,7 +60,7 @@ public:
   virtual const PhysiologyEngineConfiguration* GetConfiguration() override;
 
   virtual double GetTimeStep(const TimeUnit& unit) override;
- virtual  double GetSimulationTime(const TimeUnit& unit) override;
+  virtual double GetSimulationTime(const TimeUnit& unit) override;
 
   virtual void AdvanceModelTime() override;
   virtual void AdvanceModelTime(double time, const TimeUnit& unit) override;
@@ -84,10 +88,9 @@ public:
   virtual const SEInhaler* GetInhaler() override;
 
   virtual const SECompartmentManager& GetCompartments() override;
-  virtual Tree<const char*> GetDataRequestGraph () const override;
+  virtual Tree<const char*> GetDataRequestGraph() const override;
 
-  virtual std::string GetWorkingDir() const override;
-  virtual const char* GetWorkingDir_cStr() const override;
+
 protected:
   virtual bool IsReady();
   virtual bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
@@ -95,6 +98,5 @@ protected:
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;
   std::stringstream m_ss;
-
 };
 }

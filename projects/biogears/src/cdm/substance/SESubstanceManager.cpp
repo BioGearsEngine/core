@@ -293,7 +293,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
 
   std::string workingDirectory = GetCurrentWorkingDirectory();
 
-  dir = opendir(std::string(GetCurrentWorkingDirectory() + std::string("/substances/")).c_str());
+  dir = opendir(std::string(GetCurrentWorkingDirectory() + std::string("substances/")).c_str());
 
   if (dir != nullptr) {
     CDM::ObjectData* obj;
@@ -311,7 +311,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
       sub = nullptr;
       subData = nullptr;
       ss.str("");
-      ss << workingDirectory << "/substances/" << ent->d_name;
+      ss << workingDirectory << "substances/" << ent->d_name;
       if (!IsDirectory(ent) && strlen(ent->d_name) > 2) {
         data = Serializer::ReadFile(ss.str(), GetLogger());
         ss.str("");

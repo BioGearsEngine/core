@@ -83,7 +83,7 @@ bool Serializer::Initialize(Logger* logger)
   m_GrammerPool.reset(new XMLGrammarPoolImpl());
 
   std::string workingDirectory = GetCurrentWorkingDirectory();
-  std::string shortDir = workingDirectory + "/xsd/BioGearsDataModel.xsd";
+  std::string shortDir = workingDirectory + "xsd/BioGearsDataModel.xsd";
 
   ErrorHandler eh;
   DOMLSParser* parser(CreateParser(logger));

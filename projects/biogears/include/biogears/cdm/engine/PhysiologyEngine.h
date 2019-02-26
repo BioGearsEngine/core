@@ -328,12 +328,5 @@ public:
   //! Return a Graph of DataRequest that the current PhysiologyEngine Supports.
   //!-------------------------------------------------------------------------------------------------
   virtual Tree<const char*> GetDataRequestGraph() const = 0;
-  //!-------------------------------------------------------------------------------------------------
-  //! \brief
-  //! Get Working Directory for all File/IO -- BioGears currently assumes an underlying traditional filesystem
-  //! Future versions may allow resource handles to be returned here.
-  //!-------------------------------------------------------------------------------------------------
-  virtual std::string GetWorkingDir() const = 0;
-  virtual const char* GetWorkingDir_cStr() const = 0;
 };
 }

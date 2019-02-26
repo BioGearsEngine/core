@@ -90,6 +90,8 @@ protected:
   EngineState m_State;
 
 public:
+  BioGears(Logger* logger);
+  BioGears(const std::string& logfileName);
   BioGears(Logger* logger, const std::string& working_dir);
   BioGears(const std::string& logfileName, const std::string& working_dir);
   virtual ~BioGears();
@@ -165,9 +167,6 @@ public:
   void SetIntubation(CDM::enumOnOff::value s);
   void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
 
-  std::string GetWorkingDir() const;
-  const char* GetWorkingDir_cStr() const;
-
 protected:
   void SetupCardiovascular();
   void SetupRenal();
@@ -232,6 +231,5 @@ protected:
 
   // Flag to destroy the logger or not
   bool myLogger;
-  std::string m_working_dir;
 };
 }

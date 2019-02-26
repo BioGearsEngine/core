@@ -38,14 +38,12 @@ namespace biogears {
 
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string logfile)
 {
-  std::string path{ "" };
-  return std::make_unique<BioGearsEngine>(logfile, path);
+  return std::make_unique<BioGearsEngine>(logfile);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 {
-  std::string path{ "" };
-  return std::make_unique<BioGearsEngine>(logger, path);
+  return std::make_unique<BioGearsEngine>(logger);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, const std::string logfile)
@@ -58,6 +56,15 @@ std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::stri
   return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger, working_dir));
 }
 //-------------------------------------------------------------------------------
+BioGearsEngine::BioGearsEngine(Logger* logger)
+  : BioGears(logger)
+  , m_EngineTrack(*this)
+{
+  m_State = EngineState::NotReady;
+  m_EventHandler = nullptr;
+  m_DataTrack = &m_EngineTrack.GetDataTrack();
+}
+//-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir)
   : BioGears(logger, working_dir)
   , m_EngineTrack(*this)
@@ -68,10 +75,9 @@ BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir)
   m_DataTrack = &m_EngineTrack.GetDataTrack();
 }
 //-------------------------------------------------------------------------------
-BioGearsEngine::BioGearsEngine(const char* logFileName, const char* working_dir)
-  : BioGearsEngine(std::string{ logFileName }, std::string{ working_dir })
+BioGearsEngine::BioGearsEngine(const char* logFileName)
+  : BioGearsEngine(std::string{ logFileName })
 {
-  SetCurrentWorkingDirectory(working_dir);
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string& working_dir)
@@ -79,6 +85,24 @@ BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string
   , m_EngineTrack(*this)
 {
   SetCurrentWorkingDirectory(working_dir);
+  m_State = EngineState::NotReady;
+  m_EventHandler = nullptr;
+  m_DataTrack = &m_EngineTrack.GetDataTrack();
+}
+//-------------------------------------------------------------------------------
+BioGearsEngine::BioGearsEngine(const std::string& logFileName)
+  : BioGears(logFileName)
+  , m_EngineTrack(*this)
+{
+  m_State = EngineState::NotReady;
+  m_EventHandler = nullptr;
+  m_DataTrack = &m_EngineTrack.GetDataTrack();
+}
+//-------------------------------------------------------------------------------
+BioGearsEngine::BioGearsEngine(const char* logFileName, const char* working_dir)
+  : BioGears(logFileName, working_dir)
+  , m_EngineTrack(*this)
+{
   m_State = EngineState::NotReady;
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
@@ -834,14 +858,5 @@ Tree<const char*> BioGearsEngine::GetDataRequestGraph() const
     .emplace_back(GetRespiratory().GetPhysiologyRequestGraph())
     .emplace_back(GetTissue().GetPhysiologyRequestGraph());
 }
-//-------------------------------------------------------------------------------
-std::string BioGearsEngine::GetWorkingDir() const
-{
-  return BioGears::GetWorkingDir();
-}
-//-------------------------------------------------------------------------------
-const char* BioGearsEngine::GetWorkingDir_cStr() const
-{
-  return BioGears::GetWorkingDir_cStr();
-}
+
 }

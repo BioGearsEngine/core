@@ -35,7 +35,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 
 
-std::string g_working_dir = "./";
+std::string g_working_dir = "";
 
 std::string Replace(const std::string& original, const std::string& replace, const std::string& withThis)
 {
