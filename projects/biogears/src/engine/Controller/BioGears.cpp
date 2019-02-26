@@ -43,16 +43,18 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 
-BioGears::BioGears(const std::string& logFileName)
-  : BioGears(new Logger(logFileName))
+BioGears::BioGears(const std::string& logFileName, const std::string& working_dir)
+  : BioGears(new Logger(logFileName, working_dir), working_dir)
 {
   myLogger = true;
   m_DataTrack = nullptr;
 }
 
-BioGears::BioGears(Logger* logger)
+BioGears::BioGears(Logger* logger, const std::string& working_dir)
   : Loggable(logger)
+  , m_working_dir(working_dir)
 {
+  SetCurrentWorkingDirectory(working_dir);
   myLogger = false;
   m_DataTrack = nullptr;
   if (!m_Logger->HasForward()) { // Don't override a forwarder, if there already is one there
@@ -215,6 +217,17 @@ void BioGears::SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode)
   ss << "Airway Mode : " << m_AirwayMode;
   Info(ss);
 }
+
+std::string BioGears::GetWorkingDir() const
+{
+  return m_working_dir;
+};
+
+const char* BioGears::GetWorkingDir_cStr() const
+{
+  return m_working_dir.c_str();
+}
+
 void BioGears::SetIntubation(CDM::enumOnOff::value s)
 {
   if (m_Intubation == s) {
@@ -461,7 +474,7 @@ bool BioGears::SetupPatient()
       ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is bradycardic";
       Info(ss);
     } else {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " exceeds minimum stable value of " << heartRateMin_bpm << " bpm.  Resetting heart rate baseline to " <<heartRateMin_bpm;
+      ss << "Patient heart rate baseline of " << heartRate_bpm << " exceeds minimum stable value of " << heartRateMin_bpm << " bpm.  Resetting heart rate baseline to " << heartRateMin_bpm;
       m_Patient->GetHeartRateBaseline().SetValue(heartRateMin_bpm, FrequencyUnit::Per_min);
       Info(ss);
     }
@@ -855,20 +868,20 @@ SEEnvironment& BioGears::GetEnvironment() { return *m_Environment; }
 
 const EngineState BioGears::GetState() const { return m_State; }
 const SaturationCalculator& BioGears::GetSaturationCalculator() const { return *m_SaturationCalculator; }
-const BioGearsSubstances& BioGears::GetSubstances()const { return *m_Substances; }
-const SEPatient& BioGears::GetPatient()const { return *m_Patient; }
+const BioGearsSubstances& BioGears::GetSubstances() const { return *m_Substances; }
+const SEPatient& BioGears::GetPatient() const { return *m_Patient; }
 const SEBloodChemistrySystem& BioGears::GetBloodChemistry() const { return *m_BloodChemistrySystem; }
 const SECardiovascularSystem& BioGears::GetCardiovascular() const { return *m_CardiovascularSystem; }
 const SEDrugSystem& BioGears::GetDrugs() const { return *m_DrugSystem; }
 const SEEndocrineSystem& BioGears::GetEndocrine() const { return *m_EndocrineSystem; }
-const SEEnergySystem& BioGears::GetEnergy()const { return *m_EnergySystem; }
+const SEEnergySystem& BioGears::GetEnergy() const { return *m_EnergySystem; }
 const SEGastrointestinalSystem& BioGears::GetGastrointestinal() const { return *m_GastrointestinalSystem; }
-const SEHepaticSystem& BioGears::GetHepatic()const { return *m_HepaticSystem; }
+const SEHepaticSystem& BioGears::GetHepatic() const { return *m_HepaticSystem; }
 const SENervousSystem& BioGears::GetNervous() const { return *m_NervousSystem; }
-const SERenalSystem& BioGears::GetRenal()const { return *m_RenalSystem; }
+const SERenalSystem& BioGears::GetRenal() const { return *m_RenalSystem; }
 const SERespiratorySystem& BioGears::GetRespiratory() const { return *m_RespiratorySystem; }
 const SETissueSystem& BioGears::GetTissue() const { return *m_TissueSystem; }
-const SEEnvironment& BioGears::GetEnvironment()const { return *m_Environment; }
+const SEEnvironment& BioGears::GetEnvironment() const { return *m_Environment; }
 
 SEAnesthesiaMachine& BioGears::GetAnesthesiaMachine() { return *m_AnesthesiaMachine; }
 SEElectroCardioGram& BioGears::GetECG() { return *m_ECG; }
@@ -3577,7 +3590,7 @@ void BioGears::SetupTissue()
   LeftLungTissue.GetReflectionCoefficient().SetValue(1.0);
 
   SELiquidCompartmentLink& LeftLungVascularToTissue = m_Compartments->CreateLiquidLink(*m_Compartments->GetLiquidCompartment(BGE::VascularCompartment::LeftLung),
-    LeftLungExtracellular, BGE::VascularLink::LeftLungVascularToTissue);
+                                                                                       LeftLungExtracellular, BGE::VascularLink::LeftLungVascularToTissue);
   LeftLungVascularToTissue.MapPath(LeftLungVToLeftLungE1);
 
   //SELiquidCompartmentLink& LeftLungTissueToLymph = m_Compartments->CreateLiquidLink(LeftLungExtracellular, cLymph, BGE::LymphLink::LeftLungTissueToLymph);

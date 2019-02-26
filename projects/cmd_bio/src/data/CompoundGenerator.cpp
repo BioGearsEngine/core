@@ -58,7 +58,7 @@ bool CompoundGenerator::save() const
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief reads Compounds.csv and populates _compounds with SubstanceCompoundData objects for each compound in the csv
+//! \brief reads Compounds.csv and populates _compounds with SubstanceCompoundData objects for each compound in the csv`
 //! \return bool rValue, true if there were no issues reading from Compounds.csv, false otherwise
 //! 
 bool CompoundGenerator::parse()

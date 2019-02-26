@@ -655,22 +655,22 @@ double DataTrack::StreamDataFromFile(std::vector<std::string>* headings)
   return time;
 }
 
-void DataTrack::CreateFile(const std::string& fileName, std::ofstream& file)
+void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile)
 {
-  CreateFile(fileName.c_str(), file);
+  CreateFile(fileName.c_str(), newFile);
 }
-void DataTrack::CreateFile(const char* fileName, std::ofstream& file)
+void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile )
 {
-  file.open(fileName, std::ofstream::out | std::ofstream::trunc);
+  newFile.open(fileName, std::ofstream::out | std::ofstream::trunc);
   // Write our headers
-  file << "Time(s)" << m_Delimiter;
+  newFile << "Time(s)" << m_Delimiter;
   for (unsigned int i = 0; i < m_HeadingOrder.size(); i++) {
-    file << m_HeadingOrder.at(i);
+    newFile << m_HeadingOrder.at(i);
     if (i < (m_HeadingOrder.size() - 1))
-      file << m_Delimiter;
+      newFile << m_Delimiter;
   }
-  file << std::endl;
-  file.flush();
+  newFile << std::endl;
+  newFile.flush();
 }
 
 void DataTrack::WriteTrackToFile(const char* fileName)

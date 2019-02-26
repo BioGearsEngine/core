@@ -66,7 +66,7 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
   DataTrack outTrk;
   std::ofstream file;
 
-  BioGears bg(sTestDirectory + "/" + tName + ".log");
+  BioGears bg(sTestDirectory + "/" + tName + ".log", std::string{"./"});
   bg.GetLogger()->Info("Running " + tName);
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();

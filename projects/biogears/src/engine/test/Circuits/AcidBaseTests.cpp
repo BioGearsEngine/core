@@ -41,7 +41,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
 
   DataTrack trk;
 
-  BioGears bg(rptDirectory + "/AcidBaseMath.log");
+  BioGears bg(rptDirectory + "/AcidBaseMath.log", std::string{"./"});
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
@@ -275,7 +275,7 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
   // It’s making sure the solver gives the same answer when it's feed back the previous answer.
 
   DataTrack trk;
-  BioGears bg(rptDirectory + "/AcidBaseFeedback.log");
+  BioGears bg(rptDirectory + "/AcidBaseFeedback.log", std::string{"./"});
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
@@ -385,7 +385,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   // Did not test negatives because the engine already has checks for negative mass and concentrations.
 
   DataTrack trk;
-  BioGears bg(rptDirectory + "/AcidBaseLimits.log");
+  BioGears bg(rptDirectory + "/AcidBaseLimits.log", std::string{"./"});
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
@@ -572,7 +572,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
 void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
 {
   DataTrack trk;
-  BioGears bg(rptDirectory + "/AcidBaseExtreme.log");
+  BioGears bg(rptDirectory + "/AcidBaseExtreme.log", std::string{"./"});
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
 
@@ -1190,7 +1190,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
 
 void BioGearsEngineTest::AcidBaseBloodGasTests(const std::string& sOutputDirectory)
 {
-  BioGears bg(sOutputDirectory + "/AcidBaseBloodGasTests.log");
+  BioGears bg(sOutputDirectory + "/AcidBaseBloodGasTests.log", std::string{"./"});
 
   // Set up our test report
   SETestReport testReport = SETestReport(bg.GetLogger());

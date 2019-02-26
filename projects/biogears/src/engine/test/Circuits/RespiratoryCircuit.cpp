@@ -42,7 +42,7 @@ void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfigura
   std::ofstream fileGraph;
   std::ofstream fAerosolGraph;
 
-  BioGears bg(sTestDirectory + "/RespiratoryCircuitAndTransportTest.log");
+  BioGears bg(sTestDirectory + "/RespiratoryCircuitAndTransportTest.log", std::string{"./"});
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -177,7 +177,7 @@ void BioGearsEngineTest::RespiratoryDriverTest(const std::string& sTestDirectory
 {
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "/RespiratoryDriverTest.log");
+  BioGears bg(sTestDirectory + "/RespiratoryDriverTest.log", std::string{"./"});
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);

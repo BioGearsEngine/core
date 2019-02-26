@@ -27,6 +27,7 @@ class SEDecimalFormat;
 class BIOGEARS_API SEScenario : public Loggable {
 public:
   SEScenario(SESubstanceManager& subMgr);
+
   virtual ~SEScenario();
 
   virtual void Clear(); //clear memory
@@ -91,6 +92,7 @@ protected:
   std::string m_Description;
   std::string m_EngineStateFile;
   std::string m_PatientFile;
+  std::string m_workingDir;
   SEScenarioInitialParameters* m_InitialParameters;
   SEScenarioAutoSerialization* m_AutoSerialization;
   SEDataRequestManager m_DataRequestMgr;

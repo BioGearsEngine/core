@@ -33,6 +33,10 @@ specific language governing permissions and limitations under the License.
 #endif
 
 namespace biogears {
+
+
+std::string g_working_dir = "./";
+
 std::string Replace(const std::string& original, const std::string& replace, const std::string& withThis)
 {
   size_t idx = 0;
@@ -148,12 +152,14 @@ void DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories)
   RMDIR(dir.c_str());
 }
 
+void  SetCurrentWorkingDirectory( std::string working_dir )
+{
+  g_working_dir = working_dir;
+}
+
 std::string GetCurrentWorkingDirectory()
 {
-  char path[MAXPATH];
-  GETCWD(path, MAXPATH);
-
-  return std::string(path) + "/";
+  return g_working_dir;
 }
 
 BIOGEARS_API std::recursive_mutex g_fileSystemMutex;

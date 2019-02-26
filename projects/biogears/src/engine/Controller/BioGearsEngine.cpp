@@ -36,35 +36,49 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 
-std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string& logfile)
+std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string logfile)
 {
-  return std::make_unique<BioGearsEngine>(logfile);
+  std::string path{ "" };
+  return std::make_unique<BioGearsEngine>(logfile, path);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 {
-  return std::make_unique<BioGearsEngine>(logger);
+  std::string path{ "" };
+  return std::make_unique<BioGearsEngine>(logger, path);
 }
 //-------------------------------------------------------------------------------
-BioGearsEngine::BioGearsEngine(Logger* logger)
-  : BioGears(logger)
+std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, const std::string logfile)
+{
+  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile, working_dir));
+}
+//-------------------------------------------------------------------------------
+std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, biogears::Logger* logger)
+{
+  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger, working_dir));
+}
+//-------------------------------------------------------------------------------
+BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir)
+  : BioGears(logger, working_dir)
   , m_EngineTrack(*this)
 {
+  SetCurrentWorkingDirectory(working_dir);
   m_State = EngineState::NotReady;
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
 }
 //-------------------------------------------------------------------------------
-BioGearsEngine::BioGearsEngine(const char* logFileName)
-  :BioGearsEngine(std::string{logFileName})
+BioGearsEngine::BioGearsEngine(const char* logFileName, const char* working_dir)
+  : BioGearsEngine(std::string{ logFileName }, std::string{ working_dir })
 {
-  
+  SetCurrentWorkingDirectory(working_dir);
 }
 //-------------------------------------------------------------------------------
-BioGearsEngine::BioGearsEngine(const std::string& logFileName)
-  : BioGears(logFileName)
+BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string& working_dir)
+  : BioGears(logFileName, working_dir)
   , m_EngineTrack(*this)
 {
+  SetCurrentWorkingDirectory(working_dir);
   m_State = EngineState::NotReady;
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
@@ -84,7 +98,7 @@ PhysiologyEngineTrack* BioGearsEngine::GetEngineTrack()
   return &m_EngineTrack;
 }
 //-------------------------------------------------------------------------------
-bool BioGearsEngine::LoadState(const char*file, const SEScalarTime* simTime)
+bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 {
   return LoadState(std::string{ file }, simTime);
 }
@@ -585,7 +599,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       GetPatientAssessment(pft);
 
       // Write out the Assessement
-      std::string pftFile = GetEngineTrack()->GetDataRequestManager().GetResultFilename();
+      std::string pftFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (pftFile.empty())
         pftFile = "PulmonaryFunctionTest";
       m_ss << "PFT@" << GetSimulationTime(TimeUnit::s) << "s";
@@ -609,7 +623,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       SEUrinalysis upan(m_Logger);
       GetPatientAssessment(upan);
 
-      std::string upanFile = GetEngineTrack()->GetDataRequestManager().GetResultFilename();
+      std::string upanFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (upanFile.empty())
         upanFile = "Urinalysis";
       m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s";
@@ -632,7 +646,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::CompleteBloodCount: {
       SECompleteBloodCount cbc(m_Logger);
       GetPatientAssessment(cbc);
-      std::string cbcFile = GetEngineTrack()->GetDataRequestManager().GetResultFilename();
+      std::string cbcFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (cbcFile.empty())
         cbcFile = "CompleteBloodCount";
       m_ss << "CBC@" << GetSimulationTime(TimeUnit::s) << "s";
@@ -655,7 +669,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel: {
       SEComprehensiveMetabolicPanel mp(m_Logger);
       GetPatientAssessment(mp);
-      std::string mpFile = GetEngineTrack()->GetDataRequestManager().GetResultFilename();
+      std::string mpFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (mpFile.empty())
         mpFile = "ComprehensiveMetabolicPanel";
       m_ss << "CMP@" << GetSimulationTime(TimeUnit::s) << "s";
@@ -807,18 +821,27 @@ const SECompartmentManager& BioGearsEngine::GetCompartments()
 //-------------------------------------------------------------------------------
 Tree<const char*> BioGearsEngine::GetDataRequestGraph() const
 {
-  return
-  Tree<const char*>{ "BioGearsEngine" }
-  .emplace_back(GetBloodChemistry().GetPhysiologyRequestGraph())
-  .emplace_back(GetCardiovascular().GetPhysiologyRequestGraph())
-  .emplace_back(GetDrugs().GetPhysiologyRequestGraph())
-  .emplace_back(GetEndocrine().GetPhysiologyRequestGraph())
-  .emplace_back(GetEnergy().GetPhysiologyRequestGraph())
-  .emplace_back(GetGastrointestinal().GetPhysiologyRequestGraph())
-  .emplace_back(GetHepatic().GetPhysiologyRequestGraph())
-  .emplace_back(GetNervous().GetPhysiologyRequestGraph())
-  .emplace_back(GetRenal().GetPhysiologyRequestGraph())
-  .emplace_back(GetRespiratory().GetPhysiologyRequestGraph())
-  .emplace_back(GetTissue().GetPhysiologyRequestGraph());
+  return Tree<const char*>{ "BioGearsEngine" }
+    .emplace_back(GetBloodChemistry().GetPhysiologyRequestGraph())
+    .emplace_back(GetCardiovascular().GetPhysiologyRequestGraph())
+    .emplace_back(GetDrugs().GetPhysiologyRequestGraph())
+    .emplace_back(GetEndocrine().GetPhysiologyRequestGraph())
+    .emplace_back(GetEnergy().GetPhysiologyRequestGraph())
+    .emplace_back(GetGastrointestinal().GetPhysiologyRequestGraph())
+    .emplace_back(GetHepatic().GetPhysiologyRequestGraph())
+    .emplace_back(GetNervous().GetPhysiologyRequestGraph())
+    .emplace_back(GetRenal().GetPhysiologyRequestGraph())
+    .emplace_back(GetRespiratory().GetPhysiologyRequestGraph())
+    .emplace_back(GetTissue().GetPhysiologyRequestGraph());
+}
+//-------------------------------------------------------------------------------
+std::string BioGearsEngine::GetWorkingDir() const
+{
+  return BioGears::GetWorkingDir();
+}
+//-------------------------------------------------------------------------------
+const char* BioGearsEngine::GetWorkingDir_cStr() const
+{
+  return BioGears::GetWorkingDir_cStr();
 }
 }

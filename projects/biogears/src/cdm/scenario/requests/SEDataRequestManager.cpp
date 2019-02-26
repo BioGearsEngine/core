@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SEDataRequestManager::SEDataRequestManager(Logger* logger)
   : Loggable(logger)
+  , m_SamplesPerSecond(1.0)
+  , m_ResultsFile("Biogears.csv")
+ 
 {
   m_DefaultDecimalFormatting = nullptr;
   m_OverrideDecimalFormatting = nullptr;
@@ -27,12 +30,12 @@ SEDataRequestManager::~SEDataRequestManager()
   Clear();
 }
 //-----------------------------------------------------------------------------
-const char * SEDataRequestManager::GetResultFilename_cStr() const
+const char* SEDataRequestManager::GetResultsFilename_cStr() const
 {
   return m_ResultsFile.c_str();
 }
 //-----------------------------------------------------------------------------
-std::string SEDataRequestManager::GetResultFilename() const
+std::string SEDataRequestManager::GetResultsFilename() const
 {
   return m_ResultsFile;
 }
@@ -46,6 +49,28 @@ void SEDataRequestManager::SetResultsFilename(const std::string& name)
 {
   m_ResultsFile = name;
 }
+//-----------------------------------------------------------------------------
+std::string SEDataRequestManager::GetWorkingDir() const
+{
+  return m_WorkingDir;
+}
+//-----------------------------------------------------------------------------
+const char* SEDataRequestManager::GetWorkingDir_cStr() const
+{
+  return m_WorkingDir.c_str();
+}
+//-----------------------------------------------------------------------------
+void SEDataRequestManager::SetWorkingDir(const char* name)
+{
+  m_WorkingDir = name;
+}
+//-----------------------------------------------------------------------------
+void SEDataRequestManager::SetWorkingDir(const std::string& name)
+{
+  m_WorkingDir = name;
+}
+//-----------------------------------------------------------------------------
+std::string SEDataRequestManager::GetResovedFilePath() const{ return m_WorkingDir + m_ResultsFile; }
 //-----------------------------------------------------------------------------
 void SEDataRequestManager::Clear()
 {

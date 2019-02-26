@@ -213,7 +213,7 @@ void BioGearsEngineTest::SizeIndependentDepositionEfficencyCoefficientsTest(SETe
   SETestCase& tc1 = suite.CreateTestCase();
   tc1.SetName(std::string{ substance.GetName() } +"SIDECo");
 
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   const SizeIndependentDepositionEfficencyCoefficient& SIDECoeff = bg.GetSubstances().GetSizeIndependentDepositionEfficencyCoefficient(substance);
   m_ss << "Mouth: " << SIDECoeff.GetMouth();
   Info(m_ss);
@@ -251,7 +251,7 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
   SETestCase& tc = suite.CreateTestCase();
   tc.SetName(std::string{substance.GetName()} + "DepositionFraction");
 
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);

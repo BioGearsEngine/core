@@ -25,10 +25,10 @@ class SEPatient;
 class SEScalarTime;
 class TimeUnit;
 
-
 class BIOGEARS_API PhysiologyEngineConfiguration : public Loggable {
 public:
   PhysiologyEngineConfiguration(Logger* logger);
+
   virtual ~PhysiologyEngineConfiguration();
 
   virtual void Clear();
@@ -38,10 +38,6 @@ public:
   virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
   virtual CDM::PhysiologyEngineConfigurationData* Unload() const;
 
-protected:
-  void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
-
-public:
   virtual bool Load(const char* file);
   virtual bool Load(const std::string& file);
 
@@ -72,6 +68,9 @@ public:
   virtual bool HasWritePatientBaselineFile() const { return m_WritePatientBaselineFile != (CDM::enumOnOff::value)-1; }
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
   virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
+
+protected:
+  void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
 
 protected:
   bool m_Merge;

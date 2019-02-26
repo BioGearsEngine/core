@@ -26,12 +26,11 @@ namespace biogears {
 const std::string Loggable::empty("");
 
 // logger constructor
-Logger::Logger(const std::string& logFilename)
+Logger::Logger(const std::string& logFilename, const std::string& working_dir)
   : m_Forward(nullptr)
   , m_time(nullptr)
-
 {
-  ResetLogFile(logFilename);
+  ResetLogFile(logFilename, working_dir);
 }
 
 void Logger::LogToConsole(bool log_to_console)
@@ -43,8 +42,7 @@ void Logger::LogToConsole(bool log_to_console)
   }
 }
 
-
-void Logger::ResetLogFile(const std::string& logFilename)
+void Logger::ResetLogFile(const std::string& logFilename, const std::string& working_dir)
 {
   log4cpp::Category& category = log4cpp::Category::getInstance(logFilename);
   m_Log = &category;
@@ -55,13 +53,14 @@ void Logger::ResetLogFile(const std::string& logFilename)
     CreateFilePath(logFilename);
 
     // delete previous log contents if it exists
-    FILE* FilePointer = fopen((logFilename).c_str(), "wt+");
+    std::string qulaified_path = working_dir + logFilename;
+    FILE* FilePointer = fopen(qulaified_path.c_str(), "wt+");
     if (FilePointer)
       fclose(FilePointer);
 
     m_FileAppender = log4cpp::Appender::getAppender(logFilename);
     if (m_FileAppender == nullptr) {
-      m_FileAppender = new log4cpp::FileAppender(logFilename, logFilename);
+      m_FileAppender = new log4cpp::FileAppender(logFilename, qulaified_path);
       log4cpp::PatternLayout* myLayout = new log4cpp::PatternLayout();
       myLayout->setConversionPattern("%d [%p] %m%n");
       m_FileAppender->setLayout(myLayout);

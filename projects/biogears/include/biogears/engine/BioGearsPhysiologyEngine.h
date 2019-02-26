@@ -21,8 +21,10 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 
 namespace biogears {
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string& logfile = "");
+BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string logfile = "");
 BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(biogears::Logger* logger = nullptr);
+BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, const std::string logfile);
+BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, biogears::Logger* logger);
 }
 
 namespace mil {

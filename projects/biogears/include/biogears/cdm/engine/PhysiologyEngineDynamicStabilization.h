@@ -61,6 +61,7 @@ class BIOGEARS_API PhysiologyEngineDynamicStabilizationCriteria : public Loggabl
 
 public:
   PhysiologyEngineDynamicStabilizationCriteria(Logger* logger);
+
   virtual ~PhysiologyEngineDynamicStabilizationCriteria();
 
   virtual void Clear();
@@ -190,5 +191,6 @@ protected:
   bool Merge();
   PhysiologyEngineDynamicStabilizationCriteria m_MergedConditions;
   std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ActiveConditions;
+
 };
 }

@@ -45,12 +45,12 @@ class SEPatientAssessment;
 class BioGearsScenarioExec;
 
 enum class EngineState { NotReady = 0,
-  Initialization,
-  InitialStabilization,
-  AtInitialStableState,
-  SecondaryStabilization,
-  AtSecondaryStableState,
-  Active };
+                         Initialization,
+                         InitialStabilization,
+                         AtInitialStableState,
+                         SecondaryStabilization,
+                         AtSecondaryStableState,
+                         Active };
 
 class ECG;
 class DataTrack;
@@ -90,8 +90,8 @@ protected:
   EngineState m_State;
 
 public:
-  BioGears(Logger* logger);
-  BioGears(const std::string& logfileName);
+  BioGears(Logger* logger, const std::string& working_dir);
+  BioGears(const std::string& logfileName, const std::string& working_dir);
   virtual ~BioGears();
 
   EngineState GetState();
@@ -102,7 +102,7 @@ public:
   const SaturationCalculator& GetSaturationCalculator() const;
 
   BioGearsSubstances& GetSubstances();
-  const BioGearsSubstances& GetSubstances() const ;
+  const BioGearsSubstances& GetSubstances() const;
 
   SEPatient& GetPatient();
   const SEPatient& GetPatient() const;
@@ -164,6 +164,10 @@ public:
   bool CreateCircuitsAndCompartments();
   void SetIntubation(CDM::enumOnOff::value s);
   void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
+
+  std::string GetWorkingDir() const;
+  const char* GetWorkingDir_cStr() const;
+
 protected:
   void SetupCardiovascular();
   void SetupRenal();
@@ -228,5 +232,6 @@ protected:
 
   // Flag to destroy the logger or not
   bool myLogger;
+  std::string m_working_dir;
 };
 }

@@ -32,9 +32,10 @@ using namespace biogears;
 void HowToAsthma() 
 {
   // Create the engine and load the patient
-	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToAsthma.log");
+	Logger logger( "HowToAsthma.log", "C:/Users/sawhite/desktop/");
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine( "C:/Users/sawhite/desktop/log_testing/runtime/", &logger);
   bg->GetLogger()->Info("HowToAsthmaAttack");
-	if (!bg->LoadState("./states/StandardMale@0s.xml"))
+	if (!bg->LoadState( GetCurrentWorkingDirectory() + "states/StandardMale@0s.xml"))
   {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;

@@ -25,7 +25,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   std::string stabilizeFile = rptDirectory + "/Stabilization.csv";
   std::string stabilizeFile2 = rptDirectory + "/Stabilization2.csv";
   std::string cvFile = rptDirectory + "/CVCircuit.csv";
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   SECircuitManager circuits(m_Logger);
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);

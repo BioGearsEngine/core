@@ -69,5 +69,6 @@ protected:
   SEPatient* m_Patient;
   std::string m_PatientFile;
   std::vector<SECondition*> m_Conditions;
+
 };
 }

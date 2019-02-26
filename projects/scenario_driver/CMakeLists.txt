@@ -104,7 +104,7 @@ set(${PREFIX}_LIBS
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )
  
-if(${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
+if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
 add_dependencies(${PROJECT_NAME} stage_runtime)
 endif()
 

@@ -168,10 +168,10 @@ foreach(_file IN LISTS  source_scenario_list)
 endforeach()
 list(APPEND runtime_glob_list 	"${runtime_xsd_list}"	"${runtime_jar_list}" 	"${runtime_data_list}" 	"${runtime_doc_list}" 	"${runtime_scenario_list}")
 
-add_custom_target( stage_runtime 
-    DEPENDS 
-	${PROJECT_BINARY_DIR}/runtime
-	${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
-	${runtime_glob_list}
-	COMMENT "Scanning for need to stage runtime dir"
-)	
+#add_custom_target( stage_runtime 
+#    DEPENDS 
+#	${PROJECT_BINARY_DIR}/runtime
+#	${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
+#	${runtime_glob_list}
+#	COMMENT "Scanning for need to stage runtime dir"
+#)	

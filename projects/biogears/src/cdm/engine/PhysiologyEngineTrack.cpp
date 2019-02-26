@@ -169,7 +169,7 @@ void PhysiologyEngineTrack::SetupRequests()
   // Create the file now that all probes and requests have been added to the track
   // So we get columns for all of our data
   if (!isOpen)
-    m_DataTrack.CreateFile(m_DataRequestMgr.GetResultFilename(), m_ResultsStream);
+    m_DataTrack.CreateFile(m_DataRequestMgr.GetResultsFilename(), m_ResultsStream);
 }
 
 void PhysiologyEngineTrack::TrackData(double time_s)

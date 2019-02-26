@@ -42,10 +42,19 @@ protected:
 
 public:
   bool HasResultsFilename() const { return !m_ResultsFile.empty(); }
-  std::string GetResultFilename() const;
-  const char * GetResultFilename_cStr() const;
+  std::string GetResultsFilename() const;
+  const char * GetResultsFilename_cStr() const;
   void SetResultsFilename(const char* name);
   void SetResultsFilename(const std::string& name);
+
+  bool HasWorkingDir() const { return !m_ResultsFile.empty(); }
+  std::string GetWorkingDir() const;
+  const char * GetWorkingDir_cStr() const;
+  void SetWorkingDir(const char* name);
+  void SetWorkingDir(const std::string& name);
+
+  std::string GetResovedFilePath() const; 
+  //const char * GetResovedFilePath_cStr() const;
 
   double GetSamplesPerSecond() const { return m_SamplesPerSecond; }
   void SetSamplesPerSecond(double num) { m_SamplesPerSecond = num; }
@@ -76,6 +85,7 @@ protected:
   double m_SamplesPerSecond;
   std::vector<SEDataRequest*> m_Requests;
   std::string m_ResultsFile;
+  std::string m_WorkingDir;
 
   SEDecimalFormat* m_DefaultDecimalFormatting;
   SEDecimalFormat* m_OverrideDecimalFormatting;

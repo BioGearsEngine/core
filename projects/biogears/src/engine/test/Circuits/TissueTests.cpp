@@ -36,7 +36,7 @@ namespace biogears {
 void BioGearsEngineTest::DistributeMass(SETestSuite& testSuite)
 {
   TimingProfile timer;
-  BioGears bg(testSuite.GetLogger());
+  BioGears bg(testSuite.GetLogger(), std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   // First test case
   SETestCase& testCase = testSuite.CreateTestCase();
@@ -218,7 +218,7 @@ void BioGearsEngineTest::DistributeMass(SETestSuite& testSuite)
 
 void BioGearsEngineTest::PerfusionLimitedDiffusionTest(SETestSuite& testSuite)
 {
-  BioGears bg(testSuite.GetLogger());
+  BioGears bg(testSuite.GetLogger(), std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   TimingProfile timer;
   double timestep_s = 1. / 90.;
@@ -278,7 +278,7 @@ void BioGearsEngineTest::AlveolarOxygenDiffusionTest(const std::string& rptDirec
   //This test examines diffusion of O2 from a gas compartment (like lungs) to a liquid compartment
   //The gas compartment is set to resemble atmospheric conditions, and the liquid compartment is oxygen-poor
   //We should expect to see oxygen diffuse into the liquid compartment
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
 
   double timestep_s = 1.0 / 90;
@@ -342,7 +342,7 @@ void BioGearsEngineTest::AlveolarCarbonDioxideDiffusionTest(const std::string& r
 {
   //Second test case: High liquid compartment CO2 concentration with a lower gas compartment CO2 concentration
   //We should expect CO2 to diffuse out of the liquid compartment into the gas compartment
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
 
   DataTrack trk2;
@@ -410,7 +410,7 @@ void BioGearsEngineTest::InstantPlusSimpleDiffusionTest(const std::string& rptDi
   //                    |
   //                  cmpt4
   // Expect cmpt2 and cmpt4 to quickly equilibrate, while the others take more time
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   double timestep_s = 1.0 / 90;
   SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
@@ -474,7 +474,7 @@ void BioGearsEngineTest::InstantPlusSimpleDiffusionTest(const std::string& rptDi
 void BioGearsEngineTest::InstantDiffusionTest(SETestSuite& testSuite)
 {
   TimingProfile timer;
-  BioGears bg(testSuite.GetLogger());
+  BioGears bg(testSuite.GetLogger(), std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   double timestep_s = 1.0 / 90;
   SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
@@ -518,7 +518,7 @@ void BioGearsEngineTest::SimpleDiffusionTwoCompartmentTest(const std::string& rp
   // Second test case --
   // Tests the diffusion between two tissue liquid compartments
   // Calculated permeability coefficient
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   double timestep_s = 1.0 / 90;
   SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
@@ -595,7 +595,7 @@ void BioGearsEngineTest::SimpleDiffusionFourCompartmentTest(const std::string& r
   //     cmpt4 <->  cmpt2
   //              \ cmpt3
   // Artificial permeability coefficient
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   double timestep_s = 1.0 / 90;
   SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
@@ -691,7 +691,7 @@ void BioGearsEngineTest::SimpleDiffusionHierarchyTest(const std::string& rptDire
   // Only these cmpts have data--> L2C0  L2C1 L2C2 L2C3
   // Artificial permeability coefficient
 
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   double timestep_s = 1.0 / 90;
   SESubstance* sub = bg.GetSubstances().GetSubstance("Desflurane");
@@ -818,7 +818,7 @@ void BioGearsEngineTest::SimpleDiffusionHierarchyTest(const std::string& rptDire
 
 void BioGearsEngineTest::FacilitatedDiffusionTest(const std::string& rptDirectory)
 {
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
   double timestep_s = 1.0 / 90;
   SESubstance* sub = bg.GetSubstances().GetSubstance("Glucose");
@@ -864,7 +864,7 @@ void BioGearsEngineTest::FacilitatedDiffusionTest(const std::string& rptDirector
 void BioGearsEngineTest::GenericClearanceTest(SETestSuite& testSuite)
 {
   TimingProfile timer;
-  BioGears bg(testSuite.GetLogger());
+  BioGears bg(testSuite.GetLogger(), std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
 
   // First test case
@@ -890,7 +890,7 @@ void BioGearsEngineTest::GenericClearanceTest(SETestSuite& testSuite)
 void BioGearsEngineTest::GenericExcretionTest(SETestSuite& testSuite)
 {
   TimingProfile timer;
-  BioGears bg(testSuite.GetLogger());
+  BioGears bg(testSuite.GetLogger(), std::string{"./"});
   Tissue& tsu = (Tissue&)bg.GetTissue();
 
   // First test case
@@ -949,7 +949,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   std::string circuitFile = rptDirectory + "/TissueTransportCircuit.csv";
   std::string testFile = rptDirectory + "/TissueCombinedTransportTest.csv";
   std::string stabilizationFile = rptDirectory + "/TissueCombinedStabilization.csv";
-  BioGears bg(m_Logger);
+  BioGears bg(m_Logger, std::string{"./"});
   SECircuitManager circuits(m_Logger);
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);

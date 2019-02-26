@@ -35,9 +35,9 @@ namespace biogears {
 //--------------------------------------------------------------------------------------------------
 class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
 public:
-  BioGearsEngine(Logger* logger);
-  BioGearsEngine(const char*);
-  BioGearsEngine(const std::string&);
+  BioGearsEngine(Logger* logger, const std::string& working_dir );
+  BioGearsEngine(const char*, const char* );
+  BioGearsEngine(const std::string&, const std::string& working_dir );
   virtual ~BioGearsEngine() override;
 
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
@@ -85,7 +85,9 @@ public:
 
   virtual const SECompartmentManager& GetCompartments() override;
   virtual Tree<const char*> GetDataRequestGraph () const override;
-  
+
+  virtual std::string GetWorkingDir() const override;
+  virtual const char* GetWorkingDir_cStr() const override;
 protected:
   virtual bool IsReady();
   virtual bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
@@ -93,5 +95,6 @@ protected:
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;
   std::stringstream m_ss;
+
 };
 }

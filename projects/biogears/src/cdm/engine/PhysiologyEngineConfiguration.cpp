@@ -14,10 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/cdm/patient/SEPatient.h>
 
 namespace biogears {
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
@@ -31,6 +31,7 @@ PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   m_TimeStep = nullptr;
   m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
 }
+
 //-----------------------------------------------------------------------------
 PhysiologyEngineConfiguration::~PhysiologyEngineConfiguration()
 {
@@ -259,5 +260,4 @@ double PhysiologyEngineConfiguration::GetTimeStep(const TimeUnit& unit) const
     return SEScalar::dNaN();
   return m_TimeStep->GetValue(unit);
 }
-//-----------------------------------------------------------------------------
 }

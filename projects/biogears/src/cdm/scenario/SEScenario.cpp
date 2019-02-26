@@ -25,7 +25,7 @@ SEScenario::SEScenario(SESubstanceManager& subMgr)
 {
   m_InitialParameters = nullptr;
   m_AutoSerialization = nullptr;
-  Clear();
+  SEScenario::Clear();
 }
 //-----------------------------------------------------------------------------
 SEScenario::~SEScenario()
@@ -306,5 +306,5 @@ const std::vector<SEAction*>& SEScenario::GetActions() const
 {
   return m_Actions;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 }

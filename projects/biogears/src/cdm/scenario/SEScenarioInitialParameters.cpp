@@ -22,11 +22,13 @@ namespace biogears {
 SEScenarioInitialParameters::SEScenarioInitialParameters(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
   , m_SubMgr(subMgr)
+ 
 {
   m_Configuration = nullptr;
   m_Patient = nullptr;
   Clear();
 }
+
 //-----------------------------------------------------------------------------
 SEScenarioInitialParameters::~SEScenarioInitialParameters()
 {
@@ -185,5 +187,5 @@ const std::vector<SECondition*>& SEScenarioInitialParameters::GetConditions() co
 {
   return m_Conditions;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 }

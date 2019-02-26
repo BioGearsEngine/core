@@ -82,7 +82,7 @@ function(add_howto name)
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
-    if(${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
+	if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
       add_dependencies(${TARGET_NAME} stage_runtime)
     endif()
     

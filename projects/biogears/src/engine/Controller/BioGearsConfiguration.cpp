@@ -44,125 +44,115 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
+#include <biogears/cdm/utils/FileUtils.h>
 
 namespace biogears {
+
 BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   : PhysiologyEngineConfiguration(substances.GetLogger())
   , m_Substances(substances)
-{
   // Barorecptors
-  m_ResponseSlope = nullptr;
-  m_HeartRateDistributedTimeDelay = nullptr;
-  m_HeartElastanceDistributedTimeDelay = nullptr;
-  m_SystemicResistanceDistributedTimeDelay = nullptr;
-  m_VenousComplianceDistributedTimeDelay = nullptr;
-  m_NormalizedHeartRateIntercept = nullptr;
-  m_NormalizedHeartRateSympatheticSlope = nullptr;
-  m_NormalizedHeartRateParasympatheticSlope = nullptr;
-  m_NormalizedHeartElastanceIntercept = nullptr;
-  m_NormalizedHeartElastanceSympatheticSlope = nullptr;
-  m_NormalizedResistanceIntercept = nullptr;
-  m_NormalizedResistanceSympatheticSlope = nullptr;
-  m_NormalizedComplianceIntercept = nullptr;
-  m_NormalizedComplianceParasympatheticSlope = nullptr;
-
+  , m_ResponseSlope(nullptr)
+  , m_HeartRateDistributedTimeDelay(nullptr)
+  , m_HeartElastanceDistributedTimeDelay(nullptr)
+  , m_SystemicResistanceDistributedTimeDelay(nullptr)
+  , m_VenousComplianceDistributedTimeDelay(nullptr)
+  , m_NormalizedHeartRateIntercept(nullptr)
+  , m_NormalizedHeartRateSympatheticSlope(nullptr)
+  , m_NormalizedHeartRateParasympatheticSlope(nullptr)
+  , m_NormalizedHeartElastanceIntercept(nullptr)
+  , m_NormalizedHeartElastanceSympatheticSlope(nullptr)
+  , m_NormalizedResistanceIntercept(nullptr)
+  , m_NormalizedResistanceSympatheticSlope(nullptr)
+  , m_NormalizedComplianceIntercept(nullptr)
+  , m_NormalizedComplianceParasympatheticSlope(nullptr)
   // Blood Chemistry
-  m_MeanCorpuscularHemoglobin = nullptr;
-  m_MeanCorpuscularVolume = nullptr;
-  m_StandardDiffusionDistance = nullptr;
-  m_StandardOxygenDiffusionCoefficient = nullptr;
-
+  , m_MeanCorpuscularHemoglobin(nullptr)
+  , m_MeanCorpuscularVolume(nullptr)
+  , m_StandardDiffusionDistance(nullptr)
+  , m_StandardOxygenDiffusionCoefficient(nullptr)
   // Cardiovascular
-  m_LeftHeartElastanceMaximum = nullptr;
-  m_LeftHeartElastanceMinimum = nullptr;
-  m_MinimumBloodVolumeFraction = nullptr;
-  m_RightHeartElastanceMaximum = nullptr;
-  m_RightHeartElastanceMinimum = nullptr;
-  m_StandardPulmonaryCapillaryCoverage = nullptr;
-
+  , m_LeftHeartElastanceMaximum(nullptr)
+  , m_LeftHeartElastanceMinimum(nullptr)
+  , m_MinimumBloodVolumeFraction(nullptr)
+  , m_RightHeartElastanceMaximum(nullptr)
+  , m_RightHeartElastanceMinimum(nullptr)
+  , m_StandardPulmonaryCapillaryCoverage(nullptr)
   // Circuit
-  m_CardiovascularOpenResistance = nullptr;
-  m_DefaultClosedElectricResistance = nullptr;
-  m_DefaultClosedFlowResistance = nullptr;
-  m_DefaultClosedHeatResistance = nullptr;
-  m_DefaultOpenElectricResistance = nullptr;
-  m_DefaultOpenFlowResistance = nullptr;
-  m_DefaultOpenHeatResistance = nullptr;
-  m_MachineClosedResistance = nullptr;
-  m_MachineOpenResistance = nullptr;
-  m_RespiratoryClosedResistance = nullptr;
-  m_RespiratoryOpenResistance = nullptr;
-
+  , m_CardiovascularOpenResistance(nullptr)
+  , m_DefaultClosedElectricResistance(nullptr)
+  , m_DefaultClosedFlowResistance(nullptr)
+  , m_DefaultClosedHeatResistance(nullptr)
+  , m_DefaultOpenElectricResistance(nullptr)
+  , m_DefaultOpenFlowResistance(nullptr)
+  , m_DefaultOpenHeatResistance(nullptr)
+  , m_MachineClosedResistance(nullptr)
+  , m_MachineOpenResistance(nullptr)
+  , m_RespiratoryClosedResistance(nullptr)
+  , m_RespiratoryOpenResistance(nullptr)
   // Constants
-  m_OxygenMetabolicConstant = nullptr;
-  m_StefanBoltzmann = nullptr;
-  m_UniversalGasConstant = nullptr;
-
+  , m_OxygenMetabolicConstant(nullptr)
+  , m_StefanBoltzmann(nullptr)
+  , m_UniversalGasConstant(nullptr)
   // Drugs
-  m_PDEnabled = CDM::enumOnOff::value(-1);
-
+  , m_PDEnabled(CDM::enumOnOff::value(-1))
   // Energy
-  m_BodySpecificHeat = nullptr;
-  m_CarbondDioxideProductionFromOxygenConsumptionConstant = nullptr;
-  m_CoreTemperatureLow = nullptr;
-  m_CoreTemperatureHigh = nullptr;
-  m_DeltaCoreTemperatureLow = nullptr;
-  m_EnergyPerATP = nullptr;
-  m_SweatHeatTransfer = nullptr;
-  m_VaporizationEnergy = nullptr;
-  m_VaporSpecificHeat = nullptr;
-
+  , m_BodySpecificHeat(nullptr)
+  , m_CarbondDioxideProductionFromOxygenConsumptionConstant(nullptr)
+  , m_CoreTemperatureLow(nullptr)
+  , m_CoreTemperatureHigh(nullptr)
+  , m_DeltaCoreTemperatureLow(nullptr)
+  , m_EnergyPerATP(nullptr)
+  , m_SweatHeatTransfer(nullptr)
+  , m_VaporizationEnergy(nullptr)
+  , m_VaporSpecificHeat(nullptr)
   // Environment
-  m_AirDensity = nullptr;
-  m_AirSpecificHeat = nullptr;
-  m_MolarMassOfDryAir = nullptr;
-  m_MolarMassOfWaterVapor = nullptr;
-  m_InitialEnvironmentalConditions = nullptr;
-  m_WaterDensity = nullptr;
-
+  , m_AirDensity(nullptr)
+  , m_AirSpecificHeat(nullptr)
+  , m_MolarMassOfDryAir(nullptr)
+  , m_MolarMassOfWaterVapor(nullptr)
+  , m_InitialEnvironmentalConditions(nullptr)
+  , m_WaterDensity(nullptr)
   // Gastrointestinal
-  m_CalciumDigestionRate = nullptr;
-  m_CalciumAbsorptionFraction = nullptr;
-  m_CarbohydrateAbsorptionFraction = nullptr;
-  m_DefaultCarbohydrateDigestionRate = nullptr;
-  m_DefaultFatDigestionRate = nullptr;
-  m_DefaultProteinDigestionRate = nullptr;
-  m_DefaultStomachContents = nullptr;
-  m_FatAbsorptionFraction = nullptr;
-  m_ProteinToUreaFraction = nullptr;
-  m_WaterDigestionRate = nullptr;
-
+  , m_CalciumDigestionRate(nullptr)
+  , m_CalciumAbsorptionFraction(nullptr)
+  , m_CarbohydrateAbsorptionFraction(nullptr)
+  , m_DefaultCarbohydrateDigestionRate(nullptr)
+  , m_DefaultFatDigestionRate(nullptr)
+  , m_DefaultProteinDigestionRate(nullptr)
+  , m_DefaultStomachContents(nullptr)
+  , m_FatAbsorptionFraction(nullptr)
+  , m_ProteinToUreaFraction(nullptr)
+  , m_WaterDigestionRate(nullptr)
   // Nervous
-  m_PupilDiameterBaseline = nullptr;
-
+  , m_PupilDiameterBaseline(nullptr)
   // Renal
-  m_RenalEnabled = CDM::enumOnOff::value(-1);
-  m_PlasmaSodiumConcentrationSetPoint = nullptr;
-  m_PeritubularPotassiumConcentrationSetPoint = nullptr;
-  m_LeftGlomerularFluidPermeabilityBaseline = nullptr;
-  m_LeftGlomerularFilteringSurfaceAreaBaseline = nullptr;
-  m_LeftTubularReabsorptionFluidPermeabilityBaseline = nullptr;
-  m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline = nullptr;
-  m_MaximumAfferentResistance = nullptr;
-  m_MinimumAfferentResistance = nullptr;
-  m_RightGlomerularFluidPermeabilityBaseline = nullptr;
-  m_RightGlomerularFilteringSurfaceAreaBaseline = nullptr;
-  m_RightTubularReabsorptionFluidPermeabilityBaseline = nullptr;
-  m_RightTubularReabsorptionFilteringSurfaceAreaBaseline = nullptr;
-  m_TargetSodiumDelivery = nullptr;
-
+  , m_RenalEnabled(CDM::enumOnOff::value(-1))
+  , m_PlasmaSodiumConcentrationSetPoint(nullptr)
+  , m_PeritubularPotassiumConcentrationSetPoint(nullptr)
+  , m_LeftGlomerularFluidPermeabilityBaseline(nullptr)
+  , m_LeftGlomerularFilteringSurfaceAreaBaseline(nullptr)
+  , m_LeftTubularReabsorptionFluidPermeabilityBaseline(nullptr)
+  , m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline(nullptr)
+  , m_MaximumAfferentResistance(nullptr)
+  , m_MinimumAfferentResistance(nullptr)
+  , m_RightGlomerularFluidPermeabilityBaseline(nullptr)
+  , m_RightGlomerularFilteringSurfaceAreaBaseline(nullptr)
+  , m_RightTubularReabsorptionFluidPermeabilityBaseline(nullptr)
+  , m_RightTubularReabsorptionFilteringSurfaceAreaBaseline(nullptr)
+  , m_TargetSodiumDelivery(nullptr)
   // Respiratory
-  m_CentralControllerCO2PressureSetPoint = nullptr;
-  m_CentralVentilatoryControllerGain = nullptr;
-  m_PeripheralControllerCO2PressureSetPoint = nullptr;
-  m_PeripheralVentilatoryControllerGain = nullptr;
-  m_PleuralComplianceSensitivity = nullptr;
-  m_PulmonaryVentilationRateMaximum = nullptr;
-  m_VentilationTidalVolumeIntercept = nullptr;
-  m_VentilatoryOcclusionPressure = nullptr;
-
+  , m_CentralControllerCO2PressureSetPoint(nullptr)
+  , m_CentralVentilatoryControllerGain(nullptr)
+  , m_PeripheralControllerCO2PressureSetPoint(nullptr)
+  , m_PeripheralVentilatoryControllerGain(nullptr)
+  , m_PleuralComplianceSensitivity(nullptr)
+  , m_PulmonaryVentilationRateMaximum(nullptr)
+  , m_VentilationTidalVolumeIntercept(nullptr)
+  , m_VentilatoryOcclusionPressure(nullptr)
   // Tissue
-  m_TissueEnabled = CDM::enumOnOff::value(-1);
+  , m_TissueEnabled(CDM::enumOnOff::value(-1))
+{
 }
 
 BioGearsConfiguration::~BioGearsConfiguration()
@@ -295,10 +285,10 @@ void BioGearsConfiguration::Initialize()
   m_WritePatientBaselineFile = CDM::enumOnOff::Off;
 
   // Reset to default values
-  GetECGInterpolator().LoadWaveforms("./ecg/StandardECG.xml");
+  GetECGInterpolator().LoadWaveforms(GetCurrentWorkingDirectory() + "ecg/StandardECG.xml");
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
-  GetDynamicStabilizationCriteria().Load("./config/DynamicStabilization.xml");
-  //GetTimedStabilizationCriteria().Load("./config/TimedStabilization.xml");
+  GetDynamicStabilizationCriteria().Load(GetCurrentWorkingDirectory() + "config/DynamicStabilization.xml");
+  //GetTimedStabilizationCriteria().Load(GetCurrentWorkingDirectory() +"config/TimedStabilization.xml");
   m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off); // Turn on to include stabilization tracking for debugging
 
   // Baroreceptors
@@ -368,7 +358,7 @@ void BioGearsConfiguration::Initialize()
   GetAirSpecificHeat().SetValue(1.0035, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
   GetMolarMassOfDryAir().SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
   GetMolarMassOfWaterVapor().SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
-  GetInitialEnvironmentalConditions().Load("./environments/Standard.xml");
+  GetInitialEnvironmentalConditions().Load(GetCurrentWorkingDirectory() + "environments/Standard.xml");
   GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
 
   // Gastrointestinal
@@ -378,7 +368,7 @@ void BioGearsConfiguration::Initialize()
   GetDefaultCarbohydrateDigestionRate().SetValue(0.5, MassPerTimeUnit::g_Per_min); // Guyton (About 4.25hr to digest the carbs in default meal)
   GetDefaultFatDigestionRate().SetValue(0.055, MassPerTimeUnit::g_Per_min); // Guyton (About 8hr to digest the fat in the default meal)
   GetDefaultProteinDigestionRate().SetValue(0.071, MassPerTimeUnit::g_Per_min); // Dangin2001Digestion (About 5hr to digest the protein in the default meal)
-  GetDefaultStomachContents().Load("./nutrition/NoMacros.xml"); // Refs are in the data spreadsheet
+  GetDefaultStomachContents().Load(GetCurrentWorkingDirectory() + "nutrition/NoMacros.xml"); // Refs are in the data spreadsheet
   GetFatAbsorptionFraction().SetValue(0.248); // Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
   // We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
   GetProteinToUreaFraction().SetValue(0.405); // BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%.
