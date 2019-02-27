@@ -45,6 +45,7 @@ bool NutritionGenerator::save() const
       file.open("nutrition/" + nutrition_conf.Name().get() + ".xml");
       mil::tatrc::physiology::datamodel::Nutrition(file, nutrition_conf, info);
       file.close();
+      std::cout << "Saved nutrition/" + nutrition_conf.Name() + ".xml" << "\n";
 
     } catch (std::exception e) {
       std::cout << e.what() << std::endl;

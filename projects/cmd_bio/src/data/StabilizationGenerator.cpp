@@ -70,6 +70,7 @@ bool StabilizationGenerator::save() const
     file.open("config/DynamicStabilization.xml");
     CDM::PhysiologyEngineDynamicStabilization(file, _dynamic, info);
     file.close();
+    std::cout << "Saved config/DynamicStabilization.xml" << "\n";
 
   } catch (std::exception e) {
     std::cout << e.what() << std::endl;
@@ -80,7 +81,7 @@ bool StabilizationGenerator::save() const
     file.open("config/TimedStabilization.xml");
     CDM::PhysiologyEngineTimedStabilization(file, _timed, info);
     file.close();
-
+    std::cout << "Saved config/TimedStabilization.xml" << "\n";
   } catch (std::exception e) {
     std::cout << e.what() << std::endl;
   }

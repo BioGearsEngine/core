@@ -47,6 +47,7 @@ bool CompoundGenerator::save() const
       file.open("substances/" + compound.Name() + ".xml");
       mil::tatrc::physiology::datamodel::SubstanceCompound(file, compound, info);
       file.close();
+      std::cout << "Saved substances/" + compound.Name() + ".xml" << "\n";
 
     } catch (std::exception e) {
       rValue = false;

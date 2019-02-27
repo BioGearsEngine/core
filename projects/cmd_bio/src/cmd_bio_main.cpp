@@ -16,11 +16,7 @@
 #include <string>
 #include <thread>
 
-#include "exec/CDMDriver.h"
-#include "exec/PatientValidationGenerator.h"
-#include "exec/ScenarioDriver.h"
-#include "exec/StateGenerator.h"
-#include "exec/TestDriver.h"
+#include "exec/Driver.h"
 
 #include "data/CompoundGenerator.h"
 #include "data/EnvironmentGenerator.h"
@@ -58,6 +54,7 @@ int main(int argc, char** argv)
   bool run_verification = false;
 
   unsigned int thread_count = std::thread::hardware_concurrency();
+
   if (args.KeywordFound("THREADS")) {
     try {
       thread_count = std::stoi(args.Keyword("THREADS"));
@@ -66,16 +63,11 @@ int main(int argc, char** argv)
       exit(1);
     }
   }
-
+  biogears::Driver driver{ thread_count };
   if (args.Option("GENSTATES")) {
-    biogears::ScenarioDriver generator{ thread_count };
-    std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
-    generator.LoadPatients(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
-    generator.run();
-    while (!generator.stop_if_empty()) {
-      std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-    generator.join();
+    auto patients = biogears::ListFiles("patients", R"(\.xml)");
+    //Manually make the InitialPatient Config
+    //driver.queue(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
   }
 
   if (args.Option("GENDATA")) { // gen-data
@@ -87,8 +79,10 @@ int main(int argc, char** argv)
     generators.push_back(std::make_unique<biogears::NutritionGenerator>());
     generators.push_back(std::make_unique<biogears::CompoundGenerator>());
     for (auto& gen : generators) {
+      std::cout << "Generating Data:" << gen->Path() << gen->Filename() << "\n";
       gen->parse();
       gen->save();
+      std::cout << "\n\n";
     }
   }
 
@@ -98,28 +92,17 @@ int main(int argc, char** argv)
     run_system_validation = true;
     run_verification = true;
   }
+
   if (args.MultiWordFound("TEST")) {
     auto tests = args.MultiWord("TEST");
     for (auto& test : tests) {
       std::transform(test.begin(), test.end(), test.begin(), ::tolower);
       if (test == "cdm") { // run-cdm-tests
         biogears::Config runs{ "CDMUnitTests.config" };
-        biogears::CDMDriver cdm{ thread_count };
-        cdm.RunCDMs(runs);
-        cdm.run();
-        while (!cdm.stop_if_empty()) {
-          std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
-        cdm.join();
+        driver.queue(runs);
       } else if (test == "bge") {
         biogears::Config runs{ "BGEUnitTests.config" };
-        biogears::CDMDriver bge{ thread_count };
-        bge.RunCDMs(runs);
-        bge.run();
-        while (!bge.stop_if_empty()) {
-          std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
-        bge.join();
+        driver.queue(runs);
       } else {
         std::cout << "Warrning: No Test known as " << test << "exists.\n";
       }
@@ -147,54 +130,30 @@ int main(int argc, char** argv)
   }
 
   if (run_system_validation) { // run-system-validation
-    //  std::vector<std::string> files = biogears::Config("ValidationSystemsShort.config");
-    //  biogears::ScenarioDriver test{ thread_count };
-    //  test.LoadPatients(files, std::string("Scenarios/Validation/Patient-Validation.xml"));
-    //  test.run();
-    //  while (!test.stop_if_empty()) {
-    //    std::this_thread::sleep_for(std::chrono::seconds(1));
-    //  }
-    //  test.join();
+    const auto runs = biogears::Config("ValidationSystems.config");
+    driver.queue(runs);
   }
-  if (run_patient_validation) {
-    // run-patient-validation
-    //  biogears::ScenarioDriver generator{ thread_count };
-    //  std::vector<std::string> patients = biogears::ListFiles("patients", R"(\.xml)");
-    //  generator.LoadPatients(patients, std::string("Scenarios/Validation/Patient-Validation.xml"));
-    //  generator.run();
-    //  while (!generator.stop_if_empty()) {
-    //    std::this_thread::sleep_for(std::chrono::seconds(1));
-    //  }
-    //  generator.join();
+  if (run_patient_validation) { //run-patient-validation
+    const auto runs = biogears::Config("ValidationPatient.config");
+    driver.queue(runs);
   }
   if (run_drug_validation) { // run-drug-validation
-    //  std::vector<std::string> files = biogears::ParseConfigFile("ValidationDrugsShort.config");
-    //  biogears::ScenarioDriver test{ thread_count };
-    //  test.LoadScenarios(files);
-    //  test.run();
-    //  while (!test.stop_if_empty()) {
-    //    std::this_thread::sleep_for(std::chrono::seconds(1));
-    //  }
-    //  test.join();
+    const auto runs = biogears::Config("ValidationDrugs.config");
+    driver.queue(runs);
   }
   if (run_verification) { // run-verification
-    //  std::vector<std::string> files = biogears::ParseConfigFile("VerificationScenariosShort.config");
-    //  biogears::ScenarioDriver test{ thread_count };
-    //  test.LoadScenarios(files);
-    //  test.run();
-    //  while (!test.stop_if_empty()) {
-    //    std::this_thread::sleep_for(std::chrono::seconds(1));
-    //  }
-    //  test.join();
+    const auto runs = biogears::Config("VerificationScenarios.config");
+    driver.queue(runs);
   }
 
   if (args.MultiWordFound("SCENARIO")) {
     for (auto& arg : args.MultiWord("SCENARIO")) {
-      biogears::Config config {arg};
-      biogears::CDMDriver driver { thread_count };
-      
+      auto configs = biogears::Config{ arg };
+      driver.queue(configs);
     }
   }
 
+  driver.run();
+  driver.join();
   return 0;
- }
+}

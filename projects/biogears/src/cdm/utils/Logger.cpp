@@ -9,11 +9,10 @@ KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/Logger.h>
 
-#pragma warning(push,0)
+#pragma warning(push, 0)
 #include <log4cpp/Appender.hh>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/OstreamAppender.hh>
@@ -28,17 +27,22 @@ const std::string Loggable::empty("");
 
 // logger constructor
 Logger::Logger(const std::string& logFilename)
+  : m_Forward(nullptr)
+  , m_time(nullptr)
+
 {
-  m_Forward = nullptr;
-  m_time = nullptr;
   ResetLogFile(logFilename);
 }
 
-void Logger::LogToConsole(bool b)
+void Logger::LogToConsole(bool log_to_console)
 {
-  (b) ? m_Log->addAppender(m_ConsoleAppender)
-      : m_Log->removeAppender(m_ConsoleAppender);
+  if (log_to_console) {
+    m_Log->addAppender(m_ConsoleAppender);
+  } else {
+    m_Log->removeAppender(m_ConsoleAppender);
+  }
 }
+
 
 void Logger::ResetLogFile(const std::string& logFilename)
 {
@@ -51,7 +55,7 @@ void Logger::ResetLogFile(const std::string& logFilename)
     CreateFilePath(logFilename);
 
     // delete previous log contents if it exists
-    FILE* FilePointer = fopen(logFilename.c_str(), "wt+");
+    FILE* FilePointer = fopen((logFilename).c_str(), "wt+");
     if (FilePointer)
       fclose(FilePointer);
 
@@ -100,7 +104,7 @@ void Logger::SetForward(LoggerForward* forward) { m_Forward = forward; }
 bool Logger::HasForward() { return m_Forward == nullptr ? false : true; }
 
 std::string Logger::FormatLogMessage(const std::string& msg,
-  const std::string& origin)
+                                     const std::string& origin)
 {
   m_ss.str("");
   m_ss.clear();
@@ -271,7 +275,7 @@ void Loggable::Info(std::stringstream& msg, const std::string& origin) const
 }
 
 void Loggable::Info(const std::stringstream& msg,
-  const std::string& origin) const
+                    const std::string& origin) const
 {
   Info(msg.str(), origin);
 }
@@ -284,7 +288,7 @@ void Loggable::Info(std::ostream& msg, const std::string& origin) const
 }
 
 void Loggable::Warning(const std::string& msg,
-  const std::string& origin) const
+                       const std::string& origin) const
 {
   if (m_Logger)
     m_Logger->Warning(msg, origin);
@@ -292,7 +296,7 @@ void Loggable::Warning(const std::string& msg,
     std::cout << "WARN:" << msg << " : " << origin << std::endl;
 }
 void Loggable::Warning(std::stringstream& msg,
-  const std::string& origin) const
+                       const std::string& origin) const
 {
   Warning(msg.str(), origin);
   msg.str("");

@@ -83,6 +83,7 @@ function(CHILDLIST result curdir)
   set(${result} ${dirlist} PARENT_SCOPE)
 endfunction()
 
+
 function(add_source_files var prefix regex source_group)
     message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
     file(GLOB TEMP "${prefix}/${regex}")
@@ -98,6 +99,7 @@ function(add_source_files var prefix regex source_group)
 
     set(${var} ${${var}} ${TEMP} PARENT_SCOPE)
 endfunction()
+
 
 ########################################################################################################
 #

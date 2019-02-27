@@ -80,7 +80,7 @@ public:
   Logger(const std::string& logFilename = Loggable::empty);
   virtual ~Logger();
 
-  void LogToConsole(bool b);
+  void LogToConsole(bool log_to_console);
 
   void ResetLogFile(const std::string& logFilename = Loggable::empty);
 

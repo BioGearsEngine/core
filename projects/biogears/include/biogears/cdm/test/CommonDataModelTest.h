@@ -30,7 +30,7 @@ public:
   virtual ~CommonDataModelTest();
 
   bool RunTest(const std::string& testName,
-    const std::string& sOutputDirectory);
+  const std::string& sOutputDirectory);
   void FillFunctionMap();
 
 protected:

@@ -38,12 +38,12 @@ namespace biogears {
 
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string& logfile)
 {
-  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile));
+  return std::make_unique<BioGearsEngine>(logfile);
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 {
-  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger));
+  return std::make_unique<BioGearsEngine>(logger);
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger)

@@ -3,7 +3,9 @@
 #include "string-helpers.h"
 
 #include <fstream>
+#include <iostream>
 #include <list>
+#include <map>
 #include <regex>
 #include <sstream>
 
@@ -32,137 +34,7 @@ bool grab_next_symbol_or_fail(Tokenizer::token_list::iterator& tokenItr, Tokeniz
 bool gobble_until_next_given(Tokenizer::token_list::iterator& tokenItr, Tokenizer::token_list::iterator end, Token&, Tokenizer::token_list&);
 
 std::list<std::string> split_token_on_word_boundry(std::string);
-//-----------------------------------------------------------------------------
-Executor::Executor()
-  : Executor("Undefined", EDriver::Undefined)
-{
-}
-//-----------------------------------------------------------------------------
-Executor::Executor(std::string n, EDriver d)
-  : name(n)
-  , driver(d)
-  , plot_style(EPlotStyle::FastPlot)
-  , no_compare(false)
-  , group("Other")
-{
-}
-//-----------------------------------------------------------------------------
-std::string Executor::Name() const { return name; }
-//-----------------------------------------------------------------------------
-EDriver Executor::Driver() const { return driver; }
-//-----------------------------------------------------------------------------
-EPlotStyle Executor::PlotStyle() const { return plot_style; }
-//-----------------------------------------------------------------------------
-bool Executor::NoCompare() const
-{
-  return no_compare;
-}
-//-----------------------------------------------------------------------------
-std::string Executor::Baselines() const { return baselines; }
-//-----------------------------------------------------------------------------
-std::string Executor::Computed() const { return computed; }
-//-----------------------------------------------------------------------------
-std::string Executor::Group() const { return group; }
-//-----------------------------------------------------------------------------
-std::vector<std::string> Executor::Results() const { return results; }
-//-----------------------------------------------------------------------------
-Executor& Executor::Name(const std::string& n) &&
-{
-  name = n;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Driver(EDriver d) &&
-{
-  driver = d;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::PlotStyle(EPlotStyle p) &&
-{
-  plot_style = p;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::NoCompare(bool nc) &&
-{
-  no_compare = nc;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Baselines(const std::string& b) &&
-{
-  baselines = b;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Computed(const std::string& c) &&
-{
-  computed = c;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Group(const std::string& g) &&
-{
-  group = g;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Results(const std::vector<std::string>& r) &&
-{
-  results = r;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-std::string Executor::Name(const std::string& n) &
-{
-  return name = n;
-}
-//-----------------------------------------------------------------------------
-EDriver Executor::Driver(EDriver d) &
-{
-  return driver = d;
-}
-//-----------------------------------------------------------------------------
-EPlotStyle Executor::PlotStyle(EPlotStyle p) &
-{
-  return plot_style = p;
-}
-//-----------------------------------------------------------------------------
-bool Executor::NoCompare(bool nc) &
-{
-  return no_compare = nc;
-}
-//-----------------------------------------------------------------------------
-std::string Executor::Baselines(const std::string& b) &
-{
-  return baselines = b;
-}
-//-----------------------------------------------------------------------------
-std::string Executor::Computed(const std::string& c) &
-{
-  return computed = c;
-}
-//-----------------------------------------------------------------------------
-std::string Executor::Group(const std::string& g) &
-{
-  return group = g;
-}
-//-----------------------------------------------------------------------------
-std::vector<std::string> Executor::Results(const std::vector<std::string>& r) &
-{
-  return results = r;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::push_back_results(const std::string& r) &&
-{
-  results.push_back(r);
-  return *this;
-}
-//-----------------------------------------------------------------------------
-void Executor::push_back_results(const std::string& r) & { results.push_back(r); }
-//-----------------------------------------------------------------------------
-void Executor::clear_results() { results.clear(); }
+
 //-----------------------------------------------------------------------------
 Config::Config()
   : _email_subject("BioGears Notification Email")
@@ -210,6 +82,26 @@ auto Config::end() -> iterator
 auto Config::end() const -> const_iterator
 {
   return _execs.end();
+}
+//-----------------------------------------------------------------------------
+auto Config::front() -> reference
+{
+   return _execs.front();
+}
+//-----------------------------------------------------------------------------
+auto Config::front() const -> const_reference
+{
+  return _execs.front();
+}
+//-----------------------------------------------------------------------------
+auto Config::back() -> reference
+{
+  return _execs.back();
+}
+//-----------------------------------------------------------------------------
+auto Config::back() const -> const_reference
+{
+  return _execs.back();
 }
 //-----------------------------------------------------------------------------
 bool Config::load(std::string filepath)
@@ -312,10 +204,9 @@ bool Config::process(Tokenizer&& tokens)
           _current_group = tokenItr->value;
           Tokenizer::token_list group_name;
           if (gobble_until_next_given(tokenItr, tokens.end(), Token{ ETokenClass::Newline, "\n" }, group_name)) {
-            for( auto& component : group_name)
-            {
+            for (auto& component : group_name) {
               _current_group += component.value;
-            } 
+            }
             trim(_current_group);
           } else {
             valid_state &= false;
@@ -343,6 +234,23 @@ bool Config::process(Tokenizer&& tokens)
     }
   }
   return true;
+}
+//-----------------------------------------------------------------------------
+void Config::push_back(const Executor& ex)
+{
+  _execs.push_back(ex);
+}
+//-----------------------------------------------------------------------------
+void Config::push_back(Executor&& ex)
+{
+  _execs.push_back(std::move(ex));
+}
+//-----------------------------------------------------------------------------
+void Config::merge(Config&& conf)
+{
+  for (auto& ex : conf) {
+    _execs.push_back(std::move(ex));
+  }
 }
 //-----------------------------------------------------------------------------
 std::list<std::string> split_token_on_word_boundry(std::string token)

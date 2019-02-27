@@ -11,75 +11,26 @@
 //CONDITIONS OF ANY KIND, either express or implied.See the License for the
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
-#include <iostream>
-#include <map>
+
 #include <string>
 #include <vector>
-#include <list>
+
+#include "Executor.h"
 
 namespace biogears {
 class Tokenizer;
-
-enum class EDriver { Undefined, BGEUnitTestDriver, CDMUnitTestDriver, ScenarioTestDriver };
-enum class EPlotter{ Undefined, ActionEventPlotter, MultiPlotter};
-enum class EPlotStyle {FastPlot //Plot every nth data point (hardcoded)
-                      ,FullPlot //Plot all data points
-                      ,FastPlotErrors //Only plot failures and only every nth data point (hardcoded)
-                      ,FullPlotErrors //Plot all data points only for failing data
-                      ,MemoryFastPlot //Do a fast plot, but manage memory better, slower plotting, but can handle larger files
-};
-class Executor {
-public:
-  Executor();
-  Executor(std::string name, EDriver driver);
-
-  std::string Name() const;
-  EDriver Driver() const;
-  EPlotStyle PlotStyle() const;
-  bool NoCompare() const;
-  std::string Baselines() const;
-  std::string Computed() const;
-  std::string Group() const;
-  std::vector<std::string> Results() const;
-
-  Executor& Name(const std::string&) &&;
-  Executor& Driver(EDriver) &&;
-  Executor& PlotStyle(EPlotStyle) &&;
-  Executor& NoCompare(bool) &&;
-  Executor& Baselines(const std::string&) &&;
-  Executor& Computed(const std::string&) &&;
-  Executor& Group(const std::string&) &&;
-  Executor& Results(const std::vector<std::string>&) &&;
-
-  std::string Name(const std::string&) &;
-  EDriver Driver(EDriver) &;
-  EPlotStyle PlotStyle(EPlotStyle) &;
-  bool NoCompare(bool) &;
-  std::string Baselines(const std::string&) &;
-  std::string Computed(const std::string&) &;
-  std::string Group(const std::string&) &;
-  std::vector<std::string> Results(const std::vector<std::string>&) &;
-
-  Executor& push_back_results(const std::string&) &&;
-  void push_back_results(const std::string&) &;
-  void clear_results();
-private:
-  EDriver driver;
-  EPlotStyle   plot_style;
-  bool no_compare;
-  std::string name;
-  std::string baselines;
-  std::string computed;
-  std::string group;
-  std::vector<std::string> results;
-};
 
 class Config {
 
 public:
   Config();
   Config(const std::string& file);
+  Config(const Config&) = default;
+  Config(Config&&) = default;
   ~Config() = default;
+
+  Config& operator=(const Config&) = default;
+  Config& operator=(Config&&) = default;
 
   bool load(std::string filepath);
   void clear();
@@ -87,15 +38,27 @@ public:
   using executor_vector = std::vector<Executor>;
   using iterator = executor_vector::iterator;
   using const_iterator = executor_vector::const_iterator;
-
+  using reference = executor_vector::reference;
+  using const_reference = executor_vector::const_reference;
   iterator begin();
   const_iterator begin() const;
 
   iterator end();
   const_iterator end() const;
-  protected:
-  bool  process(Tokenizer&&);
-  
+
+  reference front();
+  const_reference front() const;
+
+  reference back();
+  const_reference back() const;
+
+  void push_back(const Executor&);
+  void push_back(Executor&&);
+  void merge(Config&&);
+
+protected:
+  bool process(Tokenizer&&);
+
 private:
   bool _send_email;
   std::string _email_smtp_server;

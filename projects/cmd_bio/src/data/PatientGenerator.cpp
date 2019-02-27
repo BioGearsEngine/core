@@ -48,6 +48,7 @@ bool PatientGenerator::save() const
       file.open("patients/" + patient.Name() + ".xml");
       mil::tatrc::physiology::datamodel::Patient(file, patient, info);
       file.close();
+      std::cout << "Saved patients/" + patient.Name() + ".xml" << "\n";
 
     } catch (std::exception e) {
       std::cout << e.what() << std::endl;

@@ -45,7 +45,7 @@ void ScenarioDriver::LoadPatients(std::vector<std::string> files, std::string xm
     _pool.queue_work(work);
   }
 }
-
+//-------------------------------------------------------------------------------
 void ScenarioDriver::LoadScenarios(std::vector<std::string> files)
 {
   for (auto& patient : files) {
@@ -53,9 +53,7 @@ void ScenarioDriver::LoadScenarios(std::vector<std::string> files)
     _pool.queue_work(work);
   }
 }
-
 //-------------------------------------------------------------------------------
-
 //!
 //! \brief creates a BioGearsScenarioExec object and executes the scenario
 //! \param patient : the name of the patient being used for the scenario

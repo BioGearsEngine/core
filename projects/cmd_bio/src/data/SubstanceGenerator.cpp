@@ -89,6 +89,7 @@ bool SubstanceGenerator::save() const
       file.open("substances/" + substance.Name() + ".xml");
       Substance(file, substance, info);
       file.close();
+      std::cout << "Saved substances/" + substance.Name() + ".xml" << "\n";
 
     } catch (std::exception e) {
       std::cout << e.what() << std::endl;
