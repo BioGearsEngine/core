@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include "Verification.h"
 
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/test/CommonDataModelTest.h>
+
 #include "biogears/engine/test/BioGearsEngineTest.h"
 
 using namespace biogears;
@@ -31,9 +31,9 @@ int main(int argc, char* argv[])
     std::string test= argv[2];
     std::string dir = argv[3];
     if (type =="CDM") {
-      CommonDataModelTest executor;
-      executor.GetLogger()->LogToConsole(true);
-      executor.RunTest(test, dir);
+      //CommonDataModelTest executor;
+      //executor.GetLogger()->LogToConsole(true);
+      //executor.RunTest(test, dir);
     } else if(type =="BGE") {
       BioGearsEngineTest executor;
       executor.RunTest(test, dir);

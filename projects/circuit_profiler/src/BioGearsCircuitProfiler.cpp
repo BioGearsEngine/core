@@ -88,6 +88,8 @@ void BioGearsCircuitProfiler::RenalCircuitTest()
 //lovelystuff - a new romance
 //HM Surf - Scopophobia
 //Engelwood - La Fonda
+//bil - figure (a)
+//jeiku - we spent the day at the beach
 void BioGearsCircuitProfiler::RespiratoryCircuitTest()
 {
   biogears::Logger logger("RespiratoryCircuitTest.log");

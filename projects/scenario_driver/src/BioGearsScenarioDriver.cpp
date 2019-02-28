@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include "Verification.h"
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 
 using namespace biogears;
 using namespace ScenarioDriver;
@@ -84,7 +85,9 @@ void BioGearsScenarioDriver::RunScenario()
 	dataFile = Replace(dataFile, ".xml", "Results.csv");
 	// Delete any results file that may be there
 	remove(dataFile.c_str());
-	std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(logFile.c_str());
+	//std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(logFile.c_str());
+  // I commented out the line above and added the next two lines for profiling purposes
+  std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(logFile);
 	if (!bioGears)
 	{
 		std::cerr << "Unable to create BioGearsEngine" << std::endl;
