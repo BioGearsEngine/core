@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
         <xs:complexContent>
             <xs:extension base="ObjectData">
                 <xs:sequence>
-                    <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+                    <xs:element name="Name" type="xs:string" minOccurs="0"  maxOccurs="1"/>
                     <xs:element name="Carbohydrate" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="CarbohydrateDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="Fat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
