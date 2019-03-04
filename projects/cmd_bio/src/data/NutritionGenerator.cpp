@@ -42,7 +42,7 @@ bool NutritionGenerator::save() const
 
     try {
       std::ofstream file;
-      file.open("nutrition/" + nutrition_conf.Name() + ".xml");
+      file.open("nutrition/" + nutrition_conf.Name().get() + ".xml");
       mil::tatrc::physiology::datamodel::Nutrition(file, nutrition_conf, info);
       file.close();
 

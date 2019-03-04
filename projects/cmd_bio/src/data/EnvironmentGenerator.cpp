@@ -75,7 +75,7 @@ bool EnvironmentGenerator::save() const
 
     try {
       std::ofstream file;
-      file.open("environments/" + env.Name() + ".xml");
+      file.open("environments/" + env.Name().get() + ".xml");
       EnvironmentalConditions(file, env, info);
       file.close();
 

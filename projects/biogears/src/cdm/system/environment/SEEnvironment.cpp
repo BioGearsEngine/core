@@ -119,7 +119,8 @@ const SEScalar* SEEnvironment::GetScalar(const std::string& name)
 bool SEEnvironment::Load(const CDM::EnvironmentData& in)
 {
   SESystem::Load(in);
-  m_Name = in.Name();
+  if (in.Name().present())
+    m_Name = in.Name().get();
   if (in.ActiveHeating().present())
     GetActiveHeating().Load(in.ActiveHeating().get());
   if (in.ActiveCooling().present())
@@ -540,6 +541,6 @@ double SEEnvironment::GetSkinHeatLoss(const PowerUnit& unit) const
 //-------------------------------------------------------------------------------
 Tree<const char*> SEEnvironment::GetPhysiologyRequestGraph() const
 {
-  return {""};
+  return { "" };
 }
 }
