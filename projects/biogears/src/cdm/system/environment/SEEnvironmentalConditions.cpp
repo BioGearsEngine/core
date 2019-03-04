@@ -170,7 +170,7 @@ void SEEnvironmentalConditions::Unload(CDM::EnvironmentalConditionsData& data) c
   if (HasName()) {
     data.Name(m_Name);
   } else {
-    data.Name("Unknown Environment Conditions");
+    data.Name("Local Environment Conditions");
   }
   if (HasSurroundingType())
     data.SurroundingType(m_SurroundingType);

@@ -35,7 +35,7 @@ SEEnvironment::SEEnvironment(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
 {
-  m_Name = "";
+  m_Name = "Local Environment";
   m_ActiveHeating = nullptr;
   m_ActiveCooling = nullptr;
   m_AppliedTemperature = nullptr;
@@ -119,8 +119,11 @@ const SEScalar* SEEnvironment::GetScalar(const std::string& name)
 bool SEEnvironment::Load(const CDM::EnvironmentData& in)
 {
   SESystem::Load(in);
-  if (in.Name().present())
+  if (in.Name().present()) {
     m_Name = in.Name().get();
+  } else {
+    m_Name = "Local Environment";
+  }
   if (in.ActiveHeating().present())
     GetActiveHeating().Load(in.ActiveHeating().get());
   if (in.ActiveCooling().present())

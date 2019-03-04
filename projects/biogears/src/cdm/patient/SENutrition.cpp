@@ -22,7 +22,7 @@ namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
 {
-  m_Name = "";
+  m_Name = "Standard Meal";
   m_Carbohydrate = nullptr;
   m_CarbohydrateDigestionRate = nullptr;
   m_Fat = nullptr;
@@ -106,8 +106,11 @@ bool SENutrition::Load(const CDM::NutritionData& in)
 {
   Clear();
 
-  if (in.Name().present())
+  if (in.Name().present()) {
     m_Name = in.Name().get();
+  } else {
+    m_Name = "Standard Meal";
+  }
   if (in.Carbohydrate().present())
     GetCarbohydrate().Load(in.Carbohydrate().get());
   if (in.CarbohydrateDigestionRate().present())
