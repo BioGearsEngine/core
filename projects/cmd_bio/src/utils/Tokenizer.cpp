@@ -5,6 +5,7 @@
 #include <fstream>
 #include <list>
 #include <regex>
+#include <cerrno>
 
 namespace biogears {
 
@@ -33,7 +34,8 @@ bool Token::is_double() const
 
     char* end = nullptr;
     double val = strtod(value.c_str(), &end);
-    return end != value.c_str() && val != HUGE_VAL;
+    errno = 0;
+    return end != value.c_str() && ERANGE != errno ;
   }
   return false;
 }

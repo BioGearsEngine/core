@@ -86,7 +86,7 @@ auto Config::end() const -> const_iterator
 //-----------------------------------------------------------------------------
 auto Config::front() -> reference
 {
-   return _execs.front();
+  return _execs.front();
 }
 //-----------------------------------------------------------------------------
 auto Config::front() const -> const_reference
@@ -203,7 +203,8 @@ bool Config::process(Tokenizer&& tokens)
         if (grab_next_word_or_fail(tokenItr, tokens.end())) {
           _current_group = tokenItr->value;
           Tokenizer::token_list group_name;
-          if (gobble_until_next_given(tokenItr, tokens.end(), Token{ ETokenClass::Newline, "\n" }, group_name)) {
+          auto delimiter = Token{ ETokenClass::Newline, "\n" };
+          if (gobble_until_next_given(tokenItr, tokens.end(), delimiter , group_name)) {
             for (auto& component : group_name) {
               _current_group += component.value;
             }
@@ -289,6 +290,9 @@ bool handle_assignment(Tokenizer::token_list::iterator& tokenItr, Tokenizer::tok
     } else {
       while (next != end) {
         if (next->type == ETokenClass::Newline) {
+          break;
+        }
+        if (next->type == ETokenClass::Whitespace) {
           break;
         }
         rhs += next->value;
@@ -414,8 +418,9 @@ bool handle_driver_definition(Tokenizer::token_list::iterator& tokenItr, Tokeniz
     }
   }
   tokenItr = next;
-
-  if (!handle_driver_paramaters(paramaters.begin(), paramaters.end(), rhs)) {
+  auto p_begin =  paramaters.begin();
+  auto p_end   =  paramaters.end();
+  if (!handle_driver_paramaters(p_begin, p_end, rhs)) {
     return false;
   }
   return true;
@@ -459,6 +464,14 @@ bool handle_driver_paramaters(Tokenizer::token_list::iterator& tokenItr, Tokeniz
       handle_assignment(next, end, results);
       handle_delimited_list(results, ',', results_list);
       rhs.Results(results_list);
+    } else if (token == "patient") {
+      std::string computed;
+      handle_assignment(next, end, computed);
+      rhs.Patient(computed);
+    } else if (token == "scenario") {
+      std::string computed;
+      handle_assignment(next, end, computed);
+      rhs.Scenario(computed);
     } else {
       std::cerr << "Error: Unknown paramater " << original_token << " found after " << tokenItr->value << " .\n";
     }

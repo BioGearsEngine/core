@@ -40,6 +40,8 @@ public:
   std::string Baselines() const;
   std::string Computed() const;
   std::string Group() const;
+  std::string Patient() const;
+  std::string Scenario() const;
   std::vector<std::string> Results() const;
 
   Executor& Name(const std::string&) &&;
@@ -49,6 +51,8 @@ public:
   Executor& Baselines(const std::string&) &&;
   Executor& Computed(const std::string&) &&;
   Executor& Group(const std::string&) &&;
+  Executor& Patient(const std::string&) &&;
+  Executor& Scenario(const std::string&) &&;
   Executor& Results(const std::vector<std::string>&) &&;
 
   std::string Name(const std::string&) &;
@@ -58,6 +62,8 @@ public:
   std::string Baselines(const std::string&) &;
   std::string Computed(const std::string&) &;
   std::string Group(const std::string&) &;
+  std::string Patient(const std::string&) &;
+  std::string Scenario(const std::string&) &;
   std::vector<std::string> Results(const std::vector<std::string>&) &;
 
   Executor& push_back_results(const std::string&) &&;
@@ -72,6 +78,8 @@ private:
   std::string baselines;
   std::string computed;
   std::string group;
+  std::string patient;
+  std::string scenario;
   std::vector<std::string> results;
 };
 

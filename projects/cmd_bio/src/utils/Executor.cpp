@@ -15,6 +15,8 @@ Executor::Executor(std::string n, EDriver d)
   , plot_style(EPlotStyle::FastPlot)
   , no_compare(false)
   , group("Other")
+  , patient("patients/StandardMale.xml")
+  , scenario("Scenarios/BasicStandard.xml")
 {
 }
 //-----------------------------------------------------------------------------
@@ -34,6 +36,10 @@ std::string Executor::Baselines() const { return baselines; }
 std::string Executor::Computed() const { return computed; }
 //-----------------------------------------------------------------------------
 std::string Executor::Group() const { return group; }
+//-----------------------------------------------------------------------------
+std::string Executor::Patient() const { return patient; }
+//-----------------------------------------------------------------------------
+std::string Executor::Scenario() const { return scenario; }
 //-----------------------------------------------------------------------------
 std::vector<std::string> Executor::Results() const { return results; }
 //-----------------------------------------------------------------------------
@@ -79,6 +85,18 @@ Executor& Executor::Group(const std::string& g) &&
   return *this;
 }
 //-----------------------------------------------------------------------------
+Executor& Executor::Patient(const std::string& p) &&
+{
+  patient = p;
+  return *this;
+}
+//-----------------------------------------------------------------------------
+Executor& Executor::Scenario(const std::string& s) &&
+{
+  scenario = s;
+  return *this;
+}
+//-----------------------------------------------------------------------------
 Executor& Executor::Results(const std::vector<std::string>& r) &&
 {
   results = r;
@@ -118,6 +136,16 @@ std::string Executor::Computed(const std::string& c) &
 std::string Executor::Group(const std::string& g) &
 {
   return group = g;
+}
+//-----------------------------------------------------------------------------
+std::string Executor::Patient(const std::string& p) &
+{
+  return patient = p;
+}
+//-----------------------------------------------------------------------------
+std::string Executor::Scenario(const std::string& s) &
+{
+  return scenario = s;
 }
 //-----------------------------------------------------------------------------
 std::vector<std::string> Executor::Results(const std::vector<std::string>& r) &

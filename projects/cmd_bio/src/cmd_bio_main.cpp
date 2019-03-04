@@ -134,7 +134,7 @@ int main(int argc, char** argv)
     driver.queue(runs);
   }
   if (run_patient_validation) { //run-patient-validation
-    const auto runs = biogears::Config("ValidationPatient.config");
+    const auto runs = biogears::Config("ValidationPatients.config");
     driver.queue(runs);
   }
   if (run_drug_validation) { // run-drug-validation

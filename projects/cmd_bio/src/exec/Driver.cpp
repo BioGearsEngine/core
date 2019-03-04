@@ -107,43 +107,61 @@ void Driver::queue_CDMUnitTest(const Executor& exec)
 //-----------------------------------------------------------------------------
 void Driver::queue_Scenario(const Executor& exec)
 {
+  const auto& patient_path = exec.Patient();
+  std::string scenario_path = exec.Scenario();
 
-  _pool.queue_work(
-    [=]() {
-      std::string& patient = exec.Name();
-      std::string XMLString;
+  std::string nc_patient_path = exec.Patient();
+  std::transform(nc_patient_path.begin(), nc_patient_path.end(), nc_patient_path.begin(), ::tolower);
 
-      std::string patientXML(trim(patient));
+  auto scenario_launch = [](Executor ex) {
+    std::string trimed_patient_path(trim(ex.Patient()));
+    auto split_patient_path = split(trimed_patient_path, '/');
+    auto patient_no_extension = split(split_patient_path.back(), '.').front();
 
-      std::string patientLog = "-" + patientXML;
-      patientLog = findAndReplace(patientLog, ".xml", ".log");
+    std::string trimed_scenario_path(trim(ex.Scenario()));
+    auto split_scenario_path = split(trimed_scenario_path, '/');
+    auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
-      std::string patientResults = "-" + patientXML;
-      patientResults = findAndReplace(patientResults, ".xml", "Results.csv");
 
-      std::string logFile(trim(patient));
-      std::string outputFile(trim(patient));
-      logFile = findAndReplace(logFile, ".xml", "Results.log");
-      outputFile = findAndReplace(outputFile, ".xml", "Results.csv");
-
-      std::unique_ptr<PhysiologyEngine> eng;
-      try {
-        eng = CreateBioGearsEngine(logFile);
-      } catch (std::exception e) {
-        std::cout << e.what();
-        return 1;
+    //NOTE: This looses non relative prefixes as the split will eat the leading path_seperator
+    std::string parent_dir;
+    for (auto dir = split_scenario_path.begin(); dir != split_scenario_path.end(); ++dir) {
+      if (dir + 1 != split_scenario_path.end()) {
+        parent_dir.append(*dir);
+        parent_dir += "/";
       }
-      DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
-      BioGearsScenario sce(eng->GetSubstanceManager());
-      sce.Load(trim(XMLString));
-      sce.GetInitialParameters().SetPatientFile(trim(patientXML));
+    }
 
-      BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
-      exec->Execute(sce, outputFile, nullptr);
-      delete exec;
+    std::string console_file = patient_no_extension + "-" + scenario_no_extension + ".log";
+    std::string log_file = patient_no_extension + "-" + scenario_no_extension + "Results.log";
+    std::string results_file = patient_no_extension + "-" + scenario_no_extension + "Results.csv";
 
-      return 0;
-    });
+    std::unique_ptr<PhysiologyEngine> eng;
+    try {
+      eng = CreateBioGearsEngine(ex.Computed()+parent_dir+console_file);
+    } catch (std::exception e) {
+      std::cout << e.what();
+    }
+
+    BioGearsScenario sce(eng->GetSubstanceManager());
+    sce.Load("Scenarios/" + trim(trimed_scenario_path));
+    sce.GetInitialParameters().SetPatientFile(trim(trimed_patient_path));
+
+    BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
+    exec->Execute(sce, ex.Computed()+parent_dir+results_file, nullptr);
+    delete exec;
+  };
+
+  if (nc_patient_path == "all") {
+    auto patientEx{ exec };
+    auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
+    for (const std::string& patient_file : patient_files) {
+      patientEx.Patient(patient_file);
+      _pool.queue_work(std::bind(scenario_launch, patientEx));
+    }
+  } else {
+    _pool.queue_work(std::bind(scenario_launch, exec));
+  }
 }
 //-----------------------------------------------------------------------------
 }
