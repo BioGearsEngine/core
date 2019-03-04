@@ -78,7 +78,7 @@ bool EnvironmentGenerator::save() const
       file.open("environments/" + env.Name().get() + ".xml");
       EnvironmentalConditions(file, env, info);
       file.close();
-      std::cout << "Saved environments/" + env.Name() + ".xml" << "\n";
+      std::cout << "Saved environments/" + env.Name().get() + ".xml" << "\n";
 
     } catch (std::exception e) {
       rValue = false;
