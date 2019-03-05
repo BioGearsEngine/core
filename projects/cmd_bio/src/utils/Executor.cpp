@@ -103,54 +103,54 @@ Executor& Executor::Results(const std::vector<std::string>& r) &&
   return *this;
 }
 //-----------------------------------------------------------------------------
-std::string Executor::Name(const std::string& n) &
+void Executor::Name(const std::string& n) &
 {
-  return name = n;
+  name = n;
 }
 //-----------------------------------------------------------------------------
-EDriver Executor::Driver(EDriver d) &
+void Executor::Driver(EDriver d) &
 {
-  return driver = d;
+  driver = d;
 }
 //-----------------------------------------------------------------------------
-EPlotStyle Executor::PlotStyle(EPlotStyle p) &
+void Executor::PlotStyle(EPlotStyle p) &
 {
-  return plot_style = p;
+  plot_style = p;
 }
 //-----------------------------------------------------------------------------
-bool Executor::NoCompare(bool nc) &
+void Executor::NoCompare(bool nc) &
 {
-  return no_compare = nc;
+  no_compare = nc;
 }
 //-----------------------------------------------------------------------------
-std::string Executor::Baselines(const std::string& b) &
+void Executor::Baselines(const std::string& b) &
 {
-  return baselines = b;
+  baselines = b;
 }
 //-----------------------------------------------------------------------------
-std::string Executor::Computed(const std::string& c) &
+void Executor::Computed(const std::string& c) &
 {
-  return computed = c;
+  computed = c;
 }
 //-----------------------------------------------------------------------------
-std::string Executor::Group(const std::string& g) &
+void Executor::Group(const std::string& g) &
 {
-  return group = g;
+  group = g;
 }
 //-----------------------------------------------------------------------------
-std::string Executor::Patient(const std::string& p) &
+void Executor::Patient(const std::string& p) &
 {
-  return patient = p;
+  patient = p;
 }
 //-----------------------------------------------------------------------------
-std::string Executor::Scenario(const std::string& s) &
+void Executor::Scenario(const std::string& s) &
 {
-  return scenario = s;
+  scenario = s;
 }
 //-----------------------------------------------------------------------------
-std::vector<std::string> Executor::Results(const std::vector<std::string>& r) &
+void Executor::Results(const std::vector<std::string>& r) &
 {
-  return results = r;
+  results = r;
 }
 //-----------------------------------------------------------------------------
 Executor& Executor::push_back_results(const std::string& r) &&

@@ -59,6 +59,214 @@ Config::Config(const std::string& file)
   load(file);
 }
 //-----------------------------------------------------------------------------
+bool Config::send_email() const
+{
+  return _send_email;
+}
+//-----------------------------------------------------------------------------
+void Config::send_email(const bool send_email) &
+{
+  _send_email = send_email;
+}
+//-----------------------------------------------------------------------------
+Config& Config::send_email(const bool send_email) &&
+{
+  _send_email = send_email;
+  return *this;
+}
+//-----------------------------------------------------------------------------
+std::string Config::email_smtp_server() const
+{
+  return _email_smtp_server;
+}
+//-----------------------------------------------------------------------------
+void Config::email_smtp_server(std::string cs) &
+{
+  _email_smtp_server = std::move(cs);
+}
+//-----------------------------------------------------------------------------
+Config& Config::email_smtp_server(std::string cs) &&
+{
+  _email_smtp_server = std::move(cs);
+  return *this;
+}
+  //-----------------------------------------------------------------------------
+std::string Config::email_smtp_user() const
+{
+  return _email_smtp_user;
+}
+//-----------------------------------------------------------------------------
+void Config::email_smtp_user(std::string cs) &
+{
+  _email_smtp_user = std::move(cs);
+}
+//-----------------------------------------------------------------------------
+Config& Config::email_smtp_user(std::string cs) &&
+{
+  _email_smtp_user = std::move(cs);
+  return *this;
+}
+//-----------------------------------------------------------------------------
+std::string Config::email_smtp_password() const
+{
+  return _email_smtp_password;
+}
+//-----------------------------------------------------------------------------
+void Config::email_smtp_password(std::string cs) &
+{
+  _email_smtp_password = std::move(cs);
+}
+
+Config& Config::email_smtp_password(std::string cs) &&
+{
+  _email_smtp_password = std::move(cs);
+  return *this;
+}
+//-----------------------------------------------------------------------------
+std::string Config::email_subject() const
+{
+  return _email_subject;
+}
+//-----------------------------------------------------------------------------
+void Config::email_subject(std::string cs) &
+{
+  _email_subject = std::move(cs);
+}
+//-----------------------------------------------------------------------------
+Config& Config::email_subject(std::string cs) &&
+{
+  _email_subject = std::move(cs);
+  return *this;
+}
+//-----------------------------------------------------------------------------
+std::string Config::email_sender_address() const
+{
+  return _email_sender_address;
+}
+//-----------------------------------------------------------------------------
+void Config::email_sender_address(std::string cs) &
+{
+  _email_sender_address = std::move(cs);
+}
+//-----------------------------------------------------------------------------
+Config& Config::email_sender_address(std::string cs) &&
+{
+  _email_sender_address = std::move(cs);
+  return *this;
+}
+//-----------------------------------------------------------------------------
+std::vector<std::string> Config::email_receipients() const
+{
+  return _email_receipients;
+}
+//-----------------------------------------------------------------------------
+void Config::email_receipients(std::vector<std::string> basic_strings) &
+{
+  _email_receipients = std::move(basic_strings);
+}
+//-----------------------------------------------------------------------------
+Config& Config::email_receipients(std::vector<std::string> basic_strings) &&
+{
+  _email_receipients = std::move(basic_strings);
+  return *this;
+}
+//-----------------------------------------------------------------------------
+int Config::threads() const
+{
+  return _threads;
+}
+//-----------------------------------------------------------------------------
+void Config::threads(const int threads) &
+{
+  _threads = threads;
+}
+//-----------------------------------------------------------------------------
+Config& Config::threads(const int threads) &&
+{
+  _threads = threads;
+  return *this;
+}
+//-----------------------------------------------------------------------------
+bool Config::execute_tests() const
+{
+  return _execute_tests;
+}
+//-----------------------------------------------------------------------------
+void Config::execute_tests(const bool execute_tests) &
+{
+  _execute_tests = execute_tests;
+}
+//-----------------------------------------------------------------------------
+Config& Config::execute_tests(const bool execute_tests) &&
+{
+  _execute_tests = execute_tests;
+  return *this;
+}
+//-----------------------------------------------------------------------------
+bool Config::plot_results() const
+{
+  return _plot_results;
+}
+//-----------------------------------------------------------------------------
+void Config::plot_results(const bool plot_results) &
+{
+  _plot_results = plot_results;
+}
+//-----------------------------------------------------------------------------
+Config& Config::plot_results(const bool plot_results) &&
+{
+  _plot_results = plot_results;
+  return *this;
+}
+//-----------------------------------------------------------------------------
+double Config::percent_difference() const
+{
+  return _percent_difference;
+}
+//-----------------------------------------------------------------------------
+void Config::percent_difference(const double percent_difference) &
+{
+  _percent_difference = percent_difference;
+}
+//-----------------------------------------------------------------------------
+Config& Config::percent_difference(const double percent_difference) &&
+{
+  _percent_difference = percent_difference;
+  return *this;
+}
+//-----------------------------------------------------------------------------
+std::string Config::current_group() const
+{
+  return _current_group;
+}
+//-----------------------------------------------------------------------------
+void Config::current_group(std::string cs) &
+{
+  _current_group = std::move(cs);
+}
+//-----------------------------------------------------------------------------
+Config& Config::current_group(std::string cs) &&
+{
+  _current_group = std::move(cs);
+  return *this;
+}
+  //-----------------------------------------------------------------------------
+void Config::copy_globals( const Config& conf)
+{ 
+  send_email(conf.send_email());
+  email_smtp_server(conf.email_smtp_server());
+  email_smtp_user(conf.email_smtp_user());
+  email_smtp_password(conf.email_smtp_password());
+  email_subject(conf.email_subject());
+  email_sender_address(conf.email_sender_address());
+  email_receipients(conf.email_receipients());
+  threads(conf.threads());
+  execute_tests(conf.execute_tests());
+  plot_results(conf.plot_results());
+  percent_difference(conf.percent_difference());
+  current_group(conf.current_group());
+}
+//-----------------------------------------------------------------------------
 void Config::clear()
 {
   _execs.clear();
@@ -204,7 +412,7 @@ bool Config::process(Tokenizer&& tokens)
           _current_group = tokenItr->value;
           Tokenizer::token_list group_name;
           auto delimiter = Token{ ETokenClass::Newline, "\n" };
-          if (gobble_until_next_given(tokenItr, tokens.end(), delimiter , group_name)) {
+          if (gobble_until_next_given(tokenItr, tokens.end(), delimiter, group_name)) {
             for (auto& component : group_name) {
               _current_group += component.value;
             }
@@ -418,8 +626,8 @@ bool handle_driver_definition(Tokenizer::token_list::iterator& tokenItr, Tokeniz
     }
   }
   tokenItr = next;
-  auto p_begin =  paramaters.begin();
-  auto p_end   =  paramaters.end();
+  auto p_begin = paramaters.begin();
+  auto p_end = paramaters.end();
   if (!handle_driver_paramaters(p_begin, p_end, rhs)) {
     return false;
   }

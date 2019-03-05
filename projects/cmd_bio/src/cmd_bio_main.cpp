@@ -64,10 +64,13 @@ int main(int argc, char** argv)
     }
   }
   biogears::Driver driver{ thread_count };
+
+  const biogears::Config conf{ "Email.config" };
+  driver.configure(conf);
+
   if (args.Option("GENSTATES")) {
-    auto patients = biogears::ListFiles("patients", R"(\.xml)");
-    //Manually make the InitialPatient Config
-    //driver.queue(patients, std::string("Scenarios/InitialPatientStateAll.xml"));
+    const  biogears::Config runs{ "GenStates.config" };
+    driver.queue(runs);
   }
 
   if (args.Option("GENDATA")) { // gen-data

@@ -27,6 +27,12 @@ Driver::~Driver()
   _pool.join();
 }
 //-----------------------------------------------------------------------------
+void Driver::configure(const Config& runs)
+{
+  _globals = runs;
+  _globals.clear();
+}
+//-----------------------------------------------------------------------------
 void Driver::queue(const Config& runs)
 {
   for (auto& exec : runs) {

@@ -4,6 +4,8 @@
 #include <biogears/threading/runnable.h>
 #include <biogears/threading/thread_pool.h>
 
+#include "../utils/Config.h"
+
 namespace biogears {
 class Executor;
 class Config;
@@ -15,6 +17,7 @@ public:
   Driver(Driver&&) = default;
   ~Driver() override;
 
+  void configure(const Config& config);
   void queue(const Config& runs);
 
   void run() override;
@@ -28,6 +31,7 @@ protected:
   void queue_Scenario(const Executor&);
 private:
   ThreadPool _pool;
+  Config _globals;
 };
 } //namespace biogears
 

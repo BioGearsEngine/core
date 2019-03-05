@@ -55,16 +55,16 @@ public:
   Executor& Scenario(const std::string&) &&;
   Executor& Results(const std::vector<std::string>&) &&;
 
-  std::string Name(const std::string&) &;
-  EDriver Driver(EDriver) &;
-  EPlotStyle PlotStyle(EPlotStyle) &;
-  bool NoCompare(bool) &;
-  std::string Baselines(const std::string&) &;
-  std::string Computed(const std::string&) &;
-  std::string Group(const std::string&) &;
-  std::string Patient(const std::string&) &;
-  std::string Scenario(const std::string&) &;
-  std::vector<std::string> Results(const std::vector<std::string>&) &;
+  void Name(const std::string&) &;
+  void Driver(EDriver) &;
+  void PlotStyle(EPlotStyle) &;
+  void NoCompare(bool) &;
+  void Baselines(const std::string&) &;
+  void Computed(const std::string&) &;
+  void Group(const std::string&) &;
+  void Patient(const std::string&) &;
+  void Scenario(const std::string&) &;
+  void Results(const std::vector<std::string>&) &;
 
   Executor& push_back_results(const std::string&) &&;
   void push_back_results(const std::string&) &;
