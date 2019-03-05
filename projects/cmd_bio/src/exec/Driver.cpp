@@ -70,6 +70,14 @@ bool Driver::stop_if_empty()
 {
   return _pool.stop_if_empty();
 }
+  //-----------------------------------------------------------------------------
+void Driver::stop_when_empty()
+{
+    while ( !_pool.stop_if_empty() )
+    {
+      std::this_thread::sleep_for( std::chrono::seconds(1) );
+    }
+}
 //-----------------------------------------------------------------------------
 void Driver::join()
 {

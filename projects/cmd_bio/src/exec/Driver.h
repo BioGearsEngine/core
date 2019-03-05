@@ -23,6 +23,8 @@ public:
   void run() override;
   void stop() override;
   bool stop_if_empty();
+  void stop_when_empty();
+
   void join() override;
 
 protected:
