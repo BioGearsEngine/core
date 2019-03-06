@@ -16,6 +16,19 @@ function(CHILDLIST result curdir)
   set(${result} ${dirlist} PARENT_SCOPE)
 endfunction()
 
+function(EXELIST result curdir)
+  file(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  set(dirlist "")
+  foreach(child ${children})
+    if(NOT IS_DIRECTORY ${curdir}/${child} AND ${child} MATCHES ".*${CMAKE_EXECUTABLE_SUFFIX}" )
+      list(APPEND dirlist ${curdir}/${child})
+	  set(${result} ${dirlist} PARENT_SCOPE)
+	  return()
+    endif()
+  endforeach()
+endfunction()
+
+
 function(add_source_files var prefix regex source_group)
     message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
     file(GLOB TEMP "${prefix}/${regex}")
@@ -50,21 +63,12 @@ foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
     list(APPEND THIRD_PARTY_BIN ${_dir}/bin)
 endforeach()
 
-CHILDLIST(projects ${PROJECT_SOURCE_DIR}/projects )
+
+EXELIST(projects ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 
 foreach( project IN LISTS projects)
-  if (EXISTS ${project}/ext/cmake/bundle.cmake)
-    message(STATUS "Bundling ${project}" )
-    include(${project}/ext/cmake/bundle.cmake)
-  endif()
-  get_filename_component(project_name ${project} NAME )
-  if ( project_name STREQUAL examples ) 
-    CHILDLIST(examples ${project} )
-    foreach( example IN LISTS examples)
-      if(EXISTS ${example}/ext/cmake/bundle.cmake)
-         message(STATUS "Bundling ${example}" )  
-         include(${example}/ext/cmake/bundle.cmake)
-      endif()
-    endforeach()
-  endif()
+	fixup_bundle(${project}
+                  ""
+                 "${THIRD_PARTY_LIB};${THIRD_PARTY_BIN}"
+	  )
 endforeach()

@@ -51,56 +51,8 @@ else()
     endforeach(OUTPUTCONFIG)
 endif()
 ###############################################################################
-# Step 2: Project Includes are generally order dependent.  So manually maintain
-#         this list
+# STAGE RUNTIME
 ###############################################################################
-
-find_package(Java)
-find_package(JNI)
-verify_package(Log4cpp REQUIRED)
-option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
-
-add_subdirectory(biogears-common)
-add_subdirectory(biogears)
-add_subdirectory(scenario_driver)
-add_subdirectory(test_driver)
-add_subdirectory(howto)
-add_subdirectory(unit)
-add_subdirectory(cmd_bio)
-
-if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
-  add_subdirectory(java)
-endif()
-
-###############################################################################
-# Step 3: Global Doxygen configuration 
-#         you might need to tweak this if you have multiple doxy files
-###############################################################################
-if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
-    find_package(Doxygen REQUIRED)
-    if(NOT DOXYGEN_FOUND)
-        message(FATAL_ERROR "Doxygen is needed to build the documentation.")
-    endif()
-
-    set(doxyfile_in ${CMAKE_SOURCE_DIR}/share/doc/cmake-common.doxy)
-    set(doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-
-    configure_file(${doxyfile_in} ${doxyfile} @ONLY)
-
-    add_custom_target(doxygen ALL
-        COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc
-        COMMENT "Generating API documentation with Doxygen"
-        VERBATIM)
-
-   set_target_properties(doxygen PROPERTIES
-                          DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
-                          CXX_STANDARD 11
-                          FOLDER "Other"
-                          PROJECT_LABEL "Doxygen")
-   install(DIRECTORY ${PROJECT_BINARY_DIR}/outputs/docs/html DESTINATION share/doc/biogears/)
-endif()
-
 add_custom_command(
     OUTPUT  ${PROJECT_BINARY_DIR}/runtime 
     COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
@@ -174,4 +126,54 @@ add_custom_target( stage_runtime
 	${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
 	${runtime_glob_list}
 	COMMENT "Scanning for need to stage runtime dir"
-)	
+)
+###############################################################################
+# Step 2: Project Includes are generally order dependent.  So manually maintain
+#         this list
+###############################################################################
+
+find_package(Java)
+find_package(JNI)
+verify_package(Log4cpp REQUIRED)
+option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
+
+add_subdirectory(biogears-common)
+add_subdirectory(biogears)
+add_subdirectory(scenario_driver)
+add_subdirectory(test_driver)
+add_subdirectory(howto)
+add_subdirectory(unit)
+add_subdirectory(cmd_bio)
+
+if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
+  add_subdirectory(java)
+endif()
+
+###############################################################################
+# Step 3: Global Doxygen configuration 
+#         you might need to tweak this if you have multiple doxy files
+###############################################################################
+if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
+    find_package(Doxygen REQUIRED)
+    if(NOT DOXYGEN_FOUND)
+        message(FATAL_ERROR "Doxygen is needed to build the documentation.")
+    endif()
+
+    set(doxyfile_in ${CMAKE_SOURCE_DIR}/share/doc/cmake-common.doxy)
+    set(doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+    configure_file(${doxyfile_in} ${doxyfile} @ONLY)
+
+    add_custom_target(doxygen ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM)
+
+   set_target_properties(doxygen PROPERTIES
+                          DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+                          CXX_STANDARD 11
+                          FOLDER "Other"
+                          PROJECT_LABEL "Doxygen")
+   install(DIRECTORY ${PROJECT_BINARY_DIR}/outputs/docs/html DESTINATION share/doc/biogears/)
+endif()
