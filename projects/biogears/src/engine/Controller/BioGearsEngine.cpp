@@ -75,9 +75,22 @@ BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir)
   m_DataTrack = &m_EngineTrack.GetDataTrack();
 }
 //-------------------------------------------------------------------------------
+BioGearsEngine::BioGearsEngine(Logger* logger, const char* working_dir)
+  : BioGearsEngine(logger, std::string{working_dir})
+{}
+//-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const char* logFileName)
   : BioGearsEngine(std::string{ logFileName })
 {
+}
+//-------------------------------------------------------------------------------
+BioGearsEngine::BioGearsEngine(const std::string& logFileName)
+  : BioGears(logFileName)
+  , m_EngineTrack(*this)
+{
+  m_State = EngineState::NotReady;
+  m_EventHandler = nullptr;
+  m_DataTrack = &m_EngineTrack.GetDataTrack();
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string& working_dir)
@@ -85,15 +98,6 @@ BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string
   , m_EngineTrack(*this)
 {
   SetCurrentWorkingDirectory(working_dir);
-  m_State = EngineState::NotReady;
-  m_EventHandler = nullptr;
-  m_DataTrack = &m_EngineTrack.GetDataTrack();
-}
-//-------------------------------------------------------------------------------
-BioGearsEngine::BioGearsEngine(const std::string& logFileName)
-  : BioGears(logFileName)
-  , m_EngineTrack(*this)
-{
   m_State = EngineState::NotReady;
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();

@@ -37,11 +37,14 @@ class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
 public:
   //-------------------------------------------------------------------------------
   BioGearsEngine(Logger* logger);
-  BioGearsEngine(const char* logFileName);
+  
   BioGearsEngine(const std::string& logFileName);
+  BioGearsEngine(const char* logFileName);
   BioGearsEngine(Logger* logger, const std::string& working_dir);
-  BioGearsEngine(const char*, const char*);
+  BioGearsEngine(Logger* logger, const char* working_dir);
   BioGearsEngine(const std::string&, const std::string& working_dir);
+  BioGearsEngine(const char*, const char*);
+  
   virtual ~BioGearsEngine() override;
 
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
