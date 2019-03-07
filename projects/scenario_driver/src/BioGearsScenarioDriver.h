@@ -11,35 +11,34 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 
-#include <string>
 #include <set>
+#include <string>
 
-namespace ScenarioDriver
-{
-    enum class RunMode
-    {
-        Invalid,
-        Scenario,
-        Verification
-    };
+namespace ScenarioDriver {
+enum class RunMode {
+  Invalid,
+  Scenario,
+  Verification
+};
 }
 
-class BioGearsScenarioDriver
-{
+class BioGearsScenarioDriver {
 public:
-    BioGearsScenarioDriver() = default;
-    ~BioGearsScenarioDriver() = default;
+  BioGearsScenarioDriver() = default;
+  ~BioGearsScenarioDriver() = default;
 
-    bool Configure(int argc, char* argv[]);
-    void Run();
+  bool Configure(int argc, char* argv[]);
+  void Run();
 
 private:
-    void RunScenario();
-    void RunVerification();
+  void RunScenario();
+  void RunVerification();
 
-    bool HasArgument(const std::string& argument);
+  bool HasArgument(const std::string& argument);
 
-    std::string m_file;
-    std::set<std::string> m_arguments;
-    ScenarioDriver::RunMode m_mode = ScenarioDriver::RunMode::Invalid;
+  std::string m_filepath;
+  std::string m_dirname;
+  std::string m_filename;
+  std::set<std::string> m_arguments;
+  ScenarioDriver::RunMode m_mode = ScenarioDriver::RunMode::Invalid;
 };

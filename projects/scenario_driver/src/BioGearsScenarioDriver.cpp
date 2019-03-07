@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include "Verification.h"
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#include <biogears/cdm/utils/FileUtils.h>
 
 using namespace biogears;
 using namespace ScenarioDriver;
@@ -29,12 +29,13 @@ bool BioGearsScenarioDriver::Configure(int argc, char* argv[])
     std::string file(argv[1]);
     if (file.find(".xml") != std::string::npos)
     {
-        m_file = file;
+        m_filepath = file;
         m_mode = RunMode::Scenario;
+        
     }
     else if (file.find(".config") != std::string::npos)
     {
-        m_file = file;
+        m_filepath = file;
         m_mode = RunMode::Verification;
     }
     else
@@ -74,11 +75,11 @@ void BioGearsScenarioDriver::Run()
 void BioGearsScenarioDriver::RunScenario()
 {
 	// Set up the log file
-	std::string logFile = m_file;
+	std::string logFile = m_filepath;
 	logFile = Replace(logFile, "verification", "bin");
 	logFile = Replace(logFile, ".xml", ".log");
 	// Set up the verification output file	
-	std::string dataFile = m_file;
+	std::string dataFile = m_filepath;
 	dataFile = Replace(dataFile, "verification", "bin");
 	dataFile = Replace(dataFile, ".xml", "Results.csv");
 	// Delete any results file that may be there
@@ -92,7 +93,7 @@ void BioGearsScenarioDriver::RunScenario()
 	try
 	{
 		BioGearsScenarioExec exec(*bioGears);
-		exec.Execute(m_file.c_str(), dataFile.c_str(), nullptr);
+		exec.Execute(m_filepath.c_str(), dataFile.c_str(), nullptr);
 	}
 	catch (std::exception ex)
 	{
@@ -100,7 +101,7 @@ void BioGearsScenarioDriver::RunScenario()
 	}
 	catch (...)
 	{
-		std::cerr << "Unable to run scenario " << m_file << std::endl;
+		std::cerr << "Unable to run scenario " << m_filepath << std::endl;
 	}
 }
 
@@ -116,7 +117,7 @@ void BioGearsScenarioDriver::RunVerification()
         mode = Verification::RunMode::KnownFailing;
     }
 
-    Verification verifier(m_file, mode);
+    Verification verifier(m_filepath, mode);
     verifier.Verify();
 }
 
