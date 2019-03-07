@@ -45,7 +45,7 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
   std::ofstream file;
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
-  BioGears bg(m_Logger, std::string{"./"});
+  BioGears bg(m_Logger);
   Gastrointestinal& gi = (Gastrointestinal&)bg.GetGastrointestinal();
 
   bg.GetPatient().Load("./patients/StandardMale.xml");
@@ -346,7 +346,7 @@ void BioGearsEngineTest::AbsorptionTest(const std::string& rptDirectory, MealTyp
   std::ofstream file;
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
-  BioGears bg(m_Logger, std::string{"./"});
+  BioGears bg(m_Logger);
   Gastrointestinal& gi = (Gastrointestinal&)bg.GetGastrointestinal();
 
   bg.GetPatient().Load("./patients/StandardMale.xml");

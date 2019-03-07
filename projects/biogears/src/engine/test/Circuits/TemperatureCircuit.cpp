@@ -37,7 +37,7 @@ namespace biogears {
 //This test holds EnvironmentSkin and EnvironmentCore sources constant and varies BMR
 void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "/InternalTemperatureVariableBMRCircuitTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/InternalTemperatureVariableBMRCircuitTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -106,7 +106,7 @@ void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::st
 //This test holds BMR and EnvironmentCore sources constant and varies EnvironmentSkin
 void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "/InternalTemperatureVariableSkinCircuitTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/InternalTemperatureVariableSkinCircuitTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -190,7 +190,7 @@ void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::s
 //This test holds BMR and EnvironmentSkin sources constant and varies EnvironmentCore
 void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "/InternalTemperatureVariableCoreCircuitTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/InternalTemperatureVariableCoreCircuitTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -273,7 +273,7 @@ void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::s
 //This test uses a constant BMR in place of the Energy circuit and varies ambient temperature
 void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "/EnvironmentVariableTemperatureCircuitTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/EnvironmentVariableTemperatureCircuitTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -382,7 +382,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
 //This test uses both the Environment and Energy circuits, varying both BMR and ambient temp
 void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -509,7 +509,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
 //This test verifies that the Skin temperature drops when drastically lowering other values
 void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentSkinTempDropCircuitTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentSkinTempDropCircuitTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -599,7 +599,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
 //This test compares Environment circuit output to ISO data
 void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTestDirectory)
 {
-  BioGears bg(sTestDirectory + "/EnvironmentTemperatureInput.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/EnvironmentTemperatureInput.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);

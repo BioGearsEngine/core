@@ -123,7 +123,7 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(SETestSuite& testSuite, c
 {
   TimingProfile timer;
   timer.Start("TestCase");
-  BioGears bg(testSuite.GetLogger(), std::string{"./"} );
+  BioGears bg(testSuite.GetLogger() );
   testSuite.GetLogger()->Info("Running " + sTestName);
   CDM_COPY((&patient), (&bg.GetPatient()));
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
@@ -179,7 +179,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   double circuit_s = 0;
   double transport_s = 0;
   double binding_s = 0;
-  BioGears bg(sTestDirectory + "/" + tName.str() + "CircuitAndTransportTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/" + tName.str() + "CircuitAndTransportTest.log");
   bg.GetLogger()->Info("Running " + tName.str());
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();

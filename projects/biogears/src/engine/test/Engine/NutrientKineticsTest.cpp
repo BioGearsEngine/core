@@ -44,7 +44,7 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   std::ofstream file;
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
-  BioGears bg(m_Logger, std::string{"./"});
+  BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
   Hepatic& hptc = (Hepatic&)bg.GetHepatic();
   bg.GetPatient().Load("./patients/StandardMale.xml");

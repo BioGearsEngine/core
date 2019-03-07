@@ -38,7 +38,7 @@ void BioGearsEngineTest::RenalCircuitAndTransportTest(const std::string& sTestDi
   DataTrack graphTrk;
   std::ofstream graphFile;
 
-  BioGears bg(sTestDirectory + "/RenalCircuitAndTransportTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/RenalCircuitAndTransportTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
@@ -162,7 +162,7 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
 {
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "/RenalFeedbackTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/RenalFeedbackTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
@@ -464,7 +464,7 @@ void BioGearsEngineTest::RenalSystemTest(RenalSystems systemtest, const std::str
 
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "/RenalSystemTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/RenalSystemTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);

@@ -47,7 +47,7 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
   std::ofstream fileCircuit;
   std::ofstream fileGraph;
 
-  BioGears bg(sTestDirectory + "/AnesthesiaMachineCircuitAndTransportTest.log", std::string{"./"});
+  BioGears bg(sTestDirectory + "/AnesthesiaMachineCircuitAndTransportTest.log");
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
