@@ -41,6 +41,11 @@ std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string logfile
   return std::make_unique<BioGearsEngine>(logfile);
 }
 //-------------------------------------------------------------------------------
+std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const char* logfile)
+{
+  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile));
+}
+//-------------------------------------------------------------------------------
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 {
   return std::make_unique<BioGearsEngine>(logger);
@@ -51,7 +56,17 @@ std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::stri
   return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile, working_dir));
 }
 //-------------------------------------------------------------------------------
+std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, const char* logfile)
+{
+  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logfile, working_dir));
+}
+//-------------------------------------------------------------------------------
 std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, biogears::Logger* logger)
+{
+  return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger, working_dir));
+}
+//-------------------------------------------------------------------------------
+std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, biogears::Logger* logger)
 {
   return std::unique_ptr<BioGearsEngine>(new BioGearsEngine(logger, working_dir));
 }
@@ -76,12 +91,14 @@ BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir)
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger, const char* working_dir)
-  : BioGearsEngine(logger, std::string{working_dir})
-{}
+  : BioGearsEngine(logger, std::string{ working_dir })
+{
+}
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const char* logFileName)
   : BioGearsEngine(std::string{ logFileName })
-{}
+{
+}
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const std::string& logFileName)
   : BioGears(logFileName)
@@ -132,7 +149,7 @@ bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
-  std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(file, GetLogger());
+  std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(GetCurrentWorkingDirectory() + file, GetLogger());
   CDM::BioGearsStateData* state = dynamic_cast<CDM::BioGearsStateData*>(bind.get());
   if (state != nullptr)
     return LoadState(*state, simTime);
@@ -861,5 +878,4 @@ Tree<const char*> BioGearsEngine::GetDataRequestGraph() const
     .emplace_back(GetRespiratory().GetPhysiologyRequestGraph())
     .emplace_back(GetTissue().GetPhysiologyRequestGraph());
 }
-
 }
