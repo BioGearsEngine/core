@@ -33,9 +33,9 @@ void HowToAsthma()
 {
   // Create the engine and load the patient
 	Logger logger( "HowToAsthma.log");
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine( "C:/Users/sawhite/Desktop/log_testing/runtime/", &logger);
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine(&logger);
   bg->GetLogger()->Info("HowToAsthmaAttack");
-	if (!bg->LoadState( GetCurrentWorkingDirectory() + "states/StandardMale@0s.xml"))
+	if (!bg->LoadState("states/StandardMale@0s.xml"))
   {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
