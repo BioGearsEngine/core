@@ -12,9 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/FileUtils.h>
 
-#include <regex>
-#include <dirent.h>
 #include <cstdio>
+#include <dirent.h>
+#include <regex>
 
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
 
@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 #define RMDIR(x) _rmdir(x)
 #else
 
-
 #define MAXPATH PATH_MAX
 #define GETCWD getcwd
 #define MKDIR(x) mkdir(x, 0755)
@@ -33,7 +32,6 @@ specific language governing permissions and limitations under the License.
 #endif
 
 namespace biogears {
-
 
 std::string g_working_dir = "";
 
@@ -105,11 +103,12 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
       filename += ent->d_name;
 
       if (!IsDirectory(ent)) {
-        if ( std::regex_search(filename,mask) )
+        if (std::regex_search(filename, mask))
           files.push_back(filename);
       } else {
-        if(recurse)
-        {  ListFiles(filename, files, regex , recurse);  }
+        if (recurse) {
+          ListFiles(filename, files, regex, recurse);
+        }
       }
     }
   }
@@ -152,7 +151,12 @@ void DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories)
   RMDIR(dir.c_str());
 }
 
-void  SetCurrentWorkingDirectory( std::string working_dir )
+void SetCurrentWorkingDirectory(std::string working_dir)
+{
+  g_working_dir = working_dir;
+}
+
+void SetCurrentWorkingDirectory(const char* working_dir)
 {
   g_working_dir = working_dir;
 }

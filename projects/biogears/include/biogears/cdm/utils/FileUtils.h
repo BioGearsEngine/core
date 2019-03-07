@@ -45,7 +45,8 @@ void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& fi
 std::vector<std::string> BIOGEARS_API ListFiles(const std::string& dir, const std::string&regex, bool recurse = true);
 
   
-void  SetCurrentWorkingDirectory( std::string working_dir );
+void  BIOGEARS_API SetCurrentWorkingDirectory( std::string working_dir );
+  void  BIOGEARS_API SetCurrentWorkingDirectory( const char* working_dir );
 std::string BIOGEARS_API GetCurrentWorkingDirectory();
 void BIOGEARS_API DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories = true);
 void BIOGEARS_API MakeDirectory(const std::string& dir);

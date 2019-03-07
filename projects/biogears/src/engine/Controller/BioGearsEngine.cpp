@@ -81,8 +81,7 @@ BioGearsEngine::BioGearsEngine(Logger* logger, const char* working_dir)
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const char* logFileName)
   : BioGearsEngine(std::string{ logFileName })
-{
-}
+{}
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const std::string& logFileName)
   : BioGears(logFileName)
@@ -481,7 +480,7 @@ bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std:
 {
   std::string pFile = patientFile;
   if (pFile.find("patients/") == std::string::npos) { // Prepend the patient directory if it's not there
-    pFile = "./patients/";
+    pFile = GetCurrentWorkingDirectory() + "patients/";
     pFile += patientFile;
   }
   if (!m_Patient->Load(pFile))

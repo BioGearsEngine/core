@@ -77,12 +77,12 @@ class BIOGEARS_API Logger {
   friend Loggable;
 
 public:
-  Logger(const std::string& logFilename = Loggable::empty, const std::string& working_dir = "./");
+  Logger(const std::string& logFilename = Loggable::empty, const std::string& working_dir = "");
   virtual ~Logger();
 
   void LogToConsole(bool log_to_console);
 
-  void ResetLogFile(const std::string& logFilename = Loggable::empty, const std::string& working_dir = "./");
+  void ResetLogFile(const std::string& logFilename = Loggable::empty, const std::string& working_dir = "");
 
   void SetLogLevel(log4cpp::Priority::Value priority);
   log4cpp::Priority::Value GetLogLevel();
