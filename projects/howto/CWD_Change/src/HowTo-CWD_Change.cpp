@@ -34,7 +34,7 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 void HowToCWD_Change() 
 {
-  using_direct_control();
+  //using_direct_control();
   using_scenario_exec();
 }
 
@@ -131,8 +131,8 @@ void using_scenario_exec()
 constexpr const char* working_dir_path = "C:/biogears/runtime/" ;
 
 constexpr const char* log_file     = "HowTo_CWD_Change.log";
-constexpr const char* scenario_file = "Showcase/AsthmaAttack.xml";
-constexpr const char* results_file = "Showcase/AsthmaAttack.csv";
+constexpr const char* scenario_file = "Scenarios/Showcase/AsthmaAttack.xml";
+constexpr const char* results_file = "Scenarios/Showcase/AsthmaAttack.csv";
 
 	//NOTE: If your passing a log_file with a working_dir the logfile should be relative to the working dir
 

@@ -49,7 +49,7 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     m_Cancel = false;
     m_CustomExec = cExec;
 
-    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(scenarioFile, GetLogger());
+    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(GetCurrentWorkingDirectory() + scenarioFile, GetLogger());
     if (bind == nullptr) {
       m_ss << "Unable to load scenario file : " << scenarioFile << std::endl;
       Error(m_ss);
@@ -63,7 +63,7 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     }
     BioGearsScenario scenario(m_Engine.GetSubstanceManager());
     scenario.Load(*sceData);
-    std::string rFile = resultsFile;
+    std::string rFile = GetCurrentWorkingDirectory() + resultsFile;
     if (rFile.empty()) {
       rFile = scenarioFile;
       rFile += ".csv";
