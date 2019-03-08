@@ -65,7 +65,7 @@ int main(int argc, char** argv)
   }
   biogears::Driver driver{ thread_count };
 
-  const biogears::Config conf{ "Email.config" };
+  const biogears::Config conf{ "Email.config", true };
   driver.configure(conf);
 
   if (args.Option("GENSTATES")) {

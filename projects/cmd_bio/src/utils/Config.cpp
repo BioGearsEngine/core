@@ -47,7 +47,7 @@ Config::Config()
 {
 }
 //-----------------------------------------------------------------------------
-Config::Config(const std::string& file)
+Config::Config(const std::string& file, bool silent)
   : _email_subject("BioGears Notification Email")
   , _current_group("Other")
   , _send_email(true)
@@ -56,7 +56,7 @@ Config::Config(const std::string& file)
   , _percent_difference(2.)
   , _threads(-1)
 {
-  load(file);
+  load(file, silent);
 }
 //-----------------------------------------------------------------------------
 bool Config::send_email() const
@@ -90,7 +90,7 @@ Config& Config::email_smtp_server(std::string cs) &&
   _email_smtp_server = std::move(cs);
   return *this;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 std::string Config::email_smtp_user() const
 {
   return _email_smtp_user;
@@ -250,9 +250,9 @@ Config& Config::current_group(std::string cs) &&
   _current_group = std::move(cs);
   return *this;
 }
-  //-----------------------------------------------------------------------------
-void Config::copy_globals( const Config& conf)
-{ 
+//-----------------------------------------------------------------------------
+void Config::copy_globals(const Config& conf)
+{
   send_email(conf.send_email());
   email_smtp_server(conf.email_smtp_server());
   email_smtp_user(conf.email_smtp_user());
@@ -312,7 +312,7 @@ auto Config::back() const -> const_reference
   return _execs.back();
 }
 //-----------------------------------------------------------------------------
-bool Config::load(std::string filepath)
+bool Config::load(std::string filepath, bool silent)
 {
   Tokenizer tokens;
   std::ifstream ifs(filepath);
@@ -320,7 +320,9 @@ bool Config::load(std::string filepath)
     int count = 1;
     return process(std::move(tokens));
   } else {
-    std::cerr << "Unable to Load " << filepath << "!!!\n";
+    if (!silent) {
+      std::cerr << "Unable to Load " << filepath << "!!!\n";
+    }
     return false;
   }
   return true;

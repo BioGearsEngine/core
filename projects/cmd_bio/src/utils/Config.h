@@ -24,7 +24,7 @@ class Config {
 
 public:
   Config();
-  Config(const std::string& file);
+  Config(const std::string& file, bool silent = false);
   Config(const Config&) = default;
   Config(Config&&) = default;
   ~Config() = default;
@@ -32,7 +32,7 @@ public:
   Config& operator=(const Config&) = default;
   Config& operator=(Config&&) = default;
 
-  bool load(std::string filepath);
+  bool load(std::string filepath, bool silent = false);
   void clear();
 
   bool send_email() const;
