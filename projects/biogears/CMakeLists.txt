@@ -50,7 +50,7 @@ message(STATUS "")
 message(STATUS "Configuring ${PROJECT_NAME}")
 
 #Biogears CDM
-add_source_files(PUBLIC_CDM_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/cdm "*.h"  "Headers\\Public\\")
+add_source_files(PUBLIC_CDM_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libCDM "*.h"  "Headers\\Public\\")
 add_source_files(GEN_CDM_HDRS ${CMAKE_CURRENT_BINARY_DIR}/biogears "*.hxx"  "Headers\\Public\\")
 add_source_files(GEN_CDM_SRCS ${CMAKE_CURRENT_BINARY_DIR}/biogears "*.cxx" "Sources\\")
 #Biogears Core
@@ -166,9 +166,9 @@ else()
   target_compile_options(lib${PROJECT_NAME}_cdm PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
   
   target_include_directories(lib${PROJECT_NAME}_cdm 
-      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cdm/include
+      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/libCDM/include
       INTERFACE 
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cdm/include>
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libCDM/include>
                 $<INSTALL_INTERFACE:include>
   )
   
@@ -361,7 +361,7 @@ endif() #NOT ${PREFIX}_BUILD_STATIC
  
 install(DIRECTORY 
     include/biogears
-    cdm/include/biogears
+    libCDM/include/biogears
     jni/include/biogears
     libCircuitTest/include/biogears
 	  ${CMAKE_CURRENT_BINARY_DIR}/biogears
