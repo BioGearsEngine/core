@@ -17,8 +17,8 @@ option (${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS       "Toggle on the Circuit Te
 set(PROJECT_NAME biogears)
 set(PREFIX bio)
 
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
+set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/include" )
+set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src" )
 set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
@@ -54,11 +54,11 @@ add_source_files(PUBLIC_CDM_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libCDM "*.h"  "Head
 add_source_files(GEN_CDM_HDRS ${CMAKE_CURRENT_BINARY_DIR}/biogears "*.hxx"  "Headers\\Public\\")
 add_source_files(GEN_CDM_SRCS ${CMAKE_CURRENT_BINARY_DIR}/biogears "*.cxx" "Sources\\")
 #Biogears Core
-add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.h"   "Headers\\Private\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
+add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src "*.h"   "Headers\\Private\\")
+add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src "*.cpp" "Sources\\")
 
-add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.h"  "Headers\\Public\\")
-add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.inl"  "Headers\\Public\\")
+add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/include "*.h"  "Headers\\Public\\")
+add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/include "*.inl"  "Headers\\Public\\")
 #Biogears circuit_test
 add_source_files(PUBLIC_CIRCUIT_TEST_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/include "*.h"  "Headers\\Public\\")
 add_source_files(CIRCUIT_TEST_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/src "*cpp" "Sources\\")
@@ -221,7 +221,7 @@ else()
   target_include_directories(lib${PROJECT_NAME} 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} 
       INTERFACE 
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                $<BUILD_INTERFACE:${${PREFIX}_INCLUDE_DIR}>
 				$<BUILD_INTERFACE:${${PREFIX}_GENERATED_INCLUDE_DIR}>
                 $<INSTALL_INTERFACE:include>
   )
@@ -360,7 +360,7 @@ else()
 endif() #NOT ${PREFIX}_BUILD_STATIC
  
 install(DIRECTORY 
-    include/biogears
+    libBiogears/include/biogears
     libCDM/include/biogears
     libJNI/include/biogears
     libCircuitTest/include/biogears
