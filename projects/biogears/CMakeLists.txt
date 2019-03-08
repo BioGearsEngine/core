@@ -63,8 +63,8 @@ add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.inl"  "Heade
 add_source_files(PUBLIC_CIRCUIT_TEST_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/include "*.h"  "Headers\\Public\\")
 add_source_files(CIRCUIT_TEST_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/src "*cpp" "Sources\\")
 #Biogears JNI
-add_source_files(PUBLIC_JNI_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/jni/include "*.h"  "Headers\\Public\\")
-add_source_files(JNI_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/jni/src "*cpp" "Sources\\")
+add_source_files(PUBLIC_JNI_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libJNI/include "*.h"  "Headers\\Public\\")
+add_source_files(JNI_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libJNI/src "*cpp" "Sources\\")
 
 set(LIB${PREFIX}_CDM_HEADERS ${CDM_HDRS} ${PUBLIC_CDM_HDRS} ${GEN_CDM_HDRS})
 set(LIB${PREFIX}_CDM_SOURCES ${CDM_SRCS} ${GEN_CDM_SRCS})
@@ -311,10 +311,10 @@ else()
   target_compile_options(lib${PROJECT_NAME}_jni PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
   
   target_include_directories(lib${PROJECT_NAME}_jni 
-      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/jni/include
+      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/libJNI/include
 	    PUBLIC   ${JNI_INCLUDE_DIRS}
       INTERFACE 
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/jni/include>
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libJNI/include>
                 $<INSTALL_INTERFACE:include>
   )
   
@@ -362,7 +362,7 @@ endif() #NOT ${PREFIX}_BUILD_STATIC
 install(DIRECTORY 
     include/biogears
     libCDM/include/biogears
-    jni/include/biogears
+    libJNI/include/biogears
     libCircuitTest/include/biogears
 	  ${CMAKE_CURRENT_BINARY_DIR}/biogears
     DESTINATION include/
