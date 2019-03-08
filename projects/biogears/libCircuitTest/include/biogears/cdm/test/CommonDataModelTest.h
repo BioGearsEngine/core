@@ -2,6 +2,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
+
+#include <biogears/circuit_test_exports.h>
 // #include <biogears/schema/biogears-cdm.hxx>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
@@ -23,14 +25,14 @@ enum enumCDMTestSourceType { DC,
   PULSE,
   ZEROCENTEREDSIN };
 
-class BIOGEARS_API CommonDataModelTest : public Loggable {
+class BIOGEARS_CIRCUIT_TEST_API CommonDataModelTest : public Loggable {
 public:
   CommonDataModelTest();
   CommonDataModelTest(Logger* logger);
   virtual ~CommonDataModelTest();
 
   bool RunTest(const std::string& testName,
-  const std::string& sOutputDirectory);
+    const std::string& sOutputDirectory);
   void FillFunctionMap();
 
 protected:

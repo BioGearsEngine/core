@@ -1,3 +1,8 @@
+if(NOT Biogears_BUILD_CIRCUIT_TESTS)
+  message(FATAL_ERROR "FATAL_ERROR: Java Tools require circuit_tests to be built")
+
+endif()
+
 cmake_policy(SET CMP0070 NEW)
 include(UseJava)
 

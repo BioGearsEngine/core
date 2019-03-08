@@ -95,6 +95,7 @@ set(${PREFIX}_LIBS
       ${CMAKE_DL_LIBS}
       Biogears::libbiogears_cdm
       Biogears::libbiogears
+      Biogears::libbiogears_circuit_test
 )
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )

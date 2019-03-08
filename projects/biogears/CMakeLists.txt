@@ -9,6 +9,7 @@
 option (${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when a ReadOnly SEScalar is Modified." ON)
 option (${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
 option (${ROOT_PROJECT_NAME}_USE_OVERRIDE_CONTROL       "When enabled Biogears will control the ranges of override"  OFF)
+option (${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS       "Toggle on the Circuit Test Library which is a dependeny of libbiogears_jni"  ON)
 
 ###############################################################################
 # Base Variables
@@ -58,6 +59,9 @@ add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
 
 add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.h"  "Headers\\Public\\")
 add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.inl"  "Headers\\Public\\")
+#Biogears circuit_test
+add_source_files(PUBLIC_CIRCUIT_TEST_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/include "*.h"  "Headers\\Public\\")
+add_source_files(CIRCUIT_TEST_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/src "*cpp" "Sources\\")
 #Biogears JNI
 add_source_files(PUBLIC_JNI_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/jni/include "*.h"  "Headers\\Public\\")
 add_source_files(JNI_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/jni/src "*cpp" "Sources\\")
@@ -67,6 +71,9 @@ set(LIB${PREFIX}_CDM_SOURCES ${CDM_SRCS} ${GEN_CDM_SRCS})
 
 set(LIB${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
 set(LIB${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
+
+set(LIB${PREFIX}_CIRCUIT_TEST_HEADERS ${CIRCUIT_TEST_HDRS} ${PUBLIC_CIRCUIT_TEST_HDRS} ${GEN_CIRCUIT_TEST_HDRS})
+set(LIB${PREFIX}_CIRCUIT_TEST_SOURCES ${CIRCUIT_TEST_SRCS} ${GEN_CIRCUIT_TEST_SRCS})
 
 set(LIB${PREFIX}_JNI_HEADERS ${JNI_HDRS} ${PUBLIC_JNI_HDRS} ${GEN_JNI_HDRS})
 set(LIB${PREFIX}_JNI_SOURCES ${JNI_SRCS} ${GEN_JNI_SRCS})
@@ -232,11 +239,57 @@ else()
       LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
       ARCHIVE DESTINATION lib
    )
+  ###############################################################################
+  # libBiogears_circuit_test
+  ###############################################################################
+  if( ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
+     add_library(lib${PROJECT_NAME}_circuit_test  SHARED ${LIB${PREFIX}_CIRCUIT_TEST_SOURCES} ${LIB${PREFIX}_CIRCUIT_TEST_HEADERS})
+     add_library(Biogears::lib${PROJECT_NAME}_circuit_test ALIAS lib${PROJECT_NAME}_circuit_test)
+       set_target_properties(lib${PROJECT_NAME}_circuit_test
+       PROPERTIES
+       DEFINE_SYMBOL ${PROJECT_NAME}_CIRCUIT_TEST_EXPORTS
+       FOLDER "Libraries"
+       OUTPUT_NAME "${PROJECT_NAME}_circuit_test"
+       COMPILE_PDB_NAME "${PROJECT_NAME}_circuit_test"
+       PROJECT_LABEL "lib${PROJECT_NAME}_circuit_test"
+       DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+       CXX_STANDARD 14
+       )
+  ###############################################################################
+  # libBiogears_circuit_test COMPILATION & LINKAGE MODIFICATIONS
+  ###############################################################################
+  set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX > )
+  target_compile_definitions(lib${PROJECT_NAME}_circuit_test  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE})
+  target_compile_definitions(lib${PROJECT_NAME}_circuit_test  PRIVATE ${${PREFIX}_CPPFLAGS} )
+  target_compile_options(lib${PROJECT_NAME}_circuit_test PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
+  
+  target_include_directories(lib${PROJECT_NAME}_circuit_test 
+      PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/include
+      PUBLIC   ${CIRCUIT_TEST_INCLUDE_DIRS}
+      INTERFACE 
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/include>
+                $<INSTALL_INTERFACE:include>
+  )
 
+  set(${PREFIX}_CIRCUIT_TEST_LIBS
+            CodeSynthesis::XSD
+            Eigen3::Eigen
+            Biogears::lib${PROJECT_NAME}
+  )
+  message(STATUS "${PREFIX}_circuit_test_LIBS=${${PREFIX}_circuit_test_LIBS}")
+    target_link_libraries(lib${PROJECT_NAME}_circuit_test  PUBLIC ${${PREFIX}_CIRCUIT_TEST_LIBS} )
+
+
+     install(TARGETS lib${PROJECT_NAME}_circuit_test EXPORT libBiogears
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+         ARCHIVE DESTINATION lib
+      )
+   endif()
   ###############################################################################
   # libBiogears_jni
   ###############################################################################
-  if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
+  if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS AND ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
      add_library(lib${PROJECT_NAME}_jni  SHARED ${LIB${PREFIX}_JNI_SOURCES} ${LIB${PREFIX}_JNI_HEADERS})
      add_library(Biogears::lib${PROJECT_NAME}_jni ALIAS lib${PROJECT_NAME}_jni)
   	   set_target_properties(lib${PROJECT_NAME}_jni
@@ -268,7 +321,7 @@ else()
   set(${PREFIX}_jni_LIBS
             CodeSynthesis::XSD
             Eigen3::Eigen
-            Biogears::lib${PROJECT_NAME}
+            Biogears::lib${PROJECT_NAME}_circuit_test
   )
 	message(STATUS "${PREFIX}_jni_LIBS=${${PREFIX}_jni_LIBS}")
     target_link_libraries(lib${PROJECT_NAME}_jni  PUBLIC ${${PREFIX}_jni_LIBS} )
@@ -280,10 +333,12 @@ else()
          ARCHIVE DESTINATION lib
       )
    endif()
-endif()
+endif() #${PREFIX}_BUILD_STATIC
 
 
-
+######################################################################################################
+# INSTALL LOGIC
+######################################################################################################
  install(TARGETS lib${PROJECT_NAME} EXPORT libBiogears
      RUNTIME DESTINATION bin
      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
@@ -302,13 +357,13 @@ else()
           install(FILES "${CMAKE_PDB_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER}}/*.pdb" DESTINATION lib CONFIGURATIONS ${OUTPUTCONFIG} OPTIONAL)
       endforeach(OUTPUTCONFIG)
    endif()
-endif()
+endif() #NOT ${PREFIX}_BUILD_STATIC
  
 install(DIRECTORY 
     include/biogears
     cdm/include/biogears
     jni/include/biogears
-    #string/include/biogears
+    libCircuitTest/include/biogears
 	  ${CMAKE_CURRENT_BINARY_DIR}/biogears
     DESTINATION include/
     FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ

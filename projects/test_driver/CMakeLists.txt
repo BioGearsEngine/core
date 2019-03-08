@@ -98,6 +98,7 @@ set(${PREFIX}_LIBS
       ${CMAKE_DL_LIBS}
       Biogears::libbiogears_cdm
       Biogears::libbiogears
+      Biogears::libbiogears_circuit_test
 )
 #if(WIN32)
 #  list(APPEND ${PREFIX}_LIBS libbiogears_string)

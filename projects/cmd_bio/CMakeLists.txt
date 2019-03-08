@@ -97,7 +97,13 @@ set(${PREFIX}_LIBS
       ${CMAKE_DL_LIBS}
       Biogears::libbiogears_cdm
       Biogears::libbiogears
+	  Biogears::libbiogears_circuit_test
+
 )
+if( ${ROOT_PROJECT}_BUILD_CIRCUIT_TEST )
+  list(APPEND ${PREFIX}_LIBS Biogears::libbiogears_test_circuit)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE CMD_BIO_SUPPORT_CIRCUIT_TEST} )
+endif()
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )
  

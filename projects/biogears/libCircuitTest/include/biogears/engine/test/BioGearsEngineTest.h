@@ -11,15 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // The following tests will be exported and runnable
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <math.h>
 
+#include <biogears/circuit_test_exports.h>
+
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace biogears {
 class SETestSuite;
 class HowToTracker;
 
-class BIOGEARS_API BioGearsEngineTest : Loggable {
+class BIOGEARS_CIRCUIT_TEST_API BioGearsEngineTest : Loggable {
 public:
   BioGearsEngineTest();
   BioGearsEngineTest(Logger* logger);
