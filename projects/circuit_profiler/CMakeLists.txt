@@ -6,7 +6,11 @@ cmake_policy(VERSION 3.8.0)
 ###############################################################################
 # Options
 ###############################################################################
-
+option(${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_PROFILER "Toggle building of circuit_profiler" ON)
+if(${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_PROFILER)
+if(NOT ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
+  message(FATAL_ERROR "Fatal Error: circuit_profiler requires BUILD_CIRCUIT_TESTS enabled to continue")
+endif()
 ###############################################################################
 # Base Variables
 ###############################################################################
@@ -115,3 +119,4 @@ endif()
   )
 
 message(STATUS "")
+endif()

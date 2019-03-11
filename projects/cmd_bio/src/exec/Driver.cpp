@@ -3,12 +3,14 @@
 #include <iostream>
 
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
+#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
 #include <biogears/engine/test/BioGearsEngineTest.h>
+#include <biogears/cdm/test/CommonDataModelTest.h>
+#endif
 
 #include "../utils/string-helpers.h"
 
@@ -86,6 +88,7 @@ void Driver::join()
 //-----------------------------------------------------------------------------
 void Driver::queue_BGEUnitTest(const Executor& exec)
 {
+#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
   _pool.queue_work(
     [=]() {
       BioGearsEngineTest* executor;
@@ -99,11 +102,13 @@ void Driver::queue_BGEUnitTest(const Executor& exec)
       delete executor;
       return 0;
     });
+#endif
 }
 
 //-----------------------------------------------------------------------------
 void Driver::queue_CDMUnitTest(const Executor& exec)
 {
+#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
   _pool.queue_work(
     [&]() {
       CommonDataModelTest* executor;
@@ -117,6 +122,7 @@ void Driver::queue_CDMUnitTest(const Executor& exec)
       delete executor;
       return 0;
     });
+#endif
 }
 //-----------------------------------------------------------------------------
 void Driver::queue_Scenario(const Executor& exec)

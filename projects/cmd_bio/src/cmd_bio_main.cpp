@@ -95,7 +95,7 @@ int main(int argc, char** argv)
     run_system_validation = true;
     run_verification = true;
   }
-
+#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
   if (args.MultiWordFound("TEST")) {
     auto tests = args.MultiWord("TEST");
     for (auto& test : tests) {
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
       }
     }
   }
-
+#endif
   if (args.MultiWordFound("VALIDATE")) {
     auto tests = args.MultiWord("VALIDATE");
     for (auto& test : tests) {
