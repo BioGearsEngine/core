@@ -34,13 +34,13 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 void HowToCWD_Change() 
 {
-  //using_direct_control();
+  using_direct_control();
   using_scenario_exec();
 }
 
 void using_direct_control()
 {
-  constexpr const char* logfile_path = "C:/biogears/log/HowTo_CWD_Change.log";
+  constexpr const char* logfile_path = "C:/biogears/direct_control/HowTo_CWD_Change.log";
   constexpr const char* working_dir_path = "C:/biogears/runtime/" ;
 
   //NOTE: Absolute Path to logger independent of any working path later passed to BioGearsEngine
@@ -130,7 +130,7 @@ void using_scenario_exec()
 
 constexpr const char* working_dir_path = "C:/biogears/runtime/" ;
 
-constexpr const char* log_file     = "HowTo_CWD_Change.log";
+constexpr const char* log_file     = "scenario_exec/HowTo_CWD_Change.log";
 constexpr const char* scenario_file = "Scenarios/Showcase/AsthmaAttack.xml";
 constexpr const char* results_file = "Scenarios/Showcase/AsthmaAttack.csv";
 
