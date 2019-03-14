@@ -17,7 +17,7 @@ namespace biogears {
 SEDataRequestManager::SEDataRequestManager(Logger* logger)
   : Loggable(logger)
   , m_SamplesPerSecond(1.0)
-  , m_ResultsFile("Biogears.csv")
+  , m_ResultsFile("")
  
 {
   m_DefaultDecimalFormatting = nullptr;
