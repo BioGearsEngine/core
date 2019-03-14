@@ -143,7 +143,7 @@
     </Action>
     <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
         <Substance>Fentanyl</Substance>
-        <Concentration value="10" unit="ug/mL"/>
+        <Concentration value="70" unit="ug/mL"/>
         <Dose value="10" unit="mL"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
