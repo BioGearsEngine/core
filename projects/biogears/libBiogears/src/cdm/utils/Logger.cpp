@@ -24,9 +24,16 @@ governing permissions and limitations under the License.
 
 namespace biogears {
 const std::string Loggable::empty("");
-
+const char* Loggable::empty_cStr("");
 // logger constructor
 Logger::Logger(const std::string& logFilename, const std::string& working_dir)
+  : m_Forward(nullptr)
+  , m_time(nullptr)
+{
+  ResetLogFile(logFilename, working_dir);
+}
+
+Logger::Logger(const char* logFilename, const char* working_dir)
   : m_Forward(nullptr)
   , m_time(nullptr)
 {
@@ -78,6 +85,12 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
   LogToConsole(true);
 }
 
+void Logger::ResetLogFile(const char* logFilename, const char* working_dir)
+{
+  const std::string logFileName_str{ logFilename };
+  const std::string working_dir_str{ working_dir };
+  ResetLogFile(logFileName_str, working_dir_str);
+}
 Logger::~Logger() {}
 
 void Logger::SetLogTime(const SEScalarTime* time) { m_time = time; }

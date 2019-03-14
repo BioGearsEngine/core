@@ -27,6 +27,7 @@ class SEScalarTime;
 class BIOGEARS_API Loggable {
 public:
   static const std::string empty;
+  static const char* empty_cStr;
 
   Loggable();
   Loggable(Logger* log);
@@ -77,12 +78,14 @@ class BIOGEARS_API Logger {
   friend Loggable;
 
 public:
-  Logger(const std::string& logFilename = Loggable::empty, const std::string& working_dir = "");
+  Logger(const std::string& logFilename = Loggable::empty, const std::string& working_dir = Loggable::empty);
+  Logger(const char* logFilename, const char* working_dir = Loggable::empty_cStr);
   virtual ~Logger();
 
   void LogToConsole(bool log_to_console);
 
-  void ResetLogFile(const std::string& logFilename = Loggable::empty, const std::string& working_dir = "");
+  void ResetLogFile(const std::string& logFilename = Loggable::empty, const std::string& working_dir = Loggable::empty);
+  void ResetLogFile(const char* logFilename , const char* working_dir = Loggable::empty_cStr);
 
   void SetLogLevel(log4cpp::Priority::Value priority);
   log4cpp::Priority::Value GetLogLevel();
