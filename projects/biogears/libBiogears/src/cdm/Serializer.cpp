@@ -82,8 +82,7 @@ bool Serializer::Initialize(Logger* logger)
   xercesc::XMLPlatformUtils::Initialize();
   m_GrammerPool.reset(new XMLGrammarPoolImpl());
 
-  std::string workingDirectory = GetCurrentWorkingDirectory();
-  std::string shortDir = workingDirectory + "xsd/BioGearsDataModel.xsd";
+  std::string shortDir = ResolveAbsolutePath("xsd/BioGearsDataModel.xsd");
 
   ErrorHandler eh;
   DOMLSParser* parser(CreateParser(logger));
@@ -185,7 +184,9 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   std::stringstream err;
   std::unique_ptr<DOMLSParser> parser(m_me->CreateParser(logger));
   parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
-  std::unique_ptr<xercesc::DOMDocument> doc(parser->parseURI(xmlFile.c_str()));
+
+  const std::string resolved_xmlFile = ResolveAbsolutePath(xmlFile);
+  std::unique_ptr<xercesc::DOMDocument> doc(parser->parseURI( resolved_xmlFile.c_str()));
   if (eh.failed() || doc == nullptr) {
     // TODO Append parse error
     /// \error Error reading xml file
