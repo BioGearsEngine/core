@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include "../../../../../howto/common-source/HowTo-ThreadedBioGears.h"
+#include <biogears/cdm/utils/FileUtils.h>
 
 namespace biogears {
 SEEnvironmentalConditions::SEEnvironmentalConditions(SESubstanceManager& substances)
@@ -264,7 +264,7 @@ bool SEEnvironmentalConditions::Load(const std::string& given)
   std::unique_ptr<CDM::ObjectData> data;
 
   std::string filepath = given;
-  if (!IsAbsolutePath(given) && TestFirstDirName(given,"environments")) {
+  if (!IsAbsolutePath(given) && !TestFirstDirName(given,"environments")) {
     filepath = "environments/";
     filepath += given;
   }

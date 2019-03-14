@@ -32,7 +32,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Equipment/ECG.h>
-#include "biogears/cdm/utils/NullLogger.h"
+#include <biogears/filesystem/path.h>
+
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -472,9 +473,10 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
   state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
 
   if (!file.empty()) {
-    CreateFilePath(file);
+    std::string qulaified_path = ResolveAbsolutePath(file);
+    CreateFilePath(qulaified_path);
     // Write out the engine state
-    std::ofstream stream(file);
+    std::ofstream stream(qulaified_path);
     // Write out the xml file
     xml_schema::namespace_infomap map;
     map[""].name = "uri:/mil/tatrc/physiology/datamodel";
@@ -496,11 +498,11 @@ bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
-  std::string pFile = patientFile;
-  if (pFile.find("patients/") == std::string::npos) { // Prepend the patient directory if it's not there
+  filesystem::path pFile = patientFile;
+  if (!IsAbsolutePath(patientFile) && !TestFirstDirName(patientFile,"patients")) { // Prepend the patient directory if it's not there
     pFile = "patients/"+patientFile;
   }
-  if (!m_Patient->Load(pFile))
+  if (!m_Patient->Load(pFile.string()))
     return false;
   return InitializeEngine(conditions, config);
 }
@@ -650,7 +652,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       pftFile = Replace(pftFile, "Results", m_ss.str());
       pftFile = Replace(pftFile, ".csv", ".xml");
       m_ss << "PulmonaryFunctionTest@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(pftFile);
+      std::ofstream stream(ResolveAbsolutePath(pftFile));
       m_ss.str("");
       m_ss.clear();
       // Write out the xml file
@@ -674,7 +676,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       upanFile = Replace(upanFile, "Results", m_ss.str());
       upanFile = Replace(upanFile, ".csv", ".xml");
       m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(upanFile);
+      std::ofstream stream(ResolveAbsolutePath(upanFile));
       m_ss.str("");
       m_ss.clear();
       // Write out the xml file
@@ -697,7 +699,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       cbcFile = Replace(cbcFile, "Results", m_ss.str());
       cbcFile = Replace(cbcFile, ".csv", ".xml");
       m_ss << "CompleteBloodCount@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(cbcFile);
+      std::ofstream stream(ResolveAbsolutePath(cbcFile));
       m_ss.str("");
       m_ss.clear();
       // Write out the xml file
@@ -720,7 +722,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       mpFile = Replace(mpFile, "Results", m_ss.str());
       mpFile = Replace(mpFile, ".csv", ".xml");
       m_ss << "ComprehensiveMetabolicPanel@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(mpFile);
+      std::ofstream stream(ResolveAbsolutePath(mpFile));
       m_ss.str("");
       m_ss.clear();
       // Write out the xml file

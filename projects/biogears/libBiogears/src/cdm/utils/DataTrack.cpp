@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/utils/FileUtils.h>
 
 namespace biogears {
 DataTrack::DataTrack()
@@ -616,7 +617,7 @@ std::vector<std::string> DataTrack::StreamDataFromFile(const char* fileName)
 {
   Reset();
   std::string line;
-  m_FileStream.open(fileName);
+  m_FileStream.open(ResolveAbsolutePath(fileName));
   // Grab the headings from the first line
   std::getline(m_FileStream, line);
   std::size_t pos = 0;
@@ -657,11 +658,8 @@ double DataTrack::StreamDataFromFile(std::vector<std::string>* headings)
 
 void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile)
 {
-  CreateFile(fileName.c_str(), newFile);
-}
-void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile )
-{
-  newFile.open(fileName, std::ofstream::out | std::ofstream::trunc);
+
+  newFile.open(ResolveAbsolutePath(fileName), std::ofstream::out | std::ofstream::trunc);
   // Write our headers
   newFile << "Time(s)" << m_Delimiter;
   for (unsigned int i = 0; i < m_HeadingOrder.size(); i++) {
@@ -672,10 +670,15 @@ void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile )
   newFile << std::endl;
   newFile.flush();
 }
+void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile )
+{
+  CreateFile(std::string{fileName}, newFile);
+}
 
 void DataTrack::WriteTrackToFile(const char* fileName)
 {
   std::ofstream file;
+  std::string filepath = ResolveAbsolutePath(fileName);
   file.open(fileName, std::ofstream::out | std::ofstream::trunc);
   // Write our headers
   file << "Time(s)" << m_Delimiter;

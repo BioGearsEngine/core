@@ -203,7 +203,7 @@ bool SENutrition::Load(const std::string& given)
   std::unique_ptr<CDM::ObjectData> data;
 
   std::string filepath = given;
-  if ( !IsAbsolutePath(given) && TestFirstDirName(given,"nutrition")) {
+  if ( !IsAbsolutePath(given) && !TestFirstDirName(given,"nutrition")) {
     filepath = "nutrition/";
     filepath += given;
   }
