@@ -57,10 +57,10 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
   m_Log->setPriority(log4cpp::Priority::INFO);
 
   if (!logFilename.empty()) {
-    CreateFilePath(logFilename);
+    CreateFilePath(ResolveAbsolutePath(working_dir+logFilename));
 
     // delete previous log contents if it exists
-    std::string qulaified_path = working_dir + logFilename;
+    std::string qulaified_path = ResolveAbsolutePath(working_dir + logFilename);
     FILE* FilePointer = fopen(qulaified_path.c_str(), "wt+");
     if (FilePointer)
       fclose(FilePointer);
