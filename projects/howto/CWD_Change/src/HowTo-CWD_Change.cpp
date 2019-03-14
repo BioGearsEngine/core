@@ -130,9 +130,9 @@ void using_scenario_exec()
 
 constexpr const char* working_dir_path = "C:/biogears/runtime/" ;
 
-constexpr const char* log_file     = "scenario_exec/HowTo_CWD_Change.log";
+constexpr const char* log_file     = "./scenario_exec/HowTo_CWD_Change.log";
 constexpr const char* scenario_file = "Scenarios/Showcase/AsthmaAttack.xml";
-constexpr const char* results_file = "Scenarios/Showcase/AsthmaAttack.csv";
+constexpr const char* results_file = "./Scenarios/Showcase/AsthmaAttack.csv";
 
 	//NOTE: If your passing a log_file with a working_dir the logfile should be relative to the working dir
 
