@@ -53,7 +53,7 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
     m_Cancel = false;
     m_CustomExec = cExec;
 
-    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(ResolveAbsolutePath(scenarioFile), GetLogger());
+    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(scenarioFile, GetLogger());
     if (bind == nullptr) {
       m_ss << "Unable to load scenario file : " << scenarioFile << std::endl;
       Error(m_ss);
@@ -67,7 +67,7 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
     }
     SEScenario scenario(m_Engine.GetSubstanceManager());
     scenario.Load(*sceData);
-    std::string rFile = ResolveAbsolutePath(resultsFile);
+    std::string rFile = resultsFile;
     if (rFile.empty()) {
       rFile = scenarioFile;
       rFile += ".out";

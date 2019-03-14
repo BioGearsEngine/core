@@ -100,6 +100,9 @@ protected:
 
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;
+#pragma warning(push,0)
   std::stringstream m_ss;
+#pragma warning(pop)
+
 };
 }

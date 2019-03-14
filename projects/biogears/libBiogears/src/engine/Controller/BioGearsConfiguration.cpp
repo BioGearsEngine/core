@@ -285,10 +285,10 @@ void BioGearsConfiguration::Initialize()
   m_WritePatientBaselineFile = CDM::enumOnOff::Off;
 
   // Reset to default values
-  GetECGInterpolator().LoadWaveforms(ResolveAbsolutePath("ecg/StandardECG.xml"));
+  GetECGInterpolator().LoadWaveforms("ecg/StandardECG.xml");
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
-  GetDynamicStabilizationCriteria().Load(ResolveAbsolutePath("config/DynamicStabilization.xml"));
-  //GetTimedStabilizationCriteria().Load(ResolveAbsolutePath("config/TimedStabilization.xml"));
+  GetDynamicStabilizationCriteria().Load("config/DynamicStabilization.xml");
+  //GetTimedStabilizationCriteria().Load("config/TimedStabilization.xml");
   m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off); // Turn on to include stabilization tracking for debugging
 
   // Baroreceptors
@@ -358,7 +358,7 @@ void BioGearsConfiguration::Initialize()
   GetAirSpecificHeat().SetValue(1.0035, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
   GetMolarMassOfDryAir().SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
   GetMolarMassOfWaterVapor().SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
-  GetInitialEnvironmentalConditions().Load(ResolveAbsolutePath("environments/Standard.xml"));
+  GetInitialEnvironmentalConditions().Load("environments/Standard.xml");
   GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
 
   // Gastrointestinal
@@ -368,7 +368,7 @@ void BioGearsConfiguration::Initialize()
   GetDefaultCarbohydrateDigestionRate().SetValue(0.5, MassPerTimeUnit::g_Per_min); // Guyton (About 4.25hr to digest the carbs in default meal)
   GetDefaultFatDigestionRate().SetValue(0.055, MassPerTimeUnit::g_Per_min); // Guyton (About 8hr to digest the fat in the default meal)
   GetDefaultProteinDigestionRate().SetValue(0.071, MassPerTimeUnit::g_Per_min); // Dangin2001Digestion (About 5hr to digest the protein in the default meal)
-  GetDefaultStomachContents().Load(ResolveAbsolutePath("nutrition/NoMacros.xml")); // Refs are in the data spreadsheet
+  GetDefaultStomachContents().Load("nutrition/NoMacros.xml"); // Refs are in the data spreadsheet
   GetFatAbsorptionFraction().SetValue(0.248); // Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
   // We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
   GetProteinToUreaFraction().SetValue(0.405); // BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%.

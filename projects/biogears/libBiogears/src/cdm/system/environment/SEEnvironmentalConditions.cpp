@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include "../../../../../howto/common-source/HowTo-ThreadedBioGears.h"
 
 namespace biogears {
 SEEnvironmentalConditions::SEEnvironmentalConditions(SESubstanceManager& substances)
@@ -257,21 +258,21 @@ bool SEEnvironmentalConditions::Load(const char* environmentFile)
   return Load(std::string{ environmentFile });
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::Load(const std::string& environmentFile)
+bool SEEnvironmentalConditions::Load(const std::string& given)
 {
   CDM::EnvironmentalConditionsData* eData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  std::string eFile = environmentFile;
-  if (eFile.find("environments") == std::string::npos) {
-    eFile = "./environments/";
-    eFile += environmentFile;
+  std::string filepath = given;
+  if (!IsAbsolutePath(given) && TestFirstDirName(given,"environments")) {
+    filepath = "environments/";
+    filepath += given;
   }
-  data = Serializer::ReadFile(eFile, GetLogger());
+  data = Serializer::ReadFile(filepath, GetLogger());
   eData = dynamic_cast<CDM::EnvironmentalConditionsData*>(data.get());
   if (eData == nullptr) {
     std::stringstream ss;
-    ss << "Environmental Conditions file could not be read : " << environmentFile << std::endl;
+    ss << "Environmental Conditions file could not be read : " << given << std::endl;
     Error(ss);
     return false;
   }

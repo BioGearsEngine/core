@@ -150,7 +150,7 @@ bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
-  std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(ResolveAbsolutePath(file), GetLogger());
+  std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(file, GetLogger());
   CDM::BioGearsStateData* state = dynamic_cast<CDM::BioGearsStateData*>(bind.get());
   if (state != nullptr)
     return LoadState(*state, simTime);
@@ -498,7 +498,7 @@ bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std:
 {
   std::string pFile = patientFile;
   if (pFile.find("patients/") == std::string::npos) { // Prepend the patient directory if it's not there
-    pFile = ResolveAbsolutePath("patients/"+patientFile);
+    pFile = "patients/"+patientFile;
   }
   if (!m_Patient->Load(pFile))
     return false;

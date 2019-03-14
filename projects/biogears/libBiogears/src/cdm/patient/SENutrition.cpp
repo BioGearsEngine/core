@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
-
+#include <biogears/cdm/utils/FileUtils.h>
 namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
@@ -197,22 +197,22 @@ bool SENutrition::Load(const char* nutritionFile)
   return Load(std::string{ nutritionFile });
 }
 //-----------------------------------------------------------------------------
-bool SENutrition::Load(const std::string& nutritionFile)
+bool SENutrition::Load(const std::string& given)
 {
   CDM::NutritionData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  std::string nFile = nutritionFile;
-  if (nFile.find("nutrition/") == std::string::npos) {
-    nFile = "./nutrition/";
-    nFile += nutritionFile;
+  std::string filepath = given;
+  if ( !IsAbsolutePath(given) && TestFirstDirName(given,"nutrition")) {
+    filepath = "nutrition/";
+    filepath += given;
   }
 
-  data = Serializer::ReadFile(nFile, GetLogger());
+  data = Serializer::ReadFile(filepath, GetLogger());
   pData = dynamic_cast<CDM::NutritionData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
-    ss << "Nutrition file could not be read : " << nutritionFile << std::endl;
+    ss << "Nutrition file could not be read : " << ResolveAbsolutePath(given) << std::endl;
     Error(ss);
     return false;
   }

@@ -40,7 +40,7 @@ void HowToCWD_Change()
 
 void using_direct_control()
 {
-  constexpr const char* logfile_path = "C:/biogears/HowTo_CWD_Change.log";
+  constexpr const char* logfile_path = "C:/biogears/log/HowTo_CWD_Change.log";
   constexpr const char* working_dir_path = "C:/biogears/runtime/" ;
 
   //NOTE: Absolute Path to logger independent of any working path later passed to BioGearsEngine

@@ -16,17 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <dirent.h>
 #include <regex>
 
-#ifdef __cpp_lib_filesystem
-#include <filesystem>
-using fs = std::filesystem;
-#elif __cpp_lib_experimental_filesystem
-#include <experimental/filesystem>
-namespace std {
-namespace filesystem = experimental::filesystem;
-}
-#else
-#error "no filesystem support ='("
-#endif
+#include <biogears/filesystem/path.h>
 
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
 
@@ -133,31 +123,31 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
 
 bool IsAbsolutePath(const std::string& path)
 {
-  return std::filesystem::path{ path }.is_absolute();
+  return filesystem::path{ path }.is_absolute();
 }
 
 bool IsAbsolutePath(const char* path)
 {
-  return std::filesystem::path{ path }.is_absolute();
+  return filesystem::path{ path }.is_absolute();
 }
 
 std::string ResolveAbsolutePath(const std::string& path)
 {
-  std::filesystem::path given_path{ path };
-  std::filesystem::path cwd{ GetCurrentWorkingDirectory() };
+  filesystem::path given_path{ path };
+  filesystem::path cwd{ GetCurrentWorkingDirectory() };
 
-    return ((given_path.is_absolute()) ? given_path
-                                       : (std::filesystem::path{ cwd }.is_absolute()) ? std::filesystem::absolute(cwd / given_path)
-                                                                                      : std::filesystem::absolute(given_path))
-      .string();
+  return ((given_path.is_absolute()) ? given_path
+                                     : (filesystem::path{ cwd }.is_absolute()) ? filesystem::absolute(cwd / given_path)
+                                                                               : filesystem::absolute(given_path))
+    .string();
 }
 //!
 //!  \param const char* path Path to be resolved
 //!  \brief This call is very unsafe when using threading. The lifetime of the char* returned is until the next call of ResolveAbsolutePath.
 //!         Copy this return value immediatly after the call to avoid most issues
-const char* ResolveAbsolutePath_cStr(const char* p)
+const char* ResolveAbsolutePath_cStr(const char* path)
 {
-  static std::string storage = std::string{ p };
+  static std::string storage = std::string{ path };
   storage = ResolveAbsolutePath(storage);
   return storage.c_str();
 }
@@ -207,6 +197,37 @@ void SetCurrentWorkingDirectory(std::string working_dir)
 void SetCurrentWorkingDirectory(const char* working_dir)
 {
   g_working_dir = working_dir;
+}
+
+bool TestLastDirName(std::string path, std::string dirname)
+{
+  filesystem::path p{ std::move(path) };
+  if (!filesystem::is_directory(p)) {
+    p = p.parent_path();
+  }
+  return p.filename().string() == dirname;
+}
+bool TestFirstDirName(std::string path, std::string dirname)
+{
+  filesystem::path p{ std::move(path) };
+  if (p.begin() != p.end()) {
+    auto itr = p.begin();
+    ++itr;
+    if (itr != p.end()) {
+      return *itr == dirname;
+    }
+  }
+  return false;
+}
+
+bool TestLastDirName(const char* path, const char* dirname)
+{
+  return TestLastDirName(std::string{ path }, std::string{ dirname });
+}
+
+bool TestFirstDirName(const char* path, const char* dirname)
+{
+  return TestFirstDirName(std::string{ path }, std::string{ dirname });
 }
 
 std::string GetCurrentWorkingDirectory()
