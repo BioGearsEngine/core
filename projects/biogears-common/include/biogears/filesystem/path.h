@@ -44,7 +44,6 @@ namespace filesystem {
  */
   class path {
   public:
-
     using value_type = std::vector<std::string>;
     using iterator = value_type::iterator;
     using const_iterator = value_type::const_iterator;
@@ -98,9 +97,9 @@ namespace filesystem {
       return m_path.size();
     }
 
-    auto begin() -> iterator  { return m_path.begin(); } 
+    auto begin() -> iterator { return m_path.begin(); }
 
-    auto end()  -> iterator  { return m_path.end(); }
+    auto end() -> iterator { return m_path.end(); }
 
     bool empty() const { return m_path.empty(); }
 
@@ -120,6 +119,25 @@ namespace filesystem {
         throw std::runtime_error("Internal error in realpath(): " + std::to_string(GetLastError()));
       return path(out.substr(0, length));
 #endif
+    }
+
+    path make_normal() const
+    {
+      path working_path;
+      for (auto& segment : m_path) {
+        if (segment.empty()) {
+
+        } else if (segment == ".") {
+          
+        } else if (segment == "..")
+        {
+          working_path = working_path.parent_path();
+        } else
+        {
+          working_path /= segment;
+        }
+      }
+      return working_path;
     }
 
     bool exists() const
@@ -207,6 +225,11 @@ namespace filesystem {
       return result;
     }
 
+    path& operator/=(const path& other)
+    {
+      *this = *this / other;
+      return *this;
+    }
     path operator/(const path& other) const
     {
       if (other.m_absolute)

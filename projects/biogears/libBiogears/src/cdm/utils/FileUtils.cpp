@@ -210,11 +210,13 @@ bool TestLastDirName(std::string path, std::string dirname)
 bool TestFirstDirName(std::string path, std::string dirname)
 {
   filesystem::path p{ std::move(path) };
-  if (p.begin() != p.end()) {
-    auto itr = p.begin();
-    ++itr;
-    if (itr != p.end()) {
-      return *itr == dirname;
+  p = p.make_normal();
+  if (!p.is_absolute()) {
+    if (p.begin() != p.end()) {
+      auto itr = p.begin();
+        return *itr == dirname;
+    } else {
+
     }
   }
   return false;
