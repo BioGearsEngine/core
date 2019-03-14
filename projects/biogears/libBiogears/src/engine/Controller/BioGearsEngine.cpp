@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Equipment/ECG.h>
-#include <biogears/filesystem/path.h>
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -498,11 +497,11 @@ bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
-  filesystem::path pFile = patientFile;
+  std::string pFile = patientFile;
   if (!IsAbsolutePath(patientFile) && !TestFirstDirName(patientFile,"patients")) { // Prepend the patient directory if it's not there
     pFile = "patients/"+patientFile;
   }
-  if (!m_Patient->Load(pFile.string()))
+  if (!m_Patient->Load(pFile))
     return false;
   return InitializeEngine(conditions, config);
 }
