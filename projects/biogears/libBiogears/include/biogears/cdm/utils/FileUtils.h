@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 
 #include <mutex>
-#include <vector>
 #include <string>
+#include <vector>
 
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
 
@@ -39,17 +39,24 @@ specific language governing permissions and limitations under the License.
 struct dirent;
 
 namespace biogears {
-bool BIOGEARS_API CreateFilePath(const std::string&);
-std::string BIOGEARS_API Replace(const std::string& original, const std::string& replace, const std::string& withThis);
-void BIOGEARS_API ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "", bool recurse = true);
-std::vector<std::string> BIOGEARS_API ListFiles(const std::string& dir, const std::string&regex, bool recurse = true);
+BIOGEARS_API bool CreateFilePath(const std::string&);
+BIOGEARS_API bool CreateFilePath(const char*);
+BIOGEARS_API std::string Replace(const std::string& original, const std::string& replace, const std::string& withThis);
+BIOGEARS_API void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& mask = "", bool recurse = true);
+BIOGEARS_API std::vector<std::string> ListFiles(const std::string& dir, const std::string& regex, bool recurse = true);
 
-  
-void  BIOGEARS_API SetCurrentWorkingDirectory( std::string working_dir );
-  void  BIOGEARS_API SetCurrentWorkingDirectory( const char* working_dir );
-std::string BIOGEARS_API GetCurrentWorkingDirectory();
-void BIOGEARS_API DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories = true);
-void BIOGEARS_API MakeDirectory(const std::string& dir);
+BIOGEARS_API bool IsAbsolutePath(const std::string& path);
+BIOGEARS_API bool IsAbsolutePath(const char* path);
+BIOGEARS_API std::string ResolveAbsolutePath(const std::string& path);
+BIOGEARS_API const char* ResolveAbsolutePath_cStr(const char* path);
+BIOGEARS_API void SetCurrentWorkingDirectory(std::string working_dir);
+BIOGEARS_API void SetCurrentWorkingDirectory(const char* working_dir);
+
+BIOGEARS_API std::string GetCurrentWorkingDirectory();
+BIOGEARS_API const char* GetCurrentWorkingDirectory_cStr();
+
+BIOGEARS_API void DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories = true);
+BIOGEARS_API void MakeDirectory(const std::string& dir);
 
 BIOGEARS_API extern std::recursive_mutex g_fileSystemMutex;
 
@@ -65,5 +72,5 @@ public:
   ScopedFileSystemLock& operator=(ScopedFileSystemLock&& other) = delete;
 };
 
-bool BIOGEARS_API IsDirectory( dirent* ent);
+bool BIOGEARS_API IsDirectory(dirent* ent);
 }

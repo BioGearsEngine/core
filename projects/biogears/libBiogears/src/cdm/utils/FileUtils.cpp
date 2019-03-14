@@ -16,6 +16,18 @@ specific language governing permissions and limitations under the License.
 #include <dirent.h>
 #include <regex>
 
+#ifdef __cpp_lib_filesystem
+#include <filesystem>
+using fs = std::filesystem;
+#elif __cpp_lib_experimental_filesystem
+#include <experimental/filesystem>
+namespace std {
+namespace filesystem = experimental::filesystem;
+}
+#else
+#error "no filesystem support ='("
+#endif
+
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
 
 #define MAXPATH MAX_PATH
@@ -86,6 +98,11 @@ bool CreateFilePath(const std::string& path)
   return true;
 }
 
+bool CreateFilePath(const char* path)
+{
+  std::string path_str{ path };
+  return CreateFilePath(path_str);
+}
 void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& regex, bool recurse)
 {
   DIR* d;
@@ -112,6 +129,37 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
       }
     }
   }
+}
+
+bool IsAbsolutePath(const std::string& path)
+{
+  return std::filesystem::path{ path }.is_absolute();
+}
+
+bool IsAbsolutePath(const char* path)
+{
+  return std::filesystem::path{ path }.is_absolute();
+}
+
+std::string ResolveAbsolutePath(const std::string& path)
+{
+  std::filesystem::path given_path{ path };
+  std::filesystem::path cwd{ GetCurrentWorkingDirectory() };
+
+    return ((given_path.is_absolute()) ? given_path
+                                       : (std::filesystem::path{ cwd }.is_absolute()) ? std::filesystem::absolute(cwd / given_path)
+                                                                                      : std::filesystem::absolute(given_path))
+      .string();
+}
+//!
+//!  \param const char* path Path to be resolved
+//!  \brief This call is very unsafe when using threading. The lifetime of the char* returned is until the next call of ResolveAbsolutePath.
+//!         Copy this return value immediatly after the call to avoid most issues
+const char* ResolveAbsolutePath_cStr(const char* p)
+{
+  static std::string storage = std::string{ p };
+  storage = ResolveAbsolutePath(storage);
+  return storage.c_str();
 }
 
 std::vector<std::string> ListFiles(const std::string& dir, const std::string& regex, bool recurse)
@@ -153,7 +201,7 @@ void DeleteDirectory(const std::string& dir, bool bDeleteSubdirectories)
 
 void SetCurrentWorkingDirectory(std::string working_dir)
 {
-  g_working_dir = working_dir;
+  g_working_dir = std::move(working_dir);
 }
 
 void SetCurrentWorkingDirectory(const char* working_dir)
@@ -164,6 +212,11 @@ void SetCurrentWorkingDirectory(const char* working_dir)
 std::string GetCurrentWorkingDirectory()
 {
   return g_working_dir;
+}
+
+const char* GetCurrentWorkingDirectory_cStr()
+{
+  return g_working_dir.c_str();
 }
 
 BIOGEARS_API std::recursive_mutex g_fileSystemMutex;
