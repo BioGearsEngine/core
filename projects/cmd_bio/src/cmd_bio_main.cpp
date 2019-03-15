@@ -44,13 +44,13 @@ int main(int argc, char** argv)
     ,
     { "THREADS" } //Keywords
     ,
-    { "TEST", "SCENARIO" } //MultiWords
+    { "TEST", "SCENARIO", "VALIDATE" } //MultiWords
   );
   args.parse(argc, argv);
 
   bool run_patient_validation = false;
   bool run_drug_validation = false;
-  bool run_system_validation = false;
+  bool run_system_validation = true;
   bool run_verification = false;
 
   unsigned int thread_count = std::thread::hardware_concurrency();
