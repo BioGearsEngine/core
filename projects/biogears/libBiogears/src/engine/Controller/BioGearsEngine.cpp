@@ -498,8 +498,8 @@ bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
   std::string pFile = patientFile;
-  if (!IsAbsolutePath(patientFile) && !TestFirstDirName(patientFile,"patients")) { // Prepend the patient directory if it's not there
-    pFile = "patients/"+patientFile;
+  if (!IsAbsolutePath(patientFile) && !TestFirstDirName(patientFile, "patients")) { // Prepend the patient directory if it's not there
+    pFile = "patients/" + patientFile;
   }
   if (!m_Patient->Load(pFile))
     return false;
@@ -638,22 +638,21 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
 
   const SEPatientAssessmentRequest* patientAss = dynamic_cast<const SEPatientAssessmentRequest*>(&action);
   if (patientAss != nullptr) {
+    m_ss.str("");
+    m_ss.clear();
     switch (patientAss->GetType()) {
     case CDM::enumPatientAssessment::PulmonaryFunctionTest: {
       SEPulmonaryFunctionTest pft(m_Logger);
       GetPatientAssessment(pft);
 
       // Write out the Assessement
-      std::string pftFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
-      if (pftFile.empty())
-        pftFile = "PulmonaryFunctionTest";
+      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
+      if (results_filepath.empty())
+        results_filepath = "PulmonaryFunctionTest";
       m_ss << "PFT@" << GetSimulationTime(TimeUnit::s) << "s";
-      pftFile = Replace(pftFile, "Results", m_ss.str());
-      pftFile = Replace(pftFile, ".csv", ".xml");
-      m_ss << "PulmonaryFunctionTest@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(ResolveAbsolutePath(pftFile));
-      m_ss.str("");
-      m_ss.clear();
+      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
+      results_filepath += m_ss.str() + ".xml";
+      std::ofstream stream(ResolveAbsolutePath(results_filepath));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -668,16 +667,14 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       SEUrinalysis upan(m_Logger);
       GetPatientAssessment(upan);
 
-      std::string upanFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
-      if (upanFile.empty())
-        upanFile = "Urinalysis";
+      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
+      if (results_filepath.empty())
+        results_filepath = "Urinalysis";
       m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s";
-      upanFile = Replace(upanFile, "Results", m_ss.str());
-      upanFile = Replace(upanFile, ".csv", ".xml");
-      m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(ResolveAbsolutePath(upanFile));
-      m_ss.str("");
-      m_ss.clear();
+      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
+      results_filepath += m_ss.str() + ".xml";
+      std::ofstream stream(ResolveAbsolutePath(results_filepath));
+
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -691,16 +688,13 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::CompleteBloodCount: {
       SECompleteBloodCount cbc(m_Logger);
       GetPatientAssessment(cbc);
-      std::string cbcFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
-      if (cbcFile.empty())
-        cbcFile = "CompleteBloodCount";
+      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
+      if (results_filepath.empty())
+        results_filepath = "CompleteBloodCount";
       m_ss << "CBC@" << GetSimulationTime(TimeUnit::s) << "s";
-      cbcFile = Replace(cbcFile, "Results", m_ss.str());
-      cbcFile = Replace(cbcFile, ".csv", ".xml");
-      m_ss << "CompleteBloodCount@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(ResolveAbsolutePath(cbcFile));
-      m_ss.str("");
-      m_ss.clear();
+      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
+      results_filepath += m_ss.str() + ".xml";
+      std::ofstream stream(ResolveAbsolutePath(results_filepath));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -714,16 +708,14 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel: {
       SEComprehensiveMetabolicPanel mp(m_Logger);
       GetPatientAssessment(mp);
-      std::string mpFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
-      if (mpFile.empty())
-        mpFile = "ComprehensiveMetabolicPanel";
+      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
+      if (results_filepath.empty())
+        results_filepath = "ComprehensiveMetabolicPanel";
       m_ss << "CMP@" << GetSimulationTime(TimeUnit::s) << "s";
-      mpFile = Replace(mpFile, "Results", m_ss.str());
-      mpFile = Replace(mpFile, ".csv", ".xml");
-      m_ss << "ComprehensiveMetabolicPanel@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-      std::ofstream stream(ResolveAbsolutePath(mpFile));
-      m_ss.str("");
-      m_ss.clear();
+      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
+      results_filepath += m_ss.str() + ".xml";
+      std::ofstream stream(ResolveAbsolutePath(results_filepath));
+
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -739,6 +731,8 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       return false;
     }
     }
+    m_ss.str("");
+    m_ss.clear();
     return true;
   }
 
