@@ -51,7 +51,7 @@ void Logger::LogToConsole(bool log_to_console)
 
 void Logger::ResetLogFile(const std::string& logFilename, const std::string& working_dir)
 {
-  log4cpp::Category& category = log4cpp::Category::getInstance(logFilename);
+  log4cpp::Category& category = log4cpp::Category::getInstance("biogears_logger");
   m_Log = &category;
   m_Log->removeAllAppenders();
   m_Log->setPriority(log4cpp::Priority::INFO);
@@ -66,7 +66,7 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
       fclose(FilePointer);
 
     m_FileAppender = log4cpp::Appender::getAppender(logFilename);
-    if (m_FileAppender == nullptr) {
+    if (m_FileAppender == nullptr && !logFilename.empty()) {
       m_FileAppender = new log4cpp::FileAppender(logFilename, qulaified_path);
       log4cpp::PatternLayout* myLayout = new log4cpp::PatternLayout();
       myLayout->setConversionPattern("%d [%p] %m%n");

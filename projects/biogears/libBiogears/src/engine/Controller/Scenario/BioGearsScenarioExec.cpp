@@ -64,10 +64,7 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     BioGearsScenario scenario(m_Engine.GetSubstanceManager());
     scenario.Load(*sceData);
     std::string rFile = resultsFile;
-    if (rFile.empty()) {
-      rFile = scenarioFile;
-      rFile += ".csv";
-    }
+ 
     bool success = SEScenarioExec::Execute(scenario, rFile, cExec);
     return success;
   } catch (CommonDataModelException& ex) {

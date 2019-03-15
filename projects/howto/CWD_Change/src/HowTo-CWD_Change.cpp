@@ -34,8 +34,8 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 void HowToCWD_Change() 
 {
-  using_direct_control();
   using_scenario_exec();
+  using_direct_control();
 }
 
 void using_direct_control()
@@ -68,7 +68,7 @@ void using_direct_control()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InspiratoryExpiratoryRatio");
   bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Carina, "InFlow");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToAsthma.csv");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowTo-CWD_Change.csv");
 
 	// Advance some time to get some healthy data
 	tracker.AdvanceModelTime(50);
@@ -130,9 +130,9 @@ void using_scenario_exec()
 
 constexpr const char* working_dir_path = "C:/biogears/runtime/" ;
 
-constexpr const char* log_file     = "./scenario_exec/HowTo_CWD_Change.log";
+constexpr const char* log_file     = "";
 constexpr const char* scenario_file = "Scenarios/Showcase/AsthmaAttack.xml";
-constexpr const char* results_file = "./Scenarios/Showcase/AsthmaAttack.csv";
+constexpr const char* results_file = "";
 
 	//NOTE: If your passing a log_file with a working_dir the logfile should be relative to the working dir
 
