@@ -165,9 +165,9 @@ bool Tokenizer::tokenize(std::istream& os)
       } else if (workItem.type == ETokenClass::Number) {
         if (std::isdigit(cur)) {
           workItem.value.push_back(cur);
-        } else if (std::isalpha(cur)) {
-          _tokens.push_back(workItem);
-          workItem = Token{ ETokenClass::Word, cur };
+        } else if (std::isalnum(cur)) {
+          workItem.value.push_back(cur);
+          workItem.type=ETokenClass::Word;
         } else {
           _tokens.push_back(workItem);
           _tokens.emplace_back(ETokenClass::Symbol, cur);

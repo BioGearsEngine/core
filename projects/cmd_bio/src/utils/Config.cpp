@@ -362,7 +362,7 @@ bool Config::process(Tokenizer&& tokens)
                 std::cerr << "Error: Unable to process paramaters for " << original_token << "(" << name << ").\n";
               }
             } else {
-              std::cerr << "Error: Call to " << original_token << "requires a test name with in the paramater list but non was found.\n";
+              std::cerr << "Error: Call to " << original_token << " requires a test name with in the paramater list but non was found.\n";
             }
           }
         } else {
