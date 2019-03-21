@@ -115,7 +115,7 @@ void Driver::queue_CDMUnitTest(const Executor& exec)
       try {
         executor = new CommonDataModelTest;
       } catch (const std::exception& e) {
-        std::cout << e.what();
+        std::cout << e.what();  
         return 1;
       }
       executor->RunTest(exec.Name(), exec.Computed());
