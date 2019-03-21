@@ -413,7 +413,7 @@ bool Config::process(Tokenizer&& tokens)
         if (grab_next_word_or_fail(tokenItr, tokens.end())) {
           _current_group = tokenItr->value;
           Tokenizer::token_list group_name;
-          auto delimiter = Token{ ETokenClass::Newline, "\n" };
+          auto delimiter = Token{ ETokenClass::Newline, "\n"};
           if (gobble_until_next_given(tokenItr, tokens.end(), delimiter, group_name)) {
             for (auto& component : group_name) {
               _current_group += component.value;

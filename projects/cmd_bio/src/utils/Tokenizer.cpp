@@ -2,10 +2,10 @@
 #include "string-helpers.h"
 
 #include <cctype>
+#include <cerrno>
 #include <fstream>
 #include <list>
 #include <regex>
-#include <cerrno>
 
 namespace biogears {
 
@@ -15,15 +15,19 @@ Token::Token()
 {
 }
 //-----------------------------------------------------------------------------
-Token::Token(const ETokenClass c, const std::string& s)
+Token::Token(const ETokenClass c, const std::string& s, size_t l, size_t col)
   : type(c)
   , value(s)
+  , line(l)
+  , column(col)
 {
 }
 //-----------------------------------------------------------------------------
-Token::Token(const ETokenClass c, const char s)
+Token::Token(const ETokenClass c, const char s, size_t l, size_t col)
   : type(c)
   , value()
+  , line(l)
+  , column(col)
 {
   value.push_back(s);
 }
@@ -35,7 +39,7 @@ bool Token::is_double() const
     char* end = nullptr;
     double val = strtod(value.c_str(), &end);
     errno = 0;
-    return end != value.c_str() && ERANGE != errno ;
+    return end != value.c_str() && ERANGE != errno;
   }
   return false;
 }
@@ -110,77 +114,93 @@ bool Tokenizer::tokenize(std::istream& os)
 {
   std::string line;
   char delimiter = '\0';
+  size_t current_line = 0;
   while (std::getline(os, line)) {
+    ++current_line;
     trim(line);
     if (line.empty()) {
       continue;
     }
     line += "\n";
-    Token workItem{ ETokenClass::Undefined, "" };
+    Token workItem{ ETokenClass::Undefined, "", current_line, 0 };
+    size_t current_column = 0;
     for (auto itr = line.begin(); itr != line.end(); ++itr) {
+      ++current_column;
       auto& cur = *itr;
 
       if (workItem.type == ETokenClass::Undefined) {
         if (cur == '\n') {
-          _tokens.emplace_back(ETokenClass::Newline, cur);
+          _tokens.emplace_back(ETokenClass::Newline, cur, current_line, current_column);
         } else if (std::isspace(cur)) {
           workItem.type = ETokenClass::Whitespace;
+          workItem.line = current_line;
+          workItem.column = current_column;
           workItem.value.push_back(cur);
         } else if (cur == '#') {
           break;
         } else if (std::isdigit(cur)) {
           workItem.type = ETokenClass::Number;
+          workItem.line = current_line;
+          workItem.column = current_column;
           workItem.value.push_back(cur);
         } else if (std::isalpha(cur)) {
           workItem.type = ETokenClass::Word;
+          workItem.line = current_line;
+          workItem.column = current_column;
           workItem.value.push_back(cur);
         } else {
-          _tokens.emplace_back(ETokenClass::Symbol, cur);
+          _tokens.emplace_back(ETokenClass::Symbol, cur, current_line, current_column);
         }
-      } else if (cur == '\n') {
+      } 
+      else if (cur == '\n') {
         _tokens.push_back(workItem);
-        _tokens.emplace_back(ETokenClass::Newline, cur);
+        _tokens.emplace_back(ETokenClass::Newline, cur, current_line, current_column);
         workItem = Token();
-      } else if (workItem.type != ETokenClass::Whitespace && std::isspace(cur)) {
+      } 
+      else if (workItem.type != ETokenClass::Whitespace && std::isspace(cur)) {
         _tokens.push_back(workItem);
-        workItem = Token(ETokenClass::Whitespace, cur);
-      } else if (cur == '#') {
+        workItem = Token(ETokenClass::Whitespace, cur, current_line, current_column);
+      } 
+      else if (cur == '#') {
         _tokens.push_back(workItem);
         workItem = Token();
         break;
-      } else if (workItem.type == ETokenClass::Whitespace) {
+      } 
+      else if (workItem.type == ETokenClass::Whitespace) {
         if (std::isspace(cur)) {
           workItem.value.push_back(cur);
         } else if (std::isalpha(cur)) {
           _tokens.push_back(workItem);
-          workItem = Token{ ETokenClass::Word, cur };
+          workItem = Token{ ETokenClass::Word, cur, current_line, current_column };
         } else if (std::isdigit(cur)) {
           _tokens.push_back(workItem);
-          workItem = Token{ ETokenClass::Number, cur };
+          workItem = Token{ ETokenClass::Number, cur, current_line, current_column };
         } else {
           _tokens.push_back(workItem);
-          _tokens.emplace_back(ETokenClass::Symbol, cur);
+          _tokens.emplace_back(ETokenClass::Symbol, cur, current_line, current_column);
           workItem = Token();
         }
-      } else if (workItem.type == ETokenClass::Number) {
+      } 
+      else if (workItem.type == ETokenClass::Number) {
         if (std::isdigit(cur)) {
           workItem.value.push_back(cur);
         } else if (std::isalnum(cur)) {
           workItem.value.push_back(cur);
-          workItem.type=ETokenClass::Word;
+          workItem.type = ETokenClass::Word;
         } else {
           _tokens.push_back(workItem);
-          _tokens.emplace_back(ETokenClass::Symbol, cur);
+          _tokens.emplace_back(ETokenClass::Symbol, cur, current_line, current_column);
           workItem = Token();
         }
-      } else if (workItem.type == ETokenClass::Word) {
+      } 
+      else if (workItem.type == ETokenClass::Word) {
         if (std::isalnum(cur)) {
           workItem.value.push_back(cur);
-        } else if ( cur == '_' ) {
+        } else if (cur == '_') {
           workItem.value.push_back(cur);
         } else {
           _tokens.push_back(workItem);
-          _tokens.emplace_back(ETokenClass::Symbol, cur);
+          _tokens.emplace_back(ETokenClass::Symbol, cur, current_line, current_column);
           workItem = Token();
         }
       }
