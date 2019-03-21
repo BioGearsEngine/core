@@ -512,7 +512,7 @@ bool handle_assignment(Tokenizer::token_list::iterator& tokenItr, Tokenizer::tok
       return true;
     }
   } else {
-    std::cerr << "Error: Expected = after " << *tokenItr << "but " << *next << "was found instead.\n";
+    std::cerr << "Error: Expected = after " << *tokenItr << "but " << *next << " was found instead.\n";
   }
   return true;
 }
