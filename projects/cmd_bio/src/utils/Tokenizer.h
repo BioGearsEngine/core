@@ -31,9 +31,10 @@ struct Token {
   std::string value;
   size_t line;
   size_t column;
+  size_t index;
   Token();
-  explicit Token(const ETokenClass c, const std::string& s, size_t line=0, size_t column=0);
-  explicit Token(const ETokenClass c, const char s, size_t line=0, size_t column=0);
+  explicit Token(const ETokenClass c, const std::string& s, size_t line=0, size_t column=0, size_t i = 0);
+  explicit Token(const ETokenClass c, const char s, size_t line=0, size_t column=0, size_t i = 0);
 
   Token(const Token& obj) = default;
   Token(Token&& obj) = default;
