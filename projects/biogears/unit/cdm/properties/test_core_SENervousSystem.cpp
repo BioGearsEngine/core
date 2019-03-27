@@ -25,9 +25,9 @@
 #include <biogears/cdm/properties/SEScalarTypes.h>
 
 #ifdef DISABLE_BIOGEARS_SENervousSystem_TEST
-#define TEST_FIXTURE_NAME DISABLED_SENervousSystem_Fixture
+#define TEST_FIXTURE_NAME DISABLED_Core_SENervousSystem_Fixture
 #else
-#define TEST_FIXTURE_NAME SENervousSystem_Fixture
+#define TEST_FIXTURE_NAME Core_SENervousSystem_Fixture
 #endif
 
 using namespace biogears;

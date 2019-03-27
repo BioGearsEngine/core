@@ -34,10 +34,10 @@
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 //
-#ifdef DISABLE_BIOGEARS_Circuit_TEST
-#define TEST_FIXTURE_NAME DISABLED_Circuit_Fixture
+#ifdef DISABLE_BIOGEARS_Gastrointestinal_TEST
+#define TEST_FIXTURE_NAME DISABLED_Circuit_Gastrointestinal_Fixture
 #else
-#define TEST_FIXTURE_NAME Circuit_Fixture
+#define TEST_FIXTURE_NAME Circuit_Gastrointestinal_Fixture
 #endif
 
 using namespace biogears;

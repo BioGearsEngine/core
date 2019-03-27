@@ -12,9 +12,9 @@
 
 
 #ifdef DISABLE_BIOGEARS_MajorSystems_TEST
-#define TEST_FIXTURE_NAME DISABLED_MajorSystems_Fixture
+#define TEST_FIXTURE_NAME DISABLED_Circuit_MajorSystems_Fixture
 #else
-#define TEST_FIXTURE_NAME SEMajorSystems_Fixture
+#define TEST_FIXTURE_NAME Circuit_MajorSystems_Fixture
 #endif
 
 using namespace biogears;

@@ -59,8 +59,8 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
     ${UNITTEST_HEADERS}
     ${BIOGEARS_CORE_UNITTEST_HEADERS}
     ${BIOGEARS_CORE_UNITTEST_SOURCES}
-	${BIOGEARS_COMMON_UNITTEST_HEADERS}
-	${BIOGEARS_COMMON_UNITTEST_SOURCES}
+	  ${BIOGEARS_COMMON_UNITTEST_HEADERS}
+	  ${BIOGEARS_COMMON_UNITTEST_SOURCES}
     ${BIOGEARS_CMDLINE_UNITTEST_HEADERS}
     ${BIOGEARS_CMDLINE_UNITTEST_SOURCES}
     ${BIOGEARS_CIRCUIT_UNITTEST_HEADERS}
@@ -73,39 +73,46 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   #                   import unit test from Project/cmake/unit.cmake
   ##################################################################V#############
   function( setup_unittest )
-  cmake_parse_arguments( "_l" 
-                        ""
-                        "GROUP"
-                        "TESTS"
-                        ${ARGN}
-                        )
-
-  if(UNITTEST_${_l_GROUP})
-  	  foreach ( test_name IN LISTS _l_TESTS )
-	  	option(UNITTEST_${_l_GROUP}_${test_name} "Enable test_core_angles" ON)
-	  	mark_as_advanced(UNITTEST_${_l_GROUP}_${test_name})
-	  	if (  NOT UNITTEST_${_l_GROUP}_${test_name})
-		  add_compile_definitions( DISABLE_BIOGEARS_${test_name}_TEST )
-	endif()
-	  endforeach()
- endif()
+    cmake_parse_arguments( "_l" 
+                          ""
+                          "GROUP;PREFIX"
+                          "TESTS"
+                          ${ARGN}
+                          )
+    if(UNITTEST_${_l_GROUP})
+    	  foreach ( filepath IN LISTS _l_TESTS )
+          string(REGEX REPLACE ".*\\/test_${_l_PREFIX}_(.*).cpp" "\\1" test_name ${filepath})
+	    	  option(UNITTEST_${_l_GROUP}_${test_name} "Enable ${_l_GROUP}_${test_name}" ON)
+	    	  mark_as_advanced(UNITTEST_${_l_GROUP}_${test_name})
+	    	  if (  NOT UNITTEST_${_l_GROUP}_${test_name})
+            set_property(   SOURCE ${filepath}
+                            PROPERTY
+                            COMPILE_DEFINITIONS DISABLE_BIOGEARS_${test_name}_TEST )
+	        endif()
+	      endforeach()
+    endif()
   endfunction() 
 
   set(COMMON_TEST_LIST ${BIOGEARS_COMMON_UNITTEST_SOURCES})
-  list(TRANSFORM COMMON_TEST_LIST REPLACE ".*\\/test_common_(.*).cpp" "\\1")
-  setup_unittest( GROUP biogears-common 
+#  list(TRANSFORM COMMON_TEST_LIST REPLACE ".*\\/test_common_(.*).cpp" "\\1")
+  setup_unittest( GROUP biogears-common PREFIX common
                   TESTS 
                     ${COMMON_TEST_LIST})
   set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
-  list(TRANSFORM CORE_TEST_LIST REPLACE ".*\\/test_core_(.*).cpp" "\\1")
-  setup_unittest( GROUP biogears-core
+#  list(TRANSFORM CORE_TEST_LIST REPLACE ".*\\/test_core_(.*).cpp" "\\1")
+  setup_unittest( GROUP biogears-core PREFIX core
                   TESTS 
                     ${CORE_TEST_LIST})
   set(CMDLINE_TEST_LIST ${BIOGEARS_CMDLINE_UNITTEST_SOURCES})
-  list(TRANSFORM CMDLINE_TEST_LIST REPLACE ".*\\/test_cmdline_(.*).cpp" "\\1")
-  setup_unittest( GROUP biogears-cmd 
+#  list(TRANSFORM CMDLINE_TEST_LIST REPLACE ".*\\/test_cmdline_(.*).cpp" "\\1")
+  setup_unittest( GROUP biogears-cmd PREFIX cmd
                   TESTS 
                     ${CMDLINE_TEST_LIST})
+  set(CIRCUIT_TEST_LIST ${BIOGEARS_CIRCUIT_UNITTEST_SOURCES})
+#  list(TRANSFORM CIRCUIT_TEST_LIST REPLACE ".*\\/test_circuit_(.*).cpp" "\\1")
+  setup_unittest( GROUP biogears-circuit PREFIX circuit
+                  TESTS 
+                    ${CIRCUIT_TEST_LIST})
  
   set_target_properties(unittest PROPERTIES
                         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
@@ -123,13 +130,9 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   )
 
   if(WIN32)
-  target_compile_options(unittest
-      PRIVATE "-D_CRT_SECURE_NO_WARNINGS"
+  target_compile_definitions(unittest
+      PRIVATE "_CRT_SECURE_NO_WARNINGS"
   )
-  endif()
-
-  if (${PROJECT_NAME}_BUILD_STATIC)
-    add_definitions("-D${PROJECT_NAME}_BUILT_AS_STATIC")
   endif()
 
   target_link_libraries(unittest
