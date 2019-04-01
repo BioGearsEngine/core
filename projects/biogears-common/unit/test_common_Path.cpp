@@ -85,7 +85,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Empty)
 
   EXPECT_TRUE(path_empty.empty());
   EXPECT_FALSE(path_relative.empty());
-  
+  //This test is inconsistant across paltforms. Need to improve
   //EXPECT_FALSE(path_absolute_root.empty());
 }
 

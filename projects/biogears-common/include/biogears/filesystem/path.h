@@ -124,6 +124,8 @@ namespace filesystem {
     path make_normal() const
     {
       path working_path;
+      working_path.m_absolute = m_absolute;
+      working_path.m_type = m_type;
       for (auto& segment : m_path) {
         if (segment.empty()) {
 
@@ -230,15 +232,16 @@ namespace filesystem {
     }
     path operator/(const path& other) const
     {
-      if (other.m_absolute)
+      if (other.m_absolute) {
         if (m_path.empty()) {
           return other;
         } else {
           throw std::runtime_error("path::operator/(): expected a relative path!");
         }
-      if (m_type != other.m_type)
+      }
+      if (m_type != other.m_type) {
         throw std::runtime_error("path::operator/(): expected a path of the same type!");
-
+      }
       path result(*this);
 
       for (size_t i = 0; i < other.m_path.size(); ++i)

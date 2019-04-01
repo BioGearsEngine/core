@@ -79,7 +79,6 @@ TEST_F(TEST_FIXTURE_NAME, FileUtils_ResolvePath)
   biogears::SetCurrentWorkingDirectory("");
   EXPECT_EQ(path::getcwd() / "test_file.txt", ResolvePath("test_file.txt"));
   EXPECT_EQ(path::getcwd() / "test_file.txt", ResolvePath("./test_file.txt"));
-  EXPECT_EQ(path("C:/biogears/test_file.txt").make_normal(), ResolvePath("C:/biogears/test_file.txt"));
 
 #ifdef _WIN32
   biogears::SetCurrentWorkingDirectory("C:/");
