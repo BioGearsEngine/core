@@ -135,11 +135,17 @@ std::string ResolvePath(const std::string& path)
 {
   filesystem::path given_path{ path };
   filesystem::path cwd{ GetCurrentWorkingDirectory() };
-
-  return ((given_path.is_absolute()) ? given_path
-                                     : (filesystem::path{ cwd }.is_absolute()) ? filesystem::normalize(cwd / given_path)
-                                                                               : filesystem::normalize(given_path))
-    .string();
+  if (path.empty()) {
+    return "";
+  } else if (given_path.is_absolute()) {
+    return given_path.string();
+  } else if (filesystem::path{ cwd }.is_absolute()) {
+    return filesystem::normalize(cwd / given_path).string();
+  } else {
+    return filesystem::normalize(filesystem::path::getcwd() / cwd / given_path).string();
+  }
+  //TODO -- IS this right? If the user wants a relative library CWD is that realtive to the actual CWD
+  //TODO -- Document this behavior for sure.
 }
 //!
 //!  \param const char* path Path to be resolved
@@ -214,9 +220,8 @@ bool TestFirstDirName(std::string path, std::string dirname)
   if (!p.is_absolute()) {
     if (p.begin() != p.end()) {
       auto itr = p.begin();
-        return *itr == dirname;
+      return *itr == dirname;
     } else {
-
     }
   }
   return false;
