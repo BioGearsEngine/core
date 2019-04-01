@@ -212,7 +212,7 @@ bool SENutrition::Load(const std::string& given)
   pData = dynamic_cast<CDM::NutritionData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
-    ss << "Nutrition file could not be read : " << ResolveAbsolutePath(given) << std::endl;
+    ss << "Nutrition file could not be read : " << ResolvePath(given) << std::endl;
     Error(ss);
     return false;
   }

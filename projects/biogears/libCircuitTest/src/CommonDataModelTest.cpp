@@ -259,7 +259,7 @@ void CommonDataModelTest::TestCompartmentSerialization(SECompartmentManager& mgr
 {
   ScopedFileSystemLock lock;
 
-  std::ofstream stream(ResolveAbsolutePath(fileName));
+  std::ofstream stream(ResolvePath(fileName));
   xml_schema::namespace_infomap map;
   map[""].name = "uri:/mil/tatrc/physiology/datamodel";
 

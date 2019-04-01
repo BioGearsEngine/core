@@ -94,22 +94,18 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   endfunction() 
 
   set(COMMON_TEST_LIST ${BIOGEARS_COMMON_UNITTEST_SOURCES})
-#  list(TRANSFORM COMMON_TEST_LIST REPLACE ".*\\/test_common_(.*).cpp" "\\1")
   setup_unittest( GROUP biogears-common PREFIX common
                   TESTS 
                     ${COMMON_TEST_LIST})
   set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
-#  list(TRANSFORM CORE_TEST_LIST REPLACE ".*\\/test_core_(.*).cpp" "\\1")
   setup_unittest( GROUP biogears-core PREFIX core
                   TESTS 
                     ${CORE_TEST_LIST})
   set(CMDLINE_TEST_LIST ${BIOGEARS_CMDLINE_UNITTEST_SOURCES})
-#  list(TRANSFORM CMDLINE_TEST_LIST REPLACE ".*\\/test_cmdline_(.*).cpp" "\\1")
   setup_unittest( GROUP biogears-cmd PREFIX cmd
                   TESTS 
                     ${CMDLINE_TEST_LIST})
   set(CIRCUIT_TEST_LIST ${BIOGEARS_CIRCUIT_UNITTEST_SOURCES})
-#  list(TRANSFORM CIRCUIT_TEST_LIST REPLACE ".*\\/test_circuit_(.*).cpp" "\\1")
   setup_unittest( GROUP biogears-circuit PREFIX circuit
                   TESTS 
                     ${CIRCUIT_TEST_LIST})

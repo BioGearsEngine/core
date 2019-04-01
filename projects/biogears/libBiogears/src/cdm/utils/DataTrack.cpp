@@ -617,7 +617,7 @@ std::vector<std::string> DataTrack::StreamDataFromFile(const char* fileName)
 {
   Reset();
   std::string line;
-  m_FileStream.open(ResolveAbsolutePath(fileName));
+  m_FileStream.open(ResolvePath(fileName));
   // Grab the headings from the first line
   std::getline(m_FileStream, line);
   std::size_t pos = 0;
@@ -659,7 +659,7 @@ double DataTrack::StreamDataFromFile(std::vector<std::string>* headings)
 void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile)
 {
 
-  newFile.open(ResolveAbsolutePath(fileName), std::ofstream::out | std::ofstream::trunc);
+  newFile.open(ResolvePath(fileName), std::ofstream::out | std::ofstream::trunc);
   // Write our headers
   newFile << "Time(s)" << m_Delimiter;
   for (unsigned int i = 0; i < m_HeadingOrder.size(); i++) {
@@ -678,7 +678,7 @@ void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile )
 void DataTrack::WriteTrackToFile(const char* fileName)
 {
   std::ofstream file;
-  std::string filepath = ResolveAbsolutePath(fileName);
+  std::string filepath = ResolvePath(fileName);
   file.open(fileName, std::ofstream::out | std::ofstream::trunc);
   // Write our headers
   file << "Time(s)" << m_Delimiter;

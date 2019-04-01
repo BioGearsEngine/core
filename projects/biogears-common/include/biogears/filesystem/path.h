@@ -128,12 +128,10 @@ namespace filesystem {
         if (segment.empty()) {
 
         } else if (segment == ".") {
-          
-        } else if (segment == "..")
-        {
+
+        } else if (segment == "..") {
           working_path = working_path.parent_path();
-        } else
-        {
+        } else {
           working_path /= segment;
         }
       }
@@ -233,7 +231,11 @@ namespace filesystem {
     path operator/(const path& other) const
     {
       if (other.m_absolute)
-        throw std::runtime_error("path::operator/(): expected a relative path!");
+        if (m_path.empty()) {
+          return other;
+        } else {
+          throw std::runtime_error("path::operator/(): expected a relative path!");
+        }
       if (m_type != other.m_type)
         throw std::runtime_error("path::operator/(): expected a path of the same type!");
 
@@ -286,7 +288,10 @@ namespace filesystem {
     void set(const std::string& str, path_type type = native_path)
     {
       m_type = type;
-      if (type == windows_path) {
+      if (str.empty() || std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); })) {
+        m_type = native_path;
+        m_absolute = false;
+      } else if (type == windows_path) {
         std::string tmp = str;
 
         // Long windows paths (sometimes) begin with the prefix \\?\. It should only
@@ -473,6 +478,11 @@ namespace filesystem {
   inline path absolute(const path p)
   {
     return p.make_absolute();
+  }
+
+  inline path normalize(const path p)
+  {
+    return p.make_normal();
   }
 
   inline bool is_directory(const path& p)

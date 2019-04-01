@@ -75,7 +75,7 @@ bool SETestReport::WriteFile(const std::string& fileName)
 
   try {
     std::ofstream outFile;
-    outFile.open(ResolveAbsolutePath(fileName));
+    outFile.open(ResolvePath(fileName));
     std::unique_ptr<CDM::TestReportData> unloaded = Unload();
     CDM::TestReport(outFile, *unloaded, map);
   } catch (const xml_schema::exception& e) {

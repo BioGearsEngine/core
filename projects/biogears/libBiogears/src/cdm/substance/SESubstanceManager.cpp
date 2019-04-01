@@ -293,7 +293,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
 
   std::string workingDirectory = GetCurrentWorkingDirectory();
 
-  dir = opendir(std::string(ResolveAbsolutePath(std::string("substances/"))).c_str());
+  dir = opendir(std::string(ResolvePath(std::string("substances/"))).c_str());
 
   if (dir != nullptr) {
     CDM::ObjectData* obj;

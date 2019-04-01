@@ -472,7 +472,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
   state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
 
   if (!file.empty()) {
-    std::string qulaified_path = ResolveAbsolutePath(file);
+    std::string qulaified_path = ResolvePath(file);
     CreateFilePath(qulaified_path);
     // Write out the engine state
     std::ofstream stream(qulaified_path);
@@ -652,7 +652,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       m_ss << "PFT@" << GetSimulationTime(TimeUnit::s) << "s";
       results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
       results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolveAbsolutePath(results_filepath));
+      std::ofstream stream(ResolvePath(results_filepath));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -673,7 +673,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s";
       results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
       results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolveAbsolutePath(results_filepath));
+      std::ofstream stream(ResolvePath(results_filepath));
 
       // Write out the xml file
       xml_schema::namespace_infomap map;
@@ -694,7 +694,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       m_ss << "CBC@" << GetSimulationTime(TimeUnit::s) << "s";
       results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
       results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolveAbsolutePath(results_filepath));
+      std::ofstream stream(ResolvePath(results_filepath));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -714,7 +714,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       m_ss << "CMP@" << GetSimulationTime(TimeUnit::s) << "s";
       results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
       results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolveAbsolutePath(results_filepath));
+      std::ofstream stream(ResolvePath(results_filepath));
 
       // Write out the xml file
       xml_schema::namespace_infomap map;

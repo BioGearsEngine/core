@@ -131,24 +131,24 @@ bool IsAbsolutePath(const char* path)
   return filesystem::path{ path }.is_absolute();
 }
 
-std::string ResolveAbsolutePath(const std::string& path)
+std::string ResolvePath(const std::string& path)
 {
   filesystem::path given_path{ path };
   filesystem::path cwd{ GetCurrentWorkingDirectory() };
 
   return ((given_path.is_absolute()) ? given_path
-                                     : (filesystem::path{ cwd }.is_absolute()) ? (cwd / given_path).make_normal()
-                                                                               :(given_path).make_normal())
+                                     : (filesystem::path{ cwd }.is_absolute()) ? filesystem::normalize(cwd / given_path)
+                                                                               : filesystem::normalize(given_path))
     .string();
 }
 //!
 //!  \param const char* path Path to be resolved
-//!  \brief This call is very unsafe when using threading. The lifetime of the char* returned is until the next call of ResolveAbsolutePath.
+//!  \brief This call is very unsafe when using threading. The lifetime of the char* returned is until the next call of ResolvePath.
 //!         Copy this return value immediatly after the call to avoid most issues
-const char* ResolveAbsolutePath_cStr(const char* path)
+const char* ResolvePath_cStr(const char* path)
 {
   static std::string storage = std::string{ path };
-  storage = ResolveAbsolutePath(storage);
+  storage = ResolvePath(storage);
   return storage.c_str();
 }
 

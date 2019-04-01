@@ -47,8 +47,8 @@ BIOGEARS_API std::vector<std::string> ListFiles(const std::string& dir, const st
 
 BIOGEARS_API bool IsAbsolutePath(const std::string& path);
 BIOGEARS_API bool IsAbsolutePath(const char* path);
-BIOGEARS_API std::string ResolveAbsolutePath(const std::string& path);
-BIOGEARS_API const char* ResolveAbsolutePath_cStr(const char* path);
+BIOGEARS_API std::string ResolvePath(const std::string& path);
+BIOGEARS_API const char* ResolvePath_cStr(const char* path);
 BIOGEARS_API void SetCurrentWorkingDirectory(std::string working_dir);
 BIOGEARS_API void SetCurrentWorkingDirectory(const char* working_dir);
 BIOGEARS_API bool TestLastDirName(std::string path, std::string dirname);
