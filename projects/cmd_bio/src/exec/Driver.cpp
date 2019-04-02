@@ -152,10 +152,10 @@ void Driver::queue_Scenario(Executor exec)
     std::string results_file = base_file_name + "Results.csv";
 
     std::unique_ptr<PhysiologyEngine> eng;
+    Logger console_logger;
     Logger file_logger(ex.Computed() + parent_dir + console_file);
-
     try {
-      file_logger.LogToConsole(false);
+      file_logger.SetConsoleLogLevel(log4cpp::Priority::WARN);
       eng = CreateBioGearsEngine(&file_logger);
     } catch (std::exception e) {
       std::cout << e.what();
@@ -168,14 +168,14 @@ void Driver::queue_Scenario(Executor exec)
 
     //NOTE:Assuming a Patient File
     sce.GetInitialParameters().SetPatientFile(ex.Patient());
-    std::cout << "Starting Scenario: " + trimed_scenario_path+"\n";
+    console_logger.Info("Starting Scenario: " + trimed_scenario_path);
     try
     {
       BioGearsScenarioExec bse{*eng};
       bse.Execute(sce, ex.Computed() + parent_dir + results_file, nullptr);
-      std::cout << "Completed Scenario: " + trimed_scenario_path +"\n";
+      console_logger.Info("Completed Scenario: " + trimed_scenario_path);
     } catch (...){
-      std::cout << "Scenario: " + trimed_scenario_path + " Failed.\n";
+      console_logger.Info("Scenario: " + trimed_scenario_path + " Failed.");
     }
   };
 

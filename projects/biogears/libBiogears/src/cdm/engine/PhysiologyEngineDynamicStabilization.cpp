@@ -170,7 +170,8 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
 }
 //-----------------------------------------------------------------------------
 PhysiologyEngineDynamicStabilizer::PhysiologyEngineDynamicStabilizer(double timeStep_s, const PhysiologyEngineDynamicStabilizationCriteria& criteria)
-  : m_properties(criteria.GetPropertyConvergence())
+  : Loggable(criteria.GetLogger())
+  , m_properties(criteria.GetPropertyConvergence())
 {
   m_dT_s = timeStep_s;
   m_totTime_s = 0;
@@ -228,11 +229,11 @@ void PhysiologyEngineDynamicStabilizer::Converge()
   if (!m_converged && m_passTime_s >= m_covTime_s) { // We have converged
     m_converged = true;
     if (m_hasOptionalProperties)
-      Info("We have passed required convergence criteria, attempting to converge optional properties from multiple conditions.");
+      Warning("We have passed required convergence criteria, attempting to converge optional properties from multiple conditions.");
   }
   if (m_converged && m_optsPassTime_s >= m_covTime_s) { // We have converged optional props
     m_convergedOptional = true;
-    Info("We have passed required and optional convergence criteria.");
+    Warning("We have passed required and optional convergence criteria.");
   }
 
   if (m_totTime_s > m_maxTime_s) {

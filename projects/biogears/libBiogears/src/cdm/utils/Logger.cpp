@@ -43,7 +43,7 @@ Logger::Logger(const char* logFilename, const char* working_dir)
 void Logger::LogToConsole(bool log_to_console)
 {
   if (log_to_console) {
-    m_Log->addAppender(m_ConsoleAppender);
+    m_Log->addAppender(*m_ConsoleAppender);
   } else {
     m_Log->removeAppender(m_ConsoleAppender);
   }
@@ -51,7 +51,8 @@ void Logger::LogToConsole(bool log_to_console)
 
 void Logger::ResetLogFile(const std::string& logFilename, const std::string& working_dir)
 {
-  log4cpp::Category& category = log4cpp::Category::getInstance(logFilename);
+  std::string key = logFilename; if( logFilename.empty()) { key = "biogears_logger"; }
+  log4cpp::Category& category = log4cpp::Category::getInstance(key);
   m_Log = &category;
   m_Log->removeAllAppenders();
   m_Log->setPriority(log4cpp::Priority::INFO);
@@ -77,10 +78,11 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
 
   m_ConsoleAppender = log4cpp::Appender::getAppender(logFilename + "_console");
   if (m_ConsoleAppender == nullptr) {
-    m_ConsoleAppender = new log4cpp::OstreamAppender("console", &std::cout);
+    m_ConsoleAppender = new log4cpp::OstreamAppender(logFilename + "_console", &std::cout);
     log4cpp::PatternLayout* cLayout = new log4cpp::PatternLayout();
     cLayout->setConversionPattern("%d [%p] %m%n");
     m_ConsoleAppender->setLayout(cLayout);
+    m_ConsoleAppender->setThreshold(log4cpp::Priority::INFO);
   }
   LogToConsole(true);
 }
@@ -101,8 +103,17 @@ void Logger::SetLogTime(const SEScalarTime* time) { m_time = time; }
 // This function will change the priority of the logger
 void Logger::SetLogLevel(log4cpp::Priority::Value priority)
 {
-  if (m_Log)
+  if (m_Log) {
     m_Log->setPriority(priority);
+  }
+}
+
+// This function will change the priority of the m_ConsoleAppender
+void Logger::SetConsoleLogLevel(log4cpp::Priority::Value priority)
+{
+  if (m_ConsoleAppender) {
+    m_ConsoleAppender->setThreshold(priority);
+  }
 }
 
 // This function will return the priority of the logger

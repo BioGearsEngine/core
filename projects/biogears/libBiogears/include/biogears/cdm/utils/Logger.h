@@ -88,6 +88,7 @@ public:
   void ResetLogFile(const char* logFilename , const char* working_dir = Loggable::empty_cStr);
 
   void SetLogLevel(log4cpp::Priority::Value priority);
+  void SetConsoleLogLevel(log4cpp::Priority::Value priority);
   log4cpp::Priority::Value GetLogLevel();
 
   virtual void SetLogTime(const SEScalarTime* time);
