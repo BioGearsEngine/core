@@ -159,5 +159,6 @@ int main(int argc, char** argv)
   driver.run();
   driver.stop_when_empty();
   driver.join();
+  std::cout << "done!" << std::endl;
   return 0;
 }
