@@ -40,7 +40,7 @@ message(STATUS "Configuring ${PROJECT_NAME}")
 SET(MD_MAIN_PAGE "MainPage.md")
 configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
 configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/nocode.doxy.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/NoCode.doxy @ONLY)
-configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/validationtables.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/ValidationTables.config @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/validationtables.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/ValidationTablesJava.config @ONLY)
 
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.java"   "Sources\\")
 
@@ -135,7 +135,7 @@ set (allocation_args "-Xms64M" "-Xmx1G" "-Xmn64M" "-Xss4m")
 #    VERBATIM
 #    USES_TERMINAL
 #)
-#set (args "InitialPatientStates.config")
+#set (args "InitialPatientStatesJava.config")
 #add_custom_target(gen-states
 #    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.TestDriver ${args}
 #    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -150,7 +150,7 @@ if(Biogears_BUILD_DOCUMENTATION)
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRun.config
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava.config
         COMMAND cd doc    #I hate windows
         COMMAND cd doxygen 
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
@@ -159,7 +159,7 @@ if(Biogears_BUILD_DOCUMENTATION)
         USES_TERMINAL
   )
 endif()
-set (args "ValidationSystems.config" )
+set (args "ValidationSystemsJava.config" )
 add_custom_target(run-system-validation
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.SystemValidation
@@ -175,7 +175,7 @@ add_custom_target(run-system-validation
 #    VERBATIM
 #    USES_TERMINAL
 #)
-set (args "ValidationPatients.config")
+set (args "ValidationPatientsJava.config")
 add_custom_target(run-patient-validation
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.validation.PatientValidation
@@ -183,7 +183,7 @@ add_custom_target(run-patient-validation
     VERBATIM
     USES_TERMINAL
 )
-set (args "ValidationDrugs.config")
+set (args "ValidationDrugsJava.config")
 add_custom_target(run-drug-validation
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -191,7 +191,7 @@ add_custom_target(run-drug-validation
     USES_TERMINAL
 )
 
-set (args "VerificationScenarios.config")
+set (args "VerificationScenariosJava.config")
 add_custom_target(run-verification
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -199,7 +199,7 @@ add_custom_target(run-verification
     USES_TERMINAL
 )
 
-set (args "DebugRun.config")
+set (args "DebugRunJava.config")
 add_custom_target(run-debug
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"    mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -207,28 +207,28 @@ add_custom_target(run-debug
     USES_TERMINAL
 )
 
-set (args "PlotRun.config")
+set (args "PlotRunJava.config")
 add_custom_target(run-plots
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "DebugPlots.config")
+set (args "DebugPlotsJava.config")
 add_custom_target(run-debug-plots
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.csv.plots.PlotDriver  ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "CDMUnitTests.config")
+set (args "CDMUnitTestsJava.config")
 add_custom_target(run-cdm-tests
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
     VERBATIM
     USES_TERMINAL
 )
-set (args "BGEUnitTests.config")
+set (args "BGEUnitTestsJava.config")
 add_custom_target(run-bge-tests
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -246,7 +246,7 @@ add_custom_target(rebase-scenarios
     VERBATIM
     USES_TERMINAL
 )
-set (args "DebugRun.config true")
+set (args "DebugRunJava.config true")
 add_custom_target(rebase-debug
     COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.Rebase ${args}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
