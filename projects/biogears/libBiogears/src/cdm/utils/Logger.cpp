@@ -51,7 +51,7 @@ void Logger::LogToConsole(bool log_to_console)
 
 void Logger::ResetLogFile(const std::string& logFilename, const std::string& working_dir)
 {
-  log4cpp::Category& category = log4cpp::Category::getInstance("biogears_logger");
+  log4cpp::Category& category = log4cpp::Category::getInstance(logFilename);
   m_Log = &category;
   m_Log->removeAllAppenders();
   m_Log->setPriority(log4cpp::Priority::INFO);
