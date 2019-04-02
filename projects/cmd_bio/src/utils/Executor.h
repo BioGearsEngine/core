@@ -44,30 +44,18 @@ public:
   std::string Scenario() const;
   std::vector<std::string> Results() const;
 
-  Executor& Name(const std::string&) &&;
-  Executor& Driver(EDriver) &&;
-  Executor& PlotStyle(EPlotStyle) &&;
-  Executor& NoCompare(bool) &&;
-  Executor& Baselines(const std::string&) &&;
-  Executor& Computed(const std::string&) &&;
-  Executor& Group(const std::string&) &&;
-  Executor& Patient(const std::string&) &&;
-  Executor& Scenario(const std::string&) &&;
-  Executor& Results(const std::vector<std::string>&) &&;
+  void Name(const std::string&);
+  void Driver(EDriver);
+  void PlotStyle(EPlotStyle);
+  void NoCompare(bool);
+  void Baselines(const std::string&);
+  void Computed(const std::string&);
+  void Group(const std::string&);
+  void Patient(const std::string&);
+  void Scenario(const std::string&);
+  void Results(const std::vector<std::string>&);
 
-  void Name(const std::string&) &;
-  void Driver(EDriver) &;
-  void PlotStyle(EPlotStyle) &;
-  void NoCompare(bool) &;
-  void Baselines(const std::string&) &;
-  void Computed(const std::string&) &;
-  void Group(const std::string&) &;
-  void Patient(const std::string&) &;
-  void Scenario(const std::string&) &;
-  void Results(const std::vector<std::string>&) &;
-
-  Executor& push_back_results(const std::string&) &&;
-  void push_back_results(const std::string&) &;
+  void push_back_results(const std::string&);
   void clear_results();
 
 private:

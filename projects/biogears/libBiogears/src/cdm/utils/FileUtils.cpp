@@ -137,8 +137,8 @@ std::string ResolveAbsolutePath(const std::string& path)
   filesystem::path cwd{ GetCurrentWorkingDirectory() };
 
   return ((given_path.is_absolute()) ? given_path
-                                     : (filesystem::path{ cwd }.is_absolute()) ? filesystem::absolute(cwd / given_path)
-                                                                               : filesystem::absolute(given_path))
+                                     : (filesystem::path{ cwd }.is_absolute()) ? (cwd / given_path).make_normal()
+                                                                               :(given_path).make_normal())
     .string();
 }
 //!

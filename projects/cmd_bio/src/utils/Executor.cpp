@@ -42,124 +42,60 @@ std::string Executor::Patient() const { return patient; }
 std::string Executor::Scenario() const { return scenario; }
 //-----------------------------------------------------------------------------
 std::vector<std::string> Executor::Results() const { return results; }
+
 //-----------------------------------------------------------------------------
-Executor& Executor::Name(const std::string& n) &&
-{
-  name = n;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Driver(EDriver d) &&
-{
-  driver = d;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::PlotStyle(EPlotStyle p) &&
-{
-  plot_style = p;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::NoCompare(bool nc) &&
-{
-  no_compare = nc;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Baselines(const std::string& b) &&
-{
-  baselines = b;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Computed(const std::string& c) &&
-{
-  computed = c;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Group(const std::string& g) &&
-{
-  group = g;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Patient(const std::string& p) &&
-{
-  patient = p;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Scenario(const std::string& s) &&
-{
-  scenario = s;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-Executor& Executor::Results(const std::vector<std::string>& r) &&
-{
-  results = r;
-  return *this;
-}
-//-----------------------------------------------------------------------------
-void Executor::Name(const std::string& n) &
+void Executor::Name(const std::string& n)
 {
   name = n;
 }
 //-----------------------------------------------------------------------------
-void Executor::Driver(EDriver d) &
+void Executor::Driver(EDriver d)
 {
   driver = d;
 }
 //-----------------------------------------------------------------------------
-void Executor::PlotStyle(EPlotStyle p) &
+void Executor::PlotStyle(EPlotStyle p)
 {
   plot_style = p;
 }
 //-----------------------------------------------------------------------------
-void Executor::NoCompare(bool nc) &
+void Executor::NoCompare(bool nc)
 {
   no_compare = nc;
 }
 //-----------------------------------------------------------------------------
-void Executor::Baselines(const std::string& b) &
+void Executor::Baselines(const std::string& b)
 {
   baselines = b;
 }
 //-----------------------------------------------------------------------------
-void Executor::Computed(const std::string& c) &
+void Executor::Computed(const std::string& c)
 {
   computed = c;
 }
 //-----------------------------------------------------------------------------
-void Executor::Group(const std::string& g) &
+void Executor::Group(const std::string& g)
 {
   group = g;
 }
 //-----------------------------------------------------------------------------
-void Executor::Patient(const std::string& p) &
+void Executor::Patient(const std::string& p)
 {
   patient = p;
 }
 //-----------------------------------------------------------------------------
-void Executor::Scenario(const std::string& s) &
+void Executor::Scenario(const std::string& s)
 {
   scenario = s;
 }
 //-----------------------------------------------------------------------------
-void Executor::Results(const std::vector<std::string>& r) &
+void Executor::Results(const std::vector<std::string>& r)
 {
   results = r;
 }
+
 //-----------------------------------------------------------------------------
-Executor& Executor::push_back_results(const std::string& r) &&
-{
-  results.push_back(r);
-  return *this;
-}
-//-----------------------------------------------------------------------------
-void Executor::push_back_results(const std::string& r) & { results.push_back(r); }
+void Executor::push_back_results(const std::string& r) { results.push_back(r); }
 //-----------------------------------------------------------------------------
 void Executor::clear_results() { results.clear(); }
 std::ostream& operator<<(std::ostream& ostr, const EDriver& driver)

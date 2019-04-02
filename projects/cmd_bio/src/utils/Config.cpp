@@ -674,10 +674,6 @@ bool handle_driver_paramaters(Tokenizer::token_list::iterator& tokenItr, Tokeniz
       handle_assignment(next, end, results);
       handle_delimited_list(results, ',', results_list);
       rhs.Results(results_list);
-    } else if (token == "patient") {
-      std::string computed;
-      handle_assignment(next, end, computed);
-      rhs.Patient(computed);
     } else if (token == "scenario") {
       std::string computed;
       handle_assignment(next, end, computed);

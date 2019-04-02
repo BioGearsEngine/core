@@ -8,9 +8,11 @@
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
-#include <biogears/engine/test/BioGearsEngineTest.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
+#include <biogears/engine/test/BioGearsEngineTest.h>
 #endif
+#include <biogears/schema/cdm/Scenario.hxx>
+#include <xsd/cxx/tree/exceptions.hxx>
 
 #include "../utils/string-helpers.h"
 
@@ -72,13 +74,12 @@ bool Driver::stop_if_empty()
 {
   return _pool.stop_if_empty();
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void Driver::stop_when_empty()
 {
-    while ( !_pool.stop_if_empty() )
-    {
-      std::this_thread::sleep_for( std::chrono::seconds(1) );
-    }
+  while (!_pool.stop_if_empty()) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+  }
 }
 //-----------------------------------------------------------------------------
 void Driver::join()
@@ -86,7 +87,7 @@ void Driver::join()
   _pool.join();
 }
 //-----------------------------------------------------------------------------
-void Driver::queue_BGEUnitTest(const Executor& exec)
+void Driver::queue_BGEUnitTest(Executor exec)
 {
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
   _pool.queue_work(
@@ -106,7 +107,7 @@ void Driver::queue_BGEUnitTest(const Executor& exec)
 }
 
 //-----------------------------------------------------------------------------
-void Driver::queue_CDMUnitTest(const Executor& exec)
+void Driver::queue_CDMUnitTest(Executor exec)
 {
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
   _pool.queue_work(
@@ -115,7 +116,7 @@ void Driver::queue_CDMUnitTest(const Executor& exec)
       try {
         executor = new CommonDataModelTest;
       } catch (const std::exception& e) {
-        std::cout << e.what();  
+        std::cout << e.what();
         return 1;
       }
       executor->RunTest(exec.Name(), exec.Computed());
@@ -125,23 +126,16 @@ void Driver::queue_CDMUnitTest(const Executor& exec)
 #endif
 }
 //-----------------------------------------------------------------------------
-void Driver::queue_Scenario(const Executor& exec)
+void Driver::queue_Scenario(Executor exec)
 {
-  const auto& patient_path = exec.Patient();
-  std::string scenario_path = exec.Scenario();
-
-  std::string nc_patient_path = exec.Patient();
-  std::transform(nc_patient_path.begin(), nc_patient_path.end(), nc_patient_path.begin(), ::tolower);
-
-  auto scenario_launch = [](Executor ex) {
-    std::string trimed_patient_path(trim(ex.Patient()));
-    auto split_patient_path = split(trimed_patient_path, '/');
-    auto patient_no_extension = split(split_patient_path.back(), '.').front();
-
+  auto scenario_launch = [](Executor& ex, bool multi_patient_run) {
     std::string trimed_scenario_path(trim(ex.Scenario()));
     auto split_scenario_path = split(trimed_scenario_path, '/');
     auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
+    std::string trimed_patient_path(trim(ex.Patient()));
+    auto split_patient_path = split(trimed_patient_path, '/');
+    auto patient_no_extension = split(split_patient_path.back(), '.').front();
 
     //NOTE: This looses non relative prefixes as the split will eat the leading path_seperator
     std::string parent_dir;
@@ -152,36 +146,95 @@ void Driver::queue_Scenario(const Executor& exec)
       }
     }
 
-    std::string console_file = patient_no_extension + "-" + scenario_no_extension + ".log";
-    std::string log_file = patient_no_extension + "-" + scenario_no_extension + "Results.log";
-    std::string results_file = patient_no_extension + "-" + scenario_no_extension + "Results.csv";
+    std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
+    std::string console_file = base_file_name + ".log";
+    std::string log_file = base_file_name + "Results.log";
+    std::string results_file = base_file_name + "Results.csv";
 
     std::unique_ptr<PhysiologyEngine> eng;
+    Logger file_logger(ex.Computed() + parent_dir + console_file);
+
     try {
-      eng = CreateBioGearsEngine(ex.Computed()+parent_dir+console_file);
+      file_logger.LogToConsole(false);
+      eng = CreateBioGearsEngine(&file_logger);
     } catch (std::exception e) {
       std::cout << e.what();
     }
 
     BioGearsScenario sce(eng->GetSubstanceManager());
-    sce.Load("Scenarios/" + trim(trimed_scenario_path));
-    sce.GetInitialParameters().SetPatientFile(trim(trimed_patient_path));
+    if (!sce.Load("Scenarios/" + trim(trimed_scenario_path))) {
+      //TODO::LOG ERROR Scenario File could not be loaded
+    }
 
-    BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
-    exec->Execute(sce, ex.Computed()+parent_dir+results_file, nullptr);
-    delete exec;
+    //NOTE:Assuming a Patient File
+    sce.GetInitialParameters().SetPatientFile(ex.Patient());
+    std::cout << "Starting Scenario: " + trimed_scenario_path+"\n";
+    try
+    {
+      BioGearsScenarioExec bse{*eng};
+      bse.Execute(sce, ex.Computed() + parent_dir + results_file, nullptr);
+      std::cout << "Completed Scenario: " + trimed_scenario_path +"\n";
+    } catch (...){
+      std::cout << "Scenario: " + trimed_scenario_path + " Failed.\n";
+    }
   };
 
-  if (nc_patient_path == "all") {
-    auto patientEx{ exec };
-    auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
-    for (const std::string& patient_file : patient_files) {
-      patientEx.Patient(patient_file);
-      _pool.queue_work(std::bind(scenario_launch, patientEx));
+  std::ifstream ifs{ exec.Scenario() };
+  if (!ifs.is_open()) {
+    ifs.open("Scenarios/" + exec.Scenario());
+    if (!ifs.is_open()) {
+      //TODO: Log A Clean Error about Scenario not being found.
+      return;
     }
+  }
+  std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
+  try
+  {
+    xml_schema::flags xml_flags;
+    xml_schema::properties xml_properties;
+
+    xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel","xsd/BioGearsDataModel.xsd");
+    scenario = mil::tatrc::physiology::datamodel::Scenario(ifs,xml_flags, xml_properties);
+  } catch ( std::runtime_error e)
+  {
+    std::cout << e.what();
+    return;
+  } catch (xsd::cxx::tree::parsing<char> e )
+  {
+    std::cout << e;
+    return;
+  }
+  // The Biogears Schema states that ScenarioData supports the following booot strap tags
+  // 1. EngineStateFile -- Overrides PatientFile and Patient tag and skips initialization using the state file
+  // 2. PatientFile -- External file which will be read in with a patient definition
+  // 3. Patient -- Inline Patient definition simaler to PatientFile
+  // Currently only Patient File is supported by this function
+  // TODO: Test for EngineState file and call an appropriate launcher
+  // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
+  if (scenario->EngineStateFile().present()) {
+    //TODO: Log A Clean Error about EngineState File Not Supported by this launcher;
+    return;
+  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
+    const auto patient_file = scenario->InitialParameters()->PatientFile().get();
+    std::string nc_patient_file = patient_file;
+    std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
+    if ("all" == nc_patient_file) {
+      auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
+      for (const std::string& patient_file : patient_files) {
+        auto patientEx{ exec };
+        patientEx.Patient(patient_file);
+        _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
+      }
+    } else {
+      exec.Patient(patient_file);
+      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+    }
+  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
+    //TODO Log Error that inline patient definitions not supported by this launcher;
   } else {
-    _pool.queue_work(std::bind(scenario_launch, exec));
+    //TODO: Log Error about no patient condition specified in scenario file;
+    return;
   }
 }
 //-----------------------------------------------------------------------------
-}
+} // NAMESPACE
