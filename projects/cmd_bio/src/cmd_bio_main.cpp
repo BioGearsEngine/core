@@ -43,6 +43,11 @@
 //!
 int main(int argc, char** argv)
 {
+  if(argv[1][0] == 'R') {
+    biogears::ReportWriter r;
+    r.CalculateAverages(std::string("BloodChemistryValidationResults.csv"));
+    return 0;
+  }
   if (argv[1][0] == 'B') {
     biogears::ReportWriter r;
     r.ParseCSV(std::string("BloodChemistryValidation.csv"));

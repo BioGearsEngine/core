@@ -13,7 +13,10 @@ public:
   std::string to_xml();
   void generate();
   void ParseCSV(std::string& filename);
+  void CalculateAverages(std::string& filename);
 private:
+  std::vector<std::pair<std::string,double>> average_values;
+  std::vector<std::vector<double>> values;
   std::vector<std::vector<std::string>> cells;
   std::string report;
 };  
