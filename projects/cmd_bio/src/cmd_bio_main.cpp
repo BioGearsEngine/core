@@ -27,9 +27,13 @@
 
 #include "utils/Arguments.h"
 #include "utils/Config.h"
+#include "utils/ReportWriter.h"
 
 #include "biogears/cdm/utils/ConfigParser.h"
 #include <biogears/cdm/utils/FileUtils.h>
+////////////////////
+#include <iostream>
+#include <fstream>
 
 //!
 //! \brief Reads command line argument and executes corresponding operation
@@ -39,6 +43,16 @@
 //!
 int main(int argc, char** argv)
 {
+  if (argv[1][0] == 'B') {
+    biogears::ReportWriter r;
+    r.ParseCSV(std::string("BloodChemistryValidation.csv"));
+    std::string report = r.to_markdown();
+    std::ofstream myreport;
+    myreport.open("report.md");
+    myreport << report;
+    myreport.close();
+    return 0;
+  }
   biogears::Arguments args(
     { "GENDATA", "GENSTATES", "VERIFY" } //Options
     ,
@@ -69,7 +83,7 @@ int main(int argc, char** argv)
   driver.configure(conf);
 
   if (args.Option("GENSTATES")) {
-    const  biogears::Config runs{ "GenStates.config" };
+    const biogears::Config runs{ "GenStates.config" };
     driver.queue(runs);
   }
 

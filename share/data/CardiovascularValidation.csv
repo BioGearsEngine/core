@@ -1,0 +1,115 @@
+Output,Units,Algorithm,Reference Values,References,Reference Page,Notes,Table,ResultsFile,SignificantDigits
+ArterialPressure*,,,,,,"Not validating the waveform itself. 
+Waveform Mean is being validated.",Cardiovascular,,
+BloodVolume,mL,Mean,5674,guyton2006medical,p293,,Cardiovascular,,0f
+CardiacIndex,L/min m^2,Mean,3,guyton2006medical,p232,,Cardiovascular,,1f
+CardiacOutput,mL/min,Mean,5600,guyton2006medical,p232,,Cardiovascular,,0f
+CentralVenousPressure*,mmHg,Mean,"[2,6]",Leeuwen2015laboratory,p93,"Not validating the waveform itself. 
+Waveform Mean is being validated.",Cardiovascular,,
+CerebralBloodFlow,mL/min,Mean,"[725,942.5]",guyton2006medical,p787,"50-65 mL per 100g per min, assuming an average 1450g/male and 1300g/female brain mass",Cardiovascular,,0f
+CerebralPerfusionPressure,mmHg,Mean,"[60,98]",[MAP-ICP],,,Cardiovascular,,1f
+DiastolicArterialPressure,mmHg,Mean,"[60,90]",Leeuwen2015laboratory,p93,,Cardiovascular,,1f
+HeartEjectionFraction,,Mean,0.55,guyton2006medical,,,Cardiovascular,,2f
+HeartRate,1/min,Mean,72,guyton2006medical,p147,,Cardiovascular,,0f
+HeartRhythm*,,,,,,Not validating enums,Cardiovascular,,
+HeartStrokeVolume,mL,Mean,"[55.3,93.1]",brandfonbrener1955changes,,,Cardiovascular,,1f
+IntracranialPressure,mmHg,Mean,"[7,15]",steiner2006monitoring,,Assumes supine adult,Cardiovascular,,1f
+MeanArterialPressure,mmHg,Mean,"[70,105]",Leeuwen2015laboratory,p93,,Cardiovascular,,1f
+MeanArterialCarbonDioxidePartialPressure*,,,,,,Exposed for use by other systems,Cardiovascular,,
+MeanArterialCarbonDioxidePartialPressureDelta*,,,,,,Exposed for use by other systems,Cardiovascular,,
+MeanCentralVenousPressure,mmHg,Mean,"[2,6]",Leeuwen2015laboratory,p93,,Cardiovascular,,1f
+MeanSkinFlow,mL/s,Mean,6.3,valentin2002icrp,,,Cardiovascular,,1f
+PulmonaryArterialPressure*,,,,,,"Not validating the waveform itself. 
+Waveform Mean is being validated.",Cardiovascular,,
+PulmonaryCapillariesWedgePressure,mmHg,Mean,"[4,12]",Leeuwen2015laboratory,p93,,Cardiovascular,,1f
+PulmonaryDiastolicArterialPressure,mmHg,Mean,"[4,12],
+[8,15]","Leeuwen2015laboratory,
+Edwards2009pocket","p93
+",,Cardiovascular,,1f
+PulmonaryMeanArterialPressure,mmHg,Mean,"[9,18]",Edwards2009pocket,,,Cardiovascular,,1f
+PulmonaryMeanCapillaryFlow*,,,,,,,Cardiovascular,,
+PulmonaryMeanShuntFlow*,,,,,,,Cardiovascular,,
+PulmonarySystolicArterialPressure,mmHg,Mean,"[15,30]",Leeuwen2015laboratory,p93,,Cardiovascular,,1f
+PulmonaryVascularResistance,mmHg s/mL,Mean,0.14,guyton2006medical,p167,,Cardiovascular,,3f
+PulmonaryVascularResistanceIndex,mmHg s/mL m^2,Mean,0.082,guyton2006medical,p167 & p232,,Cardiovascular,,3f
+PulsePressure,mmHg,Mean,40,guyton2006medical,p180,SystolicArterialPressure - DiastolicArteralPressure,Cardiovascular,,1f
+SystemicVascularResistance,mmHg s/mL,Mean,1,guyton2006medical,p163,,Cardiovascular,,1f
+SystolicArterialPressure,mmHg,Mean,"[100,140]",Leeuwen2015laboratory,p93,,Cardiovascular,,1f
+Compartment Data,Units,Algorithm,Chosen Values,Reference,Page,Notes,Table,ResultsFile,SignificantDigits
+Aorta-Volume,mL,Mean,283.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+Aorta-InFlow ,mL/s,Mean,94.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+BrainVasculature-Volume ,mL,Mean,68.1,valentin2002icrp,,,CardiovascularCompartments,,1f
+BrainVasculature-InFlow ,mL/s,Mean,11.4,valentin2002icrp,,,CardiovascularCompartments,,1f
+BrainVasculature-Oxygen-PartialPressure,mmHg,Mean,40,dhawan2011neurointensive,409,,CardiovascularCompartments,,1f
+BoneVasculature-Volume ,mL,Mean,397.2,valentin2002icrp,,,CardiovascularCompartments,,1f
+BoneVasculature-InFlow ,mL/s,Mean,4.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+FatVasculature-Volume ,mL,Mean,283.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+FatVasculature-InFlow ,mL/s,Mean,4.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+KidneyVasculature-Volume ,mL,Mean,"[63.4,75.8]",effros1967vascular,,,CardiovascularCompartments,,1f
+KidneyVasculature-InFlow ,mL/s,Mean,18.6,valentin2002icrp,,,CardiovascularCompartments,,1f
+LargeIntestineVasculature-Volume ,mL,Mean,107.8,valentin2002icrp,,,CardiovascularCompartments,,1f
+LargeIntestineVasculature-InFlow ,mL/s,Mean,3.8,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftArmVasculature-Volume ,mL,Mean,56.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftHeart-Volume ,mL,WaveformMin,"[34,66]",hudsmuth2005heartvolume,,,CardiovascularCompartments,,1f
+LeftHeart-Volume ,mL,WaveformMax,"[131,189]",hudsmuth2005heartvolume,,,CardiovascularCompartments,,1f
+LeftHeart-Pressure ,mmHg,WaveformMin,"[4,12]",Edwards2009pocket,,,CardiovascularCompartments,,1f
+LeftHeart-Pressure ,mmHg,WaveformMax,"[100,140]",homoud2008introduction,p8,,CardiovascularCompartments,,1f
+LeftHeart-InFlow ,mL/s,Mean,94.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftKidneyVasculature-Volume ,mL,Mean,"[31.7,37.9]",effros1967vascular,,,CardiovascularCompartments,,1f
+LeftKidneyVasculature-InFlow ,mL/s,Mean,9.3,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftLegVasculature-Volume ,mL,Mean,85.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftPulmonaryArteries-Volume ,mL,Mean,96.5,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftPulmonaryArteries-InFlow ,mL/s,Mean,45,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftPulmonaryCapillaries-Volume ,mL,Mean,65.3,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftPulmonaryCapillaries-InFlow ,mL/s,Mean,45,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftPulmonaryVeins-Volume ,mL,Mean,192.9,valentin2002icrp,,,CardiovascularCompartments,,1f
+LeftPulmonaryVeins-InFlow ,mL/s,Mean,45,valentin2002icrp,,,CardiovascularCompartments,,1f
+LiverVasculature-Volume ,mL,Mean,601.5,valentin2002icrp,,,CardiovascularCompartments,,1f
+LiverVasculature-InFlow ,mL/s,Mean,24.2,guyton2006medical,p838,,CardiovascularCompartments,,1f
+MuscleVasculature-Volume ,mL,Mean,794.4,valentin2002icrp,,,CardiovascularCompartments,,1f
+MuscleVasculature-InFlow ,mL/s,Mean,16.1,valentin2002icrp,,,CardiovascularCompartments,,1f
+MyocardiumVasculature-Volume ,mL,Mean,39.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+MyocardiumVasculature-InFlow ,mL/s,Mean,3.8,valentin2002icrp,,,CardiovascularCompartments,,1f
+PulmonaryArteries-Volume ,mL,Mean,192.9,valentin2002icrp,,,CardiovascularCompartments,,1f
+PulmonaryArteries-InFlow ,mL/s,Mean,94.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+PulmonaryArteries-Pressure ,mmHg,WaveformMin,"[4,12]",Leeuwen2015laboratory,p93,,CardiovascularCompartments,,1f
+PulmonaryArteries-Pressure ,mmHg,WaveformMax,"[15,30]",Leeuwen2015laboratory,p93,,CardiovascularCompartments,,1f
+PulmonaryCapillaries-Volume ,mL,Mean,130.5,valentin2002icrp,,,CardiovascularCompartments,,1f
+PulmonaryCapillaries-InFlow ,mL/s,Mean,94.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+PulmonaryCapillaries-Pressure ,mmHg,Mean,"[4,12]",Leeuwen2015laboratory,p93,,CardiovascularCompartments,,1f
+PulmonaryVeins-Volume ,mL,Mean,385.8,valentin2002icrp,,,CardiovascularCompartments,,1f
+PulmonaryVeins-InFlow ,mL/s,Mean,94.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+PulmonaryVeins-Pressure ,mmHg,Mean,"[4,12]",Leeuwen2015laboratory,p93,,CardiovascularCompartments,,1f
+RightArmVasculature-Volume ,mL,Mean,56.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightHeart-Volume ,mL,WaveformMin,"[58,98],
+[50,100]","hudsmuth2005heartvolume,
+Edwards2009pocket",,,CardiovascularCompartments,,1f
+RightHeart-Volume ,mL,WaveformMax,"[157,223],
+[100,160]","hudsmuth2005heartvolume,
+Edwards2009pocket",,,CardiovascularCompartments,,1f
+RightHeart-Pressure ,mmHg,WaveformMin,"[2,8]",Edwards2009pocket,,,CardiovascularCompartments,,1f
+RightHeart-Pressure ,mmHg,WaveformMax,"[15,30]",Edwards2009pocket,,,CardiovascularCompartments,,1f
+RightHeart-InFlow ,mL/s,Mean,94.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightKidneyVasculature-Volume ,mL,Mean,"[31.7,37.9]",effros1967vascular,,,CardiovascularCompartments,,1f
+RightKidneyVasculature-InFlow ,mL/s,Mean,9.3,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightLegVasculature-Volume ,mL,Mean,85.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightPulmonaryArteries-Volume ,mL,Mean,96.5,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightPulmonaryArteries-InFlow ,mL/s,Mean,49.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightPulmonaryCapillaries-Volume ,mL,Mean,65.3,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightPulmonaryCapillaries-InFlow ,mL/s,Mean,49.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightPulmonaryVeins-Volume ,mL,Mean,192.9,valentin2002icrp,,,CardiovascularCompartments,,1f
+RightPulmonaryVeins-InFlow ,mL/s,Mean,49.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+SkinVasculature-Volume ,mL,Mean,181.6,valentin2002icrp,,,CardiovascularCompartments,,1f
+SkinVasculature-InFlow ,mL/s,Mean,6.3,valentin2002icrp,,,CardiovascularCompartments,,1f
+SmallIntestineVasculature-Volume ,mL,Mean,215.6,valentin2002icrp,,,CardiovascularCompartments,,1f
+SmallIntestineVasculature-InFlow ,mL/s,Mean,9.5,valentin2002icrp,,,CardiovascularCompartments,,1f
+SplanchnicVasculature-Volume ,mL,Mean,65.8,valentin2002icrp,,,CardiovascularCompartments,,1f
+SplanchnicVasculature-InFlow ,mL/s,Mean,2.4,valentin2002icrp,,,CardiovascularCompartments,,1f
+SpleenVasculature-Volume ,mL,Mean,79.4,valentin2002icrp,,,CardiovascularCompartments,,1f
+SpleenVasculature-InFlow ,mL/s,Mean,2.84,valentin2002icrp,,,CardiovascularCompartments,,1f
+VenaCava-Volume ,mL,Mean,1032.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+VenaCava-InFlow ,mL/s,Mean,94.7,valentin2002icrp,,,CardiovascularCompartments,,1f
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,

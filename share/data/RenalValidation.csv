@@ -1,0 +1,170 @@
+Output,Units,Algorithm,Reference Values,References,Reference Page,Notes,Internal Notes,Reading,Table,ResultsFile,SignificantDigits
+FiltrationFraction,,Mean,0.2,guyton2006medical,317,GFR/RenalPlasmaFlow,,,Renal,,2f
+GlomerularFiltrationRate,L/day,Mean,180,guyton2006medical,315,,,,Renal,,1f
+RenalBloodFlow,mL/min,Mean,"1200, 1064","valtin1995renal,
+valentin2002icrp",91,,,,Renal,,1f
+RenalPlasmaFlow,mL/min,Mean,660,valtin1995renal,91,Dependent on Hematocrit,,,Renal,,1f
+RenalVascularResistance,mmHg min/mL,Mean,0.08,guyton2006medical,320,,"We are just looking at left, right should be the same",,Renal,,3f
+UrinationRate*,mL/s,Mean,22,Folkestad2004,"Male: Folkestad 2004
+Female is 33 from Corstiaans 2000",,Validation scenario will need to include urination…,,Renal,,
+UrineOsmolality,mOsm/kg,Mean,"[50,1200]",valtin1995renal,"Wilczynski 2014
+Valtin & Shaffer p. 291",,,,Renal,,0f
+UrineOsmolarity,mOsm/L,Mean,"[50,1200]",valtin1995renal,Valtin & Shaffer p. 291,,,,Renal,,0f
+UrineProductionRate,L/day,Mean,1.5,guyton2006medical,315,,,,Renal,,2f
+UrineSpecificGravity,,Mean,"[1.01,1.022],
+[1.003,1.040]","valtin1995renal,
+walker1990clinical",Valtin & Shaffer p.291,,,,Renal,,3f
+UrineVolume*,,,,,,,,,Renal,,
+UrineUreaNitrogenConcentration,g/L,Mean,"[5,10]",valtin1995renal,Valtin & Shaffer p.291,,,,Renal,,1f
+LeftAfferentArterioleResistance,mmHg min/mL,Mean,0.0417,guyton2006medical,321,(85mmHg - 60mmHg) / (RenalBloodFlow / 2),,,Renal,,3f
+LeftBowmansCapsulesHydrostaticPressure,mmHg,Mean,18,guyton2006medical,318,,,,Renal,,1f
+LeftBowmansCapsulesOsmoticPressure,mmHg,Mean,0,guyton2006medical,318,,,,Renal,,1f
+LeftEfferentArterioleResistance,mmHg min/mL,Mean,0.0763,guyton2006medical,321,(59mmHg - 18mmHg) / ((RenalBloodFlow - GFR) / 2),,,Renal,,3f
+LeftFiltrationFraction,,Mean,0.2,guyton2006medical,317,GFR/RenalPlasmaFlow,,,Renal,,2f
+LeftGlomerularCapillariesHydrostaticPressure,mmHg,Mean,60,guyton2006medical,318,,,,Renal,,1f
+LeftGlomerularCapillariesOsmoticPressure,mmHg,Mean,-32,guyton2006medical,318,,,,Renal,,1f
+LeftGlomerularFiltrationCoefficient,mL/min mmHg,Mean,6.3,guyton2006medical,318,Rate/NetPressure,,,Renal,,1f
+LeftGlomerularFiltrationRate,L/day,Mean,90,guyton2006medical,315,Total GFR / 2,,,Renal,,1f
+LeftGlomerularFiltrationSurfaceArea,cm^2,Mean,"[7250,23250]",[(SurfaceArea/100g<sub>RenalTissue</sub>)*KidneyMass<sub>g</sub>],44,5000-15000 cm^2 per 100 g renal tissue @cite valtin1995renal <br> mass of 2 kidneys in adult male = 310 g / 2 @cite valentin2002icrp,,,Renal,,0f
+LeftGlomerularFluidPermeability*,mL/min m^2 mmHg,Mean,3.67647,tuma2011microcirculation,,,We don’t change this from 1.0,,Renal,,
+LeftNetFiltrationPressure,mmHg,Mean,10,guyton2006medical,318,,,,Renal,,1f
+LeftNetReabsorptionPressure,mmHg,Mean,10,guyton2006medical,p340,,,,Renal,,1f
+LeftPeritubularCapillariesHydrostaticPressure*,mmHg,Mean,13,guyton2006medical,340,,,,Renal,,1f
+LeftPeritubularCapillariesOsmoticPressure,mmHg,Mean,-32,guyton2006medical,340,,,,Renal,,1f
+LeftReabsorptionFiltrationCoefficient,mL/min mmHg,Mean,6.2,guyton2006medical,p340,Rate/NetPressure,,,Renal,,1f
+LeftReabsorptionRate,mL/min,Mean,62,guyton2006medical,339,TotalReabsorptionRate/2,,,Renal,,1f
+LeftTubularReabsorptionFiltrationSurfaceArea*,m^2,Mean,2.5,valentin2002icrp,,,Cannot find,,Renal,,
+LeftTubularReabsorptionFluidPermeability*,mL/min m^2 mmHg,Mean,2.91747,tuma2011microcirculation,,,We don’t change this from 1.0,,Renal,,
+LeftTubularHydrostaticPressure*,mmHg,Mean,6,guyton2006medical,340,,,,Renal,,
+LeftTubularOsmoticPressure,mmHg,Mean,-15,guyton2006medical,340,,,,Renal,,1f
+RightAfferentArterioleResistance,mmHg min/mL,Mean,0.0417,guyton2006medical,321,(85mmHg - 60mmHg) / (RenalBloodFlow / 2),,,Renal,,3f
+RightBowmansCapsulesHydrostaticPressure,mmHg,Mean,18,guyton2006medical,318,,,,Renal,,1f
+RightBowmansCapsulesOsmoticPressure,mmHg,Mean,0,guyton2006medical,318,,,,Renal,,1f
+RightEfferentArterioleResistance,mmHg min/mL,Mean,0.0763,guyton2006medical,321,(59mmHg - 18mmHg) / ((RenalBloodFlow - GFR) / 2),,,Renal,,3f
+RightFiltrationFraction,,Mean,0.2,guyton2006medical,317,GFR/RenalPlasmaFlow,,,Renal,,2f
+RightGlomerularCapillariesHydrostaticPressure,mmHg,Mean,60,guyton2006medical,318,,,,Renal,,1f
+RightGlomerularCapillariesOsmoticPressure,mmHg,Mean,-32,guyton2006medical,318,,,,Renal,,1f
+RightGlomerularFiltrationCoefficient,mL/min mmHg,Mean,6.25,guyton2006medical,318,Rate/NetPressure,,,Renal,,1f
+RightGlomerularFiltrationRate,L/day,Mean,90,guyton2006medical,315,Total GFR / 2,,,Renal,,1f
+RightGlomerularFiltrationSurfaceArea,cm^2,Mean,"[7250,23250]",[(SurfaceArea/100g<sub>RenalTissue</sub>)*KidneyMass<sub>g</sub>],44,5000-15000 cm^2 per 100 g renal tissue @cite valtin1995renal <br> mass of 2 kidneys in adult male = 310 g / 2 @cite valentin2002icrp,,,Renal,,0f
+RightGlomerularFluidPermeability*,mL/min m^2 mmHg,Mean,3.67647,tuma2011microcirculation,,,We don’t change this from 1.0,,Renal,,
+RightNetFiltrationPressure,mmHg,Mean,10,guyton2006medical,318,,,,Renal,,1f
+RightNetReabsorptionPressure,mmHg,Mean,10,guyton2006medical,p340,,,,Renal,,1f
+RightPeritubularCapillariesHydrostaticPressure*,mmHg,Mean,13,guyton2006medical,340,,,,Renal,,1f
+RightPeritubularCapillariesOsmoticPressure,mmHg,Mean,-32,guyton2006medical,340,,,,Renal,,1f
+RightReabsorptionFiltrationCoefficient,mL/min mmHg,Mean,6.2,guyton2006medical,p340,Rate/NetPressure,,,Renal,,1f
+RightReabsorptionRate,mL/min,Mean,62,guyton2006medical,339,TotalReabsorptionRate/2,,,Renal,,1f
+RightTubularReabsorptionFiltrationSurfaceArea*,m^2,Mean,2.5,valentin2002icrp,,,,,Renal,,
+RightTubularReabsorptionFluidPermeability*,mL/min m^2 mmHg,Mean,2.91747,tuma2011microcirculation,,,We don’t change this from 1.0,,Renal,,
+RightTubularHydrostaticPressure*,mmHg,Mean,6,guyton2006medical,340,,,,Renal,,
+RightTubularOsmoticPressure,mmHg,Mean,-15,guyton2006medical,340,,,,Renal,,1f
+Compartment Data,Units,Algorithm,Chosen Values,Reference,Page,Notes,Internal Notes,Reading,Table,ResultsFile,SignificantDigits
+LeftKidneyVasculature-Volume,mL,Mean,"[31.7,37.9]",effros1967vascular,,"28 is the difference between intravascular fluid volume and total extracellular fluid volume, reported in the ICRP",Blood only; Total/2,,RenalCompartments,,1f
+LeftRenalArtery-Volume,mL,Mean,"[5.3,6.3]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneyLargeVasculature = TotalKidney/2 <br> LargeVasculature = TotalKidneyLargeVasculature/3 ,,,RenalCompartments,,1f
+LeftRenalVein-Volume,mL,Mean,"[5.3,6.3]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneyLargeVasculature = TotalKidney/2 <br> LargeVasculature = TotalKidneyLargeVasculature/3 ,,,RenalCompartments,,1f
+LeftAfferentArteriole-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,1f
+LeftGlomerularCapillaries-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+LeftEfferentArteriole-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+LeftPeritubularCapillaries-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+LeftBowmansCapsules-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+LeftTubules-Volume,mL,Mean,"[5.3,6.3]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneyLargeVasculature = TotalKidney/2 <br> LargeVasculature = TotalKidneyLargeVasculature/3,,,RenalCompartments,,1f
+LeftUreter-Volume,mL,Mean,0.71,[(3.14*(diameter/2)<sup>2</sup>)*length],150,Ureter Length 28.5 cm @cite valentin2002icrp <br> Estimated Diameter 0.89 mm (factoring vessel wall) @cite zelenko2004normal,,,RenalCompartments,,2f
+RightKidneyVasculature-Volume,mL,Mean,"[31.7,37.9]",effros1967vascular,,"28 is the difference between intravascular fluid volume and total extracellular fluid volume, reported in the ICRP",Blood only; Total/2,,RenalCompartments,,1f
+RightRenalArtery-Volume,mL,Mean,"[5.3,6.3]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneyLargeVasculature = TotalKidney/2 <br> LargeVasculature = TotalKidneyLargeVasculature/3 ,,,RenalCompartments,,1f
+RightRenalVein-Volume,mL,Mean,"[5.3,6.3]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneyLargeVasculature = TotalKidney/2 <br> LargeVasculature = TotalKidneyLargeVasculature/3 ,,,RenalCompartments,,1f
+RightAfferentArteriole-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,1f
+RightGlomerularCapillaries-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+RightEfferentArteriole-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+RightPeritubularCapillaries-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+RightBowmansCapsules-Volume,mL,Mean,"[3.18,3.78]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneySmallVasculature = TotalKidney/2 <br> SmallVasculature = TotalKidneySmallVasculature/5,,,RenalCompartments,,2f
+RightTubules-Volume,mL,Mean,"[5.3,6.3]",effros1967vascular,,TotalKidney = 34.8 <br> TotalKidneyLargeVasculature = TotalKidney/2 <br> LargeVasculature = TotalKidneyLargeVasculature/3,,,RenalCompartments,,1f
+RightUreter-Volume,mL,Mean,0.71,[(3.14*(diameter/2)<sup>2</sup>)*length],,Ureter Length 28.5 cm @cite valentin2002icrp <br> Estimated Diameter 0.89 mm (factoring vessel wall) @cite zelenko2004normal,,,RenalCompartments,,2f
+LeftRenalArtery-Pressure,mmHg,Mean,100,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+LeftRenalVein-Pressure,mmHg,Mean,8,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+LeftAfferentArteriole-Pressure,mmHg,Mean,85,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+LeftGlomerularCapillaries-Pressure,mmHg,Mean,60,guyton2006medical,318,,Same as GlomerularCapillariesHydrostaticPressure,,RenalCompartments,,1f
+LeftEfferentArteriole-Pressure,mmHg,Mean,59,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+LeftPeritubularCapillaries-Pressure,mmHg,Mean,"[13, 18]",guyton2006medical,321 & 340,,(Beginning + End) / 2,,RenalCompartments,,1f
+LeftBowmansCapsules-Pressure,mmHg,Mean,18,guyton2006medical,318,,Same as BowmansCapsulesHydrostaticPressure,,RenalCompartments,,1f
+LeftTubules-Pressure*,mmHg,Mean,6,guyton2006medical,340,,,,RenalCompartments,,1f
+RightRenalArtery-Pressure,mmHg,Mean,100,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+RightRenalVein-Pressure,mmHg,Mean,8,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+RightAfferentArteriole-Pressure,mmHg,Mean,85,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+RightGlomerularCapillaries-Pressure,mmHg,Mean,60,guyton2006medical,318,,Same as GlomerularCapillariesHydrostaticPressure,,RenalCompartments,,1f
+RightEfferentArteriole-Pressure,mmHg,Mean,59,guyton2006medical,321,,(Beginning + End) / 2,,RenalCompartments,,1f
+RightPeritubularCapillaries-Pressure,mmHg,Mean,"[13, 18]",guyton2006medical,321 & 340,,(Beginning + End) / 2,,RenalCompartments,,1f
+RightBowmansCapsules-Pressure,mmHg,Mean,18,guyton2006medical,318,,Same as BowmansCapsulesHydrostaticPressure,,RenalCompartments,,1f
+RightTubules-Pressure*,mmHg,Mean,6,guyton2006medical,340,,,,RenalCompartments,,1f
+LeftRenalArtery-InFlow,ml/min,Mean,550,guyton2006medical,309,,1100/2,,RenalCompartments,,1f
+LeftUreter-InFlow,L/day,Mean,0.75,guyton2006medical,UrineProductionRate/2,,,,RenalCompartments,,2f
+RightRenalArtery-InFlow,ml/min,Mean,550,guyton2006medical,309,,1100/2,,RenalCompartments,,1f
+RightUreter-InFlow,L/day,Mean,0.75,guyton2006medical,UrineProductionRate/2,,,,RenalCompartments,,2f
+Bladder-Ketones-Concentration,g/L,Mean,0,sapir1975renal,,Converted to g/L by multiplying by Acetoacetate Molar Mass: 66500g/mol,TM limited,TM = Transport Maximum; the maximum rate of renal retention,RenalCompartments,,2f
+Bladder-Albumin-Concentration,g/L,Mean,0.0667,tojo2012mechanisms,,(0.1 g/day excreted) / (1.5 L/day urine production),Clearance Rate * Body Weight * Healthy Plasma Concentration / Avg Urine Production Rate,,RenalCompartments,,2f
+Bladder-Bicarbonate-Concentration,g/L,Mean,0.081,valtin1995renal,Valtin & Shaffer p. 10,Converted to mg/L by multiplying by Bicarbonate Molar Mass: 61.02 g/mol,Clearance Rate * Body Weight * Healthy Plasma Concentration / Avg Urine Production Rate,,RenalCompartments,,2f
+Bladder-Calcium-Concentration,g/L,Mean,"[0.1,0.24]",valtin1995renal,Valtin & Shaffer p.290,Converted to g/L by multiplying by Calcium Molar Mass: 40.08 g/mol,,,RenalCompartments,,2f
+Bladder-Creatinine-Concentration,g/L,Mean,"[0.68,2.26]",valtin1995renal,Valtin & Shaffer p.290,Converted to g/L by multiplying by Creatinine Molar Mass: 113.12 g/mol,,,RenalCompartments,,2f
+Bladder-Glucose-Concentration,g/L,Mean,0,valtin1995renal,"Valtin & Shaffer p.291
+",,"Apparently there can technically be some lost per day, but it's so minimal it doesn’t get detected by routine tests (V&S) TM limited",,RenalCompartments,,2f
+Bladder-Chloride-Concentration,g/L,Mean,"[1.06,4.61]",valtin1995renal,Valtin & Shaffer p.291,Converted to g/L by multiplying by Sodium Molar Mass: 35.45 g/mol,,,RenalCompartments,,2f
+Bladder-Potassium-Concentration,g/L,Mean,"[0.78,2.74]",valtin1995renal,Valtin & Shaffer p.291,Converted to g/L by multiplying by Sodium Molar Mass: 39.0983 g/mol,,,RenalCompartments,,2f
+Bladder-Lactate-Concentration,g/L,Mean,0,bellomo2002bench,Bellomo2002Bench,Converted to g/L by multiplying by Lactate Molar Mass: 89.07 g/mol,TM limited,TM = Transport Maximum; the maximum rate of renal retention,RenalCompartments,,2f
+Bladder-Sodium-Concentration,g/L,Mean,"[0.69,2.99]",valtin1995renal,Valtin & Shaffer p.291,Converted to g/L by multiplying by Sodium Molar Mass: 22.99 g/mol,,,RenalCompartments,,2f
+Bladder-Urea-Concentration,g/L,Mean,"[10,20]",valtin1995renal,Valtin & Shaffer p.291,,,,RenalCompartments,,2f
+Substance Data,Units,Algorithm,Chosen Values,Reference,Page,Notes,Internal Notes,Reading,Table,ResultsFile,SignificantDigits
+Ketones-Clearance-RenalClearance,ml/min kg,Mean,0,sapir1975renal,,(UrineConcentration)(UrineProductionRate) / (PatientMass*(PlasmaConcentration)),"*Inferred from the given urine concentration, blood concentration and a urine production rate of 1500 mL/day",,RenalSubstances,,3f
+Albumin-Clearance-RenalClearance*,ml/min kg,Mean,0.0000241,Tojo2012Mechanisms,Tojo2012Mechanisms,(UrineConcentration)(UrineProductionRate) / (PatientMass*(PlasmaConcentration)),Converted from the 2.7 mL/day given by Dr. Moss to mL/min kg,,RenalSubstances,,3g
+Albumin-Clearance-GlomerularFilterability,,Mean,"0.001, 0.005","rhoades2003medical, 
+guyton2006medical",401,,,,RenalSubstances,,3f
+Bicarbonate-Clearance-RenalClearance*,ml/min kg,Mean,0.0011,valtin1995renal,Valtin & Shaffer p.10,(UrineConcentration)(UrineProductionRate) / (PatientMass*(PlasmaConcentration)),"*Inferred from the given urine concentration, blood concentration and a urine production rate of 1500 mL/day",,RenalSubstances,,3f
+Bicarbonate-Clearance-RenalExcretionRate,g/day,Mean,0.122,valtin1995renal,10,converted from 2 mmol/day,,,RenalSubstances,,3f
+Bicarbonate-Clearance-RenalFiltrationRate,g/day,Mean,274.59,valtin1995renal,10,converted from 4500 mmol/day,,,RenalSubstances,,2f
+Bicarbonate-Clearance-RenalReabsorptionRate,g/day,Mean,274.46796,valtin1995renal,10,converted from 4498 mmol/day,,,RenalSubstances,,1f
+Calcium-Clearance-RenalClearance*,ml/min kg,Mean,0.0235,[[urine](UrineProductionRate) / (PatientMass*[plasma])] @cite valtin1995renal,Valtin & Shaffer p.291*,,"*Inferred from the given urine concentration, blood concentration and a urine production rate of 1500 mL/day",,RenalSubstances,,3f
+Calcium-Clearance-RenalExcretionRate,g/day,Mean,"[0.1, 0.2]
+",blaine2014renal,160,converted from 0.0053 mEq/min,,,RenalSubstances,,1f
+Calcium-Clearance-RenalFiltrationRate,g/day,Mean,10,blaine2014renal,160,converted from 0.5 mEq/min,,,RenalSubstances,,1f
+Calcium-Clearance-RenalReabsorptionRate,g/day,Mean,"[9.9,9.8]",blaine2014renal,160,Calc from (Filtration - Excretion) <br> converted from 0.4947 mEq/min,,,RenalSubstances,,1f
+Creatinine-Clearance-RenalClearance*,ml/min kg,Mean,2.39,[[urine](UrineProductionRate) / (PatientMass*[plasma])] @cite valtin1995renal,Valtin & Shaffer p.291,,"*Inferred from the given urine concentration, blood concentration and a urine production rate of 1500 mL/day",,RenalSubstances,,3f
+Creatinine-Clearance-RenalExcretionRate,mg/min,Mean,"[0.625,1.875]",valtin1995renal,Valtin & Shaffer p.291,,"GFR*[PlasmaCreatinine]
+used 125 mL/min for GFR",,RenalSubstances,,3f
+Creatinine-Clearance-RenalFiltrationRate,mg/min,Mean,"[0.625,1.875]",valtin1995renal,Valtin & Shaffer p.291,,"GFR*[PlasmaCreatinine]
+used 125 mL/min for GFR",,RenalSubstances,,3f
+Creatinine-Clearance-RenalReabsorptionRate,mg/min,Mean,0,guyton2006medical,341,,Creatinine not reabsorbed in normal physiology,,RenalSubstances,,3f
+Glucose-Clearance-RenalClearance*,ml/min kg,Mean,0,[[urine](UrineProductionRate) / (PatientMass*[plasma])],Valtin & Shaffer p. 72,,"According to literature all glucose is reabsorbed until the filtered load begins approaching the transport maximum, in reality a little gets through
+@cite valtin1995renal",,RenalSubstances,,1f
+Glucose-Clearance-RenalExcretionRate,g/day,Mean,0,valtin1995renal,290,,For our models we will follow the convention that glucose is 100% reabsorbed,,RenalSubstances,,1f
+Glucose-Clearance-RenalFiltrationRate,g/day,Mean,180,valtin1995renal,10,converted from 800 mmol/day,,,RenalSubstances,,1f
+Glucose-Clearance-GlomerularFilterability,,Mean,1,rhoades2003medical,401,,,,RenalSubstances,,1f
+Glucose-Clearance-RenalReabsorptionRate,g/day,Mean,180,valtin1995renal,10,converted from 799.5 mmol/day,,,RenalSubstances,,1f
+Hemoglobin-Clearance-GlomerularFilterability,,Mean,0.01,rhoades2003medical,401,,"Implementation does not filter this, it should be NaN and fail. That is expected",,RenalSubstances,,2f
+Lactate-Clearance-RenalClearance*,ml/min kg,Mean,0.0443,[urine](UrineProductionRate) / (PatientMass*[plasma]) @cite bellomo2002bench,Bellomo2002Bench,,,,RenalSubstances,,4f
+Sodium-Clearance-RenalClearance*,ml/min kg,Mean,0.0097,[[urine](UrineProductionRate) / (PatientMass*[plasma])] @cite valtin1995renal,Valtin & Shaffer p.291*,,"*Inferred from the given urine concentration, blood concentration and a urine production rate of 1500 mL/day",,RenalSubstances,,4f
+Sodium-Clearance-RenalExcretionRate,g/day,Mean,3.45,valtin1995renal,10,converted from 150 mmol/day,,,RenalSubstances,,2f
+Sodium-Clearance-RenalFiltrationRate,g/day,Mean,575,valtin1995renal,10,converted from 25000 mmol/day,,,RenalSubstances,,1f
+Sodium-Clearance-GlomerularFilterability,,Mean,1,guyton2006medical,317,,,,RenalSubstances,,2f
+Sodium-Clearance-RenalReabsorptionRate,g/day,Mean,571.55,valtin1995renal,10,converted from 24850 mmol/day,,,RenalSubstances,,1f
+Chloride-Clearance-RenalClearance*,ml/min kg,Mean,0.0088,[[urine](UrineProductionRate) / (PatientMass*[plasma])] @cite valtin1995renal,Valtin & Shaffer p.291*,,"*Inferred from the given urine concentration, blood concentration and a urine production rate of 1500 mL/day",,RenalSubstances,,4f
+Chloride-Clearance-RenalExcretionRate,g/day,Mean,5.32,valtin1995renal,10,converted from 150 mmol/day,,,RenalSubstances,,1f
+Chloride-Clearance-RenalFiltrationRate,g/day,Mean,638,valtin1995renal,10,converted from 18000 mmol/day,,,RenalSubstances,,1f
+Chloride-Clearance-GlomerularFilterability,,Mean,0.992,guyton2006medical,317,,,,RenalSubstances,,2f
+Chloride-Clearance-RenalReabsorptionRate,g/day,Mean,632.78,valtin1995renal,10,converted from 24850 mmol/day,,,RenalSubstances,,1f
+Urea-Clearance-RenalClearance*,ml/min kg,Mean,0.778,[[urine](UrineProductionRate) / (PatientMass*[plasma])] @cite valtin1995renal,Valtin & Shaffer p.291*,,"*Inferred from the given urine concentration, blood concentration and a urine production rate of 1500 mL/day",,RenalSubstances,,3f
+Urea-Clearance-RenalExcretionRate,mg/min,Mean,18,valentin2002icrp,160,,,,RenalSubstances,,1f
+Urea-Clearance-RenalFiltrationRate,mg/min,Mean,31,valentin2002icrp,160,,,,RenalSubstances,,1f
+Urea-Clearance-RenalReabsorptionRate,mg/min,Mean,13,valentin2002icrp,160,Calculated from (Filtration - Excretion),,,RenalSubstances,,1f
+Urinalysis,Units,Algorithm,Reference Values,References,Reference Page,Notes,Internal Notes,Reading,Table,ResultsFile,SignificantDigits
+Color,,Enum,Yellow,N/A,,Color is a gradient based on Urine Osmolality,,,Urinalysis,Urinalysis@,
+Appearance*,,,,,,,,,Urinalysis,Urinalysis@,
+Glucose,,Enum,Negative,walker1990clinical,,Determined by concentration > 100mg/dL,,,Urinalysis,Urinalysis@,
+Ketone,,Enum,Negative,walker1990clinical,,Determined by concentration > 5 mg/dL,,,Urinalysis,Urinalysis@,
+Bilirubin*,,,,,,,,,Urinalysis,Urinalysis@,
+SpecificGravity,,Mean,"[1.01,1.022],
+[1.003,1.040]","valtin1995renal,
+walker1990clinical",Valtin & Shaffer p.291,,,,Urinalysis,Urinalysis@,
+Blood,,Enum,Negative,walker1990clinical,,Determined by concentration > 0.15 mg/dL,,,Urinalysis,Urinalysis@,
+pH*,,,,,,,,,Urinalysis,Urinalysis@,
+Protein,,Enum,Negative,walker1990clinical,,Determined by concentration > 25 mg/dL,,,Urinalysis,Urinalysis@,
+Urobilinogen*,,,,,,,,,Urinalysis,Urinalysis@,
+Nitrite*,,,,,,,,,Urinalysis,Urinalysis@,
+LeukocyteEsterase*,,,,,,,,,Urinalysis,Urinalysis@,
