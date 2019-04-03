@@ -29,6 +29,7 @@ const char* Loggable::empty_cStr("");
 Logger::Logger(const std::string& logFilename, const std::string& working_dir)
   : m_Forward(nullptr)
   , m_time(nullptr)
+  , m_FormatMessages(true)
 {
   ResetLogFile(logFilename, working_dir);
 }
@@ -36,6 +37,7 @@ Logger::Logger(const std::string& logFilename, const std::string& working_dir)
 Logger::Logger(const char* logFilename, const char* working_dir)
   : m_Forward(nullptr)
   , m_time(nullptr)
+  , m_FormatMessages(true)
 {
   ResetLogFile(logFilename, working_dir);
 }
@@ -49,9 +51,16 @@ void Logger::LogToConsole(bool log_to_console)
   }
 }
 
+void Logger::FormatMessages(bool format_messages)
+{
+  m_FormatMessages = format_messages;
+}
 void Logger::ResetLogFile(const std::string& logFilename, const std::string& working_dir)
 {
-  std::string key = logFilename; if( logFilename.empty()) { key = "biogears_logger"; }
+  std::string key = logFilename;
+  if (logFilename.empty()) {
+    key = "biogears_logger";
+  }
   log4cpp::Category& category = log4cpp::Category::getInstance(key);
   m_Log = &category;
   m_Log->removeAllAppenders();
@@ -115,7 +124,18 @@ void Logger::SetConsoleLogLevel(log4cpp::Priority::Value priority)
     m_ConsoleAppender->setThreshold(priority);
   }
 }
-
+void Logger::SetsetConversionPattern(const std::string& layout)
+{
+  log4cpp::PatternLayout* cLayout = new log4cpp::PatternLayout();
+  cLayout->setConversionPattern(layout);
+  m_FileAppender->setLayout(cLayout);
+}
+void Logger::SetConsolesetConversionPattern(const std::string& layout)
+{
+  log4cpp::PatternLayout* cLayout = new log4cpp::PatternLayout();
+  cLayout->setConversionPattern(layout);
+  m_ConsoleAppender->setLayout(cLayout);
+}
 // This function will return the priority of the logger
 log4cpp::Priority::Value Logger::GetLogLevel()
 {
@@ -129,15 +149,19 @@ bool Logger::HasForward() { return m_Forward == nullptr ? false : true; }
 std::string Logger::FormatLogMessage(const std::string& msg,
                                      const std::string& origin)
 {
-  m_ss.str("");
-  m_ss.clear();
-  if (m_time != nullptr && m_time->IsValid())
-    m_ss << "[" << *m_time << "] " << msg;
-  else
-    m_ss << msg;
-  if (msg.empty())
-    return origin;
-  return origin + " : " + m_ss.str();
+  if (m_FormatMessages) {
+    m_ss.str("");
+    m_ss.clear();
+    if (m_time != nullptr && m_time->IsValid())
+      m_ss << "[" << *m_time << "] " << msg;
+    else
+      m_ss << msg;
+    if (msg.empty())
+      return origin;
+    return origin + " : " + m_ss.str();
+  } else {
+    return msg;
+  }
 }
 
 void Logger::Debug(const std::string& msg, const std::string& origin)

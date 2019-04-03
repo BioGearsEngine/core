@@ -146,6 +146,9 @@ void Driver::queue_Scenario(Executor exec)
       }
     }
 
+    if (multi_patient_run) {
+      ex.Name(ex.Name() + "-" + patient_no_extension);
+    }
     std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
     std::string console_file = base_file_name + ".log";
     std::string log_file = base_file_name + "Results.log";
@@ -156,6 +159,10 @@ void Driver::queue_Scenario(Executor exec)
     Logger file_logger(ex.Computed() + parent_dir + console_file);
     try {
       file_logger.SetConsoleLogLevel(log4cpp::Priority::WARN);
+      file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + " %m%n");
+      console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
+      console_logger.FormatMessages(false);
+
       eng = CreateBioGearsEngine(&file_logger);
     } catch (std::exception e) {
       std::cout << e.what();
@@ -168,14 +175,13 @@ void Driver::queue_Scenario(Executor exec)
 
     //NOTE:Assuming a Patient File
     sce.GetInitialParameters().SetPatientFile(ex.Patient());
-    console_logger.Info("Starting Scenario: " + trimed_scenario_path);
-    try
-    {
-      BioGearsScenarioExec bse{*eng};
+    console_logger.Info("Starting "+ ex.Name());
+    try {
+      BioGearsScenarioExec bse{ *eng };
       bse.Execute(sce, ex.Computed() + parent_dir + results_file, nullptr);
-      console_logger.Info("Completed Scenario: " + trimed_scenario_path);
-    } catch (...){
-      console_logger.Info("Scenario: " + trimed_scenario_path + " Failed.");
+      console_logger.Info("Completed "+ ex.Name());
+    } catch (...) {
+      console_logger.Error("Failed "+ ex.Name());
     }
   };
 
@@ -188,19 +194,16 @@ void Driver::queue_Scenario(Executor exec)
     }
   }
   std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
-  try
-  {
+  try {
     xml_schema::flags xml_flags;
     xml_schema::properties xml_properties;
 
-    xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel","xsd/BioGearsDataModel.xsd");
-    scenario = mil::tatrc::physiology::datamodel::Scenario(ifs,xml_flags, xml_properties);
-  } catch ( std::runtime_error e)
-  {
+    xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
+    scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
+  } catch (std::runtime_error e) {
     std::cout << e.what();
     return;
-  } catch (xsd::cxx::tree::parsing<char> e )
-  {
+  } catch (xsd::cxx::tree::parsing<char> e) {
     std::cout << e;
     return;
   }
