@@ -105,6 +105,7 @@ void Energy::Initialize()
   GetEnergyDeficit().SetValue(0.0, PowerUnit::W);
   GetExerciseMeanArterialPressureDelta().SetValue(0.0, PressureUnit::mmHg);
   GetTotalWorkRateLevel().SetValue(0.0);
+  GetAchievedExerciseLevel().SetValue(0.0);
   GetFatigueLevel().SetValue(0.0);
   GetSweatRate().SetValue(0.0, MassPerTimeUnit::kg_Per_s);
   GetChlorideLostToSweat().SetValue(0.0, MassUnit::mg);
@@ -262,6 +263,8 @@ void Energy::Process()
 {
   m_circuitCalculator.Process(*m_TemperatureCircuit, m_dT_s);
   CalculateVitalSigns();
+
+  
 }
 
 //--------------------------------------------------------------------------------------------------

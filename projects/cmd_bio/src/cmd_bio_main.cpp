@@ -104,7 +104,7 @@ int main(int argc, char** argv)
         biogears::Config runs{ "BGEUnitTests.config" };
         driver.queue(runs);
       } else {
-        std::cout << "Warrning: No Test known as " << test << "exists.\n";
+        std::cout << "Warning: No Test known as " << test << "exists.\n";
       }
     }
   }
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
       } else if (test == "all") {
         run_patient_validation = run_drug_validation = run_system_validation = run_verification = true;
       } else {
-         std::cout << "Warning: No Validation known as " << test << "exists.\n";
+        std::cout << "Warning: No Validation known as " << test << "exists.\n";
       }
     }
   }

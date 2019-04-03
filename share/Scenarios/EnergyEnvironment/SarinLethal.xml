@@ -169,6 +169,6 @@
 		</Conditions>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="15" unit="min"/>
+		<Time value="30" unit="min"/>
 	</Action>
 </Scenario>

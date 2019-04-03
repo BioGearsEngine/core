@@ -80,16 +80,24 @@ void AnesthesiaMachine::Clear()
 void AnesthesiaMachine::Initialize()
 {
   BioGearsSystem::Initialize();
+  m_nVentilator->GetPressure().SetValue(1033.23, PressureUnit::cmH2O);
+  m_nVentilator->GetNextPressure().SetValue(1033.23, PressureUnit::cmH2O);
+  m_nVentilator->GetVolume().SetValue(1.0, VolumeUnit::L);
+  m_nVentilator->GetNextVolume().SetValue(1.0, VolumeUnit::L);
+  m_nSelector->GetPressure().SetValue(1033.23, PressureUnit::cmH2O);
+  m_nSelector->GetNextPressure().SetValue(1033.23, PressureUnit::cmH2O);
+  m_nSelector->GetVolume().SetValue(0.1, VolumeUnit::L);
+  m_nSelector->GetNextVolume().SetValue(0.1, VolumeUnit::L);
 
   SetConnection(CDM::enumAnesthesiaMachineConnection::Off);
   GetInletFlow().SetValue(5.0, VolumePerTimeUnit::L_Per_min);
   GetRespiratoryRate().SetValue(12.0, FrequencyUnit::Per_min);
-  GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
+  GetPositiveEndExpiredPressure().SetValue(0.0, PressureUnit::cmH2O);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetOxygenFraction().SetValue(0.5);
   SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
   SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
-  GetVentilatorPressure().SetValue(15.0, PressureUnit::cmH2O);
+  GetVentilatorPressure().SetValue(0.0, PressureUnit::cmH2O);
   GetOxygenBottleOne().GetVolume().SetValue(660.0, VolumeUnit::L);
   GetOxygenBottleTwo().GetVolume().SetValue(660.0, VolumeUnit::L);
   GetReliefValvePressure().SetValue(100.0, PressureUnit::cmH2O);
@@ -164,6 +172,7 @@ void AnesthesiaMachine::SetUp()
 
   // Circuit Nodes
   m_nVentilator = m_data.GetCircuits().GetAnesthesiaMachineCircuit().GetNode(BGE::AnesthesiaMachineNode::Ventilator);
+  m_nSelector = m_data.GetCircuits().GetAnesthesiaMachineCircuit().GetNode(BGE::AnesthesiaMachineNode::Selector);
 
   // Circuit Paths
   m_pAnesthesiaConnectionToEnvironment = m_data.GetCircuits().GetAnesthesiaMachineCircuit().GetPath(BGE::AnesthesiaMachinePath::AnesthesiaConnectionToEnvironment);
@@ -647,7 +656,7 @@ void AnesthesiaMachine::CalculateValveResistances()
 void AnesthesiaMachine::CalculateVentilator()
 {
   //Calculate the driver pressure
-  double dDriverPressure = 0.0;
+  double dDriverPressure = 1033.23;
   if (m_inhaling) {
     dDriverPressure = GetVentilatorPressure(PressureUnit::cmH2O);
   } else {

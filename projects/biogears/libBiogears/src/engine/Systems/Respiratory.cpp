@@ -211,6 +211,7 @@ void Respiratory::Initialize()
 
   //Get the fluid mechanics to a good starting point
   TuneCircuit();
+
 }
 
 bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)

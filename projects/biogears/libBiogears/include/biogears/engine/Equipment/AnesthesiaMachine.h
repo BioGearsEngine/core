@@ -113,6 +113,7 @@ private:
   SEGasSubstanceQuantity* m_scubberCO2;
   SEGasSubstanceQuantity* m_scrubberN2;
   SEFluidCircuitNode* m_nVentilator;
+  SEFluidCircuitNode* m_nSelector;
   SEFluidCircuitPath* m_pAnesthesiaConnectionToEnvironment;
   SEFluidCircuitPath* m_pYPieceToExpiratoryLimb;
   SEFluidCircuitPath* m_pGasSourceToGasInlet;
