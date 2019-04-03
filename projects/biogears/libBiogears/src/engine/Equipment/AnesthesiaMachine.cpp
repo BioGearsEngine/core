@@ -92,12 +92,12 @@ void AnesthesiaMachine::Initialize()
   SetConnection(CDM::enumAnesthesiaMachineConnection::Off);
   GetInletFlow().SetValue(5.0, VolumePerTimeUnit::L_Per_min);
   GetRespiratoryRate().SetValue(12.0, FrequencyUnit::Per_min);
-  GetPositiveEndExpiredPressure().SetValue(0.0, PressureUnit::cmH2O);
+  GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetOxygenFraction().SetValue(0.5);
   SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
   SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
-  GetVentilatorPressure().SetValue(0.0, PressureUnit::cmH2O);
+  GetVentilatorPressure().SetValue(15.0, PressureUnit::cmH2O);
   GetOxygenBottleOne().GetVolume().SetValue(660.0, VolumeUnit::L);
   GetOxygenBottleTwo().GetVolume().SetValue(660.0, VolumeUnit::L);
   GetReliefValvePressure().SetValue(100.0, PressureUnit::cmH2O);

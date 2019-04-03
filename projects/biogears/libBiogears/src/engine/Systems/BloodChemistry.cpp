@@ -302,7 +302,6 @@ void BloodChemistry::Process()
   // Calculate pH
   GetArterialBloodPH().Set(m_aorta->GetPH());
   GetVenousBloodPH().Set(m_venaCava->GetPH());
-  m_data.GetDataTrack().Probe("BloodLactate",GetArterialBloodPH().GetValue());
 
   // Pressures
   // arterial gas partial pressures -
