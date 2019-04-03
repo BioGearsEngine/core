@@ -12,9 +12,9 @@ This project is a command line implementation of BioGears for processing Scenari
 
 **GENSTATES**: Generate Stabalized Patient States for all Patients
 
-**VALIDATE** Run one ore more validate senarios arguments include drug,patient,system,validation, or all.
+**VALIDATE** Run one ore more validate senarios arguments include drug,patient,system or all. Where `VALIDATE all` is the same as providing the following `VALIDATE drug patient system VERIFY`
 
-**VERIFRY**: Run all verifications and validations senarios mentioned above
+**VERIFY**: Run Verification.config
 
 **THREADS**: Takes and Integer to control the number of threads the pool will run when running multiple scnearios. 
 

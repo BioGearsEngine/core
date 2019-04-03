@@ -90,9 +90,6 @@ int main(int argc, char** argv)
   }
 
   if (args.Option("VERIFY")) {
-    run_patient_validation = true;
-    run_drug_validation = true;
-    run_system_validation = true;
     run_verification = true;
   }
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
@@ -122,12 +119,10 @@ int main(int argc, char** argv)
         run_drug_validation = true;
       } else if (test == "system") {
         run_system_validation = true;
-      } else if (test == "validation") {
-        run_verification = true;
       } else if (test == "all") {
         run_patient_validation = run_drug_validation = run_system_validation = run_verification = true;
       } else {
-        std::cout << "Warrning: No Validation known as " << test << "exists.\n";
+         std::cout << "Warning: No Validation known as " << test << "exists.\n";
       }
     }
   }
