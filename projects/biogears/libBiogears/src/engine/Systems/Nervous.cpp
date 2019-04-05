@@ -540,7 +540,7 @@ void Nervous::ChemoreceptorFeedback()
   double drugCNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
   if (drugCNSModifier > ZERO_APPROX) {
     for (auto drug : m_data.GetSubstances().GetActiveSubstances()) {
-      if (drug->GetClassification() == CDM::enumSubstanceClass::Opioid) {
+      if (drug->GetClassification() == CDM::enumSubstanceClass::Opioid || drug->GetName() == "Sarin") {
         nextTargetVentilation_L_Per_min *= (1.0 - drugCNSModifier);
         break;  //Don't evaluate more than once if for some reason we give someone morphine and fentanyl
       }

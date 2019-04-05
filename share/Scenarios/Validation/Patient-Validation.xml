@@ -3,7 +3,7 @@
   <Name>Patient Validation</Name>
   <Description>Validation of the patient data</Description>
   <InitialParameters>
-		<PatientFile>StandardMale.xml</PatientFile>
+		<PatientFile>ALL</PatientFile>
     <Configuration  xsi:type="BioGearsConfigurationData"> 
       <WritePatientBaselineFile>On</WritePatientBaselineFile>
     </Configuration>
