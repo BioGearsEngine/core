@@ -11,20 +11,40 @@ ReportWriter::~ReportWriter() {}
 
 std::string ReportWriter::to_html()
 {
-  report.append(std::string("<html><body><table border=\"1\">\n"));
+  report.append(std::string("<html><body>\n"));
   //...Do work
-  for (std::vector<std::string> cell : validation_data) {
-    std::string line("<tr>");
-    for (std::string item : cell) {
-      line.append("<td>");
-      line.append(item);
-      line.append("</td>");
+  for(auto table_itr = tables_.begin();table_itr != tables_.end();++table_itr) {
+    report.append(std::string("<table border=\"1\">"));
+
+    for(int i = 0;i < table_itr->second.size();i++) {
+      std::string line("<tr");
+      if(table_itr->second[i].passed) {
+        line += "bgcolor=#32CD32>";
+      } else {
+        line += "bgcolor=#FF0000>";
+      }
+      line += "<td>";
+      line += table_itr->second[i].field_name;
+      line += "</td>";
+      line += "<td>";
+      line += table_itr->second[i].expected_value;
+      line += "</td>";
+      line += "<td>";
+      line += std::to_string(table_itr->second[i].engine_value);
+      line += "</td>";
+      line += table_itr->second[i].percent_error;
+      line += "</td>";
+      line += "<td>";
+      line += table_itr->second[i].notes;
+      line += "</td>";
+      line += "</tr>";
+      report.append(line);
     }
-    line.append("</tr>\n");
-    report.append(line);
+    report.append(std::string("</table>"));
   }
+
   //...Finish work
-  report.append(std::string("</table></body></html>\n"));
+  report.append(std::string("</body></html>\n"));
   return report;
 }
 
@@ -63,20 +83,40 @@ std::string ReportWriter::to_markdown()
 
 std::string ReportWriter::to_xml()
 {
-  report.append(std::string("<xml><body><table border=\"1\">\n"));
+  report.append(std::string("<xml><body>\n"));
   //...Do work
-  for (std::vector<std::string> cell : validation_data) {
-    std::string line("<tr>");
-    for (std::string item : cell) {
-      line.append("<td>");
-      line.append(item);
-      line.append("</td>");
+  for (auto table_itr = tables_.begin(); table_itr != tables_.end(); ++table_itr) {
+    report.append(std::string("<table border=\"1\">"));
+
+    for (int i = 0; i < table_itr->second.size(); i++) {
+      std::string line("<tr");
+      if (table_itr->second[i].passed) {
+        line += "bgcolor=#32CD32>";
+      } else {
+        line += "bgcolor=#FF0000>";
+      }
+      line += "<td>";
+      line += table_itr->second[i].field_name;
+      line += "</td>";
+      line += "<td>";
+      line += table_itr->second[i].expected_value;
+      line += "</td>";
+      line += "<td>";
+      line += std::to_string(table_itr->second[i].engine_value);
+      line += "</td>";
+      line += table_itr->second[i].percent_error;
+      line += "</td>";
+      line += "<td>";
+      line += table_itr->second[i].notes;
+      line += "</td>";
+      line += "</tr>";
+      report.append(line);
     }
-    line.append("</tr>\n");
-    report.append(line);
+    report.append(std::string("</table>"));
   }
+
   //...Finish work
-  report.append(std::string("</table></body></xml>\n"));
+  report.append(std::string("</body></xml>\n"));
   return report;
 }
 
@@ -187,7 +227,6 @@ void ReportWriter::Validate()
       }
     } else {
       table_row.expected_value = std::to_string(ref.reference_value)+"@"+ref.reference;
-
       double error = std::abs(1.0 - (ref.reference_value/table_row.engine_value));
       table_row.percent_error = error;
       if(ref.error_threshold >= error) {
@@ -200,6 +239,81 @@ void ReportWriter::Validate()
       table_row.field_name += "(" + ref.unit_name + ")";
     }
     table_row.notes = ref.notes;
+    table_row.table_name = ref.table_name;
+  }
+}
+
+void ReportWriter::PopulateTables()
+{
+  // This block of code is to have at least the first row in every table, since we're going to have to print out at least one 
+  // line for all of them. 
+  std::vector<std::vector<std::string>> bcvec; //BloodChemistry
+  bcvec.push_back(std::vector<std::string> {"BloodChemistry","Expected Value","Engine Value","Percent Error","Notes"});
+  std::vector<std::vector<std::string>> cmpvec; //CompleteMetabolicPanel
+  cmpvec.push_back(std::vector<std::string>{ "CompleteMetabolicPanel", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> cbcvec; //CompleteBloodCount
+  cbcvec.push_back(std::vector<std::string>{ "CompleteBloodCount", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> cvec; //Cardiovascular
+  cvec.push_back(std::vector<std::string>{ "Cardiovascular", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> ccvec; //CardiovascularComponents
+  ccvec.push_back(std::vector<std::string>{ "CardiovascularComponents", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> evec; //Endocrine
+  evec.push_back(std::vector<std::string>{ "Endocrine", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> envec; //Energy
+  envec.push_back(std::vector<std::string>{ "Energy", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> gvec; //Gastrointestinal
+  gvec.push_back(std::vector<std::string>{ "Gastrointestinal", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> nvec; //Nervous
+  nvec.push_back(std::vector<std::string>{ "Nervous", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> rcvec; //RenalCompartments
+  rcvec.push_back(std::vector<std::string>{ "RenalCompartments", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> uvec; //Urinalysis
+  uvec.push_back(std::vector<std::string>{ "Urinalysis", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> rvec; //Renal
+  rvec.push_back(std::vector<std::string>{ "Renal", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> rsvec; //RenalSubstances
+  rsvec.push_back(std::vector<std::string>{ "RenalSubstances", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> revec; //Respiratory
+  revec.push_back(std::vector<std::string>{ "Respiratory", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> pftvec; //PulmonaryFunctionTest
+  pftvec.push_back(std::vector<std::string>{ "PulmonaryFunctionTest", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> recvec; //RespiratoryCompartments
+  recvec.push_back(std::vector<std::string>{ "RespiratoryCompartments", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> tvec; //Tissue
+  tvec.push_back(std::vector<std::string>{ "Tissue", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> tcvec; //TissueCompartments
+  tcvec.push_back(std::vector<std::string>{ "TissueComparments", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> tsvec; //TissueSubstances
+  tsvec.push_back(std::vector<std::string>{ "TissueSubstances", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+  std::vector<std::vector<std::string>> svvec; //SystemValidationData.xlsx
+  svvec.push_back(std::vector<std::string>{ "SystemValidationData.xlsx", "Expected Value", "Engine Value", "Percent Error", "Notes" });
+
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("BloodChemistry"), bcvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("CompleteMetabolicPanel"), cmpvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("CompleteBloodCount"), cbcvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Cardiovascular"), cvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("CardiovascularComponents"), ccvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Endocrine"), evec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Energy"), envec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Gastrointestinal"), gvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Nervous"), nvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("RenalCompartments"), rcvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Urinalysis"), uvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Renal"), rvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("RenalSubstances"), rsvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Respiratory"), revec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("PulmonaryFunctionTest"), pftvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("RespiratoryCompartments"), recvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Tissue"), tvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("TissueCompartments"), tcvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("TissueSubstances"), tsvec));
+  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("SystemValidationData.xlsx"), svvec));
+
+  for(auto itr = table_row_map.begin();itr != table_row_map.end();++itr) {
+//  So this line pulls the table corresponding to the table_name of the row object, it then pushes a vector with the following layout
+//  field_name, expected_value, engine_value, percent_error, notes 
+    tables.find(itr->second.table_name)->second.push_back(std::vector<std::string>{ itr->second.field_name, itr->second.expected_value, std::to_string(itr->second.engine_value), itr->second.percent_error, itr->second.notes });
+    tables_.find(itr->second.table_name)->second.push_back(itr->second);
   }
 }
 
