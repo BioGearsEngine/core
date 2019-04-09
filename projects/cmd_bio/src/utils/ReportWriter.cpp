@@ -227,7 +227,8 @@ void ReportWriter::Validate()
       }
     } else {
       table_row.expected_value = std::to_string(ref.reference_value)+"@"+ref.reference;
-      double error = std::abs(1.0 - (ref.reference_value/table_row.engine_value));
+      double error = 1.0 - (ref.reference_value/table_row.engine_value);
+      error = std::fabs(error);
       table_row.percent_error = error;
       if(ref.error_threshold >= error) {
         table_row.passed = true;
