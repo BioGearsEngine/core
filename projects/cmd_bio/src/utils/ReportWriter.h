@@ -27,7 +27,6 @@ class ReferenceValue
 {
 public:
   bool is_range;
-  enum value_type;
   std::string value_name;
   std::string unit_name;
   std::string table_name;
