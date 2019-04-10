@@ -1,8 +1,10 @@
 #include "ReportWriter.h"
 #include "Tokenizer.h"
+#include "string-helpers.h"
+#include <cmath>
 #include <fstream>
 #include <numeric>
-#include "string-helpers.h"
+#include <iostream>
 
 namespace biogears {
 
@@ -14,11 +16,9 @@ TableRow::TableRow(std::string field_n, std::string expected_v, double engine_v,
   engine_value = engine_v;
   percent_error = percent_e;
   notes = n;
+  passed = true;
 }
 TableRow::~TableRow() {}
-
-Report::Report() {}
-Report::~Report(){}
 
 ReferenceValue::ReferenceValue() {}
 ReferenceValue::~ReferenceValue() {}
@@ -67,6 +67,8 @@ std::string ReportWriter::to_html()
 std::string ReportWriter::to_markdown()
 {
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
+    std::string table;
+    std::string table_name = table_itr->first;
     for (int i = 0; i < table_itr->second.size(); i++) {
       std::string line("|");
       line += table_itr->second[i].field_name;
@@ -79,12 +81,21 @@ std::string ReportWriter::to_markdown()
       line += "|";
       line += table_itr->second[i].notes;
       line += "|\n";
-      report.append(line);
+      table.append(line);
       if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
-        report.append("|---|---|---|---|---|\n");
+        table.append("|---|---|---|---|---|\n");
       }
     }
-    report.append("\n");
+    // This block saves out the md tables for website generation
+    std::ofstream md_file;
+    md_file.open(table_name+"ValidationTable.md");
+    if( !md_file ) {
+      return "Error writing md file";
+    }
+    md_file << table;
+    md_file.close();
+    //
+    report.append(table+"\n");
   }
   return report;
 }

@@ -7,9 +7,9 @@ namespace biogears
 class TableRow 
 {
 public:
-  TableRow::TableRow();
-  TableRow::TableRow(std::string field_name,std::string expected_value,double engine_value,std::string percent_error,std::string notes);
-  TableRow::~TableRow();
+  TableRow();
+  TableRow(std::string field_name,std::string expected_value,double engine_value,std::string percent_error,std::string notes);
+  ~TableRow();
   bool passed;
   std::string field_name; //field_name = value_name+unit_name
   std::string expected_value; //expected_value = reference_value+'@cite'+reference
@@ -19,20 +19,11 @@ public:
   double engine_value; //
 };
 
-class Report 
-{
-public:
-  Report::Report();
-  Report::~Report();
-  std::string table_name;
-  std::vector<std::pair<std::string,std::vector<TableRow>>> tables;
-};
-
 class ReferenceValue 
 {
 public:
-  ReferenceValue::ReferenceValue();
-  ReferenceValue::~ReferenceValue();
+  ReferenceValue();
+  ~ReferenceValue();
   bool is_range;
   std::string value_name;
   std::string unit_name;
