@@ -1,3 +1,1 @@
-Output,Units,Algorithm,Reference Values,References,Reference Page,Notes,Internal Notes,Reading,Table,ResultsFile,SignificantDigits
-InsulinSynthesisRate,pmol/min,Mean,"[0.55,436]",tolic2000modeling,,,the insulin secretion rate is going to be highly dynamic because of the feeding at the begining of the validation scenario. We need to include insulin synthesis validation in the meal validation.,,Endocrine,,2f
-GlucagonSynthesisRate*,pmol/min,Mean,"[0,22]",,,,"The glucagon synthesis rate is based upon its counterpart, the clearance rate, which is validated",,Endocrine,,2f
+InsulinSynthesisRate,pmol/min,"[0.55,436]",tolic2000modeling,,Endocrine

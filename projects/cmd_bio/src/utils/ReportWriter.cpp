@@ -88,7 +88,7 @@ std::string ReportWriter::to_markdown()
     }
     // This block saves out the md tables for website generation
     std::ofstream md_file;
-    md_file.open(table_name+"ValidationTable.md");
+    md_file.open("validation/"+table_name+"ValidationTable.md");
     if( !md_file ) {
       return "Error writing md file";
     }

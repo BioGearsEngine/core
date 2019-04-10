@@ -1,45 +1,41 @@
-Output,Units,Algorithm,Reference Values,References,Notes,Table,ResultsFile,SignificantDigits
-BloodDensity,kg/m^3,Mean,1050,herman2007physics,,BloodChemistry,,0f
-BloodPH,,Mean,"7.2,
- [7.35,7.4]","valentin2002icrp,  guyton2006medical",,BloodChemistry,,2f
-BloodSpecificHeat,J/K kg,Mean,3617,blake2010specificheat,,BloodChemistry,,0f
-BloodUreaNitrogenConcentration,mg/dL,Mean,"[9.0,18.0],
+BloodDensity,kg/m^3,1050,herman2007physics,,BloodChemistry
+BloodPH,,"7.2,
+ [7.35,7.4]","valentin2002icrp,  guyton2006medical",,BloodChemistry
+BloodSpecificHeat,J/K kg,3617,blake2010specificheat,,BloodChemistry
+BloodUreaNitrogenConcentration,mg/dL,"[9.0,18.0],
 [6.0,20.0]","valtin1995renal,
-Deepakfirst",,BloodChemistry,,1f
-CarbonDioxideSaturation*,,Mean,0.13,dash2010erratum,,BloodChemistry,,2f
-CarbonMonoxideSaturation*,,Mean,0,,None in default system/enviornment,BloodChemistry,,
-Hematocrit,,Mean,"0.42,
+Deepakfirst",,BloodChemistry
+Hematocrit,,"0.42,
 [0.4,0.5]","guyton2006medical,
-valtin1995renal",,BloodChemistry,,2f
-HemoglobinContent,g,Mean,"[661.5, 835.2]",[C<sub>Hb</sub>*V<sub>blood</sub>],,BloodChemistry,,1f
-OxygenSaturation,,Mean,"0.97, [0.96,1.0]","guyton2006medical,
-valtin1995renal",,BloodChemistry,,2f
-Phosphate,mmol/L,Mean,"[0.8,1.4]",Leeuwen2015laboratory,,BloodChemistry,,1f
-PlasmaVolume,mL,Mean,"3000, 3000","guyton2006medical,
-valentin2002icrp",,BloodChemistry,,1f
-PulseOximetry,,Mean,"0.97, [0.96,1.0]","guyton2006medical,
-valtin1995renal",,BloodChemistry,,2f
-RedBloodCellCount,ct/uL,Mean,"5200000,
+valtin1995renal",,BloodChemistry
+HemoglobinContent,g,"[661.5, 835.2]",[C<sub>Hb</sub>*V<sub>blood</sub>],,BloodChemistry
+OxygenSaturation,,"0.97, [0.96,1.0]","guyton2006medical,
+valtin1995renal",,BloodChemistry
+Phosphate,mmol/L,"[0.8,1.4]",Leeuwen2015laboratory,,BloodChemistry
+PlasmaVolume,mL,"3000, 3000","guyton2006medical,
+valentin2002icrp",,BloodChemistry
+PulseOximetry,,"0.97, [0.96,1.0]","guyton2006medical,
+valtin1995renal",,BloodChemistry
+RedBloodCellCount,ct/uL,"5200000,
  5400000","guyton2006medical,
-valentin2002icrp",,BloodChemistry,,3g
-RedBloodCellAcetylcholinesterase*,,,,,,,,
-ShuntFraction,,Mean,"[0.02,0.05]",levitzky2013pulmonary,,BloodChemistry,,2f
-StrongIonDifference,mmol/L,Mean,"[40,42]",kellum2009stewart,,BloodChemistry,,1f
-TotalProteinConcentration,g/dL,Mean,"[6,8]",valtin1995renal,,BloodChemistry,,1f
-VolumeFractionNeutralLipidInPlasma,,Mean,0.0023,rodgers2006physiologically,,BloodChemistry,,4f
-VolumeFractionNeutralPhospholipidInPlasma,,Mean,0.0013,rodgers2006physiologically,,BloodChemistry,,4f
-WhiteBloodCellCount,ct/uL,Mean,"7,000",guyton2006medical   ,,BloodChemistry,,4g
-Ketones-BloodConcentration,mg/L,Mean,"[8.1672,10.209]",Fery1983ketone,,BloodChemistry,,1f
-Albumin-BloodConcentration,g/dL,Mean,"[4,5]",valtin1995renal,,BloodChemistry,,1f
-Bicarbonate-BloodConcentration,g/dL,Mean,"[0.134,0.159]",valtin1995renal,,BloodChemistry,,3f
-Calcium-BloodConcentration,mg/L,Mean,"[44.08,52.1]",cheuvront2014comparison,,BloodChemistry,,1f
-Chloride-BloodConcentration,g/L,Mean,"[3.6868,3.86405],
+valentin2002icrp",,BloodChemistry
+ShuntFraction,,"[0.02,0.05]",levitzky2013pulmonary,,BloodChemistry
+StrongIonDifference,mmol/L,"[40,42]",kellum2009stewart,,BloodChemistry
+TotalProteinConcentration,g/dL,"[6,8]",valtin1995renal,,BloodChemistry
+VolumeFractionNeutralLipidInPlasma,,0.0023,rodgers2006physiologically,,BloodChemistry
+VolumeFractionNeutralPhospholipidInPlasma,,0.0013,rodgers2006physiologically,,BloodChemistry
+WhiteBloodCellCount,ct/uL,"7,000",guyton2006medical   ,,BloodChemistry
+Ketones-BloodConcentration,mg/L,"[8.1672,10.209]",Fery1983ketone,,BloodChemistry
+Albumin-BloodConcentration,g/dL,"[4,5]",valtin1995renal,,BloodChemistry
+Bicarbonate-BloodConcentration,g/dL,"[0.134,0.159]",valtin1995renal,,BloodChemistry
+Calcium-BloodConcentration,mg/L,"[44.08,52.1]",cheuvront2014comparison,,BloodChemistry
+Chloride-BloodConcentration,g/L,"[3.6868,3.86405],
 3.6159,
 [3.43865,3.79315]","cheuvront2014comparison,
 Boron2012medical,
-Leeuwen2015laboratory",,,,1f
-Creatinine-BloodConcentration,mg/L,Mean,"[5.0,15.0]",valtin1995renal,,BloodChemistry,,1f
-Epinephrine-BloodConcentration,ug/L,Mean,"[0.032, 0.036],
+Leeuwen2015laboratory",,BloodChemistry
+Creatinine-BloodConcentration,mg/L,"[5.0,15.0]",valtin1995renal,,BloodChemistry
+Epinephrine-BloodConcentration,ug/L,"[0.032, 0.036],
 [0.028, 0.072],
 [0.015, 0.021],
 [0.022, 0.034],
@@ -47,64 +43,60 @@ Epinephrine-BloodConcentration,ug/L,Mean,"[0.032, 0.036],
 stratton1985hemodynamic,
 stein1998basal,
 penesova2008role,
-zauner2000resting",,,,3f
-Globulin-BloodConcentration,g/dL,Mean,"[2,3]",valtin1995renal,,BloodChemistry,,1f
-Glucose-BloodConcentration,mg/dL,Mean,"[70,100]",valtin1995renal,,BloodChemistry,,1f
-Hemoglobin-BloodConcentration,g/dL,Mean,"15.0,
+zauner2000resting",,BloodChemistry
+Globulin-BloodConcentration,g/dL,"[2,3]",valtin1995renal,,BloodChemistry
+Glucose-BloodConcentration,mg/dL,"[70,100]",valtin1995renal,,BloodChemistry
+Hemoglobin-BloodConcentration,g/dL,"15.0,
  [13.5,15.7]","guyton2006medical,
-onofrio1995sim",,BloodChemistry,,1f
-Insulin-BloodConcentration,ug/L,Mean,"[0.1,4.76],
+onofrio1995sim",,BloodChemistry
+Insulin-BloodConcentration,ug/L,"[0.1,4.76],
 0.324","Leeuwen2015laboratory,
-polonsky1987insulin",,BloodChemistry,,1f
-Lactate-BloodConcentration,mg/L,Mean,"[53.442,151.419],
+polonsky1987insulin",,BloodChemistry
+Lactate-BloodConcentration,mg/L,"[53.442,151.419],
 [26.721,115.791]","Kratz2004Case,
-phypers2006lactate",,BloodChemistry,,1f
-Potassium-BloodConcentration,mg/L,Mean,"[108.85,164.83],
+phypers2006lactate",,BloodChemistry
+Potassium-BloodConcentration,mg/L,"[108.85,164.83],
 [108.85,171.05]","Leeuwen2015laboratory,
-valtin1995renal",,BloodChemistry,,1f
-Sodium-BloodConcentration,g/dL,Mean,"[0.313,0.336]",valtin1995renal,,BloodChemistry,,3f
-Triacylglycerol-BloodConcentration,mg/dL,Mean,"[50,150]",valtin1995renal,,BloodChemistry,,1f
-Urea-BloodConcentration,mg/dL,Mean,"[20,34],
+valtin1995renal",,BloodChemistry
+Sodium-BloodConcentration,g/dL,"[0.313,0.336]",valtin1995renal,,BloodChemistry
+Triacylglycerol-BloodConcentration,mg/dL,"[50,150]",valtin1995renal,,BloodChemistry
+Urea-BloodConcentration,mg/dL,"[20,34],
 [19.26,38.52],
 [12.84,42.8]","musch2006age,
 BUN*2.14,
-BUN*2.14","MW of urea = 60, MW of urea nitrogen = 14x2 => 60/28 = 2.14",BloodChemistry,,1f
-ArterialCarbonDioxidePressure,mmHg,Mean,40,guyton2006medical,,BloodChemistry,,1f
-ArterialOxygenPressure,mmHg,Mean,95,guyton2006medical,,BloodChemistry,,1f
-PulmonaryArterialCarbonDioxidePressure,mmHg,Mean,45,guyton2006medical,,BloodChemistry,,1f
-PulmonaryArterialOxygenPressure,mmHg,Mean,40,guyton2006medical,,BloodChemistry,,1f
-PulmonaryVenousCarbonDioxidePressure,mmHg,Mean,40,guyton2006medical,,BloodChemistry,,1f
-PulmonaryVenousOxygenPressure,mmHg,Mean,104,guyton2006medical,,BloodChemistry,,1f
-VenousOxygenPressure,mmHg,Mean,40,guyton2006medical,,BloodChemistry,,1f
-VenousCarbonDioxidePressure,mmHg,Mean,45,guyton2006medical,,BloodChemistry,,1f
-Hematocrit,,Mean,"0.42,
+BUN*2.14","MW of urea = 60, MW of urea nitrogen = 14x2 => 60/28 = 2.14",BloodChemistry
+ArterialCarbonDioxidePressure,mmHg,40,guyton2006medical,,BloodChemistry
+ArterialOxygenPressure,mmHg,95,guyton2006medical,,BloodChemistry
+PulmonaryArterialCarbonDioxidePressure,mmHg,45,guyton2006medical,,BloodChemistry
+PulmonaryArterialOxygenPressure,mmHg,40,guyton2006medical,,BloodChemistry
+PulmonaryVenousCarbonDioxidePressure,mmHg,40,guyton2006medical,,BloodChemistry
+PulmonaryVenousOxygenPressure,mmHg,104,guyton2006medical,,BloodChemistry
+VenousOxygenPressure,mmHg,40,guyton2006medical,,BloodChemistry
+VenousCarbonDioxidePressure,mmHg,45,guyton2006medical,,BloodChemistry
+Hematocrit,,"0.42,
 [0.4,0.5]","guyton2006medical,
-valtin1995renal",,CompleteBloodCount,CBC@,1f
-Hemoglobin,g/dL,Mean,"15.0,
+valtin1995renal",,CompleteBloodCount
+Hemoglobin,g/dL,"15.0,
  [13.5,15.7]","guyton2006medical,
-onofrio1995sim",,CompleteBloodCount,CBC@,1f
-MeanCorpuscularHemoglobin,pg/ct,Mean,"[27,31]",medline2015corpuscular,,CompleteBloodCount,CBC@,1f
-MeanCorpuscularHemoglobinConcentration,g/dL,Mean,"[27,39.25]",[C<sub>Hb</sub>/Hematocrit],,CompleteBloodCount,CBC@,1f
-MeanCorpuscularVolume,uL,Mean,9.00E-08,guyton2006medical,,CompleteBloodCount,CBC@,1f
-PlateletCount,ct/uL,Mean,"[150000,400000]",ross1988stability,,CompleteBloodCount,CBC@,3g
-RedBloodCellCount,ct/uL,Mean,"5200000,
+onofrio1995sim",,CompleteBloodCount
+MeanCorpuscularHemoglobin,pg/ct,"[27,31]",medline2015corpuscular,,CompleteBloodCount
+MeanCorpuscularHemoglobinConcentration,g/dL,"[27,39.25]",[C<sub>Hb</sub>/Hematocrit],,CompleteBloodCount
+MeanCorpuscularVolume,uL,9.00E-08,guyton2006medical,,CompleteBloodCount
+PlateletCount,ct/uL,"[150000,400000]",ross1988stability,,CompleteBloodCount
+RedBloodCellCount,ct/uL,"5200000,
  5400000","guyton2006medical,
-valentin2002icrp",,CompleteBloodCount,CBC@,3g
-WhiteBloodCellCount,ct/uL,Mean,"7,000",guyton2006medical   ,,CompleteBloodCount,CBC@,1f
-Albumin,g/dL,Mean,"[4,5]",valtin1995renal,,CompleteMetabolicPanel,CMP@,1f
-ALP*,,Mean,,,,CompleteMetabolicPanel,CMP@,1f
-ALT*,,Mean,,,,CompleteMetabolicPanel,CMP@,1f
-AST*,,Mean,,,,CompleteMetabolicPanel,CMP@,1f
-BUN,mg/dL,Mean,"[9.0,18.0],
+valentin2002icrp",,CompleteBloodCount
+WhiteBloodCellCount,ct/uL,"7,000",guyton2006medical   ,,CompleteBloodCount
+Albumin,g/dL,"[4,5]",valtin1995renal,,CompleteMetabolicPanel
+BUN,mg/dL,"[9.0,18.0],
 [6.0,20.0]","valtin1995renal,
-Deepakfirst",,CompleteMetabolicPanel,CMP@,1f
-Calcium,mg/L,Mean,"[44.08,52.1]",cheuvront2014comparison,,CompleteMetabolicPanel,CMP@,1f
-Chloride,mmol/L,Mean,"[102,110]",boron2012medical,,CompleteMetabolicPanel,CMP@,1f
-CO2,mmol/L,Mean,"[22.0, 26.0]",valtin1995renal,,CompleteMetabolicPanel,CMP@,1f
-Creatinine,mg/L,Mean,"[5.0,15.0]",valtin1995renal,,CompleteMetabolicPanel,CMP@,1f
-Glucose,mg/dL,Mean,"[65,139]",Leeuwen2015laboratory,,CompleteMetabolicPanel,CMP@,1f
-Potassium,mmol/L,Mean,"[3.5,5.5]",nelson2008principles,,CompleteMetabolicPanel,CMP@,1f
-Sodium,mmol/L,Mean," [136, 146]","Leeuwen2015laboratory,
-valtin1995renal",,CompleteMetabolicPanel,CMP@,1f
-TotalBilirubin*,,Mean,,,,CompleteMetabolicPanel,CMP@,1f
-TotalProtein,g/dL,Mean,"[6,8]",valtin1995renal,,CompleteMetabolicPanel,CMP@,1f
+Deepakfirst",,CompleteMetabolicPanel
+Calcium,mg/L,"[44.08,52.1]",cheuvront2014comparison,,CompleteMetabolicPanel
+Chloride,mmol/L,"[102,110]",boron2012medical,,CompleteMetabolicPanel
+CO2,mmol/L,"[22.0, 26.0]",valtin1995renal,,CompleteMetabolicPanel
+Creatinine,mg/L,"[5.0,15.0]",valtin1995renal,,CompleteMetabolicPanel
+Glucose,mg/dL,"[65,139]",Leeuwen2015laboratory,,CompleteMetabolicPanel
+Potassium,mmol/L,"[3.5,5.5]",nelson2008principles,,CompleteMetabolicPanel
+Sodium,mmol/L," [136, 146]","Leeuwen2015laboratory,
+valtin1995renal",,CompleteMetabolicPanel
+TotalProtein,g/dL,"[6,8]",valtin1995renal,,CompleteMetabolicPanel
