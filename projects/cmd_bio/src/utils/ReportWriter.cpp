@@ -1,11 +1,28 @@
 #include "ReportWriter.h"
 #include "Tokenizer.h"
-#include <algorithm>
 #include <fstream>
 #include <numeric>
 #include "string-helpers.h"
 
 namespace biogears {
+
+TableRow::TableRow(){}
+TableRow::TableRow(std::string field_n, std::string expected_v, double engine_v, std::string percent_e, std::string n)
+{
+  field_name = field_n;
+  expected_value = expected_v;
+  engine_value = engine_v;
+  percent_error = percent_e;
+  notes = n;
+}
+TableRow::~TableRow() {}
+
+Report::Report() {}
+Report::~Report(){}
+
+ReferenceValue::ReferenceValue() {}
+ReferenceValue::~ReferenceValue() {}
+
 ReportWriter::ReportWriter() {}
 ReportWriter::~ReportWriter() {}
 
@@ -13,9 +30,8 @@ std::string ReportWriter::to_html()
 {
   report.append(std::string("<html><body>\n"));
   //...Do work
-  for(auto table_itr = tables_.begin();table_itr != tables_.end();++table_itr) {
+  for(auto table_itr = tables.begin();table_itr != tables.end();++table_itr) {
     report.append(std::string("<table border=\"1\">"));
-
     for(int i = 0;i < table_itr->second.size();i++) {
       std::string line("<tr");
       if(table_itr->second[i].passed) {
@@ -50,34 +66,26 @@ std::string ReportWriter::to_html()
 
 std::string ReportWriter::to_markdown()
 {
-  //...Do work
-  // The reason for this block of code is that markdown is structured like
-  // | Table Header 1 | Table Header 2 | Table Header 3 |
-  // | -------------- | -------------- | -------------- |
-  // So it's simpler to just generate the first two lines before the rest,
-  // since line 2 is its own thing
-  std::string first_line("|");
-  std::string second_line("|");
-  for (std::string item : validation_data[0]) {
-    first_line.append(item + "|");
-    second_line.append("---|");
-  }
-  first_line.append("\n");
-  second_line.append("\n");
-  report.append(first_line);
-  report.append(second_line);
-
-  for (int i = 1; i < validation_data.size(); i++) {
-    std::vector<std::string> cell = validation_data[i];
-    std::string line("|");
-    for (std::string item : cell) {
-      line.append(item);
-      line.append("|");
+  for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
+    for (int i = 0; i < table_itr->second.size(); i++) {
+      std::string line("|");
+      line += table_itr->second[i].field_name;
+      line += "|";
+      line += table_itr->second[i].expected_value;
+      line += "|";
+      line += std::to_string(table_itr->second[i].engine_value);
+      line += "|";
+      line += table_itr->second[i].percent_error;
+      line += "|";
+      line += table_itr->second[i].notes;
+      line += "|\n";
+      report.append(line);
+      if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
+        report.append("|---|---|---|---|---|\n");
+      }
     }
-    line.append("\n");
-    report.append(line);
+    report.append("\n");
   }
-  //...Finish work
   return report;
 }
 
@@ -85,7 +93,7 @@ std::string ReportWriter::to_xml()
 {
   report.append(std::string("<xml><body>\n"));
   //...Do work
-  for (auto table_itr = tables_.begin(); table_itr != tables_.end(); ++table_itr) {
+  for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
     report.append(std::string("<table border=\"1\">"));
 
     for (int i = 0; i < table_itr->second.size(); i++) {
@@ -246,75 +254,58 @@ void ReportWriter::Validate()
 
 void ReportWriter::PopulateTables()
 {
-  // This block of code is to have at least the first row in every table, since we're going to have to print out at least one 
-  // line for all of them. 
-  std::vector<std::vector<std::string>> bcvec; //BloodChemistry
-  bcvec.push_back(std::vector<std::string> {"BloodChemistry","Expected Value","Engine Value","Percent Error","Notes"});
-  std::vector<std::vector<std::string>> cmpvec; //CompleteMetabolicPanel
-  cmpvec.push_back(std::vector<std::string>{ "CompleteMetabolicPanel", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> cbcvec; //CompleteBloodCount
-  cbcvec.push_back(std::vector<std::string>{ "CompleteBloodCount", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> cvec; //Cardiovascular
-  cvec.push_back(std::vector<std::string>{ "Cardiovascular", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> ccvec; //CardiovascularComponents
-  ccvec.push_back(std::vector<std::string>{ "CardiovascularComponents", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> evec; //Endocrine
-  evec.push_back(std::vector<std::string>{ "Endocrine", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> envec; //Energy
-  envec.push_back(std::vector<std::string>{ "Energy", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> gvec; //Gastrointestinal
-  gvec.push_back(std::vector<std::string>{ "Gastrointestinal", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> nvec; //Nervous
-  nvec.push_back(std::vector<std::string>{ "Nervous", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> rcvec; //RenalCompartments
-  rcvec.push_back(std::vector<std::string>{ "RenalCompartments", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> uvec; //Urinalysis
-  uvec.push_back(std::vector<std::string>{ "Urinalysis", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> rvec; //Renal
-  rvec.push_back(std::vector<std::string>{ "Renal", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> rsvec; //RenalSubstances
-  rsvec.push_back(std::vector<std::string>{ "RenalSubstances", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> revec; //Respiratory
-  revec.push_back(std::vector<std::string>{ "Respiratory", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> pftvec; //PulmonaryFunctionTest
-  pftvec.push_back(std::vector<std::string>{ "PulmonaryFunctionTest", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> recvec; //RespiratoryCompartments
-  recvec.push_back(std::vector<std::string>{ "RespiratoryCompartments", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> tvec; //Tissue
-  tvec.push_back(std::vector<std::string>{ "Tissue", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> tcvec; //TissueCompartments
-  tcvec.push_back(std::vector<std::string>{ "TissueComparments", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> tsvec; //TissueSubstances
-  tsvec.push_back(std::vector<std::string>{ "TissueSubstances", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-  std::vector<std::vector<std::string>> svvec; //SystemValidationData.xlsx
-  svvec.push_back(std::vector<std::string>{ "SystemValidationData.xlsx", "Expected Value", "Engine Value", "Percent Error", "Notes" });
-
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("BloodChemistry"), bcvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("CompleteMetabolicPanel"), cmpvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("CompleteBloodCount"), cbcvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Cardiovascular"), cvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("CardiovascularComponents"), ccvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Endocrine"), evec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Energy"), envec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Gastrointestinal"), gvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Nervous"), nvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("RenalCompartments"), rcvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Urinalysis"), uvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Renal"), rvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("RenalSubstances"), rsvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Respiratory"), revec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("PulmonaryFunctionTest"), pftvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("RespiratoryCompartments"), recvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("Tissue"), tvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("TissueCompartments"), tcvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("TissueSubstances"), tsvec));
-  tables.insert(std::pair<std::string, std::vector<std::vector<std::string>>>(std::string("SystemValidationData.xlsx"), svvec));
-
+  //So all of these tables need a first row where they have the top row, this block of code adds all of those to tables
+  biogears::TableRow BloodChemistry("BloodChemistry", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow CompleteMetabolicPanel("CompleteMetabolicPanel", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow CompleteBloodCount("CompleteBloodCount", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Cardiovascular("Cardiovascular", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow CardiovascularComponents("CardiovascularComponents", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Endocrine("Endocrine", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Energy("Energy", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Gastrointestinal("Gastrointestinal", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Nervous("Nervous", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow RenalCompartments("RenalCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Urinalysis("Urinalysis", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Renal("Renal", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow RenalSubstances("RenalSubstances", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Respiratory("Respiratory", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow PulmonaryFunctionTest("PulmonaryFunctionTest", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow RespiratoryCompartments("RespiratoryCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow Tissue("Tissue", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow TissueCompartments("TissueCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow TissueSubstances("TissueSubstances", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow SystemValidationData("SystemValidationData.xlsx", "Expected Value", 0.0, "Percent Error", "Notes");
+  std::vector<std::vector<biogears::TableRow>> first_rows;
+  for(int i = 0; i < 20;i++) {
+    first_rows.emplace_back(std::vector<biogears::TableRow>());
+  }
+  first_rows[0].push_back(BloodChemistry);
+  first_rows[1].push_back(CompleteMetabolicPanel);
+  first_rows[2].push_back(CompleteBloodCount);
+  first_rows[3].push_back(Cardiovascular);
+  first_rows[4].push_back(CardiovascularComponents);
+  first_rows[5].push_back(Endocrine);
+  first_rows[6].push_back(Energy);
+  first_rows[7].push_back(Gastrointestinal);
+  first_rows[8].push_back(Nervous);
+  first_rows[9].push_back(RenalCompartments);
+  first_rows[10].push_back(Urinalysis);
+  first_rows[11].push_back(Renal);
+  first_rows[12].push_back(RenalSubstances);
+  first_rows[13].push_back(Respiratory);
+  first_rows[14].push_back(PulmonaryFunctionTest);
+  first_rows[15].push_back(RespiratoryCompartments);
+  first_rows[16].push_back(Tissue);
+  first_rows[17].push_back(TissueCompartments);
+  first_rows[18].push_back(TissueSubstances);
+  first_rows[19].push_back(SystemValidationData);
+  for(int i = 0;i < 20;i++) {
+    tables.insert(std::pair<std::string, std::vector<biogears::TableRow>>(first_rows[i][0].field_name,first_rows[i]));
+  }
   for(auto itr = table_row_map.begin();itr != table_row_map.end();++itr) {
 //  So this line pulls the table corresponding to the table_name of the row object, it then pushes a vector with the following layout
 //  field_name, expected_value, engine_value, percent_error, notes 
-    tables.find(itr->second.table_name)->second.push_back(std::vector<std::string>{ itr->second.field_name, itr->second.expected_value, std::to_string(itr->second.engine_value), itr->second.percent_error, itr->second.notes });
-    tables_.find(itr->second.table_name)->second.push_back(itr->second);
+    tables.find(itr->second.table_name)->second.push_back(itr->second);
   }
 }
 
