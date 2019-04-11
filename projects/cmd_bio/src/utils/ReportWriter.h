@@ -43,12 +43,16 @@ public:
   std::string to_markdown();
   std::string to_html();
   std::string to_xml();
-  void ParseCSV(std::string& filename);
-  void CalculateAverages(std::string& filename);
+  void ParseReferenceCSV(const char* filename);
+  void ParseReferenceCSV(std::string filename);
+  void ParseBaselineCSV(const char* filename);
+  void ParseBaselineCSV(std::string filename);
+  void CalculateAverages();
   void ExtractValues();
   void Validate();
   void PopulateTables();
 private:
+  void ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& vec);
   std::map<std::string,std::vector<biogears::TableRow>> tables;
   std::map<std::string, biogears::TableRow> table_row_map;
   std::vector<biogears::ReferenceValue> reference_values;

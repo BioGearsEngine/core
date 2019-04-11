@@ -46,7 +46,7 @@ std::string ReportWriter::to_html()
       line += table_itr->second[i].expected_value;
       line += "</td>";
       line += "<td>";
-      line += std::to_string(table_itr->second[i].engine_value);
+      line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
       line += "</td>";
       line += table_itr->second[i].percent_error;
       line += "</td>";
@@ -75,7 +75,7 @@ std::string ReportWriter::to_markdown()
       line += "|";
       line += table_itr->second[i].expected_value;
       line += "|";
-      line += std::to_string(table_itr->second[i].engine_value);
+      line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
       line += "|";
       line += table_itr->second[i].percent_error;
       line += "|";
@@ -121,7 +121,7 @@ std::string ReportWriter::to_xml()
       line += table_itr->second[i].expected_value;
       line += "</td>";
       line += "<td>";
-      line += std::to_string(table_itr->second[i].engine_value);
+      line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
       line += "</td>";
       line += table_itr->second[i].percent_error;
       line += "</td>";
@@ -139,7 +139,28 @@ std::string ReportWriter::to_xml()
   return report;
 }
 
-void ReportWriter::ParseCSV(std::string& filename)
+void ReportWriter::ParseReferenceCSV(const char* filename)
+{
+  ParseReferenceCSV(std::string(filename));
+}
+
+void ReportWriter::ParseReferenceCSV(std::string filename)
+{
+  ParseCSV(filename,this->validation_data);
+}
+
+void ReportWriter::ParseBaselineCSV(const char* filename)
+{
+  ParseBaselineCSV(std::string(filename));
+}
+
+void ReportWriter::ParseBaselineCSV(std::string filename)
+{
+  ParseCSV(filename,this->biogears_results);
+}
+
+
+void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& data)
 {
   std::ifstream file{ filename };
   if (!file.is_open()) {
@@ -151,10 +172,10 @@ void ReportWriter::ParseCSV(std::string& filename)
   while (std::getline(file, line)) {
     std::string cell;
     std::vector<std::string> vec;
-    validation_data.push_back(vec);
+    data.push_back(vec);
     for (int i = 0;i < line.size();i++) {
       if(line[i] == ',') {
-        validation_data[line_number].push_back(cell);
+        data[line_number].push_back(cell);
         cell.clear();
       } else if (line[i] == '"') {
         while(true) {
@@ -174,23 +195,19 @@ void ReportWriter::ParseCSV(std::string& filename)
         cell += line[i];
       }
     }
-    validation_data[line_number].push_back(cell);
+    data[line_number].push_back(ltrim(cell));
     cell.clear();
     ++line_number;
   }
 }
 
-void ReportWriter::CalculateAverages(std::string& filename)
+void ReportWriter::CalculateAverages()
 {
-  std::ifstream file{ filename };
-  if (!file.is_open()) {
-    return;
-  }
   std::vector<biogears::TableRow> rows;
   for(int i = 0;i < biogears_results[0].size();i++) {
     biogears::TableRow row;
     row.field_name = biogears_results[0][i];
-    row.expected_value = 0.0;
+    row.expected_value = "0.0";
     rows.push_back(row);
   }
   for(int i = 1;i < biogears_results.size();i++) {
@@ -198,8 +215,8 @@ void ReportWriter::CalculateAverages(std::string& filename)
       rows[k].engine_value += std::stod(biogears_results[i][k]);
     }
   }
-
   for(int i = 0;i < rows.size();i++) { 
+    rows[i].engine_value /= biogears_results.size() - 1;
     std::string field_name_with_units = rows[i].field_name;
     TableRow row = rows[i]; //So field_name_with_units looks like "Name(Unit)", which is why it gets split to just be "Name"
     table_row_map.insert(std::pair<std::string,biogears::TableRow>(split(field_name_with_units,'(')[0],row));
@@ -227,39 +244,44 @@ void ReportWriter::ExtractValues()
     ref.reference = split(validation_data[i][3],',')[0];
     ref.notes = validation_data[i][4];
     ref.table_name = validation_data[i][5];
+    //!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/
     ref.error_threshold = 0.5; // This is a placeholder value
     reference_values.push_back(ref);
+    //!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/
   }
 }
 
 void ReportWriter::Validate()
 {
   for(biogears::ReferenceValue ref : reference_values) {
-    biogears::TableRow table_row = table_row_map.find(ref.value_name)->second;
+    auto table_row_itr = table_row_map.find(ref.value_name);
+    if(table_row_itr == table_row_map.end()) {
+      continue;
+    }
+    biogears::TableRow table_row = table_row_itr->second;
     if(ref.is_range) { 
       table_row.expected_value = "["+std::to_string(ref.reference_range.first)+","+std::to_string(ref.reference_range.second)+"]" + "@" + ref.reference;
-      table_row.expected_value += ref.reference;
       if(ref.reference_range.first <= table_row.engine_value && ref.reference_range.second >= table_row.engine_value) {
         table_row.passed = true;
+        table_row.percent_error = "Within Bounds";
       } else {
         table_row.passed = false;
+        table_row.percent_error = "Outside Bounds";
       }
     } else {
-      table_row.expected_value = std::to_string(ref.reference_value)+"@"+ref.reference;
+      table_row.expected_value = std::to_string(ref.reference_value) + "@" + ref.reference;
       double error = 1.0 - (ref.reference_value/table_row.engine_value);
       error = std::fabs(error);
-      table_row.percent_error = error;
+      table_row.percent_error = std::to_string(error)+"%";
       if(ref.error_threshold >= error) {
         table_row.passed = true;
       } else {
         table_row.passed = false;
       }
     }
-    if(ref.unit_name != "") {
-      table_row.field_name += "(" + ref.unit_name + ")";
-    }
     table_row.notes = ref.notes;
     table_row.table_name = ref.table_name;
+    table_row_itr->second = table_row;
   }
 }
 
@@ -316,7 +338,10 @@ void ReportWriter::PopulateTables()
   for(auto itr = table_row_map.begin();itr != table_row_map.end();++itr) {
 //  So this line pulls the table corresponding to the table_name of the row object, it then pushes a vector with the following layout
 //  field_name, expected_value, engine_value, percent_error, notes 
-    tables.find(itr->second.table_name)->second.push_back(itr->second);
+    auto table_itr = tables.find(itr->second.table_name);
+    if(table_itr != tables.end()) {
+      table_itr->second.push_back(itr->second);
+    }
   }
 }
 
