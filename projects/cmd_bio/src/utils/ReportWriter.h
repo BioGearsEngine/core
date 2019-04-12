@@ -40,10 +40,10 @@ class ReportWriter
 public:
   ReportWriter();
   ~ReportWriter();
-  std::vector<std::string> gen_tables();
   std::string to_markdown();
   std::string to_html();
   std::string to_xml();
+  void gen_tables();
   void ParseReferenceCSV(const char* filename);
   void ParseReferenceCSV(std::string filename);
   void ParseBaselineCSV(const char* filename);

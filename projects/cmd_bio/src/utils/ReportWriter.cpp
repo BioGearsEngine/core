@@ -26,7 +26,7 @@ ReferenceValue::~ReferenceValue() {}
 ReportWriter::ReportWriter() {}
 ReportWriter::~ReportWriter() {}
 
-std::vector<std::string> ReportWriter::gen_tables()
+void ReportWriter::gen_tables()
 {
   std::vector<std::string> validation_files{"BloodChemistryValidation.csv",
                                             "CardiovascularValidation.csv",
@@ -51,7 +51,7 @@ std::vector<std::string> ReportWriter::gen_tables()
     reports.push_back(to_markdown());
     clear();
   }
-  return reports;
+  return;
 }
 
 std::string ReportWriter::to_html()
@@ -120,7 +120,7 @@ std::string ReportWriter::to_markdown()
     // This block saves out the md tables for website generation
     if(table_has_entries) {
       std::ofstream md_file;
-      md_file.open("validation/tables/"+table_name+"ValidationTable.md");
+      md_file.open("validation/"+table_name+"ValidationTable.md");
       if( !md_file ) {
         return "Error writing md file";
       }

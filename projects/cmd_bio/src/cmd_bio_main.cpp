@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     ,
     { "THREADS" } //Keywords
     ,
-    { "TEST", "SCENARIO", "VALIDATE" } //MultiWords
+    { "TEST", "SCENARIO", "VALIDATE" , "GEN-TABLES"} //MultiWords
   );
   args.parse(argc, argv);
 
@@ -157,6 +157,11 @@ int main(int argc, char** argv)
   driver.run();
   driver.stop_when_empty();
   driver.join();
+
+  if(args.MultiWordFound("GEN-TABLES")) {
+    biogears::ReportWriter report_writer;
+    report_writer.gen_tables();
+  }
   std::cout << "done!" << std::endl;
   return 0;
 }
