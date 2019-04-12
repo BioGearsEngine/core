@@ -32,8 +32,8 @@
 #include "biogears/cdm/utils/ConfigParser.h"
 #include <biogears/cdm/utils/FileUtils.h>
 ////////////////////
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 //!
 //! \brief Reads command line argument and executes corresponding operation
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
   driver.stop_when_empty();
   driver.join();
 
-  if(args.Option("GEN-TABLES")) {
+  if (args.Option("GEN-TABLES")) {
     biogears::ReportWriter report_writer;
     report_writer.gen_tables();
   }

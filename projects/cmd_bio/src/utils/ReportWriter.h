@@ -1,14 +1,12 @@
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
-namespace biogears
-{
-class TableRow 
-{
+namespace biogears {
+class TableRow {
 public:
   TableRow();
-  TableRow(std::string field_name,std::string expected_value,double engine_value,std::string percent_error,std::string notes);
+  TableRow(std::string field_name, std::string expected_value, double engine_value, std::string percent_error, std::string notes);
   ~TableRow();
   bool passed;
   std::string field_name; //field_name = value_name+unit_name
@@ -19,8 +17,7 @@ public:
   double engine_value; //
 };
 
-class ReferenceValue 
-{
+class ReferenceValue {
 public:
   ReferenceValue();
   ~ReferenceValue();
@@ -35,8 +32,7 @@ public:
   double error_threshold;
 };
 
-class ReportWriter
-{
+class ReportWriter {
 public:
   ReportWriter();
   ~ReportWriter();
@@ -55,14 +51,15 @@ public:
   void Validate();
   void PopulateTables();
   void clear();
+
 private:
   void ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& vec);
-  std::map<std::string,std::vector<biogears::TableRow>> tables;
+  std::map<std::string, std::vector<biogears::TableRow>> tables;
   std::map<std::string, biogears::TableRow> table_row_map;
   std::vector<biogears::ReferenceValue> reference_values;
   std::vector<std::vector<std::string>> validation_data;
   std::vector<std::vector<std::string>> biogears_results;
   std::string report;
-};  
+};
 
 } // end namespace biogears
