@@ -37,7 +37,6 @@ MuscleTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSu
 MuscleTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 MuscleTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 MuscleTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
-Triacylglycerol-ExtracellularMolarity*,mmol/L,,,,TissueSubstances
 MuscleTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,TissueSubstances
 MuscleTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 MuscleTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances

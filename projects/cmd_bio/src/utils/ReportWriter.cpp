@@ -26,11 +26,41 @@ ReferenceValue::~ReferenceValue() {}
 ReportWriter::ReportWriter() {}
 ReportWriter::~ReportWriter() {}
 
+std::vector<std::string> ReportWriter::gen_tables()
+{
+  std::vector<std::string> validation_files{"BloodChemistryValidation.csv",
+                                            "CardiovascularValidation.csv",
+                                            "EnergyValidation.csv",
+                                            "EndocrineValidation.csv",
+                                            "RenalValidation.csv",
+                                            "TissueValidation.csv"};
+  std::vector<std::string> baseline_files{"BloodChemistryValidationResults.csv",
+                                          "CardiovascularValidationResults.csv",
+                                          "EnergyValidationResults.csv",
+                                          "EndocrineValidationResults.csv",
+                                          "RenalValidationResults.csv",
+                                          "TissueValidationResults.csv"};
+  std::vector<std::string> reports;
+  for(int i = 0;i < validation_files.size();i++) {
+    ParseReferenceCSV(std::string(validation_files[i]));
+    ParseBaselineCSV(std::string(baseline_files[i]));
+    CalculateAverages();
+    ExtractValues(); //this is producing issues for Renal validation !!!!
+    Validate();
+    PopulateTables();
+    reports.push_back(to_markdown());
+    clear();
+  }
+  return reports;
+}
+
 std::string ReportWriter::to_html()
 {
   report.append(std::string("<html><body>\n"));
   //...Do work
   for(auto table_itr = tables.begin();table_itr != tables.end();++table_itr) {
+    std::string table;
+    std::string table_name = table_itr->first;
     report.append(std::string("<table border=\"1\">"));
     for(int i = 0;i < table_itr->second.size();i++) {
       std::string line("<tr");
@@ -58,8 +88,6 @@ std::string ReportWriter::to_html()
     }
     report.append(std::string("</table>"));
   }
-
-  //...Finish work
   report.append(std::string("</body></html>\n"));
   return report;
 }
@@ -69,7 +97,9 @@ std::string ReportWriter::to_markdown()
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
     std::string table;
     std::string table_name = table_itr->first;
+    bool table_has_entries;
     for (int i = 0; i < table_itr->second.size(); i++) {
+      table_has_entries = true;
       std::string line("|");
       line += table_itr->second[i].field_name;
       line += "|";
@@ -84,16 +114,19 @@ std::string ReportWriter::to_markdown()
       table.append(line);
       if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
         table.append("|---|---|---|---|---|\n");
+        table_has_entries = false;
       }
     }
     // This block saves out the md tables for website generation
-    std::ofstream md_file;
-    md_file.open("validation/"+table_name+"ValidationTable.md");
-    if( !md_file ) {
-      return "Error writing md file";
+    if(table_has_entries) {
+      std::ofstream md_file;
+      md_file.open("validation/tables/"+table_name+"ValidationTable.md");
+      if( !md_file ) {
+        return "Error writing md file";
+      }
+      md_file << table;
+      md_file.close();
     }
-    md_file << table;
-    md_file.close();
     //
     report.append(table+"\n");
   }
@@ -292,7 +325,7 @@ void ReportWriter::PopulateTables()
   biogears::TableRow CompleteMetabolicPanel("CompleteMetabolicPanel", "Expected Value", 0.0, "Percent Error", "Notes");
   biogears::TableRow CompleteBloodCount("CompleteBloodCount", "Expected Value", 0.0, "Percent Error", "Notes");
   biogears::TableRow Cardiovascular("Cardiovascular", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow CardiovascularComponents("CardiovascularComponents", "Expected Value", 0.0, "Percent Error", "Notes");
+  biogears::TableRow CardiovascularCompartments("CardiovascularCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
   biogears::TableRow Endocrine("Endocrine", "Expected Value", 0.0, "Percent Error", "Notes");
   biogears::TableRow Energy("Energy", "Expected Value", 0.0, "Percent Error", "Notes");
   biogears::TableRow Gastrointestinal("Gastrointestinal", "Expected Value", 0.0, "Percent Error", "Notes");
@@ -316,7 +349,7 @@ void ReportWriter::PopulateTables()
   first_rows[1].push_back(CompleteMetabolicPanel);
   first_rows[2].push_back(CompleteBloodCount);
   first_rows[3].push_back(Cardiovascular);
-  first_rows[4].push_back(CardiovascularComponents);
+  first_rows[4].push_back(CardiovascularCompartments);
   first_rows[5].push_back(Endocrine);
   first_rows[6].push_back(Energy);
   first_rows[7].push_back(Gastrointestinal);
@@ -345,5 +378,14 @@ void ReportWriter::PopulateTables()
   }
 }
 
+void ReportWriter::clear()
+{
+  tables.clear();
+  table_row_map.clear();
+  reference_values.clear();
+  validation_data.clear();
+  biogears_results.clear();
+  report.clear();
+}
 
 }

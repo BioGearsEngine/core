@@ -43,6 +43,11 @@
 //!
 int main(int argc, char** argv)
 {
+  if(argv[1][0] == 'B') {
+    biogears::ReportWriter report_writer;
+    std::vector<std::string> reports = report_writer.gen_tables();
+  }
+
   biogears::Arguments args(
     { "GENDATA", "GENSTATES", "VERIFY" } //Options
     ,

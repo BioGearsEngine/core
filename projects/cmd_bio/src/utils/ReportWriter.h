@@ -40,6 +40,7 @@ class ReportWriter
 public:
   ReportWriter();
   ~ReportWriter();
+  std::vector<std::string> gen_tables();
   std::string to_markdown();
   std::string to_html();
   std::string to_xml();
@@ -51,6 +52,7 @@ public:
   void ExtractValues();
   void Validate();
   void PopulateTables();
+  void clear();
 private:
   void ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& vec);
   std::map<std::string,std::vector<biogears::TableRow>> tables;

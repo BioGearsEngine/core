@@ -121,11 +121,6 @@ Chloride-Clearance-RenalReabsorptionRate,g/day,632.78,valtin1995renal,converted 
 Urea-Clearance-RenalExcretionRate,mg/min,18,valentin2002icrp,,RenalSubstances
 Urea-Clearance-RenalFiltrationRate,mg/min,31,valentin2002icrp,,RenalSubstances
 Urea-Clearance-RenalReabsorptionRate,mg/min,13,valentin2002icrp,Calculated from (Filtration - Excretion),RenalSubstances
-Color,,Yellow,N/A,Color is a gradient based on Urine Osmolality,Urinalysis
-Glucose,,Negative,walker1990clinical,Determined by concentration > 100mg/dL,Urinalysis
-Ketone,,Negative,walker1990clinical,Determined by concentration > 5 mg/dL,Urinalysis
 SpecificGravity,,"[1.01,1.022],
 [1.003,1.040]","valtin1995renal,
 walker1990clinical",,Urinalysis
-Blood,,Negative,walker1990clinical,Determined by concentration > 0.15 mg/dL,Urinalysis
-Protein,,Negative,walker1990clinical,Determined by concentration > 25 mg/dL,Urinalysis
