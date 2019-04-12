@@ -26,6 +26,24 @@ ReferenceValue::~ReferenceValue() {}
 ReportWriter::ReportWriter() {}
 ReportWriter::~ReportWriter() {}
 
+void ReportWriter::gen_tables_single_sheet(const char* validation_file, const char* baseline_file)
+{
+  gen_tables_single_sheet(std::string(validation_file),std::string(baseline_file));
+}
+
+
+void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::string baseline_file)
+{
+  ParseReferenceCSV(validation_file);
+  ParseBaselineCSV(baseline_file);
+  CalculateAverages();
+  ExtractValues();
+  Validate();
+  PopulateTables();
+  to_markdown();
+  clear();
+}
+
 void ReportWriter::gen_tables()
 {
   std::vector<std::string> validation_files{"BloodChemistryValidation.csv",
@@ -45,7 +63,7 @@ void ReportWriter::gen_tables()
     ParseReferenceCSV(std::string(validation_files[i]));
     ParseBaselineCSV(std::string(baseline_files[i]));
     CalculateAverages();
-    ExtractValues(); //this is producing issues for Renal validation !!!!
+    ExtractValues(); 
     Validate();
     PopulateTables();
     reports.push_back(to_markdown());
@@ -97,9 +115,7 @@ std::string ReportWriter::to_markdown()
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
     std::string table;
     std::string table_name = table_itr->first;
-    bool table_has_entries;
     for (int i = 0; i < table_itr->second.size(); i++) {
-      table_has_entries = true;
       std::string line("|");
       line += table_itr->second[i].field_name;
       line += "|";
@@ -114,19 +130,16 @@ std::string ReportWriter::to_markdown()
       table.append(line);
       if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
         table.append("|---|---|---|---|---|\n");
-        table_has_entries = false;
       }
     }
     // This block saves out the md tables for website generation
-    if(table_has_entries) {
-      std::ofstream md_file;
-      md_file.open("validation/"+table_name+"ValidationTable.md");
-      if( !md_file ) {
-        return "Error writing md file";
-      }
-      md_file << table;
-      md_file.close();
+    std::ofstream md_file;
+    md_file.open("validation/tables/"+table_name+"ValidationTable.md");
+    if( !md_file ) {
+      return "Error writing md file";
     }
+    md_file << table;
+    md_file.close();
     //
     report.append(table+"\n");
   }
@@ -255,8 +268,7 @@ void ReportWriter::CalculateAverages()
     table_row_map.insert(std::pair<std::string,biogears::TableRow>(split(field_name_with_units,'(')[0],row));
   }
 }
-// This method assumes a particular layout for the validation data csvs, if that layout is changed, this
-// method will break
+
 void ReportWriter::ExtractValues()
 {
   for(int i = 1;i < validation_data.size();i++) {
@@ -320,59 +332,16 @@ void ReportWriter::Validate()
 
 void ReportWriter::PopulateTables()
 {
-  //So all of these tables need a first row where they have the top row, this block of code adds all of those to tables
-  biogears::TableRow BloodChemistry("BloodChemistry", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow CompleteMetabolicPanel("CompleteMetabolicPanel", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow CompleteBloodCount("CompleteBloodCount", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Cardiovascular("Cardiovascular", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow CardiovascularCompartments("CardiovascularCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Endocrine("Endocrine", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Energy("Energy", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Gastrointestinal("Gastrointestinal", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Nervous("Nervous", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow RenalCompartments("RenalCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Urinalysis("Urinalysis", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Renal("Renal", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow RenalSubstances("RenalSubstances", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Respiratory("Respiratory", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow PulmonaryFunctionTest("PulmonaryFunctionTest", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow RespiratoryCompartments("RespiratoryCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow Tissue("Tissue", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow TissueCompartments("TissueCompartments", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow TissueSubstances("TissueSubstances", "Expected Value", 0.0, "Percent Error", "Notes");
-  biogears::TableRow SystemValidationData("SystemValidationData.xlsx", "Expected Value", 0.0, "Percent Error", "Notes");
-  std::vector<std::vector<biogears::TableRow>> first_rows;
-  for(int i = 0; i < 20;i++) {
-    first_rows.emplace_back(std::vector<biogears::TableRow>());
-  }
-  first_rows[0].push_back(BloodChemistry);
-  first_rows[1].push_back(CompleteMetabolicPanel);
-  first_rows[2].push_back(CompleteBloodCount);
-  first_rows[3].push_back(Cardiovascular);
-  first_rows[4].push_back(CardiovascularCompartments);
-  first_rows[5].push_back(Endocrine);
-  first_rows[6].push_back(Energy);
-  first_rows[7].push_back(Gastrointestinal);
-  first_rows[8].push_back(Nervous);
-  first_rows[9].push_back(RenalCompartments);
-  first_rows[10].push_back(Urinalysis);
-  first_rows[11].push_back(Renal);
-  first_rows[12].push_back(RenalSubstances);
-  first_rows[13].push_back(Respiratory);
-  first_rows[14].push_back(PulmonaryFunctionTest);
-  first_rows[15].push_back(RespiratoryCompartments);
-  first_rows[16].push_back(Tissue);
-  first_rows[17].push_back(TissueCompartments);
-  first_rows[18].push_back(TissueSubstances);
-  first_rows[19].push_back(SystemValidationData);
-  for(int i = 0;i < 20;i++) {
-    tables.insert(std::pair<std::string, std::vector<biogears::TableRow>>(first_rows[i][0].field_name,first_rows[i]));
-  }
   for(auto itr = table_row_map.begin();itr != table_row_map.end();++itr) {
-//  So this line pulls the table corresponding to the table_name of the row object, it then pushes a vector with the following layout
-//  field_name, expected_value, engine_value, percent_error, notes 
     auto table_itr = tables.find(itr->second.table_name);
     if(table_itr != tables.end()) {
+      table_itr->second.push_back(itr->second);
+    } else {
+      biogears::TableRow tr(itr->second.table_name,"Expected Value",0.0,"Percent Error","Notes");
+      std::vector<biogears::TableRow> tr_vec;
+      tr_vec.push_back(tr);
+      tables.insert(std::pair<std::string,std::vector<biogears::TableRow>>(itr->second.table_name,tr_vec));
+      table_itr = tables.find(itr->second.table_name);
       table_itr->second.push_back(itr->second);
     }
   }

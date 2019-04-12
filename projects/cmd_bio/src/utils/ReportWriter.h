@@ -43,6 +43,8 @@ public:
   std::string to_markdown();
   std::string to_html();
   std::string to_xml();
+  void gen_tables_single_sheet(const char* validation_file, const char* baseline_file);
+  void gen_tables_single_sheet(std::string validation_file, std::string baseline_file);
   void gen_tables();
   void ParseReferenceCSV(const char* filename);
   void ParseReferenceCSV(std::string filename);

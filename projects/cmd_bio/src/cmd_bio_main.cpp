@@ -44,11 +44,11 @@
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "GENDATA", "GENSTATES", "VERIFY" } //Options
+    { "GENDATA", "GENSTATES", "VERIFY", "GEN-TABLES" } //Options
     ,
     { "THREADS" } //Keywords
     ,
-    { "TEST", "SCENARIO", "VALIDATE" , "GEN-TABLES"} //MultiWords
+    { "TEST", "SCENARIO", "VALIDATE" } //MultiWords
   );
   args.parse(argc, argv);
 
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
   driver.stop_when_empty();
   driver.join();
 
-  if(args.MultiWordFound("GEN-TABLES")) {
+  if(args.Option("GEN-TABLES")) {
     biogears::ReportWriter report_writer;
     report_writer.gen_tables();
   }
