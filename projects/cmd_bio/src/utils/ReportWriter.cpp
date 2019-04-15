@@ -65,7 +65,7 @@ void ReportWriter::gen_tables()
     ExtractValues();
     Validate();
     PopulateTables();
-    reports.push_back(to_markdown());
+    reports.push_back(to_html());
     clear();
   }
   return;
@@ -78,13 +78,13 @@ std::string ReportWriter::to_html()
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
     std::string table;
     std::string table_name = table_itr->first;
-    table += std::string("<table border=\"1\">");
+    table += std::string("<table border=\"1\">\n");
     for (int i = 0; i < table_itr->second.size(); i++) {
-      std::string line("<tr");
+      std::string line("<tr ");
       if (table_itr->second[i].passed) {
-        line += "bgcolor=#32CD32>";
+        line += (i==0) ? ">" : "bgcolor=#32CD32>";
       } else {
-        line += "bgcolor=#FF0000>";
+        line += (i==0) ? ">" : "bgcolor=#FF0000>";
       }
       line += "<td>";
       line += table_itr->second[i].field_name;
@@ -95,15 +95,16 @@ std::string ReportWriter::to_html()
       line += "<td>";
       line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
       line += "</td>";
+      line += "<td>";
       line += table_itr->second[i].percent_error;
       line += "</td>";
       line += "<td>";
       line += table_itr->second[i].notes;
       line += "</td>";
-      line += "</tr>";
+      line += "</tr>\n";
       table.append(line);
     }
-    table += std::string("</table>");
+    table += std::string("</table>\n");
     // This block saves out the md tables for website generation
     std::ofstream html_file;
     html_file.open("validation/tables/" + table_name + "ValidationTable.html");
@@ -237,7 +238,7 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
     data.push_back(vec);
     for (int i = 0; i < line.size(); i++) {
       if (line[i] == ',') {
-        data[line_number].push_back(cell);
+        data[line_number].push_back(ltrim(cell));
         cell.clear();
       } else if (line[i] == '"') {
         while (true) {
