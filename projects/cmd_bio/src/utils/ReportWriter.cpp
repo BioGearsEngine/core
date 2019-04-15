@@ -4,7 +4,9 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <numeric>
+#include <iomanip>
 
 namespace biogears {
 
@@ -332,13 +334,18 @@ void ReportWriter::Validate()
       }
     } else {
       table_row.expected_value = std::to_string(ref.reference_value) + "@" + ref.reference;
-      double error = 1.0 - (ref.reference_value / table_row.engine_value);
-      error = std::fabs(error);
-      table_row.percent_error = std::to_string(error) + "%";
-      if (ref.error_threshold >= error) {
+      if(std::fabs(ref.reference_value - table_row.engine_value) <= 0.0001) {
+        table_row.percent_error = "0.0%";
         table_row.passed = true;
       } else {
-        table_row.passed = false;
+        double error = (std::fabs(ref.reference_value - table_row.engine_value)/((ref.reference_value + table_row.engine_value)/2));
+        error = std::fabs(error);
+        table_row.percent_error = std::to_string(error*100) + "%";
+        if (ref.error_threshold >= error) {
+          table_row.passed = true;
+        } else {
+          table_row.passed = false;
+        }
       }
     }
     table_row.notes = ref.notes;
