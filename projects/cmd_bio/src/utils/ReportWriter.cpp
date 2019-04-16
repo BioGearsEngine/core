@@ -18,7 +18,7 @@ TableRow::TableRow(std::string field_n, std::string expected_v, double engine_v,
   engine_value = engine_v;
   percent_error = percent_e;
   notes = n;
-  passed = true;
+  result = Green;
 }
 TableRow::~TableRow() {}
 
@@ -83,10 +83,12 @@ std::string ReportWriter::to_html()
     table += std::string("<table border=\"1\">\n");
     for (int i = 0; i < table_itr->second.size(); i++) {
       std::string line("<tr ");
-      if (table_itr->second[i].passed) {
+      if (table_itr->second[i].result == Green) {
         line += (i==0) ? ">" : "bgcolor=#32CD32>";
-      } else {
+      } else if (table_itr->second[i].result == Red) {
         line += (i==0) ? ">" : "bgcolor=#FF0000>";
+      } else if (table_itr->second[i].result == Yellow){ //This line isn't technically necessary, but I'm leaving it in for readability
+        line += (i==0) ? ">" : "bgcolor=#FFFF99>";
       }
       line += "<td>";
       line += table_itr->second[i].field_name;
@@ -107,7 +109,7 @@ std::string ReportWriter::to_html()
       table.append(line);
     }
     table += std::string("</table>\n");
-    // This block saves out the md tables for website generation
+    // This block saves out the html tables for website generation
     std::ofstream html_file;
     html_file.open("validation/tables/" + table_name + "ValidationTable.html");
     if (!html_file) {
@@ -131,10 +133,12 @@ std::string ReportWriter::to_markdown()
     for (int i = 0; i < table_itr->second.size(); i++) {
       std::string line_prepend;
       std::string line_append("</span>");
-      if (table_itr->second[i].passed) {
-        line_prepend = "<span style=\"background-color: #32CD32\">";
-      } else {
-        line_prepend = "<span style=\"background-color: #FF0000\">";
+      if (table_itr->second[i].result == Green) {
+        line_prepend = (i == 0) ? ">" : "<span style=\"background-color: #32CD32\">";
+      } else if (table_itr->second[i].result == Red) {
+        line_prepend = (i == 0) ? ">" : "<span style=\"background-color: #FF0000\">";
+      } else if (table_itr->second[i].result == Yellow) { //This line isn't technically necessary, but I'm leaving it in for readability
+        line_prepend += (i == 0) ? ">" : "<span style =\"background-color: #FFFF99\">";
       }
       std::string line("|");
       line += table_itr->second[i].field_name;
@@ -175,10 +179,12 @@ std::string ReportWriter::to_xml()
 
     for (int i = 0; i < table_itr->second.size(); i++) {
       std::string line("<tr");
-      if (table_itr->second[i].passed) {
-        line += "bgcolor=#32CD32>";
-      } else {
-        line += "bgcolor=#FF0000>";
+      if (table_itr->second[i].result == Green) {
+        line += (i==0) ? ">" : "bgcolor=#32CD32>";
+      } else if (table_itr->second[i].result == Red){
+        line += (i==0) ? ">" : "bgcolor=#FF0000>";
+      } else if (table_itr->second[i].result == Yellow) { //This line isn't technically necessary, but I'm leaving it in for readability
+        line += (i == 0) ? ">" : "bgcolor=#FFFF99>";
       }
       line += "<td>";
       line += table_itr->second[i].field_name;
@@ -309,7 +315,6 @@ void ReportWriter::ExtractValues()
     ref.notes = validation_data[i][4];
     ref.table_name = validation_data[i][5];
     //!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/
-    ref.error_threshold = 0.5; // This is a placeholder value
     reference_values.push_back(ref);
     //!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/
   }
@@ -326,25 +331,27 @@ void ReportWriter::Validate()
     if (ref.is_range) {
       table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + "@" + ref.reference;
       if (ref.reference_range.first <= table_row.engine_value && ref.reference_range.second >= table_row.engine_value) {
-        table_row.passed = true;
+        table_row.result = Green;
         table_row.percent_error = "Within Bounds";
       } else {
-        table_row.passed = false;
+        table_row.result = Red;
         table_row.percent_error = "Outside Bounds";
       }
     } else {
       table_row.expected_value = std::to_string(ref.reference_value) + "@" + ref.reference;
-      if(std::fabs(ref.reference_value - table_row.engine_value) <= 0.0001) {
+      if(std::fabs(ref.reference_value - table_row.engine_value) <= 0.000001) {
         table_row.percent_error = "0.0%";
-        table_row.passed = true;
+        table_row.result = Green;
       } else {
         double error = (std::fabs(ref.reference_value - table_row.engine_value)/((ref.reference_value + table_row.engine_value)/2));
         error = std::fabs(error);
         table_row.percent_error = std::to_string(error*100) + "%";
-        if (ref.error_threshold >= error) {
-          table_row.passed = true;
+        if (error < 0.10) {
+          table_row.result = Green;
+        } else if (0.10 <= error && error <= 0.25) {
+          table_row.result = Yellow;
         } else {
-          table_row.passed = false;
+          table_row.result = Red;
         }
       }
     }

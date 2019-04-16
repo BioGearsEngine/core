@@ -3,6 +3,14 @@
 #include <vector>
 
 namespace biogears {
+
+enum color
+{
+  Green = 0,
+  Red = 1,
+  Yellow = 2
+};
+
 class TableRow {
 public:
   TableRow();
@@ -15,6 +23,7 @@ public:
   std::string notes; //
   std::string table_name;
   double engine_value; //
+  color result;
 };
 
 class ReferenceValue {
@@ -29,7 +38,6 @@ public:
   std::string notes;
   std::pair<double, double> reference_range;
   double reference_value;
-  double error_threshold;
 };
 
 class ReportWriter {
