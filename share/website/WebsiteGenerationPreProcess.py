@@ -49,7 +49,20 @@ for file in glob.glob(os.path.join(runtime_dir,'*ValidationResults.zip')):
      shutil.copy(file,runtime_dir+'/Scenarios/Validation/baselines')
      print("")
 
-#os.chdir(runtime_dir)
-#shutil.copy('RenalTGFFeedbackOutput.zip',runtime_dir+'/UnitTests/BioGearsTests/baselines')
-#shutil.copy('SimpleDiffusionFourCompartmentTest.zip',runtime_dir+'/UnitTests/BioGearsTests/baselines')
-#shutil.copy('RespiratoryValidationPFT@120.02s.xml',runtime_dir+'/Scenarios/Validation')
+if not os.path.exists('UnitTests'):
+     os.mkdir('UnitTests')
+
+os.chdir(runtime_dir+'/UnitTests')     
+if not os.path.exists('BioGearsTests'):
+     os.mkdir('BioGearsTests')
+
+os.chdir(runtime_dir+'/UnitTests/BioGearsTests')
+if not os.path.exists('baselines'):
+     os.mkdir('baselines')
+
+os.chdir(runtime_dir)
+shutil.copy('RenalTGFFeedbackOutput.zip',runtime_dir+'/UnitTests/BioGearsTests/baselines')
+shutil.copy('SimpleDiffusionFourCompartmentTest.zip',runtime_dir+'/UnitTests/BioGearsTests/baselines')
+shutil.copy('RespiratoryValidationPFT@120.02s.xml',runtime_dir+'/Scenarios/Validation')
+
+print("Preprocess successful")
