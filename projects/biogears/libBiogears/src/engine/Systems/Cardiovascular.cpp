@@ -1076,7 +1076,12 @@ void Cardiovascular::Hemorrhage()
     }
 
     if (!h->HasBleedResistance()) {
-      h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s)*1.18, FlowResistanceUnit::mmHg_s_Per_mL);
+
+      if (h->GetCompartment() == "Aorta") {
+        h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s)*1.18, FlowResistanceUnit::mmHg_s_Per_mL);\
+        }
+
+      h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
     }
 
     resistance = h->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
