@@ -4,11 +4,8 @@
     <Description>Patient has suffered from moderate dehydration</Description>
     <InitialParameters>
 		<PatientFile>StandardMale.xml</PatientFile>
-		<Condition xsi:type="ConsumeMealData">
-			<Meal>
-				<Water value="0.0" unit="L"/>
-				<ElapsedTime value="1.3" unit="day"/>	
-			</Meal>
+		<Condition xsi:type="DehydrationData">
+			<DehydrationFraction value="0.05"/>
 		</Condition>
 	</InitialParameters>
 	
