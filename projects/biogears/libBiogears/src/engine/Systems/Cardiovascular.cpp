@@ -1075,12 +1075,12 @@ void Cardiovascular::Hemorrhage()
       return;
     }
 
+    //Aorta needs to be scaled down a bit to match user specified bleed rate
+    if (h->GetCompartment() == "Aorta") {
+      h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s)*1.02, FlowResistanceUnit::mmHg_s_Per_mL);
+    }
+
     if (!h->HasBleedResistance()) {
-
-      if (h->GetCompartment() == "Aorta") {
-        h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s)*1.18, FlowResistanceUnit::mmHg_s_Per_mL);\
-        }
-
       h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
     }
 
