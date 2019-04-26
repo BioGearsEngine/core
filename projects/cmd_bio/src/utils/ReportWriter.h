@@ -44,9 +44,10 @@ class ReportWriter {
 public:
   ReportWriter();
   ~ReportWriter();
-  std::string to_markdown();
-  std::string to_html();
-  std::string to_xml();
+  std::string to_table();
+  void set_html();
+  void set_md();
+  void set_xml();
   void gen_tables_single_sheet(const char* validation_file, const char* baseline_file);
   void gen_tables_single_sheet(std::string validation_file, std::string baseline_file);
   void gen_tables();
@@ -68,6 +69,19 @@ private:
   std::vector<std::vector<std::string>> validation_data;
   std::vector<std::vector<std::string>> biogears_results;
   std::string report;
+
+  char* body_begin;
+  char* table_begin;
+  char* table_row_begin;
+  char* table_row_begin_green;
+  char* table_row_begin_red;
+  char* table_row_begin_yellow;
+  char* table_second_line;
+  char* table_item_begin;
+  char* table_item_end;
+  char* table_row_end;
+  char* table_end;
+  char* body_end;
 };
 
 } // end namespace biogears

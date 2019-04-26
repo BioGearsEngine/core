@@ -105,9 +105,6 @@ def run_plots(root_dir, sources, skip_count, recurse, plotTime):
         else:
             err("{0} does not exist. Unable to process".format(possible_scenario),LOG_LEVEL_0)
 
-def tumnecks():
-    return
-
 def plot(root_dir, source, skip_count, plotTime):
     valid_regex = '[.](txt|csv)'
     input_source = os.path.join(root_dir,source)

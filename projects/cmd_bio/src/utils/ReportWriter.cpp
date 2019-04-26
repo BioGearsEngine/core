@@ -28,6 +28,55 @@ ReferenceValue::~ReferenceValue() {}
 ReportWriter::ReportWriter() {}
 ReportWriter::~ReportWriter() {}
 
+void ReportWriter::set_html()
+{
+  body_begin = "<html><body>\n";
+  table_begin = "<table border=\"1\">\n";
+  table_row_begin = "<tr>";
+  table_row_begin_green = "<tr bgcolor=#32CD32>";
+  table_row_begin_red = "<tr bgcolor=#FF0000>";
+  table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
+  table_second_line = "";
+  table_item_begin = "<td>";
+  table_item_end = "</td>";
+  table_row_end = "</tr>\n";
+  table_end = "</table>\n";
+  body_end = "</body></html>\n";
+}
+
+void ReportWriter::set_md()
+{
+  body_begin = "";
+  table_begin = "";
+  table_row_begin = "";
+  table_row_begin_green = "";
+  table_row_begin_red = "";
+  table_row_begin_yellow = "";
+  table_second_line = "|---|---|---|---|---|\n";
+  table_item_begin = "|";
+  table_item_end = "";
+  table_row_end = "|\n";
+  table_end = "\n";
+  body_end = "\n";
+}
+
+void ReportWriter::set_xml()
+{
+  body_begin = "<xml><body>\n";
+  table_begin = "<table border=\"1\">\n";
+  table_row_begin = "<tr>";
+  table_row_begin_green = "<tr bgcolor=#32CD32>";
+  table_row_begin_red = "<tr bgcolor=#FF0000>";
+  table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
+  table_second_line = "";
+  table_item_begin = "<td>";
+  table_item_end = "</td>";
+  table_row_end = "</tr>\n";
+  table_end = "</table>\n";
+  body_end = "</body></xml>\n";
+}
+
+
 void ReportWriter::gen_tables_single_sheet(const char* validation_file, const char* baseline_file)
 {
   gen_tables_single_sheet(std::string(validation_file), std::string(baseline_file));
@@ -41,7 +90,7 @@ void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::str
   ExtractValues();
   Validate();
   PopulateTables();
-  to_markdown();
+  to_table();
   clear();
 }
 
@@ -67,147 +116,65 @@ void ReportWriter::gen_tables()
     ExtractValues();
     Validate();
     PopulateTables();
-    reports.push_back(to_html());
+    set_html();
+    reports.push_back(to_table());
     clear();
   }
   return;
 }
 
-std::string ReportWriter::to_html()
+std::string ReportWriter::to_table()
 {
-  report.append(std::string("<html><body>\n"));
+  report.append(body_begin);
   //...Do work
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
     std::string table;
     std::string table_name = table_itr->first;
-    table += std::string("<table border=\"1\">\n");
+    table += std::string(table_begin);
     for (int i = 0; i < table_itr->second.size(); i++) {
-      std::string line("<tr ");
+      std::string line;
       if (table_itr->second[i].result == Green) {
-        line += (i==0) ? ">" : "bgcolor=#32CD32>";
+        line += (i == 0) ? table_row_begin : table_row_begin_green;
       } else if (table_itr->second[i].result == Red) {
-        line += (i==0) ? ">" : "bgcolor=#FF0000>";
-      } else if (table_itr->second[i].result == Yellow){ //This line isn't technically necessary, but I'm leaving it in for readability
-        line += (i==0) ? ">" : "bgcolor=#FFFF99>";
+        line += (i == 0) ? table_row_begin : table_row_begin_red;
+      } else if (table_itr->second[i].result == Yellow) { //This line isn't technically necessary, but I'm leaving it in for readability
+        line += (i == 0) ? table_row_begin : table_row_begin_yellow;
       }
-      line += "<td>";
+      line += table_item_begin;
       line += table_itr->second[i].field_name;
-      line += "</td>";
-      line += "<td>";
+      line += table_item_end;
+      line += table_item_begin;
       line += table_itr->second[i].expected_value;
-      line += "</td>";
-      line += "<td>";
+      line += table_item_end;
+      line += table_item_begin;
       line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
-      line += "</td>";
-      line += "<td>";
+      line += table_item_end;
+      line += table_item_begin;
       line += table_itr->second[i].percent_error;
-      line += "</td>";
-      line += "<td>";
+      line += table_item_end;
+      line += table_item_begin;
       line += table_itr->second[i].notes;
-      line += "</td>";
-      line += "</tr>\n";
+      line += table_item_end;
+      line += table_row_end;
       table.append(line);
+      if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
+        table.append(table_second_line);
+      }
     }
-    table += std::string("</table>\n");
+    table += std::string(table_end);
     // This block saves out the html tables for website generation
-    std::ofstream html_file;
-    html_file.open("validation/tables/" + table_name + "ValidationTable.html");
-    if (!html_file) {
-      return "Error writing html file";
+    std::ofstream file;
+    file.open("validation/tables/" + table_name + "ValidationTable.md");
+    if (!file) {
+      return "Error writing file";
     }
-    html_file << (std::string("<html><body>\n") + table + std::string("\n</body></html>\n"));
-    html_file.close();
+    file << (std::string(body_begin) + table + std::string(body_end));
+    file.close();
     //
     report.append(table);
     table.clear();
   }
-  report.append(std::string("</body></html>\n"));
-  return report;
-}
-
-std::string ReportWriter::to_markdown()
-{
-  for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
-    std::string table;
-    std::string table_name = table_itr->first;
-    for (int i = 0; i < table_itr->second.size(); i++) {
-      std::string line_prepend;
-      std::string line_append("</span>");
-      if (table_itr->second[i].result == Green) {
-        line_prepend = (i == 0) ? ">" : "<span style=\"background-color: #32CD32\">";
-      } else if (table_itr->second[i].result == Red) {
-        line_prepend = (i == 0) ? ">" : "<span style=\"background-color: #FF0000\">";
-      } else if (table_itr->second[i].result == Yellow) { //This line isn't technically necessary, but I'm leaving it in for readability
-        line_prepend += (i == 0) ? ">" : "<span style =\"background-color: #FFFF99\">";
-      }
-      std::string line("|");
-      line += table_itr->second[i].field_name;
-      line += "|";
-      line += table_itr->second[i].expected_value;
-      line += "|";
-      line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
-      line += "|";
-      line += table_itr->second[i].percent_error;
-      line += "|";
-      line += table_itr->second[i].notes;
-      line += "|\n";
-      table.append(line);
-      if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
-        table.append("|---|---|---|---|---|\n");
-      }
-    }
-    // This block saves out the md tables for website generation
-    std::ofstream md_file;
-    md_file.open("validation/tables/" + table_name + "ValidationTable.md");
-    if (!md_file) {
-      return "Error writing md file";
-    }
-    md_file << table;
-    md_file.close();
-    //
-    report.append(table + "\n");
-  }
-  return report;
-}
-
-std::string ReportWriter::to_xml()
-{
-  report.append(std::string("<xml><body>\n"));
-  //...Do work
-  for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
-    report.append(std::string("<table border=\"1\">"));
-
-    for (int i = 0; i < table_itr->second.size(); i++) {
-      std::string line("<tr");
-      if (table_itr->second[i].result == Green) {
-        line += (i==0) ? ">" : "bgcolor=#32CD32>";
-      } else if (table_itr->second[i].result == Red){
-        line += (i==0) ? ">" : "bgcolor=#FF0000>";
-      } else if (table_itr->second[i].result == Yellow) { //This line isn't technically necessary, but I'm leaving it in for readability
-        line += (i == 0) ? ">" : "bgcolor=#FFFF99>";
-      }
-      line += "<td>";
-      line += table_itr->second[i].field_name;
-      line += "</td>";
-      line += "<td>";
-      line += table_itr->second[i].expected_value;
-      line += "</td>";
-      line += "<td>";
-      line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
-      line += "</td>";
-      line += table_itr->second[i].percent_error;
-      line += "</td>";
-      line += "<td>";
-      line += table_itr->second[i].notes;
-      line += "</td>";
-      line += "</tr>";
-      report.append(line);
-    }
-    report.append(std::string("</table>"));
-  }
-
-  //...Finish work
-  report.append(std::string("</body></xml>\n"));
+  report.append(std::string(body_end));
   return report;
 }
 
@@ -314,9 +281,7 @@ void ReportWriter::ExtractValues()
     ref.reference = split(validation_data[i][3], ',')[0];
     ref.notes = validation_data[i][4];
     ref.table_name = validation_data[i][5];
-    //!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/
     reference_values.push_back(ref);
-    //!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/
   }
 }
 
