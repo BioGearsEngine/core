@@ -44,7 +44,7 @@
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "GENDATA", "GENSTATES", "VERIFY", "GEN-TABLES" } //Options
+    { "GENDATA", "GENSTATES", "VERIFY", "GENTABLES" } //Options
     ,
     { "THREADS" } //Keywords
     ,
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
   driver.stop_when_empty();
   driver.join();
 
-  if (args.Option("GEN-TABLES")) {
+  if (args.Option("GENTABLES")) {
     biogears::ReportWriter report_writer;
     report_writer.gen_tables();
   }

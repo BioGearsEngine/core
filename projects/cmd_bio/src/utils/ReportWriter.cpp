@@ -25,8 +25,14 @@ TableRow::~TableRow() {}
 ReferenceValue::ReferenceValue() {}
 ReferenceValue::~ReferenceValue() {}
 
-ReportWriter::ReportWriter() {}
-ReportWriter::~ReportWriter() {}
+ReportWriter::ReportWriter()
+{
+  logger = new biogears::Logger("gen-tables.log");
+}
+ReportWriter::~ReportWriter()
+{
+  delete logger;
+}
 
 void ReportWriter::set_html()
 {
@@ -108,22 +114,28 @@ void ReportWriter::gen_tables()
                                            "EndocrineValidationResults.csv",
                                            "RenalValidationResults.csv",
                                            "TissueValidationResults.csv" };
-  std::vector<std::string> reports;
+
   for (int i = 0; i < validation_files.size(); i++) {
+    logger->Info("Generating table: " + split(validation_files[i],'.')[0]);
     ParseReferenceCSV(std::string(validation_files[i]));
     ParseBaselineCSV(std::string(baseline_files[i]));
     CalculateAverages();
+    logger->Info("Successfully calculated averages of file: " + baseline_files[i]);
     ExtractValues();
+    logger->Info("Successfully populated data structures with validation data");
     Validate();
+    logger->Info("Successfully ran validation");
     PopulateTables();
+    logger->Info("Successfully populated tables vector");
     set_html();
-    reports.push_back(to_table());
+    to_table();
+    logger->Info("Successfully generated table: " + split(validation_files[i],'.')[0]);
     clear();
   }
   return;
 }
 
-std::string ReportWriter::to_table()
+int ReportWriter::to_table()
 {
   report.append(body_begin);
   //...Do work
@@ -166,16 +178,14 @@ std::string ReportWriter::to_table()
     std::ofstream file;
     file.open("validation/tables/" + table_name + "ValidationTable.md");
     if (!file) {
-      return "Error writing file";
+      return 1;
     }
     file << (std::string(body_begin) + table + std::string(body_end));
     file.close();
-    //
-    report.append(table);
     table.clear();
   }
-  report.append(std::string(body_end));
-  return report;
+  
+  return 0;
 }
 
 void ReportWriter::ParseReferenceCSV(const char* filename)
@@ -202,6 +212,7 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
 {
   std::ifstream file{ filename };
   if (!file.is_open()) {
+    logger->Error("Error opening: " + filename);
     return;
   }
   std::string line;
@@ -237,6 +248,7 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
     cell.clear();
     ++line_number;
   }
+  logger->Info("Successfully parsed file: " + filename);
 }
 
 void ReportWriter::CalculateAverages()
@@ -250,7 +262,13 @@ void ReportWriter::CalculateAverages()
   }
   for (int i = 1; i < biogears_results.size(); i++) {
     for (int k = 0; k < biogears_results[i].size(); k++) {
-      rows[k].engine_value += std::stod(biogears_results[i][k]);
+      try {
+        rows[k].engine_value += std::stod(biogears_results[i][k]);
+      } catch (std::exception& e) {
+        logger->Error(std::string("Error: ") + e.what());
+        logger->Error("Cell Contents: " + biogears_results[i][k]);
+        throw(e);
+      }
     }
   }
   for (int i = 0; i < rows.size(); i++) {
@@ -272,11 +290,23 @@ void ReportWriter::ExtractValues()
       // This line splits [num1,num2],.... into a vector where the first element is num1,num2
       // Then it splits the first vector element into a vector where the first two elements are num1 and num2
       std::vector<std::string> value_range = split(split(validation_data[i][2].substr(1), ']')[0], ',');
-      ref.reference_range = std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1]));
+      try {
+        ref.reference_range = std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1]));
+      } catch(std::exception& e) {
+        logger->Error(std::string("Error: ") + e.what());
+        logger->Error("Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
+        throw(e);
+      }
     } else {
       ref.is_range = false;
       std::vector<std::string> value = split(validation_data[i][2], ',');
-      ref.reference_value = std::stod(value[0]);
+      try {
+        ref.reference_value = std::stod(value[0]);
+      } catch (std::exception& e) {
+        logger->Error(std::string("Error: ") + e.what());
+        logger->Error("Cell Contents: " + value[0]);
+        throw(e);
+      }
     }
     ref.reference = split(validation_data[i][3], ',')[0];
     ref.notes = validation_data[i][4];

@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#include <biogears/cdm/utils/Logger.h>
+
 namespace biogears {
 
 enum color
@@ -44,7 +46,7 @@ class ReportWriter {
 public:
   ReportWriter();
   ~ReportWriter();
-  std::string to_table();
+  int to_table();
   void set_html();
   void set_md();
   void set_xml();
@@ -59,7 +61,7 @@ public:
   void ExtractValues();
   void Validate();
   void PopulateTables();
-  void clear();
+  void clear(); // This does not reset the value of the pointers
 
 private:
   void ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& vec);
@@ -70,6 +72,7 @@ private:
   std::vector<std::vector<std::string>> biogears_results;
   std::string report;
 
+  biogears::Logger* logger;
   char* body_begin;
   char* table_begin;
   char* table_row_begin;
