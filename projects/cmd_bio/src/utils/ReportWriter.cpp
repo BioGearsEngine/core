@@ -27,11 +27,11 @@ ReferenceValue::~ReferenceValue() {}
 
 ReportWriter::ReportWriter()
 {
-  logger = new biogears::Logger("gen-tables.log");
+  logger = std::make_unique<biogears::Logger>("gen-tables.log");
 }
 ReportWriter::~ReportWriter()
 {
-  delete logger;
+  logger = nullptr;
 }
 
 void ReportWriter::set_html()

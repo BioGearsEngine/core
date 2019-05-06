@@ -1,3 +1,4 @@
+#include <memory>
 #include <map>
 #include <string>
 #include <vector>
@@ -72,7 +73,7 @@ private:
   std::vector<std::vector<std::string>> biogears_results;
   std::string report;
 
-  biogears::Logger* logger;
+  std::unique_ptr<biogears::Logger> logger;
   char* body_begin;
   char* table_begin;
   char* table_row_begin;
