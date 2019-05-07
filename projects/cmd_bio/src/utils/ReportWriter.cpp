@@ -117,7 +117,7 @@ void ReportWriter::gen_tables()
 
   for (int i = 0; i < validation_files.size(); i++) {
     logger->Info("Generating table: " + split(validation_files[i],'.')[0]);
-    logger->SetConsolesetConversionPattern("  ");
+    logger->SetConsolesetConversionPattern("\t%m%n");
     ParseReferenceCSV(std::string(validation_files[i]));
     ParseBaselineCSV(std::string(baseline_files[i]));
     CalculateAverages();
