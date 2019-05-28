@@ -75,6 +75,7 @@ protected:
   void AdministerSubstanceBolus();
   void AdministerSubstanceInfusion();
   void AdministerSubstanceCompoundInfusion();
+  void AdministerSubstanceOral();
 
   void CalculatePartitionCoefficients();
   void CalculateSubstanceClearance();

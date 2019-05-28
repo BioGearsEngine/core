@@ -348,6 +348,20 @@ void Drugs::AdministerSubstanceInfusion()
   m_IVToVenaCava->GetNextFlowSource().SetValue(totalRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
 }
 
+//-------------------------------------------------------------------------------------------------
+/// \brief
+/// Administer drugs via transmucosal and gastrointestinal routes
+///
+/// \details
+/// This function adminsters drug as lozenges which dissolve in the mouth (transmucosal) or as pills that
+/// are swallowed and dissolve in the stomarch (gastrointestinal).  The transmucosal route takes into account
+/// dissolved drug that is swallowed and enters circulation through the GI.
+
+void Drugs::AdministerSubstanceOral()
+{
+
+}
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Increases the substance masses for compounds
@@ -400,7 +414,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->Balance(BalanceLiquidBy::Mass);
     }
 
-    if ( compound->GetName() == "Saline" || compound->GetName() == "RingersLactate" || compound->GetName() == "Antibiotic") //Note: Saline and ringers lactate have different densities than pure water
+    if (compound->GetName() == "Saline" || compound->GetName() == "RingersLactate" || compound->GetName() == "Antibiotic") //Note: Saline and ringers lactate have different densities than pure water
     {
       SEScalarTemperature& ambientTemp = m_data.GetEnvironment().GetConditions().GetAmbientTemperature();
       SEScalarMassPerVolume densityFluid;
@@ -590,12 +604,12 @@ void Drugs::CalculateDrugEffects()
       }
     }
 
-    if (m_data.GetActions().GetPatientActions().HasOverride() 
+    if (m_data.GetActions().GetPatientActions().HasOverride()
         && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
       if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
-          pd.GetDiastolicPressureModifier().SetValue(0.0);
-          pd.GetSystolicPressureModifier().SetValue(0.0);
-        }
+        pd.GetDiastolicPressureModifier().SetValue(0.0);
+        pd.GetSystolicPressureModifier().SetValue(0.0);
+      }
       if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
         pd.GetHeartRateModifier().SetValue(0.0);
       }
@@ -636,8 +650,7 @@ void Drugs::CalculateDrugEffects()
     pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
   }
 
-  
- //Sepsis Effects
+  //Sepsis Effects
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
     double nitricOxideBaseline = 0.05;
     double nitricOxide = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetNitricOxide().GetValue() - nitricOxideBaseline;
@@ -651,7 +664,6 @@ void Drugs::CalculateDrugEffects()
     deltaSystolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
     deltaDiastolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
   }
-
 
   //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
   double deltaMeanPressure_mmHg = (2 * deltaDiastolicBP_mmHg + deltaSystolicBP_mmHg) / 3;
