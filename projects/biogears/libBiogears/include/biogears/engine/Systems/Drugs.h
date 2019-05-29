@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/properties/SEScalarTime.h>
 
 namespace biogears {
 class SETissueCompartment;
@@ -93,6 +94,8 @@ protected:
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
+  SEScalarTime m_TimeOfAdministration;
+
   double m_RbcAcetylcholinesteraseFractionInhibited;
   SELiquidCompartment* m_aortaVascular;
   SELiquidCompartment* m_venaCavaVascular;

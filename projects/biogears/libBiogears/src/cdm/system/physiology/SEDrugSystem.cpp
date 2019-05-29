@@ -19,13 +19,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
 
-  constexpr char idBronchodilationLevel[] = "BronchodilationLevel";
+constexpr char idBronchodilationLevel[] = "BronchodilationLevel";
 constexpr char idHeartRateChange[] = "HeartRateChange";
+constexpr char idHemorrhageChange[] = "HemorrhageChange";
 constexpr char idMeanBloodPressureChange[] = "MeanBloodPressureChange";
 constexpr char idNeuromuscularBlockLevel[] = "NeuromuscularBlockLevel";
 constexpr char idPulsePressureChange[] = "PulsePressureChange";
@@ -41,6 +43,7 @@ SEDrugSystem::SEDrugSystem(Logger* logger)
 {
   m_BronchodilationLevel = nullptr;
   m_HeartRateChange = nullptr;
+  m_HemorrhageChange = nullptr;
   m_MeanBloodPressureChange = nullptr;
   m_NeuromuscularBlockLevel = nullptr;
   m_PulsePressureChange = nullptr;
@@ -65,6 +68,7 @@ void SEDrugSystem::Clear()
 
   SAFE_DELETE(m_BronchodilationLevel);
   SAFE_DELETE(m_HeartRateChange);
+  SAFE_DELETE(m_HemorrhageChange);
   SAFE_DELETE(m_MeanBloodPressureChange);
   SAFE_DELETE(m_NeuromuscularBlockLevel);
   SAFE_DELETE(m_PulsePressureChange);
@@ -85,8 +89,10 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
     GetBronchodilationLevel().Load(in.BronchodilationLevel().get());
   if (in.HeartRateChange().present())
     GetHeartRateChange().Load(in.HeartRateChange().get());
+  if (in.HemorrhageChange().present())
+    GetHemorrhageChange().Load(in.HemorrhageChange().get());
   if (in.MeanBloodPressureChange().present())
-    GetMeanBloodPressureChange().Load(in.MeanBloodPressureChange().get());
+      GetMeanBloodPressureChange().Load(in.MeanBloodPressureChange().get());
   if (in.NeuromuscularBlockLevel().present())
     GetNeuromuscularBlockLevel().Load(in.NeuromuscularBlockLevel().get());
   if (in.PulsePressureChange().present())
@@ -118,6 +124,8 @@ const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
     return &GetBronchodilationLevel();
   if (name == idHeartRateChange)
     return &GetHeartRateChange();
+  if (name == idHemorrhageChange)
+    return &GetHemorrhageChange();
   if (name == idMeanBloodPressureChange)
     return &GetMeanBloodPressureChange();
   if (name == idNeuromuscularBlockLevel)
@@ -163,6 +171,8 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
     data.BronchodilationLevel(std::unique_ptr<CDM::ScalarFractionData>(m_BronchodilationLevel->Unload()));
   if (m_HeartRateChange != nullptr)
     data.HeartRateChange(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateChange->Unload()));
+  if (m_HemorrhageChange != nullptr)
+    data.HemorrhageChange(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_HemorrhageChange->Unload()));
   if (m_MeanBloodPressureChange != nullptr)
     data.MeanBloodPressureChange(std::unique_ptr<CDM::ScalarPressureData>(m_MeanBloodPressureChange->Unload()));
   if (m_NeuromuscularBlockLevel != nullptr)
@@ -183,7 +193,6 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
     data.CentralNervousResponse(std::unique_ptr<CDM::ScalarFractionData>(m_CentralNervousResponse->Unload()));
 }
 //-------------------------------------------------------------------------------
-
 
 bool SEDrugSystem::HasBronchodilationLevel() const
 {
@@ -222,6 +231,25 @@ double SEDrugSystem::GetHeartRateChange(const FrequencyUnit& unit) const
   if (m_HeartRateChange == nullptr)
     return SEScalar::dNaN();
   return m_HeartRateChange->GetValue(unit);
+}
+
+bool SEDrugSystem::HasHemorrhageChange() const
+{
+  return m_HemorrhageChange == nullptr ? false : m_HemorrhageChange->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTime& SEDrugSystem::GetHemorrhageChange()
+{
+  if (m_HemorrhageChange == nullptr)
+    m_HemorrhageChange = new SEScalarVolumePerTime();
+  return *m_HemorrhageChange;
+}
+//-------------------------------------------------------------------------------
+double SEDrugSystem::GetHemorrhageChange(const VolumePerTimeUnit& unit) const
+{
+  if (m_HemorrhageChange == nullptr)
+    return SEScalar::dNaN();
+  return m_HemorrhageChange->GetValue(unit);
 }
 
 bool SEDrugSystem::HasMeanBloodPressureChange() const
@@ -409,9 +437,10 @@ double SEDrugSystem::GetCentralNervousResponse() const
 //-------------------------------------------------------------------------------
 Tree<const char*> SEDrugSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
+  return Tree<const char*>{ classname() }
     .emplace_back(idBronchodilationLevel)
     .emplace_back(idHeartRateChange)
+    .emplace_back(idHemorrhageChange)
     .emplace_back(idMeanBloodPressureChange)
     .emplace_back(idNeuromuscularBlockLevel)
     .emplace_back(idPulsePressureChange)

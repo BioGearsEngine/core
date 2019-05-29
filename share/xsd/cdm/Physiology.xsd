@@ -180,6 +180,7 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>
                     <xs:element name="BronchodilationLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="HeartRateChange" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
+					<xs:element name="HemorrhageChange" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="MeanBloodPressureChange" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="NeuromuscularBlockLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="PulsePressureChange" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->

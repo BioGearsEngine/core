@@ -82,6 +82,7 @@ void Drugs::Initialize()
   BioGearsSystem::Initialize();
   GetBronchodilationLevel().SetValue(0.0);
   GetHeartRateChange().SetValue(0.0, FrequencyUnit::Per_min);
+  GetHemorrhageChange().SetValue(0.0,VolumePerTimeUnit::mL_Per_s);
   GetMeanBloodPressureChange().SetValue(0.0, PressureUnit::mmHg);
   GetNeuromuscularBlockLevel().SetValue(0.0);
   GetPulsePressureChange().SetValue(0.0, PressureUnit::mmHg);
@@ -179,6 +180,7 @@ void Drugs::SetUp()
   //Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
+  m_TimeOfAdministration.SetValue(0.0, TimeUnit::s);
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -337,6 +339,9 @@ void Drugs::AdministerSubstanceInfusion()
 
   for (auto i : infusions) {
     sub = (SESubstance*)i.first; /// \todo sub needs to be const
+    if (sub->GetName() == "TranexamicAcid") {
+      m_TimeOfAdministration.SetValue(m_data.GetSimulationTime().GetValue(TimeUnit::s), TimeUnit::s);
+    }
     infusion = i.second;
     concentration_ug_Per_mL = infusion->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
     rate_mL_Per_s = infusion->GetRate().GetValue(VolumePerTimeUnit::mL_Per_s);
@@ -840,7 +845,13 @@ void Drugs::CalculateSubstanceClearance()
     SESubstanceClearance& clearance = sub->GetClearance();
 
     //Renal Volume Cleared - Clearance happens through the renal system
-    RenalVolumeCleared_mL = (clearance.GetRenalClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * PatientWeight_kg * m_dt_s);
+    //if (sub->GetName() != "TranexamicAcid") {
+      RenalVolumeCleared_mL = (clearance.GetRenalClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * PatientWeight_kg * m_dt_s);
+    /*} else {
+      double TimeeSinceAdministration_s = (m_data.GetSimulationTime().GetValue(TimeUnit::hr)) - m_TimeOfAdministration.GetValue(TimeUnit::hr);
+      
+      RenalVolumeCleared_mL = RenalVolumeCleared_mg_per_hr * (m_dt_s / (1100 * 3600)); //use density and time step with conversions
+    }*/
 
     //Intrinsic Clearance
     IntrinsicClearance_mLPersPerkg = clearance.GetIntrinsicClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg);

@@ -27,6 +27,9 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarVolume;
 class VolumeUnit;
+class SEScalarVolumePerTime;
+class VolumePerTimeUnit;
+
 class BIOGEARS_API SEDrugSystem : public SESystem {
 public:
   SEDrugSystem(Logger* logger);
@@ -57,6 +60,10 @@ public:
   bool HasHeartRateChange() const;
   SEScalarFrequency& GetHeartRateChange();
   double GetHeartRateChange(const FrequencyUnit& unit) const;
+
+  bool HasHemorrhageChange() const;
+  SEScalarVolumePerTime& GetHemorrhageChange();
+  double GetHemorrhageChange(const VolumePerTimeUnit& unit) const;
 
   bool HasMeanBloodPressureChange() const;
   SEScalarPressure& GetMeanBloodPressureChange();
@@ -98,6 +105,7 @@ public:
 protected:
   SEScalarFraction* m_BronchodilationLevel;
   SEScalarFrequency* m_HeartRateChange;
+  SEScalarVolumePerTime* m_HemorrhageChange;
   SEScalarPressure* m_MeanBloodPressureChange;
   SEScalarFraction* m_NeuromuscularBlockLevel;
   SEScalarPressure* m_PulsePressureChange;

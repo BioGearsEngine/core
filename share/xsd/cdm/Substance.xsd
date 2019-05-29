@@ -135,7 +135,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="EC50" type="ScalarMassPerVolumeData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
           <xs:element name="EMaxShapeParameter" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This used to create a sigmoid shape response. i.e. the steepness parameter in the EMax equation. -->
           <xs:element name="HeartRateModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the heart rate. -->
-          <xs:element name="NeuromuscularBlock" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="HemorrhageModifier" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the hemorrhage blood flow effect. -->
+		  <xs:element name="NeuromuscularBlock" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
           <xs:element name="PupillaryResponse" type="PupillaryResponseData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
           <xs:element name="RespirationRateModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
           <xs:element name="Sedation" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
