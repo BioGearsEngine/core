@@ -76,6 +76,7 @@ specific language governing permissions and limitations under the License.
       <xs:extension base="DrugSystemData">
         <xs:sequence>
           <xs:element name="BolusAdministration" type="SubstanceBolusStateData" minOccurs="0" maxOccurs="unbounded"/>
+		  <xs:element name="OralAdministration" type="SubstanceOralStateData" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="SarinRbcAcetylcholinesteraseComplex_nM" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="AgedRbcAcetylcholinesterase_nM" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>

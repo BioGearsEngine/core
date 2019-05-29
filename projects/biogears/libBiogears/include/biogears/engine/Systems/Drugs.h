@@ -24,6 +24,7 @@ class SEFluidCircuitPath;
 class SETissueCompartment;
 class SESubstance;
 class SESubstanceBolusState;
+class SESubstanceOralState;
 class SELiquidCompartment;
 
 class BioGears;
@@ -85,6 +86,7 @@ protected:
 
   // Serializable member variables (Set in Initialize and in schema)
   std::map<const SESubstance*, SESubstanceBolusState*> m_BolusAdministrations;
+  std::map<const SESubstance*, SESubstanceOralState*> m_OralAdministrations;
   double m_SarinRbcAcetylcholinesteraseComplex_nM;
   double m_AgedRbcAcetylcholinesterase_nM;
 

@@ -385,6 +385,14 @@ specific language governing permissions and limitations under the License.
 		</xs:restriction>
 	</xs:simpleType>
 	
+	<!-- @brief Methods of oral drug administration.  Currently supported routes are transmucosal and gastrointestinal -->
+	<xs:simpleType name="enumOralAdministration">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Transmucosal"/>
+			<xs:enumeration value="Gastrointestinal"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
 	<!-- @brief The administration of a substance or other compound that is given to raise its concentration in blood to an effective level. -->
 	<xs:complexType name="SubstanceAdministrationData" abstract="true">
 		<xs:complexContent>
@@ -439,7 +447,59 @@ specific language governing permissions and limitations under the License.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
+	<!-- @brief The state variables w.r.t. drug dissolution for a drug administered transmucosally-->
+	<xs:complexType name="OralTransmucosalStateData">
+		<xs:sequence>
+			<xs:element name="MouthSolidDrugMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SalivaConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="EpitheliumConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LaminaConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- @brief The state variables w.r.t. drug dissolution for a drug administered transmucosally-->
+	<xs:complexType name="OralGastrointestinalStateData">
+		<xs:sequence>
+			<xs:element name="StomachSolidDrugMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--@brief Drug administered orally, either as a lozenge that dissolves in mouth (transmucosal) or as a pill that dissolves is stomach (gastrointestinal)-->
+	<xs:complexType name="SubstanceOralDoseData">
+		<xs:complexContent>
+			<xs:extension base="SubstanceAdministrationData">
+				<xs:sequence>
+					<xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>	<!--<< @brief -->
+					<xs:element name="Dose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->													
+				</xs:sequence>
+				<xs:attribute name="AdminRoute" type="enumOralAdministration" use="required"/><!--<< @brief -->
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--@brief The state variables of a drug administered orally.  The transmucosal and gastrointestinal routes converge to a common pathway when dissolved drug reaches the stomach (either as transmucosal drug that is swallowed or a pill that dissolves in stomach).  Thus, we distinguish between the transmucosal and GI dissolution states during drug dissolution process, but use common elements thereafter -->
+	<xs:complexType name="SubstanceOralStateData">
+		<xs:complexContent>
+			<xs:extension base="ObjectData">
+				<xs:sequence>
+					<xs:element name="RouteSpecificData">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="TransmucosalRoute" type="OralTransmucosalStateData"/>
+								<xs:element name="GastrointestinalRoute" type="OralGastrointestinalStateData"/>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="StomachDissolvedMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="LumenConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="EnterocyteConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="VilliConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attribute name="Substance" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
 	<!-- @brief Empty the bladder of its contents. -->
 	<xs:complexType name="UrinateData">
 		<xs:complexContent>

@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SESepsis.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
+#include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
@@ -309,6 +310,18 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SESubstanceBolus* a = new SESubstanceBolus(*substance);
       a->Load(*bolusData);
       return a;
+    }
+
+	CDM::SubstanceOralDoseData* oralData = dynamic_cast<CDM::SubstanceOralDoseData*>(action);
+    if (oralData != nullptr) {
+		substance = substances.GetSubstance(oralData->Substance());
+		if (substance == nullptr) {
+			ss << "Unknown substance : " << oralData->Substance();
+			substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+		}
+		SESubstanceOralDose* od = new SESubstanceOralDose(*substance);
+		od->Load(*oralData);
+		return od;
     }
 
     CDM::SubstanceInfusionData* subInfuzData = dynamic_cast<CDM::SubstanceInfusionData*>(action);

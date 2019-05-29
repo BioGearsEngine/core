@@ -121,6 +121,18 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     bolusState->Load(bData);
   }
 
+  for (const CDM::SubstanceOralStateData& oData : in.OralAdministration()) {
+    SESubstance* sub = m_data.GetSubstances().GetSubstance(oData.Substance());
+    if (sub == nullptr) {
+      m_ss << "Unable to find subtance " << oData.Substance();
+      Error(m_ss, "Drugs::Load::OralAdministration");
+      return false;
+    }
+    SESubstanceOralState* oralState = new SESubstanceOralState(*sub);
+    m_OralAdministrations[sub] = oralState;
+    oralState->Load(oData);
+  }
+
   return true;
 }
 CDM::BioGearsDrugSystemData* Drugs::Unload() const
@@ -138,6 +150,11 @@ void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
   for (auto itr : m_BolusAdministrations) {
     if (itr.second != nullptr)
       data.BolusAdministration().push_back(std::unique_ptr<CDM::SubstanceBolusStateData>(itr.second->Unload()));
+  }
+
+  for (auto itr : m_OralAdministrations) {
+    if (itr.second != nullptr)
+      data.OralAdministration().push_back(std::unique_ptr<CDM::SubstanceOralStateData>(itr.second->Unload()));
   }
 }
 
@@ -187,6 +204,7 @@ void Drugs::AtSteadyState()
 void Drugs::PreProcess()
 {
   AdministerSubstanceBolus();
+  AdministerSubstanceOral();
   AdministerSubstanceInfusion();
   AdministerSubstanceCompoundInfusion();
 }
@@ -359,9 +377,27 @@ void Drugs::AdministerSubstanceInfusion()
 
 void Drugs::AdministerSubstanceOral()
 {
+  //Need to loop over Bolus Dose Objects
+  const std::map<const SESubstance*, SESubstanceOralDose*>& oralDoses = m_data.GetActions().GetPatientActions().GetSubstanceOralDoses();
+  if (oralDoses.empty())
+    return;
 
+  SESubstanceOralDose* oDose;
+  const SESubstance* sub;
+  SESubstanceOralState* oState;
+
+  for (auto od : oralDoses) {
+    sub = od.first;
+    oDose = od.second;
+    oState = m_OralAdministrations[sub];
+    if (oState == nullptr) {
+      oState = new SESubstanceOralState(*sub);
+      oState->Initialize(oDose->GetDose(), oDose->GetAdminRoute());
+      m_OralAdministrations[sub] = oState;
+    }
+    
+  }
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Increases the substance masses for compounds

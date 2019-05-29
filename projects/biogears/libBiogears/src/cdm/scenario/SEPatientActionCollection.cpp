@@ -86,6 +86,7 @@ void SEPatientActionCollection::Clear()
   DELETE_MAP_SECOND(m_PainStimuli);
   DELETE_MAP_SECOND(m_SubstanceBolus);
   DELETE_MAP_SECOND(m_SubstanceInfusions);
+  DELETE_MAP_SECOND(m_SubstanceOralDoses);
   DELETE_MAP_SECOND(m_SubstanceCompoundInfusions);
 }
 //-------------------------------------------------------------------------------
@@ -152,6 +153,8 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   for (auto itr : GetSubstanceBoluses())
     to.push_back(itr.second->Unload());
   for (auto itr : GetSubstanceInfusions())
+    to.push_back(itr.second->Unload());
+  for (auto itr : GetSubstanceOralDoses())
     to.push_back(itr.second->Unload());
   for (auto itr : GetSubstanceCompoundInfusions())
     to.push_back(itr.second->Unload());
@@ -1037,6 +1040,18 @@ void SEPatientActionCollection::RemoveSubstanceInfusion(const SESubstance& sub)
   SAFE_DELETE(si);
 }
 //-------------------------------------------------------------------------------
+const std::map<const SESubstance*, SESubstanceOralDose*>& SEPatientActionCollection::GetSubstanceOralDoses() const
+{
+  return m_SubstanceOralDoses;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveSubstanceOralDose(const SESubstance& sub)
+{
+  SESubstanceOralDose* od = m_SubstanceOralDoses[&sub];
+  m_SubstanceOralDoses.erase(&sub);
+  SAFE_DELETE(od);
+}
+//-------------------------------------------------------------------------------
 const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& SEPatientActionCollection::GetSubstanceCompoundInfusions() const
 {
   return m_SubstanceCompoundInfusions;
@@ -1093,6 +1108,29 @@ bool SEPatientActionCollection::AdministerSubstance(const CDM::SubstanceAdminist
       return true;
     }
     return IsValid(*mySubInfuse);
+  }
+
+  const CDM::SubstanceOralDoseData* oralDose = dynamic_cast<const CDM::SubstanceOralDoseData*>(&subAdmin);
+  if (oralDose != nullptr) {
+    SESubstance* sub = m_Substances.GetSubstance(oralDose->Substance());
+    if (sub == nullptr) {
+      m_ss << "Unknown substance : " << oralDose->Substance();
+      Error(m_ss);
+      return false;
+    }
+    SESubstanceOralDose* myOralDose = m_SubstanceOralDoses[sub];
+    if (myOralDose == nullptr) {
+      myOralDose = new SESubstanceOralDose(*sub);
+      m_SubstanceOralDoses[sub] = myOralDose;
+      m_Substances.AddActiveSubstance(*sub);
+    }
+    myOralDose->Load(*oralDose);
+    if (!myOralDose->IsActive()) {
+      RemoveSubstanceOralDose(*sub);
+      return true;
+    }
+    return IsValid(*myOralDose);
+  
   }
 
   const CDM::SubstanceCompoundInfusionData* cSubInfusion = dynamic_cast<const CDM::SubstanceCompoundInfusionData*>(&subAdmin);
