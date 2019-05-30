@@ -82,7 +82,7 @@ void Drugs::Initialize()
   BioGearsSystem::Initialize();
   GetBronchodilationLevel().SetValue(0.0);
   GetHeartRateChange().SetValue(0.0, FrequencyUnit::Per_min);
-  GetHemorrhageChange().SetValue(0.0,VolumePerTimeUnit::mL_Per_s);
+  GetHemorrhageChange().SetValue(0.0, VolumePerTimeUnit::mL_Per_s);
   GetMeanBloodPressureChange().SetValue(0.0, PressureUnit::mmHg);
   GetNeuromuscularBlockLevel().SetValue(0.0);
   GetPulsePressureChange().SetValue(0.0, PressureUnit::mmHg);
@@ -620,6 +620,7 @@ void Drugs::CalculateDrugEffects()
 {
 
   double deltaHeartRate_Per_min = 0;
+  double deltaHemorrhageflow_mL_Per_min = 0;
   double deltaDiastolicBP_mmHg = 0;
   double deltaSystolicBP_mmHg = 0;
   double deltaRespirationRate_Per_min = 0;
@@ -694,6 +695,9 @@ void Drugs::CalculateDrugEffects()
     // and the blood gas setpoint reset for example).
     deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
 
+    // If the substance affects hemorrhage blood flow
+    deltaHemorrhageflow_mL_Per_min = pd.GetHemorrhageModifier().GetValue() * concentrationEffects_unitless;
+
     deltaDiastolicBP_mmHg += patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetDiastolicPressureModifier().GetValue() * concentrationEffects_unitless;
 
     deltaSystolicBP_mmHg += patient.GetSystolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetSystolicPressureModifier().GetValue() * concentrationEffects_unitless;
@@ -741,6 +745,7 @@ void Drugs::CalculateDrugEffects()
 
   //Set values on the CDM System Values
   GetHeartRateChange().SetValue(deltaHeartRate_Per_min, FrequencyUnit::Per_min);
+  GetHemorrhageChange().SetValue(deltaHemorrhageflow_mL_Per_min, VolumePerTimeUnit::mL_Per_min);
   GetMeanBloodPressureChange().SetValue(deltaMeanPressure_mmHg, PressureUnit::mmHg);
   GetPulsePressureChange().SetValue(deltaPulsePressure_mmHg, PressureUnit::mmHg);
   GetRespirationRateChange().SetValue(deltaRespirationRate_Per_min, FrequencyUnit::Per_min);
@@ -767,6 +772,8 @@ void Drugs::CalculateDrugEffects()
   BLIM(pupilReactivityResponseLevel, -1, 1);
   GetPupillaryResponse().GetSizeModifier().SetValue(pupilSizeResponseLevel);
   GetPupillaryResponse().GetReactivityModifier().SetValue(pupilReactivityResponseLevel);
+
+  m_data.GetDataTrack().Probe("concEffect", concentrationEffects_unitless);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -846,7 +853,7 @@ void Drugs::CalculateSubstanceClearance()
 
     //Renal Volume Cleared - Clearance happens through the renal system
     //if (sub->GetName() != "TranexamicAcid") {
-      RenalVolumeCleared_mL = (clearance.GetRenalClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * PatientWeight_kg * m_dt_s);
+    RenalVolumeCleared_mL = (clearance.GetRenalClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * PatientWeight_kg * m_dt_s);
     /*} else {
       double TimeeSinceAdministration_s = (m_data.GetSimulationTime().GetValue(TimeUnit::hr)) - m_TimeOfAdministration.GetValue(TimeUnit::hr);
       

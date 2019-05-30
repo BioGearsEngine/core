@@ -76,6 +76,7 @@
     <EC50 readOnly="false" unit="ug/mL" value="2"/>
     <EMaxShapeParameter readOnly="false" value="2"/>
     <HeartRateModifier readOnly="false" value="0"/>
+	<HemorrhageModifier readOnly="false" value="0"/>
     <NeuromuscularBlock readOnly="false" value="0"/>
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>

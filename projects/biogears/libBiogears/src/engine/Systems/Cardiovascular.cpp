@@ -407,13 +407,12 @@ void Cardiovascular::SetUp()
   SEFluidCircuitPath* p = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::PortalVeinToLiver1);
   if (!Contains(m_systemicResistancePaths, (*p)))
     m_systemicResistancePaths.push_back(p);
-    m_AortaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta1ToGround);
-    m_AortaResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta3ToAorta1);
-    m_VenaCavaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
-    m_RightHeartResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToRightHeart2);
+  m_AortaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta1ToGround);
+  m_AortaResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta3ToAorta1);
+  m_VenaCavaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
+  m_RightHeartResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToRightHeart2);
 
-if(m_data.GetConfiguration().IsTissueEnabled())
-  {
+  if (m_data.GetConfiguration().IsTissueEnabled()) {
     m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::GutE1ToGutE2));
     m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::BoneE1ToBoneE2));
     m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::BrainE1ToBrainE2));
@@ -681,10 +680,9 @@ void Cardiovascular::Process()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PostProcess()
 {
-  if (m_data.GetActions().GetPatientActions().HasOverride() 
-    && m_data.GetState() == EngineState::Active) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) 
-    {
+  if (m_data.GetActions().GetPatientActions().HasOverride()
+      && m_data.GetState() == EngineState::Active) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) {
       ProcessOverride();
     }
   }
@@ -841,7 +839,7 @@ void Cardiovascular::CalculateVitalSigns()
     }
     ///\event Patient: Asystole: Heart Rate has fallen below minimum value and is being set to 0.
     // @cite guinness2005lowest
-    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27) { 
+    if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27) {
       if (!m_PatientActions->HasOverride()) {
         m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
         SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
@@ -852,7 +850,6 @@ void Cardiovascular::CalculateVitalSigns()
         }
       }
     }
- 
   }
 
   // Irreversible state if asystole persists.
@@ -1075,13 +1072,18 @@ void Cardiovascular::Hemorrhage()
       return;
     }
 
+    double TXAModFraction = m_data.GetDrugs().GetHemorrhageChange(VolumePerTimeUnit::mL_Per_s);
+    double newFlow = targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * TXAModFraction;
+    targetPath->GetFlow().SetReadOnly(false);
+    targetPath->GetFlow().SetValue(newFlow, VolumePerTimeUnit::mL_Per_s);
+
     if (!h->HasBleedResistance()) {
       //Aorta needs to be scaled down a bit to match user specified bleed rate
       if (h->GetCompartment() == "Aorta") {
         h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s) * 1.25, FlowResistanceUnit::mmHg_s_Per_mL);
       } else {
         h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
-        }
+      }
     }
 
     resistance = h->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1727,7 +1729,7 @@ void Cardiovascular::TuneCircuit()
       bloodVolumeBaseline_mL += c->GetVolume(VolumeUnit::mL);
       c->Balance(BalanceLiquidBy::Concentration);
       if (m_CirculatoryGraph->GetCompartment(c->GetName()) == nullptr)
-        Info(std::string{"Cardiovascular Graph does not have cmpt "} + c->GetName());
+        Info(std::string{ "Cardiovascular Graph does not have cmpt " } + c->GetName());
       if (c->HasSubstanceQuantity(m_data.GetSubstances().GetHb())) // Unit testing does not have any Hb
         m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*c); //so don't do this if we don't have Hb
     }
@@ -1776,11 +1778,11 @@ void Cardiovascular::TunePaths(double systemicResistanceScale, double systemicCo
   }
   if (systemicResistanceScale != 1.0) {
     for (SEFluidCircuitPath* p : m_tissueResistancePaths) {
-        sp1_mmHg_s_Per_mL = p->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_min_Per_mL) / systemicResistanceScale;
+      sp1_mmHg_s_Per_mL = p->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_min_Per_mL) / systemicResistanceScale;
 
-        p->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
-        p->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
-        p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+      p->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+      p->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+      p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
     }
   }
 
@@ -1861,7 +1863,7 @@ void Cardiovascular::AdjustVascularTone()
     for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
       if (!Path->HasNextResistance())
         continue;
-      if ( Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1 || Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2) {
+      if (Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1 || Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2) {
         continue;
       }
       UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1888,7 +1890,7 @@ void Cardiovascular::CalculateHeartRate()
   // was set back to false), so we need to subtract one time step from the interval.
   double HeartRate_Per_s = 0.0;
   if (m_data.GetActions().GetPatientActions().HasOverride()
-    && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
+      && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
     HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
   } else {
     HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
@@ -1912,7 +1914,7 @@ void Cardiovascular::ProcessOverride()
 #ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
 #endif
-  
+
   if (override->HasBloodVolumeOverride()) {
     GetBloodVolume().SetValue(override->GetBloodVolumeOverride(VolumeUnit::L), VolumeUnit::L);
   }

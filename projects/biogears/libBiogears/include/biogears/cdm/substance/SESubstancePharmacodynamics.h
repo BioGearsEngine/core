@@ -63,6 +63,10 @@ public:
   virtual SEScalarFraction& GetHeartRateModifier();
   virtual double GetHeartRateModifier() const;
 
+  virtual bool HasHemorrhageModifier() const;
+  virtual SEScalarFraction& GetHemorrhageModifier();
+  virtual double GetHemorrhageModifier() const;
+
   virtual bool HasNeuromuscularBlock() const;
   virtual SEScalarFraction& GetNeuromuscularBlock();
   virtual double GetNeuromuscularBlock() const;
@@ -108,6 +112,7 @@ protected:
   SEScalarMassPerVolume* m_EC50;
   SEScalar* m_EMaxShapeParameter;
   SEScalarFraction* m_HeartRateModifier;
+  SEScalarFraction* m_HemorrhageModifier;
   SEScalarFraction* m_NeuromuscularBlock;
   SEPupillaryResponse* m_PupillaryResponse;
   SEScalarFraction* m_RespirationRateModifier;

@@ -190,7 +190,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="TidalVolumeChange" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="TubularPermeabilityChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="CentralNervousResponse" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                </xs:sequence>  
+                </xs:sequence> 
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>

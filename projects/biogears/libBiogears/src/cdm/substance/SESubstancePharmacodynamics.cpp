@@ -26,6 +26,7 @@ SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   m_EC50 = nullptr;
   m_EMaxShapeParameter = nullptr;
   m_HeartRateModifier = nullptr;
+  m_HemorrhageModifier = nullptr;
   m_NeuromuscularBlock = nullptr;
   m_PupillaryResponse = nullptr;
   m_RespirationRateModifier = nullptr;
@@ -49,6 +50,7 @@ void SESubstancePharmacodynamics::Clear()
   SAFE_DELETE(m_EC50);
   SAFE_DELETE(m_EMaxShapeParameter);
   SAFE_DELETE(m_HeartRateModifier);
+  SAFE_DELETE(m_HemorrhageModifier);
   SAFE_DELETE(m_NeuromuscularBlock);
   SAFE_DELETE(m_PupillaryResponse);
   SAFE_DELETE(m_RespirationRateModifier);
@@ -71,6 +73,8 @@ bool SESubstancePharmacodynamics::IsValid() const
   if (!HasEMaxShapeParameter())
     return false;
   if (!HasHeartRateModifier())
+    return false;
+  if (!HasHemorrhageModifier())
     return false;
   if (!HasNeuromuscularBlock())
     return false;
@@ -110,6 +114,8 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
     return &GetEMaxShapeParameter();
   if (name.compare("HeartRateModifier") == 0)
     return &GetHeartRateModifier();
+  if (name.compare("HemorrhageModifier") == 0)
+    return &GetHemorrhageModifier();
   if (name.compare("NeuromuscularBlock") == 0)
     return &GetNeuromuscularBlock();
   if (name.compare("RespirationRateModifier") == 0)
@@ -137,6 +143,7 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   GetEC50().Load(in.EC50());
   GetEMaxShapeParameter().Load(in.EMaxShapeParameter());
   GetHeartRateModifier().Load(in.HeartRateModifier());
+  GetHemorrhageModifier().Load(in.HemorrhageModifier());
   GetNeuromuscularBlock().Load(in.NeuromuscularBlock());
   GetPupillaryResponse().Load(in.PupillaryResponse());
   GetRespirationRateModifier().Load(in.RespirationRateModifier());
@@ -171,6 +178,8 @@ void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& dat
     data.EMaxShapeParameter(std::unique_ptr<CDM::ScalarData>(m_EMaxShapeParameter->Unload()));
   if (HasHeartRateModifier())
     data.HeartRateModifier(std::unique_ptr<CDM::ScalarFractionData>(m_HeartRateModifier->Unload()));
+  if (HasHemorrhageModifier())
+    data.HemorrhageModifier(std::unique_ptr<CDM::ScalarFractionData>(m_HemorrhageModifier->Unload()));
   if (HasNeuromuscularBlock())
     data.NeuromuscularBlock(std::unique_ptr<CDM::ScalarFractionData>(m_NeuromuscularBlock->Unload()));
   if (HasPupillaryResponse())
@@ -308,6 +317,29 @@ double SESubstancePharmacodynamics::GetHeartRateModifier() const
   }
 
   return m_HeartRateModifier->GetValue();
+}
+//-----------------------------------------------------------------------------
+bool SESubstancePharmacodynamics::HasHemorrhageModifier() const
+{
+  return (m_HemorrhageModifier == nullptr) ? false : m_HemorrhageModifier->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarFraction& SESubstancePharmacodynamics::GetHemorrhageModifier()
+{
+  if (m_HemorrhageModifier == nullptr) {
+    m_HemorrhageModifier = new SEScalarFraction();
+  }
+
+  return *m_HemorrhageModifier;
+}
+//-----------------------------------------------------------------------------
+double SESubstancePharmacodynamics::GetHemorrhageModifier() const
+{
+  if (m_HemorrhageModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_HemorrhageModifier->GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasNeuromuscularBlock() const
