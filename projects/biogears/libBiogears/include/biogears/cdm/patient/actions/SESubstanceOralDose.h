@@ -67,7 +67,9 @@ public:
   void Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route);
 
   SEOralTransmucosalState& GetTransmucosalSpecificData();
+  bool IsTransmucosalRoute();
   SEOralGastrointestinalState& GetGastrointestinalSpecificData();
+  bool IsGastrointestinalRoute();
   SEScalarMass& GetStomachDissolvedMass();
   SEScalarMassPerVolume& GetLumenConcentration();
   SEScalarMassPerVolume& GetEnterocyteConcentration();

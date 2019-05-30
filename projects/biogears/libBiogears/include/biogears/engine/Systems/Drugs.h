@@ -102,5 +102,20 @@ protected:
   SETissueCompartment* m_fatTissue;
   SESubstance* m_Sarin;
   SESubstance* m_Pralidoxime;
+
+  //****Debug for OTFC only****
+  double mSolidMouth;
+  double cSaliva;
+  double cEpithelium;
+  double cLamina;
+  double mStomach;
+  double cLumen;
+  double cEnterocyte;
+  double cVilli;
+  double totalSwallowed;
+  double totalMetabolized;
+  double totalExcreted;
+  double totalAbsorbed;
+
 };
 }

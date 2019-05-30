@@ -193,6 +193,11 @@ SEOralTransmucosalState& SESubstanceOralState::GetTransmucosalSpecificData()
   return *m_TransmucosalState;
 }
 
+bool SESubstanceOralState::IsTransmucosalRoute()
+{
+  return m_TransmucosalState == nullptr ? false : true;
+}
+
 SEOralGastrointestinalState& SESubstanceOralState::GetGastrointestinalSpecificData()
 {
   //Check to see if both states are null ptr because you should never be able to define both.
@@ -200,6 +205,10 @@ SEOralGastrointestinalState& SESubstanceOralState::GetGastrointestinalSpecificDa
   if (m_TransmucosalState == nullptr && m_GastrointestinalState == nullptr)
     m_GastrointestinalState = new SEOralGastrointestinalState();
   return *m_GastrointestinalState;
+}
+bool SESubstanceOralState::IsGastrointestinalRoute()
+{
+  return m_GastrointestinalState == nullptr ? false : true;
 }
 
 SEScalarMass& SESubstanceOralState::GetStomachDissolvedMass()

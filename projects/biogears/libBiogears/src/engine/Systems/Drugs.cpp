@@ -52,6 +52,19 @@ Drugs::Drugs(BioGears& bg)
   , m_data(bg)
 {
   Clear();
+  //Initialize debug variables for OTFC
+  mSolidMouth = 0.0;
+  cSaliva = 0.0;
+  cEpithelium = 0.0;
+  cLamina = 0.0;
+  mStomach = 0.0;
+  cLumen = 0.0;
+  cEnterocyte = 0.0;
+  cVilli = 0.0;
+  totalSwallowed = 0.0;
+  totalMetabolized = 0.0;
+  totalExcreted = 0.0;
+  totalAbsorbed = 0.0;
 }
 
 Drugs::~Drugs()
@@ -205,6 +218,21 @@ void Drugs::PreProcess()
 {
   AdministerSubstanceBolus();
   AdministerSubstanceOral();
+  //**Write debug info to data track here because it is guaranteed to execute
+  m_data.GetDataTrack().Probe("MouthDrugMass_ug", mSolidMouth);
+  m_data.GetDataTrack().Probe("SalivaConcentratin_ug_Per_mL", cSaliva);
+  m_data.GetDataTrack().Probe("EpitheliumConcentration_ug_Per_mL", cEpithelium);
+  m_data.GetDataTrack().Probe("LaminaConcentration_ug_Per_mL", cLamina);
+  m_data.GetDataTrack().Probe("StomachDrugMass_ug", mStomach);
+  m_data.GetDataTrack().Probe("LumenConcentration_ug_Per_mL", cLumen);
+  m_data.GetDataTrack().Probe("EnterocyteConcentration_ug_Per_mL", cEnterocyte);
+  m_data.GetDataTrack().Probe("VilliConcentration_ug_Per_mL", cVilli);
+  m_data.GetDataTrack().Probe("MassSwallowed_ug", totalSwallowed);
+  m_data.GetDataTrack().Probe("MassExcreted_ug", totalExcreted);
+  m_data.GetDataTrack().Probe("MassMetabolized_ug", totalMetabolized);
+  m_data.GetDataTrack().Probe("MassAbsorbed_ug", totalAbsorbed);
+
+
   AdministerSubstanceInfusion();
   AdministerSubstanceCompoundInfusion();
 }
@@ -385,7 +413,7 @@ void Drugs::AdministerSubstanceOral()
   SESubstanceOralDose* oDose;
   const SESubstance* sub;
   SESubstanceOralState* oState;
-
+  double timeStep_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   for (auto od : oralDoses) {
     sub = od.first;
     oDose = od.second;
@@ -395,7 +423,138 @@ void Drugs::AdministerSubstanceOral()
       oState->Initialize(oDose->GetDose(), oDose->GetAdminRoute());
       m_OralAdministrations[sub] = oState;
     }
-    
+
+    //A fraction of all orally administered drugs reaches a dissolved state in the stomach.  However, there are two ways that we can get there.
+    //1) We can give a lozenge that is absorbed transmucosally--some drug will traverse oral mucosa and enter circulation, but some will be
+    //swallowed and enter the stomach in a dissolved state. 2) We can give a pill that enters the stomach as a solid and dissolves there.
+    //We therefore have two route-specific paths (Transmucosal and Gastrointestinal) that converge at the dissolved state in the stomach.
+
+	//Concentrations from last time step
+    double plasmaConcentration_ug_Per_mL = sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
+    double smallIntestineVascularConcentration_ug_Per_mL = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::SmallIntestine)->GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+    //double plasmaConcentration_ug_Per_mL = 0.0;
+    //double smallIntestineVascularConcentration_ug_Per_mL = 0.0;
+	//Physiochemical constants
+    double subLogP = sub->GetPK()->GetPhysicochemicals()->GetLogP();
+    double bloodPlasmaRatio = sub->GetPK()->GetPhysicochemicals()->GetBloodPlasmaRatio();
+    double molarMass_ug_Per_mol = sub->GetMolarMass(MassPerAmountUnit::ug_Per_mol);
+    double subPolarSurfaceArea_A = 23.6; //Add this to sub CDM later
+    double subHydrogenBondDonors = 0.0; //Add this to sub CDM later
+    double subSolubility_ug_Per_mL = 200.0;  //Add this to sub CDM later
+    //Defining mass transfer rates to stomach here so that we can accout for both routes if need be
+    double rateSwallowedDrugToStomach_ug_Per_s = 0.0; //Transmucosal route
+    double rateDrugDissolutionInStomach_ug_Per_s = 0.0; //Gastrointestinal route
+    //Process transmucosal drugs
+    if (oState->IsTransmucosalRoute()) {
+      //Previous state
+      SEOralTransmucosalState& otData = oState->GetTransmucosalSpecificData();
+      double solidMassInMouth_ug = otData.GetMouthSolidDrugMass().GetValue(MassUnit::ug);
+	  //It's possible for mass increment from previous step to give a slightly negative mass when there is very little drug left.
+	  //Make sure that when mass is ~0 that we set it to 0 so we don't get weird numbers when doing mass^(2/3)
+      if (solidMassInMouth_ug < ZERO_APPROX)
+        solidMassInMouth_ug = 0.0;
+      double salivaConcentration_ug_Per_mL = otData.GetSalivaConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+      double epitheliumConcentration_ug_Per_mL = otData.GetEpitheliumConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+      double laminaConcentration_ug_Per_mL = otData.GetLaminaConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+      //Derived physiochemical data
+      double Kp_SalivaToEpithelium = 2.12 * std::exp(0.523 * subLogP);
+      double Diff_Mucosa_cm2_Per_s;
+      if (subLogP < 3.0) {
+        double exponent = -0.0803 * (subLogP * subLogP) + 0.5005 * subLogP - 6.7316;
+        Diff_Mucosa_cm2_Per_s = std::pow(10.0, exponent);
+      } else {
+        Diff_Mucosa_cm2_Per_s = std::pow(10.0, -5.9514);
+      }
+      double Diff_Saliva_cm2_Per_s = 2.8e-6;
+      //Characteristic mouth parameters
+      double initialMass_ug = od.second->GetDose().GetValue(MassUnit::ug);
+      double surfaceArea_cm2 = 50.0;
+      double salivaThickness_cm = 0.0085;
+      double epitheliumThickness_cm = 400.0e-4; //um to cm
+      double laminaThickness_cm = 500e-4; //um to cm
+      double mucosaThickness_cm = epitheliumThickness_cm + laminaThickness_cm;
+      double volumeSaliva_mL = 0.32;
+      double volumeEpithelium_mL = surfaceArea_cm2 * epitheliumThickness_cm;
+      double volumeLamina_mL = surfaceArea_cm2 * laminaThickness_cm;
+      double bloodSupply_mL_Per_s = 0.23 / 60.0; //mL/min to mL/s
+      //Rate constants
+      double kSwallow_mL_Per_s = 0.0625;
+      double kConvective_mL_Per_s = kSwallow_mL_Per_s; //Assuming to start off with that the convective rate of saliva across the epithelium is equal to the rate of swallowing
+      double dissolveConstant = 20.0;
+      double kDissolve_Per_s = dissolveConstant * Diff_Saliva_cm2_Per_s * subSolubility_ug_Per_mL * std::pow(initialMass_ug / molarMass_ug_Per_mol, 0.33) / salivaThickness_cm;
+      //Intermediate expressions -- makes typing out equations easier
+      double rateMassDissolutionInMouth_ug_Per_s = kDissolve_Per_s * std::pow(solidMassInMouth_ug, 0.67);
+      rateSwallowedDrugToStomach_ug_Per_s = kSwallow_mL_Per_s * salivaConcentration_ug_Per_mL;
+      double rateSalivaToEpithelium_ug_Per_s = kConvective_mL_Per_s *(salivaConcentration_ug_Per_mL - epitheliumConcentration_ug_Per_mL / Kp_SalivaToEpithelium);
+      double fluxEpitheliumToLamina_ug_Per_s = (Diff_Mucosa_cm2_Per_s * surfaceArea_cm2 / mucosaThickness_cm) * (epitheliumConcentration_ug_Per_mL - laminaConcentration_ug_Per_mL);
+      double rateMassToPlasma_ug_Per_s = bloodPlasmaRatio * bloodSupply_mL_Per_s * (laminaConcentration_ug_Per_mL - plasmaConcentration_ug_Per_mL);
+	  //Differential equations
+      double dSolidDrugMouth_ug_Per_s = -rateMassDissolutionInMouth_ug_Per_s;
+      double dSalivaConcentration_ug_Per_mL_s = (1.0 / volumeSaliva_mL) * (rateMassDissolutionInMouth_ug_Per_s - rateSalivaToEpithelium_ug_Per_s -rateSwallowedDrugToStomach_ug_Per_s);
+      double dEpitheliumConcentration_ug_Per_mL_s = (1.0 / volumeEpithelium_mL) * (rateSalivaToEpithelium_ug_Per_s - fluxEpitheliumToLamina_ug_Per_s);
+      double dLaminaConcentration_ug_Per_mL_s = (1.0 / volumeLamina_mL) * (fluxEpitheliumToLamina_ug_Per_s - rateMassToPlasma_ug_Per_s);
+	  //Update state
+      otData.GetMouthSolidDrugMass().IncrementValue(dSolidDrugMouth_ug_Per_s * timeStep_s, MassUnit::ug);
+      otData.GetSalivaConcentration().IncrementValue(dSalivaConcentration_ug_Per_mL_s * timeStep_s, MassPerVolumeUnit::ug_Per_mL);
+      otData.GetEpitheliumConcentration().IncrementValue(dEpitheliumConcentration_ug_Per_mL_s * timeStep_s, MassPerVolumeUnit::ug_Per_mL);
+      otData.GetLaminaConcentration().IncrementValue(dLaminaConcentration_ug_Per_mL_s * timeStep_s, MassPerVolumeUnit::ug_Per_mL);
+	  //Put mass in circulation--do vena cava for now, may change
+      m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava)->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(rateMassToPlasma_ug_Per_s * timeStep_s, MassUnit::ug);
+
+	  //**Debug tracking
+      mSolidMouth = solidMassInMouth_ug;
+      cSaliva = salivaConcentration_ug_Per_mL;
+      cEpithelium = epitheliumConcentration_ug_Per_mL;
+      cLamina = laminaConcentration_ug_Per_mL;
+      totalSwallowed += (rateSwallowedDrugToStomach_ug_Per_s * timeStep_s);
+      totalAbsorbed += (rateMassToPlasma_ug_Per_s * timeStep_s);
+    }
+    if (oState->IsGastrointestinalRoute()) {
+		//Nothing here for now
+    }
+	//Following calculations account for transport from dissolved state in stomach to circulation
+
+	//Previous state variables
+    double dissolvedMassInStomach_ug = oState->GetStomachDissolvedMass().GetValue(MassUnit::ug);
+    double lumenConcentration_ug_Per_mL = oState->GetLumenConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+    double enterocyteConcentration_ug_Per_mL = oState->GetEnterocyteConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+    double villiConcentration_ug_Per_mL = oState->GetVilliConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+	//Characeteristic stomach/small intestine parameters
+    double volumeLumen_mL = 310.0;
+    double volumeEnterocytes_mL = 70.0;
+    double volumeVilli_mL = 380;
+    double surfaceAreaLumen_cm2 = 6600.0;
+    double villiBloodFlow_mL_Per_s = 5.0;
+	//Rate constants
+    double kGastric_Per_s = 5.46 / 3600.0;   //Per_h to Per_s
+    double kExrection_mL_Per_s = 0.12;
+    double kMetabolic_mL_Per_s = 500.0;
+	//Derived physiochemical data
+    double log10Perm = -3.061 + 0.19 * subLogP - 0.01 * subPolarSurfaceArea_A - 0.245 * subHydrogenBondDonors;
+    double permeabilityConstant_cm_Per_s = std::pow(10.0, log10Perm);
+    //Intermediate expressions
+    double rateMassToSmallIntestine_ug_Per_s = villiBloodFlow_mL_Per_s * (villiConcentration_ug_Per_mL - smallIntestineVascularConcentration_ug_Per_mL);
+	//Differential equations
+    double dDissolvedMassInStomach_ug_Per_s = rateSwallowedDrugToStomach_ug_Per_s - kGastric_Per_s * dissolvedMassInStomach_ug;
+    double dLumenConcentration_ug_Per_mL_s = (1.0 / volumeLumen_mL) * (kGastric_Per_s * dissolvedMassInStomach_ug - (permeabilityConstant_cm_Per_s * surfaceAreaLumen_cm2 + kExrection_mL_Per_s) * lumenConcentration_ug_Per_mL);
+    double dEnterocyteConcentration_ug_Per_mL_s = (1.0 / volumeEnterocytes_mL) * (permeabilityConstant_cm_Per_s * surfaceAreaLumen_cm2 * lumenConcentration_ug_Per_mL - (permeabilityConstant_cm_Per_s * surfaceAreaLumen_cm2 + kMetabolic_mL_Per_s) * enterocyteConcentration_ug_Per_mL);
+    double dVilliConcentration_ug_Per_mL_s = (1.0 / volumeVilli_mL) * (permeabilityConstant_cm_Per_s * surfaceAreaLumen_cm2 * enterocyteConcentration_ug_Per_mL - rateMassToSmallIntestine_ug_Per_s );
+	//Update states
+    oState->GetStomachDissolvedMass().IncrementValue(dDissolvedMassInStomach_ug_Per_s * timeStep_s, MassUnit::ug);
+    oState->GetLumenConcentration().IncrementValue(dLumenConcentration_ug_Per_mL_s * timeStep_s, MassPerVolumeUnit::ug_Per_mL);
+    oState->GetEnterocyteConcentration().IncrementValue(dEnterocyteConcentration_ug_Per_mL_s * timeStep_s, MassPerVolumeUnit::ug_Per_mL);
+    oState->GetVilliConcentration().IncrementValue(dVilliConcentration_ug_Per_mL_s * timeStep_s, MassPerVolumeUnit::ug_Per_mL);
+	//Put mass in small instestine vasculature
+    m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::SmallIntestine)->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(rateMassToSmallIntestine_ug_Per_s * timeStep_s, MassUnit::ug);
+  
+	//**Debug tracking
+    mStomach = dissolvedMassInStomach_ug;
+    cLumen = lumenConcentration_ug_Per_mL;
+    cEnterocyte = enterocyteConcentration_ug_Per_mL;
+    cVilli = villiConcentration_ug_Per_mL;
+    totalMetabolized += (enterocyteConcentration_ug_Per_mL * kMetabolic_mL_Per_s * timeStep_s);
+    totalExcreted += (lumenConcentration_ug_Per_mL * kExrection_mL_Per_s * timeStep_s);
+    totalAbsorbed += (rateMassToSmallIntestine_ug_Per_s * timeStep_s);
   }
 }
 //--------------------------------------------------------------------------------------------------
