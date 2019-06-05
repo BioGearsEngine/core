@@ -5,16 +5,13 @@
 	<InitialParameters>
 		<PatientFile>StandardMale.xml</PatientFile>
 		<Configuration xsi:type="BioGearsConfigurationData">
-			<DrugsConfiguration>
-        <PDModel>Off</PDModel>
-      </DrugsConfiguration>
 		</Configuration>
 	</InitialParameters>
     
   <DataRequests SamplesPerSecond="1">
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="TranexamicAcid" Unit="ug/L" Precision="6"/>
   
-	<DataRequest Substance="TranexamicAcid" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Name="BloodConcentration" Unit="ug/L" Precision="6"/>
 
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate" Unit="1/min"/>
@@ -26,22 +23,14 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume" Unit="mL"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent" Unit="g"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulsePressure" Unit="mmHg"/>
+	
+	<!-- Anything action specific data needed for verification of this scenario -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ground"  Name="InFlow"   Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLegVasculature"  Name="OutFlow"   Unit="mL/min" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLegVasculature"  Name="InFlow"   Unit="mL/min" Precision="3"/>
 		
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Name="MassInBody" Unit="ug" Precision="2"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="TranexamicAcid" Name="MassCleared" Unit="ug" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="TranexamicAcid" Name="MassCleared" Unit="ug" Precision="2"/>
@@ -52,7 +41,7 @@
   </DataRequests>
 	
 	<Action xsi:type="HemorrhageData" Compartment="RightLeg">
-        <InitialRate value="100.0" unit="mL/min"/>
+        <InitialRate value="40.0" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="10" unit="min"/>       

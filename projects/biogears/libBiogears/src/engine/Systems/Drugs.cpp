@@ -618,7 +618,7 @@ void Drugs::CalculatePartitionCoefficients()
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculateDrugEffects()
 {
-
+  double JUSTaTEST = 0;
   double deltaHeartRate_Per_min = 0;
   double deltaHemorrhageflow_mL_Per_min = 0;
   double deltaDiastolicBP_mmHg = 0;
@@ -674,6 +674,10 @@ void Drugs::CalculateDrugEffects()
         concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       }
     }
+    
+    if (sub->GetName() == "TranexamicAcid") {
+      JUSTaTEST = concentrationEffects_unitless;
+    }
 
     if (m_data.GetActions().GetPatientActions().HasOverride()
         && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
@@ -696,7 +700,7 @@ void Drugs::CalculateDrugEffects()
     deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
 
     // If the substance affects hemorrhage blood flow
-    deltaHemorrhageflow_mL_Per_min = pd.GetHemorrhageModifier().GetValue() * concentrationEffects_unitless;
+    deltaHemorrhageflow_mL_Per_min += pd.GetHemorrhageModifier().GetValue() * concentrationEffects_unitless;
 
     deltaDiastolicBP_mmHg += patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetDiastolicPressureModifier().GetValue() * concentrationEffects_unitless;
 
@@ -773,7 +777,7 @@ void Drugs::CalculateDrugEffects()
   GetPupillaryResponse().GetSizeModifier().SetValue(pupilSizeResponseLevel);
   GetPupillaryResponse().GetReactivityModifier().SetValue(pupilReactivityResponseLevel);
 
-  m_data.GetDataTrack().Probe("concEffect", concentrationEffects_unitless);
+  m_data.GetDataTrack().Probe("concEffect", JUSTaTEST);
 }
 
 //--------------------------------------------------------------------------------------------------

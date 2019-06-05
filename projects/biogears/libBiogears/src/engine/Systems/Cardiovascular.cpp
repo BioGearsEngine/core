@@ -318,6 +318,7 @@ void Cardiovascular::SetUp()
   m_dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_patient = &m_data.GetPatient();
   m_minIndividialSystemicResistance__mmHg_s_Per_mL = 0.1;
+  m_hemDrugEffect = 0.0;
 
   //Circuits
   m_CirculatoryCircuit = &m_data.GetCircuits().GetActiveCardiovascularCircuit();
@@ -1051,6 +1052,7 @@ void Cardiovascular::Hemorrhage()
   double probabilitySurvival = 0.0;
   double bleedoutTime = 0.0;
   double bleedRate_mL_Per_s = 0.0;
+  double newFlowResistance = 0.0;
 
   double bloodVolume_mL = GetBloodVolume(VolumeUnit::mL);
   double baselineBloodVolume_mL = m_patient->GetBloodVolumeBaseline(VolumeUnit::mL);
@@ -1062,6 +1064,7 @@ void Cardiovascular::Hemorrhage()
     locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg);
     bleedRate_mL_Per_s = h->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s);
 
+
     //enforce strict restictions on bleed rate for circuit stability
     if (bleedRate_mL_Per_s > m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s)) {
       std::stringstream err;
@@ -1071,11 +1074,6 @@ void Cardiovascular::Hemorrhage()
       Fatal("Cannot set a bleed rate higher than the cardiac output");
       return;
     }
-
-    double TXAModFraction = m_data.GetDrugs().GetHemorrhageChange(VolumePerTimeUnit::mL_Per_s);
-    double newFlow = targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * TXAModFraction;
-    targetPath->GetFlow().SetReadOnly(false);
-    targetPath->GetFlow().SetValue(newFlow, VolumePerTimeUnit::mL_Per_s);
 
     if (!h->HasBleedResistance()) {
       //Aorta needs to be scaled down a bit to match user specified bleed rate
@@ -1087,7 +1085,25 @@ void Cardiovascular::Hemorrhage()
     }
 
     resistance = h->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
-    targetPath->GetNextResistance().SetValue(resistance, FlowResistanceUnit::mmHg_s_Per_mL);
+
+    double TXAModFraction = m_data.GetDrugs().GetHemorrhageChange(VolumePerTimeUnit::mL_Per_s);
+    if (TXAModFraction != 0) {
+      std::stringstream ss;
+      ss << "TXA MOD" << TXAModFraction;
+      Info(ss);
+    }
+    m_hemDrugEffect += TXAModFraction;
+    newFlowResistance = resistance * (1-m_hemDrugEffect);
+
+    //if (TXAModFraction > 0) {
+    //  //targetPath->GetNextResistance().SetValue(newFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    //  h->GetBleedResistance().Clear();
+    //  h->GetInitialRate().Clear();
+    //  h->GetInitialRate().SetValue(locationPressure_mmHg / newFlowResistance, VolumePerTimeUnit::mL_Per_s);
+    //  //h->GetInitialRate().SetValue(locationPressure_mmHg / newFlowResistance, VolumePerTimeUnit::mL_Per_s);
+    //}
+
+    targetPath->GetNextResistance().SetValue(newFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
     TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
     TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
@@ -1098,6 +1114,7 @@ void Cardiovascular::Hemorrhage()
   if (bleedoutTime!=0)
   probabilitySurvival = 100.0-100.0*(0.9127*exp(-0.008*bleedoutTime));  //relationship from Table 5 in champion2003profile
   */
+  m_data.GetDataTrack().Probe("effect", m_hemDrugEffect);
 
   double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
   double massLost_kg = TotalLossRate_mL_Per_s * bloodDensity_kg_Per_mL * m_dT_s;
