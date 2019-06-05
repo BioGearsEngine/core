@@ -103,9 +103,30 @@ protected:
   SESubstance* m_Sarin;
   SESubstance* m_Pralidoxime;
 
-  //****Debug for OTFC only****
+  //***Test OTFC States before putting in CDM***//
   double mSolidMouth;
   double cSaliva;
+  double cEpi1_u;
+  double cEpi1;
+  double cEpi2;
+  double cEpi3;
+  double cEpi4;
+  double cEpi5;
+  double cEpi6;
+  double cLamE;
+
+  double cTon1_u;
+  double cTon1;
+  double cTon2;
+  double cTon3;
+  double cTon4;
+  double cTon5;
+  double cTon6;
+  double cLamT;
+
+
+  //****Debug for OTFC only****
+
   double cEpithelium;
   double cLamina;
   double mStomach;
@@ -116,6 +137,7 @@ protected:
   double totalMetabolized;
   double totalExcreted;
   double totalAbsorbed;
+  double massConservation;
 
 };
 }
