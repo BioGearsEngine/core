@@ -59,7 +59,7 @@ function(REGISTER_XSD schema)
     message(STATUS "Generating ${schema}.hxx and ${schema}.cxx")
     execute_process( WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
-                     COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
+                     COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
                      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd ${CMAKE_BINARY_DIR}/${resource_path}/${schema}.xsd   
                      ERROR_VARIABLE XSD_ERROR
                      OUTPUT_QUIET
@@ -74,7 +74,7 @@ function(REGISTER_XSD schema)
 
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                      COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
+                      COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
                       DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.xsd
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${schema}.cfg 
                       DEPENDS ${_l_DEPENDS}
@@ -199,7 +199,7 @@ function(REGISTER_XSD_FILE file )
     execute_process( 
                      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component} 
-                     COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
+                     COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
                      ERROR_VARIABLE XSD_ERROR
                    )
     if(XSD_ERROR )
@@ -220,7 +220,7 @@ function(REGISTER_XSD_FILE file )
   string(REPLACE "/" "_" safe_unique_name ${component}/${schema})
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.cxx ${_l_OUTPUTS}
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                      COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
+                      COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
                       DEPENDS ${PROJECT_SOURCE_DIR}/share/xsd/${file}
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}
                       DEPENDS ${_l_DEPENDS}
@@ -309,7 +309,7 @@ function(GENERATE_XSD_SCHEMA file)
   string(REPLACE "/" "_" safe_unique_name ${component}/${schema})
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${root_dir}/${component}/${schema}.hxx ${_l_OUTPUTS}
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                      COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${ARA_${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
+                      COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${PROJECT_SOURCE_DIR}/share/xsd/${cfg_file}
                       DEPENDS ${_l_DEPENDS}
                       COMMENT "Generating source code from XML" )

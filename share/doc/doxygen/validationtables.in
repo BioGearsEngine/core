@@ -704,7 +704,7 @@ LAYOUT_FILE            =
 # LATEX_BIB_STYLE. To use this feature you need bibtex and perl available in the
 # search path. See also \cite for info how to create references.
 
-CITE_BIB_FILES         = @ARA_Biogears_Reference_DIR@
+CITE_BIB_FILES         = @Biogears_Reference_DIR@/BioGears.bib
 
 #---------------------------------------------------------------------------
 # Configuration options related to warning and progress messages

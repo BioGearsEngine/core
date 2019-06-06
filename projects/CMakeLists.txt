@@ -5,10 +5,10 @@ option(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML bas
 option(${ROOT_PROJECT_NAME}_STAGE_RUNTIME "Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
 
 find_path (
-  ${ROOT_PROJECT_NAME}_Verification_DIR
+  ${ROOT_PROJECT_NAME}_Baseline_DIR
   NAME Scenarios
-  PATHS ${PROJECT_SOURCE_DIR}/../verification
-  DOC "Optional directory path to a hiarchial verification filetree of baseline archives. This will be used by Java Utilities to find Baselines"
+  PATHS ${PROJECT_SOURCE_DIR}/../verification  ${PROJECT_SOURCE_DIR}/../validation ${PROJECT_SOURCE_DIR}/../baselines
+  DOC "Optional directory path to hiarchial filetree of baseline archives. This will be used by Java Utilities to find Baselines"
 )
 find_path (
   ${ROOT_PROJECT_NAME}_Reference_DIR

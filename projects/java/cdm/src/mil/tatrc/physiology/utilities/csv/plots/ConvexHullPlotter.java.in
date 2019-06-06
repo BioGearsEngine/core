@@ -51,7 +51,7 @@ public class ConvexHullPlotter implements Plotter
 {
 
 	protected Map<String,List<Double>> data = new HashMap<String,List<Double>>();
-  public String       verificationDirectory = "@ARA_Biogears_Verification_DIR@";
+  public String       verificationDirectory = "@Biogears_Baseline_DIR@";
 	
 	public static void main(String[] args)
 	{

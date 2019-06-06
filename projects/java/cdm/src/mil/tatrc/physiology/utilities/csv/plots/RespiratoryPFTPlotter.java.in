@@ -73,7 +73,7 @@ public class RespiratoryPFTPlotter implements Plotter
 	protected List<SEAction> actions = new ArrayList<SEAction>();
 	protected SEScenario scenario;
 	protected SEPulmonaryFunctionTest pft;
-  public String       verificationDirectory = "@ARA_Biogears_Verification_DIR@";
+  public String       verificationDirectory = "@ARA_Biogears_Baseline_DIR@";
 
 	public static void main(String[] args)
 	{

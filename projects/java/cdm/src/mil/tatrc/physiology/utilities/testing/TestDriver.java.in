@@ -186,7 +186,7 @@ public class TestDriver
     public boolean      PlottableResults = false;
     public PlotType     plotType = PlotType.FastPlot;//Only plot every nth data point
     public double       percentDifference;
-    public String       verificationDirectory = "@ARA_Biogears_Verification_DIR@";
+    public String       verificationDirectory = "@Biogears_Baseline_DIR@";
     public List<String> baselineFiles = new ArrayList<String>();
     public String       baselineDirectory = null;
     public List<String> computedFiles = new ArrayList<String>();

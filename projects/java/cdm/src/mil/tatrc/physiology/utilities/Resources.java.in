@@ -61,14 +61,14 @@ public class Resources
       classPath.add( Paths.get(sysroot).toAbsolutePath().resolve("usr/jar") );
     }
 
-    binPath.add(Paths.get("@ARA_Biogears_EXTERNAL@/bin"));
+    binPath.add(Paths.get("@Biogears_EXTERNAL@/bin"));
     binPath.add(Paths.get("./").toAbsolutePath().resolve("bin"));
     binPath.add(Paths.get(System.getProperty("user.dir")).resolve("bin"));
     binPath.add(Paths.get(System.getProperty("user.home")).resolve("bin"));
     binPath.add(Paths.get(System.getProperty("user.dir")).resolve("usr/bin"));
     binPath.add(Paths.get(System.getProperty("user.home")).resolve("usr/bin"));
 
-    libPath.add(Paths.get("@ARA_Biogears_EXTERNAL@/lib"));
+    libPath.add(Paths.get("@Biogears_EXTERNAL@/lib"));
     libPath.add(Paths.get("./").toAbsolutePath().resolve("lib"));
     libPath.add(Paths.get(System.getProperty("user.dir")).resolve("lib"));
     libPath.add(Paths.get(System.getProperty("user.home")).resolve("lib"));
@@ -83,7 +83,7 @@ public class Resources
     resourcePath.add(Paths.get(System.getProperty("user.dir")).resolve("share/biogears/resources"));
     resourcePath.add(Paths.get(System.getProperty("user.home")).resolve("share/biogears/resources"));
 
-    classPath.add(Paths.get("@ARA_Biogears_EXTERNAL@/jar"));
+    classPath.add(Paths.get("@Biogears_EXTERNAL@/jar"));
     classPath.add(Paths.get("./").toAbsolutePath().resolve("jar"));
     classPath.add(Paths.get(System.getProperty("user.dir")).resolve("jar"));
     classPath.add(Paths.get(System.getProperty("user.home")).resolve("jar"));

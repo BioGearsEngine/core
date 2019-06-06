@@ -78,7 +78,7 @@ public class ActionEventPlotter implements Plotter
 	protected List<List<Double>> timeData = new ArrayList<List<Double>>();
 	protected List<SEAction> actions = new ArrayList<SEAction>();
 	protected SEScenario scenario;
-  public String       verificationDirectory = "@ARA_Biogears_Verification_DIR@";
+  public String       verificationDirectory = "@Biogears_Baseline_DIR@";
 
 	public static void main(String[] args)
 	{
