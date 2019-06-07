@@ -2,28 +2,28 @@
 <Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>Fentanyl</Name>
   <Classification>Opioid</Classification>
-  <MolarMass readOnly="false" unit="g/mol" value="528.23"/>
+  <MolarMass readOnly="false" unit="g/mol" value="336.47"/>
   <State>Liquid</State>
   <Clearance>
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.336"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <RenalClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="14"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.21"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="11.0"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="0.7"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="11.7"/>
     </Systemic>
     <RenalDynamics>
-      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
+      <Clearance readOnly="false" unit="mL/min kg" value="0.7"/>
     </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
-      <AcidDissociationConstant readOnly="false" value="8.77"/>
+      <AcidDissociationConstant readOnly="false" value="8.3"/>
       <BindingProtein>Albumin</BindingProtein>
       <BloodPlasmaRatio readOnly="false" value="0.87"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.336"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.21"/>
       <IonicState>WeakBase</IonicState>
-      <LogP readOnly="false" value="4.55"/>
+      <LogP readOnly="false" value="2.90"/>
     </Physicochemicals>
   </Pharmacokinetics>
   <Pharmacodynamics>

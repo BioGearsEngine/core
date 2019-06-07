@@ -451,16 +451,16 @@ specific language governing permissions and limitations under the License.
 	<!-- @brief The state variables w.r.t. drug dissolution for a drug administered transmucosally-->
 	<xs:complexType name="OralTransmucosalStateData">
 		<xs:sequence>
-			<xs:element name="MouthSolidDrugMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="MouthSolidMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="SalivaConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="EpitheliumConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="LaminaConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="BuccalConcentrations" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="7"/>
+			<xs:element name="SublingualConcentrations" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="7"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!-- @brief The state variables w.r.t. drug dissolution for a drug administered transmucosally-->
 	<xs:complexType name="OralGastrointestinalStateData">
 		<xs:sequence>
-			<xs:element name="StomachSolidDrugMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="StomachSolidMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!--@brief Drug administered orally, either as a lozenge that dissolves in mouth (transmucosal) or as a pill that dissolves is stomach (gastrointestinal)-->
@@ -490,9 +490,10 @@ specific language governing permissions and limitations under the License.
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="StomachDissolvedMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="LumenConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="EnterocyteConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="VilliConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TransitDissolvedMasses" type="ScalarMassData" minOccurs="0" maxOccurs="8"/>
+					<!--<xs:element name="EnterocyteMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>-->
+					<xs:element name="EnterocyteDissolvedMasses" type="ScalarMassData" minOccurs="0" maxOccurs="8"/>
+					<!--<xs:element name="VilliCapillaryConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>-->
 				</xs:sequence>
 				<xs:attribute name="Substance" type="xs:string" use="required"/>
 			</xs:extension>

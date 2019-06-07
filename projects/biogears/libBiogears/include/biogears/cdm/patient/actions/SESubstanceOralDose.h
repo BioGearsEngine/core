@@ -64,16 +64,22 @@ public:
   virtual bool Load(const CDM::SubstanceOralStateData& in);
   virtual CDM::SubstanceOralStateData* Unload() const;
 
-  void Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route);
+  bool Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route);
 
   SEOralTransmucosalState& GetTransmucosalSpecificData();
   bool IsTransmucosalRoute();
   SEOralGastrointestinalState& GetGastrointestinalSpecificData();
   bool IsGastrointestinalRoute();
   SEScalarMass& GetStomachDissolvedMass();
-  SEScalarMassPerVolume& GetLumenConcentration();
-  SEScalarMassPerVolume& GetEnterocyteConcentration();
-  SEScalarMassPerVolume& GetVilliConcentration();
+  std::vector<SEScalarMass*>& GetTransitDissolvedMasses();
+  std::vector<double> GetTransitDissolvedMasses(const MassUnit& unit);
+  bool SetTransitDissolvedMasses(std::vector<double>& tMasses, const MassUnit& unit);
+  //SEScalarMass& GetEnterocyteMass();
+  //SEScalarMassPerVolume& GetVilliCapillaryConcentration();
+  std::vector<SEScalarMass*>& GetEnterocyteDissolvedMasses();
+  std::vector<double> GetEnterocyteDissolvedMasses(const MassUnit& unit);
+  bool SetEnterocyteDissolvedMasses(std::vector<double>& tMasses, const MassUnit& unit);
+
 
 protected:
   virtual void Unload(CDM::SubstanceOralStateData& data) const;
@@ -82,9 +88,11 @@ protected:
   SEOralGastrointestinalState* m_GastrointestinalState;
   //Common pathway for both transmucosal and gastrointestinal routes
   SEScalarMass* m_StomachDissolvedMass;
-  SEScalarMassPerVolume* m_LumenConcentration;
-  SEScalarMassPerVolume* m_EnterocyteConcentration;
-  SEScalarMassPerVolume* m_VilliConcentration;
+  std::vector<SEScalarMass*> m_TransitDissolvedMasses;
+  //SEScalarMass* m_EnterocyteMass;
+  std::vector<SEScalarMass*> m_EnterocyteDissolvedMasses;
+  //SEScalarMassPerVolume* m_VilliCapillaryConcentration;
+  size_t m_NumTransitMasses;
 };
 
 class BIOGEARS_API SEOralTransmucosalState {
@@ -92,23 +100,29 @@ public:
   SEOralTransmucosalState();
   ~SEOralTransmucosalState();
   void Clear();
-  void Initialize(double dose_ug);
+  bool Initialize(double dose_ug);
 
   virtual bool Load(const CDM::OralTransmucosalStateData& in);
   virtual CDM::OralTransmucosalStateData* Unload() const;
 
-  SEScalarMass& GetMouthSolidDrugMass();
+  SEScalarMass& GetMouthSolidMass();
   SEScalarMassPerVolume& GetSalivaConcentration();
-  SEScalarMassPerVolume& GetEpitheliumConcentration();
-  SEScalarMassPerVolume& GetLaminaConcentration();
+  std::vector<SEScalarMassPerVolume*>& GetBuccalConcentrations();
+  std::vector<SEScalarMassPerVolume*>& GetSublingualConcentrations();
+  std::vector<double> GetBuccalConcentrations(const MassPerVolumeUnit& unit);
+  std::vector<double> GetSublingualConcentrations(const MassPerVolumeUnit& unit);
+  bool SetBuccalConcentrations(std::vector<double>& bMasses, const MassPerVolumeUnit& unit);
+  bool SetSublingualConcentrations(std::vector<double>& slMasses, const MassPerVolumeUnit& unit);
 
 protected:
   virtual void Unload(CDM::OralTransmucosalStateData& data) const;
   //Transumucosal specific values
-  SEScalarMass* m_MouthSolidDrugMass;
+  SEScalarMass* m_MouthSolidMass;
   SEScalarMassPerVolume* m_SalivaConcentration;
-  SEScalarMassPerVolume* m_EpitheliumConcentration;
-  SEScalarMassPerVolume* m_LaminaConcentration;
+  std::vector<SEScalarMassPerVolume*> m_BuccalConcentrations;
+  std::vector<SEScalarMassPerVolume*> m_SublingualConcentrations;
+  size_t m_NumBuccalRegions;
+  size_t m_NumSublingualRegions;
 };
 
 class BIOGEARS_API SEOralGastrointestinalState {
@@ -116,15 +130,15 @@ public:
   SEOralGastrointestinalState();
   ~SEOralGastrointestinalState();
   void Clear();
-  void Initialize(double dose_ug);
+  bool Initialize(double dose_ug);
 
   virtual bool Load(const CDM::OralGastrointestinalStateData& in);
   virtual CDM::OralGastrointestinalStateData* Unload() const;
 
-  SEScalarMass& GetStomachSolidDrugMass();
+  SEScalarMass& GetStomachSolidMass();
 
 protected:
   virtual void Unload(CDM::OralGastrointestinalStateData& data) const;
-  SEScalarMass* m_StomachSolidDrugMass;
+  SEScalarMass* m_StomachSolidMass;
 };
 }

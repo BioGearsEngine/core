@@ -46,8 +46,8 @@ protected:
 public:
   virtual ~Drugs() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
-  static constexpr char const * const  TypeTag() { return "Drugs"; }
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); } //! Hopefully this returns a unique ID for every type
+  static constexpr char const* const TypeTag() { return "Drugs"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -70,7 +70,7 @@ public:
   void AtSteadyState() override;
   void PreProcess() override;
   void Process() override;
-  void PostProcess()  override {}
+  void PostProcess() override {}
 
 protected:
   void AdministerSubstanceBolus();
@@ -106,6 +106,8 @@ protected:
   //***Test OTFC States before putting in CDM***//
   double mSolidMouth;
   double cSaliva;
+  double mSolid2;
+  double cSaliva2;
   double cEpi1_u;
   double cEpi1;
   double cEpi2;
@@ -124,9 +126,6 @@ protected:
   double cTon6;
   double cLamT;
 
-
-  //****Debug for OTFC only****
-
   double cEpithelium;
   double cLamina;
   double mStomach;
@@ -138,6 +137,19 @@ protected:
   double totalExcreted;
   double totalAbsorbed;
   double massConservation;
+
+  /***Test GI States before putting them in CDM***/
+  double mDuodenum;
+  double mJejunum1;
+  double mJejunum2;
+  double mIleum1;
+  double mIleum2;
+  double mIleum3;
+  double mCecum;
+  double mColon;
+  double mEnterocyte;
+  double mVilli;
+	
 
 };
 }

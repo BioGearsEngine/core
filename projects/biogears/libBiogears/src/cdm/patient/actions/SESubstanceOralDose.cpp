@@ -117,9 +117,9 @@ SESubstanceOralState::SESubstanceOralState(const SESubstance& sub)
   m_TransmucosalState = nullptr;
   m_GastrointestinalState = nullptr;
   m_StomachDissolvedMass = nullptr;
-  m_LumenConcentration = nullptr;
-  m_EnterocyteConcentration = nullptr;
-  m_VilliConcentration = nullptr;
+  //m_EnterocyteMass = nullptr;
+  //m_VilliCapillaryConcentration = nullptr;
+  m_NumTransitMasses = 8; //Hard-coded for current model implementation!
 }
 
 SESubstanceOralState::~SESubstanceOralState()
@@ -134,9 +134,10 @@ void SESubstanceOralState::Clear()
   if (m_GastrointestinalState != nullptr)
     m_GastrointestinalState->Clear();
   SAFE_DELETE(m_StomachDissolvedMass);
-  SAFE_DELETE(m_LumenConcentration);
-  SAFE_DELETE(m_EnterocyteConcentration);
-  SAFE_DELETE(m_VilliConcentration);
+  m_TransitDissolvedMasses.clear();
+  //SAFE_DELETE(m_EnterocyteMass);
+  //SAFE_DELETE(m_VilliCapillaryConcentration);
+  m_EnterocyteDissolvedMasses.clear();
 }
 
 bool SESubstanceOralState::Load(const CDM::SubstanceOralStateData& in)
@@ -146,9 +147,20 @@ bool SESubstanceOralState::Load(const CDM::SubstanceOralStateData& in)
   if (in.RouteSpecificData().GastrointestinalRoute().present())
     m_GastrointestinalState->Load(in.RouteSpecificData().GastrointestinalRoute().get());
   GetStomachDissolvedMass().Load(in.StomachDissolvedMass());
-  GetLumenConcentration().Load(in.LumenConcentration());
-  GetEnterocyteConcentration().Load(in.EnterocyteConcentration());
-  GetVilliConcentration().Load(in.VilliConcentration());
+  m_TransitDissolvedMasses.clear();
+  for (auto transitMass : in.TransitDissolvedMasses()) {
+    SEScalarMass* tMass = new SEScalarMass;
+    tMass->Load(transitMass);
+    m_TransitDissolvedMasses.push_back(tMass);
+  }
+  m_EnterocyteDissolvedMasses.clear();
+  for (auto entMass : in.TransitDissolvedMasses()) {
+    SEScalarMass* eMass = new SEScalarMass;
+    eMass->Load(entMass);
+    m_EnterocyteDissolvedMasses.push_back(eMass);
+  }
+  //GetEnterocyteMass().Load(in.EnterocyteMass());
+  //GetVilliCapillaryConcentration().Load(in.VilliCapillaryConcentration());
 
   return true;
 }
@@ -166,12 +178,17 @@ void SESubstanceOralState::Unload(CDM::SubstanceOralStateData& data) const
   if (m_GastrointestinalState != nullptr)
     data.RouteSpecificData().GastrointestinalRoute(std::unique_ptr<CDM::OralGastrointestinalStateData>(m_GastrointestinalState->Unload()));
   data.StomachDissolvedMass(std::unique_ptr<CDM::ScalarMassData>(m_StomachDissolvedMass->Unload()));
-  data.LumenConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_LumenConcentration->Unload()));
-  data.EnterocyteConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EnterocyteConcentration->Unload()));
-  data.VilliConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_VilliConcentration->Unload()));
+  for (auto tMass : m_TransitDissolvedMasses) {
+    data.TransitDissolvedMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(tMass->Unload()));
+  }
+  //data.EnterocyteMass(std::unique_ptr<CDM::ScalarMassData>(m_EnterocyteMass->Unload()));
+  //data.VilliCapillaryConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_VilliCapillaryConcentration->Unload()));
+  for (auto eMass : m_EnterocyteDissolvedMasses) {
+    data.EnterocyteDissolvedMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(eMass->Unload()));
+  }
 }
 
-void SESubstanceOralState::Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route)
+bool SESubstanceOralState::Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route)
 {
   if (route == CDM::enumOralAdministration::Transmucosal)
     GetTransmucosalSpecificData().Initialize(dose.GetValue(MassUnit::ug));
@@ -179,9 +196,14 @@ void SESubstanceOralState::Initialize(SEScalarMass& dose, CDM::enumOralAdministr
     GetGastrointestinalSpecificData().Initialize(dose.GetValue(MassUnit::ug));
 
   GetStomachDissolvedMass().SetValue(0.0, MassUnit::ug);
-  GetLumenConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
-  GetEnterocyteConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
-  GetVilliConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
+  std::vector<double> initDisTransit(m_NumTransitMasses); //All zeros, correct number of elements
+  bool trSet = SetTransitDissolvedMasses(initDisTransit, MassUnit::ug);
+  //GetEnterocyteMass().SetValue(0.0, MassUnit::ug);
+  //GetVilliCapillaryConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
+  std::vector<double> initEnt(m_NumTransitMasses);
+  bool entSet = SetEnterocyteDissolvedMasses(initEnt, MassUnit::ug);
+
+  return (trSet&&entSet);
 }
 
 SEOralTransmucosalState& SESubstanceOralState::GetTransmucosalSpecificData()
@@ -217,33 +239,104 @@ SEScalarMass& SESubstanceOralState::GetStomachDissolvedMass()
     m_StomachDissolvedMass = new SEScalarMass();
   return *m_StomachDissolvedMass;
 }
-SEScalarMassPerVolume& SESubstanceOralState::GetLumenConcentration()
+std::vector<SEScalarMass*>& SESubstanceOralState::GetTransitDissolvedMasses()
 {
-  if (m_LumenConcentration == nullptr)
-    m_LumenConcentration = new SEScalarMassPerVolume();
-  return *m_LumenConcentration;
+  //Going to initialize the masses inside this vector the first time it is called in Drugs.  It feels weird to set the
+  //length here where it might be hard to find later.  If we change GI drug implementation, it should be easier to see
+  //how to adjust the size of this vector
+  return m_TransitDissolvedMasses;
 }
-SEScalarMassPerVolume& SESubstanceOralState::GetEnterocyteConcentration()
+std::vector<double> SESubstanceOralState::GetTransitDissolvedMasses(const MassUnit& unit)
 {
-  if (m_EnterocyteConcentration == nullptr)
-    m_EnterocyteConcentration = new SEScalarMassPerVolume();
-  return *m_EnterocyteConcentration;
+  std::vector<double> transitMasses;
+  for (auto tData : m_TransitDissolvedMasses) {
+    transitMasses.push_back(tData->GetValue(unit));
+  }
+  return transitMasses;
 }
-SEScalarMassPerVolume& SESubstanceOralState::GetVilliConcentration()
+bool SESubstanceOralState::SetTransitDissolvedMasses(std::vector<double>& tMasses, const MassUnit& unit)
 {
-  if (m_VilliConcentration == nullptr)
-    m_VilliConcentration = new SEScalarMassPerVolume();
-  return *m_VilliConcentration;
+  if (tMasses.size() != m_NumTransitMasses) {
+    //Don't execute if the input vector is not the correct size
+    return false;
+  }
+  if (m_TransitDissolvedMasses.empty()) {
+    //The very first time we call this function, the member vector will be empty.  All values should initialize to 0
+    for (size_t pos = 0; pos < m_NumTransitMasses; pos++) {
+      SEScalarMass* gtMass = new SEScalarMass();
+      gtMass->SetValue(tMasses[pos], unit);
+      m_TransitDissolvedMasses.push_back(gtMass);
+    }
+  } else {
+    //Vectors should be the same size, so we can iterate over them
+    std::vector<double>::iterator dblIt;
+    std::vector<SEScalarMass*>::iterator scIt;
+    for (dblIt = tMasses.begin(), scIt = m_TransitDissolvedMasses.begin(); dblIt != tMasses.end() && scIt != m_TransitDissolvedMasses.end(); dblIt++, scIt++) {
+      (*scIt)->SetValue(*dblIt, unit);
+    }
+  }
+  return true;
 }
+
+std::vector<SEScalarMass*>& SESubstanceOralState::GetEnterocyteDissolvedMasses()
+{
+  //Going to initialize the masses inside this vector the first time it is called in Drugs.  It feels weird to set the
+  //length here where it might be hard to find later.  If we change GI drug implementation, it should be easier to see
+  //how to adjust the size of this vector
+  return m_EnterocyteDissolvedMasses;
+}
+std::vector<double> SESubstanceOralState::GetEnterocyteDissolvedMasses(const MassUnit& unit)
+{
+  std::vector<double> EnterocyteMasses;
+  for (auto eData : m_EnterocyteDissolvedMasses) {
+    EnterocyteMasses.push_back(eData->GetValue(unit));
+  }
+  return EnterocyteMasses;
+}
+bool SESubstanceOralState::SetEnterocyteDissolvedMasses(std::vector<double>& entMasses, const MassUnit& unit)
+{
+  if (entMasses.size() != m_NumTransitMasses) {
+    //Don't execute if the input vector is not the correct size
+    return false;
+  }
+  if (m_EnterocyteDissolvedMasses.empty()) {
+    //The very first time we call this function, the member vector will be empty.  All values should initialize to 0
+    for (size_t pos = 0; pos < m_NumTransitMasses; pos++) {
+      SEScalarMass* entMass = new SEScalarMass();
+      entMass->SetValue(entMasses[pos], unit);
+      m_EnterocyteDissolvedMasses.push_back(entMass);
+    }
+  } else {
+    //Vectors should be the same size, so we can iterate over them
+    std::vector<double>::iterator dblIt;
+    std::vector<SEScalarMass*>::iterator scIt;
+    for (dblIt = entMasses.begin(), scIt = m_EnterocyteDissolvedMasses.begin(); dblIt != entMasses.end() && scIt != m_EnterocyteDissolvedMasses.end(); dblIt++, scIt++) {
+      (*scIt)->SetValue(*dblIt, unit);
+    }
+  }
+  return true;
+}
+//SEScalarMass& SESubstanceOralState::GetEnterocyteMass()
+//{
+//  if (m_EnterocyteMass == nullptr)
+//    m_EnterocyteMass = new SEScalarMass();
+//  return *m_EnterocyteMass;
+//}
+//SEScalarMassPerVolume& SESubstanceOralState::GetVilliCapillaryConcentration()
+//{
+//  if (m_VilliCapillaryConcentration == nullptr)
+//    m_VilliCapillaryConcentration = new SEScalarMassPerVolume();
+//  return *m_VilliCapillaryConcentration;
+//}
 
 //--------------------------------------------------------------------------------------------------
 // Oral Transmucosal State methods
 SEOralTransmucosalState::SEOralTransmucosalState()
 {
-  m_MouthSolidDrugMass = nullptr;
+  m_MouthSolidMass = nullptr;
   m_SalivaConcentration = nullptr;
-  m_EpitheliumConcentration = nullptr;
-  m_LaminaConcentration = nullptr;
+  m_NumBuccalRegions = 7; //Hard-coded for current model implementation!
+  m_NumSublingualRegions = 7; //Hard-coded for current model implementation!
 }
 
 SEOralTransmucosalState::~SEOralTransmucosalState()
@@ -253,27 +346,39 @@ SEOralTransmucosalState::~SEOralTransmucosalState()
 
 void SEOralTransmucosalState::Clear()
 {
-  SAFE_DELETE(m_MouthSolidDrugMass);
+  SAFE_DELETE(m_MouthSolidMass);
   SAFE_DELETE(m_SalivaConcentration);
-  SAFE_DELETE(m_EpitheliumConcentration);
-  SAFE_DELETE(m_LaminaConcentration);
+  m_BuccalConcentrations.clear();
+  m_SublingualConcentrations.clear();
 }
 
-void SEOralTransmucosalState::Initialize(double dose_ug)
+bool SEOralTransmucosalState::Initialize(double dose_ug)
 {
-  GetMouthSolidDrugMass().SetValue(dose_ug, MassUnit::ug);
+  GetMouthSolidMass().SetValue(dose_ug, MassUnit::ug);
   GetSalivaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
-  GetEpitheliumConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
-  GetLaminaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
+  std::vector<double> initBuccal(m_NumBuccalRegions);
+  std::vector<double> initSublingual(m_NumSublingualRegions);
+  bool bucSet = SetBuccalConcentrations(initBuccal, MassPerVolumeUnit::ug_Per_mL);
+  bool subSet = SetSublingualConcentrations(initSublingual, MassPerVolumeUnit::ug_Per_mL);
+  return (bucSet && subSet);
 }
 
 bool SEOralTransmucosalState::Load(const CDM::OralTransmucosalStateData& in)
 {
-  GetMouthSolidDrugMass().Load(in.MouthSolidDrugMass());
+  GetMouthSolidMass().Load(in.MouthSolidMass());
   GetSalivaConcentration().Load(in.SalivaConcentration());
-  GetEpitheliumConcentration().Load(in.EpitheliumConcentration());
-  GetLaminaConcentration().Load(in.LaminaConcentration());
-
+  m_BuccalConcentrations.clear();
+  for (auto brData : in.BuccalConcentrations()) {
+    SEScalarMassPerVolume* buc = new SEScalarMassPerVolume;
+    buc->Load(brData);
+    m_BuccalConcentrations.push_back(buc);
+  }
+  m_SublingualConcentrations.clear();
+  for (auto slData : in.SublingualConcentrations()) {
+    SEScalarMassPerVolume* sl = new SEScalarMassPerVolume;
+    sl->Load(slData);
+    m_SublingualConcentrations.push_back(sl);
+  }
   return true;
 }
 
@@ -285,17 +390,21 @@ CDM::OralTransmucosalStateData* SEOralTransmucosalState::Unload() const
 }
 void SEOralTransmucosalState::Unload(CDM::OralTransmucosalStateData& data) const
 {
-  data.MouthSolidDrugMass(std::unique_ptr<CDM::ScalarMassData>(m_MouthSolidDrugMass->Unload()));
+  data.MouthSolidMass(std::unique_ptr<CDM::ScalarMassData>(m_MouthSolidMass->Unload()));
   data.SalivaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_SalivaConcentration->Unload()));
-  data.EpitheliumConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EpitheliumConcentration->Unload()));
-  data.LaminaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_LaminaConcentration->Unload()));
+  for (auto bcData : m_BuccalConcentrations) {
+    data.BuccalConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(bcData->Unload()));
+  }
+  for (auto slData : m_SublingualConcentrations) {
+    data.SublingualConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(slData->Unload()));
+  }
 }
 
-SEScalarMass& SEOralTransmucosalState::GetMouthSolidDrugMass()
+SEScalarMass& SEOralTransmucosalState::GetMouthSolidMass()
 {
-  if (m_MouthSolidDrugMass == nullptr)
-    m_MouthSolidDrugMass = new SEScalarMass();
-  return *m_MouthSolidDrugMass;
+  if (m_MouthSolidMass == nullptr)
+    m_MouthSolidMass = new SEScalarMass();
+  return *m_MouthSolidMass;
 }
 SEScalarMassPerVolume& SEOralTransmucosalState::GetSalivaConcentration()
 {
@@ -303,24 +412,84 @@ SEScalarMassPerVolume& SEOralTransmucosalState::GetSalivaConcentration()
     m_SalivaConcentration = new SEScalarMassPerVolume();
   return *m_SalivaConcentration;
 }
-SEScalarMassPerVolume& SEOralTransmucosalState::GetEpitheliumConcentration()
+std::vector<SEScalarMassPerVolume*>& SEOralTransmucosalState::GetBuccalConcentrations()
 {
-  if (m_EpitheliumConcentration == nullptr)
-    m_EpitheliumConcentration = new SEScalarMassPerVolume();
-  return *m_EpitheliumConcentration;
+  return m_BuccalConcentrations;
 }
-SEScalarMassPerVolume& SEOralTransmucosalState::GetLaminaConcentration()
+std::vector<double> SEOralTransmucosalState::GetBuccalConcentrations(const MassPerVolumeUnit& unit)
 {
-  if (m_LaminaConcentration == nullptr)
-    m_LaminaConcentration = new SEScalarMassPerVolume();
-  return *m_LaminaConcentration;
+  std::vector<double> buccalMasses;
+  for (auto bMass : m_BuccalConcentrations) {
+    buccalMasses.push_back(bMass->GetValue(unit));
+  }
+  return buccalMasses;
+}
+bool SEOralTransmucosalState::SetBuccalConcentrations(std::vector<double>& bMasses, const MassPerVolumeUnit& unit)
+{
+  if (bMasses.size() != m_NumBuccalRegions) {
+    //Don't execute if the input vector is not the correct size
+    return false;
+  }
+  if (m_BuccalConcentrations.empty()) {
+    //The very first time we call this function, the member vector will be empty.  All values should initialize to 0
+    for (size_t pos = 0; pos < m_NumBuccalRegions; pos++) {
+      SEScalarMassPerVolume* brMass = new SEScalarMassPerVolume();
+      brMass->SetValue(bMasses[0], unit);
+      m_BuccalConcentrations.push_back(brMass);
+    }
+  } else {
+    //Vectors should be the same size, so we can iterate over them
+    std::vector<double>::iterator dblIt;
+    std::vector<SEScalarMassPerVolume*>::iterator scIt;
+    for (dblIt = bMasses.begin(), scIt = m_BuccalConcentrations.begin(); dblIt != bMasses.end() && scIt != m_BuccalConcentrations.end(); dblIt++, scIt++) {
+      (*scIt)->SetValue(*dblIt, unit);
+    }
+  }
+  return true;
+}
+
+std::vector<SEScalarMassPerVolume*>& SEOralTransmucosalState::GetSublingualConcentrations()
+{
+  return m_SublingualConcentrations;
+}
+std::vector<double> SEOralTransmucosalState::GetSublingualConcentrations(const MassPerVolumeUnit& unit)
+{
+  std::vector<double> sublingualMasses;
+  for (auto slMass : m_SublingualConcentrations) {
+    sublingualMasses.push_back(slMass->GetValue(unit));
+  }
+  return sublingualMasses;
+}
+bool SEOralTransmucosalState::SetSublingualConcentrations(std::vector<double>& slMasses, const MassPerVolumeUnit& unit)
+{
+  if (slMasses.size() != m_NumSublingualRegions) {
+    //Don't execute if the input vector is not the correct size
+    return false;
+  }
+  if (m_SublingualConcentrations.empty()) {
+    //The very first time we call this function, the member vector will be empty.  All values should initialize to 0
+    for (size_t pos = 0; pos < m_NumSublingualRegions; pos++) {
+      SEScalarMassPerVolume* slMass = new SEScalarMassPerVolume();
+      slMass->SetValue(slMasses[0], unit);
+      m_SublingualConcentrations.push_back(slMass);
+    }
+  } else {
+    //Vectors should be the same size, so we can iterate over them
+    std::vector<double>::iterator dblIt;
+    std::vector<SEScalarMassPerVolume*>::iterator scIt;
+    for (dblIt = slMasses.begin(), scIt = m_SublingualConcentrations.begin(); dblIt != slMasses.end() && scIt != m_SublingualConcentrations.end(); dblIt++, scIt++) {
+      (*scIt)->SetValue(*dblIt, unit);
+    }
+  }
+
+  return true;
 }
 
 //--------------------------------------------------------------------------------------
 //Oral Gastrointestinal State methods
 SEOralGastrointestinalState::SEOralGastrointestinalState()
 {
-  m_StomachSolidDrugMass = nullptr;
+  m_StomachSolidMass = nullptr;
 }
 
 SEOralGastrointestinalState::~SEOralGastrointestinalState()
@@ -330,17 +499,18 @@ SEOralGastrointestinalState::~SEOralGastrointestinalState()
 
 void SEOralGastrointestinalState::Clear()
 {
-  SAFE_DELETE(m_StomachSolidDrugMass);
+  SAFE_DELETE(m_StomachSolidMass);
 }
 
-void SEOralGastrointestinalState::Initialize(double dose_ug)
+bool SEOralGastrointestinalState::Initialize(double dose_ug)
 {
-  GetStomachSolidDrugMass().SetValue(dose_ug, MassUnit::ug);
+  GetStomachSolidMass().SetValue(dose_ug, MassUnit::ug);
+  return true;
 }
 
 bool SEOralGastrointestinalState::Load(const CDM::OralGastrointestinalStateData& in)
 {
-  GetStomachSolidDrugMass().Load(in.StomachSolidDrugMass());
+  GetStomachSolidMass().Load(in.StomachSolidMass());
 
   return true;
 }
@@ -353,13 +523,13 @@ CDM::OralGastrointestinalStateData* SEOralGastrointestinalState::Unload() const
 }
 void SEOralGastrointestinalState::Unload(CDM::OralGastrointestinalStateData& data) const
 {
-  data.StomachSolidDrugMass(std::unique_ptr<CDM::ScalarMassData>(m_StomachSolidDrugMass->Unload()));
+  data.StomachSolidMass(std::unique_ptr<CDM::ScalarMassData>(m_StomachSolidMass->Unload()));
 }
 
-SEScalarMass& SEOralGastrointestinalState::GetStomachSolidDrugMass()
+SEScalarMass& SEOralGastrointestinalState::GetStomachSolidMass()
 {
-  if (m_StomachSolidDrugMass == nullptr)
-    m_StomachSolidDrugMass = new SEScalarMass();
-  return *m_StomachSolidDrugMass;
+  if (m_StomachSolidMass == nullptr)
+    m_StomachSolidMass = new SEScalarMass();
+  return *m_StomachSolidMass;
 }
 }
