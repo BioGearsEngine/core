@@ -54,6 +54,6 @@
         <Rate value="0.0" unit="mL/s"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="15" unit="min"/>       
+        <Time value="8" unit="hr"/>       
     </Action>
 </Scenario>

@@ -33,10 +33,10 @@
   <Pharmacodynamics>
     <Bronchodilation readOnly="false" value="0"/>
     <DiastolicPressureModifier readOnly="false" value="0"/>
-    <EC50 readOnly="false" unit="ug/mL" value="75"/>
-    <EMaxShapeParameter readOnly="false" value="10.5"/>
+    <EC50 readOnly="false" unit="ug/mL" value="60"/>
+    <EMaxShapeParameter readOnly="false" value="5.5"/>
     <HeartRateModifier readOnly="false" value="0"/>
-	<HemorrhageModifier readOnly="false" value="-09"/>
+	<HemorrhageModifier readOnly="false" value="-0.000218 "/>
     <NeuromuscularBlock readOnly="false" value="0"/>
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>

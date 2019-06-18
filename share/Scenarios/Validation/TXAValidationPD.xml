@@ -41,18 +41,15 @@
   </DataRequests>
 	
 	<Action xsi:type="HemorrhageData" Compartment="RightLeg">
-        <InitialRate value="40.0" unit="mL/min"/>
-    </Action>
-	<Action xsi:type="AdvanceTimeData">
-        <Time value="10" unit="min"/>       
+        <InitialRate value="5.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="SubstanceInfusionData">
         <Substance>TranexamicAcid</Substance>
-        <Concentration value="0.1" unit="g/mL"/>
-        <Rate value="0.03333" unit="mL/s"/>
+        <Concentration value="0.02" unit="g/mL"/>
+        <Rate value="0.111" unit="mL/s"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="5" unit="min"/>       
+        <Time value="15" unit="min"/>       
     </Action>
 	<Action xsi:type="SubstanceInfusionData">
         <Substance>TranexamicAcid</Substance>
@@ -60,6 +57,6 @@
         <Rate value="0.0" unit="mL/s"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="55" unit="min"/>       
+        <Time value="11.75" unit="hr"/>       
     </Action>
 </Scenario>
