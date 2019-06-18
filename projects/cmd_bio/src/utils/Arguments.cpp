@@ -19,7 +19,7 @@ Arguments::Arguments(const std::vector<std::string>& options, const std::vector<
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
     _options[key] = false;
   }
-
+  
   for (auto key : keywords) {
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
     if (_options.find(key) != _options.end()) {
@@ -57,11 +57,21 @@ Arguments::Arguments(const std::vector<std::string>& options, const std::vector<
 bool Arguments::parse(int argc, char* argv[])
 {
   std::vector<std::string> args;
+  const std::string prefix = "--";
+
   size_t index = 1;
   if (argc > 1) {
     while (1 < argc) {
       args.emplace_back(argv[index++]);
       --argc;
+    }
+  }
+  for (auto& arg : args )
+  { //Iterate over the args and strip occurances of -- 
+    auto res = std::mismatch(prefix.begin(), prefix.end(), arg.begin());
+    if (res.first == prefix.end())
+    {
+      arg = arg.substr(2); 
     }
   }
   return parse(args);

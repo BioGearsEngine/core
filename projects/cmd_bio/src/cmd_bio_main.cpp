@@ -29,9 +29,10 @@
 #include "utils/Config.h"
 #include "utils/ReportWriter.h"
 
-#include "biogears/cdm/utils/ConfigParser.h"
+#include <biogears/cdm/utils/ConfigParser.h>
 #include <biogears/cdm/utils/FileUtils.h>
-////////////////////
+#include <biogears/version.h>
+
 #include <fstream>
 #include <iostream>
 
@@ -44,7 +45,7 @@
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "GENDATA", "GENSTATES", "VERIFY", "GENTABLES" } //Options
+    { "GENDATA", "GENSTATES", "VERIFY", "GENTABLES" ,"VERSION" } //Options
     ,
     { "THREADS" } //Keywords
     ,
@@ -58,7 +59,10 @@ int main(int argc, char** argv)
   bool run_verification = false;
 
   unsigned int thread_count = std::thread::hardware_concurrency();
-
+  if (args.Option("VERSION")) {
+    std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
+    exit(0);
+  }
   if (args.KeywordFound("THREADS")) {
     try {
       thread_count = std::stoi(args.Keyword("THREADS"));

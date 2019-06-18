@@ -16,10 +16,7 @@ cmake_minimum_required(VERSION ${${ROOT_PROJECT_NAME}_CMAKE_MIN_VERSION})
 
 include(cmake/cmake-common_logic.cmake)
 
-set(${ROOT_PROJECT_NAME}_VERSION_MAJOR 6)
-set(${ROOT_PROJECT_NAME}_VERSION_MINOR 4)
-set(${ROOT_PROJECT_NAME}_VERSION_PATCH 0)
-set(${ROOT_PROJECT_NAME}_VERSION_TAG  "-beta")
+
 ################################################################################
 # STEP 1: 
 # Change this to custimize your project
@@ -34,6 +31,17 @@ project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
     CMAKE_PREFIX_PATH  = ${CMAKE_PREFIX_PATH}
     CMAKE_FIND_ROOT_PATH = ${CMAKE_FIND_ROOT_PATH}
     ")
+
+find_package(Git)
+if(Git_FOUND)
+  configure_version_information()
+else()
+  set(${ROOT_PROJECT_NAME}_VERSION_MAJOR 7)
+  set(${ROOT_PROJECT_NAME}_VERSION_MINOR 2)
+  set(${ROOT_PROJECT_NAME}_VERSION_PATCH 2)
+  set(${ROOT_PROJECT_NAME}_VERSION_TWEAK 0)
+  set(${ROOT_PROJECT_NAME}_DIRTY_BUILD true)
+endif()
 ###############################################################################
 # Add Repository Subdirectories
 ###############################################################################

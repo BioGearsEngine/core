@@ -85,7 +85,7 @@ endfunction()
 
 
 function(add_source_files var prefix regex source_group)
-    message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
+#    message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
     file(GLOB TEMP "${prefix}/${regex}")
 
     source_group("${source_group}" FILES ${TEMP})
@@ -179,3 +179,55 @@ function(create_stage)
       PROJECT_LABEL "STAGE"
   )
 endfunction() 
+########################################################################################################
+# 
+# Git Version Macro
+# 
+# List Tags in the order they appear assumes the version of the project is the latest version split by '.'
+# Creates the following variabels
+#
+# ${ROOT_PROJECT_NAME}_VERSION_MAJOR  #First group of characters in the split
+# ${ROOT_PROJECT_NAME}_VERSION_MINOR  #Second group of characters in the split
+# ${ROOT_PROJECT_NAME}_VERSION_PATCH  #Third set of characters in the split
+# ${ROOT_PROJECT_NAME}_VERSION_TAG    #A string tag based on how dirty the tag is usually -dirty 
+# ${ROOT_PROJECT_NAME}_DIRTY_BUILD    #True if the number of commits since the last tag is greater then 0
+#
+########################################################################################################
+
+function(configure_version_information)
+  execute_process(COMMAND ${GIT_EXECUTABLE}  describe --tags
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                  OUTPUT_VARIABLE _GIT_REV
+                                  ERROR_QUIET)
+  string(REPLACE "." ";"  _GIT_REV_LIST "${_GIT_REV}") 
+  string(REPLACE "-" ";"  _GIT_FULL_REV_LIST "${_GIT_REV_LIST}" )
+  list(LENGTH _GIT_FULL_REV_LIST _len)
+  message(STATUS "GIT_REV=${_GIT_REV}")
+  if(_len GREATER 0)
+    list(GET _GIT_FULL_REV_LIST 0 _VERSION_MAJOR)
+  endif()
+  if(_len GREATER 1)
+    list(GET _GIT_FULL_REV_LIST 1 _VERSION_MINOR)
+  endif()
+  if(_len GREATER 2)
+    list(GET _GIT_FULL_REV_LIST 2 _VERSION_PATCH)
+  endif()
+  if(_len GREATER 4)
+    set(_DIRTY_BUILD true)
+    list(GET _GIT_FULL_REV_LIST 3 _VERSION_TWEAK)
+    list(GET _GIT_FULL_REV_LIST 4 _VERSION_HASH )
+  else()
+    set(_DIRTY_BUILD false)
+    set(_VERSION_TWEAK 0)
+    list(GET _GIT_FULL_REV_LIST 3 _VERSION_HASH )
+  endif()
+  string(STRIP "${_VERSION_HASH}" _VERSION_HASH )
+  
+  set( ${ROOT_PROJECT_NAME}_VERSION_MAJOR ${_VERSION_MAJOR} PARENT_SCOPE)
+  set( ${ROOT_PROJECT_NAME}_VERSION_MINOR ${_VERSION_MINOR} PARENT_SCOPE)
+  set( ${ROOT_PROJECT_NAME}_VERSION_PATCH ${_VERSION_PATCH} PARENT_SCOPE)
+  set( ${ROOT_PROJECT_NAME}_VERSION_TWEAK ${_VERSION_TWEAK} PARENT_SCOPE)
+  set( ${ROOT_PROJECT_NAME}_VERSION_HASH  ${_VERSION_HASH}  PARENT_SCOPE)
+  set( ${ROOT_PROJECT_NAME}_DIRTY_BUILD ${_DIRTY_BUILD} PARENT_SCOPE)
+  set( ${ROOT_PROJECT_NAME}_LIB_VERSION "${_VERSION_MAJOR}.${_VERSION_MINOR}" PARENT_SCOPE)
+endfunction(configure_version_information)
