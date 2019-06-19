@@ -1087,22 +1087,9 @@ void Cardiovascular::Hemorrhage()
     resistance = h->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
 
     double TXAModFraction = m_data.GetDrugs().GetHemorrhageChange(VolumePerTimeUnit::mL_Per_s);
-    /*if (TXAModFraction != 0) {
-      std::stringstream ss;
-      ss << "TXA MOD" << TXAModFraction;
-      Info(ss);
-    }*/
     m_hemDrugEffect = TXAModFraction;
 
     newFlowResistance = resistance * (1-m_hemDrugEffect);
-
-    //if (TXAModFraction > 0) {
-    //  //targetPath->GetNextResistance().SetValue(newFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-    //  h->GetBleedResistance().Clear();
-    //  h->GetInitialRate().Clear();
-    //  h->GetInitialRate().SetValue(locationPressure_mmHg / newFlowResistance, VolumePerTimeUnit::mL_Per_s);
-    //  //h->GetInitialRate().SetValue(locationPressure_mmHg / newFlowResistance, VolumePerTimeUnit::mL_Per_s);
-    //}
 
     h->GetBleedResistance().SetValue(newFlowResistance,FlowResistanceUnit::mmHg_s_Per_mL);
     targetPath->GetNextResistance().SetValue(newFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1111,8 +1098,7 @@ void Cardiovascular::Hemorrhage()
     TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
     bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
   }
-  //m_data.GetDataTrack().Probe("res", resistance);
-  //m_data.GetDataTrack().Probe("newres", newFlowResistance);
+
   /*
   Stub to try to calculate a probability of survival based on the bleeding rate and approximate time to bleed out.
   if (bleedoutTime!=0)

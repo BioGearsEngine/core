@@ -618,7 +618,6 @@ void Drugs::CalculatePartitionCoefficients()
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculateDrugEffects()
 {
-  double JUSTaTEST = 0;
   double deltaHeartRate_Per_min = 0;
   double deltaHemorrhageflow_mL_Per_min = 0;
   double deltaDiastolicBP_mmHg = 0;
@@ -673,10 +672,6 @@ void Drugs::CalculateDrugEffects()
       } else {
         concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       }
-    }
-    
-    if (sub->GetName() == "TranexamicAcid") {
-      JUSTaTEST = concentrationEffects_unitless;
     }
 
     if (m_data.GetActions().GetPatientActions().HasOverride()
@@ -776,8 +771,6 @@ void Drugs::CalculateDrugEffects()
   BLIM(pupilReactivityResponseLevel, -1, 1);
   GetPupillaryResponse().GetSizeModifier().SetValue(pupilSizeResponseLevel);
   GetPupillaryResponse().GetReactivityModifier().SetValue(pupilReactivityResponseLevel);
-
-  m_data.GetDataTrack().Probe("concEffect", JUSTaTEST);
 }
 
 //--------------------------------------------------------------------------------------------------
