@@ -1052,7 +1052,7 @@ void Cardiovascular::Hemorrhage()
   double probabilitySurvival = 0.0;
   double bleedoutTime = 0.0;
   double bleedRate_mL_Per_s = 0.0;
-  double newFlowResistance = 0.0;
+  double drugFlowResistance = 0.0;
 
   double bloodVolume_mL = GetBloodVolume(VolumeUnit::mL);
   double baselineBloodVolume_mL = m_patient->GetBloodVolumeBaseline(VolumeUnit::mL);
@@ -1088,11 +1088,11 @@ void Cardiovascular::Hemorrhage()
 
     double TXAModFraction = m_data.GetDrugs().GetHemorrhageChange(VolumePerTimeUnit::mL_Per_s);
     m_hemDrugEffect = TXAModFraction;
-
-    newFlowResistance = resistance * (1-m_hemDrugEffect);
-
-    h->GetBleedResistance().SetValue(newFlowResistance,FlowResistanceUnit::mmHg_s_Per_mL);
-    targetPath->GetNextResistance().SetValue(newFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
+    drugFlowResistance = resistance * (1-m_hemDrugEffect);
+    //Set to resistance path AND next resistance to ensure stacked effect over time
+    h->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
     TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
     TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
@@ -1104,7 +1104,6 @@ void Cardiovascular::Hemorrhage()
   if (bleedoutTime!=0)
   probabilitySurvival = 100.0-100.0*(0.9127*exp(-0.008*bleedoutTime));  //relationship from Table 5 in champion2003profile
   */
-  m_data.GetDataTrack().Probe("effect", m_hemDrugEffect);
 
   double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
   double massLost_kg = TotalLossRate_mL_Per_s * bloodDensity_kg_Per_mL * m_dT_s;
