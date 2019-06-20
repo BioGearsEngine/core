@@ -178,6 +178,7 @@ In its first iteration, the E<sub>max</sub> model referred to the expected effec
 |	Bronchodilation	|	Drug effect on the bronchii radii. A maximal effect of 1.0 will reverse the constriction of an asthma attack. | 0 to 1 |
 |	Diastolic Pressure	|	Change in the diastolic pressure. Given as a fraction. | -1 to 1 |
 |	Heart Rate	|	Change in the heart rate. Given as a fraction. | -1 to 1 |
+|	Hemorrhage Flow	|	Change in hemorrhage bleeding rate, with negative reducing the effect of hemorrhage. | -1 to 1 |
 |   Neuromuscular Block |  Drug&rsquo;s strength as a neuromuscular block, with a 1.0 as the strongest block.  | 0 to 1 |
 |   Pupil Size Modifier |  Drug effect on the pupil diameter. Given as a modifier. | -1 to 1 |
 |   Pupil Reactivity Modifier |  Drug effect on the pupil reactivity to light. Given as a modifier. | -1 to 1 |
@@ -261,7 +262,7 @@ The pharmacodynamic effects of diuretics locally target the renal system's funct
 
 @anchor drugs-substances
 ### %Substances
-The full list of drugs available in the %BioGears library can be found in Table&nbsp;4 in the Validation section. Additional substances, such as oxygen, carbon dioxide, and hemoglobin that are available in the %BioGears Engine can be found in the @ref BloodChemistryMethodology.
+The full list of drugs available in the %BioGears library can be found in Table&nbsp;5 in the Validation section. Additional substances, such as oxygen, carbon dioxide, and hemoglobin that are available in the %BioGears Engine can be found in the @ref BloodChemistryMethodology.
 
 @anchor drugs-variability
 ### Patient Variability
@@ -417,9 +418,14 @@ The PK model was validated by comparing the plasma concentration calculated by t
 <i>Figure 16. The succinylcholine pharmacokinetics were initially calculated from the values found in literature for the physical chemical properties. However, this was significantly adjusted to attempt to match the calculated plasma concentration to the experimental data found in @cite roy2002concentration.</i>
 </center><br>
 
+<img src="./plots/Drugs/TranexamicAcid.jpg" width="1100">
+<center>
+<i>Figure 17. The succinylcholine pharmacokinetics were initially calculated from the values found in literature for the physical chemical properties. However, this was significantly adjusted to attempt to match the calculated plasma concentration to the experimental data found in @cite roy2002concentration.</i>
+</center><br>
+
 <img src="./plots/Drugs/Vasopressin.jpg" width="1100">
 <center>
-<i>Figure 17. Vasopressin is naturally produced in the body, but the dose given here is much greater than basal levels so this should not be a confounding factor.  The predicted values are generally in agreement with the data reported in @cite glanzer1982hemodynamic</i>
+<i>Figure 18. Vasopressin is naturally produced in the body, but the dose given here is much greater than basal levels so this should not be a confounding factor.  The predicted values are generally in agreement with the data reported in @cite glanzer1982hemodynamic</i>
 </center><br>
 
 The above results show that, in general, the model chosen for %BioGears produces good agreement between experimental and calculated data. However, it also reveals that for some drugs, this model does not appear to be valid. Future work will investigate the incorporation of vaporized substance methodologies, and additional partition coefficient calculations that may prove more accurate for specific drug types. Further statistical analysis will also be undertaken to assess the model performance rather than solely relying on a qualitative analysis.
@@ -451,26 +457,28 @@ The pharmacodynamic effects of the drugs were validated by comparing the effects
 |	Rocuronium	|	Administer 52 mg injection of Rocuronium	|<span class="success">	3	</span>|<span class="warning">	0	</span>|<span class="danger">	2	</span>|
 |	Sarin	|	Exposure to five concentrations in environment	|<span class="success">	21	</span>|<span class="warning">	4	</span>|<span class="danger">	0	</span>|
 |	Succinylcholine	|	Administer 96 mg injection of Succinylcholine	|<span class="success">	3	</span>|<span class="warning">	2	</span>|<span class="danger">	0	</span>|
+|	Tranexamic Acid	|	Administer 200 mg injection of TXA	|<span class="success">	8	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
 |	Vasopressin	|	Administer 0.04, 0.18, and 0.25 ug	|<span class="success">	3	</span>|<span class="warning">	2	</span>|<span class="danger">	0	</span>|
-|		|	Total	|<span class="success">	84	</span>|<span class="warning">	16	</span>|<span class="danger">	3	</span>|
+|		|	Total	|<span class="success">	92	</span>|<span class="warning">	16	</span>|<span class="danger">	3	</span>|
 
 <center>
 <i>Table 6. The validation results for liquid-modeled drugs.</i>
 </center>
 
-|	Event	|	Notes	|	Action Occurrence Time (s)	|	Sample Scenario Time (s)	|	Heart Rate  (beats/min)	|	Systolic Pressure  (mmHg)	|	Diastolic Pressure  (mmHg)	|	Respiration Rate  (breaths/min)	|	Oxygen Saturation	|
-|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
-|	Administer Epinephrine - 10ug	|	Drug Onset < 1 minute	|	30	|	30	|<span class="success">	25-50% Increase @cite dukeSME	</span>|<span class="warning">	25-50% Increase @cite dukeSME 	</span>|<span class="success">	25-50% Increase @cite dukeSME 	</span>|<span class="success">	NC @cite dukeSME	</span>|<span class="success">	NC 	</span>|
-|	Administer Fentanyl - 300 ug	|	Drug Onset  2-4 minutes	|	30	|	600	|<span class="success">	Stable @cite Morgan2006Clinical p192-7, @cite PaulGBarash2009 p277; 5-10% Decrease @cite dukeSME  	</span>|<span class="success">	Stable @cite Morgan2006Clinical p192-7, @cite PaulGBarash2009 p277; 5-10% Decrease @cite dukeSME  	</span>|<span class="success">	Stable @cite Morgan2006Clinical p192-7, @cite PaulGBarash2009 p277; 5-10% Decrease @cite dukeSME  	</span>|<span class="success">	Decrease ˜ 50% @cite mildh2001concentration, @cite yassen2007mechanism	</span>|<span class="success">	Decrease below 95% @cite mildh2001concentration	</span>|
-|	Administer Ketamine - 115 mg	|	Drug Onset < 1 minute	|	30	|	300	|<span class="success">	Moderate Increase @cite Morgan2006Clinical p200; 15-25% Increase @cite dukeSME   	</span>|<span class="warning">	Moderate Increase @cite Morgan2006Clinical p200; 15-25% Increase @cite dukeSME   	</span>|<span class="success">	Moderate Increase @cite Morgan2006Clinical p200; 15-25% Increase @cite dukeSME   	</span>|<span class="success">	Mild Decrease @cite Morgan2006Clinical p200; 25-50% Decrease @cite dukeSME     	</span>|<span class="success">	NC 	</span>|
-|	Administer Midazolam - 5 mg	|	Drug Onset in 1-3 min and lasts 30-60 minutes	|	30	|	70	|<span class="success">	Mild Increase @cite Morgan2006Clinical p200; 5-10% Decrease @cite dukeSME	</span>|<span class="success">	Moderate Decrease @cite Morgan2006Clinical p200; 15-25% Decrease @cite dukeSME    	</span>|<span class="success">	Moderate Decrease @cite Morgan2006Clinical p200; 15-25% Decrease @cite dukeSME    	</span>|<span class="success">	Moderate Decrease @cite Morgan2006Clinical p200; Marked Decrease To 0 @cite dukeSME    	</span>|<span class="success">	As long as some respiration rate, little change. If RR=0, then begins to drop along O2 curve. 	</span>|
-|	Administer Morphine - 2.75 mg/min	|	Constant rate of infusion for 4 minutes (11 mg total)	|	30-270	|	5000	|<span class="success">	Decrease 4-10% @cite thompson1995respiratory	</span>|<span class="success">	Minimal Decrease @cite thompson1995respiratory or NC @cite goodman1996goodman	</span>|<span class="success">	Minimal Decrease @cite thompson1995respiratory or NC @cite goodman1996goodman	</span>|<span class="success">	Decrease 25-30% @cite olofsen2010naloxone	</span>|<span class="success">	Remain above 95% @cite shapiro2005frequency	</span>|
-|	Administer Naloxone - 200 ug -  in response to Fentanyl	|	Naloxone is modeled as a competitive inhibitor of opioids; it exhibits minimal PD effects alone	|	30 = 300 ug Fentanyl; 300 = 200 ug Naloxone	|	1000	|<span class="success">	Return to resting state @cite goodman1996goodman	</span>|<span class="success">	Return to resting state @cite goodman1996goodman	</span>|<span class="success">	Return to resting state @cite goodman1996goodman	</span>|<span class="success">	Return to resting baseline @cite goodman1996goodman	</span>|<span class="success">	Increase  	</span>|
-|	Administer Prednisone - 20 mg	|	Drug Onset in less than 1 minute	|	30	|	100	|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|
-|	Administer Propofol - 200 mg	|	Drug Onset in less than 1 minute	|	30	|	70	|<span class="danger">	NC @cite Morgan2006Clinical p200; NC @cite dukeSME     	</span>|<span class="success">	Marked Decrease @cite Morgan2006Clinical p200; 25-40% Decrease @cite dukeSME    	</span>|<span class="success">	Marked Decrease @cite Morgan2006Clinical p200; 25-40% Decrease @cite dukeSME    	</span>|<span class="success">	Marked Decrease @cite Morgan2006Clinical p200; 100% Decrease @cite dukeSME    	</span>|<span class="success">	Begins to drop according to O2 curve 	</span>|
-|	Administer Rocuronium - 50 mg	|	Drug Onset in 60-90 seconds	|	30	|	100	|<span class="danger">	NC @cite PaulGBarash2009 p299; NC @cite dukeSME     	</span>|<span class="success">	NC @cite PaulGBarash2009 p299; NC @cite dukeSME     	</span>|<span class="danger">	NC @cite PaulGBarash2009 p299; NC @cite dukeSME     	</span>|<span class="success">	Goes to Zero @cite Morgan2006Clinical p224; Goes to Zero @cite dukeSME     	</span>|<span class="success">	Begins to drop according to O2 curve 	</span>|
-|	Administer Succinycholine - 77 mg	|	Drug Onset < 1 minute	|	30	|	70	|<span class="warning">	Mild  Increase @cite Morgan2006Clinical pp210-5; 5-10% Decrease @cite dukeSME    	</span>|<span class="warning">	Mild  Increase @cite Morgan2006Clinical pp210-5; 5-10% Decrease @cite dukeSME    	</span>|<span class="success">	Mild  Increase @cite Morgan2006Clinical pp210-5; 5-10% Decrease @cite dukeSME    	</span>|<span class="success">	Goes to Zero @cite Morgan2006Clinical p224; Goes to Zero @cite dukeSME     	</span>|<span class="success">	Begins to drop according to O2 curve 	</span>|
-|	Administer Vasopressin -- 0.04, 0.18, and 0.25 ug	|	Infusions are successive, each lasts 20 minutes	|	30, 1230, 2430	|	2430	|<span class="success">	Decrease ˜ 25% @cite mohring1980greatly	</span>|<span class="warning">	Increase 7-8 mmHg @cite mohring1980greatly	</span>|<span class="warning">	Increase 7-8 mmHg @cite mohring1980greatly	</span>|<span class="success">	NC @cite mohring1980greatly	</span>|<span class="success">	NC @cite mohring1980greatly	</span>|
+|	Event	|	Notes	|	Action Occurrence Time (s)	|	Sample Scenario Time (s)	|	Heart Rate  (beats/min)	|	Systolic Pressure  (mmHg)	|	Diastolic Pressure  (mmHg)	|	Respiration Rate  (breaths/min)	|	Oxygen Saturation	|	Hemorrhage Flow (mL/s)	|
+|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
+|	Administer Epinephrine - 10ug	|	Drug Onset < 1 minute	|	30	|	30	|<span class="success">	25-50% Increase @cite dukeSME	</span>|<span class="warning">	25-50% Increase @cite dukeSME 	</span>|<span class="success">	25-50% Increase @cite dukeSME 	</span>|<span class="success">	NC @cite dukeSME	</span>|<span class="success">	NC 	</span>|<span class="success">	NC 	</span>|
+|	Administer Fentanyl - 300 ug	|	Drug Onset  2-4 minutes	|	30	|	600	|<span class="success">	Stable @cite Morgan2006Clinical p192-7, @cite PaulGBarash2009 p277; 5-10% Decrease @cite dukeSME  	</span>|<span class="success">	Stable @cite Morgan2006Clinical p192-7, @cite PaulGBarash2009 p277; 5-10% Decrease @cite dukeSME  	</span>|<span class="success">	Stable @cite Morgan2006Clinical p192-7, @cite PaulGBarash2009 p277; 5-10% Decrease @cite dukeSME  	</span>|<span class="success">	Decrease ˜ 50% @cite mildh2001concentration, @cite yassen2007mechanism	</span>|<span class="success">	Decrease below 95% @cite mildh2001concentration	</span>|<span class="success">	NC 	</span>|
+|	Administer Ketamine - 115 mg	|	Drug Onset < 1 minute	|	30	|	300	|<span class="success">	Moderate Increase @cite Morgan2006Clinical p200; 15-25% Increase @cite dukeSME   	</span>|<span class="warning">	Moderate Increase @cite Morgan2006Clinical p200; 15-25% Increase @cite dukeSME   	</span>|<span class="success">	Moderate Increase @cite Morgan2006Clinical p200; 15-25% Increase @cite dukeSME   	</span>|<span class="success">	Mild Decrease @cite Morgan2006Clinical p200; 25-50% Decrease @cite dukeSME     	</span>|<span class="success">	NC 	</span>|<span class="success">	NC 	</span>|
+|	Administer Midazolam - 5 mg	|	Drug Onset in 1-3 min and lasts 30-60 minutes	|	30	|	70	|<span class="success">	Mild Increase @cite Morgan2006Clinical p200; 5-10% Decrease @cite dukeSME	</span>|<span class="success">	Moderate Decrease @cite Morgan2006Clinical p200; 15-25% Decrease @cite dukeSME    	</span>|<span class="success">	Moderate Decrease @cite Morgan2006Clinical p200; 15-25% Decrease @cite dukeSME    	</span>|<span class="success">	Moderate Decrease @cite Morgan2006Clinical p200; Marked Decrease To 0 @cite dukeSME    	</span>|<span class="success">	As long as some respiration rate, little change. If RR=0, then begins to drop along O2 curve. 	</span>|<span class="success">	NC 	</span>|
+|	Administer Morphine - 2.75 mg/min	|	Constant rate of infusion for 4 minutes (11 mg total)	|	30-270	|	5000	|<span class="success">	Decrease 4-10% @cite thompson1995respiratory	</span>|<span class="success">	Minimal Decrease @cite thompson1995respiratory or NC @cite goodman1996goodman	</span>|<span class="success">	Minimal Decrease @cite thompson1995respiratory or NC @cite goodman1996goodman	</span>|<span class="success">	Decrease 25-30% @cite olofsen2010naloxone	</span>|<span class="success">	Remain above 95% @cite shapiro2005frequency	</span>|<span class="success">	NC 	</span>|
+|	Administer Naloxone - 200 ug -  in response to Fentanyl	|	Naloxone is modeled as a competitive inhibitor of opioids; it exhibits minimal PD effects alone	|	30 = 300 ug Fentanyl; 300 = 200 ug Naloxone	|	1000	|<span class="success">	Return to resting state @cite goodman1996goodman	</span>|<span class="success">	Return to resting state @cite goodman1996goodman	</span>|<span class="success">	Return to resting state @cite goodman1996goodman	</span>|<span class="success">	Return to resting baseline @cite goodman1996goodman	</span>|<span class="success">	Increase  	</span>|<span class="success">	NC 	</span>|
+|	Administer Prednisone - 20 mg	|	Drug Onset in less than 1 minute	|	30	|	100	|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC @cite safety  	</span>|<span class="success">	NC 	</span>|
+|	Administer Propofol - 200 mg	|	Drug Onset in less than 1 minute	|	30	|	70	|<span class="danger">	NC @cite Morgan2006Clinical p200; NC @cite dukeSME     	</span>|<span class="success">	Marked Decrease @cite Morgan2006Clinical p200; 25-40% Decrease @cite dukeSME    	</span>|<span class="success">	Marked Decrease @cite Morgan2006Clinical p200; 25-40% Decrease @cite dukeSME    	</span>|<span class="success">	Marked Decrease @cite Morgan2006Clinical p200; 100% Decrease @cite dukeSME    	</span>|<span class="success">	Begins to drop according to O2 curve 	</span>|<span class="success">	NC 	</span>|
+|	Administer Rocuronium - 50 mg	|	Drug Onset in 60-90 seconds	|	30	|	100	|<span class="danger">	NC @cite PaulGBarash2009 p299; NC @cite dukeSME     	</span>|<span class="success">	NC @cite PaulGBarash2009 p299; NC @cite dukeSME     	</span>|<span class="danger">	NC @cite PaulGBarash2009 p299; NC @cite dukeSME     	</span>|<span class="success">	Goes to Zero @cite Morgan2006Clinical p224; Goes to Zero @cite dukeSME     	</span>|<span class="success">	Begins to drop according to O2 curve 	</span>|<span class="success">	NC 	</span>|
+|	Administer Succinycholine - 77 mg	|	Drug Onset < 1 minute	|	30	|	70	|<span class="warning">	Mild  Increase @cite Morgan2006Clinical pp210-5; 5-10% Decrease @cite dukeSME    	</span>|<span class="warning">	Mild  Increase @cite Morgan2006Clinical pp210-5; 5-10% Decrease @cite dukeSME    	</span>|<span class="success">	Mild  Increase @cite Morgan2006Clinical pp210-5; 5-10% Decrease @cite dukeSME    	</span>|<span class="success">	Goes to Zero @cite Morgan2006Clinical p224; Goes to Zero @cite dukeSME     	</span>|<span class="success">	Begins to drop according to O2 curve 	</span>|<span class="success">	NC 	</span>|
+|	Administer TXA -- 200 mg	|	Infusion over 15 mins	|	30	|	30	|<span class="success">	NC 	</span>|<span class="success">	NC 	</span>|<span class="success">	NC 	</span>|<span class="success">	NC 	</span>|<span class="success">	NC 	</span>|<span class="success">	Decrease 29-55% </span>|
+|	Administer Vasopressin -- 0.04, 0.18, and 0.25 ug	|	Infusions are successive, each lasts 20 minutes	|	30, 1230, 2430	|	2430	|<span class="success">	Decrease ˜ 25% @cite mohring1980greatly	</span>|<span class="warning">	Increase 7-8 mmHg @cite mohring1980greatly	</span>|<span class="warning">	Increase 7-8 mmHg @cite mohring1980greatly	</span>|<span class="success">	NC @cite mohring1980greatly	</span>|<span class="success">	NC @cite mohring1980greatly	</span>|<span class="success">	NC 	</span>|
 
 
 
@@ -496,7 +504,7 @@ The pharmacodynamic effects of the drugs were validated by comparing the effects
 
 @anchor drugs-furosemide
 ### Diuretic-Furosemide 
-PD effects for the diuretic Furosemide are handled differently than other drugs in the %BioGears patient. Localized effects are implemented via a tubular permeability modifier. This effectively simulates Furosemide's effect on the tubular luminal Na-K-Cl co-transporter, inhibiting reabsorption of fluid and ions into the vasculature, as shown in Figure 18. The permeability modifier is a function of drug concentration in the blood plasma. These concentrations determine appropriate tubular reabsorption inhibition by reducing the permeability of the tubular lumen (for more information, see @ref RenalMethodology). This effectively increases the urine production rate and ion excretion, and reduces the patient's total blood volume. To see the effects of the drug on the cardiovascular system during ventricular systolic dysfunction, see @ref cardiovascular-validation-conditions "Cardiovascular System".
+PD effects for the diuretic Furosemide are handled differently than other drugs in the %BioGears patient. Localized effects are implemented via a tubular permeability modifier. This effectively simulates Furosemide's effect on the tubular luminal Na-K-Cl co-transporter, inhibiting reabsorption of fluid and ions into the vasculature, as shown in Figure 19. The permeability modifier is a function of drug concentration in the blood plasma. These concentrations determine appropriate tubular reabsorption inhibition by reducing the permeability of the tubular lumen (for more information, see @ref RenalMethodology). This effectively increases the urine production rate and ion excretion, and reduces the patient's total blood volume. To see the effects of the drug on the cardiovascular system during ventricular systolic dysfunction, see @ref cardiovascular-validation-conditions "Cardiovascular System".
 
 <center>
 <table border="0">
@@ -514,7 +522,7 @@ PD effects for the diuretic Furosemide are handled differently than other drugs 
 </table>
 </center>
 <center>
-<i>Figure 18. The diuretic furosemide causes an inhibition of reabsorption due to its effect on the tubular lumen co-transporter. Total blood volume decreases as urine production and ion excretion increase. Eventually, as the body clears the drug, urine production and ion excretion both begin to return to normal.</i>
+<i>Figure 19. The diuretic furosemide causes an inhibition of reabsorption due to its effect on the tubular lumen co-transporter. Total blood volume decreases as urine production and ion excretion increase. Eventually, as the body clears the drug, urine production and ion excretion both begin to return to normal.</i>
 </center><br>
 
 
@@ -550,7 +558,7 @@ PD effects for the diuretic Furosemide are handled differently than other drugs 
 </table>
 </center>
 <center>
-<i>Figure 19.  The anesthetic desflurane suppresses mean arterial blood pressure by decreasing systemic vascular resistance.  Heart rate increases and, in the case of spontaneously breathing patients @cite weiskopf1991cardiovascular, so too does cardiac output (though not to the degree predicted).  Desflurane also impacts the respiratory system by increasing respiration rate and decreasing tidal volume.  </i>
+<i>Figure 20.  The anesthetic desflurane suppresses mean arterial blood pressure by decreasing systemic vascular resistance.  Heart rate increases and, in the case of spontaneously breathing patients @cite weiskopf1991cardiovascular, so too does cardiac output (though not to the degree predicted).  Desflurane also impacts the respiratory system by increasing respiration rate and decreasing tidal volume.  </i>
 </center><br>
 
 @anchor advanced-models
@@ -560,7 +568,7 @@ As we work to continuously improve the %BioGears %Drugs System, we have introduc
 ###Opioids
 @anchor opioids
 ####Morphine Intoxication
-Morphine is the first drug in the %BioGears library with parameters tuned to model overdose scenarios. The %BioGears overdose scenario is modeled after a case report in which a patient received 200 mg of intravenous Morphine over 24 minutes from a defective patient controlled analgesic (PCA) device and experienced severe opioid ventilatory impairment (OIVI) @cite doyle2008another.  Morphine PD parameters were tuned to produce symptoms consistent with OIVI (respiratory depression, hypercapnia, and hypoxia) using both this report and other supporting literature (see Table 10).  Figure 20 compares the severe overdose scenario to the standard Morphine dose.  Note the prolonged nature of the pharmacological effects, which is a function of Morphine's low effect site rate constant (k<sub>e</sub> = 0.0026 1/min). In this scenario, the patient does not enter an irreversible state (though one will be triggered at higher doses), making our model somewhat conservative.  We took such a conservative approach because opioid sensitivity is extremely variable among patients, particularly between men and women @cite overdyk2014opioid.  It should also be mentioned that the tidal volume predicted by our model (not shown) erroneously demonstrates a substantial increase.  This is a known issue resulting from the manner in which tidal volume and respiration rate are coupled in the current %BioGears respiratory system (see @ref RespiratoryMethodology) and will be an area of future work.   
+Morphine is the first drug in the %BioGears library with parameters tuned to model overdose scenarios. The %BioGears overdose scenario is modeled after a case report in which a patient received 200 mg of intravenous Morphine over 24 minutes from a defective patient controlled analgesic (PCA) device and experienced severe opioid ventilatory impairment (OIVI) @cite doyle2008another.  Morphine PD parameters were tuned to produce symptoms consistent with OIVI (respiratory depression, hypercapnia, and hypoxia) using both this report and other supporting literature (see Table 10).  Figure 21 compares the severe overdose scenario to the standard Morphine dose.  Note the prolonged nature of the pharmacological effects, which is a function of Morphine's low effect site rate constant (k<sub>e</sub> = 0.0026 1/min). In this scenario, the patient does not enter an irreversible state (though one will be triggered at higher doses), making our model somewhat conservative.  We took such a conservative approach because opioid sensitivity is extremely variable among patients, particularly between men and women @cite overdyk2014opioid.  It should also be mentioned that the tidal volume predicted by our model (not shown) erroneously demonstrates a substantial increase.  This is a known issue resulting from the manner in which tidal volume and respiration rate are coupled in the current %BioGears respiratory system (see @ref RespiratoryMethodology) and will be an area of future work.   
  
 <center>
 <i>Table 10. Comparison of the %BioGears response to a standard dose of Morphine (@cite thompson1995respiratory) and an overdose of Morphine (@cite doyle2008another).  The overdose produces symptoms consistent with opioid induced ventilatory impairment (OIVI) and bradycardia.</i>
@@ -589,11 +597,11 @@ Morphine is the first drug in the %BioGears library with parameters tuned to mod
 </tr>
 </table>
 </center>
-<i>Figure 20.  The Morphine overdose scenario shows the difference in effect betweeen a standard dose (red) an overdose (blue).  The timeline below the plots shows the collection of respiratory events thrown in %BioGears such as respiratory distress, hypoxia, and hypercapnia.</i>
+<i>Figure 21.  The Morphine overdose scenario shows the difference in effect betweeen a standard dose (red) an overdose (blue).  The timeline below the plots shows the collection of respiratory events thrown in %BioGears such as respiratory distress, hypoxia, and hypercapnia.</i>
 </center><br>
 
 ####Reversal of Opioid Induced %Respiratory Depression
-Severe respiratory depression resulting from opioid usage is commonly treated with naloxone.  Naloxone competes with opioids at mu receptors in the central nervous system and, when bound, exerts essentially no pharmacodynamic effects @cite goodman1996goodman.  Thus, as more opioids are displaced, symptoms progressively improve.  This competitive interaction can be modeled using Equation 10.  The inhibition constant (K<sub>I</sub>) for Naloxone was estimated in two stages (see Figure 21) from data published in @cite olofsen2010naloxone regarding the combined effects of Morphine and Naloxone on respiration.  First, the EC<sub>50</sub> for Morphine was estimated from human volunteers who were administered Morphine followed by placebo.  This experimental EC<sub>50</sub> was then used to fit Equation 10 to data collected from individuals who were given Morphine followed by Naloxone and determine the best value for K<sub>I</sub>.  Since the EC<sub>50</sub> for Morphine utilized by %BioGears is not equivalent to the one determined from this study (this is due to the fact that %BioGears is tuned for multiple pharmacodynamic responses and not just breathing rate), the ratio of the estimated EC<sub>50</sub> to K<sub>I</sub> was used to determine the %BioGears K<sub>I</sub>.  It was assumed that this K<sub>I</sub> is appropriate for the interaction of Naloxone and Fentanyl, which seems appropriate given that Fentanyl acts predominantly on the same receptor as Morphine.  
+Severe respiratory depression resulting from opioid usage is commonly treated with naloxone.  Naloxone competes with opioids at mu receptors in the central nervous system and, when bound, exerts essentially no pharmacodynamic effects @cite goodman1996goodman.  Thus, as more opioids are displaced, symptoms progressively improve.  This competitive interaction can be modeled using Equation 10.  The inhibition constant (K<sub>I</sub>) for Naloxone was estimated in two stages (see Figure 22) from data published in @cite olofsen2010naloxone regarding the combined effects of Morphine and Naloxone on respiration.  First, the EC<sub>50</sub> for Morphine was estimated from human volunteers who were administered Morphine followed by placebo.  This experimental EC<sub>50</sub> was then used to fit Equation 10 to data collected from individuals who were given Morphine followed by Naloxone and determine the best value for K<sub>I</sub>.  Since the EC<sub>50</sub> for Morphine utilized by %BioGears is not equivalent to the one determined from this study (this is due to the fact that %BioGears is tuned for multiple pharmacodynamic responses and not just breathing rate), the ratio of the estimated EC<sub>50</sub> to K<sub>I</sub> was used to determine the %BioGears K<sub>I</sub>.  It was assumed that this K<sub>I</sub> is appropriate for the interaction of Naloxone and Fentanyl, which seems appropriate given that Fentanyl acts predominantly on the same receptor as Morphine.  
 
 <center>
 <table border="0">
@@ -604,15 +612,15 @@ Severe respiratory depression resulting from opioid usage is commonly treated wi
 </table>
 </center>
 <center>
-<i>Figure 21.  Non-linear least squares regression after estimation of Morphine EC<sub>50</sub> and Naloxone K<sub>I</sub>.  Experimental data was obtained from @cite olofsen2010naloxone in which patients were administered 0.15mg/kg intravenously followed by a placebo (left) or 400 ug of intravenous Naloxone (right).</i>
+<i>Figure 22.  Non-linear least squares regression after estimation of Morphine EC<sub>50</sub> and Naloxone K<sub>I</sub>.  Experimental data was obtained from @cite olofsen2010naloxone in which patients were administered 0.15mg/kg intravenously followed by a placebo (left) or 400 ug of intravenous Naloxone (right).</i>
 </center><br>
 
 
-Figures 22-23 demonstrate the effect of administering naloxone after respiratory depression induced by Fentanyl and Morphine.  Note that while the effects of Fentanyl are completely reversed after a standard Naloxone dose (115 ug @cite olofsen2010naloxone), depression of respiratory activity persists in the case of morphine (renarcotization).  In the case of massive overdose, the degree of renarcotization necessitates a second dose of naloxone.  This result is due to the fact that Naloxone has a longer elimination half-life than Fentanyl but a significantly shorter one than Morphine (see Table 6 for Naloxone validation).
+Figures 23-24 demonstrate the effect of administering naloxone after respiratory depression induced by Fentanyl and Morphine.  Note that while the effects of Fentanyl are completely reversed after a standard Naloxone dose (115 ug @cite olofsen2010naloxone), depression of respiratory activity persists in the case of morphine (renarcotization).  In the case of massive overdose, the degree of renarcotization necessitates a second dose of naloxone.  This result is due to the fact that Naloxone has a longer elimination half-life than Fentanyl but a significantly shorter one than Morphine (see Table 6 for Naloxone validation).
 
 <img src="./plots/Drugs/Naloxone_FentanylStandard.jpg" width="550">
 <center>
-<i>Figure 22. Naloxone reversal of respiratory depression induced by Fentanyl.  Fentanyl protocol and pharmacodynamic parameters were obtained from @cite yassen2007mechanism.  Green = Infuse 300 ug of Fentanyl; Black = End of Infusion; Magenta = Administer 200 ug of IV naloxone.</i>
+<i>Figure 23. Naloxone reversal of respiratory depression induced by Fentanyl.  Fentanyl protocol and pharmacodynamic parameters were obtained from @cite yassen2007mechanism.  Green = Infuse 300 ug of Fentanyl; Black = End of Infusion; Magenta = Administer 200 ug of IV naloxone.</i>
 </center><br>
 
 
@@ -625,7 +633,7 @@ Figures 22-23 demonstrate the effect of administering naloxone after respiratory
 </table>
 </center>
 <center>
-<i>Figure 23.  Naloxone reversal of minor respiratory depression induced by standard dose of morphine (left) and major respiratory depression induced by morphine overdose (right).  Left Figure:  Green = Administer 10.5 mg bolus of intravenous morphine; Black = Adminster 200 ug of Naloxone.  Right Figure:  Green = Begin intravenous morphine infusion of 8 mg/min; Black = End of infusion; Magenta = Administer 800 ug of intravenous Naloxone; Yellow = Adminster 400 ug of intravenous Naloxone.</i>
+<i>Figure 24.  Naloxone reversal of minor respiratory depression induced by standard dose of morphine (left) and major respiratory depression induced by morphine overdose (right).  Left Figure:  Green = Administer 10.5 mg bolus of intravenous morphine; Black = Adminster 200 ug of Naloxone.  Right Figure:  Green = Begin intravenous morphine infusion of 8 mg/min; Black = End of infusion; Magenta = Administer 800 ug of intravenous Naloxone; Yellow = Adminster 400 ug of intravenous Naloxone.</i>
 </center><br>
 
 @anchor sarin-nerve
@@ -662,7 +670,7 @@ The kinetic equations governing Sarin inhibition of AChE are given below with th
 <i>Equation 17.</i>
 </center><br>
 
-For reasons that are hopefully obvious, the validation metrics for Sarin exposure in humans (Tables 12 and 13) are predominantly qualitative.  Estimates for the degree of RBC-AChE inhibition are either extrapolated from studies involving extremely low concentrations or drawn from case studies of accidental exposures.  Figure 24 compares the predicted physiological responses to threshold and severe exposures.  Figure 25 highlights the RBC-AChE salvaging action of Pralidoxime.
+For reasons that are hopefully obvious, the validation metrics for Sarin exposure in humans (Tables 12 and 13) are predominantly qualitative.  Estimates for the degree of RBC-AChE inhibition are either extrapolated from studies involving extremely low concentrations or drawn from case studies of accidental exposures.  Figure 25 compares the predicted physiological responses to threshold and severe exposures.  Figure 26 highlights the RBC-AChE salvaging action of Pralidoxime.
 
 
 <center>
@@ -694,7 +702,7 @@ For reasons that are hopefully obvious, the validation metrics for Sarin exposur
 </tr>
 </table>
 </center>
-<i>Figure 24.  Predicted responses to threshold (red) and severe (blue) exposures to Sarin inhaled from the environment.  Note that constriction of the pupils (miosis) occurs even at very low Sarin concentrations.  The difference in Pulmonary Resistance is due to deposition of Sarin in the upper respiratory tract, which leads to bronchoconstriction and difficulty breathing.  As bronchoconstriction increases, the patient has trouble breathing deeply, resulting in a decrease in tidal volume. </i>
+<i>Figure 25.  Predicted responses to threshold (red) and severe (blue) exposures to Sarin inhaled from the environment.  Note that constriction of the pupils (miosis) occurs even at very low Sarin concentrations.  The difference in Pulmonary Resistance is due to deposition of Sarin in the upper respiratory tract, which leads to bronchoconstriction and difficulty breathing.  As bronchoconstriction increases, the patient has trouble breathing deeply, resulting in a decrease in tidal volume. </i>
 </center><br>
 
 <center>
@@ -715,7 +723,7 @@ For reasons that are hopefully obvious, the validation metrics for Sarin exposur
 </tr>
 </table>
 </center>
-<i>Figure 25.  A severe Sarin exposure (green line = beginning of exposure, black line = end of exposure) followed by administration of 1 g intravenous Pralidoxime (pink line).  The red blood cell acetylcholinesterase levels increase, though not to baseline because a fraction of the RBC-AChE still undergoes irreversible aging.  The oxygen saturation is shown to demonstrate the positive effect that Pralidoxime has on respiratory function</i>
+<i>Figure 26.  A severe Sarin exposure (green line = beginning of exposure, black line = end of exposure) followed by administration of 1 g intravenous Pralidoxime (pink line).  The red blood cell acetylcholinesterase levels increase, though not to baseline because a fraction of the RBC-AChE still undergoes irreversible aging.  The oxygen saturation is shown to demonstrate the positive effect that Pralidoxime has on respiratory function</i>
 </center><br>
 
 
