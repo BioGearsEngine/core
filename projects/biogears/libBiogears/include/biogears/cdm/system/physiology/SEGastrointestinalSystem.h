@@ -17,15 +17,19 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalarVolumePerTime;
+class SEScalarMass;
+class MassUnit;
 class VolumePerTimeUnit;
+class SESubstance;
+class SEDrugTransitState;
 
-class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
+class BIOGEARS_API SEGastrointestinalSystem : public SESystem {		
 public:
   SEGastrointestinalSystem(Logger* logger);
   ~SEGastrointestinalSystem() override;
-
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
-  static constexpr char const * const  TypeTag() { return "SEGastrointestinalSystem"; }
+  	
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); } //! Hopefully this returns a unique ID for every type
+  static constexpr char const* const TypeTag() { return "SEGastrointestinalSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -43,15 +47,57 @@ public:
   const SENutrition* GetStomachContents() const;
   void RemoveStomachContents();
 
+  std::map<const SESubstance*, SEDrugTransitState*> GetDrugTransitStates();
+  SEDrugTransitState* GetDrugTransitState(const SESubstance* sub);
+  SEDrugTransitState* NewDrugTransitState(const SESubstance* sub);
+
   bool Load(const CDM::GastrointestinalSystemData& in);
   CDM::GastrointestinalSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::GastrointestinalSystemData& data) const;
 
 protected:
   SEScalarVolumePerTime* m_ChymeAbsorptionRate;
   SENutrition* m_StomachContents;
+  std::map<const SESubstance*, SEDrugTransitState*> m_DrugTransitStates;
+};
+
+class BIOGEARS_API SEDrugTransitState {
+public:
+  SEDrugTransitState(const SESubstance& sub);
+  ~SEDrugTransitState();
+
+  virtual void Clear();
+
+  virtual bool Load(const CDM::DrugTransitStateData& in);
+  virtual CDM::DrugTransitStateData* Unload() const;
+
+  bool Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route);
+
+  std::vector<double> GetLumenSolidMasses(const MassUnit& unit);
+  std::vector<double> GetLumenDissolvedMasses(const MassUnit& unit);
+  std::vector<double> GetEnterocyteMasses(const MassUnit& unit);
+  bool SetLumenSolidMasses(std::vector<double>& tsolid, const MassUnit& unit);
+  bool SetLumenDissolvedMasses(std::vector<double>& tdis, const MassUnit& unit);
+  bool SetEnterocyteMasses(std::vector<double>& esolid, const MassUnit& unit);
+  void IncrementStomachDissolvedMass(double value, const MassUnit& unit);
+  double GetTotalSolidMassInLumen(const MassUnit& unit);
+  double GetTotalDissolvedMassInLumen(const MassUnit& unit);
+  double GetTotalMassInEnterocytes(const MassUnit& unit);
+  SEScalarMass& GetTotalMassMetabolized();
+  SEScalarMass& GetTotalMassExcreted();
+
+protected:
+  virtual void Unload(CDM::DrugTransitStateData& data) const;
+  const SESubstance* m_Substance;
+  std::vector<SEScalarMass*> m_LumenSolidMasses;
+  std::vector<SEScalarMass*> m_LumenDissolvedMasses;
+  std::vector<SEScalarMass*> m_EnterocyteMasses;
+  SEScalarMass* m_TotalMassMetabolized;
+  SEScalarMass* m_TotalMassExcreted;
+  size_t m_NumTransitMasses;
 };
 }

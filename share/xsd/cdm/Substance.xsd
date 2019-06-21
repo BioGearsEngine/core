@@ -108,7 +108,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Fraction of the substance in the plasma that is unbound. -->
           <xs:element name="IonicState" type="enumSubstanceIonicState" minOccurs="1"  maxOccurs="1"/><!--<< @brief @copybrief Substance_enumSubstanceIonicState -->
           <xs:element name="LogP" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The octanol-water partition coefficient. -->
-          <xs:element name="OralAbsorptionRateConstant" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Rate at which an orally administered drug leaves the GI tract. -->  
+          <xs:element name="HydrogenBondCount" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Combined number of hydrogen bond donor and acceptors sites, used by GI CAT model. -->
+		  <xs:element name="PolarSurfaceArea" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--@brief Area (in A^2) encompassed by polar atoms of a molecule, which effects permeability, used by GI CAT model-->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

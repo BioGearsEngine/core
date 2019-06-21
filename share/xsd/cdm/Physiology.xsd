@@ -237,9 +237,23 @@ specific language governing permissions and limitations under the License.
     </xs:complexType>
     <xs:element name="EnergySystemData" type="EnergySystemData"/>   
     
-    
-    <!-- @brief Provides nutrients to the body
-         @details Balances out the fluid and substances lost through other functionalities such as urination, sweating, and water loss from breathing.
+	
+	<xs:complexType name="DrugTransitStateData">
+		<xs:complexContent>
+			<xs:extension base="ObjectData">
+				<xs:sequence>
+					<xs:element name="LumenSolidMasses" type="ScalarMassData" minOccurs="0" maxOccurs="9"/>  <!--@brief CAT drug model, solid drug content of 8 small intestince compartments and stomach-->
+					<xs:element name="LumenDissolvedMasses" type="ScalarMassData" minOccurs="0" maxOccurs="9"/> <!--@brief CAT drug model, dissolved drug content of 8 small intestince compartments and stomach-->
+					<xs:element name="EnterocyteMasses" type="ScalarMassData" minOccurs="0" maxOccurs="8"/> <!--@brief CAT drug model, drug content of intestinal enteroycte layer, no stomach portion-->
+					<xs:element name="MassMetabolized" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--@brief CAT drug model, tracks the amount of drug metabolized in the GI-->
+					<xs:element name="MassExcreted" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--@brief CAT drug model, tracks the amount of drug excreted unabsorbed from GI-->
+				</xs:sequence>
+				<xs:attribute name="Substance" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+    <!-- @brief Provides nutrients to the body and monitors oral drug absorption
+         @details Balances out the fluid and substances lost through other functionalities such as urination, sweating, and water loss from breathing.  Hosts Compartment Absorption Transit (CAT) model for oral drug administration
      -->
     <xs:complexType name="GastrointestinalSystemData">
         <xs:complexContent>
@@ -247,6 +261,7 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>
                     <xs:element name="ChymeAbsorptionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Rate of the absorption of nutrients from chyme into the blood stream-->
                     <xs:element name="StomachContents" type="NutritionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The contents in the stomach-->
+					<xs:element name="DrugTransitStates" type="DrugTransitStateData" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>	
             </xs:extension>
         </xs:complexContent>

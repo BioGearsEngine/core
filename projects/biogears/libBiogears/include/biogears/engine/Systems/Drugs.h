@@ -24,7 +24,7 @@ class SEFluidCircuitPath;
 class SETissueCompartment;
 class SESubstance;
 class SESubstanceBolusState;
-class SESubstanceOralState;
+class SETransmucosalState;
 class SELiquidCompartment;
 
 class BioGears;
@@ -83,10 +83,11 @@ protected:
   void CalculatePlasmaSubstanceConcentration();
   void CalculateDrugEffects();
   void SarinKinetics();
+  double OralTransmucosalModel(const SESubstance* sub, SETransmucosalState* ot);
 
   // Serializable member variables (Set in Initialize and in schema)
   std::map<const SESubstance*, SESubstanceBolusState*> m_BolusAdministrations;
-  std::map<const SESubstance*, SESubstanceOralState*> m_OralAdministrations;
+  std::map<const SESubstance*, SETransmucosalState*> m_TransmucosalStates;
   double m_SarinRbcAcetylcholinesteraseComplex_nM;
   double m_AgedRbcAcetylcholinesterase_nM;
 
@@ -102,54 +103,6 @@ protected:
   SETissueCompartment* m_fatTissue;
   SESubstance* m_Sarin;
   SESubstance* m_Pralidoxime;
-
-  //***Test OTFC States before putting in CDM***//
-  double mSolidMouth;
-  double cSaliva;
-  double mSolid2;
-  double cSaliva2;
-  double cEpi1_u;
-  double cEpi1;
-  double cEpi2;
-  double cEpi3;
-  double cEpi4;
-  double cEpi5;
-  double cEpi6;
-  double cLamE;
-
-  double cTon1_u;
-  double cTon1;
-  double cTon2;
-  double cTon3;
-  double cTon4;
-  double cTon5;
-  double cTon6;
-  double cLamT;
-
-  double cEpithelium;
-  double cLamina;
-  double mStomach;
-  double cLumen;
-  double cEnterocyte;
-  double cVilli;
-  double totalSwallowed;
-  double totalMetabolized;
-  double totalExcreted;
-  double totalAbsorbed;
-  double massConservation;
-
-  /***Test GI States before putting them in CDM***/
-  double mDuodenum;
-  double mJejunum1;
-  double mJejunum2;
-  double mIleum1;
-  double mIleum2;
-  double mIleum3;
-  double mCecum;
-  double mColon;
-  double mEnterocyte;
-  double mVilli;
-	
 
 };
 }

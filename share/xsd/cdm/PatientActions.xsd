@@ -448,21 +448,6 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 
-	<!-- @brief The state variables w.r.t. drug dissolution for a drug administered transmucosally-->
-	<xs:complexType name="OralTransmucosalStateData">
-		<xs:sequence>
-			<xs:element name="MouthSolidMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SalivaConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="BuccalConcentrations" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="7"/>
-			<xs:element name="SublingualConcentrations" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="7"/>
-		</xs:sequence>
-	</xs:complexType>
-	<!-- @brief The state variables w.r.t. drug dissolution for a drug administered transmucosally-->
-	<xs:complexType name="OralGastrointestinalStateData">
-		<xs:sequence>
-			<xs:element name="StomachSolidMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
 	<!--@brief Drug administered orally, either as a lozenge that dissolves in mouth (transmucosal) or as a pill that dissolves is stomach (gastrointestinal)-->
 	<xs:complexType name="SubstanceOralDoseData">
 		<xs:complexContent>
@@ -477,23 +462,14 @@ specific language governing permissions and limitations under the License.
 	</xs:complexType>
 
 	<!--@brief The state variables of a drug administered orally.  The transmucosal and gastrointestinal routes converge to a common pathway when dissolved drug reaches the stomach (either as transmucosal drug that is swallowed or a pill that dissolves in stomach).  Thus, we distinguish between the transmucosal and GI dissolution states during drug dissolution process, but use common elements thereafter -->
-	<xs:complexType name="SubstanceOralStateData">
+	<xs:complexType name="TransmucosalStateData">
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
 				<xs:sequence>
-					<xs:element name="RouteSpecificData">
-						<xs:complexType>
-							<xs:choice>
-								<xs:element name="TransmucosalRoute" type="OralTransmucosalStateData"/>
-								<xs:element name="GastrointestinalRoute" type="OralGastrointestinalStateData"/>
-							</xs:choice>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="StomachDissolvedMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TransitDissolvedMasses" type="ScalarMassData" minOccurs="0" maxOccurs="8"/>
-					<!--<xs:element name="EnterocyteMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>-->
-					<xs:element name="EnterocyteDissolvedMasses" type="ScalarMassData" minOccurs="0" maxOccurs="8"/>
-					<!--<xs:element name="VilliCapillaryConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>-->
+					<xs:element name="MouthSolidMass" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="SalivaConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="BuccalConcentrations" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="7"/>
+					<xs:element name="SublingualConcentrations" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="7"/>
 				</xs:sequence>
 				<xs:attribute name="Substance" type="xs:string" use="required"/>
 			</xs:extension>

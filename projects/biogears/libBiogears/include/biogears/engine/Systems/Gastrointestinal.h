@@ -75,6 +75,8 @@ protected:
   void AbsorbMeal(double duration_s);
   void AbsorbNutrients(double duration_s);
 
+  void ProcessDrugCAT();  //Compartment, absorption, and transit model for oral drug dosing
+
   void ChymeSecretion();
   // Serializable member variables (Set in Initialize and in schema)
 
@@ -100,6 +102,15 @@ protected:
   SEFluidCircuitPath* m_GutE3ToGroundPath;
   SEScalarMassPerTime m_CalciumDigestionRate;
   SEScalarVolumePerTime m_WaterDigestionRate;
+
+  //Drug absoprtion member variables
+  std::vector<double> m_TransitPH;
+  std::vector<double> m_TransitVolume_mL;
+  std::vector<double> m_TransitSurfaceArea_cm2;
+  std::vector<double> m_EnterocyteVolumeFraction;
+  std::vector<double> m_TransitRate_Per_s;
+  std::vector<double> m_TransitBileSalts_mM;
+
 
   // We want to start simulation time 0 (after stabilization) with the initial gut mass from the meal specified in the config file
   std::map<SELiquidSubstanceQuantity*, double> m_InitialSubstanceMasses_ug; // Used only during the final AtSteadyState

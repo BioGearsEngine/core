@@ -24,7 +24,8 @@ SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
   m_FractionUnboundInPlasma = nullptr;
   m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
   m_LogP = nullptr;
-  m_OralAbsorptionRateConstant = nullptr;
+  m_HydrogenBondCount = nullptr;
+  m_PolarSurfaceArea = nullptr;
 }
 //-----------------------------------------------------------------------------
 SESubstancePhysicochemicals::~SESubstancePhysicochemicals()
@@ -40,7 +41,8 @@ void SESubstancePhysicochemicals::Clear()
   SAFE_DELETE(m_FractionUnboundInPlasma);
   m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
   SAFE_DELETE(m_LogP);
-  SAFE_DELETE(m_OralAbsorptionRateConstant);
+  SAFE_DELETE(m_HydrogenBondCount);
+  SAFE_DELETE(m_PolarSurfaceArea);
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::IsValid() const
@@ -75,8 +77,10 @@ const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name)
     return &GetFractionUnboundInPlasma();
   if (name.compare("LogP") == 0)
     return &GetLogP();
-  if (name.compare("OralAbsorptionRateConstant") == 0)
-    return &GetOralAbsorptionRateConstant();
+  if (name.compare("HydrogenBondCount") == 0)
+    return &GetHydrogenBondCount();
+  if (name.compare("PolarSurfaceArea") == 0)
+    return &GetPolarSurfaceArea();
 
   return nullptr;
 }
@@ -91,9 +95,10 @@ bool SESubstancePhysicochemicals::Load(const CDM::SubstancePhysicochemicalData& 
   GetFractionUnboundInPlasma().Load(in.FractionUnboundInPlasma());
   SetIonicState(in.IonicState());
   GetLogP().Load(in.LogP());
-  if (in.OralAbsorptionRateConstant().present())
-    GetOralAbsorptionRateConstant().Load(in.OralAbsorptionRateConstant().get());
-
+  if (in.HydrogenBondCount().present())
+    GetHydrogenBondCount().Load(in.HydrogenBondCount().get());
+  if (in.PolarSurfaceArea().present())
+    GetPolarSurfaceArea().Load(in.PolarSurfaceArea().get());
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -120,8 +125,10 @@ void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data
     data.IonicState(m_IonicState);
   if (HasLogP())
     data.LogP(std::unique_ptr<CDM::ScalarData>(m_LogP->Unload()));
-  if (HasOralAbsorptionRateConstant())
-    data.OralAbsorptionRateConstant(std::unique_ptr<CDM::ScalarData>(m_OralAbsorptionRateConstant->Unload()));
+  if (HasHydrogenBondCount())
+    data.HydrogenBondCount(std::unique_ptr<CDM::ScalarData>(m_HydrogenBondCount->Unload()));
+  if (HasPolarSurfaceArea())
+    data.PolarSurfaceArea(std::unique_ptr<CDM::ScalarData>(m_PolarSurfaceArea->Unload()));
 };
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasAcidDissociationConstant() const
@@ -239,23 +246,40 @@ double SESubstancePhysicochemicals::GetLogP() const
   return m_LogP->GetValue();
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasOralAbsorptionRateConstant() const
+bool SESubstancePhysicochemicals::HasHydrogenBondCount() const
 {
-  return (m_OralAbsorptionRateConstant == nullptr) ? false : m_OralAbsorptionRateConstant->IsValid();
+  return (m_HydrogenBondCount == nullptr) ? false : m_HydrogenBondCount->IsValid();
 }
 //-----------------------------------------------------------------------------
-SEScalar& SESubstancePhysicochemicals::GetOralAbsorptionRateConstant()
-//-----------------------------------------------------------------------------
+SEScalar& SESubstancePhysicochemicals::GetHydrogenBondCount()
 {
-  if (m_OralAbsorptionRateConstant == nullptr)
-    m_OralAbsorptionRateConstant = new SEScalar();
-  return *m_OralAbsorptionRateConstant;
+  if (m_HydrogenBondCount == nullptr)
+    m_HydrogenBondCount = new SEScalar();
+  return *m_HydrogenBondCount;
 }
-double SESubstancePhysicochemicals::GetOralAbsorptionRateConstant() const
+double SESubstancePhysicochemicals::GetHydrogenBondCount() const
 {
-  if (m_OralAbsorptionRateConstant == nullptr)
+  if (m_HydrogenBondCount == nullptr)
     return SEScalar::dNaN();
-  return m_OralAbsorptionRateConstant->GetValue();
+  return m_HydrogenBondCount->GetValue();
+}
+//-----------------------------------------------------------------------------
+bool SESubstancePhysicochemicals::HasPolarSurfaceArea() const
+{
+  return (m_PolarSurfaceArea == nullptr) ? false : m_PolarSurfaceArea->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalar& SESubstancePhysicochemicals::GetPolarSurfaceArea()
+{
+  if (m_PolarSurfaceArea == nullptr)
+    m_PolarSurfaceArea = new SEScalar();
+  return *m_PolarSurfaceArea;
+}
+double SESubstancePhysicochemicals::GetPolarSurfaceArea() const
+{
+  if (m_PolarSurfaceArea == nullptr)
+    return SEScalar::dNaN();
+  return m_PolarSurfaceArea->GetValue();
 }
 //-----------------------------------------------------------------------------
 }

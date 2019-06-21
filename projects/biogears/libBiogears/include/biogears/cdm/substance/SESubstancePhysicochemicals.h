@@ -63,9 +63,13 @@ public:
   virtual SEScalar& GetLogP();
   virtual double GetLogP() const;
 
-  virtual bool HasOralAbsorptionRateConstant() const;
-  virtual SEScalar& GetOralAbsorptionRateConstant();
-  virtual double GetOralAbsorptionRateConstant() const;
+  virtual bool HasHydrogenBondCount() const;
+  virtual SEScalar& GetHydrogenBondCount();
+  virtual double GetHydrogenBondCount() const;
+
+  virtual bool HasPolarSurfaceArea() const;
+  virtual SEScalar& GetPolarSurfaceArea();
+  virtual double GetPolarSurfaceArea() const;
 
 protected:
   SEScalar* m_AcidDissociationConstant;
@@ -74,6 +78,8 @@ protected:
   SEScalarFraction* m_FractionUnboundInPlasma;
   CDM::enumSubstanceIonicState::value m_IonicState;
   SEScalar* m_LogP;
-  SEScalar* m_OralAbsorptionRateConstant;
+  SEScalar* m_HydrogenBondCount;
+  SEScalar* m_PolarSurfaceArea;
+
 };
 }

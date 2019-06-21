@@ -18,8 +18,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SESubstance;
-class SEOralTransmucosalState;
-class SEOralGastrointestinalState;
+class SETransmucosalState;
 
 class BIOGEARS_API SESubstanceOralDose : public SESubstanceAdministration {
 public:
@@ -55,56 +54,18 @@ protected:
   const SESubstance& m_Substance;
 };
 
-class BIOGEARS_API SESubstanceOralState {
+class BIOGEARS_API SETransmucosalState {
 public:
-  SESubstanceOralState(const SESubstance& sub);
-  ~SESubstanceOralState();
+  SETransmucosalState(const SESubstance& sub);
+  ~SETransmucosalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::SubstanceOralStateData& in);
-  virtual CDM::SubstanceOralStateData* Unload() const;
+  virtual bool Load(const CDM::TransmucosalStateData& in);
+  virtual CDM::TransmucosalStateData* Unload() const;
 
-  bool Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route);
+  bool Initialize(SEScalarMass& dose);
 
-  SEOralTransmucosalState& GetTransmucosalSpecificData();
-  bool IsTransmucosalRoute();
-  SEOralGastrointestinalState& GetGastrointestinalSpecificData();
-  bool IsGastrointestinalRoute();
-  SEScalarMass& GetStomachDissolvedMass();
-  std::vector<SEScalarMass*>& GetTransitDissolvedMasses();
-  std::vector<double> GetTransitDissolvedMasses(const MassUnit& unit);
-  bool SetTransitDissolvedMasses(std::vector<double>& tMasses, const MassUnit& unit);
-  //SEScalarMass& GetEnterocyteMass();
-  //SEScalarMassPerVolume& GetVilliCapillaryConcentration();
-  std::vector<SEScalarMass*>& GetEnterocyteDissolvedMasses();
-  std::vector<double> GetEnterocyteDissolvedMasses(const MassUnit& unit);
-  bool SetEnterocyteDissolvedMasses(std::vector<double>& tMasses, const MassUnit& unit);
-
-
-protected:
-  virtual void Unload(CDM::SubstanceOralStateData& data) const;
-  const SESubstance& m_Substance;
-  SEOralTransmucosalState* m_TransmucosalState;
-  SEOralGastrointestinalState* m_GastrointestinalState;
-  //Common pathway for both transmucosal and gastrointestinal routes
-  SEScalarMass* m_StomachDissolvedMass;
-  std::vector<SEScalarMass*> m_TransitDissolvedMasses;
-  //SEScalarMass* m_EnterocyteMass;
-  std::vector<SEScalarMass*> m_EnterocyteDissolvedMasses;
-  //SEScalarMassPerVolume* m_VilliCapillaryConcentration;
-  size_t m_NumTransitMasses;
-};
-
-class BIOGEARS_API SEOralTransmucosalState {
-public:
-  SEOralTransmucosalState();
-  ~SEOralTransmucosalState();
-  void Clear();
-  bool Initialize(double dose_ug);
-
-  virtual bool Load(const CDM::OralTransmucosalStateData& in);
-  virtual CDM::OralTransmucosalStateData* Unload() const;
-
+ 
   SEScalarMass& GetMouthSolidMass();
   SEScalarMassPerVolume& GetSalivaConcentration();
   std::vector<SEScalarMassPerVolume*>& GetBuccalConcentrations();
@@ -115,30 +76,14 @@ public:
   bool SetSublingualConcentrations(std::vector<double>& slMasses, const MassPerVolumeUnit& unit);
 
 protected:
-  virtual void Unload(CDM::OralTransmucosalStateData& data) const;
+  virtual void Unload(CDM::TransmucosalStateData& data) const;
   //Transumucosal specific values
+  const SESubstance* m_Substance;
   SEScalarMass* m_MouthSolidMass;
   SEScalarMassPerVolume* m_SalivaConcentration;
   std::vector<SEScalarMassPerVolume*> m_BuccalConcentrations;
   std::vector<SEScalarMassPerVolume*> m_SublingualConcentrations;
   size_t m_NumBuccalRegions;
   size_t m_NumSublingualRegions;
-};
-
-class BIOGEARS_API SEOralGastrointestinalState {
-public:
-  SEOralGastrointestinalState();
-  ~SEOralGastrointestinalState();
-  void Clear();
-  bool Initialize(double dose_ug);
-
-  virtual bool Load(const CDM::OralGastrointestinalStateData& in);
-  virtual CDM::OralGastrointestinalStateData* Unload() const;
-
-  SEScalarMass& GetStomachSolidMass();
-
-protected:
-  virtual void Unload(CDM::OralGastrointestinalStateData& data) const;
-  SEScalarMass* m_StomachSolidMass;
 };
 }
