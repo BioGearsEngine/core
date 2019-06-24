@@ -201,9 +201,6 @@ function(configure_version_information _SUCESS_CHECK)
                   RESULT_VARIABLE  _RESULT_VARIABLE
                                   ERROR_QUIET)
   
-  message(STATUS " ${_RESULT_VARIABLE} EQUAL 0"
-  " "
-   ${_RESULT_VARIABLE} EQUAL 0)
   if(_RESULT_VARIABLE EQUAL 0)
     message(STATUS "GIT_REV=${_GIT_REV}")
     string(REPLACE "." ";"  _GIT_REV_LIST "${_GIT_REV}") 
@@ -237,6 +234,6 @@ function(configure_version_information _SUCESS_CHECK)
     set( ${ROOT_PROJECT_NAME}_VERSION_HASH  ${_VERSION_HASH}  PARENT_SCOPE)
     set( ${ROOT_PROJECT_NAME}_DIRTY_BUILD ${_DIRTY_BUILD} PARENT_SCOPE)
     set( ${ROOT_PROJECT_NAME}_LIB_VERSION "${_VERSION_MAJOR}.${_VERSION_MINOR}" PARENT_SCOPE)
-    set( ${_SUCESS_CHECK} ${_RESULT_VARIABLE} EQUAL 0 )
+    set( ${_SUCESS_CHECK} True PARENT_SCOPE)
   endif()
 endfunction(configure_version_information)

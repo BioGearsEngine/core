@@ -35,7 +35,8 @@ project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
 find_package(Git)
 if(Git_FOUND)
   configure_version_information(GIT_SUCESS)
-else(NOT GIT_SUCESS)
+endif()
+if(NOT GIT_SUCESS)
   # Update these variables to ensure out of source build have some sane tags
   message(WARNING "GIT_EXECUTABLE was not found or no corrisponding GIT_REPO is avaliable.\n" 
     "If you are building with in a git repo you should ensure GIT is in your current path. " 
