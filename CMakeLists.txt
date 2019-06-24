@@ -34,12 +34,17 @@ project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
 
 find_package(Git)
 if(Git_FOUND)
-  configure_version_information()
-else()
+  configure_version_information(GIT_SUCESS)
+else(NOT GIT_SUCESS)
+  # Update these variables to ensure out of source build have some sane tags
+  message(WARNING "GIT_EXECUTABLE was not found or no corrisponding GIT_REPO is avaliable.\n" 
+    "If you are building with in a git repo you should ensure GIT is in your current path. " 
+	"If you are building outside of a repo ignore this message.")
   set(${ROOT_PROJECT_NAME}_VERSION_MAJOR 7)
   set(${ROOT_PROJECT_NAME}_VERSION_MINOR 2)
   set(${ROOT_PROJECT_NAME}_VERSION_PATCH 2)
   set(${ROOT_PROJECT_NAME}_VERSION_TWEAK 0)
+  set(${ROOT_PROJECT_NAME}_LIB_VERSION ${${ROOT_PROJECT_NAME}_VERSION_MAJOR}.${${ROOT_PROJECT_NAME}_VERSION_MINOR} )
   set(${ROOT_PROJECT_NAME}_DIRTY_BUILD true)
 endif()
 ###############################################################################
