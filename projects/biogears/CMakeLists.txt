@@ -99,7 +99,7 @@ if(${PREFIX}_BUILD_STATIC)
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     CXX_STANDARD 14
     )
-  set_target_properties(lib${PROJECT_NAME} PROPERTIES SOVERSION ${${ROOT_PROJECT_NAME}_LIB_VERSION})
+  set_target_properties(lib${PROJECT_NAME} PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
    if(${PROJECT_NAME}_USE_OVERRIDE_CONTROL)
       target_compile_definitions( lib${PROJECT_NAME} PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
    endif()
@@ -159,7 +159,7 @@ else()
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     CXX_STANDARD 14
     )
-  set_target_properties(lib${PROJECT_NAME}_cdm PROPERTIES SOVERSION ${${ROOT_PROJECT_NAME}_LIB_VERSION})
+  set_target_properties(lib${PROJECT_NAME}_cdm PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
   add_dependencies(lib${PROJECT_NAME}_cdm ${XSD_TARGETS})
 
   ###############################################################################
@@ -204,7 +204,7 @@ else()
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     CXX_STANDARD 14
     )
-  set_target_properties(lib${PROJECT_NAME} PROPERTIES SOVERSION ${${ROOT_PROJECT_NAME}_LIB_VERSION})
+  set_target_properties(lib${PROJECT_NAME} PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
 
   ###############################################################################
   # libBiogears COMPILATION & LINKAGE MODIFICATIONS
@@ -261,7 +261,7 @@ else()
        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
        CXX_STANDARD 14
        )
-    set_target_properties(lib${PROJECT_NAME}_circuit_test PROPERTIES SOVERSION ${${ROOT_PROJECT_NAME}_LIB_VERSION})
+    set_target_properties(lib${PROJECT_NAME}_circuit_test PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
   ###############################################################################
   # libBiogears_circuit_test COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
@@ -309,7 +309,7 @@ else()
        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
        CXX_STANDARD 14
        )
-     set_target_properties(lib${PROJECT_NAME}_jni PROPERTIES SOVERSION ${${ROOT_PROJECT_NAME}_LIB_VERSION})
+     set_target_properties(lib${PROJECT_NAME}_jni PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
   ###############################################################################
   # libBiogears_jni COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
