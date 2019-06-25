@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGears.hxx>
+#include <biogears/cdm/substance/SESubstance.h>
 
 namespace biogears {
 class SEPulmonaryFunctionTest;
@@ -266,6 +267,7 @@ private:
   SEFluidCircuitPath* m_ConnectionToMouth;
   SEFluidCircuitPath* m_GroundToConnection;
 
+  SESubstance* m_PropofolCheck;
   SEFluidCircuitCalculator m_Calculator;
   SEGasTransporter m_GasTransporter;
   SELiquidTransporter m_AerosolTransporter;

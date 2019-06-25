@@ -985,14 +985,17 @@ void Respiratory::ProcessDriverActions()
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
     cardiacArrestEffect = 0.0;
   }
-
+  double propofolCheck = 0;
+  m_PropofolCheck = m_data.GetSubstances().GetSubstance("Propofol");
+  if (m_PropofolCheck->GetMassInBlood().GetValue(MassUnit::ug) > 0) {
+    propofolCheck = 1;
+  }
   //Process drug effects--adjust them based on neuromuscular block level
   SEDrugSystem& Drugs = m_data.GetDrugs();
   double DrugRRChange_Per_min = Drugs.GetRespirationRateChange(FrequencyUnit::Per_min);
   double DrugsTVChange_L = Drugs.GetTidalVolumeChange(VolumeUnit::L);
   double NMBModifier = 1.0;
   double SedationModifier = 1.0;
-
 
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
     NMBModifier = 0.0;
@@ -1002,7 +1005,11 @@ void Respiratory::ProcessDriverActions()
     NMBModifier = 0.5;
     DrugRRChange_Per_min = 0.0;
     DrugsTVChange_L = 0.0;
-  } else if (Drugs.GetSedationLevel().GetValue() > 0.15 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0) {
+  } else if (Drugs.GetSedationLevel().GetValue() > 0.15 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && propofolCheck == 0) {
+    SedationModifier = 0.0;
+    DrugRRChange_Per_min = 0.0;
+    DrugsTVChange_L = 0.0;
+  } else if (Drugs.GetSedationLevel().GetValue() > 0.5 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && propofolCheck == 1) {
     SedationModifier = 0.0;
     DrugRRChange_Per_min = 0.0;
     DrugsTVChange_L = 0.0;
@@ -1043,11 +1050,10 @@ void Respiratory::ProcessDriverActions()
   } else {
     m_VentilationFrequency_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min) / m_TargetTidalVolume_L;
     m_VentilationFrequency_Per_min += sepsisModifier;
-    m_VentilationFrequency_Per_min *= painModifier; 
+    m_VentilationFrequency_Per_min *= painModifier;
     m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
     m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
   }
-
   //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
   m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
 }

@@ -703,7 +703,8 @@ void Drugs::CalculateDrugEffects()
 
     deltaTubularPermeability += (pd.GetTubularPermeabilityModifier().GetValue()) * concentrationEffects_unitless;
 
-    if (sedationLevel > 0.15) {
+    /// \todo Check levels for other sedative/anesthetic drugs for carry over so not specific to propofol. Carries over to respiratory.cpp if statements in driver function as well
+    if ((sedationLevel > 0.15 && sub->GetName() != "Propofol") || (sedationLevel > 0.5)) { 
       deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue();
       deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue();
     } else {
