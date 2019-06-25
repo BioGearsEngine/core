@@ -28,17 +28,17 @@ public class DoxygenPreprocessor
   {
     Log.setFileName("DoxygenPreprocessor.log");
     if(args.length!=2)
-    {
+    { // Check # of input args
       Log.info("Command arguments are : <Directory of files to process> <Directory to place processed files>");
       return;
     }
     Path sourceDir = Paths.get(args[0]);
-    if(!Files.isDirectory(sourceDir) ) {
+    if(!Files.isDirectory(sourceDir) ) { // locate source directory
       Log.error(String.format("Cannot find Source Directory : %s",args[0]));
       return;
     }
     Path destDir = Paths.get(args[1]);
-    if(!Files.exists(destDir)) {
+    if(!Files.exists(destDir)) { // check for then create destination directory
       try {
         Files.createDirectories(destDir);
       } catch (IOException e) {
@@ -49,7 +49,7 @@ public class DoxygenPreprocessor
       DirectoryStream<Path> directoryStream = Files.newDirectoryStream(sourceDir);
       for (Path file: directoryStream)  {        
         if( Files.isDirectory(file) || ! file.toString().toLowerCase().endsWith(".md") )
-        {  continue; }
+        {  continue; } // If the file is a directory or not an 'md' file, ignore it
         
         Log.info("Processing file : "+ file.toString() );
         BufferedReader inputSource = Files.newBufferedReader(file, StandardCharsets.ISO_8859_1);

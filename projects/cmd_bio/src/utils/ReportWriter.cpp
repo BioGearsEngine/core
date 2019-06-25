@@ -45,7 +45,7 @@ void ReportWriter::set_html()
   table_second_line = "";
   table_item_begin = "<td>";
   table_item_end = "</td>";
-  table_row_end = "</tr>\n";
+  table_row_end = "</td></tr>\n";
   table_end = "</table>\n";
   body_end = "</body></html>\n";
 }
@@ -55,13 +55,13 @@ void ReportWriter::set_md()
   body_begin = "";
   table_begin = "";
   table_row_begin = "";
-  table_row_begin_green = "";
-  table_row_begin_red = "";
-  table_row_begin_yellow = "";
+  table_row_begin_green = "<span class=\"success\">";
+  table_row_begin_red = "<span class=\"failure\">";
+  table_row_begin_yellow = "<span class=\"warning\">";
   table_second_line = "|---|---|---|---|---|\n";
-  table_item_begin = "|";
-  table_item_end = "";
-  table_row_end = "|\n";
+  table_item_begin = "";
+  table_item_end = "|";
+  table_row_end = "</span>|\n";
   table_end = "\n";
   body_end = "\n";
 }
@@ -77,7 +77,7 @@ void ReportWriter::set_xml()
   table_second_line = "";
   table_item_begin = "<td>";
   table_item_end = "</td>";
-  table_row_end = "</tr>\n";
+  table_row_end = "</td></tr>\n";
   table_end = "</table>\n";
   body_end = "</body></xml>\n";
 }
@@ -128,7 +128,7 @@ void ReportWriter::gen_tables()
     logger->Info("Successfully ran validation");
     PopulateTables();
     logger->Info("Successfully populated tables vector");
-    set_html();
+    set_md();
     to_table();
     logger->Info("Successfully generated table: " + split(validation_files[i],'.')[0]);
     clear();
@@ -168,7 +168,6 @@ int ReportWriter::to_table()
       line += table_item_end;
       line += table_item_begin;
       line += table_itr->second[i].notes;
-      line += table_item_end;
       line += table_row_end;
       table.append(line);
       if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
@@ -178,7 +177,7 @@ int ReportWriter::to_table()
     table += std::string(table_end);
     // This block saves out the html tables for website generation
     std::ofstream file;
-    file.open("validation/tables/" + table_name + "ValidationTable.md");
+    file.open("validation/tables/" + table_name + "ValidationTable.html");
     if (!file) {
       return 1;
     }
@@ -250,6 +249,10 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
     cell.clear();
     ++line_number;
   }
+  for(int i = 0;i < data[0].size();++i)
+  {
+    logger->Info(data[0][i]);
+  }
   logger->Info("Successfully parsed file: " + filename);
 }
 
@@ -258,7 +261,7 @@ void ReportWriter::CalculateAverages()
   std::vector<biogears::TableRow> rows;
   for (int i = 0; i < biogears_results[0].size(); i++) {
     biogears::TableRow row;
-    row.field_name = biogears_results[0][i];
+    row.field_name = trim(biogears_results[0][i]);
     row.expected_value = "0.0";
     rows.push_back(row);
   }
@@ -277,7 +280,7 @@ void ReportWriter::CalculateAverages()
     rows[i].engine_value /= biogears_results.size() - 1;
     std::string field_name_with_units = rows[i].field_name;
     TableRow row = rows[i]; //So field_name_with_units looks like "Name(Unit)", which is why it gets split to just be "Name"
-    table_row_map.insert(std::pair<std::string, biogears::TableRow>(split(field_name_with_units, '(')[0], row));
+    table_row_map.insert(std::pair<std::string, biogears::TableRow>(trim(split(field_name_with_units, '(')[0]), row));
   }
 }
 
@@ -285,7 +288,7 @@ void ReportWriter::ExtractValues()
 {
   for (int i = 1; i < validation_data.size(); i++) {
     biogears::ReferenceValue ref;
-    ref.value_name = validation_data[i][0];
+    ref.value_name = trim(validation_data[i][0]);
     ref.unit_name = validation_data[i][1];
     if (validation_data[i][2][0] == '[') {
       ref.is_range = true; // In the case that the validation data looks like [num1,num2],....
@@ -320,8 +323,10 @@ void ReportWriter::ExtractValues()
 void ReportWriter::Validate()
 {
   for (biogears::ReferenceValue ref : reference_values) {
-    auto table_row_itr = table_row_map.find(ref.value_name);
+    logger->Info(ref.value_name);
+    auto table_row_itr = table_row_map.find(trim(ref.value_name));
     if (table_row_itr == table_row_map.end()) {
+      logger->Info(std::string("  Not Found"));
       continue;
     }
     biogears::TableRow table_row = table_row_itr->second;

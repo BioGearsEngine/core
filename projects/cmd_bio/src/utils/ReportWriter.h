@@ -74,18 +74,18 @@ private:
   std::string report;
 
   std::unique_ptr<biogears::Logger> logger;
-  const char* body_begin;
-  const char* table_begin;
-  const char* table_row_begin;
-  const char* table_row_begin_green;
-  const char* table_row_begin_red;
-  const char* table_row_begin_yellow;
-  const char* table_second_line;
-  const char* table_item_begin;
-  const char* table_item_end;
-  const char* table_row_end;
-  const char* table_end;
-  const char* body_end;
+  char* body_begin;
+  char* table_begin;
+  char* table_row_begin;
+  char* table_row_begin_green;
+  char* table_row_begin_red;
+  char* table_row_begin_yellow;
+  char* table_second_line;
+  char* table_item_begin;
+  char* table_item_end;
+  char* table_row_end;
+  char* table_end;
+  char* body_end;
 };
 
 } // end namespace biogears

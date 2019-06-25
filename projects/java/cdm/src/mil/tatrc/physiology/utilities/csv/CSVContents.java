@@ -40,20 +40,20 @@ public class CSVContents
   
   public static void main(String[] args) throws IOException
   {
-  	CSVContents regular = new CSVContents("./scenarios/showcase/CombatMultitraumaResults.csv");
-  	List<Double> regularData = new ArrayList<Double>();
-  	regular.readHeader("Lead3ElectricPotential(mV)", regularData);
-  	double regularMax = DoubleUtils.getMax(regularData);
-  	double regularMin = DoubleUtils.getMin(regularData);
-  	System.out.println("Regular : Max : "+regularMax+" Min : "+regularMin);
-  	
-  	CSVContents nonInterp = new CSVContents("./scenarios/showcase/CombatMultitraumaResults-NoInterp.csv");
-  	List<Double> nonInterpData = new ArrayList<Double>();
-  	nonInterp.readHeader("Lead3ElectricPotential(mV)", nonInterpData);
-  	double nonInterpMax = DoubleUtils.getMax(nonInterpData);
-  	double nonInterpMin = DoubleUtils.getMin(nonInterpData);
-  	System.out.println("NonInterp : Max : "+nonInterpMax+" Min : "+nonInterpMin);
-  	
+    CSVContents regular = new CSVContents("./scenarios/showcase/CombatMultitraumaResults.csv");
+    List<Double> regularData = new ArrayList<Double>();
+    regular.readHeader("Lead3ElectricPotential(mV)", regularData);
+    double regularMax = DoubleUtils.getMax(regularData);
+    double regularMin = DoubleUtils.getMin(regularData);
+    System.out.println("Regular : Max : "+regularMax+" Min : "+regularMin);
+    
+    CSVContents nonInterp = new CSVContents("./scenarios/showcase/CombatMultitraumaResults-NoInterp.csv");
+    List<Double> nonInterpData = new ArrayList<Double>();
+    nonInterp.readHeader("Lead3ElectricPotential(mV)", nonInterpData);
+    double nonInterpMax = DoubleUtils.getMax(nonInterpData);
+    double nonInterpMin = DoubleUtils.getMin(nonInterpData);
+    System.out.println("NonInterp : Max : "+nonInterpMax+" Min : "+nonInterpMin);
+    
   }
 
   
@@ -72,9 +72,9 @@ public class CSVContents
 
   public List<String> getHeaders() 
   {
-  	if(in == null)
-  	{
-  		if(!getBuffer(resultsFile))
+    if(in == null)
+    {
+      if(!getBuffer(resultsFile))
       {
         Log.error("Unable to get buffer from file "+resultsFile);
         return null;
@@ -84,7 +84,7 @@ public class CSVContents
         Log.error("Unable to get headers from file "+resultsFile);
         return null;
       }
-  	}
+    }
     return Collections.unmodifiableList(this.headers);
   }
 
@@ -105,7 +105,7 @@ public class CSVContents
         List<FileHeader> headers = zipFile.getFileHeaders();
         for(FileHeader header : headers)
         {
-          if(header.getFileName().endsWith(".csv"))
+          if(header.getFileName().endsWith(".csv") || header.getFileName().endsWith(".txt")) // Lucas - Edited June 21, 2019 ///////////////////////////////////////////////////
           {
             buff = new BufferedReader(new InputStreamReader(zipFile.getInputStream(header)));
             break;// We expect results zips to only contain 1 text file
@@ -119,7 +119,7 @@ public class CSVContents
         buff = new BufferedReader(new InputStreamReader(in));
       }
       if(!headers.isEmpty())
-      	buff.readLine();
+        buff.readLine();
     }
     catch(Exception ex)
     {
@@ -178,35 +178,35 @@ public class CSVContents
       noZero=true;
     data.clear();   
     while(parseLine(buff))
-    {    	
+    {     
       d=this.rowDoubles.get(idx);
       if(noZero&&d<=0)
         d=Double.NaN;
       data.add(d);
       if(abbreviateContents>0)
-    	{
-    		try
-    		{
-    			boolean eof=false;
-    			for(int i=0; i<abbreviateContents; i++)
-    			{
-    				if(buff.readLine()==null)
-    				{
-    					eof=true;    			
-    					break;
-    				}
-    			}
-    			if(eof)
-    				break;
-    		}
-    		catch(Exception ex)
-    		{
-    			Log.error("Error reading next line",ex);
+      {
+        try
+        {
+          boolean eof=false;
+          for(int i=0; i<abbreviateContents; i++)
+          {
+            if(buff.readLine()==null)
+            {
+              eof=true;         
+              break;
+            }
+          }
+          if(eof)
+            break;
+        }
+        catch(Exception ex)
+        {
+          Log.error("Error reading next line",ex);
           return false;
-    		}
-    	}
+        }
+      }
     }
-    this.rowDoubles.clear();  	
+    this.rowDoubles.clear();    
     return true;
   }
 
@@ -236,7 +236,7 @@ public class CSVContents
     int h;
     double d;   
     while(parseLine(buff))
-    {    	
+    {     
       h=0;
       for(String header : this.headers)
       {
@@ -252,27 +252,27 @@ public class CSVContents
         list.add(d);
       }
       if(abbreviateContents>0)
-    	{
-    		try
-    		{
-    			boolean eof=false;
-    			for(int i=0; i<abbreviateContents; i++)
-    			{
-    				if(buff.readLine()==null)
-    				{
-    					eof=true;    			
-    					break;
-    				}
-    			}
-    			if(eof)
-    				break;
-    		}
-    		catch(Exception ex)
-    		{
-    			Log.error("Error reading next line",ex);
+      {
+        try
+        {
+          boolean eof=false;
+          for(int i=0; i<abbreviateContents; i++)
+          {
+            if(buff.readLine()==null)
+            {
+              eof=true;         
+              break;
+            }
+          }
+          if(eof)
+            break;
+        }
+        catch(Exception ex)
+        {
+          Log.error("Error reading next line",ex);
           return false;
-    		}
-    	}
+        }
+      }
     }
     this.rowDoubles.clear();   
     return true;
@@ -280,9 +280,9 @@ public class CSVContents
   
   public List<Double> readNextLine()
   {
-  	if(this.buff != null)
-  		parseLine(this.buff);  	
-  	return Collections.unmodifiableList(this.rowDoubles);
+    if(this.buff != null)
+      parseLine(this.buff);   
+    return Collections.unmodifiableList(this.rowDoubles);
   }
 
   protected String[] readNextLine(BufferedReader buff) throws IOException
@@ -305,7 +305,7 @@ public class CSVContents
   {
     this.rowDoubles.clear();
     if(this.buff == null)
-    	return false;
+      return false;
     double data;
     String[] rowData;
 
@@ -337,33 +337,33 @@ public class CSVContents
             rowData[r].indexOf("NAN")>-1||
             rowData[r].indexOf("nan")>-1)
         {
-          data = Double.NaN;    	  	
+          data = Double.NaN;          
         }
         else
         {
           Log.error("Error reading input on line " + this.headers.get(r));
           throw new RuntimeException("Error reading in data: non doubles detected");
         }
-      }      	
-      this.rowDoubles.add(data);    	  
+      }       
+      this.rowDoubles.add(data);        
     }
     return true;
   }
   
   //Replace any underscore in units with a space
   // Units are in parens
-	public String unitUnderscoreToSpace(String header)
-	{
+  public String unitUnderscoreToSpace(String header)
+  {
     int firstParen = header.indexOf("(");
     if(firstParen > -1)
     {
-    	int lastParen = header.indexOf(")",firstParen);
-    	String unit = header.substring(firstParen,lastParen+1);
-    	String property = header.substring(0,firstParen);
-    	header = property+unit.replaceAll("_", " ");
+      int lastParen = header.indexOf(")",firstParen);
+      String unit = header.substring(firstParen,lastParen+1);
+      String property = header.substring(0,firstParen);
+      header = property+unit.replaceAll("_", " ");
     }
     
     return header;
-	}
+  }
 
 }
