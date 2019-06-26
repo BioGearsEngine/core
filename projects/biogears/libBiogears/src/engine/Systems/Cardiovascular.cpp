@@ -318,7 +318,6 @@ void Cardiovascular::SetUp()
   m_dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_patient = &m_data.GetPatient();
   m_minIndividialSystemicResistance__mmHg_s_Per_mL = 0.1;
-  m_hemDrugEffect = 0.0;
 
   //Circuits
   m_CirculatoryCircuit = &m_data.GetCircuits().GetActiveCardiovascularCircuit();

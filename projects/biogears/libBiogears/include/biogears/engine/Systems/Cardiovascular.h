@@ -234,8 +234,5 @@ private:
   std::vector<SEFluidCircuitPath*> m_tissueResistancePaths;
 
   SEPatientActionCollection* m_PatientActions;
-
-  //hemorrhage drug effect 
-  double m_hemDrugEffect;
 };
 }
