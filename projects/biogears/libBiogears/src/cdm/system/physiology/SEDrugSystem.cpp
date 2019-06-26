@@ -172,7 +172,7 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
   if (m_HeartRateChange != nullptr)
     data.HeartRateChange(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateChange->Unload()));
   if (m_HemorrhageChange != nullptr)
-    data.HemorrhageChange(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_HemorrhageChange->Unload()));
+    data.HemorrhageChange(std::unique_ptr<CDM::ScalarFractionData>(m_HemorrhageChange->Unload()));
   if (m_MeanBloodPressureChange != nullptr)
     data.MeanBloodPressureChange(std::unique_ptr<CDM::ScalarPressureData>(m_MeanBloodPressureChange->Unload()));
   if (m_NeuromuscularBlockLevel != nullptr)
@@ -238,18 +238,18 @@ bool SEDrugSystem::HasHemorrhageChange() const
   return m_HemorrhageChange == nullptr ? false : m_HemorrhageChange->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalarVolumePerTime& SEDrugSystem::GetHemorrhageChange()
+SEScalarFraction& SEDrugSystem::GetHemorrhageChange()
 {
   if (m_HemorrhageChange == nullptr)
-    m_HemorrhageChange = new SEScalarVolumePerTime();
+    m_HemorrhageChange = new SEScalarFraction();
   return *m_HemorrhageChange;
 }
 //-------------------------------------------------------------------------------
-double SEDrugSystem::GetHemorrhageChange(const VolumePerTimeUnit& unit) const
+double SEDrugSystem::GetHemorrhageChange() const
 {
   if (m_HemorrhageChange == nullptr)
     return SEScalar::dNaN();
-  return m_HemorrhageChange->GetValue(unit);
+  return m_HemorrhageChange->GetValue();
 }
 
 bool SEDrugSystem::HasMeanBloodPressureChange() const

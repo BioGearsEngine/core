@@ -1086,10 +1086,8 @@ void Cardiovascular::Hemorrhage()
 
     resistance = h->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
 
-    double TXAModFraction = m_data.GetDrugs().GetHemorrhageChange(VolumePerTimeUnit::mL_Per_s);
-    m_hemDrugEffect = TXAModFraction;
     // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
-    drugFlowResistance = resistance * (1-m_hemDrugEffect);
+    drugFlowResistance = resistance * (1 - m_data.GetDrugs().GetHemorrhageChange().GetValue());
     //Set to resistance path AND next resistance to ensure stacked effect over time
     h->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
     targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);

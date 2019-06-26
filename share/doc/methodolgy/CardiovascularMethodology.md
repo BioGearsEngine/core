@@ -387,7 +387,7 @@ The heart failure scenario has a ventricular systolic dysfunction condition appl
 |	Furosemide Administration	|	120	|<span class="success">	300-400% Increase @cite lahav1992intermittent 	</span>|<span class="success">	300-400% Increase @cite lahav1992intermittent 	</span>|<span class="success">	300-400% Increase @cite lahav1992intermittent 	</span>|<span class="success">	Decrease (around 500-1000 mL) @cite hammarlund1985acute	</span>|
 
 ### Hemorrhage
-The hemorrhage action is tested using several scenarios. The class 2 hemorrhage scenario with blood intravenous (IV) administration begins with a healthy patient. After a few seconds, a severe arterial (severity value = 0.8) hemorrhage is initiated. The hemorrhage continues for ten minutes before the bleeding is stopped. After two minutes, 500&nbsp;mL of IV blood is administered intravenously over five minutes. The other hemorrhage scenarios are similar but with different subsequent interventions. There are also two multi-compartment hemorrhage scenarios that demonstrate bleeding from other compartments (the spleen and leg). Finally, tranexamic acid is validated as an antifibrinolytic agent based on its ability to reduce bleeding of a hemorrhage. Figure 11 demonstrates the time-evolution of select data, and the validation results are displayed in Tables 7a-g.
+The hemorrhage action is tested using several scenarios. The class 2 hemorrhage scenario with blood intravenous (IV) administration begins with a healthy patient. After a few seconds, a severe arterial (severity value = 0.8) hemorrhage is initiated. The hemorrhage continues for ten minutes before the bleeding is stopped. After two minutes, 500&nbsp;mL of IV blood is administered intravenously over five minutes. The other hemorrhage scenarios are similar but with different subsequent interventions. There are also two multi-compartment hemorrhage scenarios that demonstrate bleeding from other compartments (the spleen and leg). Finally, tranexamic acid is validated as an antifibrinolytic agent based on its ability to reduce bleeding of a hemorrhage. Figure 11 demonstrates the time-evolution of select data, and the validation results are displayed in Tables 7a-h.
 
 The results show decreases in the systolic pressure and minor increases in the diastolic pressure during the course of the hemorrhage. In response to the decreasing arterial pressures, the baroreceptor response raises the heart rate. Note that fluid can shift between the intravascular and extravascular space. This shift is evident in the period between cessation of hemorrhage and the start of the infusion (top-left panel of Figure 11).
 
@@ -478,11 +478,22 @@ Following the completion of the hemorrhage, intravenous blood is administered. T
 <br><center>
 *Table 7g. Low severity hemorrhage with immediate infusion of tranexamic acid monitored over twelve hours (validation results).*
 </center>
-|	Action Occurrence Time (s)	|	Sampled Scenario Time (s)	|	Heart Rate (/min)	|	Systolic Pressure (mmHg)	|	Diastolic Pressure (mmHg)	|	Cardiac Output (mL/min)	|	Heart Stroke Volume (mL)	|
-|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
-|	30	|	600	|<span class="success">	Increase @cite garrioch2004body	</span>|<span class="success">	Slight decrease or no change at all @cite garrioch2004body	</span>|<span class="success">	Increase @cite garrioch2004body	</span>|<span class="success">	Decrease @cite garrioch2004body	</span>|<span class="success">	Decrease @cite garrioch2004body	</span>|
-|	600	|	720	|<span class="success">	Decrease @cite Chalmers1967	</span>|<span class="success">	Slight increase or no change at all @cite garrioch2004body	</span>|<span class="danger">	Decrease @cite Chalmers1967	</span>|<span class="success">	Increase @cite Chalmers1967	</span>|<span class="success">	Increase @cite Chalmers1967	</span>|
-|	720	|	1120	|<span class="success">	Decrease @cite metoyer2016SME	</span>|<span class="success">	Increase @cite metoyer2016SME	</span>|<span class="danger">	Increase @cite metoyer2016SME	</span>|<span class="success">	Increase @cite metoyer2016SME	</span>|<span class="success">	Increase @cite metoyer2016SME	</span>|
+|	Sampled Scenario Time (s)	|	Notes	|	Blood Volume - No Intervention (mL)	|	Expected Flow Change (%)	|	Blood Volume - TXA Application (mL)	|
+|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
+|	0	|	Initiation of low severity hemorrhage with immediate intravenous injection of TXA	| 5401.7 | 0 |<span class="success">	5401.7 @cite kushioka2017high	</span>|
+|	7200	|	| 5013.1 | 29.3 |<span class="success">	5285.6 @cite kushioka2017high	</span>|
+|	14400	|	| 4528.9 | 48.1 |<span class="success">	5047.2 @cite kushioka2017high	</span>|
+|	21600	|	| 4107.1 | 52.9 |<span class="success">	4859.6 @cite kushioka2017high	</span>|
+|	28800	|	| 3709.5 | 55.4 |<span class="success">	4674.2 @cite kushioka2017high	</span>|
+|	36000	|	| 3355.9 | 55.2 |<span class="success">	4504.1 @cite kushioka2017high	</span>|
+|	43200	|	| 3047.0 | 55.6 |<span class="success">	4342.0 @cite kushioka2017high	</span>|
+
+<br><center>
+*Table 7h. Chance of survival increase when applying TXA as tested by time of survival during an extreme hemorrhage with and without intervention (validation results).*
+</center>
+|	Hemorrhage Survival Time (s)	|	TXA Survival Time (s)	|	Percent Change	|	Time To Death	|
+|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
+|	4691.4	| 5341.2 | +13.9 |<span class="success">	Increase @cite roberts2013crash	</span>|
 
 
 ### Pericardial Effusion
