@@ -420,7 +420,7 @@ The PK model was validated by comparing the plasma concentration calculated by t
 
 <img src="./plots/Drugs/TranexamicAcid.jpg" width="1100">
 <center>
-<i>Figure 17. The TXA pharmacokinetics were initially calculated using physiochemical propertioes found in literature with slight adjustments made over time to allow for BioGears plasma concentration to account for the lack of three phases of clearance.</i>
+<i>Figure 17. The TXA pharmacokinetics were initially calculated using physiochemical propertioes found in literature with slight adjustments made over time to allow for BioGears plasma concentration to account for proper clearance @cite nilsson1980clinical</i>
 </center><br>
 
 <img src="./plots/Drugs/Vasopressin.jpg" width="1100">
