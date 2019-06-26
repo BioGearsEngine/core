@@ -57,7 +57,7 @@ bool SubstanceGenerator::parse()
       lineItr += 11;
     } else if ("Pharmacokinetics (all or none)" == lineItr->first) {
       rValue &= process_pharmacokinetics(++lineItr);
-      lineItr += 5;
+      lineItr += 7;
     } else if ("Pharmacodynamics (all or none)" == lineItr->first) {
       rValue &= process_pharmacodynamics(++lineItr);
       lineItr += 14;
@@ -454,6 +454,10 @@ bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
         phys_type.IonicState(value);
         value = (itr + 5)->second[index];
         phys_type.LogP(std::stod(value));
+        value = (itr + 6)->second[index];
+        phys_type.HydrogenBondCount(std::stod(value));
+        value = (itr + 7)->second[index];
+        phys_type.PolarSurfaceArea(std::stod(value));
 
         data.Physicochemicals(phys_type);
         substance.Pharmacokinetics(data);

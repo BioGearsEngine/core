@@ -8,7 +8,7 @@
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0"/>
       <FractionUnboundInPlasma readOnly="false" value="0.21"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="11.0"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="11"/>
       <RenalClearance readOnly="false" unit="mL/min kg" value="0.7"/>
       <SystemicClearance readOnly="false" unit="mL/min kg" value="11.7"/>
     </Systemic>
@@ -23,9 +23,9 @@
       <BloodPlasmaRatio readOnly="false" value="0.87"/>
       <FractionUnboundInPlasma readOnly="false" value="0.21"/>
       <IonicState>WeakBase</IonicState>
-      <LogP readOnly="false" value="2.90"/>
-	  <HydrogenBondCount readOnly="false" value="2"/>
-	  <PolarSurfaceArea readOnly="false" value="23.6"/>
+      <LogP readOnly="false" value="2.9"/>
+      <HydrogenBondCount readOnly="false" value="2"/>
+      <PolarSurfaceArea readOnly="false" value="23.6"/>
     </Physicochemicals>
   </Pharmacokinetics>
   <Pharmacodynamics>

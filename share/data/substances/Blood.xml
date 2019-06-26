@@ -8,13 +8,7 @@
     <Concentration readOnly="false" unit="g/dL" value="11.1"/>
   </Component>
   <Component Name="Sodium">
-    <Concentration readOnly="false" unit="g/dL" value="0.3335"/>
-  </Component>
-  <Component Name="Chloride">
-	<Concentration readOnly="false" unit="g/dL" value="0.362"/>
-  </Component>
-  <Component Name="Potassium">
-	<Concentration readOnly="false" unit="mg/L" value="176.4"/>
+    <Concentration readOnly="false" unit="g/dL" value="0.32335"/>
   </Component>
   <Component Name="Albumin">
     <Concentration readOnly="false" unit="g/dL" value="4.5"/>
@@ -39,5 +33,11 @@
   </Component>
   <Component Name="CarbonDioxide">
     <Concentration readOnly="false" unit="g/L" value="0.715"/>
+  </Component>
+  <Component Name="Chloride">
+    <Concentration readOnly="false" unit="g/dL" value="0.362"/>
+  </Component>
+  <Component Name="Potassium">
+    <Concentration readOnly="false" unit="mg/L" value="176.4"/>
   </Component>
 </SubstanceCompound>

@@ -24,6 +24,8 @@
       <FractionUnboundInPlasma readOnly="false" value="0.7"/>
       <IonicState>WeakBase</IonicState>
       <LogP readOnly="false" value="2.77"/>
+      <HydrogenBondCount readOnly="false" value="0"/>
+      <PolarSurfaceArea readOnly="false" value="0"/>
     </Physicochemicals>
   </Pharmacokinetics>
   <Pharmacodynamics>

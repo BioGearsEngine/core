@@ -7,20 +7,20 @@ Concentration,0.354 g/dL,3.7 g/dL,0.299 g/dL,0.2 g/mL
 Component Name,Chloride,Oxyhemoglobin,Chloride,Tazobactam
 Concentration,0.546 g/dL,11.1 g/dL,0.386 g/dL,0.025 g/mL
 ,Substance,Substance,,Substance
-Component Name,,Sodium,Lactate,Sodium
-Concentration,,0.322 g/dL,0.249 g/dL,0.0268 g/mL
+Component Name,Oxygen,Sodium,Lactate,Sodium
+Concentration,0.0329 g/L,0.32335 g/dL,0.249 g/dL,0.0268 g/mL
 ,Substance,Substance,,Substance
-Component Name,,Albumin,Potassium,
-Concentration,,4.5 g/dL,0.0156 g/dL,
+Component Name,CarbonDioxide,Albumin,Potassium,
+Concentration,0.786 g/L,4.5 g/dL,0.0156 g/dL,
 ,Substance,Substance,,Substance
 Component Name,,Urea,Calcium,
 Concentration,,0.0257 g/dL,0.006 g/dL,
 ,Substance,Substance,Substance,Substance
-Component Name,,Glucose,,
-Concentration,,0.08 g/dL,,
+Component Name,,Glucose,Oxygen,
+Concentration,,0.08 g/dL,0.0314 g/L,
 ,Substance,Substance,Substance,Substance
-Component Name,,Triacylglycerol,,
-Concentration,,0.107 g/dL,,
+Component Name,,Triacylglycerol,CarbonDioxide,
+Concentration,,0.107 g/dL,0.715 g/L,
 ,Substance,Substance,Substance,Substance
 Component Name,,Calcium,,
 Concentration,,.010 g/dL,,
@@ -28,8 +28,14 @@ Concentration,,.010 g/dL,,
 Component Name,,Creatinine,,
 Concentration,,.001 g/dL,,
 ,Substance,Substance,Substance ,Substance
-Component Name,Oxygen,Oxygen,,
-Concentration,0.0329 g/L,0.0314 g/L,,
+Component Name,,Oxygen,,
+Concentration,,0.0314 g/L,,
 ,Substance,Substance,Substance,Substance
-Component Name,CarbonDioxide,CarbonDioxide,,
-Concentration,0.786 g/L,0.715 g/L,,
+Component Name,,CarbonDioxide,,
+Concentration,,0.715 g/L,,
+,Substance,Substance,Substance,Substance
+Component Name,,Chloride,,
+Concentration,,0.362 g/dL,,
+,Substance,Substance,Substance,Substance
+Component Name,,Potassium,,
+Concentration,,176.4 mg/L,,
