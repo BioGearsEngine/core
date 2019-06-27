@@ -404,9 +404,10 @@ void Cardiovascular::SetUp()
     }
   }
   // Add the portal vein!
-  SEFluidCircuitPath* p = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::PortalVeinToLiver1);
-  if (!Contains(m_systemicResistancePaths, (*p)))
-    m_systemicResistancePaths.push_back(p);
+  SEFluidCircuitPath* path = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::PortalVeinToLiver1);
+  if (!Contains(m_systemicResistancePaths, (*path))) {
+    m_systemicResistancePaths.push_back(path);
+  }
   m_AortaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta1ToGround);
   m_AortaResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta3ToAorta1);
   m_VenaCavaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
@@ -1040,7 +1041,7 @@ void Cardiovascular::TraumaticBrainInjury()
 void Cardiovascular::Hemorrhage()
 {
   /// \todo Enforce limits and remove fatal errors.
-  SEHemorrhage* h;
+  SEHemorrhage* targetHemorrhage;
   SEFluidCircuitPath* targetPath = nullptr;
 
   //Values for tracking physiological metrics
@@ -1058,11 +1059,10 @@ void Cardiovascular::Hemorrhage()
 
   const std::map<std::string, SEHemorrhage*>& hems = m_data.GetActions().GetPatientActions().GetHemorrhages();
   for (auto hem : hems) {
-    h = hem.second;
-    targetPath = m_CirculatoryCircuit->GetPath(h->GetCompartment() + "Bleed");
+    targetHemorrhage = hem.second;
+    targetPath = m_CirculatoryCircuit->GetPath(targetHemorrhage->GetCompartment() + "Bleed");
     locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg);
-    bleedRate_mL_Per_s = h->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s);
-
+    bleedRate_mL_Per_s = targetHemorrhage->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s);
 
     //enforce strict restictions on bleed rate for circuit stability
     if (bleedRate_mL_Per_s > m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_s)) {
@@ -1074,21 +1074,21 @@ void Cardiovascular::Hemorrhage()
       return;
     }
 
-    if (!h->HasBleedResistance()) {
+    if (!targetHemorrhage->HasBleedResistance()) {
       //Aorta needs to be scaled down a bit to match user specified bleed rate
-      if (h->GetCompartment() == "Aorta") {
-        h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s) * 1.25, FlowResistanceUnit::mmHg_s_Per_mL);
+      if (targetHemorrhage->GetCompartment() == "Aorta") {
+        targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s) * 1.25, FlowResistanceUnit::mmHg_s_Per_mL);
       } else {
-        h->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
+        targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
       }
     }
 
-    resistance = h->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
+    resistance = targetHemorrhage->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
 
     // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
+    // Then set to resistance path AND next resistance to ensure stacked effect over time
     drugFlowResistance = resistance * (1 - m_data.GetDrugs().GetHemorrhageChange().GetValue());
-    //Set to resistance path AND next resistance to ensure stacked effect over time
-    h->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    targetHemorrhage->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
     targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
     TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);

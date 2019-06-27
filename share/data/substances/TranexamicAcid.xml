@@ -28,6 +28,8 @@
       <FractionUnboundInPlasma readOnly="false" value="0.03"/>
       <IonicState>Neutral</IonicState>
       <LogP readOnly="false" value="1.15"/>
+	  <HydrogenBondCount readOnly="false" value="5"/>
+	  <PolarSurfaceArea readOnly="false" value="63.3"/>
     </Physicochemicals>
   </Pharmacokinetics>
   <Pharmacodynamics>
@@ -36,7 +38,7 @@
     <EC50 readOnly="false" unit="ug/mL" value="60"/>
     <EMaxShapeParameter readOnly="false" value="5.5"/>
     <HeartRateModifier readOnly="false" value="0"/>
-	<HemorrhageModifier readOnly="false" value="-0.00000597 "/>
+	<HemorrhageModifier readOnly="false" value="-0.00000597"/>
     <NeuromuscularBlock readOnly="false" value="0"/>
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>
