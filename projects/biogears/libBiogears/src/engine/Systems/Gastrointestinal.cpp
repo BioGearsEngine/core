@@ -892,18 +892,14 @@ void Gastrointestinal::ProcessDrugCAT()
     sub = catState.first;
     cat = catState.second;
 
-    //Check whether this drug was administered transmucosally (in which we have dissolved drug entering stomach via saliva) or as pill
-    //Theoretically, this could break if you create two actions with the same drug and administer one orally and one transmucosally.
-    //But the odds of that seem low--not sure if there would be an actual application there.
-    CDM::enumOralAdministration adminRoute = m_data.GetActions().GetPatientActions().GetSubstanceOralDoses().at(sub)->GetAdminRoute();
-
     //GI parameters
     double villousBloodFlow_mL_Per_s = 5.0;
     double fBlood = 1.0 / 8.0;
     double bodyMass_g = m_data.GetPatient().GetWeight(MassUnit::g); //Used to estimate enterocyte volume, assuming density 1.0 g/mL
-    if (adminRoute == CDM::enumOralAdministration::Transmucosal) {
-      //We need a little more of a delay between peak transmucosal absorption and the beginning of GI absorption, based on fentanyl
-      //This stomach transit rate is within reasonable bounds for a "fed" state.
+    if (sub->GetName()=="Fentanyl") {
+      //For oral transmucosal fentanyl, we need a little more of a delay between peak transmucosal absorption and the beginning of GI absorption
+      //This stomach transit rate is within reasonable bounds for a "fed" state.  We may need to revisit this with other drugs--perhaps make
+	  //it a sub parameter or base it on drug classification.
       m_TransitRate_Per_s[0] = 1.0 / 3600.0;
     }
     //Physiochemical data
