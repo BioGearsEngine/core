@@ -391,7 +391,7 @@ void Drugs::AdministerSubstanceOral()
     sub = od.first;
     oDose = od.second;
     if (oDose->GetAdminRoute() == CDM::enumOralAdministration::Transmucosal) {
-      //Drug is being given transmucosally--get OT state for this substance if it already exists
+      //Drug is being given transmucosally--get oral transmucosal (OT) state for this substance if it already exists
       SETransmucosalState* otState = m_TransmucosalStates[sub];
       if (otState == nullptr) {
 		//If it doesn't exist yet, make a new model state for the substance and initialize it
@@ -953,41 +953,41 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
 		plasmaConcentration_ug_Per_mL = sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
 	}
 	//Physiochemical constants
-	double subLogP = sub->GetPK()->GetPhysicochemicals()->GetLogP();
-	double fracUnbound_plasma = sub->GetPK()->GetPhysicochemicals()->GetFractionUnboundInPlasma();
-	double subPka = sub->GetPK()->GetPhysicochemicals()->GetAcidDissociationConstant();
-	double subBloodPlasmaRatio = sub->GetPK()->GetPhysicochemicals()->GetBloodPlasmaRatio();
-	double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-	double subSolubility_ug_Per_mL = 200.0; //Add this to sub CDM later if we do more tranmucosal subs
+	const double subLogP = sub->GetPK()->GetPhysicochemicals()->GetLogP();
+	const double fracUnbound_plasma = sub->GetPK()->GetPhysicochemicals()->GetFractionUnboundInPlasma();
+	const double subPka = sub->GetPK()->GetPhysicochemicals()->GetAcidDissociationConstant();
+	const double subBloodPlasmaRatio = sub->GetPK()->GetPhysicochemicals()->GetBloodPlasmaRatio();
+	const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
+	const double subSolubility_ug_Per_mL = 200.0; //Add this to sub CDM later if we do more tranmucosal subs
 	//Defining mass transfer rates to stomach here so that we can accout for both routes if need be
 	double rateSwallowedDrugToStomach_ug_Per_s = 0.0; //Transmucosal route
 	double rateDrugDissolutionInStomach_ug_Per_s = 0.0; //Gastrointestinal route
 	//Characteristic mouth parameters
-	double salivaThickness_cm = 30.0e-4;		//Tuned to get dissolution of OTFC in right time frame
-	double buccalSA_cm2 = 50.0;
-	double buccalThickness_cm = 400.0e-4; //@cite Xia2015Development
-	double buccalH_cm = buccalThickness_cm / 6.0;
-	double buccalLaminaThickness_cm = buccalH_cm; //This ensures that our mesh points are equally spaced
-	double volumeSaliva_mL = 1.0; //@cite Xia2015Development
-	double volumeBuccalSlice_mL = buccalH_cm * buccalSA_cm2; //volume of the Nth epithelial layer
-	double volumeBuccalLamina_mL = buccalLaminaThickness_cm * buccalSA_cm2;
-	double bloodSupplyBuccal_mL_Per_s = 2.4 / 60.0 * buccalSA_cm2; // @cite Sattar2014, buccal blood supply = 2.4 mL/min/cm2
-	double tongueSA_cm2 = 15.0;		//@cite Xia2015Development
-	double tongueThickness_cm = 125.0e-4; //@cite Xia2015Development
-	double tongueH_cm = tongueThickness_cm / 6.0;
-	double tongueLaminaThickness_cm = tongueH_cm;
-	double volumeTongueSlice_mL = tongueH_cm * tongueSA_cm2;
-	double volumeTongueLamina_mL = tongueLaminaThickness_cm * tongueSA_cm2;
-	double bloodSupplyTongue_mL_Per_s = 1.0 / 60.0 * tongueSA_cm2;
+	const double salivaThickness_cm = 30.0e-4;		//Tuned to get dissolution of OTFC in right time frame
+	const double buccalSA_cm2 = 50.0;
+	const double buccalThickness_cm = 400.0e-4; //@cite Xia2015Development
+	const double buccalH_cm = buccalThickness_cm / 6.0;
+	const double buccalLaminaThickness_cm = buccalH_cm; //This ensures that our mesh points are equally spaced
+	const double volumeSaliva_mL = 1.0; //@cite Xia2015Development
+	const double volumeBuccalSlice_mL = buccalH_cm * buccalSA_cm2; //volume of the Nth epithelial layer
+	const double volumeBuccalLamina_mL = buccalLaminaThickness_cm * buccalSA_cm2;
+	const double bloodSupplyBuccal_mL_Per_s = 2.4 / 60.0 * buccalSA_cm2; // @cite Sattar2014, buccal blood supply = 2.4 mL/min/cm2
+	const double tongueSA_cm2 = 15.0;		//@cite Xia2015Development
+	const double tongueThickness_cm = 125.0e-4; //@cite Xia2015Development
+	const double tongueH_cm = tongueThickness_cm / 6.0;
+	const double tongueLaminaThickness_cm = tongueH_cm;
+	const double volumeTongueSlice_mL = tongueH_cm * tongueSA_cm2;
+	const double volumeTongueLamina_mL = tongueLaminaThickness_cm * tongueSA_cm2;
+	const double bloodSupplyTongue_mL_Per_s = 1.0 / 60.0 * tongueSA_cm2;
 
 	//Assumed substance particle paramters (for Noyes-Whitney equation)
-	double rho_g_Per_mL = 1.2;
-	double sol_ug_Per_mL = 200.0;
-	double radius_cm = 5.0e-4;
+	const double rho_g_Per_mL = 1.2;
+	const double sol_ug_Per_mL = 200.0;
+	const double radius_cm = 5.0e-4;
 
 	//Derived physiochemical data
-	double Kp_SalivaToEpithelium = 25.0;	//Tuned to fentanyl response
-	double fracUnbound_tis = 1.0 / Kp_SalivaToEpithelium;
+	const double Kp_SalivaToEpithelium = 25.0;	//Tuned to fentanyl response
+	const double fracUnbound_tis = 1.0 / Kp_SalivaToEpithelium;
 	double Diff_Mucosa_cm2_Per_s;
 	if (subLogP < 3.0) {
 		double exponent = -0.0803 * (subLogP * subLogP) + 0.5005 * subLogP - 6.7316;
@@ -995,11 +995,11 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
 	} else {
 		Diff_Mucosa_cm2_Per_s = std::pow(10.0, -5.9514);
 	}
-	double Diff_Saliva_cm2_Per_s = 8.0e-6;		//Tuned to fentanyl response
+	const double Diff_Saliva_cm2_Per_s = 8.0e-6;		//Tuned to fentanyl response
 	//Rate constants
-	double kSwallow_mL_Per_s = 0.5 / 60; //Tuned so that 75% of fentanyl dose is swallowed, value is consistent with rate of saliva production between 0.36 and 0.5 mL/min (@cite Xia2015Development @cite Sattar2014)
-	double kDis_mL_Per_s_g = 3.0 * Diff_Saliva_cm2_Per_s / (rho_g_Per_mL * radius_cm * salivaThickness_cm);	//Noyes-Whitney equation
-	double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
+	const double kSwallow_mL_Per_s = 0.5 / 60; //Tuned so that 75% of fentanyl dose is swallowed, value is consistent with rate of saliva production between 0.36 and 0.5 mL/min (@cite Xia2015Development @cite Sattar2014)
+	const double kDis_mL_Per_s_g = 3.0 * Diff_Saliva_cm2_Per_s / (rho_g_Per_mL * radius_cm * salivaThickness_cm);	//Noyes-Whitney equation
+	const double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
 	//Values from last time step
 	double mouthMass_ug = ot->GetMouthSolidMass().GetValue(MassUnit::ug);
 	if (mouthMass_ug < ZERO_APPROX) {

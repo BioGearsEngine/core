@@ -893,35 +893,35 @@ void Gastrointestinal::ProcessDrugCAT()
     cat = catState.second;
 
     //GI parameters
-    double villousBloodFlow_mL_Per_s = 5.0;
-    double fBlood = 1.0 / 8.0;
-    double bodyMass_g = m_data.GetPatient().GetWeight(MassUnit::g); //Used to estimate enterocyte volume, assuming density 1.0 g/mL
+    const double villousBloodFlow_mL_Per_s = 5.0;
+    const double fBlood = 1.0 / 8.0;
+    const double bodyMass_g = m_data.GetPatient().GetWeight(MassUnit::g); //Used to estimate enterocyte volume, assuming density 1.0 g/mL
     if (sub->GetName()=="Fentanyl") {
       //For oral transmucosal fentanyl, we need a little more of a delay between peak transmucosal absorption and the beginning of GI absorption
-      //This stomach transit rate is within reasonable bounds for a "fed" state.  We may need to revisit this with other drugs--perhaps make
-	  //it a sub parameter or base it on drug classification.
+      //This stomach transit rate is within reasonable bounds for a "fed" state.  
+	 ///\ToDo: We may need to revisit this with other drugs--perhaps make it a sub parameter or base it on drug classification.
       m_TransitRate_Per_s[0] = 1.0 / 3600.0;
     }
     //Physiochemical data
     const SESubstancePhysicochemicals* subData = sub->GetPK()->GetPhysicochemicals();
-    double hydrogenBondCount = subData->GetHydrogenBondCount();
-    double polarSurfaceArea = subData->GetPolarSurfaceArea();
-    double logP = subData->GetLogP();
-    double pKa = subData->GetAcidDissociationConstant();
-    double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-    double gutKP = 30.0; //Gut partition coefficient, hard-coded for fentanyl currently
-    double fMetabolized = 0.5;  //default to fentanyl for now
+    const double hydrogenBondCount = subData->GetHydrogenBondCount();
+    const double polarSurfaceArea = subData->GetPolarSurfaceArea();
+    const double logP = subData->GetLogP();
+    const double pKa = subData->GetAcidDissociationConstant();
+    const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
+    const double gutKP = 30.0; //Gut partition coefficient, hard-coded for fentanyl currently
+    const double fMetabolized = 0.5;  //default to fentanyl for now
     //Dissolution data
-    double particleRadius_cm = 5.0e-4; //default for now
-    double subDensity_g_Per_mL = 1.0; //default for now
-    double diffCoeff_cm2_Per_s = 1.2e-6; //default for now
-    double diffusionLayer_cm = 30.0e-4;
-    double dissolutionCoeff_mL_Per_s_ug = 3.0 * diffCoeff_cm2_Per_s / (subDensity_g_Per_mL * particleRadius_cm * diffusionLayer_cm) * 1.e-6; //Noyes-Whitney coefficient, 1e-6 factor converts g to ug basis
+    const double particleRadius_cm = 5.0e-4; //default for now
+    const double subDensity_g_Per_mL = 1.0; //default for now
+    const double diffCoeff_cm2_Per_s = 1.2e-6; //default for now
+    const double diffusionLayer_cm = 30.0e-4;
+    const double dissolutionCoeff_mL_Per_s_ug = 3.0 * diffCoeff_cm2_Per_s / (subDensity_g_Per_mL * particleRadius_cm * diffusionLayer_cm) * 1.e-6; //Noyes-Whitney coefficient, 1e-6 factor converts g to ug basis
     //Permeability and solubility derivation--Use relationship from Wolk2019Segmental (perm) and Yang2016Appliation (sol)
-    double A = 3.67e-5, B = 3.45e-5, C = -1.04e-7, D = -5.48e-6, E = -2.3e-8, F = 1.46e-4; //Permeability constants
-    double constTerms = A * logP + C * molarMass_g_Per_mol + D * hydrogenBondCount + E * polarSurfaceArea + F; //This part of permeability equation is constant across small intestine
-    double solWaterStd_ug_Per_mL = 200.0; //fentanyl value-default for now
-    double solubilityRatio = std::pow(10.0, 0.606 * logP + 2.234); //Yang2016Application
+    const double A = 3.67e-5, B = 3.45e-5, C = -1.04e-7, D = -5.48e-6, E = -2.3e-8, F = 1.46e-4; //Permeability constants
+    const double constTerms = A * logP + C * molarMass_g_Per_mol + D * hydrogenBondCount + E * polarSurfaceArea + F; //This part of permeability equation is constant across small intestine
+    const double solWaterStd_ug_Per_mL = 200.0; //fentanyl value-default for now
+    const double solubilityRatio = std::pow(10.0, 0.606 * logP + 2.234); //Yang2016Application
     std::vector<double> fracUnionized; //fraction of drug un-ionized in each GI compartment
     std::vector<double> permeability_cm_Per_s; //drug permeability in each GI compartment
     std::vector<double> solubility_ug_Per_mL;
@@ -992,7 +992,7 @@ void Gastrointestinal::ProcessDrugCAT()
     }
     
 	//Update states
-    double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
+    const double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
     for (lumenPos = 0; lumenPos < lumenSolidMasses_ug.size(); ++lumenPos) {
       lumenSolidMasses_ug[lumenPos] += dLumenSolidMass_ug_Per_s[lumenPos] * dT_s;
       lumenDissolvedMasses_ug[lumenPos] += dLumenDissolvedMass_ug_Per_s[lumenPos] * dT_s;
