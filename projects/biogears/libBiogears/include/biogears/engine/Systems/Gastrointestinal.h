@@ -122,5 +122,14 @@ protected:
   // We do not decrement stomach contents during stabilization
   double m_secretionRate_mL_Per_s;
   double m_dT_s;
+
+  //Debug variables to track oral drug mass conservation
+  double m_SolidMassLumen;
+  double m_DissolvedMassLumen;
+  double m_MassEnterocytes;
+  double m_MassAbsorbed;
+  double m_MassMetabolized;
+  double m_MassExcreted;
+  double m_MassConservation;
 };
 }

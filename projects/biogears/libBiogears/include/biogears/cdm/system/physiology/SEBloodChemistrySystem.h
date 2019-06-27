@@ -11,11 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/patient/actions/SEInflammationState.h>
+#include <biogears/exports.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-
 
 namespace biogears {
 
@@ -34,7 +33,7 @@ class SEScalarPressure;
 class PressureUnit;
 class SESepsisState;
 class SEInflammationState;
-
+class SEInflammatoryResponse;
 
 /** @copydoc Physiology_BloodChemistrySystemData
   @nosubgrouping */
@@ -43,8 +42,8 @@ public:
   SEBloodChemistrySystem(Logger* logger);
   ~SEBloodChemistrySystem() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
-  static constexpr char const * const  TypeTag() { return "SEBloodChemistrySystem"; }
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); } //! Hopefully this returns a unique ID for every type
+  static constexpr char const* const TypeTag() { return "SEBloodChemistrySystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -58,6 +57,7 @@ public:
   CDM::BloodChemistrySystemData* Unload() const override; /**< @copydoc DOXY_CDM_UNLOAD */
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::BloodChemistrySystemData& data) const; /**< @copydoc DOXY_CDM_UNLOAD_TO */ //@}
 public:
@@ -66,7 +66,6 @@ public:
   SEScalarMassPerVolume& GetBloodDensity(); /**< @copydoc DOXY_CDM_GET */
   double GetBloodDensity(const MassPerVolumeUnit& unit) const; /**< @copydoc DOXY_CDM_GET_VALUE */ //@}
 
- 
   /** @name ArterialBloodPH
   *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialBloodPH
   *  @{*/
@@ -371,6 +370,10 @@ public:
   //@}
   virtual bool HasAcuteInflammatoryResponse() const;
   virtual SEInflammationState& GetAcuteInflammatoryResponse();
+
+  virtual bool HasInflammatoryResponse() const;
+  virtual SEInflammatoryResponse& GetInflammatoryResponse();
+
 protected:
   SEScalarMassPerVolume* m_BloodDensity;
   SEScalar* m_ArterialBloodPH;
@@ -406,6 +409,6 @@ protected:
   SEScalarPressure* m_VenousCarbonDioxidePressure;
   SEScalarPressure* m_VenousOxygenPressure;
   SEInflammationState* m_AcuteInflammatoryResponse;
+  SEInflammatoryResponse* m_InflammatoryResponse;
 };
 }
-

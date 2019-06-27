@@ -54,8 +54,8 @@ namespace biogears {
   constexpr char idPulmonaryVenousOxygenPressure[] = "PulmonaryVenousOxygenPressure";
   constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
   constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
-  constexpr char idSepsisInfectionState[] = "SepsisInfectionState";
   constexpr char idAcuteInflammatoryResponse[] = "AcuteInflammatoryResponse";
+  constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
 
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
@@ -225,6 +225,9 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     if (parent == idAcuteInflammatoryResponse) {
       return GetAcuteInflammatoryResponse().GetScalar(prop);
     }
+    if (parent == idInflammtoryRespone) {
+      return GetInflammatoryResponse().GetScalar(prop);
+    }
   }
 
   return nullptr;
@@ -302,6 +305,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetVenousOxygenPressure().Load(in.VenousOxygenPressure().get());
   if (in.AcuteInflammatoryResponse().present())
     GetAcuteInflammatoryResponse().Load(in.AcuteInflammatoryResponse().get());
+  if (in.InflammatoryResponse().present())
+    GetInflammatoryResponse().Load(in.InflammatoryResponse().get());
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -385,6 +390,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.VenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousOxygenPressure->Unload()));
   if (m_AcuteInflammatoryResponse != nullptr)
     data.AcuteInflammatoryResponse(std::unique_ptr<CDM::InflammationStateData>(m_AcuteInflammatoryResponse->Unload()));
+  if (m_InflammatoryResponse != nullptr)
+    data.InflammatoryResponse(std::unique_ptr<CDM::InflammatoryResponseData>(m_InflammatoryResponse->Unload()));
 }
 //-------------------------------------------------------------------------------
 
@@ -1037,6 +1044,18 @@ SEInflammationState& SEBloodChemistrySystem::GetAcuteInflammatoryResponse()
   return *m_AcuteInflammatoryResponse;
 }
 //-------------------------------------------------------------------------------
+bool SEBloodChemistrySystem::HasInflammatoryResponse() const
+{
+  return m_InflammatoryResponse == nullptr ? false : m_InflammatoryResponse->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEInflammatoryResponse& SEBloodChemistrySystem::GetInflammatoryResponse()
+{
+  if (m_InflammatoryResponse == nullptr)
+    m_InflammatoryResponse = new SEInflammatoryResponse();
+  return *m_InflammatoryResponse;
+}
+//-------------------------------------------------------------------------------
 Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
 {
   return Tree<const char*>{classname()}
@@ -1071,8 +1090,8 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idPulmonaryVenousOxygenPressure)
     .emplace_back(idVenousCarbonDioxidePressure)
     .emplace_back(idVenousOxygenPressure)
-    .emplace_back(idSepsisInfectionState)
     .emplace_back(idAcuteInflammatoryResponse)
+    .emplace_back(idInflammtoryRespone);
     ;
 }
 }

@@ -100,6 +100,7 @@ void BloodChemistry::Initialize()
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
   //Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
   GetAcuteInflammatoryResponse().InitializeState();
+  GetInflammatoryResponse().Initialize();
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   GetCarbonMonoxideSaturation().SetValue(0);
@@ -876,6 +877,98 @@ void BloodChemistry::AcuteInflammatoryResponse()
   nitricOxide = iNOS * (1.0 + kNOMA * (GetAcuteInflammatoryResponse().GetMacrophageActive().GetValue() + GetAcuteInflammatoryResponse().GetNeutrophilActive().GetValue())) + eNOS;
   GetAcuteInflammatoryResponse().GetNitricOxide().SetValue(nitricOxide);
 }
+
+//Will replace AcuteInflammatoryResponse function when tested
+void BloodChemistry::InflammatoryResponse()
+{
+  SEInflammatoryResponse infl = GetInflammatoryResponse();
+  SEImmuneMediators tis = infl.GetTissueMediators();
+  SEImmuneMediators blood = infl.GetBloodMediators();
+
+  //Previous time step
+  //Tissue
+  double tPathogen = infl.GetPathogenTissue().GetValue();
+  double tAntibodies = tis.GetAntibodies().GetValue();
+  double tMacrophageResting = tis.GetMacrophageResting().GetValue();
+  double tMacrophageActive = tis.GetMacrophageActive().GetValue();
+  double tNeutrophilActive = tis.GetNeutrophilActive().GetValue();
+  double tTNF = tis.GetTumorNecrosisFactor().GetValue();
+  double tIL10 = tis.GetInterleukin10().GetValue();
+  double tNO = tis.GetNitricOxide().GetValue();
+  //Blood
+  double bPathogen = infl.GetPathogenBlood().GetValue();
+  double bAntibodies = blood.GetAntibodies().GetValue();
+  double bMacrophageResting = blood.GetMacrophageResting().GetValue();
+  double bMacrophageActive = blood.GetMacrophageActive().GetValue();
+  double bNeutrophilResting = blood.GetNeutrophilResting().GetValue();
+  double bNeutrophilActive = blood.GetNeutrophilActive().GetValue();
+  double bTNF = blood.GetTumorNecrosisFactor().GetValue();
+  double bIL10 = blood.GetInterleukin10().GetValue();
+  double bNO = blood.GetNitricOxide().GetValue();
+  //Other
+  double inflLevel = infl.GetInflammationLevel().GetValue();
+
+  
+  //Set-up constants
+  //Assumed volumes
+  double volB = 50., volT = 0.5;
+  //Source terms
+  double sBt = 0.075, sBb = sBt, sMRt = 10.0, sNRb = sMRt, xNRb = 200.0, hNRb = 2.0;
+  //Decay terms
+  double uMRt = 0.12, uMAt = 0.05, uTNFt = 1.8, uTNFb = uTNFt, uNRb = 1.8, uNRt = uMRt, uNAb = 0.05, uNAt = uNAb, uBt = 0.0023, uBb = uBt;
+  double uIL10t_max = 0.34, uIL10t_min = 0.005, uIL10b_max = uIL10t_max, uIL10b_min = uIL10t_min, uNOt = 4.0, uNOb = uNOt;
+  //Pathogen terms
+  double kPt = 0.6, kPb = kPt, infPt = 20000., infPb = 20., kP_Bb = 0.461, kP_Bt = kP_Bb;
+  double kP_MAt = 2.8, kP_NAt = 5.8, kP_NAb = 0.04, xP_MAt = 20.0, hP_MAt = 3.0, xP_NAt = 1500., hP_NAt = 3.0, xP_NAb = 0.1, hP_NAb = 1.0;
+  //Non-specific immune interactions
+  double kBt_P = 0.0001, kBb_P = 0.02;
+  //Resting macrophage interactions
+  double kMR_Pt = 40.0, kMR_TNFt = 20.0, kMR_NOt = 0.01, xMR_Pt = 20.0, xMR_TNFt = 20.0, hMR_TNFt = 2.0;
+  //Active macrophages--no acted upon by anything else, just subject to decay
+  //Resting neutrophil interactions
+  double kNR_TNFb = 2.0, kNR_NOb = 0.1, kNRb = 3.0, xNR_Pb = 0.1, hNR_Pb = 1;
+  //Active neutrophil interactions
+  double dNA_Pt = 5.0, dNA_Pb = dNA_Pt, rNA_Pt = 0.98, rNA_Pb = rNA_Pt;
+  //TNF interactions
+  double dTNF_MRt = 5.0, dTNF_NAb = 0.8, kTNF_MAt = 3000., xTNF_MAt = 80., hTNF_MAt = 2.0;
+  //Interleukin-10 interactions
+  double kIL10_MAt = 1000., xIL10_MAt = 140., hIL10_MAt = 2.0, dIL10_IL10t = 8.0, dIL10_IL10b = dIL10_IL10t, hIL10_IL10 = 2.0;
+  //Radical interactions
+  double kNO_NOt = 0.1, kNO_NAt = 0.01, kNO_NAb = kNO_NAt, kNO_NAPt = 0.2, kNO_MAPt = 1.0e-5;
+  //Tissue Integrity
+  double kTI = 2.0, infTI = 1.0, aTI = 0.1, kTI_NO = 0.01;
+  //Inflammation ("Z")
+  double kZ_TNF = 0.5, kZ_TI = kZ_TNF, xZ_TNF = 20.0, rZ_TNFTI = 0.1, uZ = 0.1;
+  //Inhibition constants
+  double cMAt = 0.05, hMAt = 3.0, xMAt = 200.0;		//IL10 inhibition of macrophages
+  double cTNFt = 1.0e-6, hTNFt = 5.0, xTNFt = 60.0;		//IL10 inhibition of tisue TNF
+  double cTNFb = 1.0e-6, hTNFb = 2.0, xTNFb = 15.0;		//IL10 inhibition of blood TNF
+  double cNR = 0.05, hNR = 3.0, xNR = 200.0;
+  double cNA = 0.15, hNA = 1.0, xNA = 80.0;		//IL10 inhibition of tissue and blood neutrophils
+  //Inhibition terms--function of IL10
+  double inMAt = (1.0 - cMAt) / (1.0 + std::pow(tIL10 / xMAt, hMAt)) + cMAt;
+  double inTNFt = (1.0 - cTNFt) / (1.0 + std::pow(tIL10 / xTNFt, hTNFt)) + cTNFt;
+  double inTNFb = (1.0 - cTNFb) / (1.0 + std::pow(bIL10 / xTNFb, hTNFb)) + cTNFb;
+  double inNRb = (1.0 - cNR) / (1.0 + std::pow(bIL10 / xNR, hNR)) + cNR;
+  double inNAt = (1.0 - cNA) / (1.0 + std::pow(tIL10 / xNA, hNA)) + cNA;
+  double inNAb = (1.0 - cNA) / (1.0 + std::pow(bIL10 / xNA, hNA)) + cNA;
+  //Diffusion constants
+  double dbn = 0.005, dfn = 50.0;		//Baseline diffusion of neutrophil and effect of inflammation on neutrophil diffusion
+  double dbp = 1.0, dfp = 1.0;			//Baseline diffusion of pathogen and effect of inflammation on pathogen diffusion
+  double dbmol = 10.0, dfmol = 1.0;			//Baseline diffusion of other molecules and effect of inflammation on other molecules diffusion
+  double at = 50.0, bt = 0.8, ab = 2000.;	//Constants in diffusion equations
+  //Diffusion adjustment depending on inflammation
+  double difN_Z = dbn * (1.0 + dfn * inflLevel);			
+  double difP_Z = dbp * (1.0 + dfp * inflLevel);
+  double difMol_Z = dbmol * (1.0 + dfmol * inflLevel);
+  //Pathogen diffusion
+  double difP_t = (at * std::pow(tPathogen, 2.0 / 3.0)) / (1.0 + bt * std::pow(tPathogen, 1.0 / 3.0));    //tissue pathogen effect on pathogen diffusion
+  double difP_b = ab * bPathogen;	//blood pathogen effect on pathogen diffusion
+
+
+
+}
+
 
 //--------------------------------------------------------------------------------------------------
 /// \brief

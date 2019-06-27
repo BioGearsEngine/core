@@ -370,6 +370,11 @@ void SEDrugTransitState::IncrementStomachDissolvedMass(double value, const MassU
   m_LumenDissolvedMasses[0]->IncrementValue(value, unit);
 }
 
+void SEDrugTransitState::IncrementStomachSolidMass(double value, const MassUnit& unit)
+{
+  m_LumenSolidMasses[0]->IncrementValue(value, unit);
+}
+
 double SEDrugTransitState::GetTotalSolidMassInLumen(const MassUnit& unit)
 {
   double totalMass = 0.0;

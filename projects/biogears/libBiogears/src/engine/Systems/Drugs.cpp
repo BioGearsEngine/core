@@ -389,6 +389,7 @@ void Drugs::AdministerSubstanceOral()
 
   SESubstanceOralDose* oDose;
   const SESubstance* sub;
+  std::vector<const SESubstance*> deactiveSubs;
   double timeStep_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   for (auto od : oralDoses) {
     sub = od.first;
@@ -415,19 +416,30 @@ void Drugs::AdministerSubstanceOral()
       //If 99.9% of the original dose has been removed from model (either through absorption or swallowing), deactivate the action and remove it
 	  // from the TransmucosalStates map.  This will not effect the GI Transit state--drug in GI will still be processed.
       if (massRemaining_ug < 0.001 * oDose->GetDose().GetValue(MassUnit::ug)) {
-        m_data.GetActions().GetPatientActions().RemoveSubstanceOralDose(*sub);
-        delete m_TransmucosalStates[sub];
-        m_TransmucosalStates[sub] = nullptr;
+        deactiveSubs.emplace_back(sub);   
       }
     } else {
-      //Oral dose is being given as a pill--initiate a GI absorption model state for it if it doesn't already exist.  If it does, do nothing.  GI will take care of it
+      //Oral dose is being given as a pill--initiate a GI absorption model state for it if it doesn't already exist.
       if (m_data.GetGastrointestinal().GetDrugTransitState(sub) == nullptr) {
         m_data.GetGastrointestinal().NewDrugTransitState(sub);
         if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
           Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
         }
+      } else {
+		  //If the drug already has as an existing GI state, that means we are repeat dosing.  Get the drug state and add the new dose to the stomach
+        m_data.GetGastrointestinal().GetDrugTransitState(sub)->IncrementStomachSolidMass(oDose->GetDose().GetValue(MassUnit::mg), MassUnit::mg);
       }
+	  //We can remove the action right away because the GI will keep processing the drug once the transit model state is initiated
+	  //By deactivating the Oral Dose action right away, we will be able to detect repeat dose actions
+      deactiveSubs.emplace_back(sub);
     }
+  }
+  for (auto deSub : deactiveSubs) {
+    if (oralDoses.at(deSub)->GetAdminRoute() == CDM::enumOralAdministration::Transmucosal) {
+      delete m_TransmucosalStates[deSub];
+      m_TransmucosalStates[deSub] = nullptr;
+    }
+    m_data.GetActions().GetPatientActions().RemoveSubstanceOralDose(*deSub);
   }
 }
 //--------------------------------------------------------------------------------------------------
@@ -783,15 +795,29 @@ void Drugs::CalculateDrugEffects()
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculatePlasmaSubstanceConcentration()
 {
-  double PlasmaMass_ug = 0;
+  double plasmaMass_ug = 0;
+  double bloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
   double effectConcentration;
-  double PlasmaVolume_mL = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL);
+  double plasmaVolume_mL = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL);
   double rate_Per_s = 0.0;
 
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
+	//--Old erroneous plasma calc---
+    //plasmaMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
+    //sub->GetPlasmaConcentration().SetValue(plasmaMass_ug / plasmaVolume_mL, MassPerVolumeUnit::ug_Per_mL);
+	
+	//--New better way---
+    double bloodPlasmaRatio = 1.0;		//Assume equal distribution for subs without a defined BP ratio
+    double massInBlood_ug = 0.0;
+    if (sub->GetPK().GetPhysicochemicals().HasBloodPlasmaRatio()) {
+      bloodPlasmaRatio = sub->GetPK().GetPhysicochemicals().GetBloodPlasmaRatio().GetValue();
+    }
+    if (sub->HasMassInBlood()) {
+      massInBlood_ug = sub->GetMassInBlood(MassUnit::ug);
+    }
+	//K_bp = Cb/Cp  ---> Cp = Cb/K_bp
+	sub->GetPlasmaConcentration().SetValue((massInBlood_ug / bloodVolume_mL) / bloodPlasmaRatio, MassPerVolumeUnit::ug_Per_mL);
 
-    PlasmaMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
-    sub->GetPlasmaConcentration().SetValue(PlasmaMass_ug / PlasmaVolume_mL, MassPerVolumeUnit::ug_Per_mL);
 
     //Get substance PD Data if it exists, including rate constant describing transfer to effect compartment and previous effect site concentration
     if (sub->HasPD()) {

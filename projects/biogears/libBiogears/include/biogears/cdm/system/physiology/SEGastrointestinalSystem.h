@@ -84,6 +84,7 @@ public:
   bool SetLumenDissolvedMasses(std::vector<double>& tdis, const MassUnit& unit);
   bool SetEnterocyteMasses(std::vector<double>& esolid, const MassUnit& unit);
   void IncrementStomachDissolvedMass(double value, const MassUnit& unit);
+  void IncrementStomachSolidMass(double value, const MassUnit& unit);
   double GetTotalSolidMassInLumen(const MassUnit& unit);
   double GetTotalDissolvedMassInLumen(const MassUnit& unit);
   double GetTotalMassInEnterocytes(const MassUnit& unit);
