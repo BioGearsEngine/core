@@ -692,7 +692,7 @@ void Drugs::CalculateDrugEffects()
     // and the blood gas setpoint reset for example).
     deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
 
-    hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue()/100000.0) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
+    hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue()/10e5) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
 
     deltaDiastolicBP_mmHg += patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetDiastolicPressureModifier().GetValue() * concentrationEffects_unitless;
 
