@@ -83,61 +83,62 @@ void HowToInfusionDrug()
   //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Example for TXA infusion after a hemorrhage. This example serves as an alternate to the one above. In order to run, comment out or delete the previous example and uncomment this one.
   //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  
-  //// Create the engine and load the patient
-  //std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("TXAPD.log");
-  //bg->GetLogger()->Info("TXAPD");
-  //if (!bg->LoadState("./states/StandardMale@0s.xml")) {
-  //  bg->GetLogger()->Error("Could not load state, check the error");
-  //  return;
-  //}
 
-  //// The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  //HowToTracker tracker(*bg);
+  //bg->GetLogger()->ResetLogFile();
+  // Create the engine and load the patient
+  bg = CreateBioGearsEngine("TXAPD.log");
+  bg->GetLogger()->Info("TXAPD");
+  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return;
+  }
 
-  //SESubstance* txa = bg->GetSubstanceManager().GetSubstance("TranexamicAcid");
-  //txa->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
+  // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
+  HowToTracker tracker2(*bg);
 
-  //// Create a substance infusion action to administer the substance
-  //SESubstanceInfusion infuse(*txa);
-  //infuse.GetConcentration().SetValue(0.1, MassPerVolumeUnit::g_Per_mL);
-  //infuse.GetRate().SetValue(0.033, VolumePerTimeUnit::mL_Per_s);
+  SESubstance* txa = bg->GetSubstanceManager().GetSubstance("TranexamicAcid");
+  txa->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
 
-  //// Create data requests for each value that should be written to the output log as the engine is executing
-  //// Physiology System Names are defined on the System Objects
-  //// defined in the Physiology.xsd file
-  //bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*txa, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-  //bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  //bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
-  //bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
-  //bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
-  //bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::L_Per_min);
-  //bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Ground","InFlow",VolumePerTimeUnit::mL_Per_min);
+  // Create a substance infusion action to administer the substance
+  SESubstanceInfusion infuse2(*txa);
+  infuse2.GetConcentration().SetValue(0.1, MassPerVolumeUnit::g_Per_mL);
+  infuse2.GetRate().SetValue(0.033, VolumePerTimeUnit::mL_Per_s);
 
-  ////Create variables for scenario
-  //SEHemorrhage hemorrhageSpleen; //hemorrhage object
-  //std::string location; //location of hemorrhage, valid options are "Aorta", "VenaCava", "Brain", "Myocardium", "LeftLung", "RightLung", "Spleen", "Splanchnic", "SmallIntestine", "LargeIntestine", "LeftKidney", "RightKidney", "Liver", "LeftArm", "RightArm", "LeftLeg", "RightLeg"
-  //double rate_mL_Per_min = 150.0; //the initial bleeding rate of the hemorrhage
-  //std::vector<unsigned int> mcisCode; //injury code if using option 2, see ParseMCIS method below for more details
-  ////Let's create an internal hemorrhage in the spleen (maybe it ruptured...)
-  //location = "Spleen";
-  //hemorrhageSpleen.SetCompartment(location);
-  //hemorrhageSpleen.GetInitialRate().SetValue(rate_mL_Per_min, VolumePerTimeUnit::mL_Per_min);
-  //hemorrhageSpleen.SetMCIS();
+  // Create data requests for each value that should be written to the output log as the engine is executing
+  // Physiology System Names are defined on the System Objects
+  // defined in the Physiology.xsd file
+  bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*txa, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::L_Per_min);
+  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Ground","InFlow",VolumePerTimeUnit::mL_Per_min);
 
-  //bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("TXAPD.csv");
+  //Create variables for scenario
+  SEHemorrhage hemorrhageSpleen; //hemorrhage object
+  std::string location; //location of hemorrhage, valid options are "Aorta", "VenaCava", "Brain", "Myocardium", "LeftLung", "RightLung", "Spleen", "Splanchnic", "SmallIntestine", "LargeIntestine", "LeftKidney", "RightKidney", "Liver", "LeftArm", "RightArm", "LeftLeg", "RightLeg"
+  double rate_mL_Per_min = 150.0; //the initial bleeding rate of the hemorrhage
+  std::vector<unsigned int> mcisCode; //injury code if using option 2, see ParseMCIS method below for more details
+  //Let's create an internal hemorrhage in the spleen (maybe it ruptured...)
+  location = "Spleen";
+  hemorrhageSpleen.SetCompartment(location);
+  hemorrhageSpleen.GetInitialRate().SetValue(rate_mL_Per_min, VolumePerTimeUnit::mL_Per_min);
+  hemorrhageSpleen.SetMCIS();
 
-  //bg->GetLogger()->Info("Beginning PD Scenario");
+  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("TXAPD.csv");
 
-  //// Hemorrhage Starts - instantiate a hemorrhage action and have the engine process it.  Note that BioGears will output the injury code regardless of which method was used
-  //bg->ProcessAction(hemorrhageSpleen);
-  //bg->ProcessAction(infuse);
-  //tracker.AdvanceModelTime(300);
+  bg->GetLogger()->Info("Beginning PD Scenario");
 
-  //infuse.GetConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
-  //bg->ProcessAction(infuse);
-  //tracker.AdvanceModelTime(7200);
+  // Hemorrhage Starts - instantiate a hemorrhage action and have the engine process it.  Note that BioGears will output the injury code regardless of which method was used
+  bg->ProcessAction(hemorrhageSpleen);
+  bg->ProcessAction(infuse2);
+  tracker2.AdvanceModelTime(300);
 
-  //bg->GetLogger()->Info("Finished");
+  infuse2.GetConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
+  bg->ProcessAction(infuse2);
+  tracker2.AdvanceModelTime(7200);
+
+  bg->GetLogger()->Info("Finished");
   
 }
