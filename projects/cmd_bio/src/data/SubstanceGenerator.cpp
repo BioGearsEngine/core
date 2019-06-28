@@ -60,7 +60,7 @@ bool SubstanceGenerator::parse()
       lineItr += 7;
     } else if ("Pharmacodynamics (all or none)" == lineItr->first) {
       rValue &= process_pharmacodynamics(++lineItr);
-      lineItr += 14;
+      lineItr += 15;
     } else if ( lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
       rValue &= process_tissues(lineItr);
       lineItr += 1;
