@@ -192,7 +192,7 @@
     <MolarMass readOnly="false" unit="g/mol" value="183.2"/>
     <State>Liquid</State>
     <BloodConcentration readOnly="false" unit="ug/mL" value="3.23329453171805e-05"/>
-    <MassInBody readOnly="false" unit="ug" value="1.38179458236775"/>
+    <MassInBody readOnly="false" unit="ug" value="1.38179458236776"/>
     <MassInBlood readOnly="false" unit="ug" value="0.173022659727156"/>
     <MassInTissue readOnly="false" unit="ug" value="1.2087719226406"/>
     <PlasmaConcentration readOnly="false" unit="ug/mL" value="6.10026129238777e-05"/>
@@ -549,7 +549,7 @@
     <MolarMass readOnly="false" unit="g/mol" value="89.07"/>
     <State>Liquid</State>
     <BloodConcentration readOnly="false" unit="ug/mL" value="131.70214706926"/>
-    <MassInBody readOnly="false" unit="ug" value="5671335.3996923"/>
+    <MassInBody readOnly="false" unit="ug" value="5671335.39969229"/>
     <MassInBlood readOnly="false" unit="ug" value="738680.112716217"/>
     <MassInTissue readOnly="false" unit="ug" value="4932655.28697608"/>
     <PlasmaConcentration readOnly="false" unit="ug/mL" value="260.434917747538"/>
@@ -993,15 +993,15 @@
     <ConsciousEndPressure_cmH2O>0</ConsciousEndPressure_cmH2O>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
-    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.80269583266256"/>
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.80211805459416"/>
     <DehydrationFraction readOnly="false" value="0"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="9079.3140415287"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="34416.2553961258"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
-    <IntracellularFluidVolume readOnly="false" unit="mL" value="25336.9413545971"/>
+    <IntracellularFluidVolume readOnly="false" unit="mL" value="25336.9413545972"/>
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="39817.9123216757"/>
-    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="2.94514658024006"/>
-    <RespiratoryExchangeRatio readOnly="false" value="0.89188487928994"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="2.94654418705537"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.891309560826246"/>
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1014,9 +1014,9 @@
     <StoredFat readOnly="false" unit="g" value="16298.5481353854"/>
     <RestingPatientMass_kg>77.6122029</RestingPatientMass_kg>
     <RestingFluidMass_kg>37.7291113481355</RestingFluidMass_kg>
-    <O2ConsumedRunningAverage_mL_Per_s numSamples="6" sum="17.6811783775381"/>
-    <CO2ProducedRunningAverage_mL_Per_s numSamples="6" sum="16.8985701084324"/>
-    <RespiratoryQuotientRunningAverage numSamples="6" sum="5.37454244141341"/>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="6" sum="17.6058314370265"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="6" sum="16.5257449093695"/>
+    <RespiratoryQuotientRunningAverage numSamples="6" sum="5.27859843019314"/>
     <FatigueRunningAverage numSamples="30" sum="0"/>
   </System>
   <System xsi:type="BioGearsEnvironmentData">

@@ -417,7 +417,7 @@
     <MolarMass readOnly="false" unit="g/mol" value="113.12"/>
     <State>Liquid</State>
     <BloodConcentration readOnly="false" unit="ug/mL" value="10.7346543614227"/>
-    <MassInBody readOnly="false" unit="ug" value="349940.379587278"/>
+    <MassInBody readOnly="false" unit="ug" value="349940.379587277"/>
     <MassInBlood readOnly="false" unit="ug" value="46945.2972204195"/>
     <MassInTissue readOnly="false" unit="ug" value="302995.082366858"/>
     <PlasmaConcentration readOnly="false" unit="ug/mL" value="24.7201328555313"/>

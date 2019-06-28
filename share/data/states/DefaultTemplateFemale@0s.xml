@@ -993,15 +993,15 @@
     <ConsciousEndPressure_cmH2O>0</ConsciousEndPressure_cmH2O>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
-    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.08031529620308"/>
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.079371050259"/>
     <DehydrationFraction readOnly="false" value="0"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="6880.1081026908"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="23213.0354703703"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="16332.9273676795"/>
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="27235.5111521133"/>
-    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="2.18533979188083"/>
-    <RespiratoryExchangeRatio readOnly="false" value="0.892215559515118"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="2.1833148141919"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.892625677819249"/>
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1014,9 +1014,9 @@
     <StoredFat readOnly="false" unit="g" value="16321.6017362377"/>
     <RestingPatientMass_kg>58.2915</RestingPatientMass_kg>
     <RestingFluidMass_kg>25.6767874724799</RestingFluidMass_kg>
-    <O2ConsumedRunningAverage_mL_Per_s numSamples="42" sum="91.7945591551486"/>
-    <CO2ProducedRunningAverage_mL_Per_s numSamples="42" sum="87.4500594245641"/>
-    <RespiratoryQuotientRunningAverage numSamples="42" sum="37.5006621805832"/>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="42" sum="91.7211704658342"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="42" sum="87.4778017183684"/>
+    <RespiratoryQuotientRunningAverage numSamples="42" sum="37.5431687233379"/>
     <FatigueRunningAverage numSamples="41" sum="0"/>
   </System>
   <System xsi:type="BioGearsEnvironmentData">
