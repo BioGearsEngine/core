@@ -78,6 +78,7 @@ void Respiratory::Clear()
   SERespiratorySystem::Clear();
   m_Patient = nullptr;
   m_PatientActions = nullptr;
+  m_Propofol = nullptr;
 
   m_Environment = nullptr;
   m_AerosolMouth = nullptr;
@@ -333,6 +334,8 @@ void Respiratory::SetUp()
   //Patient
   m_Patient = &m_data.GetPatient();
   m_PatientActions = &m_data.GetActions().GetPatientActions();
+  // Substance
+  m_Propofol = m_data.GetSubstances().GetSubstance("Propofol");
   //Configuration parameters
   m_dDefaultOpenResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dDefaultClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultClosedFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
@@ -985,11 +988,6 @@ void Respiratory::ProcessDriverActions()
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
     cardiacArrestEffect = 0.0;
   }
-  double propofolCheck = 0;
-  m_PropofolCheck = m_data.GetSubstances().GetSubstance("Propofol");
-  if (m_PropofolCheck->GetMassInBlood().GetValue(MassUnit::ug) > 0) {
-    propofolCheck = 1;
-  }
   //Process drug effects--adjust them based on neuromuscular block level
   SEDrugSystem& Drugs = m_data.GetDrugs();
   double DrugRRChange_Per_min = Drugs.GetRespirationRateChange(FrequencyUnit::Per_min);
@@ -997,6 +995,8 @@ void Respiratory::ProcessDriverActions()
   double NMBModifier = 1.0;
   double SedationModifier = 1.0;
 
+  // Check drug modifiers for effect on driver actions 
+  // \todo The propofol check needs to be investigated for all anethesia/sedative type drugs
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
     NMBModifier = 0.0;
     DrugRRChange_Per_min = 0.0;
@@ -1005,11 +1005,11 @@ void Respiratory::ProcessDriverActions()
     NMBModifier = 0.5;
     DrugRRChange_Per_min = 0.0;
     DrugsTVChange_L = 0.0;
-  } else if (Drugs.GetSedationLevel().GetValue() > 0.15 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && propofolCheck == 0) {
+  } else if (Drugs.GetSedationLevel().GetValue() > 0.15 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && !m_data.GetSubstances().IsActive(*m_Propofol)) {
     SedationModifier = 0.0;
     DrugRRChange_Per_min = 0.0;
     DrugsTVChange_L = 0.0;
-  } else if (Drugs.GetSedationLevel().GetValue() > 0.5 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && propofolCheck == 1) {
+  } else if (Drugs.GetSedationLevel().GetValue() > 0.5 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && m_data.GetSubstances().IsActive(*m_Propofol)) {
     SedationModifier = 0.0;
     DrugRRChange_Per_min = 0.0;
     DrugsTVChange_L = 0.0;
