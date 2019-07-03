@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGears.hxx>
-#include <biogears/cdm/substance/SESubstance.h>
 
 namespace biogears {
 class SEPulmonaryFunctionTest;
@@ -32,6 +31,7 @@ class SELiquidCompartment;
 class SEGasSubstanceQuantity;
 class SELiquidSubstanceQuantity;
 class SEGasSubstanceQuantity;
+class SESubstance;
 class SELiquidCompartment;
 class SEGasCompartment;
 class SEFluidCircuit;
