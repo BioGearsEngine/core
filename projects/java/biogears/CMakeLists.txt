@@ -56,7 +56,7 @@ add_jar(${PROJECT_NAME}
         Java_DataModelBindings
         Java_CommonDataModel
         Java_BioGearsEngine
-        Java_BioGearsGUI
+#        Java_BioGearsGUI
         ${PROJECT_SOURCE_DIR}/share/jar/zip4j-1.3.1.jar
         ${PROJECT_SOURCE_DIR}/share/jar/log4j-1.2.17.jar
         ${PROJECT_SOURCE_DIR}/share/jar/jfreechart-1.0.13.jar
@@ -95,8 +95,9 @@ set_target_properties(${PROJECT_NAME}
 add_dependencies(${PROJECT_NAME} Biogears::libbiogears_jni
         Java_DataModelBindings
         Java_CommonDataModel
-        Java_BioGearsEngine
-        Java_BioGearsGUI)
+        Java_BioGearsEngine)
+ #       Java_BioGearsGUI)
+
 ###############################################################################
 # COMPILATION & LINKAGE MODIFICATIONS
 ###############################################################################
@@ -119,7 +120,7 @@ endfunction()
 
 genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/outputs/jar/BioGears.jar
-        ${PROJECT_BINARY_DIR}/outputs/jar/BioGearsGUI.jar
+#        ${PROJECT_BINARY_DIR}/outputs/jar/BioGearsGUI.jar#
         ${PROJECT_BINARY_DIR}/outputs/jar/BioGearsEngine.jar 
         ${PROJECT_BINARY_DIR}/outputs/jar/CommonDataModel.jar 
         ${PROJECT_BINARY_DIR}/outputs/jar/DataModelBindings.jar
@@ -146,11 +147,11 @@ if(Biogears_BUILD_DOCUMENTATION)
     add_custom_target(gen-website-docs
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava.config
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD #cdm
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md #cdm
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md #cdm
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx #cdm
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava.config 
         COMMAND cd doc    #I hate windows
         COMMAND cd doxygen 
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
@@ -261,13 +262,13 @@ add_custom_target(rebase-tests
     USES_TERMINAL
 )
 
-set (args "")
-add_custom_target(biogears-gui
-    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.biogears.gui.BioGearsGUI ${args}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    VERBATIM
-    USES_TERMINAL
-)
+#set (args "")
+#add_custom_target(biogears-gui
+    #COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.biogears.gui.BioGearsGUI ${args}
+    #WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+    #VERBATIM
+    #USES_TERMINAL
+#)
 
 #add_dependencies(gen-states  ${PROJECT_NAME})
 #add_dependencies(gen-data  ${PROJECT_NAME})
@@ -286,7 +287,7 @@ add_dependencies(run-bge-tests  ${PROJECT_NAME})
 add_dependencies(rebase-scenarios  ${PROJECT_NAME})
 add_dependencies(rebase-debug  ${PROJECT_NAME})
 add_dependencies(rebase-tests  ${PROJECT_NAME})
-add_dependencies(biogears-gui  ${PROJECT_NAME})
+#add_dependencies(biogears-gui  ${PROJECT_NAME})
 
 
 if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
@@ -307,7 +308,7 @@ endif()
  add_dependencies(rebase-scenarios stage_runtime )
  add_dependencies(rebase-debug stage_runtime )
  add_dependencies(rebase-tests stage_runtime )
- add_dependencies(biogears-gui stage_runtime )
+ #add_dependencies(biogears-gui stage_runtime )
 endif()
 set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
 
@@ -331,4 +332,4 @@ set_target_properties(run-bge-tests            PROPERTIES FOLDER "Java/Test" )
 set_target_properties(rebase-scenarios         PROPERTIES FOLDER "Java" )
 set_target_properties(rebase-debug             PROPERTIES FOLDER "Java" )
 set_target_properties(rebase-tests             PROPERTIES FOLDER "Java" )
-set_target_properties(biogears-gui             PROPERTIES FOLDER "Java" )
+#set_target_properties(biogears-gui             PROPERTIES FOLDER "Java" )

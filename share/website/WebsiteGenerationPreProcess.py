@@ -87,4 +87,7 @@ shutil.copy('RenalTGFFeedbackOutput.zip',runtime_dir+'UnitTests/BioGearsTests/ba
 shutil.copy('SimpleDiffusionFourCompartmentTest.zip',runtime_dir+'UnitTests/BioGearsTests/baselines')
 shutil.copy('RespiratoryValidationPFT@120.02s.xml',runtime_dir+'Scenarios/Validation')
 
+os.chdir(runtime_dir+'Scenarios/Showcase')
+shutil.copy('HeatStrokeResultsCMP@2610.2s.xml',runtime_dir);
+
 print("Preprocess successful")

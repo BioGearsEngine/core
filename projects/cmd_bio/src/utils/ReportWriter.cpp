@@ -48,6 +48,7 @@ void ReportWriter::set_html()
   table_row_end = "</td></tr>\n";
   table_end = "</table>\n";
   body_end = "</body></html>\n";
+  file_extension = ".xml";
 }
 
 void ReportWriter::set_md()
@@ -56,14 +57,15 @@ void ReportWriter::set_md()
   table_begin = "";
   table_row_begin = "";
   table_row_begin_green = "<span class=\"success\">";
-  table_row_begin_red = "<span class=\"failure\">";
+  table_row_begin_red = "<span class=\"danger\">";
   table_row_begin_yellow = "<span class=\"warning\">";
-  table_second_line = "|---|---|---|---|---|\n";
+  table_second_line = "---|---|---|---|---|\n";
   table_item_begin = "";
   table_item_end = "|";
   table_row_end = "</span>|\n";
   table_end = "\n";
   body_end = "\n";
+  file_extension = ".md";
 }
 
 void ReportWriter::set_xml()
@@ -80,6 +82,7 @@ void ReportWriter::set_xml()
   table_row_end = "</td></tr>\n";
   table_end = "</table>\n";
   body_end = "</body></xml>\n";
+  file_extension = ".xml";
 }
 
 
@@ -114,12 +117,16 @@ void ReportWriter::gen_tables()
                                            "EndocrineValidationResults.csv",
                                            "RenalValidationResults.csv",
                                            "TissueValidationResults.csv" };
+  std::vector<std::string> xml_files { "HeatStrokeResultsCMP@2610.2s.xml" };
 
   for (int i = 0; i < validation_files.size(); i++) {
     logger->Info("Generating table: " + split(validation_files[i],'.')[0]);
     logger->SetConsolesetConversionPattern("\t%m%n");
     ParseReferenceCSV(std::string(validation_files[i]));
     ParseBaselineCSV(std::string(baseline_files[i]));
+    if (i == 0) {
+      ParseXML(xml_files[0]);
+    }
     CalculateAverages();
     logger->Info("Successfully calculated averages of file: " + baseline_files[i]);
     ExtractValues();
@@ -177,7 +184,7 @@ int ReportWriter::to_table()
     table += std::string(table_end);
     // This block saves out the html tables for website generation
     std::ofstream file;
-    file.open("validation/tables/" + table_name + "ValidationTable.html");
+    file.open("validation/tables/" + table_name + "ValidationTable" + file_extension);
     if (!file) {
       return 1;
     }
@@ -249,26 +256,64 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
     cell.clear();
     ++line_number;
   }
-  for(int i = 0;i < data[0].size();++i)
-  {
-    logger->Info(data[0][i]);
-  }
   logger->Info("Successfully parsed file: " + filename);
 }
+
+void ReportWriter::ParseXML(std::string& filename)
+{
+  std::ifstream file{ filename };
+  if (!file.is_open()) {
+    logger->Error("Error opening: " + filename);
+    return;
+  }
+  std::string line;
+  while (std::getline(file, line)) {
+    size_t name_index = line.find("p1:");
+    if(name_index == std::string::npos || line.find("/p1:") != std::string::npos) {
+      continue;
+    }
+    name_index += 3;
+    size_t name_end = line.find(" ",name_index);
+    size_t unit_index = line.find("unit=\"",name_end);
+    if (unit_index == std::string::npos) {
+      continue;
+    }
+    unit_index += 6;
+    size_t unit_end = line.find("\"",unit_index);
+    size_t value_index = line.find("value=\"",unit_end) + 7;
+    size_t value_end = line.find("\"/", value_index);
+    biogears::TableRow xmlRow;
+    std::string name = trim(line.substr(name_index, name_end - name_index));
+    std::string unit = trim(line.substr(unit_index, unit_end - unit_index));
+    std::string value = trim(line.substr(value_index, value_end - value_index));
+    xmlRow.field_name = name+"("+unit+")";
+    xmlRow.expected_value = "0.0";
+    xmlRow.engine_value = std::stod(value);
+    table_row_map.insert(std::pair<std::string, biogears::TableRow>(name,xmlRow));
+  }
+}
+
 
 void ReportWriter::CalculateAverages()
 {
   std::vector<biogears::TableRow> rows;
+  std::vector<int> row_items;
   for (int i = 0; i < biogears_results[0].size(); i++) {
     biogears::TableRow row;
-    row.field_name = trim(biogears_results[0][i]);
+    row.field_name = biogears_results[0][i];
     row.expected_value = "0.0";
+    row.engine_value = 0.0;
     rows.push_back(row);
+    row_items.push_back(0);
   }
+  
   for (int i = 1; i < biogears_results.size(); i++) {
     for (int k = 0; k < biogears_results[i].size(); k++) {
       try {
-        rows[k].engine_value += std::stod(biogears_results[i][k]);
+        if(trim(biogears_results[i][k]) != "") {
+          rows[k].engine_value += std::stod(biogears_results[i][k]);
+          ++row_items[k];
+        }
       } catch (std::exception& e) {
         logger->Error(std::string("Error: ") + e.what());
         logger->Error("Cell Contents: " + biogears_results[i][k]);
@@ -277,7 +322,7 @@ void ReportWriter::CalculateAverages()
     }
   }
   for (int i = 0; i < rows.size(); i++) {
-    rows[i].engine_value /= biogears_results.size() - 1;
+    rows[i].engine_value /= row_items[i];
     std::string field_name_with_units = rows[i].field_name;
     TableRow row = rows[i]; //So field_name_with_units looks like "Name(Unit)", which is why it gets split to just be "Name"
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(trim(split(field_name_with_units, '(')[0]), row));
@@ -288,7 +333,7 @@ void ReportWriter::ExtractValues()
 {
   for (int i = 1; i < validation_data.size(); i++) {
     biogears::ReferenceValue ref;
-    ref.value_name = trim(validation_data[i][0]);
+    ref.value_name = validation_data[i][0];
     ref.unit_name = validation_data[i][1];
     if (validation_data[i][2][0] == '[') {
       ref.is_range = true; // In the case that the validation data looks like [num1,num2],....

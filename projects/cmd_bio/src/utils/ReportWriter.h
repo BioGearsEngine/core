@@ -66,6 +66,7 @@ public:
 
 private:
   void ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& vec);
+  void ParseXML(std::string& filename);
   std::map<std::string, std::vector<biogears::TableRow>> tables;
   std::map<std::string, biogears::TableRow> table_row_map;
   std::vector<biogears::ReferenceValue> reference_values;
@@ -86,6 +87,7 @@ private:
   char* table_row_end;
   char* table_end;
   char* body_end;
+  char* file_extension;
 };
 
 } // end namespace biogears
