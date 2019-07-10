@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Platelet</Name>
+  <Classification>WholeBlood</Classification>
+  <State>Cellular</State>
+  <!-- @brief  Normal mean count is 300000/microliter. -->
+  <Clearance>
+    <CellRegulation>
+      <CellDeathRate readOnly="false" unit="1/s" value="4629629.6"/>
+	  <CellBirthRate readOnly="false" unit="1/s" value="4629629.6"/>
+    </RenalDynamics>
+  </Clearance>
+</Substance>

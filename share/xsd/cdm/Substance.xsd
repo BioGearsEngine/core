@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Liquid"/>
       <xs:enumeration value="Gas"/>
       <xs:enumeration value="Molecular"/>
+	  <xs:enumeration value="Cellular"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -57,6 +58,7 @@ specific language governing permissions and limitations under the License.
   	<xs:restriction base="xs:string">
   		<xs:enumeration value="Anesthetic"/>
 		<xs:enumeration value="Antibiotic"/>
+		<xs:enumeration value="WholeBlood"/>
   		<xs:enumeration value="Ion"/>
   		<xs:enumeration value="Opioid"/>
   		<xs:enumeration value="ReversalAgent"/>
@@ -192,7 +194,15 @@ specific language governing permissions and limitations under the License.
                 <xs:element name="GlomerularFilterability" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief  -->
               </xs:sequence>
             </xs:complexType>
-          </xs:element>          
+          </xs:element>   
+		  <xs:element name="CellRegulation" minOccurs="0"  maxOccurs="1"> <!--<< @brief Renal Dynamics for clearance and/or regulation of substances. -->
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="CellDeathRate" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief frequency of cells being added into circulation. -->
+                <xs:element name="CellBirthRate" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief frequency of cells being taken out of circulation. -->
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>     
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -231,7 +241,9 @@ specific language governing permissions and limitations under the License.
           <xs:element name="EndTidalFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of gas in the trachea that consists of the substance at the end of each respiratory cycle. -->
           <xs:element name="EndTidalPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The pressure of gas in the trachea that consists of the substance at the end of each respiratory cycle. -->
           <xs:element name="RelativeDiffusionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of the substance to diffuse across a membrane. A proportionality of the solubility and the square root of the molecular weight as defined relative to oxygen.-->
-          <xs:element name="SolubilityCoefficient" type="ScalarInversePressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of a substance to dissolve in a solution. -->          
+          <xs:element name="SolubilityCoefficient" type="ScalarInversePressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of a substance to dissolve in a solution. -->    
+		  <!-- Blood -->
+		  <xs:element name="Antigen" type="xs:string" minOccurs="0"  maxOccurs="1"/><!--<< @brief The unique name of the substance. -->
           <!-- More complex Objects -->
           <xs:element name="Clearance" type="SubstanceClearanceData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstanceClearanceData --> 
           <xs:element name="Pharmacokinetics" type="SubstancePharmacokineticsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacokineticsData -->  
