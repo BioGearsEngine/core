@@ -126,7 +126,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="LeanBodyMass" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief Component of body composition after subtracting body fat weight. -->
           <xs:element name="MaxWorkRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<< @brief The maximal work rate. -->
           <xs:element name="MuscleMass" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief The mass of muscle only. --> 
-		  <xs:element name="BloodTypeABO" type="enumBloodTypeABO" minOccurs="0" maxOccurs="1"/><!--<< @brief ABO antigen blood type. --> 
+		  <xs:element name="BloodTypeABO" type="enumBloodType" minOccurs="0" maxOccurs="1"/><!--<< @brief ABO antigen blood type. --> 
 		  <xs:element name="BloodTypeRh" type="enumBinaryResults" minOccurs="0" maxOccurs="1"/><!--<< @brief whether blood type is positive or negative for Rh factor. Initializes to 0 OR 1. --> 
           <!-- Physical Characteristics that can change and should be change due to a condition -->
           <xs:element name="AlveoliSurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief The surface area of the alveoli for gas diffusion--> 
