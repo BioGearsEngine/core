@@ -603,6 +603,7 @@ void SEInflammatoryResponse::Initialize()
   GetTissueMediators().Initialize(true);
   GetBloodMediators().Initialize(false);
   GetTissueIntegrity().SetValue(1.0);
+  GetInflammationLevel().SetValue(0.0);
 }
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::IsValid()

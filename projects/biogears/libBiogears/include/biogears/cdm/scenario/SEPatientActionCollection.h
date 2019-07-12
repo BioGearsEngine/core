@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
+#include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
@@ -86,7 +87,7 @@ public:
   bool HasBurnWound() const;
   SEBurnWound* GetBurnWound() const;
   void RemoveBurnWound();
-  
+
   bool HasCardiacArrest() const;
   SECardiacArrest* GetCardiacArrest() const;
   void RemoveCardiacArrest();
@@ -122,6 +123,10 @@ public:
   const std::map<std::string, SEHemorrhage*>& GetHemorrhages() const;
   void RemoveHemorrhage(const char* cmpt);
   void RemoveHemorrhage(const std::string& cmpt);
+
+  bool HasInfection() const;
+  SEInfection* GetInfection() const;
+  void RemoveInfection();
 
   bool HasIntubation() const;
   SEIntubation* GetIntubation() const;
@@ -209,6 +214,7 @@ protected:
   SEConsciousRespiration* m_ConsciousRespiration;
   SEConsumeNutrients* m_ConsumeNutrients;
   SEExercise* m_Exercise;
+  SEInfection* m_Infection;
   SEIntubation* m_Intubation;
   SEMechanicalVentilation* m_MechanicalVentilation;
   SENeedleDecompression* m_LeftNeedleDecompression;

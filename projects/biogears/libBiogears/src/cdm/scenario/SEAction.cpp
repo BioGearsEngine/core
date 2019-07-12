@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
+#include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
@@ -271,6 +272,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       a->Load(*hemData);
       return a;
     }
+	
+	CDM::InfectionData* infData = dynamic_cast<CDM::InfectionData*>(action);
+    if (infData != nullptr) {
+      SEInfection* infect = new SEInfection();
+      infect->Load(*infData);
+      return infect;
+	}
 
     CDM::PainStimulusData* painData = dynamic_cast<CDM::PainStimulusData*>(action);
     if (painData != nullptr) {

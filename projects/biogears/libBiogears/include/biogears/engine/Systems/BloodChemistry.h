@@ -96,6 +96,7 @@ protected:
   // Stateless member variable (Set in SetUp())
   double m_redBloodCellVolume_mL;
   double m_HbPerRedBloodCell_ug_Per_ct;
+  SEInflammatoryResponse* m_InflammatoryResponse;
   SELiquidCompartment* m_aorta;
   SELiquidSubstanceQuantity* m_aortaO2;
   SELiquidSubstanceQuantity* m_aortaCO2;

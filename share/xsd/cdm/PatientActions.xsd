@@ -271,6 +271,28 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!--Infection action types, including sepsis-->
+	<xs:simpleType name="enumInfectionSeverity">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Eliminated"/>	<!--Will use this tag to deactive infection-->
+			<xs:enumeration value="Mild"/>
+			<xs:enumeration value="Moderate"/>
+			<xs:enumeration value="Severe"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="InfectionData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="MinimumInhibitoryConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Location" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attribute name="Severity" type="enumInfectionSeverity" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<xs:complexType name="SepsisData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">

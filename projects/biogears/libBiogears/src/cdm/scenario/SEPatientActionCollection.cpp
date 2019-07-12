@@ -34,6 +34,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_LeftChestOcclusiveDressing = nullptr;
   m_RightChestOcclusiveDressing = nullptr;
   m_Exercise = nullptr;
+  m_Infection = nullptr;
   m_Intubation = nullptr;
   m_MechanicalVentilation = nullptr;
   m_LeftNeedleDecompression = nullptr;
@@ -69,6 +70,7 @@ void SEPatientActionCollection::Clear()
   RemoveLeftChestOcclusiveDressing();
   RemoveRightChestOcclusiveDressing();
   RemoveExercise();
+  RemoveInfection();
   RemoveIntubation();
   RemoveMechanicalVentilation();
   RemoveLeftNeedleDecompression();
@@ -126,6 +128,8 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     for (auto itr : GetHemorrhages())
       to.push_back(itr.second->Unload());
   }
+  if (HasInfection())
+    to.push_back(GetInfection()->Unload());
   if (HasIntubation())
     to.push_back(GetIntubation()->Unload());
   if (HasMechanicalVentilation())
@@ -398,6 +402,19 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*myHem);
+  }
+
+  const CDM::InfectionData* infect = dynamic_cast<const CDM::InfectionData*>(&action);
+  if (infect != nullptr) {
+	  if (m_Infection == nullptr){
+		m_Infection = new SEInfection();
+	  }
+    m_Infection->Load(*infect);
+    if (!m_Infection->IsActive()) {
+      RemoveInfection();
+      return true;
+    }
+    return IsValid(*m_Infection);
   }
 
   const CDM::IntubationData* intubation = dynamic_cast<const CDM::IntubationData*>(&action);
@@ -824,6 +841,21 @@ void SEPatientActionCollection::RemoveHemorrhage(const std::string& cmpt)
   SEHemorrhage* h = m_Hemorrhages[cmpt];
   m_Hemorrhages.erase(cmpt);
   SAFE_DELETE(h);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasInfection() const
+{
+  return m_Infection == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SEInfection* SEPatientActionCollection::GetInfection() const
+{
+  return m_Infection;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveInfection()
+{
+  SAFE_DELETE(m_Infection);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasIntubation() const

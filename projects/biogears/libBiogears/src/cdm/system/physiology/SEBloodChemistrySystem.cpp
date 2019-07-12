@@ -96,6 +96,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_VenousCarbonDioxidePressure = nullptr;
   m_VenousOxygenPressure = nullptr;
   m_AcuteInflammatoryResponse = nullptr;
+  m_InflammatoryResponse = nullptr;
 }
 //-------------------------------------------------------------------------------
 

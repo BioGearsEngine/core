@@ -861,13 +861,13 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
 void Gastrointestinal::Process()
 {
   ProcessDrugCAT();
-  m_data.GetDataTrack().Probe("DrugMass_SolidLumen", m_SolidMassLumen);
-  m_data.GetDataTrack().Probe("DrugMass_DissolvedLumen", m_DissolvedMassLumen);
-  m_data.GetDataTrack().Probe("DrugMass_Enterocyte", m_MassEnterocytes);
-  m_data.GetDataTrack().Probe("DrugMass_Absorbed", m_MassAbsorbed);
-  m_data.GetDataTrack().Probe("DrugMass_Metabolized", m_MassMetabolized);
-  m_data.GetDataTrack().Probe("DrugMass_Excreted", m_MassExcreted);
-  m_data.GetDataTrack().Probe("DrugMass_Conservation", m_MassConservation);
+  //m_data.GetDataTrack().Probe("DrugMass_SolidLumen", m_SolidMassLumen);
+  //m_data.GetDataTrack().Probe("DrugMass_DissolvedLumen", m_DissolvedMassLumen);
+  //m_data.GetDataTrack().Probe("DrugMass_Enterocyte", m_MassEnterocytes);
+  //m_data.GetDataTrack().Probe("DrugMass_Absorbed", m_MassAbsorbed);
+  //m_data.GetDataTrack().Probe("DrugMass_Metabolized", m_MassMetabolized);
+  //m_data.GetDataTrack().Probe("DrugMass_Excreted", m_MassExcreted);
+  //m_data.GetDataTrack().Probe("DrugMass_Conservation", m_MassConservation);
 }
 
 //--------------------------------------------------------------------------------------------------
