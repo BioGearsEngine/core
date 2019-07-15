@@ -149,7 +149,7 @@ add_custom_target( stage_runtime
 find_package(Java)
 find_package(JNI)
 verify_package(Log4cpp REQUIRED)
-option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" ${Java_FOUND} )
+option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" OFF )
 
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)
