@@ -263,6 +263,8 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>  
   <xs:element name="Substance" type="SubstanceData"/>
   
+  
+  
   <!-- @brief A compound made up of several substances. -->
   <xs:complexType name="SubstanceCompoundData">
     <xs:complexContent>
