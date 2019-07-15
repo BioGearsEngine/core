@@ -66,17 +66,26 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<xs:complexType name="ImmuneMediatorData">
+	<xs:complexType name="ImmuneCompartmentData">
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
 				<xs:sequence>
-					<xs:element name="Antibodies" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Trauma" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="MacrophageResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="MacrophageActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="EpitheliumResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="EpitheliumActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TumorNecrosisFactor" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Interleukin6" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Interleukin10" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Interleukin12" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="InducibleNOSPre" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="InducibleNOS" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ConstitutiveNOS" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Nitrate" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
@@ -87,13 +96,9 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
 				<xs:sequence>
-					<xs:element name="PathogenBlood" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="PathogenTissue" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Trauma" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TissueMediators" type="ImmuneMediatorData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="BloodMediators" type="ImmuneMediatorData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="TissueResponse" type="ImmuneCompartmentData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="BloodResponse" type="ImmuneCompartmentData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="InflammationLevel" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
 				</xs:sequence>
 			</xs:extension>
@@ -213,6 +218,7 @@ specific language governing permissions and limitations under the License.
         <xs:complexContent>
             <xs:extension base="SystemData">
                 <xs:sequence>
+					<xs:element name="AntibioticActivity" type="ScalarData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="BronchodilationLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="HeartRateChange" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
 					<xs:element name="HemorrhageChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->

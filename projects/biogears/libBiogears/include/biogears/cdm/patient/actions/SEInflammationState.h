@@ -19,7 +19,7 @@ namespace biogears {
 
 class SEScalar;
 class SEScalar0To1;
-class SEImmuneMediators;
+class SEImmuneCompartment;
 
 class BIOGEARS_API SEInflammationState {
 public:
@@ -151,68 +151,83 @@ protected:
   virtual void Unload(CDM::InflammatoryResponseData& data) const;
 
 public:
-  virtual bool HasPathogenTissue() const;
-  virtual SEScalar& GetPathogenTissue();
-  virtual double GetPathogenTissue() const;
+  virtual bool HasTissueResponse() const;
+  virtual SEImmuneCompartment& GetTissueResponse();
 
-  virtual bool HasPathogenBlood() const;
-  virtual SEScalar& GetPathogenBlood();
-  virtual double GetPathogenBlood() const;
-
-  virtual bool HasTrauma() const;
-  virtual SEScalar& GetTrauma();
-  virtual double GetTrauma() const;
-
-  virtual bool HasTissueMediators() const;
-  virtual SEImmuneMediators& GetTissueMediators();
-
-  virtual bool HasBloodMediators() const;
-  virtual SEImmuneMediators& GetBloodMediators();
+  virtual bool HasBloodResponse() const;
+  virtual SEImmuneCompartment& GetBloodResponse();
 
   virtual bool HasTissueIntegrity() const;
   virtual SEScalar0To1& GetTissueIntegrity();
   virtual double GetTissueIntegrity() const;
 
-  virtual bool HasInflammationLevel() const;
-  virtual SEScalar0To1& GetInflammationLevel();
-  virtual double GetInflammationLevel() const;
-
   virtual bool HasInflammationSources() const;
   virtual std::vector<CDM::enumInflammationSource>& GetInflammationSources();
 
+  virtual bool HasImmuneResponses() const;
+  virtual std::vector<std::pair<std::string, SEImmuneCompartment*>> GetImmuneResponses();
+
+  virtual void SetImmuneResponses();
+
 protected:
-  SEScalar* m_PathogenTissue;
-  SEScalar* m_PathogenBlood;
-  SEScalar* m_Trauma;
-  SEImmuneMediators* m_TissueMediators;
-  SEImmuneMediators* m_BloodMediators;
-  SEScalar0To1* m_InflammationLevel;
+  SEImmuneCompartment* m_BloodResponse;
+  SEImmuneCompartment* m_TissueResponse;
   SEScalar0To1* m_TissueIntegrity;
   std::vector<CDM::enumInflammationSource> m_InflammationSources;
+  std::vector<std::pair<std::string, SEImmuneCompartment*>> m_ImmuneResponses;
 };
 
-class BIOGEARS_API SEImmuneMediators {
+class BIOGEARS_API SEImmuneCompartment {
 public:
-  SEImmuneMediators();
-  virtual ~SEImmuneMediators();
+  SEImmuneCompartment();
+  virtual ~SEImmuneCompartment();
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::ImmuneMediatorData& in);
-  virtual CDM::ImmuneMediatorData* Unload() const;
+  virtual bool Load(const CDM::ImmuneCompartmentData& in);
+  virtual CDM::ImmuneCompartmentData* Unload() const;
   virtual bool IsValid();
 
-  void Initialize(bool TissueSpace);		//True means we're initializing Tissue Mediators, false means we're initializing Blood Mediators
+  void Initialize();		//True means we're initializing Tissue Mediators, false means we're initializing Blood Mediators
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
 protected:
-  virtual void Unload(CDM::ImmuneMediatorData& data) const;
+  virtual void Unload(CDM::ImmuneCompartmentData& data) const;
 
 public:
-  virtual bool HasAntibodies() const;
-  virtual SEScalar& GetAntibodies();
-  virtual double GetAntibodies() const;
+
+  virtual bool HasConstitutiveNOS() const;
+  virtual SEScalar& GetConstitutiveNOS();
+  virtual double GetConstitutiveNOS() const;
+
+  virtual bool HasEpitheliumResting() const;
+  virtual SEScalar& GetEpitheliumResting();
+  virtual double GetEpitheliumResting() const;
+
+  virtual bool HasEpitheliumActive() const;
+  virtual SEScalar& GetEpitheliumActive();
+  virtual double GetEpitheliumActive() const;
+
+  virtual bool HasInducibleNOSPre() const;
+  virtual SEScalar& GetInducibleNOSPre();
+  virtual double GetInducibleNOSPre() const;
+
+  virtual bool HasInducibleNOS() const;
+  virtual SEScalar& GetInducibleNOS();
+  virtual double GetInducibleNOS() const;
+
+  virtual bool HasInterleukin6() const;
+  virtual SEScalar& GetInterleukin6();
+  virtual double GetInterleukin6() const;
+  
+  virtual bool HasInterleukin10() const;
+  virtual SEScalar& GetInterleukin10();
+  virtual double GetInterleukin10() const;
+
+  virtual bool HasInterleukin12() const;
+  virtual SEScalar& GetInterleukin12();
+  virtual double GetInterleukin12() const;
 
   virtual bool HasMacrophageResting() const;
   virtual SEScalar& GetMacrophageResting();
@@ -230,26 +245,44 @@ public:
   virtual SEScalar& GetNeutrophilActive();
   virtual double GetNeutrophilActive() const;
 
+  virtual bool HasNitrate() const;
+  virtual SEScalar& GetNitrate();
+  virtual double GetNitrate() const;
+
   virtual bool HasNitricOxide() const;
   virtual SEScalar& GetNitricOxide();
   virtual double GetNitricOxide() const;
+
+  virtual bool HasPathogen() const;
+  virtual SEScalar& GetPathogen();
+  virtual double GetPathogen() const;
+
+  virtual bool HasTrauma() const;
+  virtual SEScalar& GetTrauma();
+  virtual double GetTrauma() const;
 
   virtual bool HasTumorNecrosisFactor() const;
   virtual SEScalar& GetTumorNecrosisFactor();
   virtual double GetTumorNecrosisFactor() const;
 
-  virtual bool HasInterleukin10() const;
-  virtual SEScalar& GetInterleukin10();
-  virtual double GetInterleukin10() const;
 
 protected:
-  SEScalar* m_Antibodies;
+  SEScalar* m_ConstitutiveNOS;
+  SEScalar* m_EpitheliumResting;
+  SEScalar* m_EpitheliumActive;
+  SEScalar* m_InducibleNOSPre;
+  SEScalar* m_InducibleNOS;
+  SEScalar* m_Interleukin6;
   SEScalar* m_Interleukin10;
+  SEScalar* m_Interleukin12;
   SEScalar* m_MacrophageResting;
   SEScalar* m_MacrophageActive;
   SEScalar* m_NeutrophilResting;
   SEScalar* m_NeutrophilActive;
+  SEScalar* m_Nitrate;
   SEScalar* m_NitricOxide;
+  SEScalar* m_Pathogen;
+  SEScalar* m_Trauma;
   SEScalar* m_TumorNecrosisFactor;
 };
 }

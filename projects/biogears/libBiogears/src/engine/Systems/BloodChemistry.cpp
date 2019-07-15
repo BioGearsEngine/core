@@ -205,9 +205,9 @@ void BloodChemistry::SetUp()
   m_PatientActions = &m_data.GetActions().GetPatientActions();
 
   m_InflammatoryResponse = &GetInflammatoryResponse();
- // m_InflammatoryResponse->Initialize();
-
-
+  if (!m_InflammatoryResponse->HasImmuneResponses()) {
+    m_InflammatoryResponse->SetImmuneResponses(); //We don't serialize out the vector that holds pointers to the blood/tissue response pairs.  Check here to make sure that we have them in case we load a state
+  }
 }
 
 void BloodChemistry::AtSteadyState()
@@ -892,19 +892,19 @@ void BloodChemistry::InflammatoryResponse()
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetInfection()->GetSeverity()) {
       case CDM::enumInfectionSeverity::Mild:
-        initialPathogen = 500.0;
+        initialPathogen = 1.0;
         break;
       case CDM::enumInfectionSeverity::Moderate:
-        initialPathogen = 1000.0;
+        initialPathogen = 5.0;
         break;
       case CDM::enumInfectionSeverity::Severe:
-        initialPathogen = 1400.0;
+        initialPathogen = 20.0;
         break;
       default:
-        initialPathogen = 500;		//Default to mild infection
+        initialPathogen = 1.0; //Default to mild infection
       }
 
-      m_InflammatoryResponse->GetPathogenTissue().SetValue(initialPathogen); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
+      m_InflammatoryResponse->GetTissueResponse().GetPathogen().SetValue(initialPathogen); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
     }
   }
@@ -913,140 +913,130 @@ void BloodChemistry::InflammatoryResponse()
     return;
   }
 
-  //Previous time step
-  //Tissue
-  double tPathogen = m_InflammatoryResponse->GetPathogenTissue().GetValue();
-  LLIM(tPathogen, ZERO_APPROX);	//Make sure this value can't go < 0 on rounding error because this will cause NaN value in diffentials
-  double tAntibodies = m_InflammatoryResponse->GetTissueMediators().GetAntibodies().GetValue();
-  double tMacrophageResting = m_InflammatoryResponse->GetTissueMediators().GetMacrophageResting().GetValue();
-  double tMacrophageActive = m_InflammatoryResponse->GetTissueMediators().GetMacrophageActive().GetValue();
-  double tNeutrophilActive = m_InflammatoryResponse->GetTissueMediators().GetNeutrophilActive().GetValue();
-  double tTNF = m_InflammatoryResponse->GetTissueMediators().GetTumorNecrosisFactor().GetValue();
-  double tIL10 = m_InflammatoryResponse->GetTissueMediators().GetInterleukin10().GetValue();
-  double tNO = m_InflammatoryResponse->GetTissueMediators().GetNitricOxide().GetValue();
-  //Blood
-  double bPathogen = m_InflammatoryResponse->GetPathogenBlood().GetValue();
-  LLIM(bPathogen, ZERO_APPROX); //Make sure this value can't go < 0 on rounding error because this will cause NaN value in diffentials
-  double bAntibodies = m_InflammatoryResponse->GetBloodMediators().GetAntibodies().GetValue();
-  double bNeutrophilResting = m_InflammatoryResponse->GetBloodMediators().GetNeutrophilResting().GetValue();
-  double bNeutrophilActive = m_InflammatoryResponse->GetBloodMediators().GetNeutrophilActive().GetValue();
-  double bTNF = m_InflammatoryResponse->GetBloodMediators().GetTumorNecrosisFactor().GetValue();
-  double bIL10 = m_InflammatoryResponse->GetBloodMediators().GetInterleukin10().GetValue();
-  double bNO = m_InflammatoryResponse->GetBloodMediators().GetNitricOxide().GetValue();
-  //Other
-  double inflLevel = m_InflammatoryResponse->GetInflammationLevel().GetValue();
-  double tissueIntegrity = m_InflammatoryResponse->GetTissueIntegrity().GetValue();
-
-  //Set-up constants
-  //Assumed volumes
-  double volB = 50., volT = 0.5;
+  //Time step
+  double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
+  //Model Parameters
   //Source terms
-  double sBt = 0.0075, sBb = sBt, sMRt = 10.0, sNRb = sMRt, xNRb = 200.0, hNRb = 2.0;
-  //Decay terms
-  double uMRt = 0.12, uMAt = 0.05, uTNFt = 1.8, uTNFb = uTNFt, uNRb = uMRt, uNAb = 0.05, uNAt = uNAb, uBt = 0.0023, uBb = uBt;
-  double uIL10t_max = 0.34, uIL10t_min = 0.005, uIL10b_max = uIL10t_max, uIL10b_min = uIL10t_min, uNOt = 4.0, uNOb = uNOt;
-  //Pathogen terms
-  double kPt = 0.6, kPb = kPt, infPt = 20000., infPb = 20., kP_Bb = 0.461, kP_Bt = kP_Bb;
-  double kP_MAt = 2.8, kP_NAt = 5.8, kP_NAb = 0.04, xP_MAt = 20.0, hP_MAt = 3.0, xP_NAt = 1500., hP_NAt = 3.0, xP_NAb = 0.1, hP_NAb = 1.0;
-  //Antibody interactions
-  double kB_Pt = 0.0001, kB_Pb = 0.02;
-  //Resting macrophage interactions
-  double kMR_Pt = 40.0, kMR_TNFt = 20.0, kMR_NOt = 0.01, xMR_Pt = 20.0, hMR_Pt = 3.0, xMR_TNFt = 20.0, hMR_TNFt = 2.0;
-  //Active macrophages--no acted upon by anything else, just subject to decay
-  //Resting neutrophil interactions
-  double kNR_TNFb = 2.0, kNR_NOb = 0.1, kNRb = 3.0, kNR_Pb = 5.0, xNR_Pb = 0.1, hNR_Pb = 1, xNR_TNFb = 2.0, hNR_TNFb = 2.0;
-  //Active neutrophil interactions
-  double dNA_Pt = 5.0, dNA_Pb = dNA_Pt, rNA_Pt = 0.98, rNA_Pb = rNA_Pt;
-  //TNF interactions
-  double dTNF_MRt = 5.0, dTNF_NAb = 0.8, kTNF_MAt = 3000., xTNF_MAt = 80., hTNF_MAt = 2.0, xTNF_NAb = 2.0, hTNF_NAb = 2.0;
-  //Interleukin-10 interactions
-  double kIL10_MAt = 1000., xIL10_MAt = 140., hIL10_MAt = 2.0, xIL10t = 8.0, xIL10b = xIL10t, hIL10t = 2.0, hIL10b = hIL10t;
-  //Radical interactions
-  double kNO_NOt = 0.1, kNO_NAt = 0.01, kNO_NAb = kNO_NAt, kNO_NAPt = 0.2, kNO_MAPt = 1.0e-5;
-  //Tissue Integrity
-  double kTI = 2.0, infTI = 1.0, aTI = 0.02, kTI_NO = 0.01;
-  //Inflammation ("Z")
-  double kZ_TNF = 0.5, kZ_TI = kZ_TNF, xZ_TNF = 20.0, hZ_TNF = 2.0, rZ_TNFTI = 0.1, uZ = 0.01;
-  //Inhibition constants
-  double cMt = 0.05, hMt = 3.0, xMt = 200.0; //IL10 inhibition of macrophages
-  double cTNFt = 1.0e-6, hTNFt = 5.0, xTNFt = 60.0; //IL10 inhibition of tisue TNF
-  double cTNFb = 1.0e-6, hTNFb = 2.0, xTNFb = 15.0; //IL10 inhibition of blood TNF
-  double cNR = 0.05, hNR = 3.0, xNR = 200.0;
-  double cNA = 0.15, hNA = 1.0, xNA = 80.0; //IL10 inhibition of tissue and blood neutrophils
-  //Inhibition terms--function of IL10
-  double inMt = (1.0 - cMt) / (1.0 + std::pow(tIL10 / xMt, hMt)) + cMt;		//Applies to resting and active macrophage terms
-  double inTNFt = (1.0 - cTNFt) / (1.0 + std::pow(tIL10 / xTNFt, hTNFt)) + cTNFt;
-  double inTNFb = (1.0 - cTNFb) / (1.0 + std::pow(bIL10 / xTNFb, hTNFb)) + cTNFb;
-  double inNRb = (1.0 - cNR) / (1.0 + std::pow(bIL10 / xNR, hNR)) + cNR;
-  double inNAt = (1.0 - cNA) / (1.0 + std::pow(tIL10 / xNA, hNA)) + cNA;
-  double inNAb = (1.0 - cNA) / (1.0 + std::pow(bIL10 / xNA, hNA)) + cNA;
-  //Diffusion constants
-  double dbn = 0.005, dfn = 50.0; //Baseline diffusion of neutrophil and effect of inflammation on neutrophil diffusion
-  double dbp = 1.0, dfp = 1.0; //Baseline diffusion of pathogen and effect of inflammation on pathogen diffusion
-  double dbmol = 10.0, dfmol = 1.0; //Baseline diffusion of other molecules and effect of inflammation on other molecules diffusion
-  double at = 50.0, bt = 0.8, ab = 2000.; //Constants in diffusion equations
-  //Diffusion adjustment depending on inflammation
-  double difN_Z = dbn * (1.0 + dfn * inflLevel);
-  double difP_Z = dbp * (1.0 + dfp * inflLevel);
-  double difMol_Z = dbmol * (1.0 + dfmol * inflLevel);
-  //Pathogen diffusion
-  double difP_t = (at * std::pow(tPathogen, 2.0 / 3.0)) / (1.0 + bt * std::pow(tPathogen, 1.0 / 3.0)); //tissue pathogen effect on pathogen diffusion
-  double difP_b = ab * bPathogen; //blood pathogen effect on pathogen diffusion
+  double sM = 1.0, sN = 1.0, s6 = 0.001, s10 = 0.01;
+  //Pathogen parameters
+  double kPG = 1.0;
+  double kPN = 4.0; //Phagocytic effect of activated neutrophils on pathogen, determined empirically
+  double xPN = 10.0; //Level of pathogen that brings elimination of P by neutrophils to 50% of max
+  double sB = 0.0075; //Source of non-specific immune response
+  double kPB = 0.461; //Rate that non-specific response eliminates pathogen
+  double uB = 0.0023; //Decay rate of non-specific immune response
+  double kBP = 0.0001; //Rate at which non-specific response exhausted by pathogen
+  double maxPathogen = 100.0; //Maximum pathogen population size
+  //Trauma decay
+  double kTr = 0.85; //Determined empirically to give good results
+  //Macrophage interaction
+  double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 1.0, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
+  //Activate macrophage interactions
+  double kMANO = 0.2, kMA = 0.2;
+  //Neutrophil interactions
+  double kNL = 0.15, kNTNF = 0.2, kN6 = 0.557, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 15.0, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2, xNNO = 0.5; //xND was 0.4 for burn
+  //Inducible NOS
+  double kINOSN = 1.5, kINOSM = 0.1, kINOSEC = 0.1, kINOS6 = 2.0, kINOSd = 0.05, kINOS = 0.101, xINOS10 = 0.1, xINOSTNF = 0.05, xINOS6 = 0.1, xINOSNO = 0.3;
+  //E NOS
+  double kENOS = 4.0, kENOSEC = 0.05, xENOSTNF = 0.4, xENOSL = 1.015, xENOSTR = 0.1;
+  //Nitric oxide
+  double kN = 0.5, kNO3 = 0.46, kNOMA = 2.0;
+  //TNF
+  double kTNFN = 2.97, kTNFM = 0.1, kTNF = 1.4, xTNF6 = 0.059, xTNF10 = 0.079;
+  //IL6
+  double k6M = 3.03, k6TNF = 1.0, k62 = 3.4, k6NO = 2.97, k6 = 0.7, k6N = 0.2, x610 = 0.1782, x6TNF = 0.1, x66 = 0.2277, x6NO = 0.4;
+  //IL10
+  double k10MA = 0.1, k10N = 0.1, k10A = 62.87, k10TNF = 1.485, k106 = 0.051, k10 = 0.35, k10R = 0.1, x10TNF = 0.05, x1012 = 0.049, x106 = 0.08;
+  //CA
+  double kCA = 0.1, kCATR = 0.16;
+  //IL12
+  double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
+  //Blood pressure
+  double kB = 4.0, kBNO = 0.2, xBNO = 0.05;
+  //Damage --- changed kDB from 0.02, changed xD6 from 0.25, changed kDTR from 0.05,
+  double kDB = 0.005, kD6 = 0.3, kD = 0.05, xD6 = 0.25, xDNO = 0.5;
+  double kDTR = 0.0; //This is a base value that will be adjusted as a function of type and severity of trauma
+  double kDP = 0.001; //Pathogen causes a small amount of damage by itself
+  //Temperature parameters
+  double kT = 1.0, kTTnf = 1.5, nTTnf = 0.2, hTTnf = 0.75, TMax = 39.5, TMin = 37.0, kT6 = 1.5, nT6 = 0.5, hT6 = 0.75, kT10 = 0.0625, nT10 = 0.2, hT10 = 1.0;
+  //Heart rate parameters
+  double kH = 0.2, nHT = 1.0, hHT = 2.0, HMax = 192.0, HBase = 72.0, tau2 = 0.003;
+  //Pain threshold parameters
+  double kPTP = 0.025, kPT = 0.011, PTM = 1.0;
+  //Containers to hold states
+  double P = 0.0, MR = 0.0, MA = 0.0, NR = 0.0, NA = 0.0, ER = 0.0, EA = 0.0, eNOS = 0.0, iNOSd = 0.0, iNOS = 0.0, NO3 = 0.0, NO = 0.0, I6 = 0.0, I10 = 0.0, I12 = 0.0, TNF = 0.0, TI = 0.0, TR = 0.0;
+  //Differential containers
+  double dP = 0.0, dMR = 0.0, dMA = 0.0, dNR = 0.0, dNA = 0.0, dER = 0.0, dEA = 0.0, dENOS = 0.0, dINOSd = 0.0, dINOS = 0.0, dNO3 = 0.0, dI6 = 0.0, dI10 = 0.0, dI12 = 0.0, dTNF = 0.0, dTI = 0.0, dTR = 0.0;
 
-  //Differential Equations
-  //Pathogen
-  double dTPathogen = kPt * tPathogen * (1.0 - tPathogen / infPt) - kP_MAt * inMt * tMacrophageActive * GeneralMath::HillActivation(tPathogen, xP_MAt, hP_MAt) - kP_NAt * inNAt * tNeutrophilActive * GeneralMath::HillActivation(tPathogen, xP_NAt, hP_NAt) - kP_Bt * sBt * tPathogen / (uBt + kB_Pt * tPathogen) + difP_Z * (difP_b - difP_t) / volT;//kP_Bt * tAntibodies * tPathogen   kP_Bt * sBt * tPathogen / (uBt + kB_Pt * tPathogen)
-  double dBPathogen = kPb * bPathogen * (1.0 - bPathogen / infPb) - kP_NAb * inNAb * bNeutrophilActive * GeneralMath::HillActivation(bPathogen, xP_NAb, hP_NAb) - kP_Bb * bPathogen * sBb / (uBb + kB_Pb * bPathogen) + difP_Z * (difP_t - difP_b) / volB;//kP_Bb * bPathogen * bAntibodies  kP_Bb * bPathogen * sBb / (uBb + kB_Pb * bPathogen)
-  //Antibodies
-  double dTAntibodies = sBt - uBt * tAntibodies - kB_Pt * tPathogen * tAntibodies;
-  double dBAntibodies = sBb - uBb * bAntibodies - kB_Pb * bPathogen * bAntibodies;
-  //Resting macrophages (tissue only)
-  double dTMacrophageResting = sMRt - uMRt * tMacrophageResting - (kMR_Pt * inMt * tMacrophageResting * GeneralMath::HillActivation(tPathogen, xMR_Pt, hMR_Pt) + kMR_TNFt * inMt * tMacrophageResting * GeneralMath::HillActivation(tTNF, xMR_TNFt, hMR_TNFt) + kMR_NOt * inMt * tMacrophageResting * tNO);
-  //Active macrophages (tissue only)
-  double dTMacrophageActive = -uMAt * tMacrophageActive + (kMR_Pt * inMt * tMacrophageResting * GeneralMath::HillActivation(tPathogen, xMR_Pt, hMR_Pt) + kMR_TNFt * inMt * tMacrophageResting * GeneralMath::HillActivation(tTNF, xMR_TNFt, hMR_TNFt) + kMR_NOt * inMt * dTMacrophageResting * tNO);
-  //Resting neutrophils (blood only)
-  double dBNeutrophilResting = (sNRb + kNRb * GeneralMath::HillActivation(tNeutrophilActive + bNeutrophilActive, xNRb, hNRb)) - uNRb * bNeutrophilResting - (kNR_TNFb * inNAb * bNeutrophilResting * GeneralMath::HillActivation(bTNF, xNR_TNFb, hNR_TNFb) + kNR_NOb * inNAb * bNeutrophilResting * bNO + kNR_Pb * inNRb * bNeutrophilResting * GeneralMath::HillActivation(bPathogen, xNR_Pb, hNR_Pb));
-  //Active neutrophils
-  double dTNeutrophilActive = -uNAt * tNeutrophilActive + difN_Z * bNeutrophilActive / volT - (1.0 - rNA_Pt) * dNA_Pt * inNAt * tNeutrophilActive * GeneralMath::HillActivation(tPathogen, xP_NAt, hP_NAt);
-  double dBNeutrophilActive = -uNAb * bNeutrophilActive - difN_Z * bNeutrophilActive / volB + (kNR_Pb * inNAb * bNeutrophilResting * GeneralMath::HillActivation(bPathogen, xNR_Pb, hNR_Pb) + kNR_TNFb * inNAb * bNeutrophilResting * GeneralMath::HillActivation(bTNF, xNR_TNFb, hNR_TNFb) + kNR_NOb * inNAb * bNeutrophilResting * bNO) - (1.0 - rNA_Pb) * dNA_Pb * inNAb * bNeutrophilActive * GeneralMath::HillActivation(bPathogen, xP_NAb, hP_NAb);
-  //Tumor Necrosis Factor
-  double dTTNF = -uTNFt * tTNF + difMol_Z * (bTNF - tTNF) / volT - dTNF_MRt * inMt * tMacrophageResting * GeneralMath::HillActivation(tTNF, xMR_TNFt, hMR_TNFt) + kTNF_MAt * inTNFt * GeneralMath::HillActivation(tMacrophageActive, xTNF_MAt, hTNF_MAt);
-  double dBTNF = -uTNFb * bTNF + difMol_Z * (tTNF - bTNF) / volB - dTNF_NAb * inNAb * bNeutrophilResting * GeneralMath::HillActivation(bTNF, xTNF_NAb, hTNF_NAb);
-  //Interleukin-10
-  double dTIL10 = -(uIL10t_max - (uIL10t_max - uIL10t_min) * GeneralMath::HillActivation(tIL10, xIL10t, hIL10t)) * tIL10 + difMol_Z * (bIL10 - tIL10) / volT + kIL10_MAt * inMt * GeneralMath::HillActivation(tMacrophageActive, xIL10_MAt, hIL10_MAt);
-  double dBIL10 = -(uIL10b_max - (uIL10b_max - uIL10b_min) * GeneralMath::HillActivation(bIL10, xIL10b, hIL10b)) * bIL10 + difMol_Z * (tIL10 - bIL10) / volB;
-  //Nitric Oxide
-  double dTNO = -uNOt * tNO + difMol_Z * (bNO - tNO) / volT + kNO_NOt * tNO * tissueIntegrity + kNO_NAt * tNeutrophilActive * inNAt + kNO_NAt * tNeutrophilActive * tissueIntegrity + kNO_NAPt * tNeutrophilActive * tPathogen * tissueIntegrity + kNO_MAPt * tMacrophageActive * tPathogen * tissueIntegrity;
-  double dBNO = -uNOb * bNO + difMol_Z * (tNO - bNO) / volB + kNO_NAb * inNAb * bNeutrophilActive;
-  //Tissue Integrity
-  double dTI = kTI * tissueIntegrity * (1.0 - tissueIntegrity / infTI) * (tissueIntegrity - aTI) - kTI_NO * tNO * tissueIntegrity;
-  //Inflammation Level (Z)
-  double dZ = kZ_TNF * (GeneralMath::HillActivation(tTNF, xZ_TNF, hZ_TNF) + rZ_TNFTI * (infTI - tissueIntegrity)) * (1.0 - inflLevel) - uZ * inflLevel;
+  TI = m_InflammatoryResponse->GetTissueIntegrity().GetValue();
+  double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
-  double scale = 60.0;	//only for testing
+  for (auto immunePair : m_InflammatoryResponse->GetImmuneResponses()) {
+    std::string compName = immunePair.first;
+    SEImmuneCompartment* immuneCmpt = immunePair.second;
 
-  //Update state
-  double dT_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
-  //Inflammatory response values
-  m_InflammatoryResponse->GetPathogenBlood().IncrementValue(dBPathogen * dT_hr * scale);
-  m_InflammatoryResponse->GetPathogenTissue().IncrementValue(dTPathogen * dT_hr * scale);
-  m_InflammatoryResponse->GetInflammationLevel().IncrementValue(dZ * dT_hr * scale);
-  m_InflammatoryResponse->GetTissueIntegrity().IncrementValue(dTI * dT_hr * scale);
-  //Tissue mediators
-  m_InflammatoryResponse->GetTissueMediators().GetAntibodies().IncrementValue(dTAntibodies * dT_hr * scale);
-  m_InflammatoryResponse->GetTissueMediators().GetMacrophageResting().IncrementValue(dTMacrophageResting * dT_hr * scale);
-  m_InflammatoryResponse->GetTissueMediators().GetMacrophageActive().IncrementValue(dTMacrophageActive * dT_hr * scale);
-  m_InflammatoryResponse->GetTissueMediators().GetNeutrophilActive().IncrementValue(dTNeutrophilActive * dT_hr * scale);
-  m_InflammatoryResponse->GetTissueMediators().GetInterleukin10().IncrementValue(dTIL10 * dT_hr * scale);
-  m_InflammatoryResponse->GetTissueMediators().GetNitricOxide().IncrementValue(dTNO * dT_hr * scale);
-  m_InflammatoryResponse->GetTissueMediators().GetTumorNecrosisFactor().IncrementValue(dTTNF * dT_hr * scale);
-  //Blood Mediators
-  m_InflammatoryResponse->GetBloodMediators().GetAntibodies().IncrementValue(dBAntibodies * dT_hr * scale);
-  m_InflammatoryResponse->GetBloodMediators().GetNeutrophilResting().IncrementValue(dBNeutrophilResting * dT_hr * scale);
-  m_InflammatoryResponse->GetBloodMediators().GetNeutrophilActive().IncrementValue(dBNeutrophilActive * dT_hr * scale);
-  m_InflammatoryResponse->GetBloodMediators().GetInterleukin10().IncrementValue(dBIL10 * dT_hr * scale);
-  m_InflammatoryResponse->GetBloodMediators().GetNitricOxide().IncrementValue(dBNO * dT_hr * scale);
-  m_InflammatoryResponse->GetBloodMediators().GetTumorNecrosisFactor().IncrementValue(dBTNF * dT_hr * scale);
+    P = immuneCmpt->GetPathogen().GetValue();
+    MR = immuneCmpt->GetMacrophageResting().GetValue();
+    MA = immuneCmpt->GetMacrophageActive().GetValue();
+    NR = immuneCmpt->GetNeutrophilResting().GetValue();
+    NA = immuneCmpt->GetNeutrophilActive().GetValue();
+    ER = immuneCmpt->GetEpitheliumResting().GetValue();
+    EA = immuneCmpt->GetEpitheliumActive().GetValue();
+    eNOS = immuneCmpt->GetConstitutiveNOS().GetValue();
+    iNOSd = immuneCmpt->GetInducibleNOSPre().GetValue();
+    iNOS = immuneCmpt->GetInducibleNOS().GetValue();
+    NO3 = immuneCmpt->GetNitrate().GetValue();
+    NO = immuneCmpt->GetNitricOxide().GetValue();
+    I6 = immuneCmpt->GetInterleukin6().GetValue();
+    I10 = immuneCmpt->GetInterleukin10().GetValue();
+    I12 = immuneCmpt->GetInterleukin12().GetValue();
+    TNF = immuneCmpt->GetTumorNecrosisFactor().GetValue();
+
+    dP = (kPG-antibacterialEffect) * P * (1.0 - P / maxPathogen) - P * kPN * NA * GeneralMath::HillActivation(P, xPN, 2.0) - sB * kPB * P / (uB + kBP * P); //This is assumed to be the driving force for infection / sepsis.
+    if (P < 0.001) {
+      //Since pathogen decreases exponentially it will never actually hit 0.  Make sure it can't rebound when population becomes 0.1% of initial pop
+      dP = 0.0;
+    }
+    dTR = -kTr * TR; //This is assumed to be the driving force for burn
+    dMR = -((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(P, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
+    dMA = ((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(P, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
+    dNR = -(kNL * xNL * GeneralMath::HillActivation(P, xNL, 1.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
+    dNA = (kNL * xNL * GeneralMath::HillActivation(P, xNL, 1.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNA * NA;
+    dINOS = kINOS * (iNOSd - iNOS);
+    dINOSd = (kINOSN * NA + kINOSM * MA + kINOSEC * (std::pow(xINOSTNF, 2.0) * GeneralMath::HillActivation(TNF, xINOSTNF, 2.0) + kINOS6 * std::pow(xINOS6, 2.0) * GeneralMath::HillActivation(I6, xINOS6, 2.0))) * GeneralMath::HillInhibition(I10, xINOS10, 2.0) * GeneralMath::HillInhibition(NO, xINOSNO, 2.0) - kINOSd * iNOSd;
+    dENOS = kENOSEC * GeneralMath::HillInhibition(TNF, xENOSTNF, 1.0) * GeneralMath::HillInhibition(P, xENOSL, 1.0) * GeneralMath::HillInhibition(TR, xENOSTR, 4.0) - kENOS * eNOS;
+    dNO3 = kNO3 * (NO - NO3);
+    dTNF = (kTNFN * NA + kTNFM * MA) * GeneralMath::HillInhibition(I10, xTNF10, 2.0) * GeneralMath::HillInhibition(I6, xTNF6, 3.0) - kTNF * TNF;
+    dI6 = (k6N * NA + MA) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(NO, x6NO, 2.0)) * GeneralMath::HillInhibition(I10, x610, 2.0) * GeneralMath::HillInhibition(I6, x66, 4.0) + k6 * (s6 - I6);
+    dI10 = (k10N * NA + MA) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(I6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(I12, x1012, 4.0) + k10R) - k10 * (I10 - s10);
+    dI12 = k12M * MA * GeneralMath::HillInhibition(I10, x1210, 2.0) - k12 * I12;
+    if (compName == "Tissue") {
+      dTI += kD * (1.0 - TI) - TI * (kD6 * GeneralMath::HillActivation(I6, xD6, 2.0) + kDTR * TR + kDP * P) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
+    } else {
+      dTI += 0.0;
+    }
+
+    double scale = 60.0;
+    //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up
+    immuneCmpt->GetPathogen().IncrementValue(dP * dt_hr * scale);
+    immuneCmpt->GetTrauma().IncrementValue(dTR * dt_hr * scale);
+    immuneCmpt->GetMacrophageResting().IncrementValue(dMR * dt_hr * scale);
+    immuneCmpt->GetMacrophageActive().IncrementValue(dMA * dt_hr * scale);
+    immuneCmpt->GetNeutrophilResting().IncrementValue(dNR * dt_hr * scale);
+    immuneCmpt->GetNeutrophilActive().IncrementValue(dNA * dt_hr * scale);
+    immuneCmpt->GetInducibleNOS().IncrementValue(dINOS * dt_hr * scale);
+    immuneCmpt->GetInducibleNOSPre().IncrementValue(dINOSd * dt_hr * scale);
+    immuneCmpt->GetConstitutiveNOS().IncrementValue(dENOS * dt_hr * scale);
+    immuneCmpt->GetNitrate().IncrementValue(dNO3 * dt_hr * scale);
+    immuneCmpt->GetTumorNecrosisFactor().IncrementValue(dTNF * dt_hr * scale);
+    immuneCmpt->GetInterleukin6().IncrementValue(dI6 * dt_hr * scale);
+    immuneCmpt->GetInterleukin10().IncrementValue(dI10 * dt_hr * scale);
+    immuneCmpt->GetInterleukin12().IncrementValue(dI12 * dt_hr * scale);
+    m_InflammatoryResponse->GetTissueIntegrity().IncrementValue(dTI * dt_hr * scale);
+    //Nitric oxide is an algebraic relationship--update it here using new macrophage and neutrophil values
+    NO = iNOS * (1.0 + kNOMA * (immuneCmpt->GetMacrophageActive().GetValue() + immuneCmpt->GetNeutrophilActive().GetValue())) + eNOS;
+    immuneCmpt->GetNitricOxide().SetValue(NO);
+  }
 }
 
 //--------------------------------------------------------------------------------------------------

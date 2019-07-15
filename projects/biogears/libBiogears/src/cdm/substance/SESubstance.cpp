@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarTimeMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
@@ -41,13 +43,15 @@ SESubstance::SESubstance(Logger* logger)
   m_MembraneResistance = nullptr;
 
   m_Aerosolization = nullptr;
+  m_AreaUnderCurve = nullptr;
   m_BloodConcentration = nullptr;
+  m_EffectSiteConcentration = nullptr;
   m_MassInBody = nullptr;
   m_MassInBlood = nullptr;
   m_MassInTissue = nullptr;
   m_PlasmaConcentration = nullptr;
-  m_EffectSiteConcentration = nullptr;
   m_SystemicMassCleared = nullptr;
+  m_TimeAboveMIC = nullptr;
   m_TissueConcentration = nullptr;
 
   m_AlveolarTransfer = nullptr;
@@ -57,6 +61,7 @@ SESubstance::SESubstance(Logger* logger)
   m_SolubilityCoefficient = nullptr;
   m_RelativeDiffusionCoefficient = nullptr;
 
+  m_AntibioticPD = nullptr;
   m_Clearance = nullptr;
   m_PK = nullptr;
   m_PD = nullptr;
@@ -79,13 +84,15 @@ void SESubstance::Clear()
   SAFE_DELETE(m_MichaelisCoefficient);
   SAFE_DELETE(m_MembraneResistance);
 
+  SAFE_DELETE(m_AreaUnderCurve);
   SAFE_DELETE(m_BloodConcentration);
+  SAFE_DELETE(m_EffectSiteConcentration);
   SAFE_DELETE(m_MassInBody);
   SAFE_DELETE(m_MassInBlood);
   SAFE_DELETE(m_MassInTissue);
   SAFE_DELETE(m_PlasmaConcentration);
-  SAFE_DELETE(m_EffectSiteConcentration);
   SAFE_DELETE(m_SystemicMassCleared);
+  SAFE_DELETE(m_TimeAboveMIC);
   SAFE_DELETE(m_TissueConcentration);
 
   SAFE_DELETE(m_AlveolarTransfer);
@@ -95,6 +102,7 @@ void SESubstance::Clear()
   SAFE_DELETE(m_SolubilityCoefficient);
   SAFE_DELETE(m_RelativeDiffusionCoefficient);
 
+  SAFE_DELETE(m_AntibioticPD);
   SAFE_DELETE(m_Aerosolization);
   SAFE_DELETE(m_Clearance);
   SAFE_DELETE(m_PK);
@@ -120,8 +128,12 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
   if (name.compare("MembraneConductivity") == 0)
     return &GetMembraneResistance();
 
+  if (name.compare("AreaUnderCurve") == 0)
+    return &GetAreaUnderCurve();
   if (name.compare("BloodConcentration") == 0)
     return &GetBloodConcentration();
+  if (name.compare("EffectSiteConcentration") == 0)
+    return &GetEffectSiteConcentration();
   if (name.compare("MassInBody") == 0)
     return &GetMassInBody();
   if (name.compare("MassInBlood") == 0)
@@ -130,10 +142,10 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
     return &GetMassInTissue();
   if (name.compare("PlasmaConcentration") == 0)
     return &GetPlasmaConcentration();
-  if (name.compare("EffectSiteConcentration") == 0)
-    return &GetEffectSiteConcentration();
   if (name.compare("SystemicMassCleared") == 0)
     return &GetSystemicMassCleared();
+  if (name.compare("TimeAboveMIC") == 0)
+    return &GetTimeAboveMIC();
   if (name.compare("TissueConcentration") == 0)
     return &GetTissueConcentration();
 
@@ -162,6 +174,8 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
       return GetPK().GetScalar(prop);
     if (child == "PD")
       return GetPD().GetScalar(prop);
+    if (child == "AntibioticPD")
+      return GetAntibioticPD().GetScalar(prop);
   }
 
   return nullptr;
@@ -188,8 +202,12 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
   if (in.MembraneResistance().present())
     GetMembraneResistance().Load(in.MembraneResistance().get());
 
+  if (in.AreaUnderCurve().present())
+    GetAreaUnderCurve().Load(in.AreaUnderCurve().get());
   if (in.BloodConcentration().present())
     GetBloodConcentration().Load(in.BloodConcentration().get());
+  if (in.EffectSiteConcentration().present())
+    GetEffectSiteConcentration().Load(in.EffectSiteConcentration().get());
   if (in.MassInBody().present())
     GetMassInBody().Load(in.MassInBody().get());
   if (in.MassInBlood().present())
@@ -198,10 +216,10 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
     GetMassInTissue().Load(in.MassInTissue().get());
   if (in.PlasmaConcentration().present())
     GetPlasmaConcentration().Load(in.PlasmaConcentration().get());
-  if (in.EffectSiteConcentration().present())
-    GetEffectSiteConcentration().Load(in.EffectSiteConcentration().get());
   if (in.SystemicMassCleared().present())
     GetSystemicMassCleared().Load(in.SystemicMassCleared().get());
+  if (in.TimeAboveMIC().present())
+    GetTimeAboveMIC().Load(in.TimeAboveMIC().get());
   if (in.TissueConcentration().present())
     GetTissueConcentration().Load(in.TissueConcentration().get());
 
@@ -218,6 +236,8 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
   if (in.SolubilityCoefficient().present())
     GetSolubilityCoefficient().Load(in.SolubilityCoefficient().get());
 
+  if (in.AntibioticPharmacodynamics().present())
+    GetAntibioticPD().Load(in.AntibioticPharmacodynamics().get());
   if (in.Aerosolization().present())
     GetAerosolization().Load(in.Aerosolization().get());
   if (in.Clearance().present())
@@ -245,8 +265,7 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
 {
   if (HasName()) {
     data.Name(m_Name);
-  } else
-  {
+  } else {
     data.Name("Unknown Substance");
   }
   if (HasState())
@@ -265,8 +284,12 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
   if (HasMembraneResistance())
     data.MembraneResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_MembraneResistance->Unload()));
 
+  if (HasAreaUnderCurve())
+    data.AreaUnderCurve(std::unique_ptr<CDM::ScalarTimeMassPerVolumeData>(m_AreaUnderCurve->Unload()));
   if (HasBloodConcentration())
     data.BloodConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodConcentration->Unload()));
+  if (HasEffectSiteConcentration())
+    data.EffectSiteConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EffectSiteConcentration->Unload()));
   if (HasMassInBody())
     data.MassInBody(std::unique_ptr<CDM::ScalarMassData>(m_MassInBody->Unload()));
   if (HasMassInBlood())
@@ -275,10 +298,10 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
     data.MassInTissue(std::unique_ptr<CDM::ScalarMassData>(m_MassInTissue->Unload()));
   if (HasPlasmaConcentration())
     data.PlasmaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_PlasmaConcentration->Unload()));
-  if (HasEffectSiteConcentration())
-    data.EffectSiteConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EffectSiteConcentration->Unload()));
   if (HasSystemicMassCleared())
     data.SystemicMassCleared(std::unique_ptr<CDM::ScalarMassData>(m_SystemicMassCleared->Unload()));
+  if (HasTimeAboveMIC())
+    data.TimeAboveMIC(std::unique_ptr<CDM::ScalarTimeData>(m_TimeAboveMIC->Unload()));
   if (HasTissueConcentration())
     data.TissueConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TissueConcentration->Unload()));
 
@@ -295,6 +318,8 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
   if (HasRelativeDiffusionCoefficient())
     data.RelativeDiffusionCoefficient(std::unique_ptr<CDM::ScalarData>(m_RelativeDiffusionCoefficient->Unload()));
 
+  if (HasAntibioticPD())
+    data.AntibioticPharmacodynamics(std::unique_ptr<CDM::AntibioticPharmacodynamicsData>(m_AntibioticPD->Unload()));
   if (HasAerosolization())
     data.Aerosolization(std::unique_ptr<CDM::SubstanceAerosolizationData>(m_Aerosolization->Unload()));
   if (HasClearance())
@@ -492,6 +517,25 @@ void SESubstance::RemoveAerosolization()
   SAFE_DELETE(m_Aerosolization);
 }
 //-----------------------------------------------------------------------------
+bool SESubstance::HasAreaUnderCurve() const
+{
+  return (m_AreaUnderCurve == nullptr) ? false : m_AreaUnderCurve->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarTimeMassPerVolume& SESubstance::GetAreaUnderCurve()
+{
+  if (m_AreaUnderCurve == nullptr)
+    m_AreaUnderCurve = new SEScalarTimeMassPerVolume();
+  return *m_AreaUnderCurve;
+}
+//-----------------------------------------------------------------------------
+double SESubstance::GetAreaUnderCurve(const TimeMassPerVolumeUnit& unit) const
+{
+  if (m_AreaUnderCurve == nullptr)
+    return SEScalar::dNaN();
+  return m_AreaUnderCurve->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
 bool SESubstance::HasBloodConcentration() const
 {
   return (m_BloodConcentration == nullptr) ? false : m_BloodConcentration->IsValid();
@@ -509,6 +553,25 @@ double SESubstance::GetBloodConcentration(const MassPerVolumeUnit& unit) const
   if (m_BloodConcentration == nullptr)
     return SEScalar::dNaN();
   return m_BloodConcentration->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+bool SESubstance::HasEffectSiteConcentration() const
+{
+  return (m_EffectSiteConcentration == nullptr) ? false : m_EffectSiteConcentration->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarMassPerVolume& SESubstance::GetEffectSiteConcentration()
+{
+  if (m_EffectSiteConcentration == nullptr)
+    m_EffectSiteConcentration = new SEScalarMassPerVolume();
+  return *m_EffectSiteConcentration;
+}
+//-----------------------------------------------------------------------------
+double SESubstance::GetEffectSiteConcentration(const MassPerVolumeUnit& unit) const
+{
+  if (m_EffectSiteConcentration == nullptr)
+    return SEScalar::dNaN();
+  return m_EffectSiteConcentration->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMassInBody() const
@@ -587,25 +650,6 @@ double SESubstance::GetPlasmaConcentration(const MassPerVolumeUnit& unit) const
   return m_PlasmaConcentration->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-bool SESubstance::HasEffectSiteConcentration() const
-{
-  return (m_EffectSiteConcentration == nullptr) ? false : m_EffectSiteConcentration->IsValid();
-}
-//-----------------------------------------------------------------------------
-SEScalarMassPerVolume& SESubstance::GetEffectSiteConcentration()
-{
-  if (m_EffectSiteConcentration == nullptr)
-    m_EffectSiteConcentration = new SEScalarMassPerVolume();
-  return *m_EffectSiteConcentration;
-}
-//-----------------------------------------------------------------------------
-double SESubstance::GetEffectSiteConcentration(const MassPerVolumeUnit& unit) const
-{
-  if (m_EffectSiteConcentration == nullptr)
-    return SEScalar::dNaN();
-  return m_EffectSiteConcentration->GetValue(unit);
-}
-//-----------------------------------------------------------------------------
 bool SESubstance::HasSystemicMassCleared() const
 {
   return (m_SystemicMassCleared == nullptr) ? false : m_SystemicMassCleared->IsValid();
@@ -623,6 +667,25 @@ double SESubstance::GetSystemicMassCleared(const MassUnit& unit) const
   if (m_SystemicMassCleared == nullptr)
     return SEScalar::dNaN();
   return m_SystemicMassCleared->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+bool SESubstance::HasTimeAboveMIC() const
+{
+  return (m_TimeAboveMIC == nullptr) ? false : m_TimeAboveMIC->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarTime& SESubstance::GetTimeAboveMIC()
+{
+  if (m_TimeAboveMIC == nullptr)
+    m_TimeAboveMIC = new SEScalarTime();
+  return *m_TimeAboveMIC;
+}
+//-----------------------------------------------------------------------------
+double SESubstance::GetTimeAboveMIC(const TimeUnit& unit) const
+{
+  if (m_TimeAboveMIC == nullptr)
+    return SEScalar::dNaN();
+  return m_TimeAboveMIC->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasTissueConcentration() const
@@ -822,6 +885,28 @@ const SESubstancePharmacodynamics* SESubstance::GetPD() const
 void SESubstance::RemovePD()
 {
   SAFE_DELETE(m_PD);
+}
+//-----------------------------------------------------------------------------
+bool SESubstance::HasAntibioticPD() const
+{
+  return (m_AntibioticPD != nullptr && m_AntibioticPD->IsValid());
+}
+//-----------------------------------------------------------------------------
+SEAntibioticPharmacodynamics& SESubstance::GetAntibioticPD()
+{
+  if (m_AntibioticPD == nullptr)
+    m_AntibioticPD = new SEAntibioticPharmacodynamics(GetLogger());
+  return *m_AntibioticPD;
+}
+//-----------------------------------------------------------------------------
+const SEAntibioticPharmacodynamics* SESubstance::GetAntibioticPD() const
+{
+  return m_AntibioticPD;
+}
+//-----------------------------------------------------------------------------
+void SESubstance::RemoveAntibioticPD()
+{
+  SAFE_DELETE(m_AntibioticPD);
 }
 //-----------------------------------------------------------------------------
 }

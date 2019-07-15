@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-
+constexpr char idAntibioticActivity[] = "AntibioticActivity";
 constexpr char idBronchodilationLevel[] = "BronchodilationLevel";
 constexpr char idHeartRateChange[] = "HeartRateChange";
 constexpr char idHemorrhageChange[] = "HemorrhageChange";
@@ -41,6 +41,7 @@ constexpr char idPupillaryResponse[] = "PupillaryResponse";
 SEDrugSystem::SEDrugSystem(Logger* logger)
   : SESystem(logger)
 {
+  m_AntibioticActivity = nullptr;
   m_BronchodilationLevel = nullptr;
   m_HeartRateChange = nullptr;
   m_HemorrhageChange = nullptr;
@@ -66,6 +67,7 @@ void SEDrugSystem::Clear()
 {
   SESystem::Clear();
 
+  SAFE_DELETE(m_AntibioticActivity);
   SAFE_DELETE(m_BronchodilationLevel);
   SAFE_DELETE(m_HeartRateChange);
   SAFE_DELETE(m_HemorrhageChange);
@@ -85,6 +87,8 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
 {
   SESystem::Load(in);
 
+  if (in.AntibioticActivity().present())
+    GetAntibioticActivity().Load(in.AntibioticActivity().get());
   if (in.BronchodilationLevel().present())
     GetBronchodilationLevel().Load(in.BronchodilationLevel().get());
   if (in.HeartRateChange().present())
@@ -120,6 +124,8 @@ const SEScalar* SEDrugSystem::GetScalar(const char* name)
 //-------------------------------------------------------------------------------
 const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
 {
+  if (name == idAntibioticActivity)
+    return &GetAntibioticActivity();
   if (name == idBronchodilationLevel)
     return &GetBronchodilationLevel();
   if (name == idHeartRateChange)
@@ -167,6 +173,8 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
 {
   SESystem::Unload(data);
 
+  if (m_AntibioticActivity != nullptr)
+    data.AntibioticActivity(std::unique_ptr<CDM::ScalarData>(m_AntibioticActivity->Unload()));
   if (m_BronchodilationLevel != nullptr)
     data.BronchodilationLevel(std::unique_ptr<CDM::ScalarFractionData>(m_BronchodilationLevel->Unload()));
   if (m_HeartRateChange != nullptr)
@@ -191,6 +199,26 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
     data.TubularPermeabilityChange(std::unique_ptr<CDM::ScalarFractionData>(m_TubularPermeabilityChange->Unload()));
   if (m_CentralNervousResponse != nullptr)
     data.CentralNervousResponse(std::unique_ptr<CDM::ScalarFractionData>(m_CentralNervousResponse->Unload()));
+}
+//-------------------------------------------------------------------------------
+
+bool SEDrugSystem::HasAntibioticActivity() const
+{
+  return m_AntibioticActivity == nullptr ? false : m_AntibioticActivity->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEDrugSystem::GetAntibioticActivity()
+{
+  if (m_AntibioticActivity == nullptr)
+    m_AntibioticActivity = new SEScalar();
+  return *m_AntibioticActivity;
+}
+//-------------------------------------------------------------------------------
+double SEDrugSystem::GetAntibioticActivity() const
+{
+  if (m_AntibioticActivity == nullptr)
+    return SEScalar::dNaN();
+  return m_AntibioticActivity->GetValue();
 }
 //-------------------------------------------------------------------------------
 

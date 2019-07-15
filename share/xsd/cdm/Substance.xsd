@@ -63,6 +63,14 @@ specific language governing permissions and limitations under the License.
   	</xs:restriction>
   </xs:simpleType>
   
+  <xs:simpleType name="enumAntibioticPDIndex">
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="TimeAboveMIC"/>
+		<xs:enumeration value="AUC:MIC"/>
+		<xs:enumeration value="Cmax:MIC"/>
+	</xs:restriction>
+  </xs:simpleType>
+  
   
   <!-- The following object types encapsulate data for a particular methodology.
        There may be data fields (ex. FractionUnboundInPlasma) duplicated between objects.
@@ -150,6 +158,18 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
   
+  <xs:complexType name="AntibioticPharmacodynamicsData">
+	<xs:complexContent>
+		<xs:extension base="ObjectData">
+			<xs:sequence>
+				<xs:element name="AntibacterialIndex" type="enumAntibioticPDIndex" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="I50" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="AntibacterialEffect" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:extension>
+	</xs:complexContent>
+  </xs:complexType>
+  
   <!-- @brief Data associated with reducing substance mass in the body by filtration (Kidney/Liver) or some other metabolic process (Systemic). -->
   <xs:complexType name="SubstanceClearanceData">
     <xs:complexContent>
@@ -214,14 +234,15 @@ specific language governing permissions and limitations under the License.
           <!-- Aerosol -->
           <xs:element name="Aerosolization" type="SubstanceAerosolizationData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Data for if this substance was to be aerosolized. -->
           <!-- Liquid -->
+		  <xs:element name="AreaUnderCurve" type="ScalarTimeMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@ brief Parameter for drugs to track residence in body-->
           <xs:element name="BloodConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Concentration of this substance that is in the blood. -->
+		  <xs:element name="EffectSiteConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Calculated concentration at drug site of action for PD Effects -->
           <xs:element name="MassInBody" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total Amount of mass of this substance that is in the body. -->
           <xs:element name="MassInBlood" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Amount of mass of this substance that is in the blood. -->
           <xs:element name="MassInTissue" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Amount of mass of this substance that is in the tissue. -->
           <xs:element name="PlasmaConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Calculated concentration of a substance in the plasma. -->
           <xs:element name="SystemicMassCleared" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of mass that has been systemically cleared-->          
-          <xs:element name="EffectSiteConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Calculated concentration at drug site of action for PD Effects -->
-
+		  <xs:element name="TimeAboveMIC" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/><!--@ breif The amount of time an antiobiotics plasma concentration is greater than the minimum amount required to act on a bacterium-->
           <xs:element name="TissueConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Concentration of this substance that is in the tissue. -->
           <!-- Gas -->
           <xs:element name="AlveolarTransfer" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Calculated rate of transfer that occurs during gas exchange. -->
@@ -231,6 +252,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="RelativeDiffusionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of the substance to diffuse across a membrane. A proportionality of the solubility and the square root of the molecular weight as defined relative to oxygen.-->
           <xs:element name="SolubilityCoefficient" type="ScalarInversePressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of a substance to dissolve in a solution. -->          
           <!-- More complex Objects -->
+		  <xs:element name="AntibioticPharmacodynamics" type="AntibioticPharmacodynamicsData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="Clearance" type="SubstanceClearanceData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstanceClearanceData --> 
           <xs:element name="Pharmacokinetics" type="SubstancePharmacokineticsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacokineticsData -->  
           <xs:element name="Pharmacodynamics" type="SubstancePharmacodynamicsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacodynamicsData -->   

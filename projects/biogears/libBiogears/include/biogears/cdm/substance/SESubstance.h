@@ -16,12 +16,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
+#include <biogears/cdm/substance/SEAntibioticPharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
-CDM_BIND_DECL(SubstanceData) 
+CDM_BIND_DECL(SubstanceData)
 
 namespace biogears {
 class SEScalarMass;
@@ -41,6 +42,10 @@ class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 class SEScalarPressure;
 class PressureUnit;
+class SEScalarTimeMassPerVolume;
+class TimeMassPerVolumeUnit;
+class SEScalarTime;
+class TimeUnit;
 
 class BIOGEARS_API SESubstance : public Loggable {
 public:
@@ -103,9 +108,17 @@ public:
   virtual const SESubstanceAerosolization* GetAerosolization() const;
   virtual void RemoveAerosolization();
 
+  virtual bool HasAreaUnderCurve() const;
+  virtual SEScalarTimeMassPerVolume& GetAreaUnderCurve();
+  virtual double GetAreaUnderCurve(const TimeMassPerVolumeUnit& unit) const;
+
   virtual bool HasBloodConcentration() const;
   virtual SEScalarMassPerVolume& GetBloodConcentration();
   virtual double GetBloodConcentration(const MassPerVolumeUnit& unit) const;
+
+  virtual bool HasEffectSiteConcentration() const;
+  virtual SEScalarMassPerVolume& GetEffectSiteConcentration();
+  virtual double GetEffectSiteConcentration(const MassPerVolumeUnit& unit) const;
 
   virtual bool HasMassInBody() const;
   virtual SEScalarMass& GetMassInBody();
@@ -123,13 +136,13 @@ public:
   virtual SEScalarMassPerVolume& GetPlasmaConcentration();
   virtual double GetPlasmaConcentration(const MassPerVolumeUnit& unit) const;
 
-  virtual bool HasEffectSiteConcentration() const;
-  virtual SEScalarMassPerVolume& GetEffectSiteConcentration();
-  virtual double GetEffectSiteConcentration(const MassPerVolumeUnit& unit) const;
-
   virtual bool HasSystemicMassCleared() const;
   virtual SEScalarMass& GetSystemicMassCleared();
   virtual double GetSystemicMassCleared(const MassUnit& unit) const;
+
+  virtual bool HasTimeAboveMIC() const;
+  virtual SEScalarTime& GetTimeAboveMIC();
+  virtual double GetTimeAboveMIC(const TimeUnit& unit) const;
 
   virtual bool HasTissueConcentration() const;
   virtual SEScalarMassPerVolume& GetTissueConcentration();
@@ -160,6 +173,11 @@ public:
   virtual SEScalarInversePressure& GetSolubilityCoefficient();
   virtual double GetSolubilityCoefficient(const InversePressureUnit& unit) const;
 
+  virtual bool HasAntibioticPD() const;
+  virtual SEAntibioticPharmacodynamics& GetAntibioticPD();
+  virtual const SEAntibioticPharmacodynamics* GetAntibioticPD() const;
+  virtual void RemoveAntibioticPD();
+
   virtual bool HasClearance() const;
   virtual SESubstanceClearance& GetClearance();
   virtual const SESubstanceClearance* GetClearance() const;
@@ -187,13 +205,15 @@ protected:
   SEScalarElectricResistance* m_MembraneResistance;
 
   SESubstanceAerosolization* m_Aerosolization;
+  SEScalarTimeMassPerVolume* m_AreaUnderCurve;
   SEScalarMassPerVolume* m_BloodConcentration;
+  SEScalarMassPerVolume* m_EffectSiteConcentration;
   SEScalarMass* m_MassInBody;
   SEScalarMass* m_MassInBlood;
   SEScalarMass* m_MassInTissue;
   SEScalarMassPerVolume* m_PlasmaConcentration;
-  SEScalarMassPerVolume* m_EffectSiteConcentration;
   SEScalarMass* m_SystemicMassCleared;
+  SEScalarTime* m_TimeAboveMIC;
   SEScalarMassPerVolume* m_TissueConcentration;
 
   SEScalarVolumePerTime* m_AlveolarTransfer;
@@ -203,6 +223,7 @@ protected:
   SEScalar* m_RelativeDiffusionCoefficient;
   SEScalarInversePressure* m_SolubilityCoefficient;
 
+  SEAntibioticPharmacodynamics* m_AntibioticPD;
   SESubstanceClearance* m_Clearance;
   SESubstancePharmacokinetics* m_PK;
   SESubstancePharmacodynamics* m_PD;

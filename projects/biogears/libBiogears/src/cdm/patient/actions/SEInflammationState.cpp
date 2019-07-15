@@ -531,13 +531,9 @@ std::vector<CDM::enumInflammationSource>& SEInflammationState::GetInflammationSo
 //-------------------------------------------------------------------------------
 //////////////////////////////////--SEInflammatoryResponse--//////////////////////////////////
 SEInflammatoryResponse::SEInflammatoryResponse()
-  : m_PathogenTissue(nullptr)
-  , m_PathogenBlood(nullptr)
-  , m_Trauma(nullptr)
-  , m_BloodMediators(nullptr)
-  , m_TissueMediators(nullptr)
+  : m_BloodResponse(nullptr)
+  , m_TissueResponse(nullptr)
   , m_TissueIntegrity(nullptr)
-  , m_InflammationLevel(nullptr)
 {
 }
 //-------------------------------------------------------------------------------
@@ -548,24 +544,17 @@ SEInflammatoryResponse::~SEInflammatoryResponse()
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Clear()
 {
-  SAFE_DELETE(m_PathogenTissue);
-  SAFE_DELETE(m_PathogenBlood);
-  SAFE_DELETE(m_Trauma);
-  SAFE_DELETE(m_BloodMediators);
-  SAFE_DELETE(m_TissueMediators);
+  SAFE_DELETE(m_BloodResponse);
+  SAFE_DELETE(m_TissueResponse);
   SAFE_DELETE(m_TissueIntegrity);
-  SAFE_DELETE(m_InflammationLevel);
+  m_ImmuneResponses.clear();
   m_InflammationSources.clear();
 }
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::Load(const CDM::InflammatoryResponseData& in)
 {
-  GetPathogenTissue().Load(in.PathogenTissue());
-  GetPathogenBlood().Load(in.PathogenBlood());
-  GetTrauma().Load(in.Trauma());
-  GetBloodMediators().Load(in.BloodMediators());
-  GetTissueMediators().Load(in.TissueMediators());
-  GetInflammationLevel().Load(in.InflammationLevel());
+  GetBloodResponse().Load(in.BloodResponse());
+  GetTissueResponse().Load(in.TissueResponse());
   GetTissueIntegrity().Load(in.TissueIntegrity());
   for (auto src : in.Source()) {
     m_InflammationSources.push_back(src);
@@ -582,13 +571,9 @@ CDM::InflammatoryResponseData* SEInflammatoryResponse::Unload() const
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
 {
-  data.PathogenTissue(std::unique_ptr<CDM::ScalarData>(m_PathogenTissue->Unload()));
-  data.PathogenBlood(std::unique_ptr<CDM::ScalarData>(m_PathogenBlood->Unload()));
-  data.Trauma(std::unique_ptr<CDM::ScalarData>(m_Trauma->Unload()));
-  data.BloodMediators(std::unique_ptr<CDM::ImmuneMediatorData>(m_BloodMediators->Unload()));
-  data.TissueMediators(std::unique_ptr<CDM::ImmuneMediatorData>(m_TissueMediators->Unload()));
+  data.BloodResponse(std::unique_ptr<CDM::ImmuneCompartmentData>(m_BloodResponse->Unload()));
+  data.TissueResponse(std::unique_ptr<CDM::ImmuneCompartmentData>(m_TissueResponse->Unload()));
   data.TissueIntegrity(std::unique_ptr<CDM::Scalar0To1Data>(m_TissueIntegrity->Unload()));
-  data.InflammationLevel(std::unique_ptr<CDM::Scalar0To1Data>(m_InflammationLevel->Unload()));
   for (auto src : m_InflammationSources) {
     data.Source().push_back(src);
   }
@@ -597,18 +582,16 @@ void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
 void SEInflammatoryResponse::Initialize()
 {
   //Values from Chow2005Acute
-  GetPathogenTissue().SetValue(0.0); //Change this back to 0 after testing
-  GetPathogenBlood().SetValue(0.0);
-  GetTrauma().SetValue(0.0);
-  GetTissueMediators().Initialize(true);
-  GetBloodMediators().Initialize(false);
+  GetTissueResponse().Initialize();
+  GetBloodResponse().Initialize();
   GetTissueIntegrity().SetValue(1.0);
-  GetInflammationLevel().SetValue(0.0);
+  m_ImmuneResponses.push_back(std::make_pair("Blood", m_BloodResponse));
+  m_ImmuneResponses.push_back(std::make_pair("Tissue", m_TissueResponse));
 }
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::IsValid()
 {
-  if (HasPathogenTissue() && HasPathogenBlood() && HasTrauma() && HasTissueIntegrity() && HasInflammationLevel() && HasBloodMediators() && HasTissueMediators())
+  if (HasTissueIntegrity() && HasTissueResponse() && HasBloodResponse())
     return true;
   else
     return false;
@@ -621,84 +604,37 @@ const SEScalar* SEInflammatoryResponse::GetScalar(const char* name)
 //-------------------------------------------------------------------------------
 const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name)
 {
-  if (name.compare("PathogenTissue") == 0)
-    return &GetPathogenTissue();
-  if (name.compare("PathogenBlood") == 0)
-    return &GetPathogenBlood();
-  if (name.compare("Trauma") == 0)
-    return &GetTrauma();
+
   if (name.compare("TissueIntegrity") == 0)
     return &GetTissueIntegrity();
-  if (name.compare("InflammationLevel") == 0)
-    return &GetInflammationLevel();
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string prop = name.substr(split + 1, name.npos);
     std::string parent = name.substr(0, split);
-    if (parent.compare("BloodMediators") == 0)
-      return GetBloodMediators().GetScalar(prop);
-    if (parent.compare("TissueMediators") == 0)
-      return GetTissueMediators().GetScalar(prop);
+    if (parent.compare("BloodResponse") == 0)
+      return GetBloodResponse().GetScalar(prop);
+    if (parent.compare("TissueResponse") == 0)
+      return GetTissueResponse().GetScalar(prop);
   }
 
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasPathogenTissue() const
+bool SEInflammatoryResponse::HasImmuneResponses() const
 {
-  return m_PathogenTissue == nullptr ? false : m_PathogenTissue->IsValid();
+  return m_ImmuneResponses.size() != 2 ? false : true;
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEInflammatoryResponse::GetPathogenTissue()
+std::vector<std::pair<std::string, SEImmuneCompartment*>> SEInflammatoryResponse::GetImmuneResponses()
 {
-  if (m_PathogenTissue == nullptr)
-    m_PathogenTissue = new SEScalar();
-  return *m_PathogenTissue;
+  return m_ImmuneResponses;
 }
 //-------------------------------------------------------------------------------
-double SEInflammatoryResponse::GetPathogenTissue() const
+void SEInflammatoryResponse::SetImmuneResponses()
 {
-  if (m_PathogenTissue == nullptr)
-    return SEScalar::dNaN();
-  return m_PathogenTissue->GetValue();
-}
-//-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasPathogenBlood() const
-{
-  return m_PathogenBlood == nullptr ? false : m_PathogenBlood->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SEInflammatoryResponse::GetPathogenBlood()
-{
-  if (m_PathogenBlood == nullptr)
-    m_PathogenBlood = new SEScalar();
-  return *m_PathogenBlood;
-}
-//-------------------------------------------------------------------------------
-double SEInflammatoryResponse::GetPathogenBlood() const
-{
-  if (m_PathogenBlood == nullptr)
-    return SEScalar::dNaN();
-  return m_PathogenBlood->GetValue();
-}
-//-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasTrauma() const
-{
-  return m_Trauma == nullptr ? false : m_Trauma->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SEInflammatoryResponse::GetTrauma()
-{
-  if (m_Trauma == nullptr)
-    m_Trauma = new SEScalar();
-  return *m_Trauma;
-}
-//-------------------------------------------------------------------------------
-double SEInflammatoryResponse::GetTrauma() const
-{
-  if (m_Trauma == nullptr)
-    return SEScalar::dNaN();
-  return m_Trauma->GetValue();
+  m_ImmuneResponses.clear();
+  m_ImmuneResponses.push_back(std::make_pair("Blood", m_BloodResponse));
+  m_ImmuneResponses.push_back(std::make_pair("Tissue", m_TissueResponse));
 }
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::HasTissueIntegrity() const
@@ -720,25 +656,6 @@ double SEInflammatoryResponse::GetTissueIntegrity() const
   return m_TissueIntegrity->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasInflammationLevel() const
-{
-  return m_InflammationLevel == nullptr ? false : m_InflammationLevel->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar0To1& SEInflammatoryResponse::GetInflammationLevel()
-{
-  if (m_InflammationLevel == nullptr)
-    m_InflammationLevel = new SEScalar0To1();
-  return *m_InflammationLevel;
-}
-//-------------------------------------------------------------------------------
-double SEInflammatoryResponse::GetInflammationLevel() const
-{
-  if (m_InflammationLevel == nullptr)
-    return SEScalar::dNaN();
-  return m_InflammationLevel->GetValue();
-}
-//-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::HasInflammationSources() const
 {
   return !m_InflammationSources.empty();
@@ -749,136 +666,183 @@ std::vector<CDM::enumInflammationSource>& SEInflammatoryResponse::GetInflammatio
   return m_InflammationSources;
 }
 //-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasBloodMediators() const
+bool SEInflammatoryResponse::HasBloodResponse() const
 {
-  return m_BloodMediators == nullptr ? false : m_BloodMediators->IsValid();
+  return m_BloodResponse == nullptr ? false : m_BloodResponse->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEImmuneMediators& SEInflammatoryResponse::GetBloodMediators()
+SEImmuneCompartment& SEInflammatoryResponse::GetBloodResponse()
 {
-  if (m_BloodMediators == nullptr)
-    m_BloodMediators = new SEImmuneMediators();
-  return *m_BloodMediators;
+  if (m_BloodResponse == nullptr)
+    m_BloodResponse = new SEImmuneCompartment();
+  return *m_BloodResponse;
 }
 //-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasTissueMediators() const
+bool SEInflammatoryResponse::HasTissueResponse() const
 {
-  return m_TissueMediators == nullptr ? false : m_TissueMediators->IsValid();
+  return m_TissueResponse == nullptr ? false : m_TissueResponse->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEImmuneMediators& SEInflammatoryResponse::GetTissueMediators()
+SEImmuneCompartment& SEInflammatoryResponse::GetTissueResponse()
 {
-  if (m_TissueMediators == nullptr)
-    m_TissueMediators = new SEImmuneMediators();
-  return *m_TissueMediators;
+  if (m_TissueResponse == nullptr)
+    m_TissueResponse = new SEImmuneCompartment();
+  return *m_TissueResponse;
 }
 //-------------------------------------------------------------------------------
 
-/////////////////////////////////--SEImmuneMediators--////////////////////////////////////////
-SEImmuneMediators::SEImmuneMediators()
-  : m_Antibodies(nullptr)
+/////////////////////////////////--SEImmuneCompartment--////////////////////////////////////////
+SEImmuneCompartment::SEImmuneCompartment()
+  : m_ConstitutiveNOS(nullptr)
+  , m_EpitheliumResting(nullptr)
+  , m_EpitheliumActive(nullptr)
+  , m_InducibleNOSPre(nullptr)
+  , m_InducibleNOS(nullptr)
+  , m_Interleukin6(nullptr)
   , m_Interleukin10(nullptr)
+  , m_Interleukin12(nullptr)
   , m_MacrophageResting(nullptr)
   , m_MacrophageActive(nullptr)
   , m_NeutrophilResting(nullptr)
   , m_NeutrophilActive(nullptr)
+  , m_Nitrate(nullptr)
   , m_NitricOxide(nullptr)
+  , m_Pathogen(nullptr)
+  , m_Trauma(nullptr)
   , m_TumorNecrosisFactor(nullptr)
 {
 }
 
 //-------------------------------------------------------------------------------
-SEImmuneMediators::~SEImmuneMediators()
+SEImmuneCompartment::~SEImmuneCompartment()
 {
   Clear();
 }
 //-------------------------------------------------------------------------------
-void SEImmuneMediators::Clear()
+void SEImmuneCompartment::Clear()
 {
-  SAFE_DELETE(m_Antibodies);
+  SAFE_DELETE(m_ConstitutiveNOS);
+  SAFE_DELETE(m_EpitheliumResting);
+  SAFE_DELETE(m_EpitheliumActive);
+  SAFE_DELETE(m_InducibleNOSPre);
+  SAFE_DELETE(m_InducibleNOS);
+  SAFE_DELETE(m_Interleukin6);
   SAFE_DELETE(m_Interleukin10);
+  SAFE_DELETE(m_Interleukin12);
   SAFE_DELETE(m_MacrophageActive);
   SAFE_DELETE(m_MacrophageResting);
   SAFE_DELETE(m_NeutrophilResting);
   SAFE_DELETE(m_NeutrophilActive);
+  SAFE_DELETE(m_Nitrate);
   SAFE_DELETE(m_NitricOxide);
+  SAFE_DELETE(m_Pathogen);
+  SAFE_DELETE(m_Trauma);
   SAFE_DELETE(m_TumorNecrosisFactor);
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::Load(const CDM::ImmuneMediatorData& in)
+bool SEImmuneCompartment::Load(const CDM::ImmuneCompartmentData& in)
 {
-  GetAntibodies().Load(in.Antibodies());
+  GetConstitutiveNOS().Load(in.ConstitutiveNOS());
+  GetEpitheliumResting().Load(in.EpitheliumResting());
+  GetEpitheliumActive().Load(in.EpitheliumActive());
+  GetInducibleNOSPre().Load(in.InducibleNOSPre());
+  GetInducibleNOS().Load(in.InducibleNOS());
+  GetInterleukin6().Load(in.Interleukin6());
   GetInterleukin10().Load(in.Interleukin10());
+  GetInterleukin12().Load(in.Interleukin12());
   GetMacrophageResting().Load(in.MacrophageResting());
   GetMacrophageActive().Load(in.MacrophageActive());
   GetNeutrophilResting().Load(in.NeutrophilResting());
   GetNeutrophilActive().Load(in.NeutrophilActive());
+  GetNitrate().Load(in.Nitrate());
   GetNitricOxide().Load(in.NitricOxide());
+  GetPathogen().Load(in.Pathogen());
+  GetTrauma().Load(in.Trauma());
   GetTumorNecrosisFactor().Load(in.TumorNecrosisFactor());
 
   return true;
 }
 //-------------------------------------------------------------------------------
-CDM::ImmuneMediatorData* SEImmuneMediators::Unload() const
+CDM::ImmuneCompartmentData* SEImmuneCompartment::Unload() const
 {
-  CDM::ImmuneMediatorData* data = new CDM::ImmuneMediatorData();
+  CDM::ImmuneCompartmentData* data = new CDM::ImmuneCompartmentData();
   Unload(*data);
   return data;
 }
 //-------------------------------------------------------------------------------
-void SEImmuneMediators::Unload(CDM::ImmuneMediatorData& data) const
+void SEImmuneCompartment::Unload(CDM::ImmuneCompartmentData& data) const
 {
-  data.Antibodies(std::unique_ptr<CDM::ScalarData> (m_Antibodies->Unload()));
+  data.ConstitutiveNOS(std::unique_ptr<CDM::ScalarData>(m_ConstitutiveNOS->Unload()));
+  data.EpitheliumResting(std::unique_ptr<CDM::ScalarData>(m_EpitheliumResting->Unload()));
+  data.EpitheliumActive(std::unique_ptr<CDM::ScalarData>(m_EpitheliumActive->Unload()));
+  data.InducibleNOSPre(std::unique_ptr<CDM::ScalarData>(m_InducibleNOSPre->Unload()));
+  data.InducibleNOS(std::unique_ptr<CDM::ScalarData>(m_InducibleNOS->Unload()));
+  data.Interleukin6(std::unique_ptr<CDM::ScalarData>(m_Interleukin6->Unload()));
   data.Interleukin10(std::unique_ptr<CDM::ScalarData>(m_Interleukin10->Unload()));
+  data.Interleukin12(std::unique_ptr<CDM::ScalarData>(m_Interleukin12->Unload()));
   data.MacrophageResting(std::unique_ptr<CDM::ScalarData>(m_MacrophageResting->Unload()));
   data.MacrophageActive(std::unique_ptr<CDM::ScalarData>(m_MacrophageActive->Unload()));
   data.NeutrophilResting(std::unique_ptr<CDM::ScalarData>(m_NeutrophilResting->Unload()));
   data.NeutrophilActive(std::unique_ptr<CDM::ScalarData>(m_NeutrophilActive->Unload()));
+  data.Nitrate(std::unique_ptr<CDM::ScalarData>(m_Nitrate->Unload()));
   data.NitricOxide(std::unique_ptr<CDM::ScalarData>(m_NitricOxide->Unload()));
+  data.Pathogen(std::unique_ptr<CDM::ScalarData>(m_Pathogen->Unload()));
+  data.Trauma(std::unique_ptr<CDM::ScalarData>(m_Trauma->Unload()));
   data.TumorNecrosisFactor(std::unique_ptr<CDM::ScalarData>(m_TumorNecrosisFactor->Unload()));
 }
 //-------------------------------------------------------------------------------
-void SEImmuneMediators::Initialize(bool TissueSpace)
+void SEImmuneCompartment::Initialize()
 {
-  //Values from Reynolds2008Mathematical
-  if (TissueSpace) {
-    GetAntibodies().SetValue(0.0075 / 0.0023);		//Ratio of resting synthesis rate to resting decay rate
-    GetMacrophageResting().SetValue(10.0 / 0.12); //Ratio of resting synthesis rate to resting decay rate
-    GetMacrophageActive().SetValue(0.0);
-    GetNeutrophilResting().SetValue(0.0);
-    GetNeutrophilActive().SetValue(0.0);
-    GetNitricOxide().SetValue(0.0);
-    GetTumorNecrosisFactor().SetValue(0.0);
-    GetInterleukin10().SetValue(0.0);
-  } else {
-    GetAntibodies().SetValue(0.0075 / 0.0023);    //Ratio of resting synthesis rate to resting decay rate
-    GetMacrophageResting().SetValue(10.0 / 0.12); //Ratio of resting synthesis rate to resting decay rate
-    GetMacrophageActive().SetValue(0.0);
-    GetNeutrophilResting().SetValue(10.0 / 0.12); //Ratio of resting synthesis rate to resting decay rate
-    GetNeutrophilActive().SetValue(0.0);
-    GetNitricOxide().SetValue(0.0);
-    GetTumorNecrosisFactor().SetValue(0.0);
-    GetInterleukin10().SetValue(0.0);
-  }
+  GetConstitutiveNOS().SetValue(0.05);
+  GetEpitheliumResting().SetValue(1.0);
+  GetEpitheliumActive().SetValue(0.0);
+  GetInducibleNOSPre().SetValue(0.0);
+  GetInducibleNOS().SetValue(0.0);
+  GetInterleukin6().SetValue(0.001);
+  GetInterleukin10().SetValue(0.01);
+  GetInterleukin12().SetValue(0.0);
+  GetMacrophageResting().SetValue(1.0);
+  GetMacrophageActive().SetValue(0.0);
+  GetNeutrophilResting().SetValue(1.0);
+  GetNeutrophilActive().SetValue(0.0);
+  GetNitrate().SetValue(0.0);
+  GetNitricOxide().SetValue(0.0);
+  GetPathogen().SetValue(0.0);
+  GetTrauma().SetValue(0.0);
+  GetTumorNecrosisFactor().SetValue(0.0);
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::IsValid()
+bool SEImmuneCompartment::IsValid()
 {
-  if (HasAntibodies() && HasMacrophageResting() && HasMacrophageActive() && HasNeutrophilResting() && HasNeutrophilActive() && HasNitricOxide() && HasTumorNecrosisFactor() && HasInterleukin10())
+  if (HasConstitutiveNOS() && HasEpitheliumResting() && HasEpitheliumActive() && HasInducibleNOSPre() && HasInducibleNOS() && HasInterleukin6() && HasInterleukin10() && HasInterleukin12() && HasMacrophageResting() && HasMacrophageActive() && HasNeutrophilResting() && HasNeutrophilActive() && HasNitrate() && HasNitricOxide() && HasPathogen() && HasTrauma() && HasTumorNecrosisFactor())
     return true;
   else
     return false;
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEImmuneMediators::GetScalar(const char* name)
+const SEScalar* SEImmuneCompartment::GetScalar(const char* name)
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEImmuneMediators::GetScalar(const std::string& name)
+const SEScalar* SEImmuneCompartment::GetScalar(const std::string& name)
 {
-  if (name.compare("Antibodies") == 0)
-    return &GetAntibodies();
+  if (name.compare("ConstitutiveNOS") == 0)
+    return &GetConstitutiveNOS();
+  if (name.compare("EpitheliumResting") == 0)
+    return &GetEpitheliumResting();
+  if (name.compare("EpitheliumActive") == 0)
+    return &GetEpitheliumActive();
+  if (name.compare("InducibleNOSPre") == 0)
+    return &GetInducibleNOSPre();
+  if (name.compare("InducibleNOS") == 0)
+    return &GetInducibleNOS();
+  if (name.compare("Interleukin6") == 0)
+    return &GetInterleukin6();
+  if (name.compare("Interleukin10") == 0)
+    return &GetInterleukin10();
+  if (name.compare("Interleukin12") == 0)
+    return &GetInterleukin12();
   if (name.compare("MacrophageResting") == 0)
     return &GetMacrophageResting();
   if (name.compare("MacrophageActive") == 0)
@@ -887,163 +851,337 @@ const SEScalar* SEImmuneMediators::GetScalar(const std::string& name)
     return &GetNeutrophilResting();
   if (name.compare("NeutrophilActive") == 0)
     return &GetNeutrophilActive();
+  if (name.compare("Nitrate") == 0)
+    return &GetNitrate();
   if (name.compare("NitricOxide") == 0)
     return &GetNitricOxide();
+  if (name.compare("Pathogen") == 0)
+    return &GetPathogen();
+  if (name.compare("Trauma") == 0)
+    return &GetTrauma();
   if (name.compare("TumorNecrosisFactor") == 0)
     return &GetTumorNecrosisFactor();
-  if (name.compare("Interleukin10") == 0)
-    return &GetInterleukin10();
 
   return nullptr;
 }
-
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasAntibodies() const
+bool SEImmuneCompartment::HasConstitutiveNOS() const
 {
-  return m_Antibodies == nullptr ? false : m_Antibodies->IsValid();
+  return m_ConstitutiveNOS == nullptr ? false : m_ConstitutiveNOS->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetAntibodies()
+SEScalar& SEImmuneCompartment::GetConstitutiveNOS()
 {
-  if (m_Antibodies == nullptr)
-    m_Antibodies = new SEScalar();
-  return *m_Antibodies;
+  if (m_ConstitutiveNOS == nullptr)
+    m_ConstitutiveNOS = new SEScalar();
+  return *m_ConstitutiveNOS;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetAntibodies() const
+double SEImmuneCompartment::GetConstitutiveNOS() const
 {
-  if (m_Antibodies == nullptr)
+  if (m_ConstitutiveNOS == nullptr)
     return SEScalar::dNaN();
-  return m_Antibodies->GetValue();
+  return m_ConstitutiveNOS->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasInterleukin10() const
+bool SEImmuneCompartment::HasEpitheliumResting() const
+{
+  return m_EpitheliumResting == nullptr ? false : m_EpitheliumResting->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetEpitheliumResting()
+{
+  if (m_EpitheliumResting == nullptr)
+    m_EpitheliumResting = new SEScalar();
+  return *m_EpitheliumResting;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetEpitheliumResting() const
+{
+  if (m_EpitheliumResting == nullptr)
+    return SEScalar::dNaN();
+  return m_EpitheliumResting->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasEpitheliumActive() const
+{
+  return m_EpitheliumActive == nullptr ? false : m_EpitheliumActive->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetEpitheliumActive()
+{
+  if (m_EpitheliumActive == nullptr)
+    m_EpitheliumActive = new SEScalar();
+  return *m_EpitheliumActive;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetEpitheliumActive() const
+{
+  if (m_EpitheliumActive == nullptr)
+    return SEScalar::dNaN();
+  return m_EpitheliumActive->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasInducibleNOSPre() const
+{
+  return m_InducibleNOSPre == nullptr ? false : m_InducibleNOSPre->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetInducibleNOSPre()
+{
+  if (m_InducibleNOSPre == nullptr)
+    m_InducibleNOSPre = new SEScalar();
+  return *m_InducibleNOSPre;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetInducibleNOSPre() const
+{
+  if (m_InducibleNOSPre == nullptr)
+    return SEScalar::dNaN();
+  return m_InducibleNOSPre->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasInducibleNOS() const
+{
+  return m_InducibleNOS == nullptr ? false : m_InducibleNOS->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetInducibleNOS()
+{
+  if (m_InducibleNOS == nullptr)
+    m_InducibleNOS = new SEScalar();
+  return *m_InducibleNOS;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetInducibleNOS() const
+{
+  if (m_InducibleNOS == nullptr)
+    return SEScalar::dNaN();
+  return m_InducibleNOS->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasInterleukin6() const
+{
+  return m_Interleukin6 == nullptr ? false : m_Interleukin6->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetInterleukin6()
+{
+  if (m_Interleukin6 == nullptr)
+    m_Interleukin6 = new SEScalar();
+  return *m_Interleukin6;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetInterleukin6() const
+{
+  if (m_Interleukin6 == nullptr)
+    return SEScalar::dNaN();
+  return m_Interleukin6->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasInterleukin10() const
 {
   return m_Interleukin10 == nullptr ? false : m_Interleukin10->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetInterleukin10()
+SEScalar& SEImmuneCompartment::GetInterleukin10()
 {
   if (m_Interleukin10 == nullptr)
     m_Interleukin10 = new SEScalar();
   return *m_Interleukin10;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetInterleukin10() const
+double SEImmuneCompartment::GetInterleukin10() const
 {
   if (m_Interleukin10 == nullptr)
     return SEScalar::dNaN();
   return m_Interleukin10->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasMacrophageResting() const
+bool SEImmuneCompartment::HasInterleukin12() const
+{
+  return m_Interleukin12 == nullptr ? false : m_Interleukin12->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetInterleukin12()
+{
+  if (m_Interleukin12 == nullptr)
+    m_Interleukin12 = new SEScalar();
+  return *m_Interleukin12;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetInterleukin12() const
+{
+  if (m_Interleukin12 == nullptr)
+    return SEScalar::dNaN();
+  return m_Interleukin12->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasMacrophageResting() const
 {
   return m_MacrophageResting == nullptr ? false : m_MacrophageResting->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetMacrophageResting()
+SEScalar& SEImmuneCompartment::GetMacrophageResting()
 {
   if (m_MacrophageResting == nullptr)
     m_MacrophageResting = new SEScalar();
   return *m_MacrophageResting;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetMacrophageResting() const
+double SEImmuneCompartment::GetMacrophageResting() const
 {
   if (m_MacrophageResting == nullptr)
     return SEScalar::dNaN();
   return m_MacrophageResting->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasMacrophageActive() const
+bool SEImmuneCompartment::HasMacrophageActive() const
 {
   return m_MacrophageActive == nullptr ? false : m_MacrophageActive->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetMacrophageActive()
+SEScalar& SEImmuneCompartment::GetMacrophageActive()
 {
   if (m_MacrophageActive == nullptr)
     m_MacrophageActive = new SEScalar();
   return *m_MacrophageActive;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetMacrophageActive() const
+double SEImmuneCompartment::GetMacrophageActive() const
 {
   if (m_MacrophageActive == nullptr)
     return SEScalar::dNaN();
   return m_MacrophageActive->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasNeutrophilResting() const
+bool SEImmuneCompartment::HasNeutrophilResting() const
 {
   return m_NeutrophilResting == nullptr ? false : m_NeutrophilResting->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetNeutrophilResting()
+SEScalar& SEImmuneCompartment::GetNeutrophilResting()
 {
   if (m_NeutrophilResting == nullptr)
     m_NeutrophilResting = new SEScalar();
   return *m_NeutrophilResting;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetNeutrophilResting() const
+double SEImmuneCompartment::GetNeutrophilResting() const
 {
   if (m_NeutrophilResting == nullptr)
     return SEScalar::dNaN();
   return m_NeutrophilResting->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasNeutrophilActive() const
+bool SEImmuneCompartment::HasNeutrophilActive() const
 {
   return m_NeutrophilActive == nullptr ? false : m_NeutrophilActive->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetNeutrophilActive()
+SEScalar& SEImmuneCompartment::GetNeutrophilActive()
 {
   if (m_NeutrophilActive == nullptr)
     m_NeutrophilActive = new SEScalar();
   return *m_NeutrophilActive;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetNeutrophilActive() const
+double SEImmuneCompartment::GetNeutrophilActive() const
 {
   if (m_NeutrophilActive == nullptr)
     return SEScalar::dNaN();
   return m_NeutrophilActive->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasNitricOxide() const
+bool SEImmuneCompartment::HasNitrate() const
+{
+  return m_Nitrate == nullptr ? false : m_Nitrate->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetNitrate()
+{
+  if (m_Nitrate == nullptr)
+    m_Nitrate = new SEScalar();
+  return *m_Nitrate;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetNitrate() const
+{
+  if (m_Nitrate == nullptr)
+    return SEScalar::dNaN();
+  return m_Nitrate->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasNitricOxide() const
 {
   return m_NitricOxide == nullptr ? false : m_NitricOxide->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetNitricOxide()
+SEScalar& SEImmuneCompartment::GetNitricOxide()
 {
   if (m_NitricOxide == nullptr)
     m_NitricOxide = new SEScalar();
   return *m_NitricOxide;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetNitricOxide() const
+double SEImmuneCompartment::GetNitricOxide() const
 {
   if (m_NitricOxide == nullptr)
     return SEScalar::dNaN();
   return m_NitricOxide->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEImmuneMediators::HasTumorNecrosisFactor() const
+bool SEImmuneCompartment::HasPathogen() const
+{
+  return m_Pathogen == nullptr ? false : m_Pathogen->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetPathogen()
+{
+  if (m_Pathogen == nullptr)
+    m_Pathogen = new SEScalar();
+  return *m_Pathogen;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetPathogen() const
+{
+  if (m_Pathogen == nullptr)
+    return SEScalar::dNaN();
+  return m_Pathogen->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasTrauma() const
+{
+  return m_Trauma == nullptr ? false : m_Trauma->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEImmuneCompartment::GetTrauma()
+{
+  if (m_Trauma == nullptr)
+    m_Trauma = new SEScalar();
+  return *m_Trauma;
+}
+//-------------------------------------------------------------------------------
+double SEImmuneCompartment::GetTrauma() const
+{
+  if (m_Trauma == nullptr)
+    return SEScalar::dNaN();
+  return m_Trauma->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEImmuneCompartment::HasTumorNecrosisFactor() const
 {
   return m_TumorNecrosisFactor == nullptr ? false : m_TumorNecrosisFactor->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEImmuneMediators::GetTumorNecrosisFactor()
+SEScalar& SEImmuneCompartment::GetTumorNecrosisFactor()
 {
   if (m_TumorNecrosisFactor == nullptr)
     m_TumorNecrosisFactor = new SEScalar();
   return *m_TumorNecrosisFactor;
 }
 //-------------------------------------------------------------------------------
-double SEImmuneMediators::GetTumorNecrosisFactor() const
+double SEImmuneCompartment::GetTumorNecrosisFactor() const
 {
   if (m_TumorNecrosisFactor == nullptr)
     return SEScalar::dNaN();

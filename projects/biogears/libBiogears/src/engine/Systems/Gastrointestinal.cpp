@@ -924,7 +924,7 @@ void Gastrointestinal::ProcessDrugCAT()
     const double pKa = subData->GetAcidDissociationConstant();
     const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
     const double gutKP = 30.0; //Gut partition coefficient, hard-coded for fentanyl currently
-    double fMetabolized = 0.1;
+    double fMetabolized = 0.0;
     if (sub->GetName() == "Fentanyl") {
       fMetabolized = 0.25;  //Probably need to make this substance specific--part of clearance terms
 	}

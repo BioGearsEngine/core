@@ -524,6 +524,16 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
   
+    <!-- @brief  A scalar for holding time-mass per volume quanties for drug area under curve measuremments (ex. g-min/mL) -->
+  <xs:complexType name="ScalarTimeMassPerVolumeData">
+    <xs:complexContent>
+      <xs:restriction base="ScalarData">
+        <xs:attribute name="unit" type="xs:string" use="required"/>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  
   <!-- @brief A scalar for holding osmolality quanties (ex. Osm/kg)-->
   <xs:complexType name="ScalarOsmolalityData">
     <xs:complexContent>

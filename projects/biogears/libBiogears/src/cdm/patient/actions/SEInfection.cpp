@@ -61,7 +61,7 @@ namespace biogears
     return data;
   }
   //-------------------------------------------------------------------------------
-  void SEInfection::Unload(CDM::InfectionData & data) const
+  void SEInfection::Unload(CDM::InfectionData& data) const
   {
     SEPatientAction::Unload(data);
     if (HasLocation())

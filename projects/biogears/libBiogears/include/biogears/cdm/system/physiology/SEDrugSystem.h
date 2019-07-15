@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
+class SEScalar;
 class SEScalarFraction;
 class SEScalarMass;
 class MassUnit;
@@ -52,6 +53,10 @@ protected:
   void Unload(CDM::DrugSystemData& data) const;
 
 public:
+  bool HasAntibioticActivity() const;
+  SEScalar& GetAntibioticActivity();
+  double GetAntibioticActivity() const;
+
   bool HasBronchodilationLevel() const;
   SEScalarFraction& GetBronchodilationLevel();
   double GetBronchodilationLevel() const;
@@ -102,6 +107,7 @@ public:
   double GetCentralNervousResponse() const;
 
 protected:
+  SEScalar* m_AntibioticActivity;
   SEScalarFraction* m_BronchodilationLevel;
   SEScalarFrequency* m_HeartRateChange;
   SEScalarFraction* m_HemorrhageChange;
