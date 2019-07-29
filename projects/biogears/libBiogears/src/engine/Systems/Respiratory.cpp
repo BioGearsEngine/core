@@ -1023,7 +1023,7 @@ void Respiratory::ProcessDriverActions()
   double sepsisModifier = 0.0;
   if (m_PatientActions->HasSepsis()) {
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
-    double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+    double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.4);
   }
 

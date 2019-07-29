@@ -769,7 +769,7 @@ void Drugs::CalculateDrugEffects()
   //Sepsis Effects
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
     double nitricOxideBaseline = 0.05;
-    double nitricOxide = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetNitricOxide().GetValue() - nitricOxideBaseline;
+    double nitricOxide = m_data.GetBloodChemistry().GetInflammatoryResponse().GetNitricOxide().GetValue() - nitricOxideBaseline;
     LLIM(nitricOxide, 0.0);
     double nitricOxideEC50 = 0.4;
     double nitricOxideBPMod = -0.3;

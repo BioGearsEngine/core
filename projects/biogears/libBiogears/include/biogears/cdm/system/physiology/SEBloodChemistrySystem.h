@@ -11,13 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/patient/actions/SEInflammationState.h>
-#include <biogears/exports.h>
+
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/exports.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
-
+class SEScalar;
+class SEScalar0To1;
 class SEScalarMass;
 class MassUnit;
 class SEScalarMassPerVolume;
@@ -31,8 +32,6 @@ class SEScalarAmountPerVolume;
 class AmountPerVolumeUnit;
 class SEScalarPressure;
 class PressureUnit;
-class SESepsisState;
-class SEInflammationState;
 class SEInflammatoryResponse;
 
 /** @copydoc Physiology_BloodChemistrySystemData
@@ -368,8 +367,6 @@ public:
   SEScalarPressure& GetVenousOxygenPressure();
   double GetVenousOxygenPressure(const PressureUnit& unit) const;
   //@}
-  virtual bool HasAcuteInflammatoryResponse() const;
-  virtual SEInflammationState& GetAcuteInflammatoryResponse();
 
   virtual bool HasInflammatoryResponse() const;
   virtual SEInflammatoryResponse& GetInflammatoryResponse();
@@ -408,7 +405,119 @@ protected:
   SEScalarPressure* m_PulmonaryVenousOxygenPressure;
   SEScalarPressure* m_VenousCarbonDioxidePressure;
   SEScalarPressure* m_VenousOxygenPressure;
-  SEInflammationState* m_AcuteInflammatoryResponse;
   SEInflammatoryResponse* m_InflammatoryResponse;
 };
+
+class BIOGEARS_API SEInflammatoryResponse {
+public:
+  SEInflammatoryResponse();
+  virtual ~SEInflammatoryResponse();
+
+  virtual void Clear();
+
+  virtual bool Load(const CDM::InflammatoryResponseData& in);
+  virtual CDM::InflammatoryResponseData* Unload() const;
+  virtual bool IsValid();
+
+  void Initialize();
+  virtual const SEScalar* GetScalar(const char* name);
+  virtual const SEScalar* GetScalar(const std::string& name);
+
+protected:
+  virtual void Unload(CDM::InflammatoryResponseData& data) const;
+
+public:
+  virtual bool HasCatecholamines() const;
+  virtual SEScalar& GetCatecholamines();
+  virtual double GetCatecholamines() const;
+
+  virtual bool HasConstitutiveNOS() const;
+  virtual SEScalar& GetConstitutiveNOS();
+  virtual double GetConstitutiveNOS() const;
+
+  virtual bool HasInducibleNOSPre() const;
+  virtual SEScalar& GetInducibleNOSPre();
+  virtual double GetInducibleNOSPre() const;
+
+  virtual bool HasInducibleNOS() const;
+  virtual SEScalar& GetInducibleNOS();
+  virtual double GetInducibleNOS() const;
+
+  virtual bool HasInterleukin6() const;
+  virtual SEScalar& GetInterleukin6();
+  virtual double GetInterleukin6() const;
+
+  virtual bool HasInterleukin10() const;
+  virtual SEScalar& GetInterleukin10();
+  virtual double GetInterleukin10() const;
+
+  virtual bool HasInterleukin12() const;
+  virtual SEScalar& GetInterleukin12();
+  virtual double GetInterleukin12() const;
+
+  virtual bool HasMacrophageResting() const;
+  virtual SEScalar& GetMacrophageResting();
+  virtual double GetMacrophageResting() const;
+
+  virtual bool HasMacrophageActive() const;
+  virtual SEScalar& GetMacrophageActive();
+  virtual double GetMacrophageActive() const;
+
+  virtual bool HasNeutrophilResting() const;
+  virtual SEScalar& GetNeutrophilResting();
+  virtual double GetNeutrophilResting() const;
+
+  virtual bool HasNeutrophilActive() const;
+  virtual SEScalar& GetNeutrophilActive();
+  virtual double GetNeutrophilActive() const;
+
+  virtual bool HasNitrate() const;
+  virtual SEScalar& GetNitrate();
+  virtual double GetNitrate() const;
+
+  virtual bool HasNitricOxide() const;
+  virtual SEScalar& GetNitricOxide();
+  virtual double GetNitricOxide() const;
+
+  virtual bool HasPathogen() const;
+  virtual SEScalar& GetPathogen();
+  virtual double GetPathogen() const;
+
+  virtual bool HasTissueIntegrity() const;
+  virtual SEScalar0To1& GetTissueIntegrity();
+  virtual double GetTissueIntegrity() const;
+
+  virtual bool HasTrauma() const;
+  virtual SEScalar& GetTrauma();
+  virtual double GetTrauma() const;
+
+  virtual bool HasTumorNecrosisFactor() const;
+  virtual SEScalar& GetTumorNecrosisFactor();
+  virtual double GetTumorNecrosisFactor() const;
+
+  virtual bool HasInflammationSources() const;
+  virtual std::vector<CDM::enumInflammationSource>& GetInflammationSources();
+
+protected:
+  SEScalar* m_Catecholamines;
+  SEScalar* m_ConstitutiveNOS;
+  SEScalar* m_InducibleNOSPre;
+  SEScalar* m_InducibleNOS;
+  SEScalar* m_Interleukin6;
+  SEScalar* m_Interleukin10;
+  SEScalar* m_Interleukin12;
+  SEScalar* m_MacrophageResting;
+  SEScalar* m_MacrophageActive;
+  SEScalar* m_NeutrophilResting;
+  SEScalar* m_NeutrophilActive;
+  SEScalar* m_Nitrate;
+  SEScalar* m_NitricOxide;
+  SEScalar* m_Pathogen;
+  SEScalar0To1* m_TissueIntegrity;
+  SEScalar* m_Trauma;
+  SEScalar* m_TumorNecrosisFactor;
+  std::vector<CDM::enumInflammationSource> m_InflammationSources;
+};
+
+
 }

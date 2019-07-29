@@ -2419,7 +2419,7 @@ void Tissue::CalculateTissueFluidFluxes()
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
       SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
-      double resistanceModifier = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+      double resistanceModifier = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
       if (t->GetName() != BGE::TissueCompartment::Brain) {
         res->GetNextResistance().SetValue(res->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resistanceModifier, FlowResistanceUnit::mmHg_min_Per_mL);
       }
@@ -2428,7 +2428,7 @@ void Tissue::CalculateTissueFluidFluxes()
   if (m_data.GetActions().GetPatientActions().HasSepsis()) {
     for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
       SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
-      double resistanceModifier = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+      double resistanceModifier = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
       if (t->GetName() != BGE::TissueCompartment::Brain) {
         res->GetNextResistance().SetValue(res->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resistanceModifier, FlowResistanceUnit::mmHg_min_Per_mL);
       }
@@ -2502,8 +2502,8 @@ double Tissue::AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartme
   double tissueMass_kg = tissue.GetTotalMass(MassUnit::kg);
 
   //We need to increase albumin permeability when there is inflammation
-  if (m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
-    double tissueIntegrity = m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().GetTissueIntegrity().GetValue();
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
+    double tissueIntegrity = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
   }
 

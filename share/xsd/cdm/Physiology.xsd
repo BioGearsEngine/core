@@ -38,8 +38,8 @@ specific language governing permissions and limitations under the License.
 			<xs:enumeration value="Pathogen"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
-	<xs:complexType name="InflammationStateData">
+		
+	<xs:complexType name="InflammatoryResponseData">
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
 				<xs:sequence>
@@ -49,35 +49,6 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="MacrophageActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="InducibleNOSynthasePre" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="InducibleNOSynthase" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="ConstitutiveNOSynthase" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Nitrate" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TumorNecrosisFactor" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Interleukin6" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Interleukin10" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Interleukin12" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="ImmuneCompartmentData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Trauma" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="MacrophageResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="MacrophageActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="EpitheliumResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="EpitheliumActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TumorNecrosisFactor" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Interleukin6" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Interleukin10" type="ScalarData" minOccurs="1" maxOccurs="1"/>
@@ -87,18 +58,8 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="ConstitutiveNOS" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Nitrate" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="InflammatoryResponseData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="TissueResponse" type="ImmuneCompartmentData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="BloodResponse" type="ImmuneCompartmentData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
 				</xs:sequence>
 			</xs:extension>
@@ -138,8 +99,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
                     <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
                     <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
-					<xs:element name="AcuteInflammatoryResponse" type="InflammationStateData" minOccurs="0" maxOccurs="1"/> <!--@brief State vector for general acute inflammation model representing response to infection and trauma-->
-					<xs:element name="InflammatoryResponse" type="InflammatoryResponseData" minOccurs="0" maxOccurs="1"/> <!--Experimental to replace AcuteInflammationResponse-->
+					<xs:element name="InflammatoryResponse" type="InflammatoryResponseData" minOccurs="0" maxOccurs="1"/> <!--Inflammatory response to infections, burn wounds, hemorrhage, and other trauma-->
 					<!-- Substance Pressures -->
                     <xs:element name="ArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the aorta.-->
                     <xs:element name="ArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the aorta.-->

@@ -328,7 +328,7 @@ void Nervous::BaroreceptorFeedback()
 void Nervous::CheckPainStimulus()
 {
   //Screen for both external pain stimulus and presence of inflammation
-  if (!m_data.GetActions().GetPatientActions().HasPainStimulus() && !m_data.GetBloodChemistry().GetAcuteInflammatoryResponse().HasInflammationSources()) {
+  if (!m_data.GetActions().GetPatientActions().HasPainStimulus() && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
     GetPainVisualAnalogueScale().SetValue(0.0);
     return;
   }
