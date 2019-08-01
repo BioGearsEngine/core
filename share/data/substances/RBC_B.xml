@@ -4,7 +4,7 @@
   <Classification>WholeBlood</Classification>
   <MolarMass readOnly="false" unit="g/mol" value="97.4785"/>
   <State>Cellular</State>
-  <Antigen>B</Anitgen>
+  <Antigen>B</Antigen>
   <!-- @brief  Normal mean count is 5 million cells/microliter. -->
   <!-- @brief  One RBC expresses about 2 million ABO antigens. -->
   <!-- @brief  One RBC carries about 270 million hemoglobin. -->
@@ -12,6 +12,6 @@
     <CellRegulation>
       <CellDeathRate readOnly="false" unit="1/s" value="2000000"/>
 	  <CellBirthRate readOnly="false" unit="1/s" value="2000000"/>
-    </RenalDynamics>
+    </CellRegulation>
   </Clearance>
 </Substance>

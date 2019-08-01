@@ -8,6 +8,6 @@
     <CellRegulation>
       <CellDeathRate readOnly="false" unit="1/s" value="115740.7"/>
 	  <CellBirthRate readOnly="false" unit="1/s" value="115740.7"/>
-    </RenalDynamics>
+    </CellRegulation>
   </Clearance>
 </Substance>

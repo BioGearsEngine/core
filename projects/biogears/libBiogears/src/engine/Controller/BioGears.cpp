@@ -614,6 +614,22 @@ bool BioGears::SetupPatient()
   double MAP_mmHg = 1.0 / 3.0 * systolic_mmHg + 2.0 / 3.0 * diastolic_mmHg;
   m_Patient->GetMeanArterialPressureBaseline().SetValue(MAP_mmHg, PressureUnit::mmHg);
 
+  //Blood Type -----------------------------------------------------------------
+  //default blood type based on most common globally
+  CDM::enumBloodType::value defaultBloodType_ABO = CDM::enumBloodType::O;
+  CDM::enumBinaryResults::value defaultBloodRh = CDM::enumBinaryResults::positive;
+  if (!m_Patient->HasBloodRh()) {
+    m_Patient->SetBloodRh(defaultBloodRh);
+    ss << "Patient's blood Rh factor has not been set. Defaulting to  " << defaultBloodRh;
+    Info(ss);
+  }
+
+  if (!m_Patient->HasBloodType()) {
+    m_Patient->SetBloodType(defaultBloodType_ABO);
+    ss << "Patient's blood type antigen has not been set. Defaulting to  " << defaultBloodType_ABO;
+    Info(ss);
+  }
+
   //Blood Volume ---------------------------------------------------------------
   /// \cite Morgan2006Clinical
   double bloodVolume_mL;

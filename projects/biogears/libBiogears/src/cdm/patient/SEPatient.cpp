@@ -31,6 +31,8 @@ SEPatient::SEPatient(Logger* logger)
 
   m_AlveoliSurfaceArea = nullptr;
   m_BasalMetabolicRate = nullptr;
+  m_BloodRh = (CDM::enumBinaryResults::value)-1;
+  m_BloodType = (CDM::enumBloodType::value)-1;
   m_BloodVolumeBaseline = nullptr;
   m_BodyDensity = nullptr;
   m_BodyFatFraction = nullptr;
@@ -98,6 +100,8 @@ void SEPatient::Clear()
 
   SAFE_DELETE(m_AlveoliSurfaceArea);
   SAFE_DELETE(m_BasalMetabolicRate);
+  m_BloodRh = (CDM::enumBinaryResults::value)-1;
+  m_BloodType = (CDM::enumBloodType::value)-1;
   SAFE_DELETE(m_BloodVolumeBaseline);
   SAFE_DELETE(m_BodyDensity);
   SAFE_DELETE(m_BodyFatFraction);
@@ -223,6 +227,12 @@ bool SEPatient::Load(const CDM::PatientData& in)
   if (in.BasalMetabolicRate().present()) {
     GetBasalMetabolicRate().Load(in.BasalMetabolicRate().get());
   }
+  if (in.BloodTypeRh().present()) {
+    m_BloodRh = in.BloodTypeRh().get();
+  }
+  if (in.BloodTypeABO().present()) {
+    m_BloodType = in.BloodTypeABO().get();
+  }
   if (in.BloodVolumeBaseline().present()) {
     GetBloodVolumeBaseline().Load(in.BloodVolumeBaseline().get());
   }
@@ -341,6 +351,12 @@ void SEPatient::Unload(CDM::PatientData& data) const
   }
   if (m_BasalMetabolicRate != nullptr) {
     data.BasalMetabolicRate(std::unique_ptr<CDM::ScalarPowerData>(m_BasalMetabolicRate->Unload()));
+  }
+  if (HasBloodRh()) {
+    data.BloodTypeRh(m_BloodRh);
+  }
+  if (HasBloodType()) {
+    data.BloodTypeABO(m_BloodType);
   }
   if (m_BloodVolumeBaseline != nullptr) {
     data.BloodVolumeBaseline(std::unique_ptr<CDM::ScalarVolumeData>(m_BloodVolumeBaseline->Unload()));
@@ -948,7 +964,47 @@ double SEPatient::GetBasalMetabolicRate(const PowerUnit& unit) const
   }
   return m_BasalMetabolicRate->GetValue(unit);
 }
+//------------------------------------------------------------------------------
+CDM::enumBloodType::value SEPatient::GetBloodType() const
+{
+  return m_BloodType;
+}
 //-----------------------------------------------------------------------------
+void SEPatient::SetBloodType(CDM::enumBloodType::value bloodAntigen)
+{
+  m_BloodType = bloodAntigen;
+}
+//-----------------------------------------------------------------------------
+bool SEPatient::HasBloodType() const
+{
+  return m_BloodType == ((CDM::enumBloodType::value)-1) ? false : true;
+}
+//-----------------------------------------------------------------------------
+void SEPatient::InvalidateBloodType()
+{
+  m_BloodType = (CDM::enumBloodType::value)-1;
+}
+//-----------------------------------------------------------------------------
+CDM::enumBinaryResults::value SEPatient::GetBloodRh() const
+{
+  return m_BloodRh;
+}
+//-----------------------------------------------------------------------------
+void SEPatient::SetBloodRh(CDM::enumBinaryResults::value bloodRh)
+{
+  m_BloodRh = bloodRh;
+}
+//-----------------------------------------------------------------------------
+bool SEPatient::HasBloodRh() const
+{
+  return m_BloodRh == ((CDM::enumBinaryResults::value)-1) ? false : true;
+}
+//-----------------------------------------------------------------------------
+void SEPatient::InvalidateBloodRh()
+{
+  m_BloodRh = (CDM::enumBinaryResults::value)-1;
+}
+  //---------------------------------------------------------------------------
 bool SEPatient::HasBloodVolumeBaseline() const
 {
   return m_BloodVolumeBaseline == nullptr ? false : m_BloodVolumeBaseline->IsValid();

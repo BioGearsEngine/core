@@ -121,6 +121,16 @@ public:
   virtual SEScalarPower& GetBasalMetabolicRate();
   virtual double GetBasalMetabolicRate(const PowerUnit& unit) const;
 
+  virtual CDM::enumBloodType::value GetBloodType() const;
+  virtual void SetBloodType(CDM::enumBloodType::value bloodAntigen);
+  virtual bool HasBloodType() const;
+  virtual void InvalidateBloodType();
+
+  virtual CDM::enumBinaryResults::value GetBloodRh() const;
+  virtual void SetBloodRh(CDM::enumBinaryResults::value bloodRh);
+  virtual bool HasBloodRh() const;
+  virtual void InvalidateBloodRh();
+
   virtual bool HasBloodVolumeBaseline() const;
   virtual SEScalarVolume& GetBloodVolumeBaseline();
   virtual double GetBloodVolumeBaseline(const VolumeUnit& unit) const;
@@ -244,6 +254,8 @@ protected:
   SEScalarMass* m_LeanBodyMass;
   SEScalarPower* m_MaxWorkRate;
   SEScalarMass* m_MuscleMass;
+  CDM::enumBloodType::value m_BloodType;
+  CDM::enumBinaryResults::value m_BloodRh;
 
   SEScalarArea* m_AlveoliSurfaceArea;
   SEScalarFraction* m_RightLungRatio;
