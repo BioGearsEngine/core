@@ -42,6 +42,9 @@ SESubstance::SESubstance(Logger* logger)
   m_MichaelisCoefficient = nullptr;
   m_MembraneResistance = nullptr;
 
+  m_Antigen = (CDM::enumBloodTypeABO::value)-1;
+  m_CellCount = nullptr;
+
   m_Aerosolization = nullptr;
   m_AreaUnderCurve = nullptr;
   m_BloodConcentration = nullptr;
@@ -81,8 +84,9 @@ void SESubstance::Clear()
   SAFE_DELETE(m_MaximumDiffusionFlux);
   SAFE_DELETE(m_MichaelisCoefficient);
   SAFE_DELETE(m_MembraneResistance);
-
   SAFE_DELETE(m_AreaUnderCurve);
+  m_Antigen = (CDM::enumBloodTypeABO::value)-1;
+  SAFE_DELETE(m_CellCount);
   SAFE_DELETE(m_BloodConcentration);
   SAFE_DELETE(m_EffectSiteConcentration);
   SAFE_DELETE(m_MassInBody);
@@ -123,9 +127,10 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
     return &GetMichaelisCoefficient();
   if (name.compare("MembraneConductivity") == 0)
     return &GetMembraneResistance();
-
   if (name.compare("AreaUnderCurve") == 0)
     return &GetAreaUnderCurve();
+  if (name.compare("CellCount") == 0)
+    return &GetCellCount();
   if (name.compare("BloodConcentration") == 0)
     return &GetBloodConcentration();
   if (name.compare("EffectSiteConcentration") == 0)
@@ -193,9 +198,12 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
     GetMichaelisCoefficient().Load(in.MichaelisCoefficient().get());
   if (in.MembraneResistance().present())
     GetMembraneResistance().Load(in.MembraneResistance().get());
-
   if (in.AreaUnderCurve().present())
     GetAreaUnderCurve().Load(in.AreaUnderCurve().get());
+  if (in.Antigen().present())
+    m_Antigen = in.Antigen().get();
+  if (in.CellCount().present())
+    GetCellCount().Load(in.CellCount().get());
   if (in.BloodConcentration().present())
     GetBloodConcentration().Load(in.BloodConcentration().get());
   if (in.EffectSiteConcentration().present())
@@ -271,9 +279,12 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
     data.MichaelisCoefficient(std::unique_ptr<CDM::ScalarData>(m_MichaelisCoefficient->Unload()));
   if (HasMembraneResistance())
     data.MembraneResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_MembraneResistance->Unload()));
-
   if (HasAreaUnderCurve())
     data.AreaUnderCurve(std::unique_ptr<CDM::ScalarTimeMassPerVolumeData>(m_AreaUnderCurve->Unload()));
+  if (HasAntigen())
+    data.Antigen(m_Antigen);
+  if (HasCellCount())
+    data.CellCount(std::unique_ptr<CDM::ScalarData>(m_CellCount->Unload()));
   if (HasBloodConcentration())
     data.BloodConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodConcentration->Unload()));
   if (HasEffectSiteConcentration())
@@ -784,6 +795,45 @@ double SESubstance::GetSolubilityCoefficient(const InversePressureUnit& unit) co
   if (m_SolubilityCoefficient == nullptr)
     return SEScalar::dNaN();
   return m_SolubilityCoefficient->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+CDM::enumBloodTypeABO::value SESubstance::GetAntigen() const
+{
+  return m_Antigen;
+}
+//-----------------------------------------------------------------------------
+void SESubstance::SetAntigen(CDM::enumBloodTypeABO::value bloodAntigen)
+{
+  m_Antigen = bloodAntigen;
+}
+//-----------------------------------------------------------------------------
+bool SESubstance::HasAntigen() const
+{
+  return m_Antigen == ((CDM::enumBloodTypeABO::value)-1) ? false : true;
+}
+//-----------------------------------------------------------------------------
+void SESubstance::InvalidateAntigen()
+{
+  m_Antigen = (CDM::enumBloodTypeABO::value)-1;
+}
+//-----------------------------------------------------------------------------
+bool SESubstance::HasCellCount() const
+{
+  return (m_CellCount == nullptr) ? false : m_CellCount->IsValid();
+}
+//----------------------------------------------------------------------------------------
+SEScalar& SESubstance::GetCellCount()
+{
+  if (m_CellCount == nullptr)
+    m_CellCount = new SEScalar();
+  return *m_CellCount;
+}
+//-----------------------------------------------------------------------------
+double SESubstance::GetCellCount() const
+{
+  if (m_CellCount == nullptr)
+    return SEScalar::dNaN();
+  return m_CellCount->GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasClearance() const

@@ -99,6 +99,16 @@ public:
   virtual SEScalarElectricResistance& GetMembraneResistance();
   virtual double GetMembraneResistance(const ElectricResistanceUnit& unit) const;
 
+  // Cellular and Blood
+  CDM::enumBloodTypeABO::value SESubstance::GetAntigen() const;
+  void SESubstance::SetAntigen(CDM::enumBloodTypeABO::value bloodAntigen);
+  bool SESubstance::HasAntigen() const;
+  void SESubstance::InvalidateAntigen();
+
+  bool SESubstance::HasCellCount() const;
+  SEScalar& SESubstance::GetCellCount();
+  double SESubstance::GetCellCount() const;
+
   // Liquid-ish
   virtual bool HasAerosolization() const;
   virtual SESubstanceAerosolization& GetAerosolization();
@@ -191,6 +201,9 @@ protected:
   SEScalarMassPerAreaTime* m_MaximumDiffusionFlux;
   SEScalar* m_MichaelisCoefficient;
   SEScalarElectricResistance* m_MembraneResistance;
+
+  CDM::enumBloodTypeABO::value m_Antigen;
+  SEScalar* m_CellCount;
 
   SESubstanceAerosolization* m_Aerosolization;
   SEScalarTimeMassPerVolume* m_AreaUnderCurve;
