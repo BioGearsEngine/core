@@ -52,6 +52,7 @@ SESubstance::SESubstance(Logger* logger)
   m_PlasmaConcentration = nullptr;
   m_SystemicMassCleared = nullptr;
   m_TimeAboveMIC = nullptr;
+  m_TimeAfterDose = nullptr;
   m_TissueConcentration = nullptr;
 
   m_AlveolarTransfer = nullptr;
@@ -93,6 +94,7 @@ void SESubstance::Clear()
   SAFE_DELETE(m_PlasmaConcentration);
   SAFE_DELETE(m_SystemicMassCleared);
   SAFE_DELETE(m_TimeAboveMIC);
+  SAFE_DELETE(m_TimeAfterDose);
   SAFE_DELETE(m_TissueConcentration);
 
   SAFE_DELETE(m_AlveolarTransfer);
@@ -146,6 +148,8 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
     return &GetSystemicMassCleared();
   if (name.compare("TimeAboveMIC") == 0)
     return &GetTimeAboveMIC();
+  if (name.compare("TimeAfterDose") == 0)
+    return &GetTimeAfterDose();
   if (name.compare("TissueConcentration") == 0)
     return &GetTissueConcentration();
 
@@ -220,6 +224,8 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
     GetSystemicMassCleared().Load(in.SystemicMassCleared().get());
   if (in.TimeAboveMIC().present())
     GetTimeAboveMIC().Load(in.TimeAboveMIC().get());
+  if (in.TimeAfterDose().present())
+    GetTimeAfterDose().Load(in.TimeAfterDose().get());
   if (in.TissueConcentration().present())
     GetTissueConcentration().Load(in.TissueConcentration().get());
 
@@ -302,6 +308,8 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
     data.SystemicMassCleared(std::unique_ptr<CDM::ScalarMassData>(m_SystemicMassCleared->Unload()));
   if (HasTimeAboveMIC())
     data.TimeAboveMIC(std::unique_ptr<CDM::ScalarTimeData>(m_TimeAboveMIC->Unload()));
+  if (HasTimeAfterDose())
+    data.TimeAfterDose(std::unique_ptr<CDM::ScalarTimeData>(m_TimeAfterDose->Unload()));
   if (HasTissueConcentration())
     data.TissueConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TissueConcentration->Unload()));
 
@@ -676,8 +684,9 @@ bool SESubstance::HasTimeAboveMIC() const
 //-----------------------------------------------------------------------------
 SEScalarTime& SESubstance::GetTimeAboveMIC()
 {
-  if (m_TimeAboveMIC == nullptr)
+  if (m_TimeAboveMIC == nullptr) {
     m_TimeAboveMIC = new SEScalarTime();
+  }
   return *m_TimeAboveMIC;
 }
 //-----------------------------------------------------------------------------
@@ -686,6 +695,30 @@ double SESubstance::GetTimeAboveMIC(const TimeUnit& unit) const
   if (m_TimeAboveMIC == nullptr)
     return SEScalar::dNaN();
   return m_TimeAboveMIC->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+bool SESubstance::HasTimeAfterDose() const
+{
+  return (m_TimeAfterDose == nullptr) ? false : m_TimeAfterDose->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarTime& SESubstance::GetTimeAfterDose()
+{
+  if (m_TimeAfterDose == nullptr)
+    m_TimeAfterDose = new SEScalarTime();
+  return *m_TimeAfterDose;
+}
+//-----------------------------------------------------------------------------
+double SESubstance::GetTimeAfterDose(const TimeUnit& unit) const
+{
+  if (m_TimeAfterDose == nullptr)
+    return SEScalar::dNaN();
+  return m_TimeAfterDose->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+void SESubstance::ResetTimeAfterDose()
+{
+  m_TimeAfterDose->SetValue(0.0, TimeUnit::s);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasTissueConcentration() const

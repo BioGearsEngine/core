@@ -861,13 +861,13 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
 void Gastrointestinal::Process()
 {
   ProcessDrugCAT();
-  //m_data.GetDataTrack().Probe("DrugMass_SolidLumen", m_SolidMassLumen);
-  //m_data.GetDataTrack().Probe("DrugMass_DissolvedLumen", m_DissolvedMassLumen);
-  //m_data.GetDataTrack().Probe("DrugMass_Enterocyte", m_MassEnterocytes);
-  //m_data.GetDataTrack().Probe("DrugMass_Absorbed", m_MassAbsorbed);
-  //m_data.GetDataTrack().Probe("DrugMass_Metabolized", m_MassMetabolized);
-  //m_data.GetDataTrack().Probe("DrugMass_Excreted", m_MassExcreted);
-  //m_data.GetDataTrack().Probe("DrugMass_Conservation", m_MassConservation);
+  m_data.GetDataTrack().Probe("DrugMass_SolidLumen", m_SolidMassLumen);
+  m_data.GetDataTrack().Probe("DrugMass_DissolvedLumen", m_DissolvedMassLumen);
+  m_data.GetDataTrack().Probe("DrugMass_Enterocyte", m_MassEnterocytes);
+  m_data.GetDataTrack().Probe("DrugMass_Absorbed", m_MassAbsorbed);
+  m_data.GetDataTrack().Probe("DrugMass_Metabolized", m_MassMetabolized);
+  m_data.GetDataTrack().Probe("DrugMass_Excreted", m_MassExcreted);
+  m_data.GetDataTrack().Probe("DrugMass_Conservation", m_MassConservation);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -921,9 +921,13 @@ void Gastrointestinal::ProcessDrugCAT()
     const double hydrogenBondCount = subData->GetHydrogenBondCount();
     const double polarSurfaceArea = subData->GetPolarSurfaceArea();
     const double logP = subData->GetLogP();
-    const double pKa = subData->GetAcidDissociationConstant();
+    const double pKa = subData->GetPrimaryPKA();
+    double pKa2 = 0;		//Only used for Zwitterions--can't set const because we need to reset it in switch/case below
     const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-    const double gutKP = 30.0; //Gut partition coefficient, hard-coded for fentanyl currently
+    double gutKP = 1.0;		//First time step, we won't have the tissue kinetics defined yet
+    if (sub->GetPK()->GetTissueKinetics(BGE::TissueCompartment::Gut)->HasPartitionCoefficient()) {
+      gutKP = sub->GetPK()->GetTissueKinetics(BGE::TissueCompartment::Gut)->GetPartitionCoefficient();
+    }
     double fMetabolized = 0.0;
     if (sub->GetName() == "Fentanyl") {
       fMetabolized = 0.25;  //Probably need to make this substance specific--part of clearance terms
@@ -947,6 +951,7 @@ void Gastrointestinal::ProcessDrugCAT()
     double solBileSalts_ug_Per_mL = 0.0;
     double solubilityCapacity = 0.0;
     double ionTerm = 0.0;
+    double tautomerizationConstant = 0.0;
     std::vector<double>::iterator phIt;
     std::vector<double>::iterator solIt;
     for (phIt = m_TransitPH.begin(), solIt = m_TransitBileSalts_mM.begin(); phIt != m_TransitPH.end() && solIt != m_TransitBileSalts_mM.end(); ++phIt, ++solIt) {
@@ -956,21 +961,35 @@ void Gastrointestinal::ProcessDrugCAT()
         ionTerm = 1.0 + std::pow(10.0, *phIt - pKa);
         break;
       case CDM::enumSubstanceIonicState::WeakBase:
-        //Intentionally blank w/o break statement-->this way weak acid and base flow to same place (same equation used)
+        //Intentionally blank w/o break statement-->this way weak base and base flow to same place (same equation used)
       case CDM::enumSubstanceIonicState::Base:
         ionTerm = 1.0 + std::pow(10.0, pKa - *phIt);
         break;
+      case CDM::enumSubstanceIonicState::Zwitterion:
+        if (!subData->HasSecondaryPKA()) {
+          std::stringstream ss;
+          ss << "Gastrointestinal::ProcessCAT:  Zwitterions needs two pKa's defined" << std::endl;
+          Error(ss);
+		}
+        pKa2 = subData->GetSecondaryPKA();
+		//This tells us what fraction is in the zwitterionic form (as opposed to fully deprotonated or fully protonated)
+		ionTerm = 1.0 + std::pow(10, *phIt - std::max(pKa, pKa2)) + std::pow(10.0, std::min(pKa, pKa2) - *phIt);
+		//Zwitterions tautomerize between charged form (with + balancing -) and fully neutral forms.  Only fully neutral form is unionized!
+		//Tautomerization constant describes equlibirum of [A+-] : [A0]
+		tautomerizationConstant = 10.0;	//This is accurate based on microconstant data for moxifloxacin (current active zwitterion in BioGears)
+		ionTerm *= tautomerizationConstant;
+        break;
       default:
         ionTerm = 1.0;
-        break;
       }
       fracUnionized.push_back(1.0 / ionTerm);
       permeability_cm_Per_s.push_back(constTerms + B * std::log10(1.0 / ionTerm)); //Note that this gives us a "stomach permeability" that we do not use
       //Solubility--could look at Ando2015New for this as well
       solWaterAdjusted_ug_Per_mL = std::pow(10.0, std::log10(solWaterStd_ug_Per_mL) + std::log10(ionTerm));
-      solubilityCapacity = solWaterAdjusted_ug_Per_mL * (18.0 / molarMass_g_Per_mol) * 1.0e-6;
+	  //Using std sol instead of adjusting because there are some weird pH effects going on that need to be investigated further
+      solubilityCapacity = solWaterStd_ug_Per_mL * (18.0 / molarMass_g_Per_mol) * 1.0e-6;
       solBileSalts_ug_Per_mL = solubilityRatio * solubilityCapacity * molarMass_g_Per_mol * (*solIt);
-      solubility_ug_Per_mL.push_back(solWaterAdjusted_ug_Per_mL + solBileSalts_ug_Per_mL);
+      solubility_ug_Per_mL.push_back(solWaterStd_ug_Per_mL + solBileSalts_ug_Per_mL);
     }
     //Previous state
     std::vector<double> lumenSolidMasses_ug = cat->GetLumenSolidMasses(MassUnit::ug);

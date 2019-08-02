@@ -989,9 +989,9 @@ void BloodChemistry::InflammatoryResponse()
   double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
   //Process equations
-  dP = (kPG-antibacterialEffect) * P * (1.0 - P / maxPathogen) - P * kPN * NA * GeneralMath::HillActivation(P, xPN, 2.0) - sB * kPB * P / (uB + kBP * P); //This is assumed to be the driving force for infection / sepsis.
-  if (P < 0.001) {
-    //Since pathogen decreases exponentially it will never actually hit 0.  Make sure it can't rebound when population becomes 0.1% of initial pop
+  dP = (kPG-antibacterialEffect) * P * (1.0 - P / maxPathogen) - kPN * NA * GeneralMath::HillActivation(P, xPN, 2.0) - sB * kPB * P / (uB + kBP * P); //This is assumed to be the driving force for infection / sepsis.
+  if (P < ZERO_APPROX) {
+    //Make sure when we get close to P = 0 that we don't take too big a step and pull a negative P for next iteration
     dP = 0.0;
   }
   dTR = -kTr * TR; //This is assumed to be the driving force for burn
@@ -1010,7 +1010,7 @@ void BloodChemistry::InflammatoryResponse()
   dTI += kD * (1.0 - TI) - TI * (kD6 * GeneralMath::HillActivation(I6, xD6, 2.0) + kDTR * TR + kDP * P) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
 
 
-  double scale = 60.0;
+  double scale = 1.0;  //Only change this if you want to test inflammation model by itself at faster rate!  Other Bg metrics will no longer align with model progression
   //Increment state values--make sure to scale nitrate, tnf, il6, and il10 back up
   m_InflammatoryResponse->GetPathogen().IncrementValue(dP * dt_hr * scale);
   m_InflammatoryResponse->GetTrauma().IncrementValue(dTR * dt_hr * scale);

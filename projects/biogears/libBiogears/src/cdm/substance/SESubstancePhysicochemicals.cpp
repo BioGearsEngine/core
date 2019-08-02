@@ -18,7 +18,7 @@ namespace biogears {
 SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
   : Loggable(logger)
 {
-  m_AcidDissociationConstant = nullptr;
+  m_AcidDissociationConstants.clear();
   m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
   m_BloodPlasmaRatio = nullptr;
   m_FractionUnboundInPlasma = nullptr;
@@ -35,7 +35,7 @@ SESubstancePhysicochemicals::~SESubstancePhysicochemicals()
 //-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::Clear()
 {
-  SAFE_DELETE(m_AcidDissociationConstant);
+  m_AcidDissociationConstants.clear();
   m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
   SAFE_DELETE(m_BloodPlasmaRatio);
   SAFE_DELETE(m_FractionUnboundInPlasma);
@@ -47,7 +47,7 @@ void SESubstancePhysicochemicals::Clear()
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::IsValid() const
 {
-  if (!HasAcidDissociationConstant())
+  if (!HasPrimaryPKA())
     return false;
   if (!HasBindingProtein())
     return false;
@@ -69,8 +69,10 @@ const SEScalar* SESubstancePhysicochemicals::GetScalar(const char* name)
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name)
 {
-  if (name.compare("AcidDissociationConstant") == 0)
-    return &GetAcidDissociationConstant();
+  if (name.compare("PrimaryPKA") == 0)
+    return &GetPrimaryPKA();
+  if (name.compare("SecondaryPKA") == 0)
+    return &GetSecondaryPKA();
   if (name.compare("BloodPlasmaRatio") == 0)
     return &GetBloodPlasmaRatio();
   if (name.compare("FractionUnboundInPlasma") == 0)
@@ -89,7 +91,11 @@ bool SESubstancePhysicochemicals::Load(const CDM::SubstancePhysicochemicalData& 
 {
   Clear();
 
-  GetAcidDissociationConstant().Load(in.AcidDissociationConstant());
+  for (auto pKa : in.AcidDissociationConstant()) {
+    SEScalar* pKScalar = new SEScalar();
+    pKScalar->Load(pKa);
+    m_AcidDissociationConstants.push_back(pKScalar);
+  }
   m_BindingProtein = in.BindingProtein();
   GetBloodPlasmaRatio().Load(in.BloodPlasmaRatio());
   GetFractionUnboundInPlasma().Load(in.FractionUnboundInPlasma());
@@ -113,8 +119,9 @@ CDM::SubstancePhysicochemicalData* SESubstancePhysicochemicals::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data) const
 {
-  if (HasAcidDissociationConstant())
-    data.AcidDissociationConstant(std::unique_ptr<CDM::ScalarData>(m_AcidDissociationConstant->Unload()));
+  for (auto pKa : m_AcidDissociationConstants) {
+    data.AcidDissociationConstant().push_back(std::unique_ptr<CDM::ScalarData>(pKa->Unload()));
+  }
   if (HasBindingProtein())
     data.BindingProtein(m_BindingProtein);
   if (HasBloodPlasmaRatio())
@@ -131,25 +138,68 @@ void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data
     data.PolarSurfaceArea(std::unique_ptr<CDM::ScalarData>(m_PolarSurfaceArea->Unload()));
 };
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasAcidDissociationConstant() const
+//bool SESubstancePhysicochemicals::HasAcidDissociationConstant() const
+//{
+//  return (m_AcidDissociationConstant == nullptr) ? false : m_AcidDissociationConstant->IsValid();
+//}
+////-----------------------------------------------------------------------------
+//SEScalar& SESubstancePhysicochemicals::GetAcidDissociationConstant()
+//{
+//  if (m_AcidDissociationConstant == nullptr)
+//    m_AcidDissociationConstant = new SEScalar();
+//  return *m_AcidDissociationConstant;
+//}
+////-----------------------------------------------------------------------------
+//double SESubstancePhysicochemicals::GetAcidDissociationConstant() const
+//{
+//  if (m_AcidDissociationConstant == nullptr)
+//    return SEScalar::dNaN();
+//  return m_AcidDissociationConstant->GetValue();
+//}
+////-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool SESubstancePhysicochemicals::HasPrimaryPKA() const
 {
-  return (m_AcidDissociationConstant == nullptr) ? false : m_AcidDissociationConstant->IsValid();
+  return (!m_AcidDissociationConstants.empty());
 }
 //-----------------------------------------------------------------------------
-SEScalar& SESubstancePhysicochemicals::GetAcidDissociationConstant()
+SEScalar& SESubstancePhysicochemicals::GetPrimaryPKA()
 {
-  if (m_AcidDissociationConstant == nullptr)
-    m_AcidDissociationConstant = new SEScalar();
-  return *m_AcidDissociationConstant;
+  if (m_AcidDissociationConstants.empty()) {
+    SEScalar* pKA1 = new SEScalar();
+    m_AcidDissociationConstants.push_back(pKA1);
+  }
+  return *m_AcidDissociationConstants[0];
 }
 //-----------------------------------------------------------------------------
-double SESubstancePhysicochemicals::GetAcidDissociationConstant() const
+double SESubstancePhysicochemicals::GetPrimaryPKA() const
 {
-  if (m_AcidDissociationConstant == nullptr)
+  if (m_AcidDissociationConstants.empty())
     return SEScalar::dNaN();
-  return m_AcidDissociationConstant->GetValue();
+  return m_AcidDissociationConstants[0]->GetValue();
 }
 //-----------------------------------------------------------------------------
+bool SESubstancePhysicochemicals::HasSecondaryPKA() const
+{
+  return m_AcidDissociationConstants.size() < 2 ? false : true;
+}
+//-----------------------------------------------------------------------------
+SEScalar& SESubstancePhysicochemicals::GetSecondaryPKA()
+{
+  if (m_AcidDissociationConstants.size() < 2) {
+    SEScalar* pKA2 = new SEScalar();
+    m_AcidDissociationConstants.push_back(pKA2);
+  }
+  return *m_AcidDissociationConstants[1];
+}
+//-----------------------------------------------------------------------------
+double SESubstancePhysicochemicals::GetSecondaryPKA() const
+{
+  if (m_AcidDissociationConstants.size()<2)
+    return SEScalar::dNaN();
+  return m_AcidDissociationConstants[1]->GetValue();
+}
+////-----------------------------------------------------------------------------
 CDM::enumSubstanceBindingProtein::value SESubstancePhysicochemicals::GetBindingProtein() const
 {
   return m_BindingProtein;

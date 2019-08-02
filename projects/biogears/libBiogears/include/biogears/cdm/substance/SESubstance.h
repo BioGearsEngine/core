@@ -144,6 +144,11 @@ public:
   virtual SEScalarTime& GetTimeAboveMIC();
   virtual double GetTimeAboveMIC(const TimeUnit& unit) const;
 
+  virtual bool HasTimeAfterDose() const;
+  virtual SEScalarTime& GetTimeAfterDose();
+  virtual double GetTimeAfterDose(const TimeUnit& unit) const;
+  void ResetTimeAfterDose();
+
   virtual bool HasTissueConcentration() const;
   virtual SEScalarMassPerVolume& GetTissueConcentration();
   virtual double GetTissueConcentration(const MassPerVolumeUnit& unit) const;
@@ -214,6 +219,7 @@ protected:
   SEScalarMassPerVolume* m_PlasmaConcentration;
   SEScalarMass* m_SystemicMassCleared;
   SEScalarTime* m_TimeAboveMIC;
+  SEScalarTime* m_TimeAfterDose;
   SEScalarMassPerVolume* m_TissueConcentration;
 
   SEScalarVolumePerTime* m_AlveolarTransfer;

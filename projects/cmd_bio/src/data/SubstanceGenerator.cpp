@@ -19,8 +19,8 @@
 namespace biogears {
 //-----------------------------------------------------------------------------
 //!
-//! \brief 
-//! \param path -- std:string -- The Path to the CSV document folder will be appened with a delimiter. 
+//! \brief
+//! \param path -- std:string -- The Path to the CSV document folder will be appened with a delimiter.
 //!
 SubstanceGenerator::SubstanceGenerator(std::string path)
   : CSVToXMLConvertor(path, "Substances.csv")
@@ -28,8 +28,8 @@ SubstanceGenerator::SubstanceGenerator(std::string path)
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief 
-//! 
+//! \brief
+//!
 SubstanceGenerator::~SubstanceGenerator()
 {
 }
@@ -61,7 +61,7 @@ bool SubstanceGenerator::parse()
     } else if ("Pharmacodynamics (all or none)" == lineItr->first) {
       rValue &= process_pharmacodynamics(++lineItr);
       lineItr += 15;
-    } else if ( lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
+    } else if (lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
       rValue &= process_tissues(lineItr);
       lineItr += 1;
     } else {
@@ -75,8 +75,8 @@ bool SubstanceGenerator::parse()
 //-----------------------------------------------------------------------------
 //!
 //! \brief Saves xml for each SubstanceData object in _substances
-//! \return 
-//! 
+//! \return
+//!
 bool SubstanceGenerator::save() const
 {
   for (auto& substance : _substances) {
@@ -89,7 +89,8 @@ bool SubstanceGenerator::save() const
       file.open("substances/" + substance.Name() + ".xml");
       Substance(file, substance, info);
       file.close();
-      std::cout << "Saved substances/" + substance.Name() + ".xml" << "\n";
+      std::cout << "Saved substances/" + substance.Name() + ".xml"
+                << "\n";
 
     } catch (std::exception e) {
       std::cout << e.what() << std::endl;
@@ -110,8 +111,8 @@ void SubstanceGenerator::print() const
 //! \param name first cell of row
 //! \param value another cell of same row
 //! \param substance SubstanceData object
-//! \return 
-//! 
+//! \return
+//!
 bool SubstanceGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::SubstanceData& substance)
 {
   using namespace mil::tatrc::physiology::datamodel;
@@ -204,7 +205,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos = 0;
     try {
       type.value(std::stod(value, &pos));
-      //type.unit(trim(value.substr(pos))); //No Unit 
+      //type.unit(trim(value.substr(pos))); //No Unit
       substance.RelativeDiffusionCoefficient(type);
     } catch (std::exception e) {
       rValue = false;
@@ -226,8 +227,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in data for the xml tags nested inside the aerosol tag
-//! \param itr, iterator for the data structure representation of csv rows 
-//! \return 
+//! \param itr, iterator for the data structure representation of csv rows
+//! \return
 //! \details since nested tags are dependent on multiple rows of the csv document it is necessary to write a method such as this one
 //!          for all tags which nest other xml tags.
 bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
@@ -316,9 +317,9 @@ bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in data for xml tags nested in the clearance tag
-//! \param itr, iterator for the data structure representation of csv rows 
-//! \return 
-//! 
+//! \param itr, iterator for the data structure representation of csv rows
+//! \return
+//!
 bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -336,7 +337,6 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
     auto& value = (itr)->second[index];
     if (!value.empty()) {
       CDM::SubstanceClearanceData::Systemic_type systemic_data;
-  
 
       CDM::SubstanceClearanceData::Systemic_type::FractionExcretedInFeces_type feif_data;
       CDM::SubstanceClearanceData::Systemic_type::FractionUnboundInPlasma_type fuip_data;
@@ -377,7 +377,7 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
     if (!value.empty()) {
       default_clearance = false;
       try {
-        renal_data.Clearance(std::stod(value,&pos));
+        renal_data.Clearance(std::stod(value, &pos));
         renal_data.Clearance()->unit(trim(value.substr(pos)));
         data.RenalDynamics(renal_data);
       } catch (std::exception e) {
@@ -423,9 +423,9 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in data for the xml tags nested inside the pharmacokinetics tag
-//! \param itr, iterator for the data structure representation of csv rows 
-//! \return 
-//! 
+//! \param itr, iterator for the data structure representation of csv rows
+//! \return
+//!
 bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -442,8 +442,15 @@ bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
     auto& value = (itr)->second[index];
     if (!value.empty()) {
       try {
-
-        phys_type.AcidDissociationConstant(std::stod(value));
+        size_t secondPKA = value.find(';'); //If two pKa's are present, they will be separated by a ;
+        if (secondPKA == value.npos) {
+          phys_type.AcidDissociationConstant().push_back(std::stod(value));
+        } else {
+          std::string pKA1 = value.substr(0, secondPKA);
+          std::string pKA2 = value.substr(secondPKA + 1, value.npos);
+          phys_type.AcidDissociationConstant().push_back(std::stod(pKA1));
+          phys_type.AcidDissociationConstant().push_back(std::stod(pKA2));
+        }
         value = (itr + 1)->second[index];
         phys_type.BindingProtein(value);
         value = (itr + 2)->second[index];
@@ -472,9 +479,9 @@ bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
 //-------------------------------------------------------------------------------
 //!
 //! \brief Reads in data for the xml tags nested inside the pharmacodynamics tag
-//! \param itr, iterator for the data structure representation of csv rows 
-//! \return 
-//! 
+//! \param itr, iterator for the data structure representation of csv rows
+//! \return
+//!
 bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -545,9 +552,9 @@ bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in data for the xml tags nested inside the tissues tag
-//! \param itr, iterator for the data structure representation of csv rows 
-//! \return 
-//! 
+//! \param itr, iterator for the data structure representation of csv rows
+//! \return
+//!
 bool SubstanceGenerator::process_tissues(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -561,9 +568,9 @@ bool SubstanceGenerator::process_tissues(CSV_RowItr itr)
   for (auto& substance : _substances) {
     auto& value = (itr + 1)->second[index];
     if (!value.empty()) {
-      std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type> data; 
+      std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type> data;
       std::unique_ptr<CDM::SubstanceData::Pharmacokinetics_type::TissueKinetics_sequence> tissues;
-      if ( substance.Pharmacokinetics().present() ) {
+      if (substance.Pharmacokinetics().present()) {
         data = substance.Pharmacokinetics().detach();
       } else {
         data = std::make_unique<CDM::SubstanceData::Pharmacokinetics_type>();

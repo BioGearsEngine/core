@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Base"/>
       <xs:enumeration value="Acid"/>
       <xs:enumeration value="Neutral"/>
+	  <xs:enumeration value="Zwitterion"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -110,7 +111,7 @@ specific language governing permissions and limitations under the License.
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="AcidDissociationConstant" type="ScalarData" minOccurs="1"  maxOccurs="1"/> <!--<< @brief A quantitative measure of the strength of an acid in solution. -->         
+          <xs:element name="AcidDissociationConstant" type="ScalarData" minOccurs="1"  maxOccurs="2"/> <!--<< @brief A quantitative measure of the strength of an acid in solution. -->         
           <xs:element name="BindingProtein" type="enumSubstanceBindingProtein" minOccurs="1"  maxOccurs="1"/><!--<< @brief @copybrief Substance_enumSubstanceBindingProtein -->
           <xs:element name="BloodPlasmaRatio" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The ratio of the substance in the blood versus the plasma. -->
           <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Fraction of the substance in the plasma that is unbound. -->
@@ -242,7 +243,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="MassInTissue" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Amount of mass of this substance that is in the tissue. -->
           <xs:element name="PlasmaConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Calculated concentration of a substance in the plasma. -->
           <xs:element name="SystemicMassCleared" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of mass that has been systemically cleared-->          
-		  <xs:element name="TimeAboveMIC" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/><!--@ breif The amount of time an antiobiotics plasma concentration is greater than the minimum amount required to act on a bacterium-->
+		  <xs:element name="TimeAboveMIC" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/><!--@ brief The amount of time an antiobiotics plasma concentration is greater than the minimum amount required to act on a bacterium-->
+		  <xs:element name="TimeAfterDose" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/><!--@ brief Time after drug administered so that we can track fraction of time antibiotic concentration is greater than MIC-->
           <xs:element name="TissueConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Concentration of this substance that is in the tissue. -->
           <!-- Gas -->
           <xs:element name="AlveolarTransfer" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Calculated rate of transfer that occurs during gas exchange. -->

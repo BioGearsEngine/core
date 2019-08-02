@@ -37,9 +37,17 @@ protected:
   virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
 
 public:
-  virtual bool HasAcidDissociationConstant() const;
-  virtual SEScalar& GetAcidDissociationConstant();
-  virtual double GetAcidDissociationConstant() const;
+  //virtual bool HasAcidDissociationConstant() const;
+  //virtual SEScalar& GetAcidDissociationConstant();
+  //virtual double GetAcidDissociationConstant() const;
+  
+   virtual bool HasPrimaryPKA() const;
+   virtual SEScalar& GetPrimaryPKA();
+   virtual double GetPrimaryPKA() const;
+ 
+   virtual bool HasSecondaryPKA() const;
+   virtual SEScalar& GetSecondaryPKA();
+   virtual double GetSecondaryPKA() const;
 
   virtual CDM::enumSubstanceBindingProtein::value GetBindingProtein() const;
   virtual void SetBindingProtein(CDM::enumSubstanceBindingProtein::value state);
@@ -72,7 +80,7 @@ public:
   virtual double GetPolarSurfaceArea() const;
 
 protected:
-  SEScalar* m_AcidDissociationConstant;
+  std::vector<SEScalar*> m_AcidDissociationConstants;
   CDM::enumSubstanceBindingProtein::value m_BindingProtein;
   SEScalar* m_BloodPlasmaRatio;
   SEScalarFraction* m_FractionUnboundInPlasma;

@@ -229,8 +229,10 @@ void Drugs::Process()
 
   CalculatePlasmaSubstanceConcentration();
 
-  if (m_data.GetConfiguration().IsPDEnabled())
+  if (m_data.GetConfiguration().IsPDEnabled()) {
+    CalculateAntibioticEffects();
     CalculateDrugEffects();
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -542,6 +544,17 @@ void Drugs::CalculatePartitionCoefficients()
   double EquationPartC = 0;
   double PartitionCoefficient = 0;
   double TissueToPlasmaProteinRatio = 0;
+  //Red blood cell constants for estimation of acidic phospholipid association constant (bases and zwitterions)
+  double rbcNeutralLipids = 0.0012;
+  double rbcNeutralPhospholipids = 0.0033;
+  double rbcIntracellularWater = 0.603;
+  double rbcAcidicPhospholipids = 0.57;
+  double rbcIntracellularPH = 7.2;  //See Poulin2011Predictive:Part5
+  double rbcPHEffects = 0.0;
+  //Constansts for zwitterions
+  double hematocrit = m_data.GetBloodChemistry().GetHematocrit().GetValue();
+  double bloodPlasmaUnboundRatio = 0.0;
+  double AcidicPhospholipidAssociation = 0.0;
 
   //Loop over tissue nodes
   for (SETissueCompartment* tissue : m_data.GetCompartments().GetTissueLeafCompartments()) {
@@ -560,7 +573,8 @@ void Drugs::CalculatePartitionCoefficients()
 
       SESubstancePhysicochemicals& pk = sub->GetPK().GetPhysicochemicals();
       CDM::enumSubstanceIonicState::value IonicState = pk.GetIonicState();
-      double AcidDissociationConstant = pk.GetAcidDissociationConstant().GetValue();
+      double pKA1 = pk.GetPrimaryPKA().GetValue();
+      double pKA2 = 0.0; //Only for zwitterions
       double P = exp(log(10) * pk.GetLogP().GetValue()); //Getting P from logP value
       if (tissue == m_fatTissue) {
         P = 1.115 * pk.GetLogP().GetValue() - 1.35;
@@ -581,35 +595,111 @@ void Drugs::CalculatePartitionCoefficients()
         ss << tissue->GetName();
         Fatal(ss);
       }
-      //Based on the ionic state, the partition coefficient equation and/or pH effect equations are varied.
-      if (IonicState == CDM::enumSubstanceIonicState::Base) {
-        IntracellularPHEffects = std::pow(10.0, (AcidDissociationConstant - IntracellularPH));
-        PHEffectPower = PlasmaPH - AcidDissociationConstant;
+	  //Previous implementation grouped by nested if/else.  Using switch results in some code duplication (between acid/weakbase/neutral), but it looks a lot cleaner
+      switch (IonicState) {
+      case CDM::enumSubstanceIonicState::Base:
+        PHEffectPower = pKA1 - IntracellularPH;
+        IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+		PHEffectPower = pKA1 - PlasmaPH;
         PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
-        EquationPartA = 1.0 + IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
-        /// \todo How to support oral absorption - should I check if oral administration then use Oral absorption rate otherwise assume 1?
-        EquationPartB = tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * IntracellularPHEffects / PlasmaPHEffects;
-        EquationPartC = P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue() / PlasmaPHEffects;
-      } else {
-        if (IonicState == CDM::enumSubstanceIonicState::Acid) {
-          PHEffectPower = IntracellularPH - AcidDissociationConstant;
-          IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
-          PHEffectPower = PlasmaPH - AcidDissociationConstant;
-          PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
-        } else if (IonicState == CDM::enumSubstanceIonicState::WeakBase) {
-          PHEffectPower = AcidDissociationConstant - IntracellularPH;
-          IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
-          PHEffectPower = AcidDissociationConstant - PlasmaPH;
-          PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
-        } else {
-          IntracellularPHEffects = 1.0;
-          PlasmaPHEffects = 1.0;
-        }
+		//Method of Rogers/Rowland requires an estimate for association constant of bases with acidic phospholipids.  This value can be estimated using blood/plasma_unbound partition coefficient
+		bloodPlasmaUnboundRatio = (pk.GetBloodPlasmaRatio().GetValue() - (1.0 - hematocrit)) / (hematocrit * pk.GetFractionUnboundInPlasma().GetValue());  //See Hinderling1997Red:  Kb/p = Ke/pu * fu * hematocrit + (1- hematocrit)
+        //Recycle equation part A,B,C for determination of acidic phospholipid association
+		rbcPHEffects = 1.0 + std::pow(10.0, (pKA1 - rbcIntracellularPH));
+        EquationPartA = (rbcPHEffects*rbcIntracellularWater) / PlasmaPHEffects; 
+		EquationPartB = (P * rbcNeutralLipids + (0.3 * P + 0.7) * rbcNeutralPhospholipids) / PlasmaPHEffects;
+        EquationPartC = PlasmaPHEffects / (rbcAcidicPhospholipids * IntracellularPHEffects);
+		AcidicPhospholipidAssociation = (bloodPlasmaUnboundRatio - EquationPartA - EquationPartB) * EquationPartC;
+        LLIM(AcidicPhospholipidAssociation, 0.0);	//Poulin2011Predictive:Part5 notes that in corner cases this value can become negative and should be set to 0
+        //Now calculate features of partition coefficient
+		EquationPartA = (IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue()) / PlasmaPHEffects;
+        EquationPartB = AcidicPhospholipidAssociation * tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * IntracellularPHEffects / PlasmaPHEffects;
+        EquationPartC = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue()) / PlasmaPHEffects;
+        break;
+      case CDM::enumSubstanceIonicState::Acid:
+        PHEffectPower = IntracellularPH - pKA1;
+        IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+        PHEffectPower = PlasmaPH - pKA1;
+        PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         EquationPartA = IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
         EquationPartB = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue())
           / PlasmaPHEffects;
-        EquationPartC = ((1 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
+        EquationPartC = ((1.0 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
+        break;
+      case CDM::enumSubstanceIonicState::WeakBase:
+        PHEffectPower = pKA1 - IntracellularPH;
+        IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+        PHEffectPower = pKA1 - PlasmaPH;
+        PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+        EquationPartA = IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
+        EquationPartB = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue())
+          / PlasmaPHEffects;
+        EquationPartC = ((1.0 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
+        break;
+      case CDM::enumSubstanceIonicState::Zwitterion:
+        if (!pk.HasSecondaryPKA()) {
+          std::stringstream ss;
+          ss << "A zwitterion requires two acid dissociation constants to calculate partition coefficients:  Substance =  ";
+          ss << sub->GetName();
+          Fatal(ss);
+        }
+        pKA2 = pk.GetSecondaryPKA().GetValue();
+		//Using std::min/max below to make sure that more acidic and more basic pKa's are applied in proper place
+        PlasmaPHEffects = 1.0 + std::pow(10.0, PlasmaPH - std::min(pKA1,pKA2)) + std::pow(10.0, std::max(pKA1,pKA2) - PlasmaPH);
+        IntracellularPHEffects = 1.0 + std::pow(10.0, IntracellularPH - std::min(pKA1,pKA2)) + std::pow(10.0, std::max(pKA1,pKA2) - IntracellularPH);
+        //Method of Rogers/Rowland requires an estimate for association constant of zwitterions with acidic phospholipids.  This value can be estimated using blood/plasma_unbound partition coefficient
+        bloodPlasmaUnboundRatio = (pk.GetBloodPlasmaRatio().GetValue() - (1.0 - hematocrit)) / (hematocrit * pk.GetFractionUnboundInPlasma().GetValue()); //See Hinderling1997Red:  Kb/p = Ke/pu * fu * hematocrit + (1- hematocrit)
+        //Recycle equation part A,B,C for determination of acidic phospholipid association
+        rbcPHEffects = 1.0 + std::pow(10.0, rbcIntracellularPH - std::min(pKA1,pKA2)) + std::pow(10.0, std::max(pKA1,pKA2) - rbcIntracellularPH);
+        EquationPartA = (rbcPHEffects * rbcIntracellularWater) / PlasmaPHEffects;
+        EquationPartB = (P * rbcNeutralLipids + (0.3 * P + 0.7) * rbcNeutralPhospholipids) / PlasmaPHEffects;
+        EquationPartC = PlasmaPHEffects / (rbcAcidicPhospholipids * rbcPHEffects);
+        AcidicPhospholipidAssociation = (bloodPlasmaUnboundRatio - EquationPartA - EquationPartB) * EquationPartC;
+        LLIM(AcidicPhospholipidAssociation, 0.0); //Poulin2011Predictive:Part5 notes that in corner cases this value can become negative and should be set to 0
+        //Now calculate features of partition coefficient
+        EquationPartA = (IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue()) / PlasmaPHEffects;
+        EquationPartB = (AcidicPhospholipidAssociation * tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * std::pow(10.0, std::max(pKA1,pKA2) - IntracellularPH) + std::pow(10.0, IntracellularPH - std::min(pKA1,pKA2))) / PlasmaPHEffects;
+        EquationPartC = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue()) / PlasmaPHEffects;
+		break;
+      default:
+		//Neutral ion
+        IntracellularPHEffects = 1.0;
+        PlasmaPHEffects = 1.0;
+        EquationPartA = IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
+        EquationPartB = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue())
+          / PlasmaPHEffects;
+        EquationPartC = ((1.0 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
       }
+
+
+      ////Based on the ionic state, the partition coefficient equation and/or pH effect equations are varied.
+      //if (IonicState == CDM::enumSubstanceIonicState::Base) {
+      //  IntracellularPHEffects = std::pow(10.0, (pKA1 - IntracellularPH));
+      //  PHEffectPower = pKA1-PlasmaPH;
+      //  PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+      //  EquationPartA = (1.0 + IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue()) / PlasmaPHEffects;
+      //  EquationPartB = tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * IntracellularPHEffects / PlasmaPHEffects;
+      //  EquationPartC = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue()) / PlasmaPHEffects;
+      //} else {
+      //  if (IonicState == CDM::enumSubstanceIonicState::Acid) {
+      //    PHEffectPower = IntracellularPH - pKA1;
+      //    IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+      //    PHEffectPower = PlasmaPH - pKA1;
+      //    PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+      //  } else if (IonicState == CDM::enumSubstanceIonicState::WeakBase) {
+      //    PHEffectPower = pKA1 - IntracellularPH;
+      //    IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+      //    PHEffectPower = pKA1 - PlasmaPH;
+      //    PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
+      //  } else {
+      //    IntracellularPHEffects = 1.0;
+      //    PlasmaPHEffects = 1.0;
+      //  }
+      //  EquationPartA = IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
+      //  EquationPartB = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue())
+      //    / PlasmaPHEffects;
+      //  EquationPartC = ((1.0 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
+      //}
       //Calculate the partition coefficient and set it on the substance compartment effects
       PartitionCoefficient = EquationPartA + ExtracellularFluid.GetWaterVolumeFraction().GetValue() + EquationPartB + EquationPartC;
       PartitionCoefficient = PartitionCoefficient * pk.GetFractionUnboundInPlasma().GetValue() / pk.GetBloodPlasmaRatio().GetValue();
@@ -617,226 +707,245 @@ void Drugs::CalculatePartitionCoefficients()
     }
   }
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// Calculates the drug effects on other system parameters
+/// Calculates the effects of antibiotics
 ///
 /// \details
-/// If the substance is a drug with an EC50 value, the effects on heart rate, blood pressure, respiration rate,
-/// tidal volume, neuromuscular block level, sedation level, bronchodilation level, and pupillary state are
-/// calculated using the current plasma concentration, the EC50, and the maximum drug response.
+/// If the substance is an antibiotic, we need to establish how effective it is against any bactera that
+/// are present.  We have a separate function (rather than combined with Calc Drug Effecs) because
+/// drugs and antibiotics use two different pharmacodynamic data structures.  If there is not infection
+/// present, we do not process effects.
 //--------------------------------------------------------------------------------------------------
-void Drugs::CalculateDrugEffects()
+void Drugs::CalculateAntibioticEffects()
 {
   double antibioticActivity = 0.0;
-  double deltaHeartRate_Per_min = 0;
-  double hemorrhageFlowRecoveryFraction = 0;
-  double deltaDiastolicBP_mmHg = 0;
-  double deltaSystolicBP_mmHg = 0;
-  double deltaRespirationRate_Per_min = 0;
-  double deltaTidalVolume_mL = 0;
-  double neuromuscularBlockLevel = 0;
-  double sedationLevel = 0;
-  double bronchodilationLevel = 0;
-  double concentrationEffects_unitless = 0;
-  double deltaTubularPermeability = 0.0;
-  double pupilSizeResponseLevel = 0;
-  double pupilReactivityResponseLevel = 0;
-  double shapeParameter = 1.;
-  double ec50_ug_Per_mL = 0.0;
-  SEPatient& patient = m_data.GetPatient();
-  double HRBaseline_per_min = patient.GetHeartRateBaseline(FrequencyUnit::Per_min);
-  double effectSiteConcentration_ug_Per_mL = 0.0;
-  double centralNervousResponseLevel = 0.0;
-
-  //Naloxone reversal
-  SESubstance* m_Naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
-  double inhibitorConcentration_ug_Per_mL = 0.0;
-  double inhibitorConstant_ug_Per_mL = 1.0; //Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
-
-  //Loop over substances
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
-    if (!sub->HasPD() && !sub->HasAntibioticPD())
-      continue;
-
-    SESubstancePharmacodynamics& pd = sub->GetPD();
-    shapeParameter = pd.GetEMaxShapeParameter().GetValue();
-    ec50_ug_Per_mL = pd.GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
-
-    //Get effect site concentration and use it to calculate unitless drug effects.
-    //Currently, effect site concentration is same as plasma concentration for all drugs except morphine and sarin
-    effectSiteConcentration_ug_Per_mL = sub->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
-
-    if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
-      //Do non-antibiotic effects first
-      if (m_data.GetSubstances().IsActive(*m_Naloxone)) {
-        inhibitorConstant_ug_Per_mL = m_Naloxone->GetPD().GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
-        inhibitorConcentration_ug_Per_mL = m_Naloxone->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
-      }
-      concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
-    } else if (sub->GetName() == "Sarin") {
-      concentrationEffects_unitless = m_RbcAcetylcholinesteraseFractionInhibited;
-    } else {
-      if (shapeParameter == 1) // Avoiding using pow if we don't have to. I don't know if this is good practice or not, but seems legit.
-      {
-        concentrationEffects_unitless = effectSiteConcentration_ug_Per_mL / (ec50_ug_Per_mL + effectSiteConcentration_ug_Per_mL);
-
-      } else {
-        concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
-      }
-    }
-
-    if (m_data.GetActions().GetPatientActions().HasOverride()
-        && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
-      if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
-        pd.GetDiastolicPressureModifier().SetValue(0.0);
-        pd.GetSystolicPressureModifier().SetValue(0.0);
-      }
-      if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
-        pd.GetHeartRateModifier().SetValue(0.0);
-      }
-    }
-
-    /// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.
-    // This would be a problem for something like a continuous infusion of a drug or an environmental drug
-    // where we need to establish a new homeostatic point. Once the patient stabilizes with the drug effect included, a new baseline is
-    // set, and suddenly the drug effect is being computed using the new baseline. We may need to add another layer of
-    // stabilization and restrict drugs to post-feedback stabilization. Alternatively, we could base the drug effect on a baseline
-    // concentration which is normally zero but which gets set to a new baseline concentration at the end of feedback (see chemoreceptor
-    // and the blood gas setpoint reset for example).
-    deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
-
-    hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue() * 1e-5) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
-
-    deltaDiastolicBP_mmHg += patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetDiastolicPressureModifier().GetValue() * concentrationEffects_unitless;
-
-    deltaSystolicBP_mmHg += patient.GetSystolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetSystolicPressureModifier().GetValue() * concentrationEffects_unitless;
-
-    sedationLevel += pd.GetSedation().GetValue() * concentrationEffects_unitless;
-    centralNervousResponseLevel += pd.GetCentralNervousModifier().GetValue() * concentrationEffects_unitless;
-
-    deltaTubularPermeability += (pd.GetTubularPermeabilityModifier().GetValue()) * concentrationEffects_unitless;
-
-    /// \todo Check levels for other sedative/anesthetic drugs for carry over so not specific to propofol. Carries over to respiratory.cpp if statements in driver function as well
-    if ((sedationLevel > 0.15 && sub->GetName() != "Propofol") || (sedationLevel > 0.5)) {
-      deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue();
-      deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue();
-    } else {
-      deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue() * concentrationEffects_unitless;
-      deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue() * concentrationEffects_unitless;
-    }
-
-    neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
-
-    bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
-
-    const SEPupillaryResponse& pupillaryResponse = pd.GetPupillaryResponse();
-    pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier() * concentrationEffects_unitless;
-    pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
-
-    //Antibiotic effects--only process if an infection is active.  If inactive, AntibioticEffect will be 0 (assigned above)
-    if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic && m_data.GetActions().GetPatientActions().HasInfection()) {
-      SEAntibioticPharmacodynamics& antiPD = sub->GetAntibioticPD();
-      double antibacterialEffect = antiPD.GetAntibacterialEffect().GetValue();
-      double I50 = antiPD.GetI50().GetValue();
-      CDM::enumAntibioticPDIndex antiIndex = antiPD.GetAntibacterialIndex();
-      double MIC_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
-      double indexValue = 0.0;
-      switch (antiIndex) {
-      case CDM::enumAntibioticPDIndex::TimeAboveMIC:
-        indexValue = sub->GetTimeAboveMIC().GetValue(TimeUnit::min);
-		//Update TMIC here
-        if (sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL) > MIC_ug_Per_mL) {
-          sub->GetTimeAboveMIC().IncrementValue(m_data.GetTimeStep().GetValue(TimeUnit::s), TimeUnit::s);
-        } 
-		break;
-      case CDM::enumAntibioticPDIndex::AUC_MIC:
-        indexValue = sub->GetAreaUnderCurve().GetValue(TimeMassPerVolumeUnit::min_ug_Per_mL) / MIC_ug_Per_mL;
-        break;
-      case CDM::enumAntibioticPDIndex::Cmax_MIC:
-        indexValue = 0.0;
-        break;
-      default:
-        indexValue = 0.0;
-      }    
-  
-     antibioticActivity += antibacterialEffect * indexValue / (indexValue + I50);  
-    }
-
-  }
-
-  //Sepsis Effects
-  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    double nitricOxideBaseline = 0.05;
-    double nitricOxide = m_data.GetBloodChemistry().GetInflammatoryResponse().GetNitricOxide().GetValue() - nitricOxideBaseline;
-    LLIM(nitricOxide, 0.0);
-    double nitricOxideEC50 = 0.4;
-    double nitricOxideBPMod = -0.3;
-    double nitricOxideHRMod = 0.3;
-    double nitricOxideBPChange = nitricOxideBPMod * std::pow(nitricOxide, 2.0) / (std::pow(nitricOxide, 2.0) + std::pow(nitricOxideEC50, 2.0));
-    double nitricOxideHRChange = nitricOxideHRMod * std::pow(nitricOxide, 2.0) / (std::pow(nitricOxide, 2.0) + std::pow(nitricOxideEC50, 2.0));
-    deltaHeartRate_Per_min += nitricOxideHRChange * m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min);
-    deltaSystolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
-    deltaDiastolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
-  }
-
-  //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
-  double deltaMeanPressure_mmHg = (2 * deltaDiastolicBP_mmHg + deltaSystolicBP_mmHg) / 3;
-  double deltaPulsePressure_mmHg = (deltaSystolicBP_mmHg - deltaDiastolicBP_mmHg);
-
-  //Set values on the CDM System Values
-  GetAntibioticActivity().SetValue(antibioticActivity);
-  GetHeartRateChange().SetValue(deltaHeartRate_Per_min, FrequencyUnit::Per_min);
-  GetHemorrhageChange().SetValue(hemorrhageFlowRecoveryFraction);
-  GetMeanBloodPressureChange().SetValue(deltaMeanPressure_mmHg, PressureUnit::mmHg);
-  GetPulsePressureChange().SetValue(deltaPulsePressure_mmHg, PressureUnit::mmHg);
-  GetRespirationRateChange().SetValue(deltaRespirationRate_Per_min, FrequencyUnit::Per_min);
-  GetTidalVolumeChange().SetValue(deltaTidalVolume_mL, VolumeUnit::mL);
-  GetNeuromuscularBlockLevel().SetValue(neuromuscularBlockLevel);
-  GetSedationLevel().SetValue(sedationLevel);
-  GetBronchodilationLevel().SetValue(bronchodilationLevel);
-  GetTubularPermeabilityChange().SetValue(deltaTubularPermeability);
-  GetCentralNervousResponse().SetValue(centralNervousResponseLevel);
-
-  //Pupil effects
-
-  //We need to handle Sarin pupil effects (if Sarin is active) separately because technically they stem from contact and not systemic levels, meaning that they
-  //do not depend on the Sarin plasma concentration in the same way as other PD effects.  We still perform the calculation here because
-  //we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
-  //overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
-  if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
-    pupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
-    pupilReactivityResponseLevel = pupilSizeResponseLevel;
-  }
-
-  //Bound pupil modifiers
-  BLIM(pupilSizeResponseLevel, -1, 1);
-  BLIM(pupilReactivityResponseLevel, -1, 1);
-  GetPupillaryResponse().GetSizeModifier().SetValue(pupilSizeResponseLevel);
-  GetPupillaryResponse().GetReactivityModifier().SetValue(pupilReactivityResponseLevel);
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates the concentration of a substance in the plasma
-///
-/// \details
-/// If the substance has PK properties, the concentration of the substance in the plasma is calculated.
-/// PlasmaConcentration = TotalMassInTheBlood / PlasmaVolume.
-/// The plasma concentration is then set on the substance.
-/// The concentration computation is obviously erroneous. This is a known issue. See @ref pharmacokinetics
-//--------------------------------------------------------------------------------------------------
-void Drugs::CalculatePlasmaSubstanceConcentration()
-{
-  double plasmaMass_ug = 0;
-  double bloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
-  double effectConcentration;
-  double plasmaVolume_mL = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL);
-  double rate_Per_s = 0.0;
 
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances())
         {
+          if (sub->HasAntibioticPD() && m_data.GetActions().GetPatientActions().HasInfection()) {
+            SEAntibioticPharmacodynamics& antiPD = sub->GetAntibioticPD();
+            double antibacterialEffect = antiPD.GetAntibacterialEffect().GetValue();
+            double I50 = antiPD.GetI50().GetValue();
+            CDM::enumAntibioticPDIndex antiIndex = antiPD.GetAntibacterialIndex();
+            double MIC_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+            double indexValue = 0.0;
+            switch (antiIndex) {
+            case CDM::enumAntibioticPDIndex::TimeAboveMIC:
+              //Initalize time above MIC if it does not exist yet
+              if (!sub->HasTimeAboveMIC()) {
+                sub->GetTimeAboveMIC().SetValue(0.0, TimeUnit::s);
+              }
+              //Increment time after dose (always)
+              sub->GetTimeAfterDose().IncrementValue(m_data.GetTimeStep().GetValue(TimeUnit::s), TimeUnit::s);
+              //Increment time above MIC if applicable--note that it's FREE plasma concentration above MIC
+              if (sub->GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma().GetValue() * sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL) > MIC_ug_Per_mL) {
+                sub->GetTimeAboveMIC().IncrementValue(m_data.GetTimeStep().GetValue(TimeUnit::s), TimeUnit::s);
+              }
+              //Calcuate fraction time above MIC to time of dose--incrementing done first so that we don't divide by 0 on first iteration
+              indexValue = sub->GetTimeAboveMIC().GetValue(TimeUnit::s) / sub->GetTimeAfterDose().GetValue(TimeUnit::s);
+              break;
+            case CDM::enumAntibioticPDIndex::AUC_MIC:
+              indexValue = sub->GetAreaUnderCurve().GetValue(TimeMassPerVolumeUnit::min_ug_Per_mL) / MIC_ug_Per_mL;
+              break;
+            case CDM::enumAntibioticPDIndex::Cmax_MIC:
+              indexValue = 0.0;
+              break;
+            default:
+              indexValue = 0.0;
+            }
+
+            antibioticActivity += antibacterialEffect * indexValue / (indexValue + I50);
+          }
+        }
+        GetAntibioticActivity().SetValue(antibioticActivity);
+      }
+
+      //--------------------------------------------------------------------------------------------------
+      /// \brief
+      /// Calculates the drug effects on other system parameters
+      ///
+      /// \details
+      /// If the substance is a drug with an EC50 value, the effects on heart rate, blood pressure, respiration rate,
+      /// tidal volume, neuromuscular block level, sedation level, bronchodilation level, and pupillary state are
+      /// calculated using the current plasma concentration, the EC50, and the maximum drug response.
+      //--------------------------------------------------------------------------------------------------
+      void Drugs::CalculateDrugEffects()
+      {
+        double deltaHeartRate_Per_min = 0;
+        double hemorrhageFlowRecoveryFraction = 0;
+        double deltaDiastolicBP_mmHg = 0;
+        double deltaSystolicBP_mmHg = 0;
+        double deltaRespirationRate_Per_min = 0;
+        double deltaTidalVolume_mL = 0;
+        double neuromuscularBlockLevel = 0;
+        double sedationLevel = 0;
+        double bronchodilationLevel = 0;
+        double concentrationEffects_unitless = 0;
+        double deltaTubularPermeability = 0.0;
+        double pupilSizeResponseLevel = 0;
+        double pupilReactivityResponseLevel = 0;
+        double shapeParameter = 1.;
+        double ec50_ug_Per_mL = 0.0;
+        SEPatient& patient = m_data.GetPatient();
+        double HRBaseline_per_min = patient.GetHeartRateBaseline(FrequencyUnit::Per_min);
+        double effectSiteConcentration_ug_Per_mL = 0.0;
+        double centralNervousResponseLevel = 0.0;
+
+        //Naloxone reversal
+        SESubstance* m_Naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
+        double inhibitorConcentration_ug_Per_mL = 0.0;
+        double inhibitorConstant_ug_Per_mL = 1.0; //Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
+
+        //Loop over substances
+        for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
+          if (!sub->HasPD())
+            continue;
+
+          SESubstancePharmacodynamics& pd = sub->GetPD();
+          shapeParameter = pd.GetEMaxShapeParameter().GetValue();
+          ec50_ug_Per_mL = pd.GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
+
+          //Get effect site concentration and use it to calculate unitless drug effects.
+          //Currently, effect site concentration is same as plasma concentration for all drugs except morphine and sarin
+          effectSiteConcentration_ug_Per_mL = sub->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
+
+          if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
+            if (m_data.GetSubstances().IsActive(*m_Naloxone)) {
+              inhibitorConstant_ug_Per_mL = m_Naloxone->GetPD().GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
+              inhibitorConcentration_ug_Per_mL = m_Naloxone->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
+            }
+            concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+          } else if (sub->GetName() == "Sarin") {
+            concentrationEffects_unitless = m_RbcAcetylcholinesteraseFractionInhibited;
+          } else {
+            if (shapeParameter == 1) // Avoiding using pow if we don't have to. I don't know if this is good practice or not, but seems legit.
+            {
+              concentrationEffects_unitless = effectSiteConcentration_ug_Per_mL / (ec50_ug_Per_mL + effectSiteConcentration_ug_Per_mL);
+
+            } else {
+              concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+            }
+          }
+
+          if (m_data.GetActions().GetPatientActions().HasOverride()
+              && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+            if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
+              pd.GetDiastolicPressureModifier().SetValue(0.0);
+              pd.GetSystolicPressureModifier().SetValue(0.0);
+            }
+            if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
+              pd.GetHeartRateModifier().SetValue(0.0);
+            }
+          }
+
+          /// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.
+          // This would be a problem for something like a continuous infusion of a drug or an environmental drug
+          // where we need to establish a new homeostatic point. Once the patient stabilizes with the drug effect included, a new baseline is
+          // set, and suddenly the drug effect is being computed using the new baseline. We may need to add another layer of
+          // stabilization and restrict drugs to post-feedback stabilization. Alternatively, we could base the drug effect on a baseline
+          // concentration which is normally zero but which gets set to a new baseline concentration at the end of feedback (see chemoreceptor
+          // and the blood gas setpoint reset for example).
+          deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
+
+          hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue() * 1e-5) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
+
+          deltaDiastolicBP_mmHg += patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetDiastolicPressureModifier().GetValue() * concentrationEffects_unitless;
+
+          deltaSystolicBP_mmHg += patient.GetSystolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetSystolicPressureModifier().GetValue() * concentrationEffects_unitless;
+
+          sedationLevel += pd.GetSedation().GetValue() * concentrationEffects_unitless;
+          centralNervousResponseLevel += pd.GetCentralNervousModifier().GetValue() * concentrationEffects_unitless;
+
+          deltaTubularPermeability += (pd.GetTubularPermeabilityModifier().GetValue()) * concentrationEffects_unitless;
+
+          /// \todo Check levels for other sedative/anesthetic drugs for carry over so not specific to propofol. Carries over to respiratory.cpp if statements in driver function as well
+          if ((sedationLevel > 0.15 && sub->GetName() != "Propofol") || (sedationLevel > 0.5)) {
+            deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue();
+            deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue();
+          } else {
+            deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue() * concentrationEffects_unitless;
+            deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue() * concentrationEffects_unitless;
+          }
+
+          neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
+
+          bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
+
+          const SEPupillaryResponse& pupillaryResponse = pd.GetPupillaryResponse();
+          pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier() * concentrationEffects_unitless;
+          pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
+        }
+
+        //Sepsis Effects
+        if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+          double nitricOxideBaseline = 0.05;
+          double nitricOxide = m_data.GetBloodChemistry().GetInflammatoryResponse().GetNitricOxide().GetValue() - nitricOxideBaseline;
+          LLIM(nitricOxide, 0.0);
+          double nitricOxideEC50 = 0.4;
+          double nitricOxideBPMod = -0.3;
+          double nitricOxideHRMod = 0.3;
+          double nitricOxideBPChange = nitricOxideBPMod * std::pow(nitricOxide, 2.0) / (std::pow(nitricOxide, 2.0) + std::pow(nitricOxideEC50, 2.0));
+          double nitricOxideHRChange = nitricOxideHRMod * std::pow(nitricOxide, 2.0) / (std::pow(nitricOxide, 2.0) + std::pow(nitricOxideEC50, 2.0));
+          deltaHeartRate_Per_min += nitricOxideHRChange * m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min);
+          deltaSystolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
+          deltaDiastolicBP_mmHg += nitricOxideBPChange * m_data.GetPatient().GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
+        }
+
+        //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
+        double deltaMeanPressure_mmHg = (2 * deltaDiastolicBP_mmHg + deltaSystolicBP_mmHg) / 3;
+        double deltaPulsePressure_mmHg = (deltaSystolicBP_mmHg - deltaDiastolicBP_mmHg);
+
+        //Set values on the CDM System Values
+        GetHeartRateChange().SetValue(deltaHeartRate_Per_min, FrequencyUnit::Per_min);
+        GetHemorrhageChange().SetValue(hemorrhageFlowRecoveryFraction);
+        GetMeanBloodPressureChange().SetValue(deltaMeanPressure_mmHg, PressureUnit::mmHg);
+        GetPulsePressureChange().SetValue(deltaPulsePressure_mmHg, PressureUnit::mmHg);
+        GetRespirationRateChange().SetValue(deltaRespirationRate_Per_min, FrequencyUnit::Per_min);
+        GetTidalVolumeChange().SetValue(deltaTidalVolume_mL, VolumeUnit::mL);
+        GetNeuromuscularBlockLevel().SetValue(neuromuscularBlockLevel);
+        GetSedationLevel().SetValue(sedationLevel);
+        GetBronchodilationLevel().SetValue(bronchodilationLevel);
+        GetTubularPermeabilityChange().SetValue(deltaTubularPermeability);
+        GetCentralNervousResponse().SetValue(centralNervousResponseLevel);
+
+        //Pupil effects
+
+        //We need to handle Sarin pupil effects (if Sarin is active) separately because technically they stem from contact and not systemic levels, meaning that they
+        //do not depend on the Sarin plasma concentration in the same way as other PD effects.  We still perform the calculation here because
+        //we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
+        //overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
+        if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
+          pupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
+          pupilReactivityResponseLevel = pupilSizeResponseLevel;
+        }
+
+        //Bound pupil modifiers
+        BLIM(pupilSizeResponseLevel, -1, 1);
+        BLIM(pupilReactivityResponseLevel, -1, 1);
+        GetPupillaryResponse().GetSizeModifier().SetValue(pupilSizeResponseLevel);
+        GetPupillaryResponse().GetReactivityModifier().SetValue(pupilReactivityResponseLevel);
+      }
+
+      //--------------------------------------------------------------------------------------------------
+      /// \brief
+      /// Calculates the concentration of a substance in the plasma
+      ///
+      /// \details
+      /// If the substance has PK properties, the concentration of the substance in the plasma is calculated.
+      /// PlasmaConcentration = TotalMassInTheBlood / PlasmaVolume.
+      /// The plasma concentration is then set on the substance.
+      /// The concentration computation is obviously erroneous. This is a known issue. See @ref pharmacokinetics
+      //--------------------------------------------------------------------------------------------------
+      void Drugs::CalculatePlasmaSubstanceConcentration()
+      {
+        double plasmaMass_ug = 0;
+        double bloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
+        double effectConcentration;
+        double plasmaVolume_mL = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL);
+        double rate_Per_s = 0.0;
+
+        for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
           if (!sub->HasPK())
             continue;
           //--Old erroneous plasma calc---
@@ -1028,7 +1137,7 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
         //Physiochemical constants
         const double subLogP = sub->GetPK()->GetPhysicochemicals()->GetLogP();
         const double fracUnbound_plasma = sub->GetPK()->GetPhysicochemicals()->GetFractionUnboundInPlasma();
-        const double subPka = sub->GetPK()->GetPhysicochemicals()->GetAcidDissociationConstant();
+        const double subPka = sub->GetPK()->GetPhysicochemicals()->GetPrimaryPKA();
         const double subBloodPlasmaRatio = sub->GetPK()->GetPhysicochemicals()->GetBloodPlasmaRatio();
         const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
         const double subSolubility_ug_Per_mL = 200.0; //Add this to sub CDM later if we do more tranmucosal subs
