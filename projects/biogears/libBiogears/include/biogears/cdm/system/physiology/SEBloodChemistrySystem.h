@@ -279,16 +279,6 @@ public:
   double GetVolumeFractionNeutralLipidInPlasma() const;
   //@}
 
-  /** @name WhiteBloodCellCount
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_WhiteBloodCellCount
-  *  @{*/
-  /// %Test if member has been allocated
-  bool HasWhiteBloodCellCount() const;
-  /// Get member class, allocate if nullptr
-  SEScalarAmountPerVolume& GetWhiteBloodCellCount();
-  double GetWhiteBloodCellCount(const AmountPerVolumeUnit& unit) const;
-  //@}
-
   /** @name ArterialCarbonDioxidePressure
   *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialCarbonDioxidePressure
   *  @{*/
@@ -396,7 +386,6 @@ protected:
   SEScalarMassPerVolume* m_TotalProteinConcentration;
   SEScalarFraction* m_VolumeFractionNeutralPhospholipidInPlasma;
   SEScalarFraction* m_VolumeFractionNeutralLipidInPlasma;
-  SEScalarAmountPerVolume* m_WhiteBloodCellCount;
 
   SEScalarPressure* m_ArterialCarbonDioxidePressure;
   SEScalarPressure* m_ArterialOxygenPressure;

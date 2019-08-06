@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
+#include "biogears/cdm/properties/SEScalarAmountPerVolume.h"
 
 namespace biogears {
 SESubstance::SESubstance(Logger* logger)
@@ -284,7 +285,7 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
   if (HasAntigen())
     data.Antigen(m_Antigen);
   if (HasCellCount())
-    data.CellCount(std::unique_ptr<CDM::ScalarData>(m_CellCount->Unload()));
+    data.CellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_CellCount->Unload()));
   if (HasBloodConcentration())
     data.BloodConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodConcentration->Unload()));
   if (HasEffectSiteConcentration())
@@ -822,18 +823,18 @@ bool SESubstance::HasCellCount() const
   return (m_CellCount == nullptr) ? false : m_CellCount->IsValid();
 }
 //----------------------------------------------------------------------------------------
-SEScalar& SESubstance::GetCellCount()
+SEScalarAmountPerVolume& SESubstance::GetCellCount()
 {
   if (m_CellCount == nullptr)
-    m_CellCount = new SEScalar();
+    m_CellCount = new SEScalarAmountPerVolume();
   return *m_CellCount;
 }
 //-----------------------------------------------------------------------------
-double SESubstance::GetCellCount() const
+double SESubstance::GetCellCount(const AmountPerVolumeUnit& unit) const
 {
   if (m_CellCount == nullptr)
     return SEScalar::dNaN();
-  return m_CellCount->GetValue();
+  return m_CellCount->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasClearance() const

@@ -24,6 +24,8 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(SubstanceData)
 
 namespace biogears {
+class SEScalarAmountPerVolume;
+class AmountPerVolumeUnit;
 class SEScalarMass;
 class MassUnit;
 class SEScalarMassPerAmount;
@@ -105,9 +107,9 @@ public:
   bool SESubstance::HasAntigen() const;
   void SESubstance::InvalidateAntigen();
 
-  bool SESubstance::HasCellCount() const;
-  SEScalar& SESubstance::GetCellCount();
-  double SESubstance::GetCellCount() const;
+  virtual bool HasCellCount() const;
+  virtual SEScalarAmountPerVolume& GetCellCount();
+  virtual double GetCellCount(const AmountPerVolumeUnit& unit) const;
 
   // Liquid-ish
   virtual bool HasAerosolization() const;
@@ -203,7 +205,7 @@ protected:
   SEScalarElectricResistance* m_MembraneResistance;
 
   CDM::enumBloodTypeABO::value m_Antigen;
-  SEScalar* m_CellCount;
+  SEScalarAmountPerVolume* m_CellCount;
 
   SESubstanceAerosolization* m_Aerosolization;
   SEScalarTimeMassPerVolume* m_AreaUnderCurve;

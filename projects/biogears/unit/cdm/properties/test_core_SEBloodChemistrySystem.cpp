@@ -318,6 +318,7 @@ TEST_F(TEST_FIXTURE_NAME, FractionNeutralLipidInPlasma)
   auto dvalue = cbcs.GetVolumeFractionNeutralLipidInPlasma();
   EXPECT_NE(dvalue, dvalue);
 }
+/*
 TEST_F(TEST_FIXTURE_NAME, WhiteBloodCellCount)
 {
   EXPECT_FALSE( bcs->HasWhiteBloodCellCount());
@@ -330,6 +331,7 @@ TEST_F(TEST_FIXTURE_NAME, WhiteBloodCellCount)
   auto dvalue = cbcs.GetWhiteBloodCellCount(AmountPerVolumeUnit::ct_Per_L);
   EXPECT_NE(dvalue, dvalue);
 }
+*/
 TEST_F(TEST_FIXTURE_NAME, ArterialCarbonDioxidePressure)
 {
   EXPECT_FALSE( bcs->HasArterialCarbonDioxidePressure());

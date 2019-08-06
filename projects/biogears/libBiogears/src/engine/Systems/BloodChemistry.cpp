@@ -94,7 +94,6 @@ void BloodChemistry::Initialize()
   GetBloodSpecificHeat().SetValue(3617, HeatCapacitancePerMassUnit::J_Per_K_kg);
   GetVolumeFractionNeutralLipidInPlasma().SetValue(0.0023);
   GetVolumeFractionNeutralPhospholipidInPlasma().SetValue(0.0013);
-  GetWhiteBloodCellCount().SetValue(7000, AmountPerVolumeUnit::ct_Per_uL);
   GetPhosphate().SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
@@ -103,6 +102,7 @@ void BloodChemistry::Initialize()
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   GetCarbonMonoxideSaturation().SetValue(0);
+
   Process(); // Calculate the initial system values
 }
 
@@ -199,6 +199,30 @@ void BloodChemistry::SetUp()
   SELiquidCompartment* pulmonaryVeins = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::PulmonaryVeins);
   m_pulmonaryVeinsO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
   m_pulmonaryVeinsCO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+
+  SESubstance& rbcA = m_data.GetSubstances().GetRBC_A();
+  rbcA.GetCellCount().SetReadOnly(false);
+  SESubstance& rbcB = m_data.GetSubstances().GetRBC_B();
+  rbcB.GetCellCount().SetReadOnly(false);
+  SESubstance& rbcO = m_data.GetSubstances().GetRBC_O();
+  rbcO.GetCellCount().SetReadOnly(false);
+  if (m_Patient->GetBloodType() == CDM::enumBloodType::A) {
+    rbcB.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_Patient->GetBloodType() == CDM::enumBloodType::B) {
+    rbcA.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_Patient->GetBloodType() == CDM::enumBloodType::O) {
+    rbcA.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    rbcB.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_Patient->GetBloodType() == CDM::enumBloodType::AB) {
+    rbcA.GetCellCount().SetValue(0.5 * rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+    rbcB.GetCellCount().SetValue(0.5 * rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  }
+
+  m_ss << "TESTING A: " << rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and B: " << rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and O: " << rbcO.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL);
+  Info(m_ss);
 
   double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_PatientActions = &m_data.GetActions().GetPatientActions();
@@ -330,11 +354,13 @@ void BloodChemistry::Process()
   double bloodMass_ug;
   double tissueMass_ug;
   for (SESubstance* sub : m_data.GetSubstances().GetActiveSubstances()) {
-    bloodMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
-    tissueMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetTissueLeafCompartments(), MassUnit::ug);
-    sub->GetMassInBody().SetValue(bloodMass_ug + tissueMass_ug, MassUnit::ug);
-    sub->GetMassInBlood().SetValue(bloodMass_ug, MassUnit::ug);
-    sub->GetMassInTissue().SetValue(tissueMass_ug, MassUnit::ug);
+    if (sub->GetState() != CDM::enumSubstanceState::Cellular) {
+      bloodMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
+      tissueMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetTissueLeafCompartments(), MassUnit::ug);
+      sub->GetMassInBody().SetValue(bloodMass_ug + tissueMass_ug, MassUnit::ug);
+      sub->GetMassInBlood().SetValue(bloodMass_ug, MassUnit::ug);
+      sub->GetMassInTissue().SetValue(tissueMass_ug, MassUnit::ug);
+    }
   }
 }
 
@@ -661,7 +687,8 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
   cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstances().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL); //Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
   cbc.GetMeanCorpuscularVolume().SetValue(m_data.GetConfiguration().GetMeanCorpuscularVolume(VolumeUnit::uL), VolumeUnit::uL);
   cbc.GetRedBloodCellCount().Set(GetRedBloodCellCount());
-  cbc.GetWhiteBloodCellCount().Set(GetWhiteBloodCellCount());
+  double wbcCount_ct_Per_uL = m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
+  cbc.GetWhiteBloodCellCount().SetValue(wbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   return true;
 }
 
@@ -670,7 +697,7 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 /// Simulate effects of systemic pathogen after infection
 ///
 /// \details
-/// Helper function for Inflammatory Response.  If the source of inflammation is a pathogen, this 
+/// Helper function for Inflammatory Response.  If the source of inflammation is a pathogen, this
 /// function is called to simulate effects of systemic pathogen infiltration that are not currently
 /// modeled mechanistically.  At low infection levels, these inflammation markers will remain
 /// near their baseline values
@@ -680,13 +707,14 @@ void BloodChemistry::ManageSIRS()
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
 
   //Physiological response
-  const double wbcBaseline_ct_Per_uL = 7000.0;
+  SESubstance& wbcBaseline = m_data.GetSubstances().GetWBC();
   double tissueIntegrity = m_InflammatoryResponse->GetTissueIntegrity().GetValue();
   double neutrophilActive = m_InflammatoryResponse->GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.25);
-  GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+  double wbcAbsolute_ct_Per_uL = wbcBaseline.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) * (1.0 + neutrophilActive / 0.25);
+  wbcBaseline.GetCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+  //GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the tissue integrity output from the inflammation model to track other Systemic Inflammatory metrics.  These relationships were all
   //empirically determined to time symptom onset (i.e. temperature > 38 degC) with the appropriate stage of sepsis
@@ -704,11 +732,10 @@ void BloodChemistry::ManageSIRS()
   double totalBilirubin_mg_Per_dL = GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput) + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
 
-  double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8;  //Discounting the 20% used by brain 
+  double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8; //Discounting the 20% used by brain
   const double maxDeficitMultiplier = 1.0;
   double energyDeficit_W = basalTissueEnergyDemand_W * maxDeficitMultiplier * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + 0.25 * 0.25);
   m_data.GetEnergy().GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -854,93 +881,94 @@ void BloodChemistry::InflammatoryResponse()
   //------------------Inflammation source specific modifications and/or actions --------------------------------
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
-    kDTR = 10.0 * burnTotalBodySurfaceArea;		//We assume that larger burns inflict damage more rapidly
-    kTr = 0.5 / burnTotalBodySurfaceArea;		//We assume that larger burns take longer for trauma to resolve
-    tiMin = 0.05;								//Promotes faster damage accumulation
+    kDTR = 10.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
+    kTr = 0.5 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+    tiMin = 0.05; //Promotes faster damage accumulation
     kD6 = 0.3, xD6 = 0.25, kD = 0.05, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
-  }
-  if (PB > ZERO_APPROX) {
-    ManageSIRS();
-  }
 
-  //---------------------State equations----------------------------------------------
-  //Differential containers
-  double dPT = 0.0, dMT = 0.0, dNT = 0.0, dBT = 0.0, dPB = 0.0, dMR = 0.0, dMA = 0.0, dNR = 0.0, dNA = 0.0, dER = 0.0, dEA = 0.0, dENOS = 0.0, dINOSd = 0.0, dINOS = 0.0, dNO3 = 0.0, dI6 = 0.0, dI10 = 0.0, dI12 = 0.0, dTNF = 0.0, dTI = 0.0, dTR = 0.0, dB = 0.0;
-  //TLR state depends on the last TLR state and the tissue pathogen populaton
-  if (PT > pUpper) {
-    R = 1.0; //TLR always active if pathogen above max threshold
-    TLR = CDM::enumOnOff::On;
-  } else if (PT > pLower) {
-    if (TLR == CDM::enumOnOff::On) {
-      R = 1.0; //If pathogen between min/max threshold, it remains at its previous values
-    } else {
-      R = 0.0;
+    if (PB > ZERO_APPROX) {
+      ManageSIRS();
     }
-  } else {
-    R = 0.0; //If pathogen below min threshold, it is always inactive
-    TLR = CDM::enumOnOff::Off;
-  }
-  //Process equations
-  dPT = (kapP / uP) * PT * (1.0 - PT) - thetaP * PT / (1.0 + epsPB * B) - psiPN * NT * PT - psiPM * MT * PT;
-  if (PT < ZERO_APPROX) {
-    //Make sure when we get close to P = 0 that we don't take too big a step and pull a negative P for next iteration
-    PT = 0.0;
-    dPT = 0.0;
-  }
-  dMT = beta * NT / (1.0 + epsMB * B) * Mv - delM * MT;
-  dNT = alpha * R * Nv / ((1.0 + epsNB * B) * (1.0 + epsNM * MT)) - delN * NT;
-  dB = kapB / (1.0 + epsBP * R) * B * (1.0 - B) - psiBP * R * B - psiBN * NT * B;
-  dPB = (kapP - antibacterialEffect) * PB + thetaP * PT / (1.0 + epsPB * B) - kPS * PB / (xPS + PB) - kPN * NA * GeneralMath::HillActivation(PB, xPN, 2.0);
-  dTR = -kTr * TR; //This is assumed to be the driving force for burn
-  dMR = -((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
-  dMA = ((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
-  dNR = -(kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
-  dNA = (kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNA * NA;
-  dINOS = kINOS * (iNOSd - iNOS);
-  dINOSd = (kINOSN * NA + kINOSM * MA + kINOSEC * (std::pow(xINOSTNF, 2.0) * GeneralMath::HillActivation(TNF, xINOSTNF, 2.0) + kINOS6 * std::pow(xINOS6, 2.0) * GeneralMath::HillActivation(I6, xINOS6, 2.0))) * GeneralMath::HillInhibition(I10, xINOS10, 2.0) * GeneralMath::HillInhibition(NO, xINOSNO, 4.0) - kINOSd * iNOSd;
-  dENOS = kENOSEC * GeneralMath::HillInhibition(TNF, xENOSTNF, 1.0) * GeneralMath::HillInhibition(PB, xENOSL, 1.0) * GeneralMath::HillInhibition(TR, xENOSTR, 4.0) - kENOS * eNOS;
-  dNO3 = kNO3 * (NO - NO3);
-  dTNF = (kTNFN * NA + kTNFM * MA) * GeneralMath::HillInhibition(I10, xTNF10, 2.0) * GeneralMath::HillInhibition(I6, xTNF6, 3.0) - kTNF * TNF;
-  dI6 = (k6N * NA + MA) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(NO, x6NO, 2.0)) * GeneralMath::HillInhibition(I10, x610, 2.0) * GeneralMath::HillInhibition(I6, x66, h66) + k6 * (s6 - I6);
-  dI10 = (k10N * NA + MA) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(I6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(I12, x1012, 4.0) + k10R) - k10 * (I10 - s10);
-  dI12 = k12M * MA * GeneralMath::HillInhibition(I10, x1210, 2.0) - k12 * I12;
-  dTI = kD * (1.0 - TI) * (TI - tiMin) * TI - (TI-tiMin) * (kD6 * GeneralMath::HillActivation(I6, xD6, hD6) + kDTR * TR) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
 
-  //------------------------Update State-----------------------------------------------
-  m_InflammatoryResponse->GetLocalPathogen().IncrementValue(dPT * dt_hr * scale);
-  m_InflammatoryResponse->GetLocalMacrophage().IncrementValue(dMT * dt_hr * scale);
-  m_InflammatoryResponse->GetLocalNeutrophil().IncrementValue(dNT * dt_hr * scale);
-  m_InflammatoryResponse->GetLocalBarrier().IncrementValue(dB * dt_hr * scale);
-  m_InflammatoryResponse->GetBloodPathogen().IncrementValue(dPB * dt_hr * scale);
-  m_InflammatoryResponse->GetTrauma().IncrementValue(dTR * dt_hr * scale);
-  m_InflammatoryResponse->GetMacrophageResting().IncrementValue(dMR * dt_hr * scale);
-  m_InflammatoryResponse->GetMacrophageActive().IncrementValue(dMA * dt_hr * scale);
-  m_InflammatoryResponse->GetNeutrophilResting().IncrementValue(dNR * dt_hr * scale);
-  m_InflammatoryResponse->GetNeutrophilActive().IncrementValue(dNA * dt_hr * scale);
-  m_InflammatoryResponse->GetInducibleNOS().IncrementValue(dINOS * dt_hr * scale);
-  m_InflammatoryResponse->GetInducibleNOSPre().IncrementValue(dINOSd * dt_hr * scale);
-  m_InflammatoryResponse->GetConstitutiveNOS().IncrementValue(dENOS * dt_hr * scale);
-  m_InflammatoryResponse->GetNitrate().IncrementValue(dNO3 * dt_hr * scale);
-  m_InflammatoryResponse->GetTumorNecrosisFactor().IncrementValue(dTNF * dt_hr * scale);
-  m_InflammatoryResponse->GetInterleukin6().IncrementValue(dI6 * dt_hr * scale);
-  m_InflammatoryResponse->GetInterleukin10().IncrementValue(dI10 * dt_hr * scale);
-  m_InflammatoryResponse->GetInterleukin12().IncrementValue(dI12 * dt_hr * scale);
-  m_InflammatoryResponse->GetTissueIntegrity().IncrementValue(dTI * dt_hr * scale);
-  NO = iNOS * (1.0 + kNOMA * (m_InflammatoryResponse->GetMacrophageActive().GetValue() + m_InflammatoryResponse->GetNeutrophilActive().GetValue())) + eNOS; //Algebraic relationship, not differential
-  m_InflammatoryResponse->GetNitricOxide().SetValue(NO);
-  m_InflammatoryResponse->SetActiveTLR(TLR);
+    //---------------------State equations----------------------------------------------
+    //Differential containers
+    double dPT = 0.0, dMT = 0.0, dNT = 0.0, dBT = 0.0, dPB = 0.0, dMR = 0.0, dMA = 0.0, dNR = 0.0, dNA = 0.0, dER = 0.0, dEA = 0.0, dENOS = 0.0, dINOSd = 0.0, dINOS = 0.0, dNO3 = 0.0, dI6 = 0.0, dI10 = 0.0, dI12 = 0.0, dTNF = 0.0, dTI = 0.0, dTR = 0.0, dB = 0.0;
+    //TLR state depends on the last TLR state and the tissue pathogen populaton
+    if (PT > pUpper) {
+      R = 1.0; //TLR always active if pathogen above max threshold
+      TLR = CDM::enumOnOff::On;
+    } else if (PT > pLower) {
+      if (TLR == CDM::enumOnOff::On) {
+        R = 1.0; //If pathogen between min/max threshold, it remains at its previous values
+      } else {
+        R = 0.0;
+      }
+    } else {
+      R = 0.0; //If pathogen below min threshold, it is always inactive
+      TLR = CDM::enumOnOff::Off;
+    }
+    //Process equations
+    dPT = (kapP / uP) * PT * (1.0 - PT) - thetaP * PT / (1.0 + epsPB * B) - psiPN * NT * PT - psiPM * MT * PT;
+    if (PT < ZERO_APPROX) {
+      //Make sure when we get close to P = 0 that we don't take too big a step and pull a negative P for next iteration
+      PT = 0.0;
+      dPT = 0.0;
+    }
+    dMT = beta * NT / (1.0 + epsMB * B) * Mv - delM * MT;
+    dNT = alpha * R * Nv / ((1.0 + epsNB * B) * (1.0 + epsNM * MT)) - delN * NT;
+    dB = kapB / (1.0 + epsBP * R) * B * (1.0 - B) - psiBP * R * B - psiBN * NT * B;
+    dPB = (kapP - antibacterialEffect) * PB + thetaP * PT / (1.0 + epsPB * B) - kPS * PB / (xPS + PB) - kPN * NA * GeneralMath::HillActivation(PB, xPN, 2.0);
+    dTR = -kTr * TR; //This is assumed to be the driving force for burn
+    dMR = -((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
+    dMA = ((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
+    dNR = -(kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
+    dNA = (kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNA * NA;
+    dINOS = kINOS * (iNOSd - iNOS);
+    dINOSd = (kINOSN * NA + kINOSM * MA + kINOSEC * (std::pow(xINOSTNF, 2.0) * GeneralMath::HillActivation(TNF, xINOSTNF, 2.0) + kINOS6 * std::pow(xINOS6, 2.0) * GeneralMath::HillActivation(I6, xINOS6, 2.0))) * GeneralMath::HillInhibition(I10, xINOS10, 2.0) * GeneralMath::HillInhibition(NO, xINOSNO, 4.0) - kINOSd * iNOSd;
+    dENOS = kENOSEC * GeneralMath::HillInhibition(TNF, xENOSTNF, 1.0) * GeneralMath::HillInhibition(PB, xENOSL, 1.0) * GeneralMath::HillInhibition(TR, xENOSTR, 4.0) - kENOS * eNOS;
+    dNO3 = kNO3 * (NO - NO3);
+    dTNF = (kTNFN * NA + kTNFM * MA) * GeneralMath::HillInhibition(I10, xTNF10, 2.0) * GeneralMath::HillInhibition(I6, xTNF6, 3.0) - kTNF * TNF;
+    dI6 = (k6N * NA + MA) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(NO, x6NO, 2.0)) * GeneralMath::HillInhibition(I10, x610, 2.0) * GeneralMath::HillInhibition(I6, x66, h66) + k6 * (s6 - I6);
+    dI10 = (k10N * NA + MA) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(I6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(I12, x1012, 4.0) + k10R) - k10 * (I10 - s10);
+    dI12 = k12M * MA * GeneralMath::HillInhibition(I10, x1210, 2.0) - k12 * I12;
+    dTI = kD * (1.0 - TI) * (TI - tiMin) * TI - (TI - tiMin) * (kD6 * GeneralMath::HillActivation(I6, xD6, hD6) + kDTR * TR) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
 
-  //------------------------Check to see if infection-induced inflammation has resolved sufficient to eliminate action-----------------------
-  //Note that even though we remove the infection, we leave the inflammation source active.  This is because we want the inflammation markers
-  // to return to normal, baseline values.
-  const double bloodPathogenLimit = 1.0e-5;	//This is 1e-4 % of approximate max blood pathogen that model can eliminate withoug antibiotics
-  const double tissuePathogenLimit = 1.0;		//This is 1e-4 % of the initial value for a mild infection
-  if ((PT < tissuePathogenLimit) && (PB < bloodPathogenLimit) && (m_data.GetActions().GetPatientActions().HasInfection())) {
-    m_data.GetActions().GetPatientActions().RemoveInfection();
+    //------------------------Update State-----------------------------------------------
+    m_InflammatoryResponse->GetLocalPathogen().IncrementValue(dPT * dt_hr * scale);
+    m_InflammatoryResponse->GetLocalMacrophage().IncrementValue(dMT * dt_hr * scale);
+    m_InflammatoryResponse->GetLocalNeutrophil().IncrementValue(dNT * dt_hr * scale);
+    m_InflammatoryResponse->GetLocalBarrier().IncrementValue(dB * dt_hr * scale);
+    m_InflammatoryResponse->GetBloodPathogen().IncrementValue(dPB * dt_hr * scale);
+    m_InflammatoryResponse->GetTrauma().IncrementValue(dTR * dt_hr * scale);
+    m_InflammatoryResponse->GetMacrophageResting().IncrementValue(dMR * dt_hr * scale);
+    m_InflammatoryResponse->GetMacrophageActive().IncrementValue(dMA * dt_hr * scale);
+    m_InflammatoryResponse->GetNeutrophilResting().IncrementValue(dNR * dt_hr * scale);
+    m_InflammatoryResponse->GetNeutrophilActive().IncrementValue(dNA * dt_hr * scale);
+    m_InflammatoryResponse->GetInducibleNOS().IncrementValue(dINOS * dt_hr * scale);
+    m_InflammatoryResponse->GetInducibleNOSPre().IncrementValue(dINOSd * dt_hr * scale);
+    m_InflammatoryResponse->GetConstitutiveNOS().IncrementValue(dENOS * dt_hr * scale);
+    m_InflammatoryResponse->GetNitrate().IncrementValue(dNO3 * dt_hr * scale);
+    m_InflammatoryResponse->GetTumorNecrosisFactor().IncrementValue(dTNF * dt_hr * scale);
+    m_InflammatoryResponse->GetInterleukin6().IncrementValue(dI6 * dt_hr * scale);
+    m_InflammatoryResponse->GetInterleukin10().IncrementValue(dI10 * dt_hr * scale);
+    m_InflammatoryResponse->GetInterleukin12().IncrementValue(dI12 * dt_hr * scale);
+    m_InflammatoryResponse->GetTissueIntegrity().IncrementValue(dTI * dt_hr * scale);
+    NO = iNOS * (1.0 + kNOMA * (m_InflammatoryResponse->GetMacrophageActive().GetValue() + m_InflammatoryResponse->GetNeutrophilActive().GetValue())) + eNOS; //Algebraic relationship, not differential
+    m_InflammatoryResponse->GetNitricOxide().SetValue(NO);
+    m_InflammatoryResponse->SetActiveTLR(TLR);
+
+    //------------------------Check to see if infection-induced inflammation has resolved sufficient to eliminate action-----------------------
+    //Note that even though we remove the infection, we leave the inflammation source active.  This is because we want the inflammation markers
+    // to return to normal, baseline values.
+    const double bloodPathogenLimit = 1.0e-5; //This is 1e-4 % of approximate max blood pathogen that model can eliminate withoug antibiotics
+    const double tissuePathogenLimit = 1.0; //This is 1e-4 % of the initial value for a mild infection
+    if ((PT < tissuePathogenLimit) && (PB < bloodPathogenLimit) && (m_data.GetActions().GetPatientActions().HasInfection())) {
+      m_data.GetActions().GetPatientActions().RemoveInfection();
+    }
+    //We could put a check here to see if all inflammation states are back to baseline and then remove it from the sources vector
+    //However, I think this would only happen over an extremely long run, and so it does not seem likely to be a major need.
   }
-  //We could put a check here to see if all inflammation states are back to baseline and then remove it from the sources vector
-  //However, I think this would only happen over an extremely long run, and so it does not seem likely to be a major need.
 }
   //--------------------------------------------------------------------------------------------------
   /// \brief
@@ -976,9 +1004,9 @@ void BloodChemistry::InflammatoryResponse()
     if (override->HasPhosphateOverride()) {
       GetPhosphate().SetValue(override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL), AmountPerVolumeUnit::mmol_Per_mL);
     }
-    if (override->HasWBCCountOverride()) {
+    /*if (override->HasWBCCountOverride()) {
       GetWhiteBloodCellCount().SetValue(override->GetWBCCountOverride(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
-    }
+    } */
     if (override->HasTotalBilirubinOverride()) {
       GetTotalBilirubin().SetValue(override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
     }
@@ -1015,8 +1043,6 @@ void BloodChemistry::InflammatoryResponse()
     constexpr double minO2SaturationOverride = 0.0; //Oxygen Saturation
     constexpr double maxPhosphateOverride = 1000.0; // mmol/mL
     constexpr double minPhosphateOverride = 0.0; // mmol/mL
-    constexpr double maxWBCCountOverride = 50000.0; // ct/uL
-    constexpr double minWBCCountOverride = 0.0; // ct/uL
     constexpr double maxTotalBilirubinOverride = 500.0; // mg/dL
     constexpr double minTotalBilirubinOverride = 0.0; // mg/dL
     constexpr double maxCalciumConcentrationOverride = 500.0; // mg/dL
@@ -1036,7 +1062,6 @@ void BloodChemistry::InflammatoryResponse()
     double currentCOSaturationOverride = 0.0; //value gets changed in next check
     double currentO2SaturationOverride = 0.0; //value gets changed in next check
     double currentPhosphateOverride = 0.0; //value gets changed in next check
-    double currentWBCCountOverride = 0.0; //value gets changed in next check
     double currentTotalBilirubinOverride = 0.0; //value gets changed in next check
     double currentCalciumConcentrationOverride = 0.0; //value gets changed in next check
     double currentGlucoseConcentrationOverride = 0.0; //value gets changed in next check
@@ -1061,9 +1086,6 @@ void BloodChemistry::InflammatoryResponse()
     }
     if (override->HasPhosphateOverride()) {
       currentPhosphateOverride = override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL);
-    }
-    if (override->HasWBCCountOverride()) {
-      currentWBCCountOverride = override->GetWBCCountOverride(AmountPerVolumeUnit::mmol_Per_mL);
     }
     if (override->HasTotalBilirubinOverride()) {
       currentTotalBilirubinOverride = override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL);
@@ -1114,11 +1136,6 @@ void BloodChemistry::InflammatoryResponse()
       Info(m_ss);
       override->SetOverrideConformance(CDM::enumOnOff::Off);
     }
-    if ((currentWBCCountOverride < minWBCCountOverride || currentWBCCountOverride > maxWBCCountOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-      m_ss << "White Blood Cell Count (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-      Info(m_ss);
-      override->SetOverrideConformance(CDM::enumOnOff::Off);
-    }
     if ((currentTotalBilirubinOverride < minTotalBilirubinOverride || currentTotalBilirubinOverride > maxTotalBilirubinOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
       m_ss << "Total Bilirubin (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
       Info(m_ss);
@@ -1149,6 +1166,6 @@ void BloodChemistry::InflammatoryResponse()
       Info(m_ss);
       override->SetOverrideConformance(CDM::enumOnOff::Off);
     }
-    return;
   }
 }
+

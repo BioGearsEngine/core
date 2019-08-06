@@ -92,6 +92,13 @@ public:
   inline SESubstance& GetSodium() { return *m_sodium; }
   inline SESubstance& GetUrea() { return *m_urea; }
 
+  inline SESubstance& GetPlasma() { return *m_plasma; }
+  inline SESubstance& GetPlatelets() { return *m_platelets; }
+  inline SESubstance& GetRBC_A() { return *m_RBCa; }
+  inline SESubstance& GetRBC_B() { return *m_RBCb; }
+  inline SESubstance& GetRBC_O() { return *m_RBCo; }
+  inline SESubstance& GetWBC() { return *m_WBC; }
+
   void CalculateGenericClearance(double volumeCleared_mL, SELiquidCompartment& cmpt, SESubstance& sub, SEScalarMass* cleared = nullptr);
   void CalculateGenericClearance(double volumeCleared_mL, SETissueCompartment& cmpt, SESubstance& sub, SEScalarMass* cleared = nullptr);
   void CalculateGenericExcretion(double VascularFlow_mL_Per_s, SETissueCompartment& cmpt, SESubstance& sub, double FractionExcreted, double timestep_s, SEScalarMass* excreted = nullptr);
@@ -152,6 +159,13 @@ protected:
   SESubstance* m_potassium;
   SESubstance* m_sodium;
   SESubstance* m_urea;
+
+  SESubstance* m_plasma;
+  SESubstance* m_platelets;
+  SESubstance* m_RBCa;
+  SESubstance* m_RBCb;
+  SESubstance* m_RBCo;
+  SESubstance* m_WBC;
 
   bool m_isCOActive;
 

@@ -3,7 +3,8 @@
   <Name>WhiteBloodCell</Name>
   <Classification>WholeBlood</Classification>
   <State>Cellular</State>
-  <!-- @brief  Normal mean count is 7500 cells/microliter. -->
+  <CellCount readOnly="false" unit="ct/uL" value="7000"/>
+  <!-- @brief  Normal mean count is 7500 cells/microliter. 7000 used for sepsis. -->
   <Clearance>
     <CellRegulation>
       <CellDeathRate readOnly="false" unit="1/s" value="115740.7"/>

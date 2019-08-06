@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <Name>RedBloodCell_A</Name>
+  <Name>RedBloodCell_O</Name>
   <Classification>WholeBlood</Classification>
   <MolarMass readOnly="false" unit="g/mol" value="97.4785"/>
   <State>Cellular</State>
   <Antigen>O</Antigen>
+  <CellCount readOnly="false" unit="ct/uL" value="5000000"/>
   <!-- @brief  Normal mean count is 5 million cells/microliter. -->
   <!-- @brief  One RBC expresses about 2 million ABO antigens. -->
   <!-- @brief  One RBC carries about 270 million hemoglobin. -->

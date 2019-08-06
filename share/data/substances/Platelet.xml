@@ -3,6 +3,7 @@
   <Name>Platelet</Name>
   <Classification>WholeBlood</Classification>
   <State>Cellular</State>
+  <CellCount readOnly="false" unit="ct/uL" value="300000"/>
   <!-- @brief  Normal mean count is 300000/microliter. -->
   <Clearance>
     <CellRegulation>
