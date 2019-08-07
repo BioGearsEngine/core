@@ -54,6 +54,7 @@ public:
 
   void Probe(const std::string& name, double value, int i);
   void Probe(const std::string& name, double value);
+  void Probe(const std::string& name, std::vector<double>& values);
   void Probe(const SEFluidCircuit& c);
   void Probe(const SEElectricalCircuit& c);
   void Probe(const SEThermalCircuit& c);

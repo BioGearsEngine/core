@@ -110,6 +110,22 @@ void DataTrack::Probe(const std::string& name, double value)
   m_Probe[name] = value;
 }
 
+void DataTrack::Probe(const::std::string& name, std::vector<double> &values)
+{
+  std::string header;
+  int valCount = 1;
+  for (auto val : values) {
+    header = name + " - " + std::to_string(valCount);
+    if (std::find(m_HeadingOrder.begin(), m_HeadingOrder.end(), header) == m_HeadingOrder.end()) {
+      m_HeadingOrder.push_back(header);
+    }
+    m_Probe[header] = val;
+    header.clear();
+    ++valCount;
+  }
+}
+
+
 void DataTrack::Probe(const SEFluidCircuit& c)
 {
   for (SEFluidCircuitNode* n : c.GetNodes()) {
