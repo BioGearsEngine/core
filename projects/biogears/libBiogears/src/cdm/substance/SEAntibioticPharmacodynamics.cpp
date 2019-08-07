@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/substance/SEAntibioticPharmacodynamics.h>
 
 namespace biogears {
@@ -74,7 +75,7 @@ void SEAntibioticPharmacodynamics::Unload(CDM::AntibioticPharmacodynamicsData& d
   if (HasI50())
     data.I50(std::unique_ptr<CDM::ScalarData>(m_I50->Unload()));
   if (HasAntibacterialEffect())
-    data.AntibacterialEffect(std::unique_ptr<CDM::ScalarData>(m_AntibacterialEffect->Unload()));
+    data.AntibacterialEffect(std::unique_ptr<CDM::ScalarFrequencyData>(m_AntibacterialEffect->Unload()));
 }
 //-----------------------------------------------------------------------------
 bool SEAntibioticPharmacodynamics::HasAntibacterialIndex() const
@@ -104,10 +105,10 @@ bool SEAntibioticPharmacodynamics::HasAntibacterialEffect() const
   return m_AntibacterialEffect == nullptr ? false : true;
 }
 //-----------------------------------------------------------------------------
-SEScalar& SEAntibioticPharmacodynamics::GetAntibacterialEffect()
+SEScalarFrequency& SEAntibioticPharmacodynamics::GetAntibacterialEffect()
 {
   if (m_AntibacterialEffect == nullptr)
-    m_AntibacterialEffect = new SEScalar();
+    m_AntibacterialEffect = new SEScalarFrequency();
   return *m_AntibacterialEffect;
 }
 }

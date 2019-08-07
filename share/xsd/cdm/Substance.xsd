@@ -165,7 +165,7 @@ specific language governing permissions and limitations under the License.
 			<xs:sequence>
 				<xs:element name="AntibacterialIndex" type="enumAntibioticPDIndex" minOccurs="1" maxOccurs="1"/>
 				<xs:element name="I50" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-				<xs:element name="AntibacterialEffect" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="AntibacterialEffect" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/>
 			</xs:sequence>
 		</xs:extension>
 	</xs:complexContent>

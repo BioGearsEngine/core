@@ -16,6 +16,7 @@ namespace biogears {
 const FrequencyUnit FrequencyUnit::Per_min("1/min");
 const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
+const FrequencyUnit FrequencyUnit::Per_hr("1/hr");
 
 FrequencyUnit::FrequencyUnit(const char* u)
   : FrequencyUnit(std::string{ u })
@@ -38,13 +39,16 @@ CDM::ScalarFrequencyData* SEScalarFrequency::Unload() const
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(Per_min.GetString(),unit) == 0)
+  if (strcmp(Per_min.GetString(), unit) == 0)
     return true;
-  if (strcmp(Per_s.GetString(),unit) == 0)
+  if (strcmp(Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(Hz.GetString(),unit) == 0)
+  if (strcmp(Hz.GetString(), unit) == 0)
     return true;
-  return false;
+  if (strcmp(Per_hr.GetString(), unit) == 0)
+    return true;
+
+    return false;
 }
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::IsValidUnit(const std::string& unit)
@@ -54,12 +58,14 @@ bool FrequencyUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(Per_min.GetString(),unit) == 0)
+  if (strcmp(Per_min.GetString(), unit) == 0)
     return Per_min;
-  if (strcmp(Per_s.GetString(),unit) == 0)
+  if (strcmp(Per_s.GetString(), unit) == 0)
     return Per_s;
-  if (strcmp(Hz.GetString(),unit) == 0)
+  if (strcmp(Hz.GetString(), unit) == 0)
     return Hz;
+  if (strcmp(Per_hr.GetString(), unit) == 0)
+    return Per_hr;
   std::stringstream err;
   err << unit << " is not a valid Frequency unit";
   throw CommonDataModelException(err.str());

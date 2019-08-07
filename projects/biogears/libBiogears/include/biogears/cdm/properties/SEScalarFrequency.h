@@ -30,6 +30,7 @@ public:
   static const FrequencyUnit Per_min;
   static const FrequencyUnit Per_s;
   static const FrequencyUnit Hz;
+  static const FrequencyUnit Per_hr;
 };
 
 class BIOGEARS_API SEScalarFrequency : public SEScalarQuantity<FrequencyUnit> {

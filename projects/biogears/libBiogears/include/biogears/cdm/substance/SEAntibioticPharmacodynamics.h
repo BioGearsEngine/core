@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 
 class SEScalar;
+class SEScalarFrequency;
 
 class BIOGEARS_API SEAntibioticPharmacodynamics : Loggable {
 public:
@@ -44,12 +45,12 @@ public:
   virtual SEScalar& GetI50();
 
   virtual bool HasAntibacterialEffect() const;
-  virtual SEScalar& GetAntibacterialEffect();
+  virtual SEScalarFrequency& GetAntibacterialEffect();
 
 protected:
   CDM::enumAntibioticPDIndex::value m_AntibacterialIndex;
   SEScalar* m_I50;
-  SEScalar* m_AntibacterialEffect;
+  SEScalarFrequency* m_AntibacterialEffect;
 
 
 };
