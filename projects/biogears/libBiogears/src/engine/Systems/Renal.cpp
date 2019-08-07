@@ -837,7 +837,9 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
       bowmans = m_rightBowmans;
       filterResistancePath = m_rightGlomerularFilterResistancePath;
     }
-
+    if (!sub.GetClearance().HasGlomerularFilterability()) {
+      CalculateFilterability(sub);
+    }
     double filterability = sub.GetClearance().GetGlomerularFilterability().GetValue();
 
     SELiquidSubstanceQuantity* bowmansSubQ = bowmans->GetSubstanceQuantity(sub);
