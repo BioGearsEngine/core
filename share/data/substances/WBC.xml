@@ -2,6 +2,8 @@
 <Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>WhiteBloodCell</Name>
   <Classification>WholeBlood</Classification>
+  <Density readOnly="false" unit="g/mL" value="1.08"/>
+  <MolarMass readOnly="false" unit="g/mol" value="92910857142857142.8"/>
   <State>Cellular</State>
   <CellCount readOnly="false" unit="ct/uL" value="7000"/>
   <!-- @brief  Normal mean count is 7500 cells/microliter. 7000 used for sepsis. -->

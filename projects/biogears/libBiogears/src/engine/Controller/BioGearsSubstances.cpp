@@ -128,6 +128,28 @@ void BioGearsSubstances::InitializeSubstances()
   InitializeGasCompartments();
   InitializeLiquidCompartmentGases();
   InitializeLiquidCompartmentNonGases();
+
+  //Initialize Blood Type
+  SESubstance& rbcA = m_data.GetSubstances().GetRBC_A();
+  rbcA.GetCellCount().SetReadOnly(false);
+  SESubstance& rbcB = m_data.GetSubstances().GetRBC_B();
+  rbcB.GetCellCount().SetReadOnly(false);
+  SESubstance& rbcO = m_data.GetSubstances().GetRBC_O();
+  rbcO.GetCellCount().SetReadOnly(false);
+  if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::A) {
+    rbcB.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::B) {
+    rbcA.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::O) {
+    rbcA.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    rbcB.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::AB) {
+    rbcA.GetCellCount().SetValue(0.5 * rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+    rbcB.GetCellCount().SetValue(0.5 * rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  }
 }
 
 void BioGearsSubstances::InitializeGasCompartments()
@@ -846,6 +868,24 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   //Lymph
   lymph->GetSubstanceQuantity(*m_urea)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_urea)->Balance(BalanceLiquidBy::Molarity);
+
+  //BLOOD COMPONENTS//
+  //Plasma
+  concentration.SetValue(45,MassPerVolumeUnit::g_Per_L);
+  SetSubstanceConcentration(*m_plasma, vascular, concentration);
+  //RBC
+  concentration.SetValue(32.7, MassPerVolumeUnit::g_Per_L);
+  SetSubstanceConcentration(*m_RBCa, vascular, concentration);
+  SetSubstanceConcentration(*m_RBCb, vascular, concentration);
+  SetSubstanceConcentration(*m_RBCo, vascular, concentration);
+  //WBC -check this
+  concentration.SetValue(0.9, MassPerVolumeUnit::g_Per_L);
+  SetSubstanceConcentration(*m_WBC, vascular, concentration);
+  //Platelets -check this
+  concentration.SetValue(3.3, MassPerVolumeUnit::g_Per_L);
+  SetSubstanceConcentration(*m_platelets, vascular, concentration);
+
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1101,8 +1141,8 @@ void BioGearsSubstances::AddActiveSubstance(SESubstance& substance)
   SESubstanceManager::AddActiveSubstance(substance);
   if (substance.GetState() == CDM::enumSubstanceState::Gas)
     m_data.GetCompartments().AddGasCompartmentSubstance(substance);
-  if (substance.GetState() != CDM::enumSubstanceState::Cellular)
-    m_data.GetCompartments().AddLiquidCompartmentSubstance(substance);
+  //if (substance.GetState() != CDM::enumSubstanceState::Cellular) //Double check on molar mass as fraction of blood
+  m_data.GetCompartments().AddLiquidCompartmentSubstance(substance);
 
   if (&substance == m_CO) // We need to put HbCO in the system if CO is in the system
   {

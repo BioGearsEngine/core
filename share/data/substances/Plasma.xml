@@ -3,5 +3,7 @@
   <Name>Plasma</Name>
   <Classification>WholeBlood</Classification>
   <Density readOnly="false" unit="kg/m^3" value="1025"/>
-  <State>Liquid</State>
+  <MolarMass readOnly="false" unit="g/mol" value="66500"/>
+  <State>Cellular</State>
+  <BloodConcentration readOnly="false" unit="g/L" value="45"/>
 </Substance>

@@ -2,6 +2,8 @@
 <Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>Platelet</Name>
   <Classification>WholeBlood</Classification>
+  <Density readOnly="false" unit="g/mL" value="1.06"/>
+  <MolarMass readOnly="false" unit="g/mol" value="2127773333333333.3"/>
   <State>Cellular</State>
   <CellCount readOnly="false" unit="ct/uL" value="300000"/>
   <!-- @brief  Normal mean count is 300000/microliter. -->

@@ -200,7 +200,7 @@ void BloodChemistry::SetUp()
   m_pulmonaryVeinsO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
   m_pulmonaryVeinsCO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
 
-  SESubstance& rbcA = m_data.GetSubstances().GetRBC_A();
+  /*SESubstance& rbcA = m_data.GetSubstances().GetRBC_A();
   rbcA.GetCellCount().SetReadOnly(false);
   SESubstance& rbcB = m_data.GetSubstances().GetRBC_B();
   rbcB.GetCellCount().SetReadOnly(false);
@@ -219,10 +219,10 @@ void BloodChemistry::SetUp()
     rbcA.GetCellCount().SetValue(0.5 * rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
     rbcB.GetCellCount().SetValue(0.5 * rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
     rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-  }
+  }*/
 
-  m_ss << "TESTING A: " << rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and B: " << rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and O: " << rbcO.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL);
-  Info(m_ss);
+ /* m_ss << "TESTING A: " << rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and B: " << rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and O: " << rbcO.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL);
+  Info(m_ss)*/;
 
   double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_PatientActions = &m_data.GetActions().GetPatientActions();
@@ -288,13 +288,29 @@ void BloodChemistry::Process()
   GetHemoglobinContent().SetValue(totalHemoglobinO2Hemoglobin_g, MassUnit::g);
 
   // Calculate Blood Cell Counts
-  double RedBloodCellCount_ct = GetHemoglobinContent(MassUnit::ug) / m_HbPerRedBloodCell_ug_Per_ct;
-  double RedBloodCellVolume_mL = RedBloodCellCount_ct * m_redBloodCellVolume_mL;
+  SESubstance& rbc_A = m_data.GetSubstances().GetRBC_A();
+  SESubstance& rbc_B = m_data.GetSubstances().GetRBC_B();
+  SESubstance& rbc_O = m_data.GetSubstances().GetRBC_O();
   double TotalBloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
+  double iRedBloodCellCount_ct_Per_uL = (rbc_A.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_B.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_O.GetCellCount(AmountPerVolumeUnit::ct_Per_uL));
+  double RedBloodCellCount_ct = (rbc_A.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_B.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_O.GetCellCount(AmountPerVolumeUnit::ct_Per_uL))*TotalBloodVolume_mL*1000;
+  //double RedBloodCellCount_ct = GetHemoglobinContent(MassUnit::ug) / m_HbPerRedBloodCell_ug_Per_ct;
+  double RedBloodCellVolume_mL = RedBloodCellCount_ct * m_redBloodCellVolume_mL;
   GetHematocrit().SetValue((RedBloodCellVolume_mL / TotalBloodVolume_mL));
   // Yes, we are giving GetRedBloodCellCount a concentration, because that is what it is, but clinically, it is known as RedBloodCellCount
   GetRedBloodCellCount().SetValue(RedBloodCellCount_ct / m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::L), AmountPerVolumeUnit::ct_Per_L);
+  rbc_A.GetCellCount().SetValue((GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL)/iRedBloodCellCount_ct_Per_uL)*rbc_A.GetCellCount(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+  rbc_B.GetCellCount().SetValue((GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL) / iRedBloodCellCount_ct_Per_uL) * rbc_B.GetCellCount(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+  rbc_O.GetCellCount().SetValue((GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL) / iRedBloodCellCount_ct_Per_uL) * rbc_O.GetCellCount(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+  double rbc_A_count = m_data.GetSubstances().GetRBC_A().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
+  double rbc_B_count = m_data.GetSubstances().GetRBC_B().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
+  double rbc_O_count = m_data.GetSubstances().GetRBC_O().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
   GetPlasmaVolume().SetValue(TotalBloodVolume_mL - RedBloodCellVolume_mL, VolumeUnit::mL);
+
+  m_data.GetDataTrack().Probe("rbcA", rbc_A_count);
+  m_data.GetDataTrack().Probe("rbcB", rbc_B_count);
+  m_data.GetDataTrack().Probe("rbcO", rbc_O_count);
+  m_data.GetDataTrack().Probe("rbccountBG", GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL));
 
   // Concentrations
   double albuminConcentration_ug_Per_mL = m_venaCavaAlbumin->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
