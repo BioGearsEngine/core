@@ -427,6 +427,10 @@ protected:
   virtual void Unload(CDM::InflammatoryResponseData& data) const;
 
 public:
+  virtual bool HasAntibodies() const;
+  virtual SEScalar& GetAntibodies();
+  virtual double GetAntibodies() const;
+
   virtual bool HasCatecholamines() const;
   virtual SEScalar& GetCatecholamines();
   virtual double GetCatecholamines() const;
@@ -499,6 +503,7 @@ public:
   virtual std::vector<CDM::enumInflammationSource>& GetInflammationSources();
 
 protected:
+  SEScalar* m_Antibodies;
   SEScalar* m_Catecholamines;
   SEScalar* m_ConstitutiveNOS;
   SEScalar* m_InducibleNOSPre;

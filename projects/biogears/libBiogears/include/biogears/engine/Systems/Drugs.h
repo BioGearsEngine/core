@@ -83,7 +83,6 @@ protected:
   void CalculatePartitionCoefficients();
   void CalculateSubstanceClearance();
   void CalculatePlasmaSubstanceConcentration();
-  void CalculateAntibioticEffects();
   void CalculateDrugEffects();
   void SarinKinetics();
   double OralTransmucosalModel(const SESubstance* sub, SETransmucosalState* ot);

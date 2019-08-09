@@ -62,7 +62,6 @@ SESubstance::SESubstance(Logger* logger)
   m_SolubilityCoefficient = nullptr;
   m_RelativeDiffusionCoefficient = nullptr;
 
-  m_AntibioticPD = nullptr;
   m_Clearance = nullptr;
   m_PK = nullptr;
   m_PD = nullptr;
@@ -104,7 +103,6 @@ void SESubstance::Clear()
   SAFE_DELETE(m_SolubilityCoefficient);
   SAFE_DELETE(m_RelativeDiffusionCoefficient);
 
-  SAFE_DELETE(m_AntibioticPD);
   SAFE_DELETE(m_Aerosolization);
   SAFE_DELETE(m_Clearance);
   SAFE_DELETE(m_PK);
@@ -178,8 +176,6 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
       return GetPK().GetScalar(prop);
     if (child == "PD")
       return GetPD().GetScalar(prop);
-    if (child == "AntibioticPD")
-      return GetAntibioticPD().GetScalar(prop);
   }
 
   return nullptr;
@@ -242,8 +238,6 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
   if (in.SolubilityCoefficient().present())
     GetSolubilityCoefficient().Load(in.SolubilityCoefficient().get());
 
-  if (in.AntibioticPharmacodynamics().present())
-    GetAntibioticPD().Load(in.AntibioticPharmacodynamics().get());
   if (in.Aerosolization().present())
     GetAerosolization().Load(in.Aerosolization().get());
   if (in.Clearance().present())
@@ -326,8 +320,6 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
   if (HasRelativeDiffusionCoefficient())
     data.RelativeDiffusionCoefficient(std::unique_ptr<CDM::ScalarData>(m_RelativeDiffusionCoefficient->Unload()));
 
-  if (HasAntibioticPD())
-    data.AntibioticPharmacodynamics(std::unique_ptr<CDM::AntibioticPharmacodynamicsData>(m_AntibioticPD->Unload()));
   if (HasAerosolization())
     data.Aerosolization(std::unique_ptr<CDM::SubstanceAerosolizationData>(m_Aerosolization->Unload()));
   if (HasClearance())
@@ -918,28 +910,6 @@ const SESubstancePharmacodynamics* SESubstance::GetPD() const
 void SESubstance::RemovePD()
 {
   SAFE_DELETE(m_PD);
-}
-//-----------------------------------------------------------------------------
-bool SESubstance::HasAntibioticPD() const
-{
-  return (m_AntibioticPD != nullptr && m_AntibioticPD->IsValid());
-}
-//-----------------------------------------------------------------------------
-SEAntibioticPharmacodynamics& SESubstance::GetAntibioticPD()
-{
-  if (m_AntibioticPD == nullptr)
-    m_AntibioticPD = new SEAntibioticPharmacodynamics(GetLogger());
-  return *m_AntibioticPD;
-}
-//-----------------------------------------------------------------------------
-const SEAntibioticPharmacodynamics* SESubstance::GetAntibioticPD() const
-{
-  return m_AntibioticPD;
-}
-//-----------------------------------------------------------------------------
-void SESubstance::RemoveAntibioticPD()
-{
-  SAFE_DELETE(m_AntibioticPD);
 }
 //-----------------------------------------------------------------------------
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Ertapenem injection</Name>
+    <Description>Administer intravenous ertapenem to standard patient</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	<!-- Base system data required for all scenario verification -->
+  <DataRequests SamplesPerSecond="1">
+ 
+	<!-- Anything action specific data needed for verification of this scenario -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Ertapenem" Unit="ug/L" Precision="9"/>
+  
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Name="PlasmaConcentration" Unit="mg/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Name="SystemicMassCleared" Unit="mg" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Name="MassInBody" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
+	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Name="TimeAboveMIC" Unit="min" Precision="2"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ertapenem" Name="MassCleared" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Ertapenem" Name="MassCleared" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Ertapenem" Name="MassCleared" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Ertapenem" Name="MassExcreted" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Ertapenem" Name="MassExcreted" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ertapenem" Name="MassExcreted" Unit="mg" Precision="2"/>
+	
+	
+  </DataRequests>
+	
+	<!--Administer 1 g of ertapenem of 30 min (1.0 g/mL * 0.033 mL /min * 30 min = 1.0 g--> 
+    <Action xsi:type="SubstanceInfusionData">
+		<Substance>Ertapenem</Substance>
+		<Concentration value="1.0" unit="g/mL"/>
+		<Rate value="0.0333" unit="mL/min"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+		<Substance>Ertapenem</Substance>
+		<Concentration value="1000" unit="ug/mL"/>
+		<Rate value="0.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="11.5" unit="hr"/>       
+    </Action>
+
+	
+</Scenario>

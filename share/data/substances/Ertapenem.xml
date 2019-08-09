@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <Name>Pralidoxime</Name>
-  <Classification>ReversalAgent</Classification>
-  <MolarMass readOnly="false" unit="g/mol" value="176.6"/>
+  <Name>Ertapenem</Name>
+  <Classification>Antibiotic</Classification>
+  <MolarMass readOnly="false" unit="g/mol" value="475.5"/>
   <State>Liquid</State>
   <Clearance>
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0"/>
-      <FractionUnboundInPlasma readOnly="false" value="1"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.1"/>
       <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <RenalClearance readOnly="false" unit="mL/min kg" value="7.2"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="15"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="0.2"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="0.62"/>
     </Systemic>
     <RenalDynamics>
-      <Clearance readOnly="false" unit="mL/min kg" value="7.2"/>
+      <Clearance readOnly="false" unit="mL/min kg" value="0.2"/>
     </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
-      <AcidDissociationConstant readOnly="false" value="5.78"/>
+      <AcidDissociationConstant readOnly="false" value="3.22"/>
       <BindingProtein>Albumin</BindingProtein>
-      <BloodPlasmaRatio readOnly="false" value="1.564"/>
-      <FractionUnboundInPlasma readOnly="false" value="1"/>
-      <IonicState>WeakBase</IonicState>
-      <LogP readOnly="false" value="1.564"/>
-      <HydrogenBondCount readOnly="false" value="0"/>
-      <PolarSurfaceArea readOnly="false" value="0"/>
+      <BloodPlasmaRatio readOnly="false" value="1"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.1"/>
+      <IonicState>Acid</IonicState>
+      <LogP readOnly="false" value="0.2"/>
+      <HydrogenBondCount readOnly="false" value="13"/>
+      <PolarSurfaceArea readOnly="false" value="156.27"/>
     </Physicochemicals>
   </Pharmacokinetics>
   <Pharmacodynamics>
     <Bronchodilation readOnly="false" value="0"/>
     <DiastolicPressureModifier readOnly="false" value="0"/>
-    <EC50 readOnly="false" unit="ug/mL" value="0.2855"/>
+    <EC50 readOnly="false" unit="mg/L" value="0.029"/>
     <EMaxShapeParameter readOnly="false" value="1"/>
     <HeartRateModifier readOnly="false" value="0"/>
     <HemorrhageModifier readOnly="false" value="0"/>
@@ -46,7 +46,7 @@
     <TidalVolumeModifier readOnly="false" value="0"/>
     <TubularPermeabilityModifier readOnly="false" value="0"/>
     <CentralNervousModifier readOnly="false" value="0"/>
-    <AntibacterialEffect readOnly="false" unit="1/hr" value="0"/>
+    <AntibacterialEffect readOnly="false" unit="1/hr" value="0.5"/>
     <EffectSiteRateConstant readOnly="false" unit="1/min" value="0"/>
   </Pharmacodynamics>
 </Substance>

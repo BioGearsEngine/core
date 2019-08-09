@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Moxifloxacin_Oral</Name>
+    <Description>Administer Moxifloxacin pill to standard patient</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	<!-- Base system data required for all scenario verification -->
+  <DataRequests SamplesPerSecond="1">
+ 
+	<!-- Anything action specific data needed for verification of this scenario -->
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Moxifloxacin" Unit="ug/L" Precision="9"/>
+  
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="PlasmaConcentration" Unit="mg/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="SystemicMassCleared" Unit="mg" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="MassInBody" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
+	
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneVasculature"        Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature"       Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatVasculature"         Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutVasculature"         Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyVasculature"  Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungVasculature"    Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverVasculature"       Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature"      Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumVasculature"  Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature" Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungVasculature"   Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinVasculature"        Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenVasculature"      Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+
+     <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular"        Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular"       Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular"         Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular"         Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular"  Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular"    Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular"       Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular"      Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular"  Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+     <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular"   Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular"        Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular"      Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 
+
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"        Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"       Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"         Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"         Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"    Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"      Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"  Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+     <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"   Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"        Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"      Substance="Moxifloxacin" Name="Concentration" Unit="ug/L" Precision="4"/>
+
+	
+	
+	
+	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Moxifloxacin" Name="MassCleared" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Moxifloxacin" Name="MassCleared" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Moxifloxacin" Name="MassCleared" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Moxifloxacin" Name="MassExcreted" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Moxifloxacin" Name="MassExcreted" Unit="mg" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Moxifloxacin" Name="MassExcreted" Unit="mg" Precision="2"/>
+	
+	
+  </DataRequests>
+	
+	<!--Administer 400 mg of Moxifloxacin as a pill--> 
+    <Action xsi:type="SubstanceOralDoseData" AdminRoute="Gastrointestinal">
+		<Substance>Moxifloxacin</Substance>
+		<Dose value="400" unit="mg"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="12" unit="hr"/>       
+    </Action>
+
+	
+</Scenario>

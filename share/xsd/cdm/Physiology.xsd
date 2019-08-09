@@ -60,6 +60,7 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Antibodies" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
 				</xs:sequence>
 			</xs:extension>

@@ -4,7 +4,7 @@
     <Description>Administer fentanyl to patient via oral transmucosal route (OTFC)</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	<!-- Base system data required for all scenario verification -->
-  <DataRequests>
+  <DataRequests SamplesPerSecond="1">
  
 	<!-- Anything action specific data needed for verification of this scenario -->
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Fentanyl" Unit="ug/L" Precision="9"/>
@@ -33,7 +33,7 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Fentanyl" Name="MassExcreted" Unit="ug" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Fentanyl" Name="MassExcreted" Unit="ug" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Fentanyl" Name="MassExcreted" Unit="ug" Precision="2"/>
-	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
 	
   </DataRequests>
 	
@@ -43,6 +43,7 @@
 		<Dose value="800" unit="ug"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="600" unit="min"/>       
+        <Time value="12" unit="hr"/>       
     </Action>
+  
 </Scenario>

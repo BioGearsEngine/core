@@ -43,6 +43,10 @@ protected:
   virtual void Unload(CDM::SubstancePharmacodynamicsData& data) const;
 
 public:
+  virtual bool HasAntibacterialEffect() const;
+  virtual SEScalarFrequency& GetAntibacterialEffect();
+  virtual double GetAntibacterialEffect(const FrequencyUnit& unit) const;
+
   virtual bool HasBronchodilation() const;
   virtual SEScalarFraction& GetBronchodilation();
   virtual double GetBronchodilation() const;
@@ -107,6 +111,7 @@ public:
 protected:
   virtual void CalculateDerived();
 
+  SEScalarFrequency* m_AntibacterialEffect;
   SEScalarFraction* m_Bronchodilation;
   SEScalarFraction* m_DiastolicPressureModifier;
   SEScalarMassPerVolume* m_EC50;

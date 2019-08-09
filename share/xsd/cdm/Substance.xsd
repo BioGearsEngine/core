@@ -64,14 +64,6 @@ specific language governing permissions and limitations under the License.
   	</xs:restriction>
   </xs:simpleType>
   
-  <xs:simpleType name="enumAntibioticPDIndex">
-	<xs:restriction base="xs:string">
-		<xs:enumeration value="TimeAboveMIC"/>
-		<xs:enumeration value="AUC:MIC"/>
-		<xs:enumeration value="Cmax:MIC"/>
-	</xs:restriction>
-  </xs:simpleType>
-  
   
   <!-- The following object types encapsulate data for a particular methodology.
        There may be data fields (ex. FractionUnboundInPlasma) duplicated between objects.
@@ -153,22 +145,11 @@ specific language governing permissions and limitations under the License.
           <xs:element name="TidalVolumeModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->          
           <xs:element name="TubularPermeabilityModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
           <xs:element name="CentralNervousModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+		  <xs:element name="AntibacterialEffect" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/><!--<< @brief The enhancement in bacterial death rate caused by an antibiotic-->
           <xs:element name="EffectSiteRateConstant" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Describes speed of equilibration between plasma concentration and site of action of a drug -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>
-  
-  <xs:complexType name="AntibioticPharmacodynamicsData">
-	<xs:complexContent>
-		<xs:extension base="ObjectData">
-			<xs:sequence>
-				<xs:element name="AntibacterialIndex" type="enumAntibioticPDIndex" minOccurs="1" maxOccurs="1"/>
-				<xs:element name="I50" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-				<xs:element name="AntibacterialEffect" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/>
-			</xs:sequence>
-		</xs:extension>
-	</xs:complexContent>
   </xs:complexType>
   
   <!-- @brief Data associated with reducing substance mass in the body by filtration (Kidney/Liver) or some other metabolic process (Systemic). -->
@@ -254,10 +235,9 @@ specific language governing permissions and limitations under the License.
           <xs:element name="RelativeDiffusionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of the substance to diffuse across a membrane. A proportionality of the solubility and the square root of the molecular weight as defined relative to oxygen.-->
           <xs:element name="SolubilityCoefficient" type="ScalarInversePressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of a substance to dissolve in a solution. -->          
           <!-- More complex Objects -->
-		  <xs:element name="AntibioticPharmacodynamics" type="AntibioticPharmacodynamicsData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="Clearance" type="SubstanceClearanceData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstanceClearanceData --> 
           <xs:element name="Pharmacokinetics" type="SubstancePharmacokineticsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacokineticsData -->  
-          <xs:element name="Pharmacodynamics" type="SubstancePharmacodynamicsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacodynamicsData -->   
+          <xs:element name="Pharmacodynamics" type="SubstancePharmacodynamicsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacodynamicsData --> 
         </xs:sequence>        
       </xs:extension>
     </xs:complexContent>

@@ -1079,7 +1079,8 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
 }
 
 SEInflammatoryResponse::SEInflammatoryResponse()
-  : m_Catecholamines(nullptr)
+  : m_Antibodies(nullptr)
+  , m_Catecholamines(nullptr)
   , m_ConstitutiveNOS(nullptr)
   , m_InducibleNOSPre(nullptr)
   , m_InducibleNOS(nullptr)
@@ -1106,6 +1107,7 @@ SEInflammatoryResponse::~SEInflammatoryResponse()
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Clear()
 {
+  SAFE_DELETE(m_Antibodies);
   SAFE_DELETE(m_Catecholamines);
   SAFE_DELETE(m_ConstitutiveNOS);
   SAFE_DELETE(m_InducibleNOSPre);
@@ -1128,6 +1130,7 @@ void SEInflammatoryResponse::Clear()
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::Load(const CDM::InflammatoryResponseData& in)
 {
+  GetAntibodies().Load(in.Antibodies());
   GetCatecholamines().Load(in.Catecholamines());
   GetConstitutiveNOS().Load(in.ConstitutiveNOS());
   GetInducibleNOSPre().Load(in.InducibleNOSPre());
@@ -1161,6 +1164,7 @@ CDM::InflammatoryResponseData* SEInflammatoryResponse::Unload() const
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
 {
+  data.Antibodies(std::unique_ptr<CDM::ScalarData>(m_Antibodies->Unload()));
   data.Catecholamines(std::unique_ptr<CDM::ScalarData>(m_Catecholamines->Unload()));
   data.ConstitutiveNOS(std::unique_ptr<CDM::ScalarData>(m_ConstitutiveNOS->Unload()));
   data.InducibleNOSPre(std::unique_ptr<CDM::ScalarData>(m_InducibleNOSPre->Unload()));
@@ -1188,6 +1192,7 @@ void SEInflammatoryResponse::Initialize()
 {
   //Values from Chow2005Acute
   GetPathogen().SetValue(0.0); //Change this back to 0 after testing
+  GetAntibodies().SetValue(3.26);  //Ratio of resting source to decay terms in inflammation model
   GetTrauma().SetValue(0.0);
   GetMacrophageResting().SetValue(1.0);
   GetMacrophageActive().SetValue(0.0);
@@ -1208,7 +1213,7 @@ void SEInflammatoryResponse::Initialize()
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::IsValid()
 {
-  if (HasPathogen() && HasTrauma() && HasMacrophageResting() && HasMacrophageActive() && HasNeutrophilResting() && HasNeutrophilActive() && HasInducibleNOSPre() && HasInducibleNOS() && HasConstitutiveNOS() && HasNitrate() && HasNitricOxide() && HasTumorNecrosisFactor() && HasInterleukin6() && HasInterleukin10() && HasInterleukin12() && HasCatecholamines() && HasTissueIntegrity())
+  if (HasAntibodies() && HasPathogen() && HasTrauma() && HasMacrophageResting() && HasMacrophageActive() && HasNeutrophilResting() && HasNeutrophilActive() && HasInducibleNOSPre() && HasInducibleNOS() && HasConstitutiveNOS() && HasNitrate() && HasNitricOxide() && HasTumorNecrosisFactor() && HasInterleukin6() && HasInterleukin10() && HasInterleukin12() && HasCatecholamines() && HasTissueIntegrity())
     return true;
   else
     return false;
@@ -1221,6 +1226,8 @@ const SEScalar* SEInflammatoryResponse::GetScalar(const char* name)
 //-------------------------------------------------------------------------------
 const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name)
 {
+  if (name.compare("Antibodies") == 0)
+    return &GetAntibodies();
   if (name.compare("Pathogen") == 0)
     return &GetPathogen();
   if (name.compare("Trauma") == 0)
@@ -1257,6 +1264,25 @@ const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name)
     return &GetTissueIntegrity();
 
   return nullptr;
+}
+//-------------------------------------------------------------------------------
+bool SEInflammatoryResponse::HasAntibodies() const
+{
+  return m_Antibodies == nullptr ? false : m_Antibodies->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEInflammatoryResponse::GetAntibodies()
+{
+  if (m_Antibodies == nullptr)
+    m_Antibodies = new SEScalar();
+  return *m_Antibodies;
+}
+//-------------------------------------------------------------------------------
+double SEInflammatoryResponse::GetAntibodies() const
+{
+  if (m_Antibodies == nullptr)
+    return SEScalar::dNaN();
+  return m_Antibodies->GetValue();
 }
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::HasPathogen() const

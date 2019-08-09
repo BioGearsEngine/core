@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
-#include <biogears/cdm/substance/SEAntibioticPharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
@@ -178,11 +177,6 @@ public:
   virtual SEScalarInversePressure& GetSolubilityCoefficient();
   virtual double GetSolubilityCoefficient(const InversePressureUnit& unit) const;
 
-  virtual bool HasAntibioticPD() const;
-  virtual SEAntibioticPharmacodynamics& GetAntibioticPD();
-  virtual const SEAntibioticPharmacodynamics* GetAntibioticPD() const;
-  virtual void RemoveAntibioticPD();
-
   virtual bool HasClearance() const;
   virtual SESubstanceClearance& GetClearance();
   virtual const SESubstanceClearance* GetClearance() const;
@@ -229,7 +223,6 @@ protected:
   SEScalar* m_RelativeDiffusionCoefficient;
   SEScalarInversePressure* m_SolubilityCoefficient;
 
-  SEAntibioticPharmacodynamics* m_AntibioticPD;
   SESubstanceClearance* m_Clearance;
   SESubstancePharmacokinetics* m_PK;
   SESubstancePharmacodynamics* m_PD;

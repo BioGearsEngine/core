@@ -21,6 +21,7 @@ namespace biogears {
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)
 {
+  m_AntibacterialEffect = nullptr;
   m_Bronchodilation = nullptr;
   m_DiastolicPressureModifier = nullptr;
   m_EC50 = nullptr;
@@ -45,6 +46,7 @@ SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
 //-----------------------------------------------------------------------------
 void SESubstancePharmacodynamics::Clear()
 {
+  SAFE_DELETE(m_AntibacterialEffect);
   SAFE_DELETE(m_Bronchodilation);
   SAFE_DELETE(m_DiastolicPressureModifier);
   SAFE_DELETE(m_EC50);
@@ -64,6 +66,8 @@ void SESubstancePharmacodynamics::Clear()
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::IsValid() const
 {
+  if (!HasAntibacterialEffect())
+    return false;
   if (!HasBronchodilation())
     return false;
   if (!HasDiastolicPressureModifier())
@@ -104,6 +108,8 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const char* name)
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
 {
+  if (name.compare("AntibacterialEffect") == 0)
+    return &GetAntibacterialEffect();
   if (name.compare("Bronchodilation") == 0)
     return &GetBronchodilation();
   if (name.compare("DiastolicPressureModifier") == 0)
@@ -152,6 +158,7 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   GetTidalVolumeModifier().Load(in.TidalVolumeModifier());
   GetTubularPermeabilityModifier().Load(in.TubularPermeabilityModifier());
   GetCentralNervousModifier().Load(in.CentralNervousModifier());
+  GetAntibacterialEffect().Load(in.AntibacterialEffect());
   GetEffectSiteRateConstant().Load(in.EffectSiteRateConstant());
   CalculateDerived();
   return true;
@@ -196,12 +203,38 @@ void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& dat
     data.TubularPermeabilityModifier(std::unique_ptr<CDM::ScalarFractionData>(m_TubularPermeabilityModifier->Unload()));
   if (HasCentralNervousModifier())
     data.CentralNervousModifier(std::unique_ptr<CDM::ScalarFractionData>(m_CentralNervousModifier->Unload()));
+  if (HasAntibacterialEffect())
+    data.AntibacterialEffect(std::unique_ptr<CDM::ScalarFrequencyData>(m_AntibacterialEffect->Unload()));
   if (HasEffectSiteRateConstant())
     data.EffectSiteRateConstant(std::unique_ptr<CDM::ScalarFrequencyData>(m_EffectSiteRateConstant->Unload()));
 }
 //-----------------------------------------------------------------------------
 void SESubstancePharmacodynamics::CalculateDerived()
 {
+}
+
+//-----------------------------------------------------------------------------
+bool SESubstancePharmacodynamics::HasAntibacterialEffect() const
+{
+  return (m_AntibacterialEffect == nullptr) ? false : m_AntibacterialEffect->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarFrequency& SESubstancePharmacodynamics::GetAntibacterialEffect()
+{
+  if (m_AntibacterialEffect == nullptr) {
+    m_AntibacterialEffect = new SEScalarFrequency();
+  }
+
+  return *m_AntibacterialEffect;
+}
+//-----------------------------------------------------------------------------
+double SESubstancePharmacodynamics::GetAntibacterialEffect(const FrequencyUnit& unit) const
+{
+  if (m_AntibacterialEffect == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_AntibacterialEffect->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasBronchodilation() const

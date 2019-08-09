@@ -60,8 +60,9 @@ bool SubstanceGenerator::parse()
       lineItr += 7;
     } else if ("Pharmacodynamics (all or none)" == lineItr->first) {
       rValue &= process_pharmacodynamics(++lineItr);
-      lineItr += 15;
-    } else if (lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
+      lineItr += 16;
+    }
+	else if (lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
       rValue &= process_tissues(lineItr);
       lineItr += 1;
     } else {
@@ -535,6 +536,11 @@ bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
         value = (itr + 14)->second[index];
         data.CentralNervousModifier(std::stod(value));
         value = (itr + 15)->second[index];
+        CDM::SubstanceData::Pharmacodynamics_type::AntibacterialEffect_type anti;
+        anti.value(std::stod(value, &pos));
+        anti.unit(trim(value.substr(pos)));
+        data.AntibacterialEffect(anti);
+        value = (itr + 16)->second[index];
         CDM::SubstanceData::Pharmacodynamics_type::EffectSiteRateConstant_type esrc_type;
         esrc_type.value(std::stod(value, &pos));
         esrc_type.unit(trim(value.substr(pos)));
@@ -549,6 +555,7 @@ bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
   }
   return rValue;
 }
+
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in data for the xml tags nested inside the tissues tag

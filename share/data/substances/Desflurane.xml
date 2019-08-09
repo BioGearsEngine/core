@@ -37,7 +37,7 @@
     <EC50 readOnly="false" unit="ug/mL" value="100"/>
     <EMaxShapeParameter readOnly="false" value="10"/>
     <HeartRateModifier readOnly="false" value="0.8"/>
-	<HemorrhageModifier readOnly="false" value="0"/>
+    <HemorrhageModifier readOnly="false" value="0"/>
     <NeuromuscularBlock readOnly="false" value="0"/>
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>
@@ -49,6 +49,7 @@
     <TidalVolumeModifier readOnly="false" value="-0.55"/>
     <TubularPermeabilityModifier readOnly="false" value="0"/>
     <CentralNervousModifier readOnly="false" value="0"/>
+    <AntibacterialEffect readOnly="false" unit="1/hr" value="0"/>
     <EffectSiteRateConstant readOnly="false" unit="1/min" value="0.55"/>
   </Pharmacodynamics>
 </Substance>
