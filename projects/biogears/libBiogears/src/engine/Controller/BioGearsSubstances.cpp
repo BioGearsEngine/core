@@ -129,6 +129,7 @@ void BioGearsSubstances::InitializeSubstances()
   InitializeLiquidCompartmentGases();
   InitializeLiquidCompartmentNonGases();
 
+  /*
   //Initialize Blood Type
   SESubstance& rbcA = m_data.GetSubstances().GetRBC_A();
   rbcA.GetCellCount().SetReadOnly(false);
@@ -149,7 +150,7 @@ void BioGearsSubstances::InitializeSubstances()
     rbcA.GetCellCount().SetValue(0.5 * rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
     rbcB.GetCellCount().SetValue(0.5 * rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
     rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-  }
+  }*/
 }
 
 void BioGearsSubstances::InitializeGasCompartments()
@@ -870,20 +871,38 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   lymph->GetSubstanceQuantity(*m_urea)->Balance(BalanceLiquidBy::Molarity);
 
   //BLOOD COMPONENTS//
-  //Plasma
-  concentration.SetValue(45,MassPerVolumeUnit::g_Per_L);
-  SetSubstanceConcentration(*m_plasma, vascular, concentration);
+  //Initialize Blood Type
+  SEScalarAmountPerVolume molarityA;
+  SEScalarAmountPerVolume molarityB;
+  SEScalarAmountPerVolume molarityO;
+
+  if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::A) {
+    molarityA.SetValue(5280000, AmountPerVolumeUnit::ct_Per_uL);
+    molarityB.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarityO.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::B) {
+    molarityA.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarityB.SetValue(5280000, AmountPerVolumeUnit::ct_Per_uL);
+    molarityO.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::O) {
+    molarityA.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarityB.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarityO.SetValue(5280000, AmountPerVolumeUnit::ct_Per_uL);
+  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::AB) {
+    molarityA.SetValue(0.5*5280000, AmountPerVolumeUnit::ct_Per_uL);
+    molarityB.SetValue(0.5*5280000, AmountPerVolumeUnit::ct_Per_uL);
+    molarityO.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+  }
   //RBC
-  concentration.SetValue(32.7, MassPerVolumeUnit::g_Per_L);
-  SetSubstanceConcentration(*m_RBCa, vascular, concentration);
-  SetSubstanceConcentration(*m_RBCb, vascular, concentration);
-  SetSubstanceConcentration(*m_RBCo, vascular, concentration);
-  //WBC -check this
-  concentration.SetValue(0.9, MassPerVolumeUnit::g_Per_L);
-  SetSubstanceConcentration(*m_WBC, vascular, concentration);
-  //Platelets -check this
-  concentration.SetValue(3.3, MassPerVolumeUnit::g_Per_L);
-  SetSubstanceConcentration(*m_platelets, vascular, concentration);
+  SetSubstanceMolarity(*m_RBCa, vascular, molarityA);
+  SetSubstanceMolarity(*m_RBCb, vascular, molarityB);
+  SetSubstanceMolarity(*m_RBCo, vascular, molarityO);
+  //WBC
+  molarity1.SetValue(7000, AmountPerVolumeUnit::ct_Per_uL);
+  SetSubstanceMolarity(*m_WBC, vascular, molarity1);
+  //Platelets
+  molarity1.SetValue(300000, AmountPerVolumeUnit::ct_Per_uL);
+  SetSubstanceMolarity(*m_platelets, vascular, molarity1);
 
 
 }

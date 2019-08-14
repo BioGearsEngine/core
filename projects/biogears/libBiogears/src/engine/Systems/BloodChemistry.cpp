@@ -76,6 +76,9 @@ void BloodChemistry::Clear()
   m_venaCavaInsulin = nullptr;
   m_venaCavaLactate = nullptr;
   m_venaCavaPotassium = nullptr;
+  m_venaCavaRBC_A = nullptr;
+  m_venaCavaRBC_B = nullptr;
+  m_venaCavaRBC_O = nullptr;
   m_venaCavaSodium = nullptr;
   m_venaCavaTriacylglycerol = nullptr;
   m_venaCavaUrea = nullptr;
@@ -160,6 +163,9 @@ void BloodChemistry::SetUp()
   SESubstance* ketones = &m_data.GetSubstances().GetKetones();
   SESubstance* lactate = &m_data.GetSubstances().GetLactate();
   SESubstance* potassium = &m_data.GetSubstances().GetPotassium();
+  SESubstance* rbc_A = &m_data.GetSubstances().GetRBC_A();
+  SESubstance* rbc_B = &m_data.GetSubstances().GetRBC_B();
+  SESubstance* rbc_O = &m_data.GetSubstances().GetRBC_O();
   SESubstance* sodium = &m_data.GetSubstances().GetSodium();
   SESubstance* triaclyglycerol = &m_data.GetSubstances().GetTriacylglycerol();
   SESubstance* urea = &m_data.GetSubstances().GetUrea();
@@ -188,6 +194,9 @@ void BloodChemistry::SetUp()
   m_venaCavaKetones = m_venaCava->GetSubstanceQuantity(*ketones);
   m_venaCavaLactate = m_venaCava->GetSubstanceQuantity(*lactate);
   m_venaCavaPotassium = m_venaCava->GetSubstanceQuantity(*potassium);
+  m_venaCavaRBC_A = m_venaCava->GetSubstanceQuantity(*rbc_A);
+  m_venaCavaRBC_B = m_venaCava->GetSubstanceQuantity(*rbc_B);
+  m_venaCavaRBC_O = m_venaCava->GetSubstanceQuantity(*rbc_O);
   m_venaCavaSodium = m_venaCava->GetSubstanceQuantity(*sodium);
   m_venaCavaTriacylglycerol = m_venaCava->GetSubstanceQuantity(*triaclyglycerol);
   m_venaCavaUrea = m_venaCava->GetSubstanceQuantity(*urea);
@@ -221,8 +230,9 @@ void BloodChemistry::SetUp()
     rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
   }*/
 
- /* m_ss << "TESTING A: " << rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and B: " << rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and O: " << rbcO.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL);
-  Info(m_ss)*/;
+  /* m_ss << "TESTING A: " << rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and B: " << rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) << "and O: " << rbcO.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL);
+  Info(m_ss)*/
+  ;
 
   double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_PatientActions = &m_data.GetActions().GetPatientActions();
@@ -292,24 +302,16 @@ void BloodChemistry::Process()
   SESubstance& rbc_B = m_data.GetSubstances().GetRBC_B();
   SESubstance& rbc_O = m_data.GetSubstances().GetRBC_O();
   double TotalBloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
-  double iRedBloodCellCount_ct_Per_uL = (rbc_A.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_B.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_O.GetCellCount(AmountPerVolumeUnit::ct_Per_uL));
-  double RedBloodCellCount_ct = (rbc_A.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_B.GetCellCount(AmountPerVolumeUnit::ct_Per_uL) + rbc_O.GetCellCount(AmountPerVolumeUnit::ct_Per_uL))*TotalBloodVolume_mL*1000;
+
+  double RedBloodCellCount_ct_Per_uL = m_venaCavaRBC_A->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) + m_venaCavaRBC_B->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) + m_venaCavaRBC_O->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double RedBloodCellCount_ct = (RedBloodCellCount_ct_Per_uL)*TotalBloodVolume_mL * 1000;
   //double RedBloodCellCount_ct = GetHemoglobinContent(MassUnit::ug) / m_HbPerRedBloodCell_ug_Per_ct;
   double RedBloodCellVolume_mL = RedBloodCellCount_ct * m_redBloodCellVolume_mL;
   GetHematocrit().SetValue((RedBloodCellVolume_mL / TotalBloodVolume_mL));
   // Yes, we are giving GetRedBloodCellCount a concentration, because that is what it is, but clinically, it is known as RedBloodCellCount
   GetRedBloodCellCount().SetValue(RedBloodCellCount_ct / m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::L), AmountPerVolumeUnit::ct_Per_L);
-  rbc_A.GetCellCount().SetValue((GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL)/iRedBloodCellCount_ct_Per_uL)*rbc_A.GetCellCount(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
-  rbc_B.GetCellCount().SetValue((GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL) / iRedBloodCellCount_ct_Per_uL) * rbc_B.GetCellCount(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
-  rbc_O.GetCellCount().SetValue((GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL) / iRedBloodCellCount_ct_Per_uL) * rbc_O.GetCellCount(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
-  double rbc_A_count = m_data.GetSubstances().GetRBC_A().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
-  double rbc_B_count = m_data.GetSubstances().GetRBC_B().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
-  double rbc_O_count = m_data.GetSubstances().GetRBC_O().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
-  GetPlasmaVolume().SetValue(TotalBloodVolume_mL - RedBloodCellVolume_mL, VolumeUnit::mL);
+  GetPlasmaVolume().SetValue(TotalBloodVolume_mL - RedBloodCellVolume_mL, VolumeUnit::mL); //Look into changing to account for platelets and wbc too
 
-  m_data.GetDataTrack().Probe("rbcA", rbc_A_count);
-  m_data.GetDataTrack().Probe("rbcB", rbc_B_count);
-  m_data.GetDataTrack().Probe("rbcO", rbc_O_count);
   m_data.GetDataTrack().Probe("rbccountBG", GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL));
 
   // Concentrations
@@ -331,6 +333,9 @@ void BloodChemistry::Process()
   m_data.GetSubstances().GetKetones().GetBloodConcentration().Set(m_venaCavaKetones->GetConcentration());
   m_data.GetSubstances().GetLactate().GetBloodConcentration().Set(m_venaCavaLactate->GetConcentration());
   m_data.GetSubstances().GetPotassium().GetBloodConcentration().Set(m_venaCavaPotassium->GetConcentration());
+  m_data.GetSubstances().GetRBC_A().GetBloodConcentration().Set(m_venaCavaRBC_A->GetConcentration());
+  m_data.GetSubstances().GetRBC_B().GetBloodConcentration().Set(m_venaCavaRBC_B->GetConcentration());
+  m_data.GetSubstances().GetRBC_O().GetBloodConcentration().Set(m_venaCavaRBC_O->GetConcentration());
   m_data.GetSubstances().GetSodium().GetBloodConcentration().Set(m_venaCavaSodium->GetConcentration());
   GetTotalProteinConcentration().SetValue(albuminConcentration_ug_Per_mL * 1.6, MassPerVolumeUnit::ug_Per_mL);
   m_data.GetSubstances().GetTriacylglycerol().GetBloodConcentration().Set(m_venaCavaTriacylglycerol->GetConcentration());
@@ -703,8 +708,9 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
   cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstances().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL); //Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
   cbc.GetMeanCorpuscularVolume().SetValue(m_data.GetConfiguration().GetMeanCorpuscularVolume(VolumeUnit::uL), VolumeUnit::uL);
   cbc.GetRedBloodCellCount().Set(GetRedBloodCellCount());
-  double wbcCount_ct_Per_uL = m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
-  cbc.GetWhiteBloodCellCount().SetValue(wbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+
+  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); //m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
+    cbc.GetWhiteBloodCellCount().SetValue(wbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   return true;
 }
 
@@ -728,8 +734,9 @@ void BloodChemistry::ManageSIRS()
   double neutrophilActive = m_InflammatoryResponse->GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcAbsolute_ct_Per_uL = wbcBaseline.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL) * (1.0 + neutrophilActive / 0.25);
-  wbcBaseline.GetCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); //m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
+  double wbcAbsolute_ct_Per_uL = wbcCount_ct_Per_uL * (1.0 + neutrophilActive / 0.25);
+  m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   //GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the tissue integrity output from the inflammation model to track other Systemic Inflammatory metrics.  These relationships were all
