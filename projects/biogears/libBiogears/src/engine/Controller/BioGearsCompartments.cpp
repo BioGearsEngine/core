@@ -41,6 +41,7 @@ void BioGearsCompartments::Clear()
   SECompartmentManager::Clear();
   m_CombinedCardiovascularGraph = nullptr;
   m_CardiovascularGraph = nullptr;
+  m_CerebralGraph = nullptr;
   m_RenalGraph = nullptr;
   m_RespiratoryGraph = nullptr;
   m_AnesthesiaMachineGraph = nullptr;
@@ -90,6 +91,11 @@ bool BioGearsCompartments::Load(const CDM::CompartmentManagerData& in, SECircuit
   m_CardiovascularGraph = GetLiquidGraph(BGE::Graph::Cardiovascular);
   if (m_CardiovascularGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::Cardiovascular));
+    return false;
+  }
+  m_CerebralGraph = GetLiquidGraph(BGE::Graph::Cerebral);
+  if (m_CerebralGraph == nullptr) {
+    Error("Could not find required Graph " + std::string(BGE::Graph::Cerebral));
     return false;
   }
   m_RenalGraph = GetLiquidGraph(BGE::Graph::Renal);
@@ -169,13 +175,13 @@ void BioGearsCompartments::StateChange()
     m_ExtracellularFluid.clear();
     m_IntracellularFluid.clear();
     for (SETissueCompartment* t : m_TissueLeafCompartments) {
-      cmpt = GetLiquidCompartment(std::string{ t->GetName() }+"Extracellular");
+      cmpt = GetLiquidCompartment(std::string{ t->GetName() } + "Extracellular");
       if (cmpt == nullptr)
-        Fatal(std::string{ "Could not find the tissue " }+t->GetName() + " Extracellular compartment");
+        Fatal(std::string{ "Could not find the tissue " } + t->GetName() + " Extracellular compartment");
       m_ExtracellularFluid[t] = cmpt;
-      cmpt = GetLiquidCompartment(std::string{ t->GetName() }+"Intracellular");
+      cmpt = GetLiquidCompartment(std::string{ t->GetName() } + "Intracellular");
       if (cmpt == nullptr)
-        Fatal(std::string{ "Could not find the tissue " }+t->GetName() + " Intracellular compartment");
+        Fatal(std::string{ "Could not find the tissue " } + t->GetName() + " Intracellular compartment");
       m_IntracellularFluid[t] = cmpt;
     }
   }
@@ -268,6 +274,12 @@ SELiquidCompartmentGraph& BioGearsCompartments::GetCardiovascularGraph()
   if (m_CardiovascularGraph == nullptr)
     m_CardiovascularGraph = &CreateLiquidGraph(BGE::Graph::Cardiovascular);
   return *m_CardiovascularGraph;
+}
+SELiquidCompartmentGraph& BioGearsCompartments::GetCerebralGraph()
+{
+  if (m_CerebralGraph == nullptr)
+    m_CerebralGraph = &CreateLiquidGraph(BGE::Graph::Cerebral);
+  return *m_CerebralGraph;
 }
 SELiquidCompartmentGraph& BioGearsCompartments::GetRenalGraph()
 {

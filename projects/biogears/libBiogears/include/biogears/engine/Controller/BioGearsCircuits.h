@@ -35,6 +35,7 @@ public:
   // Active methods return the circuit configuration to be calculated
   SEFluidCircuit& GetActiveCardiovascularCircuit();
   SEFluidCircuit& GetCardiovascularCircuit();
+  SEFluidCircuit& GetCerebralCircuit();
   SEFluidCircuit& GetRenalCircuit();
 
   SEFluidCircuit& GetActiveRespiratoryCircuit();
@@ -63,6 +64,7 @@ protected:
   SEFluidCircuit* m_CombinedCardiovascularCircuit;
 
   SEFluidCircuit* m_CardiovascularCircuit;
+  SEFluidCircuit* m_CerebralCircuit;
   SEFluidCircuit* m_RenalCircuit;
 
   SEFluidCircuit* m_RespiratoryCircuit;
@@ -91,9 +93,10 @@ namespace tatrc {
     namespace biogears {
 
       namespace Circuits {
-      
+
         DEFINE_STATIC_STRING(FullCardiovascular);
         DEFINE_STATIC_STRING(Cardiovascular);
+        DEFINE_STATIC_STRING(Cerebral);
         DEFINE_STATIC_STRING(Renal);
         DEFINE_STATIC_STRING(Respiratory);
         DEFINE_STATIC_STRING(AnesthesiaMachine);
@@ -110,19 +113,19 @@ namespace tatrc {
       ///////////////////////////
 
       namespace ChymeNode {
-      
+
         DEFINE_STATIC_STRING(SmallIntestineC1);
       };
 
       namespace ChymePath {
-      
+
         DEFINE_STATIC_STRING(SmallIntestineC1ToSmallIntestine1);
         DEFINE_STATIC_STRING(GroundToSmallIntestineC1);
         DEFINE_STATIC_STRING(GutE3ToGroundGI);
       };
 
       namespace RespiratoryNode {
-      
+
         DEFINE_STATIC_STRING(Carina);
 
         DEFINE_STATIC_STRING(LeftAlveoli);
@@ -146,7 +149,7 @@ namespace tatrc {
       };
 
       namespace RespiratoryPath {
-      
+
         DEFINE_STATIC_STRING(CarinaToLeftAnatomicDeadSpace);
         DEFINE_STATIC_STRING(CarinaToRightAnatomicDeadSpace);
 
@@ -186,7 +189,7 @@ namespace tatrc {
       //////////////////////////////////////
 
       namespace AnesthesiaMachineNode {
-      
+
         DEFINE_STATIC_STRING(AnesthesiaConnection);
         DEFINE_STATIC_STRING(ExpiratoryLimb);
         DEFINE_STATIC_STRING(GasInlet);
@@ -201,7 +204,7 @@ namespace tatrc {
       };
 
       namespace AnesthesiaMachinePath {
-      
+
         DEFINE_STATIC_STRING(EnvironmentToVentilator);
         DEFINE_STATIC_STRING(EnvironmentToReliefValve);
         DEFINE_STATIC_STRING(VentilatorToVentilatorConnection);
@@ -221,7 +224,7 @@ namespace tatrc {
       };
 
       namespace CombinedAnesthesiaMachinePath {
-      
+
         DEFINE_STATIC_STRING(AnesthesiaConnectionToMouth);
         DEFINE_STATIC_STRING(GroundConnection);
       };
@@ -231,12 +234,12 @@ namespace tatrc {
       ///////////////////////////
 
       namespace InhalerNode {
-      
+
         DEFINE_STATIC_STRING(Mouthpiece);
       };
 
       namespace InhalerPath {
-      
+
         DEFINE_STATIC_STRING(EnvironmentToMouthpiece);
         DEFINE_STATIC_STRING(MouthpieceToMouth);
       };
@@ -246,12 +249,12 @@ namespace tatrc {
       ////////////////////////////////////////
 
       namespace MechanicalVentilatorNode {
-      
+
         DEFINE_STATIC_STRING_EX(Connection, MechanicalVentilatorConnection);
       };
 
       namespace MechanicalVentilatorPath {
-      
+
         DEFINE_STATIC_STRING_EX(ConnectionToMouth, MechanicalVentilatorConnectionToMouth);
         DEFINE_STATIC_STRING_EX(GroundToConnection, MechanicalVentilatorGroundToConnection);
       };
@@ -261,7 +264,7 @@ namespace tatrc {
       ///////////////////////////////////
 
       namespace EnvironmentNode {
-      
+
         DEFINE_STATIC_STRING(Ambient);
       };
 
@@ -270,7 +273,7 @@ namespace tatrc {
       ///////////////////////////////////////////
 
       namespace ExternalTemperatureNode {
-      
+
         DEFINE_STATIC_STRING(Active);
         DEFINE_STATIC_STRING(Clothing);
         DEFINE_STATIC_STRING(Enclosure);
@@ -281,7 +284,7 @@ namespace tatrc {
       };
 
       namespace ExternalTemperaturePath {
-      
+
         DEFINE_STATIC_STRING(ActiveToClothing);
         DEFINE_STATIC_STRING(ClothingToEnclosure);
         DEFINE_STATIC_STRING(ClothingToEnvironment);
@@ -299,14 +302,14 @@ namespace tatrc {
       ////////////////////////////////////////
 
       namespace InternalTemperatureNode {
-      
+
         DEFINE_STATIC_STRING(InternalCore);
         DEFINE_STATIC_STRING(InternalSkin);
         DEFINE_STATIC_STRING(InternalGround);
       };
 
       namespace InternalTemperaturePath {
-      
+
         DEFINE_STATIC_STRING(GroundToInternalCore);
         DEFINE_STATIC_STRING(InternalCoreToInternalSkin);
         DEFINE_STATIC_STRING(InternalCoreToGround);
@@ -318,13 +321,13 @@ namespace tatrc {
       ////////////////////////////////////////
 
       namespace CombinedTemperaturePath {
-      
+
         DEFINE_STATIC_STRING(InternalCoreToExternalCore);
         DEFINE_STATIC_STRING(InternalSkinToExternalSkin);
       };
 
       namespace CardiovascularNode {
-      
+
         DEFINE_STATIC_STRING(RightHeart1);
         DEFINE_STATIC_STRING(RightHeart2);
         DEFINE_STATIC_STRING(RightHeart3);
@@ -407,7 +410,7 @@ namespace tatrc {
       };
 
       namespace CardiovascularPath {
-      
+
         // Heart and Lungs
         DEFINE_STATIC_STRING(VenaCavaToRightHeart2);
         DEFINE_STATIC_STRING(RightHeart2ToRightHeart1);
@@ -550,8 +553,40 @@ namespace tatrc {
         DEFINE_STATIC_STRING(VenaCavaBleed);
       };
 
+      namespace CerebralNode {
+        DEFINE_STATIC_STRING(NeckArteries);
+        DEFINE_STATIC_STRING(CerebralArteries1);
+        DEFINE_STATIC_STRING(CerebralArteries2);
+        DEFINE_STATIC_STRING(CerebralCapillaries);
+        DEFINE_STATIC_STRING(CerebralVeins1);
+        DEFINE_STATIC_STRING(CerebralVeins2);
+        DEFINE_STATIC_STRING(NeckVeins);
+        DEFINE_STATIC_STRING(CerebralVeinsCheck);
+        DEFINE_STATIC_STRING(SpinalFluid);
+      };
+
+      namespace CerebralPath {
+        DEFINE_STATIC_STRING(Aorta1ToNeckArteries);
+        DEFINE_STATIC_STRING(NeckArteriesToCerebralArteries1);
+        DEFINE_STATIC_STRING(NeckArteriesToGround);
+        DEFINE_STATIC_STRING(CerebralArteries1ToCerebralArteries2);
+        DEFINE_STATIC_STRING(CerebralArteries1ToSpinalFluid);
+        DEFINE_STATIC_STRING(CerebralArteries2ToSpinalFluid);
+        DEFINE_STATIC_STRING(CerebralArteries2ToCapillaries);
+        DEFINE_STATIC_STRING(CerebralCapillariesToSpinalFluid);
+        DEFINE_STATIC_STRING(CerebralCapillariesToCerebralVeins1);
+        DEFINE_STATIC_STRING(CerebralVeins1ToSpinalFluid);
+        DEFINE_STATIC_STRING(CerebralVeins1ToCerebralVeins2);
+        DEFINE_STATIC_STRING(CerebralVeinsCheckToCerebralVeins2);
+        DEFINE_STATIC_STRING(CerebralVeinsCheckToSpinalFluid);
+        DEFINE_STATIC_STRING(CerebralVeins2ToNeckVeins);
+        DEFINE_STATIC_STRING(NeckVeinsToGround);
+        DEFINE_STATIC_STRING(NeckVeinsToVenaCava)
+        DEFINE_STATIC_STRING(SpinalFluidToGround);
+      }
+
       namespace TissueNode {
-      
+
         DEFINE_STATIC_STRING(BoneE1);
         DEFINE_STATIC_STRING(BoneE2);
         DEFINE_STATIC_STRING(BoneE3);
@@ -774,7 +809,7 @@ namespace tatrc {
       };
 
       namespace RenalNode {
-      
+
         // Blood
         DEFINE_STATIC_STRING(RightAortaConnection);
         DEFINE_STATIC_STRING(RightRenalArtery);
@@ -817,7 +852,7 @@ namespace tatrc {
       };
 
       namespace RenalPath {
-      
+
         DEFINE_STATIC_STRING(RightAortaConnectionToRenalArtery);
         DEFINE_STATIC_STRING(RightRenalArteryToAfferentArteriole);
         DEFINE_STATIC_STRING(RightRenalArteryCompliance);
@@ -869,7 +904,7 @@ namespace tatrc {
       };
 
       namespace DigestionPath {
-      
+
         DEFINE_STATIC_STRING(GutChymeToSmallIntestineVascular);
       };
     } //namespace biogears

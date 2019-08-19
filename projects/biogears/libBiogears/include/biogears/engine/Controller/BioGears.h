@@ -169,6 +169,7 @@ public:
 
 protected:
   void SetupCardiovascular();
+  void SetupCerebral();
   void SetupRenal();
   void SetupTissue();
   void SetupGastrointestinal();

@@ -31,14 +31,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Equipment/AnesthesiaMachine.h>
 #include <biogears/engine/Equipment/ECG.h>
 #include <biogears/engine/Systems/Environment.h>
 #include <biogears/engine/Systems/Gastrointestinal.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
-#include <biogears/cdm/utils/FileUtils.h>
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -1078,6 +1077,9 @@ bool BioGears::CreateCircuitsAndCompartments()
   m_Compartments->Clear();
 
   SetupCardiovascular();
+  if (m_Config->TestCerebral()) {
+    SetupCerebral();
+  }
   if (m_Config->IsRenalEnabled()) {
     SetupRenal();
   }
@@ -2159,6 +2161,10 @@ void BioGears::SetupCardiovascular()
   SELiquidCompartmentGraph& gCombinedCardiovascular = m_Compartments->GetActiveCardiovascularGraph();
   gCombinedCardiovascular.AddGraph(gCardiovascular);
   gCombinedCardiovascular.StateChange();
+}
+
+void BioGears::SetupCerebral()
+{
 }
 
 void BioGears::SetupRenal()

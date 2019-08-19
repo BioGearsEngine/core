@@ -41,6 +41,7 @@ public:
 
   SELiquidCompartmentGraph& GetActiveCardiovascularGraph();
   SELiquidCompartmentGraph& GetCardiovascularGraph();
+  SELiquidCompartmentGraph& GetCerebralGraph();
   SELiquidCompartmentGraph& GetRenalGraph();
 
   SEGasCompartmentGraph& GetActiveRespiratoryGraph();
@@ -109,6 +110,7 @@ protected:
 
   SELiquidCompartmentGraph* m_CombinedCardiovascularGraph;
   SELiquidCompartmentGraph* m_CardiovascularGraph;
+  SELiquidCompartmentGraph* m_CerebralGraph;
   SELiquidCompartmentGraph* m_RenalGraph;
 
   SEGasCompartmentGraph* m_RespiratoryGraph;

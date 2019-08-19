@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGearsCircuits.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -34,6 +34,7 @@ void BioGearsCircuits::Clear()
   SECircuitManager::Clear();
   m_CombinedCardiovascularCircuit = nullptr;
   m_CardiovascularCircuit = nullptr;
+  m_CerebralCircuit = nullptr;
   m_RenalCircuit = nullptr;
   m_RespiratoryCircuit = nullptr;
   m_AnesthesiaMachineCircuit = nullptr;
@@ -57,6 +58,11 @@ bool BioGearsCircuits::Load(const CDM::CircuitManagerData& in)
   m_CardiovascularCircuit = GetFluidCircuit(BGE::Circuits::Cardiovascular);
   if (m_CardiovascularCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::Cardiovascular));
+    return false;
+  }
+  m_CerebralCircuit = GetFluidCircuit(BGE::Circuits::Cerebral);
+  if (m_CardiovascularCircuit == nullptr) {
+    Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::Cerebral));
     return false;
   }
   m_RenalCircuit = GetFluidCircuit(BGE::Circuits::Renal);
@@ -131,6 +137,13 @@ SEFluidCircuit& BioGearsCircuits::GetCardiovascularCircuit()
     m_CardiovascularCircuit = &CreateFluidCircuit(BGE::Circuits::Cardiovascular);
   return *m_CardiovascularCircuit;
 }
+SEFluidCircuit& BioGearsCircuits::GetCerebralCircuit()
+{
+  if (m_CerebralCircuit == nullptr)
+    m_CerebralCircuit = &CreateFluidCircuit(BGE::Circuits::Cerebral);
+  return *m_CerebralCircuit;
+}
+
 SEFluidCircuit& BioGearsCircuits::GetRenalCircuit()
 {
   if (m_RenalCircuit == nullptr)

@@ -90,6 +90,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_MachineOpenResistance(nullptr)
   , m_RespiratoryClosedResistance(nullptr)
   , m_RespiratoryOpenResistance(nullptr)
+  , m_TestCerebral(CDM::enumOnOff::value(-1))
   // Constants
   , m_OxygenMetabolicConstant(nullptr)
   , m_StefanBoltzmann(nullptr)
@@ -206,6 +207,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_MachineOpenResistance);
   SAFE_DELETE(m_RespiratoryClosedResistance);
   SAFE_DELETE(m_RespiratoryOpenResistance);
+  m_TestCerebral = CDM::enumOnOff::value(-1);
 
   // Constants
   SAFE_DELETE(m_OxygenMetabolicConstant);
@@ -333,6 +335,8 @@ void BioGearsConfiguration::Initialize()
   GetMachineOpenResistance().SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
   GetRespiratoryClosedResistance().SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
   GetRespiratoryOpenResistance().SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
+
+  m_TestCerebral = CDM::enumOnOff::On;
 
   // Constants
   GetOxygenMetabolicConstant().SetValue(9.0);
