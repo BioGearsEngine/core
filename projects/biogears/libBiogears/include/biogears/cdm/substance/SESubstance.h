@@ -43,8 +43,6 @@ class SEScalarPressure;
 class PressureUnit;
 class SEScalarTimeMassPerVolume;
 class TimeMassPerVolumeUnit;
-class SEScalarTime;
-class TimeUnit;
 
 class BIOGEARS_API SESubstance : public Loggable {
 public:
@@ -139,15 +137,6 @@ public:
   virtual SEScalarMass& GetSystemicMassCleared();
   virtual double GetSystemicMassCleared(const MassUnit& unit) const;
 
-  virtual bool HasTimeAboveMIC() const;
-  virtual SEScalarTime& GetTimeAboveMIC();
-  virtual double GetTimeAboveMIC(const TimeUnit& unit) const;
-
-  virtual bool HasTimeAfterDose() const;
-  virtual SEScalarTime& GetTimeAfterDose();
-  virtual double GetTimeAfterDose(const TimeUnit& unit) const;
-  void ResetTimeAfterDose();
-
   virtual bool HasTissueConcentration() const;
   virtual SEScalarMassPerVolume& GetTissueConcentration();
   virtual double GetTissueConcentration(const MassPerVolumeUnit& unit) const;
@@ -212,8 +201,6 @@ protected:
   SEScalarMass* m_MassInTissue;
   SEScalarMassPerVolume* m_PlasmaConcentration;
   SEScalarMass* m_SystemicMassCleared;
-  SEScalarTime* m_TimeAboveMIC;
-  SEScalarTime* m_TimeAfterDose;
   SEScalarMassPerVolume* m_TissueConcentration;
 
   SEScalarVolumePerTime* m_AlveolarTransfer;
