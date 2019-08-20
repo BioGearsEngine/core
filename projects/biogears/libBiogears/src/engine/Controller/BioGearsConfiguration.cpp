@@ -90,7 +90,6 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_MachineOpenResistance(nullptr)
   , m_RespiratoryClosedResistance(nullptr)
   , m_RespiratoryOpenResistance(nullptr)
-  , m_TestCerebral(CDM::enumOnOff::value(-1))
   // Constants
   , m_OxygenMetabolicConstant(nullptr)
   , m_StefanBoltzmann(nullptr)
@@ -126,6 +125,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_ProteinToUreaFraction(nullptr)
   , m_WaterDigestionRate(nullptr)
   // Nervous
+  , m_CerebralEnabled(CDM::enumOnOff::value(-1))
   , m_PupilDiameterBaseline(nullptr)
   // Renal
   , m_RenalEnabled(CDM::enumOnOff::value(-1))
@@ -207,7 +207,6 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_MachineOpenResistance);
   SAFE_DELETE(m_RespiratoryClosedResistance);
   SAFE_DELETE(m_RespiratoryOpenResistance);
-  m_TestCerebral = CDM::enumOnOff::value(-1);
 
   // Constants
   SAFE_DELETE(m_OxygenMetabolicConstant);
@@ -249,6 +248,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_WaterDigestionRate);
 
   // Nervous
+  m_CerebralEnabled = CDM::enumOnOff::value(-1);
   SAFE_DELETE(m_PupilDiameterBaseline);
 
   // Renal
@@ -336,8 +336,6 @@ void BioGearsConfiguration::Initialize()
   GetRespiratoryClosedResistance().SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
   GetRespiratoryOpenResistance().SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
 
-  m_TestCerebral = CDM::enumOnOff::On;
-
   // Constants
   GetOxygenMetabolicConstant().SetValue(9.0);
   GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); //http://physics.nist.gov/cuu/Constants/
@@ -379,6 +377,7 @@ void BioGearsConfiguration::Initialize()
   GetWaterDigestionRate().SetValue(0.417, VolumePerTimeUnit::mL_Per_s); // Peronnet2012Pharmacokinetic, Estimated from 300mL H20 being absorbed in 9.5-12m
 
   // Nervous
+  m_CerebralEnabled = CDM::enumOnOff::On;
   GetPupilDiameterBaseline().SetValue(4, LengthUnit::mm);
 
   // Renal
@@ -660,8 +659,10 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   // Nervous
   if (in.NervousConfiguration().present()) {
     const CDM::NervousConfigurationData& config = in.NervousConfiguration().get();
-    if (config.PupilDiameterBaseline().present())
-      GetPupilDiameterBaseline().Load(config.PupilDiameterBaseline().get());
+    if (config.EnableCerebral().present())
+      EnableCerebral(config.EnableCerebral().get());
+	if (config.PupilDiameterBaseline().present())
+	  GetPupilDiameterBaseline().Load(config.PupilDiameterBaseline().get());
   }
 
   // Renal
@@ -907,6 +908,8 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
 
   // Nervous
   CDM::NervousConfigurationData* n(new CDM::NervousConfigurationData());
+  if (HasEnableCerebral())
+    n->EnableCerebral(m_CerebralEnabled);
   if (HasPupilDiameterBaseline())
     n->PupilDiameterBaseline(std::unique_ptr<CDM::ScalarLengthData>(m_PupilDiameterBaseline->Unload()));
   data.NervousConfiguration(std::unique_ptr<CDM::NervousConfigurationData>(n));

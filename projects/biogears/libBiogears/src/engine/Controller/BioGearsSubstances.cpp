@@ -217,7 +217,15 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   // Bootstrapped values from many runs (using standard patient)
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Aorta), Hb_total_mM, 0.974905, 0.129608, 0.02817, 1.3012, 25.9389, 7.39961);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Bone), Hb_total_mM, 0.830363, 0.0616873, 0.13056, 1.3881, 26.0892, 7.37404);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Brain), Hb_total_mM, 0.827281, 0.0612181, 0.133288, 1.38958, 26.0916, 7.37362);
+  if (m_data.GetConfiguration().IsCerebralEnabled()) {
+    InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::NeckArteries), Hb_total_mM, 0.974905, 0.129608, 0.02817, 1.3012, 25.9389, 7.39961);
+    InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::CerebralArteries), Hb_total_mM, 0.827281, 0.0612181, 0.133288, 1.38958, 26.0916, 7.37362);
+    InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::CerebralCapillaries), Hb_total_mM, 0.827281, 0.0612181, 0.133288, 1.38958, 26.0916, 7.37362);
+    InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::CerebralVeins), Hb_total_mM, 0.827281, 0.0612181, 0.133288, 1.38958, 26.0916, 7.37362);
+    InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::NeckVeins), Hb_total_mM, 0.813122, 0.0591948, 0.146203, 1.39669, 26.1035, 7.3716);
+  } else {
+    InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Brain), Hb_total_mM, 0.827281, 0.0612181, 0.133288, 1.38958, 26.0916, 7.37362);
+  }
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Fat), Hb_total_mM, 0.830303, 0.0616616, 0.128914, 1.38717, 26.0876, 7.3743);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LargeIntestine), Hb_total_mM, 0.807872, 0.0584747, 0.149044, 1.39821, 26.106, 7.37117);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftAfferentArteriole), Hb_total_mM, 0.927186, 0.0870192, 0.0595885, 1.35232, 26.0285, 7.38437);
@@ -267,7 +275,11 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::VenaCava), Hb_total_mM, 0.813122, 0.0591948, 0.146203, 1.39669, 26.1035, 7.3716);
 
   InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Bone), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Bone));
-  InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Brain), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Brain));
+  if (m_data.GetConfiguration().IsCerebralEnabled()) {
+    InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Brain), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::CerebralCapillaries));
+  } else {
+    InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Brain), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Brain));
+  }
   InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Fat), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Fat));
   InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::Gut), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::Gut));
   InitializeBloodGases(*cmpts.GetTissueCompartment(BGE::TissueCompartment::LeftKidney), *cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftKidney));

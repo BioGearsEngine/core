@@ -271,10 +271,6 @@ public:
   virtual SEScalarFlowResistance& GetRespiratoryOpenResistance();
   virtual double GetRespiratoryOpenResistance(const FlowResistanceUnit& unit) const;
 
-  //Functions to flag cerebral circuit test
-  virtual bool HasTestCerebralFlag() const { return m_TestCerebral != (CDM::enumOnOff::value)-1; }
-  virtual bool TestCerebral() const { return m_TestCerebral == CDM::enumOnOff::On; }
-
 protected:
   SEScalarFlowResistance* m_CardiovascularOpenResistance;
   SEScalarElectricResistance* m_DefaultClosedElectricResistance;
@@ -287,9 +283,6 @@ protected:
   SEScalarFlowResistance* m_MachineOpenResistance;
   SEScalarFlowResistance* m_RespiratoryClosedResistance;
   SEScalarFlowResistance* m_RespiratoryOpenResistance;
-
-  //Flag to test new cerebral circuit
-  CDM::enumOnOff::value m_TestCerebral;
 
   ////////////////
   /** Constants */
@@ -474,7 +467,12 @@ public:
   virtual SEScalarLength& GetPupilDiameterBaseline();
   virtual double GetPupilDiameterBaseline(const LengthUnit& unit) const;
 
+  virtual bool HasEnableCerebral() const { return m_CerebralEnabled != (CDM::enumOnOff::value)-1; }
+  virtual bool IsCerebralEnabled() const { return m_CerebralEnabled == CDM::enumOnOff::On; }
+  virtual void EnableCerebral(CDM::enumOnOff::value s) { m_CerebralEnabled = s; }
+
 protected:
+  CDM::enumOnOff::value m_CerebralEnabled;
   SEScalarLength* m_PupilDiameterBaseline;
 
   ////////////

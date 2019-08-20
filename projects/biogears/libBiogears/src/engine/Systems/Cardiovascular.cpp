@@ -59,11 +59,7 @@ Cardiovascular::Cardiovascular(BioGears& bg)
   , m_transporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, bg.GetLogger())
 {
   Clear();
-  m_TuningFile = "./Tuning/CerebralCombined.csv";
-  m_CerebralTuning = "";
-  if (m_data.GetConfiguration().TestCerebral()) {
-    m_CerebralTuning = "./Tuning/CerebralCircuit.csv";
-  }
+  m_TuningFile = "";
 }
 
 Cardiovascular::~Cardiovascular()
@@ -367,6 +363,10 @@ void Cardiovascular::SetUp()
 
   m_pBrainResistanceDownstream = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Brain1ToBrain2);
   m_pBrainResistanceUpstream = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta1ToBrain1);
+  if (m_data.GetConfiguration().IsCerebralEnabled()) {
+    m_pBrainResistanceUpstream = m_CirculatoryCircuit->GetPath(BGE::CerebralPath::NeckArteriesToCerebralArteries1);
+    m_pBrainResistanceDownstream = m_CirculatoryCircuit->GetPath(BGE::CerebralPath::CerebralVeins1ToCerebralVeins2);
+  }
 
   m_pVenaCavaHemorrhage = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaBleed);
   m_pGndToPericardium = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::GroundToPericardium1);
@@ -391,6 +391,9 @@ void Cardiovascular::SetUp()
   for (SEFluidCircuitPath* path : m_CirculatoryCircuit->GetPaths()) {
     if (&path->GetSourceNode() == aorta && path->HasResistanceBaseline()) {
       if (&path->GetTargetNode() != ground) {
+        if (m_data.GetConfiguration().IsCerebralEnabled() && path->GetTargetNode().GetName() == BGE::CerebralNode::NeckArteries) {
+            continue;
+        }
         m_systemicResistancePaths.push_back(path);
         venousNodes.push_back(&path->GetTargetNode());
       }
@@ -790,8 +793,13 @@ void Cardiovascular::CalculateVitalSigns()
   GetPulmonaryArterialPressure().SetValue(PulmonaryArteryNodePressure_mmHg, PressureUnit::mmHg);
   GetCentralVenousPressure().SetValue(VenaCavaPressure_mmHg, PressureUnit::mmHg);
   GetCerebralBloodFlow().Set(m_Brain->GetInFlow());
-  GetIntracranialPressure().Set(m_Brain->GetPressure());
-  GetCerebralPerfusionPressure().SetValue(GetMeanArterialPressure(PressureUnit::mmHg) - GetIntracranialPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  if (m_data.GetConfiguration().IsCerebralEnabled()) {
+    GetIntracranialPressure().Set(m_CirculatoryCircuit->GetNode(BGE::CerebralNode::SpinalFluid)->GetPressure());
+    GetCerebralPerfusionPressure().SetValue(GetMeanArterialPressure(PressureUnit::mmHg) - GetIntracranialPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  } else {
+    GetIntracranialPressure().Set(m_Brain->GetPressure());
+    GetCerebralPerfusionPressure().SetValue(GetMeanArterialPressure(PressureUnit::mmHg) - GetIntracranialPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  }
 
   if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
 
@@ -1007,13 +1015,15 @@ void Cardiovascular::TraumaticBrainInjury()
   SEBrainInjury* b = m_data.GetActions().GetPatientActions().GetBrainInjury();
   double severity = b->GetSeverity().GetValue();
 
+  SEFluidCircuitPath* brainToSpinal = m_CirculatoryCircuit->GetPath(BGE::CerebralPath::CerebralArteries2ToSpinalFluid);
+
   //Interpolate linearly between multipliers of 1 (for severity of 0) to max (for severity of 1)
   //These multipliers are chosen to result in ICP > 25 mmHg and CBF < 1.8 mL/s
   //The commented out values are from the unit test; not sure why they have to be scaled by .5 in engine to get good response
-  //double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 4.87814, severity);
-  double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 2.4, severity); //2.43907
-  //double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 30.7993, severity);
-  double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 15.0, severity); //15.3997
+  double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 4.87814, severity);
+  //double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 2.4, severity); //2.43907
+  double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 30.7993, severity);
+  //double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 15.0, severity); //15.3997
 
   //We don't want to shoot the resistances up to their new values in a single time step because this causes very sharp changes in cerebral metrics
   //Use a simple proportional control to ramp up to target resistances.  Time constant determined empirically based on previous baselines
@@ -1028,8 +1038,15 @@ void Cardiovascular::TraumaticBrainInjury()
   double lastDownstream = m_pBrainResistanceDownstream->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
   double downstreamDelta = (targetDownstream - lastDownstream) * m_dT_s / timeConstant_s;
 
+  double intracranialBaseline = brainToSpinal->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+  double targetSpinal = GeneralMath::ResistanceFunction(10.0, intracranialBaseline / 5.0, intracranialBaseline, severity);
+  //double targetSpinal = brainToSpinal->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL) * (1.0 / usMult);
+  double lastSpinal = brainToSpinal->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  double spinalDelta = (targetSpinal - lastSpinal) * m_dT_s / timeConstant_s;
+
   m_pBrainResistanceDownstream->GetNextResistance().SetValue(lastDownstream + downstreamDelta, FlowResistanceUnit::mmHg_s_Per_mL);
   m_pBrainResistanceUpstream->GetNextResistance().SetValue(lastUpstream + upstreamDelta, FlowResistanceUnit::mmHg_s_Per_mL);
+  brainToSpinal->GetNextResistance().SetValue(lastSpinal + spinalDelta, FlowResistanceUnit::mmHg_s_Per_mL);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1674,15 +1691,6 @@ void Cardiovascular::TuneCircuit()
 
         circuitTrk.StreamTrackToFile(circuitFile);
       }
-
-      if (!m_CerebralTuning.empty()) {
-        cerebralTrk.Track(time_s, m_data.GetCircuits().GetCerebralCircuit());
-        if (time_s == 0) {
-          cerebralTrk.CreateFile(m_CerebralTuning.c_str(), cerebralFile);
-        }
-        cerebralTrk.StreamTrackToFile(cerebralFile);
-      }
-
       time_s += m_dT_s;
     }
     if (!m_TuneCircuit) {

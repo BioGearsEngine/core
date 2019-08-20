@@ -656,17 +656,17 @@ void Nervous::SetPupilEffects()
 
       if (b->GetType() == CDM::enumBrainInjuryType::Diffuse) {
         //https://www.wolframalpha.com/input/?i=y%3D(1+%2F+(1+%2B+exp(-2.0*(x+-+24))))+from+18%3Cx%3C28
-        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
+        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 20))));
         //https://www.wolframalpha.com/input/?i=y%3D-.001*pow(10,+.27*(x+-+15))+from+18%3Cx%3C28+and+-1%3Cy%3C0
-        leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 15));
+        leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 13));
         rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
         rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
       } else if (b->GetType() == CDM::enumBrainInjuryType::LeftFocal) {
-        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
-        leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 15));
+        leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 20))));
+        leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 13));
       } else if (b->GetType() == CDM::enumBrainInjuryType::RightFocal) {
-        rightPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 24))));
-        rightPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 15));
+        rightPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 20))));
+        rightPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 13));
       }
     }
   }

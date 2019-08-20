@@ -175,6 +175,7 @@ namespace tatrc {
 
         DEFINE_STATIC_STRING_EX(BoneExtracellular, BoneTissueExtracellular);
         DEFINE_STATIC_STRING_EX(BrainExtracellular, BrainTissueExtracellular);
+        DEFINE_STATIC_STRING(CerebralSpinalFluid);
         DEFINE_STATIC_STRING_EX(FatExtracellular, FatTissueExtracellular);
         DEFINE_STATIC_STRING_EX(GutExtracellular, GutTissueExtracellular);
         DEFINE_STATIC_STRING_EX(LeftKidneyExtracellular, LeftKidneyTissueExtracellular);
@@ -204,7 +205,7 @@ namespace tatrc {
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            BoneExtracellular, BrainExtracellular, FatExtracellular, GutExtracellular, LeftKidneyExtracellular, LeftLungExtracellular, LiverExtracellular, MuscleExtracellular, MyocardiumExtracellular, RightKidneyExtracellular, RightLungExtracellular, SkinExtracellular, SpleenExtracellular, BoneIntracellular, BrainIntracellular, FatIntracellular, GutIntracellular, LeftKidneyIntracellular, LeftLungIntracellular, LiverIntracellular, MuscleIntracellular, MyocardiumIntracellular, RightKidneyIntracellular, RightLungIntracellular, SkinIntracellular, SpleenIntracellular
+            BoneExtracellular, BrainExtracellular, CerebralSpinalFluid, FatExtracellular, GutExtracellular, LeftKidneyExtracellular, LeftLungExtracellular, LiverExtracellular, MuscleExtracellular, MyocardiumExtracellular, RightKidneyExtracellular, RightLungExtracellular, SkinExtracellular, SpleenExtracellular, BoneIntracellular, BrainIntracellular, FatIntracellular, GutIntracellular, LeftKidneyIntracellular, LeftLungIntracellular, LiverIntracellular, MuscleIntracellular, MyocardiumIntracellular, RightKidneyIntracellular, RightLungIntracellular, SkinIntracellular, SpleenIntracellular
           };
           return _values;
         }
@@ -226,8 +227,6 @@ namespace tatrc {
         DEFINE_STATIC_STRING(CerebralCapillaries);
         DEFINE_STATIC_STRING(CerebralVeins);
         DEFINE_STATIC_STRING(NeckVeins);
-        DEFINE_STATIC_STRING_EX(Cerebral, CerebralVasculature);
-        DEFINE_STATIC_STRING(CerebralSpinalFluid);
 
         // Pulmonary
         DEFINE_STATIC_STRING(PulmonaryArteries);
@@ -286,7 +285,7 @@ namespace tatrc {
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            Aorta, Heart, Myocardium, LeftHeart, RightHeart, Pericardium, VenaCava, CerebralArteries, CerebralCapillaries, CerebralVeins, NeckArteries, NeckVeins, Cerebral, CerebralSpinalFluid, PulmonaryArteries, PulmonaryCapillaries, PulmonaryVeins, Lungs, LeftLung, LeftPulmonaryArteries, LeftPulmonaryCapillaries, LeftPulmonaryVeins, RightLung, RightPulmonaryArteries, RightPulmonaryCapillaries, RightPulmonaryVeins, Kidneys, LeftKidney, LeftRenalArtery, LeftNephron, LeftAfferentArteriole, LeftGlomerularCapillaries, LeftEfferentArteriole, LeftPeritubularCapillaries, LeftBowmansCapsules, LeftTubules, LeftRenalVein, RightKidney, RightRenalArtery, RightNephron, RightAfferentArteriole, RightGlomerularCapillaries, RightEfferentArteriole, RightPeritubularCapillaries, RightBowmansCapsules, RightTubules, RightRenalVein, Bone, Brain, Fat, Gut, Splanchnic, SmallIntestine, LargeIntestine, Liver, Spleen, Skin, Muscle, LeftArm, LeftLeg, RightArm, RightLeg
+            Aorta, Heart, Myocardium, LeftHeart, RightHeart, Pericardium, VenaCava, CerebralArteries, CerebralCapillaries, CerebralVeins, NeckArteries, NeckVeins, PulmonaryArteries, PulmonaryCapillaries, PulmonaryVeins, Lungs, LeftLung, LeftPulmonaryArteries, LeftPulmonaryCapillaries, LeftPulmonaryVeins, RightLung, RightPulmonaryArteries, RightPulmonaryCapillaries, RightPulmonaryVeins, Kidneys, LeftKidney, LeftRenalArtery, LeftNephron, LeftAfferentArteriole, LeftGlomerularCapillaries, LeftEfferentArteriole, LeftPeritubularCapillaries, LeftBowmansCapsules, LeftTubules, LeftRenalVein, RightKidney, RightRenalArtery, RightNephron, RightAfferentArteriole, RightGlomerularCapillaries, RightEfferentArteriole, RightPeritubularCapillaries, RightBowmansCapsules, RightTubules, RightRenalVein, Bone, Brain, Fat, Gut, Splanchnic, SmallIntestine, LargeIntestine, Liver, Spleen, Skin, Muscle, LeftArm, LeftLeg, RightArm, RightLeg
             //,Ground
           };
           return _values;
@@ -432,8 +431,8 @@ namespace tatrc {
           static std::vector<std::string> _values = {
             VenaCavaToRightHeart, RightHeartToLeftPulmonaryArteries, LeftPulmonaryArteriesToCapillaries, LeftPulmonaryArteriesToVeins, LeftPulmonaryCapillariesToVeins, LeftPulmonaryVeinsToLeftHeart, RightHeartToRightPulmonaryArteries, RightPulmonaryArteriesToCapillaries, RightPulmonaryArteriesToVeins, RightPulmonaryCapillariesToVeins, RightPulmonaryVeinsToLeftHeart, LeftHeartToAorta, AortaToBone, BoneToVenaCava, AortaToBrain, BrainToVenaCava, AortaToFat, FatToVenaCava, AortaToLargeIntestine, LargeIntestineToLiver, AortaToLeftArm, LeftArmToVenaCava, AortaToLeftKidney, LeftKidneyToVenaCava, AortaToLeftLeg, LeftLegToVenaCava, AortaToLiver, LiverToVenaCava, AortaToMuscle, MuscleToVenaCava, AortaToMyocardium, MyocardiumToVenaCava, AortaToRightArm, RightArmToVenaCava, AortaToRightKidney, RightKidneyToVenaCava, AortaToRightLeg, RightLegToVenaCava, AortaToSkin, SkinToVenaCava, AortaToSmallIntestine, SmallIntestineToLiver, AortaToSplanchnic, SplanchnicToLiver, AortaToSpleen, SpleenToLiver
 
-			, 
-			NeckArteriesToCerebralArteries, CerebralArteriesToCerebralCapillaries, CerebralCapillariesToCerebralVeins, CerebralVeinsToNeckVeins
+            ,
+            AortaToNeckArteries, NeckArteriesToCerebralArteries, CerebralArteriesToCerebralCapillaries, CerebralCapillariesToCerebralVeins, CerebralVeinsToNeckVeins, NeckVeinsToVenaCava
 
             ,
             BoneVascularToTissue, BrainVascularToTissue, FatVascularToTissue, SmallIntestineVascularToTissue, LargeIntestineVascularToTissue, SplanchnicVascularToTissue, LeftKidneyVascularToTissue, LeftLungVascularToTissue, LiverVascularToTissue, MuscleVascularToTissue, MyocardiumVascularToTissue, RightKidneyVascularToTissue, RightLungVascularToTissue, SkinVascularToTissue, SpleenVascularToTissue

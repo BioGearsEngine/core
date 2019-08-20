@@ -158,7 +158,6 @@ bool BioGearsCompartments::Load(const CDM::CompartmentManagerData& in, SECircuit
 void BioGearsCompartments::StateChange()
 {
   SECompartmentManager::StateChange();
-
   // Hook up our compartment categories
   // Anatomy
   SORT_CMPTS(Chyme, Liquid);
@@ -185,8 +184,9 @@ void BioGearsCompartments::StateChange()
       m_IntracellularFluid[t] = cmpt;
     }
   }
-  if (m_data.GetConfiguration().IsRenalEnabled())
+  if (m_data.GetConfiguration().IsRenalEnabled()) {
     SORT_CMPTS(Urine, Liquid);
+  } 
   SORT_CMPTS(Vascular, Liquid);
   // Equipment
   SORT_CMPTS(AnesthesiaMachine, Gas);
