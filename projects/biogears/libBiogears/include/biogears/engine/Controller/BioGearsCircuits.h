@@ -449,6 +449,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Brain1ToGround);
         DEFINE_STATIC_STRING(Brain1ToBrain2);
         DEFINE_STATIC_STRING(Brain2ToVenaCava);
+        DEFINE_STATIC_STRING(Aorta1ToNeckArteries);
+        DEFINE_STATIC_STRING(NeckVeinsToVenaCava);
         // Bone
         DEFINE_STATIC_STRING(Aorta1ToBone1);
         DEFINE_STATIC_STRING(Bone1ToGround);
@@ -563,10 +565,10 @@ namespace tatrc {
         DEFINE_STATIC_STRING(NeckVeins);
         DEFINE_STATIC_STRING(CerebralVeinsCheck);
         DEFINE_STATIC_STRING(SpinalFluid);
+        DEFINE_STATIC_STRING(Ground);
       };
 
       namespace CerebralPath {
-        DEFINE_STATIC_STRING(Aorta1ToNeckArteries);
         DEFINE_STATIC_STRING(NeckArteriesToCerebralArteries1);
         DEFINE_STATIC_STRING(NeckArteriesToGround);
         DEFINE_STATIC_STRING(CerebralArteries1ToCerebralArteries2);
@@ -578,10 +580,9 @@ namespace tatrc {
         DEFINE_STATIC_STRING(CerebralVeins1ToSpinalFluid);
         DEFINE_STATIC_STRING(CerebralVeins1ToCerebralVeins2);
         DEFINE_STATIC_STRING(CerebralVeinsCheckToCerebralVeins2);
-        DEFINE_STATIC_STRING(CerebralVeinsCheckToSpinalFluid);
+        DEFINE_STATIC_STRING(SpinalFluidToCerebralVeinsCheck);
         DEFINE_STATIC_STRING(CerebralVeins2ToNeckVeins);
         DEFINE_STATIC_STRING(NeckVeinsToGround);
-        DEFINE_STATIC_STRING(NeckVeinsToVenaCava)
         DEFINE_STATIC_STRING(SpinalFluidToGround);
       }
 

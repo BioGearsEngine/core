@@ -160,6 +160,7 @@ private:
   double m_dT_s;
   bool m_TuneCircuit = true;
   std::string m_TuningFile;
+  std::string m_CerebralTuning;
 
   double m_minIndividialSystemicResistance__mmHg_s_Per_mL;
 

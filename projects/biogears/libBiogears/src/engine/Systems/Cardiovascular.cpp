@@ -59,7 +59,11 @@ Cardiovascular::Cardiovascular(BioGears& bg)
   , m_transporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, bg.GetLogger())
 {
   Clear();
-  m_TuningFile = "";
+  m_TuningFile = "./Tuning/CerebralCombined.csv";
+  m_CerebralTuning = "";
+  if (m_data.GetConfiguration().TestCerebral()) {
+    m_CerebralTuning = "./Tuning/CerebralCircuit.csv";
+  }
 }
 
 Cardiovascular::~Cardiovascular()
@@ -392,6 +396,7 @@ void Cardiovascular::SetUp()
       }
     }
   }
+
   for (SEFluidCircuitPath* path : m_CirculatoryCircuit->GetPaths()) {
     for (SEFluidCircuitNode* node : venousNodes) {
       if (&path->GetSourceNode() == node) {
@@ -1559,6 +1564,9 @@ void Cardiovascular::TuneCircuit()
   DataTrack circuitTrk;
   std::ofstream circuitFile;
 
+  DataTrack cerebralTrk;
+  std::ofstream cerebralFile;
+
   bool success = false;
   double systolicTarget_mmHg = m_patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   double diastolicTarget_mmHg = m_patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
@@ -1660,10 +1668,21 @@ void Cardiovascular::TuneCircuit()
         circuitTrk.Track("CardiacOutput_mL_per_s", time_s, cardiacOutput_mL_Per_min);
         circuitTrk.Track("BloodVolume_mL", time_s, blood_mL);
 
-        if (time_s == 0)
+        if (time_s == 0) {
           circuitTrk.CreateFile(m_TuningFile.c_str(), circuitFile);
+        }
+
         circuitTrk.StreamTrackToFile(circuitFile);
       }
+
+      if (!m_CerebralTuning.empty()) {
+        cerebralTrk.Track(time_s, m_data.GetCircuits().GetCerebralCircuit());
+        if (time_s == 0) {
+          cerebralTrk.CreateFile(m_CerebralTuning.c_str(), cerebralFile);
+        }
+        cerebralTrk.StreamTrackToFile(cerebralFile);
+      }
+
       time_s += m_dT_s;
     }
     if (!m_TuneCircuit) {
