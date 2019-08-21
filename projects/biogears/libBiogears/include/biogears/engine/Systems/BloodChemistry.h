@@ -123,9 +123,7 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaKetones;
   SELiquidSubstanceQuantity* m_venaCavaLactate;
   SELiquidSubstanceQuantity* m_venaCavaPotassium;
-  SELiquidSubstanceQuantity* m_venaCavaRBC_A;
-  SELiquidSubstanceQuantity* m_venaCavaRBC_B;
-  SELiquidSubstanceQuantity* m_venaCavaRBC_O;
+  SELiquidSubstanceQuantity* m_venaCavaRBC;
   SELiquidSubstanceQuantity* m_venaCavaSodium;
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;

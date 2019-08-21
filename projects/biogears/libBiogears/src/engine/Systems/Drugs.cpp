@@ -452,14 +452,6 @@ void Drugs::AdministerSubstanceOral()
 //--------------------------------------------------------------------------------------------------
 void Drugs::AdministerSubstanceCompoundInfusion()
 {
-
-  // Check Blood Type here, starting with Rh factor. Rh factor is just a simple yes no based on patient blood type and infusion type
-  // IF mismatch, minor reaction, tracked by RhSensitivity parameter (which will affect reaction severity). Severity will decrease with time, removing symptoms, but sensitivity will remain unchanged (in case of numerous transactions)
-
-  // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
-  //Then check for three mismatch scenarios using OR statement. If so, go to HTR function [below]
-
-
   const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& infusions = m_data.GetActions().GetPatientActions().GetSubstanceCompoundInfusions();
   if (infusions.empty())
     return;
@@ -488,6 +480,28 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     totalRate_mL_Per_s += rate_mL_Per_s;
     volumeRemaining_mL = infusion->GetBagVolume().GetValue(VolumeUnit::mL);
     volumeToAdminister_mL = rate_mL_Per_s * m_dt_s;
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // Check Blood Type here, starting with Rh factor. Rh factor is just a simple yes no based on patient blood type and infusion type
+    if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive))) {
+      // IF mismatch, minor reaction, tracked by RhSensitivity parameter (which will affect reaction severity). Severity will decrease with time, removing symptoms, but sensitivity will remain unchanged (in case of numerous transactions)
+      // may want to bypass sensitization for first pass through (more important for pregnancy)
+    }
+
+    // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
+    //Then check for three mismatch scenarios using OR statement. If so, go to HTR function [below]
+
+    if ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::AB)) || infusion->GetAdministeredBloodAntigen() == (CDM::enumBloodAntigen::O)) {
+      return;
+    } else if (((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::A))
+               || ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::B))
+               || ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::O))) {
+      CalculateHemolyticTransfusionReaction();
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
     if (volumeRemaining_mL < volumeToAdminister_mL) {
       volumeToAdminister_mL = volumeRemaining_mL;
       emptyBags.push_back(compound);

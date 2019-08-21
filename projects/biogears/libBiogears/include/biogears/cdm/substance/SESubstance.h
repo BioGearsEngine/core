@@ -102,7 +102,7 @@ public:
   virtual double GetMembraneResistance(const ElectricResistanceUnit& unit) const;
 
   // Cellular and Blood
-  CDM::enumBloodTypeABO::value SESubstance::GetAntigen() const;
+  CDM::enumBloodTypeABO::value GetAntigen() const;
   void SESubstance::SetAntigen(CDM::enumBloodTypeABO::value bloodAntigen);
   bool SESubstance::HasAntigen() const;
   void SESubstance::InvalidateAntigen();

@@ -94,9 +94,9 @@ public:
 
   inline SESubstance& GetPlasma() { return *m_plasma; }
   inline SESubstance& GetPlatelets() { return *m_platelets; }
-  inline SESubstance& GetRBC_A() { return *m_RBCa; }
-  inline SESubstance& GetRBC_B() { return *m_RBCb; }
-  inline SESubstance& GetRBC_O() { return *m_RBCo; }
+  inline SESubstance& GetAntigen_A() { return *m_AntigenA; }
+  inline SESubstance& GetAntigen_B() { return *m_AntigenB; }
+  inline SESubstance& GetRBC() { return *m_RBC; }
   inline SESubstance& GetWBC() { return *m_WBC; }
 
   void CalculateGenericClearance(double volumeCleared_mL, SELiquidCompartment& cmpt, SESubstance& sub, SEScalarMass* cleared = nullptr);
@@ -162,9 +162,9 @@ protected:
 
   SESubstance* m_plasma;
   SESubstance* m_platelets;
-  SESubstance* m_RBCa;
-  SESubstance* m_RBCb;
-  SESubstance* m_RBCo;
+  SESubstance* m_AntigenA;
+  SESubstance* m_AntigenB;
+  SESubstance* m_RBC;
   SESubstance* m_WBC;
 
   bool m_isCOActive;

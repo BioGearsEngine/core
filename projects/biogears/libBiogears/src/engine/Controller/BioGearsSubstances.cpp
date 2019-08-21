@@ -70,9 +70,9 @@ void BioGearsSubstances::Clear()
 
   m_plasma = nullptr;
   m_platelets = nullptr;
-  m_RBCa = nullptr;
-  m_RBCb = nullptr;
-  m_RBCo = nullptr;
+  m_AntigenA = nullptr;
+  m_AntigenB = nullptr;
+  m_RBC = nullptr;
   m_WBC = nullptr;
 
 }
@@ -120,37 +120,15 @@ void BioGearsSubstances::InitializeSubstances()
 
   AddActiveSubstance(*m_plasma);
   AddActiveSubstance(*m_platelets);
-  AddActiveSubstance(*m_RBCa);
-  AddActiveSubstance(*m_RBCb);
-  AddActiveSubstance(*m_RBCo);
+  AddActiveSubstance(*m_AntigenA);
+  AddActiveSubstance(*m_AntigenB);
+  AddActiveSubstance(*m_RBC);
   AddActiveSubstance(*m_WBC);
 
   InitializeGasCompartments();
   InitializeLiquidCompartmentGases();
   InitializeLiquidCompartmentNonGases();
 
-  /*
-  //Initialize Blood Type
-  SESubstance& rbcA = m_data.GetSubstances().GetRBC_A();
-  rbcA.GetCellCount().SetReadOnly(false);
-  SESubstance& rbcB = m_data.GetSubstances().GetRBC_B();
-  rbcB.GetCellCount().SetReadOnly(false);
-  SESubstance& rbcO = m_data.GetSubstances().GetRBC_O();
-  rbcO.GetCellCount().SetReadOnly(false);
-  if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::A) {
-    rbcB.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::B) {
-    rbcA.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::O) {
-    rbcA.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    rbcB.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::AB) {
-    rbcA.GetCellCount().SetValue(0.5 * rbcA.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
-    rbcB.GetCellCount().SetValue(0.5 * rbcB.GetCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
-    rbcO.GetCellCount().SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-  }*/
 }
 
 void BioGearsSubstances::InitializeGasCompartments()
@@ -872,31 +850,28 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
 
   //BLOOD COMPONENTS//
   //Initialize Blood Type
-  SEScalarAmountPerVolume molarityA;
-  SEScalarAmountPerVolume molarityB;
-  SEScalarAmountPerVolume molarityO;
+  //RBC
+  double rbc_count = 5280000;
+  double antigens_PER_rbc = 2000000;
+  molarity1.SetValue(rbc_count, AmountPerVolumeUnit::ct_Per_uL);
+  SetSubstanceMolarity(*m_RBC, vascular, molarity1);
 
   if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::A) {
-    molarityA.SetValue(5280000, AmountPerVolumeUnit::ct_Per_uL);
-    molarityB.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    molarityO.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarity1.SetValue(rbc_count*antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    molarity2.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::B) {
-    molarityA.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    molarityB.SetValue(5280000, AmountPerVolumeUnit::ct_Per_uL);
-    molarityO.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarity1.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarity2.SetValue(rbc_count * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::O) {
-    molarityA.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    molarityB.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    molarityO.SetValue(5280000, AmountPerVolumeUnit::ct_Per_uL);
+    molarity1.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarity2.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::AB) {
-    molarityA.SetValue(0.5*5280000, AmountPerVolumeUnit::ct_Per_uL);
-    molarityB.SetValue(0.5*5280000, AmountPerVolumeUnit::ct_Per_uL);
-    molarityO.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    molarity1.SetValue(0.5 * rbc_count * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    molarity2.SetValue(0.5 * rbc_count * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
   }
-  //RBC
-  SetSubstanceMolarity(*m_RBCa, vascular, molarityA);
-  SetSubstanceMolarity(*m_RBCb, vascular, molarityB);
-  SetSubstanceMolarity(*m_RBCo, vascular, molarityO);
+  //Antigens present on RBC
+  SetSubstanceMolarity(*m_AntigenA, vascular, molarity1);
+  SetSubstanceMolarity(*m_AntigenB, vascular, molarity2);
   //WBC
   molarity1.SetValue(7000, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_WBC, vascular, molarity1);
@@ -1047,9 +1022,9 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
 
   m_plasma = GetSubstance("Plasma");
   m_platelets = GetSubstance("Platelet");
-  m_RBCa = GetSubstance("RedBloodCell_A");
-  m_RBCb = GetSubstance("RedBloodCell_B");
-  m_RBCo = GetSubstance("RedBloodCell_O");
+  m_AntigenA = GetSubstance("Antigen_A");
+  m_AntigenB = GetSubstance("Antigen_B");
+  m_RBC = GetSubstance("RedBloodCell");
   m_WBC = GetSubstance("WhiteBloodCell");
 
   if (m_O2 == nullptr)
@@ -1078,11 +1053,11 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
     Error("Plasma Definition not found");
   if (m_platelets == nullptr)
     Error("Platelets Definition not found");
-  if (m_RBCa == nullptr)
+  if (m_AntigenA == nullptr)
     Error("Red Blood Cell Definition not found");
-  if (m_RBCb == nullptr)
+  if (m_AntigenB == nullptr)
     Error("Red Blood Cell Definition not found");
-  if (m_RBCo == nullptr)
+  if (m_RBC == nullptr)
     Error("Red Blood Cell Definition not found");
   if (m_WBC == nullptr)
     Error("White Blood Cell Definition not found");
