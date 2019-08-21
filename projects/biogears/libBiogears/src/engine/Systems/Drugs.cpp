@@ -452,6 +452,14 @@ void Drugs::AdministerSubstanceOral()
 //--------------------------------------------------------------------------------------------------
 void Drugs::AdministerSubstanceCompoundInfusion()
 {
+
+  // Check Blood Type here, starting with Rh factor. Rh factor is just a simple yes no based on patient blood type and infusion type
+  // IF mismatch, minor reaction, tracked by RhSensitivity parameter (which will affect reaction severity). Severity will decrease with time, removing symptoms, but sensitivity will remain unchanged (in case of numerous transactions)
+
+  // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
+  //Then check for three mismatch scenarios using OR statement. If so, go to HTR function [below]
+
+
   const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& infusions = m_data.GetActions().GetPatientActions().GetSubstanceCompoundInfusions();
   if (infusions.empty())
     return;
@@ -509,6 +517,19 @@ void Drugs::AdministerSubstanceCompoundInfusion()
 
   m_data.GetPatient().GetWeight().SetValue(patientMass_kg, MassUnit::kg);
   m_IVToVenaCava->GetNextFlowSource().SetValue(totalRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Reaction when imcompatible blood is transfused
+///
+/// \details
+/// Blood reaction causes rbc to become agglutinated/dead and they can no longer bind gases and Hb to transport, thus causing an immune response
+//--------------------------------------------------------------------------------------------------
+void Drugs::CalculateHemolyticTransfusionReaction()
+{
+  //Calculate ratio of acceptable cells to unacceptable (ex: 0.5 L of transfused B blood compared to a 4.5 L TBV of A blood would be a ratio 1:9
+  
 }
 
 //--------------------------------------------------------------------------------------------------

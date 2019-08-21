@@ -5,7 +5,6 @@
   <Density readOnly="false" unit="g/mL" value="1.08"/>
   <MolarMass readOnly="false" unit="g/mol" value="92910857142857142.8"/>
   <State>Cellular</State>
-  <CellCount readOnly="false" unit="ct/uL" value="7000"/>
   <!-- @brief  Normal mean count is 7500 cells/microliter. 7000 used for sepsis. -->
   <Clearance>
     <CellRegulation>

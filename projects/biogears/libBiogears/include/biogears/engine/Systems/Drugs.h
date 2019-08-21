@@ -80,6 +80,7 @@ protected:
   void AdministerSubstanceCompoundInfusion();
   void AdministerSubstanceOral();
 
+  void CalculateHemolyticTransfusionReaction();
   void CalculatePartitionCoefficients();
   void CalculateSubstanceClearance();
   void CalculatePlasmaSubstanceConcentration();

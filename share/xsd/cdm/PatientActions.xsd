@@ -16,6 +16,24 @@ specific language governing permissions and limitations under the License.
 	<xs:include schemaLocation="PatientNutrition.xsd"/>	
 	<xs:include schemaLocation="Substance.xsd"/>
 	
+	<!-- @brief Enumeration for Blood ABO antigens -->
+  <xs:simpleType name="enumBloodAntigen">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="A"/>
+      <xs:enumeration value="B"/>
+	  <xs:enumeration value="AB"/>
+	  <xs:enumeration value="O"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- @brief Enumeration for positive/negative comparison -->
+  <xs:simpleType name="enumBool">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="positive"/>
+      <xs:enumeration value="negative"/>
+    </xs:restriction>
+  </xs:simpleType>
+	
 	<!-- @brief Base Patient Action type -->
 	<xs:complexType name="PatientActionData" abstract="true">
 		<xs:complexContent>
@@ -439,6 +457,8 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="SubstanceAdministrationData">
 				<xs:sequence>
 					<xs:element name="SubstanceCompound" type="xs:string" minOccurs="1" maxOccurs="1"/><!--<< @brief -->	
+					<xs:element name="AdministeredBloodAntigen" type="enumBloodAntigen" minOccurs="0" maxOccurs="1"/><!--<< @brief -->
+					<xs:element name="AdministeredBloodRhFactor" type="enumBool" minOccurs="0" maxOccurs="1"/><!--<< @brief -->
 					<xs:element name="BagVolume" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
 					<xs:element name="Rate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->					
 				</xs:sequence>
