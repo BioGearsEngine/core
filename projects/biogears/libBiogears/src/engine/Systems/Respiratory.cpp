@@ -1019,12 +1019,12 @@ void Respiratory::ProcessDriverActions()
   double painVAS = 0.1 * m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
   double painModifier = 1.0 + 0.75 * (painVAS / (painVAS + 0.2)); 
 
-  //Process Sepsis effects
-  double sepsisModifier = 0.0;
-  if (m_PatientActions->HasSepsis()) {
+  //Process infection effects--this won't lead to large change until infection tends towards sepsis
+  double infectionModifier = 0.0;
+  if (m_PatientActions->HasInfection()) {
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
     double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
-    sepsisModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.4);
+    infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.6);
   }
 
   //Apply modifiers to tidal volume.  Cardiac arrest and neuromuscular block are multiplicative while drug change is additive
@@ -1049,7 +1049,7 @@ void Respiratory::ProcessDriverActions()
     m_VentilationFrequency_Per_min = 0.0;
   } else {
     m_VentilationFrequency_Per_min = GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min) / m_TargetTidalVolume_L;
-    m_VentilationFrequency_Per_min += sepsisModifier;
+    m_VentilationFrequency_Per_min += infectionModifier;
     m_VentilationFrequency_Per_min *= painModifier;
     m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
     m_VentilationFrequency_Per_min += DrugRRChange_Per_min;

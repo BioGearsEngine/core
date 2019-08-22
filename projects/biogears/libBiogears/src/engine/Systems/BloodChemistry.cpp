@@ -204,7 +204,6 @@ void BloodChemistry::SetUp()
   m_PatientActions = &m_data.GetActions().GetPatientActions();
 
   m_InflammatoryResponse = &GetInflammatoryResponse();
-
 }
 
 void BloodChemistry::AtSteadyState()
@@ -666,14 +665,18 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
   return true;
 }
 
-void BloodChemistry::Sepsis()
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Simulate effects of systemic pathogen after infection
+///
+/// \details
+/// Helper function for Inflammatory Response.  If the source of inflammation is a pathogen, this 
+/// function is called to simulate effects of systemic pathogen infiltration that are not currently
+/// modeled mechanistically.  At low infection levels, these inflammation markers will remain
+/// near their baseline values
+//--------------------------------------------------------------------------------------------------
+void BloodChemistry::ManageSIRS()
 {
-  if (!m_PatientActions->HasSepsis()) {
-    return;
-  }
-
-  //We need to signal that there is a source of inflammation--soon this will be incorporated with Acute Inflammation Model
-  //Right now we are patching in Sepsis functionality and saving merge for a future story
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
 
   //Physiological response
@@ -703,8 +706,13 @@ void BloodChemistry::Sepsis()
   double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
   double totalBilirubin_mg_Per_dL = GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput) + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
-}
 
+  double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8;  //Discounting the 20% used by brain 
+  double maxDeficitMultiplier = 0.25;
+  double energyDeficit_W = basalTissueEnergyDemand_W * maxDeficitMultiplier * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + 0.75 * 0.75);
+  m_data.GetEnergy().GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
+
+}
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -712,11 +720,11 @@ void BloodChemistry::Sepsis()
 ///
 /// \details
 /// This function uses the Diverse Shock States model of Chow, 2005 to project the inflammatory response
-/// induced by various insults. The most important output from this model is Tissue Integrity, which is 
+/// induced by various insults. The most important output from this model is Tissue Integrity, which is
 /// used to scale resistances on tissue pathways, causing the fluid shift that occurs during sepsis
 /// and in the case of large burns.  The original model was calibrated for mice and considered endotoxin
 /// (pathogen by-products) to be force for infectious inflammation.  Endotoxin was replaced by an actively
-/// growing pathogen population subjected to phagocytosis from local immune response, neutrophils, and 
+/// growing pathogen population subjected to phagocytosis from local immune response, neutrophils, and
 /// macrophages. Some parameters are adjusted depending on the source of inflamamtion to better capture
 /// the time scale and magnitude of response.
 //--------------------------------------------------------------------------------------------------
@@ -730,28 +738,29 @@ void BloodChemistry::InflammatoryResponse()
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetInfection()->GetSeverity()) {
       case CDM::enumInfectionSeverity::Mild:
-        initialPathogen = 2.0;
+        initialPathogen = 1.0e6;
         break;
       case CDM::enumInfectionSeverity::Moderate:
-        initialPathogen = 3.82;
+        initialPathogen = 5.0e6;
         break;
       case CDM::enumInfectionSeverity::Severe:
-        initialPathogen = 7.5;
+        initialPathogen = 1.0e7;
         break;
       default:
-        initialPathogen = 0.2; //Default to very mild infection
+        initialPathogen = 1.0e6; //Default to very mild infection
       }
 
-      m_InflammatoryResponse->GetPathogen().SetValue(initialPathogen);
+      m_InflammatoryResponse->GetLocalPathogen().SetValue(initialPathogen);
+      m_InflammatoryResponse->SetActiveTLR(CDM::enumOnOff::On);
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
     }
   }
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-	  burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-	  if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
-		  m_InflammatoryResponse->GetTrauma().SetValue(burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
-		  m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
-	  }
+    burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
+      m_InflammatoryResponse->GetTrauma().SetValue(burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
+      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
+    }
   }
 
   //Perform this check after looking for inflammatory actions (otherwise we'll never process)
@@ -760,49 +769,66 @@ void BloodChemistry::InflammatoryResponse()
   }
 
   //------------------Previous State--------------------------------------
-  double P = 0.0, MR = 0.0, MA = 0.0, NR = 0.0, NA = 0.0, ER = 0.0, EA = 0.0, eNOS = 0.0, iNOSd = 0.0, iNOS = 0.0, NO3 = 0.0, NO = 0.0, I6 = 0.0, I10 = 0.0, I12 = 0.0, TNF = 0.0, TI = 0.0, TR = 0.0, B = 0.0;
-  P = m_InflammatoryResponse->GetPathogen().GetValue();
-  MR = m_InflammatoryResponse->GetMacrophageResting().GetValue();
-  MA = m_InflammatoryResponse->GetMacrophageActive().GetValue();
-  NR = m_InflammatoryResponse->GetNeutrophilResting().GetValue();
-  NA = m_InflammatoryResponse->GetNeutrophilActive().GetValue();
-  eNOS = m_InflammatoryResponse->GetConstitutiveNOS().GetValue();
-  iNOSd = m_InflammatoryResponse->GetInducibleNOSPre().GetValue();
-  iNOS = m_InflammatoryResponse->GetInducibleNOS().GetValue();
-  NO3 = m_InflammatoryResponse->GetNitrate().GetValue();
-  NO = m_InflammatoryResponse->GetNitricOxide().GetValue();
-  I6 = m_InflammatoryResponse->GetInterleukin6().GetValue();
-  I10 = m_InflammatoryResponse->GetInterleukin10().GetValue();
-  I12 = m_InflammatoryResponse->GetInterleukin12().GetValue();
-  TNF = m_InflammatoryResponse->GetTumorNecrosisFactor().GetValue();
-  TI = m_InflammatoryResponse->GetTissueIntegrity().GetValue();
-  B = m_InflammatoryResponse->GetAntibodies().GetValue();
+  double PT = 0.0, MT = 0.0, NT = 0.0, B = 0.0, PB = 0.0, MR = 0.0, MA = 0.0, NR = 0.0, NA = 0.0, ER = 0.0, EA = 0.0, eNOS = 0.0, iNOSd = 0.0, iNOS = 0.0, NO3 = 0.0, NO = 0.0, I6 = 0.0, I10 = 0.0, I12 = 0.0, TNF = 0.0, TI = 0.0, TR = 0.0, R = 0.0;
+  PT = m_InflammatoryResponse->GetLocalPathogen().GetValue(); //Local tissue pathogen
+  MT = m_InflammatoryResponse->GetLocalMacrophage().GetValue(); //Local tissue macrophages
+  NT = m_InflammatoryResponse->GetLocalNeutrophil().GetValue(); //Local tissue neutrophil
+  B = m_InflammatoryResponse->GetLocalBarrier().GetValue(); //Local tissue barrier integrity
+  CDM::enumOnOff::value TLR = m_InflammatoryResponse->GetActiveTLR(); //Toll-like receptors:  When active, promote degradation of local tissue barrier integrity
+  PB = m_InflammatoryResponse->GetBloodPathogen().GetValue(); //Pathogen that has passed through local tissue barrier into bloodstream
+  MR = m_InflammatoryResponse->GetMacrophageResting().GetValue(); //Resting blood macrophages
+  MA = m_InflammatoryResponse->GetMacrophageActive().GetValue(); //Active blood macrophages
+  NR = m_InflammatoryResponse->GetNeutrophilResting().GetValue(); //Resting blood neutrophils
+  NA = m_InflammatoryResponse->GetNeutrophilActive().GetValue(); //Active blood neutrophils
+  eNOS = m_InflammatoryResponse->GetConstitutiveNOS().GetValue(); //Blood nitrogen oxide synthase (constituitive)
+  iNOSd = m_InflammatoryResponse->GetInducibleNOSPre().GetValue(); //Blood nitrogen oxide synthase (pre-inducible)
+  iNOS = m_InflammatoryResponse->GetInducibleNOS().GetValue(); //Blood nitrogen oxide syntase (induced)
+  NO3 = m_InflammatoryResponse->GetNitrate().GetValue(); //Blood nitrate--product of NO (unstable radical)
+  NO = m_InflammatoryResponse->GetNitricOxide().GetValue(); //Blood nitric oxide
+  I6 = m_InflammatoryResponse->GetInterleukin6().GetValue(); //Blood interleukin-6
+  I10 = m_InflammatoryResponse->GetInterleukin10().GetValue(); //Blood interleukin-10
+  I12 = m_InflammatoryResponse->GetInterleukin12().GetValue(); //Blood interleukin-12
+  TNF = m_InflammatoryResponse->GetTumorNecrosisFactor().GetValue(); //Blood tumor-necrosis factor
+  TI = m_InflammatoryResponse->GetTissueIntegrity().GetValue(); //Global tissue integrity
 
   //------------------------------Model Parameters-----------------------------
   //Time
   double dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
-  double scale = 0.75; //This is set to make infection operate on a more realistic time course.  This parameter can also be set very high to investigate state equation trajectores (w/ no guarantees of BG validity)
-  //Source terms
+  double scale = 1.0; //This parameter can be set very high to investigate state equation trajectores (i.e. set to 60 to simulate 30 hrs in 30 min).  Note that there is no guarantee of validity of other BG outputs
+  //----Tissue parameters are taken from Dominguez2017Mathematical; kap = growth rate, psi = degradation rate, eps = inhibition, del = decay (other params defined)
+  //Tissue pathogen
+  double thetaP = 1.35e-4; //Rate of bacteria translocation from tissue to blood
+  double epsPB = 3.1, psiPM = 6.3e-3, psiPN = 6.1e-4, kapP = 0.6;
+  double uP = 3.7e4; //Saturation constant for bacteria
+  //Tissue macrophage
+  double Mv = 3.0e-1; //Resting macrophage pool
+  double delM = 6.4e-5, epsMB = 3.6e1;
+  double beta = 2.6e-2; //Activation of macrophages
+  //Tissue neutrophil
+  double Nv = 1e8; //Resting neutrophil pool
+  double delN = 6.1e-2, epsNB = 3.6e1, epsNM = 1.6e-1;
+  double alpha = 6.975e-7; //Activation of neutrophils
+  //Local barrier
+  double kapB = 4.6e-2, epsBP = 2.6e1, psiBP = 1.4e-1, psiBN = 4.0e-8;
+  //TLR switch
+  double pUpper = 2.0e6;
+  double pLower = 1.0e3;
+  //--Blood parameters are from Chow2005Diverse; kYZ = effect of Z on Y, xYZ = amount of Z to bring effect to half its max
+  //Blood Source terms
   double sM = 1.0, sN = 1.0, s6 = 0.001, s10 = 0.01;
-  //Pathogen parameters
-  double kPG = 0.66;
-  double kPN = 5.0; //Phagocytic effect of activated neutrophils on pathogen, determined empirically
-  double kPM = 3.0; //Phagocytic effect of activated macrophages/monocytes on pathogen, determined empircally
-  double xPN = 2.0; //Level of pathogen that brings elimination of P by neutrophils to 50% of max
-  double xPM = 2.0; //Level of pathogen that brings elimination of P by macrophages to 50% of max
-  double sB = 0.0075; //Source of non-specific immune response
-  double kPB = 0.461; //Rate that non-specific response eliminates pathogen
-  double uB = 0.0023; //Decay rate of non-specific immune response
-  double kBP = 0.05; //Rate at which non-specific response exhausted by pathogen
-  double maxPathogen = 20.0; //Maximum pathogen population size
+  //Blood Pathogen parameters
+  double kPN = 5.8; //Phagocytic effect of activated neutrophils on pathogen, determined empirically
+  double xPN = 0.5; //Level of pathogen that brings elimination of P by neutrophils to 50% of max
+  double kPS = 6.9e3; //Background immune response to pathogen in blood
+  double xPS = 1.3e4; //Saturation of background immune response
   //Trauma decay
   double kTr = 0.85; //Determined empirically to give good results
   //Macrophage interaction
-  double kML = 1.01, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 10.0, xMD = 0.75, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
+  double kML = 1.01e2, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 37.5, xMD = 0.75, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
   //Activate macrophage interactions
   double kMANO = 0.2, kMA = 0.2;
-  //Neutrophil interactions
-  double kNL = 0.15, kNTNF = 0.2, kN6 = 0.557, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 15.0, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2, xNNO = 0.5; //xND was 0.4 for burn
+  //Neutrophil interactions -- kN6 and kNTNF tuned for infection
+  double kNL = 3.375e1, kNTNF = 0.4, kN6 = 1.5, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 56.25, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2, xNNO = 0.5; //xND was 0.4 for burn
   //Inducible nitric oxide synthase
   double kINOSN = 1.5, kINOSM = 0.1, kINOSEC = 0.1, kINOS6 = 2.0, kINOSd = 0.05, kINOS = 0.101, xINOS10 = 0.1, xINOSTNF = 0.05, xINOS6 = 0.1, xINOSNO = 0.3;
   //Constituitive nitric oxide synthase
@@ -812,64 +838,81 @@ void BloodChemistry::InflammatoryResponse()
   //TNF
   double kTNFN = 2.97, kTNFM = 0.1, kTNF = 1.4, xTNF6 = 0.059, xTNF10 = 0.079;
   //IL6
-  double k6M = 3.03, k6TNF = 1.0, k62 = 3.4, k6NO = 2.97, k6 = 0.7, k6N = 0.2, x610 = 0.1782, x6TNF = 0.1, x66 = 0.5, x6NO = 0.4; //x66 = 0.2277
+  double k6M = 3.03, k6TNF = 1.0, k62 = 3.4, k6NO = 2.97, k6 = 0.7, k6N = 0.2, x610 = 0.1782, x6TNF = 0.1, x66 = 0.5, x6NO = 0.4, h66 = 1.0; //x66 = 0.2277
   //IL10
-  double k10MA = 0.1, k10N = 0.1, k10A = 62.87, k10TNF = 1.485, k106 = 0.051, k10 = 0.35, k10R = 0.1, x10TNF = 0.05, x1012 = 0.049, x106 = 0.08;
+  double k10MA = 0.1, k10N = 0.1, k10A = 62.87, k10TNF = 1.485, k106 = 0.051, k10 = 0.35, k10R = 0.1, x10TNF = 0.05, x1012 = 0.01, x106 = 0.08;
   //CA
   double kCA = 0.1, kCATR = 0.16;
   //IL12
   double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
   //Damage
-  double kDB = 0.005, kD6 = 0.125, kD = 0.15, xD6 = 0.5, xDNO = 0.7;
+  double kD6 = 0.125, kD = 0.15, xD6 = 0.85, xDNO = 0.5, hD6 = 6.0;
   double kDTR = 0.0; //This is a base value that will be adjusted as a function of type and severity of trauma
-  double tiMin = 0.05;  //Minimum tissue integrity before damage is irreversible
-  //Blood pressure effects on inflammation
-  double fB = 0;
-  double bpRatio = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg) / m_data.GetPatient().GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
-  if (bpRatio < 1.0) {
-    fB = std::pow(1.0 - bpRatio, 4.0);
-  }
+  double tiMin = 0.2; //Minimum tissue integrity allowed
+
   //Antibiotic effects
   double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
   //------------------Action specific modifications--------------------------------
-  if (burnTotalBodySurfaceArea != 0){
-	//Burns inflammation happens on a faster time scale, increase rate of damage
+  if (burnTotalBodySurfaceArea != 0) {
+    //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 5.0 * burnTotalBodySurfaceArea;
-    kD6 = 0.3;
-    xD6 = 0.25;
-    xDNO = 0.5;
-    kD = 0.01;
+    kD6 = 0.3, xD6 = 0.25, kD = 0.01, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
+  }
+  if (PB > ZERO_APPROX){
+    ManageSIRS();
   }
 
   //---------------------State equations----------------------------------------------
   //Differential containers
-  double dP = 0.0, dMR = 0.0, dMA = 0.0, dNR = 0.0, dNA = 0.0, dER = 0.0, dEA = 0.0, dENOS = 0.0, dINOSd = 0.0, dINOS = 0.0, dNO3 = 0.0, dI6 = 0.0, dI10 = 0.0, dI12 = 0.0, dTNF = 0.0, dTI = 0.0, dTR = 0.0, dB = 0.0;
-  //Process equations
-  dP = (kPG-antibacterialEffect) * P * (1.0 - P / maxPathogen) - (kPM * MA * GeneralMath::HillActivation(P,xPM, 2.0) + kPN * NA * GeneralMath::HillActivation(P, xPN, 2.0) + kPB * B * P / (P + 0.5)); //This is assumed to be the driving force for infection / sepsis.
-  if (P < ZERO_APPROX) {
-    //Make sure when we get close to P = 0 that we don't take too big a step and pull a negative P for next iteration
-    dP = 0.0;
+  double dPT = 0.0, dMT = 0.0, dNT = 0.0, dBT = 0.0, dPB = 0.0, dMR = 0.0, dMA = 0.0, dNR = 0.0, dNA = 0.0, dER = 0.0, dEA = 0.0, dENOS = 0.0, dINOSd = 0.0, dINOS = 0.0, dNO3 = 0.0, dI6 = 0.0, dI10 = 0.0, dI12 = 0.0, dTNF = 0.0, dTI = 0.0, dTR = 0.0, dB = 0.0;
+  //TLR state depends on the last TLR state and the tissue pathogen populaton
+  if (PT > pUpper) {
+    R = 1.0; //TLR always active if pathogen above max threshold
+    TLR = CDM::enumOnOff::On;
+  } else if (PT > pLower) {
+    if (TLR == CDM::enumOnOff::On) {
+      R = 1.0; //If pathogen between min/max threshold, it remains at its previous values
+    } else {
+      R = 0.0;
+    }
+  } else {
+    R = 0.0; //If pathogen below min threshold, it is always inactive
+    TLR = CDM::enumOnOff::Off;
   }
+  //Process equations
+  dPT = (kapP / uP) * PT * (1.0 - PT) - thetaP * PT / (1.0 + epsPB * B) - psiPN * NT * PT - psiPM * MT * PT;
+  if (PT < ZERO_APPROX) {
+    //Make sure when we get close to P = 0 that we don't take too big a step and pull a negative P for next iteration
+    PT = 0.0;
+    dPT = 0.0;
+  }
+  dMT = beta * NT / (1.0 + epsMB * B) * Mv - delM * MT;
+  dNT = alpha * R * Nv / ((1.0 + epsNB * B) * (1.0 + epsNM * MT)) - delN * NT;
+  dB = kapB / (1.0 + epsBP * R) * B * (1.0 - B) - psiBP * R * B - psiBN * NT * B;
+  dPB = (kapP - antibacterialEffect) * PB + thetaP * PT / (1.0 + epsPB * B) - kPS * PB / (xPS + PB) - kPN * NA * GeneralMath::HillActivation(PB, xPN, 2.0);
   dTR = -kTr * TR; //This is assumed to be the driving force for burn
-  dMR = -((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(P, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
-  dMA = ((kML * std::pow(xML, 2.0) * GeneralMath::HillActivation(P, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
-  dNR = -(kNL * xNL * GeneralMath::HillActivation(P, xNL, 1.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
-  dNA = (kNL * xNL * GeneralMath::HillActivation(P, xNL, 1.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNA * NA;
+  dMR = -((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
+  dMA = ((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
+  dNR = -(kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
+  dNA = (kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNA * NA;
   dINOS = kINOS * (iNOSd - iNOS);
-  dINOSd = (kINOSN * NA + kINOSM * MA + kINOSEC * (std::pow(xINOSTNF, 2.0) * GeneralMath::HillActivation(TNF, xINOSTNF, 2.0) + kINOS6 * std::pow(xINOS6, 2.0) * GeneralMath::HillActivation(I6, xINOS6, 2.0))) * GeneralMath::HillInhibition(I10, xINOS10, 2.0) * GeneralMath::HillInhibition(NO, xINOSNO, 2.0) - kINOSd * iNOSd;
-  dENOS = kENOSEC * GeneralMath::HillInhibition(TNF, xENOSTNF, 1.0) * GeneralMath::HillInhibition(P, xENOSL, 1.0) * GeneralMath::HillInhibition(TR, xENOSTR, 4.0) - kENOS * eNOS;
+  dINOSd = (kINOSN * NA + kINOSM * MA + kINOSEC * (std::pow(xINOSTNF, 2.0) * GeneralMath::HillActivation(TNF, xINOSTNF, 2.0) + kINOS6 * std::pow(xINOS6, 2.0) * GeneralMath::HillActivation(I6, xINOS6, 2.0))) * GeneralMath::HillInhibition(I10, xINOS10, 2.0) * GeneralMath::HillInhibition(NO, xINOSNO, 4.0) - kINOSd * iNOSd;
+  dENOS = kENOSEC * GeneralMath::HillInhibition(TNF, xENOSTNF, 1.0) * GeneralMath::HillInhibition(PB, xENOSL, 1.0) * GeneralMath::HillInhibition(TR, xENOSTR, 4.0) - kENOS * eNOS;
   dNO3 = kNO3 * (NO - NO3);
   dTNF = (kTNFN * NA + kTNFM * MA) * GeneralMath::HillInhibition(I10, xTNF10, 2.0) * GeneralMath::HillInhibition(I6, xTNF6, 3.0) - kTNF * TNF;
-  dI6 = (k6N * NA + MA) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(NO, x6NO, 2.0)) * GeneralMath::HillInhibition(I10, x610, 2.0) * GeneralMath::HillInhibition(I6, x66, 4.0) + k6 * (s6 - I6);
+  dI6 = (k6N * NA + MA) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(NO, x6NO, 2.0)) * GeneralMath::HillInhibition(I10, x610, 2.0) * GeneralMath::HillInhibition(I6, x66, h66) + k6 * (s6 - I6);
   dI10 = (k10N * NA + MA) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(I6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(I12, x1012, 4.0) + k10R) - k10 * (I10 - s10);
   dI12 = k12M * MA * GeneralMath::HillInhibition(I10, x1210, 2.0) - k12 * I12;
-  dTI += kD * (1.0 - TI) * (TI - tiMin) * TI - TI * (kD6 * GeneralMath::HillActivation(I6, xD6, 4.0) + kDTR * TR + kDB * fB) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
-  dB = sB - (uB + kBP * P) * B;
+  dTI = kD * (1.0 - TI) * (TI - tiMin) * TI - (TI-tiMin) * (kD6 * GeneralMath::HillActivation(I6, xD6, hD6) + kDTR * TR) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
 
   //------------------------Update State-----------------------------------------------
-  m_InflammatoryResponse->GetPathogen().IncrementValue(dP * dt_hr * scale);
+  m_InflammatoryResponse->GetLocalPathogen().IncrementValue(dPT * dt_hr * scale);
+  m_InflammatoryResponse->GetLocalMacrophage().IncrementValue(dMT * dt_hr * scale);
+  m_InflammatoryResponse->GetLocalNeutrophil().IncrementValue(dNT * dt_hr * scale);
+  m_InflammatoryResponse->GetLocalBarrier().IncrementValue(dB * dt_hr * scale);
+  m_InflammatoryResponse->GetBloodPathogen().IncrementValue(dPB * dt_hr * scale);
   m_InflammatoryResponse->GetTrauma().IncrementValue(dTR * dt_hr * scale);
   m_InflammatoryResponse->GetMacrophageResting().IncrementValue(dMR * dt_hr * scale);
   m_InflammatoryResponse->GetMacrophageActive().IncrementValue(dMA * dt_hr * scale);
@@ -884,218 +927,217 @@ void BloodChemistry::InflammatoryResponse()
   m_InflammatoryResponse->GetInterleukin10().IncrementValue(dI10 * dt_hr * scale);
   m_InflammatoryResponse->GetInterleukin12().IncrementValue(dI12 * dt_hr * scale);
   m_InflammatoryResponse->GetTissueIntegrity().IncrementValue(dTI * dt_hr * scale);
-  m_InflammatoryResponse->GetAntibodies().IncrementValue(dB * dt_hr * scale);
-  NO = iNOS * (1.0 + kNOMA * (m_InflammatoryResponse->GetMacrophageActive().GetValue() + m_InflammatoryResponse->GetNeutrophilActive().GetValue())) + eNOS;  //Algebraic relationship, not differential
+  NO = iNOS * (1.0 + kNOMA * (m_InflammatoryResponse->GetMacrophageActive().GetValue() + m_InflammatoryResponse->GetNeutrophilActive().GetValue())) + eNOS; //Algebraic relationship, not differential
   m_InflammatoryResponse->GetNitricOxide().SetValue(NO);
+  m_InflammatoryResponse->SetActiveTLR(TLR);
 }
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// determine override requirements from user defined inputs
-///
-/// \details
-/// User specified override outputs that are specific to the cardiovascular system are implemented here.
-/// If overrides aren't present for this system then this function will not be called during preprocess.
-//--------------------------------------------------------------------------------------------------
-void BloodChemistry::ProcessOverride()
-{
-  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// determine override requirements from user defined inputs
+  ///
+  /// \details
+  /// User specified override outputs that are specific to the cardiovascular system are implemented here.
+  /// If overrides aren't present for this system then this function will not be called during preprocess.
+  //--------------------------------------------------------------------------------------------------
+  void BloodChemistry::ProcessOverride()
+  {
+    auto override = m_data.GetActions().GetPatientActions().GetOverride();
 
 #ifdef BIOGEARS_USE_OVERRIDE_CONTROL
-  OverrideControlLoop();
+    OverrideControlLoop();
 #endif
 
-  if (override->HasArterialPHOverride()) {
-    GetArterialBloodPH().SetValue(override->GetArterialPHOverride().GetValue());
-  }
-  if (override->HasVenousPHOverride()) {
-    GetVenousBloodPH().SetValue(override->GetVenousPHOverride().GetValue());
-  }
-  if (override->HasCO2SaturationOverride()) {
-    GetCarbonDioxideSaturation().SetValue(override->GetCO2SaturationOverride().GetValue());
-  }
-  if (override->HasCOSaturationOverride()) {
-    GetCarbonMonoxideSaturation().SetValue(override->GetCOSaturationOverride().GetValue());
-  }
-  if (override->HasO2SaturationOverride()) {
-    GetOxygenSaturation().SetValue(override->GetO2SaturationOverride().GetValue());
-  }
-  if (override->HasPhosphateOverride()) {
-    GetPhosphate().SetValue(override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL), AmountPerVolumeUnit::mmol_Per_mL);
-  }
-  if (override->HasWBCCountOverride()) {
-    GetWhiteBloodCellCount().SetValue(override->GetWBCCountOverride(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
-  }
-  if (override->HasTotalBilirubinOverride()) {
-    GetTotalBilirubin().SetValue(override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasCalciumConcentrationOverride()) {
-    m_data.GetSubstances().GetCalcium().GetBloodConcentration().SetValue(override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasGlucoseConcentrationOverride()) {
-    m_data.GetSubstances().GetGlucose().GetBloodConcentration().SetValue(override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasLactateConcentrationOverride()) {
-    m_data.GetSubstances().GetLactate().GetBloodConcentration().SetValue(override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasPotassiumConcentrationOverride()) {
-    m_data.GetSubstances().GetPotassium().GetBloodConcentration().SetValue(override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasSodiumConcentrationOverride()) {
-    m_data.GetSubstances().GetSodium().GetBloodConcentration().SetValue(override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
-  }
-}
-
-//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
-void BloodChemistry::OverrideControlLoop()
-{
-  auto override = m_data.GetActions().GetPatientActions().GetOverride();
-  constexpr double maxArtPHOverride = 14.0; //Arterial pH
-  constexpr double minArtPHOverride = 0.0; //Arterial pH
-  constexpr double maxVenPHOverride = 14.0; //Venous pH
-  constexpr double minVenPHOverride = 0.0; //Venous pH
-  constexpr double maxCO2SaturationOverride = 1.0; //Carbon Dioxide Saturation
-  constexpr double minCO2SaturationOverride = 0.0; //Carbon Dioxide Saturation
-  constexpr double maxCOSaturationOverride = 1.0; //Carbon Monoxide Saturation
-  constexpr double minCOSaturationOverride = 0.0; //Carbon Monoxide Saturation
-  constexpr double maxO2SaturationOverride = 1.0; //Oxygen Saturation
-  constexpr double minO2SaturationOverride = 0.0; //Oxygen Saturation
-  constexpr double maxPhosphateOverride = 1000.0; // mmol/mL
-  constexpr double minPhosphateOverride = 0.0; // mmol/mL
-  constexpr double maxWBCCountOverride = 50000.0; // ct/uL
-  constexpr double minWBCCountOverride = 0.0; // ct/uL
-  constexpr double maxTotalBilirubinOverride = 500.0; // mg/dL
-  constexpr double minTotalBilirubinOverride = 0.0; // mg/dL
-  constexpr double maxCalciumConcentrationOverride = 500.0; // mg/dL
-  constexpr double minCalciumConcentrationOverride = 0.0; // mg/dL
-  constexpr double maxGlucoseConcentrationOverride = 1000.0; // mg/dL
-  constexpr double minGlucoseConcentrationOverride = 0.0; // mg/dL
-  constexpr double maxLactateConcentrationOverride = 1000.0; // mg/dL
-  constexpr double minLactateConcentrationOverride = 0.0; // mg/dL
-  constexpr double maxPotassiumConcentrationOverride = 500.0; // mg/mL
-  constexpr double minPotassiumConcentrationOverride = 0.0; // mg/mL
-  constexpr double maxSodiumConcentrationOverride = 500.0; // mg/mL
-  constexpr double minSodiumConcentrationOverride = 0.0; // mg/mL
-
-  double currentArtPHOverride = GetArterialBloodPH().GetValue(); //Current Arterial pH, value gets changed in next check
-  double currentVenPHOverride = GetVenousBloodPH().GetValue(); //Current Venous pH, value gets changed in next check
-  double currentCO2SaturationOverride = 0.0; //value gets changed in next check
-  double currentCOSaturationOverride = 0.0; //value gets changed in next check
-  double currentO2SaturationOverride = 0.0; //value gets changed in next check
-  double currentPhosphateOverride = 0.0; //value gets changed in next check
-  double currentWBCCountOverride = 0.0; //value gets changed in next check
-  double currentTotalBilirubinOverride = 0.0; //value gets changed in next check
-  double currentCalciumConcentrationOverride = 0.0; //value gets changed in next check
-  double currentGlucoseConcentrationOverride = 0.0; //value gets changed in next check
-  double currentLactateConcentrationOverride = 0.0; //value gets changed in next check
-  double currentPotassiumConcentrationOverride = 0.0; //value gets changed in next check
-  double currentSodiumConcentrationOverride = 0.0; //value gets changed in next check
-
-  if (override->HasArterialPHOverride()) {
-    currentArtPHOverride = override->GetArterialPHOverride().GetValue();
-  }
-  if (override->HasVenousPHOverride()) {
-    currentVenPHOverride = override->GetVenousPHOverride().GetValue();
-  }
-  if (override->HasCO2SaturationOverride()) {
-    currentCO2SaturationOverride = override->GetCO2SaturationOverride().GetValue();
-  }
-  if (override->HasCOSaturationOverride()) {
-    currentCOSaturationOverride = override->GetCOSaturationOverride().GetValue();
-  }
-  if (override->HasO2SaturationOverride()) {
-    currentO2SaturationOverride = override->GetO2SaturationOverride().GetValue();
-  }
-  if (override->HasPhosphateOverride()) {
-    currentPhosphateOverride = override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL);
-  }
-  if (override->HasWBCCountOverride()) {
-    currentWBCCountOverride = override->GetWBCCountOverride(AmountPerVolumeUnit::mmol_Per_mL);
-  }
-  if (override->HasTotalBilirubinOverride()) {
-    currentTotalBilirubinOverride = override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasCalciumConcentrationOverride()) {
-    currentCalciumConcentrationOverride = override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasGlucoseConcentrationOverride()) {
-    currentGlucoseConcentrationOverride = override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasLactateConcentrationOverride()) {
-    currentLactateConcentrationOverride = override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasPotassiumConcentrationOverride()) {
-    currentPotassiumConcentrationOverride = override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
-  }
-  if (override->HasSodiumConcentrationOverride()) {
-    currentSodiumConcentrationOverride = override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+    if (override->HasArterialPHOverride()) {
+      GetArterialBloodPH().SetValue(override->GetArterialPHOverride().GetValue());
+    }
+    if (override->HasVenousPHOverride()) {
+      GetVenousBloodPH().SetValue(override->GetVenousPHOverride().GetValue());
+    }
+    if (override->HasCO2SaturationOverride()) {
+      GetCarbonDioxideSaturation().SetValue(override->GetCO2SaturationOverride().GetValue());
+    }
+    if (override->HasCOSaturationOverride()) {
+      GetCarbonMonoxideSaturation().SetValue(override->GetCOSaturationOverride().GetValue());
+    }
+    if (override->HasO2SaturationOverride()) {
+      GetOxygenSaturation().SetValue(override->GetO2SaturationOverride().GetValue());
+    }
+    if (override->HasPhosphateOverride()) {
+      GetPhosphate().SetValue(override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL), AmountPerVolumeUnit::mmol_Per_mL);
+    }
+    if (override->HasWBCCountOverride()) {
+      GetWhiteBloodCellCount().SetValue(override->GetWBCCountOverride(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+    }
+    if (override->HasTotalBilirubinOverride()) {
+      GetTotalBilirubin().SetValue(override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasCalciumConcentrationOverride()) {
+      m_data.GetSubstances().GetCalcium().GetBloodConcentration().SetValue(override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasGlucoseConcentrationOverride()) {
+      m_data.GetSubstances().GetGlucose().GetBloodConcentration().SetValue(override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasLactateConcentrationOverride()) {
+      m_data.GetSubstances().GetLactate().GetBloodConcentration().SetValue(override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasPotassiumConcentrationOverride()) {
+      m_data.GetSubstances().GetPotassium().GetBloodConcentration().SetValue(override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasSodiumConcentrationOverride()) {
+      m_data.GetSubstances().GetSodium().GetBloodConcentration().SetValue(override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    }
   }
 
-  if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Arterial Blood pH Override (BloodChemistry) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+  //// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
+  void BloodChemistry::OverrideControlLoop()
+  {
+    auto override = m_data.GetActions().GetPatientActions().GetOverride();
+    constexpr double maxArtPHOverride = 14.0; //Arterial pH
+    constexpr double minArtPHOverride = 0.0; //Arterial pH
+    constexpr double maxVenPHOverride = 14.0; //Venous pH
+    constexpr double minVenPHOverride = 0.0; //Venous pH
+    constexpr double maxCO2SaturationOverride = 1.0; //Carbon Dioxide Saturation
+    constexpr double minCO2SaturationOverride = 0.0; //Carbon Dioxide Saturation
+    constexpr double maxCOSaturationOverride = 1.0; //Carbon Monoxide Saturation
+    constexpr double minCOSaturationOverride = 0.0; //Carbon Monoxide Saturation
+    constexpr double maxO2SaturationOverride = 1.0; //Oxygen Saturation
+    constexpr double minO2SaturationOverride = 0.0; //Oxygen Saturation
+    constexpr double maxPhosphateOverride = 1000.0; // mmol/mL
+    constexpr double minPhosphateOverride = 0.0; // mmol/mL
+    constexpr double maxWBCCountOverride = 50000.0; // ct/uL
+    constexpr double minWBCCountOverride = 0.0; // ct/uL
+    constexpr double maxTotalBilirubinOverride = 500.0; // mg/dL
+    constexpr double minTotalBilirubinOverride = 0.0; // mg/dL
+    constexpr double maxCalciumConcentrationOverride = 500.0; // mg/dL
+    constexpr double minCalciumConcentrationOverride = 0.0; // mg/dL
+    constexpr double maxGlucoseConcentrationOverride = 1000.0; // mg/dL
+    constexpr double minGlucoseConcentrationOverride = 0.0; // mg/dL
+    constexpr double maxLactateConcentrationOverride = 1000.0; // mg/dL
+    constexpr double minLactateConcentrationOverride = 0.0; // mg/dL
+    constexpr double maxPotassiumConcentrationOverride = 500.0; // mg/mL
+    constexpr double minPotassiumConcentrationOverride = 0.0; // mg/mL
+    constexpr double maxSodiumConcentrationOverride = 500.0; // mg/mL
+    constexpr double minSodiumConcentrationOverride = 0.0; // mg/mL
+
+    double currentArtPHOverride = GetArterialBloodPH().GetValue(); //Current Arterial pH, value gets changed in next check
+    double currentVenPHOverride = GetVenousBloodPH().GetValue(); //Current Venous pH, value gets changed in next check
+    double currentCO2SaturationOverride = 0.0; //value gets changed in next check
+    double currentCOSaturationOverride = 0.0; //value gets changed in next check
+    double currentO2SaturationOverride = 0.0; //value gets changed in next check
+    double currentPhosphateOverride = 0.0; //value gets changed in next check
+    double currentWBCCountOverride = 0.0; //value gets changed in next check
+    double currentTotalBilirubinOverride = 0.0; //value gets changed in next check
+    double currentCalciumConcentrationOverride = 0.0; //value gets changed in next check
+    double currentGlucoseConcentrationOverride = 0.0; //value gets changed in next check
+    double currentLactateConcentrationOverride = 0.0; //value gets changed in next check
+    double currentPotassiumConcentrationOverride = 0.0; //value gets changed in next check
+    double currentSodiumConcentrationOverride = 0.0; //value gets changed in next check
+
+    if (override->HasArterialPHOverride()) {
+      currentArtPHOverride = override->GetArterialPHOverride().GetValue();
+    }
+    if (override->HasVenousPHOverride()) {
+      currentVenPHOverride = override->GetVenousPHOverride().GetValue();
+    }
+    if (override->HasCO2SaturationOverride()) {
+      currentCO2SaturationOverride = override->GetCO2SaturationOverride().GetValue();
+    }
+    if (override->HasCOSaturationOverride()) {
+      currentCOSaturationOverride = override->GetCOSaturationOverride().GetValue();
+    }
+    if (override->HasO2SaturationOverride()) {
+      currentO2SaturationOverride = override->GetO2SaturationOverride().GetValue();
+    }
+    if (override->HasPhosphateOverride()) {
+      currentPhosphateOverride = override->GetPhosphateOverride(AmountPerVolumeUnit::mmol_Per_mL);
+    }
+    if (override->HasWBCCountOverride()) {
+      currentWBCCountOverride = override->GetWBCCountOverride(AmountPerVolumeUnit::mmol_Per_mL);
+    }
+    if (override->HasTotalBilirubinOverride()) {
+      currentTotalBilirubinOverride = override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasCalciumConcentrationOverride()) {
+      currentCalciumConcentrationOverride = override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasGlucoseConcentrationOverride()) {
+      currentGlucoseConcentrationOverride = override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasLactateConcentrationOverride()) {
+      currentLactateConcentrationOverride = override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasPotassiumConcentrationOverride()) {
+      currentPotassiumConcentrationOverride = override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+    }
+    if (override->HasSodiumConcentrationOverride()) {
+      currentSodiumConcentrationOverride = override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
+    }
+
+    if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Arterial Blood pH Override (BloodChemistry) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentVenPHOverride < minVenPHOverride || currentVenPHOverride > maxVenPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Venous Blood pH (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentCO2SaturationOverride < minCO2SaturationOverride || currentCO2SaturationOverride > maxCO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "CO2 Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentCOSaturationOverride < minCOSaturationOverride || currentCOSaturationOverride > maxCOSaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "CO Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentO2SaturationOverride < minO2SaturationOverride || currentO2SaturationOverride > maxO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Oxygen Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentPhosphateOverride < minPhosphateOverride || currentPhosphateOverride > maxPhosphateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Phosphate (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentWBCCountOverride < minWBCCountOverride || currentWBCCountOverride > maxWBCCountOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "White Blood Cell Count (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentTotalBilirubinOverride < minTotalBilirubinOverride || currentTotalBilirubinOverride > maxTotalBilirubinOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Total Bilirubin (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentCalciumConcentrationOverride < minCalciumConcentrationOverride || currentCalciumConcentrationOverride > maxCalciumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Calcium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentGlucoseConcentrationOverride < minGlucoseConcentrationOverride || currentGlucoseConcentrationOverride > maxGlucoseConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Glucose Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentLactateConcentrationOverride < minLactateConcentrationOverride || currentLactateConcentrationOverride > maxLactateConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Lactate Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentPotassiumConcentrationOverride < minPotassiumConcentrationOverride || currentPotassiumConcentrationOverride > maxPotassiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Potassium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentSodiumConcentrationOverride < minSodiumConcentrationOverride || currentSodiumConcentrationOverride > maxSodiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Sodium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    return;
   }
-  if ((currentVenPHOverride < minVenPHOverride || currentVenPHOverride > maxVenPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Venous Blood pH (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentCO2SaturationOverride < minCO2SaturationOverride || currentCO2SaturationOverride > maxCO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "CO2 Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentCOSaturationOverride < minCOSaturationOverride || currentCOSaturationOverride > maxCOSaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "CO Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentO2SaturationOverride < minO2SaturationOverride || currentO2SaturationOverride > maxO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Oxygen Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentPhosphateOverride < minPhosphateOverride || currentPhosphateOverride > maxPhosphateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Phosphate (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentWBCCountOverride < minWBCCountOverride || currentWBCCountOverride > maxWBCCountOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "White Blood Cell Count (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentTotalBilirubinOverride < minTotalBilirubinOverride || currentTotalBilirubinOverride > maxTotalBilirubinOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Total Bilirubin (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentCalciumConcentrationOverride < minCalciumConcentrationOverride || currentCalciumConcentrationOverride > maxCalciumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Calcium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentGlucoseConcentrationOverride < minGlucoseConcentrationOverride || currentGlucoseConcentrationOverride > maxGlucoseConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Glucose Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentLactateConcentrationOverride < minLactateConcentrationOverride || currentLactateConcentrationOverride > maxLactateConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Lactate Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentPotassiumConcentrationOverride < minPotassiumConcentrationOverride || currentPotassiumConcentrationOverride > maxPotassiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Potassium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentSodiumConcentrationOverride < minSodiumConcentrationOverride || currentSodiumConcentrationOverride > maxSodiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Sodium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  return;
-}
 }

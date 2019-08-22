@@ -24,40 +24,40 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-  constexpr char idArterialBloodPH[] = "ArterialBloodPH";
-  constexpr char idArterialBloodPHBaseline[] = "ArterialBloodPHBaseline";
-  constexpr char idBloodDensity[] = "BloodDensity";
-  constexpr char idBloodSpecificHeat[] = "BloodSpecificHeat";
-  constexpr char idBloodUreaNitrogenConcentration[] = "BloodUreaNitrogenConcentration";
-  constexpr char idCarbonDioxideSaturation[] = "CarbonDioxideSaturation";
-  constexpr char idCarbonMonoxideSaturation[] = "CarbonMonoxideSaturation";
-  constexpr char idHematocrit[] = "Hematocrit";
-  constexpr char idHemoglobinContent[] = "HemoglobinContent";
-  constexpr char idOxygenSaturation[] = "OxygenSaturation";
-  constexpr char idOxygenVenousSaturation[] = "OxygenVenousSaturation";
-  constexpr char idPhosphate[] = "Phosphate";
-  constexpr char idPlasmaVolume[] = "PlasmaVolume";
-  constexpr char idPulseOximetry[] = "PulseOximetry";
-  constexpr char idRedBloodCellAcetylcholinesterase[] = "RedBloodCellAcetylcholinesterase";
-  constexpr char idRedBloodCellCount[] = "RedBloodCellCount";
-  constexpr char idShuntFraction[] = "ShuntFraction";
-  constexpr char idStrongIonDifference[] = "StrongIonDifference";
-  constexpr char idTotalBilirubin[] = "TotalBilirubin";
-  constexpr char idTotalProteinConcentration[] = "TotalProteinConcentration";
-  constexpr char idVenousBloodPH[] = "VenousBloodPH";
-  constexpr char idVolumeFractionNeutralPhospholipidInPlasma[] = "VolumeFractionNeutralPhospholipidInPlasma";
-  constexpr char idVolumeFractionNeutralLipidInPlasma[] = "VolumeFractionNeutralLipidInPlasma";
-  constexpr char idWhiteBloodCellCount[] = "WhiteBloodCellCount";
-  constexpr char idArterialCarbonDioxidePressure[] = "ArterialCarbonDioxidePressure";
-  constexpr char idArterialOxygenPressure[] = "ArterialOxygenPressure";
-  constexpr char idPulmonaryArterialCarbonDioxidePressure[] = "PulmonaryArterialCarbonDioxidePressure";
-  constexpr char idPulmonaryArterialOxygenPressure[] = "PulmonaryArterialOxygenPressure";
-  constexpr char idPulmonaryVenousCarbonDioxidePressure[] = "PulmonaryVenousCarbonDioxidePressure";
-  constexpr char idPulmonaryVenousOxygenPressure[] = "PulmonaryVenousOxygenPressure";
-  constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
-  constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
-  constexpr char idAcuteInflammatoryResponse[] = "AcuteInflammatoryResponse";
-  constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
+constexpr char idArterialBloodPH[] = "ArterialBloodPH";
+constexpr char idArterialBloodPHBaseline[] = "ArterialBloodPHBaseline";
+constexpr char idBloodDensity[] = "BloodDensity";
+constexpr char idBloodSpecificHeat[] = "BloodSpecificHeat";
+constexpr char idBloodUreaNitrogenConcentration[] = "BloodUreaNitrogenConcentration";
+constexpr char idCarbonDioxideSaturation[] = "CarbonDioxideSaturation";
+constexpr char idCarbonMonoxideSaturation[] = "CarbonMonoxideSaturation";
+constexpr char idHematocrit[] = "Hematocrit";
+constexpr char idHemoglobinContent[] = "HemoglobinContent";
+constexpr char idOxygenSaturation[] = "OxygenSaturation";
+constexpr char idOxygenVenousSaturation[] = "OxygenVenousSaturation";
+constexpr char idPhosphate[] = "Phosphate";
+constexpr char idPlasmaVolume[] = "PlasmaVolume";
+constexpr char idPulseOximetry[] = "PulseOximetry";
+constexpr char idRedBloodCellAcetylcholinesterase[] = "RedBloodCellAcetylcholinesterase";
+constexpr char idRedBloodCellCount[] = "RedBloodCellCount";
+constexpr char idShuntFraction[] = "ShuntFraction";
+constexpr char idStrongIonDifference[] = "StrongIonDifference";
+constexpr char idTotalBilirubin[] = "TotalBilirubin";
+constexpr char idTotalProteinConcentration[] = "TotalProteinConcentration";
+constexpr char idVenousBloodPH[] = "VenousBloodPH";
+constexpr char idVolumeFractionNeutralPhospholipidInPlasma[] = "VolumeFractionNeutralPhospholipidInPlasma";
+constexpr char idVolumeFractionNeutralLipidInPlasma[] = "VolumeFractionNeutralLipidInPlasma";
+constexpr char idWhiteBloodCellCount[] = "WhiteBloodCellCount";
+constexpr char idArterialCarbonDioxidePressure[] = "ArterialCarbonDioxidePressure";
+constexpr char idArterialOxygenPressure[] = "ArterialOxygenPressure";
+constexpr char idPulmonaryArterialCarbonDioxidePressure[] = "PulmonaryArterialCarbonDioxidePressure";
+constexpr char idPulmonaryArterialOxygenPressure[] = "PulmonaryArterialOxygenPressure";
+constexpr char idPulmonaryVenousCarbonDioxidePressure[] = "PulmonaryVenousCarbonDioxidePressure";
+constexpr char idPulmonaryVenousOxygenPressure[] = "PulmonaryVenousOxygenPressure";
+constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
+constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
+constexpr char idAcuteInflammatoryResponse[] = "AcuteInflammatoryResponse";
+constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
 
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
@@ -1041,7 +1041,7 @@ SEInflammatoryResponse& SEBloodChemistrySystem::GetInflammatoryResponse()
 //-------------------------------------------------------------------------------
 Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
+  return Tree<const char*>{ classname() }
     .emplace_back(idArterialBloodPH)
     .emplace_back(idArterialBloodPHBaseline)
     .emplace_back(idBloodDensity)
@@ -1075,11 +1075,15 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idVenousOxygenPressure)
     .emplace_back(idAcuteInflammatoryResponse)
     .emplace_back(idInflammtoryRespone);
-    ;
+  ;
 }
 
 SEInflammatoryResponse::SEInflammatoryResponse()
-  : m_Antibodies(nullptr)
+  : m_LocalPathogen(nullptr)
+  , m_LocalMacrophage(nullptr)
+  , m_LocalNeutrophil(nullptr)
+  , m_LocalBarrier(nullptr)
+  , m_ActiveTLR(CDM::enumOnOff::value(-1))
   , m_Catecholamines(nullptr)
   , m_ConstitutiveNOS(nullptr)
   , m_InducibleNOSPre(nullptr)
@@ -1093,12 +1097,13 @@ SEInflammatoryResponse::SEInflammatoryResponse()
   , m_NeutrophilActive(nullptr)
   , m_Nitrate(nullptr)
   , m_NitricOxide(nullptr)
-  , m_Pathogen(nullptr)
+  , m_BloodPathogen(nullptr)
   , m_TissueIntegrity(nullptr)
   , m_Trauma(nullptr)
   , m_TumorNecrosisFactor(nullptr)
 {
-}
+  
+  }
 //-------------------------------------------------------------------------------
 SEInflammatoryResponse::~SEInflammatoryResponse()
 {
@@ -1107,7 +1112,11 @@ SEInflammatoryResponse::~SEInflammatoryResponse()
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Clear()
 {
-  SAFE_DELETE(m_Antibodies);
+  SAFE_DELETE(m_LocalPathogen);
+  SAFE_DELETE(m_LocalMacrophage);
+  SAFE_DELETE(m_LocalNeutrophil);
+  SAFE_DELETE(m_LocalBarrier);
+  m_ActiveTLR = CDM::enumOnOff::value(-1);
   SAFE_DELETE(m_Catecholamines);
   SAFE_DELETE(m_ConstitutiveNOS);
   SAFE_DELETE(m_InducibleNOSPre);
@@ -1121,7 +1130,7 @@ void SEInflammatoryResponse::Clear()
   SAFE_DELETE(m_NeutrophilActive);
   SAFE_DELETE(m_Nitrate);
   SAFE_DELETE(m_NitricOxide);
-  SAFE_DELETE(m_Pathogen);
+  SAFE_DELETE(m_BloodPathogen);
   SAFE_DELETE(m_TissueIntegrity);
   SAFE_DELETE(m_Trauma);
   SAFE_DELETE(m_TumorNecrosisFactor);
@@ -1130,7 +1139,11 @@ void SEInflammatoryResponse::Clear()
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::Load(const CDM::InflammatoryResponseData& in)
 {
-  GetAntibodies().Load(in.Antibodies());
+  GetLocalPathogen().Load(in.LocalPathogen());
+  GetLocalMacrophage().Load(in.LocalMacrophage());
+  GetLocalNeutrophil().Load(in.LocalNeutrophil());
+  GetLocalBarrier().Load(in.LocalBarrier());
+  SetActiveTLR(in.ActiveTLR());
   GetCatecholamines().Load(in.Catecholamines());
   GetConstitutiveNOS().Load(in.ConstitutiveNOS());
   GetInducibleNOSPre().Load(in.InducibleNOSPre());
@@ -1144,7 +1157,7 @@ bool SEInflammatoryResponse::Load(const CDM::InflammatoryResponseData& in)
   GetNeutrophilActive().Load(in.NeutrophilActive());
   GetNitrate().Load(in.Nitrate());
   GetNitricOxide().Load(in.NitricOxide());
-  GetPathogen().Load(in.Pathogen());
+  GetBloodPathogen().Load(in.BloodPathogen());
   GetTissueIntegrity().Load(in.TissueIntegrity());
   GetTrauma().Load(in.Trauma());
   GetTumorNecrosisFactor().Load(in.TumorNecrosisFactor());
@@ -1164,7 +1177,11 @@ CDM::InflammatoryResponseData* SEInflammatoryResponse::Unload() const
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
 {
-  data.Antibodies(std::unique_ptr<CDM::ScalarData>(m_Antibodies->Unload()));
+  data.LocalPathogen(std::unique_ptr<CDM::ScalarData>(m_LocalPathogen->Unload()));
+  data.LocalMacrophage(std::unique_ptr<CDM::ScalarData>(m_LocalMacrophage->Unload()));
+  data.LocalNeutrophil(std::unique_ptr<CDM::ScalarData>(m_LocalNeutrophil->Unload()));
+  data.LocalBarrier(std::unique_ptr<CDM::ScalarData> (m_LocalBarrier->Unload()));
+  data.ActiveTLR(m_ActiveTLR);
   data.Catecholamines(std::unique_ptr<CDM::ScalarData>(m_Catecholamines->Unload()));
   data.ConstitutiveNOS(std::unique_ptr<CDM::ScalarData>(m_ConstitutiveNOS->Unload()));
   data.InducibleNOSPre(std::unique_ptr<CDM::ScalarData>(m_InducibleNOSPre->Unload()));
@@ -1178,7 +1195,7 @@ void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
   data.NeutrophilActive(std::unique_ptr<CDM::ScalarData>(m_NeutrophilActive->Unload()));
   data.Nitrate(std::unique_ptr<CDM::ScalarData>(m_Nitrate->Unload()));
   data.NitricOxide(std::unique_ptr<CDM::ScalarData>(m_NitricOxide->Unload()));
-  data.Pathogen(std::unique_ptr<CDM::ScalarData>(m_Pathogen->Unload()));
+  data.BloodPathogen(std::unique_ptr<CDM::ScalarData>(m_BloodPathogen->Unload()));
   data.TissueIntegrity(std::unique_ptr<CDM::Scalar0To1Data>(m_TissueIntegrity->Unload()));
   data.Trauma(std::unique_ptr<CDM::ScalarData>(m_Trauma->Unload()));
   data.TumorNecrosisFactor(std::unique_ptr<CDM::ScalarData>(m_TumorNecrosisFactor->Unload()));
@@ -1191,8 +1208,12 @@ void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
 void SEInflammatoryResponse::Initialize()
 {
   //Values from Chow2005Acute
-  GetPathogen().SetValue(0.0); //Change this back to 0 after testing
-  GetAntibodies().SetValue(3.26);  //Ratio of resting source to decay terms in inflammation model
+  GetLocalPathogen().SetValue(0.0);
+  GetLocalMacrophage().SetValue(10.0);
+  GetLocalNeutrophil().SetValue(0.0);
+  GetLocalBarrier().SetValue(1.0);
+  SetActiveTLR(CDM::enumOnOff::Off);
+  GetBloodPathogen().SetValue(0.0); //Change this back to 0 after testing
   GetTrauma().SetValue(0.0);
   GetMacrophageResting().SetValue(1.0);
   GetMacrophageActive().SetValue(0.0);
@@ -1204,8 +1225,8 @@ void SEInflammatoryResponse::Initialize()
   GetNitrate().SetValue(0.0);
   GetNitricOxide().SetValue(0.0);
   GetTumorNecrosisFactor().SetValue(0.0);
-  GetInterleukin6().SetValue(0.001); 
-  GetInterleukin10().SetValue(0.01); 
+  GetInterleukin6().SetValue(0.001);
+  GetInterleukin10().SetValue(0.01);
   GetInterleukin12().SetValue(0.0);
   GetCatecholamines().SetValue(0.0);
   GetTissueIntegrity().SetValue(1.0);
@@ -1213,7 +1234,7 @@ void SEInflammatoryResponse::Initialize()
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::IsValid()
 {
-  if (HasAntibodies() && HasPathogen() && HasTrauma() && HasMacrophageResting() && HasMacrophageActive() && HasNeutrophilResting() && HasNeutrophilActive() && HasInducibleNOSPre() && HasInducibleNOS() && HasConstitutiveNOS() && HasNitrate() && HasNitricOxide() && HasTumorNecrosisFactor() && HasInterleukin6() && HasInterleukin10() && HasInterleukin12() && HasCatecholamines() && HasTissueIntegrity())
+  if (HasLocalPathogen() && HasLocalMacrophage() && HasLocalNeutrophil() && HasLocalBarrier()  && HasActiveTLR() && HasBloodPathogen() && HasTrauma() && HasMacrophageResting() && HasMacrophageActive() && HasNeutrophilResting() && HasNeutrophilActive() && HasInducibleNOSPre() && HasInducibleNOS() && HasConstitutiveNOS() && HasNitrate() && HasNitricOxide() && HasTumorNecrosisFactor() && HasInterleukin6() && HasInterleukin10() && HasInterleukin12() && HasCatecholamines() && HasTissueIntegrity())
     return true;
   else
     return false;
@@ -1226,10 +1247,16 @@ const SEScalar* SEInflammatoryResponse::GetScalar(const char* name)
 //-------------------------------------------------------------------------------
 const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name)
 {
-  if (name.compare("Antibodies") == 0)
-    return &GetAntibodies();
-  if (name.compare("Pathogen") == 0)
-    return &GetPathogen();
+  if (name.compare("LocalPathogen") == 0)
+    return &GetLocalPathogen();
+  if (name.compare("LocalMacrophage") == 0)
+    return &GetLocalMacrophage();
+  if (name.compare("LocalNeutrophil") == 0)
+    return &GetLocalNeutrophil();
+  if (name.compare("LocalBarrier") == 0)
+    return &GetLocalBarrier();
+  if (name.compare("BloodPathogen") == 0)
+    return &GetBloodPathogen();
   if (name.compare("Trauma") == 0)
     return &GetTrauma();
   if (name.compare("MacrophageResting") == 0)
@@ -1266,42 +1293,99 @@ const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name)
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasAntibodies() const
+bool SEInflammatoryResponse::HasLocalPathogen() const
 {
-  return m_Antibodies == nullptr ? false : m_Antibodies->IsValid();
+  return m_LocalPathogen == nullptr ? false : m_LocalPathogen->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEInflammatoryResponse::GetAntibodies()
+SEScalar& SEInflammatoryResponse::GetLocalPathogen()
 {
-  if (m_Antibodies == nullptr)
-    m_Antibodies = new SEScalar();
-  return *m_Antibodies;
+  if (m_LocalPathogen == nullptr)
+    m_LocalPathogen = new SEScalar();
+  return *m_LocalPathogen;
 }
 //-------------------------------------------------------------------------------
-double SEInflammatoryResponse::GetAntibodies() const
+double SEInflammatoryResponse::GetLocalPathogen() const
 {
-  if (m_Antibodies == nullptr)
+  if (m_LocalPathogen == nullptr)
     return SEScalar::dNaN();
-  return m_Antibodies->GetValue();
+  return m_LocalPathogen->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::HasPathogen() const
+bool SEInflammatoryResponse::HasLocalMacrophage() const
 {
-  return m_Pathogen == nullptr ? false : m_Pathogen->IsValid();
+  return m_LocalMacrophage == nullptr ? false : m_LocalMacrophage->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SEInflammatoryResponse::GetPathogen()
+SEScalar& SEInflammatoryResponse::GetLocalMacrophage()
 {
-  if (m_Pathogen == nullptr)
-    m_Pathogen = new SEScalar();
-  return *m_Pathogen;
+  if (m_LocalMacrophage == nullptr)
+    m_LocalMacrophage = new SEScalar();
+  return *m_LocalMacrophage;
 }
 //-------------------------------------------------------------------------------
-double SEInflammatoryResponse::GetPathogen() const
+double SEInflammatoryResponse::GetLocalMacrophage() const
 {
-  if (m_Pathogen == nullptr)
+  if (m_LocalMacrophage == nullptr)
     return SEScalar::dNaN();
-  return m_Pathogen->GetValue();
+  return m_LocalMacrophage->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEInflammatoryResponse::HasLocalNeutrophil() const
+{
+  return m_LocalNeutrophil == nullptr ? false : m_LocalNeutrophil->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEInflammatoryResponse::GetLocalNeutrophil()
+{
+  if (m_LocalNeutrophil == nullptr)
+    m_LocalNeutrophil = new SEScalar();
+  return *m_LocalNeutrophil;
+}
+//-------------------------------------------------------------------------------
+double SEInflammatoryResponse::GetLocalNeutrophil() const
+{
+  if (m_LocalNeutrophil == nullptr)
+    return SEScalar::dNaN();
+  return m_LocalNeutrophil->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEInflammatoryResponse::HasLocalBarrier() const
+{
+  return m_LocalBarrier == nullptr ? false : m_LocalBarrier->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEInflammatoryResponse::GetLocalBarrier()
+{
+  if (m_LocalBarrier == nullptr)
+    m_LocalBarrier = new SEScalar();
+  return *m_LocalBarrier;
+}
+//-------------------------------------------------------------------------------
+double SEInflammatoryResponse::GetLocalBarrier() const
+{
+  if (m_LocalBarrier == nullptr)
+    return SEScalar::dNaN();
+  return m_LocalBarrier->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEInflammatoryResponse::HasBloodPathogen() const
+{
+  return m_BloodPathogen == nullptr ? false : m_BloodPathogen->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEInflammatoryResponse::GetBloodPathogen()
+{
+  if (m_BloodPathogen == nullptr)
+    m_BloodPathogen = new SEScalar();
+  return *m_BloodPathogen;
+}
+//-------------------------------------------------------------------------------
+double SEInflammatoryResponse::GetBloodPathogen() const
+{
+  if (m_BloodPathogen == nullptr)
+    return SEScalar::dNaN();
+  return m_BloodPathogen->GetValue();
 }
 //-------------------------------------------------------------------------------
 bool SEInflammatoryResponse::HasTrauma() const
@@ -1617,7 +1701,4 @@ std::vector<CDM::enumInflammationSource>& SEInflammatoryResponse::GetInflammatio
 {
   return m_InflammationSources;
 }
-
-
-
 }

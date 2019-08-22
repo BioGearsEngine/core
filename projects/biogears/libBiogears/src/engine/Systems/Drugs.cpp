@@ -591,7 +591,7 @@ void Drugs::CalculatePartitionCoefficients()
         ss << tissue->GetName();
         Fatal(ss);
       }
-      //Previous implementation grouped by nested if/else.  Using switch results in some code duplication (between acid/weakbase/neutral), but it looks a lot cleaner
+	  //Choose correct set of equations to use given the ionic state of the drug
       switch (IonicState) {
       case CDM::enumSubstanceIonicState::Base:
         PHEffectPower = pKA1 - IntracellularPH;
@@ -600,7 +600,7 @@ void Drugs::CalculatePartitionCoefficients()
         PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         //Method of Rogers/Rowland requires an estimate for association constant of bases with acidic phospholipids.  This value can be estimated using blood/plasma_unbound partition coefficient
         bloodPlasmaUnboundRatio = (pk.GetBloodPlasmaRatio().GetValue() - (1.0 - hematocrit)) / (hematocrit * pk.GetFractionUnboundInPlasma().GetValue()); //See Hinderling1997Red:  Kb/p = Ke/pu * fu * hematocrit + (1- hematocrit)
-          //Recycle equation part A,B,C for determination of acidic phospholipid association
+        //Recycle equation part A,B,C for determination of acidic phospholipid association
         rbcPHEffects = 1.0 + std::pow(10.0, (pKA1 - rbcIntracellularPH));
         EquationPartA = (rbcPHEffects * rbcIntracellularWater) / PlasmaPHEffects;
         EquationPartB = (P * rbcNeutralLipids + (0.3 * P + 0.7) * rbcNeutralPhospholipids) / PlasmaPHEffects;
@@ -798,8 +798,11 @@ void Drugs::CalculateDrugEffects()
 		  //curve is the ratio -kMin / kMax.  This structure imposes a net growth rate of 0 when antibiotic concentration = MIC (very useful result).
 		  //This means that we will not use the EC50 value given in antibiotic sub xml files, but it also reduces the amount of parameter guesswork we do.
 		  //For now, the max pathogen growth rate is constant (see BloodChemistry).  If that changes, we need to make sure that this function is aware.
-        double growthMax_Per_hr = 0.66;
+        double growthMax_Per_hr = 0.6;
         double growthMin_Per_hr = growthMax_Per_hr - pd.GetAntibacterialEffect(FrequencyUnit::Per_hr);
+        if (growthMin_Per_hr > 0.0) {
+          Warning("Maximum antibacterial effect is lower than the growth rate of the bacteria");
+        }
         double growthRatio = growthMin_Per_hr / growthMax_Per_hr;
         double concentrationToMIC = effectSiteConcentration_ug_Per_mL * sub->GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma().GetValue() / minimumInhibitoryConcentration_ug_Per_mL;
         concentrationEffects_unitless = std::pow(concentrationToMIC, shapeParameter) / (std::pow(concentrationToMIC, shapeParameter) - growthRatio);

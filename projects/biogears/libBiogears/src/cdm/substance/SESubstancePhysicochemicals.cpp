@@ -138,26 +138,6 @@ void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data
     data.PolarSurfaceArea(std::unique_ptr<CDM::ScalarData>(m_PolarSurfaceArea->Unload()));
 };
 //-----------------------------------------------------------------------------
-//bool SESubstancePhysicochemicals::HasAcidDissociationConstant() const
-//{
-//  return (m_AcidDissociationConstant == nullptr) ? false : m_AcidDissociationConstant->IsValid();
-//}
-////-----------------------------------------------------------------------------
-//SEScalar& SESubstancePhysicochemicals::GetAcidDissociationConstant()
-//{
-//  if (m_AcidDissociationConstant == nullptr)
-//    m_AcidDissociationConstant = new SEScalar();
-//  return *m_AcidDissociationConstant;
-//}
-////-----------------------------------------------------------------------------
-//double SESubstancePhysicochemicals::GetAcidDissociationConstant() const
-//{
-//  if (m_AcidDissociationConstant == nullptr)
-//    return SEScalar::dNaN();
-//  return m_AcidDissociationConstant->GetValue();
-//}
-////-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasPrimaryPKA() const
 {
   return (!m_AcidDissociationConstants.empty());

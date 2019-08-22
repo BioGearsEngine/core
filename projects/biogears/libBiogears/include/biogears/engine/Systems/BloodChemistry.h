@@ -77,8 +77,8 @@ public:
 
 protected:
   void CheckBloodSubstanceLevels();
-  void Sepsis();
   void InflammatoryResponse();
+  void ManageSIRS();		//SIRS = Systemic Inflammatory Response Syndrome
 
   //Override
   void ProcessOverride();

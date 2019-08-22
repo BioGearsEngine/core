@@ -43,7 +43,12 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
 				<xs:sequence>
-					<xs:element name="Pathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="LocalPathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="LocalMacrophage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="LocalNeutrophil" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="LocalBarrier" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="ActiveTLR" type="enumOnOff" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="BloodPathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Trauma" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="MacrophageResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="MacrophageActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
@@ -60,7 +65,6 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Antibodies" type="ScalarData" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
 				</xs:sequence>
 			</xs:extension>

@@ -253,21 +253,20 @@ void Nervous::BaroreceptorFeedback()
     }
   }
   //Sepsis effects
-  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
-    if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::SevereSepsis)){
-      double severeSepsisDuration_hr = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::hr);
-      double newAlphaResistance = m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() * std::exp(-severeSepsisDuration_hr);
-      //This check is done in the event that the Severe Sepsis event toggles on/off quickly.  When this happens, the new resistance will suddenly reset to the baseline configuration
-      //(because severeSepsisDuration_hr resets to 0).
-      if (newAlphaResistance < m_normalizedAlphaResistance){
-        m_normalizedAlphaResistance = newAlphaResistance;
-      }
-    } else {
-      //Very slowly restore resistance gain to its original state.  This should not happen all at once
-      double restoringFactor = 1e-6;
-      m_normalizedAlphaResistance += restoringFactor * (m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() - m_normalizedAlphaResistance);
-      }
+  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::SevereSepsis)){
+	  double severeSepsisDuration_hr = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::hr);
+	  double newAlphaResistance = m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() * std::exp(-severeSepsisDuration_hr);
+	  //This check is done in the event that the Severe Sepsis event toggles on/off quickly.  When this happens, the new resistance will suddenly reset to the baseline configuration
+	  //(because severeSepsisDuration_hr resets to 0).
+	  if (newAlphaResistance < m_normalizedAlphaResistance){
+		  m_normalizedAlphaResistance = newAlphaResistance;
+	  }
+  } else {
+	  //Very slowly restore resistance gain to its original state.  This should not happen all at once
+	  double restoringFactor = 1e-6;
+	  m_normalizedAlphaResistance += restoringFactor * (m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() - m_normalizedAlphaResistance);
   }
+  
 
   //Neurological effects of pain action
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {

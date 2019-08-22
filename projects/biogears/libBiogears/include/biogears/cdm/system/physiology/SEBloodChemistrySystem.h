@@ -427,9 +427,25 @@ protected:
   virtual void Unload(CDM::InflammatoryResponseData& data) const;
 
 public:
-  virtual bool HasAntibodies() const;
-  virtual SEScalar& GetAntibodies();
-  virtual double GetAntibodies() const;
+  virtual bool HasLocalPathogen() const;
+  virtual SEScalar& GetLocalPathogen();
+  virtual double GetLocalPathogen() const;
+
+  virtual bool HasLocalBarrier() const;
+  virtual SEScalar& GetLocalBarrier();
+  virtual double GetLocalBarrier() const;
+
+  virtual bool HasLocalMacrophage() const;
+  virtual SEScalar& GetLocalMacrophage();
+  virtual double GetLocalMacrophage() const;
+
+  virtual bool HasLocalNeutrophil() const;
+  virtual SEScalar& GetLocalNeutrophil();
+  virtual double GetLocalNeutrophil() const;
+
+  virtual bool HasActiveTLR() const {return m_ActiveTLR == CDM::enumOnOff::value(-1) ? false : true;};
+  virtual CDM::enumOnOff GetActiveTLR() { return m_ActiveTLR; };
+  virtual void SetActiveTLR(CDM::enumOnOff value) { m_ActiveTLR = value; };
 
   virtual bool HasCatecholamines() const;
   virtual SEScalar& GetCatecholamines();
@@ -483,9 +499,9 @@ public:
   virtual SEScalar& GetNitricOxide();
   virtual double GetNitricOxide() const;
 
-  virtual bool HasPathogen() const;
-  virtual SEScalar& GetPathogen();
-  virtual double GetPathogen() const;
+  virtual bool HasBloodPathogen() const;
+  virtual SEScalar& GetBloodPathogen();
+  virtual double GetBloodPathogen() const;
 
   virtual bool HasTissueIntegrity() const;
   virtual SEScalar0To1& GetTissueIntegrity();
@@ -503,7 +519,11 @@ public:
   virtual std::vector<CDM::enumInflammationSource>& GetInflammationSources();
 
 protected:
-  SEScalar* m_Antibodies;
+  SEScalar* m_LocalPathogen;
+  SEScalar* m_LocalMacrophage;
+  SEScalar* m_LocalNeutrophil;
+  SEScalar* m_LocalBarrier;
+  CDM::enumOnOff::value m_ActiveTLR;
   SEScalar* m_Catecholamines;
   SEScalar* m_ConstitutiveNOS;
   SEScalar* m_InducibleNOSPre;
@@ -517,12 +537,10 @@ protected:
   SEScalar* m_NeutrophilActive;
   SEScalar* m_Nitrate;
   SEScalar* m_NitricOxide;
-  SEScalar* m_Pathogen;
+  SEScalar* m_BloodPathogen;
   SEScalar0To1* m_TissueIntegrity;
   SEScalar* m_Trauma;
   SEScalar* m_TumorNecrosisFactor;
   std::vector<CDM::enumInflammationSource> m_InflammationSources;
 };
-
-
 }

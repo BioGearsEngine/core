@@ -805,17 +805,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     mandatoryMuscleAnaerobicFraction *= 1.5; //50% increase
   }
-  //Patients with sepsis have elevated lactate levels (i.e. increased anaerobic activity) because of poor oxygen perfusion to tissues
-  //Assume that the muscles are most effected by this deficit and increase the anaerobic fraction as a function of sepsis progression
-  if (m_PatientActions->HasSepsis()) {
-    //Making this so that highest severity increases levels by 50% like the COPD function above, time scale seems about right.  Lower increases for lower severities because those
-    //scenarios will have more time to accumulate lactate
-    mandatoryMuscleAnaerobicFraction *= (1.0 + m_PatientActions->GetSepsis()->GetSeverity().GetValue() / 2.0);
-    //If we get to severe sepsis but do not have lactic acidosis yet, ramp up fraction another 50% (theoretical max = 0.1 * (1.5)^2 = 0.225)
-    if (m_Patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis) && !m_Patient->IsEventActive(CDM::enumPatientEvent::LacticAcidosis)) {
-      mandatoryMuscleAnaerobicFraction *= 1.5;
-    }
-  }
+
   if (m_PatientActions->HasHemorrhage()) {
     double maxBleedingRate_mL_Per_min = 200.0;
     double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
@@ -2416,16 +2406,7 @@ void Tissue::CalculateTissueFluidFluxes()
     osmoticFlow->GetNextFlowSource().SetValue(hydraulicConductivity_mL_Per_min_mM * (mOsmIntra - mOsmExtra), VolumePerTimeUnit::mL_Per_min);
   }
 
-  if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
-      SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
-      double resistanceModifier = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
-      if (t->GetName() != BGE::TissueCompartment::Brain) {
-        res->GetNextResistance().SetValue(res->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resistanceModifier, FlowResistanceUnit::mmHg_min_Per_mL);
-      }
-    }
-  }
-  if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
     for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
       SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
       double resistanceModifier = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();

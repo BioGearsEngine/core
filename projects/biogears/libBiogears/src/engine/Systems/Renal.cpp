@@ -1468,7 +1468,7 @@ void Renal::CalculateVitalSigns()
         m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, false, m_data.GetSimulationTime());
       }
 
-      if (m_data.GetActions().GetPatientActions().HasSepsis()) {
+      if (m_data.GetActions().GetPatientActions().HasInfection()) {
         double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
         if (systolicBP <= 100.0 && m_urineProductionRate_mL_Per_min_runningAvg.Value() <= 0.5) {
           m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
