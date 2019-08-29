@@ -1019,11 +1019,8 @@ void Cardiovascular::TraumaticBrainInjury()
 
   //Interpolate linearly between multipliers of 1 (for severity of 0) to max (for severity of 1)
   //These multipliers are chosen to result in ICP > 25 mmHg and CBF < 1.8 mL/s
-  //The commented out values are from the unit test; not sure why they have to be scaled by .5 in engine to get good response
   double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 4.87814, severity);
-  //double usMult = GeneralMath::LinearInterpolator(0, 1, 1, 2.4, severity); //2.43907
   double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 30.7993, severity);
-  //double dsMult = GeneralMath::LinearInterpolator(0, 1, 1, 15.0, severity); //15.3997
 
   //We don't want to shoot the resistances up to their new values in a single time step because this causes very sharp changes in cerebral metrics
   //Use a simple proportional control to ramp up to target resistances.  Time constant determined empirically based on previous baselines
@@ -1040,7 +1037,6 @@ void Cardiovascular::TraumaticBrainInjury()
 
   double intracranialBaseline = brainToSpinal->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
   double targetSpinal = GeneralMath::ResistanceFunction(10.0, intracranialBaseline / 5.0, intracranialBaseline, severity);
-  //double targetSpinal = brainToSpinal->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL) * (1.0 / usMult);
   double lastSpinal = brainToSpinal->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
   double spinalDelta = (targetSpinal - lastSpinal) * m_dT_s / timeConstant_s;
 
