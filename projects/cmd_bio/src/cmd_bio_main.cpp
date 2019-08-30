@@ -153,10 +153,13 @@ int main(int argc, char** argv)
   }
 
   if (args.MultiWordFound("SCENARIO")) {
+    auto configs = biogears::Config{  };
     for (auto& arg : args.MultiWord("SCENARIO")) {
-      auto configs = biogears::Config{ arg };
-      driver.queue(configs);
+      auto ex = biogears::Executor{ arg, biogears::EDriver::ScenarioTestDriver};
+      ex.Scenario(arg);
+      configs.push_back(ex);
     }
+    driver.queue(configs);
   }
   driver.run();
   driver.stop_when_empty();
