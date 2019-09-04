@@ -55,5 +55,6 @@ public:
   static double CalculateNernstPotential(SELiquidCompartment& extra, SELiquidCompartment& intra, SESubstance* ion, double& coreTemp_K);
   static double HillActivation(double x, double n, double h);
   static double HillInhibition(double x, double n, double h);
+  static double VectorSum(std::vector<double>& vec);
 };
 }

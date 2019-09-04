@@ -73,15 +73,26 @@ void Nervous::Initialize()
 {
   BioGearsSystem::Initialize();
   m_FeedbackActive = false;
+  m_TestBaroreceptors = true;
   m_blockActive = false;
 
   m_AfferentChemoreceptor_Hz = 3.5;
   m_BaroreceptorFatigueScale = 0.0;
+
   m_ChemoreceptorFiringRateSetPoint_Hz = m_AfferentChemoreceptor_Hz;
   m_CentralFrequencyDelta_Per_min = 0.0;
   m_CentralPressureDelta_cmH2O = 0.0;
   m_PeripheralFrequencyDelta_Per_min = 0.0;
   m_PeripheralPressureDelta_cmH2O = 0.0;
+  m_BaroreceptorFrequencyBaseline_Hz = 30.0; //From Ottesen
+  m_CentralVentilationDelta_L_Per_min = 0.0;
+  m_ChemoreceptorFiringRate_Hz = 3.65;
+  m_ChemoreceptorFiringRateSetPoint_Hz = m_ChemoreceptorFiringRate_Hz;
+  m_PeripheralBloodGasInteractionBaseline_Hz = 0.0;
+  m_PeripheralVentilationDelta_L_Per_min = 0.0;
+  m_PreviousMeanArterialPressure_mmHg = m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
+  SetBaroreceptorFrequencyComponents(std::vector<double>(3), FrequencyUnit::Hz);
+
   GetBaroreceptorHeartRateScale().SetValue(1.0);
   GetBaroreceptorHeartElastanceScale().SetValue(1.0);
   GetBaroreceptorResistanceScale().SetValue(1.0);
@@ -104,11 +115,21 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_ArterialOxygenBaseline_mmHg = in.ArterialOxygenBaseline_mmHg();
   m_ArterialCarbonDioxideBaseline_mmHg = in.ArterialCarbonDioxideBaseline_mmHg();
   m_BaroreceptorFatigueScale = in.BaroreceptorFatigueScale();
+
   m_ChemoreceptorFiringRateSetPoint_Hz = in.ChemoreceptorFiringRateSetPoint_Hz();
   m_CentralFrequencyDelta_Per_min = in.CentralFrequencyDelta_Per_min();
   m_CentralPressureDelta_cmH2O = in.CentralPressureDelta_cmH2O();
   m_PeripheralFrequencyDelta_Per_min = in.PeripheralFrequencyDelta_Per_min();
   m_PeripheralPressureDelta_cmH2O = in.PeripheralPressureDelta_cmH2O();
+
+  m_BaroreceptorFrequencyBaseline_Hz = in.BaroreceptorFrequencyBaseline_Hz();
+  m_CentralVentilationDelta_L_Per_min = in.ChemoreceptorCentralVentilationDelta_L_Per_min();
+  m_ChemoreceptorFiringRate_Hz = in.ChemoreceptorFiringRate_Hz();
+  m_ChemoreceptorFiringRateSetPoint_Hz = in.ChemoreceptorFiringRateSetPoint_Hz();
+  m_PeripheralBloodGasInteractionBaseline_Hz = in.ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz();
+  m_PeripheralVentilationDelta_L_Per_min = in.ChemoreceptorPeripheralVentilationDelta_L_Per_min();
+  m_PreviousMeanArterialPressure_mmHg = in.PreviousMeanArterialPressure_mmHg();
+
 
   return true;
 }
@@ -125,11 +146,21 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.ArterialOxygenBaseline_mmHg(m_ArterialOxygenBaseline_mmHg);
   data.ArterialCarbonDioxideBaseline_mmHg(m_ArterialCarbonDioxideBaseline_mmHg);
   data.BaroreceptorFatigueScale(m_BaroreceptorFatigueScale);
+
   data.ChemoreceptorFiringRateSetPoint_Hz(m_ChemoreceptorFiringRateSetPoint_Hz);
   data.CentralFrequencyDelta_Per_min(m_CentralFrequencyDelta_Per_min);
   data.CentralPressureDelta_cmH2O(m_CentralPressureDelta_cmH2O);
   data.PeripheralFrequencyDelta_Per_min(m_PeripheralFrequencyDelta_Per_min);
   data.PeripheralPressureDelta_cmH2O(m_PeripheralPressureDelta_cmH2O);
+
+  data.BaroreceptorFrequencyBaseline_Hz(m_BaroreceptorFrequencyBaseline_Hz);
+  data.ChemoreceptorCentralVentilationDelta_L_Per_min(m_CentralVentilationDelta_L_Per_min);
+  data.ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz(m_PeripheralBloodGasInteractionBaseline_Hz);
+  data.ChemoreceptorFiringRate_Hz(m_ChemoreceptorFiringRate_Hz);
+  data.ChemoreceptorFiringRateSetPoint_Hz(m_ChemoreceptorFiringRateSetPoint_Hz);
+  data.ChemoreceptorPeripheralVentilationDelta_L_Per_min(m_PeripheralVentilationDelta_L_Per_min);
+  data.PreviousMeanArterialPressure_mmHg(m_PreviousMeanArterialPressure_mmHg);
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -169,8 +200,11 @@ void Nervous::SetUp()
 
 void Nervous::AtSteadyState()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState)
+  if (m_data.GetState() == EngineState::AtInitialStableState) {
     m_FeedbackActive = true;
+    SetBaroreceptorFrequencyComponents(std::vector<double>(3), FrequencyUnit::Hz); //Vector of 0's
+  }
+    
 
   // The set-points (Baselines) get reset at the end of each stabilization period.
 
@@ -247,13 +281,48 @@ void Nervous::PostProcess()
 /// \todo Add decompensation. Perhaps a reduction in the effect that is a function of blood volume below a threshold... and maybe time.
 void Nervous::BaroreceptorFeedback()
 {
-  if (!m_FeedbackActive) {
-    return;
+  //New model constants
+  std::vector<double> tau_s{ 0.5, 5.0, 500.0 };
+  std::vector<double> gain_Hz_Per_mmHg{ 0.5, 0.5, 1.0 };
+  double maxFrequency_Hz = 120.0;
+
+  //Determine dP/dt and update last arterial pressure
+  double alpha = 0.78;
+  double arterialPressure_mmHg = m_data.GetCardiovascular().GetArterialPressure(PressureUnit::mmHg);
+  double dMeanPressure_mmHg_Per_s = alpha * (arterialPressure_mmHg - m_PreviousMeanArterialPressure_mmHg);
+  m_PreviousMeanArterialPressure_mmHg += dMeanPressure_mmHg_Per_s * m_dt_s;
+
+  //Get previous component frequencies and total frequency (sum of components and baseline)
+  std::vector<double> baroreceptorComponentFrequencies = GetBaroreceptorFrequencyComponents(FrequencyUnit::Hz);
+  double combinedFrequencySignal_Hz = m_BaroreceptorFrequencyBaseline_Hz;
+  for (auto signal : baroreceptorComponentFrequencies) {
+    combinedFrequencySignal_Hz += signal;
+  }
+  //Calcualte new frequencies
+  double dComponentFrequency_Hz_Per_s = 0.0;
+  double nextFrequency_Hz = 0.0;
+  for (size_t pos = 0; pos < baroreceptorComponentFrequencies.size(); ++pos) {
+    dComponentFrequency_Hz_Per_s = gain_Hz_Per_mmHg[pos] * dMeanPressure_mmHg_Per_s * combinedFrequencySignal_Hz * (maxFrequency_Hz - combinedFrequencySignal_Hz) / (std::pow(maxFrequency_Hz / 2.0, 2.0)) - (1.0 / tau_s[pos]) * baroreceptorComponentFrequencies[pos];
+    nextFrequency_Hz = baroreceptorComponentFrequencies[pos] + dComponentFrequency_Hz_Per_s * m_dt_s;
+    baroreceptorComponentFrequencies[pos] = nextFrequency_Hz;
+  }
+  //Push new values to CDM
+  if (!SetBaroreceptorFrequencyComponents(baroreceptorComponentFrequencies, FrequencyUnit::Hz)) {
+    Error("Nervous::BaroreceptorFeedback: Vector length mismatch");
   }
 
+  m_data.GetDataTrack().Probe("BaroreceptorComponents", GetBaroreceptorFrequencyComponents(FrequencyUnit::Hz));
+  m_data.GetDataTrack().Probe("Baroreceptor-Combined", combinedFrequencySignal_Hz);
+  m_data.GetDataTrack().Probe("Baroreceptor-Baseline", m_BaroreceptorFrequencyBaseline_Hz);
+  m_data.GetDataTrack().Probe("MeanPressureInput", m_PreviousMeanArterialPressure_mmHg);
+  if (!m_FeedbackActive) {
+	//Update baseline during initial stabilization and do not process model
+    //m_BaroreceptorFrequencyBaseline_Hz = combinedFrequencySignal_Hz;
+	return;
+  }
+  double meanArterialPressure_mmHg = m_data.GetCardiovascular().GetArterialPressure(PressureUnit::mmHg);
   //First calculate the sympathetic and parasympathetic firing rates:
   double nu = m_data.GetConfiguration().GetResponseSlope();
-  double meanArterialPressure_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure(PressureUnit::mmHg);
 
   //Adjusting the mean arterial pressure set-point to account for cardiovascular drug effects
   double meanArterialPressureSetPoint_mmHg = m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg) //m_MeanArterialPressureNoFeedbackBaseline_mmHg
@@ -280,6 +349,11 @@ void Nervous::BaroreceptorFeedback()
 
   double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
   double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
+  if (m_TestBaroreceptors){
+    sympatheticFraction = 1.0 / (1.0 + std::pow(combinedFrequencySignal_Hz / m_BaroreceptorFrequencyBaseline_Hz, nu));
+    parasympatheticFraction = 1.0 / (1.0 + std::pow(combinedFrequencySignal_Hz / m_BaroreceptorFrequencyBaseline_Hz, -nu));
+  }
+
 
   //Currently baroreceptor fatigue has only been tested for severe infections leading to sepsis.  We only accumulate fatigue if the sympathetic
   // outflow is above a certain threshold.  If we drop below threshold, we allow fatigue parameter to return towards 0. Note that even if infetion
@@ -590,6 +664,7 @@ void Nervous::ChemoreceptorFeedback()
   const double baselineDrivePressure_cmH2O = m_Patient->GetRespiratoryDriverAmplitudeBaseline(PressureUnit::cmH2O);
   double nextRespirationRate_Per_min  = baselineRespirationRate_Per_min + m_CentralFrequencyDelta_Per_min + m_PeripheralFrequencyDelta_Per_min;
   double nextDrivePressure_cmH2O = baselineDrivePressure_cmH2O - m_CentralPressureDelta_cmH2O - m_PeripheralPressureDelta_cmH2O;
+
 
   //Apply metabolic effects. The modifier is tuned to achieve the correct respiratory response for near maximal exercise.
   //A linear relationship is assumed for the respiratory effects due to increased metabolic exertion

@@ -142,12 +142,13 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ArterialOxygenBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorFatigueScale" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="PeripheralInteractionBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="BaroreceptorFrequencyBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorCentralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorPeripheralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ChemoreceptorFiringRate_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorFiringRateSetPoint_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="CentralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="CentralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="PeripheralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="PeripheralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="PreviousMeanArterialPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

@@ -64,7 +64,7 @@ Cardiovascular::Cardiovascular(BioGears& bg)
   , m_transporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, bg.GetLogger())
 {
   Clear();
-  m_TuningFile = "";
+  m_TuningFile = "./Tuning/Circuit.csv";
 }
 
 Cardiovascular::~Cardiovascular()
@@ -86,7 +86,7 @@ void Cardiovascular::Clear()
   m_RightHeartResistance = nullptr;
 
   m_MainPulmonaryArteries = nullptr;
-  m_LeftHeart2 = nullptr;
+  m_LeftAtrium1 = nullptr;
 
   m_LeftPulmonaryArteriesToVeins = nullptr;
   m_LeftPulmonaryArteriesToCapillaries = nullptr;
@@ -359,7 +359,7 @@ void Cardiovascular::SetUp()
   m_RightHeart = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightHeart);
   //Nodes
   m_MainPulmonaryArteries = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::MainPulmonaryArteries);
-  m_LeftHeart2 = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::LeftHeart2);
+  m_LeftAtrium1 = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::LeftAtrium1);
   //Paths
   m_LeftPulmonaryArteriesToVeins = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftPulmonaryArteriesToLeftPulmonaryVeins);
   m_LeftPulmonaryArteriesToCapillaries = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftPulmonaryArteriesToLeftPulmonaryCapillaries);
@@ -392,11 +392,14 @@ void Cardiovascular::SetUp()
   m_pVenaCavaHemorrhage = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaBleed);
   m_pGndToPericardium = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::GroundToPericardium1);
   m_pPericardiumToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Pericardium1ToGround);
-  m_pRightHeartToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightHeart3ToGround);
-  m_pRightHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightHeart1ToRightHeart3);
-  m_pLeftHeartToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftHeart3ToGround);
-  m_pLeftHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);
-  m_LeftHeartToAorta = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftHeart1ToAorta2);
+  m_pRightHeartToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightVentricle2ToGround);
+  //m_pRightHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightHeart1ToRightHeart3);
+  m_pRightHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightVentricle1ToRightVentricle2);
+  m_pLeftHeartToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftVentricle2ToGround);
+  //m_pLeftHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);
+  m_pLeftHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftVentricle1ToLeftVentricle2);
+  //m_LeftHeartToAorta = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftHeart1ToAorta2);
+  m_LeftHeartToAorta = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftVentricle1ToAorta2);
 
   /// \todo We are assuming that the complex renal system is connected. Make it agnostic.
   m_leftRenalArteryPath = m_CirculatoryCircuit->GetPath(BGE::RenalPath::LeftRenalArteryToAfferentArteriole);
@@ -440,7 +443,8 @@ void Cardiovascular::SetUp()
   m_AortaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta1ToGround);
   m_AortaResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Aorta3ToAorta1);
   m_VenaCavaCompliance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
-  m_RightHeartResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToRightHeart2);
+  //m_RightHeartResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToRightHeart2);
+  m_RightHeartResistance = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToRightAtrium1);
 
   if (m_data.GetConfiguration().IsTissueEnabled()) {
     m_tissueResistancePaths.push_back(m_CirculatoryCircuit->GetPath(BGE::TissuePath::GutE1ToGutE2));
@@ -698,6 +702,8 @@ void Cardiovascular::Process()
   m_circuitCalculator.Process(*m_CirculatoryCircuit, m_dT_s);
   m_transporter.Transport(*m_CirculatoryGraph, m_dT_s);
   CalculateVitalSigns();
+  m_data.GetDataTrack().Probe("ElastanceLeft_BG", m_LeftHeartElastanceMax_mmHg_Per_mL);
+  m_data.GetDataTrack().Probe("ElastanceRight_BG", m_RightHeartElastanceMax_mmHg_Per_mL);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -976,18 +982,18 @@ void Cardiovascular::RecordAndResetCardiacCycle()
   m_CardiacCycleSkinFlow_mL_Per_s.Reset();
 
   // Computed systemic Vascular Resistance
-  double cardiacOutput_mL_Per_min = GetCardiacOutput().GetValue(VolumePerTimeUnit::mL_Per_s);
+  double cardiacOutput_mL_Per_s = GetCardiacOutput().GetValue(VolumePerTimeUnit::mL_Per_s);
   double systemicVascularResistance_mmHg_s_Per_mL = 0.0;
-  if (cardiacOutput_mL_Per_min > ZERO_APPROX)
-    systemicVascularResistance_mmHg_s_Per_mL = (GetMeanArterialPressure().GetValue(PressureUnit::mmHg) - GetMeanCentralVenousPressure().GetValue(PressureUnit::mmHg)) / cardiacOutput_mL_Per_min;
+  if (cardiacOutput_mL_Per_s > ZERO_APPROX)
+    systemicVascularResistance_mmHg_s_Per_mL = (GetMeanArterialPressure().GetValue(PressureUnit::mmHg) - GetMeanCentralVenousPressure().GetValue(PressureUnit::mmHg)) / cardiacOutput_mL_Per_s;
   GetSystemicVascularResistance().SetValue(systemicVascularResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
 
   // Computed pulmonary Vascular Resistances
-  if (cardiacOutput_mL_Per_min == 0.0) {
+  if (cardiacOutput_mL_Per_s == 0.0) {
     GetPulmonaryVascularResistance().SetValue(0.0, FlowResistanceUnit::mmHg_min_Per_mL);
     GetPulmonaryVascularResistanceIndex().SetValue(0.0, PressureTimePerVolumeAreaUnit::mmHg_min_Per_mL_m2);
   } else {
-    GetPulmonaryVascularResistance().SetValue((m_MainPulmonaryArteries->GetNextPressure(PressureUnit::mmHg) - m_LeftHeart2->GetNextPressure(PressureUnit::mmHg)) / cardiacOutput_mL_Per_min, FlowResistanceUnit::mmHg_min_Per_mL);
+    GetPulmonaryVascularResistance().SetValue((m_MainPulmonaryArteries->GetNextPressure(PressureUnit::mmHg) - m_LeftAtrium1->GetNextPressure(PressureUnit::mmHg)) / cardiacOutput_mL_Per_s, FlowResistanceUnit::mmHg_s_Per_mL);
     GetPulmonaryVascularResistanceIndex().SetValue(GetPulmonaryVascularResistance(FlowResistanceUnit::mmHg_min_Per_mL) / m_patient->GetSkinSurfaceArea(AreaUnit::m2), PressureTimePerVolumeAreaUnit::mmHg_min_Per_mL_m2);
   }
 
@@ -1643,6 +1649,7 @@ void Cardiovascular::CalculateHeartElastance()
 
   m_LeftHeartElastance_mmHg_Per_mL = (m_LeftHeartElastanceMax_mmHg_Per_mL - m_LeftHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_LeftHeartElastanceMin_mmHg_Per_mL;
   m_RightHeartElastance_mmHg_Per_mL = (m_RightHeartElastanceMax_mmHg_Per_mL - m_RightHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_RightHeartElastanceMin_mmHg_Per_mL;
+
 }
 
 //--------------------------------------------------------------------------------------------------

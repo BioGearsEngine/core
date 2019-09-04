@@ -429,4 +429,13 @@ double GeneralMath::HillInhibition(double x, double n, double h)
 {
   return 1.0 / (1.0 + std::pow(x / n, h));
 }
+
+double GeneralMath::VectorSum(std::vector<double> &vec)
+{
+  double returnValue = 0.0;
+  for (auto value : vec) {
+    returnValue += value;
+  }
+  return returnValue;
+}
 }

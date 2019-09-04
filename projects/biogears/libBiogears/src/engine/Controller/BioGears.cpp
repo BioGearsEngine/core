@@ -1233,12 +1233,19 @@ void BioGears::SetupCardiovascular()
   SEFluidCircuit& cCardiovascular = m_Circuits->GetCardiovascularCircuit();
 
   // Create Nodes, set volume baselines and pressures where appropriate
-  SEFluidCircuitNode& RightHeart1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::RightHeart1);
-  RightHeart1.GetPressure().SetValue(0.0, PressureUnit::mmHg);
-  SEFluidCircuitNode& RightHeart2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::RightHeart2);
-  SEFluidCircuitNode& RightHeart3 = cCardiovascular.CreateNode(BGE::CardiovascularNode::RightHeart3);
-  RightHeart3.GetPressure().SetValue(0.0, PressureUnit::mmHg);
-  RightHeart1.GetVolumeBaseline().SetValue(VolumeFractionHeartRight * bloodVolume_mL, VolumeUnit::mL);
+  SEFluidCircuitNode& RightAtrium1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::RightAtrium1);
+  RightAtrium1.GetVolumeBaseline().SetValue(VolumeFractionHeartRight * 0.45 * bloodVolume_mL, VolumeUnit::mL);
+  RightAtrium1.GetPressure().SetValue(2.9, PressureUnit::mmHg);
+
+  SEFluidCircuitNode& RightAtrium2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::RightAtrium2);
+  RightAtrium2.GetPressure().SetValue(2.9 - ResistanceHeartRight * cardiacOutputTarget_mL_Per_s, PressureUnit::mmHg);
+
+  SEFluidCircuitNode& RightVentricle1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::RightVentricle1);
+  RightVentricle1.GetPressure().SetValue(0.0, PressureUnit::mmHg);
+  RightVentricle1.GetVolumeBaseline().SetValue(VolumeFractionHeartRight * 0.55 * bloodVolume_mL, VolumeUnit::mL);
+
+  SEFluidCircuitNode& RightVentricle2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::RightVentricle2);
+  RightVentricle2.GetPressure().SetValue(0.0, PressureUnit::mmHg);
 
   SEFluidCircuitNode& MainPulmonaryArteries = cCardiovascular.CreateNode(BGE::CardiovascularNode::MainPulmonaryArteries);
 
@@ -1270,12 +1277,19 @@ void BioGears::SetupCardiovascular()
   LeftPulmonaryVeins.GetVolumeBaseline().SetValue(VolumeFractionPulmVeinsLeft * bloodVolume_mL, VolumeUnit::mL);
   LeftPulmonaryVeins.GetPressure().SetValue(VascularPressureTargetPulmVeinsLeft, PressureUnit::mmHg);
 
-  SEFluidCircuitNode& LeftHeart1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::LeftHeart1);
-  LeftHeart1.GetPressure().SetValue(0.0, PressureUnit::mmHg);
-  SEFluidCircuitNode& LeftHeart2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::LeftHeart2);
-  SEFluidCircuitNode& LeftHeart3 = cCardiovascular.CreateNode(BGE::CardiovascularNode::LeftHeart3);
-  LeftHeart3.GetPressure().SetValue(0.0, PressureUnit::mmHg);
-  LeftHeart1.GetVolumeBaseline().SetValue(VolumeFractionHeartLeft * bloodVolume_mL, VolumeUnit::mL);
+  SEFluidCircuitNode& LeftAtrium1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::LeftAtrium1);
+  LeftAtrium1.GetVolumeBaseline().SetValue(VolumeFractionHeartLeft * 0.45 * bloodVolume_mL, VolumeUnit::mL);
+  LeftAtrium1.GetPressure().SetValue(4.9, PressureUnit::mmHg);
+
+  SEFluidCircuitNode& LeftAtrium2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::LeftAtrium2);
+  LeftAtrium2.GetPressure().SetValue(4.9 - ResistanceHeartLeft * cardiacOutputTarget_mL_Per_s, PressureUnit::mmHg);
+
+  SEFluidCircuitNode& LeftVentricle1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::LeftVentricle1);
+  LeftVentricle1.GetPressure().SetValue(0.0, PressureUnit::mmHg);
+  LeftVentricle1.GetVolumeBaseline().SetValue(VolumeFractionHeartLeft * 0.55 * bloodVolume_mL, VolumeUnit::mL);
+
+  SEFluidCircuitNode& LeftVentricle2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::LeftVentricle2);
+  LeftVentricle2.GetPressure().SetValue(0.0, PressureUnit::mmHg);
 
   SEFluidCircuitNode& Aorta1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::Aorta1);
   SEFluidCircuitNode& Aorta2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::Aorta2);
@@ -1390,16 +1404,19 @@ void BioGears::SetupCardiovascular()
   Pericardium.GetPressure().SetValue(1.0, PressureUnit::mmHg);
 
   // Create Paths, set switch (diodes), compliances, and resistances where appropriate
-  SEFluidCircuitPath& VenaCavaToRightHeart2 = cCardiovascular.CreatePath(VenaCava, RightHeart2, BGE::CardiovascularPath::VenaCavaToRightHeart2);
-  VenaCavaToRightHeart2.GetResistanceBaseline().SetValue(ResistanceHeartRight, FlowResistanceUnit::mmHg_s_Per_mL);
-  SEFluidCircuitPath& RightHeart2ToRightHeart1 = cCardiovascular.CreatePath(RightHeart2, RightHeart1, BGE::CardiovascularPath::RightHeart2ToRightHeart1);
-  RightHeart2ToRightHeart1.SetNextValve(CDM::enumOpenClosed::Closed);
-  SEFluidCircuitPath& RightHeart1ToRightHeart3 = cCardiovascular.CreatePath(RightHeart1, RightHeart3, BGE::CardiovascularPath::RightHeart1ToRightHeart3);
-  SEFluidCircuitPath& RightHeart3ToGround = cCardiovascular.CreatePath(Ground, RightHeart3, BGE::CardiovascularPath::RightHeart3ToGround);
-  RightHeart3ToGround.GetPressureSourceBaseline().SetValue(0.0, PressureUnit::mmHg);
-
-  SEFluidCircuitPath& RightHeart1ToMainPulmonaryArteries = cCardiovascular.CreatePath(RightHeart1, MainPulmonaryArteries, BGE::CardiovascularPath::RightHeart1ToMainPulmonaryArteries);
-  RightHeart1ToMainPulmonaryArteries.SetNextValve(CDM::enumOpenClosed::Closed);
+  SEFluidCircuitPath& VenaCavaToRightAtrium1 = cCardiovascular.CreatePath(VenaCava, RightAtrium1, BGE::CardiovascularPath::VenaCavaToRightAtrium1);
+  VenaCavaToRightAtrium1.GetResistanceBaseline().SetValue(ResistanceHeartRight, FlowResistanceUnit::mmHg_s_Per_mL);
+  SEFluidCircuitPath& RightAtrium1ToGround = cCardiovascular.CreatePath(RightAtrium1, Ground, BGE::CardiovascularPath::RightAtrium1ToGround);
+  RightAtrium1ToGround.GetComplianceBaseline().SetValue(1.0 / 0.06, FlowComplianceUnit::mL_Per_mmHg);
+  SEFluidCircuitPath& RightAtrium1ToRightAtrium2 = cCardiovascular.CreatePath(RightAtrium1, RightAtrium2, BGE::CardiovascularPath::RightAtrium1ToRightAtrium2);
+  RightAtrium1ToRightAtrium2.GetResistanceBaseline().SetValue(5.94e-5, FlowResistanceUnit::mmHg_s_Per_mL);
+  SEFluidCircuitPath& RightAtrium2ToRightVentricle1 = cCardiovascular.CreatePath(RightAtrium2, RightVentricle1, BGE::CardiovascularPath::RightAtrium2ToRightVentricle1);
+  RightAtrium2ToRightVentricle1.SetNextValve(CDM::enumOpenClosed::Closed);
+  SEFluidCircuitPath& RightVentricle1ToRightVentricle2 = cCardiovascular.CreatePath(RightVentricle1, RightVentricle2, BGE::CardiovascularPath::RightVentricle1ToRightVentricle2);
+  SEFluidCircuitPath& RightVentricle2ToGround = cCardiovascular.CreatePath(Ground, RightVentricle2, BGE::CardiovascularPath::RightVentricle2ToGround);
+  RightVentricle2ToGround.GetPressureSourceBaseline().SetValue(0.0, PressureUnit::mmHg);
+  SEFluidCircuitPath& RightVentricle1ToMainPulmonaryArteries = cCardiovascular.CreatePath(RightVentricle1, MainPulmonaryArteries, BGE::CardiovascularPath::RightVentricle1ToMainPulmonaryArteries);
+  RightVentricle1ToMainPulmonaryArteries.SetNextValve(CDM::enumOpenClosed::Closed);
 
   SEFluidCircuitPath& MainPulmonaryArteriesToRightIntermediatePulmonaryArteries = cCardiovascular.CreatePath(MainPulmonaryArteries, RightIntermediatePulmonaryArteries, BGE::CardiovascularPath::MainPulmonaryArteriesToRightIntermediatePulmonaryArteries);
   //MainPulmonaryArteriesToRightIntermediatePulmonaryArteries.SetNextValve(CDM::enumOpenClosed::Closed);
@@ -1421,8 +1438,8 @@ void BioGears::SetupCardiovascular()
   RightPulmonaryVeinsToRightIntermediatePulmonaryVeins.GetResistanceBaseline().SetValue(ResistanceHeartLeft, FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& RightPulmonaryVeinsToGround = cCardiovascular.CreatePath(RightPulmonaryVeins, Ground, BGE::CardiovascularPath::RightPulmonaryVeinsToGround);
   RightPulmonaryVeinsToGround.GetComplianceBaseline().SetValue(0.0, FlowComplianceUnit::mL_Per_mmHg);
-  SEFluidCircuitPath& RightIntermediatePulmonaryVeinsToLeftHeart2 = cCardiovascular.CreatePath(RightIntermediatePulmonaryVeins, LeftHeart2, BGE::CardiovascularPath::RightIntermediatePulmonaryVeinsToLeftHeart2);
-  //RightIntermediatePulmonaryVeinsToLeftHeart2.SetNextValve(CDM::enumOpenClosed::Closed);
+  SEFluidCircuitPath& RightIntermediatePulmonaryVeinsToLeftAtrium1 = cCardiovascular.CreatePath(RightIntermediatePulmonaryVeins, LeftAtrium1, BGE::CardiovascularPath::RightIntermediatePulmonaryVeinsToLeftAtrium1);
+  //RightIntermediatePulmonaryVeinsToLeftAtrium2.SetNextValve(CDM::enumOpenClosed::Closed);
 
   SEFluidCircuitPath& MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries = cCardiovascular.CreatePath(MainPulmonaryArteries, LeftIntermediatePulmonaryArteries, BGE::CardiovascularPath::MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries);
   //MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries.SetNextValve(CDM::enumOpenClosed::Closed);
@@ -1444,16 +1461,21 @@ void BioGears::SetupCardiovascular()
   LeftPulmonaryVeinsToLeftIntermediatePulmonaryVeins.GetResistanceBaseline().SetValue(ResistanceHeartLeft, FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& LeftPulmonaryVeinsToGround = cCardiovascular.CreatePath(LeftPulmonaryVeins, Ground, BGE::CardiovascularPath::LeftPulmonaryVeinsToGround);
   LeftPulmonaryVeinsToGround.GetComplianceBaseline().SetValue(0.0, FlowComplianceUnit::mL_Per_mmHg);
-  SEFluidCircuitPath& LeftIntermediatePulmonaryVeinsToLeftHeart2 = cCardiovascular.CreatePath(LeftIntermediatePulmonaryVeins, LeftHeart2, BGE::CardiovascularPath::LeftIntermediatePulmonaryVeinsToLeftHeart2);
-  //LeftIntermediatePulmonaryVeinsToLeftHeart2.SetNextValve(CDM::enumOpenClosed::Closed);
-  SEFluidCircuitPath& LeftHeart2ToLeftHeart1 = cCardiovascular.CreatePath(LeftHeart2, LeftHeart1, BGE::CardiovascularPath::LeftHeart2ToLeftHeart1);
-  LeftHeart2ToLeftHeart1.SetNextValve(CDM::enumOpenClosed::Closed);
-  SEFluidCircuitPath& LeftHeart1ToLeftHeart3 = cCardiovascular.CreatePath(LeftHeart1, LeftHeart3, BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);
+  SEFluidCircuitPath& LeftIntermediatePulmonaryVeinsToLeftAtrium1 = cCardiovascular.CreatePath(LeftIntermediatePulmonaryVeins, LeftAtrium1, BGE::CardiovascularPath::LeftIntermediatePulmonaryVeinsToLeftAtrium1);
+  //LeftIntermediatePulmonaryVeinsToLeftAtrium2.SetNextValve(CDM::enumOpenClosed::Closed);
 
-  SEFluidCircuitPath& LeftHeart3ToGround = cCardiovascular.CreatePath(Ground, LeftHeart3, BGE::CardiovascularPath::LeftHeart3ToGround);
-  LeftHeart3ToGround.GetPressureSourceBaseline().SetValue(0.0, PressureUnit::mmHg);
-  SEFluidCircuitPath& LeftHeart1ToAorta2 = cCardiovascular.CreatePath(LeftHeart1, Aorta2, BGE::CardiovascularPath::LeftHeart1ToAorta2);
-  LeftHeart1ToAorta2.SetNextValve(CDM::enumOpenClosed::Closed);
+  SEFluidCircuitPath& LeftAtrium1ToGround = cCardiovascular.CreatePath(LeftAtrium1, Ground, BGE::CardiovascularPath::LeftAtrium1ToGround);
+  LeftAtrium1ToGround.GetComplianceBaseline().SetValue(1.0 / 0.075, FlowComplianceUnit::mL_Per_mmHg);
+  SEFluidCircuitPath& LeftAtrium1ToLeftAtrium2 = cCardiovascular.CreatePath(LeftAtrium1, LeftAtrium2, BGE::CardiovascularPath::LeftAtrium1ToLeftAtrium2);
+  LeftAtrium1ToLeftAtrium2.GetResistanceBaseline().SetValue(8.9e-5, FlowResistanceUnit::mmHg_s_Per_mL);
+  SEFluidCircuitPath& LeftAtrium2ToLeftVentricle1 = cCardiovascular.CreatePath(LeftAtrium2, LeftVentricle1, BGE::CardiovascularPath::LeftAtrium2ToLeftVentricle1);
+  LeftAtrium2ToLeftVentricle1.SetNextValve(CDM::enumOpenClosed::Closed);
+  SEFluidCircuitPath& LeftVentricle1ToLeftVentricle2 = cCardiovascular.CreatePath(LeftVentricle1, LeftVentricle2, BGE::CardiovascularPath::LeftVentricle1ToLeftVentricle2);
+  SEFluidCircuitPath& LeftVentricle2ToGround = cCardiovascular.CreatePath(Ground, LeftVentricle2, BGE::CardiovascularPath::LeftVentricle2ToGround);
+  LeftVentricle2ToGround.GetPressureSourceBaseline().SetValue(0.0, PressureUnit::mmHg);
+  SEFluidCircuitPath& LeftVentricle1ToAorta2 = cCardiovascular.CreatePath(LeftVentricle1, Aorta2, BGE::CardiovascularPath::LeftVentricle1ToAorta2);
+  LeftVentricle1ToAorta2.SetNextValve(CDM::enumOpenClosed::Closed);
+
   SEFluidCircuitPath& Aorta2ToAorta3 = cCardiovascular.CreatePath(Aorta2, Aorta3, BGE::CardiovascularPath::Aorta2ToAorta3);
   SEFluidCircuitPath& Aorta3ToAorta1 = cCardiovascular.CreatePath(Aorta3, Aorta1, BGE::CardiovascularPath::Aorta3ToAorta1);
   Aorta3ToAorta1.GetResistanceBaseline().SetValue(ResistanceAorta, FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1661,8 +1683,10 @@ void BioGears::SetupCardiovascular()
   // initial pressure wave will be devastating to the rest of the CV system during the first contraction phase. Too little prime
   // and there will be issues with available flow as the elastance decreases during the first relaxation phase.
   // The 1/4 full initialization gives decent results.
-  RightHeart1ToRightHeart3.GetComplianceBaseline().SetValue(InitialComplianceHeartRight, FlowComplianceUnit::mL_Per_mmHg);
-  LeftHeart1ToLeftHeart3.GetComplianceBaseline().SetValue(InitialComplianceHeartLeft, FlowComplianceUnit::mL_Per_mmHg);
+  // RightHeart1ToRightHeart3.GetComplianceBaseline().SetValue(InitialComplianceHeartRight, FlowComplianceUnit::mL_Per_mmHg);
+  //LeftHeart1ToLeftHeart3.GetComplianceBaseline().SetValue(InitialComplianceHeartLeft, FlowComplianceUnit::mL_Per_mmHg);
+  LeftVentricle1ToLeftVentricle2.GetComplianceBaseline().SetValue(1.0 / 0.049, FlowComplianceUnit::mL_Per_mmHg);
+  RightVentricle1ToRightVentricle2.GetComplianceBaseline().SetValue(1.0 / 0.0243, FlowComplianceUnit::mL_Per_mmHg);
   PericardiumToGround.GetComplianceBaseline().SetValue(100.0, FlowComplianceUnit::mL_Per_mmHg);
 
   double VolumeModifierAorta = 1.16722 * 1.018749, VolumeModifierBrain = 0.998011 * 1.038409, VolumeModifierBone = 1.175574 * 0.985629, VolumeModifierFat = 1.175573 * 0.986527;
@@ -1717,11 +1741,13 @@ void BioGears::SetupCardiovascular()
 
   /////////////////
   // Right Heart //
-  SELiquidCompartment& vRightHeart = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::RightHeart);
-  vRightHeart.MapNode(RightHeart1);
-  vRightHeart.MapNode(RightHeart2);
-  vRightHeart.MapNode(RightHeart3);
-  vRightHeart.MapNode(MainPulmonaryArteries);
+  SELiquidCompartment& vRightAtrium = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::RightAtrium);
+  vRightAtrium.MapNode(RightAtrium1);
+  vRightAtrium.MapNode(RightAtrium2);
+  SELiquidCompartment& vRightVentricle = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::RightVentricle);
+  vRightVentricle.MapNode(RightVentricle1);
+  vRightVentricle.MapNode(RightVentricle2);
+  vRightVentricle.MapNode(MainPulmonaryArteries);
   //////////////////////////////
   // Right Pulmonary Arteries //
   SELiquidCompartment& vRightPulmonaryArteries = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::RightPulmonaryArteries);
@@ -1765,10 +1791,12 @@ void BioGears::SetupCardiovascular()
   vPulmonaryVeins.AddChild(vLeftPulmonaryVeins);
   ////////////////
   // Left Heart //
-  SELiquidCompartment& vLeftHeart = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::LeftHeart);
-  vLeftHeart.MapNode(LeftHeart1);
-  vLeftHeart.MapNode(LeftHeart2);
-  vLeftHeart.MapNode(LeftHeart3);
+  SELiquidCompartment& vLeftAtrium = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::LeftAtrium);
+  vLeftAtrium.MapNode(LeftAtrium1);
+  vLeftAtrium.MapNode(LeftAtrium2);
+  SELiquidCompartment& vLeftVentricle = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::LeftVentricle);
+  vLeftVentricle.MapNode(LeftVentricle1);
+  vLeftVentricle.MapNode(LeftVentricle2);
   ///////////
   // Aorta //
   SELiquidCompartment& vAorta = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::Aorta);
@@ -1876,6 +1904,12 @@ void BioGears::SetupCardiovascular()
   SELiquidCompartment& vKidneys = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::Kidneys);
   vKidneys.AddChild(vLeftKidney);
   vKidneys.AddChild(vRightKidney);
+  SELiquidCompartment& vRightHeart = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::RightHeart);
+  vRightHeart.AddChild(vRightAtrium);
+  vRightHeart.AddChild(vRightVentricle);
+  SELiquidCompartment& vLeftHeart = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::LeftHeart);
+  vLeftHeart.AddChild(vLeftAtrium);
+  vLeftHeart.AddChild(vRightAtrium);
   SELiquidCompartment& vHeart = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::Heart);
   vHeart.AddChild(vMyocardium);
   vHeart.AddChild(vLeftHeart);
@@ -1903,30 +1937,35 @@ void BioGears::SetupCardiovascular()
 
   /////////////////////
   // Heart and Lungs //
-  SELiquidCompartmentLink& vVenaCavaToRightHeart = m_Compartments->CreateLiquidLink(vVenaCava, vRightHeart, BGE::VascularLink::VenaCavaToRightHeart);
-  vVenaCavaToRightHeart.MapPath(VenaCavaToRightHeart2);
-  SELiquidCompartmentLink& vRightHeartToLeftPulmonaryArteries = m_Compartments->CreateLiquidLink(vRightHeart, vLeftPulmonaryArteries, BGE::VascularLink::RightHeartToLeftPulmonaryArteries);
-  vRightHeartToLeftPulmonaryArteries.MapPath(MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries);
+  SELiquidCompartmentLink& vVenaCavaToRightAtrium = m_Compartments->CreateLiquidLink(vVenaCava, vRightAtrium, BGE::VascularLink::VenaCavaToRightAtrium);
+  //vVenaCavaToRightHeart.MapPath(VenaCavaToRightHeart2);
+  vVenaCavaToRightAtrium.MapPath(VenaCavaToRightAtrium1);
+  SELiquidCompartmentLink& vRightAtriumToRightVentricle = m_Compartments->CreateLiquidLink(vRightAtrium, vRightVentricle, BGE::VascularLink::RightAtriumToRightVentricle);
+  vRightAtriumToRightVentricle.MapPath(RightAtrium2ToRightVentricle1);
+  SELiquidCompartmentLink& vRightVentricleToLeftPulmonaryArteries = m_Compartments->CreateLiquidLink(vRightVentricle, vLeftPulmonaryArteries, BGE::VascularLink::RightVentricleToLeftPulmonaryArteries);
+  vRightVentricleToLeftPulmonaryArteries.MapPath(MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries);
   SELiquidCompartmentLink& vLeftPulmonaryArteriesToCapillaries = m_Compartments->CreateLiquidLink(vLeftPulmonaryArteries, vLeftPulmonaryCapillaries, BGE::VascularLink::LeftPulmonaryArteriesToCapillaries);
   vLeftPulmonaryArteriesToCapillaries.MapPath(LeftPulmonaryArteriesToLeftPulmonaryCapillaries);
   SELiquidCompartmentLink& vLeftPulmonaryArteriesToVeins = m_Compartments->CreateLiquidLink(vLeftPulmonaryArteries, vLeftPulmonaryVeins, BGE::VascularLink::LeftPulmonaryArteriesToVeins);
   vLeftPulmonaryArteriesToVeins.MapPath(LeftPulmonaryArteriesToLeftPulmonaryVeins);
   SELiquidCompartmentLink& vLeftPulmonaryCapillariesToVeins = m_Compartments->CreateLiquidLink(vLeftPulmonaryCapillaries, vLeftPulmonaryVeins, BGE::VascularLink::LeftPulmonaryCapillariesToVeins);
   vLeftPulmonaryCapillariesToVeins.MapPath(LeftPulmonaryCapillariesToLeftPulmonaryVeins);
-  SELiquidCompartmentLink& vLeftPulmonaryVeinsToLeftHeart = m_Compartments->CreateLiquidLink(vLeftPulmonaryVeins, vLeftHeart, BGE::VascularLink::LeftPulmonaryVeinsToLeftHeart);
-  vLeftPulmonaryVeinsToLeftHeart.MapPath(LeftIntermediatePulmonaryVeinsToLeftHeart2);
-  SELiquidCompartmentLink& vRightHeartToRightPulmonaryArteries = m_Compartments->CreateLiquidLink(vRightHeart, vRightPulmonaryArteries, BGE::VascularLink::RightHeartToRightPulmonaryArteries);
-  vRightHeartToRightPulmonaryArteries.MapPath(MainPulmonaryArteriesToRightIntermediatePulmonaryArteries);
+  SELiquidCompartmentLink& vLeftPulmonaryVeinsToLeftAtrium = m_Compartments->CreateLiquidLink(vLeftPulmonaryVeins, vLeftAtrium, BGE::VascularLink::LeftPulmonaryVeinsToLeftAtrium);
+  vLeftPulmonaryVeinsToLeftAtrium.MapPath(LeftIntermediatePulmonaryVeinsToLeftAtrium1);
+  SELiquidCompartmentLink& vRightVentricleToRightPulmonaryArteries = m_Compartments->CreateLiquidLink(vRightVentricle, vRightPulmonaryArteries, BGE::VascularLink::RightVentricleToRightPulmonaryArteries);
+  vRightVentricleToRightPulmonaryArteries.MapPath(MainPulmonaryArteriesToRightIntermediatePulmonaryArteries);
   SELiquidCompartmentLink& vRightPulmonaryArteriesToCapillaries = m_Compartments->CreateLiquidLink(vRightPulmonaryArteries, vRightPulmonaryCapillaries, BGE::VascularLink::RightPulmonaryArteriesToCapillaries);
   vRightPulmonaryArteriesToCapillaries.MapPath(RightPulmonaryArteriesToRightPulmonaryCapillaries);
   SELiquidCompartmentLink& vRightPulmonaryArteriesToVeins = m_Compartments->CreateLiquidLink(vRightPulmonaryArteries, vRightPulmonaryVeins, BGE::VascularLink::RightPulmonaryArteriesToVeins);
   vRightPulmonaryArteriesToVeins.MapPath(RightPulmonaryArteriesToRightPulmonaryVeins);
   SELiquidCompartmentLink& vRightPulmonaryCapillariesToVeins = m_Compartments->CreateLiquidLink(vRightPulmonaryCapillaries, vRightPulmonaryVeins, BGE::VascularLink::RightPulmonaryCapillariesToVeins);
   vRightPulmonaryCapillariesToVeins.MapPath(RightPulmonaryCapillariesToRightPulmonaryVeins);
-  SELiquidCompartmentLink& vRightPulmonaryVeinsToLeftHeart = m_Compartments->CreateLiquidLink(vRightPulmonaryVeins, vLeftHeart, BGE::VascularLink::RightPulmonaryVeinsToLeftHeart);
-  vRightPulmonaryVeinsToLeftHeart.MapPath(RightIntermediatePulmonaryVeinsToLeftHeart2);
-  SELiquidCompartmentLink& vLeftHeartToAorta = m_Compartments->CreateLiquidLink(vLeftHeart, vAorta, BGE::VascularLink::LeftHeartToAorta);
-  vLeftHeartToAorta.MapPath(LeftHeart1ToAorta2);
+  SELiquidCompartmentLink& vRightPulmonaryVeinsToLeftAtrium = m_Compartments->CreateLiquidLink(vRightPulmonaryVeins, vLeftAtrium, BGE::VascularLink::RightPulmonaryVeinsToLeftAtrium);
+  vRightPulmonaryVeinsToLeftAtrium.MapPath(RightIntermediatePulmonaryVeinsToLeftAtrium1);
+  SELiquidCompartmentLink& vLeftAtriumToLeftVentricle = m_Compartments->CreateLiquidLink(vLeftAtrium, vLeftVentricle, BGE::VascularLink::LeftAtriumToLeftVentricle);
+  vLeftAtriumToLeftVentricle.MapPath(LeftAtrium2ToLeftVentricle1);
+  SELiquidCompartmentLink& vLeftVentricleToAorta = m_Compartments->CreateLiquidLink(vLeftVentricle, vAorta, BGE::VascularLink::LeftVentricleToAorta);
+  vLeftVentricleToAorta.MapPath(LeftVentricle1ToAorta2);
   //////////
   // Bone //
   SELiquidCompartmentLink& vAortaToBone = m_Compartments->CreateLiquidLink(vAorta, vBone, BGE::VascularLink::AortaToBone);
@@ -2067,14 +2106,16 @@ void BioGears::SetupCardiovascular()
   vRightLegHemorrhage.MapPath(RightLegBleed);
 
   SELiquidCompartmentGraph& gCardiovascular = m_Compartments->GetCardiovascularGraph();
-  gCardiovascular.AddCompartment(vRightHeart);
+  gCardiovascular.AddCompartment(vRightAtrium);
+  gCardiovascular.AddCompartment(vRightVentricle);
   gCardiovascular.AddCompartment(vRightPulmonaryArteries);
   gCardiovascular.AddCompartment(vLeftPulmonaryArteries);
   gCardiovascular.AddCompartment(vRightPulmonaryCapillaries);
   gCardiovascular.AddCompartment(vLeftPulmonaryCapillaries);
   gCardiovascular.AddCompartment(vRightPulmonaryVeins);
   gCardiovascular.AddCompartment(vLeftPulmonaryVeins);
-  gCardiovascular.AddCompartment(vLeftHeart);
+  gCardiovascular.AddCompartment(vLeftAtrium);
+  gCardiovascular.AddCompartment(vLeftVentricle);
   gCardiovascular.AddCompartment(vAorta);
   gCardiovascular.AddCompartment(vBrain);
   gCardiovascular.AddCompartment(vBone);
@@ -2094,18 +2135,20 @@ void BioGears::SetupCardiovascular()
   gCardiovascular.AddCompartment(vSplanchnic);
   gCardiovascular.AddCompartment(vSpleen);
   gCardiovascular.AddCompartment(vVenaCava);
-  gCardiovascular.AddLink(vVenaCavaToRightHeart);
-  gCardiovascular.AddLink(vRightHeartToLeftPulmonaryArteries);
+  gCardiovascular.AddLink(vVenaCavaToRightAtrium);
+  gCardiovascular.AddLink(vRightAtriumToRightVentricle);
+  gCardiovascular.AddLink(vRightVentricleToLeftPulmonaryArteries);
   gCardiovascular.AddLink(vLeftPulmonaryArteriesToCapillaries);
   gCardiovascular.AddLink(vLeftPulmonaryArteriesToVeins);
   gCardiovascular.AddLink(vLeftPulmonaryCapillariesToVeins);
-  gCardiovascular.AddLink(vLeftPulmonaryVeinsToLeftHeart);
-  gCardiovascular.AddLink(vRightHeartToRightPulmonaryArteries);
+  gCardiovascular.AddLink(vLeftPulmonaryVeinsToLeftAtrium);
+  gCardiovascular.AddLink(vRightVentricleToRightPulmonaryArteries);
   gCardiovascular.AddLink(vRightPulmonaryArteriesToCapillaries);
   gCardiovascular.AddLink(vRightPulmonaryArteriesToVeins);
   gCardiovascular.AddLink(vRightPulmonaryCapillariesToVeins);
-  gCardiovascular.AddLink(vRightPulmonaryVeinsToLeftHeart);
-  gCardiovascular.AddLink(vLeftHeartToAorta);
+  gCardiovascular.AddLink(vRightPulmonaryVeinsToLeftAtrium);
+  gCardiovascular.AddLink(vLeftAtriumToLeftVentricle);
+  gCardiovascular.AddLink(vLeftVentricleToAorta);
   gCardiovascular.AddLink(vAortaToBone);
   gCardiovascular.AddLink(vBoneToVenaCava);
   gCardiovascular.AddLink(vAortaToBrain);

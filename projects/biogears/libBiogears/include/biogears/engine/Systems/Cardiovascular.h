@@ -180,7 +180,7 @@ private:
   SELiquidCompartmentGraph* m_CirculatoryGraph;
 
   SEFluidCircuitNode* m_MainPulmonaryArteries;
-  SEFluidCircuitNode* m_LeftHeart2;
+  SEFluidCircuitNode* m_LeftAtrium1;
 
   SEFluidCircuitPath* m_AortaCompliance;
   SEFluidCircuitPath* m_AortaResistance;

@@ -218,7 +218,11 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Heart);
         DEFINE_STATIC_STRING_EX(Myocardium, MyocardiumVasculature);
         DEFINE_STATIC_STRING(LeftHeart);
+        DEFINE_STATIC_STRING(LeftAtrium);
+        DEFINE_STATIC_STRING(LeftVentricle);
         DEFINE_STATIC_STRING(RightHeart);
+        DEFINE_STATIC_STRING(RightAtrium);
+        DEFINE_STATIC_STRING(RightVentricle);
         DEFINE_STATIC_STRING(Pericardium);
         DEFINE_STATIC_STRING(VenaCava);
         //Cerebral
@@ -285,7 +289,7 @@ namespace tatrc {
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            Aorta, Heart, Myocardium, LeftHeart, RightHeart, Pericardium, VenaCava, CerebralArteries, CerebralCapillaries, CerebralVeins, NeckArteries, NeckVeins, PulmonaryArteries, PulmonaryCapillaries, PulmonaryVeins, Lungs, LeftLung, LeftPulmonaryArteries, LeftPulmonaryCapillaries, LeftPulmonaryVeins, RightLung, RightPulmonaryArteries, RightPulmonaryCapillaries, RightPulmonaryVeins, Kidneys, LeftKidney, LeftRenalArtery, LeftNephron, LeftAfferentArteriole, LeftGlomerularCapillaries, LeftEfferentArteriole, LeftPeritubularCapillaries, LeftBowmansCapsules, LeftTubules, LeftRenalVein, RightKidney, RightRenalArtery, RightNephron, RightAfferentArteriole, RightGlomerularCapillaries, RightEfferentArteriole, RightPeritubularCapillaries, RightBowmansCapsules, RightTubules, RightRenalVein, Bone, Brain, Fat, Gut, Splanchnic, SmallIntestine, LargeIntestine, Liver, Spleen, Skin, Muscle, LeftArm, LeftLeg, RightArm, RightLeg
+            Aorta, Heart, Myocardium, LeftHeart, LeftAtrium, LeftVentricle, RightHeart, RightAtrium, RightVentricle, Pericardium, VenaCava, CerebralArteries, CerebralCapillaries, CerebralVeins, NeckArteries, NeckVeins, PulmonaryArteries, PulmonaryCapillaries, PulmonaryVeins, Lungs, LeftLung, LeftPulmonaryArteries, LeftPulmonaryCapillaries, LeftPulmonaryVeins, RightLung, RightPulmonaryArteries, RightPulmonaryCapillaries, RightPulmonaryVeins, Kidneys, LeftKidney, LeftRenalArtery, LeftNephron, LeftAfferentArteriole, LeftGlomerularCapillaries, LeftEfferentArteriole, LeftPeritubularCapillaries, LeftBowmansCapsules, LeftTubules, LeftRenalVein, RightKidney, RightRenalArtery, RightNephron, RightAfferentArteriole, RightGlomerularCapillaries, RightEfferentArteriole, RightPeritubularCapillaries, RightBowmansCapsules, RightTubules, RightRenalVein, Bone, Brain, Fat, Gut, Splanchnic, SmallIntestine, LargeIntestine, Liver, Spleen, Skin, Muscle, LeftArm, LeftLeg, RightArm, RightLeg
             //,Ground
           };
           return _values;
@@ -295,18 +299,20 @@ namespace tatrc {
       namespace VascularLink {
 
         // Heart and Lungs
-        DEFINE_STATIC_STRING(VenaCavaToRightHeart);
-        DEFINE_STATIC_STRING(RightHeartToLeftPulmonaryArteries);
+        DEFINE_STATIC_STRING(VenaCavaToRightAtrium);
+        DEFINE_STATIC_STRING(RightAtriumToRightVentricle);
+        DEFINE_STATIC_STRING(RightVentricleToLeftPulmonaryArteries);
         DEFINE_STATIC_STRING(LeftPulmonaryArteriesToCapillaries);
         DEFINE_STATIC_STRING(LeftPulmonaryArteriesToVeins);
         DEFINE_STATIC_STRING(LeftPulmonaryCapillariesToVeins);
-        DEFINE_STATIC_STRING(LeftPulmonaryVeinsToLeftHeart);
-        DEFINE_STATIC_STRING(RightHeartToRightPulmonaryArteries);
+        DEFINE_STATIC_STRING(LeftPulmonaryVeinsToLeftAtrium);
+        DEFINE_STATIC_STRING(RightVentricleToRightPulmonaryArteries);
         DEFINE_STATIC_STRING(RightPulmonaryArteriesToCapillaries);
         DEFINE_STATIC_STRING(RightPulmonaryArteriesToVeins);
         DEFINE_STATIC_STRING(RightPulmonaryCapillariesToVeins);
-        DEFINE_STATIC_STRING(RightPulmonaryVeinsToLeftHeart);
-        DEFINE_STATIC_STRING(LeftHeartToAorta);
+        DEFINE_STATIC_STRING(RightPulmonaryVeinsToLeftAtrium);
+        DEFINE_STATIC_STRING(LeftAtriumToLeftVentricle);
+        DEFINE_STATIC_STRING(LeftVentricleToAorta);
         //Cerebral
         DEFINE_STATIC_STRING(AortaToNeckArteries);
         DEFINE_STATIC_STRING(NeckArteriesToCerebralArteries);
@@ -429,7 +435,7 @@ namespace tatrc {
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            VenaCavaToRightHeart, RightHeartToLeftPulmonaryArteries, LeftPulmonaryArteriesToCapillaries, LeftPulmonaryArteriesToVeins, LeftPulmonaryCapillariesToVeins, LeftPulmonaryVeinsToLeftHeart, RightHeartToRightPulmonaryArteries, RightPulmonaryArteriesToCapillaries, RightPulmonaryArteriesToVeins, RightPulmonaryCapillariesToVeins, RightPulmonaryVeinsToLeftHeart, LeftHeartToAorta, AortaToBone, BoneToVenaCava, AortaToBrain, BrainToVenaCava, AortaToFat, FatToVenaCava, AortaToLargeIntestine, LargeIntestineToLiver, AortaToLeftArm, LeftArmToVenaCava, AortaToLeftKidney, LeftKidneyToVenaCava, AortaToLeftLeg, LeftLegToVenaCava, AortaToLiver, LiverToVenaCava, AortaToMuscle, MuscleToVenaCava, AortaToMyocardium, MyocardiumToVenaCava, AortaToRightArm, RightArmToVenaCava, AortaToRightKidney, RightKidneyToVenaCava, AortaToRightLeg, RightLegToVenaCava, AortaToSkin, SkinToVenaCava, AortaToSmallIntestine, SmallIntestineToLiver, AortaToSplanchnic, SplanchnicToLiver, AortaToSpleen, SpleenToLiver
+            VenaCavaToRightAtrium, RightAtriumToRightVentricle, RightVentricleToLeftPulmonaryArteries, LeftPulmonaryArteriesToCapillaries, LeftPulmonaryArteriesToVeins, LeftPulmonaryCapillariesToVeins, LeftPulmonaryVeinsToLeftAtrium, RightVentricleToRightPulmonaryArteries, RightPulmonaryArteriesToCapillaries, RightPulmonaryArteriesToVeins, RightPulmonaryCapillariesToVeins, RightPulmonaryVeinsToLeftAtrium, LeftAtriumToLeftVentricle, LeftVentricleToAorta, AortaToBone, BoneToVenaCava, AortaToBrain, BrainToVenaCava, AortaToFat, FatToVenaCava, AortaToLargeIntestine, LargeIntestineToLiver, AortaToLeftArm, LeftArmToVenaCava, AortaToLeftKidney, LeftKidneyToVenaCava, AortaToLeftLeg, LeftLegToVenaCava, AortaToLiver, LiverToVenaCava, AortaToMuscle, MuscleToVenaCava, AortaToMyocardium, MyocardiumToVenaCava, AortaToRightArm, RightArmToVenaCava, AortaToRightKidney, RightKidneyToVenaCava, AortaToRightLeg, RightLegToVenaCava, AortaToSkin, SkinToVenaCava, AortaToSmallIntestine, SmallIntestineToLiver, AortaToSplanchnic, SplanchnicToLiver, AortaToSpleen, SpleenToLiver
 
             ,
             AortaToNeckArteries, NeckArteriesToCerebralArteries, CerebralArteriesToCerebralCapillaries, CerebralCapillariesToCerebralVeins, CerebralVeinsToNeckVeins, NeckVeinsToVenaCava

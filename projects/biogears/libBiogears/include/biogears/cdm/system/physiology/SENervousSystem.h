@@ -13,10 +13,12 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class BIOGEARS_API SENervousSystem : public SESystem {
@@ -42,6 +44,11 @@ protected:
   void Unload(CDM::NervousSystemData& data) const;
 
 public:
+  bool HasBaroreceptorFrequencyComponents() const;
+  std::vector<SEScalarFrequency*> GetBaroreceptorFrequencyComponents();
+  std::vector<double> GetBaroreceptorFrequencyComponents(const FrequencyUnit& unit) const;
+  bool SetBaroreceptorFrequencyComponents(std::vector<double> newComponents, const FrequencyUnit& unit);
+
   bool HasBaroreceptorHeartRateScale() const;
   SEScalar& GetBaroreceptorHeartRateScale();
   double GetBaroreceptorHeartRateScale() const;
@@ -81,6 +88,8 @@ public:
   void RemoveRightEyePupillaryResponse();
 
 protected:
+  size_t m_NumFrequencyComponents;
+  std::vector<SEScalarFrequency*> m_BaroreceptorFrequencyComponents;
   SEScalar* m_BaroreceptorHeartRateScale;
   SEScalar* m_BaroreceptorHeartElastanceScale;
   SEScalar* m_BaroreceptorResistanceScale;

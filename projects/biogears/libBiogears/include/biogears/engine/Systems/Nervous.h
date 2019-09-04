@@ -70,17 +70,35 @@ protected:
   void ChemoreceptorFeedback();
   void SetPupilEffects();
 
+  void UrsinoBaroreceptor();
+
+  void AfferentResponse();
+  void SympatheticSignalProcess();
+  void ParasympatheticSignalProcess();
+  void EfferentResponse();
+
+
+  double m_FilteredPressure;
+  double m_HeartRateModSympathetic;
+  double m_HeartRateModVagal;
+  double m_ResistanceMod;
+  double m_ElastanceMod;
+  double m_ComplianceMod;
   // Serializable member variables (Set in Initialize and in schema)
   double m_AfferentChemoreceptor_Hz;
   double m_ArterialOxygenBaseline_mmHg;
   double m_ArterialCarbonDioxideBaseline_mmHg;
   double m_CerebralCarbonDioxideSetPoint_mmHg;
   double m_BaroreceptorFatigueScale;
+
+  double m_BaroreceptorFrequencyBaseline_Hz;
+  double m_CentralVentilationDelta_L_Per_min;
+  double m_ChemoreceptorFiringRate_Hz;
   double m_ChemoreceptorFiringRateSetPoint_Hz;
-  double m_CentralFrequencyDelta_Per_min;
-  double m_CentralPressureDelta_cmH2O;
-  double m_PeripheralFrequencyDelta_Per_min;
-  double m_PeripheralPressureDelta_cmH2O;
+  double m_PeripheralBloodGasInteractionBaseline_Hz;
+  double m_PeripheralVentilationDelta_L_Per_min;
+  double m_PreviousMeanArterialPressure_mmHg;
+
 
   // Stateless member variable (Set in SetUp())
   bool m_FeedbackActive;
@@ -94,6 +112,26 @@ protected:
   double m_painVASDuration_s;
   double m_painVAS;
   double m_painStimulus;
+
+  //Testing combined signals
+  double m_AfferentBaroreceptor_Hz;
+  double m_AfferentPulmonary_Hz;	//*AP
+  double m_AfferentAtrial_Hz;		//*AA
+  double m_FilteredPulmonaryVenousPressure_Hz; //*AA
+  double m_AfferentThermal_Hz;		//*AT
+  double m_SympathethicNode_Hz;
+  double m_SympatheticPeripheral_Hz;
+  double m_Vagal_Hz;
+  double m_AchVagal;
+  double m_AchSympatheticNode;
+  double m_AchSympatheticPeripheral;
+  double m_AdrenalMedulla;
+  std::vector<double> m_HeartRateEffectors;
+  std::vector<double> m_HeartElastanceEffectors;
+  std::vector<double> m_ResistanceEffectors;
+
+
+  bool m_TestBaroreceptors;
 
   // Configuration fractions representing the amount by which each quantity can change due to baroreceptors;
   double m_normalizedGammaHeartRate;
