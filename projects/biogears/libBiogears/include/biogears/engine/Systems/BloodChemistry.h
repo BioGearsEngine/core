@@ -14,11 +14,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include <biogears/cdm/patient/SEPatient.h>
 
 namespace biogears {
 class SECompleteBloodCount;
@@ -46,8 +46,8 @@ protected:
 public:
   virtual ~BloodChemistry() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
-  static constexpr char const * const  TypeTag() { return "BloodChemistry"; }
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); } //! Hopefully this returns a unique ID for every type
+  static constexpr char const* const TypeTag() { return "BloodChemistry"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -74,6 +74,7 @@ public:
 
   bool CalculateCompleteBloodCount(SECompleteBloodCount& cbc);
   bool CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp);
+  void CalculateHemolyticTransfusionReaction();
 
 protected:
   void CheckBloodSubstanceLevels();
@@ -127,5 +128,13 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaSodium;
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;
+
+  //Initialize HTR concentrations
+  double m_donorRBC;
+  double m_patientRBC;
+  double m_2Agglutinate;
+  double m_p3Agglutinate;
+  double m_d3Agglutinate;
+  double m_4Agglutinate;
 };
 }

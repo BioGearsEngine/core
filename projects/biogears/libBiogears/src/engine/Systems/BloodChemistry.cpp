@@ -82,6 +82,13 @@ void BloodChemistry::Clear()
   m_venaCavaUrea = nullptr;
   m_ArterialOxygen_mmHg.Reset();
   m_ArterialCarbonDioxide_mmHg.Reset();
+
+  m_donorRBC = 0.0;
+  m_patientRBC = 0.0;
+  m_2Agglutinate = 0.0;
+  m_p3Agglutinate = 0.0;
+  m_d3Agglutinate = 0.0;
+  m_4Agglutinate = 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -103,6 +110,12 @@ void BloodChemistry::Initialize()
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   GetCarbonMonoxideSaturation().SetValue(0);
+  m_donorRBC = 0.0;
+  m_patientRBC = 0.0;
+  m_2Agglutinate = 0.0;
+  m_p3Agglutinate = 0.0;
+  m_d3Agglutinate = 0.0;
+  m_4Agglutinate = 0.0;
 
   Process(); // Calculate the initial system values
 }
@@ -146,6 +159,12 @@ void BloodChemistry::SetUp()
   const BioGearsConfiguration& ConfigData = m_data.GetConfiguration();
   m_redBloodCellVolume_mL = ConfigData.GetMeanCorpuscularVolume(VolumeUnit::mL);
   m_HbPerRedBloodCell_ug_Per_ct = ConfigData.GetMeanCorpuscularHemoglobin(MassPerAmountUnit::ug_Per_ct);
+  m_donorRBC = 0.0;
+  m_patientRBC = 0.0;
+  m_2Agglutinate = 0.0;
+  m_p3Agglutinate = 0.0;
+  m_d3Agglutinate = 0.0;
+  m_4Agglutinate = 0.0;
 
   //Substance
   SESubstance* albumin = &m_data.GetSubstances().GetAlbumin();
@@ -332,6 +351,33 @@ void BloodChemistry::Process()
   double shuntFlow_mL_Per_min = m_data.GetCardiovascular().GetPulmonaryMeanShuntFlow(VolumePerTimeUnit::mL_Per_min);
   double shunt = shuntFlow_mL_Per_min / totalFlow_mL_Per_min;
   GetShuntFraction().SetValue(shunt);
+
+  //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  /*
+    // Check Blood Type here, starting with Rh factor. Rh factor is just a simple yes no based on patient blood type and infusion type
+    if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive))) {
+      // IF mismatch, minor reaction, tracked by RhSensitivity parameter (which will affect reaction severity). Severity will decrease with time, removing symptoms, but sensitivity will remain unchanged (in case of numerous transactions)
+      // may want to bypass sensitization for first pass through (more important for pregnancy)
+      dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
+    }
+    */
+
+  //Check for HTR
+  SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
+  SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
+
+  // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
+  //Then check for three mismatch scenarios using OR statement. If so, go to HTR function [below]
+
+  if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::AB)) {
+    return;
+  } else if ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O) && (m_data.GetSubstances().IsActive(*m_AntigenA) || m_data.GetSubstances().IsActive(*m_AntigenB)))
+             || (m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB))) {
+    CalculateHemolyticTransfusionReaction();
+  }
+  //dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
+
+  //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   //Throw events if levels are low/high
   CheckBloodSubstanceLevels();
@@ -680,6 +726,102 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 }
 
 //--------------------------------------------------------------------------------------------------
+/// \brief
+/// Reaction when incompatible blood is transfused
+///
+/// \details
+/// Blood reaction causes rbc to become agglutinated/dead and they can no longer bind gases and Hb to transport, thus causing an immune response
+//--------------------------------------------------------------------------------------------------
+void BloodChemistry::CalculateHemolyticTransfusionReaction()
+{
+  double dt = m_data.GetTimeStep().GetValue(TimeUnit::s);
+  //Calculate ratio of acceptable cells to unacceptable (ex: 0.5 L of transfused B blood compared to a 4.5 L TBV of A blood would be a ratio 1:9
+  double patientRBC;
+  double donorRBC;
+  double TotalRBC;
+  double patientAntigen_ct_per_uL;
+  double donorAntigen_ct_per_uL;
+  double BloodVolume = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
+  double antigens_per_rbc = 2000000;
+  double agglutinin_per_rbc = 50;
+  double AntigenA = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double AntigenB = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+
+  if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) {
+    donorAntigen_ct_per_uL = AntigenA + AntigenB;
+    patientAntigen_ct_per_uL = 0.0;
+  } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) {
+    donorAntigen_ct_per_uL = AntigenB;
+    patientAntigen_ct_per_uL = AntigenA;
+  } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) {
+    donorAntigen_ct_per_uL = AntigenA;
+    patientAntigen_ct_per_uL = AntigenB;
+  }
+
+  TotalRBC = rbcCount_ct_Per_uL * BloodVolume;
+  donorRBC = (donorAntigen_ct_per_uL * BloodVolume) / antigens_per_rbc;
+  patientRBC = TotalRBC - donorRBC; // Calculated this way to account for O cells still having no antigens
+
+  double HealFactor = std::pow(10, (1 - (patientRBC / (5280000 * 4800000)))); //estimate of baseline rbc molarity times full blood
+  double RBC_birth = HealFactor * 2000000; //per s(increased by factor of 10)
+  double RBC_death = 2000000; //per s
+
+  //Surface Area of rbc stacked
+  double sa1 = 0.0000013;
+  double sa2 = 0.0000019;
+  double sa3 = 0.0000024;
+  double antpercm2 = antigens_per_rbc / sa1;
+  double aggpercm2 = agglutinin_per_rbc / sa1;
+
+  double D1 = 0.000000000014; //cm2 per s and is diffusion coefficient of one rbc
+  double R1 = 0.00035; //cm and is radius of one rbc
+  double R2 = R1 * std::cbrt(2);
+  double R3 = R1 * std::cbrt(3);
+  double D2 = (D1 * R1) / (R2);
+  double D3 = (D1 * R1) / (R3);
+
+  double agg1 = (aggpercm2 * sa1);
+  double ant1 = (antpercm2 * sa1);
+  double agg2 = (aggpercm2 * sa2);
+  double ant2 = (antpercm2 * sa2);
+  double agg3 = (aggpercm2 * sa3);
+  double ant3 = (antpercm2 * sa3);
+
+  double timedelay = 0.00005;
+  double tuning11 = timedelay / ((agg1 + ant1) * (agg1 + ant1)); //tuning factor for timing of response
+  double tuning12 = timedelay / ((agg1 + ant1) * (agg2 + ant2));
+  double tuning22 = timedelay / ((agg2 + ant2) * (agg2 + ant2));
+  double tuning13 = timedelay / ((agg1 + ant1) * (agg3 + ant3));
+
+  //Agglutinate Probabilities
+  double oneK1 = tuning11 * ((2 * D1) * (2 * R1)) / (4 * D1 * R1);
+  double twoK1 = tuning12 * ((D1 + D2) * (R1 + R2)) / (4 * D1 * R1);
+  double twoK2 = tuning22 * ((D2 + D2) * (R2 + R2)) / (4 * D1 * R1);
+  double threeK1 = tuning13 * ((D3 + D1) * (R3 + R1)) / (4 * D1 * R1);
+
+  double newC1RBC_patient = patientRBC + (RBC_birth * dt) - (RBC_death * dt) - (dt * ((oneK1 * patientRBC * donorRBC) + (twoK1 * m_2Agglutinate * patientRBC) + (threeK1 * m_d3Agglutinate * patientRBC)));
+  double newC1RBC_donor = donorRBC - (RBC_death * dt) - (dt * ((oneK1 * patientRBC * donorRBC) + (twoK1 * m_2Agglutinate * donorRBC) + (threeK1 * m_p3Agglutinate * donorRBC)));
+  double newC2RBC = m_2Agglutinate + (dt * ((oneK1 * patientRBC * donorRBC) - (twoK1 * m_2Agglutinate * patientRBC) - (twoK1 * m_2Agglutinate * donorRBC) - (twoK2 * m_2Agglutinate * m_2Agglutinate)));
+  double newC3RBC_patient = m_p3Agglutinate + (dt*((twoK1*m_2Agglutinate*patientRBC)-(threeK1*m_p3Agglutinate*donorRBC)));
+  double newC3RBC_donor = m_d3Agglutinate + (dt*((twoK1*m_2Agglutinate*donorRBC)-(threeK1*m_d3Agglutinate*patientRBC)));
+  double newC4RBC = m_4Agglutinate + (dt * ((twoK2 * m_2Agglutinate * m_2Agglutinate) + (threeK1 * m_d3Agglutinate * patientRBC) + (threeK1 * m_p3Agglutinate * donorRBC)));
+
+  m_patientRBC = newC1RBC_patient + m_patientRBC;
+  m_donorRBC = newC1RBC_donor + m_donorRBC;
+  m_2Agglutinate = newC2RBC + m_2Agglutinate;
+  m_p3Agglutinate = newC3RBC_patient + m_p3Agglutinate;
+  m_d3Agglutinate = newC3RBC_donor + m_d3Agglutinate;
+  m_4Agglutinate = newC4RBC + m_4Agglutinate;
+
+  m_data.GetDataTrack().Probe("pRBC1", m_patientRBC);
+  m_data.GetDataTrack().Probe("dRBC1", m_donorRBC);
+  m_data.GetDataTrack().Probe("RBC2", m_2Agglutinate);
+  m_data.GetDataTrack().Probe("pRBC3", m_p3Agglutinate);
+  m_data.GetDataTrack().Probe("pRBC3", m_d3Agglutinate);
+  m_data.GetDataTrack().Probe("RBC4", m_4Agglutinate);
+}
+
 /// \brief
 /// Simulate effects of systemic pathogen after infection
 ///

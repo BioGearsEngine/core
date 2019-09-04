@@ -92,7 +92,6 @@ public:
   inline SESubstance& GetSodium() { return *m_sodium; }
   inline SESubstance& GetUrea() { return *m_urea; }
 
-  inline SESubstance& GetPlasma() { return *m_plasma; }
   inline SESubstance& GetPlatelets() { return *m_platelets; }
   inline SESubstance& GetAntigen_A() { return *m_AntigenA; }
   inline SESubstance& GetAntigen_B() { return *m_AntigenB; }
@@ -160,7 +159,6 @@ protected:
   SESubstance* m_sodium;
   SESubstance* m_urea;
 
-  SESubstance* m_plasma;
   SESubstance* m_platelets;
   SESubstance* m_AntigenA;
   SESubstance* m_AntigenB;

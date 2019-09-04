@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Drugs.h>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+#include <biogears/engine/Systems/BloodChemistry.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
@@ -482,11 +483,14 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     volumeToAdminister_mL = rate_mL_Per_s * m_dt_s;
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    /*
     // Check Blood Type here, starting with Rh factor. Rh factor is just a simple yes no based on patient blood type and infusion type
     if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive))) {
       // IF mismatch, minor reaction, tracked by RhSensitivity parameter (which will affect reaction severity). Severity will decrease with time, removing symptoms, but sensitivity will remain unchanged (in case of numerous transactions)
       // may want to bypass sensitization for first pass through (more important for pregnancy)
+      dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
     }
+    
 
     // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
     //Then check for three mismatch scenarios using OR statement. If so, go to HTR function [below]
@@ -495,12 +499,16 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       return;
     } else if (((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::A))
                || ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::B))
-               || ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::O))) {
-      CalculateHemolyticTransfusionReaction();
+               || ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::O))
+               || ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive)))) {
+      HTRvolume = HTRvolume + volumeToAdminister_mL;
     }
 
+    if (HTRvolume > 0) {
+      dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
+    }
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+    */
 
     if (volumeRemaining_mL < volumeToAdminister_mL) {
       volumeToAdminister_mL = volumeRemaining_mL;
@@ -531,19 +539,6 @@ void Drugs::AdministerSubstanceCompoundInfusion()
 
   m_data.GetPatient().GetWeight().SetValue(patientMass_kg, MassUnit::kg);
   m_IVToVenaCava->GetNextFlowSource().SetValue(totalRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Reaction when imcompatible blood is transfused
-///
-/// \details
-/// Blood reaction causes rbc to become agglutinated/dead and they can no longer bind gases and Hb to transport, thus causing an immune response
-//--------------------------------------------------------------------------------------------------
-void Drugs::CalculateHemolyticTransfusionReaction()
-{
-  //Calculate ratio of acceptable cells to unacceptable (ex: 0.5 L of transfused B blood compared to a 4.5 L TBV of A blood would be a ratio 1:9
-  
 }
 
 //--------------------------------------------------------------------------------------------------

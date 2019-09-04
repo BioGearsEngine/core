@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <Name>Plasma</Name>
-  <Classification>WholeBlood</Classification>
-  <Density readOnly="false" unit="kg/m^3" value="1025"/>
-  <MolarMass readOnly="false" unit="g/mol" value="66500"/>
-  <State>Cellular</State>
-</Substance>
+<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Blood</Name>
+  <Component Name="Hemoglobin">
+    <Concentration readOnly="false" unit="g/dL" value="3.7"/>
+  </Component>
+  <Component Name="Oxyhemoglobin">
+    <Concentration readOnly="false" unit="g/dL" value="11.1"/>
+  </Component>
+  <Component Name="Sodium">
+    <Concentration readOnly="false" unit="g/dL" value="0.32335"/>
+  </Component>
+  <Component Name="Albumin">
+    <Concentration readOnly="false" unit="g/dL" value="4.5"/>
+  </Component>
+  <Component Name="Urea">
+    <Concentration readOnly="false" unit="g/dL" value="0.0257"/>
+  </Component>
+  <Component Name="Glucose">
+    <Concentration readOnly="false" unit="g/dL" value="0.08"/>
+  </Component>
+  <Component Name="Triacylglycerol">
+    <Concentration readOnly="false" unit="g/dL" value="0.107"/>
+  </Component>
+  <Component Name="Calcium">
+    <Concentration readOnly="false" unit="g/dL" value="0.01"/>
+  </Component>
+  <Component Name="Creatinine">
+    <Concentration readOnly="false" unit="g/dL" value="0.001"/>
+  </Component>
+  <Component Name="Oxygen">
+    <Concentration readOnly="false" unit="g/L" value="0.0314"/>
+  </Component>
+  <Component Name="CarbonDioxide">
+    <Concentration readOnly="false" unit="g/L" value="0.715"/>
+  </Component>
+  <Component Name="Chloride">
+    <Concentration readOnly="false" unit="g/dL" value="0.362"/>
+  </Component>
+  <Component Name="Potassium">
+    <Concentration readOnly="false" unit="mg/L" value="176.4"/>
+  </Component>
+</SubstanceCompound>

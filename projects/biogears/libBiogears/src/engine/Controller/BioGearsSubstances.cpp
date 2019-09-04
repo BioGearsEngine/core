@@ -68,7 +68,6 @@ void BioGearsSubstances::Clear()
   m_sodium = nullptr;
   m_urea = nullptr;
 
-  m_plasma = nullptr;
   m_platelets = nullptr;
   m_AntigenA = nullptr;
   m_AntigenB = nullptr;
@@ -118,7 +117,6 @@ void BioGearsSubstances::InitializeSubstances()
   AddActiveSubstance(*m_triacylglycerol);
   AddActiveSubstance(*m_urea);
 
-  AddActiveSubstance(*m_plasma);
   AddActiveSubstance(*m_platelets);
   AddActiveSubstance(*m_AntigenA);
   AddActiveSubstance(*m_AntigenB);
@@ -1020,7 +1018,6 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   m_HCO3 = GetSubstance("Bicarbonate");
   m_epi = GetSubstance("Epinephrine");
 
-  m_plasma = GetSubstance("Plasma");
   m_platelets = GetSubstance("Platelet");
   m_AntigenA = GetSubstance("Antigen_A");
   m_AntigenB = GetSubstance("Antigen_B");
@@ -1049,8 +1046,6 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
     Error("Bicarbonate Definition not found");
   if (m_epi == nullptr)
     Error("Epinephrine Definition not found");
-  if (m_plasma == nullptr)
-    Error("Plasma Definition not found");
   if (m_platelets == nullptr)
     Error("Platelets Definition not found");
   if (m_AntigenA == nullptr)
@@ -1135,7 +1130,6 @@ void BioGearsSubstances::AddActiveSubstance(SESubstance& substance)
   SESubstanceManager::AddActiveSubstance(substance);
   if (substance.GetState() == CDM::enumSubstanceState::Gas)
     m_data.GetCompartments().AddGasCompartmentSubstance(substance);
-  //if (substance.GetState() != CDM::enumSubstanceState::Cellular) //Double check on molar mass as fraction of blood
   m_data.GetCompartments().AddLiquidCompartmentSubstance(substance);
 
   if (&substance == m_CO) // We need to put HbCO in the system if CO is in the system

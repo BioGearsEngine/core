@@ -103,9 +103,9 @@ public:
 
   // Cellular and Blood
   CDM::enumBloodTypeABO::value GetAntigen() const;
-  void SESubstance::SetAntigen(CDM::enumBloodTypeABO::value bloodAntigen);
-  bool SESubstance::HasAntigen() const;
-  void SESubstance::InvalidateAntigen();
+  void SetAntigen(CDM::enumBloodTypeABO::value bloodAntigen);
+  bool HasAntigen() const;
+  void InvalidateAntigen();
 
   // Liquid-ish
   virtual bool HasAerosolization() const;
