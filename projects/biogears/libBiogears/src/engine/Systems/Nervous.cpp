@@ -69,6 +69,7 @@ void Nervous::Initialize()
   BioGearsSystem::Initialize();
   m_FeedbackActive = false;
   m_blockActive = false;
+  m_BaroreceptorFatigueScale = 0.0;
   m_CentralVentilationDelta_L_Per_min = 0.0;
   m_ChemoreceptorFiringRate_Hz = 3.65;
   m_ChemoreceptorFiringRateSetPoint_Hz = m_ChemoreceptorFiringRate_Hz;
@@ -94,6 +95,7 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_FeedbackActive = true;
   m_ArterialOxygenSetPoint_mmHg = in.ArterialOxygenSetPoint_mmHg();
   m_ArterialCarbonDioxideSetPoint_mmHg = in.ArterialCarbonDioxideSetPoint_mmHg();
+  m_BaroreceptorFatigueScale = in.BaroreceptorFatigueScale();
   m_CentralVentilationDelta_L_Per_min = in.ChemoreceptorCentralVentilationDelta_L_Per_min();
   m_ChemoreceptorFiringRate_Hz = in.ChemoreceptorFiringRate_Hz();
   m_ChemoreceptorFiringRateSetPoint_Hz = in.ChemoreceptorFiringRateSetPoint_Hz();
@@ -113,6 +115,7 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   SENervousSystem::Unload(data);
   data.ArterialOxygenSetPoint_mmHg(m_ArterialOxygenSetPoint_mmHg);
   data.ArterialCarbonDioxideSetPoint_mmHg(m_ArterialCarbonDioxideSetPoint_mmHg);
+  data.BaroreceptorFatigueScale(m_BaroreceptorFatigueScale);
   data.ChemoreceptorCentralVentilationDelta_L_Per_min(m_CentralVentilationDelta_L_Per_min);
   data.ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz(m_PeripheralBloodGasInteractionBaseline_Hz);
   data.ChemoreceptorFiringRate_Hz(m_ChemoreceptorFiringRate_Hz);
@@ -252,21 +255,6 @@ void Nervous::BaroreceptorFeedback()
       ///\TODO:  Look into a better way to implement drug classification search
     }
   }
-  //Sepsis effects
-  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::SevereSepsis)){
-	  double severeSepsisDuration_hr = m_data.GetPatient().GetEventDuration(CDM::enumPatientEvent::SevereSepsis, TimeUnit::hr);
-	  double newAlphaResistance = m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() * std::exp(-severeSepsisDuration_hr);
-	  //This check is done in the event that the Severe Sepsis event toggles on/off quickly.  When this happens, the new resistance will suddenly reset to the baseline configuration
-	  //(because severeSepsisDuration_hr resets to 0).
-	  if (newAlphaResistance < m_normalizedAlphaResistance){
-		  m_normalizedAlphaResistance = newAlphaResistance;
-	  }
-  } else {
-	  //Very slowly restore resistance gain to its original state.  This should not happen all at once
-	  double restoringFactor = 1e-6;
-	  m_normalizedAlphaResistance += restoringFactor * (m_data.GetConfiguration().GetNormalizedResistanceSympatheticSlope() - m_normalizedAlphaResistance);
-  }
-  
 
   //Neurological effects of pain action
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
@@ -278,6 +266,17 @@ void Nervous::BaroreceptorFeedback()
   double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
   double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
 
+  //Calculate fatigue fraction during sepsis
+  double fatigueThreshold = 0.65;
+  double fatigueTimeConstant_hr = 2.0;
+  double fatigueInput = 0.0;
+  double dFatigueScale = 0.0;
+  if (sympatheticFraction > fatigueThreshold) {
+    fatigueInput = sympatheticFraction - fatigueThreshold;
+    dFatigueScale = (1.0 / fatigueTimeConstant_hr) * (fatigueInput) * (1.2 - m_BaroreceptorFatigueScale);
+    m_BaroreceptorFatigueScale += (dFatigueScale * m_data.GetTimeStep().GetValue(TimeUnit::hr));
+  }
+  
   //Calculate the normalized change in heart rate
   double normalizedHeartRate = GetBaroreceptorHeartRateScale().GetValue();
   double tauHeartRate_s = m_data.GetConfiguration().GetHeartRateDistributedTimeDelay(TimeUnit::s);
@@ -292,11 +291,12 @@ void Nervous::BaroreceptorFeedback()
   normalizedHeartElastance += deltaNormalizedHeartElastance;
   GetBaroreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
 
+
   //Calculate the normalized change in flow resistance for any cardiovascular resistor
   double normalizedResistance = GetBaroreceptorResistanceScale().GetValue();
   double tauResistance_s = m_data.GetConfiguration().GetSystemicResistanceDistributedTimeDelay(TimeUnit::s);
-  double deltaNormalizedResistance = (1.0 / tauResistance_s) * (-normalizedResistance + m_normalizedAlphaResistance * sympatheticFraction + m_normalizedGammaResistance) * m_dt_s;
-  normalizedResistance += deltaNormalizedResistance;
+  double deltaNormalizedResistance = (1.0 / tauResistance_s) * (-normalizedResistance + (m_normalizedAlphaResistance - m_BaroreceptorFatigueScale) * sympatheticFraction + m_normalizedGammaResistance) * m_dt_s;
+  normalizedResistance += (deltaNormalizedResistance);
   GetBaroreceptorResistanceScale().SetValue(normalizedResistance);
 
   //Calculate the normalized change in flow compliance for any cardiovascular compliance

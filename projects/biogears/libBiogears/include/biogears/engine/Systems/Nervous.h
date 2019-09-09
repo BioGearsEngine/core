@@ -72,6 +72,7 @@ protected:
   // Serializable member variables (Set in Initialize and in schema)
   double m_ArterialOxygenSetPoint_mmHg; /// \todo Aaron these should be baselines.
   double m_ArterialCarbonDioxideSetPoint_mmHg;
+  double m_BaroreceptorFatigueScale;
   double m_CentralVentilationDelta_L_Per_min;
   double m_ChemoreceptorFiringRate_Hz;
   double m_ChemoreceptorFiringRateSetPoint_Hz;
