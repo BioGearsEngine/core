@@ -797,7 +797,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double TAG_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_TAG / (3 * 2340 + 686); //Palmitic acid free energy is 2340 kcal, glycerol is similar to glucose, so assume 686 \cite voet2013fundamentals
   double AA_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_AA / 387.189; //Alanine heat of combustion is 1.62 MJ/mol \cite livesey1984energy
   double ketones_CellularEfficiency = glucose_CellularEfficiency; //Assuming the same as glucose
-  double mandatoryMuscleAnaerobicFraction = .1; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
+  double mandatoryMuscleAnaerobicFraction = 0.028; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = 1200; //see Energy::Exercise
 

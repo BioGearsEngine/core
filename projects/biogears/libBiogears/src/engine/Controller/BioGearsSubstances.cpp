@@ -676,7 +676,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   lymph->GetSubstanceQuantity(*m_ketones)->Balance(BalanceLiquidBy::Molarity);
 
   // LACTATE //
-  concentration.SetValue(142.5, MassPerVolumeUnit::mg_Per_L);
+  concentration.SetValue(80.0, MassPerVolumeUnit::mg_Per_L);
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceConcentration(*m_lactate, vascular, concentration);
   //set in tubules zero in urine
@@ -693,6 +693,17 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   rightUreter->GetSubstanceQuantity(*m_lactate)->SetToZero();
   // Tissue
   SetSubstanceMolarity(*m_lactate, tissue, molarity1, molarity1);
+  //set muscle tissue lactate to higher value --> creates gradient from muscle to blood that causes lactate transfer to blood at same rate that
+  //lactate is produced basally in muscles and same rate that kidneys filter lactate.  Net result is stable lactate blood concentration
+  double lactateGradient_mg_Per_L = 10.0; //Produces 7 mg/min lactate transport, equal to basal tissue production
+  double lactateExtracellular_mg_Per_L = molarity1.GetValue(AmountPerVolumeUnit::mol_Per_L) * m_lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol) * 1000. + lactateGradient_mg_Per_L;
+  double lactateIntracellular_mg_Per_L = lactateExtracellular_mg_Per_L + lactateGradient_mg_Per_L;
+  SELiquidSubstanceQuantity* muscleExtraLactate = m_data.GetCompartments().GetExtracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(*m_lactate);
+  SELiquidSubstanceQuantity* muscleIntraLactate = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(*m_lactate);
+  muscleExtraLactate->GetConcentration().SetValue(lactateExtracellular_mg_Per_L, MassPerVolumeUnit::mg_Per_L);
+  muscleIntraLactate->GetConcentration().SetValue(lactateIntracellular_mg_Per_L, MassPerVolumeUnit::mg_Per_L);
+  muscleExtraLactate->Balance(BalanceLiquidBy::Concentration);
+  muscleIntraLactate->Balance(BalanceLiquidBy::Concentration);
   //Lymph
    lymph->GetSubstanceQuantity(*m_lactate)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_lactate)->Balance(BalanceLiquidBy::Molarity);
