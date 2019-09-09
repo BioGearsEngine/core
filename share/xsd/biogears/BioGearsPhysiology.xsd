@@ -131,6 +131,7 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="ArterialOxygenSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="BaroreceptorFatigueScale" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorCentralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorPeripheralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>

@@ -232,6 +232,7 @@ void Renal::Initialize()
   GetUrineOsmolality().SetValue(625.0, OsmolalityUnit::mOsm_Per_kg);
   GetUrineOsmolarity().SetValue(625.0, OsmolarityUnit::mOsm_Per_L);
   GetUrineProductionRate().SetValue(1500.0, VolumePerTimeUnit::mL_Per_day);
+  GetMeanUrineOutput().SetValue(1500.0, VolumePerTimeUnit::mL_Per_day);
   GetUrineSpecificGravity().SetValue(1.016);
   GetUrineVolume().SetValue(0.0, VolumeUnit::mL);
   // Missing Name="UrineUreaConcentration" Unit="g/L"/>
@@ -1386,6 +1387,11 @@ void Renal::CalculateVitalSigns()
   GetUrineVolume().SetValue(m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL), VolumeUnit::mL);
   double urineProductionRate_mL_Per_s = m_leftUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_rightUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
   GetUrineProductionRate().SetValue(urineProductionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
+  //Mean urine output -- tracks urine production w/ time-weighted parameter (larger number weights more recent values more heavily)
+  double sampleWeight = 0.05;
+  double lastMeanUrineOutput_mL_Per_s = GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_s);
+  double dMeanUrineOutput_mL_Per_s_s = sampleWeight * (urineProductionRate_mL_Per_s - lastMeanUrineOutput_mL_Per_s);
+  GetMeanUrineOutput().IncrementValue(dMeanUrineOutput_mL_Per_s_s * m_dt, VolumePerTimeUnit::mL_Per_s);
 
   // Urine specific gravity is calculated by dividing the mass of all the substances in a fluid & the fluid itself by the weight of just the fluid
   SEScalarMass substanceMass;
@@ -1470,7 +1476,7 @@ void Renal::CalculateVitalSigns()
 
       if (m_data.GetActions().GetPatientActions().HasInfection()) {
         double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
-        if (systolicBP <= 100.0 && m_urineProductionRate_mL_Per_min_runningAvg.Value() <= 0.5) {
+        if (systolicBP <= 100.0 && GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) <= 0.5) {
           m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
         }
         if (m_patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis) && m_urineProductionRate_mL_Per_min_runningAvg.Value() >= 0.55 && systolicBP > 90.0) {

@@ -375,6 +375,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="UrineOsmolality" type="ScalarOsmolalityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the mass of the fluid -->
                     <xs:element name="UrineOsmolarity" type="ScalarOsmolarityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the volume of the fluid -->
                     <xs:element name="UrineProductionRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The rate of fluid flow to the bladder -->
+                    <xs:element name="MeanUrineOutput" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--@brief Less noisy average of fluid flow to bladder-->
                     <xs:element name="UrineSpecificGravity" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The density of the fluid relative to water -->
                     <xs:element name="UrineVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of the urine in the bladder --> 
                     <xs:element name="UrineUreaNitrogenConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scaled concentration of Urea in the bladder  --> 

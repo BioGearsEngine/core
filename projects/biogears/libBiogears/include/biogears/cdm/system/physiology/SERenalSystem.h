@@ -266,6 +266,10 @@ public:
   SEScalarVolumePerTime& GetUrineProductionRate();
   double GetUrineProductionRate(const VolumePerTimeUnit& unit) const;
 
+  bool HasMeanUrineOutput() const;
+  SEScalarVolumePerTime& GetMeanUrineOutput();
+  double GetMeanUrineOutput(const VolumePerTimeUnit& unit) const;
+
   bool HasUrineSpecificGravity() const;
   SEScalar& GetUrineSpecificGravity();
   double GetUrineSpecificGravity() const;
@@ -334,6 +338,7 @@ protected:
   SEScalarOsmolality* m_UrineOsmolality;
   SEScalarOsmolarity* m_UrineOsmolarity;
   SEScalarVolumePerTime* m_UrineProductionRate;
+  SEScalarVolumePerTime* m_MeanUrineOutput;
   SEScalar* m_UrineSpecificGravity;
   SEScalarVolume* m_UrineVolume;
   SEScalarMassPerVolume* m_UrineUreaNitrogenConcentration;

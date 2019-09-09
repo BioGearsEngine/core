@@ -80,6 +80,7 @@ namespace biogears {
   constexpr char idUrineOsmolality[] = "UrineOsmolality";
   constexpr char idUrineOsmolarity[] = "UrineOsmolarity";
   constexpr char idUrineProductionRate[] = "UrineProductionRate";
+  constexpr char idMeanUrineOutput[] = "MeanUrineOutput";
   constexpr char idUrineSpecificGravity[] = "UrineSpecificGravity";
   constexpr char idUrineVolume[] = "UrineVolume";
   constexpr char idUrineUreaNitrogenConcentration[] = "UrineUreaNitrogenConcentration";
@@ -142,6 +143,7 @@ SERenalSystem::SERenalSystem(Logger* logger)
   m_UrineOsmolality = nullptr;
   m_UrineOsmolarity = nullptr;
   m_UrineProductionRate = nullptr;
+  m_MeanUrineOutput = nullptr;
   m_UrineSpecificGravity = nullptr;
   m_UrineVolume = nullptr;
   m_UrineUreaNitrogenConcentration = nullptr;
@@ -213,6 +215,7 @@ void SERenalSystem::Clear()
   SAFE_DELETE(m_UrineOsmolality);
   SAFE_DELETE(m_UrineOsmolarity);
   SAFE_DELETE(m_UrineProductionRate);
+  SAFE_DELETE(m_MeanUrineOutput);
   SAFE_DELETE(m_UrineSpecificGravity);
   SAFE_DELETE(m_UrineVolume);
   SAFE_DELETE(m_UrineUreaNitrogenConcentration);
@@ -331,6 +334,8 @@ const SEScalar* SERenalSystem::GetScalar(const std::string& name)
     return &GetUrineOsmolarity();
   if (name == idUrineProductionRate)
     return &GetUrineProductionRate();
+  if (name == idMeanUrineOutput)
+    return &GetMeanUrineOutput();
   if (name == idUrineSpecificGravity)
     return &GetUrineSpecificGravity();
   if (name == idUrineVolume)
@@ -452,6 +457,8 @@ bool SERenalSystem::Load(const CDM::RenalSystemData& in)
     GetUrineOsmolarity().Load(in.UrineOsmolarity().get());
   if (in.UrineProductionRate().present())
     GetUrineProductionRate().Load(in.UrineProductionRate().get());
+  if (in.MeanUrineOutput().present())
+    GetMeanUrineOutput().Load(in.MeanUrineOutput().get());
   if (in.UrineSpecificGravity().present())
     GetUrineSpecificGravity().Load(in.UrineSpecificGravity().get());
   if (in.UrineVolume().present())
@@ -580,6 +587,8 @@ void SERenalSystem::Unload(CDM::RenalSystemData& data) const
     data.UrineOsmolarity(std::unique_ptr<CDM::ScalarOsmolarityData>(m_UrineOsmolarity->Unload()));
   if (m_UrineProductionRate != nullptr)
     data.UrineProductionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_UrineProductionRate->Unload()));
+  if (m_MeanUrineOutput != nullptr)
+    data.MeanUrineOutput(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_MeanUrineOutput->Unload()));
   if (m_UrineSpecificGravity != nullptr)
     data.UrineSpecificGravity(std::unique_ptr<CDM::ScalarData>(m_UrineSpecificGravity->Unload()));
   if (m_UrineVolume != nullptr)
@@ -1607,6 +1616,25 @@ double SERenalSystem::GetUrineProductionRate(const VolumePerTimeUnit& unit) cons
   return m_UrineProductionRate->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
+bool SERenalSystem::HasMeanUrineOutput() const
+{
+  return m_MeanUrineOutput == nullptr ? false : m_MeanUrineOutput->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTime& SERenalSystem::GetMeanUrineOutput()
+{
+  if (m_MeanUrineOutput == nullptr)
+    m_MeanUrineOutput = new SEScalarVolumePerTime();
+  return *m_MeanUrineOutput;
+}
+//-------------------------------------------------------------------------------
+double SERenalSystem::GetMeanUrineOutput(const VolumePerTimeUnit& unit) const
+{
+  if (m_MeanUrineOutput == nullptr)
+    return SEScalar::dNaN();
+  return m_MeanUrineOutput->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
 
 bool SERenalSystem::HasUrineSpecificGravity() const
 {
@@ -1722,6 +1750,7 @@ Tree<const char*> SERenalSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idUrineOsmolality)
     .emplace_back(idUrineOsmolarity)
     .emplace_back(idUrineProductionRate)
+    .emplace_back(idMeanUrineOutput)
     .emplace_back(idUrineSpecificGravity)
     .emplace_back(idUrineVolume)
     .emplace_back(idUrineUreaNitrogenConcentration)
