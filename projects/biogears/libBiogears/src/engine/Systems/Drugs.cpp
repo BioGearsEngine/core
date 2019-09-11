@@ -520,7 +520,32 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ = m_venaCavaVascular->GetSubstanceQuantity(component->GetSubstance());
       double massIncrement_ug = volumeToAdminister_mL * component->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
-      subQ->Balance(BalanceLiquidBy::Mass);
+      if (compound->GetName() == "Blood" && component->GetSubstance().GetName()=="RedBloodCell") {
+        double AntigenA = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        double AntigenB = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        double AntigenAIncrement_ct = 0.0;
+        double AntigenBIncrement_ct = 0.0;
+        if (infusion->GetAdministeredBloodAntigen() == CDM::enumBloodAntigen::A) {
+          AntigenAIncrement_ct = (massIncrement_ug/(2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc, replace with call to sub file
+        } else if (infusion->GetAdministeredBloodAntigen() == CDM::enumBloodAntigen::B) {
+          AntigenBIncrement_ct = (massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
+        } else if (infusion->GetAdministeredBloodAntigen() == CDM::enumBloodAntigen::AB) {
+          AntigenBIncrement_ct = (0.5 * massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
+          AntigenAIncrement_ct = (0.5 * massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
+        }
+        double test = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        double testt = test * volumeToAdminister_mL * 1000.0;
+        double test1 = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        double test2 = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        double venaCavaVolume_mL = m_venaCavaVascular->GetVolume(VolumeUnit::mL);
+        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity().SetValue(test1 + (AntigenAIncrement_ct / ((volumeToAdminister_mL + venaCavaVolume_mL) * 1000)), AmountPerVolumeUnit::ct_Per_uL);
+        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity().SetValue(test2 + (AntigenBIncrement_ct / ((volumeToAdminister_mL + venaCavaVolume_mL) * 1000)), AmountPerVolumeUnit::ct_Per_uL);
+        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->Balance(BalanceLiquidBy::Molarity);
+        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->Balance(BalanceLiquidBy::Molarity);
+        subQ->Balance(BalanceLiquidBy::Mass);
+      } else {
+        subQ->Balance(BalanceLiquidBy::Mass);
+      }
     }
 
     if (compound->GetName() == "Saline" || compound->GetName() == "RingersLactate" || compound->GetName() == "Antibiotic") //Note: Saline and ringers lactate have different densities than pure water

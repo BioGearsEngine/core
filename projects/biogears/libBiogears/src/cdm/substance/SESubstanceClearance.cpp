@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
 #include <biogears/schema/cdm/Compartment.hxx>
@@ -22,6 +23,9 @@ SESubstanceClearance::SESubstanceClearance(Logger* logger)
   : Loggable(logger)
 {
   m_hasSystemic = false;
+  m_hasCellular = false;
+  m_CellDeathRate = nullptr;
+  m_CellBirthRate = nullptr;
   m_ChargeInBlood = (CDM::enumCharge::value)-1;
   m_FractionExcretedInFeces = nullptr;
   m_FractionExcretedInUrine = nullptr;
@@ -37,6 +41,7 @@ SESubstanceClearance::SESubstanceClearance(Logger* logger)
   m_RenalReabsorptionRate = nullptr;
   m_RenalExcretionRate = nullptr;
   m_SystemicClearance = nullptr;
+
 }
 //-----------------------------------------------------------------------------
 SESubstanceClearance::~SESubstanceClearance()
@@ -47,6 +52,9 @@ SESubstanceClearance::~SESubstanceClearance()
 void SESubstanceClearance::Clear()
 {
   m_hasSystemic = false;
+  m_hasCellular = false;
+  SAFE_DELETE(m_CellDeathRate);
+  SAFE_DELETE(m_CellBirthRate);
   m_ChargeInBlood = (CDM::enumCharge::value)-1;
   SAFE_DELETE(m_FractionExcretedInFeces);
   SAFE_DELETE(m_FractionExcretedInUrine);
@@ -95,6 +103,13 @@ bool SESubstanceClearance::IsValid() const
     } else
       return false;
   }
+
+  if (HasCellular()) {
+    if (!HasCellBirthRate())
+      return false;
+    if (!HasCellDeathRate())
+      return false;
+  }
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -105,6 +120,10 @@ const SEScalar* SESubstanceClearance::GetScalar(const char* name)
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceClearance::GetScalar(const std::string& name)
 {
+  if (name.compare("CellDeathRate") == 0)
+    return &GetCellDeathRate();
+  if (name.compare("CellBirthRate") == 0)
+    return &GetCellBirthRate();
   if (name.compare("FractionExcretedInFeces") == 0)
     return &GetFractionExcretedInFeces();
   if (name.compare("FractionExcretedInUrine") == 0)
@@ -181,6 +200,12 @@ bool SESubstanceClearance::Load(const CDM::SubstanceClearanceData& in)
       GetRenalExcretionRate().Load(in.RenalDynamics()->ExcretionRate().get());
   }
 
+  if (in.CellRegulation().present()) {
+    SetCellular(true);
+    GetCellBirthRate().Load(in.CellRegulation().get().CellBirthRate());
+    GetCellDeathRate().Load(in.CellRegulation().get().CellDeathRate());
+  }
+
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -243,7 +268,58 @@ void SESubstanceClearance::Unload(CDM::SubstanceClearanceData& data) const
     if (HasRenalExcretionRate())
       rd->ExcretionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_RenalExcretionRate->Unload()));
   }
+
+  if (HasCellular()) {
+    CDM::CellRegulation* cell(new CDM::CellRegulation());
+    data.CellRegulation(std::unique_ptr<CDM::CellRegulation>(cell));
+
+    if (HasCellBirthRate())
+      cell->CellBirthRate(std::unique_ptr<CDM::ScalarFrequencyData>(m_CellBirthRate->Unload()));
+    if (HasCellDeathRate())
+      cell->CellDeathRate(std::unique_ptr<CDM::ScalarFrequencyData>(m_CellDeathRate->Unload()));
+  }
 };
+
+//-----------------------------------------------------------------------------
+bool SESubstanceClearance::HasCellBirthRate() const
+{
+  return (m_CellBirthRate == nullptr) ? false : m_CellBirthRate->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarFrequency& SESubstanceClearance::GetCellBirthRate()
+{
+  if (m_CellBirthRate == nullptr)
+    m_CellBirthRate = new SEScalarFrequency();
+  return *m_CellBirthRate;
+}
+//-----------------------------------------------------------------------------
+double SESubstanceClearance::GetCellBirthRate(const FrequencyUnit& unit) const
+{
+  if (m_CellBirthRate == nullptr)
+    return SEScalar::dNaN();
+  return m_CellBirthRate->GetValue(unit);
+}
+
+//-----------------------------------------------------------------------------
+bool SESubstanceClearance::HasCellDeathRate() const
+{
+  return (m_CellDeathRate == nullptr) ? false : m_CellDeathRate->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarFrequency& SESubstanceClearance::GetCellDeathRate()
+{
+  if (m_CellDeathRate == nullptr)
+    m_CellDeathRate = new SEScalarFrequency();
+  return *m_CellDeathRate;
+}
+//-----------------------------------------------------------------------------
+double SESubstanceClearance::GetCellDeathRate(const FrequencyUnit& unit) const
+{
+  if (m_CellDeathRate == nullptr)
+    return SEScalar::dNaN();
+  return m_CellDeathRate->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 CDM::enumCharge::value SESubstanceClearance::GetChargeInBlood() const
 {

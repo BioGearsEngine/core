@@ -111,7 +111,7 @@ void BloodChemistry::Initialize()
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   GetCarbonMonoxideSaturation().SetValue(0);
   m_donorRBC = 0.0;
-  m_patientRBC = 0.0;
+  m_patientRBC = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) * m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
   m_2Agglutinate = 0.0;
   m_p3Agglutinate = 0.0;
   m_d3Agglutinate = 0.0;
@@ -159,12 +159,6 @@ void BloodChemistry::SetUp()
   const BioGearsConfiguration& ConfigData = m_data.GetConfiguration();
   m_redBloodCellVolume_mL = ConfigData.GetMeanCorpuscularVolume(VolumeUnit::mL);
   m_HbPerRedBloodCell_ug_Per_ct = ConfigData.GetMeanCorpuscularHemoglobin(MassPerAmountUnit::ug_Per_ct);
-  m_donorRBC = 0.0;
-  m_patientRBC = 0.0;
-  m_2Agglutinate = 0.0;
-  m_p3Agglutinate = 0.0;
-  m_d3Agglutinate = 0.0;
-  m_4Agglutinate = 0.0;
 
   //Substance
   SESubstance* albumin = &m_data.GetSubstances().GetAlbumin();
@@ -298,8 +292,6 @@ void BloodChemistry::Process()
   GetRedBloodCellCount().SetValue(RedBloodCellCount_ct / m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::L), AmountPerVolumeUnit::ct_Per_L);
   GetPlasmaVolume().SetValue(TotalBloodVolume_mL - RedBloodCellVolume_mL, VolumeUnit::mL); //Look into changing to account for platelets and wbc too
 
-  m_data.GetDataTrack().Probe("rbccountBG", GetRedBloodCellCount(AmountPerVolumeUnit::ct_Per_uL));
-
   // Concentrations
   double albuminConcentration_ug_Per_mL = m_venaCavaAlbumin->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   m_data.GetSubstances().GetAlbumin().GetBloodConcentration().Set(m_venaCavaAlbumin->GetConcentration());
@@ -369,12 +361,21 @@ void BloodChemistry::Process()
   // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
   //Then check for three mismatch scenarios using OR statement. If so, go to HTR function [below]
 
+  //if () {
   if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::AB)) {
     return;
-  } else if ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O) && (m_data.GetSubstances().IsActive(*m_AntigenA) || m_data.GetSubstances().IsActive(*m_AntigenB)))
-             || (m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB))) {
+  } else if ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O) && ((m_data.GetSubstances().GetAntigen_A().GetBloodConcentration(MassPerVolumeUnit::g_Per_mL) > 0) || m_data.GetSubstances().GetAntigen_B().GetBloodConcentration(MassPerVolumeUnit::g_Per_mL) > 0)) //(m_data.GetSubstances().IsActive(*m_AntigenA) || m_data.GetSubstances().IsActive(*m_AntigenB)))
+             || ((m_venaCava->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) && (m_venaCava->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) { //(m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB)))
     CalculateHemolyticTransfusionReaction();
   }
+  //}
+
+  m_data.GetDataTrack().Probe("pRBC1", m_patientRBC);
+  m_data.GetDataTrack().Probe("dRBC1", m_donorRBC);
+  m_data.GetDataTrack().Probe("RBC2", m_2Agglutinate);
+  m_data.GetDataTrack().Probe("pRBC3", m_p3Agglutinate);
+  m_data.GetDataTrack().Probe("dRBC3", m_d3Agglutinate);
+  m_data.GetDataTrack().Probe("RBC4", m_4Agglutinate);
   //dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
 
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -741,9 +742,9 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction()
   double TotalRBC;
   double patientAntigen_ct_per_uL;
   double donorAntigen_ct_per_uL;
-  double BloodVolume = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
-  double antigens_per_rbc = 2000000;
-  double agglutinin_per_rbc = 50;
+  double BloodVolume = m_venaCava->GetVolume(VolumeUnit::uL); //m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
+  const double antigens_per_rbc = 2000000.0;
+  const double agglutinin_per_rbc = 50.0;
   double AntigenA = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   double AntigenB = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
@@ -763,19 +764,22 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction()
   donorRBC = (donorAntigen_ct_per_uL * BloodVolume) / antigens_per_rbc;
   patientRBC = TotalRBC - donorRBC; // Calculated this way to account for O cells still having no antigens
 
-  double HealFactor = std::pow(10, (1 - (patientRBC / (5280000 * 4800000)))); //estimate of baseline rbc molarity times full blood
-  double RBC_birth = HealFactor * 2000000; //per s(increased by factor of 10)
-  double RBC_death = 2000000; //per s
+  //double test1 = (5280000.0 * 4800000.0);
+  //double test2 = (patientRBC / (5280000 * 4800000));
+  double test = 1.0 - (patientRBC / (5280000.0 * 4800000.0));
+  double HealFactor = std::pow(10.0, test); //estimate of baseline rbc molarity times full blood
+  double RBC_birth = HealFactor * m_data.GetSubstances().GetRBC().GetClearance().GetCellBirthRate().GetValue(FrequencyUnit::Per_s); //per s(increased by factor of 10)
+  double RBC_death = m_data.GetSubstances().GetRBC().GetClearance().GetCellDeathRate(FrequencyUnit::Per_s); //per s
 
   //Surface Area of rbc stacked
-  double sa1 = 0.0000013;
-  double sa2 = 0.0000019;
-  double sa3 = 0.0000024;
+  double sa1 = 1.3e-6;
+  double sa2 = 1.9e-6;
+  double sa3 = 2.4e-6;
   double antpercm2 = antigens_per_rbc / sa1;
   double aggpercm2 = agglutinin_per_rbc / sa1;
 
-  double D1 = 0.000000000014; //cm2 per s and is diffusion coefficient of one rbc
-  double R1 = 0.00035; //cm and is radius of one rbc
+  double D1 = 1.4e-11; //cm2 per s and is diffusion coefficient of one rbc
+  double R1 = 3.5e-4; //cm and is radius of one rbc
   double R2 = R1 * std::cbrt(2);
   double R3 = R1 * std::cbrt(3);
   double D2 = (D1 * R1) / (R2);
@@ -788,7 +792,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction()
   double agg3 = (aggpercm2 * sa3);
   double ant3 = (antpercm2 * sa3);
 
-  double timedelay = 0.00005;
+  double timedelay = 5e-5;
   double tuning11 = timedelay / ((agg1 + ant1) * (agg1 + ant1)); //tuning factor for timing of response
   double tuning12 = timedelay / ((agg1 + ant1) * (agg2 + ant2));
   double tuning22 = timedelay / ((agg2 + ant2) * (agg2 + ant2));
@@ -803,23 +807,30 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction()
   double newC1RBC_patient = patientRBC + (RBC_birth * dt) - (RBC_death * dt) - (dt * ((oneK1 * patientRBC * donorRBC) + (twoK1 * m_2Agglutinate * patientRBC) + (threeK1 * m_d3Agglutinate * patientRBC)));
   double newC1RBC_donor = donorRBC - (RBC_death * dt) - (dt * ((oneK1 * patientRBC * donorRBC) + (twoK1 * m_2Agglutinate * donorRBC) + (threeK1 * m_p3Agglutinate * donorRBC)));
   double newC2RBC = m_2Agglutinate + (dt * ((oneK1 * patientRBC * donorRBC) - (twoK1 * m_2Agglutinate * patientRBC) - (twoK1 * m_2Agglutinate * donorRBC) - (twoK2 * m_2Agglutinate * m_2Agglutinate)));
-  double newC3RBC_patient = m_p3Agglutinate + (dt*((twoK1*m_2Agglutinate*patientRBC)-(threeK1*m_p3Agglutinate*donorRBC)));
-  double newC3RBC_donor = m_d3Agglutinate + (dt*((twoK1*m_2Agglutinate*donorRBC)-(threeK1*m_d3Agglutinate*patientRBC)));
+  double newC3RBC_patient = m_p3Agglutinate + (dt * ((twoK1 * m_2Agglutinate * patientRBC) - (threeK1 * m_p3Agglutinate * donorRBC)));
+  double newC3RBC_donor = m_d3Agglutinate + (dt * ((twoK1 * m_2Agglutinate * donorRBC) - (threeK1 * m_d3Agglutinate * patientRBC)));
   double newC4RBC = m_4Agglutinate + (dt * ((twoK2 * m_2Agglutinate * m_2Agglutinate) + (threeK1 * m_d3Agglutinate * patientRBC) + (threeK1 * m_p3Agglutinate * donorRBC)));
 
-  m_patientRBC = newC1RBC_patient + m_patientRBC;
-  m_donorRBC = newC1RBC_donor + m_donorRBC;
-  m_2Agglutinate = newC2RBC + m_2Agglutinate;
-  m_p3Agglutinate = newC3RBC_patient + m_p3Agglutinate;
-  m_d3Agglutinate = newC3RBC_donor + m_d3Agglutinate;
-  m_4Agglutinate = newC4RBC + m_4Agglutinate;
+  m_patientRBC = newC1RBC_patient;
+  LLIM(m_patientRBC, 0.0);
+  m_donorRBC = newC1RBC_donor;
+  LLIM(m_donorRBC, 0.0);
+  m_2Agglutinate = newC2RBC;
+  LLIM(m_2Agglutinate, 0.0);
+  m_p3Agglutinate = newC3RBC_patient;
+  LLIM(m_p3Agglutinate, 0.0);
+  m_d3Agglutinate = newC3RBC_donor;
+  LLIM(m_d3Agglutinate, 0.0);
+  m_4Agglutinate = newC4RBC;
+  LLIM(m_4Agglutinate, 0.0);
 
-  m_data.GetDataTrack().Probe("pRBC1", m_patientRBC);
-  m_data.GetDataTrack().Probe("dRBC1", m_donorRBC);
-  m_data.GetDataTrack().Probe("RBC2", m_2Agglutinate);
-  m_data.GetDataTrack().Probe("pRBC3", m_p3Agglutinate);
-  m_data.GetDataTrack().Probe("pRBC3", m_d3Agglutinate);
-  m_data.GetDataTrack().Probe("RBC4", m_4Agglutinate);
+  double deadCells_percent = (m_4Agglutinate * 4)/TotalRBC;
+  SESubstance& Hemoglobin = m_data.GetSubstances().GetHb();
+  SESubstance& HemoglobinO2 = m_data.GetSubstances().GetHbO2();
+  SESubstance& HemoglobinCO2 = m_data.GetSubstances().GetHbCO2();
+  m_venaCava->GetSubstanceQuantity(Hemoglobin)->GetConcentration().SetValue(m_venaCava->GetSubstanceQuantity(Hemoglobin)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL) * deadCells_percent, MassPerVolumeUnit::g_Per_mL);
+  m_venaCava->GetSubstanceQuantity(HemoglobinO2)->GetConcentration().SetValue(m_venaCava->GetSubstanceQuantity(HemoglobinO2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL) * deadCells_percent, MassPerVolumeUnit::g_Per_mL);
+  m_venaCava->GetSubstanceQuantity(HemoglobinCO2)->GetConcentration().SetValue(m_venaCava->GetSubstanceQuantity(HemoglobinCO2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL) * deadCells_percent, MassPerVolumeUnit::g_Per_mL);
 }
 
 /// \brief

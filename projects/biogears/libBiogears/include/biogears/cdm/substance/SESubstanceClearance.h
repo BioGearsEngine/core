@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/schema/cdm/Substance.hxx>
+#include "biogears/cdm/properties/SEScalarFrequency.h"
 
 CDM_BIND_DECL(SubstanceClearanceData)
 
@@ -51,6 +52,17 @@ protected:
 public:
   virtual bool HasSystemic() const { return m_hasSystemic; }
   virtual void SetSystemic(bool b) { m_hasSystemic = b; }
+
+  virtual bool HasCellular() const { return m_hasCellular; }
+  virtual void SetCellular(bool b) { m_hasCellular = b; }
+  
+  virtual bool HasCellBirthRate() const;
+  virtual SEScalarFrequency& GetCellBirthRate();
+  virtual double GetCellBirthRate(const FrequencyUnit& unit) const;
+
+  virtual bool HasCellDeathRate() const;
+  virtual SEScalarFrequency& GetCellDeathRate();
+  virtual double GetCellDeathRate(const FrequencyUnit& unit) const;
 
   virtual CDM::enumCharge::value GetChargeInBlood() const;
   virtual void SetChargeInBlood(CDM::enumCharge::value type);
@@ -116,6 +128,10 @@ public:
 
 protected:
   bool m_hasSystemic;
+  bool m_hasCellular;
+  SEScalarFrequency* m_CellBirthRate;
+  SEScalarFrequency* m_CellDeathRate;
+
   CDM::enumCharge::value m_ChargeInBlood;
   SEScalarFraction* m_FractionExcretedInFeces;
   SEScalarFraction* m_FractionExcretedInUrine;

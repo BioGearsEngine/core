@@ -44,11 +44,11 @@ void SESubstanceCompoundInfusion::Clear()
 
 bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in)
 {
+  SESubstanceAdministration::Load(in);
   if (in.AdministeredBloodAntigen().present())
     m_AdministeredBloodAntigen = in.AdministeredBloodAntigen().get();
   if (in.AdministeredBloodRhFactor().present())
     m_AdministeredBloodRhFactor = in.AdministeredBloodRhFactor().get();
-  SESubstanceAdministration::Load(in);
   GetRate().Load(in.Rate());
   GetBagVolume().Load(in.BagVolume());
   return true;
@@ -141,12 +141,12 @@ void SESubstanceCompoundInfusion::ToString(std::ostream& str) const
   HasBagVolume() ? str << *m_BagVolume : str << "NaN";
   str << "\n\tSubstance Compound: " << m_Compound.GetName();
   /// \todo Will need to check for if substance infusion is blood and if so, antigen and rh factor must exist
-  if (m_Compound.GetName() == "blood") {
+  if (m_Compound.GetName() == "Blood") {
     if (HasAdministeredBloodAntigen() && HasAdministeredBloodRhFactor()) {
       str << "\n\tAdministered Blood Type: ";
       str << m_AdministeredBloodAntigen << " " << m_AdministeredBloodRhFactor;
     } else {
-      Error("Must provide blood typer being transfused to patient"); // Come back to look at how this is handled
+      Error("Must provide blood type being transfused to patient"); // Come back to look at how this is handled
     }
   }
   str << std::flush;

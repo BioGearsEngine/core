@@ -27,7 +27,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
-#include "biogears/cdm/properties/SEScalarAmountPerVolume.h"
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 
 namespace biogears {
 SESubstance::SESubstance(Logger* logger)
