@@ -23,7 +23,7 @@ namespace biogears {
   BIOGEARS_API char const *       version_string_str();
   BIOGEARS_API std::string full_version_string();
   BIOGEARS_API char const *       full_version_string_str();
-  BIOGEARS_API 
+
   BIOGEARS_API std::string project_name();
   BIOGEARS_API char const *       project_name_str();
 
