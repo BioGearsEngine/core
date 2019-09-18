@@ -688,16 +688,13 @@ void BloodChemistry::ManageSIRS()
   double wbcAbsolute_ct_Per_uL = wbcBaseline_ct_Per_uL * (1.0 + neutrophilActive / 0.25);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
-  //Use the delta above normal white blood cell values to track other Systemic Inflammatory metrics.  These relationships were all
+  //Use the tissue integrity output from the inflammation model to track other Systemic Inflammatory metrics.  These relationships were all
   //empirically determined to time symptom onset (i.e. temperature > 38 degC) with the appropriate stage of sepsis
   double sigmoidInput = 1.0 - tissueIntegrity;
 
   //Respiration effects--Done in Respiratory system
 
-  //Temperature (fever) effects -- Need to be re-tuned with new infection action
-  double coreTempComplianceBaseline_J_Per_K = coreCompliance->GetCapacitanceBaseline(HeatCapacitanceUnit::J_Per_K);
-  double coreComplianceDeltaPercent = sigmoidInput / (sigmoidInput + 0.4);
-  //coreCompliance->GetNextCapacitance().SetValue(coreTempComplianceBaseline_J_Per_K * (1.0 - coreComplianceDeltaPercent / 100.0), HeatCapacitanceUnit::J_Per_K);
+  //Temperature (fever) effects -- Accounted for by Energy::UpdateHeatResistance, which accounts for altered skin blood flow
 
   //Bilirubin counts (measure of liver perfusion)
   double baselineBilirubin_mg_Per_dL = 0.70;
@@ -708,8 +705,8 @@ void BloodChemistry::ManageSIRS()
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
 
   double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8;  //Discounting the 20% used by brain 
-  double maxDeficitMultiplier = 0.5;
-  double energyDeficit_W = basalTissueEnergyDemand_W * maxDeficitMultiplier * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + 0.75 * 0.75);
+  double maxDeficitMultiplier = 1.0;
+  double energyDeficit_W = basalTissueEnergyDemand_W * maxDeficitMultiplier * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + 0.25 * 0.25);
   m_data.GetEnergy().GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
 
 }
@@ -838,7 +835,7 @@ void BloodChemistry::InflammatoryResponse()
   //TNF
   double kTNFN = 2.97, kTNFM = 0.1, kTNF = 1.4, xTNF6 = 0.059, xTNF10 = 0.079;
   //IL6
-  double k6M = 3.03, k6TNF = 1.0, k62 = 3.4, k6NO = 2.97, k6 = 0.7, k6N = 0.2, x610 = 0.1782, x6TNF = 0.1, x66 = 0.5, x6NO = 0.4, h66 = 1.0; //x66 = 0.2277
+  double k6M = 3.03, k6TNF = 1.0, k62 = 3.4, k6NO = 2.97, k6 = 0.7, k6N = 0.2, x610 = 0.1782, x6TNF = 0.1, x66 = 0.5, x6NO = 0.4, h66 = 1.0;
   //IL10
   double k10MA = 0.1, k10N = 0.1, k10A = 62.87, k10TNF = 1.485, k106 = 0.051, k10 = 0.35, k10R = 0.1, x10TNF = 0.05, x1012 = 0.01, x106 = 0.08;
   //CA

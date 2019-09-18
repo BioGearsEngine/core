@@ -804,7 +804,13 @@ void Drugs::CalculateDrugEffects()
           Warning("Maximum antibacterial effect is lower than the growth rate of the bacteria");
         }
         double growthRatio = growthMin_Per_hr / growthMax_Per_hr;
-        double concentrationToMIC = effectSiteConcentration_ug_Per_mL * sub->GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma().GetValue() / minimumInhibitoryConcentration_ug_Per_mL;
+        double fractionUnbound = 1.0;
+        if (sub->GetPK().HasPhysicochemicals()) {
+          fractionUnbound = sub->GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma().GetValue();
+        } else {
+          fractionUnbound = sub->GetClearance().GetFractionUnboundInPlasma().GetValue();
+        }
+        double concentrationToMIC = effectSiteConcentration_ug_Per_mL * fractionUnbound / minimumInhibitoryConcentration_ug_Per_mL;
         concentrationEffects_unitless = std::pow(concentrationToMIC, shapeParameter) / (std::pow(concentrationToMIC, shapeParameter) - growthRatio);
         antibioticEffect_Per_hr += (growthMax_Per_hr - growthMin_Per_hr) * concentrationEffects_unitless;
       }
