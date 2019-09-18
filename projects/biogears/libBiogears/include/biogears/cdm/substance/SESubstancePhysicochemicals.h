@@ -37,9 +37,6 @@ protected:
   virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
 
 public:
-  //virtual bool HasAcidDissociationConstant() const;
-  //virtual SEScalar& GetAcidDissociationConstant();
-  //virtual double GetAcidDissociationConstant() const;
   
    virtual bool HasPrimaryPKA() const;
    virtual SEScalar& GetPrimaryPKA();

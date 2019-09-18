@@ -1213,7 +1213,7 @@ void SEInflammatoryResponse::Initialize()
   GetLocalNeutrophil().SetValue(0.0);
   GetLocalBarrier().SetValue(1.0);
   SetActiveTLR(CDM::enumOnOff::Off);
-  GetBloodPathogen().SetValue(0.0); //Change this back to 0 after testing
+  GetBloodPathogen().SetValue(0.0);
   GetTrauma().SetValue(0.0);
   GetMacrophageResting().SetValue(1.0);
   GetMacrophageActive().SetValue(0.0);
