@@ -40,7 +40,6 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_LeftNeedleDecompression = nullptr;
   m_RightNeedleDecompression = nullptr;
   m_PericardialEffusion = nullptr;
-  m_Sepsis = nullptr;
   m_LeftOpenTensionPneumothorax = nullptr;
   m_LeftClosedTensionPneumothorax = nullptr;
   m_RightOpenTensionPneumothorax = nullptr;
@@ -80,7 +79,6 @@ void SEPatientActionCollection::Clear()
   RemoveLeftClosedTensionPneumothorax();
   RemoveRightOpenTensionPneumothorax();
   RemoveRightClosedTensionPneumothorax();
-  RemoveSepsis();
   RemoveUrinate();
   RemoveOverride();
 
@@ -152,8 +150,6 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     to.push_back(GetRightClosedTensionPneumothorax()->Unload());
   if (HasRightOpenTensionPneumothorax())
     to.push_back(GetRightOpenTensionPneumothorax()->Unload());
-  if (HasSepsis())
-    to.push_back(GetSepsis()->Unload());
   for (auto itr : GetSubstanceBoluses())
     to.push_back(itr.second->Unload());
   for (auto itr : GetSubstanceInfusions())
@@ -497,18 +493,6 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   const CDM::SubstanceAdministrationData* admin = dynamic_cast<const CDM::SubstanceAdministrationData*>(&action);
   if (admin != nullptr) {
     return AdministerSubstance(*admin);
-  }
-
-  const CDM::SepsisData* sepsisAction = dynamic_cast<const CDM::SepsisData*>(&action);
-  if (sepsisAction != nullptr) {
-    if (m_Sepsis == nullptr)
-      m_Sepsis = new SESepsis();
-    m_Sepsis->Load(*sepsisAction);
-    if (!m_Sepsis->IsActive()) {
-      RemoveSepsis();
-      return true;
-    }
-    return IsValid(*m_Sepsis);
   }
 
   const CDM::TensionPneumothoraxData* pneumo = dynamic_cast<const CDM::TensionPneumothoraxData*>(&action);
@@ -958,21 +942,6 @@ SEPericardialEffusion* SEPatientActionCollection::GetPericardialEffusion() const
 void SEPatientActionCollection::RemovePericardialEffusion()
 {
   SAFE_DELETE(m_PericardialEffusion);
-}
-//-------------------------------------------------------------------------------
-bool SEPatientActionCollection::HasSepsis() const
-{
-  return m_Sepsis == nullptr ? false : true;
-}
-//-------------------------------------------------------------------------------
-SESepsis* SEPatientActionCollection::GetSepsis() const
-{
-  return m_Sepsis;
-}
-//-------------------------------------------------------------------------------
-void SEPatientActionCollection::RemoveSepsis()
-{
-  SAFE_DELETE(m_Sepsis);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasTensionPneumothorax() const
