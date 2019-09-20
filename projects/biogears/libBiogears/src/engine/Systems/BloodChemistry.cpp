@@ -773,8 +773,9 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction()
 
   //double test1 = (5280000.0 * 4800000.0);
   //double test2 = (patientRBC / (5280000 * 4800000));
-  double test = 1.0 - (patientRBC / (5280000.0 * 4800000.0));
-  double HealFactor = std::pow(10.0, test); //estimate of baseline rbc molarity times full blood
+  double HealExp = 1.0 - (patientRBC / (5280000.0 * 4800000.0));
+  LLIM(HealExp, 0.0);
+  double HealFactor = std::pow(100.0, HealExp); //estimate of baseline rbc molarity times full blood
   double RBC_birth = HealFactor * m_data.GetSubstances().GetRBC().GetClearance().GetCellBirthRate().GetValue(FrequencyUnit::Per_s); //per s(increased by factor of 10)
   double RBC_death = m_data.GetSubstances().GetRBC().GetClearance().GetCellDeathRate(FrequencyUnit::Per_s); //per s
 
@@ -842,15 +843,16 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction()
   //std::stringstream ss;
   //ss << m_4Agglutinate << ", " << m_RemovedRBC << ", " << TotalRBC << ", " << lostOxygen_percent << "!!!!!!!!!!!!! ";
   //Info(ss);
-    SESubstance& RBC_final
-    = m_data.GetSubstances().GetRBC();
+  SESubstance& RBC_final = m_data.GetSubstances().GetRBC();
   SESubstance& Hemoglobin = m_data.GetSubstances().GetHb();
   SESubstance& HemoglobinO2 = m_data.GetSubstances().GetHbO2();
   SESubstance& HemoglobinCO2 = m_data.GetSubstances().GetHbCO2();
   SESubstance& HemoglobinCO = m_data.GetSubstances().GetHbCO();
   SESubstance& HemoglobinO2CO2 = m_data.GetSubstances().GetHbO2CO2();
-  SESubstance& testing = m_data.GetSubstances().GetO2();
+  SESubstance& Oxygen = m_data.GetSubstances().GetO2();
   SESubstance& testing2 = m_data.GetSubstances().GetCO2();
+  SESubstance& AntA_final = m_data.GetSubstances().GetAntigen_A();
+  SESubstance& AntB_final = m_data.GetSubstances().GetAntigen_B();
 
   double Hb_Per_RBC = 1000;
   m_RemovedRBC = m_4Agglutinate;
@@ -865,16 +867,22 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction()
   for (auto v : vascularcompts) {
     SELiquidCompartment* compt = v;
     //compt->GetSubstanceQuantity(Hemoglobin)->GetMass().SetReadOnly(false);
+    compt->GetSubstanceQuantity(RBC_final)->GetMass().SetValue(compt->GetSubstanceQuantity(RBC_final)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
+    compt->GetSubstanceQuantity(AntA_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AntA_final)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
+    compt->GetSubstanceQuantity(AntB_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AntB_final)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
     compt->GetSubstanceQuantity(Hemoglobin)->GetMass().SetValue(compt->GetSubstanceQuantity(Hemoglobin)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
     compt->GetSubstanceQuantity(HemoglobinO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinO2)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
     compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
     compt->GetSubstanceQuantity(HemoglobinO2CO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinO2CO2)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
-    compt->GetSubstanceQuantity(testing)->GetMass().SetValue(compt->GetSubstanceQuantity(testing)->GetMass(MassUnit::g) * lostOxygen_percent, MassUnit::g);
+    compt->GetSubstanceQuantity(Oxygen)->GetMass().SetValue(compt->GetSubstanceQuantity(Oxygen)->GetMass(MassUnit::g) * lostOxygen_percent, MassUnit::g);
+    compt->GetSubstanceQuantity(RBC_final)->Balance(BalanceLiquidBy::Mass);
+    compt->GetSubstanceQuantity(AntA_final)->Balance(BalanceLiquidBy::Mass);
+    compt->GetSubstanceQuantity(AntB_final)->Balance(BalanceLiquidBy::Mass);
     compt->GetSubstanceQuantity(Hemoglobin)->Balance(BalanceLiquidBy::Mass);
     compt->GetSubstanceQuantity(HemoglobinO2)->Balance(BalanceLiquidBy::Mass);
     compt->GetSubstanceQuantity(HemoglobinCO2)->Balance(BalanceLiquidBy::Mass);
     compt->GetSubstanceQuantity(HemoglobinO2CO2)->Balance(BalanceLiquidBy::Mass);
-    compt->GetSubstanceQuantity(testing)->Balance(BalanceLiquidBy::Mass);
+    compt->GetSubstanceQuantity(Oxygen)->Balance(BalanceLiquidBy::Mass);
   }
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::J_Per_s)*BloodDensity_percent, PowerUnit::J_Per_s); //shivering/core temp increase
   //GetBloodDensity().SetValue(GetBloodDensity(MassPerVolumeUnit::g_Per_mL)*BloodDensity_percent, MassPerVolumeUnit::g_Per_mL);
