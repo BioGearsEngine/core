@@ -136,5 +136,6 @@ protected:
   double m_p3Agglutinate;
   double m_d3Agglutinate;
   double m_4Agglutinate;
+  double m_RemovedRBC;
 };
 }

@@ -507,6 +507,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::FunctionalIncontinence:
         m_ss << " Patient has involuntarily emptied their bladder";
         break;
+      case CDM::enumPatientEvent::HemolyticTransfusionReaction:
+        m_ss << " Patient is undergoing an incompatible blood transfusion";
+        break;
       case CDM::enumPatientEvent::Hypercapnia:
         m_ss << " Patient has Hypercapnia";
         break;
@@ -648,6 +651,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::FunctionalIncontinence:
         m_ss << " Patient has an empty bladder";
+        break;
+      case CDM::enumPatientEvent::HemolyticTransfusionReaction:
+        m_ss << " Patient is no longer undergoing a hemolytic transfusion reaction";
         break;
       case CDM::enumPatientEvent::Hypercapnia:
         m_ss << " Patient no longer has Hypercapnia";

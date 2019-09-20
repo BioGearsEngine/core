@@ -40,4 +40,13 @@
   <Component Name="Potassium">
     <Concentration readOnly="false" unit="mg/L" value="176.4"/>
   </Component>
+  <Component Name="RedBloodCell">
+    <Concentration readOnly="false" unit="g/dL" value="14.256"/>
+  </Component>
+  <Component Name="WhiteBloodCell">
+    <Concentration readOnly="false" unit="g/dL" value="0.0189"/>
+  </Component>
+  <Component Name="Platelet">
+    <Concentration readOnly="false" unit="g/dL" value="0.81"/>
+  </Component>
 </SubstanceCompound>

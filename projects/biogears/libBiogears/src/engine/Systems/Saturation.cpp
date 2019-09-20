@@ -827,6 +827,7 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
   totalHbRelativeError = (resultantTotalHgb_mM - InputAmountTotalHb_mM) / InputAmountTotalHb_mM;
 
   //These shouldn't really happen unless we're at crazy extremes
+  if (!m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
   if (std::abs(totalCO2RelativeError) > tolerance && InputAmountTotalCO2_mM > approxZero) {
     resultantDissolvedCO2_mM += (InputAmountTotalCO2_mM - resultantTotalCO2_mM);
     errMsg << "Failure to conserve CO2 amount (GeneralMath:CalculateBloodGasDistribution);"
@@ -847,6 +848,7 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
            << " node: " << m_cmpt->GetName() << "; error: " << totalHbRelativeError;
     errMsg << ". Rectifying it by incrementing that amount unbound.";
     Error(errMsg);
+  }
   }
 
   // Update concentrations

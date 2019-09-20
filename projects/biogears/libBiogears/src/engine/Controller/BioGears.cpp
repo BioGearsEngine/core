@@ -615,8 +615,8 @@ bool BioGears::SetupPatient()
   m_Patient->GetMeanArterialPressureBaseline().SetValue(MAP_mmHg, PressureUnit::mmHg);
 
   //Blood Type -----------------------------------------------------------------
-  //default blood type based on most common globally
-  CDM::enumBloodType::value defaultBloodType_ABO = CDM::enumBloodType::O;
+  //default blood type based on universal acceptor
+  CDM::enumBloodType::value defaultBloodType_ABO = CDM::enumBloodType::AB;
   CDM::enumBinaryResults::value defaultBloodRh = CDM::enumBinaryResults::positive;
   if (!m_Patient->HasBloodRh()) {
     m_Patient->SetBloodRh(defaultBloodRh);
