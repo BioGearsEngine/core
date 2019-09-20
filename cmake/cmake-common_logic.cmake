@@ -7,11 +7,7 @@ if( NOT CMAKE_BUILD_TYPE )
     "Debug"
     "Release"
   ) 
-  if(ANDROID)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Release;Debug" FORCE)
-  else()
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Release;Debug" FORCE)
-  endif()
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Release;Debug" FORCE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${BUILD_OPTIONS_STRINGS})
 endif()
 
