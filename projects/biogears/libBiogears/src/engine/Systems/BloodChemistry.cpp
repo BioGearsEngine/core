@@ -825,13 +825,13 @@ void BloodChemistry::InflammatoryResponse()
   //Activate macrophage interactions
   double kMANO = 0.2, kMA = 0.2;
   //Neutrophil interactions -- kN6 and kNTNF tuned for infection
-  double kNL = 3.375e1, kNTNF = 0.4, kN6 = 1.5, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 56.25, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2, xNNO = 0.5; //xND was 0.4 for burn
+  double kNL = 3.375e1, kNTNF = 0.4, kN6 = 1.5, kNB = 0.1, kND = 0.05, kNTR = 0.02, kNTGF = 0.1, kNR = 0.05, kNNO = 0.4, kNA = 0.5, xNL = 56.25, xNTNF = 2.0, xN6 = 1.0, xND = 0.4, xN10 = 0.2; //xND was 0.4 for burn
   //Inducible nitric oxide synthase
   double kINOSN = 1.5, kINOSM = 0.1, kINOSEC = 0.1, kINOS6 = 2.0, kINOSd = 0.05, kINOS = 0.101, xINOS10 = 0.1, xINOSTNF = 0.05, xINOS6 = 0.1, xINOSNO = 0.3;
   //Constituitive nitric oxide synthase
   double kENOS = 4.0, kENOSEC = 0.05, xENOSTNF = 0.4, xENOSL = 1.015, xENOSTR = 0.1;
   //Nitric oxide
-  double kN = 0.5, kNO3 = 0.46, kNOMA = 2.0;
+  double kNO3 = 0.46, kNOMA = 2.0;
   //TNF
   double kTNFN = 2.97, kTNFM = 0.1, kTNF = 1.4, xTNF6 = 0.059, xTNF10 = 0.079;
   //IL6
@@ -850,14 +850,14 @@ void BloodChemistry::InflammatoryResponse()
   //Antibiotic effects
   double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
-  //------------------Action specific modifications--------------------------------
+  //------------------Inflammation source specific modifications and/or actions --------------------------------
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 5.0 * burnTotalBodySurfaceArea;
     kD6 = 0.3, xD6 = 0.25, kD = 0.01, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
-  if (PB > ZERO_APPROX){
+  if (PB > ZERO_APPROX) {
     ManageSIRS();
   }
 
@@ -927,6 +927,17 @@ void BloodChemistry::InflammatoryResponse()
   NO = iNOS * (1.0 + kNOMA * (m_InflammatoryResponse->GetMacrophageActive().GetValue() + m_InflammatoryResponse->GetNeutrophilActive().GetValue())) + eNOS; //Algebraic relationship, not differential
   m_InflammatoryResponse->GetNitricOxide().SetValue(NO);
   m_InflammatoryResponse->SetActiveTLR(TLR);
+
+  //------------------------Check to see if infection-induced inflammation has resolved sufficient to eliminate action-----------------------
+  //Note that even though we remove the infection, we leave the inflammation source active.  This is because we want the inflammation markers
+  // to return to normal, baseline values.
+  double bloodPathogenLimit = 1.0e-5;	//This is 1e-4 % of approximate max blood pathogen that model can eliminate withoug antibiotics
+  double tissuePathogenLimit = 1.0;		//This is 1e-4 % of the initial value for a mild infection
+  if ((PT < tissuePathogenLimit) && (PB < bloodPathogenLimit) && (m_data.GetActions().GetPatientActions().HasInfection())) {
+    m_data.GetActions().GetPatientActions().RemoveInfection();
+  }
+  //We could put a check here to see if all inflammation states are back to baseline and then remove it from the sources vector
+  //However, I think this would only happen over an extremely long run, and so it does not seem likely to be a major need.
 }
   //--------------------------------------------------------------------------------------------------
   /// \brief

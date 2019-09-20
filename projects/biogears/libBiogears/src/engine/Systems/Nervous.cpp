@@ -266,14 +266,19 @@ void Nervous::BaroreceptorFeedback()
   double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
   double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
 
-  //Calculate fatigue fraction during sepsis
+  //Currently baroreceptor fatigue has only been tested for severe infections leading to sepsis.  We only accumulate fatigue if the sympathetic
+  // outflow is above a certain threshold.  If we drop below threshold, we allow fatigue parameter to return towards 0. Note that even if infetion
+  //is eliminated, the inflammation source will still be found (which we want so that inflammatory model has time to return to baseline).  
   double fatigueThreshold = 0.65;
   double fatigueTimeConstant_hr = 2.0;
-  double fatigueInput = 0.0;
+  double fatigueInput = sympatheticFraction - fatigueThreshold;
   double dFatigueScale = 0.0;
-  if (sympatheticFraction > fatigueThreshold) {
-    fatigueInput = sympatheticFraction - fatigueThreshold;
-    dFatigueScale = (1.0 / fatigueTimeConstant_hr) * (fatigueInput) * (1.2 - m_BaroreceptorFatigueScale);
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Pathogen)) {
+    if (fatigueInput > 0.0) {
+      dFatigueScale = (1.0 / fatigueTimeConstant_hr) * (fatigueInput) * (1.2 - m_BaroreceptorFatigueScale);
+    } else if (m_BaroreceptorFatigueScale > ZERO_APPROX) {
+      dFatigueScale = (-2.0 * m_BaroreceptorFatigueScale / fatigueTimeConstant_hr);
+    }
     m_BaroreceptorFatigueScale += (dFatigueScale * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
   

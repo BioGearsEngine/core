@@ -1701,4 +1701,11 @@ std::vector<CDM::enumInflammationSource>& SEInflammatoryResponse::GetInflammatio
 {
   return m_InflammationSources;
 }
+//--------------------------------------------------------------------------------
+bool SEInflammatoryResponse::HasInflammationSource(CDM::enumInflammationSource::value src)
+{
+  std::vector<CDM::enumInflammationSource>::iterator srcLoc;
+  srcLoc = std::find(m_InflammationSources.begin(), m_InflammationSources.end(), src);
+  return srcLoc == m_InflammationSources.end() ? false : true;
+}
 }

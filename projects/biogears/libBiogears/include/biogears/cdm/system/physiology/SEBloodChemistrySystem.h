@@ -517,6 +517,7 @@ public:
 
   virtual bool HasInflammationSources() const;
   virtual std::vector<CDM::enumInflammationSource>& GetInflammationSources();
+  virtual bool HasInflammationSource(CDM::enumInflammationSource::value src);
 
 protected:
   SEScalar* m_LocalPathogen;
