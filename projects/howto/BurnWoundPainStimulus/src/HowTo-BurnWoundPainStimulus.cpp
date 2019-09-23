@@ -29,11 +29,11 @@ specific language governing permissions and limitations under the License.
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// Usage for adminstering a substance to the patient via a bolus injection
+/// Usage for applying a burn wound to a patient
 ///
 /// \details
-/// Refer to the SESubstanceBolus class
-/// Refer to the SESubstanceManager class
+/// Refer to the SEBurnWoundData class
+/// 
 //--------------------------------------------------------------------------------------------------
 void HowToBurnWoundPainStimulus()
 {
@@ -62,7 +62,7 @@ void HowToBurnWoundPainStimulus()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("NeuromuscularBlockLevel");
 
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToBurnWoundPainStimulus.csv");
-
+  // Capture initial data for healthy patient
 	bg->GetLogger()->Info("The patient is nice and healthy");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
 	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -72,7 +72,7 @@ void HowToBurnWoundPainStimulus()
 	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
 
 	tracker.AdvanceModelTime(50);
-
+  // Apply serious burn wound to patient
   SEBurnWound burnWound;
   burnWound.GetTotalBodySurfaceArea().SetValue(0.5);
   burnWound.SetInflammation(true);
@@ -87,7 +87,7 @@ void HowToBurnWoundPainStimulus()
 	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
 	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
 	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
-
+  // Administer RingersLactate
   SESubstance* rl = bg->GetSubstanceManager().GetSubstance("RingersLactate");
   SESubstanceInfusion infuse(*rl);
   bg->ProcessAction(infuse);
