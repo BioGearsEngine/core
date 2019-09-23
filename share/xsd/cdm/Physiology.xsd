@@ -29,13 +29,13 @@ specific language governing permissions and limitations under the License.
         </xs:complexContent>
     </xs:complexType>
 	
-	<!--@brief State of the acute inflammation model that tracks response to an insult (pathogen, trauma).
+	<!--@brief State of the acute inflammation model that tracks response to an insult (infection, trauma).
 	-->
 	<xs:simpleType name="enumInflammationSource">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Burn"/>
 			<xs:enumeration value="Hemorrhage"/>
-			<xs:enumeration value="Pathogen"/>
+			<xs:enumeration value="Infection"/>
 		</xs:restriction>
 	</xs:simpleType>
 		

@@ -1021,7 +1021,7 @@ void Respiratory::ProcessDriverActions()
 
   //Process infection effects--this won't lead to large change until infection tends towards sepsis
   double infectionModifier = 0.0;
-  if (m_PatientActions->HasInfection()) {
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
     double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.5);

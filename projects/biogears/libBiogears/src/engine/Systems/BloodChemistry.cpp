@@ -680,7 +680,7 @@ void BloodChemistry::ManageSIRS()
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
 
   //Physiological response
-  double wbcBaseline_ct_Per_uL = 7000.0;
+  const double wbcBaseline_ct_Per_uL = 7000.0;
   double tissueIntegrity = m_InflammatoryResponse->GetTissueIntegrity().GetValue();
   double neutrophilActive = m_InflammatoryResponse->GetNeutrophilActive().GetValue();
 
@@ -697,15 +697,15 @@ void BloodChemistry::ManageSIRS()
   //Temperature (fever) effects -- Accounted for by Energy::UpdateHeatResistance, which accounts for altered skin blood flow
 
   //Bilirubin counts (measure of liver perfusion)
-  double baselineBilirubin_mg_Per_dL = 0.70;
-  double maxBilirubin_mg_Per_dL = 26.0; //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
-  double halfMaxWBC = 0.85; //White blood cell fraction that causes half-max bilirubin concentration.  Set well above 0.5 becuase this is a later sign of shock
-  double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
+  const double baselineBilirubin_mg_Per_dL = 0.70;
+  const double maxBilirubin_mg_Per_dL = 26.0; //Not a physiologal max, but Jones2009Sequential (SOFA score) gives max score when total bilirubin > 12 mg/dL
+  const double halfMaxWBC = 0.85; //White blood cell fraction that causes half-max bilirubin concentration.  Set well above 0.5 becuase this is a later sign of shock
+  const double shapeParam = 10.0; //Empirically determined to make sure we get above 12 mg/dL (severe liver damage) before wbc maxes out
   double totalBilirubin_mg_Per_dL = GeneralMath::LogisticFunction(maxBilirubin_mg_Per_dL, halfMaxWBC, shapeParam, sigmoidInput) + baselineBilirubin_mg_Per_dL;
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
 
   double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8;  //Discounting the 20% used by brain 
-  double maxDeficitMultiplier = 1.0;
+  const double maxDeficitMultiplier = 1.0;
   double energyDeficit_W = basalTissueEnergyDemand_W * maxDeficitMultiplier * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + 0.25 * 0.25);
   m_data.GetEnergy().GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
 
@@ -731,7 +731,7 @@ void BloodChemistry::InflammatoryResponse()
   double burnTotalBodySurfaceArea = 0.0;
 
   if (m_data.GetActions().GetPatientActions().HasInfection()) {
-    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Pathogen) == sources.end()) {
+    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Infection) == sources.end()) {
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetInfection()->GetSeverity()) {
       case CDM::enumInfectionSeverity::Mild:
@@ -749,7 +749,7 @@ void BloodChemistry::InflammatoryResponse()
 
       m_InflammatoryResponse->GetLocalPathogen().SetValue(initialPathogen);
       m_InflammatoryResponse->SetActiveTLR(CDM::enumOnOff::On);
-      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Pathogen);
+      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Infection);
     }
   }
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
@@ -931,8 +931,8 @@ void BloodChemistry::InflammatoryResponse()
   //------------------------Check to see if infection-induced inflammation has resolved sufficient to eliminate action-----------------------
   //Note that even though we remove the infection, we leave the inflammation source active.  This is because we want the inflammation markers
   // to return to normal, baseline values.
-  double bloodPathogenLimit = 1.0e-5;	//This is 1e-4 % of approximate max blood pathogen that model can eliminate withoug antibiotics
-  double tissuePathogenLimit = 1.0;		//This is 1e-4 % of the initial value for a mild infection
+  const double bloodPathogenLimit = 1.0e-5;	//This is 1e-4 % of approximate max blood pathogen that model can eliminate withoug antibiotics
+  const double tissuePathogenLimit = 1.0;		//This is 1e-4 % of the initial value for a mild infection
   if ((PT < tissuePathogenLimit) && (PB < bloodPathogenLimit) && (m_data.GetActions().GetPatientActions().HasInfection())) {
     m_data.GetActions().GetPatientActions().RemoveInfection();
   }

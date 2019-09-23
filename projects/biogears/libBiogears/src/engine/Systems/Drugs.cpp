@@ -788,8 +788,8 @@ void Drugs::CalculateDrugEffects()
     pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier() * concentrationEffects_unitless;
     pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
 	
-	//Do not evaluate antibiotic effects unless the patient has an infection
-	if (m_data.GetActions().GetPatientActions().HasInfection()) {
+	//Do not evaluate antibiotic effects unless the patient has inflamamtion casued by infection
+	if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
       if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic) {
         ///\ @cite Regoes2004Pharmacodynamics

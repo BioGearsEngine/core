@@ -1388,7 +1388,7 @@ void Renal::CalculateVitalSigns()
   double urineProductionRate_mL_Per_s = m_leftUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_rightUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
   GetUrineProductionRate().SetValue(urineProductionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   //Mean urine output -- tracks urine production w/ time-weighted parameter (larger number weights more recent values more heavily)
-  double sampleWeight = 0.05;
+  const double sampleWeight = 0.05;
   double lastMeanUrineOutput_mL_Per_s = GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_s);
   double dMeanUrineOutput_mL_Per_s_s = sampleWeight * (urineProductionRate_mL_Per_s - lastMeanUrineOutput_mL_Per_s);
   GetMeanUrineOutput().IncrementValue(dMeanUrineOutput_mL_Per_s_s * m_dt, VolumePerTimeUnit::mL_Per_s);
@@ -1474,7 +1474,7 @@ void Renal::CalculateVitalSigns()
         m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, false, m_data.GetSimulationTime());
       }
 
-      if (m_data.GetActions().GetPatientActions().HasInfection()) {
+      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
         double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
         if (systolicBP <= 100.0 && GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) <= 0.5) {
           m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
