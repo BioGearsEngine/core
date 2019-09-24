@@ -41,6 +41,7 @@
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate"          Unit="mL/min"      Precision="0"/> 
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="RenalBloodFlow"                    Unit="L/min"      Precision="2"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
+        <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanUrineOutput"               Unit="mL/hr"      Precision="3"/>
 		
 		
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
@@ -53,27 +54,27 @@
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
 
 		<!--Inflammation Testing-->
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-Pathogen" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-MacrophageResting" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-MacrophageActive" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-NeutrophilResting" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-NeutrophilActive" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-InducibleNOSynthasePre" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-InducibleNOSynthase" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-ConstitutiveNOSynthase" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-Nitrate" Precision="1"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-NitricOxide" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-TumorNecrosisFactor" Precision="1"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-Interleukin6" Precision="1"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-Interleukin10" Precision="1"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-Interleukin12" Precision="4"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="AcuteInflammatoryResponse-TissueIntegrity" Precision="4"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-TissueIntegrity" Precision = "3"/>	
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Trauma" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-ConstitutiveNOS" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-InducibleNOSPre" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-InducibleNOS" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-MacrophageResting" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-MacrophageActive" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-NeutrophilActive" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-NeutrophilResting" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Interleukin6" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Interleukin10" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Interleukin12" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Nitrate" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-NitricOxide" Precision = "3"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-TumorNecrosisFactor" Precision = "3"/>
 
 	  
 	</DataRequests>
 	
 	<Action xsi:type="BurnWoundData">
-		<TotalBodySurfaceArea value="0.2"/>
+		<TotalBodySurfaceArea value="0.25"/>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="15" unit="min"/>		

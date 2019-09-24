@@ -787,6 +787,7 @@ void BloodChemistry::InflammatoryResponse()
   I12 = m_InflammatoryResponse->GetInterleukin12().GetValue(); //Blood interleukin-12
   TNF = m_InflammatoryResponse->GetTumorNecrosisFactor().GetValue(); //Blood tumor-necrosis factor
   TI = m_InflammatoryResponse->GetTissueIntegrity().GetValue(); //Global tissue integrity
+  TR = m_InflammatoryResponse->GetTrauma().GetValue(); //Trauma
 
   //------------------------------Model Parameters-----------------------------
   //Time
@@ -819,7 +820,7 @@ void BloodChemistry::InflammatoryResponse()
   double kPS = 6.9e3; //Background immune response to pathogen in blood
   double xPS = 1.3e4; //Saturation of background immune response
   //Trauma decay
-  double kTr = 0.85; //Determined empirically to give good results
+  double kTr = 0.0; //Base value--will be adjusted during burn/hemorrhage (see below)
   //Macrophage interaction
   double kML = 1.01e2, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 37.5, xMD = 0.75, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
   //Activate macrophage interactions
@@ -853,8 +854,10 @@ void BloodChemistry::InflammatoryResponse()
   //------------------Inflammation source specific modifications and/or actions --------------------------------
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
-    kDTR = 5.0 * burnTotalBodySurfaceArea;
-    kD6 = 0.3, xD6 = 0.25, kD = 0.01, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
+    kDTR = 10.0 * burnTotalBodySurfaceArea;		//We assume that larger burns inflict damage more rapidly
+    kTr = 0.5 / burnTotalBodySurfaceArea;		//We assume that larger burns take longer for trauma to resolve
+    tiMin = 0.05;								//Promotes faster damage accumulation
+    kD6 = 0.3, xD6 = 0.25, kD = 0.05, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
   if (PB > ZERO_APPROX) {
