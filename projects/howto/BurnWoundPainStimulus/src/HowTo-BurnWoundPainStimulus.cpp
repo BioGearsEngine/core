@@ -74,8 +74,7 @@ void HowToBurnWoundPainStimulus()
 	tracker.AdvanceModelTime(50);
   // Apply serious burn wound to patient
   SEBurnWound burnWound;
-  burnWound.GetTotalBodySurfaceArea().SetValue(0.5);
-  burnWound.SetInflammation(true);
+  burnWound.GetTotalBodySurfaceArea().SetValue(0.33);
   bg->ProcessAction(burnWound);
 
 	tracker.AdvanceModelTime(216000);
