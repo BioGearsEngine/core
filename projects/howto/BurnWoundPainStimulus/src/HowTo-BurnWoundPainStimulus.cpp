@@ -24,7 +24,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-#include "biogears/cdm/patient/actions/SESubstanceInfusion.h"
+#include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -77,7 +78,8 @@ void HowToBurnWoundPainStimulus()
   burnWound.GetTotalBodySurfaceArea().SetValue(0.33);
   bg->ProcessAction(burnWound);
 
-	tracker.AdvanceModelTime(216000);
+	//tracker.AdvanceModelTime(216000);
+	tracker.AdvanceModelTime(60);
 
 	bg->GetLogger()->Info("The patient suffered a burn wound one hour ago");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -87,11 +89,17 @@ void HowToBurnWoundPainStimulus()
 	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
 	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
   // Administer RingersLactate
-  SESubstance* rl = bg->GetSubstanceManager().GetSubstance("RingersLactate");
-  SESubstanceInfusion infuse(*rl);
+  SESubstanceCompound* rl = bg->GetSubstanceManager().GetCompound("RingersLactate");
+  SESubstanceCompoundInfusion infuse{*rl};
+  infuse.GetBagVolume().SetValue(1.0, VolumeUnit::L);
+  infuse.GetRate().SetValue(330.0, VolumePerTimeUnit::mL_Per_hr);
   bg->ProcessAction(infuse);
 
+  //tracker.AdvanceModelTime(216000);
   tracker.AdvanceModelTime(216000);
+
+  infuse.GetRate().SetValue(50.0, VolumePerTimeUnit::mL_Per_hr);
+  bg->ProcessAction(infuse);
 
 	bg->GetLogger()->Info("The patient was administered RingersLactate one hour ago");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
