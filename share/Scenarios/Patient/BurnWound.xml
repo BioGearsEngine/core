@@ -77,7 +77,7 @@
 		<TotalBodySurfaceArea value="0.25"/>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="15" unit="min"/>		
+		<Time value="3" unit="hr"/>		
 	</Action>
 	
 </Scenario>
