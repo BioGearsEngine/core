@@ -78,8 +78,7 @@ void HowToBurnWoundPainStimulus()
   burnWound.GetTotalBodySurfaceArea().SetValue(0.33);
   bg->ProcessAction(burnWound);
 
-	//tracker.AdvanceModelTime(216000);
-	tracker.AdvanceModelTime(60);
+	tracker.AdvanceModelTime(3600);
 
 	bg->GetLogger()->Info("The patient suffered a burn wound one hour ago");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -95,8 +94,7 @@ void HowToBurnWoundPainStimulus()
   infuse.GetRate().SetValue(330.0, VolumePerTimeUnit::mL_Per_hr);
   bg->ProcessAction(infuse);
 
-  //tracker.AdvanceModelTime(216000);
-  tracker.AdvanceModelTime(216000);
+  tracker.AdvanceModelTime(3600);
 
   infuse.GetRate().SetValue(50.0, VolumePerTimeUnit::mL_Per_hr);
   bg->ProcessAction(infuse);
