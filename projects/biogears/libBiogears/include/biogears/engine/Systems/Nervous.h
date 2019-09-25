@@ -70,14 +70,20 @@ protected:
   void SetPupilEffects();
 
   // Serializable member variables (Set in Initialize and in schema)
-  double m_ArterialOxygenSetPoint_mmHg; /// \todo Aaron these should be baselines.
-  double m_ArterialCarbonDioxideSetPoint_mmHg;
+  double m_AfferentChemoreceptor_Hz;
+  double m_ArterialOxygenBaseline_mmHg;
+  double m_ArterialCarbonDioxideBaseline_mmHg;
+  double m_BloodGasInteractionBaseline;
+  double m_CerebralCarbonDioxideSetPoint_mmHg;
   double m_BaroreceptorFatigueScale;
-  double m_CentralVentilationDelta_L_Per_min;
-  double m_ChemoreceptorFiringRate_Hz;
   double m_ChemoreceptorFiringRateSetPoint_Hz;
-  double m_PeripheralBloodGasInteractionBaseline_Hz;
-  double m_PeripheralVentilationDelta_L_Per_min;
+  double m_CentralFrequencyDelta_Per_min;
+  double m_CentralPressureDelta_cmH2O;
+  double m_PeripheralFrequencyDelta_Per_min;
+  double m_PeripheralPressureDelta_cmH2O;
+
+  double m_PreviousCO2Concentration;
+  double m_DynamicCO2Signal;
 
   // Stateless member variable (Set in SetUp())
   bool m_FeedbackActive;
@@ -86,6 +92,7 @@ protected:
   SESubstance* m_Sarin;
   SEPatient* m_Patient;
   bool m_blockActive;
+  double m_DrugRespirationEffects;
   double m_painStimulusDuration_s;
   double m_painVASDuration_s;
   double m_painVAS;

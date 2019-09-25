@@ -214,6 +214,10 @@ public:
   virtual SEScalarFrequency& GetRespirationRateBaseline();
   virtual double GetRespirationRateBaseline(const FrequencyUnit& unit) const;
 
+  virtual bool HasRespiratoryDriverAmplitudeBaseline() const;
+  virtual SEScalarPressure& GetRespiratoryDriverAmplitudeBaseline();
+  virtual double GetRespiratoryDriverAmplitudeBaseline(const PressureUnit& unit) const;
+
   virtual bool HasRightLungRatio() const;
   virtual SEScalarFraction& GetRightLungRatio();
   virtual double GetRightLungRatio() const;
@@ -277,6 +281,7 @@ protected:
   SEScalarPressure* m_MeanArterialPressureBaseline;
   SEScalarNeg1To1* m_PainSusceptibility;
   SEScalarFrequency* m_RespirationRateBaseline;
+  SEScalarPressure* m_RespiratoryDriverAmplitudeBaseline;
   SEScalarPressure* m_SystolicArterialPressureBaseline;
   SEScalarVolumePerTime* m_TotalVentilationBaseline;
   SEScalarVolume* m_TidalVolumeBaseline;

@@ -51,6 +51,7 @@ SEPatient::SEPatient(Logger* logger)
   m_MeanArterialPressureBaseline = nullptr;
   m_PainSusceptibility = nullptr;
   m_ResidualVolume = nullptr;
+  m_RespiratoryDriverAmplitudeBaseline = nullptr;
   m_RespirationRateBaseline = nullptr;
   m_RightLungRatio = nullptr;
   m_SkinSurfaceArea = nullptr;
@@ -121,6 +122,7 @@ void SEPatient::Clear()
   SAFE_DELETE(m_PainSusceptibility);
   SAFE_DELETE(m_ResidualVolume);
   SAFE_DELETE(m_RespirationRateBaseline);
+  SAFE_DELETE(m_RespiratoryDriverAmplitudeBaseline);
   SAFE_DELETE(m_RightLungRatio);
   SAFE_DELETE(m_SkinSurfaceArea);
   SAFE_DELETE(m_SystolicArterialPressureBaseline);
@@ -186,6 +188,8 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
     return &GetResidualVolume();
   if (name.compare("RespirationRateBaseline") == 0)
     return &GetRespirationRateBaseline();
+  if (name.compare("RespiratoryDriverAmplitudeBaseline") == 0)
+    return &GetRespiratoryDriverAmplitudeBaseline();
   if (name.compare("RightLungRatio") == 0)
     return &GetRightLungRatio();
   if (name.compare("SkinSurfaceArea") == 0)
@@ -292,6 +296,9 @@ bool SEPatient::Load(const CDM::PatientData& in)
   }
   if (in.RespirationRateBaseline().present()) {
     GetRespirationRateBaseline().Load(in.RespirationRateBaseline().get());
+  }
+  if (in.RespiratoryDriverAmplitudeBaseline().present()) {
+    GetRespiratoryDriverAmplitudeBaseline().Load(in.RespiratoryDriverAmplitudeBaseline().get());
   }
   if (in.RightLungRatio().present()) {
     GetRightLungRatio().Load(in.RightLungRatio().get());
@@ -420,6 +427,9 @@ void SEPatient::Unload(CDM::PatientData& data) const
   }
   if (m_RespirationRateBaseline != nullptr) {
     data.RespirationRateBaseline(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateBaseline->Unload()));
+  }
+  if (m_RespiratoryDriverAmplitudeBaseline != nullptr) {
+    data.RespiratoryDriverAmplitudeBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_RespiratoryDriverAmplitudeBaseline->Unload()));
   }
   if (m_RightLungRatio != nullptr) {
     data.RightLungRatio(std::unique_ptr<CDM::ScalarFractionData>(m_RightLungRatio->Unload()));
@@ -1440,6 +1450,27 @@ double SEPatient::GetRespirationRateBaseline(const FrequencyUnit& unit) const
     return SEScalar::dNaN();
   }
   return m_RespirationRateBaseline->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+bool SEPatient::HasRespiratoryDriverAmplitudeBaseline() const
+{
+  return m_RespiratoryDriverAmplitudeBaseline == nullptr ? false : m_RespiratoryDriverAmplitudeBaseline->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarPressure& SEPatient::GetRespiratoryDriverAmplitudeBaseline()
+{
+  if (m_RespiratoryDriverAmplitudeBaseline == nullptr) {
+    m_RespiratoryDriverAmplitudeBaseline = new SEScalarPressure();
+  }
+  return *m_RespiratoryDriverAmplitudeBaseline;
+}
+//-----------------------------------------------------------------------------
+double SEPatient::GetRespiratoryDriverAmplitudeBaseline(const PressureUnit& unit) const
+{
+  if (m_RespiratoryDriverAmplitudeBaseline == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_RespiratoryDriverAmplitudeBaseline->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasRightLungRatio() const

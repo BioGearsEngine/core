@@ -32,6 +32,7 @@ namespace biogears {
   constexpr char idInspiratoryFlow[] = "InspiratoryFlow";
   constexpr char idPulmonaryCompliance[] = "PulmonaryCompliance";
   constexpr char idPulmonaryResistance[] = "PulmonaryResistance";
+  constexpr char idRespirationDriverFrequency[] = "RespirationDriverFrequency";
   constexpr char idRespirationDriverPressure[] = "RespirationDriverPressure";
   constexpr char idRespirationMusclePressure[] = "RespirationMusclePressure";
   constexpr char idRespirationRate[] = "RespirationRate";
@@ -55,6 +56,7 @@ SERespiratorySystem::SERespiratorySystem(Logger* logger)
   m_InspiratoryFlow = nullptr;
   m_PulmonaryCompliance = nullptr;
   m_PulmonaryResistance = nullptr;
+  m_RespirationDriverFrequency = nullptr;
   m_RespirationDriverPressure = nullptr;
   m_RespirationMusclePressure = nullptr;
   m_RespirationRate = nullptr;
@@ -88,6 +90,7 @@ void SERespiratorySystem::Clear()
   SAFE_DELETE(m_InspiratoryFlow);
   SAFE_DELETE(m_PulmonaryCompliance);
   SAFE_DELETE(m_PulmonaryResistance);
+  SAFE_DELETE(m_RespirationDriverFrequency);
   SAFE_DELETE(m_RespirationDriverPressure);
   SAFE_DELETE(m_RespirationMusclePressure);
   SAFE_DELETE(m_RespirationRate);
@@ -125,6 +128,8 @@ const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
     return &GetPulmonaryCompliance();
   if (name == idPulmonaryResistance)
     return &GetPulmonaryResistance();
+  if (name == idRespirationDriverFrequency)
+    return &GetRespirationDriverFrequency();
   if (name == idRespirationDriverPressure)
     return &GetRespirationDriverPressure();
   if (name == idRespirationMusclePressure)
@@ -173,6 +178,8 @@ bool SERespiratorySystem::Load(const CDM::RespiratorySystemData& in)
     GetPulmonaryCompliance().Load(in.PulmonaryCompliance().get());
   if (in.PulmonaryResistance().present())
     GetPulmonaryResistance().Load(in.PulmonaryResistance().get());
+  if (in.RespirationDriverFrequency().present())
+    GetRespirationDriverFrequency().Load(in.RespirationDriverFrequency().get());
   if (in.RespirationDriverPressure().present())
     GetRespirationDriverPressure().Load(in.RespirationDriverPressure().get());
   if (in.RespirationMusclePressure().present())
@@ -230,6 +237,8 @@ void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
     data.PulmonaryCompliance(std::unique_ptr<CDM::ScalarFlowComplianceData>(m_PulmonaryCompliance->Unload()));
   if (m_PulmonaryResistance != nullptr)
     data.PulmonaryResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_PulmonaryResistance->Unload()));
+  if (m_RespirationDriverFrequency != nullptr)
+    data.RespirationDriverFrequency(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationDriverFrequency->Unload()));
   if (m_RespirationDriverPressure != nullptr)
     data.RespirationDriverPressure(std::unique_ptr<CDM::ScalarPressureData>(m_RespirationDriverPressure->Unload()));
   if (m_RespirationMusclePressure != nullptr)
@@ -434,7 +443,25 @@ double SERespiratorySystem::GetPulmonaryResistance(const FlowResistanceUnit& uni
   return m_PulmonaryResistance->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
+bool SERespiratorySystem::HasRespirationDriverFrequency() const
+{
+  return m_RespirationDriverFrequency == nullptr ? false : m_RespirationDriverFrequency->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarFrequency& SERespiratorySystem::GetRespirationDriverFrequency()
+{
+  if (m_RespirationDriverFrequency == nullptr)
+    m_RespirationDriverFrequency = new SEScalarFrequency();
+  return *m_RespirationDriverFrequency;
+}
+//-------------------------------------------------------------------------------
+double SERespiratorySystem::GetRespirationDriverFrequency(const FrequencyUnit& unit) const
+{
+  if (m_RespirationDriverFrequency == nullptr)
+    return SEScalar::dNaN();
+  return m_RespirationDriverFrequency->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
 bool SERespiratorySystem::HasRespirationDriverPressure() const
 {
   return m_RespirationDriverPressure == nullptr ? false : m_RespirationDriverPressure->IsValid();

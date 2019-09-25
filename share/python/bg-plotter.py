@@ -213,26 +213,28 @@ def plot(root_dir, source, skip_count, plotTime):
                     plotCol = plotCol.replace('/','Per')
                 log("Plotting {}".format(col), LOG_LEVEL_2)
 
-                    
-                plt.plot(xData,yData,'-k',label='Scenario')
-                if baseFound:
-                    try:
-                        yBase = baseCSV[col].values[::int(skip_count)]
-                        plt.plot(xBase,yBase,'xkcd:apple green',linestyle=':',label='Baseline')
-                    except KeyError:
-                        err('No baseline information for {}'.format(plotCol),LOG_LEVEL_0)
-                plt.title(plotCol)
-                plt.ylim([plotMin,plotMax])
-                plt.xlabel(xLabel)
-                plt.ylabel(plotCol + unit)
-                plt.grid()
-                plt.legend()
-                figName = os.path.join(out_dir,"{}.png".format(plotCol))
-                log("Saving : {0}".format(figName), LOG_LEVEL_3)
-                if os.path.exists(figName):
-                    os.remove(figName)
-                plt.savefig(figName)
-                plt.close()
+                try:   
+                    plt.plot(xData,yData,'-k',label='Scenario')
+                    if baseFound:
+                        try:
+                            yBase = baseCSV[col].values[::int(skip_count)]
+                            plt.plot(xBase,yBase,'xkcd:apple green',linestyle=':',label='Baseline')
+                        except KeyError:
+                            err('No baseline information for {}'.format(plotCol),LOG_LEVEL_0)
+                    plt.title(plotCol)
+                    plt.ylim([plotMin,plotMax])
+                    plt.xlabel(xLabel)
+                    plt.ylabel(plotCol + unit)
+                    plt.grid()
+                    plt.legend()
+                    figName = os.path.join(out_dir,"{}.png".format(plotCol))
+                    log("Saving : {0}".format(figName), LOG_LEVEL_3)
+                    if os.path.exists(figName):
+                        os.remove(figName)
+                    plt.savefig(figName)
+                    plt.close()
+                except ValueError:
+                    err("Non-numeric data or range, not plotting {}".format(col),LOG_LEVEL_0)
 
 def err(message, level):
     print( "{}\n".format(message) if _log_verbose >= level else "" , end="", file=sys.stderr)

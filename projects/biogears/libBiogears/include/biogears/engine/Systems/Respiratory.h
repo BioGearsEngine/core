@@ -140,7 +140,7 @@ protected:
   void OverrideControlLoop();
 
 private:
-
+  std::string m_TuningFile;
   // Serializable member variables (Set in Initialize and in schema)
   //   Initial patient values
   double m_InitialExpiratoryReserveVolume_L;
@@ -190,6 +190,9 @@ private:
   double m_dt_s;
   double m_dt_min;
   bool m_hadApnea; 
+
+
+
   // Configuration parameters
   double m_CentralControlGainConstant;
   double m_dDefaultOpenResistance_cmH2O_s_Per_L;
@@ -211,17 +214,17 @@ private:
   //Compartments
   SEGasCompartment* m_Environment;
   SELiquidCompartment* m_AerosolMouth;
-  SELiquidCompartment* m_AerosolCarina;
-  SELiquidCompartment* m_AerosolLeftDeadSpace;
+  SELiquidCompartment* m_AerosolTrachea;
+  SELiquidCompartment* m_AerosolLeftBronchi;
   SELiquidCompartment* m_AerosolLeftAlveoli;
-  SELiquidCompartment* m_AerosolRightDeadSpace;
+  SELiquidCompartment* m_AerosolRightBronchi;
   SELiquidCompartment* m_AerosolRightAlveoli;
   SELiquidCompartment* m_LeftLungExtravascular;
   SELiquidCompartment* m_RightLungExtravascular;
   SEGasCompartment* m_Lungs;
-  SEGasCompartment* m_Carina;
-  SEGasSubstanceQuantity* m_CarinaO2;
-  SEGasSubstanceQuantity* m_CarinaCO2;
+  SEGasCompartment* m_Trachea;
+  SEGasSubstanceQuantity* m_TracheaO2;
+  SEGasSubstanceQuantity* m_TracheaCO2;
   SELiquidSubstanceQuantity* m_AortaO2;
   SELiquidSubstanceQuantity* m_AortaCO2;
   SEGasSubstanceQuantity* m_LeftAlveoliO2;
@@ -234,35 +237,35 @@ private:
   SEFluidCircuit* m_RespiratoryCircuit;
   //Nodes
   SEFluidCircuitNode* m_LeftAlveoli;
-  SEFluidCircuitNode* m_LeftDeadSpace;
-  SEFluidCircuitNode* m_LeftPleural;
+  SEFluidCircuitNode* m_LeftBronchi;
+  SEFluidCircuitNode* m_LeftPleuralCavity;
   SEFluidCircuitNode* m_RespiratoryMuscle;
   SEFluidCircuitNode* m_RightAlveoli;
-  SEFluidCircuitNode* m_RightDeadSpace;
-  SEFluidCircuitNode* m_RightPleural;
+  SEFluidCircuitNode* m_RightBronchi;
+  SEFluidCircuitNode* m_RightPleuralCavity;
   SEFluidCircuitNode* m_Ambient;
   SEFluidCircuitNode* m_Stomach;
   //Paths
-  SEFluidCircuitPath* m_CarinaToLeftAnatomicDeadSpace;
-  SEFluidCircuitPath* m_CarinaToRightAnatomicDeadSpace;
-  SEFluidCircuitPath* m_LeftAnatomicDeadSpaceToLeftAlveoli;
-  SEFluidCircuitPath* m_RightAnatomicDeadSpaceToRightAlveoli;
-  SEFluidCircuitPath* m_RightPleuralToRespiratoryMuscle;
-  SEFluidCircuitPath* m_LeftPleuralToRespiratoryMuscle;
+  SEFluidCircuitPath* m_TracheaToLeftBronchi;
+  SEFluidCircuitPath* m_TracheaToRightBronchi;
+  SEFluidCircuitPath* m_LeftBronchiToLeftAlveoli;
+  SEFluidCircuitPath* m_RightBronchiToRightAlveoli;
+  SEFluidCircuitPath* m_RightPleuralCavityToRespiratoryMuscle;
+  SEFluidCircuitPath* m_LeftPleuralCavityToRespiratoryMuscle;
   SEFluidCircuitPath* m_DriverPressurePath;
   SEFluidCircuitPath* m_LeftDriverPressurePath;
-  SEFluidCircuitPath* m_MouthToCarina;
+  SEFluidCircuitPath* m_MouthToTrachea;
   SEFluidCircuitPath* m_MouthToStomach;
   SEFluidCircuitPath* m_EnvironmentToLeftChestLeak;
   SEFluidCircuitPath* m_EnvironmentToRightChestLeak;
-  SEFluidCircuitPath* m_LeftAlveoliLeakToLeftPleural;
-  SEFluidCircuitPath* m_RightAlveoliLeakToRightPleural;
-  SEFluidCircuitPath* m_LeftPleuralToEnvironment;
-  SEFluidCircuitPath* m_RightPleuralToEnvironment;
+  SEFluidCircuitPath* m_LeftAlveoliLeakToLeftPleuralCavity;
+  SEFluidCircuitPath* m_RightAlveoliLeakToRightPleuralCavity;
+  SEFluidCircuitPath* m_LeftPleuralCavityToEnvironment;
+  SEFluidCircuitPath* m_RightPleuralCavityToEnvironment;
   SEFluidCircuitPath* m_RightAlveoliToRightPleuralConnection;
   SEFluidCircuitPath* m_LeftAlveoliToLeftPleuralConnection;
-  SEFluidCircuitPath* m_RightAnatomicDeadSpaceToRightPleuralConnection;
-  SEFluidCircuitPath* m_LeftAnatomicDeadSpaceToLeftPleuralConnection;
+  SEFluidCircuitPath* m_RightBronchiToRightPleuralConnection;
+  SEFluidCircuitPath* m_LeftBronchiToLeftPleuralConnection;
   SEFluidCircuitPath* m_RightPulmonaryCapillary;
   SEFluidCircuitPath* m_LeftPulmonaryCapillary;
   SEFluidCircuitPath* m_ConnectionToMouth;

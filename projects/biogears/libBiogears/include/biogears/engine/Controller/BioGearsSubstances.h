@@ -34,14 +34,14 @@ public:
   ~SizeIndependentDepositionEfficencyCoefficient() {}
 
   double GetMouth() const { return m_mouth; }
-  double GetCarina() const { return m_carina; }
-  double GetDeadSpace() const { return m_deadSpace; }
+  double GetTrachea() const { return m_trachea; }
+  double GetBronchi() const { return m_bronchi; }
   double GetAlveoli() const { return m_alveoli; }
 
 protected:
   double m_mouth = 0;
-  double m_carina = 0;
-  double m_deadSpace = 0;
+  double m_trachea = 0;
+  double m_bronchi = 0;
   double m_alveoli = 0;
 };
 

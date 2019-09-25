@@ -89,13 +89,13 @@ namespace tatrc {
       namespace PulmonaryCompartment {
         DEFINE_STATIC_STRING(Mouth);
         DEFINE_STATIC_STRING(Stomach);
-        DEFINE_STATIC_STRING(Carina);
+        DEFINE_STATIC_STRING(Trachea);
         DEFINE_STATIC_STRING_EX(Lungs, PulmonaryLungs);
         DEFINE_STATIC_STRING_EX(LeftLung, LeftLungPulmonary);
-        DEFINE_STATIC_STRING(LeftDeadSpace);
+        DEFINE_STATIC_STRING(LeftBronchi);
         DEFINE_STATIC_STRING(LeftAlveoli);
         DEFINE_STATIC_STRING_EX(RightLung, RightLungPulmonary);
-        DEFINE_STATIC_STRING(RightDeadSpace);
+        DEFINE_STATIC_STRING(RightBronchi);
         DEFINE_STATIC_STRING(RightAlveoli);
         DEFINE_STATIC_STRING(PleuralCavity);
         DEFINE_STATIC_STRING(LeftPleuralCavity);
@@ -110,7 +110,7 @@ namespace tatrc {
         {
 
           static std::vector<std::string> _values = {
-            Mouth, Stomach, Carina, Lungs, LeftLung, LeftDeadSpace, LeftAlveoli, RightLung, RightDeadSpace, RightAlveoli, PleuralCavity, LeftPleuralCavity, RightPleuralCavity, LeftAlveoliLeak, LeftChestLeak, RightAlveoliLeak, RightChestLeak
+            Mouth, Stomach, Trachea, Lungs, LeftLung, LeftBronchi, LeftAlveoli, RightLung, RightBronchi, RightAlveoli, PleuralCavity, LeftPleuralCavity, RightPleuralCavity, LeftAlveoliLeak, LeftChestLeak, RightAlveoliLeak, RightChestLeak
           };
           return _values;
         }
@@ -119,28 +119,28 @@ namespace tatrc {
       namespace PulmonaryLink {
 
         DEFINE_STATIC_STRING(EnvironmentToMouth);
-        DEFINE_STATIC_STRING(MouthToCarina);
+        DEFINE_STATIC_STRING(MouthToTrachea);
         DEFINE_STATIC_STRING(MouthToStomach);
-        DEFINE_STATIC_STRING(CarinaToLeftDeadSpace);
-        DEFINE_STATIC_STRING(LeftDeadSpaceToAlveoli);
-        DEFINE_STATIC_STRING(CarinaToRightDeadSpace);
-        DEFINE_STATIC_STRING(RightDeadSpaceToAlveoli);
+        DEFINE_STATIC_STRING(TracheaToLeftBronchi);
+        DEFINE_STATIC_STRING(LeftBronchiToAlveoli);
+        DEFINE_STATIC_STRING(TracheaToRightBronchi);
+        DEFINE_STATIC_STRING(RightBronchiToAlveoli);
         DEFINE_STATIC_STRING(EnvironmentToLeftChestLeak);
         DEFINE_STATIC_STRING(EnvironmentToRightChestLeak);
-        DEFINE_STATIC_STRING(LeftAlveoliLeakToLeftPleural);
+        DEFINE_STATIC_STRING(LeftAlveoliLeakToLeftPleuralCavity);
         DEFINE_STATIC_STRING(LeftAlveoliToLeftAlveoliLeak);
-        DEFINE_STATIC_STRING(LeftChestLeakToLeftPleural);
-        DEFINE_STATIC_STRING(LeftPleuralToEnvironment);
-        DEFINE_STATIC_STRING(RightAlveoliLeakToRightPleural);
+        DEFINE_STATIC_STRING(LeftChestLeakToLeftPleuralCavity);
+        DEFINE_STATIC_STRING(LeftPleuralCavityToEnvironment);
+        DEFINE_STATIC_STRING(RightAlveoliLeakToRightPleuralCavity);
         DEFINE_STATIC_STRING(RightAlveoliToRightAlveoliLeak);
-        DEFINE_STATIC_STRING(RightChestLeakToRightPleural);
-        DEFINE_STATIC_STRING(RightPleuralToEnvironment);
+        DEFINE_STATIC_STRING(RightChestLeakToRightPleuralCavity);
+        DEFINE_STATIC_STRING(RightPleuralCavityToEnvironment);
 
         static const std::vector<std::string>& GetValues()
         {
 
           static std::vector<std::string> _values = {
-            EnvironmentToMouth, MouthToCarina, MouthToStomach, CarinaToLeftDeadSpace, LeftDeadSpaceToAlveoli, CarinaToRightDeadSpace, RightDeadSpaceToAlveoli, EnvironmentToLeftChestLeak, EnvironmentToRightChestLeak, LeftAlveoliLeakToLeftPleural, LeftAlveoliToLeftAlveoliLeak, LeftChestLeakToLeftPleural, LeftPleuralToEnvironment, RightAlveoliLeakToRightPleural, RightAlveoliToRightAlveoliLeak, RightChestLeakToRightPleural, RightPleuralToEnvironment
+            EnvironmentToMouth, MouthToTrachea, MouthToStomach, TracheaToLeftBronchi, LeftBronchiToAlveoli, TracheaToRightBronchi, RightBronchiToAlveoli, EnvironmentToLeftChestLeak, EnvironmentToRightChestLeak, LeftAlveoliLeakToLeftPleuralCavity, LeftAlveoliToLeftAlveoliLeak, LeftChestLeakToLeftPleuralCavity, LeftPleuralCavityToEnvironment, RightAlveoliLeakToRightPleuralCavity, RightAlveoliToRightAlveoliLeak, RightChestLeakToRightPleuralCavity, RightPleuralCavityToEnvironment
           };
           return _values;
         }

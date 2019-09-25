@@ -313,7 +313,7 @@ void BioGearsConfiguration::Initialize()
   GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
   GetMeanCorpuscularHemoglobin().SetValue(29, MassPerAmountUnit::pg_Per_ct);
   GetStandardDiffusionDistance().SetValue(0.0006, LengthUnit::mm);
-  GetStandardOxygenDiffusionCoefficient().SetValue(0.00000000246, AreaPerTimePressureUnit::cm2_Per_min_mmHg);
+  GetStandardOxygenDiffusionCoefficient().SetValue(0.000000005, AreaPerTimePressureUnit::cm2_Per_min_mmHg);
 
   // Cardiovascular
   GetLeftHeartElastanceMaximum().SetValue(2.49, FlowElastanceUnit::mmHg_Per_mL);
@@ -350,7 +350,7 @@ void BioGearsConfiguration::Initialize()
   GetCoreTemperatureLow().SetValue(36.8, TemperatureUnit::C);
   GetCoreTemperatureHigh().SetValue(37.1, TemperatureUnit::C);
   GetDeltaCoreTemperatureLow().SetValue(1.8, TemperatureUnit::C);
-  GetEnergyPerATP().SetValue(11.5, EnergyPerAmountUnit::kcal_Per_mol); //Under standard conditions, it's 7.3 kcal/mol, but under intracellular conditions, it should be around 11.5
+  GetEnergyPerATP().SetValue(52, EnergyPerAmountUnit::kJ_Per_mol); //Under standard conditions, 30.5 kJ/mol, but cellular conditions shift this to 52 kJ/mol (Lehninger-Principles of BioChem)
   GetSweatHeatTransfer().SetValue(0.20833, HeatConductanceUnit::kcal_Per_K_s);
   GetVaporizationEnergy().SetValue(2260.0, EnergyPerMassUnit::kJ_Per_kg);
   GetVaporSpecificHeat().SetValue(1.890, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
