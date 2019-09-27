@@ -679,7 +679,7 @@
       <NitricOxide readOnly="false" value="0.919276527091679"/>
       <TissueIntegrity readOnly="false" value="0.7633301447592"/>
       <Catecholamines readOnly="false" value="0"/>
-      <Source>Pathogen</Source>
+      <Source>Infection</Source>
     </InflammatoryResponse>
     <ArterialCarbonDioxidePressure readOnly="false" unit="mmHg" value="39.682437835705"/>
     <ArterialOxygenPressure readOnly="false" unit="mmHg" value="94.37129274351"/>

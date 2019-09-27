@@ -370,6 +370,7 @@ public:
 
   virtual bool HasInflammatoryResponse() const;
   virtual SEInflammatoryResponse& GetInflammatoryResponse();
+  virtual SEInflammatoryResponse& GetInflammatoryResponse() const;
 
 protected:
   SEScalarMassPerVolume* m_BloodDensity;

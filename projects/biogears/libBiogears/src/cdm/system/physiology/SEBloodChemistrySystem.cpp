@@ -1039,6 +1039,11 @@ SEInflammatoryResponse& SEBloodChemistrySystem::GetInflammatoryResponse()
   return *m_InflammatoryResponse;
 }
 //-------------------------------------------------------------------------------
+SEInflammatoryResponse& SEBloodChemistrySystem::GetInflammatoryResponse() const
+{
+  return *m_InflammatoryResponse;
+}
+//-------------------------------------------------------------------------------
 Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
 {
   return Tree<const char*>{ classname() }

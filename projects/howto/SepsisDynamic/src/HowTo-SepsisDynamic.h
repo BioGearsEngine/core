@@ -11,31 +11,49 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include "HowToTracker.h"
-#include "HowTo-ThreadedBioGears.h"
+#include <mutex>
+#include <thread>
 
-namespace biogears
-{
-class SESepsis;
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
+namespace biogears {
+class SEInfection;
+class SEInflammatoryResponse;
 class SESubstance;
 class SESubstanceInfusion;
+class SESubstanceCompoundInfusion;
 }
 
 void HowToDynamicSepsis();
 
-class DynamicSepsis : public BioGearsThread
-{
+class DynamicSepsis {
 public:
-	DynamicSepsis(const std::string& logfile);
-	virtual ~DynamicSepsis();
+  DynamicSepsis(const std::string& logfile, int infectionInput);
+  virtual ~DynamicSepsis();
 
-	void SetAntibiotic();
-	void SetNorepinephrine(double& concentration);
-	void Status();
-	void SetSepsis(std::string& location, double& severity);
-	
+  void SetAntibiotic();
+  void SetNorepinephrine(double& concentration);
+  void SetIVFluids(int compound, double rate);
+  void UpdateMIC(double mic);
+  void Status();
+
+  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+
 protected:
-	biogears::SESepsis*							m_sepsis;
-  biogears::SESubstanceInfusion*				m_pressor;
-  biogears::SESubstanceCompoundInfusion*		m_antibiotic;
+  void AdvanceTime();
+
+  std::thread m_sepsisThread;
+  std::mutex m_mutex;
+  bool m_runThread;
+
+  double m_StartTime_min;
+
+  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+
+  biogears::SEInfection* m_septicInfection;
+  biogears::SESubstanceInfusion* m_pressor;
+  biogears::SESubstanceCompoundInfusion* m_saline;
+  biogears::SESubstanceCompoundInfusion* m_ringers;
+  biogears::SESubstanceCompoundInfusion* m_antibiotic;
 };
