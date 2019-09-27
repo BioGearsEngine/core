@@ -393,12 +393,9 @@ void Cardiovascular::SetUp()
   m_pGndToPericardium = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::GroundToPericardium1);
   m_pPericardiumToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::Pericardium1ToGround);
   m_pRightHeartToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightVentricle2ToGround);
-  //m_pRightHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightHeart1ToRightHeart3);
   m_pRightHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::RightVentricle1ToRightVentricle2);
   m_pLeftHeartToGnd = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftVentricle2ToGround);
-  //m_pLeftHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);
   m_pLeftHeart = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftVentricle1ToLeftVentricle2);
-  //m_LeftHeartToAorta = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftHeart1ToAorta2);
   m_LeftHeartToAorta = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::LeftVentricle1ToAorta2);
 
   /// \todo We are assuming that the complex renal system is connected. Make it agnostic.
@@ -406,6 +403,10 @@ void Cardiovascular::SetUp()
   m_rightRenalArteryPath = m_CirculatoryCircuit->GetPath(BGE::RenalPath::RightRenalArteryToAfferentArteriole);
 
   m_systemicResistancePaths.clear();
+  m_extrasplanchnicResistancePaths.clear();
+  m_splanchnicResistancePaths.clear();
+  m_ventricleResistancePaths.clear();
+  m_muscleResistancePaths.clear();
   m_systemicCompliancePaths.clear();
   m_tissueResistancePaths.clear();
 

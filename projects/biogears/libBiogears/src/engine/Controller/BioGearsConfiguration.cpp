@@ -281,7 +281,7 @@ void BioGearsConfiguration::Initialize()
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
   GetDynamicStabilizationCriteria().Load("config/DynamicStabilization.xml");
   //GetTimedStabilizationCriteria().Load("config/TimedStabilization.xml");
-  m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::On); // Turn on to include stabilization tracking for debugging
+  m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off); // Turn on to include stabilization tracking for debugging
 
   // Baroreceptors
   GetResponseSlope().SetValue(12.0); //nu

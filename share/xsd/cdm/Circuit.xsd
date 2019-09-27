@@ -21,6 +21,16 @@ specific language governing permissions and limitations under the License.
 			<xs:enumeration value="Thermal"/>
 		</xs:restriction>
 	</xs:simpleType>  
+    
+    <xs:simpleType name="enumResistancePathType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Cerebral"/>
+            <xs:enumeration value="Extrasplanchnic"/>
+            <xs:enumeration value="Muscle"/>
+            <xs:enumeration value="Splanchnic"/>
+            <xs:enumeration value="Ventricle"/>
+        </xs:restriction>
+    </xs:simpleType>
 	
 	<xs:complexType name="CircuitData" abstract="true">
 		<xs:complexContent>
@@ -151,6 +161,7 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="Resistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="NextResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="ResistanceBaseline" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="CardiovascularRegion" type="enumResistancePathType" minOccurs="0" maxOccurs="1"/>
 					<!-- Capacitance Types -->					
 					<xs:element name="Compliance" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="NextCompliance" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>

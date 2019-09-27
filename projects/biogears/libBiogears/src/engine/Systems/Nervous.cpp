@@ -734,12 +734,12 @@ void Nervous::ChemoreceptorFeedback()
   if (modifier < 0.001)
     modifier = 0.0;
 
-  GetChemoreceptorHeartRateScale().SetValue(maxHeartRateDelta * modifier);
+  //GetChemoreceptorHeartRateScale().SetValue(maxHeartRateDelta * modifier);
 
   // Calculate the normalized change in heart elastance
   double normalizedHeartElastance = 1.0;
   /// \todo Compute and apply chemoreceptor-mediated contractility changes
-  GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
+  //GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
 }
 
 //--------------------------------------------------------------------------------------------------
