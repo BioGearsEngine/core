@@ -244,6 +244,7 @@ private:
   std::vector<SEFluidCircuitPath*> m_extrasplanchnicResistancePaths;
   std::vector<SEFluidCircuitPath*> m_ventricleResistancePaths;
   std::vector<SEFluidCircuitPath*> m_muscleResistancePaths;
+  std::vector<SEFluidCircuitPath*> m_cerebralResistancePaths;
 
   SEPatientActionCollection* m_PatientActions;
 };

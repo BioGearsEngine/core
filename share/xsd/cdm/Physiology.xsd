@@ -307,6 +307,11 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="BaroreceptorHeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="BaroreceptorResistanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="BaroreceptorComplianceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular compliance multiplier used to scale the heart rate due to baroreceptor feedback-->                    
+                    <xs:element name="ResistanceScaleCerebral" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="ResistanceScaleExtrasplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="ResistanceScaleMuscle" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="ResistanceScaleSplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="ResistanceScaleVentricle" type="ScalarData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="LeftEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->                    
                     <xs:element name="RightEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->                                      
 					<xs:element name="ChemoreceptorHeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->

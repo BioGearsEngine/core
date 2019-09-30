@@ -1576,12 +1576,12 @@ void BioGears::SetupCardiovascular()
 
   SEFluidCircuitPath& Aorta1ToMyocardium1 = cCardiovascular.CreatePath(Aorta1, Myocardium1, BGE::CardiovascularPath::Aorta1ToMyocardium1);
   Aorta1ToMyocardium1.GetResistanceBaseline().SetValue(systemicResistanceModifier * ResistanceMyocardium, FlowResistanceUnit::mmHg_s_Per_mL);
-  Aorta1ToMyocardium1.SetCardiovascularRegion(CDM::enumResistancePathType::Muscle);
+  Aorta1ToMyocardium1.SetCardiovascularRegion(CDM::enumResistancePathType::Ventricle);
   SEFluidCircuitPath& Myocardium1ToGround = cCardiovascular.CreatePath(Myocardium1, Ground, BGE::CardiovascularPath::Myocardium1ToGround);
   Myocardium1ToGround.GetComplianceBaseline().SetValue(0.0, FlowComplianceUnit::mL_Per_mmHg);
   SEFluidCircuitPath& Myocardium1ToMyocardium2 = cCardiovascular.CreatePath(Myocardium1, Myocardium2, BGE::CardiovascularPath::Myocardium1ToMyocardium2);
   Myocardium1ToMyocardium2.GetResistanceBaseline().SetValue(systemicResistanceModifier * ResistanceMyocardiumVenous, FlowResistanceUnit::mmHg_s_Per_mL);
-  Myocardium1ToMyocardium2.SetCardiovascularRegion(CDM::enumResistancePathType::Muscle);
+  Myocardium1ToMyocardium2.SetCardiovascularRegion(CDM::enumResistancePathType::Ventricle);
   SEFluidCircuitPath& Myocardium2ToVenaCava = cCardiovascular.CreatePath(Myocardium2, VenaCava, BGE::CardiovascularPath::Myocardium2ToVenaCava);
 
   SEFluidCircuitPath& PericardiumToGround = cCardiovascular.CreatePath(Pericardium, Ground, BGE::CardiovascularPath::Pericardium1ToGround);
@@ -2929,10 +2929,12 @@ void BioGears::SetupRenal()
   SEFluidCircuitPath& NewLeftKidneyToVenaCava = cCombinedCardiovascular.CreatePath(LeftVenaCavaConnection, *VenaCava, BGE::CardiovascularPath::LeftKidney2ToVenaCava);
   // We need to move the resistances
   NewAorta1ToRightKidney.GetResistanceBaseline().Set(RightAortaConnectionToRenalArtery.GetResistanceBaseline());
+  NewAorta1ToRightKidney.SetCardiovascularRegion(CDM::enumResistancePathType::Extrasplanchnic);
   RightAortaConnectionToRenalArtery.GetResistanceBaseline().Invalidate();
   NewRightKidneyToVenaCava.GetResistanceBaseline().Set(RightRenalVeinToVenaCavaConnection.GetResistanceBaseline());
   RightRenalVeinToVenaCavaConnection.GetResistanceBaseline().Invalidate();
   NewAorta1ToLeftKidney.GetResistanceBaseline().Set(LeftAortaConnectionToRenalArtery.GetResistanceBaseline());
+  NewAorta1ToLeftKidney.SetCardiovascularRegion(CDM::enumResistancePathType::Extrasplanchnic);
   LeftAortaConnectionToRenalArtery.GetResistanceBaseline().Invalidate();
   NewLeftKidneyToVenaCava.GetResistanceBaseline().Set(LeftRenalVeinToVenaCavaConnection.GetResistanceBaseline());
   LeftRenalVeinToVenaCavaConnection.GetResistanceBaseline().Invalidate();

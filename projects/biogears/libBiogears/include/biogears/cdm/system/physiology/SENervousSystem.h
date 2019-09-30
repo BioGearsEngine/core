@@ -87,6 +87,28 @@ public:
   const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
   void RemoveRightEyePupillaryResponse();
 
+  bool HasResistanceScaleCerebral() const;
+  SEScalar& GetResistanceScaleCerebral();
+  double GetResistanceScaleCerebral() const;
+
+  bool HasResistanceScaleExtrasplanchnic() const;
+  SEScalar& GetResistanceScaleExtrasplanchnic();
+  double GetResistanceScaleExtrasplanchnic() const;
+
+  bool HasResistanceScaleMuscle() const;
+  SEScalar& GetResistanceScaleMuscle();
+  double GetResistanceScaleMuscle() const;
+
+  bool HasResistanceScaleSplanchnic() const;
+  SEScalar& GetResistanceScaleSplanchnic();
+  double GetResistanceScaleSplanchnic() const;
+
+  bool HasResistanceScaleVentricle() const;
+  SEScalar& GetResistanceScaleVentricle();
+  double GetResistanceScaleVentricle() const;
+
+  bool HasResistanceScales() const;
+
 protected:
   size_t m_NumFrequencyComponents;
   std::vector<SEScalarFrequency*> m_BaroreceptorFrequencyComponents;
@@ -99,5 +121,11 @@ protected:
   SEScalar* m_PainVisualAnalogueScale;
   SEScalar* m_ChemoreceptorHeartRateScale;
   SEScalar* m_ChemoreceptorHeartElastanceScale;
+
+  SEScalar* m_ResistanceScaleCerebral;
+  SEScalar* m_ResistanceScaleExtrasplanchnic;
+  SEScalar* m_ResistanceScaleMuscle;
+  SEScalar* m_ResistanceScaleSplanchnic;
+  SEScalar* m_ResistanceScaleVentricle;
 };
 }

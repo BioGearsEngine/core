@@ -27,6 +27,11 @@ namespace biogears {
   constexpr char idPainVisualAnalogueScale[] = "PainVisualAnalogueScale";
   constexpr char idLeftEyePupillaryResponse[] = "LeftEyePupillaryResponse";
   constexpr char idRightEyePupillaryResponse[] = "RightEyePupillaryResponse";
+  constexpr char idResistanceScaleCerebral[] = "ResistanceScaleCerebral";
+  constexpr char idResistanceScaleExtrasplanchnic[] = "ResistanceScaleExtrasplanchnic";
+  constexpr char idResistanceScaleMuscle[] = "ResistanceScaleMuscle";
+  constexpr char idResistanceScaleSplanchnic[] = "ResistanceScaleSplanchnic";
+  constexpr char idResistanceScaleVentricle[] = "ResistanceScaleVentricle";
 
 SENervousSystem::SENervousSystem(Logger* logger)
   : SESystem(logger)
@@ -42,6 +47,11 @@ SENervousSystem::SENervousSystem(Logger* logger)
   m_LeftEyePupillaryResponse = nullptr;
   m_RightEyePupillaryResponse = nullptr;
   m_PainVisualAnalogueScale = nullptr;
+  m_ResistanceScaleCerebral = nullptr;
+  m_ResistanceScaleExtrasplanchnic = nullptr;
+  m_ResistanceScaleMuscle = nullptr;
+  m_ResistanceScaleSplanchnic = nullptr;
+  m_ResistanceScaleVentricle = nullptr;
 }
 //-------------------------------------------------------------------------------
 
@@ -64,6 +74,11 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_LeftEyePupillaryResponse);
   SAFE_DELETE(m_RightEyePupillaryResponse);
   SAFE_DELETE(m_PainVisualAnalogueScale);
+  SAFE_DELETE(m_ResistanceScaleCerebral);
+  SAFE_DELETE(m_ResistanceScaleExtrasplanchnic);
+  SAFE_DELETE(m_ResistanceScaleMuscle);
+  SAFE_DELETE(m_ResistanceScaleSplanchnic);
+  SAFE_DELETE(m_ResistanceScaleVentricle);
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SENervousSystem::GetScalar(const char* name)
@@ -87,6 +102,17 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
     return &GetChemoreceptorHeartElastanceScale();
   if (name == idPainVisualAnalogueScale)
     return &GetPainVisualAnalogueScale();
+  if (name == idResistanceScaleCerebral)
+    return &GetResistanceScaleCerebral();
+  if (name == idResistanceScaleExtrasplanchnic)
+    return &GetResistanceScaleExtrasplanchnic();
+  if (name == idResistanceScaleMuscle)
+    return &GetResistanceScaleMuscle();
+  if (name == idResistanceScaleSplanchnic)
+    return &GetResistanceScaleSplanchnic();
+  if (name == idResistanceScaleVentricle)
+    return &GetResistanceScaleVentricle();
+
 
   size_t split = name.find('-');
   if (split != name.npos) {
@@ -128,6 +154,16 @@ bool SENervousSystem::Load(const CDM::NervousSystemData& in)
     GetLeftEyePupillaryResponse().Load(in.LeftEyePupillaryResponse().get());
   if (in.RightEyePupillaryResponse().present())
     GetRightEyePupillaryResponse().Load(in.RightEyePupillaryResponse().get());
+  if (in.ResistanceScaleCerebral().present())
+    GetResistanceScaleCerebral().Load(in.ResistanceScaleCerebral().get());
+  if (in.ResistanceScaleExtrasplanchnic().present())
+    GetResistanceScaleExtrasplanchnic().Load(in.ResistanceScaleExtrasplanchnic().get());
+  if (in.ResistanceScaleMuscle().present())
+    GetResistanceScaleMuscle().Load(in.ResistanceScaleMuscle().get());
+  if (in.ResistanceScaleSplanchnic().present())
+    GetResistanceScaleSplanchnic().Load(in.ResistanceScaleSplanchnic().get());
+  if (in.ResistanceScaleVentricle().present())
+    GetResistanceScaleVentricle().Load(in.ResistanceScaleVentricle().get());
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -164,6 +200,16 @@ void SENervousSystem::Unload(CDM::NervousSystemData& data) const
     data.LeftEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_LeftEyePupillaryResponse->Unload()));
   if (m_RightEyePupillaryResponse != nullptr)
     data.RightEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_RightEyePupillaryResponse->Unload()));
+  if (m_ResistanceScaleCerebral != nullptr)
+    data.ResistanceScaleCerebral(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleCerebral->Unload()));
+  if (m_ResistanceScaleExtrasplanchnic != nullptr)
+    data.ResistanceScaleExtrasplanchnic(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleExtrasplanchnic->Unload()));
+  if (m_ResistanceScaleMuscle != nullptr)
+    data.ResistanceScaleMuscle(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleMuscle->Unload()));
+  if (m_ResistanceScaleSplanchnic != nullptr)
+    data.ResistanceScaleSplanchnic(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleSplanchnic->Unload()));
+  if (m_ResistanceScaleVentricle != nullptr)
+    data.ResistanceScaleVentricle(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleVentricle->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SENervousSystem::HasBaroreceptorFrequencyComponents() const
@@ -393,6 +439,108 @@ void SENervousSystem::RemoveRightEyePupillaryResponse()
   SAFE_DELETE(m_RightEyePupillaryResponse);
 }
 //-------------------------------------------------------------------------------
+
+bool SENervousSystem::HasResistanceScaleCerebral() const
+{
+  return m_ResistanceScaleCerebral == nullptr ? false : m_ResistanceScaleCerebral->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetResistanceScaleCerebral()
+{
+  if (m_ResistanceScaleCerebral == nullptr)
+    m_ResistanceScaleCerebral = new SEScalar();
+  return *m_ResistanceScaleCerebral;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetResistanceScaleCerebral() const
+{
+  if (m_ResistanceScaleCerebral == nullptr)
+    return SEScalar::dNaN();
+  return m_ResistanceScaleCerebral->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SENervousSystem::HasResistanceScaleExtrasplanchnic() const
+{
+  return m_ResistanceScaleExtrasplanchnic == nullptr ? false : m_ResistanceScaleExtrasplanchnic->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetResistanceScaleExtrasplanchnic()
+{
+  if (m_ResistanceScaleExtrasplanchnic == nullptr)
+    m_ResistanceScaleExtrasplanchnic = new SEScalar();
+  return *m_ResistanceScaleExtrasplanchnic;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetResistanceScaleExtrasplanchnic() const
+{
+  if (m_ResistanceScaleExtrasplanchnic == nullptr)
+    return SEScalar::dNaN();
+  return m_ResistanceScaleExtrasplanchnic->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SENervousSystem::HasResistanceScaleMuscle() const
+{
+  return m_ResistanceScaleMuscle == nullptr ? false : m_ResistanceScaleMuscle->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetResistanceScaleMuscle()
+{
+  if (m_ResistanceScaleMuscle == nullptr)
+    m_ResistanceScaleMuscle = new SEScalar();
+  return *m_ResistanceScaleMuscle;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetResistanceScaleMuscle() const
+{
+  if (m_ResistanceScaleMuscle == nullptr)
+    return SEScalar::dNaN();
+  return m_ResistanceScaleMuscle->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SENervousSystem::HasResistanceScaleSplanchnic() const
+{
+  return m_ResistanceScaleSplanchnic == nullptr ? false : m_ResistanceScaleSplanchnic->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetResistanceScaleSplanchnic()
+{
+  if (m_ResistanceScaleSplanchnic == nullptr)
+    m_ResistanceScaleSplanchnic = new SEScalar();
+  return *m_ResistanceScaleSplanchnic;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetResistanceScaleSplanchnic() const
+{
+  if (m_ResistanceScaleSplanchnic == nullptr)
+    return SEScalar::dNaN();
+  return m_ResistanceScaleSplanchnic->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SENervousSystem::HasResistanceScaleVentricle() const
+{
+  return m_ResistanceScaleVentricle == nullptr ? false : m_ResistanceScaleVentricle->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetResistanceScaleVentricle()
+{
+  if (m_ResistanceScaleVentricle == nullptr)
+    m_ResistanceScaleVentricle = new SEScalar();
+  return *m_ResistanceScaleVentricle;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetResistanceScaleVentricle() const
+{
+  if (m_ResistanceScaleVentricle == nullptr)
+    return SEScalar::dNaN();
+  return m_ResistanceScaleVentricle->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SENervousSystem::HasResistanceScales() const
+{
+  return (HasResistanceScaleCerebral() && HasResistanceScaleExtrasplanchnic() && HasResistanceScaleMuscle() && HasResistanceScaleSplanchnic() && HasResistanceScaleVentricle());
+}
+//-------------------------------------------------------------------------------
+
 Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
 {
   return Tree<const char*>{classname()}
@@ -405,6 +553,11 @@ Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idPainVisualAnalogueScale)
     .emplace_back(idLeftEyePupillaryResponse)
     .emplace_back(idRightEyePupillaryResponse)
+    .emplace_back(idResistanceScaleCerebral)
+    .emplace_back(idResistanceScaleExtrasplanchnic)
+    .emplace_back(idResistanceScaleMuscle)
+    .emplace_back(idResistanceScaleSplanchnic)
+    .emplace_back(idResistanceScaleVentricle)
   ;
 }
 }
