@@ -82,10 +82,12 @@ function(add_howto name)
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
-	if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
+	  if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
       add_dependencies(${TARGET_NAME} stage_runtime)
     endif()
-    
+   
+    add_dependencies(howtos ${TARGET_NAME})
+     
   endif(BUILD_EX_${EXAMPLE_NAME})
 endfunction(add_howto)
 
@@ -134,7 +136,9 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
       PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/common-source
   )
 
- target_compile_definitions(howto-common PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS">  )
+  target_compile_definitions(howto-common PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS">  )
+
+  add_custom_target(howtos COMMENT "Meta Target for compiling all howtos")
 
   childlist( dir_list ${CMAKE_CURRENT_SOURCE_DIR} )
   foreach( dir IN LISTS dir_list )
