@@ -97,7 +97,10 @@ def run_plots(root_dir, sources, skip_count, recurse, plotTime):
         if( os.path.isdir(possible_scenario) ):
          if recurse:
             for file in os.listdir(possible_scenario):
-                    run_plots( possible_scenario,[file],skip_count,recurse, plotTime)
+                try:
+                  run_plots( possible_scenario,[file],skip_count,recurse, plotTime)
+                except:
+                  err("Unable to plot resuts for {0}".format(file),LOG_LEVEL_0)
          else:
             err("{0} is a directory.\n\t Use -r for recursive mode.".format(possible_scenario),LOG_LEVEL_0)
         elif( os.path.exists(possible_scenario)):
