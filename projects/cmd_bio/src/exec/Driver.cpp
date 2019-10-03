@@ -157,7 +157,7 @@ void Driver::queue_Scenario(Executor exec)
         parent_dir += "/";
       }
     }
-
+    
     if (multi_patient_run) {
       ex.Name(ex.Name() + "-" + patient_no_extension);
     }
@@ -166,6 +166,7 @@ void Driver::queue_Scenario(Executor exec)
     std::string log_file = base_file_name + "Results.log";
     std::string results_file = base_file_name + "Results.csv";
 
+    std::cout << "ex.Computed() + parent_dir + console_file = (" << ex.Computed() << "," << parent_dir << "," << console_file << ")\n";
     std::unique_ptr<PhysiologyEngine> eng;
     Logger console_logger;
     Logger file_logger(ex.Computed() + parent_dir + console_file);

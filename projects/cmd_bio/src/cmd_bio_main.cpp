@@ -36,6 +36,18 @@
 #include <fstream>
 #include <iostream>
 
+void print_help() {
+
+    std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, VERIFY, GENTABLES ,VERSION]\n"
+                                "[THREADS N]\n" 
+                                "[TEST FILE [FILE]..., SCENARIO FILE [FILE]..., VALIDATE patient|drug|system|all\n\n";
+
+    std::cout << "Flags: \n";
+    std::cout << "j : Thread control -j N\n";
+    std::cout << "h : Print this message\n";
+    std::cout << std::endl;
+    exit(0);
+}
 //!
 //! \brief Reads command line argument and executes corresponding operation
 //! \param argc : Number of command line arguments
@@ -45,13 +57,13 @@
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "GENDATA", "GENSTATES", "VERIFY", "GENTABLES" ,"VERSION" } //Options
+    { "H","HELP","GENDATA", "GENSTATES", "VERIFY", "GENTABLES" ,"VERSION" } //Options
     ,
-    { "THREADS" } //Keywords
+    { "J", "THREADS" } //Keywords
     ,
     { "TEST", "SCENARIO", "VALIDATE" } //MultiWords
   );
-  args.parse(argc, argv);
+  
 
   bool run_patient_validation = false;
   bool run_drug_validation = false;
@@ -59,6 +71,10 @@ int main(int argc, char** argv)
   bool run_verification = false;
 
   unsigned int thread_count = std::thread::hardware_concurrency();
+  if ( !args.parse(argc, argv) || args.Option("HELP") || args.Option("H") ||  args.empty() ) {
+    print_help();
+  }
+
   if (args.Option("VERSION")) {
     std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
     exit(0);
@@ -68,6 +84,14 @@ int main(int argc, char** argv)
       thread_count = std::stoi(args.Keyword("THREADS"));
     } catch (std::exception) {
       std::cerr << "Error: THREADS given but " << args.Keyword("THREADS") << "is not a valid Integer.\n";
+      exit(1);
+    }
+  }
+  if (args.KeywordFound("J")) {
+    try {
+      thread_count = std::stoi(args.Keyword("J"));
+    } catch (std::exception) {
+      std::cerr << "Error: J given but " << args.Keyword("J") << "is not a valid Integer.\n";
       exit(1);
     }
   }
@@ -156,6 +180,7 @@ int main(int argc, char** argv)
     auto configs = biogears::Config{  };
     for (auto& arg : args.MultiWord("SCENARIO")) {
       auto ex = biogears::Executor{ arg, biogears::EDriver::ScenarioTestDriver};
+      ex.Computed("Scenarios/");
       ex.Scenario(arg);
       configs.push_back(ex);
     }
@@ -169,6 +194,6 @@ int main(int argc, char** argv)
     biogears::ReportWriter report_writer;
     report_writer.gen_tables();
   }
-  std::cout << "done!" << std::endl;
+
   return 0;
 }

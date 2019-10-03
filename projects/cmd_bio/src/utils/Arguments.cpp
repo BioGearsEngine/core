@@ -57,10 +57,12 @@ Arguments::Arguments(const std::vector<std::string>& options, const std::vector<
 bool Arguments::parse(int argc, char* argv[])
 {
   std::vector<std::string> args;
+  std::vector<std::string> flags;
   const std::string prefix = "--";
 
   size_t index = 1;
   if (argc > 1) {
+    _empty = false;
     while (1 < argc) {
       args.emplace_back(argv[index++]);
       --argc;
@@ -72,8 +74,15 @@ bool Arguments::parse(int argc, char* argv[])
     if (res.first == prefix.end())
     {
       arg = arg.substr(2); 
-    }
+    } else if (arg[0] == '-' && arg.size() > 1) {
+      auto sub = arg.substr(2);
+      arg = arg[1];
+      for (const char ch : sub ) {
+          flags.push_back(std::string(1,ch));
+      }
+    } 
   }
+  args.insert(args.end(), flags.begin(), flags.end() );
   return parse(args);
 }
 //-----------------------------------------------------------------------------
@@ -91,6 +100,7 @@ bool Arguments::parse(const std::vector<std::string>& args)
 {
   size_t index = 0;
   while (index < args.size()) {
+     _empty = false;
      std::string arg = trim(args[index]);
      std::transform(arg.begin(),arg.end(), arg.begin(), ::tolower);
     ++index;
@@ -137,6 +147,7 @@ bool Arguments::parse(const std::vector<std::string>& args)
         return false;
       }
     }
+    return false;
   }
   return true;
 }
