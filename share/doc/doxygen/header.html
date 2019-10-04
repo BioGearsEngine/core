@@ -33,9 +33,8 @@
 
 <!-- Wrap all page content here -->
 <div id="wrap">
-
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse" role="navigation">
+        <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -44,37 +43,23 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand hidden-sm" href="https://www.biogearsengine.com/"><img style='margin-top: -8px !important;height: 40px !important;' src='bootstrap/biogears_logoWT.png' /></a>
-                <a class="navbar-brand visible-sm" style='margin-left: -30px !important;width: 60px !important;' href="https://www.biogearsengine.com/"><img style='margin-top: -10px !important;height: 40px !important;' src='bootstrap/bg_symbolWT.png' /></a>
+                <a class="navbar-brand hidden-sm" href="./"><img style='margin-top: -8px !important;height: 40px !important;' src='./content/img/biogears_logoWT.png' /></a>
+                <a class="navbar-brand visible-sm" style='margin-left: -30px !important;width: 60px !important;' href="./"><img style='margin-top: -10px !important;height: 40px !important;' src='./content/img/bg_symbolWT.png' /></a>
             </div>
             <div class="collapse navbar-collapse">
                 <!-- Left -->
                 <ul class="nav navbar-nav adjust-right">
-                    <li><a href="https://www.biogearsengine.com/">Home</a></li>
-                    <li><a href="https://www.biogearsengine.com/showcase">Showcase</a></li>
-                    <li><a href="https://www.biogearsengine.com/start">Get Started</a></li>
-                    <li class="dropdown active">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-							<li><a href="https://www.biogearsengine.com/faq">FAQ</a></li>
-                            <li><a href="https://www.biogearsengine.com/systems">Systems</a></li>
-                            <li class="active"><a href="https://www.biogearsengine.com/documentation/index.html">General Documentation</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="https://www.biogearsengine.com/news">News</a></li>
-                            <li><a href="https://www.biogearsengine.com/forums">Forums</a></li>
-                            <li><a href="https://www.biogearsengine.com/workwithus">Work With Us</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="https://www.biogearsengine.com/download">Download</a></li>
-					<li class="visible-sm cse-search"><a href="#"><i class="fa fa-search"></i></a></li>				
+                    <li class="active"><a href="/"><i class="fa fa-home"> <span style="font-family: Lato;">Home</span></i></a></li>
+                    <li><a href="./documentation/index.html"><i class="fa fa-book"> <span style="font-family: Lato;">Documentation</span></i></a></li>
+                    <li><a href="./documentation/_f_a_q.html"><i class="fa fa-question-circle"> <span style="font-family: Lato;">FAQ</span></i></a></li>
+
                 </ul>
-				<ul class="nav navbar-nav navbar-right hidden-sm">				 
-					<li class="cse-search"><a href="#"><i class="fa fa-search"></i>&nbsp; Search</a></li>
-				</ul>
+                <!-- Right -->
+                <ul class="nav navbar-nav navbar-right hidden-sm" style="margin-right: -9px;">
+                    <li><a href="./releases.html"><i class="fa fa-download"> <span style="font-family: Lato;">Releases</span></i></a></li>
+                    <li><a href="https://github.com/BioGearsEngine/core/releases"><i class="fa fa-download"> <span style="font-family: Lato;">Download</span></i></a></li>
+                    <li><a href="https://github.com/BioGearsEngine"><i class="fa fa-github"> <span style="font-family: Lato;">GitHub</span></i></a></li>
+                </ul>
             </div><!--/.nav-collapse -->
         </div>
     </div>
