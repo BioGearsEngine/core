@@ -36,12 +36,6 @@ protected:
   virtual void Unload(CDM::SubstanceCompoundInfusionData& data) const;
 
 public:
-  virtual bool HasAdministeredBloodAntigen() const;
-  CDM::enumBloodAntigen::value GetAdministeredBloodAntigen() const;
-
-  virtual bool HasAdministeredBloodRhFactor() const;
-  CDM::enumBool::value GetAdministeredBloodRhFactor() const;
-
   virtual bool HasBagVolume() const;
   virtual SEScalarVolume& GetBagVolume();
 
@@ -53,8 +47,6 @@ public:
   virtual void ToString(std::ostream& str) const;
 
 protected:
-  CDM::enumBloodAntigen::value m_AdministeredBloodAntigen;
-  CDM::enumBool::value m_AdministeredBloodRhFactor;
   SEScalarVolume* m_BagVolume;
   SEScalarVolumePerTime* m_Rate;
   const SESubstanceCompound& m_Compound;

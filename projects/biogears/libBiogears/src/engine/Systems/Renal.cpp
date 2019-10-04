@@ -1618,7 +1618,9 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
   u.Reset();
 
   double urineOsm_Per_kg = GetUrineOsmolality(OsmolalityUnit::mOsm_Per_kg);
-  if (urineOsm_Per_kg <= 400) // Need cite for this
+  if (m_data.GetBloodChemistry().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) {
+    u.SetColorResult(CDM::enumUrineColor::Pink);
+  } else if (urineOsm_Per_kg <= 400) // Need cite for this
     u.SetColorResult(CDM::enumUrineColor::PaleYellow);
   else if (urineOsm_Per_kg > 400 && urineOsm_Per_kg <= 750)
     u.SetColorResult(CDM::enumUrineColor::Yellow);
@@ -1641,7 +1643,7 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
   //u.SetBilirubinResult();
 
   u.GetSpecificGravityResult().Set(GetUrineSpecificGravity());
-  if (bladder_glucose_mg_Per_dL > 0.15) /// \cite roxe1990urinalysis
+  if (bladder_glucose_mg_Per_dL > 0.15 || m_data.GetBloodChemistry().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) /// \cite roxe1990urinalysis
     u.SetBloodResult(CDM::enumPresenceIndicator::Positive);
   else
     u.SetBloodResult(CDM::enumPresenceIndicator::Negative);

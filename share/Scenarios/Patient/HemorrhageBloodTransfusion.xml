@@ -120,15 +120,14 @@
         <Time value="60" unit="s"/>       
     </Action>
     <Action xsi:type="SubstanceCompoundInfusionData">
-        <SubstanceCompound>Blood</SubstanceCompound>
-		<AdministeredBloodAntigen>B</AdministeredBloodAntigen>
-		<AdministeredBloodRhFactor>negative</AdministeredBloodRhFactor>
+        <SubstanceCompound>Blood_BNegative</SubstanceCompound>
         <BagVolume value="500" unit="mL"/>
         <Rate value="100" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="4" unit="hr"/>       
     </Action>
+	<Action xsi:type="PatientAssessmentRequestData" Type="Urinalysis"/>
 </Scenario>
 
 

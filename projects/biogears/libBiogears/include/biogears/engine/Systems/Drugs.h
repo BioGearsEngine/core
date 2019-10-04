@@ -95,6 +95,7 @@ protected:
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
+  double m_totalAdministered_uL;
 
   double m_RbcAcetylcholinesteraseFractionInhibited;
   SELiquidCompartment* m_aortaVascular;

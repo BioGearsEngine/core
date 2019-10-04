@@ -24,40 +24,41 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-constexpr char idArterialBloodPH[] = "ArterialBloodPH";
-constexpr char idArterialBloodPHBaseline[] = "ArterialBloodPHBaseline";
-constexpr char idBloodDensity[] = "BloodDensity";
-constexpr char idBloodSpecificHeat[] = "BloodSpecificHeat";
-constexpr char idBloodUreaNitrogenConcentration[] = "BloodUreaNitrogenConcentration";
-constexpr char idCarbonDioxideSaturation[] = "CarbonDioxideSaturation";
-constexpr char idCarbonMonoxideSaturation[] = "CarbonMonoxideSaturation";
-constexpr char idHematocrit[] = "Hematocrit";
-constexpr char idHemoglobinContent[] = "HemoglobinContent";
-constexpr char idOxygenSaturation[] = "OxygenSaturation";
-constexpr char idOxygenVenousSaturation[] = "OxygenVenousSaturation";
-constexpr char idPhosphate[] = "Phosphate";
-constexpr char idPlasmaVolume[] = "PlasmaVolume";
-constexpr char idPulseOximetry[] = "PulseOximetry";
-constexpr char idRedBloodCellAcetylcholinesterase[] = "RedBloodCellAcetylcholinesterase";
-constexpr char idRedBloodCellCount[] = "RedBloodCellCount";
-constexpr char idShuntFraction[] = "ShuntFraction";
-constexpr char idStrongIonDifference[] = "StrongIonDifference";
-constexpr char idTotalBilirubin[] = "TotalBilirubin";
-constexpr char idTotalProteinConcentration[] = "TotalProteinConcentration";
-constexpr char idVenousBloodPH[] = "VenousBloodPH";
-constexpr char idVolumeFractionNeutralPhospholipidInPlasma[] = "VolumeFractionNeutralPhospholipidInPlasma";
-constexpr char idVolumeFractionNeutralLipidInPlasma[] = "VolumeFractionNeutralLipidInPlasma";
-constexpr char idWhiteBloodCellCount[] = "WhiteBloodCellCount";
-constexpr char idArterialCarbonDioxidePressure[] = "ArterialCarbonDioxidePressure";
-constexpr char idArterialOxygenPressure[] = "ArterialOxygenPressure";
-constexpr char idPulmonaryArterialCarbonDioxidePressure[] = "PulmonaryArterialCarbonDioxidePressure";
-constexpr char idPulmonaryArterialOxygenPressure[] = "PulmonaryArterialOxygenPressure";
-constexpr char idPulmonaryVenousCarbonDioxidePressure[] = "PulmonaryVenousCarbonDioxidePressure";
-constexpr char idPulmonaryVenousOxygenPressure[] = "PulmonaryVenousOxygenPressure";
-constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
-constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
-constexpr char idAcuteInflammatoryResponse[] = "AcuteInflammatoryResponse";
-constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
+  constexpr char idArterialBloodPH[] = "ArterialBloodPH";
+  constexpr char idArterialBloodPHBaseline[] = "ArterialBloodPHBaseline";
+  constexpr char idBloodDensity[] = "BloodDensity";
+  constexpr char idBloodSpecificHeat[] = "BloodSpecificHeat";
+  constexpr char idBloodUreaNitrogenConcentration[] = "BloodUreaNitrogenConcentration";
+  constexpr char idCarbonDioxideSaturation[] = "CarbonDioxideSaturation";
+  constexpr char idCarbonMonoxideSaturation[] = "CarbonMonoxideSaturation";
+  constexpr char idHematocrit[] = "Hematocrit";
+  constexpr char idHemoglobinContent[] = "HemoglobinContent";
+  constexpr char idHemoglobinLostToUrine[] = "HemoglobinLostToUrine";
+  constexpr char idOxygenSaturation[] = "OxygenSaturation";
+  constexpr char idOxygenVenousSaturation[] = "OxygenVenousSaturation";
+  constexpr char idPhosphate[] = "Phosphate";
+  constexpr char idPlasmaVolume[] = "PlasmaVolume";
+  constexpr char idPulseOximetry[] = "PulseOximetry";
+  constexpr char idRedBloodCellAcetylcholinesterase[] = "RedBloodCellAcetylcholinesterase";
+  constexpr char idRedBloodCellCount[] = "RedBloodCellCount";
+  constexpr char idShuntFraction[] = "ShuntFraction";
+  constexpr char idStrongIonDifference[] = "StrongIonDifference";
+  constexpr char idTotalBilirubin[] = "TotalBilirubin";
+  constexpr char idTotalProteinConcentration[] = "TotalProteinConcentration";
+  constexpr char idVenousBloodPH[] = "VenousBloodPH";
+  constexpr char idVolumeFractionNeutralPhospholipidInPlasma[] = "VolumeFractionNeutralPhospholipidInPlasma";
+  constexpr char idVolumeFractionNeutralLipidInPlasma[] = "VolumeFractionNeutralLipidInPlasma";
+  constexpr char idWhiteBloodCellCount[] = "WhiteBloodCellCount";
+  constexpr char idArterialCarbonDioxidePressure[] = "ArterialCarbonDioxidePressure";
+  constexpr char idArterialOxygenPressure[] = "ArterialOxygenPressure";
+  constexpr char idPulmonaryArterialCarbonDioxidePressure[] = "PulmonaryArterialCarbonDioxidePressure";
+  constexpr char idPulmonaryArterialOxygenPressure[] = "PulmonaryArterialOxygenPressure";
+  constexpr char idPulmonaryVenousCarbonDioxidePressure[] = "PulmonaryVenousCarbonDioxidePressure";
+  constexpr char idPulmonaryVenousOxygenPressure[] = "PulmonaryVenousOxygenPressure";
+  constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
+  constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
+  constexpr char idAcuteInflammatoryResponse[] = "AcuteInflammatoryResponse";
+  constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
 
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
@@ -73,6 +74,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_CarbonMonoxideSaturation = nullptr;
   m_Hematocrit = nullptr;
   m_HemoglobinContent = nullptr;
+  m_HemoglobinLostToUrine = nullptr;
   m_OxygenSaturation = nullptr;
   m_OxygenVenousSaturation = nullptr;
   m_Phosphate = nullptr;
@@ -119,6 +121,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_CarbonMonoxideSaturation);
   SAFE_DELETE(m_Hematocrit);
   SAFE_DELETE(m_HemoglobinContent);
+  SAFE_DELETE(m_HemoglobinLostToUrine);
   SAFE_DELETE(m_OxygenSaturation);
   SAFE_DELETE(m_OxygenVenousSaturation);
   SAFE_DELETE(m_Phosphate);
@@ -171,6 +174,8 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     return &GetHematocrit();
   if (name == idHemoglobinContent)
     return &GetHemoglobinContent();
+  if (name == idHemoglobinLostToUrine)
+    return &GetHemoglobinLostToUrine();
   if (name == idOxygenSaturation)
     return &GetOxygenSaturation();
   if (name == idOxygenVenousSaturation)
@@ -252,6 +257,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetHematocrit().Load(in.Hematocrit().get());
   if (in.HemoglobinContent().present())
     GetHemoglobinContent().Load(in.HemoglobinContent().get());
+  if (in.HemoglobinLostToUrine().present())
+    GetHemoglobinLostToUrine().Load(in.HemoglobinLostToUrine().get());
   if (in.OxygenSaturation().present())
     GetOxygenSaturation().Load(in.OxygenSaturation().get());
   if (in.OxygenVenousSaturation().present())
@@ -333,6 +340,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.Hematocrit(std::unique_ptr<CDM::ScalarFractionData>(m_Hematocrit->Unload()));
   if (m_HemoglobinContent != nullptr)
     data.HemoglobinContent(std::unique_ptr<CDM::ScalarMassData>(m_HemoglobinContent->Unload()));
+  if (m_HemoglobinLostToUrine != nullptr)
+    data.HemoglobinLostToUrine(std::unique_ptr<CDM::ScalarMassData>(m_HemoglobinLostToUrine->Unload()));
   if (m_OxygenSaturation != nullptr)
     data.OxygenSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_OxygenSaturation->Unload()));
   if (m_OxygenVenousSaturation != nullptr)
@@ -580,6 +589,27 @@ double SEBloodChemistrySystem::GetHemoglobinContent(const MassUnit& unit) const
   if (m_HemoglobinContent == nullptr)
     return SEScalar::dNaN();
   return m_HemoglobinContent->GetValue(unit);
+}
+
+//-------------------------------------------------------------------------------
+
+bool SEBloodChemistrySystem::HasHemoglobinLostToUrine() const
+{
+  return m_HemoglobinLostToUrine == nullptr ? false : m_HemoglobinLostToUrine->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarMass& SEBloodChemistrySystem::GetHemoglobinLostToUrine()
+{
+  if (m_HemoglobinLostToUrine == nullptr)
+    m_HemoglobinLostToUrine = new SEScalarMass();
+  return *m_HemoglobinLostToUrine;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetHemoglobinLostToUrine(const MassUnit& unit) const
+{
+  if (m_HemoglobinLostToUrine == nullptr)
+    return SEScalar::dNaN();
+  return m_HemoglobinLostToUrine->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
 

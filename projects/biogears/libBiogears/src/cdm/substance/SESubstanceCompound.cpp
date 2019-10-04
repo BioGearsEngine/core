@@ -20,6 +20,7 @@ SESubstanceCompound::SESubstanceCompound(Logger* logger)
   : Loggable(logger)
 {
   m_Name = "";
+  m_Classification = (CDM::enumSubstanceClass::value)-1;
 }
 //-----------------------------------------------------------------------------
 SESubstanceCompound::~SESubstanceCompound()
@@ -30,6 +31,7 @@ SESubstanceCompound::~SESubstanceCompound()
 void SESubstanceCompound::Clear()
 {
   m_Name = "";
+  m_Classification = (CDM::enumSubstanceClass::value)-1;
   DELETE_VECTOR(m_Components);
   m_cComponents.clear();
 }
@@ -38,6 +40,8 @@ bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESub
 {
   Clear();
   m_Name = in.Name();
+  if (in.Classification().present())
+    m_Classification = in.Classification().get();
 
   std::string err;
 
@@ -73,6 +77,8 @@ void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
 {
   if (HasName())
     data.Name(m_Name);
+  if (HasClassification())
+    data.Classification(m_Classification);
 
   for (unsigned int i = 0; i < m_Components.size(); i++) {
     data.Component().push_back(*m_Components.at(i)->Unload());
@@ -107,6 +113,26 @@ bool SESubstanceCompound::HasName() const
 void SESubstanceCompound::InvalidateName()
 {
   m_Name = "";
+}
+//-----------------------------------------------------------------------------
+CDM::enumSubstanceClass::value SESubstanceCompound::GetClassification() const
+{
+  return m_Classification;
+}
+//-----------------------------------------------------------------------------
+void SESubstanceCompound::SetClassification(CDM::enumSubstanceClass::value subClass)
+{
+  m_Classification = subClass;
+}
+//-----------------------------------------------------------------------------
+bool SESubstanceCompound::HasClassification() const
+{
+  return m_Classification == ((CDM::enumSubstanceState::value)-1) ? false : true;
+}
+//-----------------------------------------------------------------------------
+void SESubstanceCompound::InvalidateClassification()
+{
+  m_Classification = (CDM::enumSubstanceClass::value)-1;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasComponent() const

@@ -118,6 +118,7 @@ specific language governing permissions and limitations under the License.
 			<xs:enumeration value="PaleYellow"/>
 			<xs:enumeration value="Yellow"/>
 			<xs:enumeration value="DarkYellow"/>
+			<xs:enumeration value="Pink"/>
 		</xs:restriction>
 	</xs:simpleType>
 	

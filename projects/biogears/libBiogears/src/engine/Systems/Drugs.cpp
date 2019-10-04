@@ -72,6 +72,7 @@ void Drugs::Clear()
   m_IVToVenaCava = nullptr;
   m_Sarin = nullptr;
   m_Pralidoxime = nullptr;
+  m_totalAdministered_uL = 0.0;
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -96,7 +97,11 @@ void Drugs::Initialize()
   GetTubularPermeabilityChange().SetValue(0);
   GetCentralNervousResponse().SetValue(0.0);
   m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(8.0 * 1e-9, AmountPerVolumeUnit::mol_Per_L); //Need to initialize here since Drugs processed before BloodChemistry
+  m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
+  GetTransfusionVolume().SetValue(0.0, VolumeUnit::uL);
+  GetTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
 
+  m_totalAdministered_uL = 0.0;
   m_SarinRbcAcetylcholinesteraseComplex_nM = 0.0;
   m_AgedRbcAcetylcholinesterase_nM = 0.0;
 }
@@ -182,6 +187,7 @@ void Drugs::SetUp()
   //Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
+  m_totalAdministered_uL = 0.0;
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -457,6 +463,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
   if (infusions.empty())
     return;
 
+  SEPatient& patient = m_data.GetPatient();
   SESubstanceCompoundInfusion* infusion;
   const SESubstanceCompound* compound;
   SELiquidSubstanceQuantity* subQ;
@@ -481,34 +488,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     totalRate_mL_Per_s += rate_mL_Per_s;
     volumeRemaining_mL = infusion->GetBagVolume().GetValue(VolumeUnit::mL);
     volumeToAdminister_mL = rate_mL_Per_s * m_dt_s;
-
-    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    /*
-    // Check Blood Type here, starting with Rh factor. Rh factor is just a simple yes no based on patient blood type and infusion type
-    if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive))) {
-      // IF mismatch, minor reaction, tracked by RhSensitivity parameter (which will affect reaction severity). Severity will decrease with time, removing symptoms, but sensitivity will remain unchanged (in case of numerous transactions)
-      // may want to bypass sensitization for first pass through (more important for pregnancy)
-      dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
-    }
-    
-
-    // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
-    //Then check for three mismatch scenarios using OR statement. If so, go to HTR function [below]
-
-    if ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::AB)) || infusion->GetAdministeredBloodAntigen() == (CDM::enumBloodAntigen::O)) {
-      return;
-    } else if (((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::A))
-               || ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::B))
-               || ((m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) && infusion->GetAdministeredBloodAntigen() != (CDM::enumBloodAntigen::O))
-               || ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive)))) {
-      HTRvolume = HTRvolume + volumeToAdminister_mL;
-    }
-
-    if (HTRvolume > 0) {
-      dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
-    }
-    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    */
+    m_totalAdministered_uL = m_totalAdministered_uL + (volumeToAdminister_mL * 1000.0);
 
     if (volumeRemaining_mL < volumeToAdminister_mL) {
       volumeToAdminister_mL = volumeRemaining_mL;
@@ -520,16 +500,41 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ = m_venaCavaVascular->GetSubstanceQuantity(component->GetSubstance());
       double massIncrement_ug = volumeToAdminister_mL * component->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
-      if (compound->GetName() == "Blood" && component->GetSubstance().GetName()=="RedBloodCell") {
+
+      //Blood Transfusion/////////////////////////////////
+      if (compound->GetClassification() == CDM::enumSubstanceClass::WholeBlood) {
+        m_data.GetDrugs().GetTransfusionVolume().SetValue(m_data.GetDrugs().GetTransfusionVolume().GetValue(VolumeUnit::mL) + volumeToAdminister_mL, VolumeUnit::mL);
+        /* TACO CHECK 
+         if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
+           std::stringstream ss;
+           ss << "Patient is experiencing Transfusion Associated Circulatory Overload (TACO) due to greater than reccomended infusion rate";
+           Info(ss);
+        }
+         */
+        //Check for HTR
+        SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
+        SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
+
+        // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
+        if (patient.GetBloodType() == (CDM::enumBloodType::AB)) {
+          return;
+        } else if ((patient.GetBloodType() == (CDM::enumBloodType::O) && ((m_data.GetSubstances().GetAntigen_A().GetBloodConcentration(MassPerVolumeUnit::g_Per_mL) > 0) || m_data.GetSubstances().GetAntigen_B().GetBloodConcentration(MassPerVolumeUnit::g_Per_mL) > 0)) //(m_data.GetSubstances().IsActive(*m_AntigenA) || m_data.GetSubstances().IsActive(*m_AntigenB)))
+                   || ((m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) && (m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) { //(m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB)))
+          patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+        } else if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_OPositive")) {
+          m_data.GetDrugs().GetTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);  //Consider Renaming specific to Rh Factor
+          patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+        }   
+
         double AntigenA = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         double AntigenB = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         double AntigenAIncrement_ct = 0.0;
         double AntigenBIncrement_ct = 0.0;
-        if (infusion->GetAdministeredBloodAntigen() == CDM::enumBloodAntigen::A) {
+        if (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_ANegative") {
           AntigenAIncrement_ct = (massIncrement_ug/(2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc, replace with call to sub file
-        } else if (infusion->GetAdministeredBloodAntigen() == CDM::enumBloodAntigen::B) {
+        } else if (compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_BNegative") {
           AntigenBIncrement_ct = (massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
-        } else if (infusion->GetAdministeredBloodAntigen() == CDM::enumBloodAntigen::AB) {
+        } else if (compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_ABNegative") {
           AntigenBIncrement_ct = (0.5 * massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
           AntigenAIncrement_ct = (0.5 * massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
         }
@@ -541,6 +546,11 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->Balance(BalanceLiquidBy::Molarity);
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->Balance(BalanceLiquidBy::Molarity);
         subQ->Balance(BalanceLiquidBy::Mass);
+        /*if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive))) {
+          dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction(m_totalAdministered_uL);/////////////////////////////////////////////////////////////////////////
+          //m_data.GetActions() 
+        }*/
+        /////////////////////////////////////////////////
       } else {
         subQ->Balance(BalanceLiquidBy::Mass);
       }

@@ -155,6 +155,16 @@ public:
   double GetHemoglobinContent(const MassUnit& unit) const;
   //@}
 
+  /** @name HemoglobinLostToUrine
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_HemoglobinLostToUrine
+  *  @{*/
+  /// %Test if member has been allocated
+  bool HasHemoglobinLostToUrine() const;
+  /// Get member class, allocate if nullptr
+  SEScalarMass& GetHemoglobinLostToUrine();
+  double GetHemoglobinLostToUrine(const MassUnit& unit) const;
+  //@}
+
   /** @name OxygenSaturation
    *  @brief @copybrief Physiology_BloodChemistrySystemData_OxygenSaturation
    *  @{*/
@@ -373,6 +383,7 @@ protected:
   SEScalarFraction* m_CarbonMonoxideSaturation;
   SEScalarFraction* m_Hematocrit;
   SEScalarMass* m_HemoglobinContent;
+  SEScalarMass* m_HemoglobinLostToUrine;
   SEScalarFraction* m_OxygenSaturation;
   SEScalarFraction* m_OxygenVenousSaturation;
   SEScalarAmountPerVolume* m_Phosphate;

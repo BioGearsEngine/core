@@ -41,6 +41,11 @@ public:
   virtual bool HasName() const;
   virtual void InvalidateName();
 
+  virtual CDM::enumSubstanceClass::value GetClassification() const;
+  virtual void SetClassification(CDM::enumSubstanceClass::value subClass);
+  virtual bool HasClassification() const;
+  virtual void InvalidateClassification();
+
   bool HasComponent() const;
   bool HasComponent(const SESubstance& substance) const;
   const std::vector<SESubstanceConcentration*>& GetComponents();
@@ -51,6 +56,7 @@ public:
 
 protected:
   std::string m_Name;
+  CDM::enumSubstanceClass::value m_Classification;
 
   std::vector<SESubstanceConcentration*> m_Components;
   std::vector<const SESubstanceConcentration*> m_cComponents;

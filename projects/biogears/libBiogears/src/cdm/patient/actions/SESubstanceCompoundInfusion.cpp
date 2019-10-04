@@ -21,8 +21,6 @@ SESubstanceCompoundInfusion::SESubstanceCompoundInfusion(const SESubstanceCompou
   : SESubstanceAdministration()
   , m_Compound(compound)
 {
-  m_AdministeredBloodAntigen = (CDM::enumBloodAntigen::value)-1;
-  m_AdministeredBloodRhFactor = (CDM::enumBool::value)-1;
   m_Rate = nullptr;
   m_BagVolume = nullptr;
 }
@@ -35,8 +33,6 @@ SESubstanceCompoundInfusion::~SESubstanceCompoundInfusion()
 void SESubstanceCompoundInfusion::Clear()
 {
   SESubstanceAdministration::Clear();
-  m_AdministeredBloodAntigen = (CDM::enumBloodAntigen::value)-1;
-  m_AdministeredBloodRhFactor = (CDM::enumBool::value)-1;
   m_Rate = nullptr;
   m_BagVolume = nullptr;
   // m_Compound=nullptr; Keeping mapping!!
@@ -45,10 +41,6 @@ void SESubstanceCompoundInfusion::Clear()
 bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in)
 {
   SESubstanceAdministration::Load(in);
-  if (in.AdministeredBloodAntigen().present())
-    m_AdministeredBloodAntigen = in.AdministeredBloodAntigen().get();
-  if (in.AdministeredBloodRhFactor().present())
-    m_AdministeredBloodRhFactor = in.AdministeredBloodRhFactor().get();
   GetRate().Load(in.Rate());
   GetBagVolume().Load(in.BagVolume());
   return true;
@@ -74,10 +66,6 @@ CDM::SubstanceCompoundInfusionData* SESubstanceCompoundInfusion::Unload() const
 void SESubstanceCompoundInfusion::Unload(CDM::SubstanceCompoundInfusionData& data) const
 {
   SESubstanceAdministration::Unload(data);
-  if (HasAdministeredBloodAntigen())
-    data.AdministeredBloodAntigen(m_AdministeredBloodAntigen);
-  if (HasAdministeredBloodRhFactor())
-    data.AdministeredBloodRhFactor(m_AdministeredBloodRhFactor);
   if (m_Rate != nullptr)
     data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
   if (m_BagVolume != nullptr)
@@ -94,24 +82,6 @@ SEScalarVolumePerTime& SESubstanceCompoundInfusion::GetRate()
   if (m_Rate == nullptr)
     m_Rate = new SEScalarVolumePerTime();
   return *m_Rate;
-}
-
-bool SESubstanceCompoundInfusion::HasAdministeredBloodAntigen() const
-{
-  return m_AdministeredBloodAntigen == ((CDM::enumBloodAntigen::value)-1) ? false : true;
-}
-CDM::enumBloodAntigen::value SESubstanceCompoundInfusion::GetAdministeredBloodAntigen() const
-{
-  return m_AdministeredBloodAntigen;
-}
-
-bool SESubstanceCompoundInfusion::HasAdministeredBloodRhFactor() const
-{
-  return m_AdministeredBloodRhFactor == ((CDM::enumBool::value)-1) ? false : true;
-}
-CDM::enumBool::value SESubstanceCompoundInfusion::GetAdministeredBloodRhFactor() const
-{
-  return m_AdministeredBloodRhFactor;
 }
 
 bool SESubstanceCompoundInfusion::HasBagVolume() const
@@ -140,15 +110,22 @@ void SESubstanceCompoundInfusion::ToString(std::ostream& str) const
   str << "\n\tBag Volume: ";
   HasBagVolume() ? str << *m_BagVolume : str << "NaN";
   str << "\n\tSubstance Compound: " << m_Compound.GetName();
+  /* PRETTY SURE I CAN TRASH THIS SECTION
   /// \todo Will need to check for if substance infusion is blood and if so, antigen and rh factor must exist
-  if (m_Compound.GetName() == "Blood") {
+  if (m_Compound.GetClassification() == CDM::enumSubstanceClass::WholeBlood) {
     if (HasAdministeredBloodAntigen() && HasAdministeredBloodRhFactor()) {
       str << "\n\tAdministered Blood Type: ";
       str << m_AdministeredBloodAntigen << " " << m_AdministeredBloodRhFactor;
     } else {
+      //m_AdministeredBloodAntigen = (CDM::enumBloodAntigen::O);
+      //m_AdministeredBloodRhFactor = (CDM::enumBool::negative);
+      /*std::stringstream ss;
+      ss << m_4Agglutinate << ", " << m_RemovedRBC << ", " << TotalRBC << ", " << lostOxygen_percent << "!!!!!!!!!!!!! ";
+      Info(ss);
       Error("Must provide blood type being transfused to patient"); // Come back to look at how this is handled
     }
   }
+  */
   str << std::flush;
 }
 
