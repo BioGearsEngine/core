@@ -546,10 +546,6 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->Balance(BalanceLiquidBy::Molarity);
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->Balance(BalanceLiquidBy::Molarity);
         subQ->Balance(BalanceLiquidBy::Mass);
-        /*if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (infusion->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive))) {
-          dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction(m_totalAdministered_uL);/////////////////////////////////////////////////////////////////////////
-          //m_data.GetActions() 
-        }*/
         /////////////////////////////////////////////////
       } else {
         subQ->Balance(BalanceLiquidBy::Mass);

@@ -365,7 +365,7 @@ void BloodChemistry::Process()
   //  CalculateHemolyticTransfusionReaction();
   //} /*else if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (m_data.GetS == (CDM::enumBool::positive))) {
   //}   */ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HELP HERE///////////////////////
-  
+
   if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
     if (m_data.GetDrugs().GetTransfusionReactionVolume().GetValue(VolumeUnit::uL) > 0) {
       CalculateHemolyticTransfusionReaction(true);
@@ -380,7 +380,6 @@ void BloodChemistry::Process()
   m_data.GetDataTrack().Probe("pRBC3", m_p3Agglutinate);
   m_data.GetDataTrack().Probe("dRBC3", m_d3Agglutinate);
   m_data.GetDataTrack().Probe("RBC4", m_4Agglutinate);
-  
 
   //dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
 
@@ -752,44 +751,73 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   double TotalRBC;
   double patientAntigen_ct_per_uL;
   double donorAntigen_ct_per_uL;
-  double BloodVolume = m_venaCava->GetVolume(VolumeUnit::uL); //m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
+  double patientAntigen_ct;
+  double donorAntigen_ct;
+  double BloodVolume = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
+  const double rbcMass_ug = 2.7e-5;
   const double antigens_per_rbc = 2000000.0;
   const double agglutinin_per_rbc = 50.0;
 
-  double AntigenA = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
-  double AntigenB = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
-  double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double RBC_initial_ct = 0.0;
+  double AntA_initial_ct = 0.0;
+  double AntB_initial_ct = 0.0;
+  SESubstance& RBC_initial = m_data.GetSubstances().GetRBC();
+  SESubstance& AntigenA_initial = m_data.GetSubstances().GetAntigen_A();
+  SESubstance& AntigenB_initial = m_data.GetSubstances().GetAntigen_B();
 
-  if (rhMismatch == true) {
-    m_RhFactorMismatch = (antigens_per_rbc * rbcCount_ct_Per_uL) * m_data.GetDrugs().GetTransfusionReactionVolume().GetValue(VolumeUnit::uL); //Calculated to be count of mismatched factors, treated as "donor antigen" after
+  /////////////////////////////////////////////////
+  std::vector<SELiquidCompartment*> vascularcompts = m_data.GetCompartments().GetVascularLeafCompartments();
+  for (auto v : vascularcompts) {
+    SELiquidCompartment* compt = v;
+    double ComptVolume = compt->GetVolume().GetValue(VolumeUnit::uL);
+    RBC_initial_ct += (compt->GetSubstanceQuantity(RBC_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) * ComptVolume); //.SetValue(compt->GetSubstanceQuantity(Hemoglobin)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
+    AntA_initial_ct += (compt->GetSubstanceQuantity(AntigenA_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) * ComptVolume);
+    AntB_initial_ct += (compt->GetSubstanceQuantity(AntigenB_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) * ComptVolume);
   }
+  //////////////////////////////////////////////
 
-  //if (m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative) && (m_data.GetActions().GetPatientActions().GetSubstanceCompoundInfusions()->GetAdministeredBloodRhFactor() == (CDM::enumBool::positive)) {}
+  /*double AntigenA = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double AntigenB = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);*/
+
+  /////////////////////////////////////////////////////////////////////////////////
+  if (rhMismatch == true) {
+    m_RhFactorMismatch = (antigens_per_rbc * (RBC_initial_ct / BloodVolume)) * m_data.GetDrugs().GetTransfusionReactionVolume().GetValue(VolumeUnit::uL); //Calculated to be count of mismatched factors, treated as "donor antigen" after
+  }
+  /////////////////////////////////////////////////////////////////////////////////
+
   if (rhMismatch == false) {
     if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) {
-      donorAntigen_ct_per_uL = AntigenA + AntigenB;
-      patientAntigen_ct_per_uL = 0.0;
+      /*donorAntigen_ct_per_uL = AntigenA + AntigenB;
+      patientAntigen_ct_per_uL = 0.0;*/
+      donorAntigen_ct = AntA_initial_ct + AntB_initial_ct;
+      patientAntigen_ct = 0.0;
     } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) {
-      donorAntigen_ct_per_uL = AntigenB;
-      patientAntigen_ct_per_uL = AntigenA;
+      /*donorAntigen_ct_per_uL = AntigenB;
+      patientAntigen_ct_per_uL = AntigenA;*/
+      donorAntigen_ct = AntB_initial_ct;
+      patientAntigen_ct = AntA_initial_ct;
     } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) {
-      donorAntigen_ct_per_uL = AntigenA;
-      patientAntigen_ct_per_uL = AntigenB;
+      /*donorAntigen_ct_per_uL = AntigenA;
+      patientAntigen_ct_per_uL = AntigenB;*/
+      donorAntigen_ct = AntA_initial_ct;
+      patientAntigen_ct = AntB_initial_ct;
     }
   } else {
-    donorAntigen_ct_per_uL = m_RhFactorMismatch/BloodVolume;
-    patientAntigen_ct_per_uL = 0.0;
+    donorAntigen_ct = m_RhFactorMismatch;
+    patientAntigen_ct = 0.0;
   }
-  double ARatio = AntigenA / (AntigenB+AntigenA);
-  double BRatio = 1 - ARatio;
 
-  TotalRBC = rbcCount_ct_Per_uL * BloodVolume;
-  donorRBC = (donorAntigen_ct_per_uL * BloodVolume) / antigens_per_rbc;
-  patientRBC = TotalRBC - donorRBC; // Calculated this way to account for O cells still having no antigens
+  //TotalRBC = rbcCount_ct_Per_uL * BloodVolume;
+  //donorRBC = (donorAntigen_ct_per_uL * BloodVolume) / antigens_per_rbc;
+  //patientRBC = TotalRBC - donorRBC; // Calculated this way to account for O cells still having no antigens
+  TotalRBC = RBC_initial_ct;
+  donorRBC = donorAntigen_ct / antigens_per_rbc;
+  patientRBC = TotalRBC - donorRBC;
 
   double HealExp = 1.0 - (patientRBC / (5280000.0 * 4800000.0)); // uL of blood at steady state time ct/uL of rbc
-  BLIM(HealExp, 0.0,1.0);
-  double HealFactor = std::pow(100.0, HealExp); //estimate of baseline rbc molarity times full blood
+  BLIM(HealExp, 0.0, 1.0);
+  double HealFactor = std::pow(2.0, HealExp);
   double RBC_birth = HealFactor * m_data.GetSubstances().GetRBC().GetClearance().GetCellBirthRate().GetValue(FrequencyUnit::Per_s); //per s(increased by factor of 10)
   double RBC_death = m_data.GetSubstances().GetRBC().GetClearance().GetCellDeathRate(FrequencyUnit::Per_s); //per s
 
@@ -849,39 +877,41 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   m_4Agglutinate = newC4RBC;
   LLIM(m_4Agglutinate, 0.0);
 
-  double effectTune = 1.0;
+  ////////////////////////////////////////////////////////////////////////
+  double effectTune = 2e-1;
   double newAggglutinates;
   newAggglutinates = (m_4Agglutinate + (m_p3Agglutinate / 12.0)) - m_RemovedRBC; // p3Agglutinates partially removed to scale for controlled donor cells (multiplied by 4 in next step)
   double deadCells_percent = ((effectTune * (newAggglutinates * 4.0)) / TotalRBC);
-  double lostOxygen_percent = deadCells_percent * 5.0;
   BLIM(deadCells_percent, 0.0, 1.0);
-  BLIM(lostOxygen_percent, 0.0, 1.0);
-  deadCells_percent = 1.0 - deadCells_percent;
+  double lostOxygen_percent = deadCells_percent; //  / 5.0; //  *5.0; smaller number here removes less oxygen
+  double liveCells_percent = 1.0 - deadCells_percent;
   lostOxygen_percent = 1.0 - lostOxygen_percent;
-  double metabolicIncrease = 1.0 + (deadCells_percent/12500.0);
+  double metabolicIncrease = 1.0 + (deadCells_percent / 50.0); // smaller number here increases metabolism
   /*std::stringstream ss;
   ss << m_4Agglutinate << ", " << m_RemovedRBC << ", " << TotalRBC << ", " << lostOxygen_percent << "!!!!!!!!!!!!! ";
   Info(ss);*/
-  SESubstance& RBC_final = m_data.GetSubstances().GetRBC();
+  //SESubstance& RBC_final = m_data.GetSubstances().GetRBC();
   SESubstance& Hemoglobin = m_data.GetSubstances().GetHb();
   SESubstance& HemoglobinO2 = m_data.GetSubstances().GetHbO2();
   SESubstance& HemoglobinCO2 = m_data.GetSubstances().GetHbCO2();
   SESubstance& HemoglobinCO = m_data.GetSubstances().GetHbCO();
   SESubstance& HemoglobinO2CO2 = m_data.GetSubstances().GetHbO2CO2();
   SESubstance& Oxygen = m_data.GetSubstances().GetO2();
-  SESubstance& AntA_final = m_data.GetSubstances().GetAntigen_A();
-  SESubstance& AntB_final = m_data.GetSubstances().GetAntigen_B();
+  //SESubstance& AntA_final = m_data.GetSubstances().GetAntigen_A();
+  //SESubstance& AntB_final = m_data.GetSubstances().GetAntigen_B();
 
   m_RemovedRBC = m_4Agglutinate + (m_p3Agglutinate / 12.0);
   //double initialHb = GetHemoglobinContent(MassUnit::g)*10000.0;
 
-  std::vector<SELiquidCompartment*> vascularcompts = m_data.GetCompartments().GetVascularLeafCompartments();
-  for (auto v : vascularcompts) {
+  std::vector<SELiquidCompartment*> vascularcompts2 = m_data.GetCompartments().GetVascularLeafCompartments();
+  for (auto v : vascularcompts2) {
     SELiquidCompartment* compt = v;
-    compt->GetSubstanceQuantity(Hemoglobin)->GetMass().SetValue(compt->GetSubstanceQuantity(Hemoglobin)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
-    compt->GetSubstanceQuantity(HemoglobinO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinO2)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
-    compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
-    compt->GetSubstanceQuantity(HemoglobinO2CO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinO2CO2)->GetMass(MassUnit::g) * deadCells_percent, MassUnit::g);
+
+    double ComptVolume = compt->GetVolume().GetValue(VolumeUnit::uL);
+    compt->GetSubstanceQuantity(Hemoglobin)->GetMass().SetValue(compt->GetSubstanceQuantity(Hemoglobin)->GetMass(MassUnit::g) * liveCells_percent, MassUnit::g);
+    compt->GetSubstanceQuantity(HemoglobinO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinO2)->GetMass(MassUnit::g) * liveCells_percent, MassUnit::g);
+    compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass(MassUnit::g) * liveCells_percent, MassUnit::g);
+    compt->GetSubstanceQuantity(HemoglobinO2CO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinO2CO2)->GetMass(MassUnit::g) * liveCells_percent, MassUnit::g);
     compt->GetSubstanceQuantity(Oxygen)->GetMass().SetValue(compt->GetSubstanceQuantity(Oxygen)->GetMass(MassUnit::g) * lostOxygen_percent, MassUnit::g);
     compt->GetSubstanceQuantity(Hemoglobin)->Balance(BalanceLiquidBy::Mass);
     compt->GetSubstanceQuantity(HemoglobinO2)->Balance(BalanceLiquidBy::Mass);
@@ -889,9 +919,23 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
     compt->GetSubstanceQuantity(HemoglobinO2CO2)->Balance(BalanceLiquidBy::Mass);
     compt->GetSubstanceQuantity(Oxygen)->Balance(BalanceLiquidBy::Mass);
 
+    compt->GetSubstanceQuantity(RBC_initial)->GetMolarity().SetValue(compt->GetSubstanceQuantity(RBC_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) * liveCells_percent, AmountPerVolumeUnit::ct_Per_uL);
+    double AntA_Molarity = compt->GetSubstanceQuantity(AntigenA_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL);
+    double AntB_Molarity = compt->GetSubstanceQuantity(AntigenA_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL);
+    double AntigensLost = (deadCells_percent * (AntA_Molarity + AntB_Molarity)) / 2.0;
+    double AntARemaining_ct_per_uL = compt->GetSubstanceQuantity(AntigenA_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) - AntigensLost;
+    double AntBRemaining_ct_per_uL = compt->GetSubstanceQuantity(AntigenB_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) - AntigensLost;
+    LLIM(AntARemaining_ct_per_uL, 0.0);
+    LLIM(AntBRemaining_ct_per_uL, 0.0);
+    compt->GetSubstanceQuantity(AntigenA_initial)->GetMolarity().SetValue(AntARemaining_ct_per_uL, AmountPerVolumeUnit::ct_Per_uL);
+    compt->GetSubstanceQuantity(AntigenB_initial)->GetMolarity().SetValue(AntBRemaining_ct_per_uL, AmountPerVolumeUnit::ct_Per_uL);
+    compt->GetSubstanceQuantity(RBC_initial)->Balance(BalanceLiquidBy::Molarity);
+    compt->GetSubstanceQuantity(AntigenA_initial)->Balance(BalanceLiquidBy::Molarity);
+    compt->GetSubstanceQuantity(AntigenB_initial)->Balance(BalanceLiquidBy::Molarity);
   }
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::J_Per_s) * metabolicIncrease, PowerUnit::J_Per_s); //core temp increase
-  double RBC_updated = m_venaCava->GetSubstanceQuantity(RBC_final)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) - ((newAggglutinates * 4.0) / BloodVolume);
+
+  /*double RBC_updated = m_venaCava->GetSubstanceQuantity(RBC_final)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) - ((newAggglutinates * 4.0) / BloodVolume);
   LLIM(RBC_updated, 0.0);
   m_venaCava->GetSubstanceQuantity(RBC_final)->GetMolarity().SetValue(RBC_updated, AmountPerVolumeUnit::ct_Per_uL);
   if (rhMismatch == false) {
@@ -904,7 +948,13 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   } else {
     m_RhFactorMismatch = m_RhFactorMismatch - ((newAggglutinates * 2.0 * 2000000.0) / BloodVolume);
     LLIM(m_RhFactorMismatch, 0.0);
+  }*/
+  ////////////////////////////////////////////////////////////////////////////////
+  if (rhMismatch == true) {
+    m_RhFactorMismatch = m_RhFactorMismatch - ((newAggglutinates * 2.0 * 2000000.0) / BloodVolume);
+    LLIM(m_RhFactorMismatch, 0.0);
   }
+  /////////////////////////////////////////////////////////////////////////////////
 
   double totalHb_g = m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHb(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g);
   double totalHbO2_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
