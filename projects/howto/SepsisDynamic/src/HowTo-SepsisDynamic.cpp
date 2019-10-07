@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
@@ -45,7 +46,7 @@ void HowToDynamicSepsis()
 
   // Create the engine and load the infection state selected:  1 = InfectionSevere_36hr, 2 = InfectionSevere_48hr
   // This call will block while the engine stabilizes
-  DynamicSepsis sepThread("./DynamicSepsis.csv", infectionState);
+  DynamicSepsis sepThread("./DynamicSepsis.log", infectionState);
   // When it comes back, the engine will be running, waiting for your input
 
   int action;
@@ -114,6 +115,12 @@ DynamicSepsis::DynamicSepsis(const std::string& logfile, int infectionInput)
     m_bg->GetLogger()->Error("Could not load state, check to make sure it exists");
     return;
   }
+
+  //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
+  m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSepsisDynamic.csv");
+  //We do not need to add any data requests to the manager because they have already been initialized in the simulations that generated the septic patient states.
+
+
   //Load substances we might use
   SESubstanceCompound* antibiotic = m_bg->GetSubstanceManager().GetCompound("PiperacillinTazobactam");
   SESubstanceCompound* saline = m_bg->GetSubstanceManager().GetCompound("Saline");
@@ -131,6 +138,8 @@ DynamicSepsis::DynamicSepsis(const std::string& logfile, int infectionInput)
 
 DynamicSepsis::~DynamicSepsis()
 {
+  m_runThread = false;
+  std::this_thread::sleep_for(std::chrono::seconds(2));
   SAFE_DELETE(m_antibiotic);
   SAFE_DELETE(m_pressor);
   SAFE_DELETE(m_saline);
@@ -211,6 +220,7 @@ void DynamicSepsis::AdvanceTime()
   while (m_runThread) {
     m_mutex.lock();
     m_bg->AdvanceModelTime(1.0, TimeUnit::s);
+    m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
     m_mutex.unlock();
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
   }

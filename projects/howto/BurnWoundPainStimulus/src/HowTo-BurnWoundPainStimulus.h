@@ -11,5 +11,44 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <mutex>
+#include <thread>
+
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 void HowToBurnWoundPainStimulus();
+
+namespace biogears {
+class SEBurnWound;
+class SESubstance;
+class SESubstanceBolus;
+class SESubstanceCompoundInfusion;
+}
+
+class BurnThread {
+public:
+  BurnThread(const std::string& logFile, double &tbsa);
+  virtual ~BurnThread();
+
+  void AdministerKetamine(double &bolus);
+  void SetRingersInfusionRate(double& volume, double& rate);
+  void Status();
+
+  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+
+  protected:
+  void AdvanceTime();
+
+  std::thread m_burnThread;
+  std::mutex m_mutex;
+  bool m_runThread;
+
+  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+
+  biogears::SEBurnWound* m_burnWound;
+  biogears::SESubstanceBolus* m_ketamineBolus;
+  biogears::SESubstanceCompoundInfusion* m_ringers;
+  double m_ivBagVolume_mL;
+
+};
