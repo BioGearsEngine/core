@@ -40,8 +40,8 @@ protected:
 public:
   virtual ~Gastrointestinal() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
-  static constexpr char const * const  TypeTag() { return "Gastrointestinal"; }
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); } //! Hopefully this returns a unique ID for every type
+  static constexpr char const* const TypeTag() { return "Gastrointestinal"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -75,7 +75,7 @@ protected:
   void AbsorbMeal(double duration_s);
   void AbsorbNutrients(double duration_s);
 
-  void ProcessDrugCAT();  //Compartment, absorption, and transit model for oral drug dosing
+  void ProcessDrugCAT(); //Compartment, absorption, and transit model for oral drug dosing
 
   void ChymeSecretion();
   // Serializable member variables (Set in Initialize and in schema)
@@ -111,7 +111,6 @@ protected:
   std::vector<double> m_TransitRate_Per_s;
   std::vector<double> m_TransitBileSalts_mM;
 
-
   // We want to start simulation time 0 (after stabilization) with the initial gut mass from the meal specified in the config file
   std::map<SELiquidSubstanceQuantity*, double> m_InitialSubstanceMasses_ug; // Used only during the final AtSteadyState
 
@@ -122,5 +121,12 @@ protected:
   // We do not decrement stomach contents during stabilization
   double m_secretionRate_mL_Per_s;
   double m_dT_s;
+
+  std::vector<double> OtfcTransit;
+  std::vector<double> OtfcEnterocyte;
+  double OtfcMetabolized;
+  double OtfcAbsorbed;
+  double OtfcTotalLumen;
+  double OtfcTotalEnterocyte;
 };
 }

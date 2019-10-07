@@ -188,6 +188,11 @@ void Drugs::SetUp()
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
   m_totalAdministered_uL = 0.0;
   DELETE_MAP_SECOND(m_BolusAdministrations);
+
+  OtfcBuccal = std::vector<double>(7);
+  OtfcSublingual = std::vector<double>(7);
+  OtfcMouth = 0.0;
+  OtfcSwallowed = 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -238,6 +243,11 @@ void Drugs::Process()
   if (m_data.GetConfiguration().IsPDEnabled()) {
     CalculateDrugEffects();
   }
+
+  m_data.GetDataTrack().Probe("Otfc_Mouth", OtfcMouth);
+  m_data.GetDataTrack().Probe("Otfc_Swallowed", OtfcSwallowed);
+  m_data.GetDataTrack().Probe("Oftc_Buccal", OtfcBuccal);
+  m_data.GetDataTrack().Probe("Otfc_Sublingual", OtfcSublingual);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -946,17 +956,14 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
     //plasmaMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
     //sub->GetPlasmaConcentration().SetValue(plasmaMass_ug / plasmaVolume_mL, MassPerVolumeUnit::ug_Per_mL);
 
-    //--New better way---
+    //--Assume that vena cava concentration is representative blood average (this is what we do in BloodChemistry) -
     double bloodPlasmaRatio = 1.0; //Assume equal distribution for subs without a defined BP ratio
-    double massInBlood_ug = 0.0;
     if (sub->GetPK().GetPhysicochemicals().HasBloodPlasmaRatio()) {
       bloodPlasmaRatio = sub->GetPK().GetPhysicochemicals().GetBloodPlasmaRatio().GetValue();
     }
-    if (sub->HasMassInBlood()) {
-      massInBlood_ug = sub->GetMassInBlood(MassUnit::ug);
-    }
+    double bloodConcentration_ug_Per_mL = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava)->GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
     //K_bp = Cb/Cp  ---> Cp = Cb/K_bp
-    double plasmaConcentration_ug_Per_mL = massInBlood_ug / bloodVolume_mL / bloodPlasmaRatio;
+    double plasmaConcentration_ug_Per_mL = bloodConcentration_ug_Per_mL / bloodPlasmaRatio;
     sub->GetPlasmaConcentration().SetValue(plasmaConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
     //Increment area under curve--should be done for subs w/ PK
     double deltaT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
@@ -1134,21 +1141,20 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   const double subPka = sub->GetPK()->GetPhysicochemicals()->GetPrimaryPKA();
   const double subBloodPlasmaRatio = sub->GetPK()->GetPhysicochemicals()->GetBloodPlasmaRatio();
   const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  const double subSolubility_ug_Per_mL = 200.0; //Add this to sub CDM later if we do more tranmucosal subs
   //Defining mass transfer rates to stomach here so that we can accout for both routes if need be
   double rateSwallowedDrugToStomach_ug_Per_s = 0.0; //Transmucosal route
   double rateDrugDissolutionInStomach_ug_Per_s = 0.0; //Gastrointestinal route
   //Characteristic mouth parameters
   const double salivaThickness_cm = 30.0e-4; //Tuned to get dissolution of OTFC in right time frame
-  const double buccalSA_cm2 = 50.0;
-  const double buccalThickness_cm = 400.0e-4; //@cite Xia2015Development
+  const double buccalSA_cm2 = 60.0;
+  const double buccalThickness_cm = 450.0e-4; //@cite Xia2015Development
   const double buccalH_cm = buccalThickness_cm / 6.0;
   const double buccalLaminaThickness_cm = buccalH_cm; //This ensures that our mesh points are equally spaced
   const double volumeSaliva_mL = 1.0; //@cite Xia2015Development
   const double volumeBuccalSlice_mL = buccalH_cm * buccalSA_cm2; //volume of the Nth epithelial layer
   const double volumeBuccalLamina_mL = buccalLaminaThickness_cm * buccalSA_cm2;
   const double bloodSupplyBuccal_mL_Per_s = 2.4 / 60.0 * buccalSA_cm2; // @cite Sattar2014, buccal blood supply = 2.4 mL/min/cm2
-  const double tongueSA_cm2 = 15.0; //@cite Xia2015Development
+  const double tongueSA_cm2 = 20.0; //@cite Xia2015Development
   const double tongueThickness_cm = 125.0e-4; //@cite Xia2015Development
   const double tongueH_cm = tongueThickness_cm / 6.0;
   const double tongueLaminaThickness_cm = tongueH_cm;
@@ -1173,7 +1179,7 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   }
   const double Diff_Saliva_cm2_Per_s = 8.0e-6; //Tuned to fentanyl response
   //Rate constants
-  const double kSwallow_mL_Per_s = 0.5 / 60; //Tuned so that 75% of fentanyl dose is swallowed, value is consistent with rate of saliva production between 0.36 and 0.5 mL/min (@cite Xia2015Development @cite Sattar2014)
+  const double kSwallow_mL_Per_s = 0.55 / 60; //Tuned so that 75% of fentanyl dose is swallowed, value is consistent with rate of saliva production between 0.36 and 0.5 mL/min (@cite Xia2015Development @cite Sattar2014)
   const double kDis_mL_Per_s_g = 3.0 * Diff_Saliva_cm2_Per_s / (rho_g_Per_mL * radius_cm * salivaThickness_cm); //Noyes-Whitney equation
   const double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   //Values from last time step
@@ -1242,6 +1248,12 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   }
   ot->SetBuccalConcentrations(buccalCon, MassPerVolumeUnit::ug_Per_mL);
   ot->SetSublingualConcentrations(sublingualCon, MassPerVolumeUnit::ug_Per_mL);
+  
+  OtfcBuccal = buccalCon;
+  OtfcSublingual = sublingualCon;
+  OtfcMouth = ot->GetMouthSolidMass().GetValue(MassUnit::ug);
+  OtfcSwallowed += (rateSwallowedDrugToStomach_ug_Per_s * m_dt_s);
+
   //Put swallowed drug in GI transit model as dissolved drug in stomach
   m_data.GetGastrointestinal().GetDrugTransitState(sub)->IncrementStomachDissolvedMass(rateSwallowedDrugToStomach_ug_Per_s * dT_s, MassUnit::ug);
 

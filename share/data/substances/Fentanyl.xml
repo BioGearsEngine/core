@@ -7,7 +7,7 @@
   <Clearance>
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.21"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.15"/>
       <IntrinsicClearance readOnly="false" unit="mL/min kg" value="11"/>
       <RenalClearance readOnly="false" unit="mL/min kg" value="0.7"/>
       <SystemicClearance readOnly="false" unit="mL/min kg" value="11.7"/>
@@ -18,12 +18,12 @@
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
-      <AcidDissociationConstant readOnly="false" value="8.3"/>
+      <AcidDissociationConstant readOnly="false" value="9"/>
       <BindingProtein>Albumin</BindingProtein>
-      <BloodPlasmaRatio readOnly="false" value="0.87"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.21"/>
-      <IonicState>WeakBase</IonicState>
-      <LogP readOnly="false" value="2.9"/>
+      <BloodPlasmaRatio readOnly="false" value="0.89"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.15"/>
+      <IonicState>Base</IonicState>
+      <LogP readOnly="false" value="4.05"/>
       <HydrogenBondCount readOnly="false" value="2"/>
       <PolarSurfaceArea readOnly="false" value="23.6"/>
     </Physicochemicals>
@@ -31,22 +31,22 @@
   <Pharmacodynamics>
     <Bronchodilation readOnly="false" value="0"/>
     <DiastolicPressureModifier readOnly="false" value="-0.05"/>
-    <EC50 readOnly="false" unit="ug/mL" value="0.003"/>
-    <EMaxShapeParameter readOnly="false" value="2.5"/>
-    <HeartRateModifier readOnly="false" value="-0.05"/>
+    <EC50 readOnly="false" unit="ug/mL" value="0.007"/>
+    <EMaxShapeParameter readOnly="false" value="3"/>
+    <HeartRateModifier readOnly="false" value="-0.02"/>
     <HemorrhageModifier readOnly="false" value="0"/>
     <NeuromuscularBlock readOnly="false" value="0"/>
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="-0.5"/>
       <SizeModifier readOnly="false" value="-0.33"/>
     </PupillaryResponse>
-    <RespirationRateModifier readOnly="false" value="-0.5"/>
+    <RespirationRateModifier readOnly="false" value="-1"/>
     <Sedation readOnly="false" value="0"/>
     <SystolicPressureModifier readOnly="false" value="-0.1"/>
     <TidalVolumeModifier readOnly="false" value="0"/>
     <TubularPermeabilityModifier readOnly="false" value="0"/>
-    <CentralNervousModifier readOnly="false" value="0.8"/>
+    <CentralNervousModifier readOnly="false" value="1"/>
     <AntibacterialEffect readOnly="false" unit="1/hr" value="0"/>
-    <EffectSiteRateConstant readOnly="false" unit="1/min" value="0.0422"/>
+    <EffectSiteRateConstant readOnly="false" unit="1/min" value="0.145"/>
   </Pharmacodynamics>
 </Substance>

@@ -532,25 +532,19 @@ void Nervous::ChemoreceptorFeedback()
     m_PeripheralBloodGasInteractionBaseline_Hz = psi;
   }
 
+  //Apply effects of opioids that depress central nervous activity
+  double drugCNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
+
+  double centralInput = arterialCO2Pressure_mmHg - m_ArterialCarbonDioxideSetPoint_mmHg;
+  double peripheralInput = m_ChemoreceptorFiringRate_Hz - m_ChemoreceptorFiringRateSetPoint_Hz;
+
   //Evaluate model derivatives pertaining to change in chemoreceptor firing rate, and changes in central and peripheral contributions to ventilation
   double dFiringRate_Hz = (1.0 / firingRateTimeConstant_s) * (-m_ChemoreceptorFiringRate_Hz + psi) * m_dt_s;
-  double dCentralVentilation_L_Per_min = (1.0 / centralTimeConstant_s) * (-m_CentralVentilationDelta_L_Per_min + centralGainConstant_L_Per_min_mmHg * (arterialCO2Pressure_mmHg - m_ArterialCarbonDioxideSetPoint_mmHg)) * m_dt_s;
-  double dPeripheralVentilation_L_Per_min = (1.0 / peripheralTimeConstant_s) * (-m_PeripheralVentilationDelta_L_Per_min + peripheralGainConstant_L_Per_min_Hz * (m_ChemoreceptorFiringRate_Hz - m_ChemoreceptorFiringRateSetPoint_Hz)) * m_dt_s;
+  double dCentralVentilation_L_Per_min = (1.0 / centralTimeConstant_s) * (-m_CentralVentilationDelta_L_Per_min + centralGainConstant_L_Per_min_mmHg * centralInput) * m_dt_s;
+  double dPeripheralVentilation_L_Per_min = (1.0 / peripheralTimeConstant_s) * (-m_PeripheralVentilationDelta_L_Per_min + peripheralGainConstant_L_Per_min_Hz * peripheralInput) * m_dt_s;
 
-  //Calculate change in ventilation assuming no metabolic or drug effects
-  double nextTargetVentilation_L_Per_min = m_data.GetPatient().GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min) + m_CentralVentilationDelta_L_Per_min + m_PeripheralVentilationDelta_L_Per_min;
-
-  //Apply effects of opioids that depress central nervous activity (currently morphine and fentanyl)
-  double drugCNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
-  if (drugCNSModifier > ZERO_APPROX) {
-    for (auto drug : m_data.GetSubstances().GetActiveSubstances()) {
-      if (drug->GetClassification() == CDM::enumSubstanceClass::Opioid || drug->GetName() == "Sarin") {
-        nextTargetVentilation_L_Per_min *= (1.0 - drugCNSModifier);
-        break;  //Don't evaluate more than once if for some reason we give someone morphine and fentanyl
-      }
-    }
-  }
-  
+  //Calculate change in ventilation assuming no metabolic effects--The CNS modifier is applied such that at high values the chemoreceptors cannot force a change from baseline
+  double nextTargetVentilation_L_Per_min = m_data.GetPatient().GetTotalVentilationBaseline(VolumePerTimeUnit::L_Per_min) + std::exp(-5.0 * drugCNSModifier) *(m_CentralVentilationDelta_L_Per_min + m_PeripheralVentilationDelta_L_Per_min);
 
   //Apply metabolic effects. The modifier is tuned to achieve the correct respiratory response for near maximal exercise.
   //A linear relationship is assumed for the respiratory effects due to increased metabolic exertion

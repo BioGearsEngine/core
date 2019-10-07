@@ -108,5 +108,10 @@ protected:
   SESubstance* m_Sarin;
   SESubstance* m_Pralidoxime;
 
+  std::vector<double> OtfcBuccal;
+  std::vector<double> OtfcSublingual;
+  double OtfcMouth;
+  double OtfcSwallowed;
+
 };
 }

@@ -167,13 +167,20 @@ void Gastrointestinal::SetUp()
   // [0] = Stomach, [1] = Duodenum, [2] = Jejunum1, [3] = Jejunum2, [4] = Ileum1, [5] = Ileum2, [6] = Ileum3, [7] = Cecum, [8] = Colon
   // Stomach does not need every parameter (vol, SA), in which case we leave the value as 0
   // Parameters obtained from Yang2016Application
-  m_TransitPH = { 3.1, 5.7, 5.8, 6.2, 6.6, 6.9, 7.4, 6.4, 6.8 };		//Stomach, duodenum, jejunum1/2 set to be halfway between fasted/fed states 
+  m_TransitPH = { 3.1, 5.7, 5.8, 6.2, 6.6, 6.9, 7.4, 6.4, 6.8 }; //Stomach, duodenum, jejunum1/2 set to be halfway between fasted/fed states
   m_TransitSurfaceArea_cm2 = { 0.0, 19995., 77482., 69217., 60952., 52171., 43906., 1964., 2961. }; //surface area of each segment, accounting for villi
   m_TransitVolume_mL = { 50.0, 48., 175., 140., 109., 79., 56., 53., 57. }; //volume of each segment
   m_TransitRate_Per_s = { 2.0 / 3600.0, 3.846 / 3600., 1.053 / 3600., 1.316 / 3600., 1.695 / 3600., 2.326 / 3600., 3.226 / 3600., 0.222 / 3600., 0.074 / 3600. }; //transit rate constant in units 1/s
   m_TransitBileSalts_mM = { 0.0, 8.6, 7.25, 6.245, 4.375, 3.575, 0.435, 0., 0. }; //avg between fasted and fed states
   //One exception--stomach has no enterocyte layer, so this vector is only length 8 (same length as GetEnteroycyteMasses returns)
   m_EnterocyteVolumeFraction = { 7.7e-4, 1.9e-3, 1.9e-3, 1.4e-3, 1.4e-3, 1.4e-3, 4.0e-4, 8.5e-4 }; //volume of enterocyte as fraction of total body weight (assuming density = 1 g /mL)
+
+  OtfcTransit = std::vector<double>(9);
+  OtfcEnterocyte = std::vector<double>(8);
+  OtfcMetabolized = 0.0;
+  OtfcAbsorbed = 0.0;
+  OtfcTotalEnterocyte = 0.0;
+  OtfcTotalLumen = 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -854,6 +861,12 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
 void Gastrointestinal::Process()
 {
   ProcessDrugCAT();
+  m_data.GetDataTrack().Probe("Otfc_Absorbed", OtfcAbsorbed);
+  m_data.GetDataTrack().Probe("Otfc_Metabolized", OtfcMetabolized);
+  m_data.GetDataTrack().Probe("Otfc_Enterocytes", OtfcEnterocyte);
+  m_data.GetDataTrack().Probe("Otfc_Transit", OtfcTransit);
+  m_data.GetDataTrack().Probe("Otfc_TotalEnterocyte", OtfcTotalEnterocyte);
+  m_data.GetDataTrack().Probe("Otfc_TotalLumen", OtfcTotalLumen);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -891,7 +904,7 @@ void Gastrointestinal::ProcessDrugCAT()
     sub = catState.first;
     cat = catState.second;
 
-	//-----------------------------Model Parameters----------------------------------------
+    //-----------------------------Model Parameters----------------------------------------
     //GI
     const double villousBloodFlow_mL_Per_s = 5.0;
     const double fBlood = 1.0 / 8.0;
@@ -909,16 +922,18 @@ void Gastrointestinal::ProcessDrugCAT()
     const double polarSurfaceArea = subData->GetPolarSurfaceArea();
     const double logP = subData->GetLogP();
     const double pKa = subData->GetPrimaryPKA();
-    double pKa2 = 0;		//Only used for Zwitterions--can't set const because we need to reset it in switch/case below
+    double pKa2 = 0; //Only used for Zwitterions--can't set const because we need to reset it in switch/case below
     const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-    double gutKP = 1.0;		//First time step, we won't have the tissue kinetics defined yet
+    double gutKP = 1.0; //First time step, we won't have the tissue kinetics defined yet
     if (sub->GetPK()->HasTissueKinetics()) {
-      gutKP = sub->GetPK()->GetTissueKinetics(BGE::TissueCompartment::Gut)->GetPartitionCoefficient();
+      if (sub->GetPK()->GetTissueKinetics(BGE::TissueCompartment::Gut)->HasPartitionCoefficient()) {
+        gutKP = sub->GetPK()->GetTissueKinetics(BGE::TissueCompartment::Gut)->GetPartitionCoefficient();
+      }
     }
     double fMetabolized = 0.0;
     if (sub->GetName() == "Fentanyl") {
-      fMetabolized = 0.25;  //If more drugs needs this we can think about adding it to substance clearance schema
-	}
+      fMetabolized = 0.25; //If more drugs needs this we can think about adding it to substance clearance schema
+    }
     //Dissolution data
     const double particleRadius_cm = 5.0e-4; //default for now
     const double subDensity_g_Per_mL = 1.0; //default for now
@@ -928,7 +943,7 @@ void Gastrointestinal::ProcessDrugCAT()
     //Permeability and solubility--Use relationship from Wolk2019Segmental (perm) and Yang2016Appliation (sol)
     const double A = 3.67e-5, B = 3.45e-5, C = -1.04e-7, D = -5.48e-6, E = -2.3e-8, F = 1.46e-4; //Permeability constants
     const double constTerms = A * logP + C * molarMass_g_Per_mol + D * hydrogenBondCount + E * polarSurfaceArea + F; //This part of permeability equation is constant across small intestine
-    const double solWaterStd_ug_Per_mL = 5.0e3; //Tuned do that dissolution of moxifloxacin happens in ~15 min 
+    const double solWaterStd_ug_Per_mL = 5.0e3; //Tuned do that dissolution of moxifloxacin happens in ~15 min
     const double solubilityRatio = std::pow(10.0, 0.606 * logP + 2.234); //Yang2016Application
     std::vector<double> fracUnionized; //fraction of drug un-ionized in each GI compartment
     std::vector<double> permeability_cm_Per_s; //drug permeability in each GI compartment
@@ -938,10 +953,10 @@ void Gastrointestinal::ProcessDrugCAT()
     double solBileSalts_ug_Per_mL = 0.0;
     double solubilityCapacity = 0.0;
     double ionTerm = 0.0;
-	//Zwitterion constant--our only Zwitterion is Moxifloxacin.  If this changes, we need to make these values substance specific!  See Langlois2004 for microconstant data
+    //Zwitterion constant--our only Zwitterion is Moxifloxacin.  If this changes, we need to make these values substance specific!  See Langlois2004 for microconstant data
     double logk11 = -7.46;
 
-	//------------------------------Calculate location specific ionization, permeability, and solubility-----------------------
+    //------------------------------Calculate location specific ionization, permeability, and solubility-----------------------
     std::vector<double>::iterator phIt;
     std::vector<double>::iterator solIt;
     for (phIt = m_TransitPH.begin(), solIt = m_TransitBileSalts_mM.begin(); phIt != m_TransitPH.end() && solIt != m_TransitBileSalts_mM.end(); ++phIt, ++solIt) {
@@ -960,10 +975,10 @@ void Gastrointestinal::ProcessDrugCAT()
           std::stringstream ss;
           ss << "Gastrointestinal::ProcessCAT:  Zwitterions needs two pKa's defined" << std::endl;
           Error(ss);
-		}
+        }
         pKa2 = subData->GetSecondaryPKA();
-		//This tells us what fraction is in the zwitterionic form (as opposed to fully deprotonated or fully protonated)
-        ionTerm = (std::pow(10.0, -pKa - pKa2) + std::pow(10.0, -pKa - *phIt) + std::pow(10.0, -2 * (*phIt))) / (std::pow(10.0, logk11-*phIt));
+        //This tells us what fraction is in the zwitterionic form (as opposed to fully deprotonated or fully protonated)
+        ionTerm = (std::pow(10.0, -pKa - pKa2) + std::pow(10.0, -pKa - *phIt) + std::pow(10.0, -2 * (*phIt))) / (std::pow(10.0, logk11 - *phIt));
         break;
       default:
         ionTerm = 1.0;
@@ -972,7 +987,7 @@ void Gastrointestinal::ProcessDrugCAT()
       permeability_cm_Per_s.push_back(constTerms + B * std::log10(1.0 / ionTerm)); //Note that this gives us a "stomach permeability" that we do not use
       //Solubility--could look at Ando2015New for this as well
       solWaterAdjusted_ug_Per_mL = std::pow(10.0, std::log10(solWaterStd_ug_Per_mL) + std::log10(ionTerm));
-	  //Using std sol instead of adjusting because there are some weird pH effects going on that need to be investigated further
+      //Using std sol instead of adjusting because there are some weird pH effects going on that need to be investigated further
       solubilityCapacity = solWaterStd_ug_Per_mL * (18.0 / molarMass_g_Per_mol) * 1.0e-6;
       solBileSalts_ug_Per_mL = solubilityRatio * solubilityCapacity * molarMass_g_Per_mol * (*solIt);
       solubility_ug_Per_mL.push_back(solWaterStd_ug_Per_mL + solBileSalts_ug_Per_mL);
@@ -1040,6 +1055,12 @@ void Gastrointestinal::ProcessDrugCAT()
     cat->GetTotalMassExcreted().IncrementValue((lumenSolidMasses_ug[8] + lumenDissolvedMasses_ug[8]) * m_TransitRate_Per_s[8] * dT_s, MassUnit::ug);
     m_vSmallIntestine->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(totalEffluxToPortal_ug_Per_s * dT_s, MassUnit::ug);
 
+    OtfcTransit = lumenDissolvedMasses_ug;
+    OtfcEnterocyte = enterocyteMasses_ug;
+    OtfcAbsorbed += (totalEffluxToPortal_ug_Per_s * dT_s);
+    OtfcMetabolized += (totalMetabolized_ug_Per_s * dT_s);
+    OtfcTotalEnterocyte = cat->GetTotalMassInEnterocytes(MassUnit::ug);
+    OtfcTotalLumen = cat->GetTotalDissolvedMassInLumen(MassUnit::ug);
   }
 }
 }
