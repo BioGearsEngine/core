@@ -52,8 +52,7 @@ SEDrugSystem::SEDrugSystem(Logger* logger)
   m_RespirationRateChange = nullptr;
   m_SedationLevel = nullptr;
   m_TidalVolumeChange = nullptr;
-  m_TransfusionVolume = nullptr;
-  m_TransfusionReactionVolume = nullptr;
+  m_RhTransfusionReactionVolume = nullptr;
   m_TubularPermeabilityChange = nullptr;
   m_CentralNervousResponse = nullptr;
 }
@@ -80,8 +79,7 @@ void SEDrugSystem::Clear()
   SAFE_DELETE(m_RespirationRateChange);
   SAFE_DELETE(m_SedationLevel);
   SAFE_DELETE(m_TidalVolumeChange);
-  SAFE_DELETE(m_TransfusionVolume);
-  SAFE_DELETE(m_TransfusionReactionVolume);
+  SAFE_DELETE(m_RhTransfusionReactionVolume);
   SAFE_DELETE(m_TubularPermeabilityChange);
   SAFE_DELETE(m_CentralNervousResponse);
 }
@@ -426,18 +424,11 @@ double SEDrugSystem::GetTidalVolumeChange(const VolumeUnit& unit) const
   return m_TidalVolumeChange->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-SEScalarVolume& SEDrugSystem::GetTransfusionVolume()
+SEScalarVolume& SEDrugSystem::GetRhTransfusionReactionVolume()
 {
-  if (m_TransfusionVolume == nullptr)
-    m_TransfusionVolume = new SEScalarVolume();
-  return *m_TransfusionVolume;
-}
-//-------------------------------------------------------------------------------
-SEScalarVolume& SEDrugSystem::GetTransfusionReactionVolume()
-{
-  if (m_TransfusionReactionVolume == nullptr)
-    m_TransfusionReactionVolume = new SEScalarVolume();
-  return *m_TransfusionReactionVolume;
+  if (m_RhTransfusionReactionVolume == nullptr)
+    m_RhTransfusionReactionVolume = new SEScalarVolume();
+  return *m_RhTransfusionReactionVolume;
 }
 //-------------------------------------------------------------------------------
 bool SEDrugSystem::HasTubularPermeabilityChange() const

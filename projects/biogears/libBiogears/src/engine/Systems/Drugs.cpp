@@ -98,8 +98,7 @@ void Drugs::Initialize()
   GetCentralNervousResponse().SetValue(0.0);
   m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(8.0 * 1e-9, AmountPerVolumeUnit::mol_Per_L); //Need to initialize here since Drugs processed before BloodChemistry
   m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
-  GetTransfusionVolume().SetValue(0.0, VolumeUnit::uL);
-  GetTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
+  GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
 
   m_totalAdministered_uL = 0.0;
   m_SarinRbcAcetylcholinesteraseComplex_nM = 0.0;
@@ -503,7 +502,6 @@ void Drugs::AdministerSubstanceCompoundInfusion()
 
       //Blood Transfusion/////////////////////////////////
       if (compound->GetClassification() == CDM::enumSubstanceClass::WholeBlood) {
-        m_data.GetDrugs().GetTransfusionVolume().SetValue(m_data.GetDrugs().GetTransfusionVolume().GetValue(VolumeUnit::mL) + volumeToAdminister_mL, VolumeUnit::mL);
         /* TACO CHECK 
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
            std::stringstream ss;
@@ -522,7 +520,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
                    || ((m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) && (m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) { //(m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB)))
           patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
         } else if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_OPositive")) {
-          m_data.GetDrugs().GetTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);  //Consider Renaming specific to Rh Factor
+          m_data.GetDrugs().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL); 
           patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
         }   
 

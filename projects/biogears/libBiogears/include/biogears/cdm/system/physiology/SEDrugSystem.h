@@ -98,8 +98,7 @@ public:
   SEScalarVolume& GetTidalVolumeChange();
   double GetTidalVolumeChange(const VolumeUnit& unit) const;
 
-  virtual SEScalarVolume& GetTransfusionVolume();
-  virtual SEScalarVolume& GetTransfusionReactionVolume();
+  virtual SEScalarVolume& GetRhTransfusionReactionVolume();
 
   bool HasTubularPermeabilityChange() const;
   SEScalarFraction& GetTubularPermeabilityChange();
@@ -121,8 +120,7 @@ protected:
   SEScalarFrequency* m_RespirationRateChange;
   SEScalarFraction* m_SedationLevel;
   SEScalarVolume* m_TidalVolumeChange;
-  SEScalarVolume* m_TransfusionVolume;
-  SEScalarVolume* m_TransfusionReactionVolume;
+  SEScalarVolume* m_RhTransfusionReactionVolume;
   SEScalarFraction* m_TubularPermeabilityChange;
   SEScalarFraction* m_CentralNervousResponse;
 };

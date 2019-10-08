@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <Name>Blood</Name>
+  <Name>Blood_ABPositive</Name>
+  <Classification>WholeBlood</Classification>
+  <BloodRHFactor>Positive</BloodRHFactor>
+  <Component Name="Hemoglobin">
+    <Concentration readOnly="false" unit="g/dL" value="3.7"/>
+  </Component>
+  <Component Name="Oxyhemoglobin">
+    <Concentration readOnly="false" unit="g/dL" value="11.1"/>
+  </Component>
   <Component Name="Sodium">
     <Concentration readOnly="false" unit="g/dL" value="0.32335"/>
   </Component>
@@ -33,5 +41,21 @@
   </Component>
   <Component Name="Potassium">
     <Concentration readOnly="false" unit="mg/L" value="176.4"/>
+  </Component>
+  <Component Name="RedBloodCell">
+    <Concentration readOnly="false" unit="g/dL" value="14.256"/>
+  </Component>
+  <!-- @brief Antigens currently handled internally in BG. -->
+  <Component Name="Antigen_A">
+    <Concentration readOnly="false" unit="g/dL" value="0.0"/>
+  </Component>
+  <Component Name="Antigen_B">
+    <Concentration readOnly="false" unit="g/dL" value="0.0"/>
+  </Component>
+  <Component Name="WhiteBloodCell">
+    <Concentration readOnly="false" unit="g/dL" value="0.0189"/>
+  </Component>
+  <Component Name="Platelet">
+    <Concentration readOnly="false" unit="g/dL" value="0.81"/>
   </Component>
 </SubstanceCompound>
