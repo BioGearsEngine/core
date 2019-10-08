@@ -775,8 +775,6 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
 
   if (rhMismatch == false) {
     if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) {
-      /*donorAntigen_ct_per_uL = AntigenA + AntigenB;
-      patientAntigen_ct_per_uL = 0.0;*/
       donorAntigen_ct = AntA_initial_ct + AntB_initial_ct;
       patientAntigen_ct = 0.0;
     } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) {
@@ -793,7 +791,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   } else {
     double newBloodVolume_uL = m_data.GetDrugs().GetRhTransfusionReactionVolume().GetValue(VolumeUnit::uL) - (m_RhTransfusionReactionVolume_mL * 1000.0);
     LLIM(newBloodVolume_uL, 0.0);
-    donorAntigen_ct = m_RhFactorMismatch_ct + ((antigens_per_rbc * (RBC_initial_ct / BloodVolume)) * (newBloodVolume_uL));
+    donorAntigen_ct = m_RhFactorMismatch_ct + (antigens_per_rbc * 5280000.0 * newBloodVolume_uL); //value based on BioGears baseline molarity for rbc in ct/uL
     patientAntigen_ct = 0.0;
   }
 
@@ -851,9 +849,6 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   LLIM(m_patientRBC, 0.0);
   m_donorRBC = newC1RBC_donor;
   LLIM(m_donorRBC, 0.0);
-  if (m_donorRBC == 0.0) {
-    patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, false, m_data.GetSimulationTime());
-  }
   m_2Agglutinate = newC2RBC;
   LLIM(m_2Agglutinate, 0.0);
   m_p3Agglutinate = newC3RBC_patient;
@@ -862,6 +857,9 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   LLIM(m_d3Agglutinate, 0.0);
   m_4Agglutinate = newC4RBC;
   LLIM(m_4Agglutinate, 0.0);
+  if ((m_donorRBC +m_2Agglutinate + m_d3Agglutinate) == 0.0) {
+    patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, false, m_data.GetSimulationTime());
+  }
 
   ////////////////////////////////////////////////////////////////////////
   double effectTune = 1.5;
@@ -875,9 +873,9 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   double liveOxygen_percent = 1.0 - lostOxygen_percent;
   double metabolismTune = 750.0;
   double metabolicIncrease = 1.0  +(deadCells_percent * metabolismTune); 
-  std::stringstream ss;
+  /*std::stringstream ss;
   ss << m_RhFactorMismatch_ct << ",   " << m_RhTransfusionReactionVolume_mL;
-  Info(ss);
+  Info(ss);*/
   SESubstance& Hemoglobin = m_data.GetSubstances().GetHb();
   SESubstance& HemoglobinO2 = m_data.GetSubstances().GetHbO2();
   SESubstance& HemoglobinCO2 = m_data.GetSubstances().GetHbCO2();
@@ -906,7 +904,6 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
     compt->GetSubstanceQuantity(RBC_initial)->GetMolarity().SetValue(compt->GetSubstanceQuantity(RBC_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) * liveCells_percent, AmountPerVolumeUnit::ct_Per_uL);
     compt->GetSubstanceQuantity(RBC_initial)->Balance(BalanceLiquidBy::Molarity);
 
-    if (rhMismatch == false) {
       double AntA_Molarity = compt->GetSubstanceQuantity(AntigenA_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL);
       double AntB_Molarity = compt->GetSubstanceQuantity(AntigenA_initial)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL);
       double AntigensLost = (deadCells_percent * (AntA_Molarity + AntB_Molarity)) / 2.0;
@@ -918,14 +915,13 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
       compt->GetSubstanceQuantity(AntigenB_initial)->GetMolarity().SetValue(AntBRemaining_ct_per_uL, AmountPerVolumeUnit::ct_Per_uL);
       compt->GetSubstanceQuantity(AntigenA_initial)->Balance(BalanceLiquidBy::Molarity);
       compt->GetSubstanceQuantity(AntigenB_initial)->Balance(BalanceLiquidBy::Molarity);
-    }
   }
   double MetabolismAfterHTR = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::W) * metabolicIncrease; //core temp increase
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(MetabolismAfterHTR, PowerUnit::W);
 
   if (rhMismatch == true) {
     m_RhTransfusionReactionVolume_mL = m_data.GetDrugs().GetRhTransfusionReactionVolume().GetValue(VolumeUnit::mL);
-    m_RhFactorMismatch_ct = m_donorRBC * agglutinin_per_rbc * ((liveCells_percent+1.0)/2.0);
+    m_RhFactorMismatch_ct = donorRBC * agglutinin_per_rbc * ((liveCells_percent+1.0)/2.0);
     LLIM(m_RhFactorMismatch_ct, 0.0);
   }
 

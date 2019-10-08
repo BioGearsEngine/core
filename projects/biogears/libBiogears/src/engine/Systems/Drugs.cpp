@@ -500,7 +500,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       double massIncrement_ug = volumeToAdminister_mL * component->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
 
-      //Blood Transfusion/////////////////////////////////
+      //Blood Transfusion//
       if (compound->GetClassification() == CDM::enumSubstanceClass::WholeBlood) {
         /* TACO CHECK 
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
@@ -509,20 +509,10 @@ void Drugs::AdministerSubstanceCompoundInfusion()
            Info(ss);
         }
          */
+
         //Check for HTR
         SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
         SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
-
-        // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
-        if (patient.GetBloodType() == (CDM::enumBloodType::AB)) {
-          return;
-        } else if ((patient.GetBloodType() == (CDM::enumBloodType::O) && ((m_data.GetSubstances().GetAntigen_A().GetBloodConcentration(MassPerVolumeUnit::g_Per_mL) > 0) || m_data.GetSubstances().GetAntigen_B().GetBloodConcentration(MassPerVolumeUnit::g_Per_mL) > 0)) //(m_data.GetSubstances().IsActive(*m_AntigenA) || m_data.GetSubstances().IsActive(*m_AntigenB)))
-                   || ((m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) && (m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) { //(m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB)))
-          patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
-        } else if ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_OPositive")) {
-          m_data.GetDrugs().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL); 
-          patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
-        }   
 
         double AntigenA = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         double AntigenB = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
@@ -543,11 +533,25 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity().SetValue(AntB_ct_Per_uL + (AntigenBIncrement_ct / ((volumeToAdminister_mL + venaCavaVolume_mL) * 1000)), AmountPerVolumeUnit::ct_Per_uL);
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->Balance(BalanceLiquidBy::Molarity);
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->Balance(BalanceLiquidBy::Molarity);
+
+        // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
+        if (patient.GetBloodType() == (CDM::enumBloodType::AB)) {
+          return;
+        } else if ((patient.GetBloodType() == (CDM::enumBloodType::O) && ((m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) || (m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) //(m_data.GetSubstances().IsActive(*m_AntigenA) || m_data.GetSubstances().IsActive(*m_AntigenB)))
+                   || ((m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) && (m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) { //(m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB)))
+          patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+        }  
+    
         subQ->Balance(BalanceLiquidBy::Mass);
         /////////////////////////////////////////////////
       } else {
         subQ->Balance(BalanceLiquidBy::Mass);
       }
+    }
+
+    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_OPositive"))) {
+      m_data.GetDrugs().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
+      patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
     }
 
     if (compound->GetName() == "Saline" || compound->GetName() == "RingersLactate" || compound->GetName() == "Antibiotic") //Note: Saline and ringers lactate have different densities than pure water
