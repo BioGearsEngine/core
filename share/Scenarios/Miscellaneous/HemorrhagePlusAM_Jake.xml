@@ -83,7 +83,7 @@
     </Action>
     <Action xsi:type="SubstanceCompoundInfusionData">
         <Comment>1 unit = 310 mL x 4</Comment>
-        <SubstanceCompound>Blood</SubstanceCompound>
+        <SubstanceCompound>Blood_ONegative</SubstanceCompound>
         <BagVolume value="1240.0" unit="mL"/>
         <Rate value="250.0" unit="mL/min"/>
     </Action>

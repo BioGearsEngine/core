@@ -52,7 +52,7 @@
 		contributes to blood volume-->
     <Action xsi:type="SubstanceCompoundInfusionData">
         <Comment>2 units</Comment>
-        <SubstanceCompound>Blood</SubstanceCompound>
+        <SubstanceCompound>Blood_ONegative</SubstanceCompound>
         <BagVolume value="600.0" unit="mL"/>
         <Rate value="300.0" unit="mL/min"/>
     </Action>
