@@ -543,7 +543,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         }  
     
         subQ->Balance(BalanceLiquidBy::Mass);
-        /////////////////////////////////////////////////
+
       } else {
         subQ->Balance(BalanceLiquidBy::Mass);
       }

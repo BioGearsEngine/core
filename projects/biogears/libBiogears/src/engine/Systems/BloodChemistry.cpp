@@ -362,28 +362,6 @@ void BloodChemistry::Process()
   double shunt = shuntFlow_mL_Per_min / totalFlow_mL_Per_min;
   GetShuntFraction().SetValue(shunt);
 
-
-  //}   */ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HELP HERE///////////////////////
-
-  /*if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
-    if (m_data.GetDrugs().GetTransfusionReactionVolume().GetValue(VolumeUnit::uL) > 0) {
-      CalculateHemolyticTransfusionReaction(true);
-    } else {
-      CalculateHemolyticTransfusionReaction();
-    }
-  }*/
-
-  m_data.GetDataTrack().Probe("pRBC1", m_patientRBC);
-  m_data.GetDataTrack().Probe("dRBC1", m_donorRBC);
-  m_data.GetDataTrack().Probe("RBC2", m_2Agglutinate);
-  m_data.GetDataTrack().Probe("pRBC3", m_p3Agglutinate);
-  m_data.GetDataTrack().Probe("dRBC3", m_d3Agglutinate);
-  m_data.GetDataTrack().Probe("RBC4", m_4Agglutinate);
-
-  //dynamic_cast<BloodChemistry&>(m_data.GetBloodChemistry()).CalculateHemolyticTransfusionReaction();
-
-  //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
   //Throw events if levels are low/high
   CheckBloodSubstanceLevels();
 
