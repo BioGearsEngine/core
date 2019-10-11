@@ -244,10 +244,10 @@ void Drugs::Process()
     CalculateDrugEffects();
   }
 
-  m_data.GetDataTrack().Probe("Otfc_Mouth", OtfcMouth);
-  m_data.GetDataTrack().Probe("Otfc_Swallowed", OtfcSwallowed);
-  m_data.GetDataTrack().Probe("Oftc_Buccal", OtfcBuccal);
-  m_data.GetDataTrack().Probe("Otfc_Sublingual", OtfcSublingual);
+  //m_data.GetDataTrack().Probe("Otfc_Mouth", OtfcMouth);
+  //m_data.GetDataTrack().Probe("Otfc_Swallowed", OtfcSwallowed);
+ // m_data.GetDataTrack().Probe("Oftc_Buccal", OtfcBuccal);
+  //m_data.GetDataTrack().Probe("Otfc_Sublingual", OtfcSublingual);
 }
 
 //--------------------------------------------------------------------------------------------------

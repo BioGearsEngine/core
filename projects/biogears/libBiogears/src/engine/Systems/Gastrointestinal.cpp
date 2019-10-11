@@ -861,12 +861,12 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
 void Gastrointestinal::Process()
 {
   ProcessDrugCAT();
-  m_data.GetDataTrack().Probe("Otfc_Absorbed", OtfcAbsorbed);
-  m_data.GetDataTrack().Probe("Otfc_Metabolized", OtfcMetabolized);
-  m_data.GetDataTrack().Probe("Otfc_Enterocytes", OtfcEnterocyte);
-  m_data.GetDataTrack().Probe("Otfc_Transit", OtfcTransit);
-  m_data.GetDataTrack().Probe("Otfc_TotalEnterocyte", OtfcTotalEnterocyte);
-  m_data.GetDataTrack().Probe("Otfc_TotalLumen", OtfcTotalLumen);
+ // m_data.GetDataTrack().Probe("Otfc_Absorbed", OtfcAbsorbed);
+  //m_data.GetDataTrack().Probe("Otfc_Metabolized", OtfcMetabolized);
+  //m_data.GetDataTrack().Probe("Otfc_Enterocytes", OtfcEnterocyte);
+  //m_data.GetDataTrack().Probe("Otfc_Transit", OtfcTransit);
+  //m_data.GetDataTrack().Probe("Otfc_TotalEnterocyte", OtfcTotalEnterocyte);
+  //m_data.GetDataTrack().Probe("Otfc_TotalLumen", OtfcTotalLumen);
 }
 
 //--------------------------------------------------------------------------------------------------
