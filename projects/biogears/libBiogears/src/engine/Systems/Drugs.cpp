@@ -958,12 +958,15 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
 
     //--Assume that vena cava concentration is representative blood average (this is what we do in BloodChemistry) -
     double bloodPlasmaRatio = 1.0; //Assume equal distribution for subs without a defined BP ratio
+    double massInBlood_ug = 0.0;
     if (sub->GetPK().GetPhysicochemicals().HasBloodPlasmaRatio()) {
       bloodPlasmaRatio = sub->GetPK().GetPhysicochemicals().GetBloodPlasmaRatio().GetValue();
     }
-    double bloodConcentration_ug_Per_mL = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava)->GetSubstanceQuantity(*sub)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+    if (sub->HasMassInBlood()) {
+      massInBlood_ug = sub->GetMassInBlood(MassUnit::ug);
+    }
     //K_bp = Cb/Cp  ---> Cp = Cb/K_bp
-    double plasmaConcentration_ug_Per_mL = bloodConcentration_ug_Per_mL / bloodPlasmaRatio;
+    double plasmaConcentration_ug_Per_mL = massInBlood_ug / bloodVolume_mL / bloodPlasmaRatio;
     sub->GetPlasmaConcentration().SetValue(plasmaConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
     //Increment area under curve--should be done for subs w/ PK
     double deltaT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
@@ -1040,7 +1043,7 @@ void Drugs::CalculateSubstanceClearance()
     LLIM(OtherSystemicVolumeCleared_mL, 0.);
 
     //Hepatic Clearance
-    m_data.GetSubstances().CalculateGenericClearance(HepaticVolumeCleared_mL, *m_liverTissue, *sub);
+    m_data.GetSubstances().CalculateGenericClearance(HepaticVolumeCleared_mL, *m_liverVascular, *sub);
 
     //Systemic Clearance
     m_data.GetSubstances().CalculateGenericClearance(OtherSystemicVolumeCleared_mL, *m_venaCavaVascular, *sub);

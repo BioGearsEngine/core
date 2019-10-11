@@ -1174,6 +1174,7 @@ void BioGearsSubstances::CalculateGenericClearance(double volumeCleared_mL, SELi
   MassCleared_ug = subQ->GetMass(MassUnit::ug) - mass_ug;
   subQ->GetMass().SetValue(mass_ug, MassUnit::ug);
   subQ->Balance(BalanceLiquidBy::Mass);
+  subQ->GetMassCleared().IncrementValue(MassCleared_ug, MassUnit::ug);
 
   sub.GetSystemicMassCleared().IncrementValue(MassCleared_ug, MassUnit::ug);
   if (cleared != nullptr)

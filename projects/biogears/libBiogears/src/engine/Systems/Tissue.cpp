@@ -543,6 +543,7 @@ void Tissue::Process()
   CalculateDiffusion();
   ManageSubstancesAndSaturation();
   CalculateVitals();
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1876,9 +1877,19 @@ double Tissue::PerfusionLimitedDiffusion(SETissueCompartment& tissue, SELiquidCo
   SELiquidSubstanceQuantity* tSubQ = intracellular.GetSubstanceQuantity(sub);
   if (tSubQ == nullptr)
     throw CommonDataModelException("No Tissue-Intracellular Substance Quantity found for substance " + std::string{ sub.GetName() });
-  SEScalarMassPerVolume tissueConcentration;
-  GeneralMath::CalculateConcentration(tSubQ->GetMass(), tissue.GetMatrixVolume(), tissueConcentration, m_Logger);
-  double TissueConcentration_ug_Per_mL = tissueConcentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
+
+  double tisDensity_kg_Per_L = 1.0;
+  if (tissue.GetName() == BGE::TissueCompartment::Gut) {
+    tisDensity_kg_Per_L = 0.92;
+  }
+  if (tissue.GetName() == BGE::TissueCompartment::Bone) {
+    tisDensity_kg_Per_L = 1.3;
+  }
+
+  //Getting tissue volume by totalMass/density because tissue compartments do not store a volume ("matrix volume" is not the whole fluid volume)
+  //Even though we store drug in intracellular cmpt, PK equations are derived assuming total tissue volume
+  double tisVolume_mL = tissue.GetTotalMass(MassUnit::kg) / tisDensity_kg_Per_L * 1000.0;
+  double TissueConcentration_ug_Per_mL = tSubQ->GetMass(MassUnit::ug) / tisVolume_mL;
   double MassIncrement_ug = 0;
   if (!(partitionCoeff == 0)) {
     MassIncrement_ug = VascularFlow_m_LPer_s * timestep_s * (VascularConcentration_ug_Per_mL - (TissueConcentration_ug_Per_mL / partitionCoeff));
