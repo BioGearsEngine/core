@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>PiperacillinTazobactamValidation</Name>
-    <Description>Inject standard patient with 4.0 g piperacillin and 0.5 g tazobactam!</Description>
+    <Description>Inject standard patient with 0.5 g tazobactam!</Description>
 	<InitialParameters>
 		<PatientFile>StandardMale.xml</PatientFile>
 		<Configuration xsi:type="BioGearsConfigurationData">
@@ -13,32 +13,6 @@
   <!-- Base system data required for all scenario verification -->
     
   <DataRequests SamplesPerSecond="1">
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular" Name="Concentration" Substance="Piperacillin" Unit="ug/mL" Precision="3"/>
-  
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="PlasmaConcentration" Unit="ug/mL" Precision="6"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="SystemicMassCleared" Unit="mg" Precision="4"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="MassInBody" Unit="mg" Precision="4"/>	
-
-	
-	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Piperacillin" Name="MassCleared" Unit="ug" Precision="2"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Piperacillin" Name="MassCleared" Unit="ug" Precision="2"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Piperacillin" Name="MassCleared" Unit="ug" Precision="2"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Piperacillin" Name="MassExcreted" Unit="ug" Precision="2"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Piperacillin" Name="MassExcreted" Unit="ug" Precision="2"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Piperacillin" Name="MassExcreted" Unit="ug" Precision="2"/>
-	
-
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Tazobactam" Unit="ug/mL" Precision="3"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular" Name="Concentration" Substance="Tazobactam" Unit="ug/mL" Precision="3"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular" Name="Concentration" Substance="Tazobactam" Unit="ug/mL" Precision="3"/>
@@ -65,13 +39,21 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Tazobactam" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-	<!--Administer 20 mL vial of piperacillin/tazobactam over 30 minutes--> 
-    <Action xsi:type="SubstanceCompoundInfusionData">
-        <SubstanceCompound>PiperacillinTazobactam</SubstanceCompound>
-        <BagVolume value="20" unit="mL"/>
+	<!--Administer 0.5 g of Tazobactam over 30 minutes--> 
+    <Action xsi:type="SubstanceInfusionData">
+        <Substance>Tazobactam</Substance>
+        <Concentration value="0.025" unit="g/mL"/>
         <Rate value="0.667" unit="mL/min"/>
     </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="min"/>  
+	</Action>
+    <Action xsi:type="SubstanceInfusionData">
+        <Substance>Tazobactam</Substance>
+        <Concentration value="0.0" unit="g/mL"/>
+        <Rate value="0.0" unit="mL/min"/>
+    </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="6" unit="hr"/>  
+        <Time value="5.5" unit="hr"/>  
 	</Action>
 </Scenario>

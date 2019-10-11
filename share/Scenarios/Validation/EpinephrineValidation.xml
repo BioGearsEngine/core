@@ -15,6 +15,7 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Epinephrine" Unit="ug/L" Precision="6"/>
   
 	<DataRequest Substance="Epinephrine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>	
+    <DataRequest Substance="Epinephrine" Name="PlasmaConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Epinephrine" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Epinephrine" Name="MassInBody" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Epinephrine" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>

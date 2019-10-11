@@ -9,7 +9,7 @@
 	<!-- Anything action specific data needed for verification of this scenario -->
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Moxifloxacin" Unit="ug/L" Precision="9"/>
   
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="PlasmaConcentration" Unit="mg/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="PlasmaConcentration" Unit="ug/mL" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="SystemicMassCleared" Unit="mg" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Name="MassInBody" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Moxifloxacin" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
