@@ -119,7 +119,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"        Substance="Sarin" Name="Concentration" Unit="ug/L" Precision="4"/> 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"      Substance="Sarin" Name="Concentration" Unit="ug/L" Precision="4"/>
 
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>		
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
+<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>    
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Name="MassInBody" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>

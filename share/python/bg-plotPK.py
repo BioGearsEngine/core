@@ -85,8 +85,8 @@ def main( args):
     
 def run_PKplots(_drugs, plotTime,scale):
     global _log_verbose
-    defaultDrugs = ["Albuterol","Desflurane","Fentanyl","Furosemide","Ketamine","Midazolam","Morphine","Naloxone","Norepinephrine","OralMoxifloxacin",
-        "PiperacillinTazobactam","Pralidoxime","Prednisone","Propofol","Rocuronium","Sarin","Succinylcholine","TransmucosalFentanyl","TXA","Vasopressin"]
+    defaultDrugs = ["Albuterol","Desflurane","Ertapenem","Fentanyl","Furosemide","Ketamine","Midazolam","Morphine","Naloxone","Norepinephrine","OralMoxifloxacin",
+        "Piperacillin","Pralidoxime","Prednisone","Propofol","Rocuronium","Sarin","Succinylcholine","Tazobactam","TransmucosalFentanyl","TranexamicAcid","Vasopressin"]
     drugList = _drugs if _drugs else defaultDrugs
     
     for drug in drugList:

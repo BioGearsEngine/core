@@ -10,7 +10,7 @@
       <FractionUnboundInPlasma readOnly="false" value="0.8"/>
       <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
       <RenalClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="50"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="37"/>
     </Systemic>
     <RenalDynamics>
       <Clearance readOnly="false" unit="mL/min kg" value="0"/>

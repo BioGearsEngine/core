@@ -15,6 +15,7 @@
     
   <DataRequests SamplesPerSecond="1">
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Desflurane" Unit="ug/mL" Precision="9"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
 	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Name="EndTidalFraction" Unit="" Precision="4"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Desflurane" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	

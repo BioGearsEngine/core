@@ -13,6 +13,7 @@
     
   <DataRequests SamplesPerSecond="1">
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Albuterol" Unit="ug/mL" Precision="9"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Albuterol" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
   
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albuterol" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albuterol" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	

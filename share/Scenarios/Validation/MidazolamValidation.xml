@@ -14,6 +14,7 @@
     
   <DataRequests SamplesPerSecond="1">
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Midazolam" Unit="ug/mL" Precision="9"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Midazolam" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
   
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Midazolam" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Midazolam" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
@@ -41,10 +42,18 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+    <Action xsi:type="SubstanceInfusionData">
         <Substance>Midazolam</Substance>
-        <Concentration value="500" unit="ug/mL"/>
-        <Dose value="10" unit="mL"/>
+        <Concentration value="5.0" unit="mg/mL"/>
+        <Rate value="2.0" unit="mL/min"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>  
+	</Action>
+    <Action xsi:type="SubstanceInfusionData">
+        <Substance>Midazolam</Substance>
+        <Concentration value="0.0" unit="g/mL"/>
+        <Rate value="0.0" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="8" unit="hr"/>       

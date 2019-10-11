@@ -8,7 +8,7 @@
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0"/>
       <FractionUnboundInPlasma readOnly="false" value="0.15"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="781.0"/><!--Back calculated from total hepatic plasma clearance of 15.0 mL/min/kg-->
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="781"/>
       <RenalClearance readOnly="false" unit="mL/min kg" value="0.7"/>
       <SystemicClearance readOnly="false" unit="mL/min kg" value="15.5"/>
     </Systemic>
@@ -18,9 +18,9 @@
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
-      <AcidDissociationConstant readOnly="false" value="9.0"/>
+      <AcidDissociationConstant readOnly="false" value="9"/>
       <BindingProtein>Albumin</BindingProtein>
-      <BloodPlasmaRatio readOnly="false" value="1.0"/>
+      <BloodPlasmaRatio readOnly="false" value="1"/>
       <FractionUnboundInPlasma readOnly="false" value="0.15"/>
       <IonicState>Base</IonicState>
       <LogP readOnly="false" value="4.05"/>

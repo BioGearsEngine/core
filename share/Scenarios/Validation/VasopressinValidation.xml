@@ -14,6 +14,7 @@
     
   <DataRequests SamplesPerSecond="1">
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Furosemide" Unit="ug/mL" Precision="9"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Vasopressin" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
   
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Vasopressin" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Vasopressin" Name="SystemicMassCleared" Unit="ug" Precision="4"/>	

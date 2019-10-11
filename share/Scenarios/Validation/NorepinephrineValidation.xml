@@ -70,6 +70,7 @@
   
     <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Norepinephrine" Name="Concentration" Unit="ug/L" Precision="4"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"               Substance="Norepinephrine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Norepinephrine" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneVasculature"        Substance="Norepinephrine" Name="Concentration" Unit="ug/L" Precision="4"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature"       Substance="Norepinephrine" Name="Concentration" Unit="ug/L" Precision="4"/> 

@@ -26,6 +26,7 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular" Name="Concentration" Substance="Tazobactam" Unit="ug/mL" Precision="3"/>
   
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Tazobactam" Name="PlasmaConcentration" Unit="ug/mL" Precision="6"/>	
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Tazobactam" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Tazobactam" Name="SystemicMassCleared" Unit="mg" Precision="4"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Tazobactam" Name="MassInBody" Unit="mg" Precision="4"/>	
 

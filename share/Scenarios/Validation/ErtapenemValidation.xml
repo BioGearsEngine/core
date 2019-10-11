@@ -27,7 +27,6 @@
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
 	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ertapenem" Name="TimeAboveMIC" Unit="min" Precision="2"/>
 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ertapenem" Name="MassCleared" Unit="mg" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Ertapenem" Name="MassCleared" Unit="mg" Precision="2"/>

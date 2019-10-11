@@ -13,6 +13,7 @@
   
   <DataRequests SamplesPerSecond="1">
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Succinylcholine" Unit="ug/mL" Precision="9"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Succinylcholine" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
   
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Succinylcholine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Succinylcholine" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
@@ -40,25 +41,11 @@
   </DataRequests>
 	
 	
-	 <!--<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+	 <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
         <Substance>Succinylcholine</Substance>
-        <Concentration value="1000" unit="ug/mL"/>
+        <Concentration value="1.0" unit="mg/mL"/>
         <Dose value="77" unit="mL"/>
-    </Action>-->
-	
-	<Action xsi:type="SubstanceInfusionData">
-        <Substance>Succinylcholine</Substance>
-        <Concentration value="5" unit="g/L"/>
-        <Rate value="1" unit="mL/s"/>
     </Action>
-	<Action xsi:type="AdvanceTimeData">
-        <Time value="15" unit="s"/>       
-    </Action>
-	<Action xsi:type="SubstanceInfusionData">
-        <Substance>Succinylcholine</Substance>
-        <Concentration value="0" unit="ug/mL"/>
-        <Rate value="0" unit="mL/min"/>
-    </Action>   
 	<Action xsi:type="AdvanceTimeData">
         <Time value="7" unit="min"/>       
     </Action>

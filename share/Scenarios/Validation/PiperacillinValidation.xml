@@ -28,6 +28,7 @@
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="PlasmaConcentration" Unit="ug/mL" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="SystemicMassCleared" Unit="mg" Precision="4"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="MassInBody" Unit="mg" Precision="4"/>	
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
 
 	
 	

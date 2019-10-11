@@ -7,9 +7,9 @@
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0"/>
       <FractionUnboundInPlasma readOnly="false" value="0.99"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="3.57"/>
       <RenalClearance readOnly="false" unit="mL/min kg" value="1.13"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="15.17"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="4.14"/>
     </Systemic>
     <RenalDynamics>
       <Clearance readOnly="false" unit="mL/min kg" value="1.13"/>

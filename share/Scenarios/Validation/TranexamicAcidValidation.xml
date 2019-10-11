@@ -12,9 +12,11 @@
 	</InitialParameters>
     
   <DataRequests SamplesPerSecond="1">
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="TranexamicAcid" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="TranexamicAcid" Unit="ug/mL" Precision="6"/>
   
-	<DataRequest Substance="TranexamicAcid" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>	
+	<DataRequest Substance="TranexamicAcid" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/mL" Precision="6"/>
+    <DataRequest Substance="TranexamicAcid" Name="PlasmaConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/mL" Precision="6"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Name="MassInBody" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="TranexamicAcid" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
