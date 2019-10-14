@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to BioGears!</title>
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Loading Lato Font -->
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Loading Fontawesome Font -->
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" media="all" rel="stylesheet">
+
+    <!-- Loading Bootstrap -->
+    <link href="./content/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./content/bootstrap/css/sticky-footer-navbar.css" rel="stylesheet">
+
+    <!-- Loading Custom CSS -->
+    <link href="./content/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+    <!-- Google Analytics -->
+    <script>
+        if(document.location.protocol == 'https:') {
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-47562802-1', 'biogearsengine.com');
+            ga('send', 'pageview');
+        }
+    </script>
+</head>
+
+<body screen_capture_injected="true">
+
+<!-- Wrap all page content here -->
+<div id="wrap">
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand hidden-sm" href="./"><img style='margin-top: -8px !important;height: 40px !important;' src='./content/img/biogears_logoWT.png' /></a>
+                <a class="navbar-brand visible-sm" style='margin-left: -30px !important;width: 60px !important;' href="./"><img style='margin-top: -10px !important;height: 40px !important;' src='./content/img/bg_symbolWT.png' /></a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <!-- Left -->
+                <ul class="nav navbar-nav adjust-right">
+                    <li class="active"><a href="/"><i class="fa fa-home"> <span style="font-family: Lato;">Home</span></i></a></li>
+                    <li><a href="./documentation/index.html"><i class="fa fa-book"> <span style="font-family: Lato;">Documentation</span></i></a></li>
+                    <li><a href="./documentation/_f_a_q.html"><i class="fa fa-question-circle"> <span style="font-family: Lato;">FAQ</span></i></a></li>
+
+                </ul>
+                <!-- Right -->
+                <ul class="nav navbar-nav navbar-right hidden-sm" style="margin-right: -9px;">
+                    <li><a href="./releases.html"><i class="fa fa-download"> <span style="font-family: Lato;">Releases</span></i></a></li>
+                    <li><a href="https://github.com/BioGearsEngine/core/releases"><i class="fa fa-download"> <span style="font-family: Lato;">Download</span></i></a></li>
+                    <li><a href="https://github.com/BioGearsEngine"><i class="fa fa-github"> <span style="font-family: Lato;">GitHub</span></i></a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class='home-section-1'>
+        <div class='container'>
+            <div class="row">
+                <div class='col-sm-offset-1 col-sm-2 '>
+                    <img class='home-img-1' src='./content/img/body_w.png'>
+                </div>
+                <div class='col-sm-offset-1 col-sm-7'>
+                    <h1 class='thin'>BioGears</h1>
+                    <p class='spacer'>
+                        BioGears is an open source, comprehensive, extensible human physiology engine released under the Apache 2.0 license that will drive medical education, research, and training technologies. BioGears enables accurate and consistent physiology simulation across the medical community. The engine can be used as a standalone application or integrated with simulators, sensor interfaces, and models of all fidelities.
+                    </p>
+                    <a class='btn btn-primary btn-lg pull-right' href='https://github.com/BioGearsEngine/Core/releases'>Download Now!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='home-section-2'>
+        <div class='container'>
+            <div class='row'>
+                <div class='col-sm-6 col-md-7'>
+                    <h1 class='thin'>What Can BioGears Do?</h1>
+                    <h4 class='top-spacer'>Several features set BioGears above the rest:</h4>
+                    <ul class='home-list-2'>
+                        <li>BioGears includes mathematical models for a wide range of systems, medical interfaces, and substances for real-time retrieval of accurate physiology state.</li>
+                        <li>The common data model includes standard inputs, outputs, units, conversions, and naming conventions that make model additions and product integration quick and easy.</li>
+                        <li>Our website is a place for discussion and sharing among our community of users. Explore showcase scenarios, collaborate with us on GitHub, and use the tutorials to guide BioGears integration.</li>
+                        <li>A full-featured API, SDK, code-based documentation, and tutorial examples make BioGears easy to understand and use. Rigorous validation methods ensure accurate model output.</li>
+                    </ul>
+                </div>
+                <div class='col-sm-6 col-md-5'>
+                    <div class='home-img-2'>
+                        <img src='./content/img/circle_launch_2.png'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='home-section-3'>
+        <div class='container'>
+            <h1 class='thin text-center'>Community Focused</h1>
+            <div class='row'>
+                <div class='col-md-offset-1 col-sm-12 col-md-10'>
+                    <p class='text-center spacer'>
+                        BioGearsEngine.com includes all the documentation you will need to use and modify BioGears. We support and engage our community of users through GitHub, Twitter, conferences and access to code-based documentation. We hope you can visit us at one of our upcoming events!
+                    </p>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-offset-2 col-lg-offset-3 col-sm-4 col-md-3 col-lg-2'>
+                    <a class='btn btn-success btn-lg btn-home-4 text-center' href='https://github.com/BioGearsEngine/core'>GitHub</a>
+                </div>
+                <div class='col-sm-4  col-md-3 col-lg-2'>
+                    <a class='btn btn-success btn-lg btn-home-4 text-center' href='https://twitter.com/BioGearsEngine'>Twitter</a>
+                </div>
+                <div class='col-sm-4  col-md-3 col-lg-2'>
+                    <a class='btn btn-success btn-lg btn-home-4 text-center' href='./documentation/index.html'>Documentation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='home-section-2'>
+        <div class='container'>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1 class='thin check-it-spacer bottom-spacer'>Current Systems</h1>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_anesthesia_machine_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                        <img src="./content/img/rings/anesthesia-machine.PNG" width="100" alt="Anesthesia Machine">
+                        <div>
+                            <h3 class="text-center thin">Anesthesia Machine</h3>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_blood_chemistry_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/blood-chemistry.png" width="100" alt="Blood Chemistry">
+                            <div>
+                                <h3 class="text-center thin">Blood Chemistry</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_cardiovascular_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/5.png" width="100" alt="Cardiovascular">
+                            <div>
+                                <h3 class="text-center thin">Cardiovascular</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_drugs_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/drugs.png" width="100" alt="Drugs">
+                            <div>
+                                <h3 class="text-center thin">Drugs</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_endocrine_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/endo.png" width="100" alt="Endocrine">
+                            <div>
+                                <h3 class="text-center thin">Endocrine</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_energy_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/11.png" width="100" alt="Energy Balance">
+                            <div>
+                                <h3 class="text-center thin">Energy Balance</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_environment_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/Environment_icon.png" width="100" alt="Environment">
+                            <div>
+                                <h3 class="text-center thin">Environment</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_gastrointestinal_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/6.png" width="100" alt="Gastrointestinal">
+                            <div>
+                                <h3 class="text-center thin">Gastrointestinal</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_hepatic_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/hepatic.png" width="100" alt="Hepatic">
+                            <div>
+                                <h3 class="text-center thin">Hepatic</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_inhaler_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/icon_inhaler_resize.png" width="100" alt="Inhaler">
+                            <div>
+                                <h3 class="text-center thin">Inhaler</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_nervous_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/1.png" width="100" alt="Nervous">
+                            <div>
+                                <h3 class="text-center thin">Nervous</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_patient_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/systems.png" width="100" alt="Patient">
+                            <div>
+                                <h3 class="text-center thin">Patient</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_renal_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/8.png" width="100" alt="Renal">
+                            <div>
+                                <h3 class="text-center thin">Renal</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_respiratory_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/3.png" width="100" alt="Respiratory">
+                            <div>
+                                <h3 class="text-center thin">Respiratory</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_system_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/SystemsInteractions.png" width="100" alt="Systems">
+                            <div>
+                                <h3 class="text-center thin">Systems</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 top-spacer system-box">
+                    <div class="thumbnail" style="border: 0px">
+                        <a href="./documentation/_tissue_methodology.html" target="_blank" style="color: #333333; text-decoration: none">
+                            <img src="./content/img/rings/tissue.png" width="100" alt="Tissue">
+                            <div>
+                                <h3 class="text-center thin">Tissue</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='showcase-banner'>
+        <div class='container'>
+            <div class="row">
+                <div class="col-sm-8">
+                    <h1 class='thin'>Work With Us!</h1>
+                    <p class='top-spacer'>
+                        <a href="http://www.ara.com/">Applied Research Associates, Inc.</a> (ARA) is the company developing the BioGears open source physiology engine and we are always looking for research partners and sponsors! The BioGears team is interested in talking to you about extensions and applications of BioGears, and new biomedical engineering projects.
+                    </p>
+                    <p >
+                        Below, we provide downloadable information, presentations about BioGears, and our contact information.
+                    </p>
+                    <p class='bottom-spacer'>
+                        We look forward to working together!
+                    </p>
+                    <p class="spacer">
+                        <a href="./content/files/BioGears_Overview_Flyer.pdf" class="btn btn-primary">Download Flyer</a>
+                        <a href="./content/files/BioGears_Overview_Presentation.pdf" class="btn btn-primary">Download Overview</a>
+                        <a href="./content/files/BioGears_Press_Kit.pdf" class="btn btn-primary">Download Press Kit</a>
+                    </p>
+                </div>
+                <div class="col-sm-4">
+                    <img class="work-img" src="./content/img/ARA_Logo_white_2010.png" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='container'>
+        <div class='row'>
+            <div class='col-xs-12'>
+                <h1 class='thin'>Explore a Scenario!</h1>
+                <ul id="showcase-nav" class="nav nav-pills dark-blue-pills showcase-pills">
+                    <li><a href="#scenario-1" data-toggle="tab">Multi-Trauma</a></li>
+                    <li><a href="#scenario-2" data-toggle="tab">Exposure</a></li>
+                    <li><a href="#scenario-3" data-toggle="tab">Asthma</a></li>
+                    <li><a href="#scenario-4" data-toggle="tab">Heat Stroke</a></li>
+                    <li><a href="#scenario-5" data-toggle="tab">Sepsis</a></li>
+
+                </ul>
+                <div class="tab-content">
+
+                    <!-- Scenario 1 -->
+                    <div class="tab-pane fade" id='scenario-1' data-showcase="1">
+                        <img class="text-center" id='spinner1' src="/content/img/spinner.GIF"/>
+                        <div class="hide" id="tab1">
+                            <h3>Soldier Multi-Trauma</h3>
+                            <p>
+                                The Soldier Multi-Trauma Showcase Scenario simulates the injuries that a Combat Medic or other caregiver may encounter on the battlefield. This scenario highlights the ability of the BioGears physiology engine to simulate multiple insults occurring simultaneously. We have incorporated a tension pneumothorax with a massive hemorrhage. The tension pneumothorax is itself a combinatory insult, affecting both the respiratory and cardiovascular systems. Combining the tension pneumothorax with the blood loss from the hemorrhage pushes and eventually exceeds the limits of the homeostatic control mechanisms.
+                                <br><br>See the <a href="./documentation/CombatMultitraumaValidation.pdf">Validation Matrix</a> for more details about the narrative and validation of the combined insult and intervention physiologic effects.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5" style='margin-top: 10px;'>
+                                    <button data-player="play" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-play"></span> <text>Play</text>
+                                    </button>
+                                    <button data-player="pause" type="button" class="btn btn-success hide">
+                                        <span class="glyphicon glyphicon-pause"></span> <text>Pause</text>
+                                    </button>
+                                    <button data-player="backward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-backward"></span>
+                                    </button>
+                                    <button data-player="forward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-forward"></span>
+                                    </button>
+                                    Playback Speed: <span data-player="speed">1</span>x
+                                </div>
+                                <div class="col-sm-12 col-md-7" style='margin-top: 10px;'>
+                                    <div class="btn-group pull-right-md">
+                                        <button data-player="unlock" data-toggle="tooltip" data-container="body" data-placement="top" title="Auto scales the Y-Axis as data is placed on the chart" type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-stats"></span> <text>Auto Scale Y-Axis</text>
+                                        </button>
+                                        <button data-player="lock" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to the currently visible data and then prevents it from changing when new data is added." type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-lock"></span> <text>Lock Y-Axis Scale</text>
+                                        </button>
+                                        <button data-player="lockmax" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to min/max of the entire series and locks it there." type="button" class="btn btn-primary active">
+                                            <span class="glyphicon glyphicon-fullscreen"></span> <text>Full Scale Y-Axis</text>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row showcase-player" id="player1">
+                                <div class="col-sm-12" id="chart1"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" data-series-alerts>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h1 class="thin text-center">Scenario Timeline</h1>
+                                    <div data-timelime class="timeline animated">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 2 -->
+                    <div class="tab-pane fade" id='scenario-2' data-showcase="2">
+                        <img class="text-center" id='spinner2' src="/content/img/spinner.GIF"/>
+                        <div class="hide" id="tab2">
+                            <h3>Environment Exposure</h3>
+                            <p>
+                                The Environment Exposure Showcase Scenario simulates the physiology of an adult woman who is exposed to cold weather long enough to develop hypothermia. This scenario highlights the ability of the BioGears physiology engine to simulate physiology when the body is exposed to an abnormal environment.
+                                <br><br>See the <a href="./documentation/CombatMultitraumaValidation.pdf">Validation Matrix</a> for more details about the narrative and validation of the combined insult and intervention physiologic effects.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5" style='margin-top: 10px;'>
+                                    <button data-player="play" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-play"></span> <text>Play</text>
+                                    </button>
+                                    <button data-player="pause" type="button" class="btn btn-success hide">
+                                        <span class="glyphicon glyphicon-pause"></span> <text>Pause</text>
+                                    </button>
+                                    <button data-player="backward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-backward"></span>
+                                    </button>
+                                    <button data-player="forward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-forward"></span>
+                                    </button>
+                                    Playback Speed: <span data-player="speed">1</span>x
+                                </div>
+                                <div class="col-sm-12 col-md-7" style='margin-top: 10px;'>
+                                    <div class="btn-group pull-right-md">
+                                        <button data-player="unlock" data-toggle="tooltip" data-container="body" data-placement="top" title="Auto scales the Y-Axis as data is placed on the chart" type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-stats"></span> <text>Auto Scale Y-Axis</text>
+                                        </button>
+                                        <button data-player="lock" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to the currently visible data and then prevents it from changing when new data is added." type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-lock"></span> <text>Lock Y-Axis Scale</text>
+                                        </button>
+                                        <button data-player="lockmax" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to min/max of the entire series and locks it there." type="button" class="btn btn-primary active">
+                                            <span class="glyphicon glyphicon-fullscreen"></span> <text>Full Scale Y-Axis</text>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row showcase-player" id="player2">
+                                <div class="col-sm-12" id="chart2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" data-series-alerts>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h1 class="thin text-center">Scenario Timeline</h1>
+                                    <div data-timelime class="timeline animated">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 3 -->
+                    <div class="tab-pane fade" id='scenario-3' data-showcase="3">
+                        <img class="text-center" id='spinner3' src="/content/img/spinner.GIF"/>
+                        <div class="hide" id="tab3">
+                            <h3>Asthma Attack</h3>
+                            <p>
+                                The Asthma Attack Showcase Scenario simulates physiology during an asthma attack and after administration of a beta-agonist. This scenario highlights the ability of the BioGears physiology engine to simulate asthma and inhaled-drug administration.
+                                <br><br>See the <a href="./documentation/CombatMultitraumaValidation.pdf">Validation Matrix</a> for more details about the narrative and validation of the combined insult and intervention physiologic effects.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5" style='margin-top: 10px;'>
+                                    <button data-player="play" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-play"></span> <text>Play</text>
+                                    </button>
+                                    <button data-player="pause" type="button" class="btn btn-success hide">
+                                        <span class="glyphicon glyphicon-pause"></span> <text>Pause</text>
+                                    </button>
+                                    <button data-player="backward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-backward"></span>
+                                    </button>
+                                    <button data-player="forward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-forward"></span>
+                                    </button>
+                                    Playback Speed: <span data-player="speed">1</span>x
+                                </div>
+                                <div class="col-sm-12 col-md-7" style='margin-top: 10px;'>
+                                    <div class="btn-group pull-right-md">
+                                        <button data-player="unlock" data-toggle="tooltip" data-container="body" data-placement="top" title="Auto scales the Y-Axis as data is placed on the chart" type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-stats"></span> <text>Auto Scale Y-Axis</text>
+                                        </button>
+                                        <button data-player="lock" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to the currently visible data and then prevents it from changing when new data is added." type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-lock"></span> <text>Lock Y-Axis Scale</text>
+                                        </button>
+                                        <button data-player="lockmax" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to min/max of the entire series and locks it there." type="button" class="btn btn-primary active">
+                                            <span class="glyphicon glyphicon-fullscreen"></span> <text>Full Scale Y-Axis</text>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row showcase-player" id="player3">
+                                <div class="col-sm-12" id="chart3"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" data-series-alerts>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h1 class="thin text-center">Scenario Timeline</h1>
+                                    <div data-timelime class="timeline animated">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 4 -->
+                    <div class="tab-pane fade" id='scenario-4' data-showcase="4">
+                        <img class="text-center" id='spinner4' src="/content/img/spinner.GIF"/>
+                        <div class="hide" id="tab4">
+                            <h3>Heat Stroke</h3>
+                            <p>
+                                The heat stroke scenario simulates the body's temperature regulation system. This scenario highlights the ability of the BioGears physiology engine to simulate the energy exchange between the human body and the environment.
+                                <br><br>See the <a href="./documentation/CombatMultitraumaValidation.pdf">Validation Matrix</a> for more details about the narrative and validation of the combined insult and intervention physiologic effects.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5" style='margin-top: 10px;'>
+                                    <button data-player="play" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-play"></span> <text>Play</text>
+                                    </button>
+                                    <button data-player="pause" type="button" class="btn btn-success hide">
+                                        <span class="glyphicon glyphicon-pause"></span> <text>Pause</text>
+                                    </button>
+                                    <button data-player="backward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-backward"></span>
+                                    </button>
+                                    <button data-player="forward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-forward"></span>
+                                    </button>
+                                    Playback Speed: <span data-player="speed">1</span>x
+                                </div>
+                                <div class="col-sm-12 col-md-7" style='margin-top: 10px;'>
+                                    <div class="btn-group pull-right-md">
+                                        <button data-player="unlock" data-toggle="tooltip" data-container="body" data-placement="top" title="Auto scales the Y-Axis as data is placed on the chart" type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-stats"></span> <text>Auto Scale Y-Axis</text>
+                                        </button>
+                                        <button data-player="lock" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to the currently visible data and then prevents it from changing when new data is added." type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-lock"></span> <text>Lock Y-Axis Scale</text>
+                                        </button>
+                                        <button data-player="lockmax" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to min/max of the entire series and locks it there." type="button" class="btn btn-primary active">
+                                            <span class="glyphicon glyphicon-fullscreen"></span> <text>Full Scale Y-Axis</text>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row showcase-player" id="player4">
+                                <div class="col-sm-12" id="chart4"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" data-series-alerts>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h1 class="thin text-center">Scenario Timeline</h1>
+                                    <div data-timelime class="timeline animated">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Scenario 5 -->
+                    <div class="tab-pane fade" id='scenario-5' data-showcase="5">
+                        <img class="text-center" id='spinner5' src="/content/img/spinner.GIF"/>
+                        <div class="hide" id="tab5">
+                            <h3>Sepsis</h3>
+                            <p>
+                                The sepsis scenario highlights the biogears inflammation/infection model and subsequent treatments. Patient reactions were validated with the University of Washington Advanced Modular Manikin project. During the onset of severe septic infection originating in the gut the patient sees symptoms in line with SIRS: increased core temperature, elevated white blood cell count and an elevated respiration rate. Treatments in line with best practice patient management. BioGears supports antibiotics, fluid infusions, and norepinephrine administration.
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5" style='margin-top: 10px;'>
+                                    <button data-player="play" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-play"></span> <text>Play</text>
+                                    </button>
+                                    <button data-player="pause" type="button" class="btn btn-success hide">
+                                        <span class="glyphicon glyphicon-pause"></span> <text>Pause</text>
+                                    </button>
+                                    <button data-player="backward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-backward"></span>
+                                    </button>
+                                    <button data-player="forward" type="button" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-forward"></span>
+                                    </button>
+                                    Playback Speed: <span data-player="speed">1</span>x
+                                </div>
+                                <div class="col-sm-12 col-md-7" style='margin-top: 10px;'>
+                                    <div class="btn-group pull-right-md">
+                                        <button data-player="unlock" data-toggle="tooltip" data-container="body" data-placement="top" title="Auto scales the Y-Axis as data is placed on the chart" type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-stats"></span> <text>Auto Scale Y-Axis</text>
+                                        </button>
+                                        <button data-player="lock" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to the currently visible data and then prevents it from changing when new data is added." type="button" class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-lock"></span> <text>Lock Y-Axis Scale</text>
+                                        </button>
+                                        <button data-player="lockmax" data-toggle="tooltip" data-container="body" data-placement="top" title="Scales the Y-Axis to min/max of the entire series and locks it there." type="button" class="btn btn-primary active">
+                                            <span class="glyphicon glyphicon-fullscreen"></span> <text>Full Scale Y-Axis</text>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row showcase-player" id="player5">
+                                <div class="col-sm-12" id="chart5"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" data-series-alerts>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h1 class="thin text-center">Scenario Timeline</h1>
+                                    <div data-timelime class="timeline animated">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="graphdiv" style="width: 1000px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class='download-banner'>
+        <div class='container text-center' >
+            <h1 class='thin'>BioGears Support</h1>
+            <p class='top-spacer' style="margin-bottom: 50px;">
+                The BioGears team is now offering our users the ability to purchase support services in daily and weekly increments through our website! If you need help on a tough integration challenge, developing a new system or scenario, or adding your model to BioGears, our technical experts are here to help! The purchase options below provide hourly technical support from senior members of the BioGears development team, including engineers and computer scientists. You can purchase the support in 8 and 40 hour increments. To get started, purchase a technical support package below.
+            </p>
+            <div style="margin-bottom: 50px;">
+                <div>
+                    <a class="btn btn-success" href="https://store.ara.com/ShoppingCart.asp?ProductCode=BioGears1&Qty.BioGears1=1" target="_blank" class="btn btn-primary">8 Hours of Support ($1540)</a>
+                    <a class="btn btn-success" href="https://store.ara.com/ShoppingCart.asp?ProductCode=BioGears2&Qty.BioGears2=1" target="_blank" class="btn btn-primary">40 Hours of Support ($7315)</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class='home-section-4'>
+        <div class='container'>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1 class='thin check-it-spacer'>Trusted and Used by:</h1>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.virtualheroes.com" target="_blank">
+                            <img src="./content/img/collab/vh.png" class="text-center collab-img" alt="Virtual Heroes">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="https://www.med.unc.edu/csc" target="_blank">
+                            <img src="./content/img/collab/unc.png" class="text-center collab-img" alt="University of North Carolina">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.umn.edu" target="_blank">
+                            <img src="./content/img/collab/umn.png" class="text-center collab-img" alt="University of Minnesota">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.washington.edu" target="_blank">
+                            <img src="./content/img/collab/uow.png" class="text-center collab-img" alt="University of Washington">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://illinois.edu" target="_blank">
+                            <img src="./content/img/collab/uoi.gif" class="text-center collab-img" alt="University of Illinois">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.massgeneral.org/partners.aspx" target="_blank">
+                            <img src="./content/img/collab/mgs.png" class="text-center collab-img" alt="Mass General Hospital">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://bic.cs.cmu.edu" target="_blank">
+                            <img src="./content/img/collab/cmu.png" class="text-center collab-img" alt="Carnegie Mellon University">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.vcom3d.com" target="_blank">
+                            <img src="./content/img/collab/vcom3d.png" class="text-center collab-img" alt="Vcom 3D">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://simbionix.com" target="_blank">
+                            <img src="./content/img/collab/simbionix.png" class="text-center collab-img" alt="Simbionix">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://simetri.us" target="_blank">
+                            <img src="./content/img/collab/simitri.png" class="text-center collab-img" alt="SIMITRI">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.ivirinc.com" target="_blank">
+                            <img src="./content/img/collab/ivir.png" class="text-center collab-img" alt="IVIR">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://bryanbergeron.com" target="_blank">
+                            <img src="./content/img/collab/bb.png" class="text-center collab-img" alt="Archetype Technologies">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.ingmarmed.com" target="_blank">
+                            <img src="./content/img/collab/ingmar.png" class="text-center collab-img" alt="IngMar Medical">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.syndaver.com" target="_blank">
+                            <img src="./content/img/collab/SynDaver-Labs-Logo.png" class="text-center collab-img" alt="SynDaver">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.utk.edu" target="_blank">
+                            <img src="./content/img/collab/uot.png" class="text-center collab-img" alt="University of Tennessee">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div class="text-center collab-img-container">
+                        <a href="http://www.kitware.com" target="_blank">
+                            <img src="./content/img/collab/Kitware_Logo.png" class="text-center collab-img" alt="Kitware">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class='home-section-5'>
+        <div class='container'>
+            <h1 class='thin text-center'>Whats Next?</h1>
+            <div class='row'>
+                <div class='col-sm-offset-2 col-md-offset-3 col-xs-12 col-sm-8 col-md-6'>
+                    <p class='spacer text-center'>
+                        Easy! <a href='./documentation/_toolkit.html'>Get started</a> with your new BioGears project, take a look at the
+                        <a href='./documentation/index.html'>documentation</a>, and interact with our
+                        growing community over at <a href='https://github.com/BioGearsEngine/Engine'>GitHub</a>.
+                    </p>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-offset-3 col-md-offset-4 col-sm-3 col-md-2'>
+                    <a class='btn btn-primary btn-lg btn-home-5 text-center' href='https://github.com/BioGearsEngine/Engine/releases'>Download</a>
+                </div>
+                <div class='col-sm-3 col-md-2'>
+                    <a class='btn btn-primary btn-lg btn-home-5 text-center' href='./documentation/_toolkit.html'>Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="footer">
+    <div class="container">
+        <div class='row text-muted'>
+            <div class='footer-row col-md-8'>Copyright &copy; 2018 <a href='http://www.ara.com'>Applied Research Associates, Inc.</a> All Rights Reserved. Sponsored by <a href='http://www.tatrc.org'>TATRC</a></div>
+            <div class='footer-row col-md-1'><a href='./terms.html'>Terms</a></div>
+            <div class='footer-row col-md-1'><a href='./privacy.html'>Privacy</a></div>
+            <div class='footer-icons col-md-1'>
+                <a class="footer-follow-icon" target="_blank" href="https://www.facebook.com/biogears.engine">
+                    <img src="./content/img/facebook.png" alt="FB">
+                </a>
+                <a class="footer-follow-icon" target="_blank" href="https://twitter.com/BioGearsEngine">
+                    <img src="./content/img/twitter.png" alt="TW">
+                </a>
+                <a class="footer-follow-icon" target="_blank" href="http://www.linkedin.com/pub/biogears-engine/8a/389/846">
+                    <img src="./content/img/linkedin.png" alt="LI">
+                </a>
+                <a class="footer-follow-icon" target="_blank" href="http://www.slideshare.net/BioGearsEngine/">
+                    <img src="./content/img/slideshare.png" alt="SS">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Load JS here for greater good =============================-->
+<script src="./content/js/jquery-1.11.0.min.js"></script>
+<script src="./content/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="./content/js/Highstock-2.0.3/js/highstock.js"></script>
+<script src="./content/js/hctheme.js"></script>
+<script src="./content/js/dygraph-combined.js"></script>
+<script src="./content/js/showcase.js"></script>
+<script>
+    $(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tab"]').first().parent().addClass('active');
+        $('.tab-pane').first().addClass('in active');
+        $('[data-showcase]').showcase();
+
+        var timelineAnimate;
+        timelineAnimate = function(elem) {
+            return $(".timeline.animated .timeline-row").each(function(i) {
+                var bottom_of_object, bottom_of_window;
+                bottom_of_object = $(this).offset().top + $(this).outerHeight();
+                bottom_of_window = $(window).scrollTop() + $(window).height();
+                if (bottom_of_window > bottom_of_object) {
+                    return $(this).addClass("active");
+                }
+            });
+        };
+        timelineAnimate();
+        return $(window).scroll(function() {
+            return timelineAnimate();
+        });
+
+    });
+</script>
+
+
+</body>
+
+</html>

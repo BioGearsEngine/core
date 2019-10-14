@@ -68,8 +68,8 @@ public class SESubstancePhysicochemicals
 	{
 		this.reset();
 	
-		if(data.getAcidDissociationConstant()!=null)
-			this.getAcidDissociationConstant().load(data.getAcidDissociationConstant());
+		//if(data.getAcidDissociationConstant()!=null)
+			//this.getAcidDissociationConstant().load(data.getAcidDissociationConstant());
 		if(data.getBindingProtein()!=null)
 			this.setBindingProtein(data.getBindingProtein());
 		if(data.getBloodPlasmaRatio()!=null)
@@ -80,8 +80,8 @@ public class SESubstancePhysicochemicals
 			this.setIonicState(data.getIonicState());
 		if(data.getLogP()!=null)
 			this.getLogP().load(data.getLogP());
-		if(data.getOralAbsorptionRateConstant()!=null)
-			this.getOralAbsorptionRateConstant().load(data.getOralAbsorptionRateConstant());
+		//if(data.getOralAbsorptionRateConstant()!=null)
+			//this.getOralAbsorptionRateConstant().load(data.getOralAbsorptionRateConstant());
 			
 		return true;
 	}
@@ -97,8 +97,8 @@ public class SESubstancePhysicochemicals
 	
 	protected void unload(SubstancePhysicochemicalData to)
 	{
-		if(hasAcidDissociationConstant())
-			to.setAcidDissociationConstant(this.acidDissociationConstant.unload());
+		//if(hasAcidDissociationConstant())
+			//to.setAcidDissociationConstant(this.acidDissociationConstant.unload());
 		if(hasBindingProtein())
 			to.setBindingProtein(this.bindingProtien);
 		if(hasBloodPlasmaRatio())
@@ -109,8 +109,8 @@ public class SESubstancePhysicochemicals
 			to.setIonicState(this.ionicState);
 		if(hasLogP())
 			to.setLogP(this.logP.unload());
-		if(hasOralAbsorptionRateConstant())
-			to.setOralAbsorptionRateConstant(this.oralAbsorptionRateConstant.unload());		
+		//if(hasOralAbsorptionRateConstant())
+			//to.setOralAbsorptionRateConstant(this.oralAbsorptionRateConstant.unload());		
 	}
 	
 	public SEScalar getAcidDissociationConstant() 

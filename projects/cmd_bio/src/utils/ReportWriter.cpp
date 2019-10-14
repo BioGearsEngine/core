@@ -184,7 +184,7 @@ int ReportWriter::to_table()
     table += std::string(table_end);
     // This block saves out the html tables for website generation
     std::ofstream file;
-    file.open("validation/tables/" + table_name + "ValidationTable" + file_extension);
+    file.open("validation/" + table_name + "ValidationTable" + file_extension);
     if (!file) {
       return 1;
     }

@@ -15,7 +15,7 @@ package mil.tatrc.physiology.datamodel.patient.actions;
 
 import java.util.*;
 import mil.tatrc.physiology.datamodel.CDMSerializer;
-import mil.tatrc.physiology.datamodel.bind.SepsisData;
+//import mil.tatrc.physiology.datamodel.bind.SepsisData;
 import mil.tatrc.physiology.datamodel.properties.SEScalar0To1;
 
 
@@ -53,30 +53,30 @@ public class SESepsis extends SEPatientAction
 		return hasCompartment() && hasSeverity();
 	}
 	
-	public boolean load(SepsisData in)
-	{
-		super.load(in);
-    this.getSeverity().load(in.getSeverity());
-    this.compartment=in.getCompartment();
-		
-    return isValid();
-	}
+//	public boolean load(SepsisData in)
+//	{
+//		super.load(in);
+//    this.getSeverity().load(in.getSeverity());
+//    this.compartment=in.getCompartment();
+//		
+//    return isValid();
+//	}
 	
-	public SepsisData unload()
-	{
-		SepsisData data = CDMSerializer.objFactory.createSepsisData();
-		unload(data);
-		return data;
-	}
+//	public SepsisData unload()
+//	{
+//		SepsisData data = CDMSerializer.objFactory.createSepsisData();
+//		unload(data);
+//		return data;
+//	}
 	
-	protected void unload(SepsisData data)
-	{
-		super.unload(data);
-		if(this.severity!=null)
-			data.setSeverity(severity.unload());
-		if(this.compartment!=null)
-			data.setCompartment(compartment);
-	}
+//	protected void unload(SepsisData data)
+//	{
+//		super.unload(data);
+//		if(this.severity!=null)
+//			data.setSeverity(severity.unload());
+//		if(this.compartment!=null)
+//			data.setCompartment(compartment);
+//	}
 	
 // Standard Get/Has and ToString methods needed for all BioGears Patient Actions
 	public String getCompartment()

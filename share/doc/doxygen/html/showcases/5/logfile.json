@@ -1,0 +1,232 @@
+{
+    "Events": {
+        "881.16": {
+            "Patient has Tachypnea": {
+                "name": "Patient has Tachypnea"
+            }
+        },
+        "1236.7": {
+            "Patient has entered state : RespiratoryAlkalosis": {
+                "name": "Patient has entered state : RespiratoryAlkalosis"
+            }
+        },
+        "1407.04": {
+            "Patient is Hyperthermic": {
+                "name": "Patient is Hyperthermic"
+            }
+        },
+        "4614.62": {
+            "Patient has Tachycardia": {
+                "name": "Patient has Tachycardia"
+            }
+        },
+        "9960.04": {
+            "Patient has Intracranial Hypotension": {
+                "name": "Patient has Intracranial Hypotension"
+            }
+        },
+        "10303.9": {
+            "Patient is in Hypovolemic Shock": {
+                "name": "Patient is in Hypovolemic Shock"
+            }
+        },
+        "10373.9": {
+            "Patient has Antidiuresis": {
+                "name": "Patient has Antidiuresis"
+            },
+            "The patient has severe sepsis": {
+                "name": "The patient has severe sepsis"
+            }
+        },
+        "12741.8": {
+            "Patient is no longer in Hypovolemic Shock": {
+                "name": "Patient is no longer in Hypovolemic Shock"
+            }
+        },
+        "12866.3": {
+            "Patient no longer is in Antidiuresis": {
+                "name": "Patient no longer is in Antidiuresis"
+            },
+            "Patient no longer has severe sepsis": {
+                "name": "Patient no longer has severe sepsis"
+            }
+        },
+        "13348.6": {
+            "Patient has Antidiuresis": {
+                "name": "Patient has Antidiuresis"
+            },
+            "The patient has severe sepsis": {
+                "name": "The patient has severe sepsis"
+            }
+        },
+        "13350.6": {
+            "Patient no longer is in Antidiuresis": {
+                "name": "Patient no longer is in Antidiuresis"
+            },
+            "Patient no longer has severe sepsis": {
+                "name": "Patient no longer has severe sepsis"
+            }
+        },
+        "13353.5": {
+            "Patient has Antidiuresis": {
+                "name": "Patient has Antidiuresis"
+            },
+            "The patient has severe sepsis": {
+                "name": "The patient has severe sepsis"
+            }
+        },
+        "14108.8": {
+            "Patient is in Hypovolemic Shock": {
+                "name": "Patient is in Hypovolemic Shock"
+            }
+        }
+    },
+    "Insults": {
+        "30.02": {
+            "Sepsis": {
+                "name": "Sepsis",
+                "data": [
+                    {
+                        "label": "Severity",
+                        "value": "1"
+                    },
+                    {
+                        "label": "Compartment",
+                        "value": "Gut"
+                    }
+                ]
+            }
+        }
+    },
+    "Interventions": {
+        "7230.04": {
+            "Compound Infusion": {
+                "name": "Compound Infusion",
+                "data": [
+                    {
+                        "label": "Rate",
+                        "value": "50(mL/min)"
+                    },
+                    {
+                        "label": "Bag Volume",
+                        "value": "500(mL)"
+                    },
+                    {
+                        "label": "Substance Compound",
+                        "value": "Saline"
+                    }
+                ]
+            }
+        },
+        "8130.06": {
+            "Compound Infusion": {
+                "name": "Compound Infusion",
+                "data": [
+                    {
+                        "label": "Rate",
+                        "value": "50(mL/min)"
+                    },
+                    {
+                        "label": "Bag Volume",
+                        "value": "500(mL)"
+                    },
+                    {
+                        "label": "Substance Compound",
+                        "value": "Saline"
+                    }
+                ]
+            }
+        },
+        "9030.08": {
+            "Compound Infusion": {
+                "name": "Compound Infusion",
+                "data": [
+                    {
+                        "label": "Rate",
+                        "value": "0.667(mL/min)"
+                    },
+                    {
+                        "label": "Bag Volume",
+                        "value": "20(mL)"
+                    },
+                    {
+                        "label": "Substance Compound",
+                        "value": "PiperacillinTazobactam"
+                    }
+                ]
+            },
+            "Substance Infusion": {
+                "name": "Substance Infusion",
+                "data": [
+                    {
+                        "label": "Rate",
+                        "value": "1(mL/min)"
+                    },
+                    {
+                        "label": "Concentration",
+                        "value": "14(ug/mL)"
+                    },
+                    {
+                        "label": "Substance",
+                        "value": "Norepinephrine"
+                    }
+                ]
+            }
+        },
+        "12630.1": {
+            "Compound Infusion": {
+                "name": "Compound Infusion",
+                "data": [
+                    {
+                        "label": "Rate",
+                        "value": "240(mL/min)"
+                    },
+                    {
+                        "label": "Bag Volume",
+                        "value": "1250(mL)"
+                    },
+                    {
+                        "label": "Substance Compound",
+                        "value": "Saline"
+                    }
+                ]
+            }
+        },
+        "16230.1": {
+            "Compound Infusion": {
+                "name": "Compound Infusion",
+                "data": [
+                    {
+                        "label": "Rate",
+                        "value": "100(mL/min)"
+                    },
+                    {
+                        "label": "Bag Volume",
+                        "value": "250(mL)"
+                    },
+                    {
+                        "label": "Substance Compound",
+                        "value": "Saline"
+                    }
+                ]
+            },
+            "Substance Infusion": {
+                "name": "Substance Infusion",
+                "data": [
+                    {
+                        "label": "Rate",
+                        "value": "0(mL/min)"
+                    },
+                    {
+                        "label": "Concentration",
+                        "value": "0(ug/mL)"
+                    },
+                    {
+                        "label": "Substance",
+                        "value": "Norepinephrine"
+                    }
+                ]
+            }
+        }
+    }
+}
