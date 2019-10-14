@@ -42,6 +42,8 @@ bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESub
   m_Name = in.Name();
   if (in.Classification().present())
     m_Classification = in.Classification().get();
+  if (in.BloodRHFactor().present())
+    m_RhFactor = in.BloodRHFactor().get();
 
   std::string err;
 
@@ -79,6 +81,8 @@ void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
     data.Name(m_Name);
   if (HasClassification())
     data.Classification(m_Classification);
+  if (HasRhFactor())
+    data.BloodRHFactor(m_RhFactor);
 
   for (unsigned int i = 0; i < m_Components.size(); i++) {
     data.Component().push_back(*m_Components.at(i)->Unload());
@@ -133,6 +137,21 @@ bool SESubstanceCompound::HasClassification() const
 void SESubstanceCompound::InvalidateClassification()
 {
   m_Classification = (CDM::enumSubstanceClass::value)-1;
+}
+//-----------------------------------------------------------------------------
+bool SESubstanceCompound::GetRhFactor() const
+{
+  return m_RhFactor;
+}
+//-----------------------------------------------------------------------------
+void SESubstanceCompound::SetRhFactor(bool subFactor)
+{
+  m_RhFactor = subFactor;
+}
+//-----------------------------------------------------------------------------
+bool SESubstanceCompound::HasRhFactor() const
+{
+  return (m_RhFactor == true || m_RhFactor == false) ? true : false;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasComponent() const

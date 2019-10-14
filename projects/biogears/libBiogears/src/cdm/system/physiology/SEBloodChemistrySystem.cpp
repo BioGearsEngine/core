@@ -86,6 +86,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_StrongIonDifference = nullptr;
   m_TotalBilirubin = nullptr;
   m_TotalProteinConcentration = nullptr;
+  m_RhTransfusionReactionVolume = nullptr;
   m_VenousBloodPH = nullptr;
   m_VolumeFractionNeutralPhospholipidInPlasma = nullptr;
   m_VolumeFractionNeutralLipidInPlasma = nullptr;
@@ -133,6 +134,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_StrongIonDifference);
   SAFE_DELETE(m_TotalBilirubin);
   SAFE_DELETE(m_TotalProteinConcentration);
+  SAFE_DELETE(m_RhTransfusionReactionVolume);
   SAFE_DELETE(m_VenousBloodPH);
   SAFE_DELETE(m_VolumeFractionNeutralPhospholipidInPlasma);
   SAFE_DELETE(m_VolumeFractionNeutralLipidInPlasma);
@@ -831,7 +833,13 @@ double SEBloodChemistrySystem::GetTotalProteinConcentration(const MassPerVolumeU
   return m_TotalProteinConcentration->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
+SEScalarVolume& SEBloodChemistrySystem::GetRhTransfusionReactionVolume()
+{
+  if (m_RhTransfusionReactionVolume == nullptr)
+    m_RhTransfusionReactionVolume = new SEScalarVolume();
+  return *m_RhTransfusionReactionVolume;
+}
+//-------------------------------------------------------------------------------
 bool SEBloodChemistrySystem::HasVolumeFractionNeutralPhospholipidInPlasma() const
 {
   return m_VolumeFractionNeutralPhospholipidInPlasma == nullptr ? false : m_VolumeFractionNeutralPhospholipidInPlasma->IsValid();

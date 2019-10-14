@@ -31,7 +31,7 @@ SEPatient::SEPatient(Logger* logger)
 
   m_AlveoliSurfaceArea = nullptr;
   m_BasalMetabolicRate = nullptr;
-  m_BloodRh = (CDM::enumBinaryResults::value)-1;
+  m_BloodRh = true;
   m_BloodType = (CDM::enumBloodType::value)-1;
   m_BloodVolumeBaseline = nullptr;
   m_BodyDensity = nullptr;
@@ -100,7 +100,7 @@ void SEPatient::Clear()
 
   SAFE_DELETE(m_AlveoliSurfaceArea);
   SAFE_DELETE(m_BasalMetabolicRate);
-  m_BloodRh = (CDM::enumBinaryResults::value)-1;
+  m_BloodRh = true;
   m_BloodType = (CDM::enumBloodType::value)-1;
   SAFE_DELETE(m_BloodVolumeBaseline);
   SAFE_DELETE(m_BodyDensity);
@@ -991,24 +991,24 @@ void SEPatient::InvalidateBloodType()
   m_BloodType = (CDM::enumBloodType::value)-1;
 }
 //-----------------------------------------------------------------------------
-CDM::enumBinaryResults::value SEPatient::GetBloodRh() const
+bool SEPatient::GetBloodRh() const
 {
   return m_BloodRh;
 }
 //-----------------------------------------------------------------------------
-void SEPatient::SetBloodRh(CDM::enumBinaryResults::value bloodRh)
+void SEPatient::SetBloodRh(bool bloodRh)
 {
   m_BloodRh = bloodRh;
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasBloodRh() const
 {
-  return m_BloodRh == ((CDM::enumBinaryResults::value)-1) ? false : true;
+  return (m_BloodRh == true || m_BloodRh == false) ? true : false;
 }
 //-----------------------------------------------------------------------------
 void SEPatient::InvalidateBloodRh()
 {
-  m_BloodRh = (CDM::enumBinaryResults::value)-1;
+  m_BloodRh = true;
 }
   //---------------------------------------------------------------------------
 bool SEPatient::HasBloodVolumeBaseline() const

@@ -126,8 +126,8 @@ public:
   virtual bool HasBloodType() const;
   virtual void InvalidateBloodType();
 
-  virtual CDM::enumBinaryResults::value GetBloodRh() const;
-  virtual void SetBloodRh(CDM::enumBinaryResults::value bloodRh);
+  virtual bool GetBloodRh() const;
+  virtual void SetBloodRh(bool bloodRh);
   virtual bool HasBloodRh() const;
   virtual void InvalidateBloodRh();
 
@@ -255,7 +255,7 @@ protected:
   SEScalarPower* m_MaxWorkRate;
   SEScalarMass* m_MuscleMass;
   CDM::enumBloodType::value m_BloodType;
-  CDM::enumBinaryResults::value m_BloodRh;
+  bool m_BloodRh;
 
   SEScalarArea* m_AlveoliSurfaceArea;
   SEScalarFraction* m_RightLungRatio;

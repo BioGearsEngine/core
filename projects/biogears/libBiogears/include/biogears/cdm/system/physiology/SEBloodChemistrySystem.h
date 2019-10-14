@@ -269,6 +269,13 @@ public:
   double GetTotalProteinConcentration(const MassPerVolumeUnit& unit) const;
   //@}
 
+  /** @name RhTransfusionReactionVolume
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_RhTransfusionReactionVolume
+  *  @{*/
+  /// %Test if rh mismatch
+  virtual SEScalarVolume& GetRhTransfusionReactionVolume();
+  //@}
+
   /** @name VolumeFractionNeutralPhospholipidInPlasma
   *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralPhospholipidInPlasma
   *  @{*/
@@ -395,6 +402,7 @@ protected:
   SEScalarAmountPerVolume* m_StrongIonDifference;
   SEScalarMassPerVolume* m_TotalBilirubin;
   SEScalarMassPerVolume* m_TotalProteinConcentration;
+  SEScalarVolume* m_RhTransfusionReactionVolume;
   SEScalarFraction* m_VolumeFractionNeutralPhospholipidInPlasma;
   SEScalarFraction* m_VolumeFractionNeutralLipidInPlasma;
 

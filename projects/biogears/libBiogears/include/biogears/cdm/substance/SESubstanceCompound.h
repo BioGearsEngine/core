@@ -45,6 +45,9 @@ public:
   virtual void SetClassification(CDM::enumSubstanceClass::value subClass);
   virtual bool HasClassification() const;
   virtual void InvalidateClassification();
+  virtual bool GetRhFactor() const;
+  virtual void SetRhFactor(bool subFactor);
+  virtual bool HasRhFactor() const;
 
   bool HasComponent() const;
   bool HasComponent(const SESubstance& substance) const;
@@ -57,6 +60,7 @@ public:
 protected:
   std::string m_Name;
   CDM::enumSubstanceClass::value m_Classification;
+  bool m_RhFactor;
 
   std::vector<SESubstanceConcentration*> m_Components;
   std::vector<const SESubstanceConcentration*> m_cComponents;

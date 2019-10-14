@@ -98,7 +98,7 @@ void Drugs::Initialize()
   GetCentralNervousResponse().SetValue(0.0);
   m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(8.0 * 1e-9, AmountPerVolumeUnit::mol_Per_L); //Need to initialize here since Drugs processed before BloodChemistry
   m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
-  GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
+  m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
 
   m_totalAdministered_uL = 0.0;
   m_SarinRbcAcetylcholinesteraseComplex_nM = 0.0;
@@ -549,8 +549,8 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       }
     }
 
-    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && ((m_data.GetPatient().GetBloodRh() == (CDM::enumBinaryResults::negative)) && (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_OPositive"))) {
-      m_data.GetDrugs().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
+    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && ((m_data.GetPatient().GetBloodRh() == false) && (compound->GetRhFactor()==true))) {
+      m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
       patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
     }
 

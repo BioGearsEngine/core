@@ -32,14 +32,6 @@ specific language governing permissions and limitations under the License.
     </xs:restriction>
   </xs:simpleType>
   
-  <!-- @brief Enumeration for positive/negative comparison -->
-  <xs:simpleType name="enumBinaryResults">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="positive"/>
-      <xs:enumeration value="negative"/>
-    </xs:restriction>
-  </xs:simpleType>
-  
   <!-- @brief Enumeration for states the patient can enter and exit out of. -->
   <xs:simpleType name="enumPatientEvent">
     <xs:restriction base="xs:string">
@@ -128,7 +120,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="MaxWorkRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<< @brief The maximal work rate. -->
           <xs:element name="MuscleMass" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief The mass of muscle only. --> 
 		  <xs:element name="BloodTypeABO" type="enumBloodType" minOccurs="0" maxOccurs="1"/><!--<< @brief ABO antigen blood type. --> 
-		  <xs:element name="BloodTypeRh" type="enumBinaryResults" minOccurs="0" maxOccurs="1"/><!--<< @brief whether blood type is positive or negative for Rh factor. Initializes to 0 OR 1. --> 
+		  <xs:element name="BloodTypeRh" type="xs:boolean" minOccurs="0" maxOccurs="1"/><!--<< @brief whether blood type is positive or negative for Rh factor. Initializes to 0 OR 1. --> 
           <!-- Physical Characteristics that can change and should be change due to a condition -->
           <xs:element name="AlveoliSurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief The surface area of the alveoli for gas diffusion--> 
 		  <xs:element name="Hyperhidrosis" type="ScalarNeg1To1Data" minOccurs="0" maxOccurs="1"/><!--<< @brief The patients’ susceptibility to sweating with negative indicating lack of sweat and positive showing excess. -->		  		  

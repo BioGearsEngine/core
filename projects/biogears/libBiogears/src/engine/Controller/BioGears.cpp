@@ -617,7 +617,7 @@ bool BioGears::SetupPatient()
   //Blood Type -----------------------------------------------------------------
   //default blood type based on universal acceptor
   CDM::enumBloodType::value defaultBloodType_ABO = CDM::enumBloodType::AB;
-  CDM::enumBinaryResults::value defaultBloodRh = CDM::enumBinaryResults::positive;
+  bool defaultBloodRh = true;
   if (!m_Patient->HasBloodRh()) {
     m_Patient->SetBloodRh(defaultBloodRh);
     ss << "Patient's blood Rh factor has not been set. Defaulting to  " << defaultBloodRh;

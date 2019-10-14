@@ -294,7 +294,7 @@ void BloodChemistry::Process()
   double TotalBloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
 
   if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
-    if (m_data.GetDrugs().GetRhTransfusionReactionVolume().GetValue(VolumeUnit::uL) > 0) {
+    if (GetRhTransfusionReactionVolume().GetValue(VolumeUnit::uL) > 0) {
       CalculateHemolyticTransfusionReaction(true);
     } else {
       CalculateHemolyticTransfusionReaction();
@@ -767,7 +767,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
       patientAntigen_ct = AntB_initial_ct;
     }
   } else {
-    double newBloodVolume_uL = m_data.GetDrugs().GetRhTransfusionReactionVolume().GetValue(VolumeUnit::uL) - (m_RhTransfusionReactionVolume_mL * 1000.0);
+    double newBloodVolume_uL = GetRhTransfusionReactionVolume().GetValue(VolumeUnit::uL) - (m_RhTransfusionReactionVolume_mL * 1000.0);
     LLIM(newBloodVolume_uL, 0.0);
     donorAntigen_ct = m_RhFactorMismatch_ct + (antigens_per_rbc * 5280000.0 * newBloodVolume_uL); //value based on BioGears baseline molarity for rbc in ct/uL
     patientAntigen_ct = 0.0;
@@ -898,7 +898,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(MetabolismAfterHTR, PowerUnit::W);
 
   if (rhMismatch == true) {
-    m_RhTransfusionReactionVolume_mL = m_data.GetDrugs().GetRhTransfusionReactionVolume().GetValue(VolumeUnit::mL);
+    m_RhTransfusionReactionVolume_mL = GetRhTransfusionReactionVolume().GetValue(VolumeUnit::mL);
     m_RhFactorMismatch_ct = donorRBC * agglutinin_per_rbc * ((liveCells_percent+1.0)/2.0);
     LLIM(m_RhFactorMismatch_ct, 0.0);
   }

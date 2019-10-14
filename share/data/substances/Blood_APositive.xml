@@ -2,7 +2,7 @@
 <SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>Blood_APositive</Name>
   <Classification>WholeBlood</Classification>
-  <BloodRHFactor>Positive</BloodRHFactor>
+  <BloodRHFactor>true</BloodRHFactor>
   <Component Name="Hemoglobin">
     <Concentration readOnly="false" unit="g/dL" value="3.7"/>
   </Component>

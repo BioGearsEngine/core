@@ -272,7 +272,7 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/><!--<< @brief The unique name of the compound. -->
 		  <xs:element name="Classification" type="enumSubstanceClass" minOccurs="0" maxOccurs="1"/><!--<<@brief Label for grouping drugs according to common physiological effects. -->
-		  <xs:element name="BloodRHFactor" type="enumCharge" minOccurs="0" maxOccurs="1"/><!--<<@brief Label for grouping drugs according to common physiological effects. -->
+		  <xs:element name="BloodRHFactor" type="xs:boolean" minOccurs="0" maxOccurs="1"/><!--<<@brief Label for grouping drugs according to common physiological effects. true is positive and false is negative. -->
           <xs:element name="Component" type="SubstanceConcentrationData" minOccurs="0"  maxOccurs="unbounded"/> <!--<< @brief @copybrief Substance_SubstanceConcentrationData -->
         </xs:sequence>
       </xs:extension>
