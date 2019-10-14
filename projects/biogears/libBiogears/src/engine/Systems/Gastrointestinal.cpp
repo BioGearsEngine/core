@@ -909,12 +909,6 @@ void Gastrointestinal::ProcessDrugCAT()
     const double villousBloodFlow_mL_Per_s = 5.0;
     const double fBlood = 1.0 / 8.0;
     const double bodyMass_g = m_data.GetPatient().GetWeight(MassUnit::g); //Used to estimate enterocyte volume, assuming density 1.0 g/mL
-    if (sub->GetName() == "Fentanyl") {
-      //For oral transmucosal fentanyl, we need a little more of a delay between peak transmucosal absorption and the beginning of GI absorption
-      //This stomach transit rate is within reasonable bounds for a "fed" state.
-      ///\ToDo: We may need to revisit this with other drugs--perhaps make it a sub parameter or base it on drug classification.
-      m_TransitRate_Per_s[0] = 1.0 / 3600.0;
-    }
     //Physiochemical data
     const SESubstancePhysicochemicals* subData = sub->GetPK()->GetPhysicochemicals();
     const CDM::enumSubstanceIonicState ionState = sub->GetPK()->GetPhysicochemicals()->GetIonicState();
@@ -932,7 +926,7 @@ void Gastrointestinal::ProcessDrugCAT()
     }
     double fMetabolized = 0.0;
     if (sub->GetName() == "Fentanyl") {
-      fMetabolized = 0.25; //If more drugs needs this we can think about adding it to substance clearance schema
+      fMetabolized = 0.20; //If more drugs needs this we can think about adding it to substance clearance schema
     }
     //Dissolution data
     const double particleRadius_cm = 5.0e-4; //default for now
