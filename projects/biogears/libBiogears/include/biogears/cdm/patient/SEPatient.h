@@ -255,7 +255,7 @@ protected:
   SEScalarPower* m_MaxWorkRate;
   SEScalarMass* m_MuscleMass;
   CDM::enumBloodType::value m_BloodType;
-  bool m_BloodRh;
+  bool m_BloodRh; // true meaning rh positive and false meaning rh negative
 
   SEScalarArea* m_AlveoliSurfaceArea;
   SEScalarFraction* m_RightLungRatio;

@@ -110,22 +110,6 @@ void SESubstanceCompoundInfusion::ToString(std::ostream& str) const
   str << "\n\tBag Volume: ";
   HasBagVolume() ? str << *m_BagVolume : str << "NaN";
   str << "\n\tSubstance Compound: " << m_Compound.GetName();
-  /* PRETTY SURE I CAN TRASH THIS SECTION
-  /// \todo Will need to check for if substance infusion is blood and if so, antigen and rh factor must exist
-  if (m_Compound.GetClassification() == CDM::enumSubstanceClass::WholeBlood) {
-    if (HasAdministeredBloodAntigen() && HasAdministeredBloodRhFactor()) {
-      str << "\n\tAdministered Blood Type: ";
-      str << m_AdministeredBloodAntigen << " " << m_AdministeredBloodRhFactor;
-    } else {
-      //m_AdministeredBloodAntigen = (CDM::enumBloodAntigen::O);
-      //m_AdministeredBloodRhFactor = (CDM::enumBool::negative);
-      /*std::stringstream ss;
-      ss << m_4Agglutinate << ", " << m_RemovedRBC << ", " << TotalRBC << ", " << lostOxygen_percent << "!!!!!!!!!!!!! ";
-      Info(ss);
-      Error("Must provide blood type being transfused to patient"); // Come back to look at how this is handled
-    }
-  }
-  */
   str << std::flush;
 }
 
