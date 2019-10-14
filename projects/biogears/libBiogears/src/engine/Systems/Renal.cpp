@@ -1620,12 +1620,13 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
   double urineOsm_Per_kg = GetUrineOsmolality(OsmolalityUnit::mOsm_Per_kg);
   if (m_data.GetBloodChemistry().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) {
     u.SetColorResult(CDM::enumUrineColor::Pink);
-  } else if (urineOsm_Per_kg <= 400) // Need cite for this
+  } else if (urineOsm_Per_kg <= 400) { // Need cite for this
     u.SetColorResult(CDM::enumUrineColor::PaleYellow);
-  else if (urineOsm_Per_kg > 400 && urineOsm_Per_kg <= 750)
+  } else if (urineOsm_Per_kg > 400 && urineOsm_Per_kg <= 750) {
     u.SetColorResult(CDM::enumUrineColor::Yellow);
-  else
+  } else {
     u.SetColorResult(CDM::enumUrineColor::DarkYellow);
+  }
 
   //u.SetApperanceResult();
   double bladder_glucose_mg_Per_dL = m_bladderGlucose->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL);

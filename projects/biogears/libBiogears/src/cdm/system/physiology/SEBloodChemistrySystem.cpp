@@ -41,6 +41,7 @@ namespace biogears {
   constexpr char idPulseOximetry[] = "PulseOximetry";
   constexpr char idRedBloodCellAcetylcholinesterase[] = "RedBloodCellAcetylcholinesterase";
   constexpr char idRedBloodCellCount[] = "RedBloodCellCount";
+  constexpr char idRhTransfusionReactionVolume[] = "RhTransfusionReactionVolume";
   constexpr char idShuntFraction[] = "ShuntFraction";
   constexpr char idStrongIonDifference[] = "StrongIonDifference";
   constexpr char idTotalBilirubin[] = "TotalBilirubin";
@@ -130,11 +131,11 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_PulseOximetry);
   SAFE_DELETE(m_RedBloodCellAcetylcholinesterase);
   SAFE_DELETE(m_RedBloodCellCount);
+  SAFE_DELETE(m_RhTransfusionReactionVolume);
   SAFE_DELETE(m_ShuntFraction);
   SAFE_DELETE(m_StrongIonDifference);
   SAFE_DELETE(m_TotalBilirubin);
   SAFE_DELETE(m_TotalProteinConcentration);
-  SAFE_DELETE(m_RhTransfusionReactionVolume);
   SAFE_DELETE(m_VenousBloodPH);
   SAFE_DELETE(m_VolumeFractionNeutralPhospholipidInPlasma);
   SAFE_DELETE(m_VolumeFractionNeutralLipidInPlasma);
@@ -192,6 +193,8 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     return &GetRedBloodCellAcetylcholinesterase();
   if (name == idRedBloodCellCount)
     return &GetRedBloodCellCount();
+  if (name == idRhTransfusionReactionVolume)
+    return &GetRhTransfusionReactionVolume();
   if (name == idShuntFraction)
     return &GetShuntFraction();
   if (name == idStrongIonDifference)
@@ -275,6 +278,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetRedBloodCellAcetylcholinesterase().Load(in.RedBloodCellAcetylcholinesterase().get());
   if (in.RedBloodCellCount().present())
     GetRedBloodCellCount().Load(in.RedBloodCellCount().get());
+  if (in.RhTransfusionReactionVolume().present())
+    GetRhTransfusionReactionVolume().Load(in.RhTransfusionReactionVolume().get());
   if (in.ShuntFraction().present())
     GetShuntFraction().Load(in.ShuntFraction().get());
   if (in.StrongIonDifference().present())
@@ -358,6 +363,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.RedBloodCellAcetylcholinesterase(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_RedBloodCellAcetylcholinesterase->Unload()));
   if (m_RedBloodCellCount != nullptr)
     data.RedBloodCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_RedBloodCellCount->Unload()));
+  if (m_RhTransfusionReactionVolume != nullptr)
+    data.RhTransfusionReactionVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_RhTransfusionReactionVolume->Unload()));
   if (m_ShuntFraction != nullptr)
     data.ShuntFraction(std::unique_ptr<CDM::ScalarFractionData>(m_ShuntFraction->Unload()));
   if (m_StrongIonDifference != nullptr)
@@ -833,11 +840,23 @@ double SEBloodChemistrySystem::GetTotalProteinConcentration(const MassPerVolumeU
   return m_TotalProteinConcentration->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
+bool SEBloodChemistrySystem::HasRhTransfusionReactionVolume() const
+{
+  return m_RhTransfusionReactionVolume == nullptr ? false : m_RhTransfusionReactionVolume->IsValid();
+}
+//-------------------------------------------------------------------------------
 SEScalarVolume& SEBloodChemistrySystem::GetRhTransfusionReactionVolume()
 {
   if (m_RhTransfusionReactionVolume == nullptr)
     m_RhTransfusionReactionVolume = new SEScalarVolume();
   return *m_RhTransfusionReactionVolume;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetRhTransfusionReactionVolume(const VolumeUnit& unit) const
+{
+  if (m_RhTransfusionReactionVolume == nullptr)
+    return SEScalar::dNaN();
+  return m_RhTransfusionReactionVolume->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
 bool SEBloodChemistrySystem::HasVolumeFractionNeutralPhospholipidInPlasma() const

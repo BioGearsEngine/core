@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Drugs.h>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
-#include <biogears/engine/Systems/BloodChemistry.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
@@ -43,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+#include <biogears/engine/Systems/BloodChemistry.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
@@ -442,7 +442,7 @@ void Drugs::AdministerSubstanceOral()
   }
   for (auto deSub : deactiveSubs) {
     if (oralDoses.at(deSub)->GetAdminRoute() == CDM::enumOralAdministration::Transmucosal) {
-      m_TransmucosalStates.erase(deSub);  //This removes both key and element, which I think is the behavior that we want
+      m_TransmucosalStates.erase(deSub); //This removes both key and element, which I think is the behavior that we want
     }
     m_data.GetActions().GetPatientActions().RemoveSubstanceOralDose(*deSub);
   }
@@ -463,6 +463,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     return;
 
   SEPatient& patient = m_data.GetPatient();
+  const CDM::enumBloodType::value patientBloodType = patient.GetBloodType();
   SESubstanceCompoundInfusion* infusion;
   const SESubstanceCompound* compound;
   SELiquidSubstanceQuantity* subQ;
@@ -514,12 +515,10 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
         SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
 
-        double AntigenA = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
-        double AntigenB = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         double AntigenAIncrement_ct = 0.0;
         double AntigenBIncrement_ct = 0.0;
         if (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_ANegative") {
-          AntigenAIncrement_ct = (massIncrement_ug/(2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc, replace with call to sub file
+          AntigenAIncrement_ct = (massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc, replace with call to sub file
         } else if (compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_BNegative") {
           AntigenBIncrement_ct = (massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
         } else if (compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_ABNegative") {
@@ -534,14 +533,22 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->Balance(BalanceLiquidBy::Molarity);
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->Balance(BalanceLiquidBy::Molarity);
 
-        // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks
-        if (patient.GetBloodType() == (CDM::enumBloodType::AB)) {
+        const double AntigenA_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        const double AntigenB_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks\
+        // First check for AB type since AB is a universal acceptor
+        // Second check for O type acceptor and ANY antigen presence since it would cause a reaction
+        // Last check for A and B presence because if one or the either, both should not be present or else reaction
+        if (patientBloodType == (CDM::enumBloodType::AB)) {
           return;
-        } else if ((patient.GetBloodType() == (CDM::enumBloodType::O) && ((m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) || (m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) //(m_data.GetSubstances().IsActive(*m_AntigenA) || m_data.GetSubstances().IsActive(*m_AntigenB)))
-                   || ((m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0) && (m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) > 0))) { //(m_data.GetSubstances().IsActive(*m_AntigenA) && m_data.GetSubstances().IsActive(*m_AntigenB)))
-          patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
-        }  
-    
+        } else if (patientBloodType == CDM::enumBloodType::O) {
+            if (AntigenA_ct_Per_uL > 0 || AntigenB_ct_Per_uL > 0) {
+              patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());     
+            }
+        } else if (AntigenA_ct_Per_uL > 0 && AntigenB_ct_Per_uL > 0) {
+            patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+        }
+
         subQ->Balance(BalanceLiquidBy::Mass);
 
       } else {
@@ -549,7 +556,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       }
     }
 
-    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && ((m_data.GetPatient().GetBloodRh() == false) && (compound->GetRhFactor()==true))) {
+    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && ((m_data.GetPatient().GetBloodRh() == false) && (compound->GetRhFactor() == true))) {
       m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
       patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
     }
@@ -652,7 +659,7 @@ void Drugs::CalculatePartitionCoefficients()
         ss << tissue->GetName();
         Fatal(ss);
       }
-	  //Choose correct set of equations to use given the ionic state of the drug
+      //Choose correct set of equations to use given the ionic state of the drug
       switch (IonicState) {
       case CDM::enumSubstanceIonicState::Base:
         PHEffectPower = pKA1 - IntracellularPH;
@@ -844,21 +851,21 @@ void Drugs::CalculateDrugEffects()
     neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
 
     bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
-    
+
     const SEPupillaryResponse& pupillaryResponse = pd.GetPupillaryResponse();
     pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier() * concentrationEffects_unitless;
     pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
-	
-	//Do not evaluate antibiotic effects unless the patient has inflamamtion casued by infection
-	if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+
+    //Do not evaluate antibiotic effects unless the patient has inflamamtion casued by infection
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
       if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic) {
         ///\ @cite Regoes2004Pharmacodynamics
-		// The model cited above parameterizes antibacterial activity by the maximum growth rate of the pathogen (kMax), the minimum growth rate exerted by the antibiotic (kMin < 0)
-		  // and a shape parameter.  The input to the function is the ratio of free antibiotic concentration to pathogen MIC.  The EC50 value for this
-		  //curve is the ratio -kMin / kMax.  This structure imposes a net growth rate of 0 when antibiotic concentration = MIC (very useful result).
-		  //This means that we will not use the EC50 value given in antibiotic sub xml files, but it also reduces the amount of parameter guesswork we do.
-		  //For now, the max pathogen growth rate is constant (see BloodChemistry).  If that changes, we need to make sure that this function is aware.
+        // The model cited above parameterizes antibacterial activity by the maximum growth rate of the pathogen (kMax), the minimum growth rate exerted by the antibiotic (kMin < 0)
+        // and a shape parameter.  The input to the function is the ratio of free antibiotic concentration to pathogen MIC.  The EC50 value for this
+        //curve is the ratio -kMin / kMax.  This structure imposes a net growth rate of 0 when antibiotic concentration = MIC (very useful result).
+        //This means that we will not use the EC50 value given in antibiotic sub xml files, but it also reduces the amount of parameter guesswork we do.
+        //For now, the max pathogen growth rate is constant (see BloodChemistry).  If that changes, we need to make sure that this function is aware.
         double growthMax_Per_hr = 0.6;
         double growthMin_Per_hr = growthMax_Per_hr - pd.GetAntibacterialEffect(FrequencyUnit::Per_hr);
         if (growthMin_Per_hr > 0.0) {

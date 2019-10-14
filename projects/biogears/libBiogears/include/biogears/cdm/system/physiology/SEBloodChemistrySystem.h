@@ -272,8 +272,11 @@ public:
   /** @name RhTransfusionReactionVolume
   *  @brief @copybrief Physiology_BloodChemistrySystemData_RhTransfusionReactionVolume
   *  @{*/
+  /// %Test if member has been allocated
+  bool HasRhTransfusionReactionVolume() const;
   /// %Test if rh mismatch
   virtual SEScalarVolume& GetRhTransfusionReactionVolume();
+  double GetRhTransfusionReactionVolume(const VolumeUnit& unit) const;
   //@}
 
   /** @name VolumeFractionNeutralPhospholipidInPlasma

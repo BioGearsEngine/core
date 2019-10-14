@@ -300,7 +300,7 @@ void BloodChemistry::Process()
     }
   }
 
-  double RedBloodCellCount_ct_Per_uL = m_venaCavaRBC->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  const double RedBloodCellCount_ct_Per_uL = m_venaCavaRBC->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   double RedBloodCellCount_ct = (RedBloodCellCount_ct_Per_uL)*TotalBloodVolume_mL * 1000;
   double RedBloodCellVolume_mL = RedBloodCellCount_ct * m_redBloodCellVolume_mL;
   GetHematocrit().SetValue((RedBloodCellVolume_mL / TotalBloodVolume_mL));

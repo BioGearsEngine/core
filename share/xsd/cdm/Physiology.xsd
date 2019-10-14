@@ -97,6 +97,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="PlasmaVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of the plasma.-->
                     <xs:element name="PulseOximetry" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin with bound oxygen as measured optically, which can include Carbon Monoxide.-->
                     <xs:element name="RedBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of red blood cells in the blood.-->
+					<xs:element name="RhTransfusionReactionVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of transfusion reaction blood based on rh mismatch.-->
                     <xs:element name="ShuntFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the blood flow that bypasses the alveoli; therefore, does not engage is gas exchange.-->
 					<xs:element name="StrongIonDifference" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Difference between the positive and negative strong ion concentrations in the blood.-->
                     <xs:element name="TotalProteinConcentration" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The concentration of urea in the blood.-->
