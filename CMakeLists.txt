@@ -119,3 +119,5 @@ install(FILES
   ${Packages}
   DESTINATION lib/cmake/${ROOT_PROJECT_NAME}
 )
+
+generate_project_suffix()

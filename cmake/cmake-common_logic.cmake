@@ -233,3 +233,36 @@ function(configure_version_information _SUCESS_CHECK)
     set( ${_SUCESS_CHECK} True PARENT_SCOPE)
   endif()
 endfunction(configure_version_information)
+
+########################################################################################################
+# 
+# Appends a suffix to the project name to make it easier to tell worktree solutions apart
+# 
+# Will additionally append the MSVC version to the solution if it is of version 14-16
+# Creates the following variabels
+#
+# ${CMAKE_PROJECT_NAME}_SUFFIX        #The value of this variable is appended to the solution name
+#                                     #For Cmake Generators who use the project name in the output files
+#                                     It is useful for determining which MSVC sln you are loading from 
+#                                     the jump list
+#
+# __PROJECT_SUFFIX_SET                This control variable is set in PARENT_SCOPE to prevent calling 
+#                                     of the function twice
+#
+########################################################################################################
+function(generate_project_suffix)
+if(MSVC AND NOT __PROJECT_SUFFIX_SET)
+  set(__PROJECT_SUFFIX_SET ON PARENT_SCOPE)
+  if(${CMAKE_PROJECT_NAME}_PROJECT_SUFFIX)
+    project(${CMAKE_PROJECT_NAME}_${${CMAKE_PROJECT_NAME}_PROJECT_SUFFIX})
+  endif()
+  if(MSVC_VERSION GREATER_EQUAL 1920)
+    project(${CMAKE_PROJECT_NAME}_msvc16)
+  elseif(MSVC_VERSION GREATER_EQUAL 1910)
+    project(${CMAKE_PROJECT_NAME}_msvc15)
+  elseif(MSVC_VERSION GREATER_EQUAL 1900)
+    project(${CMAKE_PROJECT_NAME}_msvc14)
+    project(cmake-test_msvc15)
+  endif()
+endif()
+endfunction()
