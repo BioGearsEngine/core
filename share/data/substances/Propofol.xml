@@ -6,24 +6,24 @@
   <State>Liquid</State>
   <Clearance>
     <Systemic>
-      <FractionExcretedInFeces readOnly="false" value="0.02"/>
-      <FractionUnboundInPlasma readOnly="false" value="1"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="14600"/>
-      <RenalClearance readOnly="false" unit="mL/min kg" value="14.4"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="36"/>
+      <FractionExcretedInFeces readOnly="false" value="0"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.015"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="13000"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="0"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="40"/>
     </Systemic>
     <RenalDynamics>
-      <Clearance readOnly="false" unit="mL/min kg" value="14.4"/>
+      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
     </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
       <AcidDissociationConstant readOnly="false" value="11.1"/>
       <BindingProtein>Albumin</BindingProtein>
-      <BloodPlasmaRatio readOnly="false" value="0.03"/>
-      <FractionUnboundInPlasma readOnly="false" value="1"/>
-      <IonicState>Acid</IonicState>
-      <LogP readOnly="false" value="3.79"/>
+      <BloodPlasmaRatio readOnly="false" value="1.15"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.015"/>
+      <IonicState>Base</IonicState>
+      <LogP readOnly="false" value="3.83"/>
       <HydrogenBondCount readOnly="false" value="0"/>
       <PolarSurfaceArea readOnly="false" value="0"/>
     </Physicochemicals>

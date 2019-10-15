@@ -40,7 +40,7 @@
       <ReactivityModifier readOnly="false" value="-0.5"/>
       <SizeModifier readOnly="false" value="-0.33"/>
     </PupillaryResponse>
-    <RespirationRateModifier readOnly="false" value="-1"/>
+    <RespirationRateModifier readOnly="false" value="-0.95"/>
     <Sedation readOnly="false" value="0"/>
     <SystolicPressureModifier readOnly="false" value="-0.1"/>
     <TidalVolumeModifier readOnly="false" value="0"/>

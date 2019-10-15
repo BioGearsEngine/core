@@ -17,7 +17,10 @@
   
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="MassInBody" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="MassInBody" Unit="ug" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="MassInTissue" Unit="ug" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="MassInBlood" Unit="ug" Precision="2"/>
+	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
@@ -41,10 +44,18 @@
   </DataRequests>
 
 	
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
-        <Substance>Fentanyl</Substance>
-        <Concentration value="10" unit="ug/mL"/>
-        <Dose value="58.5" unit="mL"/>
+    <Action xsi:type="SubstanceInfusionData">
+		<Substance>Fentanyl</Substance>
+		<Concentration value="300" unit="ug/mL"/>
+		<Rate value="1.0" unit="mL/min"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="1.0" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+		<Substance>Fentanyl</Substance>
+		<Concentration value="0" unit="ug/mL"/>
+		<Rate value="0" unit="mL/s"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="4" unit="hr"/>       

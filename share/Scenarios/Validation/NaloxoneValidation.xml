@@ -41,10 +41,18 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+	<Action xsi:type="SubstanceInfusionData">
         <Substance>Naloxone</Substance>
-        <Concentration value="100" unit="ug/mL"/>
-        <Dose value="8" unit="mL"/>
+        <Concentration value="80" unit="ug/mL"/>
+        <Rate value="20" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Naloxone</Substance>
+        <Concentration value="0" unit="ug/mL"/>
+        <Rate value="0" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="180" unit="min"/>       

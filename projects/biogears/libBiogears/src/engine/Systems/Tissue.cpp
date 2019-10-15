@@ -1879,7 +1879,7 @@ double Tissue::PerfusionLimitedDiffusion(SETissueCompartment& tissue, SELiquidCo
     throw CommonDataModelException("No Tissue-Intracellular Substance Quantity found for substance " + std::string{ sub.GetName() });
 
   double tisDensity_kg_Per_L = 1.0;
-  if (tissue.GetName() == BGE::TissueCompartment::Gut) {
+  if (tissue.GetName() == BGE::TissueCompartment::Fat) {
     tisDensity_kg_Per_L = 0.92;
   }
   if (tissue.GetName() == BGE::TissueCompartment::Bone) {

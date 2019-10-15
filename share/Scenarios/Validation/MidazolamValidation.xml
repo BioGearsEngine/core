@@ -44,8 +44,8 @@
 	
     <Action xsi:type="SubstanceInfusionData">
         <Substance>Midazolam</Substance>
-        <Concentration value="5.0" unit="mg/mL"/>
-        <Rate value="2.0" unit="mL/min"/>
+        <Concentration value="1.0" unit="mg/mL"/>
+        <Rate value="10.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>  

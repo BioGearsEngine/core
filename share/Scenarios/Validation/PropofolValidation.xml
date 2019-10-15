@@ -43,11 +43,11 @@
 
 	<Action xsi:type="SubstanceInfusionData">
         <Substance>Propofol</Substance>
-        <Concentration value="2" unit="g/L"/>
+        <Concentration value="4" unit="mg/mL"/>
         <Rate value="1" unit="mL/s"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="96" unit="s"/>       
+        <Time value="48" unit="s"/>       
     </Action>
 	<Action xsi:type="SubstanceInfusionData">
         <Substance>Propofol</Substance>

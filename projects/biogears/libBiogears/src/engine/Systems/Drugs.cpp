@@ -188,11 +188,6 @@ void Drugs::SetUp()
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
   m_totalAdministered_uL = 0.0;
   DELETE_MAP_SECOND(m_BolusAdministrations);
-
-  OtfcBuccal = std::vector<double>(7);
-  OtfcSublingual = std::vector<double>(7);
-  OtfcMouth = 0.0;
-  OtfcSwallowed = 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -243,11 +238,6 @@ void Drugs::Process()
   if (m_data.GetConfiguration().IsPDEnabled()) {
     CalculateDrugEffects();
   }
-
-  //m_data.GetDataTrack().Probe("Otfc_Mouth", OtfcMouth);
-  //m_data.GetDataTrack().Probe("Otfc_Swallowed", OtfcSwallowed);
- // m_data.GetDataTrack().Probe("Oftc_Buccal", OtfcBuccal);
-  //m_data.GetDataTrack().Probe("Otfc_Sublingual", OtfcSublingual);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -274,7 +264,7 @@ void Drugs::AdministerSubstanceBolus()
   double dose_mL;
   double concentration_ugPermL;
   double massIncrement_ug = 0;
-  double administrationTime_s = 2; //administer dose over 2 seconds for a bolus dose
+  double administrationTime_s = 2.0; //administer dose over 2 seconds for a bolus dose
 
   for (auto b : boluses) {
     sub = b.first;
@@ -1251,11 +1241,6 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   }
   ot->SetBuccalConcentrations(buccalCon, MassPerVolumeUnit::ug_Per_mL);
   ot->SetSublingualConcentrations(sublingualCon, MassPerVolumeUnit::ug_Per_mL);
-  
-  OtfcBuccal = buccalCon;
-  OtfcSublingual = sublingualCon;
-  OtfcMouth = ot->GetMouthSolidMass().GetValue(MassUnit::ug);
-  OtfcSwallowed += (rateSwallowedDrugToStomach_ug_Per_s * m_dt_s);
 
   //Put swallowed drug in GI transit model as dissolved drug in stomach
   m_data.GetGastrointestinal().GetDrugTransitState(sub)->IncrementStomachDissolvedMass(rateSwallowedDrugToStomach_ug_Per_s * dT_s, MassUnit::ug);

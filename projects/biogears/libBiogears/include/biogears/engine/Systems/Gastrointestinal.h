@@ -121,12 +121,5 @@ protected:
   // We do not decrement stomach contents during stabilization
   double m_secretionRate_mL_Per_s;
   double m_dT_s;
-
-  std::vector<double> OtfcTransit;
-  std::vector<double> OtfcEnterocyte;
-  double OtfcMetabolized;
-  double OtfcAbsorbed;
-  double OtfcTotalLumen;
-  double OtfcTotalEnterocyte;
 };
 }

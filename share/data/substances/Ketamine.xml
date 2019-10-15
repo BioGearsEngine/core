@@ -8,67 +8,25 @@
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0.05"/>
       <FractionUnboundInPlasma readOnly="false" value="0.77"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="5"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="195"/>
       <RenalClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="7"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="16"/>
     </Systemic>
     <RenalDynamics>
       <Clearance readOnly="false" unit="mL/min kg" value="0"/>
     </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
-    <TissueKinetics>
-      <Name>BoneTissue</Name>
-      <PartitionCoefficient readOnly="false" value="3.85366"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>BrainTissue</Name>
-      <PartitionCoefficient readOnly="false" value="3.90406"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>FatTissue</Name>
-      <PartitionCoefficient readOnly="false" value="2.6982"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>GutTissue</Name>
-      <PartitionCoefficient readOnly="false" value="3.21087"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>LeftKidneyTissue</Name>
-      <PartitionCoefficient readOnly="false" value="1.91636"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>LeftLungTissue</Name>
-      <PartitionCoefficient readOnly="false" value="1.03544"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>LiverTissue</Name>
-      <PartitionCoefficient readOnly="false" value="2.66741"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>MuscleTissue</Name>
-      <PartitionCoefficient readOnly="false" value="1.91104"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>MyocardiumTissue</Name>
-      <PartitionCoefficient readOnly="false" value="1.52201"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>RightKidneyTissue</Name>
-      <PartitionCoefficient readOnly="false" value="1.91636"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>RightLungTissue</Name>
-      <PartitionCoefficient readOnly="false" value="1.03544"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>SkinTissue</Name>
-      <PartitionCoefficient readOnly="false" value="2.14176"/>
-    </TissueKinetics>
-    <TissueKinetics>
-      <Name>SpleenTissue</Name>
-      <PartitionCoefficient readOnly="false" value="1.991899"/>
-    </TissueKinetics>
+    <Physicochemicals>
+      <AcidDissociationConstant readOnly="false" value="7.5"/>
+      <BindingProtein>Albumin</BindingProtein>
+      <BloodPlasmaRatio readOnly="false" value="1.4"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.77"/>
+      <IonicState>WeakBase</IonicState>
+      <LogP readOnly="false" value="3"/>
+      <HydrogenBondCount readOnly="false" value="3"/>
+      <PolarSurfaceArea readOnly="false" value="29"/>
+    </Physicochemicals>
   </Pharmacokinetics>
   <Pharmacodynamics>
     <Bronchodilation readOnly="false" value="1"/>

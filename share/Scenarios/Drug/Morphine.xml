@@ -85,10 +85,18 @@
 	<Action xsi:type="AdvanceTimeData">
       <Time value="30" unit="s"/>       
 	</Action>
-	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+    <Action xsi:type="SubstanceInfusionData">
+		<Substance>Morphine</Substance>
+		<Concentration value="2.5" unit="mg/mL"/>
+		<Rate value="1.0" unit="mL/min"/>
+	</Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="4" unit="min"/>
+	</Action>
+	<Action xsi:type="SubstanceInfusionData">
 		<Substance>Morphine</Substance>
 		<Concentration value="1000" unit="ug/mL"/>
-		<Dose value="10.5" unit="mL"/>
+		<Rate value="0" unit="mL/min"/>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="120" unit="min"/>

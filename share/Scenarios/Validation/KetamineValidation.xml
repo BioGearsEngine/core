@@ -41,10 +41,18 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+    <Action xsi:type="SubstanceInfusionData">
         <Substance>Ketamine</Substance>
-        <Concentration value="1000" unit="ug/mL"/>
-        <Dose value="39.0" unit="mL"/>
+        <Concentration value="3.9" unit="mg/mL"/>
+        <Rate value="0.5" unit="mL/s"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="20" unit="s"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Ketamine</Substance>
+        <Concentration value="0" unit="ug/mL"/>
+        <Rate value="0" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="180" unit="min"/>       

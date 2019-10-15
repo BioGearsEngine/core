@@ -151,19 +151,17 @@ def plot_PK(bgFile, litFile, plotTime,scale):
 
 
         bg_yData = dataCSV[yLabel].values
+        plotMin = 0.01
         try:
-            yRange = max(bg_yData)-min(bg_yData)
-            plotMin = 0.0
             plotMax = 1.25 * max(bg_yData)
         except TypeError:
-            err('Non-numeric data, setting range 0-100', LOG_LEVEL_1)
-            plotMin = 0
-            plotMax= 100
+            err('Non-numeric Ymax, setting plot max to 10', LOG_LEVEL_1)
+            plotMax= 10
 
         plt.plot(bg_xData,bg_yData,'-k',label='BioGears')
         if litFound:
             plt.plot(lit_xData,lit_yData,'ob', label = 'Literature')
-            if min(lit_yData) < plotMin:
+            if min(lit_yData) < plotMin and min(lit_yData)>0:
                 plotMin = min(lit_yData)
             if max(lit_yData) > plotMax:
                 plotMax = 1.25 * max(lit_yData)
@@ -172,7 +170,7 @@ def plot_PK(bgFile, litFile, plotTime,scale):
         plt.title(basename)
         if scale:
             plt.yscale('log')
-            plotMin = 10**(-6)
+            plotMax = 10 * max(bg_yData)
         plt.ylim([plotMin,plotMax])
         plt.xlabel(xLabel)
         plt.ylabel(yLabel)

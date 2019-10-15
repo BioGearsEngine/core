@@ -174,13 +174,6 @@ void Gastrointestinal::SetUp()
   m_TransitBileSalts_mM = { 0.0, 8.6, 7.25, 6.245, 4.375, 3.575, 0.435, 0., 0. }; //avg between fasted and fed states
   //One exception--stomach has no enterocyte layer, so this vector is only length 8 (same length as GetEnteroycyteMasses returns)
   m_EnterocyteVolumeFraction = { 7.7e-4, 1.9e-3, 1.9e-3, 1.4e-3, 1.4e-3, 1.4e-3, 4.0e-4, 8.5e-4 }; //volume of enterocyte as fraction of total body weight (assuming density = 1 g /mL)
-
-  OtfcTransit = std::vector<double>(9);
-  OtfcEnterocyte = std::vector<double>(8);
-  OtfcMetabolized = 0.0;
-  OtfcAbsorbed = 0.0;
-  OtfcTotalEnterocyte = 0.0;
-  OtfcTotalLumen = 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -861,12 +854,6 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
 void Gastrointestinal::Process()
 {
   ProcessDrugCAT();
- // m_data.GetDataTrack().Probe("Otfc_Absorbed", OtfcAbsorbed);
-  //m_data.GetDataTrack().Probe("Otfc_Metabolized", OtfcMetabolized);
-  //m_data.GetDataTrack().Probe("Otfc_Enterocytes", OtfcEnterocyte);
-  //m_data.GetDataTrack().Probe("Otfc_Transit", OtfcTransit);
-  //m_data.GetDataTrack().Probe("Otfc_TotalEnterocyte", OtfcTotalEnterocyte);
-  //m_data.GetDataTrack().Probe("Otfc_TotalLumen", OtfcTotalLumen);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1049,12 +1036,6 @@ void Gastrointestinal::ProcessDrugCAT()
     cat->GetTotalMassExcreted().IncrementValue((lumenSolidMasses_ug[8] + lumenDissolvedMasses_ug[8]) * m_TransitRate_Per_s[8] * dT_s, MassUnit::ug);
     m_vSmallIntestine->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(totalEffluxToPortal_ug_Per_s * dT_s, MassUnit::ug);
 
-    OtfcTransit = lumenDissolvedMasses_ug;
-    OtfcEnterocyte = enterocyteMasses_ug;
-    OtfcAbsorbed += (totalEffluxToPortal_ug_Per_s * dT_s);
-    OtfcMetabolized += (totalMetabolized_ug_Per_s * dT_s);
-    OtfcTotalEnterocyte = cat->GetTotalMassInEnterocytes(MassUnit::ug);
-    OtfcTotalLumen = cat->GetTotalDissolvedMassInLumen(MassUnit::ug);
   }
 }
 }

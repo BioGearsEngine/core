@@ -18,11 +18,11 @@
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
-      <AcidDissociationConstant readOnly="false" value="1"/>
+      <AcidDissociationConstant readOnly="false" value="-6.8"/>
       <BindingProtein>Albumin</BindingProtein>
       <BloodPlasmaRatio readOnly="false" value="1"/>
       <FractionUnboundInPlasma readOnly="false" value="0.8"/>
-      <IonicState>Base</IonicState>
+      <IonicState>Acid</IonicState>
       <LogP readOnly="false" value="-1.5"/>
       <HydrogenBondCount readOnly="false" value="0"/>
       <PolarSurfaceArea readOnly="false" value="0"/>

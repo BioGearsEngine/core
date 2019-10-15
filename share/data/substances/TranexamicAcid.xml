@@ -6,7 +6,7 @@
   <Clearance>
     <Systemic>
       <FractionExcretedInFeces readOnly="false" value="0"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.03"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.97"/>
       <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
       <RenalClearance readOnly="false" unit="mL/min kg" value="1.45"/>
       <SystemicClearance readOnly="false" unit="mL/min kg" value="1.45"/>
@@ -20,7 +20,7 @@
       <AcidDissociationConstant readOnly="false" value="4.31"/>
       <BindingProtein>Lipoprotein</BindingProtein>
       <BloodPlasmaRatio readOnly="false" value="1"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.03"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.97"/>
       <IonicState>Acid</IonicState>
       <LogP readOnly="false" value="1.15"/>
       <HydrogenBondCount readOnly="false" value="5"/>
