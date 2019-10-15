@@ -65,6 +65,12 @@ for file in glob.glob(os.path.join(runtime_dir,'*PatientValidationTable.md')):
      shutil.copy(file,runtime_dir+'validation')
      print("")
 
+# These files aren't currently getting generated, this is a temporary fix which checks if they're present, and adds them to the expected location
+os.chdir(runtime_dir) 
+shutil.copy('UrinalysisValidationTable.md',runtime_dir+'validation')
+shutil.copy('RespiratoryValidationTable.md',runtime_dir+'validation')
+shutil.copy('RespiratoryCompartmentsValidationTable.md',runtime_dir+'validation')
+
 os.chdir(runtime_dir)
 for file in glob.glob(os.path.join(runtime_dir,'*ValidationResults.zip')):
      print(file)
@@ -84,6 +90,8 @@ if not os.path.exists('baselines'):
 
 os.chdir(runtime_dir)
 shutil.copy('RenalTGFFeedbackOutput.zip',runtime_dir+'UnitTests/BioGearsTests/baselines')
+shutil.copy('CardiovascularCircuitOutput.zip',runtime_dir+'UnitTests/BioGearsTests/baselines')
+#shutil.copy('ColdWaterSubmersionResults.zip',runtime_dir+'Scenarios/EnergyEnvironment/baselines')
 shutil.copy('SimpleDiffusionFourCompartmentTest.zip',runtime_dir+'UnitTests/BioGearsTests/baselines')
 shutil.copy('RespiratoryValidationPFT@120.02s.xml',runtime_dir+'Scenarios/Validation')
 

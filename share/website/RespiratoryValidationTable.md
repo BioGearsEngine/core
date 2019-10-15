@@ -1,0 +1,18 @@
+|Property Name                           |Expected Value                                 |Engine Value        |Percent Error                                  |Notes                                     |
+|---                                     |---                                            |---                 |---                                            |---                                       |
+|AlveolarArterialGradient(mmHg)          |[5,14] @cite costanzo2006brs                   |Mean of 18          |<span class="danger">30%</span>                |                                          |
+|CarricoIndex(mmHg)                      |4.5e+02 @cite guyton2006medical                |Mean of 4.7e+02     |<span class="success">4.6%</span>              |95 mmHg / 0.21                            |
+|EndTidalCarbonDioxideFraction           |[0.054, 0.059] @cite Levitzky2013pulmonary     |Mean of 0.034       |<span class="danger">-36.6%</span>             |                                          |
+|ExpiratoryFlow(L/s)                     |0.44 @cite gupta2010characterizing             |Maximum of 0.32     |<span class="warning">-26.7%</span>            |                                          |
+|InspiratoryExpiratoryRatio              |[0.25, 0.50] @cite Levitzky2013pulmonary       |Mean of 0.49        |<span class="success">Within bounds</span>     |                                          |
+|InspiratoryFlow(L/s)                    |0.40 @cite gupta2010characterizing             |Maximum of 0.32     |<span class="warning">-20.5%</span>            |                                          |
+|PulmonaryCompliance(L/cmH2O)            |[0.06, 0.14] @cite Levitzky2013pulmonary       |Mean of 0.11        |<span class="success">Within bounds</span>     |                                          |
+|PulmonaryResistance(cmH2O s/L)          |[1.01, 1.99] @cite dubois1956new               |Mean of 1.48        |<span class="success">Within bounds</span>     |                                          |
+|RespirationRate(1/ min)                 |[12.0, 20.0] @cite silverthorn2013human        |Mean of 15.9        |<span class="success">Within bounds</span>     |                                          |
+|SpecificVentilation                     |0.23 @cite Levitzky2013pulmonary               |Mean of 0.21        |<span class="success">-9.3%</span>             |                                          |
+|TidalVolume(mL/kg)                      |7 @cite Levitzky2013pulmonary                  |Mean of 6.37        |<span class="success">-8.9%</span>             |                                          |
+|TotalAlveolarVentilation(L/min/kg)      |0.080 @cite Levitzky2013pulmonary              |Mean of 0.0735      |<span class="success">-8.2%</span>             |                                          |
+|TotalDeadSpaceVentilation(L/min/kg)     |0.032 @cite Levitzky2013pulmonary              |Mean of 0.0277      |<span class="warning">-13.3%</span>            |                                          |
+|TotalLungVolume(L/kg)                   |0.0335 @cite Levitzky2013pulmonary             |Mean of 0.0329      |<span class="success">-1.8%</span>             |                                          |
+|TotalPulmonaryVentilation(L/min/kg)     |0.112 @cite Levitzky2013pulmonary              |Mean of 0.101       |<span class="success">-9.6%</span>             |                                          |
+|TranspulmonaryPressure(cmH2O)           |[5.2, 7.2] @cite guyton2006medical             |Mean of 12.920      |<span class="danger">79.5%</span>              |Assume P<sub>atm</sub> = 1033.2 cmH2O     |
