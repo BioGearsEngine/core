@@ -539,14 +539,14 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         // First check for AB type since AB is a universal acceptor
         // Second check for O type acceptor and ANY antigen presence since it would cause a reaction
         // Last check for A and B presence because if one or the either, both should not be present or else reaction
-        if (patientBloodType == (CDM::enumBloodType::AB)) {
-          return;
-        } else if (patientBloodType == CDM::enumBloodType::O) {
+        if (patientBloodType != (CDM::enumBloodType::AB)) {
+          if (patientBloodType == CDM::enumBloodType::O) {
             if (AntigenA_ct_Per_uL > 0 || AntigenB_ct_Per_uL > 0) {
               patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());     
             }
-        } else if (AntigenA_ct_Per_uL > 0 && AntigenB_ct_Per_uL > 0) {
+          } else if (AntigenA_ct_Per_uL > 0 && AntigenB_ct_Per_uL > 0) {
             patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+          }
         }
 
         subQ->Balance(BalanceLiquidBy::Mass);
@@ -556,7 +556,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       }
     }
 
-    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && ((m_data.GetPatient().GetBloodRh() == false) && (compound->GetRhFactor() == true))) {
+    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && !patient.GetBloodRh() && compound->GetRhFactor()) {
       m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
       patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
     }
