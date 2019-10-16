@@ -392,7 +392,7 @@ void Cardiovascular::SetUp()
     if (&path->GetSourceNode() == aorta && path->HasResistanceBaseline()) {
       if (&path->GetTargetNode() != ground) {
         if (m_data.GetConfiguration().IsCerebralEnabled() && path->GetTargetNode().GetName() == BGE::CerebralNode::NeckArteries) {
-            continue;
+          continue;
         }
         m_systemicResistancePaths.push_back(path);
         venousNodes.push_back(&path->GetTargetNode());
@@ -654,7 +654,6 @@ void Cardiovascular::ChronicRenalStenosis()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::PreProcess()
 {
-
   // Locate the cardiac cycle in time (systole, diastole)
   // and do the appropriate calculations based on the time location.
   HeartDriver();
@@ -677,6 +676,13 @@ void Cardiovascular::Process()
 {
   m_circuitCalculator.Process(*m_CirculatoryCircuit, m_dT_s);
   m_transporter.Transport(*m_CirculatoryGraph, m_dT_s);
+  /*if (m_data.GetActions().GetPatientActions().HasOverride()
+      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On
+      && m_data.GetState() == EngineState::Active) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) {
+      ProcessOverride();
+    }
+  }*/
   CalculateVitalSigns();
 }
 
@@ -1451,6 +1457,18 @@ void Cardiovascular::BeginCardiacCycle()
   // Apply drug effects
   if (m_data.GetDrugs().HasHeartRateChange())
     HeartDriverFrequency_Per_Min += m_data.GetDrugs().GetHeartRateChange(FrequencyUnit::Per_min);
+  
+  if (m_data.GetActions().GetPatientActions().HasOverride()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+      double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
+      double HR = GetHeartRate(FrequencyUnit::Per_min);
+      double heartdriver = HeartDriverFrequency_Per_Min;
+      double HeartDriverINcrease_Per_min = ((HRoverride_Per_min - HeartDriverFrequency_Per_Min) * (HeartDriverFrequency_Per_Min/HRoverride_Per_min));
+      HeartDriverFrequency_Per_Min += HeartDriverINcrease_Per_min;
+      //HeartDriverFrequency_Per_Min = ((HRoverride_Per_min + HeartDriverFrequency_Per_Min) / 2.0);
+    }
+  }
+
   BLIM(HeartDriverFrequency_Per_Min, m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min), m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min));
 
   //Apply heart failure effects
@@ -1916,8 +1934,9 @@ void Cardiovascular::CalculateHeartRate()
   // was set back to false), so we need to subtract one time step from the interval.
   double HeartRate_Per_s = 0.0;
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
-    HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
+      && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() 
+      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+        HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
   } else {
     HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
   }
@@ -1954,7 +1973,19 @@ void Cardiovascular::ProcessOverride()
     GetMeanArterialPressure().SetValue(override->GetMAPOverride(PressureUnit::mmHg), PressureUnit::mmHg);
   }
   if (override->HasHeartRateOverride()) {
-    GetHeartRate().SetValue(override->GetHeartRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
+    if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+      GetHeartRate().SetValue(override->GetHeartRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
+    } else if (override->GetOverrideConformance() == CDM::enumOnOff::On) {
+      // INSERT PHYSIOLOGICAL SHIFT VERSION HERE
+      double overrideHRValue_Per_min = override->GetHeartRateOverride(FrequencyUnit::Per_min);
+      double currentHR_Per_min = m_data.GetCardiovascular().GetHeartRate().GetValue(FrequencyUnit::Per_min);
+      double avgHR_Per_min = ((overrideHRValue_Per_min) + (currentHR_Per_min)) / 2.0;
+      //GetHeartRate().SetValue(avgHR_Per_min, FrequencyUnit::Per_min);
+      //m_LeftHeartToAorta->GetNextFlow().SetValue(m_LeftHeartToAorta->GetNextFlow(VolumePerTimeUnit::mL_Per_s) * (avgHR_Per_min / currentHR_Per_min), VolumePerTimeUnit::mL_Per_s);
+      //m_Aorta->GetPressure().SetReadOnly(false);
+      //m_Aorta->GetPressure().SetValue(m_Aorta->GetPressure().GetValue(PressureUnit::mmHg) * (avgHR_Per_min/currentHR_Per_min), PressureUnit::mmHg);
+      //m_Aorta->GetPressure().SetReadOnly(true);
+    }
   }
   if (override->HasHeartStrokeVolumeOverride()) {
     GetHeartStrokeVolume().SetValue(override->GetHeartStrokeVolumeOverride(VolumeUnit::mL), VolumeUnit::mL);
