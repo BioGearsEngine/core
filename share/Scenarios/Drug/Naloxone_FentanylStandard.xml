@@ -146,14 +146,14 @@
     <Action xsi:type="AdvanceTimeData">
       <Time value="30" unit="s"/>       
 	</Action>
-	<!--Infuse 300 ug of fentanyl over 90 s as in study cited in Yassen2007mechanism.  Effects should be large.  When 500 ug was given in study, subject had severe respiratory depression--> 
+	<!--Infuse 2.9ug/kg of fentanyl over 90 s.  Effects should be large--> 
     <Action xsi:type="SubstanceInfusionData">
 		<Substance>Fentanyl</Substance>
-		<Concentration value="1000" unit="ug/mL"/>
-		<Rate value="0.2" unit="mL/min"/>
+		<Concentration value="145" unit="ug/mL"/>
+		<Rate value="1.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="90" unit="s"/>       
+        <Time value="1.5" unit="min"/>       
     </Action>
 	<!--Stop infusion-->
 	<Action xsi:type="SubstanceInfusionData">
