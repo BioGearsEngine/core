@@ -1139,16 +1139,16 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   double rateDrugDissolutionInStomach_ug_Per_s = 0.0; //Gastrointestinal route
   //Characteristic mouth parameters
   const double salivaThickness_cm = 30.0e-4; //Tuned to get dissolution of OTFC in right time frame
-  const double buccalSA_cm2 = 60.0;		//60
-  const double buccalThickness_cm = 450.0e-4; //@cite Xia2015Development  450
+  const double buccalSA_cm2 = 60.0;
+  const double buccalThickness_cm = 450.0e-4; //@cite Xia2015Development
   const double buccalH_cm = buccalThickness_cm / 6.0;
   const double buccalLaminaThickness_cm = buccalH_cm; //This ensures that our mesh points are equally spaced
   const double volumeSaliva_mL = 1.0; //@cite Xia2015Development
   const double volumeBuccalSlice_mL = buccalH_cm * buccalSA_cm2; //volume of the Nth epithelial layer
   const double volumeBuccalLamina_mL = buccalLaminaThickness_cm * buccalSA_cm2;
   const double bloodSupplyBuccal_mL_Per_s = 2.4 / 60.0 * buccalSA_cm2; // @cite Sattar2014, buccal blood supply = 2.4 mL/min/cm2
-  const double tongueSA_cm2 = 25.0; //@cite Xia2015Development  25
-  const double tongueThickness_cm = 110.0e-4; //@cite Xia2015Development	125
+  const double tongueSA_cm2 = 25.0; //@cite Xia2015Development
+  const double tongueThickness_cm = 110.0e-4; //@cite Xia2015Development
   const double tongueH_cm = tongueThickness_cm / 6.0;
   const double tongueLaminaThickness_cm = tongueH_cm;
   const double volumeTongueSlice_mL = tongueH_cm * tongueSA_cm2;

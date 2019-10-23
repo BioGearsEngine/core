@@ -3,7 +3,6 @@
     <Name>Fentanyl</Name>
     <Description>Inject standard patient with Fentanyl!</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
-    <!-- <EngineStateFile>./states/FentanylTest.xml</EngineStateFile> -->
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests>

@@ -491,17 +491,17 @@ void Nervous::ChemoreceptorFeedback()
   //-------Respiratory Feedback:  This is active throughtout the simulation (including stabilization)------------------------------
   //Model Parameters from
   ///\@cite Magosso2001Mathematical
-  double centralTimeConstant_s = 180.0;
+  const double centralTimeConstant_s = 180.0;
   double centralGainConstant_L_Per_min_mmHg = 1.8;
-  double peripheralTimeConstant_s = 13.0;
-  double peripheralGainConstant_L_Per_min_Hz = 3.36;
-  double firingRateMin_Hz = 0.835;
-  double firingRateMax_Hz = 12.3;
-  double oxygenHalfMax_mmHg = 45.0;
-  double oxygenScale_mmHg = 29.27;
-  double gasInteractionBase = 3.0;
-  double firingRateTimeConstant_s = 2.0;
-  double tuningFactor = 1.5;
+  const double peripheralTimeConstant_s = 13.0;
+  const double peripheralGainConstant_L_Per_min_Hz = 3.36;
+  const double firingRateMin_Hz = 0.835;
+  const double firingRateMax_Hz = 12.3;
+  const double oxygenHalfMax_mmHg = 45.0;
+  const double oxygenScale_mmHg = 29.27;
+  const double gasInteractionBase = 3.0;
+  const double firingRateTimeConstant_s = 2.0;
+  const double tuningFactor = 1.5;
 
   //Note that this method uses instantaneous values of blood gas levels, not running averages
   double arterialO2Pressure_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
