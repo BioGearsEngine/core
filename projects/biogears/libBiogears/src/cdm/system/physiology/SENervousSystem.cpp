@@ -36,8 +36,6 @@ namespace biogears {
 SENervousSystem::SENervousSystem(Logger* logger)
   : SESystem(logger)
 {
-  m_NumFrequencyComponents = 3;
-  m_BaroreceptorFrequencyComponents.clear();
   m_BaroreceptorHeartRateScale = nullptr;
   m_BaroreceptorHeartElastanceScale = nullptr;
   m_BaroreceptorResistanceScale = nullptr;
@@ -64,7 +62,6 @@ SENervousSystem::~SENervousSystem()
 void SENervousSystem::Clear()
 {
   SESystem::Clear();
-  m_BaroreceptorFrequencyComponents.clear();
   SAFE_DELETE(m_BaroreceptorHeartRateScale);
   SAFE_DELETE(m_BaroreceptorHeartElastanceScale);
   SAFE_DELETE(m_BaroreceptorResistanceScale);
@@ -130,12 +127,6 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
 bool SENervousSystem::Load(const CDM::NervousSystemData& in)
 {
   SESystem::Load(in);
-  m_BaroreceptorFrequencyComponents.clear();
-  for (auto bfc : in.BaroreceptorFrequencyComponents()) {
-    SEScalarFrequency* component = new SEScalarFrequency();
-    component->Load(bfc);
-    m_BaroreceptorFrequencyComponents.push_back(component);
-  }
   if (in.BaroreceptorHeartRateScale().present())
     GetBaroreceptorHeartRateScale().Load(in.BaroreceptorHeartRateScale().get());
   if (in.BaroreceptorHeartElastanceScale().present())
@@ -179,9 +170,6 @@ CDM::NervousSystemData* SENervousSystem::Unload() const
 void SENervousSystem::Unload(CDM::NervousSystemData& data) const
 {
   SESystem::Unload(data);
-  for (auto component : m_BaroreceptorFrequencyComponents) {
-    data.BaroreceptorFrequencyComponents().push_back(std::unique_ptr<CDM::ScalarFrequencyData>(component->Unload()));
-  }
   if (m_BaroreceptorHeartRateScale != nullptr)
     data.BaroreceptorHeartRateScale(std::unique_ptr<CDM::ScalarData>(m_BaroreceptorHeartRateScale->Unload()));
   if (m_BaroreceptorHeartElastanceScale != nullptr)
@@ -210,48 +198,6 @@ void SENervousSystem::Unload(CDM::NervousSystemData& data) const
     data.ResistanceScaleSplanchnic(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleSplanchnic->Unload()));
   if (m_ResistanceScaleVentricle != nullptr)
     data.ResistanceScaleVentricle(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleVentricle->Unload()));
-}
-//-------------------------------------------------------------------------------
-bool SENervousSystem::HasBaroreceptorFrequencyComponents() const
-{
-  return m_BaroreceptorFrequencyComponents.size() == m_NumFrequencyComponents; //There should be 3 components at all times
-}
-//-------------------------------------------------------------------------------
-std::vector<SEScalarFrequency*> SENervousSystem::GetBaroreceptorFrequencyComponents()
-{
-  return m_BaroreceptorFrequencyComponents;
-}
-//-------------------------------------------------------------------------------
-std::vector<double> SENervousSystem::GetBaroreceptorFrequencyComponents(const FrequencyUnit& unit) const
-{
-  std::vector<double> componentsAsDoubles;
-  for (auto component : m_BaroreceptorFrequencyComponents) {
-    componentsAsDoubles.push_back(component->GetValue(unit));
-  }
-  return componentsAsDoubles;
-}
-//-------------------------------------------------------------------------------
-bool SENervousSystem::SetBaroreceptorFrequencyComponents(std::vector<double> newComponents, const FrequencyUnit& unit)
-{
-  if (newComponents.size() != m_NumFrequencyComponents) {
-    return false;
-  }
-  if (m_BaroreceptorFrequencyComponents.size() == 0) {
-	  //This means we are initializing this vecotr for the first time
-    for (size_t pos = 0; pos < m_NumFrequencyComponents; ++pos) {
-      SEScalarFrequency* component = new SEScalarFrequency();
-      component->SetValue(newComponents[pos], unit);
-      m_BaroreceptorFrequencyComponents.push_back(component);
-    }
-  }
-  else {
-    std::vector<double>::iterator dblIt;
-    std::vector<SEScalarFrequency*>::iterator sfIt;
-    for (dblIt = newComponents.begin(), sfIt = m_BaroreceptorFrequencyComponents.begin(); dblIt != newComponents.end() && sfIt != m_BaroreceptorFrequencyComponents.end(); ++dblIt, ++sfIt) {
-      (*sfIt)->SetValue(*dblIt, unit);
-    }
-  }
-  return true;
 }
 //-------------------------------------------------------------------------------
 bool SENervousSystem::HasBaroreceptorHeartRateScale() const

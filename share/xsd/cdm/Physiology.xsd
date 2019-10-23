@@ -302,7 +302,6 @@ specific language governing permissions and limitations under the License.
         <xs:complexContent>
             <xs:extension base="SystemData">
                 <xs:sequence>
-                    <xs:element name="BaroreceptorFrequencyComponents" type="ScalarFrequencyData" minOccurs="3" maxOccurs="3"/><!--<< @brief The three components used to weight the baroreceptor frequency response-->
                     <xs:element name="BaroreceptorHeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="BaroreceptorHeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="BaroreceptorResistanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->

@@ -44,11 +44,6 @@ protected:
   void Unload(CDM::NervousSystemData& data) const;
 
 public:
-  bool HasBaroreceptorFrequencyComponents() const;
-  std::vector<SEScalarFrequency*> GetBaroreceptorFrequencyComponents();
-  std::vector<double> GetBaroreceptorFrequencyComponents(const FrequencyUnit& unit) const;
-  bool SetBaroreceptorFrequencyComponents(std::vector<double> newComponents, const FrequencyUnit& unit);
-
   bool HasBaroreceptorHeartRateScale() const;
   SEScalar& GetBaroreceptorHeartRateScale();
   double GetBaroreceptorHeartRateScale() const;
@@ -110,8 +105,6 @@ public:
   bool HasResistanceScales() const;
 
 protected:
-  size_t m_NumFrequencyComponents;
-  std::vector<SEScalarFrequency*> m_BaroreceptorFrequencyComponents;
   SEScalar* m_BaroreceptorHeartRateScale;
   SEScalar* m_BaroreceptorHeartElastanceScale;
   SEScalar* m_BaroreceptorResistanceScale;

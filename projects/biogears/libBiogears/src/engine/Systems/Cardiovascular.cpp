@@ -742,6 +742,8 @@ void Cardiovascular::Process()
   CalculateVitalSigns();
   m_data.GetDataTrack().Probe("ElastanceLeft_BG", m_LeftHeartElastanceMax_mmHg_Per_mL);
   m_data.GetDataTrack().Probe("ElastanceRight_BG", m_RightHeartElastanceMax_mmHg_Per_mL);
+  m_data.GetDataTrack().Probe("PulmonaryVenousPressure", m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryVeins)->GetPressure(PressureUnit::mmHg));
+  m_data.GetDataTrack().Probe("ThoracicPressure", m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg)-760.0);
 }
 
 //--------------------------------------------------------------------------------------------------

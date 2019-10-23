@@ -141,14 +141,33 @@ specific language governing permissions and limitations under the License.
 		  <xs:element name="AfferentChemoreceptor_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialOxygenBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="AfferentChemoreceptor_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="AfferentPulmonaryStrechReceptor_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="AfferentStrain" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="AfferentStrainBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="BaroreceptorBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorFatigueScale" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="BaroreceptorFrequencyBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorCentralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="BaroreceptorOperatingPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="CerebralAutoregulator" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="CerebralBloodFlowBaseline_mL_Per_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="CerebralBloodFlowInput_mL_Per_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="CerebralCarbonDioxideBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="CentralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="CentralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorPeripheralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorFiringRate_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorFiringRateSetPoint_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="PreviousMeanArterialPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ComplianceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="HeartElastanceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="HypoxiaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="HypoxiaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="PeripheralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="PeripheralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="PulmonaryVenousPressureBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="PulmonaryVenousPressureInput_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ResistanceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="SympatheticHeartSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="SympatheticPeripheralSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="VagalSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
