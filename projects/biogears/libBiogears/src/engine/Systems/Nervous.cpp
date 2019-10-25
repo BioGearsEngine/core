@@ -311,10 +311,10 @@ void Nervous::AtSteadyState()
 
 
   // The baroreceptor scales need to be reset any time the baselines are reset.
-  GetBaroreceptorHeartRateScale().SetValue(1.0);
-  GetBaroreceptorHeartElastanceScale().SetValue(1.0);
-  GetBaroreceptorResistanceScale().SetValue(1.0);
-  GetBaroreceptorComplianceScale().SetValue(1.0);
+  //GetBaroreceptorHeartRateScale().SetValue(1.0);
+  //GetBaroreceptorHeartElastanceScale().SetValue(1.0);
+  //GetBaroreceptorResistanceScale().SetValue(1.0);
+  //GetBaroreceptorComplianceScale().SetValue(1.0);
 
   m_BaroreceptorBaseline = m_AfferentBaroreceptor_Hz;
   m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
@@ -481,7 +481,7 @@ void Nervous::EfferentResponse()
 
   //Heart elastance
   const double baseElastance = 2.49;
-  const double gainElastance= 0.0;
+  const double gainElastance= 0.4;
   const double tauElastance = 2.0;
   const double initialElastance = baseElastance - gainElastance * m_SympatheticHeartSignalBaseline; //Different than baseline because sympathetic signal is non-zero
 
@@ -490,6 +490,7 @@ void Nervous::EfferentResponse()
 
   m_data.GetDataTrack().Probe("LeftHeartElastance_Mod", m_HeartElastanceModifier);
   m_data.GetDataTrack().Probe("LeftHeartElastance_Next", m_HeartElastanceModifier + initialElastance);
+  m_data.GetDataTrack().Probe("ElastanceFracChanged", (m_HeartElastanceModifier + initialElastance) / baseElastance);
 
   //Resistance
   const double tauResistance = 3.0;
@@ -503,7 +504,7 @@ void Nervous::EfferentResponse()
 
   //Venous Compliance
   const double baseVolume = 3200.0;
-  const double gainVolume = -275.0;
+  const double gainVolume = -400.0;
   const double tauVolume = 10.0;
   const double initialVolume = baseVolume - gainVolume * m_SympatheticPeripheralSignalBaseline; //Different than baseline volume because baseline sympathetic signal is non-zero
 
@@ -513,12 +514,16 @@ void Nervous::EfferentResponse()
   m_data.GetDataTrack().Probe("Volume_Mod", m_ComplianceModifier);
   m_data.GetDataTrack().Probe("Compliance_Fraction", (initialVolume + m_ComplianceModifier) / baseVolume);
 
+  
+  m_data.GetDataTrack().Probe("LeftLungResistance", m_data.GetCircuits().GetFluidPath(BGE::CardiovascularPath::LeftIntermediatePulmonaryArteriesToLeftPulmonaryArteries)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
+  m_data.GetDataTrack().Probe("RightLungResistance", m_data.GetCircuits().GetFluidPath(BGE::CardiovascularPath::RightIntermediatePulmonaryArteriesToRightPulmonaryArteries)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
   if (m_FeedbackActive) {
     GetBaroreceptorHeartRateScale().SetValue(nextHR / m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min));
     GetBaroreceptorHeartElastanceScale().SetValue((m_HeartElastanceModifier + initialElastance) / baseElastance);
-    GetResistanceScaleExtrasplanchnic().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
-    GetResistanceScaleMuscle().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
-    GetResistanceScaleSplanchnic().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
+    //GetResistanceScaleExtrasplanchnic().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
+    //GetResistanceScaleMuscle().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
+    //GetResistanceScaleSplanchnic().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
+    GetBaroreceptorResistanceScale().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
     GetBaroreceptorComplianceScale().SetValue((initialVolume + m_ComplianceModifier) / baseVolume);
   }
 }
