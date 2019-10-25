@@ -573,8 +573,8 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="StoredFatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The triacylglycerol stored in the fat tissue. -->
 					<xs:element name="StoredProteinOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The amino acids stored as protein in the muscle tissue. -->
 				</xs:sequence>  
-				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
-				<xs:attribute name="Conformant" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
+				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the override on or off. -->
+				<xs:attribute name="Conformant" type="enumOnOff" use="required"/><!--<< @brief Is the resulting phusiology conformant. -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

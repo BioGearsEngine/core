@@ -2185,7 +2185,7 @@ void SEOverride::ToString(std::ostream& str) const
     str << "\n\tHeart Rate: ";
     HasHeartRateOverride() ? str << *m_HeartRateOR : str << "Not Set";
     if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tHeart Rate has a lower bound of 30 bpm and an upper bound of 240 bpm.";
+      str << "\n\tHeart Rate has a lower/upper bound dependent on the patient.";
     } else {
       str << "\n\tPharmacodynamics affecting this value have been turned off due to conformance being turned off.";
     }

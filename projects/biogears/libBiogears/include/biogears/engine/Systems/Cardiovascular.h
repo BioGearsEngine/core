@@ -162,6 +162,7 @@ private:
   std::string m_TuningFile;
 
   double m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+  double m_OverrideHR_Conformant_Per_min;
 
   SEFluidCircuitCalculator m_circuitCalculator;
   SELiquidTransporter m_transporter;

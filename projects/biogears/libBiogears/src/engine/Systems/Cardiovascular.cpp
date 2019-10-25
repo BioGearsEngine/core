@@ -137,6 +137,8 @@ void Cardiovascular::Clear()
   m_CardiacCyclePulmonaryArteryPressure_mmHg.Reset();
   m_CardiacCycleCentralVenousPressure_mmHg.Reset();
   m_CardiacCycleSkinFlow_mL_Per_s.Reset();
+
+  m_OverrideHR_Conformant_Per_min = 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -318,6 +320,7 @@ void Cardiovascular::SetUp()
   m_dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_patient = &m_data.GetPatient();
   m_minIndividialSystemicResistance__mmHg_s_Per_mL = 0.1;
+  m_OverrideHR_Conformant_Per_min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
 
   //Circuits
   m_CirculatoryCircuit = &m_data.GetCircuits().GetActiveCardiovascularCircuit();
@@ -1446,31 +1449,32 @@ void Cardiovascular::BeginCardiacCycle()
     m_RightHeartElastanceMax_mmHg_Per_mL *= m_data.GetNervous().GetBaroreceptorHeartElastanceScale().GetValue();
 
   double HeartDriverFrequency_Per_Min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
-  if (m_data.GetNervous().HasBaroreceptorHeartRateScale())
-    HeartDriverFrequency_Per_Min *= m_data.GetNervous().GetBaroreceptorHeartRateScale().GetValue();
 
+  // In the event of a conformant HR override, the member variable is used to keep track of the changing baseline, but will reset to the patient's true baseline after being turned off
+  // Conformant changes are driven towards a new value using a moving average concept to allow other values in BG physiology to catch up in the event of extreme changes
+  // Still bound by patient min and max
+  if (m_data.GetActions().GetPatientActions().HasOverride()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+      HeartDriverFrequency_Per_Min = m_OverrideHR_Conformant_Per_min;
+      double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
+      double HeartDriverINcrease_Per_min = std::abs((HRoverride_Per_min - HeartDriverFrequency_Per_Min) / HeartDriverFrequency_Per_Min) * (HRoverride_Per_min - HeartDriverFrequency_Per_Min);
+      HeartDriverFrequency_Per_Min += HeartDriverINcrease_Per_min;
+    } 
+  } else {
+    
+  if (m_data.GetNervous().HasBaroreceptorHeartRateScale())
+    HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetBaroreceptorHeartRateScale().GetValue());
   // Chemoreceptor and drug effects are deltas rather than multipliers, so they are added.
   // Apply chemoreceptor effects
   if (m_data.GetNervous().HasChemoreceptorHeartRateScale())
-    HeartDriverFrequency_Per_Min += m_data.GetNervous().GetChemoreceptorHeartRateScale().GetValue();
-
+    HeartDriverFrequency_Per_Min += (m_data.GetNervous().GetChemoreceptorHeartRateScale().GetValue());
+  }
   // Apply drug effects
   if (m_data.GetDrugs().HasHeartRateChange())
     HeartDriverFrequency_Per_Min += m_data.GetDrugs().GetHeartRateChange(FrequencyUnit::Per_min);
-  
-  if (m_data.GetActions().GetPatientActions().HasOverride()) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-      double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
-      double HR = GetHeartRate(FrequencyUnit::Per_min);
-      double heartdriver = HeartDriverFrequency_Per_Min;
-      double HeartDriverINcrease_Per_min = ((HRoverride_Per_min - HeartDriverFrequency_Per_Min) * (HeartDriverFrequency_Per_Min/HRoverride_Per_min));
-      HeartDriverFrequency_Per_Min += HeartDriverINcrease_Per_min;
-      //HeartDriverFrequency_Per_Min = ((HRoverride_Per_min + HeartDriverFrequency_Per_Min) / 2.0);
-    }
-  }
 
   BLIM(HeartDriverFrequency_Per_Min, m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min), m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min));
-
+  m_OverrideHR_Conformant_Per_min = HeartDriverFrequency_Per_Min;
   //Apply heart failure effects
   m_LeftHeartElastanceMax_mmHg_Per_mL *= m_LeftHeartElastanceModifier;
 
@@ -1934,9 +1938,9 @@ void Cardiovascular::CalculateHeartRate()
   // was set back to false), so we need to subtract one time step from the interval.
   double HeartRate_Per_s = 0.0;
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() 
+      && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()
       && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
-        HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
+    HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
   } else {
     HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
   }
@@ -2008,8 +2012,8 @@ void Cardiovascular::OverrideControlLoop()
   constexpr double minDiastolicArtPressureOverride = 0.0; //mmHg
   constexpr double maxMAPOverride = 105.0; //mmHg
   constexpr double minMAPOverride = 60.0; //mmHg
-  constexpr double maxHROverride = 240.0; //bpm, max estimate of patient's max age related heart is [220-age_yr] so override provides a huge buffer above this estimate
-  constexpr double minHROverride = 30.0; //bpm, lowest achievable is 27 before asystole starts to end runs
+  const double maxHROverride = m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min); //bpm, max estimate of patient's max age related heart is [220-age_yr] so override provides a huge buffer above this estimate
+  const double minHROverride = m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min); //bpm
   constexpr double maxHeartStrokeVolumeOverride = 5000.0; //mL
   constexpr double minHeartStrokeVolumeOverride = 0.0; //mL
   constexpr double maxSystolicArtPressureOverride = 300.0; //mmHg
