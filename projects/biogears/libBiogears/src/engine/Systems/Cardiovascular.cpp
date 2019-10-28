@@ -1449,8 +1449,8 @@ void Cardiovascular::BeginCardiacCycle()
   if (m_data.GetActions().GetPatientActions().HasOverride()) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
       HeartDriverFrequency_Per_Min = m_OverrideHR_Conformant_Per_min;
-      double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
-      double HeartDriverINcrease_Per_min = std::abs((HRoverride_Per_min - HeartDriverFrequency_Per_Min) / HeartDriverFrequency_Per_Min) * (HRoverride_Per_min - HeartDriverFrequency_Per_Min);
+      const double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
+      const double HeartDriverINcrease_Per_min = std::abs((HRoverride_Per_min - HeartDriverFrequency_Per_Min) / HeartDriverFrequency_Per_Min) * (HRoverride_Per_min - HeartDriverFrequency_Per_Min);
       HeartDriverFrequency_Per_Min += HeartDriverINcrease_Per_min;
     } 
   } else {
