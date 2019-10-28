@@ -679,13 +679,6 @@ void Cardiovascular::Process()
 {
   m_circuitCalculator.Process(*m_CirculatoryCircuit, m_dT_s);
   m_transporter.Transport(*m_CirculatoryGraph, m_dT_s);
-  /*if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On
-      && m_data.GetState() == EngineState::Active) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasCardiovascularOverride()) {
-      ProcessOverride();
-    }
-  }*/
   CalculateVitalSigns();
 }
 
@@ -1462,16 +1455,19 @@ void Cardiovascular::BeginCardiacCycle()
     } 
   } else {
     
-  if (m_data.GetNervous().HasBaroreceptorHeartRateScale())
-    HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetBaroreceptorHeartRateScale().GetValue());
-  // Chemoreceptor and drug effects are deltas rather than multipliers, so they are added.
-  // Apply chemoreceptor effects
-  if (m_data.GetNervous().HasChemoreceptorHeartRateScale())
-    HeartDriverFrequency_Per_Min += (m_data.GetNervous().GetChemoreceptorHeartRateScale().GetValue());
+    if (m_data.GetNervous().HasBaroreceptorHeartRateScale()) {
+      HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetBaroreceptorHeartRateScale().GetValue());
+    }
+    // Chemoreceptor and drug effects are deltas rather than multipliers, so they are added.
+    // Apply chemoreceptor effects
+    if (m_data.GetNervous().HasChemoreceptorHeartRateScale()) {
+      HeartDriverFrequency_Per_Min += (m_data.GetNervous().GetChemoreceptorHeartRateScale().GetValue());
+    }
   }
   // Apply drug effects
-  if (m_data.GetDrugs().HasHeartRateChange())
+  if (m_data.GetDrugs().HasHeartRateChange()) {
     HeartDriverFrequency_Per_Min += m_data.GetDrugs().GetHeartRateChange(FrequencyUnit::Per_min);
+  }
 
   BLIM(HeartDriverFrequency_Per_Min, m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min), m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min));
   m_OverrideHR_Conformant_Per_min = HeartDriverFrequency_Per_Min;
@@ -1979,16 +1975,6 @@ void Cardiovascular::ProcessOverride()
   if (override->HasHeartRateOverride()) {
     if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
       GetHeartRate().SetValue(override->GetHeartRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
-    } else if (override->GetOverrideConformance() == CDM::enumOnOff::On) {
-      // INSERT PHYSIOLOGICAL SHIFT VERSION HERE
-      double overrideHRValue_Per_min = override->GetHeartRateOverride(FrequencyUnit::Per_min);
-      double currentHR_Per_min = m_data.GetCardiovascular().GetHeartRate().GetValue(FrequencyUnit::Per_min);
-      double avgHR_Per_min = ((overrideHRValue_Per_min) + (currentHR_Per_min)) / 2.0;
-      //GetHeartRate().SetValue(avgHR_Per_min, FrequencyUnit::Per_min);
-      //m_LeftHeartToAorta->GetNextFlow().SetValue(m_LeftHeartToAorta->GetNextFlow(VolumePerTimeUnit::mL_Per_s) * (avgHR_Per_min / currentHR_Per_min), VolumePerTimeUnit::mL_Per_s);
-      //m_Aorta->GetPressure().SetReadOnly(false);
-      //m_Aorta->GetPressure().SetValue(m_Aorta->GetPressure().GetValue(PressureUnit::mmHg) * (avgHR_Per_min/currentHR_Per_min), PressureUnit::mmHg);
-      //m_Aorta->GetPressure().SetReadOnly(true);
     }
   }
   if (override->HasHeartStrokeVolumeOverride()) {
