@@ -99,6 +99,7 @@ protected:
   double m_HeartElastanceModifier;
   double m_HypoxiaThresholdHeart;
   double m_HypoxiaThresholdPeripheral;
+  double m_IntrinsicHeartRate;
   double m_ResistanceModifier;
   double m_PeripheralBloodGasInteractionBaseline_Hz;
   double m_PeripheralVentilationDelta_L_Per_min;

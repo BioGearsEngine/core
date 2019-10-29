@@ -99,6 +99,7 @@ void Nervous::Initialize()
   m_HeartElastanceModifier = 1.0;
   m_HypoxiaThresholdHeart = 3.59;
   m_HypoxiaThresholdPeripheral = 0.0;
+  m_IntrinsicHeartRate = 1.6 * m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min);  //Approx guess -- should be higher than baseline since baseline assumes some vagal outflow
   m_ResistanceModifier = 0.0;
   m_PeripheralBloodGasInteractionBaseline_Hz = 0.0;
 
@@ -148,7 +149,6 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_AfferentStrain = in.AfferentStrain();
   m_AfferentStrainBaseline = in.AfferentStrainBaseline();
   m_BaroreceptorBaseline = in.BaroreceptorBaseline();
-  m_BaroreceptorFatigueScale = in.BaroreceptorFatigueScale();
   m_BaroreceptorOperatingPoint_mmHg = in.BaroreceptorOperatingPoint_mmHg();
   
   m_CerebralAutoregulator = in.CerebralAutoregulator();
@@ -160,6 +160,7 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_HeartElastanceModifier = in.HeartElastanceModifier();
   m_HypoxiaThresholdHeart = in.HypoxiaThresholdHeart();
   m_HypoxiaThresholdPeripheral = in.HypoxiaThresholdPeripheral();
+  m_IntrinsicHeartRate = in.IntrinsicHeartRate();
   m_PeripheralBloodGasInteractionBaseline_Hz = in.ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz();
 
   m_PulmonaryVenousPressureBaseline_mmHg = in.PulmonaryVenousPressureBaseline_mmHg();
@@ -206,6 +207,7 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.HeartElastanceModifier(m_HeartElastanceModifier);
   data.HypoxiaThresholdHeart(m_HypoxiaThresholdHeart);
   data.HypoxiaThresholdPeripheral(m_HypoxiaThresholdPeripheral);
+  data.IntrinsicHeartRate(m_IntrinsicHeartRate);
   data.PulmonaryVenousPressureBaseline_mmHg(m_PulmonaryVenousPressureBaseline_mmHg);
   data.PulmonaryVenousPressureInput_mmHg(m_PulmonaryVenousPressureInput_mmHg);
   data.ResistanceModifier(m_ResistanceModifier);
@@ -309,15 +311,10 @@ void Nervous::AtSteadyState()
   m_ChemoreceptorFiringRateSetPoint_Hz = m_AfferentChemoreceptor_Hz;
   m_AfferentChemoreceptor_Hz = m_PeripheralBloodGasInteractionBaseline_Hz;
 
-
-  // The baroreceptor scales need to be reset any time the baselines are reset.
-  //GetBaroreceptorHeartRateScale().SetValue(1.0);
-  //GetBaroreceptorHeartElastanceScale().SetValue(1.0);
-  //GetBaroreceptorResistanceScale().SetValue(1.0);
-  //GetBaroreceptorComplianceScale().SetValue(1.0);
-
   m_BaroreceptorBaseline = m_AfferentBaroreceptor_Hz;
   m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+  const double wallStrain = 0.4226;  //This is the wall strain when arterial pressure = operating point (see BaroreceptorFeedback)
+  m_AfferentStrainBaseline = wallStrain - m_AfferentStrain;
   m_CerebralBloodFlowBaseline_mL_Per_s = m_CerebralBloodFlowInput_mL_Per_s;
   m_CerebralCarbonDioxideBaseline_mmHg = m_data.GetCompartments().GetExtracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Brain)).GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetPartialPressure(PressureUnit::mmHg);
   m_CerebralAutoregulator = 0.0;
@@ -398,6 +395,7 @@ void Nervous::AfferentResponse()
   const double tidalVolume_L = m_data.GetRespiratory().GetTidalVolume(VolumeUnit::L);
   const double dFrequencyAP_Hz = (1.0 / tauAP_s) * (-m_AfferentPulmonaryStretchReceptor_Hz + tidalVolume_L * gainAP_Hz_Per_L);
   m_AfferentPulmonaryStretchReceptor_Hz += dFrequencyAP_Hz * m_dt_s;
+  
 
   //Afferent atrial stretch receptors (*aa = afferent atrial)--Input is a filtered venous pressure first (less noisy) that is determined first
   const double tauAA_s = 6.37;
@@ -474,11 +472,13 @@ void Nervous::EfferentResponse()
   //Heart Rate
   const double gainVagalHR = 0.5;
   const double gainSympatheticHR = 0.3;
-  const double baseHR = -gainVagalHR * m_VagalSignalBaseline + gainSympatheticHR * m_SympatheticHeartSignalBaseline;
-  const double intrinsicHR = m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min) / (1.0 + baseHR);
-  const double nextHR = intrinsicHR * (1.0 - gainVagalHR * m_VagalSignal_Hz + gainSympatheticHR * m_SympatheticHeartSignal_Hz);
+  const double nextHR = m_IntrinsicHeartRate * (1.0 - gainVagalHR * m_VagalSignal_Hz + gainSympatheticHR * m_SympatheticHeartSignal_Hz);
+  if (!m_FeedbackActive) {
+	//Keep resetting intrinsic heart rate so that when feedback is turned on it is tuned to the vagal and sympathethic signal baselines
+    m_IntrinsicHeartRate = m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min) / (1.0 - gainVagalHR * m_VagalSignal_Hz + gainSympatheticHR * m_SympatheticHeartSignal_Hz);
+  }
   m_data.GetDataTrack().Probe("Randall_HR", nextHR);
-
+  m_data.GetDataTrack().Probe("HR_Intrinsic", m_IntrinsicHeartRate);
   //Heart elastance
   const double baseElastance = 2.49;
   const double gainElastance= 0.4;
@@ -520,9 +520,6 @@ void Nervous::EfferentResponse()
   if (m_FeedbackActive) {
     GetBaroreceptorHeartRateScale().SetValue(nextHR / m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min));
     GetBaroreceptorHeartElastanceScale().SetValue((m_HeartElastanceModifier + initialElastance) / baseElastance);
-    //GetResistanceScaleExtrasplanchnic().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
-    //GetResistanceScaleMuscle().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
-    //GetResistanceScaleSplanchnic().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
     GetBaroreceptorResistanceScale().SetValue(baseR_mmHg_s_Per_mL + m_ResistanceModifier);
     GetBaroreceptorComplianceScale().SetValue((initialVolume + m_ComplianceModifier) / baseVolume);
   }
@@ -530,24 +527,25 @@ void Nervous::EfferentResponse()
 
 void Nervous::CerebralAutoregulation()
 {
-  double tauAuto = 40.0;
-  double complianceGainHigh = 2.87, complianceGainLow = 0.11;
+  const double tauAuto = 40.0;
+  const double complianceGainHigh = 2.87;
+  const double complianceGainLow = 0.11;
   double Kr = 4.96e4;
-  double complianceMid = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries1ToSpinalFluid)->GetComplianceBaseline(FlowComplianceUnit::mL_Per_mmHg);
+  const double complianceMid = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries1ToSpinalFluid)->GetComplianceBaseline(FlowComplianceUnit::mL_Per_mmHg);
   double complianceGain = 0.0;
   double complianceSlope = 0.0;
-  double filterConstant = 0.5;
+  const double filterConstant = 0.5;
 
-  double cranialCO2_mmHg = m_data.GetCompartments().GetExtracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Brain)).GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetPartialPressure(PressureUnit::mmHg);
+  const double cranialCO2_mmHg = m_data.GetCompartments().GetExtracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Brain)).GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetPartialPressure(PressureUnit::mmHg);
   double cbfBaseDelta = 1.8 / (1.0 + std::exp(-0.06 * (cranialCO2_mmHg - 57.0))) - 0.6;
-  cbfBaseDelta = 0.0;
-  double cbfBase = m_CerebralBloodFlowBaseline_mL_Per_s * (1.0 + cbfBaseDelta);
-  double kAuto = 18.0 / (1.0 + std::exp(2.0 * (cranialCO2_mmHg - m_CerebralCarbonDioxideBaseline_mmHg) / m_CerebralCarbonDioxideBaseline_mmHg));
-  double cerebralBloodFlow_mL_Per_s = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralCapillariesToCerebralVeins1)->GetFlow(VolumePerTimeUnit::mL_Per_s);
-  double dCerebralBloodFlow = filterConstant * (-m_CerebralBloodFlowInput_mL_Per_s + cerebralBloodFlow_mL_Per_s);
+  cbfBaseDelta = 0.0;		//Still tuning--for now leave cbf at baseline
+  const double cbfBaseline_CO2Adjust = m_CerebralBloodFlowBaseline_mL_Per_s * (1.0 + cbfBaseDelta);
+  const double kAuto = 18.0 / (1.0 + std::exp(2.0 * (cranialCO2_mmHg - m_CerebralCarbonDioxideBaseline_mmHg) / m_CerebralCarbonDioxideBaseline_mmHg));
+  const double cerebralBloodFlow_mL_Per_s = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralCapillariesToCerebralVeins1)->GetFlow(VolumePerTimeUnit::mL_Per_s);
+  const double dCerebralBloodFlow = filterConstant * (-m_CerebralBloodFlowInput_mL_Per_s + cerebralBloodFlow_mL_Per_s);
   m_CerebralBloodFlowInput_mL_Per_s += (dCerebralBloodFlow * m_dt_s);
 
-  double dAuto = (1.0 / tauAuto) * (-m_CerebralAutoregulator + kAuto * (m_CerebralBloodFlowInput_mL_Per_s - 12.0) / 12.0);
+  const double dAuto = (1.0 / tauAuto) * (-m_CerebralAutoregulator + kAuto * (m_CerebralBloodFlowInput_mL_Per_s - cbfBaseline_CO2Adjust) / cbfBaseline_CO2Adjust);
   m_CerebralAutoregulator += (dAuto * m_dt_s);
 
   if (m_CerebralAutoregulator < 0.0) {
@@ -558,12 +556,12 @@ void Nervous::CerebralAutoregulation()
     complianceSlope = complianceGainLow / 4.0;
   }
 
-  double nextCompliance = ((complianceMid - 0.5 * complianceGain) + (complianceMid + 0.5 * complianceGain) * std::exp(-m_CerebralAutoregulator / complianceSlope)) / (1.0 + std::exp(-m_CerebralAutoregulator / complianceSlope));
-  double cerebralArteryVolume_mL = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::CerebralArteries)->GetVolume(VolumeUnit::mL);
-  double cerebralArteryVolumeBase = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::CerebralNode::CerebralArteries1)->GetVolumeBaseline(VolumeUnit::mL);
-  double cerebralResistanceBase = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries2ToCapillaries)->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+  const double nextCompliance = ((complianceMid - 0.5 * complianceGain) + (complianceMid + 0.5 * complianceGain) * std::exp(-m_CerebralAutoregulator / complianceSlope)) / (1.0 + std::exp(-m_CerebralAutoregulator / complianceSlope));
+  const double cerebralArteryVolume_mL = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::CerebralArteries)->GetVolume(VolumeUnit::mL);
+  const double cerebralArteryVolumeBase = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::CerebralNode::CerebralArteries1)->GetVolumeBaseline(VolumeUnit::mL);
+  const double cerebralResistanceBase = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries2ToCapillaries)->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
   Kr = cerebralResistanceBase / (std::pow(complianceMid / 12.5, 2.0));
-  double nextResistance = Kr * std::pow(complianceMid / cerebralArteryVolume_mL, 2.0);
+  const double nextResistance = Kr * std::pow(complianceMid / cerebralArteryVolume_mL, 2.0);
 
   if (m_FeedbackActive) {
     m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries1ToSpinalFluid)->GetNextCompliance().SetValue(nextCompliance, FlowComplianceUnit::mL_Per_mmHg);
