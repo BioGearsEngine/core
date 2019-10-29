@@ -40,4 +40,10 @@ namespace biogears {
   BIOGEARS_API int biogears_patch_version();
 
   BIOGEARS_API bool biogears_offical_release();
-}
+
+  BIOGEARS_API std::string rev_commit_date();
+  BIOGEARS_API char const* rev_commit_date_str();
+  BIOGEARS_API std::string biogears_build_date();
+  BIOGEARS_API const char* biogears_build_date_str();\
+
+  }

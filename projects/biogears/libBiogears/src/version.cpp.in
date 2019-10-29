@@ -10,7 +10,7 @@ namespace biogears {
 constexpr char const * _PROJECT_NAME_ = "${ROOT_PROJECT_NAME}";
 constexpr char const * _REV_HASH_ = "${${ROOT_PROJECT_NAME}_VERSION_HASH}";
 constexpr char const * _REV_TAG_ = "${${ROOT_PROJECT_NAME}_VERSION_TAG}";
-
+constexpr char const * _REV_COMMIT_DATE_= "${${ROOT_PROJECT_NAME}_COMMIT_DATE}";
 constexpr bool _OFFICAL_RELEASE_ = ${${ROOT_PROJECT_NAME}_DIRTY_BUILD};
 
 constexpr int _MAJOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MAJOR};
@@ -20,6 +20,23 @@ constexpr int _TWEAK_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_TWEAK};
 
 
 using namespace std::string_literals;
+//-----------------------------------------------------------------------------
+std::string rev_commit_date() {
+  return biogears_build_date_str();
+}
+//-----------------------------------------------------------------------------
+const char * rev_commit_date_str() {
+  return _REV_COMMIT_DATE_;
+}
+//-----------------------------------------------------------------------------
+std::string biogears_build_date() {
+  return biogears_build_date_str();
+}
+//-----------------------------------------------------------------------------
+const char * biogears_build_date_str() {
+  return __DATE__;
+}
+//-----------------------------------------------------------------------------
 std::string version_string()
 {
   if (_TWEAK_VERSION_NUMBER_)
