@@ -749,7 +749,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   }
 
 
-  if (rhMismatch == false) {
+  if (!rhMismatch) {
     if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) {
       donorAntigen_ct = AntA_initial_ct + AntB_initial_ct;
       patientAntigen_ct = 0.0;
@@ -895,7 +895,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   double MetabolismAfterHTR = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::W) * metabolicIncrease; //core temp increase
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(MetabolismAfterHTR, PowerUnit::W);
 
-  if (rhMismatch == true) {
+  if (rhMismatch) {
     m_RhTransfusionReactionVolume_mL = GetRhTransfusionReactionVolume().GetValue(VolumeUnit::mL);
     m_RhFactorMismatch_ct = donorRBC * agglutinin_per_rbc * ((liveCells_percent+1.0)/2.0);
     LLIM(m_RhFactorMismatch_ct, 0.0);

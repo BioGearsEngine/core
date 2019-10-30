@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
+#include <biogears/cdm/patient/actions/SETourniquet.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
@@ -184,6 +185,11 @@ public:
   const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& GetSubstanceCompoundInfusions() const;
   void RemoveSubstanceCompoundInfusion(const SESubstanceCompound& sub);
 
+  bool HasTourniquet() const;
+  const std::map<std::string, SETourniquet*>& GetTourniquets() const;
+  void RemoveTourniquet(const char* cmpt);
+  void RemoveTourniquet(const std::string& cmpt);
+
   bool HasUrinate() const;
   SEUrinate* GetUrinate() const;
   void RemoveUrinate();
@@ -223,6 +229,7 @@ protected:
   SEOverride* m_OverrideAction;
 
   std::map<std::string, SEHemorrhage*> m_Hemorrhages;
+  std::map<std::string, SETourniquet*> m_Tourniquets;
   std::map<std::string, SEPainStimulus*> m_PainStimuli;
   std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
   std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;

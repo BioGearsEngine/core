@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
+#include <biogears/cdm/patient/actions/SETourniquet.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
@@ -346,6 +347,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SESubstanceCompoundInfusion* a = new SESubstanceCompoundInfusion(*compound);
       a->Load(*subCInfuzData);
       return a;
+    }
+
+	CDM::TourniquetData* tourniquetData = dynamic_cast<CDM::TourniquetData*>(action);
+    if (tourniquetData != nullptr) {
+		SETourniquet* tourniquet = new SETourniquet();
+		tourniquet->Load(*tourniquetData);
+		return tourniquet;
     }
 
     CDM::UrinateData* urinateData = dynamic_cast<CDM::UrinateData*>(action);
