@@ -147,6 +147,7 @@ private:
   double m_InitialFunctionalResidualCapacity_L;
   double m_InitialInspiratoryCapacity_L;
   double m_InitialResidualVolume_L;
+  double m_OverrideRRBaseline_Per_min;
   //   CalculateVitalSigns()
   bool m_bNotBreathing;
   double m_TopBreathTotalVolume_L;
