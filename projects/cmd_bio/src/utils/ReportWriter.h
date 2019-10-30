@@ -41,6 +41,8 @@ public:
   std::string notes;
   std::pair<double, double> reference_range;
   double reference_value;
+  std::vector<double> reference_values;
+  std::vector<std::pair<double, double>> reference_ranges;
 };
 
 class ReportWriter {
@@ -60,6 +62,7 @@ public:
   void ParseBaselineCSV(std::string filename);
   void CalculateAverages();
   void ExtractValues();
+  void ExtractValuesList();
   void Validate();
   void PopulateTables();
   void clear(); // This does not reset the value of the pointers

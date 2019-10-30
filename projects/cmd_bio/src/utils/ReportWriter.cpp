@@ -130,6 +130,7 @@ void ReportWriter::gen_tables()
     CalculateAverages();
     logger->Info("Successfully calculated averages of file: " + baseline_files[i]);
     ExtractValues();
+    ExtractValuesList();
     logger->Info("Successfully populated data structures with validation data");
     Validate();
     logger->Info("Successfully ran validation");
@@ -364,7 +365,41 @@ void ReportWriter::ExtractValues()
     reference_values.push_back(ref);
   }
 }
-
+void ReportWriter::ExtractValuesList()
+{
+  for (int i = 1; i < validation_data.size(); i++) {
+    biogears::ReferenceValue ref;
+    ref.value_name = validation_data[i][0];
+    ref.unit_name = validation_data[i][1];
+    std::string values = validation_data[i][2];
+    for (size_t j = 0; j < values.size(); j++) {
+      if (isdigit(values[j]) || values[j] == '-') {
+        size_t eod = j + 1;
+        while (eod != validation_data.size() && (isdigit(values[eod]) || values[eod] == '.' || values[eod] == '-' || values[eod] == 'E' || values[eod] == 'e')) {
+          eod++;
+        }
+        try {
+          ref.reference_values.push_back(std::stod(values.substr(j, eod - j)));
+          j += ((eod - j) + 1);
+        } catch (std::exception& e) {
+          logger->Error(std::string("Error: ") + e.what());
+          logger->Error("Cell Contents: " + values.substr(j ,eod - j));
+          throw(e);
+        }
+      } else if (values[j] == '[') {
+        std::vector<std::string> value_range = split(values.substr(j + 1, values.find_first_of(']', j + 1) - (1 + j)),',');
+        try {
+          ref.reference_ranges.push_back(std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1])));
+        } catch (std::exception& e) {
+          logger->Error(std::string("Error: ") + e.what());
+          logger->Error("Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
+          throw(e);
+        }
+        j = values.find_first_of(']', j + 1);
+      }
+    }
+  }
+}
 void ReportWriter::Validate()
 {
   for (biogears::ReferenceValue ref : reference_values) {
