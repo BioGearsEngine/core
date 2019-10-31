@@ -828,7 +828,7 @@ void Drugs::CalculateDrugEffects()
     // and the blood gas setpoint reset for example).
     deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
 
-    hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue() * 1e-5) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
+    hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue() * 1.0e-4) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
 
     deltaDiastolicBP_mmHg += patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetDiastolicPressureModifier().GetValue() * concentrationEffects_unitless;
 
@@ -942,9 +942,6 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
     if (!sub->HasPK())
       continue;
-    //--Old erroneous plasma calc---
-    //plasmaMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
-    //sub->GetPlasmaConcentration().SetValue(plasmaMass_ug / plasmaVolume_mL, MassPerVolumeUnit::ug_Per_mL);
 
     //--Assume that vena cava concentration is representative blood average (this is what we do in BloodChemistry) -
     double bloodPlasmaRatio = 1.0; //Assume equal distribution for subs without a defined BP ratio
@@ -955,9 +952,12 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
     if (sub->HasMassInBlood()) {
       massInBlood_ug = sub->GetMassInBlood(MassUnit::ug);
     }
-    //K_bp = Cb/Cp  ---> Cp = Cb/K_bp
+	//Set blood concentration for substances with PK
+    sub->GetBloodConcentration().SetValue(massInBlood_ug / bloodVolume_mL, MassPerVolumeUnit::ug_Per_mL);
+    //Set plasma concentration assuming K_bp = Cb/Cp  ---> Cp = Cb/K_bp
     double plasmaConcentration_ug_Per_mL = massInBlood_ug / bloodVolume_mL / bloodPlasmaRatio;
     sub->GetPlasmaConcentration().SetValue(plasmaConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
+    
     //Increment area under curve--should be done for subs w/ PK
     double deltaT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
     sub->GetAreaUnderCurve().IncrementValue(plasmaConcentration_ug_Per_mL * deltaT_s, TimeMassPerVolumeUnit::s_ug_Per_mL);
