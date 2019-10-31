@@ -77,7 +77,7 @@ std::string SETourniquet::GetCompartment() const
 }
 //-----------------------------------------------------------------------------
 bool SETourniquet::HasCompartment() const
-{
+{  
   return !m_Compartment.empty();
 }
 //-----------------------------------------------------------------------------

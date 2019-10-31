@@ -546,22 +546,34 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   const CDM::TourniquetData* tournData = dynamic_cast<const CDM::TourniquetData*>(&action);
   if (tournData != nullptr) {
     SETourniquet* myTourn = m_Tourniquets[tournData->Compartment()];
+    std::vector<std::string> validCmpts{ "LeftArm", "LeftLeg", "RightArm", "RightLeg" };
+    bool matchingHem = true;
+    bool validCmpt = true;
+    std::stringstream warn;
     if (myTourn == nullptr) {
       if (m_Hemorrhages[tournData->Compartment()] != nullptr) {
         myTourn = new SETourniquet();
         m_Tourniquets[tournData->Compartment()] = myTourn;
       } else {
-        Error("Cannot apply a tourniquet in a location without a hemorrhage");
+        matchingHem = false;
+        warn << "\n\t Tourniquet cannot be applied to a compartment without a hemorrhage" << std::endl;
       }
-
+	  if (std::find(validCmpts.begin(), validCmpts.end(), tournData->Compartment()) == validCmpts.end()) {
+        validCmpt = false;
+		warn << "\t Invalid tourniquet location:  Valid options are LeftArm, LeftLeg, RightArm, RightLeg" << std::endl;
+	  }
     }
-    myTourn->Load(*tournData);
-
-    if (!myTourn->IsActive()) {
-      RemoveTourniquet(myTourn->GetCompartment());
-      return true;
+    if (matchingHem && validCmpt) {
+      myTourn->Load(*tournData);
+      if (!myTourn->IsActive()) {
+        RemoveTourniquet(myTourn->GetCompartment());
+        return true;
+      }
+      return IsValid(*myTourn);
+    } else {
+      Warning(warn);
+      return false;
     }
-    return IsValid(*myTourn);
   }
 
   const CDM::UrinateData* urinate = dynamic_cast<const CDM::UrinateData*>(&action);
@@ -852,6 +864,9 @@ void SEPatientActionCollection::RemoveHemorrhage(const std::string& cmpt)
   SEHemorrhage* h = m_Hemorrhages[cmpt];
   m_Hemorrhages.erase(cmpt);
   SAFE_DELETE(h);
+  if (m_Tourniquets.count(cmpt) != 0) {
+    Info("Hemorrhage stopped but tourniquet still active.  If you want to remove tourniquet, set tourniquet level to None");
+  }
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasInfection() const
