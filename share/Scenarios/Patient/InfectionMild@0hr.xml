@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-  <Name>InfectionModerate</Name>
-  <Description>Continue a Moderate infection 12 hrs post-exposure..  Note that we need to provide food/water to keep sim stable. See InfectionModerate@24hr for extension of scenario. </Description>
-  <EngineStateFile>./states/InfectionStates/ModerateInfection@12hr.xml</EngineStateFile>
+  <Name>InfectionMild</Name>
+  <Description>Start a mild infection and progress for 12 hours.  Note that we need to provide food/water to keep sim stable. See InfectionMild@12hr and InfectionMild@24hr for extension of scenario. </Description>
+  <InitialParameters>
+    <PatientFile>StandardMale.xml</PatientFile>
+  </InitialParameters>
   <DataRequests SamplesPerSecond="0.05">
     <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
 
@@ -72,10 +74,49 @@
 
   </DataRequests>
 
+  <Action xsi:type="InfectionData" Severity="Mild">
+    <MinimumInhibitoryConcentration value="8.0" unit="mg/L"/>
+    <Location>Skin</Location>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
   <Action xsi:type="ConsumeNutrientsData">
     <Nutrition>
       <Name>Agua</Name>
       <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Food</Name>
+      <Carbohydrate value="130.0" unit="g"/>
+      <Fat value="27.0" unit="g"/>
+      <Protein value="20.0" unit="g"/>
+      <Calcium value="0.5" unit="g"/>
+      <Sodium value="0.75" unit="g"/>
+      <Water value="0.5" unit="L"/>
     </Nutrition>
   </Action>
   <Action xsi:type="AdvanceTimeData">
@@ -119,44 +160,13 @@
   </Action>
   <Action xsi:type="ConsumeNutrientsData">
     <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
+      <Name>Food</Name>
+      <Carbohydrate value="130.0" unit="g"/>
+      <Fat value="27.0" unit="g"/>
+      <Protein value="20.0" unit="g"/>
+      <Calcium value="0.5" unit="g"/>
+      <Sodium value="0.75" unit="g"/>
+      <Water value="0.5" unit="L"/>
     </Nutrition>
   </Action>
   <Action xsi:type="AdvanceTimeData">
@@ -181,6 +191,6 @@
     <Time value="1" unit="hr"/>
   </Action>
   <Action xsi:type="SerializeStateData" Type="Save">
-    <Filename>./states/InfectionStates/ModerateInfection@24hr.xml</Filename>
+    <Filename>./states/InfectionStates/MildInfection@12hr.xml</Filename>
   </Action>
 </Scenario>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-  <Name>InfectionModerate</Name>
-  <Description>Continue a Moderate infection 12 hrs post-exposure..  Note that we need to provide food/water to keep sim stable. See InfectionModerate@24hr for extension of scenario. </Description>
-  <EngineStateFile>./states/InfectionStates/ModerateInfection@12hr.xml</EngineStateFile>
+  <Name>InfectionSevere</Name>
+  <Description>Load patient who has had severe infection for 48 hrs and is in septic shock.  Proceed through representative sample of interventions </Description>
+  <EngineStateFile>./states/InfectionStates/SevereInfection@48hr.xml</EngineStateFile>
   <DataRequests SamplesPerSecond="0.05">
     <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
 
@@ -68,119 +68,104 @@
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-NitricOxide" Precision = "3"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-TumorNecrosisFactor" Precision = "3"/>
 
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="PlasmaConcentration" Unit="mg/L" Precision="6"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="SystemicMassCleared" Unit="mg" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="MassInBody" Unit="ug" Precision="2"/>
+
+
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Piperacillin" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
+
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="AntibioticActivity" Precision="4"/>
+
     <!-- Specific to this scenario -->
 
   </DataRequests>
 
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+  <!--Administer initial rescue bolus-->
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Saline</SubstanceCompound>
+    <BagVolume value="500" unit="mL"/>
+    <Rate value="50" unit="mL/min"/>
   </Action>
   <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
+    <Time value="30" unit="min"/>
   </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Saline</SubstanceCompound>
+    <BagVolume value="500" unit="mL"/>
+    <Rate value="50" unit="mL/min"/>
   </Action>
   <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+    <Time value="30" unit="min"/>
   </Action>
   <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
+    <Time value="60" unit="min"/>
   </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+  <!--Begin background fluids, norepinephrine, and antibiotics-->
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>SalineSlowDrip</SubstanceCompound>
+    <BagVolume value="1500" unit="mL"/>
+    <Rate value="75" unit="mL/hr"/>
   </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
+  <Action xsi:type="SubstanceInfusionData">
+    <Substance>Norepinephrine</Substance>
+    <Concentration value="14" unit="ug/mL"/>
+    <Rate value="1.0" unit="mL/min"/>
   </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>PiperacillinTazobactam</SubstanceCompound>
+    <BagVolume value="20" unit="mL"/>
+    <Rate value="0.667" unit="mL/min"/>
   </Action>
   <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
+    <Time value="60" unit="min"/>
   </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+  <!--Bolus to prevent hypovolemia-->
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Saline</SubstanceCompound>
+    <BagVolume value="250" unit="mL"/>
+    <Rate value="50" unit="mL/min"/>
   </Action>
   <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
+    <Time value="60" unit="min"/>
   </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
-  </Action>
-  <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
-  </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+  <!--Bolus to prevent hypovolemia-->
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Saline</SubstanceCompound>
+    <BagVolume value="250" unit="mL"/>
+    <Rate value="50" unit="mL/min"/>
   </Action>
   <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
+    <Time value="60" unit="min"/>
   </Action>
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Agua</Name>
-      <Water value="0.15" unit="L"/>
-    </Nutrition>
+  <!--Bolus to prevent hypovolemia-->
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Saline</SubstanceCompound>
+    <BagVolume value="250" unit="mL"/>
+    <Rate value="50" unit="mL/min"/>
   </Action>
   <Action xsi:type="AdvanceTimeData">
-    <Time value="1" unit="hr"/>
+    <Time value="60" unit="min"/>
+  </Action>
+  <!--Bolus to prevent hypovolemia-->
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Saline</SubstanceCompound>
+    <BagVolume value="250" unit="mL"/>
+    <Rate value="50" unit="mL/min"/>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="60" unit="min"/>
+  </Action>
+  <!--Bolus to prevent hypovolemia-->
+  <Action xsi:type="SubstanceCompoundInfusionData">
+    <SubstanceCompound>Saline</SubstanceCompound>
+    <BagVolume value="250" unit="mL"/>
+    <Rate value="50" unit="mL/min"/>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="60" unit="min"/>
   </Action>
   <Action xsi:type="SerializeStateData" Type="Save">
-    <Filename>./states/InfectionStates/ModerateInfection@24hr.xml</Filename>
+    <Filename>./states/InfectionStates/SepsisTreatment_8hr.xml</Filename>
   </Action>
 </Scenario>
