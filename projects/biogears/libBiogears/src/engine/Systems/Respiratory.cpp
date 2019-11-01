@@ -1053,7 +1053,9 @@ void Respiratory::ProcessDriverActions()
     if (m_data.GetActions().GetPatientActions().HasOverride()
         && m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride()
         && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-      // Add descriptive comment here
+      // In the event of a conformant RR override, the member variable is used to keep track of the changing baseline, but will reset to the patient's true baseline after being turned off
+      // Conformant changes are driven towards a new value using a moving average concept to allow other values in BG physiology to catch up in the event of extreme changes, max change per time step is 3 /min in either diurection
+      // Still bound by patient min and max
       m_VentilationFrequency_Per_min = m_OverrideRRBaseline_Per_min;
       const double RRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
       double OverrideVentilationIncrease_Per_min = std::abs((RRoverride_Per_min - m_VentilationFrequency_Per_min) / (m_VentilationFrequency_Per_min)) * (RRoverride_Per_min - m_VentilationFrequency_Per_min);
