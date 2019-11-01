@@ -1053,10 +1053,11 @@ void Respiratory::ProcessDriverActions()
     if (m_data.GetActions().GetPatientActions().HasOverride()
         && m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride()
         && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+      // Add descriptive comment here
       m_VentilationFrequency_Per_min = m_OverrideRRBaseline_Per_min;
       const double RRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
       double OverrideVentilationIncrease_Per_min = std::abs((RRoverride_Per_min - m_VentilationFrequency_Per_min) / (m_VentilationFrequency_Per_min)) * (RRoverride_Per_min - m_VentilationFrequency_Per_min);
-      BLIM(OverrideVentilationIncrease_Per_min, 0.0, 3.0);
+      BLIM(OverrideVentilationIncrease_Per_min, -3.0, 3.0);
       m_VentilationFrequency_Per_min += OverrideVentilationIncrease_Per_min;
       m_OverrideRRBaseline_Per_min = m_VentilationFrequency_Per_min;
     } else {
