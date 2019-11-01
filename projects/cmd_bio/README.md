@@ -1,6 +1,6 @@
 ## New Command Line Interface
 ```
-cmd_bio [GENDATA] [GENSTATES] [VERIFY]
+cmd_bio [GENDATA] [GENSTATES] [GENSEPSIS] [VERIFY]
         [THREADS N]
         [VALIDATE] [ [drug|patient|system|validation|all ]...]
         [TEST [cdm bge]...] [SCENARIO [FILE] ]
@@ -11,6 +11,8 @@ This project is a command line implementation of BioGears for processing Scenari
 **GENDATA**: Generate Data XMLs from CSV files located in the runtime directory.
 
 **GENSTATES**: Generate Stabalized Patient States for all Patients
+
+**GENSEPSIS**: Generate Stabalized Sepsis States at various levels of infection and progression
 
 **VALIDATE** Run one ore more validate senarios arguments include drug,patient,system or all. Where `VALIDATE all` is the same as providing the following `VALIDATE drug patient system VERIFY`
 

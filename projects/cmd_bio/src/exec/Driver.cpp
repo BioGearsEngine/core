@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
@@ -33,7 +34,7 @@
 
 namespace biogears {
 Driver::Driver(size_t thread_count)
-  : _pool{ thread_count }
+  : _pool { thread_count }
 {
 }
 //-----------------------------------------------------------------------------
@@ -140,7 +141,13 @@ void Driver::queue_CDMUnitTest(Executor exec)
 //-----------------------------------------------------------------------------
 void Driver::queue_Scenario(Executor exec)
 {
-  auto scenario_launch = [](Executor& ex, bool multi_patient_run) {
+  enum class PatientType {
+    FILE,
+    STATE,
+    INLINE
+  };
+  CDM::PatientData empty_patient_data; //TODO: Git Rid of PatientType and just treat everything line an inline PatientData by passing it in
+  auto scenario_launch = [](Executor& ex, bool multi_patient_run, PatientType patient_type,CDM::PatientData patient_data) {
     std::string trimed_scenario_path(trim(ex.Scenario()));
     auto split_scenario_path = split(trimed_scenario_path, '/');
     auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
@@ -157,7 +164,7 @@ void Driver::queue_Scenario(Executor exec)
         parent_dir += "/";
       }
     }
-    
+
     if (multi_patient_run) {
       ex.Name(ex.Name() + "-" + patient_no_extension);
     }
@@ -166,7 +173,6 @@ void Driver::queue_Scenario(Executor exec)
     std::string log_file = base_file_name + "Results.log";
     std::string results_file = base_file_name + "Results.csv";
 
-    std::cout << "ex.Computed() + parent_dir + console_file = (" << ex.Computed() << "," << parent_dir << "," << console_file << ")\n";
     std::unique_ptr<PhysiologyEngine> eng;
     Logger console_logger;
     Logger file_logger(ex.Computed() + parent_dir + console_file);
@@ -186,19 +192,30 @@ void Driver::queue_Scenario(Executor exec)
       //TODO::LOG ERROR Scenario File could not be loaded
     }
 
-    //NOTE:Assuming a Patient File
-    sce.GetInitialParameters().SetPatientFile(ex.Patient());
-    console_logger.Info("Starting "+ ex.Name());
+    switch (patient_type) {
+    case PatientType::FILE:
+      sce.GetInitialParameters().SetPatientFile(ex.Patient());
+      break;
+    case PatientType::STATE:
+      sce.SetEngineStateFile(ex.Patient());
+      break;
+    case PatientType::INLINE: {
+      biogears::SEPatient patient{ sce.GetLogger() };
+      patient.Load(patient_data);
+      sce.GetInitialParameters().SetPatient(patient);
+    } break;
+    }
+    console_logger.Info("Starting " + ex.Name());
     try {
-      BioGearsScenarioExec bse{ *eng };
+      BioGearsScenarioExec bse { *eng };
       bse.Execute(sce, ex.Computed() + parent_dir + results_file, nullptr);
-      console_logger.Info("Completed "+ ex.Name());
+      console_logger.Info("Completed " + ex.Name());
     } catch (...) {
-      console_logger.Error("Failed "+ ex.Name());
+      console_logger.Error("Failed " + ex.Name());
     }
   };
 
-  std::ifstream ifs{ exec.Scenario() };
+  std::ifstream ifs { exec.Scenario() };
   if (!ifs.is_open()) {
     ifs.open("Scenarios/" + exec.Scenario());
     if (!ifs.is_open()) {
@@ -228,7 +245,9 @@ void Driver::queue_Scenario(Executor exec)
   // TODO: Test for EngineState file and call an appropriate launcher
   // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
   if (scenario->EngineStateFile().present()) {
-    //TODO: Log A Clean Error about EngineState File Not Supported by this launcher;
+    std::cout << "Skipping " << exec.Name() << "\n\t -- This launcher does not currently support Serialized States\n";
+    exec.Patient(scenario->EngineStateFile().get());
+    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::STATE, empty_patient_data));
     return;
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
     const auto patient_file = scenario->InitialParameters()->PatientFile().get();
@@ -237,18 +256,21 @@ void Driver::queue_Scenario(Executor exec)
     if ("all" == nc_patient_file) {
       auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
       for (const std::string& patient_file : patient_files) {
-        auto patientEx{ exec };
+        Executor patientEx { exec };
         patientEx.Patient(patient_file);
-        _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
+        _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true, PatientType::FILE, empty_patient_data));
       }
     } else {
       exec.Patient(patient_file);
-      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::FILE, empty_patient_data));
     }
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
-    //TODO Log Error that inline patient definitions not supported by this launcher;
+    std::cout << "Skipping " << exec.Name() << "\n\t -- This launcher does not currently support inline patient definitions\n";
+    exec.Patient(scenario->InitialParameters()->Patient().get().Name());
+
+    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::INLINE, scenario->InitialParameters()->Patient().get()));
   } else {
-    //TODO: Log Error about no patient condition specified in scenario file;
+    std::cout << "Skipping " << exec.Name() << " no patient specificed.\n";
     return;
   }
 }

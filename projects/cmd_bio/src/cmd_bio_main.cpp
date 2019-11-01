@@ -57,7 +57,7 @@ void print_help() {
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "H","HELP","GENDATA", "GENSTATES", "VERIFY", "GENTABLES" ,"VERSION" } //Options
+    { "H","HELP","GENDATA", "GENSTATES", "GENSPESIS", "VERIFY", "GENTABLES" ,"VERSION" } //Options
     ,
     { "J", "THREADS" } //Keywords
     ,
@@ -102,6 +102,11 @@ int main(int argc, char** argv)
 
   if (args.Option("GENSTATES")) {
     const biogears::Config runs{ "GenStates.config" };
+    driver.queue(runs);
+  }
+
+  if (args.Option("GENSPESIS")) {
+    const biogears::Config runs { "GenSepsisStates.config" };
     driver.queue(runs);
   }
 
