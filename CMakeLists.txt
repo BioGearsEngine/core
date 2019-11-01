@@ -46,10 +46,10 @@ if(NOT GIT_SUCESS)
   set(${ROOT_PROJECT_NAME}_VERSION_PATCH 2)
   set(${ROOT_PROJECT_NAME}_VERSION_TWEAK 0)
   set(${ROOT_PROJECT_NAME}_LIB_VERSION ${${ROOT_PROJECT_NAME}_VERSION_MAJOR}.${${ROOT_PROJECT_NAME}_VERSION_MINOR} )
-  set(${${ROOT_PROJECT_NAME}_VERSION_TAG "Custom")
+  set(${ROOT_PROJECT_NAME}_VERSION_TAG "Custom")
   set(${ROOT_PROJECT_NAME}_DIRTY_BUILD true)
 
-  string(TIMESTAMP ${${ROOT_PROJECT_NAME}_COMMIT_DATE "%Y-%m-%d %H:%M")
+  string(TIMESTAMP ${ROOT_PROJECT_NAME}_COMMIT_DATE "%Y-%m-%d %H:%M")
 endif()
 ###############################################################################
 # Add Repository Subdirectories
