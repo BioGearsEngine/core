@@ -59,7 +59,8 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
 {
   std::string key = logFilename;
   if (logFilename.empty()) {
-    key = "biogears_logger";
+    static int i = 0;
+    key = "biogears_logger" + std::to_string(++i);
   }
   log4cpp::Category& category = log4cpp::Category::getInstance(key);
   m_Log = &category;
