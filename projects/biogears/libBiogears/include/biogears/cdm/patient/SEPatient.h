@@ -91,6 +91,13 @@ public:
   virtual bool HasName() const;
   virtual void InvalidateName();
 
+  virtual std::string GetAnnotation() const;
+  virtual const char* GetAnnotation_cStr() const;
+  virtual void SetAnnotation(const char* Annotation);
+  virtual void SetAnnotation(const std::string& Annotation);
+  virtual bool HasAnnotation() const;
+  virtual void InvalidateAnnotation();
+
   virtual CDM::enumSex::value GetGender() const;
   virtual void SetGender(CDM::enumSex::value sex);
   virtual bool HasGender() const;
@@ -245,6 +252,7 @@ protected:
   std::map<CDM::enumPatientEvent::value, double> m_EventDuration_s;
 
   std::string m_Name;
+  std::string m_Annotation;
   CDM::enumSex::value m_Sex;
   SEScalarTime* m_Age;
   SEScalarMass* m_Weight;

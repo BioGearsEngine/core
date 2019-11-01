@@ -68,7 +68,7 @@ SEPatient::~SEPatient()
 //-----------------------------------------------------------------------------
 bool SEPatient::Load(const char* patientFile)
 {
-  return Load(std::string{ patientFile });
+  return Load(std::string { patientFile });
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::Load(const std::string& patientFile)
@@ -132,7 +132,7 @@ void SEPatient::Clear()
 //-----------------------------------------------------------------------------
 const SEScalar* SEPatient::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEPatient::GetScalar(const std::string& name)
@@ -209,6 +209,9 @@ bool SEPatient::Load(const CDM::PatientData& in)
   Clear();
 
   m_Name = in.Name();
+  if (in.Annotation().present()) {
+    m_Annotation = in.Annotation().get();
+  }
   if (in.Sex().present()) {
     m_Sex = in.Sex().get();
   }
@@ -333,6 +336,9 @@ void SEPatient::Unload(CDM::PatientData& data) const
 {
   if (HasName()) {
     data.Name(m_Name);
+  }
+  if (HasAnnotation()) {
+    data.Annotation(m_Annotation);
   }
   if (HasSex()) {
     data.Sex(m_Sex);
@@ -815,7 +821,7 @@ void SEPatient::SetName(const std::string& name)
 {
   m_Name = name;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool SEPatient::HasName() const
 {
   return m_Name.empty() ? false : true;
@@ -824,6 +830,36 @@ bool SEPatient::HasName() const
 void SEPatient::InvalidateName()
 {
   m_Name = "";
+}
+//-----------------------------------------------------------------------------
+std::string SEPatient::GetAnnotation() const
+{
+  return m_Annotation;
+}
+//-----------------------------------------------------------------------------
+const char* SEPatient::GetAnnotation_cStr() const
+{
+  return m_Annotation.c_str();
+}
+//-----------------------------------------------------------------------------
+void SEPatient::SetAnnotation(const char* Annotation)
+{
+  m_Annotation = Annotation;
+}
+//-----------------------------------------------------------------------------
+void SEPatient::SetAnnotation(const std::string& Annotation)
+{
+  m_Annotation = Annotation;
+}
+//-----------------------------------------------------------------------------
+bool SEPatient::HasAnnotation() const
+{
+  return m_Annotation.empty() ? false : true;
+}
+//-----------------------------------------------------------------------------
+void SEPatient::InvalidateAnnotation()
+{
+  m_Annotation = "";
 }
 //-----------------------------------------------------------------------------
 CDM::enumSex::value SEPatient::GetGender() const
@@ -1010,7 +1046,7 @@ void SEPatient::InvalidateBloodRh()
 {
   m_BloodRh = true;
 }
-  //---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 bool SEPatient::HasBloodVolumeBaseline() const
 {
   return m_BloodVolumeBaseline == nullptr ? false : m_BloodVolumeBaseline->IsValid();
@@ -1552,5 +1588,5 @@ double SEPatient::GetVitalCapacity(const VolumeUnit& unit) const
   }
   return m_VitalCapacity->GetValue(unit);
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 }
