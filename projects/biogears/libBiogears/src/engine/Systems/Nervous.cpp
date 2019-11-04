@@ -240,6 +240,8 @@ void Nervous::SetUp()
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Patient = &m_data.GetPatient();
 
+  m_DrugRespirationEffects = 0.0;
+
   m_painStimulusDuration_s = 0.0;
   m_painVASDuration_s = 0.0;
   m_painVAS = 0.0;
@@ -386,17 +388,18 @@ void Nervous::AfferentResponse()
   //Generate afferent barorceptor signal
   BaroreceptorFeedback();
 
-  //Generate afferent chemoreceptor signal
+  //Generate afferent chemoreceptor signal -- combined respiration drug effects modifier calculated in this function since it primarily affects chemoreceptors
   ChemoreceptorFeedback();
 
-  //Generate afferent lung stretch receptor signal (*ap = afferent pulmonary)
+  //Generate afferent lung stretch receptor signal (*ap = afferent pulmonary) -- push this input towards baseline when anesthetics/opioids are effecting respiratory drive
   const double tauAP_s = 2.0;
   const double gainAP_Hz_Per_L = 11.25;
   const double tidalVolume_L = m_data.GetRespiratory().GetTidalVolume(VolumeUnit::L);
-  const double dFrequencyAP_Hz = (1.0 / tauAP_s) * (-m_AfferentPulmonaryStretchReceptor_Hz + tidalVolume_L * gainAP_Hz_Per_L);
+  const double baselineTidalVolume_L = m_data.GetPatient().GetTidalVolumeBaseline(VolumeUnit::L);
+  const double pulmonaryStretchInput = gainAP_Hz_Per_L * (tidalVolume_L * std::exp(-5.0 * m_DrugRespirationEffects) +  baselineTidalVolume_L * (1.0 - std::exp(-5.0 * m_DrugRespirationEffects)));
+  const double dFrequencyAP_Hz = (1.0 / tauAP_s) * (-m_AfferentPulmonaryStretchReceptor_Hz + pulmonaryStretchInput);
   m_AfferentPulmonaryStretchReceptor_Hz += dFrequencyAP_Hz * m_dt_s;
   
-
   //Afferent atrial stretch receptors (*aa = afferent atrial)--Input is a filtered venous pressure first (less noisy) that is determined first
   const double tauAA_s = 6.37;
   const double maxAA_Hz = 18.0;
@@ -427,7 +430,7 @@ void Nervous::CentralSignalProcess()
   const double kOxygenSP = 2.0;
   const double tauIschemia = 30.0;
  
-  //Update hypoxia thresholds for sympathetic signals
+  //Update hypoxia thresholds for sympathetic signals -- inactive during initial stabilization and when there is a drug disrupting CNS (opioids)
   const double arterialO2 = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
   const double expHypoxiaSH = std::exp((arterialO2 - oxygenHalfMaxSH) / kOxygenSH);
   const double expHypoxiaSP = std::exp((arterialO2 - oxygenHalfMaxSP) / kOxygenSP);
@@ -435,7 +438,8 @@ void Nervous::CentralSignalProcess()
   const double hypoxiaSP = (xMinSP + xMaxSP * expHypoxiaSP) / (1.0 + expHypoxiaSP);
   const double dHypoxiaThresholdSH = (1.0 / tauIschemia) * (-m_HypoxiaThresholdHeart + hypoxiaSH);
   const double dHypoxiaThresholdSP = (1.0 / tauIschemia) * (-m_HypoxiaThresholdPeripheral + hypoxiaSP);
-  if (m_FeedbackActive) {
+
+  if (m_FeedbackActive && m_DrugRespirationEffects < ZERO_APPROX) {
     m_HypoxiaThresholdHeart += (dHypoxiaThresholdSH * m_dt_s);
     m_HypoxiaThresholdPeripheral += (dHypoxiaThresholdSP * m_dt_s);
   }
@@ -450,7 +454,7 @@ void Nervous::CentralSignalProcess()
   const double wSP_AB = -1.13;
   const double wSP_AC = 1.716;
   const double wSP_AP = -0.34;
-  const double wSP_AA = -1.0;
+  const double wSP_AA = -1.0;	
   const double wSP_AT = 1.0;
   const double exponentSP = kS * (wSP_AB * m_AfferentBaroreceptor_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz - m_HypoxiaThresholdPeripheral);
   m_SympatheticPeripheralSignal_Hz = std::exp(exponentSP);
@@ -479,6 +483,7 @@ void Nervous::EfferentResponse()
   }
   m_data.GetDataTrack().Probe("Randall_HR", nextHR);
   m_data.GetDataTrack().Probe("HR_Intrinsic", m_IntrinsicHeartRate);
+  m_data.GetDataTrack().Probe("HR_Scaled", nextHR / m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min));
   //Heart elastance
   const double baseElastance = 2.49;
   const double gainElastance= 0.4;
@@ -594,7 +599,7 @@ void Nervous::BaroreceptorFeedback()
   const double tauVoigt = 0.9;
   const double slopeStrain = 0.04;
 
-  //Adjust apparent operating point as a result of pain and/or drugs (opioids, sedatives, anesthetics)
+  //Pain effect changes the operating point of the baroreceptors.  Anesthetics, sedatives, and opioids blunt the sensivitiy of the baroreflex (reflected in kBaro)
   double painEffect = 0.0;
   double drugEffect = 0.0;
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
@@ -603,14 +608,14 @@ void Nervous::BaroreceptorFeedback()
   }
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
     if ((sub->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (sub->GetClassification() == CDM::enumSubstanceClass::Sedative) || (sub->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
-     drugEffect = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg);
+     drugEffect = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg) / m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
      break;
      //Only want to apply the blood pressure change ONCE (In case there are multiple sedative/opioids/etc)
      ///\TODO:  Look into a better way to implement drug classification search
     }
   }
 
-  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + drugEffect;
+  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect;
 
   const double systolicPressure_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
   const double strainExp = std::exp(-slopeStrain * (systolicPressure_mmHg - baroreceptorOperatingPoint_mmHg));
@@ -618,11 +623,14 @@ void Nervous::BaroreceptorFeedback()
   const double dStrain = (1.0 / tauVoigt) * (-m_AfferentStrain + kVoigt * wallStrain);
   m_AfferentStrain += (dStrain * m_dt_s);
   const double strainSignal = wallStrain - m_AfferentStrain;
+  m_data.GetDataTrack().Probe("WallStrain", wallStrain);
+  m_data.GetDataTrack().Probe("StrainSignal", strainSignal);
 
   //Convert strain signal to be on same basis as Ursino model--this puts deviations in wall strain on same basis as other signals
   const double fBaroMax = 47.78;
   const double fBaroMin = 2.52;
-  const double kBaro = 0.075;
+  const double kBaro = 0.075 * (1.0 - 2.0 * drugEffect);
+  m_data.GetDataTrack().Probe("BaroSlope", kBaro);
   const double baroExponent = std::exp((strainSignal - m_AfferentStrainBaseline) / kBaro);
   m_AfferentBaroreceptor_Hz = (fBaroMin + fBaroMax * baroExponent) / (1.0 + baroExponent);
 
@@ -647,9 +655,6 @@ void Nervous::BaroreceptorFeedback()
     + m_data.GetEnergy().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);
 
 
-
-
-
   double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
   double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
 
@@ -672,82 +677,6 @@ void Nervous::BaroreceptorFeedback()
 
 }
 
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates the patient pain response due to stimulus, susceptibility and drugs
-///
-/// \details
-/// A patient reacts to a noxious stimulus in a certain way. Generally this is reported as a VAS
-/// scale value. This value is generally reported by the patient after the nervous system has already parsed
-/// the stimulus. For a robotic manikin trainer we need to determine the nervous system and systemic responses
-/// related to that stimulus
-//--------------------------------------------------------------------------------------------------
-void Nervous::CheckPainStimulus()
-{
-  //Screen for both external pain stimulus and presence of inflammation
-  if (!m_data.GetActions().GetPatientActions().HasPainStimulus() && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
-    GetPainVisualAnalogueScale().SetValue(0.0);
-    return;
-  } 
-
-  //initialize:
-  SEPainStimulus* p;
-  const std::map<std::string, SEPainStimulus*>& pains = m_data.GetActions().GetPatientActions().GetPainStimuli();
-  double patientSusceptability = m_Patient->GetPainSusceptibility().GetValue();
-  double susceptabilityMapping = GeneralMath::LinearInterpolator(-1.0, 1.0, 0.0, 2.0, patientSusceptability); //mapping [-1,1] -> [0, 2] for scaling the pain stimulus
-  double severity = 0.0;
-  double halfLife_s = 0.0;
-  double painVASMapping = 0.0; //for each location map the [0,1] severity to the [0,10] VAS scale
-  double tempPainVAS = 0.0; //sum, scale and store the patient score
-  double PainBuffer = 1.0;
-
-  m_painVAS = GetPainVisualAnalogueScale().GetValue();
-
-  //reset duration if VAS falls below approx zero
-  if (m_painVAS == 0.0)
-    m_painStimulusDuration_s = 0.0;
-
-  //grab drug effects if there are in the body
-  if (m_data.GetDrugs().HasPainToleranceChange()) {
-    double NervousScalar = 10.0;
-    double PainModifier = m_data.GetDrugs().GetPainToleranceChange().GetValue();
-    PainBuffer = exp(-PainModifier * NervousScalar);
-  }
-
-  //determine pain response from inflammation caused by burn trauma
-  if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    double traumaPain = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-    traumaPain *= 20.0;   //25% TBSA burn will give pain scale = 5, 40% TBSA will give pain scale = 8.0
-    tempPainVAS += (traumaPain * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0));
-  }
-
-  //iterate over all locations to get a cumulative stimulus and buffer them
-  for (auto pain : pains) {
-    p = pain.second;
-    severity = p->GetSeverity().GetValue();
-    if (p->HasHalfLife()) {
-      halfLife_s = p->GetHalfLife().GetValue(TimeUnit::s);
-      severity = severity * (std::pow(0.5, (m_painStimulusDuration_s / halfLife_s)));
-    }
-    painVASMapping = 10.0 * severity;
-
-    tempPainVAS += (painVASMapping * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
-  }
-
-  //advance time over the duration of the stimulus
-
-  if (severity < ZERO_APPROX) {
-    m_painVASDuration_s += m_dt_s;
-  }
-
-  m_painStimulusDuration_s += m_dt_s;
-
-  //set the VAS data:
-  if (tempPainVAS > 10)
-    tempPainVAS = 10.0;
-
-  GetPainVisualAnalogueScale().SetValue(tempPainVAS);
-}
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -927,13 +856,12 @@ void Nervous::ChemoreceptorFeedback()
   //Update Respiratory metrics
   const double baselineRespirationRate_Per_min = m_data.GetPatient().GetRespirationRateBaseline(FrequencyUnit::Per_min);
   const double baselineDrivePressure_cmH2O = m_Patient->GetRespiratoryDriverAmplitudeBaseline(PressureUnit::cmH2O);
-  double nextRespirationRate_Per_min  = baselineRespirationRate_Per_min + m_CentralFrequencyDelta_Per_min + m_PeripheralFrequencyDelta_Per_min;
+  double nextRespirationRate_Per_min = baselineRespirationRate_Per_min + m_CentralFrequencyDelta_Per_min + m_PeripheralFrequencyDelta_Per_min;
   double nextDrivePressure_cmH2O = baselineDrivePressure_cmH2O - m_CentralPressureDelta_cmH2O - m_PeripheralPressureDelta_cmH2O;
-
 
   //Apply metabolic effects. The modifier is tuned to achieve the correct respiratory response for near maximal exercise.
   //A linear relationship is assumed for the respiratory effects due to increased metabolic exertion
-  //Old driver multiplied a target ventilation by the metabolic modifier.  Since Vent (L/min) = RR(/min) * TV(L), we'll mulitply 
+  //Old driver multiplied a target ventilation by the metabolic modifier.  Since Vent (L/min) = RR(/min) * TV(L), we'll mulitply
   //the next respiration rate and next drive pressure by sqrt(modifier).  Relationship between driver pressure and TV is
   //approx linear (e.g. 10% change in pressure -> 10% change in TV), so this should achieve desired effect
   const double TMR_W = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W);
@@ -944,7 +872,7 @@ void Nervous::ChemoreceptorFeedback()
   const double metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
   nextRespirationRate_Per_min *= metabolicModifier;
   nextDrivePressure_cmH2O *= metabolicModifier;
- 
+
   //We want to make sure the patient respiration rate baseline is met.  Therefore, we only allow RR to change +/- 5% during initial stabilization
   if (m_data.GetState() < EngineState::AtInitialStableState) {
     const double upperTolerance = baselineRespirationRate_Per_min * 1.05;
@@ -1005,6 +933,171 @@ void Nervous::ChemoreceptorFeedback()
   double normalizedHeartElastance = 1.0;
   /// \todo Compute and apply chemoreceptor-mediated contractility changes
   //GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
+}
+
+
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Calculates the patient pain response due to stimulus, susceptibility and drugs
+///
+/// \details
+/// A patient reacts to a noxious stimulus in a certain way. Generally this is reported as a VAS
+/// scale value. This value is generally reported by the patient after the nervous system has already parsed
+/// the stimulus. For a robotic manikin trainer we need to determine the nervous system and systemic responses
+/// related to that stimulus
+//--------------------------------------------------------------------------------------------------
+void Nervous::CheckPainStimulus()
+{
+  //Screen for both external pain stimulus and presence of inflammation
+  if (!m_data.GetActions().GetPatientActions().HasPainStimulus() && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
+    GetPainVisualAnalogueScale().SetValue(0.0);
+    return;
+  }
+
+  //initialize:
+  SEPainStimulus* p;
+  const std::map<std::string, SEPainStimulus*>& pains = m_data.GetActions().GetPatientActions().GetPainStimuli();
+  double patientSusceptability = m_Patient->GetPainSusceptibility().GetValue();
+  double susceptabilityMapping = GeneralMath::LinearInterpolator(-1.0, 1.0, 0.0, 2.0, patientSusceptability); //mapping [-1,1] -> [0, 2] for scaling the pain stimulus
+  double severity = 0.0;
+  double halfLife_s = 0.0;
+  double painVASMapping = 0.0; //for each location map the [0,1] severity to the [0,10] VAS scale
+  double tempPainVAS = 0.0; //sum, scale and store the patient score
+  double PainBuffer = 1.0;
+
+  m_painVAS = GetPainVisualAnalogueScale().GetValue();
+
+  //reset duration if VAS falls below approx zero
+  if (m_painVAS == 0.0)
+    m_painStimulusDuration_s = 0.0;
+
+  //grab drug effects if there are in the body
+  if (m_data.GetDrugs().HasPainToleranceChange()) {
+    double NervousScalar = 10.0;
+    double PainModifier = m_data.GetDrugs().GetPainToleranceChange().GetValue();
+    PainBuffer = exp(-PainModifier * NervousScalar);
+  }
+
+  //determine pain response from inflammation caused by burn trauma
+  if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
+    double traumaPain = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    traumaPain *= 20.0; //25% TBSA burn will give pain scale = 5, 40% TBSA will give pain scale = 8.0
+    tempPainVAS += (traumaPain * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0));
+  }
+
+  //iterate over all locations to get a cumulative stimulus and buffer them
+  for (auto pain : pains) {
+    p = pain.second;
+    severity = p->GetSeverity().GetValue();
+    if (p->HasHalfLife()) {
+      halfLife_s = p->GetHalfLife().GetValue(TimeUnit::s);
+      severity = severity * (std::pow(0.5, (m_painStimulusDuration_s / halfLife_s)));
+    }
+    painVASMapping = 10.0 * severity;
+
+    tempPainVAS += (painVASMapping * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
+  }
+
+  //advance time over the duration of the stimulus
+
+  if (severity < ZERO_APPROX) {
+    m_painVASDuration_s += m_dt_s;
+  }
+
+  m_painStimulusDuration_s += m_dt_s;
+
+  //set the VAS data:
+  if (tempPainVAS > 10)
+    tempPainVAS = 10.0;
+
+  GetPainVisualAnalogueScale().SetValue(tempPainVAS);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Checks metrics in the nervous system to determine events to be thrown.  Currently includes brain status
+/// and presence of fasciculation.
+///
+/// \details
+/// Intracranial pressure is checked to determine if the patient has Intracranial Hyper/hypotension
+/// Fasciculation can occur as a result of calcium/magnesium deficiency
+/// (or other electrolyte imbalances),succinylcholine, nerve agents, ALS
+/// Currently, only fasciculations due to the nerve agent Sarin are active.  Other causes are a subject of model improvement
+//------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+void Nervous::CheckNervousStatus()
+{
+  //-----Check Brain Status-----------------
+  double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
+
+  //Intracranial Hypertension
+  if (icp_mmHg > 25.0) // \cite steiner2006monitoring
+  {
+    /// \event Patient: Intracranial Hypertension. The intracranial pressure has risen above 25 mmHg.
+    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, true, m_data.GetSimulationTime());
+  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypertension) && icp_mmHg < 24.0) {
+    /// \event Patient: End Intracranial Hypertension. The intracranial pressure has fallen below 24 mmHg.
+    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
+  }
+
+  //Intracranial Hypotension
+  if (icp_mmHg < 7.0) // \cite steiner2006monitoring
+  {
+    /// \event Patient: Intracranial Hypotension. The intracranial pressure has fallen below 7 mmHg.
+    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypotension, true, m_data.GetSimulationTime());
+  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypotension) && icp_mmHg > 7.5) {
+    /// \event Patient: End Intracranial Hypotension. The intracranial pressure has risen above 7.5 mmHg.
+    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
+  }
+
+  //------Fasciculations:-------------------------------------------
+
+  //----Fasciculations due to calcium deficiency (inactive)----------------------------------
+  /*if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) < 1.0)
+    {
+    /// \event Patient: Patient is fasciculating due to calcium deficiency
+    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+    }
+    else if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) > 3.0)
+    {
+    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+    }*/
+
+  //-----Fasciculations due to Sarin--------------------------------------------------
+  //Occurs due to inhibition of acetylcholinesterase, the enzyme which breaks down the neurotransmitter acetylcholine
+  double RbcAche_mol_Per_L = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
+  if (m_data.GetSubstances().IsActive(*m_Sarin)) {
+    ///\cite nambda1971cholinesterase
+    //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
+    //80% of Rbc-Ache was inhibited.  This was relaxed to 70% because BioGears is calibrated to throw an irreversible state at
+    //100% inhibition when, in actuality, a patient with 100% rbc-ache inhibition will likely survive (rbc-ache thought to act as a buffer
+    //for neuromuscular ache)
+    if (RbcFractionInhibited > 0.7)
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+    else if ((m_data.GetSubstances().IsActive(*m_Sarin)) && (RbcFractionInhibited < 0.68)) {
+      //Oscillations around 70% rbc-ache inhibition are highly unlikely but give some leeway for reversal just in case
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+    }
+  }
+  //----Fasciculations due to Succinylcholine administration.---------------------------------------------------
+  //No evidence exists for a correlation between the plasma concentration of succinylcholine
+  //and the degree or presence of fasciculation.  Rather, it has been observed that transient fasciculation tends to occur in most patients after initial dosing
+  //(particularly at a dose of 1.5 mg/kg, see refs below), subsiding once depolarization at neuromuscular synapses is accomplished.  Therefore, we model this
+  //effect by initiating fasciculation when succinylcholine enters the body and removing it when the neuromuscular block level (calculated in Drugs.cpp) reaches
+  //90% of maximum.  To prevent fasciculation from being re-flagged as succinylcholine leaves the body and the block dissipates, we use a sentinel (m_blockActive,
+  //initialized to FALSE) so that the event cannot be triggered more than once.
+  /// \cite @appiah2004pharmacology, @cite mcloughlin1994influence
+  double neuromuscularBlockLevel = m_data.GetDrugs().GetNeuromuscularBlockLevel().GetValue();
+  if (m_data.GetSubstances().IsActive(*m_Succinylcholine) && (neuromuscularBlockLevel > 0.0)) {
+    if ((neuromuscularBlockLevel < 0.9) && (!m_blockActive))
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+    else {
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+      m_blockActive = true;
+    }
+  }
 }
 
 

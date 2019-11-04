@@ -114,6 +114,7 @@ protected:
   double m_AfferentBaroreceptor_Hz;
   double m_AfferentAtrial_Hz; //*AA
   double m_AfferentThermal_Hz; //*AT
+  double m_DrugRespirationEffects;
   bool m_FeedbackActive;
   double m_dt_s;
   SESubstance* m_Succinylcholine;

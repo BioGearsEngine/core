@@ -1632,11 +1632,6 @@ void Cardiovascular::BeginCardiacCycle()
     if (m_data.GetNervous().HasBaroreceptorHeartRateScale()) {
       HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetBaroreceptorHeartRateScale().GetValue());
     }
-    // Chemoreceptor and drug effects are deltas rather than multipliers, so they are added.
-    // Apply chemoreceptor effects
-    if (m_data.GetNervous().HasChemoreceptorHeartRateScale()) {
-      HeartDriverFrequency_Per_Min += (m_data.GetNervous().GetChemoreceptorHeartRateScale().GetValue());
-    }
   }
   // Apply drug effects
   if (m_data.GetDrugs().HasHeartRateChange()) {
