@@ -570,13 +570,12 @@
   <Action xsi:type="AdvanceTimeData">
     <Time value="60" unit="min"/>
   </Action>
-  <!-- Begin background fluids, norepinephrine, and antibiotics
+  <!-- Begin background fluids, norepinephrine, and antibiotics -->
           <Action xsi:type="SubstanceCompoundInfusionData">
            <SubstanceCompound>SalineSlowDrip</SubstanceCompound>
            <BagVolume value="1500" unit="mL"/>
            <Rate value="75" unit="mL/hr"/>
          </Action>
-        -->
   <Action xsi:type="SubstanceInfusionData">
     <Substance>Norepinephrine</Substance>
     <Concentration value="14" unit="ug/mL"/>
