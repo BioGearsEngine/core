@@ -188,12 +188,12 @@ void Logger::Debug(std::ostream& msg, const std::string& origin)
 
 void Logger::Info(const std::string& msg, const std::string& origin)
 {
-  // std::cout<<"Number of appenders"<< m_Log->getAllAppenders().size() <<
-  // std::endl;
+
   m_Log->info(FormatLogMessage(msg, origin));
   // m_Log->infoStream().flush();
-  if (m_Forward != nullptr)
+  if (m_Forward != nullptr) {
     m_Forward->ForwardInfo(m_ss.str().c_str(), origin.c_str());
+  }
 }
 
 void Logger::Info(std::stringstream& msg, const std::string& origin)
