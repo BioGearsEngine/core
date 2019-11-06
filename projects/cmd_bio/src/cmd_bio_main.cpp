@@ -38,7 +38,7 @@
 
 void print_help() {
 
-    std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, VERIFY, GENTABLES ,VERSION]\n"
+    std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, GENSEPSIS, VERIFY, GENTABLES ,VERSION]\n"
                                 "[THREADS N]\n" 
                                 "[TEST FILE [FILE]..., SCENARIO FILE [FILE]..., VALIDATE patient|drug|system|all\n\n";
 
@@ -57,7 +57,7 @@ void print_help() {
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "H","HELP","GENDATA", "GENSTATES", "GENSPESIS", "VERIFY", "GENTABLES" ,"VERSION" } //Options
+    { "H","HELP","GENDATA", "GENSTATES", "GENSEPSIS", "VERIFY", "GENTABLES" ,"VERSION" } //Options
     ,
     { "J", "THREADS" } //Keywords
     ,
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
     driver.queue(runs);
   }
 
-  if (args.Option("GENSPESIS")) {
+  if (args.Option("GENSEPSIS")) {
     const biogears::Config runs { "GenSepsisStates.config" };
     driver.queue(runs);
   }
