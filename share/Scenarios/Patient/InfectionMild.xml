@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
   <Name>InfectionMild</Name>
-  <Description>Full run of the Mild Speisis Scenario. This Scenario is also broken up in to three check points for restarts 0hr,12hr,24hr.</Description>
+  <Description>Full run of the Mild Infection Scenario. This Scenario is also broken up in to three check points for restarts 0hr,12hr,24hr.</Description>
   <InitialParameters>
     <PatientFile>StandardMale.xml</PatientFile>
   </InitialParameters>
