@@ -54,15 +54,14 @@ bool SubstanceGenerator::parse()
       lineItr += 2;
     } else if ("Clearance (all or none)" == lineItr->first) {
       rValue &= process_clearance(++lineItr);
-      lineItr += 11;
+      lineItr += 14;
     } else if ("Pharmacokinetics (all or none)" == lineItr->first) {
       rValue &= process_pharmacokinetics(++lineItr);
       lineItr += 7;
     } else if ("Pharmacodynamics (all or none)" == lineItr->first) {
       rValue &= process_pharmacodynamics(++lineItr);
       lineItr += 16;
-    }
-	else if (lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
+    } else if (lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
       rValue &= process_tissues(lineItr);
       lineItr += 1;
     } else {
@@ -220,6 +219,16 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
       type.unit(trim(value.substr(pos)));
       substance.SolubilityCoefficient(type);
     } catch (std::exception e) {
+      rValue = false;
+    }
+  } else if ("Antigen" == name) {
+    if ("A" == value) {
+      substance.Antigen(SubstanceData::Antigen_type::A);
+    } else if ("B" == value) {
+      substance.Antigen(SubstanceData::Antigen_type::B);
+    } else if ("" == value) {
+      //Do nothing, antigen is optional
+    } else {
       rValue = false;
     }
   }
@@ -407,6 +416,28 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
         } catch (std::exception e) {
           rValue = false;
         }
+      }
+    }
+
+    value = (itr + 13)->second[index];
+    CDM::SubstanceClearanceData::CellRegulation_type cellregulation_data;
+    if (!value.empty()) {
+      default_clearance = false;
+      CDM::SubstanceClearanceData::CellRegulation_type::CellDeathRate_type crDeathRate_data;
+      CDM::SubstanceClearanceData::CellRegulation_type::CellBirthRate_type crBirthRate_data;
+      try {
+        crDeathRate_data.value(std::stod(value, &pos));
+        crDeathRate_data.unit(trim(value.substr(pos)));
+        cellregulation_data.CellDeathRate(crDeathRate_data);
+
+        value = (itr + 14)->second[index];
+        crBirthRate_data.value(std::stod(value, &pos));
+        crBirthRate_data.unit(trim(value.substr(pos)));
+        cellregulation_data.CellBirthRate(crBirthRate_data);
+
+		data.CellRegulation(cellregulation_data);
+      } catch (std::exception e) {
+        rValue = false;
       }
     }
 
