@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>WhiteBloodCell</Name>
-  <Classification>WholeBlood</Classification>
   <Density readOnly="false" unit="g/mL" value="1.08"/>
-  <MolarMass readOnly="false" unit="g/mol" value="92910857142857142.8"/>
-  <State>Cellular</State>
-  <!-- @brief  Normal mean count is 7500 cells/microliter. 7000 used for sepsis. -->
+  <MolarMass readOnly="false" unit="g/mol" value="9.29e+16"/>
   <Clearance>
     <CellRegulation>
-      <CellDeathRate readOnly="false" unit="1/s" value="115740.7"/>
-	  <CellBirthRate readOnly="false" unit="1/s" value="115740.7"/>
+      <CellDeathRate readOnly="false" unit="1/s" value="116000"/>
+      <CellBirthRate readOnly="false" unit="1/s" value="116000"/>
     </CellRegulation>
   </Clearance>
 </Substance>

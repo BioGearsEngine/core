@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <Name>Blood</Name>
+  <Name>Plasma</Name>
   <Component Name="Sodium">
-    <Concentration readOnly="false" unit="g/dL" value="0.32335"/>
+    <Concentration readOnly="false" unit="g/dL" value="0.3335"/>
   </Component>
   <Component Name="Albumin">
     <Concentration readOnly="false" unit="g/dL" value="4.5"/>
@@ -22,11 +22,11 @@
   <Component Name="Creatinine">
     <Concentration readOnly="false" unit="g/dL" value="0.001"/>
   </Component>
-  <Component Name="Oxygen">
-    <Concentration readOnly="false" unit="g/L" value="0.0314"/>
+  <Component Name="Chloride">
+    <Concentration readOnly="false" unit="g/dL" value="0.362"/>
   </Component>
-  <Component Name="CarbonDioxide">
-    <Concentration readOnly="false" unit="g/L" value="0.715"/>
+  <Component Name="Potassium">
+    <Concentration readOnly="false" unit="mg/L" value="176.4"/>
   </Component>
   <Component Name="Chloride">
     <Concentration readOnly="false" unit="g/dL" value="0.362"/>

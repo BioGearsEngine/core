@@ -2,7 +2,6 @@
 <SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>Blood_ANegative</Name>
   <Classification>WholeBlood</Classification>
-  <BloodRHFactor>false</BloodRHFactor>
   <Component Name="Hemoglobin">
     <Concentration readOnly="false" unit="g/dL" value="3.7"/>
   </Component>
@@ -10,7 +9,7 @@
     <Concentration readOnly="false" unit="g/dL" value="11.1"/>
   </Component>
   <Component Name="Sodium">
-    <Concentration readOnly="false" unit="g/dL" value="0.32335"/>
+    <Concentration readOnly="false" unit="g/dL" value="0.3335"/>
   </Component>
   <Component Name="Albumin">
     <Concentration readOnly="false" unit="g/dL" value="4.5"/>
@@ -30,12 +29,6 @@
   <Component Name="Creatinine">
     <Concentration readOnly="false" unit="g/dL" value="0.001"/>
   </Component>
-  <Component Name="Oxygen">
-    <Concentration readOnly="false" unit="g/L" value="0.0314"/>
-  </Component>
-  <Component Name="CarbonDioxide">
-    <Concentration readOnly="false" unit="g/L" value="0.715"/>
-  </Component>
   <Component Name="Chloride">
     <Concentration readOnly="false" unit="g/dL" value="0.362"/>
   </Component>
@@ -45,12 +38,11 @@
   <Component Name="RedBloodCell">
     <Concentration readOnly="false" unit="g/dL" value="14.256"/>
   </Component>
-  <!-- @brief Antigens currently handled internally in BG. -->
   <Component Name="Antigen_A">
-    <Concentration readOnly="false" unit="g/dL" value="0.0"/>
+    <Concentration readOnly="false" unit="g/dL" value="0"/>
   </Component>
   <Component Name="Antigen_B">
-    <Concentration readOnly="false" unit="g/dL" value="0.0"/>
+    <Concentration readOnly="false" unit="g/dL" value="0"/>
   </Component>
   <Component Name="WhiteBloodCell">
     <Concentration readOnly="false" unit="g/dL" value="0.0189"/>

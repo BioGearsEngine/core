@@ -33,7 +33,7 @@
     <DiastolicPressureModifier readOnly="false" value="-0.05"/>
     <EC50 readOnly="false" unit="ug/mL" value="0.004"/>
     <EMaxShapeParameter readOnly="false" value="3"/>
-    <HeartRateModifier readOnly="false" value="-0.02"/>
+    <HeartRateModifier readOnly="false" value="-0.01"/>
     <HemorrhageModifier readOnly="false" value="0"/>
     <NeuromuscularBlock readOnly="false" value="0"/>
     <PupillaryResponse>
