@@ -86,9 +86,9 @@ bool CompoundGenerator::parse()
       }
     } else if ("BloodRHFactor" == lineItr->first) {
       for (size_t index = 0; index < _compounds.size() && index < lineItr->second.size(); ++index) {
-        if ("true" == lineItr->second[index]) {
+        if ("TRUE" == lineItr->second[index] || "true" == lineItr->second[index]) {
           _compounds[index].BloodRHFactor(true);
-        } else if ("false" == lineItr->second[index]) {
+        } else if ("FALSE" == lineItr->second[index] || "false" == lineItr->second[index]) {
           _compounds[index].BloodRHFactor(false);
         } else if ("" == lineItr->second[index]) {
 			//Do nothing, blood rh factor is optional
