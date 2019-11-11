@@ -849,32 +849,33 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   //BLOOD COMPONENTS//
   //Initialize Blood Type
   //RBC
-  double rbc_count = 5280000;
-  double antigens_PER_rbc = 2000000;
-  molarity1.SetValue(rbc_count, AmountPerVolumeUnit::ct_Per_uL);
+  double rbc_count = 5280000.0;
+  double rbc_ct_per_uL = rbc_count / 5000000.0;
+  double antigens_PER_rbc = 2000000.0;
+  molarity1.SetValue(rbc_ct_per_uL, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_RBC, vascular, molarity1);
 
   if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::A) {
-    molarity1.SetValue(rbc_count*antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    molarity1.SetValue(rbc_ct_per_uL * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
     molarity2.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::B) {
     molarity1.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    molarity2.SetValue(rbc_count * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    molarity2.SetValue(rbc_ct_per_uL * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::O) {
     molarity1.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
     molarity2.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::AB) {
-    molarity1.SetValue(0.5 * rbc_count * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
-    molarity2.SetValue(0.5 * rbc_count * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    molarity1.SetValue(0.5 * rbc_ct_per_uL * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    molarity2.SetValue(0.5 * rbc_ct_per_uL * antigens_PER_rbc, AmountPerVolumeUnit::ct_Per_uL);
   }
   //Antigens present on RBC
   SetSubstanceMolarity(*m_AntigenA, vascular, molarity1);
   SetSubstanceMolarity(*m_AntigenB, vascular, molarity2);
   //WBC
-  molarity1.SetValue(7000, AmountPerVolumeUnit::ct_Per_uL);
+  molarity1.SetValue(7000.0, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_WBC, vascular, molarity1);
   //Platelets
-  molarity1.SetValue(300000, AmountPerVolumeUnit::ct_Per_uL);
+  molarity1.SetValue(300000.0, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_platelets, vascular, molarity1);
 
 
