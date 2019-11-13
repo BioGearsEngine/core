@@ -165,6 +165,11 @@ Additionally, blood cells are not modeled in %BioGears. We attempt to account fo
 @anchor bloodchemistry-events
 Events
 ------
+### Hemolytic Transfusion Reaction (HTR)
+HTR occurs when there is an incompatibility between patient and donor blood blood types @cite davenport2005pathophysiology.  The incompatibility triggers an immune response, resulting in agglutination and red blood cell death in the recipient's body. 
+
+The %BioGears Engine triggers an HTR event when an incompatibility is detected. This is based both on the set patient's blood type as well as any blood/antigens introduced into their system. This is a reversible condition and is considered resolved when the foreign cells are removed (over time). The time it takes the body to remove foreign cells will depend on the amount introduced.
+
 ### Hypercapnia
 Hypercapnia occurs when the partial pressure of carbon dioxide in the blood rises to greater than 60&nbsp;mmHg @cite guyton2006medical.  Patients with respiratory conditions, such as severe airway obstruction, frequently exhibit hypercapnia. This condition manifests as a decrease in blood pH and an increase in cardiac output, blood pressure, and heart rate.
 

@@ -93,6 +93,84 @@ Patient parameters are not dependent on any systems, but many systems are depend
   @refitem respiratory-variability "Respiratory Dependencies"
 @endsecreflist
 
+@anchor patient-override
+Override Capabilities
+=======================
+
+%Overview
+---------------------------
+
+Certain patient parameters can now have an override action called to change them mid-run. Currently BioGears operates utilizing a patient file to prepare a set of pre-defined patient-specific parameters which allow a user to modify a patient before a scenario run. If the user wants to modify a parameter during a scenario, then an override action must be used. 
+
+An override action consists of two required fields in addition to numerous optional parameter calls. The two required field are state and conformance. The state switch simply lets BioGears know whether the override action call is being turned on (to permit overrides) or off (to return to normal BioGears simulation). The conformance call determins whether the override is allowed to affect other BioGears parameters and conditions. Turning conformance off will only create a mask of the desired parameter in the simularion while turning it on will alter the scenario altogether. The conformance (on) feature is only currently compatible with certain parameters, though turning it on with an incompatible parameter will still allow an irreversible state (which is turned off when conformance is turned off).
+
+The current list of override parameters (with conformance compatible parameters designated with a "Conf.") is as follows:
+
+- <b>Arterial Blood Pressure</b> 
+- <b>Calcium Concentration</b>
+- <b>Carbon Dioxide Saturation</b>
+- <b>Carbon Monoxide Saturation</b>
+- <b>Glucose Concentration</b>
+- <b>Lactate Concentration</b>
+- <b>Oxygen Saturation</b>
+- <b>Phosphate Concentration</b>
+- <b>Potassium Concentration</b>
+- <b>Sodium Concentration</b>
+- <b>Total Bilirubin</b>
+- <b>Venous Blood pH</b>
+- <b>White Blood Cell Count</b>
+- <b>Blood Volume</b>
+- <b>Cardiac Output</b>
+- <b>Diastolic Arterial Pressure</b>
+- <b>Heart Rate</b> - Conf.
+- <b>Heart Stroke Volume</b>
+- <b>Mean Arterial Pressure</b>
+- <b>Systolic Arterial Pressure</b>
+- <b>Insulin Synthesis Rate</b>
+- <b>Glucagon Synthesis Rate</b>
+- <b>Acheived Exercise Level</b>
+- <b>Chloride Lost to Sweat</b>
+- <b>Core Temperature</b>
+- <b>Creatinine Production Rate</b>
+- <b>Exercise Mean Arterial Pressure Delta</b>
+- <b>Fatigue Level</b>
+- <b>Lactate Production Rate</b>
+- <b>Potassium Lost to Sweat</b>
+- <b>Skin Temperature</b>
+- <b>Sodium Lost to Sweat</b>
+- <b>Sweat Rate</b>
+- <b>Total Metabolic Rate</b>
+- <b>Total Work Rate Level</b>
+- <b>Left Afferent Arteriole Resistance</b>
+- <b>Left Glomerular Filtration Rate</b>
+- <b>Left Reabsorption Rate</b>
+- <b>Renal Blood Flow</b>
+- <b>Renal Plasma Flow</b>
+- <b>Right Afferent Arteriole Resistance</b>
+- <b>Right Glomerular Filtration Rate</b>
+- <b>Right Reabsorption Rate</b>
+- <b>Urination Rate</b>
+- <b>Urine Osmolality</b>
+- <b>Urine Volume</b>
+- <b>Urine Urea Nitrogen Concentration</b>
+- <b>Expiratory Flow</b>
+- <b>Inspiratory Flow</b>
+- <b>Pulmonary Compliance</b>
+- <b>Pulmonary Resistance</b>
+- <b>Respiration Rate</b> - Conf.
+- <b>Target Pulmonary Ventilation</b>
+- <b>Tidal Volume</b>
+- <b>Total Alveolar Ventilation</b>
+- <b>Total Lung Volume</b>
+- <b>Total Pulmonary Ventilation</b>
+- <b>Extravascular Fluid Volume</b>
+- <b>Intracellular Fluid Volume</b>
+- <b>Liver Glycogen</b>
+- <b>Muscle Glycogen</b>
+- <b>Stored Fat</b>
+- <b>Stored Protein</b>
+
+
 @anchor patient-results
 Results and Conclusions
 =======================

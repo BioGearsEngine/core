@@ -21,6 +21,15 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="RhFactorMismatch_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="RhTransfusionReactionVolume_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="donorRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="patientRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="TwoCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ThreeCellPatAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ThreeCellDonAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="FourCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="RemovedRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

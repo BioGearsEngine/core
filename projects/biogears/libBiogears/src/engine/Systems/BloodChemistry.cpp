@@ -131,6 +131,15 @@ bool BloodChemistry::Load(const CDM::BioGearsBloodChemistrySystemData& in)
     return false;
   m_ArterialOxygen_mmHg.Load(in.ArterialOxygenAverage_mmHg());
   m_ArterialCarbonDioxide_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
+  m_RhFactorMismatch_ct = in.RhFactorMismatch_ct();
+  m_RhTransfusionReactionVolume_mL = in.RhTransfusionReactionVolume_mL();
+  m_donorRBC = in.donorRBC_ct();
+  m_patientRBC = in.patientRBC_ct();
+  m_2Agglutinate = in.TwoCellAgglutinates_ct();
+  m_p3Agglutinate = in.ThreeCellPatAgglutinates_ct();
+  m_d3Agglutinate = in.ThreeCellDonAgglutinates_ct();
+  m_4Agglutinate = in.FourCellAgglutinates_ct();
+  m_RemovedRBC = in.RemovedRBC_ct();
 
   BioGearsSystem::LoadState();
 
@@ -147,6 +156,15 @@ void BloodChemistry::Unload(CDM::BioGearsBloodChemistrySystemData& data) const
   SEBloodChemistrySystem::Unload(data);
   data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialOxygen_mmHg.Unload()));
   data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCarbonDioxide_mmHg.Unload()));
+  data.RhFactorMismatch_ct(m_RhFactorMismatch_ct);
+  data.RhTransfusionReactionVolume_mL(m_RhTransfusionReactionVolume_mL);
+  data.donorRBC_ct(m_donorRBC);
+  data.patientRBC_ct(m_patientRBC);
+  data.TwoCellAgglutinates_ct(m_2Agglutinate);
+  data.ThreeCellPatAgglutinates_ct(m_p3Agglutinate);
+  data.ThreeCellDonAgglutinates_ct(m_d3Agglutinate);
+  data.FourCellAgglutinates_ct(m_4Agglutinate);
+  data.RemovedRBC_ct(m_RemovedRBC);
 }
 
 //--------------------------------------------------------------------------------------------------
