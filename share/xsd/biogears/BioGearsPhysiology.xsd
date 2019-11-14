@@ -23,8 +23,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="RhFactorMismatch_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="RhTransfusionReactionVolume_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="donorRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="patientRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="DonorRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="PatientRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="TwoCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ThreeCellPatAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ThreeCellDonAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>

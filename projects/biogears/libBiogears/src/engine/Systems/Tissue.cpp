@@ -626,6 +626,7 @@ void Tissue::CalculateDiffusion()
           //We want to prevent movement of large molecules like proteins completely. A gate of 1000 g/mol will filter out things like
           //albumin, insulin, etc while allowing glucose, ions, and others to be governed by their molecular weight.
           //Note: it doesn't consider lipophilicity, so TAG will need to be artificially tweaked using other diffusion methods.
+          if (sub->GetClassification() != CDM::enumSubstanceClass::WholeBlood) {
           if (molarMass_g_Per_mol < 1000) {
             // Compute the vascular to extracellular permeability coefficient
             // This is the coefficient per gram of tissue independent of the tissue type.
@@ -653,6 +654,7 @@ void Tissue::CalculateDiffusion()
             //a molar mass < 1000 so they will all funnel here
             if (sub->GetClassification() != CDM::enumSubstanceClass::Ion)
               moved_ug = MoveMassBySimpleDiffusion(extracellular, intracellular, *sub, ECtoICPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
+          }
           }
 
           //Facilitated diffusion depends on the substance having flux values

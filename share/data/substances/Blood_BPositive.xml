@@ -9,6 +9,12 @@
   <Component Name="Oxyhemoglobin">
     <Concentration readOnly="false" unit="g/dL" value="11.1"/>
   </Component>
+  <Component Name="Oxygen">
+    <Concentration readOnly="false" unit="g/L" value="0.0314"/>
+  </Component>
+  <Component Name="CarbonDioxide">
+    <Concentration readOnly="false" unit="g/L" value="0.715"/>
+  </Component>
   <Component Name="Sodium">
     <Concentration readOnly="false" unit="g/dL" value="0.3335"/>
   </Component>

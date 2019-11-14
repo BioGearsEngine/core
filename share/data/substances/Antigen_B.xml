@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>Antigen_B</Name>
+  <Classification>WholeBlood</Classification>
   <MolarMass readOnly="false" unit="g/mol" value="991.972"/>
   <Antigen>B</Antigen>
   <Clearance>

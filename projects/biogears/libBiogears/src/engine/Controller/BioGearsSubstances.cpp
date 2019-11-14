@@ -849,8 +849,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   //BLOOD COMPONENTS//
   //Initialize Blood Type
   //RBC
-  double rbc_count = 5280000.0;
-  double rbc_ct_per_uL = rbc_count / 5000000.0;
+  double rbc_ct_per_uL = 5280000.0;
   double antigens_PER_rbc = 2000000.0;
   molarity1.SetValue(rbc_ct_per_uL, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_RBC, vascular, molarity1);
@@ -1050,15 +1049,16 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   if (m_platelets == nullptr)
     Error("Platelets Definition not found");
   if (m_AntigenA == nullptr)
-    Error("Red Blood Cell Definition not found");
+    Error("Antigen A Definition not found");
   if (m_AntigenB == nullptr)
-    Error("Red Blood Cell Definition not found");
+    Error("Antigen B Definition not found");
   if (m_RBC == nullptr)
     Error("Red Blood Cell Definition not found");
   if (m_WBC == nullptr)
     Error("White Blood Cell Definition not found");
 
-  if (m_O2 == nullptr || m_CO == nullptr || m_CO2 == nullptr || m_N2 == nullptr || m_Hb == nullptr || m_HbO2 == nullptr || m_HbCO2 == nullptr || m_HbCO == nullptr || m_HbO2CO2 == nullptr || m_epi == nullptr || m_HCO3 == nullptr)
+  if (m_O2 == nullptr || m_CO == nullptr || m_CO2 == nullptr || m_N2 == nullptr || m_Hb == nullptr || m_HbO2 == nullptr 
+    || m_HbCO2 == nullptr || m_HbCO == nullptr || m_HbO2CO2 == nullptr || m_epi == nullptr || m_HCO3 == nullptr)
     return false;
 
   m_albumin = GetSubstance("Albumin");
