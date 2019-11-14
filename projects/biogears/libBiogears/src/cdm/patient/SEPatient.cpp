@@ -340,7 +340,7 @@ void SEPatient::Unload(CDM::PatientData& data) const
   if (HasAnnotation()) {
     data.Annotation(m_Annotation);
   }
-  if (HasSex()) {
+  if (HasGender()) {
     data.Sex(m_Sex);
   }
   if (m_Age != nullptr) {

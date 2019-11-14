@@ -210,7 +210,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   SEScalarAmountPerVolume phosphate;
 
   albuminConcentration.SetValue(45.0, MassPerVolumeUnit::g_Per_L);
-  hematocrit.SetValue(m_data.GetPatient().GetSex() == CDM::enumSex::Male ? 0.45 : 0.40);
+  hematocrit.SetValue(m_data.GetPatient().GetGender() == CDM::enumSex::Male ? 0.45 : 0.40);
   bodyTemp.SetValue(37.0, TemperatureUnit::C);
   strongIonDifference.SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
