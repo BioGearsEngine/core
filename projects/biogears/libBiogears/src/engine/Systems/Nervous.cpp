@@ -85,7 +85,6 @@ void Nervous::Initialize()
   m_AfferentPulmonaryStretchReceptor_Hz = 5.75;
   m_AfferentStrain = 0.04;
   m_AfferentStrainBaseline = 0.9 * (1.0 - std::sqrt(1.0 / 3.0));
-  m_BaroreceptorFatigueScale = 0.0;
   m_BaroreceptorOffset = 0.0;
   m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
   m_CerebralArteriesEffectors_Large = std::vector<double>(3);
@@ -108,6 +107,7 @@ void Nervous::Initialize()
   m_PulmonaryVenousPressureInput_mmHg = m_PulmonaryVenousPressureBaseline_mmHg;
   m_SympatheticHeartSignalBaseline = 0.175;
   m_SympatheticPeripheralSignalBaseline = 0.2;
+  m_SympatheticPeripheralSignalFatigue = 0.0;
   m_VagalSignalBaseline = 0.80;
 
 
@@ -148,7 +148,6 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_AfferentPulmonaryStretchReceptor_Hz = in.AfferentPulmonaryStrechReceptor_Hz();
   m_AfferentStrain = in.AfferentStrain();
   m_AfferentStrainBaseline = in.AfferentStrainBaseline();
-
   m_BaroreceptorFatigueScale = in.BaroreceptorFatigueScale();
   m_BaroreceptorOffset = in.BaroreceptorOffset();
   m_BaroreceptorOperatingPoint_mmHg = in.BaroreceptorOperatingPoint_mmHg();
@@ -178,6 +177,7 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_ResistanceModifier = in.ResistanceModifier();
   m_SympatheticHeartSignalBaseline = in.SympatheticHeartSignalBaseline();
   m_SympatheticPeripheralSignalBaseline = in.SympatheticPeripheralSignalBaseline();
+  m_SympatheticPeripheralSignalFatigue = in.SympatheticPeripheralSignalFatigue();
   m_VagalSignalBaseline = in.VagalSignalBaseline();
 
   return true;
@@ -231,6 +231,7 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.ResistanceModifier(m_ResistanceModifier);
   data.SympatheticHeartSignalBaseline(m_SympatheticHeartSignalBaseline);
   data.SympatheticPeripheralSignalBaseline(m_SympatheticPeripheralSignalBaseline);
+  data.SympatheticPeripheralSignalFatigue(m_SympatheticPeripheralSignalFatigue);
   data.VagalSignalBaseline(m_VagalSignalBaseline);
 
 }
@@ -405,13 +406,11 @@ void Nervous::CentralSignalProcess()
   //Sympathetic signal constants
   const double kS = 0.0675;
   const double xSatSH = 53.0;
-  //const double xMaxSH = 3.59;
   const double xBasalSH = 3.59;
   const double oxygenHalfMaxSH = 45.0;
   const double kOxygenSH = 6.0;
   const double xCO2SH = 1.0;
   const double xSatSP = 6.0;
-  //const double xMaxSP = -9.0;
   const double xBasalSP = -9.0;
   const double oxygenHalfMaxSP = 30.0;
   const double kOxygenSP = 2.0;
@@ -460,6 +459,17 @@ void Nervous::CentralSignalProcess()
   const double exponentSP = kS * (wSP_AB * m_AfferentBaroreceptor_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz + wSP_AA * m_AfferentAtrial_Hz - firingThresholdSP);
   m_SympatheticPeripheralSignal_Hz = std::exp(exponentSP);
 
+  //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
+  //Currently applying only to this signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy, 
+  //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+    const double kFatigue = 3.0e-5;
+    double dFatigueScale = kFatigue * (m_SympatheticPeripheralSignal_Hz - m_SympatheticPeripheralSignalBaseline);
+    m_SympatheticPeripheralSignalFatigue += (dFatigueScale * m_data.GetTimeStep().GetValue(TimeUnit::hr));
+
+  }
+  
+
   //-------Determine vagal (parasympathetic) signal to heart------------------------------------------------------------------
   const double kV = 7.06;
   const double wV_AC = 0.2;
@@ -505,7 +515,7 @@ void Nervous::EfferentResponse()
   const double gainResistance = 0.6;
   const double baseR_mmHg_s_Per_mL = 1.0 - gainResistance * m_SympatheticPeripheralSignalBaseline;
 
-  const double dResistance = (1.0 / tauResistance) * (-m_ResistanceModifier + gainResistance * m_SympatheticPeripheralSignal_Hz);
+  const double dResistance = (1.0 / tauResistance) * (-m_ResistanceModifier + gainResistance * (m_SympatheticPeripheralSignal_Hz-m_SympatheticPeripheralSignalFatigue));
   m_ResistanceModifier += (dResistance * m_dt_s);
   m_data.GetDataTrack().Probe("Resistance_Mod", m_ResistanceModifier);
   m_data.GetDataTrack().Probe("Resistance_Next", baseR_mmHg_s_Per_mL + m_ResistanceModifier);
@@ -516,7 +526,7 @@ void Nervous::EfferentResponse()
   const double tauVolume = 10.0;
   const double initialVolume = baseVolume - gainVolume * m_SympatheticPeripheralSignalBaseline; //Different than baseline volume because baseline sympathetic signal is non-zero
 
-  const double dVolume = (1.0 / tauVolume) * (-m_ComplianceModifier + gainVolume * m_SympatheticPeripheralSignal_Hz);
+  const double dVolume = (1.0 / tauVolume) * (-m_ComplianceModifier + gainVolume * (m_SympatheticPeripheralSignal_Hz-m_SympatheticPeripheralSignalFatigue));
   m_ComplianceModifier += (dVolume * m_dt_s);
 
   m_data.GetDataTrack().Probe("Volume_Mod", m_ComplianceModifier);
@@ -587,41 +597,8 @@ void Nervous::BaroreceptorFeedback()
   //Update setpoint
   if (m_data.GetState() > EngineState::SecondaryStabilization) {
     const double kAdapt = 7.0e-5;
-    double dSetpointAdjust = kAdapt * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
+    const double dSetpointAdjust = kAdapt * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust * m_dt_s);
-  }
-
-  if (!m_FeedbackActive) {
-    return;
-  }
-
-  double meanArterialPressure_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure(PressureUnit::mmHg);
-
-  //First calculate the sympathetic and parasympathetic firing rates:
-  double nu = m_data.GetConfiguration().GetResponseSlope();
-
-  //Adjusting the mean arterial pressure set-point to account for cardiovascular drug effects
-  double meanArterialPressureSetPoint_mmHg = m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg) //m_MeanArterialPressureNoFeedbackBaseline_mmHg
-    + m_data.GetEnergy().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);
-
-  double sympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, nu));
-  double parasympatheticFraction = 1.0 / (1.0 + std::pow(meanArterialPressure_mmHg / meanArterialPressureSetPoint_mmHg, -nu));
-
-
-  //Currently baroreceptor fatigue has only been tested for severe infections leading to sepsis.  We only accumulate fatigue if the sympathetic
-  // outflow is above a certain threshold.  If we drop below threshold, we allow fatigue parameter to return towards 0. Note that even if infetion
-  //is eliminated, the inflammation source will still be found (which we want so that inflammatory model has time to return to baseline).
-  const double fatigueThreshold = 0.65;
-  const double fatigueTimeConstant_hr = 2.0;
-  double fatigueInput = sympatheticFraction - fatigueThreshold;
-  double dFatigueScale = 0.0;
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
-    if (fatigueInput > 0.0) {
-      dFatigueScale = (1.0 / fatigueTimeConstant_hr) * (fatigueInput) * (1.2 - m_BaroreceptorFatigueScale);
-    } else if (m_BaroreceptorFatigueScale > ZERO_APPROX) {
-      dFatigueScale = (-2.0 * m_BaroreceptorFatigueScale / fatigueTimeConstant_hr);
-    }
-    m_BaroreceptorFatigueScale += (dFatigueScale * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
 }
 

@@ -144,7 +144,6 @@ specific language governing permissions and limitations under the License.
           <xs:element name="AfferentStrainBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ArterialOxygenBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="BaroreceptorFatigueScale" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorOffset" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorOperatingPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="CerebralArteriesEffectors_Large" type="xs:double" minOccurs="3" maxOccurs="3"/><!--@brief Effect of CBF, CO2, and O2 (hence 3 components) on large cerebral arteries-->
@@ -171,6 +170,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ResistanceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="SympatheticHeartSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="SympatheticPeripheralSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="SympatheticPeripheralSignalFatigue" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VagalSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
