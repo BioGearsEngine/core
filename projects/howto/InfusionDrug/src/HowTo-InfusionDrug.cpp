@@ -14,12 +14,16 @@ specific language governing permissions and limitations under the License.
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
-#include <biogears/cdm/patient/actions/SEHemorrhage.h>
+
+#include "biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h"
+#include "biogears/cdm/substance/SESubstanceCompound.h"
+#include "biogears/cdm/substance/SESubstanceConcentration.h"
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -113,7 +117,7 @@ void HowToInfusionDrug()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::L_Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Ground","InFlow",VolumePerTimeUnit::mL_Per_min);
+  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Ground", "InFlow", VolumePerTimeUnit::mL_Per_min);
 
   //Create variables for scenario
   SEHemorrhage hemorrhageSpleen; //hemorrhage object
@@ -139,6 +143,45 @@ void HowToInfusionDrug()
   bg->ProcessAction(infuse2);
   tracker2.AdvanceModelTime(7200);
 
-  bg->GetLogger()->Info("Finished");
+  //Example 2: Custom SubstanceCompound Infusion
+  //In this example we will programatically create a new SubstanceCompound
+  //This can be useful for integrators who want to allow patients to mix custom IV bags
+  //Note that while you can create new SubstanceCompounds while BioGears is running from
+  //Existing Substances. You should not modify any substanceCompound in the Substance Manager as it will
+  //Affect all existing volumes of that SubstanceCompound.
+  SESubstance* albumin = bg->GetSubstanceManager().GetSubstance("Albumin");
+  SESubstance* morphine = bg->GetSubstanceManager().GetSubstance("Morphine");
+  SESubstance* saline = bg->GetSubstanceManager().GetSubstance("Saline");
+  if (albumin && morphine && saline) {
+    auto albuminConcentration = std::make_unique<SESubstanceConcentration>(*albumin);
+    auto morphineConcentration = std::make_unique<SESubstanceConcentration>(*morphine);
+    auto salineConcentration = std::make_unique<SESubstanceConcentration>(*saline);
+
+    albuminConcentration->GetConcentration().SetValue (10.0, MassPerVolumeUnit::mg_Per_mL);
+    morphineConcentration->GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
+    salineConcentration->GetConcentration().SetValue  (2.17, MassPerVolumeUnit::kg_Per_L);
+
+    auto morphine_albumin_compound = std::make_unique<SESubstanceCompound>("morphine_albumin_compound", bg->GetLogger());
+    morphine_albumin_compound->SetClassification(CDM::enumSubstanceClass::Sedative);
+    morphine_albumin_compound->GetComponents().push_back(albuminConcentration.release());
+    morphine_albumin_compound->GetComponents().push_back(morphineConcentration.release());
+    morphine_albumin_compound->GetComponents().push_back(salineConcentration.release());
+
+    bg->GetSubstanceManager().AddCompound(*morphine_albumin_compound.release());
+  } else {
+    bg->GetLogger()->Error("Substance definitions for v, Morphine, and Saline required for this how-to.");
+  }
+
+  SESubstanceCompoundInfusion mac_infusion(*bg->GetSubstanceManager().GetCompound("morphine_albumin_compound"));
+  mac_infusion.GetBagVolume().SetValue(1.0, VolumeUnit::L);
+  mac_infusion.GetRate().SetValue(1.0, VolumePerTimeUnit::L_Per_day);
+  bg->ProcessAction(mac_infusion);//<Start Infusion
+  bg->AdvanceModelTime(10, TimeUnit::min);
+  mac_infusion.GetBagVolume().SetValue(1.0, VolumeUnit::L);
+  mac_infusion.GetRate().SetValue(0.0, VolumePerTimeUnit::L_Per_day);
+  bg->ProcessAction(mac_infusion);//<Stop Infusion
+  bg->AdvanceModelTime(10, TimeUnit::min);
   
+  //
+  bg->GetLogger()->Info("Finished");
 }

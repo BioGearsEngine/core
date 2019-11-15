@@ -22,6 +22,8 @@ class SESubstanceConcentration;
 
 class BIOGEARS_API SESubstanceCompound : public Loggable {
 public:
+  explicit SESubstanceCompound(const std::string& name, Logger* logger);
+  explicit SESubstanceCompound(const char* name, Logger* logger);
   SESubstanceCompound(Logger* logger);
   virtual ~SESubstanceCompound();
 
@@ -51,8 +53,8 @@ public:
 
   bool HasComponent() const;
   bool HasComponent(const SESubstance& substance) const;
-  const std::vector<SESubstanceConcentration*>& GetComponents();
-  const std::vector<const SESubstanceConcentration*>& GetComponents() const;
+  std::vector<SESubstanceConcentration*>& GetComponents();
+  std::vector<SESubstanceConcentration const *> GetComponents() const;
   const SESubstanceConcentration& GetComponent(SESubstance& substance);
   const SESubstanceConcentration* GetComponent(SESubstance& substance) const;
   void RemoveComponent(const SESubstance& substance);
@@ -63,6 +65,5 @@ protected:
   bool m_RhFactor;
 
   std::vector<SESubstanceConcentration*> m_Components;
-  std::vector<const SESubstanceConcentration*> m_cComponents;
 };
 }

@@ -16,11 +16,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SESubstanceCompound::SESubstanceCompound(Logger* logger)
+SESubstanceCompound::SESubstanceCompound(const std::string& name, Logger* logger)
   : Loggable(logger)
+  , m_Name(name)
+  , m_Classification((CDM::enumSubstanceClass::value)-1)
 {
-  m_Name = "";
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
+
+}
+SESubstanceCompound::SESubstanceCompound(const char* name, Logger* logger)
+  : SESubstanceCompound(std::string { name }, logger)
+{
+  
+}
+SESubstanceCompound::SESubstanceCompound(Logger* logger)
+  : SESubstanceCompound("",logger)
+{
 }
 //-----------------------------------------------------------------------------
 SESubstanceCompound::~SESubstanceCompound()
@@ -33,7 +43,6 @@ void SESubstanceCompound::Clear()
   m_Name = "";
   m_Classification = (CDM::enumSubstanceClass::value)-1;
   DELETE_VECTOR(m_Components);
-  m_cComponents.clear();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr)
@@ -63,7 +72,6 @@ bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESub
     cc = new SESubstanceConcentration(*substance);
     cc->Load(*ccData);
     m_Components.push_back(cc);
-    m_cComponents.push_back(cc);
   }
   return true;
 }
@@ -162,20 +170,25 @@ bool SESubstanceCompound::HasComponent() const
 bool SESubstanceCompound::HasComponent(const SESubstance& substance) const
 {
   for (SESubstanceConcentration* q : m_Components) {
-    if (&substance == &q->GetSubstance())
+    if (&substance == &q->GetSubstance()) {
       return true;
+    }
   }
   return false;
 }
 //-----------------------------------------------------------------------------
-const std::vector<SESubstanceConcentration*>& SESubstanceCompound::GetComponents()
+std::vector<SESubstanceConcentration*>& SESubstanceCompound::GetComponents()
 {
   return m_Components;
 }
 //-----------------------------------------------------------------------------
-const std::vector<const SESubstanceConcentration*>& SESubstanceCompound::GetComponents() const
+std::vector<SESubstanceConcentration const *> SESubstanceCompound::GetComponents() const
 {
-  return m_cComponents;
+  std::vector<SESubstanceConcentration const*> cCompounds;
+  for (auto componet : m_Components) {
+    cCompounds.push_back(componet);
+  }
+  return cCompounds;
 }
 //-----------------------------------------------------------------------------
 const SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& substance)
@@ -187,7 +200,6 @@ const SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& s
   SESubstanceConcentration* sq = new SESubstanceConcentration(substance);
   sq->GetConcentration().SetValue(0, MassPerVolumeUnit::ug_Per_mL);
   m_Components.push_back(sq);
-  m_cComponents.push_back(sq);
   return *sq;
 }
 //-----------------------------------------------------------------------------
@@ -206,7 +218,6 @@ void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
   for (SESubstanceConcentration* sq : m_Components) {
     if (&substance == &sq->GetSubstance()) {
       m_Components.erase(m_Components.begin() + i);
-      m_cComponents.erase(m_cComponents.begin() + i);
       delete sq;
     }
     i++;
