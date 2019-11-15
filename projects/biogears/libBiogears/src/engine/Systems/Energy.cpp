@@ -263,8 +263,6 @@ void Energy::Process()
 {
   m_circuitCalculator.Process(*m_TemperatureCircuit, m_dT_s);
   CalculateVitalSigns();
-
-  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -565,8 +563,22 @@ void Energy::UpdateHeatResistance()
   double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
 
   coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
-  //m_data.GetDataTrack().Probe("CoreToSkinResistance", coreToSkinResistance_K_Per_W);
-  m_coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
+  double coreToSkinBase = m_coreToSkinPath->GetResistanceBaseline(HeatResistanceUnit::K_Per_W);
+  double targetResistance = coreToSkinResistance_K_Per_W;
+  double nextSkinResistance = coreToSkinResistance_K_Per_W;
+  double lastResistance = m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W);
+
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0);
+    targetResistance = GeneralMath::ResistanceFunction(10.0, 0.0001, coreToSkinBase, resInput);
+    const double resistanceRampGain = 1.0e-3;
+    nextSkinResistance = lastResistance + resistanceRampGain * (targetResistance - lastResistance);
+  }
+
+  m_coreToSkinPath->GetNextResistance().SetValue(nextSkinResistance, HeatResistanceUnit::K_Per_W);
+  m_data.GetDataTrack().Probe("CoreToSkinResistance", coreToSkinResistance_K_Per_W);
+  m_data.GetDataTrack().Probe("NextSkinResistance", nextSkinResistance);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -647,7 +659,7 @@ void Energy::ProcessOverride()
 #ifdef BIOGEARS_USE_OVERRIDE_CONTROL
   OverrideControlLoop();
 #endif
- 
+
   if (override->HasAchievedExerciseLevelOverride()) {
     GetAchievedExerciseLevel().SetValue(override->GetAchievedExerciseLevelOverride().GetValue());
   }
@@ -734,7 +746,7 @@ void Energy::OverrideControlLoop()
   double currentSodiumSweatOverride = 0.0; //gets changed in next step
   double currentPotassiumSweatOverride = 0.0; //gets changed in next step
 
-  double currentChlorideSweatOverride =0.0; //gets changed in next step
+  double currentChlorideSweatOverride = 0.0; //gets changed in next step
 
   if (override->HasAchievedExerciseLevelOverride()) {
     currentAcheivedExerciseOverride = override->GetAchievedExerciseLevelOverride().GetValue();

@@ -237,16 +237,26 @@ void Environment::PreProcess()
   }
 
   //Set clothing resistor
-  double dClothingResistance_rsi = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::rsi); //1 rsi = 1 m^2-K/W
-  double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
-  m_SkinToClothing->GetNextResistance().SetValue(std::max((dClothingResistance_rsi / dSurfaceArea_m2), m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W)), HeatResistanceUnit::K_Per_W);
+  const double dClothingResistance_rsi = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::rsi); //1 rsi = 1 m^2-K/W
+  const double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
+  const double skinToClothingBaseResistance = std::max(dClothingResistance_rsi / dSurfaceArea_m2, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
+  //If the patient has a burn, they are susceptible to hypothermia.  Decrease calculated resistance according to burn size
+  //Note:  It seems like we should be able to decrease skin surface area due to burn, but that would cause resistance increase according to equation below
+  double resistanceMultiplier = 0.0;
+  double skinToClothingResistance = skinToClothingBaseResistance;
+  
+  m_SkinToClothing->GetNextResistance().SetValue(skinToClothingResistance, HeatResistanceUnit::K_Per_W);
 
+  m_data.GetDataTrack().Probe("ResistanceMultiplier", resistanceMultiplier);
+  m_data.GetDataTrack().Probe("SkinToClothingResistance", skinToClothingResistance);
+  
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
   if (m_SkinToClothing->HasHeatTransferRate()) {
     dSkinHeatLoss_W = m_SkinToClothing->GetHeatTransferRate().GetValue(PowerUnit::W);
   }
   GetSkinHeatLoss().SetValue(dSkinHeatLoss_W, PowerUnit::W);
+  m_data.GetDataTrack().Probe("SkinHeatLoss", dSkinHeatLoss_W);
 
   ProcessActions();
   CalculateSupplementalValues();
@@ -574,6 +584,9 @@ void Environment::CalculateConvection()
 
   //Calculate the resistance
   double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    dSurfaceArea_m2 *= (1.0 - m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue());
+  }
   double dResistance_K_Per_W = 0.0;
   if (dConvectiveHeatTransferCoefficient_WPerM2_K == 0) {
     //Infinite resistance
@@ -584,6 +597,7 @@ void Environment::CalculateConvection()
 
   std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
   m_ClothingToEnvironmentPath->GetNextResistance().SetValue(dResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
+  m_data.GetDataTrack().Probe("ConvectiveResistance", dResistance_K_Per_W);
 
   //Set the source
   double dAmbientTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);

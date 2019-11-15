@@ -1052,11 +1052,11 @@ void Cardiovascular::TraumaticBrainInjury()
 /// The hemorrhage function simulates bleeding from a specified compartment
 /// \details
 /// The cardiovascular circuit has paths from each compartment to ground (initially open) that represent
-/// bleeding sites.  When a hemorrhage is activated, the current pressure at the location and the 
+/// bleeding sites.  When a hemorrhage is activated, the current pressure at the location and the
 /// user specified bleed rate are used to determine a resistance for the appropriate bleeding path.
 /// A resistance is set (rather than a flow source) so that pulsatile flow characteristics can be
 /// observed and so that bleeding rate diminishes with blood volume.
-/// Tourniquets can be applied to the extremities, which increase the resistance on the paths into and 
+/// Tourniquets can be applied to the extremities, which increase the resistance on the paths into and
 /// out of the heomrrhage compartment.
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::Hemorrhage()
@@ -1127,7 +1127,7 @@ void Cardiovascular::Hemorrhage()
   //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
   for (auto tPair : tourniquets) {
     tournCmpt = tPair.first;
-	tourniquet = tPair.second;
+    tourniquet = tPair.second;
     CDM::enumTourniquetApplicationLevel::value tLevel = tourniquet->GetTourniquetLevel();
     //Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
     std::string supplyPathName = "Aorta1To" + tournCmpt + "1";
@@ -1152,7 +1152,6 @@ void Cardiovascular::Hemorrhage()
     supplyPath->GetNextResistance().SetValue(tResModifier * supplyBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
     returnPath->GetNextResistance().SetValue(tResModifier * returnBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
   }
-
 
   /*
   Stub to try to calculate a probability of survival based on the bleeding rate and approximate time to bleed out.
@@ -1590,11 +1589,15 @@ void Cardiovascular::MetabolicToneResponse()
   //The metabolic multiplier is used as a tuned response to represent cardiovascular resistance effects during exercise
   double sp0 = 1.5;
   double divisor = 7.0;
-  double metabolicMultiplier = (sp0 * metabolicFraction + (divisor - sp0)) / divisor;
+  double metabolicMultiplier = 1.0;
+  if (m_data.GetActions().GetPatientActions().HasExercise()) {
+    //Only change this value if exercise is active (per comment above) -- otherwise this modifier can increase during hypothermia, causing incorrect decease in peripheral resistance
+    metabolicModifier = (sp0 * metabolicFraction + (divisor - sp0)) / divisor;
+  }
 
   // Max delta approx. 20% of baseline \cite christie1997cardiac \cite foster1999left
   double metabolicRateMeanArterialPressureDelta_mmHg = (0.05 * metabolicFraction - 0.05) * m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
-  m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(metabolicRateMeanArterialPressureDelta_mmHg, PressureUnit::mmHg);
+  //m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(metabolicRateMeanArterialPressureDelta_mmHg, PressureUnit::mmHg);
 
   //Reducing resistances scaling with metabolic rate increase and changes in core temperature
   double resistanceNew__mmHg_s_Per_mL = 0.0;
