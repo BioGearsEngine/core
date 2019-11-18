@@ -39,8 +39,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -244,12 +244,12 @@ void Environment::PreProcess()
   //Note:  It seems like we should be able to decrease skin surface area due to burn, but that would cause resistance increase according to equation below
   double resistanceMultiplier = 0.0;
   double skinToClothingResistance = skinToClothingBaseResistance;
-  
+
   m_SkinToClothing->GetNextResistance().SetValue(skinToClothingResistance, HeatResistanceUnit::K_Per_W);
 
   m_data.GetDataTrack().Probe("ResistanceMultiplier", resistanceMultiplier);
   m_data.GetDataTrack().Probe("SkinToClothingResistance", skinToClothingResistance);
-  
+
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
   if (m_SkinToClothing->HasHeatTransferRate()) {
@@ -466,7 +466,7 @@ void Environment::CalculateSupplementalValues()
 
   //Now use that to determine the Lewis Relation
   double dAirSpecificHeat_JPerK_kg = m_data.GetConfiguration().GetAirSpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg);
-  m_dLewisRelation = 1 / (dAirDensity_kgPerm3 * dAirSpecificHeat_JPerK_kg);
+  m_dLewisRelation = 1.0 / (dAirDensity_kgPerm3 * dAirSpecificHeat_JPerK_kg);
 
   //Determine the heat vaporization of water
   //This equation was determined using a best fit from experimental data
@@ -580,13 +580,14 @@ void Environment::CalculateConvection()
   }
 
   //Set the coefficient
-  GetConvectiveHeatTranferCoefficient().SetValue(dConvectiveHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
 
+  /*if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    dConvectiveHeatTransferCoefficient_WPerM2_K *= 10.0;
+  }*/
+  GetConvectiveHeatTranferCoefficient().SetValue(dConvectiveHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
   //Calculate the resistance
   double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
-    dSurfaceArea_m2 *= (1.0 - m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue());
-  }
+
   double dResistance_K_Per_W = 0.0;
   if (dConvectiveHeatTransferCoefficient_WPerM2_K == 0) {
     //Infinite resistance
@@ -609,6 +610,7 @@ void Environment::CalculateConvection()
     dTotalHeatLoss_W = m_ClothingToEnvironmentPath->GetHeatTransferRate().GetValue(PowerUnit::W);
   }
   GetConvectiveHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
+  m_data.GetDataTrack().Probe("ConvectiveHeatLoss", dTotalHeatLoss_W);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -635,15 +637,24 @@ void Environment::CalculateEvaporation()
   } else //Air
   {
     //Calculate the coefficient
-    double dConvectiveTransferCoefficient_WPerM2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
-    double dEvaporativeHeatTransferCoefficient_WPerM2_K = m_dLewisRelation * dConvectiveTransferCoefficient_WPerM2_K;
-    GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
+    double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
+    const double dLewisRelation_K_Per_kPa = 16.5;
+    const double dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa = dConvectiveTransferCoefficient_W_Per_m2_K * dLewisRelation_K_Per_kPa;
+    const double dClothingResistance_clo  = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
+    const double clo_To_m2_K_Per_W = 0.155;
+    const double iCl = 0.35;
+    const double dClothingConductance_W_Per_m2_kPa = clo_To_m2_K_Per_W * dClothingResistance_clo/ (iCl * dLewisRelation_K_Per_kPa);
+    const double fCl = 1.0 + 0.3 * dClothingResistance_clo;
+    double skinWettednessDiffusion = 0.06;
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+      skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    }
 
-    //Calculate the source
-    double dClothingResistance_rsi = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::rsi); //1 rsi = 1 m^2-K/W
-    double dFactorOfReduction = 1.0 / (1.0 + 2.22 * dConvectiveTransferCoefficient_WPerM2_K * dClothingResistance_rsi);
-    double dMaxEvaporativePotential = dEvaporativeHeatTransferCoefficient_WPerM2_K * dFactorOfReduction * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa);
+   // GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
+
+    double dMaxEvaporativePotential = (1.0 / 1000.0) * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa) / (dClothingConductance_W_Per_m2_kPa + 1.0 / (fCl * dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa));
     double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
+
     double dSweatRate_kgPers = 0.0;
     if (m_data.GetEnergy().HasSweatRate()) {
       dSweatRate_kgPers = m_data.GetEnergy().GetSweatRate(MassPerTimeUnit::kg_Per_s) / dSurfaceArea_m2;
@@ -653,7 +664,7 @@ void Environment::CalculateEvaporation()
     if (dMaxEvaporativePotential != 0) {
       dWettedPortion = dSweatingControlMechanisms / dMaxEvaporativePotential;
     }
-    double dDiffusionOfWater = (1.0 - dWettedPortion) * 0.06 * dMaxEvaporativePotential;
+    double dDiffusionOfWater = (1.0 - dWettedPortion) * skinWettednessDiffusion * dMaxEvaporativePotential;
     double EvaporativeHeatLossFromSkin_W = dSweatingControlMechanisms + dDiffusionOfWater;
 
     //Set the source
@@ -666,8 +677,10 @@ void Environment::CalculateEvaporation()
     }
 
     GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
+    m_data.GetDataTrack().Probe("MaxEvaporativeCapacity_W", dMaxEvaporativePotential * dSurfaceArea_m2);
+    m_data.GetDataTrack().Probe("EvapHeatLoss", GetEvaporativeHeatLoss().GetValue(PowerUnit::W));
+    m_data.GetDataTrack().Probe("WettednessParam", skinWettednessDiffusion);
 
-    // m_data.GetDataTrack().Probe("EvapHeatLoss", GetEvaporativeHeatLoss().GetValue(PowerUnit::W));
   }
 }
 

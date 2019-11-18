@@ -556,6 +556,17 @@ void Energy::UpdateHeatResistance()
   double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
 
   double alphaScale = .5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
+  double targetAlpha = alphaScale;
+  const double lastAlpha = 1.0 / (m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0);		//Make >50% burn the worse case scenario 
+    targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 100.0, resInput);
+    const double rampGain = 1.0e-4;
+    
+    alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
+  }
+
 
   //The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
   //When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.
@@ -563,22 +574,11 @@ void Energy::UpdateHeatResistance()
   double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
 
   coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
-  double coreToSkinBase = m_coreToSkinPath->GetResistanceBaseline(HeatResistanceUnit::K_Per_W);
-  double targetResistance = coreToSkinResistance_K_Per_W;
-  double nextSkinResistance = coreToSkinResistance_K_Per_W;
-  double lastResistance = m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W);
 
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
-    const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-    const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0);
-    targetResistance = GeneralMath::ResistanceFunction(10.0, 0.0001, coreToSkinBase, resInput);
-    const double resistanceRampGain = 1.0e-3;
-    nextSkinResistance = lastResistance + resistanceRampGain * (targetResistance - lastResistance);
-  }
-
-  m_coreToSkinPath->GetNextResistance().SetValue(nextSkinResistance, HeatResistanceUnit::K_Per_W);
+  m_coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
   m_data.GetDataTrack().Probe("CoreToSkinResistance", coreToSkinResistance_K_Per_W);
-  m_data.GetDataTrack().Probe("NextSkinResistance", nextSkinResistance);
+  m_data.GetDataTrack().Probe("AlphaScale", alphaScale);
+  m_data.GetDataTrack().Probe("LastAlpha", lastAlpha);
 }
 
 //--------------------------------------------------------------------------------------------------
