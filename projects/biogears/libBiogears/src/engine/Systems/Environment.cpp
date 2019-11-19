@@ -244,6 +244,9 @@ void Environment::PreProcess()
   //Note:  It seems like we should be able to decrease skin surface area due to burn, but that would cause resistance increase according to equation below
   double resistanceMultiplier = 0.0;
   double skinToClothingResistance = skinToClothingBaseResistance;
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    skinToClothingResistance *= 0.1;
+  }
 
   m_SkinToClothing->GetNextResistance().SetValue(skinToClothingResistance, HeatResistanceUnit::K_Per_W);
 
@@ -513,6 +516,7 @@ void Environment::CalculateRadiation()
   {
     //Calculate the coefficient
     double dEmissivity = GetConditions().GetEmissivity().GetValue();
+
     double dStefanBoltzmann_WPerM2_K4 = m_data.GetConfiguration().GetStefanBoltzmann(PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4);
     double dEffectiveAreaOverSurfaceArea = 0.73; //Standing
     double dClothingTemperature_K = m_ClothingNode->GetTemperature().GetValue(TemperatureUnit::K);
@@ -544,6 +548,8 @@ void Environment::CalculateRadiation()
     dTotalHeatLoss_W = m_ClothingToEnclosurePath->GetHeatTransferRate().GetValue(PowerUnit::W);
   }
   GetRadiativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
+  m_data.GetDataTrack().Probe("Radiative Heat Loss", dTotalHeatLoss_W);
+  m_data.GetDataTrack().Probe("Clothing Temperature", m_ClothingNode->GetTemperature().GetValue(TemperatureUnit::C));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -577,6 +583,10 @@ void Environment::CalculateConvection()
     //Velocity should take into account wind and patient movement combined
     double dAirVelocity_MPerS = GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s);
     dConvectiveHeatTransferCoefficient_WPerM2_K = 10.3 * std::pow(dAirVelocity_MPerS, 0.6);
+    if (dAirVelocity_MPerS < 0.2) {
+      //Equation above is valid between 0.2 and 0.8 m/s air speed.  Assume value of coefficient = f(0.2) @ air speed < 0.2
+      dConvectiveHeatTransferCoefficient_WPerM2_K = 10.3 * std::pow(0.2, 0.6);
+    }
   }
 
   //Set the coefficient
@@ -587,7 +597,9 @@ void Environment::CalculateConvection()
   GetConvectiveHeatTranferCoefficient().SetValue(dConvectiveHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
   //Calculate the resistance
   double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
-
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    dSurfaceArea_m2 *= (1.0 - m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue());
+  }
   double dResistance_K_Per_W = 0.0;
   if (dConvectiveHeatTransferCoefficient_WPerM2_K == 0) {
     //Infinite resistance
@@ -611,6 +623,8 @@ void Environment::CalculateConvection()
   }
   GetConvectiveHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
   m_data.GetDataTrack().Probe("ConvectiveHeatLoss", dTotalHeatLoss_W);
+  m_data.GetDataTrack().Probe("ConvectiveCoefficient_W_Per_m2K", GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K));
+  m_data.GetDataTrack().Probe("AirVelocity_m_Per_s", GetConditions().GetAirVelocity(LengthPerTimeUnit::m_Per_s));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -640,17 +654,19 @@ void Environment::CalculateEvaporation()
     double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
     const double dLewisRelation_K_Per_kPa = 16.5;
     const double dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa = dConvectiveTransferCoefficient_W_Per_m2_K * dLewisRelation_K_Per_kPa;
-    const double dClothingResistance_clo  = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
+    const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
     const double clo_To_m2_K_Per_W = 0.155;
     const double iCl = 0.35;
-    const double dClothingConductance_W_Per_m2_kPa = clo_To_m2_K_Per_W * dClothingResistance_clo/ (iCl * dLewisRelation_K_Per_kPa);
-    const double fCl = 1.0 + 0.3 * dClothingResistance_clo;
+    double dClothingConductance_W_Per_m2_kPa = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
+    double fCl = 1.0 + 0.3 * dClothingResistance_clo;
     double skinWettednessDiffusion = 0.06;
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
       skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+      dClothingConductance_W_Per_m2_kPa = 0.0;
+      fCl = 1.0;
     }
 
-   // GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
+    // GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
 
     double dMaxEvaporativePotential = (1.0 / 1000.0) * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa) / (dClothingConductance_W_Per_m2_kPa + 1.0 / (fCl * dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa));
     double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
@@ -680,7 +696,6 @@ void Environment::CalculateEvaporation()
     m_data.GetDataTrack().Probe("MaxEvaporativeCapacity_W", dMaxEvaporativePotential * dSurfaceArea_m2);
     m_data.GetDataTrack().Probe("EvapHeatLoss", GetEvaporativeHeatLoss().GetValue(PowerUnit::W));
     m_data.GetDataTrack().Probe("WettednessParam", skinWettednessDiffusion);
-
   }
 }
 
