@@ -2,6 +2,9 @@
 
 #include <biogears/string/manipulation.h>
 
+#include <cstdlib>
+#include <cmath>
+
 namespace biogears {
 
 
@@ -16,7 +19,7 @@ constexpr bool _OFFICAL_RELEASE_ = ${${ROOT_PROJECT_NAME}_DIRTY_BUILD};
 constexpr int _MAJOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MAJOR};
 constexpr int _MINOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MINOR};
 constexpr int _PATCH_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_PATCH};
-constexpr int _TWEAK_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_TWEAK};
+constexpr char const * _TWEAK_VERSION_NUMBER_  = "${${ROOT_PROJECT_NAME}_VERSION_TWEAK}";
 
 
 using namespace std::string_literals;
@@ -39,10 +42,11 @@ const char * biogears_build_date_str() {
 //-----------------------------------------------------------------------------
 std::string version_string()
 {
-  if (_TWEAK_VERSION_NUMBER_)
+  if ( 0 == strlen(_TWEAK_VERSION_NUMBER_)) {
     return biogears::asprintf("%d.%d.%d" ,_MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_);
-  else 
-    return biogears::asprintf("%d.%d.%d+%d", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_TWEAK_VERSION_NUMBER_);
+  } else {
+    return biogears::asprintf("%d.%d.%d+%s", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_TWEAK_VERSION_NUMBER_);
+  }
 }
 //-----------------------------------------------------------------------------
 char const * version_string_str()
@@ -55,10 +59,11 @@ char const * version_string_str()
 //-----------------------------------------------------------------------------
 std::string full_version_string()
 {
-  if (_TWEAK_VERSION_NUMBER_)
+  if ( 0 == strlen(_TWEAK_VERSION_NUMBER_)) {
     return biogears::asprintf("%d.%d.%d-%s", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_REV_HASH_);
-  else 
-    return biogears::asprintf("%d.%d.%d+%d-%s", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_TWEAK_VERSION_NUMBER_,_REV_HASH_);
+  } else {
+    return biogears::asprintf("%d.%d.%d+%s-%s", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_TWEAK_VERSION_NUMBER_,_REV_HASH_);
+  }
 }
 //-----------------------------------------------------------------------------
 char const * full_version_string_str()
@@ -104,7 +109,13 @@ char const * rev_tag_str()
 
 int rev_offset()
 {
-  return _TWEAK_VERSION_NUMBER_;
+  auto offset = std::strtol(_TWEAK_VERSION_NUMBER_, nullptr, 10);
+  if(errno == ERANGE)
+  { 
+    return -1;
+  } else {
+    return offset;
+  }
 }
 //-----------------------------------------------------------------------------
 

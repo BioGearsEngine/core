@@ -34,7 +34,7 @@ project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
 
 find_package(Git)
 if(Git_FOUND)
-  configure_version_information(GIT_SUCESS)
+  configure_version_information(GIT_SUCESS MAJOR 7 MINOR 2 PATCH 2 TWEAK 0)
 endif()
 if(NOT GIT_SUCESS)
   # Update these variables to ensure out of source build have some sane tags
