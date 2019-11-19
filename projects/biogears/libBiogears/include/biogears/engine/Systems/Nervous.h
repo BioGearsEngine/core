@@ -76,10 +76,8 @@ protected:
   void CerebralAutoregulation();
 
   // Serializable member variables (Set in Initialize and in schema)
-  double m_AfferentChemoreceptor_Hz;
-  double m_ArterialOxygenBaseline_mmHg;
-  double m_ArterialCarbonDioxideBaseline_mmHg;
-  double m_AfferentPulmonaryStretchReceptor_Hz;
+  double m_AfferentChemoreceptor_Hz;  //*AC
+  double m_AfferentPulmonaryStretchReceptor_Hz;  //*AP
   double m_AfferentStrain;
   double m_AfferentStrainBaseline;
   double m_ArterialOxygenBaseline_mmHg;
@@ -104,16 +102,16 @@ protected:
   double m_ResistanceModifier;
   double m_PeripheralBloodGasInteractionBaseline_Hz;
   double m_PeripheralVentilationDelta_L_Per_min;
-  double m_PulmonaryVenousPressureBaseline_mmHg;
-  double m_PulmonaryVenousPressureInput_mmHg;
   double m_SympatheticHeartSignalBaseline;
   double m_SympatheticPeripheralSignalBaseline;
   double m_SympatheticPeripheralSignalFatigue;
+  double m_TransmuralPressureInput_mmHg;
+  double m_TransmuralPressureBaseline_mmHg;
   double m_VagalSignalBaseline;
 
 
   // Stateless member variable (Set in SetUp())
-  double m_AfferentBaroreceptor_Hz;
+  double m_AfferentBaroreceptor_Hz; //*AB
   double m_AfferentAtrial_Hz; //*AA
   double m_AfferentThermal_Hz; //*AT
   double m_DrugRespirationEffects;

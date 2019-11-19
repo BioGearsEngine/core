@@ -165,12 +165,12 @@ specific language governing permissions and limitations under the License.
 		  <xs:element name="PeripheralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PeripheralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="IntrinsicHeartRate" type="xs:double" minOccurs="1" maxOccurs="1"/><!--@brief Heart rate w/ no sympathetic or parasympathetic signals-->
-          <xs:element name="PulmonaryVenousPressureBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="PulmonaryVenousPressureInput_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ResistanceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="SympatheticHeartSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="SympatheticPeripheralSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="SympatheticPeripheralSignalFatigue" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="TransmuralPressureBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="TransmuralPressureInput_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VagalSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
