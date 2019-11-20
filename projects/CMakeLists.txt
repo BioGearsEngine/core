@@ -32,35 +32,28 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
 set(CMAKE_STATIC_LIBRARY_SUFFIX "_st${CMAKE_STATIC_LIBRARY_SUFFIX}")
 set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
 
-  
-set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
-if(UNIX)
-    foreach(OUTPUTCONFIG Release Debug)
-        string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
-        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/lib")
-        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/lib")
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/bin")
-    endforeach(OUTPUTCONFIG)
-else()
-    foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-        string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
-        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/lib")
-        set(CMAKE_PDB_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/lib")
-        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/bin")
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/bin")
-    endforeach(OUTPUTCONFIG)
-endif()
+setup_unified_output_directory(PREFIX "outputs")
 ##################################################################################
 #STAGE RUNTIME LOGIC
 ##################################################################################
+if(NOT Biogears_RUNTIME_DIR)
+  set(Biogears_RUNTIME_DIR ${PROJECT_BINARY_DIR}/runtime)
+endif()
+
 add_custom_command(
-    OUTPUT  ${PROJECT_BINARY_DIR}/runtime 
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/runtime
+    OUTPUT  ${Biogears_RUNTIME_DIR} 
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${Biogears_RUNTIME_DIR}
+)
+
+add_custom_command(
+  OUTPUT ${Biogears_RUNTIME_DIR}/UCEDefs.conf
+  DEPENDS ${PROJECT_SOURCE_DIR}/share/etc/UCEDefs.conf
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/etc/UCEDefs.conf  ${Biogears_RUNTIME_DIR}/
 )
 
 file(GLOB_RECURSE source_xsd_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
 foreach(_file IN LISTS  source_xsd_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_xsd_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -71,7 +64,7 @@ endforeach()
 
 file(GLOB_RECURSE source_jar_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/jar/*.jar")
 foreach(_file IN LISTS  source_jar_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_jar_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -82,7 +75,7 @@ endforeach()
 
 file(GLOB_RECURSE source_data_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
 foreach(_file IN LISTS  source_data_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_data_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -91,15 +84,9 @@ foreach(_file IN LISTS  source_data_list)
   )
 endforeach()
 
-add_custom_command(
-  OUTPUT ${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
-  DEPENDS ${PROJECT_SOURCE_DIR}/share/etc/UCEDefs.conf
-  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/etc//UCEDefs.conf  ${PROJECT_BINARY_DIR}/runtime
-)
-
 file(GLOB_RECURSE source_doc_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/doc/*")
 foreach(_file IN LISTS  source_doc_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_doc_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -110,7 +97,7 @@ endforeach()
 
 file(GLOB_RECURSE source_scenario_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
 foreach(_file IN LISTS  source_scenario_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_scenario_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -122,7 +109,7 @@ endforeach()
 if(Biogears_BUILD_DOCUMENTATION)
   file(GLOB_RECURSE source_website_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/website/*" )
   foreach(_file IN LISTS  source_website_list)
-    string(REPLACE "${PROJECT_SOURCE_DIR}/share/website" "${PROJECT_BINARY_DIR}/runtime" runtime_file "${_file}" )
+    string(REPLACE "${PROJECT_SOURCE_DIR}/share/website" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
     list(APPEND runtime_scenario_list ${runtime_file})
     add_custom_command(
       OUTPUT  ${runtime_file}
@@ -135,9 +122,9 @@ endif()
 list(APPEND runtime_glob_list   "${runtime_xsd_list}" "${runtime_jar_list}"   "${runtime_data_list}"  "${runtime_doc_list}"   "${runtime_scenario_list}")
 
 add_custom_target( stage_runtime 
-    DEPENDS 
-  ${PROJECT_BINARY_DIR}/runtime
-  ${PROJECT_BINARY_DIR}/runtime/UCEDefs.conf
+  DEPENDS 
+  ${Biogears_RUNTIME_DIR}
+  ${Biogears_RUNTIME_DIR}/UCEDefs.conf
   ${runtime_glob_list}
   COMMENT "Scanning for need to stage runtime dir"
 )
@@ -181,7 +168,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
 
     add_custom_target(doxygen ALL
         COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc
+        WORKING_DIRECTORY ${Biogears_RUNTIME_DIR}/doc
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
 
@@ -190,5 +177,5 @@ if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
                           CXX_STANDARD 11
                           FOLDER "Other"
                           PROJECT_LABEL "Doxygen")
-   install(DIRECTORY ${PROJECT_BINARY_DIR}/outputs/docs/html DESTINATION share/doc/biogears/)
+   install(DIRECTORY ${PROJECT_BINARY_DIR}/docs/html DESTINATION share/doc/biogears/)
 endif()

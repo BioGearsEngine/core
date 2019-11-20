@@ -185,8 +185,12 @@ endfunction()
 # ${ROOT_PROJECT_NAME}_VERSION_MAJOR  #First group of characters in the split
 # ${ROOT_PROJECT_NAME}_VERSION_MINOR  #Second group of characters in the split
 # ${ROOT_PROJECT_NAME}_VERSION_PATCH  #Third set of characters in the split
+# ${ROOT_PROJECT_NAME}_VERSION_TWEAK  #Forth set of characters in the split
 # ${ROOT_PROJECT_NAME}_VERSION_TAG    #A string tag based on how dirty the tag is usually -dirty 
+# ${ROOT_PROJECT_NAME}_VERSION_HASH   #Abriviated Git Hash for the specific commit
+# ${ROOT_PROJECT_NAME}_LIB_VERSION    #MAJOR.MINOR.PATCH - This really only works if your tags use this format
 # ${ROOT_PROJECT_NAME}_DIRTY_BUILD    #True if the number of commits since the last tag is greater then 0
+# ${ROOT_PROJECT_NAME}_COMMIT_DATE    #Date of the latest commit in the repo git  log -1 --format=%ai 
 #
 ########################################################################################################
 
@@ -311,5 +315,39 @@ if(MSVC AND NOT __PROJECT_SUFFIX_SET)
     project(${CMAKE_PROJECT_NAME}_msvc14)
     project(cmake-test_msvc15)
   endif()
+endif()
+endfunction()
+#######################################################################################################
+#
+#
+#  By default cmake setups up multi configuration directories as {lib,bin}/{debug,release}/<product>
+#  This just sets it to {debug,release}/{lib,bin}/<product> which is more natural to me.
+# 
+#  Optional Cache Value OUTPUT_PREFIX allows you add an additional later to this layout
+#######################################################################################################
+function(setup_unified_output_directory )
+  cmake_parse_arguments( "_"  "" "PREFIX"
+                         "" ${ARGN} )
+if(NOT _PREFIX)
+set(_PREFIX ".")
+endif()
+if(NOT __UNIFIED_DIR) 
+  if(UNIX)
+    foreach(OUTPUTCONFIG Release Debug)
+      string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${_PREFIX}/lib" PARENT_SCOPE)
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${_PREFIX}/lib" PARENT_SCOPE)
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${_PREFIX}/bin" PARENT_SCOPE)
+    endforeach(OUTPUTCONFIG)
+  else()
+    foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+      string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${_PREFIX}/${OUTPUTCONFIG}/lib" PARENT_SCOPE)
+      set(CMAKE_PDB_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER}     "${_PREFIX}/${OUTPUTCONFIG}/lib" PARENT_SCOPE)
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${_PREFIX}/${OUTPUTCONFIG}/bin" PARENT_SCOPE)
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${_PREFIX}/${OUTPUTCONFIG}/bin" PARENT_SCOPE)
+    endforeach(OUTPUTCONFIG)
+  endif()
+  set(__UNIFIED_DIR ON PARENT_SCOPE)
 endif()
 endfunction()
