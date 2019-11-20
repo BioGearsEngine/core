@@ -29,6 +29,7 @@ constexpr char idChlorideLostToSweat[] = "ChlorideLostToSweat";
 constexpr char idCoreTemperature[] = "CoreTemperature";
 constexpr char idCreatinineProductionRate[] = "CreatinineProductionRate";
 constexpr char idEnergyDeficit[] = "EnergyDeficit";
+constexpr char idExerciseEnergyDemand[] = "ExerciseEnergyDemand";
 constexpr char idExerciseMeanArterialPressureDelta[] = "ExerciseMeanArterialPressureDelta";
 constexpr char idFatigueLevel[] = "FatigueLevel";
 constexpr char idLactateProductionRate[] = "LactateProductionRate";
@@ -47,6 +48,7 @@ SEEnergySystem::SEEnergySystem(Logger* logger)
   m_CoreTemperature = nullptr;
   m_CreatinineProductionRate = nullptr;
   m_EnergyDeficit = nullptr;
+  m_ExerciseEnergyDemand = nullptr;
   m_ExerciseMeanArterialPressureDelta = nullptr;
   m_FatigueLevel = nullptr;
   m_LactateProductionRate = nullptr;
@@ -74,6 +76,7 @@ void SEEnergySystem::Clear()
   SAFE_DELETE(m_CoreTemperature);
   SAFE_DELETE(m_CreatinineProductionRate);
   SAFE_DELETE(m_EnergyDeficit);
+  SAFE_DELETE(m_ExerciseEnergyDemand);
   SAFE_DELETE(m_ExerciseMeanArterialPressureDelta);
   SAFE_DELETE(m_FatigueLevel);
   SAFE_DELETE(m_LactateProductionRate);
@@ -101,6 +104,8 @@ const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
     return &GetCreatinineProductionRate();
   if (name == idEnergyDeficit)
     return &GetEnergyDeficit();
+  if (name == idExerciseEnergyDemand)
+    return &GetExerciseEnergyDemand();
   if (name == idExerciseMeanArterialPressureDelta)
     return &GetExerciseMeanArterialPressureDelta();
   if (name == idFatigueLevel)
@@ -137,6 +142,8 @@ bool SEEnergySystem::Load(const CDM::EnergySystemData& in)
     GetCreatinineProductionRate().Load(in.CreatinineProductionRate().get());
   if (in.EnergyDeficit().present())
     GetEnergyDeficit().Load(in.EnergyDeficit().get());
+  if (in.ExerciseEnergyDemand().present())
+    GetExerciseEnergyDemand().Load(in.ExerciseEnergyDemand().get());
   if (in.ExerciseMeanArterialPressureDelta().present())
     GetExerciseMeanArterialPressureDelta().Load(in.ExerciseMeanArterialPressureDelta().get());
   if (in.FatigueLevel().present())
@@ -182,6 +189,8 @@ void SEEnergySystem::Unload(CDM::EnergySystemData& data) const
     data.CreatinineProductionRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_CreatinineProductionRate->Unload()));
   if (m_EnergyDeficit != nullptr)
     data.EnergyDeficit(std::unique_ptr<CDM::ScalarPowerData>(m_EnergyDeficit->Unload()));
+  if (m_ExerciseEnergyDemand != nullptr)
+    data.ExerciseEnergyDemand(std::unique_ptr<CDM::ScalarPowerData>(m_ExerciseEnergyDemand->Unload()));
   if (m_ExerciseMeanArterialPressureDelta != nullptr)
     data.ExerciseMeanArterialPressureDelta(std::unique_ptr<CDM::ScalarPressureData>(m_ExerciseMeanArterialPressureDelta->Unload()));
   if (m_FatigueLevel != nullptr)
@@ -298,9 +307,27 @@ double SEEnergySystem::GetEnergyDeficit(const PowerUnit& unit) const
   if (m_EnergyDeficit == nullptr)
     return SEScalar::dNaN();
   return m_EnergyDeficit->GetValue(unit);
-
 }
-
+//-------------------------------------------------------------------------------
+bool SEEnergySystem::HasExerciseEnergyDemand() const
+{
+  return m_ExerciseEnergyDemand == nullptr ? false : m_ExerciseEnergyDemand->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPower& SEEnergySystem::GetExerciseEnergyDemand()
+{
+  if (m_ExerciseEnergyDemand == nullptr)
+    m_ExerciseEnergyDemand = new SEScalarPower();
+  return *m_ExerciseEnergyDemand;
+}
+//-------------------------------------------------------------------------------
+double SEEnergySystem::GetExerciseEnergyDemand(const PowerUnit& unit) const
+{
+  if (m_ExerciseEnergyDemand == nullptr)
+    return SEScalar::dNaN();
+  return m_ExerciseEnergyDemand->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
 bool SEEnergySystem::HasExerciseMeanArterialPressureDelta() const
 {
   return m_ExerciseMeanArterialPressureDelta == nullptr ? false : m_ExerciseMeanArterialPressureDelta->IsValid();

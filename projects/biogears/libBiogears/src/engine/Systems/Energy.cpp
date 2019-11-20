@@ -103,6 +103,7 @@ void Energy::Initialize()
   GetLactateProductionRate().SetValue(1.3, AmountPerTimeUnit::mol_Per_day);
   /// \cite guyton2006medical
   GetEnergyDeficit().SetValue(0.0, PowerUnit::W);
+  GetExerciseEnergyDemand().SetValue(0.0, PowerUnit::W);
   GetExerciseMeanArterialPressureDelta().SetValue(0.0, PressureUnit::mmHg);
   GetTotalWorkRateLevel().SetValue(0.0);
   GetAchievedExerciseLevel().SetValue(0.0);
@@ -215,11 +216,10 @@ void Energy::Exercise()
 
   double exerciseIntensity = 0.0;
   double DesiredWorkRate = 0.0;
-  double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
-  double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
-  //double maxWorkRate_W = 1200.0;
-  double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
-  double kcal_Per_day_Per_Watt = 20.6362855;
+  const double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  const double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  const double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
+  const double kcal_Per_day_Per_Watt = 20.6362855;
 
   // Check for exercise call and only try to get intensity/desired work rate if the exercise action is active.
   if (m_PatientActions->HasExercise()) {
@@ -242,11 +242,13 @@ void Energy::Exercise()
   }
 
   // The MetabolicRateGain is used to ramp the metabolic rate to the value specified by the user's exercise intensity.
-  double MetabolicRateGain = 1.0;
-  double workRateDesired_W = exerciseIntensity * maxWorkRate_W;
-  double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day + workRateDesired_W * kcal_Per_day_Per_Watt;
-  double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day) * m_dT_s;
-  GetTotalMetabolicRate().SetValue(TotalMetabolicRateProduced_kcal_Per_day, PowerUnit::kcal_Per_day);
+  const double MetabolicRateGain = m_dT_s;
+  const double workRateDesired_W = exerciseIntensity * maxWorkRate_W;
+  const double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day + workRateDesired_W * kcal_Per_day_Per_Watt;
+  const double exerciseEnergyIncrement_kcal_Per_day = MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day);
+  GetExerciseEnergyDemand().IncrementValue(exerciseEnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
+  GetTotalMetabolicRate().IncrementValue(exerciseEnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
+  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -418,6 +420,8 @@ void Energy::CalculateMetabolicHeatGeneration()
   double totalMetabolicRateNew_W = 0.0;
   //The summit metabolism is the maximum amount of power the human body can generate due to shivering/response to the cold.
   double summitMetabolism_W = 21.0 * std::pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
+  m_data.GetDataTrack().Probe("SummitMetabolism_W", summitMetabolism_W);
+  m_data.GetDataTrack().Probe("BasalMetabolism_W", m_Patient->GetBasalMetabolicRate(PowerUnit::W));
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
 
@@ -561,8 +565,8 @@ void Energy::UpdateHeatResistance()
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
     const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0);		//Make >50% burn the worse case scenario 
-    targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 100.0, resInput);
-    const double rampGain = 1.0e-4;
+    targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 5.0, resInput);
+    const double rampGain = 1.0e-5;
     
     alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
   }

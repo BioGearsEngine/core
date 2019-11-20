@@ -170,9 +170,6 @@ void Tissue::Initialize()
   GetStoredFat().SetValue(m_data.GetPatient().GetWeight(MassUnit::g) * m_data.GetPatient().GetBodyFatFraction().GetValue(), MassUnit::g);
 
   GetDehydrationFraction().SetValue(0);
-
-
-
 }
 
 bool Tissue::Load(const CDM::BioGearsTissueSystemData& in)
@@ -543,7 +540,6 @@ void Tissue::Process()
   CalculateDiffusion();
   ManageSubstancesAndSaturation();
   CalculateVitals();
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -755,13 +751,16 @@ void Tissue::CalculatePulmonaryCapillarySubstanceTransfer()
 void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
 {
   //Inputs and outputs
-  double TMR_kcal_Per_s = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::kcal_Per_s);
-  double BMR_kcal_Per_s = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::kcal_Per_s);
-  double baseEnergyRequested_kcal = BMR_kcal_Per_s * time_s;
-  double exerciseEnergyRequested_kcal = (TMR_kcal_Per_s - BMR_kcal_Per_s) * time_s;
-  double hypoperfusionDeficit_kcal = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s;
+  const double TMR_kcal_Per_s = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::kcal_Per_s);
+  const double BMR_kcal_Per_s = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::kcal_Per_s);
+  const double baseEnergyRequested_kcal = BMR_kcal_Per_s * time_s;
+  const double exerciseEnergyRequested_kcal = m_data.GetEnergy().GetExerciseEnergyDemand(PowerUnit::kcal_Per_s) * time_s; //Will get added to muscle in tissue loop below
+  const double otherEnergyDemandAboveBasal_kcal = std::max((TMR_kcal_Per_s - BMR_kcal_Per_s) * time_s - exerciseEnergyRequested_kcal , 0.0); //Due to other factors like shivering -- will get split between muscles and fat stores in tissue loop below
+  const double hypoperfusionDeficit_kcal = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s; //Hypoperfusion deficit is "faux" energy value -- it makes system perceive an energy deficit and enter anaerobic production earlier during hemorrhage and sepsis
   double brainNeededEnergy_kcal = .2 * baseEnergyRequested_kcal; //brain requires a roughly constant 20% of basal energy regardless of exercise \cite raichle2002appraising
-  double nonbrainNeededEnergy_kcal = baseEnergyRequested_kcal - brainNeededEnergy_kcal + exerciseEnergyRequested_kcal + hypoperfusionDeficit_kcal;
+  double nonbrainNeededEnergy_kcal = 0.8 * baseEnergyRequested_kcal + hypoperfusionDeficit_kcal;
+  const double totalEnergyRequested_kcal = brainNeededEnergy_kcal + nonbrainNeededEnergy_kcal + exerciseEnergyRequested_kcal + otherEnergyDemandAboveBasal_kcal; //Use to check math below
+  double totalEnergyRequested_kcal_Check = 0.0; //Add tissue values to this as we go and use to check our math later
   double brainEnergyDeficit_kcal = 0;
   double nonbrainEnergyDeficit_kcal = 0;
   double totalO2Consumed_mol = 0;
@@ -775,6 +774,11 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double achievedExerciseLevel = 0;
   double fatigueLevel = 0;
   static double totalFatConsumed_g = 0;
+
+  m_data.GetDataTrack().Probe("TotalEnergyRequest_kcal", totalEnergyRequested_kcal);
+  m_data.GetDataTrack().Probe("OtherEnergyDemand_W", otherEnergyDemandAboveBasal_kcal * 4184.0 / time_s);
+
+
 
   //Data
   double energyPerMolATP_kcal = m_data.GetConfiguration().GetEnergyPerATP(EnergyPerAmountUnit::kcal_Per_mol);
@@ -860,11 +864,10 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       BloodFlowFraction = vascular->GetInFlow(VolumePerTimeUnit::mL_Per_min) / totalFlowRate_mL_Per_min;
     }
 
-
-
     //First, we'll handle brain consumption/production, since it's special
     //Brain can only consume glucose and ketones
     if (tissue == m_BrainTissue) {
+      totalEnergyRequested_kcal_Check += brainNeededEnergy_kcal;  //Increment now before we start change brain energy needed value below
       //First, let's check to see how much TOTAL energy exists in the brain as intracellular glucose
       //We take the values that represent the cell's [inefficient] ability to conserve energy in ATP and use the efficiency to quantify the energy lost as heat
       double totalEnergyAsIntracellularBrainGlucose_kcal = (TissueGlucose->GetMolarity(AmountPerVolumeUnit::mol_Per_L) * TissueVolume_L) * ATP_Per_Glucose * energyPerMolATP_kcal / glucose_CellularEfficiency;
@@ -977,6 +980,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       TissueCO2->Balance(BalanceLiquidBy::Mass);
       TissueKetones->Balance(BalanceLiquidBy::Mass);
 
+      
+
       continue; //nothing else to do for this tissue
     }
 
@@ -990,11 +995,16 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       muscleMandatoryAnaerobicNeededEnergy_kcal = mandatoryMuscleAnaerobicFraction * tissueNeededEnergy_kcal;
       tissueNeededEnergy_kcal -= muscleMandatoryAnaerobicNeededEnergy_kcal;
       tissueNeededEnergy_kcal += exerciseEnergyRequested_kcal;
+      tissueNeededEnergy_kcal += (0.5 * otherEnergyDemandAboveBasal_kcal); //Splitting "extra" demand evenly between muscles and fat for now
 
       double creatinineProductionRate_mg_Per_s = 2.0e-5; /// \todo Creatinine production rate should be a function of muscle mass.
       intracellular.GetSubstanceQuantity(*m_Creatinine)->GetMass().IncrementValue(creatinineProductionRate_mg_Per_s * m_Dt_s, MassUnit::mg);
     }
+    if (tissue->GetName() == BGE::TissueCompartment::Fat) {
+      tissueNeededEnergy_kcal += (0.5 * otherEnergyDemandAboveBasal_kcal); //Splitting "extra" demand evenly bewteen muscles and fat for now
+    }
 
+    totalEnergyRequested_kcal_Check += (tissueNeededEnergy_kcal + muscleMandatoryAnaerobicNeededEnergy_kcal);
     //Start with AA, since obligatory protein loss is 30g/day minimum going up to 125g/day in starvation \cite guyton2006medical
     //However, some of this consumption is due to gluconeogenesis (10-20 grams or so, see \cite garber1974hepatic)
     //Use hormone factor (based on liver) to determine "how starved" you are and vary AA consumption linearly from 15 to 110
@@ -1017,7 +1027,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(intracellularAA_mol * CO2_Per_AA * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().IncrementValue(-intracellularAA_mol * O2_Per_AA * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         double totalEnergyUsed = intracellularAA_mol * ATP_Per_AA * energyPerMolATP_kcal / AA_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         tissueNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - AA_CellularEfficiency);
         totalO2Consumed_mol += intracellularAA_mol * O2_Per_AA;
@@ -1029,7 +1038,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(AAActuallyConsumed_mol * CO2_Per_AA * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().SetValue(0, MassUnit::g);
         double totalEnergyUsed = AAActuallyConsumed_mol * ATP_Per_AA * energyPerMolATP_kcal / AA_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         tissueNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - AA_CellularEfficiency);
         totalO2Consumed_mol += AAActuallyConsumed_mol * O2_Per_AA;
@@ -1045,7 +1053,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(AAToConsume_mol * CO2_Per_AA * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().IncrementValue(-AAToConsume_mol * O2_Per_AA * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         double totalEnergyUsed = AAToConsume_mol * ATP_Per_AA * energyPerMolATP_kcal / AA_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         tissueNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - AA_CellularEfficiency);
         totalO2Consumed_mol += AAToConsume_mol * O2_Per_AA;
@@ -1059,7 +1066,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(AAActuallyConsumed_mol * CO2_Per_AA * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().SetValue(0, MassUnit::g);
         double totalEnergyUsed = AAActuallyConsumed_mol * ATP_Per_AA * energyPerMolATP_kcal / AA_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         tissueNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - AA_CellularEfficiency);
         totalO2Consumed_mol += AAActuallyConsumed_mol * O2_Per_AA;
@@ -1088,7 +1094,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(TAGToConsume_mol * CO2_Per_TAG * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().IncrementValue(-TAGToConsume_mol * O2_Per_TAG * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         double totalEnergyUsed = TAGToConsume_mol * ATP_Per_TAG * energyPerMolATP_kcal / TAG_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - TAG_CellularEfficiency);
         tissueNeededEnergy_kcal = 0;
         totalFatConsumed_g += TAGToConsume_mol * m_Triacylglycerol->GetMolarMass(MassPerAmountUnit::g_Per_mol);
@@ -1098,7 +1103,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(TAGToConsume_mol * CO2_Per_TAG * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().SetValue(0, MassUnit::g);
         double totalEnergyUsed = TAGToConsume_mol * ATP_Per_TAG * energyPerMolATP_kcal / TAG_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - TAG_CellularEfficiency);
         tissueNeededEnergy_kcal -= totalEnergyUsed;
         totalFatConsumed_g += TAGToConsume_mol * m_Triacylglycerol->GetMolarMass(MassPerAmountUnit::g_Per_mol);
@@ -1117,7 +1121,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(TAGToConsume_mol * CO2_Per_TAG * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().IncrementValue(-TAGToConsume_mol * O2_Per_TAG * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         double totalEnergyUsed = TAGToConsume_mol * ATP_Per_TAG * energyPerMolATP_kcal / TAG_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - TAG_CellularEfficiency);
         tissueNeededEnergy_kcal -= totalEnergyUsed;
         totalFatConsumed_g += TAGToConsume_mol * m_Triacylglycerol->GetMolarMass(MassPerAmountUnit::g_Per_mol);
@@ -1127,7 +1130,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(TAGToConsume_mol * CO2_Per_TAG * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().SetValue(0, MassUnit::g);
         double totalEnergyUsed = TAGToConsume_mol * ATP_Per_TAG * energyPerMolATP_kcal / TAG_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - TAG_CellularEfficiency);
         tissueNeededEnergy_kcal -= totalEnergyUsed;
         totalFatConsumed_g += TAGToConsume_mol * m_Triacylglycerol->GetMolarMass(MassPerAmountUnit::g_Per_mol);
@@ -1149,7 +1151,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(glucoseToConsume_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().IncrementValue(-glucoseToConsume_mol * O2_Per_Glucose * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         double totalEnergyUsed = glucoseToConsume_mol * ATP_Per_Glucose * energyPerMolATP_kcal / glucose_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
         tissueNeededEnergy_kcal = 0;
       } else {
@@ -1158,7 +1159,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(glucoseToConsume_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().SetValue(0, MassUnit::g);
         double totalEnergyUsed = glucoseToConsume_mol * ATP_Per_Glucose * energyPerMolATP_kcal / glucose_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
         tissueNeededEnergy_kcal -= totalEnergyUsed;
       }
@@ -1175,7 +1175,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(glucoseToConsume_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().IncrementValue(-glucoseToConsume_mol * O2_Per_Glucose * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         double totalEnergyUsed = glucoseToConsume_mol * ATP_Per_Glucose * energyPerMolATP_kcal / glucose_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
         tissueNeededEnergy_kcal -= totalEnergyUsed;
       } else {
@@ -1184,7 +1183,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueCO2->GetMass().IncrementValue(glucoseToConsume_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         TissueO2->GetMass().SetValue(0, MassUnit::g);
         double totalEnergyUsed = glucoseToConsume_mol * ATP_Per_Glucose * energyPerMolATP_kcal / glucose_CellularEfficiency;
-        nonbrainNeededEnergy_kcal -= totalEnergyUsed;
         heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
         tissueNeededEnergy_kcal -= totalEnergyUsed;
       }
@@ -1207,7 +1205,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
           TissueCO2->GetMass().IncrementValue(glycogenConsumed_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           TissueO2->GetMass().IncrementValue(-glycogenConsumed_mol * O2_Per_Glucose * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           double totalEnergyUsed = glycogenConsumed_mol * aerobic_ATP_Per_Glycogen * energyPerMolATP_kcal / glucose_CellularEfficiency;
-          nonbrainNeededEnergy_kcal -= totalEnergyUsed;
           heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
           tissueNeededEnergy_kcal = 0;
         } else {
@@ -1216,7 +1213,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
           TissueCO2->GetMass().IncrementValue(glycogenConsumed_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           TissueO2->GetMass().SetValue(0, MassUnit::g);
           double totalEnergyUsed = glycogenConsumed_mol * aerobic_ATP_Per_Glycogen * energyPerMolATP_kcal / glucose_CellularEfficiency;
-          nonbrainNeededEnergy_kcal -= totalEnergyUsed;
           heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
           tissueNeededEnergy_kcal -= totalEnergyUsed;
         }
@@ -1233,7 +1229,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
           TissueCO2->GetMass().IncrementValue(glycogenConsumed_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           TissueO2->GetMass().IncrementValue(-glycogenConsumed_mol * O2_Per_Glucose * m_O2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           double totalEnergyUsed = glycogenConsumed_mol * aerobic_ATP_Per_Glycogen * energyPerMolATP_kcal / glucose_CellularEfficiency;
-          nonbrainNeededEnergy_kcal -= totalEnergyUsed;
           heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
           tissueNeededEnergy_kcal -= totalEnergyUsed;
         } else {
@@ -1242,7 +1237,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
           TissueCO2->GetMass().IncrementValue(glycogenConsumed_mol * CO2_Per_Glucose * m_CO2->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
           TissueO2->GetMass().SetValue(0, MassUnit::g);
           double totalEnergyUsed = glycogenConsumed_mol * aerobic_ATP_Per_Glycogen * energyPerMolATP_kcal / glucose_CellularEfficiency;
-          nonbrainNeededEnergy_kcal -= totalEnergyUsed;
           heatGenerated_kcal += totalEnergyUsed * (1 - glucose_CellularEfficiency);
           tissueNeededEnergy_kcal -= totalEnergyUsed;
         }
@@ -1261,7 +1255,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       double glucoseToConsume_mol = tissueNeededEnergy_kcal / energyPerMolATP_kcal / anaerobic_ATP_Per_Glucose;
       TissueGlucose->GetMass().IncrementValue(-glucoseToConsume_mol * m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
       TissueLactate->GetMass().IncrementValue(glucoseToConsume_mol * lactate_Per_Glucose * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-      nonbrainNeededEnergy_kcal -= glucoseToConsume_mol * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
       tissueNeededEnergy_kcal = 0;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
@@ -1272,7 +1265,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       double glucoseToConsume_mol = totalEnergyAsTissueIntracellularGlucose_kcal / energyPerMolATP_kcal / anaerobic_ATP_Per_Glucose;
       TissueGlucose->GetMass().SetValue(0, MassUnit::g);
       TissueLactate->GetMass().IncrementValue(glucoseToConsume_mol * lactate_Per_Glucose * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-      nonbrainNeededEnergy_kcal -= glucoseToConsume_mol * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
       tissueNeededEnergy_kcal -= glucoseToConsume_mol * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
@@ -1290,7 +1282,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         double glycogenConsumed_mol = glycogenConsumed_g / m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol);
         GetMuscleGlycogen().IncrementValue(-glycogenConsumed_g, MassUnit::g);
         TissueLactate->GetMass().IncrementValue(glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-        nonbrainNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
           m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
@@ -1302,7 +1293,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         double glycogenConsumed_mol = GetMuscleGlycogen(MassUnit::g) / m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol);
         GetMuscleGlycogen().SetValue(0, MassUnit::g);
         TissueLactate->GetMass().IncrementValue(glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-        nonbrainNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         tissueNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
@@ -1328,6 +1318,16 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
 
   } //end of the tissue loop
 
+  //Make sure that the energy we used lines up with our demand
+  if ((m_data.GetState()>=EngineState::AtSecondaryStableState) && (totalEnergyRequested_kcal_Check < 0.99 * totalEnergyRequested_kcal || totalEnergyRequested_kcal_Check > 1.01 * totalEnergyRequested_kcal)) {
+    std::stringstream ss;
+	ss << "Tissue Energy Demand / Accounting Mismatch : " << std::endl;
+    ss << "\t Total Energy Requested (kcal) : " << totalEnergyRequested_kcal << std::endl;
+    ss << "\t Energy Acounted (kcal) : " << totalEnergyRequested_kcal_Check << std::endl;
+    Error(ss);
+  }
+
+  m_data.GetDataTrack().Probe("TotalEnergyAccountedFor_kcal", totalEnergyRequested_kcal_Check);
   //Update outputs
   totalO2Consumed_mol += m_hepaticO2Consumed_mol;
   totalCO2Produced_mol += m_hepaticCO2Produced_mol;
@@ -1362,12 +1362,12 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_PatientActions->HasExercise()) {
     m_energy->GetTotalWorkRateLevel().SetValue(achievedWorkRate_W / maxWorkRate_W);
     double intensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
-    if (intensity > 1e-6) { //approx. zero 
+    if (intensity > 1e-6) { //approx. zero
       m_energy->GetAchievedExerciseLevel().SetValue(achievedWorkRate_W / maxWorkRate_W / intensity);
     } else {
-          m_energy->GetAchievedExerciseLevel().SetValue(0.0);
+      m_energy->GetAchievedExerciseLevel().SetValue(0.0);
     }
-    } else {
+  } else {
     m_energy->GetAchievedExerciseLevel().SetValue(0.0);
     m_energy->GetTotalWorkRateLevel().SetValue(0.0);
   }
@@ -2637,5 +2637,4 @@ void Tissue::OverrideControlLoop()
   }
   return;
 }
-
 }

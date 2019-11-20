@@ -72,6 +72,10 @@ public:
   SEScalarPower& GetEnergyDeficit();
   double GetEnergyDeficit(const PowerUnit& unit) const;
 
+  bool HasExerciseEnergyDemand() const;
+  SEScalarPower& GetExerciseEnergyDemand();
+  double GetExerciseEnergyDemand(const PowerUnit& unit) const;
+
   bool HasExerciseMeanArterialPressureDelta() const;
   SEScalarPressure& GetExerciseMeanArterialPressureDelta();
   double GetExerciseMeanArterialPressureDelta(const PressureUnit& unit) const;
@@ -114,6 +118,7 @@ protected:
   SEScalarTemperature* m_CoreTemperature;
   SEScalarAmountPerTime* m_CreatinineProductionRate;
   SEScalarPower* m_EnergyDeficit;
+  SEScalarPower* m_ExerciseEnergyDemand;
   SEScalarPressure* m_ExerciseMeanArterialPressureDelta;
   SEScalarFraction* m_FatigueLevel;
   SEScalarAmountPerTime* m_LactateProductionRate;
