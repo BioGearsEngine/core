@@ -627,34 +627,34 @@ void Tissue::CalculateDiffusion()
           //albumin, insulin, etc while allowing glucose, ions, and others to be governed by their molecular weight.
           //Note: it doesn't consider lipophilicity, so TAG will need to be artificially tweaked using other diffusion methods.
           if (sub->GetClassification() != CDM::enumSubstanceClass::WholeBlood) {
-          if (molarMass_g_Per_mol < 1000) {
-            // Compute the vascular to extracellular permeability coefficient
-            // This is the coefficient per gram of tissue independent of the tissue type.
-            // This uses the Renkin and Curry data for capillary exchange as reported in \cite fournier2011basic
-            // Divide by 100 is because the Renkin-Curry equations are in per hectogram units, and 100 g/hg
-            /// \todo I believe we can optimize with a cache of these values. Also, we can cache permeabilityCoefficient_mL_Per_s_g which is not a function of the tissue properties
-            double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
-            double vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * std::pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
-            if (molecularRadius_nm < 1.0)
-              vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * std::pow(molecularRadius_nm, -1.223) / 100.0;
+            if (molarMass_g_Per_mol < 1000) {
+              // Compute the vascular to extracellular permeability coefficient
+              // This is the coefficient per gram of tissue independent of the tissue type.
+              // This uses the Renkin and Curry data for capillary exchange as reported in \cite fournier2011basic
+              // Divide by 100 is because the Renkin-Curry equations are in per hectogram units, and 100 g/hg
+              /// \todo I believe we can optimize with a cache of these values. Also, we can cache permeabilityCoefficient_mL_Per_s_g which is not a function of the tissue properties
+              double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
+              double vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * std::pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
+              if (molecularRadius_nm < 1.0)
+                vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * std::pow(molecularRadius_nm, -1.223) / 100.0;
 
-            // Multiply by tissue mass to get the tissue-dependent coefficient.
-            double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissue->GetTotalMass(MassUnit::g);
+              // Multiply by tissue mass to get the tissue-dependent coefficient.
+              double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissue->GetTotalMass(MassUnit::g);
 
-            // Tuning factors can be used to help tune the dynamics - note that concentrations will ALWAYS equilibrate in steady state given enough time regardless of the permeability
-            double vToECPermeabilityTuningFactor = 1.0;
-            double ECtoICPermeabilityTuningFactor = 1.0;
+              // Tuning factors can be used to help tune the dynamics - note that concentrations will ALWAYS equilibrate in steady state given enough time regardless of the permeability
+              double vToECPermeabilityTuningFactor = 1.0;
+              double ECtoICPermeabilityTuningFactor = 1.0;
 
-            //Vascular to Extracellular
-            moved_ug = MoveMassBySimpleDiffusion(*vascular, extracellular, *sub, vToECPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
+              //Vascular to Extracellular
+              moved_ug = MoveMassBySimpleDiffusion(*vascular, extracellular, *sub, vToECPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
 
-            //Extracellular to Intracellular
-            // Assuming that the capillary permeability coefficient is proportional to the cellular membrane permeability coefficient for a given tissue and substance
-            //Don't this is if substance is an ion, since extra<->intra has already been taken care of for them.  All of the ions have
-            //a molar mass < 1000 so they will all funnel here
-            if (sub->GetClassification() != CDM::enumSubstanceClass::Ion)
-              moved_ug = MoveMassBySimpleDiffusion(extracellular, intracellular, *sub, ECtoICPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
-          }
+              //Extracellular to Intracellular
+              // Assuming that the capillary permeability coefficient is proportional to the cellular membrane permeability coefficient for a given tissue and substance
+              //Don't this is if substance is an ion, since extra<->intra has already been taken care of for them.  All of the ions have
+              //a molar mass < 1000 so they will all funnel here
+              if (sub->GetClassification() != CDM::enumSubstanceClass::Ion)
+                moved_ug = MoveMassBySimpleDiffusion(extracellular, intracellular, *sub, ECtoICPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
+            }
           }
 
           //Facilitated diffusion depends on the substance having flux values

@@ -502,19 +502,20 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
 
       //Blood Transfusion//
-      if (compound->GetClassification() == CDM::enumSubstanceClass::WholeBlood) {
-        /* TACO CHECK 
+      if (component->GetSubstance().GetName() == "RedBloodCell") {
+        /* 
+         //TACO CHECK 
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
            std::stringstream ss;
            ss << "Patient is experiencing Transfusion Associated Circulatory Overload (TACO) due to greater than reccomended infusion rate";
            Info(ss);
         }
-         */
-
+        */
+        
         //Check for HTR
         SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
         SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
-
+        /*
         double AntigenAIncrement_ct = 0.0;
         double AntigenBIncrement_ct = 0.0;
         if (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_ANegative") {
@@ -532,9 +533,11 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity().SetValue(AntB_ct_Per_uL + (AntigenBIncrement_ct / ((volumeToAdminister_mL + venaCavaVolume_mL) * 1000)), AmountPerVolumeUnit::ct_Per_uL);
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->Balance(BalanceLiquidBy::Molarity);
         m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->Balance(BalanceLiquidBy::Molarity);
-
+        */
         const double AntigenA_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         const double AntigenB_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+        
+
         // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks\
         // First check for AB type since AB is a universal acceptor
         // Second check for O type acceptor and ANY antigen presence since it would cause a reaction

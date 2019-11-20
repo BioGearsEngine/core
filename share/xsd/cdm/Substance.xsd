@@ -31,7 +31,6 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Liquid"/>
       <xs:enumeration value="Gas"/>
       <xs:enumeration value="Molecular"/>
-	  <xs:enumeration value="Cellular"/>
     </xs:restriction>
   </xs:simpleType>
   

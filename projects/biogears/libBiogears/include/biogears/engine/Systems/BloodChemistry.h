@@ -133,12 +133,12 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaUrea;
 
   //Initialize HTR concentrations
-  double m_donorRBC;
-  double m_patientRBC;
-  double m_2Agglutinate;
-  double m_p3Agglutinate;
-  double m_d3Agglutinate;
-  double m_4Agglutinate;
-  double m_RemovedRBC;
+  double m_donorRBC_ct;
+  double m_patientRBC_ct;
+  double m_2Agglutinate_ct;
+  double m_p3Agglutinate_ct;
+  double m_d3Agglutinate_ct;
+  double m_4Agglutinate_ct;
+  double m_RemovedRBC_ct;
 };
 }
