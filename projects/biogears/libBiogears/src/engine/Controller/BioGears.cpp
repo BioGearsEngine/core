@@ -296,7 +296,7 @@ bool BioGears::SetupPatient()
 
   //Gender is the only thing we absolutely need to be defined
   //Everything else is either derived or assumed to be a "standard" value
-  if (!m_Patient->HasGender()()) {
+  if (!m_Patient->HasGender()) {
     Error("Patient must provide a gender.");
     err = true;
   }
@@ -352,7 +352,7 @@ bool BioGears::SetupPatient()
   double heightMin_cm = heightMinMale_cm;
   double heightMax_cm = heightMaxMale_cm;
   double heightStandard_cm = heightStandardMale_cm;
-  if (m_Patient->GetGender()() == CDM::enumSex::Female) {
+  if (m_Patient->GetGender() == CDM::enumSex::Female) {
     //Female
     heightMin_cm = heightMinFemale_cm;
     heightMax_cm = heightMaxFemale_cm;
@@ -428,7 +428,7 @@ bool BioGears::SetupPatient()
   double fatFractionMin = fatFractionMinMale;
   double fatFractionMax = fatFractionMaxMale;
   double fatFractionStandard = fatFractionStandardMale;
-  if (m_Patient->GetGender()() == CDM::enumSex::Female) {
+  if (m_Patient->GetGender() == CDM::enumSex::Female) {
     //Female
     fatFractionMin = fatFractionMinFemale;
     fatFractionMax = fatFractionMaxFemale;
@@ -471,7 +471,7 @@ bool BioGears::SetupPatient()
     err = true;
   }
 
-  if (m_Patient->GetGender()() == CDM::enumSex::Female) {
+  if (m_Patient->GetGender() == CDM::enumSex::Female) {
     m_Patient->GetMuscleMass().SetValue(weight_kg * .306, MassUnit::kg);
   } else {
     m_Patient->GetMuscleMass().SetValue(weight_kg * .384, MassUnit::kg);
@@ -852,7 +852,7 @@ bool BioGears::SetupPatient()
   /// \cite roza1984metabolic
   double BMR_kcal_Per_day;
   double computBMR_kcal_Per_day = 88.632 + 13.397 * weight_kg + 4.799 * height_cm - 5.677 * age_yr; //Male
-  if (m_Patient->GetGender()() == CDM::enumSex::Female) {
+  if (m_Patient->GetGender() == CDM::enumSex::Female) {
     computBMR_kcal_Per_day = 447.593 + 9.247 * weight_kg + 3.098 * height_cm - 4.330 * age_yr; //Female
   }
   if (!m_Patient->HasBasalMetabolicRate()) {
@@ -874,7 +874,7 @@ bool BioGears::SetupPatient()
   double maxWorkRate_W;
   double computedMaxWorkRate_W;
 
-  if (m_Patient->GetGender()() == CDM::enumSex::Male) {
+  if (m_Patient->GetGender() == CDM::enumSex::Male) {
     if (age_yr >= 60.) {
       computedMaxWorkRate_W = ((-24.3 * 60.) + 2070.);
     } else {
@@ -1160,7 +1160,7 @@ bool BioGears::CreateCircuitsAndCompartments()
 void BioGears::SetupCardiovascular()
 {
   Info("Setting Up Cardiovascular");
-  bool male = m_Patient->GetGender()() == CDM::enumSex::Male ? true : false;
+  bool male = m_Patient->GetGender() == CDM::enumSex::Male ? true : false;
   double RightLungRatio = m_Patient->GetRightLungRatio().GetValue();
   double LeftLungRatio = 1 - RightLungRatio;
   double bloodVolume_mL = m_Patient->GetBloodVolumeBaseline(VolumeUnit::mL);
@@ -3281,7 +3281,7 @@ void BioGears::SetupTissue()
 
   //Typical ICRP Female - From ICRP
   //Total Mass (kg)
-  if (m_Patient->GetGender()() == CDM::enumSex::Female) {
+  if (m_Patient->GetGender() == CDM::enumSex::Female) {
     AdiposeTissueMass = 19.0;
     BoneTissueMass = 7.8;
     BrainTissueMass = 1.3;
@@ -3306,7 +3306,7 @@ void BioGears::SetupTissue()
   //Male
   double standardPatientWeight_lb = 170.0;
   double standardPatientHeight_in = 71.0;
-  if (m_Patient->GetGender()() == CDM::enumSex::Female) {
+  if (m_Patient->GetGender() == CDM::enumSex::Female) {
     //Female
     standardPatientWeight_lb = 130.0;
     standardPatientHeight_in = 64.0;
@@ -3318,14 +3318,14 @@ void BioGears::SetupTissue()
   //Modify most based on lean body mass
   //Hume, R (Jul 1966). "Prediction of lean body mass from height and weight." Journal of clinical pathology. 19 (4): 389–91. doi:10.1136/jcp.19.4.389. PMC 473290. PMID 5929341.
   //double typicalLeanBodyMass_kg = 0.32810 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.33929 * Convert(standardPatientHeight_in, LengthUnit::in, LengthUnit::cm) - 29.5336; //Male
-  //if (m_Patient->GetGender()() == CDM::enumSex::Female)
+  //if (m_Patient->GetGender() == CDM::enumSex::Female)
   //{
   // typicalLeanBodyMass_kg = 0.29569 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.41813 * Convert(standardPatientHeight_in, LengthUnit::in, LengthUnit::cm) - 43.2933; //Female
   //}
 
   //Male
   double standardFatFraction = 0.21;
-  if (m_Patient->GetGender()() == CDM::enumSex::Female) {
+  if (m_Patient->GetGender() == CDM::enumSex::Female) {
     //Female
     standardFatFraction = 0.28;
   }

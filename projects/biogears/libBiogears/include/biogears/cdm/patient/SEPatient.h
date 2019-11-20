@@ -253,7 +253,7 @@ protected:
 
   std::string m_Name;
   std::string m_Annotation;
-  CDM::enumSex::value m_Sex;
+  CDM::enumSex::value m_Gender;
   SEScalarTime* m_Age;
   SEScalarMass* m_Weight;
   SEScalarLength* m_Height;

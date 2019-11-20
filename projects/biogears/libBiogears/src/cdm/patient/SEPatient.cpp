@@ -24,7 +24,7 @@ SEPatient::SEPatient(Logger* logger)
   m_EventHandler = nullptr;
 
   m_Name = "";
-  m_Sex = (CDM::enumSex::value)-1;
+  m_Gender = (CDM::enumSex::value)-1;
   m_Age = nullptr;
   m_Weight = nullptr;
   m_Height = nullptr;
@@ -93,7 +93,7 @@ void SEPatient::Clear()
   m_EventState.clear();
   m_EventDuration_s.clear();
   m_Name = "";
-  m_Sex = (CDM::enumSex::value)-1;
+  m_Gender = (CDM::enumSex::value)-1;
   SAFE_DELETE(m_Age);
   SAFE_DELETE(m_Weight);
   SAFE_DELETE(m_Height);
@@ -213,7 +213,7 @@ bool SEPatient::Load(const CDM::PatientData& in)
     m_Annotation = in.Annotation().get();
   }
   if (in.Sex().present()) {
-    m_Sex = in.Sex().get();
+    m_Gender = in.Sex().get();
   }
   if (in.Age().present()) {
     GetAge().Load(in.Age().get());
@@ -341,7 +341,7 @@ void SEPatient::Unload(CDM::PatientData& data) const
     data.Annotation(m_Annotation);
   }
   if (HasGender()) {
-    data.Sex(m_Sex);
+    data.Sex(m_Gender);
   }
   if (m_Age != nullptr) {
     data.Age(std::unique_ptr<CDM::ScalarTimeData>(m_Age->Unload()));
@@ -864,42 +864,42 @@ void SEPatient::InvalidateAnnotation()
 //-----------------------------------------------------------------------------
 CDM::enumSex::value SEPatient::GetGender() const
 {
-  return m_Sex;
+  return m_Gender;
 }
 //-----------------------------------------------------------------------------
 void SEPatient::SetGender(CDM::enumSex::value sex)
 {
-  m_Sex = sex;
+  m_Gender = sex;
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasGender() const
 {
-  return m_Sex == ((CDM::enumSex::value)-1) ? false : true;
+  return m_Gender == ((CDM::enumSex::value)-1) ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SEPatient::InvalidateGender()
 {
-  m_Sex = (CDM::enumSex::value)-1;
+  m_Gender = (CDM::enumSex::value)-1;
 }
 //-----------------------------------------------------------------------------
 [[deprecated("Use GetGender instead")]] CDM::enumSex::value SEPatient::GetSex() const
 {
-  return m_Sex;
+  return m_Gender;
 }
 //-----------------------------------------------------------------------------
 [[deprecated("Use SetGender instead")]] void SEPatient::SetSex(CDM::enumSex::value sex)
 {
-  m_Sex = sex;
+  m_Gender = sex;
 }
 //-----------------------------------------------------------------------------
 [[deprecated("Use HasGender instead")]] bool SEPatient::HasSex() const
 {
-  return m_Sex == ((CDM::enumSex::value)-1) ? false : true;
+  return m_Gender == ((CDM::enumSex::value)-1) ? false : true;
 }
 //-----------------------------------------------------------------------------
 [[deprecated("Use InvalidateGender instead")]] void SEPatient::InvalidateSex()
 {
-  m_Sex = (CDM::enumSex::value)-1;
+  m_Gender = (CDM::enumSex::value)-1;
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasAge() const
