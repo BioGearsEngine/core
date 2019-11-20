@@ -210,6 +210,19 @@ function(configure_version_information _SUCESS_CHECK)
   if(NOT _TWEAK) 
     set(_TWEAK  "source" )
   endif()
+
+  #Set values based on passed inputs as defaults incase GIT fails
+  set(${ROOT_PROJECT_NAME}_VERSION_MAJOR _MAJOR PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_VERSION_MINOR _MINOR PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_VERSION_PATCH _PATCH PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_VERSION_TWEAK _TWEAK PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_LIB_VERSION "${_MAJOR}.${_MINOR}.${_PATCH}" PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_VERSION_TAG "Custom" PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_DIRTY_BUILD true PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_VERSION_HASH "Unknown" PARENT_SCOPE)
+  set(${ROOT_PROJECT_NAME}_COMMIT_DATE "Unknown" PARENT_SCOPE)
+  
+  #Pull the latest GIT TAG
   execute_process(COMMAND ${GIT_EXECUTABLE}  describe --tags
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                   OUTPUT_VARIABLE _GIT_REV
@@ -244,45 +257,46 @@ function(configure_version_information _SUCESS_CHECK)
       list(GET _GIT_FULL_REV_LIST 3 _VERSION_HASH )
     endif()
     string(STRIP "${_VERSION_HASH}" _VERSION_HASH )
- 
-
-    set( ${ROOT_PROJECT_NAME}_VERSION_TAG ${_VERSION_TAG} PARENT_SCOPE)
-    if( _VERSION_MAJOR MATCHES "[0-9]+")
-	    set( ${ROOT_PROJECT_NAME}_VERSION_MAJOR ${_VERSION_MAJOR} PARENT_SCOPE)
-    else()
-      set( ${ROOT_PROJECT_NAME}_VERSION_MAJOR ${_MAJOR} PARENT_SCOPE)  
-    endif()
-    if( _VERSION_MINOR MATCHES "[0-9]+")
-      set( ${ROOT_PROJECT_NAME}_VERSION_MINOR ${_VERSION_MINOR} PARENT_SCOPE)
-    else()
-      set( ${ROOT_PROJECT_NAME}_VERSION_MINOR ${_MINOR} PARENT_SCOPE)  
-    endif()
-    if( _VERSION_PATCH MATCHES "[0-9]+")
-      set( ${ROOT_PROJECT_NAME}_VERSION_PATCH ${_VERSION_PATCH} PARENT_SCOPE)
-    else()
-      set( ${ROOT_PROJECT_NAME}_VERSION_PATCH ${_PATCH} PARENT_SCOPE)  
-    endif()
-    if( _VERSION_TWEAK MATCHES "[0-9]+")
-      set( ${ROOT_PROJECT_NAME}_VERSION_TWEAK ${_VERSION_TWEAK} PARENT_SCOPE)
-    else()
-      set( ${ROOT_PROJECT_NAME}_VERSION_TWEAK ${_TWEAK} PARENT_SCOPE)  
-    endif()
-    set( ${ROOT_PROJECT_NAME}_VERSION_HASH  ${_VERSION_HASH}  PARENT_SCOPE)
-    set( ${ROOT_PROJECT_NAME}_DIRTY_BUILD ${_DIRTY_BUILD} PARENT_SCOPE)
-    set( ${ROOT_PROJECT_NAME}_LIB_VERSION "${_VERSION_MAJOR}.${_VERSION_MINOR}" PARENT_SCOPE)
     set( ${_SUCESS_CHECK} True PARENT_SCOPE)
-    
-    execute_process(COMMAND ${GIT_EXECUTABLE}  log -1 --format=%ai 
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                    OUTPUT_VARIABLE _GIT_COMMIT_DATE
-                    RESULT_VARIABLE _RESULT_VARIABLE
-                                    ERROR_QUIET)
-    
+  endif() 
+  #Pull the commit date of the last GIT TAG 
+  execute_process(COMMAND ${GIT_EXECUTABLE}  log -1 --format=%ai 
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                  OUTPUT_VARIABLE _GIT_COMMIT_DATE
+                  RESULT_VARIABLE _RESULT_VARIABLE
+                                  ERROR_QUIET)
+  if(_RESULT_VARIABLE EQUAL 0_)    
     string(STRIP "${_GIT_COMMIT_DATE}" _GIT_COMMIT_DATE)
     set (${ROOT_PROJECT_NAME}_COMMIT_DATE "${_GIT_COMMIT_DATE}" PARENT_SCOPE)
-
-
   endif()
+
+  # 
+  if( _VERSION_MAJOR MATCHES "[0-9]+")
+    set( ${ROOT_PROJECT_NAME}_VERSION_MAJOR ${_VERSION_MAJOR} PARENT_SCOPE)
+  endif()
+  if( _VERSION_MINOR MATCHES "[0-9]+")
+    set( ${ROOT_PROJECT_NAME}_VERSION_MINOR ${_VERSION_MINOR} PARENT_SCOPE)
+  endif()
+  if( _VERSION_PATCH MATCHES "[0-9]+")
+    set( ${ROOT_PROJECT_NAME}_VERSION_PATCH ${_VERSION_PATCH} PARENT_SCOPE)
+  endif()
+  if( _VERSION_TWEAK MATCHES "[0-9]+")
+    set( ${ROOT_PROJECT_NAME}_VERSION_TWEAK ${_VERSION_TWEAK} PARENT_SCOPE)
+  endif()
+  if( _VERSION_MAJOR AND _VERSION_MINOR )
+    set( ${ROOT_PROJECT_NAME}_LIB_VERSION   "${_VERSION_MAJOR}.${_VERSION_MINOR}" PARENT_SCOPE)
+  endif()
+  if (_VERSION_TAG)
+    set( ${ROOT_PROJECT_NAME}_VERSION_TAG   ${_VERSION_TAG} PARENT_SCOPE)
+  endif()
+  if (_DIRTY_BUILD)
+    set( ${ROOT_PROJECT_NAME}_DIRTY_BUILD   ${_DIRTY_BUILD} PARENT_SCOPE)
+  endif()
+  if(_VERSION_HASH)
+    set( ${ROOT_PROJECT_NAME}_VERSION_HASH  ${_VERSION_HASH}  PARENT_SCOPE)
+  endif()
+  
+  
 endfunction(configure_version_information)
 
 ########################################################################################################
