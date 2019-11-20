@@ -3,6 +3,7 @@
 #include <biogears/string/manipulation.h>
 
 #include <cstdlib>
+#include <cstring>
 #include <cmath>
 
 namespace biogears {
@@ -42,7 +43,7 @@ const char * biogears_build_date_str() {
 //-----------------------------------------------------------------------------
 std::string version_string()
 {
-  if ( 0 == strlen(_TWEAK_VERSION_NUMBER_)) {
+  if ( 0 == std::strlen(_TWEAK_VERSION_NUMBER_)) {
     return biogears::asprintf("%d.%d.%d" ,_MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_);
   } else {
     return biogears::asprintf("%d.%d.%d+%s", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_TWEAK_VERSION_NUMBER_);
@@ -59,7 +60,7 @@ char const * version_string_str()
 //-----------------------------------------------------------------------------
 std::string full_version_string()
 {
-  if ( 0 == strlen(_TWEAK_VERSION_NUMBER_)) {
+  if ( 0 == std::strlen(_TWEAK_VERSION_NUMBER_)) {
     return biogears::asprintf("%d.%d.%d-%s", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_REV_HASH_);
   } else {
     return biogears::asprintf("%d.%d.%d+%s-%s", _MAJOR_VERSION_NUMBER_,_MINOR_VERSION_NUMBER_,_PATCH_VERSION_NUMBER_,_TWEAK_VERSION_NUMBER_,_REV_HASH_);
