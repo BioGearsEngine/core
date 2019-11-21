@@ -30,7 +30,7 @@ using namespace biogears;
 #include <atomic>
 std::unique_ptr<SESubstanceCompound> makeSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine)
 {
-  static std::atomic<int> counter = 0;
+  static std::atomic<int> counter { 0 };
   std::stringstream ss;
   ss << "Substance_" << ++counter;
   return std::make_unique<SESubstanceCompound>(ss.str().c_str(), engine->GetLogger());
@@ -43,7 +43,7 @@ bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, s
     substance_concentration->GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration.release());
 
-    //Because the substance isn't register at this point, it is possible to adjust the name based on the current mix.
+    //Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
     //Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;
     return true;
   }
