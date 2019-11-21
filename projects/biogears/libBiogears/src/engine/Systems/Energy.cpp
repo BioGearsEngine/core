@@ -560,17 +560,14 @@ void Energy::UpdateHeatResistance()
   double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
 
   double alphaScale = .5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
-  double targetAlpha = alphaScale;
-  const double lastAlpha = 1.0 / (m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
     const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0);		//Make >50% burn the worse case scenario 
-    targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 5.0, resInput);
+    const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 10.0, resInput);
+    const double lastAlpha = 1.0 / (m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
     const double rampGain = 1.0e-5;
-    
     alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
   }
-
 
   //The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
   //When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.
@@ -582,7 +579,6 @@ void Energy::UpdateHeatResistance()
   m_coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
   m_data.GetDataTrack().Probe("CoreToSkinResistance", coreToSkinResistance_K_Per_W);
   m_data.GetDataTrack().Probe("AlphaScale", alphaScale);
-  m_data.GetDataTrack().Probe("LastAlpha", lastAlpha);
 }
 
 //--------------------------------------------------------------------------------------------------
