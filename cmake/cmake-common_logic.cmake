@@ -195,7 +195,7 @@ endfunction()
 ########################################################################################################
 
 function(configure_version_information _SUCESS_CHECK)
-  cmake_parse_arguments( "_"  "" "MAJOR;MINOR;PATCH;TWEAK"
+  cmake_parse_arguments( ""  "" "MAJOR;MINOR;PATCH;TWEAK"
                          "" ${ARGN} )
 
   if(NOT _MAJOR) 
@@ -339,7 +339,7 @@ endfunction()
 #  Optional Cache Value OUTPUT_PREFIX allows you add an additional later to this layout
 #######################################################################################################
 function(setup_unified_output_directory )
-  cmake_parse_arguments( "_"  "UNIFIED" "PREFIX"
+  cmake_parse_arguments( ""  "UNIFIED" "PREFIX"
                          "" ${ARGN} )
 if(NOT __UNIFIED_DIR) 
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_PREFIX}/$<CONFIG>/lib" PARENT_SCOPE)
