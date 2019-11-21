@@ -851,25 +851,28 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   //RBC
   double rbc_ct_per_uL = 5280000.0;
   double antigens_per_rbc = 2000000.0;
-  molarity1.SetValue(rbc_ct_per_uL, AmountPerVolumeUnit::ct_Per_uL);
-  SetSubstanceMolarity(*m_RBC, vascular, molarity1);
+  double rbc_concentration_g_Per_dL = 14.256; //Compounds spreadsheet
+  concentration.SetValue(rbc_concentration_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  SetSubstanceConcentration(*m_RBC, vascular, concentration);
 
+  SEScalarMassPerVolume A_concentration;
+  SEScalarMassPerVolume B_concentration;
   if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::A) {
-    molarity1.SetValue(rbc_ct_per_uL * antigens_per_rbc, AmountPerVolumeUnit::ct_Per_uL);
-    molarity2.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    A_concentration.SetValue(23.0, MassPerVolumeUnit::mg_Per_L); //Compounds spreadsheet 
+    B_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::B) {
-    molarity1.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    molarity2.SetValue(rbc_ct_per_uL * antigens_per_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    A_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
+    B_concentration.SetValue(19.0, MassPerVolumeUnit::mg_Per_L);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::O) {
-    molarity1.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
-    molarity2.SetValue(0, AmountPerVolumeUnit::ct_Per_uL);
+    A_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
+    B_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
   } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::AB) {
-    molarity1.SetValue(0.5 * rbc_ct_per_uL * antigens_per_rbc, AmountPerVolumeUnit::ct_Per_uL);
-    molarity2.SetValue(0.5 * rbc_ct_per_uL * antigens_per_rbc, AmountPerVolumeUnit::ct_Per_uL);
+    A_concentration.SetValue(11.5, MassPerVolumeUnit::mg_Per_L);
+    B_concentration.SetValue(9.5, MassPerVolumeUnit::mg_Per_L);
   }
-  //Antigens present on RBC
-  SetSubstanceMolarity(*m_AntigenA, vascular, molarity1);
-  SetSubstanceMolarity(*m_AntigenB, vascular, molarity2);
+
+  SetSubstanceConcentration(*m_AntigenA, vascular, A_concentration);
+  SetSubstanceConcentration(*m_AntigenB, vascular, B_concentration);
   //WBC
   molarity1.SetValue(7000.0, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_WBC, vascular, molarity1);

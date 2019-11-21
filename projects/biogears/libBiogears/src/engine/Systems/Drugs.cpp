@@ -515,25 +515,6 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         //Check for HTR
         SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
         SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
-        /*
-        double AntigenAIncrement_ct = 0.0;
-        double AntigenBIncrement_ct = 0.0;
-        if (compound->GetName() == "Blood_APositive" || compound->GetName() == "Blood_ANegative") {
-          AntigenAIncrement_ct = (massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc, replace with call to sub file
-        } else if (compound->GetName() == "Blood_BPositive" || compound->GetName() == "Blood_BNegative") {
-          AntigenBIncrement_ct = (massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
-        } else if (compound->GetName() == "Blood_ABPositive" || compound->GetName() == "Blood_ABNegative") {
-          AntigenBIncrement_ct = (0.5 * massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
-          AntigenAIncrement_ct = (0.5 * massIncrement_ug / (2.7e-5)) * 2000000.0; // 27 pg per rbc, 2000000 antigens per rbc
-        }
-        double AntA_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
-        double AntB_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
-        double venaCavaVolume_mL = m_venaCavaVascular->GetVolume(VolumeUnit::mL);
-        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->GetMolarity().SetValue(AntA_ct_Per_uL + (AntigenAIncrement_ct / ((volumeToAdminister_mL + venaCavaVolume_mL) * 1000)), AmountPerVolumeUnit::ct_Per_uL);
-        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->GetMolarity().SetValue(AntB_ct_Per_uL + (AntigenBIncrement_ct / ((volumeToAdminister_mL + venaCavaVolume_mL) * 1000)), AmountPerVolumeUnit::ct_Per_uL);
-        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_A())->Balance(BalanceLiquidBy::Molarity);
-        m_venaCavaVascular->GetSubstanceQuantity(m_data.GetSubstances().GetAntigen_B())->Balance(BalanceLiquidBy::Molarity);
-        */
         const double AntigenA_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         const double AntigenB_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         

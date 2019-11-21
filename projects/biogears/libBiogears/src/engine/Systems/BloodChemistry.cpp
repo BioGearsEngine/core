@@ -304,6 +304,11 @@ void BloodChemistry::Process()
 
   double totalHemoglobinO2Hemoglobin_g = totalHb_g + totalHbO2_g + totalHbCO2_g + totalHBO2CO2_g + totalHBCO_g;
   GetHemoglobinContent().SetValue(totalHemoglobinO2Hemoglobin_g, MassUnit::g);
+  if (totalHemoglobinO2Hemoglobin_g < 13.0 * m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::dL)) {
+    // 13.5 g/dL is considered low Hb content
+    double hemoglobinIncrease_g = (0.63 / 86400.0) * m_data.GetTimeStep().GetValue(TimeUnit::s); //0.63 g Hb per day (in seconds is 86400)
+    m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetHb())->GetMass().IncrementValue(hemoglobinIncrease_g, MassUnit::g);
+  }
   m_HbLostToUrine_g = GetHemoglobinContent().GetValue(MassUnit::g);
 
   // Calculate Blood Cell Counts
@@ -394,8 +399,6 @@ void BloodChemistry::Process()
     //}
   }
 
-  m_data.GetDataTrack().Probe("RBCdonor_ct", m_donorRBC_ct);
-  m_data.GetDataTrack().Probe("RBCpatient_ct", m_patientRBC_ct);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -744,7 +747,6 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   double TotalRBC;
   double patientAntigen_ct;
   double donorAntigen_ct;
-  double BloodVolume = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
   const double rbcMass_ug = 2.7e-5;
   const double antigens_per_rbc = 2000000.0;
   const double agglutinin_per_rbc = 50.0;
@@ -787,6 +789,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   donorRBC = donorAntigen_ct / antigens_per_rbc;
   patientRBC = TotalRBC - donorRBC;
 
+  /// \todo Move cellular birth/death/healing to its own unique function for more accurate/responsive re-stabilizing after an event (useful outside of HTR)
   double HealExp = 1.0 - (patientRBC / (5280000.0 * 4800000.0)); // uL of blood at steady state times ct/uL of rbc
   BLIM(HealExp, 0.0, 1.0);
   double HealFactor = std::pow(5.0, HealExp);
@@ -848,17 +851,15 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   if ((m_donorRBC_ct +m_2Agglutinate_ct + m_d3Agglutinate_ct) == 0.0) {
     patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, false, m_data.GetSimulationTime());
   }
-  ////////////////////////////////////////////////////////////////////////
-  //Try separating hemoglobin from antigens
-  double effectTune_cells = 1.0; // Delete this if still 1.0 at end
-  double effectTune_Hb = 0.75;
+
+  double effectTune_Hb = 1.1;
   double oxygenTune = 50000.0; 
-  double metabolismTune = 600.0; 
+  double metabolismTune = 750.0; 
 
   double newAggglutinates = (m_4Agglutinate_ct + (m_p3Agglutinate_ct / 12.0)) - m_RemovedRBC_ct; // p3Agglutinates partially removed to scale for controlled donor cells (multiplied by 4 in next step)
 
-  double deadDonorCells_pct = (effectTune_cells*newAggglutinates * 4.0 / 2.0) / donorRBC;
-  double deadPatientCells_pct = (effectTune_cells*newAggglutinates * 4.0 / 2.0) / patientRBC;
+  double deadDonorCells_pct = (newAggglutinates * 4.0 / 2.0) / donorRBC;
+  double deadPatientCells_pct = (newAggglutinates * 4.0 / 2.0) / patientRBC;
   BLIM(deadDonorCells_pct, 0.0, 1.0);
   BLIM(deadPatientCells_pct, 0.0, 1.0);
   double liveDonorCell_pct = 1.0 - deadDonorCells_pct;
@@ -866,11 +867,10 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   
   double deadCells_percent = ((newAggglutinates * 4.0) / TotalRBC); //4.0 cells in a "stable" agglutinate
   BLIM(deadCells_percent, 0.0, 1.0);
-  double liveCells_percent = (1.0 - (deadCells_percent * effectTune_cells));
+  double liveCells_percent = (1.0 - (deadCells_percent));
   double Hb_percent = (1.0 - (deadCells_percent* effectTune_Hb));
   double lostOxygen_percent = deadCells_percent * oxygenTune;
   double liveOxygen_percent = 1.0 - lostOxygen_percent;
-  //double metabolicIncrease = 1.0 + (deadCells_percent * metabolismTune);
   double metabolicIncrease = (deadCells_percent * metabolismTune);
   /*std::stringstream ss;
   ss << m_RhFactorMismatch_ct << ",   " << m_RhTransfusionReactionVolume_mL;
@@ -890,8 +890,6 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   std::vector<SELiquidCompartment*> vascularcompts2 = m_data.GetCompartments().GetVascularLeafCompartments();
   for (auto v : vascularcompts2) {
     SELiquidCompartment* compt = v;
-
-    double ComptVolume = compt->GetVolume().GetValue(VolumeUnit::uL);
     compt->GetSubstanceQuantity(Hemoglobin)->GetMass().SetValue(compt->GetSubstanceQuantity(Hemoglobin)->GetMass(MassUnit::ug) * Hb_percent, MassUnit::ug);
     compt->GetSubstanceQuantity(HemoglobinO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinO2)->GetMass(MassUnit::ug) * Hb_percent, MassUnit::ug);
     compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass().SetValue(compt->GetSubstanceQuantity(HemoglobinCO2)->GetMass(MassUnit::ug) * Hb_percent, MassUnit::ug);

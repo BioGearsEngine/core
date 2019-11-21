@@ -102,7 +102,16 @@ Override Capabilities
 
 Certain patient parameters can now have an override action called to change them mid-run. Currently BioGears operates utilizing a patient file to prepare a set of pre-defined patient-specific parameters which allow a user to modify a patient before a scenario run. If the user wants to modify a parameter during a scenario, then an override action must be used. 
 
-An override action consists of two required fields in addition to numerous optional parameter calls. The two required field are state and conformance. The state switch simply lets BioGears know whether the override action call is being turned on (to permit overrides) or off (to return to normal BioGears simulation). The conformance call determins whether the override is allowed to affect other BioGears parameters and conditions. Turning conformance off will only create a mask of the desired parameter in the simularion while turning it on will alter the scenario altogether. The conformance (on) feature is only currently compatible with certain parameters, though turning it on with an incompatible parameter will still allow an irreversible state (which is turned off when conformance is turned off).
+An override action consists of two required fields in addition to numerous optional parameter calls. The two required field are state and conformance. The state switch simply lets BioGears know whether the override action call is being turned on (to permit overrides) or off (to return to normal BioGears simulation). The conformance call determins whether the override is allowed to affect other BioGears parameters and conditions. Turning conformance off will only create a mask of the desired parameter in the simularion while turning it on will alter the scenario altogether. The conformance (on) feature is only currently compatible with certain parameters, though turning it on with an incompatible parameter will still allow an irreversible state (which is turned off when conformance is turned off). An example of a call would be as follows, with the override being turned on, set for an hour, and then turned off:
+
+'''<Action xsi:type="OverrideData" State="On" Conformant="On">
+		<HeartRateOverride value="120" unit="1/min"/>		
+</Action>
+<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="hr"/>       
+</Action>
+<Action xsi:type="OverrideData" State="Off" Conformant="On">		
+</Action>'''
 
 The current list of override parameters (with conformance compatible parameters designated with a "Conf.") is as follows:
 
