@@ -168,7 +168,12 @@ Events
 ### Hemolytic Transfusion Reaction (HTR)
 HTR occurs when there is an incompatibility between patient and donor blood blood types @cite davenport2005pathophysiology.  The incompatibility triggers an immune response, resulting in agglutination and red blood cell death in the recipient's body. 
 
-The %BioGears Engine triggers an HTR event when an incompatibility is detected. This is based both on the set patient's blood type as well as any blood/antigens introduced into their system. This is a reversible condition and is considered resolved when the foreign cells are removed (over time). The time it takes the body to remove foreign cells will depend on the amount introduced.
+The %BioGears Engine triggers an HTR event when an incompatibility is detected. This is based both on the set patient's blood type as well as any blood/antigens introduced into their system. This is a reversible condition and is considered resolved when the foreign cells are removed (over time). The time it takes the body to remove foreign cells will depend on the amount introduced. An example reaction showing the infusion of incompatible donor cells and the reaction with patient cells can be seen below:
+
+@image html RBC_HTR_2axis.png
+<center>
+*Figure 2. %An injection of 0.5 L introduces donor blood cells which then cause a physiological response as cells (both patient and donor) are eliminated. The reaction results in such changes as increased core temperature, increased heart rate, and increased respiration.*
+</center><br>
 
 ### Hypercapnia
 Hypercapnia occurs when the partial pressure of carbon dioxide in the blood rises to greater than 60&nbsp;mmHg @cite guyton2006medical.  Patients with respiratory conditions, such as severe airway obstruction, frequently exhibit hypercapnia. This condition manifests as a decrease in blood pH and an increase in cardiac output, blood pressure, and heart rate.
@@ -211,7 +216,7 @@ The respiratory alkalosis event is triggered when the blood pH increases above t
 
 @image html AcidBaseEvents.png
 <center>
-*Figure 2. The acidosis and alkalosis events are broken down into either metabolic or respiratory induced. Metabolic induced acidosis/alkalosis is driven from a shift in bicarbonate
+*Figure 3. The acidosis and alkalosis events are broken down into either metabolic or respiratory induced. Metabolic induced acidosis/alkalosis is driven from a shift in bicarbonate
 while respiratory induced acidosis/alkalosis is due to a chance in arterial carbon dioxide. The shift between either acidosis or alkalosis occurs at a blood pH of 7.4.*
 </center><br>
 
@@ -253,7 +258,7 @@ The Blood Chemistry system does not have any conditions or actions directly embe
 <img src="./plots/BloodChemistry/BloodChemistryLegend.jpg" width="500">
 </center>
 <center>
-*Figure 3. The total blood volume decreases with the hemorrhage, then increases as saline is infused. The total hemoglobin also decreases with the hemorrhage but remains reduced after the hemorrhage is stopped.*
+*Figure 4. The total blood volume decreases with the hemorrhage, then increases as saline is infused. The total hemoglobin also decreases with the hemorrhage but remains reduced after the hemorrhage is stopped.*
 </center><br>
 
 @anchor bloodchemistry-validation-assessments
