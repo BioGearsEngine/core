@@ -253,7 +253,7 @@ void Environment::PreProcess()
     //const double rampGain = 1.0e-4;
 
     //skinToClothingResistance = lastSkinToClothingResistance + rampGain * (targetSkinToClothingResistance - lastSkinToClothingResistance);
-    skinToClothingResistance *= (1.0 - burnSurfaceAreaFraction);
+    skinToClothingResistance *= std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
   }
 
   m_SkinToClothing->GetNextResistance().SetValue(skinToClothingResistance, HeatResistanceUnit::K_Per_W);
@@ -540,6 +540,9 @@ void Environment::CalculateRadiation()
     } else {
       dResistance_K_Per_W = dSurfaceArea_m2 / dRadiativeHeatTransferCoefficient_WPerM2_K;
     }
+
+	double lastConvectiveResistance = m_ClothingToEnclosurePath->GetResistance(HeatResistanceUnit::K_Per_W);
+    double targetResistance_K_Per_W = lastConvectiveResistance;
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
       const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
       //const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); //Make >50% burn the worse case scenario
@@ -547,7 +550,7 @@ void Environment::CalculateRadiation()
       //const double rampGain = 1.0e-4;
 
       //dResistance_K_Per_W = lastConvectiveResistance + rampGain * (targetResistance_K_Per_W - lastConvectiveResistance);
-      dResistance_K_Per_W *= (1.0 - burnSurfaceAreaFraction);
+      dResistance_K_Per_W *= std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
     }
     std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
     m_ClothingToEnclosurePath->GetNextResistance().SetValue(dResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
@@ -629,7 +632,7 @@ void Environment::CalculateConvection()
     //const double rampGain = 1.0e-4;
 
     //dResistance_K_Per_W = lastConvectiveResistance + rampGain * (targetResistance_K_Per_W - lastConvectiveResistance);
-    dResistance_K_Per_W *= (1.0 - burnSurfaceAreaFraction);
+    dResistance_K_Per_W *= std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
   }
 
   std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
