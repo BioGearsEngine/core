@@ -21,15 +21,15 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="RhFactorMismatch_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="RhTransfusionReactionVolume_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="DonorRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="PatientRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="TwoCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ThreeCellPatAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ThreeCellDonAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="FourCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="RemovedRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="RhFactorMismatch_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="RhTransfusionReactionVolume_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="DonorRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="PatientRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="TwoCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ThreeCellPatAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ThreeCellDonAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="FourCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="RemovedRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -85,7 +85,7 @@ specific language governing permissions and limitations under the License.
       <xs:extension base="DrugSystemData">
         <xs:sequence>
           <xs:element name="BolusAdministration" type="SubstanceBolusStateData" minOccurs="0" maxOccurs="unbounded"/>
-		  <xs:element name="TransmucosalStates" type="TransmucosalStateData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="TransmucosalStates" type="TransmucosalStateData" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="SarinRbcAcetylcholinesteraseComplex_nM" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="AgedRbcAcetylcholinesterase_nM" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
@@ -141,11 +141,11 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ArterialOxygenSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideSetPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorFatigueScale" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorCentralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorPeripheralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorFiringRate_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ChemoreceptorFiringRateSetPoint_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ChemoreceptorCentralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ChemoreceptorPeripheralVentilationDelta_L_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ChemoreceptorFiringRate_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ChemoreceptorFiringRateSetPoint_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -160,7 +160,6 @@ specific language governing permissions and limitations under the License.
           <xs:element name="RightAfferentResistance_mmHg_s_Per_mL" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="LeftSodiumFlowSetPoint_mg_Per_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="RightSodiumFlowSetPoint_mg_Per_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
-
           <xs:element name="UrineProductionRate_mL_Per_min" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="UrineOsmolarity_mOsm_Per_L" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="SodiumConcentration_mg_Per_mL" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
@@ -196,7 +195,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="BreathingCycle" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialOxygenPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxidePressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ArterialOxygenAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideAverage_mmHg" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BreathingCycleTime_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BreathTimeExhale_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -209,7 +208,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="MaxDriverPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PeakRespiratoryDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationFrequency_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="TargetTidalVolume_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="TargetTidalVolume_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationToTidalVolumeSlope" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <!-- Conscious Breathing -->
           <xs:element name="ConsciousBreathing" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
