@@ -15,7 +15,7 @@ constexpr char const * _PROJECT_NAME_ = "${ROOT_PROJECT_NAME}";
 constexpr char const * _REV_HASH_ = "${${ROOT_PROJECT_NAME}_VERSION_HASH}";
 constexpr char const * _REV_TAG_ = "${${ROOT_PROJECT_NAME}_VERSION_TAG}";
 constexpr char const * _REV_COMMIT_DATE_= "${${ROOT_PROJECT_NAME}_COMMIT_DATE}";
-constexpr bool _OFFICAL_RELEASE_ = ${${ROOT_PROJECT_NAME}_DIRTY_BUILD};
+constexpr bool _OFFICAL_RELEASE_ = ${${ROOT_PROJECT_NAME}_CLEAN_BUILD};
 
 constexpr int _MAJOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MAJOR};
 constexpr int _MINOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MINOR};
