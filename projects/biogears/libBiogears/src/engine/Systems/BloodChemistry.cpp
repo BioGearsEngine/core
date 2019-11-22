@@ -304,7 +304,7 @@ void BloodChemistry::Process()
 
   double totalHemoglobinO2Hemoglobin_g = totalHb_g + totalHbO2_g + totalHbCO2_g + totalHBO2CO2_g + totalHBCO_g;
   GetHemoglobinContent().SetValue(totalHemoglobinO2Hemoglobin_g, MassUnit::g);
-  if (totalHemoglobinO2Hemoglobin_g < 13.0 * m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::dL)) {
+  if (totalHemoglobinO2Hemoglobin_g < (13.0 * m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::dL))) {
     // 13.5 g/dL is considered low Hb content
     double hemoglobinIncrease_g = (0.63 / 86400.0) * m_data.GetTimeStep().GetValue(TimeUnit::s); //0.63 g Hb per day (in seconds is 86400)
     m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetHb())->GetMass().IncrementValue(hemoglobinIncrease_g, MassUnit::g);
@@ -390,13 +390,12 @@ void BloodChemistry::Process()
   double bloodMass_ug;
   double tissueMass_ug;
   for (SESubstance* sub : m_data.GetSubstances().GetActiveSubstances()) {
-    //if (sub->GetState() != CDM::enumSubstanceState::Cellular) {
-      bloodMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
-      tissueMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetTissueLeafCompartments(), MassUnit::ug);
-      sub->GetMassInBody().SetValue(bloodMass_ug + tissueMass_ug, MassUnit::ug);
-      sub->GetMassInBlood().SetValue(bloodMass_ug, MassUnit::ug);
-      sub->GetMassInTissue().SetValue(tissueMass_ug, MassUnit::ug);
-    //}
+    bloodMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
+    tissueMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetTissueLeafCompartments(), MassUnit::ug);
+    sub->GetMassInBody().SetValue(bloodMass_ug + tissueMass_ug, MassUnit::ug);
+    sub->GetMassInBlood().SetValue(bloodMass_ug, MassUnit::ug);
+    sub->GetMassInTissue().SetValue(tissueMass_ug, MassUnit::ug);
+
   }
 
 }
@@ -852,6 +851,8 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
     patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, false, m_data.GetSimulationTime());
   }
 
+  // Agglutination and cell death will likewise release items the blood cells were carrying into the blood stream and make them less useful to the body
+  //The tuning parameters below tune the physiological response of HTR through hemoglobin removal (cleared renally), lowering of blood oxygen, and increase in metabolic demand
   double effectTune_Hb = 1.1;
   double oxygenTune = 50000.0; 
   double metabolismTune = 750.0; 
@@ -882,9 +883,6 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   SESubstance& HemoglobinO2CO2 = m_data.GetSubstances().GetHbO2CO2();
   SESubstance& Oxygen = m_data.GetSubstances().GetO2();
 
-  SESubstance& AnigenA_final = m_data.GetSubstances().GetAntigen_A();
-  SESubstance& AnigenB_final = m_data.GetSubstances().GetAntigen_B();
-
   m_RemovedRBC_ct = m_4Agglutinate_ct + (m_p3Agglutinate_ct / 12.0);
 
   std::vector<SELiquidCompartment*> vascularcompts2 = m_data.GetCompartments().GetVascularLeafCompartments();
@@ -904,23 +902,23 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
     compt->GetSubstanceQuantity(RBC_substance)->Balance(BalanceLiquidBy::Molarity);
 
     if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) {
-      compt->GetSubstanceQuantity(AnigenA_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AnigenA_final)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
-      compt->GetSubstanceQuantity(AnigenB_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AnigenB_final)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
-      compt->GetSubstanceQuantity(AnigenA_final)->Balance(BalanceLiquidBy::Mass);
-      compt->GetSubstanceQuantity(AnigenB_final)->Balance(BalanceLiquidBy::Mass);
+      compt->GetSubstanceQuantity(AntigenA_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenA_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
+      compt->GetSubstanceQuantity(AntigenB_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenB_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
+      compt->GetSubstanceQuantity(AntigenA_substance)->Balance(BalanceLiquidBy::Mass);
+      compt->GetSubstanceQuantity(AntigenB_substance)->Balance(BalanceLiquidBy::Mass);
     } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) {
-      compt->GetSubstanceQuantity(AnigenA_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AnigenA_final)->GetMass(MassUnit::ug) * livePatientCell_pct, MassUnit::ug);
-      compt->GetSubstanceQuantity(AnigenB_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AnigenB_final)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
-      compt->GetSubstanceQuantity(AnigenA_final)->Balance(BalanceLiquidBy::Mass);
-      compt->GetSubstanceQuantity(AnigenB_final)->Balance(BalanceLiquidBy::Mass);
+      compt->GetSubstanceQuantity(AntigenA_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenA_substance)->GetMass(MassUnit::ug) * livePatientCell_pct, MassUnit::ug);
+      compt->GetSubstanceQuantity(AntigenB_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenB_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
+      compt->GetSubstanceQuantity(AntigenA_substance)->Balance(BalanceLiquidBy::Mass);
+      compt->GetSubstanceQuantity(AntigenB_substance)->Balance(BalanceLiquidBy::Mass);
     } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) {
-      compt->GetSubstanceQuantity(AnigenA_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AnigenA_final)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
-      compt->GetSubstanceQuantity(AnigenB_final)->GetMass().SetValue(compt->GetSubstanceQuantity(AnigenB_final)->GetMass(MassUnit::ug) * livePatientCell_pct, MassUnit::ug);
-      compt->GetSubstanceQuantity(AnigenA_final)->Balance(BalanceLiquidBy::Mass);
-      compt->GetSubstanceQuantity(AnigenB_final)->Balance(BalanceLiquidBy::Mass);
+      compt->GetSubstanceQuantity(AntigenA_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenA_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
+      compt->GetSubstanceQuantity(AntigenB_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenB_substance)->GetMass(MassUnit::ug) * livePatientCell_pct, MassUnit::ug);
+      compt->GetSubstanceQuantity(AntigenA_substance)->Balance(BalanceLiquidBy::Mass);
+      compt->GetSubstanceQuantity(AntigenB_substance)->Balance(BalanceLiquidBy::Mass);
     }
   }
-  double MetabolismAfterHTR = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::W); // * metabolicIncrease; //core temp increase
+  double MetabolismAfterHTR = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::W); //used (primarily) for core temp increase
   MetabolismAfterHTR += metabolicIncrease;
   m_data.GetEnergy().GetTotalMetabolicRate().SetValue(MetabolismAfterHTR, PowerUnit::W);
 

@@ -504,7 +504,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       //Blood Transfusion//
       if (component->GetSubstance().GetName() == "RedBloodCell") {
         /* 
-         //TACO CHECK 
+         //Transfusiuon-Associated Circulatory Overload (TACO) CHECK 
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
            std::stringstream ss;
            ss << "Patient is experiencing Transfusion Associated Circulatory Overload (TACO) due to greater than reccomended infusion rate";
