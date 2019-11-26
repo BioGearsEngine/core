@@ -82,7 +82,7 @@ set_target_properties(lib${PROJECT_NAME}
     target_compile_definitions(lib${PROJECT_NAME} PUBLIC  "BIOGEARS_COMMON_BUILD_STATIC")
     set(LIB_TYPE STATIC)
   endif()
-  target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
+  target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
 target_include_directories(lib${PROJECT_NAME}
   PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR}
   INTERFACE $<BUILD_INTERFACE:${${PREFIX}_GENERATED_INCLUDE_DIR}> 

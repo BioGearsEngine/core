@@ -51,12 +51,8 @@ function(add_howto name)
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         )
 
-    if(WIN32)
-      target_compile_definitions(${TARGET_NAME}  PRIVATE "_CRT_SECURE_NO_WARNINGS"  )
-    elseif(CMAKE_COMPILER_IS_GNUCXX)
-      #target_link_options(${TARGET_NAME} "LINKER:--no-as-needed" )
-      #set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS ${${EXAMPLE_NAME}_LDFLAGS})
-    endif()
+     target_compile_definitions(${TARGET_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
+     target_compile_options(${TARGET_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
   
     ###############################################################################
     # COMPILATION & LINKAGE MODIFICATIONS
@@ -136,10 +132,11 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
       PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/common-source
   )
 
-  target_compile_definitions(howto-common PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS">  )
-
+  target_compile_definitions(howto-common  PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
+  target_compile_options(howto-common  PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
+  
   add_custom_target(howtos COMMENT "Meta Target for compiling all howtos")
-
+  
   childlist( dir_list ${CMAKE_CURRENT_SOURCE_DIR} )
   foreach( dir IN LISTS dir_list )
   if(NOT dir MATCHES "common-source")

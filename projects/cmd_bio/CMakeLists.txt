@@ -76,7 +76,7 @@ set_target_properties(${PROJECT_NAME}
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
   target_compile_definitions(${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
-  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP>)
+  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
 ###############################################################################
 # COMPILATION & LINKAGE MODIFICATIONS
 ###############################################################################
