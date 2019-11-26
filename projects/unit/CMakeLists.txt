@@ -125,11 +125,8 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
       ${bio_INCLUDE_DIR}
   )
 
-  if(WIN32)
-  target_compile_definitions(unittest
-      PRIVATE "_CRT_SECURE_NO_WARNINGS"
-  )
-  endif()
+     target_compile_definitions(unittest PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
+     target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
 
   target_link_libraries(unittest
     ${UNITTEST_LIBRARIES}
