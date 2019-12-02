@@ -39,6 +39,31 @@ The BioGears source is structured as follows:
   - howto/ - libbiogears SDK examples
     -  unit/ - Unit test harness used for testing libbiogears components
 
+## What's new in ver 7.3 (December 15, 2019)
+- General bug fixes and updates
+  - Finalization for testing and implementation to BioGears override functionality with full physiology request data support
+- Arterial and Venous PH data requests 
+- Inflammation state data to support sepsis model serialization 
+- Generalized sepsis model to a more generic inflammation model 
+  - Will be critical to future modeling efforts (hemorrhage, burn, infection)
+- New example sepsis xml files (SepsisSevere_Gut.xml)
+- New lymph circuit
+  - Handles Albumin transport and re-circulation 
+  - Creates realistic oncotic pressure sources for substance transport 
+  - Transport from tissue systems back into the vasculature via lymph 
+- New command line utility project (cmd_bio) for native c++ runtime, driver, batch run organizer/manager
+- Optional name value for xml actions meal and environment
+- New burn model 
+  - User defined total body surface area input 
+  - Inflammation cascade validated for long running scenarios (24 hr +)
+  - Validated for traditional treatment protocols with USISR SMEs
+- New unit testing framework (Google Test) to better support multiplatform functionality 
+  - Unit Test harness is a separate project in CMAKE which can be controlled with Biogears_BUILD_TEST variable
+- Introduced const char* DLL interfaces for all functions dealing with std::string to avoid windows related issues dealing with XSD implicitly exporting string through inheritance
+- Updated functionality to tension pneumothorax to fix bug in bilateral behavior 
+- Updated hemorrhage bugs to update blood gas levels and metabolic requirements 
+  - Validated with University of Washington
+
 ## What's new in ver 7.2 and 7.2.1 (January 29, 2019)
 - General bug fixes and updates
   - Finalization for testing and implementation to BioGears override functionality with full physiology request data support
