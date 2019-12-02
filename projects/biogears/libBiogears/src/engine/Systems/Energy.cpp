@@ -211,9 +211,6 @@ void Energy::PreProcess()
 //--------------------------------------------------------------------------------------------------
 void Energy::Exercise()
 {
-  //if (!m_PatientActions->HasExercise() && !m_Patient->IsEventActive(CDM::enumPatientEvent::Fatigue))  //remove fatigue check?
-  //return;
-
   double exerciseIntensity = 0.0;
   double DesiredWorkRate = 0.0;
   const double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
@@ -420,8 +417,6 @@ void Energy::CalculateMetabolicHeatGeneration()
   double totalMetabolicRateNew_W = 0.0;
   //The summit metabolism is the maximum amount of power the human body can generate due to shivering/response to the cold.
   double summitMetabolism_W = 21.0 * std::pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
-  m_data.GetDataTrack().Probe("SummitMetabolism_W", summitMetabolism_W);
-  m_data.GetDataTrack().Probe("BasalMetabolism_W", m_Patient->GetBasalMetabolicRate(PowerUnit::W));
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
 
@@ -559,11 +554,11 @@ void Energy::UpdateHeatResistance()
   double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistry().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);
   double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
 
-  double alphaScale = .5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
+  double alphaScale = 0.5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
     const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0);		//Make >50% burn the worse case scenario 
-    const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 10.0, resInput);
+    const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
     const double lastAlpha = 1.0 / (m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
     const double rampGain = 1.0e-5;
     alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
@@ -577,8 +572,6 @@ void Energy::UpdateHeatResistance()
   coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
 
   m_coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
-  m_data.GetDataTrack().Probe("CoreToSkinResistance", coreToSkinResistance_K_Per_W);
-  m_data.GetDataTrack().Probe("AlphaScale", alphaScale);
 }
 
 //--------------------------------------------------------------------------------------------------

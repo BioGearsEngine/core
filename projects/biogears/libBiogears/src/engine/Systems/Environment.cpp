@@ -258,6 +258,21 @@ void Environment::PreProcess()
   CalculateEvaporation();
   CalculateRespiration();
   ProcessActions();
+
+  //Record heat fluxes after we have processed all actions
+  double dTotalHeatLoss_W = 0.0;
+  if (m_ClothingToEnclosurePath->HasHeatTransferRate()) {
+    dTotalHeatLoss_W = m_ClothingToEnclosurePath->GetHeatTransferRate().GetValue(PowerUnit::W);
+  }
+  GetRadiativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
+  if (m_ClothingToEnvironmentPath->HasHeatTransferRate()) {
+    dTotalHeatLoss_W = m_ClothingToEnvironmentPath->GetHeatTransferRate().GetValue(PowerUnit::W);
+  }
+  GetConvectiveHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
+  if (m_EnvironmentSkinToGroundPath->HasHeatTransferRate()) {
+    dTotalHeatLoss_W = m_EnvironmentSkinToGroundPath->GetHeatTransferRate().GetValue(PowerUnit::W);
+  }
+  GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -267,9 +282,6 @@ void Environment::PreProcess()
 //--------------------------------------------------------------------------------------------------
 void Environment::Process()
 {
-  m_data.GetDataTrack().Probe("ConvectiveResistance", m_ClothingToEnvironmentPath->GetNextResistance(HeatResistanceUnit::K_Per_W));
-  m_data.GetDataTrack().Probe("SkinToClothingResistance", m_SkinToClothing->GetNextResistance(HeatResistanceUnit::K_Per_W));
-  m_data.GetDataTrack().Probe("RadiativeResistance", m_ClothingToEnclosurePath->GetNextResistance(HeatResistanceUnit::K_Per_W));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -570,13 +582,6 @@ void Environment::CalculateRadiation()
     dMeanRadiantTemperature_K = GetConditions().GetMeanRadiantTemperature(TemperatureUnit::K);
     m_GroundToEnclosurePath->GetNextTemperatureSource().SetValue(dMeanRadiantTemperature_K, TemperatureUnit::K);
   }
-
-  //Set the total heat lost
-  double dTotalHeatLoss_W = 0.0;
-  if (m_ClothingToEnclosurePath->HasHeatTransferRate()) {
-    dTotalHeatLoss_W = m_ClothingToEnclosurePath->GetHeatTransferRate().GetValue(PowerUnit::W);
-  }
-  GetRadiativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -630,18 +635,11 @@ void Environment::CalculateConvection()
 
   std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
   m_ClothingToEnvironmentPath->GetNextResistance().SetValue(dResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
-  m_data.GetDataTrack().Probe("ConvectiveResistance", dResistance_K_Per_W);
 
   //Set the source
   double dAmbientTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
   m_GroundToEnvironmentPath->GetNextTemperatureSource().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
-
-  //Set the total heat lost
-  double dTotalHeatLoss_W = 0.0;
-  if (m_ClothingToEnvironmentPath->HasHeatTransferRate()) {
-    dTotalHeatLoss_W = m_ClothingToEnvironmentPath->GetHeatTransferRate().GetValue(PowerUnit::W);
-  }
-  GetConvectiveHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
+  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -674,18 +672,19 @@ void Environment::CalculateEvaporation()
     const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
     const double clo_To_m2_K_Per_W = 0.155;
     const double iCl = 0.35;
-    double dClothingConductance_W_Per_m2_kPa = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
+    double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
     double fCl = 1.0 + 0.3 * dClothingResistance_clo;
     double skinWettednessDiffusion = 0.06;
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
       skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-      dClothingConductance_W_Per_m2_kPa = 0.0;
+      dClothingResistance_m2_kPa_Per_W = 0.0;
       fCl = 1.0;
     }
 
-    // GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_WPerM2_K, HeatConductancePerAreaUnit::W_Per_m2_K);
+	///\ToDo:  The units of this constant are incorrect on the CDM--they should be W_Per_m2_Pa (no support for this unit currently)
+    GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa, HeatConductancePerAreaUnit::W_Per_m2_K);
 
-    double dMaxEvaporativePotential = (1.0 / 1000.0) * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa) / (dClothingConductance_W_Per_m2_kPa + 1.0 / (fCl * dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa));
+    double dMaxEvaporativePotential = (1.0 / 1000.0) * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa) / (dClothingResistance_m2_kPa_Per_W + 1.0 / (fCl * dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa));
     double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
 
     double dSweatRate_kgPers = 0.0;
@@ -702,14 +701,6 @@ void Environment::CalculateEvaporation()
 
     //Set the source
     m_EnvironmentSkinToGroundPath->GetNextHeatSource().SetValue(dSurfaceArea_m2 * EvaporativeHeatLossFromSkin_W, PowerUnit::W);
-
-    //Set the total heat lost
-    double dTotalHeatLoss_W = 0.0;
-    if (m_EnvironmentSkinToGroundPath->HasHeatTransferRate()) {
-      dTotalHeatLoss_W = m_EnvironmentSkinToGroundPath->GetHeatTransferRate().GetValue(PowerUnit::W);
-    }
-
-    GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
   }
 }
 
@@ -754,42 +745,4 @@ void Environment::CalculateRespiration()
   //Set the total heat lost
   GetRespirationHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
 }
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Apply the Antione Equation.
-///
-/// \param  dTemperature_C  Temperature in degrees C.
-///
-/// \return Water vapor pressure in mmHg.
-///
-/// \details
-/// The water vapor pressure at the skin and in ambient air is determined using the piecewise Antoine Equation.
-//--------------------------------------------------------------------------------------------------
-/*
-double Environment::AntoineEquation(double dTemperature_C)
-{
-  double dA = 0.0;
-  double dB = 0.0;
-  double dC = 0.0;
-  double dWaterVaporPressureInAmbientAir_mmHg = 0.0;
-  if (dTemperature_C < 0.0) {
-    dWaterVaporPressureInAmbientAir_mmHg = 0.0;
-  } else {
-    if (dTemperature_C < 100.0) {
-      dA = 8.07131;
-      dB = 1730.63;
-      dC = 233.426;
-    } else //>100.0
-    {
-      dA = 8.14019;
-      dB = 1810.94;
-      dC = 244.485;
-    }
-    dWaterVaporPressureInAmbientAir_mmHg = std::pow(10.0, dA - (dB / (dC + dTemperature_C)));
-  }
-
-  return dWaterVaporPressureInAmbientAir_mmHg;
-}
-*/
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
 	<Name>BasicStandard</Name>
-	<Description>Patient with burn covering 20% of body surface area</Description>
+	<Description>Patient with burn covering 50% of body surface area.  Blanket (thermal application) applied after 2 hrs </Description>
 	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	<!-- <EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile> -->
 	<!-- Base system data required for all scenario verification -->
   <DataRequests>
     <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
@@ -78,10 +79,19 @@
 	</DataRequests>
 	
 	<Action xsi:type="BurnWoundData">
-		<TotalBodySurfaceArea value="0.25"/>
+		<TotalBodySurfaceArea value="0.50"/>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="3" unit="hr"/>		
+		<Time value="2" unit="hr"/>		
+	</Action>
+	<Action xsi:type="ThermalApplicationData" AppendToPrevious="true">
+		<ActiveHeating>
+			  <Power value="500" unit="W"/> 
+			  <SurfaceAreaFraction value="0.5" unit="unitless"/> 			
+		</ActiveHeating>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="60" unit="min"/>		
 	</Action>
 	
 </Scenario>
