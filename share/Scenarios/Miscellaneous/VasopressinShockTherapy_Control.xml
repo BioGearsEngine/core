@@ -67,7 +67,7 @@
         <Time value="15" unit="min"/>       
     </Action>
 	<Action xsi:type="SubstanceCompoundInfusionData">
-        <SubstanceCompound>Blood</SubstanceCompound>
+        <SubstanceCompound>Blood_ONegative</SubstanceCompound>
         <BagVolume value="300" unit="mL"/>
         <Rate value="30" unit="mL/min"/>
     </Action>
@@ -75,7 +75,7 @@
         <Time value="10" unit="min"/>       
     </Action>
 	<Action xsi:type="SubstanceCompoundInfusionData">
-        <SubstanceCompound>Blood</SubstanceCompound>
+        <SubstanceCompound>Blood_ONegative</SubstanceCompound>
         <BagVolume value="300" unit="mL"/>
         <Rate value="30" unit="mL/min"/>
     </Action>

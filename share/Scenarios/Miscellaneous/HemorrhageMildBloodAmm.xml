@@ -50,7 +50,7 @@
 	<!--AMM is administering 600 mL of fluid over two minutes after losing only 150 mL total-->
     <Action xsi:type="SubstanceCompoundInfusionData">
         <Comment>2 units</Comment>
-        <SubstanceCompound>Blood</SubstanceCompound>
+        <SubstanceCompound>Blood_ONegative</SubstanceCompound>
         <BagVolume value="600.0" unit="mL"/>
         <Rate value="300.0" unit="mL/min"/>
     </Action>

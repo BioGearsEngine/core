@@ -83,7 +83,7 @@
 
 <!-- Get an IV in and administer whole blood, can replace this with saline, or other supported biogears substance (drug, ringerslactate, antibiotics) -->
 <Action xsi:type="SubstanceCompoundInfusionData">
-    <SubstanceCompound>Blood</SubstanceCompound>
+    <SubstanceCompound>Blood_ONegative</SubstanceCompound>
     <BagVolume value="500" unit="mL"/>
     <Rate value="200" unit="mL/min"/>
 </Action>
@@ -120,7 +120,7 @@
 
 <!-- Keep transfusing redblood cells, maybe we run out and this is now saline or ringers -->
 <Action xsi:type="SubstanceCompoundInfusionData">
-    <SubstanceCompound>Blood</SubstanceCompound>
+    <SubstanceCompound>Blood_ONegative</SubstanceCompound>
     <BagVolume value="500" unit="mL"/>
     <Rate value="200" unit="mL/min"/>
 </Action>
@@ -130,7 +130,7 @@
 </Action>
 
 <Action xsi:type="SubstanceCompoundInfusionData">
-    <SubstanceCompound>Blood</SubstanceCompound>
+    <SubstanceCompound>Blood_ONegative</SubstanceCompound>
     <BagVolume value="500" unit="mL"/>
     <Rate value="200" unit="mL/min"/>
 </Action>
@@ -140,7 +140,7 @@
 </Action>
 
 <Action xsi:type="SubstanceCompoundInfusionData">
-    <SubstanceCompound>Blood</SubstanceCompound>
+    <SubstanceCompound>Blood_ONegative</SubstanceCompound>
     <BagVolume value="500" unit="mL"/>
     <Rate value="200" unit="mL/min"/>
 </Action>
@@ -150,7 +150,7 @@
 </Action>
 
 <Action xsi:type="SubstanceCompoundInfusionData">
-    <SubstanceCompound>Blood</SubstanceCompound>
+    <SubstanceCompound>Blood_ONegative</SubstanceCompound>
     <BagVolume value="500" unit="mL"/>
     <Rate value="200" unit="mL/min"/>
 </Action>
