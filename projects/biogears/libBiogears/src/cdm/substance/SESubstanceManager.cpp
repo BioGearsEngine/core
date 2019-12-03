@@ -39,6 +39,7 @@ void SESubstanceManager::Clear()
   m_ActiveCompounds.clear();
   m_ActiveGases.clear();
   m_ActiveLiquids.clear();
+
   DELETE_MAP_SECOND(m_OriginalCompoundData);
   DELETE_MAP_SECOND(m_OriginalSubstanceData);
 }
@@ -164,6 +165,11 @@ const std::vector<SESubstance*>& SESubstanceManager::GetActiveGases() const
 const std::vector<SESubstance*>& SESubstanceManager::GetActiveLiquids() const
 {
   return m_ActiveLiquids;
+}
+//-----------------------------------------------------------------------------
+const std::vector<SESubstance*>& SESubstanceManager::GetActiveDrugs() const
+{
+  return m_ActiveDrugs;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceManager::AddCompound(SESubstanceCompound& compound)

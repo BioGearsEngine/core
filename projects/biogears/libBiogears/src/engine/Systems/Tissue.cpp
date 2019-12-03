@@ -217,6 +217,10 @@ void Tissue::SetUp()
   m_Dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_Patient = &m_data.GetPatient();
 
+  //Initialize the Diffusion calculator here because it depends on all tissues being fully defined.  Placement here ensures that Diffusion gets set up
+  //correctly whether you are initializing a new engine or loading a state.
+  m_data.GetDiffusionCalculator().Initialize(m_data.GetSubstances());
+
   //"Reusable" protein stores are usually about 1% of total body protein, ~110 g (https://www.nap.edu/read/10490/chapter/12#595)
   m_maxProteinStorage_g = 110;
 
@@ -572,23 +576,28 @@ void Tissue::PostProcess()
 //--------------------------------------------------------------------------------------------------
 void Tissue::CalculateDiffusion()
 {
-  SETissueCompartment* tissue;
-  SELiquidCompartment* vascular;
-  SELiquidCompartment* lymph = m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph);
-  SELiquidCompartment* venaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava);
-  const SESubstanceTissuePharmacokinetics* tissueKinetics;
-  for (auto tissueVascular : m_TissueToVascular) {
-    tissue = tissueVascular.first;
-    vascular = tissueVascular.second;
-    SELiquidCompartment& extracellular = m_data.GetCompartments().GetExtracellularFluid(*tissue);
-    SELiquidCompartment& intracellular = m_data.GetCompartments().GetIntracellularFluid(*tissue);
-    //The extracellular to intracellular transport of the ions Na, K, Cl, and Ca are handled by the CoupledIonTransport method
-    CoupledIonTransport(*tissue, extracellular, intracellular, *vascular);
-    for (const SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
-      double moved_ug; //used only for possible debugging output
-      tissueKinetics = nullptr;
-      if (sub->HasPK())
-        tissueKinetics = sub->GetPK()->GetTissueKinetics(tissue->GetName());
+  m_data.GetDiffusionCalculator().SetDiffusionState();
+  m_data.GetDiffusionCalculator().CalculateInstantAndSimpleDiffusion();
+  
+  //Other diffusion
+  for (auto diffSet : m_data.GetDiffusionCalculator().GetDiffusionSets()) {
+    CoupledIonTransport(*diffSet.tissue, *diffSet.extracellular, *diffSet.intracellular, *diffSet.vascular);
+    for (auto facilitatedSub : m_data.GetDiffusionCalculator().GetFacilitatedDiffusionSubstances()) {
+      if (facilitatedSub->GetName() == "Triacylglycerol" && diffSet.vascular->GetName() == BGE::VascularCompartment::Brain)
+        continue;
+      double massToAreaCoefficient_cm2_Per_g = 1.0; /// \todo Define relationship between tissue mass and membrane area.
+      double capCoverage_cm2 = massToAreaCoefficient_cm2_Per_g * diffSet.tissue->GetTotalMass(MassUnit::g);
+      double maximumMassFlux = facilitatedSub->GetMaximumDiffusionFlux(MassPerAreaTimeUnit::g_Per_cm2_s);
+      double combinedCoefficient_g_Per_s = maximumMassFlux * capCoverage_cm2;
+      MoveMassByFacilitatedDiffusion(*diffSet.vascular, *diffSet.extracellular, *facilitatedSub, combinedCoefficient_g_Per_s, m_Dt_s);
+      MoveMassByFacilitatedDiffusion(*diffSet.extracellular, *diffSet.intracellular, *facilitatedSub, combinedCoefficient_g_Per_s, m_Dt_s);
+      diffSet.vascular->GetSubstanceQuantity(*facilitatedSub)->Balance(BalanceLiquidBy::Mass);
+      diffSet.extracellular->GetSubstanceQuantity(*facilitatedSub)->Balance(BalanceLiquidBy::Mass);
+      diffSet.intracellular->GetSubstanceQuantity(*facilitatedSub)->Balance(BalanceLiquidBy::Mass);
+    }
+    const SESubstanceTissuePharmacokinetics* tissueKinetics;
+    for (auto pkSub : m_data.GetSubstances().GetActiveDrugs()) {
+      tissueKinetics = &pkSub->GetPK().GetTissueKinetics(diffSet.tissue->GetName());
       //Check to see if substance is a drug with the appropriate parameters to calculate PK diffusion
       // If the substance is a PBPK drug, then diffusion is computed by perfusion limited diffusion, as described in \cite huisinga2012modeling
       if (tissueKinetics != nullptr) {
@@ -596,97 +605,20 @@ void Tissue::CalculateDiffusion()
           Error("Attempted to diffuse a substance with PK that had no partition coefficient available.");
           continue;
         }
-        PerfusionLimitedDiffusion(*tissue, *vascular, *sub, tissueKinetics->GetPartitionCoefficient(), m_Dt_s); //Balance happens in the method
-      }
-      // Otherwise, the diffusion is computed by either:
-      // Instantaneous diffusion, Simple diffusion, Facilitated diffusion, or Active diffusion
-      else {
-
-        //We have to make an exception for the brain and TAGs, since TAG can't cross blood-brain barrier
-        if (sub->GetName() == "Triacylglycerol" && std::string{ extracellular.GetName() }.find("Brain") != std::string::npos)
-          continue;
-
-        //Gases get moved by instant diffusion
-        if (sub->GetState() == CDM::enumSubstanceState::Gas) {
-          //Vascular to Extracellular
-          moved_ug = MoveMassByInstantDiffusion(*vascular, extracellular, *sub, m_Dt_s);
-
-          //Extracellular to Intracellular
-          moved_ug = MoveMassByInstantDiffusion(extracellular, intracellular, *sub, m_Dt_s);
-        }
-        //Bicarbonate doesn't diffuse because it is charged
-        else if (sub->GetName() != "Bicarbonate") {
-          double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-
-          //Simple diffusion calculates a permeability based on molecular weight. Even large molecules will diffuse, though slowly.
-          //We want to prevent movement of large molecules like proteins completely. A gate of 1000 g/mol will filter out things like
-          //albumin, insulin, etc while allowing glucose, ions, and others to be governed by their molecular weight.
-          //Note: it doesn't consider lipophilicity, so TAG will need to be artificially tweaked using other diffusion methods.
-          if (sub->GetClassification() != CDM::enumSubstanceClass::WholeBlood) {
-            if (molarMass_g_Per_mol < 1000) {
-              // Compute the vascular to extracellular permeability coefficient
-              // This is the coefficient per gram of tissue independent of the tissue type.
-              // This uses the Renkin and Curry data for capillary exchange as reported in \cite fournier2011basic
-              // Divide by 100 is because the Renkin-Curry equations are in per hectogram units, and 100 g/hg
-              /// \todo I believe we can optimize with a cache of these values. Also, we can cache permeabilityCoefficient_mL_Per_s_g which is not a function of the tissue properties
-              double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
-              double vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * std::pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
-              if (molecularRadius_nm < 1.0)
-                vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * std::pow(molecularRadius_nm, -1.223) / 100.0;
-
-              // Multiply by tissue mass to get the tissue-dependent coefficient.
-              double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissue->GetTotalMass(MassUnit::g);
-
-              // Tuning factors can be used to help tune the dynamics - note that concentrations will ALWAYS equilibrate in steady state given enough time regardless of the permeability
-              double vToECPermeabilityTuningFactor = 1.0;
-              double ECtoICPermeabilityTuningFactor = 1.0;
-
-              //Vascular to Extracellular
-              moved_ug = MoveMassBySimpleDiffusion(*vascular, extracellular, *sub, vToECPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
-
-              //Extracellular to Intracellular
-              // Assuming that the capillary permeability coefficient is proportional to the cellular membrane permeability coefficient for a given tissue and substance
-              //Don't this is if substance is an ion, since extra<->intra has already been taken care of for them.  All of the ions have
-              //a molar mass < 1000 so they will all funnel here
-              if (sub->GetClassification() != CDM::enumSubstanceClass::Ion)
-                moved_ug = MoveMassBySimpleDiffusion(extracellular, intracellular, *sub, ECtoICPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, m_Dt_s);
-            }
-          }
-
-          //Facilitated diffusion depends on the substance having flux values
-          //Currently, glucose is the only substance with "real" flux values (but even they are chosen to give good engine behavior)
-          //TAG and ketones have "fake" flux values meant to give extra diffusion movement due to lipophilicity
-          if (sub->HasMaximumDiffusionFlux()) {
-            double massToAreaCoefficient_cm2_Per_g = 1.0; /// \todo Define relationship between tissue mass and membrane area.
-            double capCoverage_cm2 = massToAreaCoefficient_cm2_Per_g * tissue->GetTotalMass(MassUnit::g);
-            double maximumMassFlux = sub->GetMaximumDiffusionFlux(MassPerAreaTimeUnit::g_Per_cm2_s);
-            double combinedCoefficient_g_Per_s = maximumMassFlux * capCoverage_cm2;
-
-            //Vascular to Extracellular
-            moved_ug = MoveMassByFacilitatedDiffusion(*vascular, extracellular, *sub, combinedCoefficient_g_Per_s, m_Dt_s);
-
-            //Extracellular to Intracellular
-            moved_ug = MoveMassByFacilitatedDiffusion(extracellular, intracellular, *sub, combinedCoefficient_g_Per_s, m_Dt_s);
-          }
-          ////This Albumin diffusion is in case we start dynamically adjusting oncotic pressures, perhaps during hemorrhages or sepsis
-          if (sub->GetName() == "Albumin") {
-            moved_ug = AlbuminTransport(*vascular, extracellular, *tissue, m_Dt_s);
-            moved_ug = MoveMassByConvection(extracellular, *lymph, *sub, m_Dt_s);
-          }
-        }
-
-        //Now that mass has been moved, balance to set concentrations and molarities
-        vascular->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
-        extracellular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
-        intracellular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
+        PerfusionLimitedDiffusion(*diffSet.tissue, *diffSet.vascular, *pkSub, tissueKinetics->GetPartitionCoefficient(), m_Dt_s); //Balance happens in the method
       }
     }
+    AlbuminTransport(*diffSet.vascular, *diffSet.extracellular, *diffSet.tissue, m_Dt_s);
+    MoveMassByConvection(*diffSet.extracellular, *m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph), *m_Albumin, m_Dt_s);
+    diffSet.vascular->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
+    diffSet.extracellular->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
   }
-  //Need to transport albumin from lymph to vena cava
-  double toLymph = MoveMassByConvection(*lymph, *venaCava, *m_Albumin, m_Dt_s);
-  lymph->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
-  venaCava->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
+  MoveMassByConvection(*m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph), *m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava), *m_Albumin, m_Dt_s);
+  m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph)->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
+  m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava)->GetSubstanceQuantity(*m_Albumin)->Balance(BalanceLiquidBy::Mass);
+
 }
+
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -1986,100 +1918,6 @@ void Tissue::AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonar
 
 /// --------------------------------------------------------------------------------------------------
 /// \brief
-/// Calculates the mass transport of a substance between compartments by simple diffusion and updates other data after the mass increment
-///
-/// \param source: source compartment
-/// \param target: target compartment
-/// \param sub: substance that is diffusing
-/// \param permeabilityCofficient_mL_Per_s: the area-independent constant of proportionality
-/// \param timestep_s: the time step
-///
-/// \details
-/// This method adjusts the mass in the source and target compartments using the concentration
-/// gradient based on the principles of simple diffusion. The method does not automatically update the concentration,
-/// molarity, partial pressure, and other data in the compartment following the mass increment.
-/// ***MUST CALL BALANCE TO UPDATE CONCENTRATION, MOLARITY, ETC.***
-/// Note that source and target are used to define a sign convention for readability only. the direction
-/// of mass flow is controlled entirely by the concentration gradient and is independent of which compartment
-/// is the source and which is the target.
-//--------------------------------------------------------------------------------------------------
-double Tissue::MoveMassBySimpleDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double permeabilityCofficient_mL_Per_s, double timestep_s)
-{
-  const SELiquidSubstanceQuantity* srcQ = source.GetSubstanceQuantity(sub);
-  const SELiquidSubstanceQuantity* tgtQ = target.GetSubstanceQuantity(sub);
-
-  double amountIncrement_ug = permeabilityCofficient_mL_Per_s * (srcQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL) - tgtQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL)) * timestep_s;
-  // Need to limit the increment to what is available... just in case
-  if (amountIncrement_ug > 0.0) {
-    if (amountIncrement_ug > srcQ->GetMass(MassUnit::ug)) {
-      amountIncrement_ug = srcQ->GetMass(MassUnit::ug);
-    }
-    DistributeMassbyMassWeighted(source, sub, -amountIncrement_ug, MassUnit::ug);
-    DistributeMassbyVolumeWeighted(target, sub, amountIncrement_ug, MassUnit::ug);
-  } else // negative increment means it is coming from the target and going to the source
-  {
-    if (-amountIncrement_ug > tgtQ->GetMass(MassUnit::ug)) {
-      amountIncrement_ug = -tgtQ->GetMass(MassUnit::ug);
-    }
-    DistributeMassbyVolumeWeighted(source, sub, -amountIncrement_ug, MassUnit::ug);
-    DistributeMassbyMassWeighted(target, sub, amountIncrement_ug, MassUnit::ug);
-  }
-
-  // Note we are only changing mass and NOT balancing on purpose
-  // We don't want the concentrations changing until we have completed our
-  // diffusion methodology in its entirety
-
-  return amountIncrement_ug;
-} // End SimpleMassDiffusion
-
-/// --------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates the mass transport of a substance between compartments by instantaneous diffusion
-///
-/// \param source: source compartment
-/// \param target: target compartment
-/// \param sub: substance that is diffusing
-/// \param timestep_s: the time step
-///
-/// \details
-/// Instantaneous diffusion assumes that the entire diffusion process happens within the bounds of a time step.
-//--------------------------------------------------------------------------------------------------
-double Tissue::MoveMassByInstantDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double timestep_s)
-{
-  const SELiquidSubstanceQuantity* srcQ = source.GetSubstanceQuantity(sub);
-  const SELiquidSubstanceQuantity* tgtQ = target.GetSubstanceQuantity(sub);
-
-  double sConc_ug_Per_mL = srcQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
-  double tConc_ug_Per_mL = tgtQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
-  double sVol_mL = source.GetVolume(VolumeUnit::mL);
-  double tVol_mL = target.GetVolume(VolumeUnit::mL);
-
-  double amountIncrement_ug = (sConc_ug_Per_mL - tConc_ug_Per_mL) * (sVol_mL * tVol_mL) / (sVol_mL + tVol_mL);
-
-  if (amountIncrement_ug > 0.0) {
-    if (amountIncrement_ug > srcQ->GetMass(MassUnit::ug)) {
-      amountIncrement_ug = srcQ->GetMass(MassUnit::ug);
-    }
-    DistributeMassbyMassWeighted(source, sub, -amountIncrement_ug, MassUnit::ug);
-    DistributeMassbyVolumeWeighted(target, sub, amountIncrement_ug, MassUnit::ug);
-  } else // negative increment means it is coming from the target and going to the source
-  {
-    if (-amountIncrement_ug > tgtQ->GetMass(MassUnit::ug)) {
-      amountIncrement_ug = -tgtQ->GetMass(MassUnit::ug);
-    }
-    DistributeMassbyVolumeWeighted(source, sub, -amountIncrement_ug, MassUnit::ug);
-    DistributeMassbyMassWeighted(target, sub, amountIncrement_ug, MassUnit::ug);
-  }
-
-  // Note we are only changing mass and NOT balancing on purpose
-  // We don't want the concentrations changing until we have completed our
-  // diffusion methodology in its entirety
-
-  return amountIncrement_ug;
-}
-
-/// --------------------------------------------------------------------------------------------------
-/// \brief
 /// Calculates the mass transport of a substance between compartments by facilitated diffusion
 ///
 /// \param source: source compartment
@@ -2147,54 +1985,6 @@ double Tissue::MoveMassByConvection(SELiquidCompartment& source, SELiquidCompart
 
   return amountIncrement_ug;
 }
-
-/// --------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates the mass transport of a substance between compartments by active transport
-///
-/// \param source: source compartment
-/// \param target: target compartment
-/// \param sub: substance that is diffusing
-/// \param pumpRate_g_Per_s: the rate at which the pump is currently working
-/// \param timestep_s: the time step
-///
-/// \details
-/// This is a simplified pumping mechanism. This single mechanism lumps together all of the
-/// biological mechanisms which "pump" a substance across a membrane against an electrochemical
-/// or other gradient (all energy-requiring transport mechanisms). It computes a mass increment
-/// based on a pump rate and then increments the mass. TThe method does not automatically update the concentration,
-/// molarity, partial pressure, and other data in the compartment following the mass increment.
-/// ***MUST CALL BALANCE TO UPDATE CONCENTRATION, MOLARITY, ETC.***
-/// Note that the sign of the increment is determined by the source and target designation.
-//--------------------------------------------------------------------------------------------------
-double Tissue::MoveMassByActiveTransport(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double pumpRate_g_Per_s, double timestep_s)
-{
-  const SELiquidSubstanceQuantity* srcQ = source.GetSubstanceQuantity(sub);
-  const SELiquidSubstanceQuantity* tgtQ = target.GetSubstanceQuantity(sub);
-
-  double amountIncrement_g = pumpRate_g_Per_s * timestep_s;
-
-  if (amountIncrement_g > 0.0) {
-    if (amountIncrement_g > srcQ->GetMass(MassUnit::g)) {
-      amountIncrement_g = srcQ->GetMass(MassUnit::g);
-    }
-    DistributeMassbyMassWeighted(source, sub, -amountIncrement_g, MassUnit::g);
-    DistributeMassbyVolumeWeighted(target, sub, amountIncrement_g, MassUnit::g);
-  } else // negative increment means it is coming from the target and going to the source
-  {
-    if (-amountIncrement_g > tgtQ->GetMass(MassUnit::g)) {
-      amountIncrement_g = -tgtQ->GetMass(MassUnit::g);
-    }
-    DistributeMassbyVolumeWeighted(source, sub, -amountIncrement_g, MassUnit::g);
-    DistributeMassbyMassWeighted(target, sub, amountIncrement_g, MassUnit::g);
-  }
-
-  // Note we are only changing mass and NOT balancing on purpose
-  // We don't want the concentrations changing until we have completed our
-  // diffusion methodology in its entirety
-
-  return amountIncrement_g;
-} // End ActiveMassTransport
 
 /// --------------------------------------------------------------------------------------------------
 /// \brief
@@ -2326,7 +2116,9 @@ void Tissue::CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartmen
       DistributeMassbyVolumeWeighted(extra, *ion, -incrementer_ug, MassUnit::ug);
       DistributeMassbyMassWeighted(intra, *ion, incrementer_ug, MassUnit::ug);
     }
-    //Balancing will happen in CalcDiffusion method after transport from vascular to extracellular is handled for each ion.
+
+    extra.GetSubstanceQuantity(*ion)->Balance(BalanceLiquidBy::Mass);
+    intra.GetSubstanceQuantity(*ion)->Balance(BalanceLiquidBy::Mass);
   }
 }
 

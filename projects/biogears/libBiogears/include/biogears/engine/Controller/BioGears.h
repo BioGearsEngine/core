@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Equipment/Inhaler.h>
 #include <biogears/engine/Systems/BloodChemistry.h>
 #include <biogears/engine/Systems/Cardiovascular.h>
+#include <biogears/engine/Systems/Diffusion.h>
 #include <biogears/engine/Systems/Drugs.h>
 #include <biogears/engine/Systems/Endocrine.h>
 #include <biogears/engine/Systems/Energy.h>
@@ -102,6 +103,9 @@ public:
   DataTrack& GetDataTrack();
   SaturationCalculator& GetSaturationCalculator();
   const SaturationCalculator& GetSaturationCalculator() const;
+
+  DiffusionCalculator& GetDiffusionCalculator();
+  const DiffusionCalculator& GetDiffusionCalculator() const;
 
   BioGearsSubstances& GetSubstances();
   const BioGearsSubstances& GetSubstances() const;
@@ -200,6 +204,7 @@ protected:
 
   std::unique_ptr<BioGearsConfiguration> m_Config;
   std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
+  std::unique_ptr<DiffusionCalculator> m_DiffusionCalculator;
 
   std::unique_ptr<BioGearsSubstances> m_Substances;
 
