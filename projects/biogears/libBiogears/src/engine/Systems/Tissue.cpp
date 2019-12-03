@@ -775,11 +775,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double fatigueLevel = 0;
   static double totalFatConsumed_g = 0;
 
-  m_data.GetDataTrack().Probe("TotalEnergyRequest_kcal", totalEnergyRequested_kcal);
-  m_data.GetDataTrack().Probe("OtherEnergyDemand_W", otherEnergyDemandAboveBasal_kcal * 4184.0 / time_s);
-
-
-
   //Data
   double energyPerMolATP_kcal = m_data.GetConfiguration().GetEnergyPerATP(EnergyPerAmountUnit::kcal_Per_mol);
   double ATP_Per_Glucose = 29.85; //The full aerobic glucose breakdown gives ~29.85 ATP, including inefficiencies \cite rich2003molecular
@@ -979,8 +974,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       TissueO2->Balance(BalanceLiquidBy::Mass);
       TissueCO2->Balance(BalanceLiquidBy::Mass);
       TissueKetones->Balance(BalanceLiquidBy::Mass);
-
-      
 
       continue; //nothing else to do for this tissue
     }
@@ -1318,7 +1311,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
 
   } //end of the tissue loop
 
-  //Make sure that the energy we used lines up with our demand
+  //Make sure that the energy we used lines up with our demand -- allowing 1% tolerance on either side
   if ((m_data.GetState()>=EngineState::AtSecondaryStableState) && (totalEnergyRequested_kcal_Check < 0.99 * totalEnergyRequested_kcal || totalEnergyRequested_kcal_Check > 1.01 * totalEnergyRequested_kcal)) {
     std::stringstream ss;
 	ss << "Tissue Energy Demand / Accounting Mismatch : " << std::endl;
@@ -1327,7 +1320,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     Error(ss);
   }
 
-  m_data.GetDataTrack().Probe("TotalEnergyAccountedFor_kcal", totalEnergyRequested_kcal_Check);
   //Update outputs
   totalO2Consumed_mol += m_hepaticO2Consumed_mol;
   totalCO2Produced_mol += m_hepaticCO2Produced_mol;
