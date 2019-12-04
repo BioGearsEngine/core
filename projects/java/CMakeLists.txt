@@ -11,7 +11,9 @@ find_program(Java_XML_EXECUTABLE
   HINTS ${_JAVA_HINTS}
   PATHS ${_JAVA_PATHS}
 )
-
+if(NOT Java_XML_EXECUTABLE)
+  message(FATAL_ERROR "Unable to find Java_XML_EXECUTABLE XJC. Can not continue configuration with out it.")
+endif()
 if(NOT CMAKE_LINK_LIBRARY_SUFFIX)
   set(CMAKE_LINK_LIBRARY_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
 endif()
@@ -121,7 +123,6 @@ function(xjc_generate_java _xjc_schema SRCS)
     # Becareful most build systems will not detect new files until the next build
 
     #XSDs can generate multiple files, but we are only verifying the master file exist.
-    
     add_custom_command(   OUTPUT  ${JAVA_FILES}
                           WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                           COMMAND ${CMAKE_COMMAND} -E make_directory ${_xjc_GEN_PATH}/${_xjc_COMPONENT}/${_xjc_COMPONENT}${_xjc_NAMESPACE_PATH} 

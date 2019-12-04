@@ -155,27 +155,27 @@ endif()
 # Step 3: Global Doxygen configuration 
 #         you might need to tweak this if you have multiple doxy files
 ###############################################################################
-if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
-    find_package(Doxygen REQUIRED)
-    if(NOT DOXYGEN_FOUND)
-        message(FATAL_ERROR "Doxygen is needed to build the documentation.")
-    endif()
-
-    set(doxyfile_in ${CMAKE_SOURCE_DIR}/share/doc/cmake-common.doxy)
-    set(doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-
-    configure_file(${doxyfile_in} ${doxyfile} @ONLY)
-
-    add_custom_target(doxygen ALL
-        COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
-        WORKING_DIRECTORY ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}/doc
-        COMMENT "Generating API documentation with Doxygen"
-        VERBATIM)
-
-   set_target_properties(doxygen PROPERTIES
-                          DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
-                          CXX_STANDARD 11
-                          FOLDER "Other"
-                          PROJECT_LABEL "Doxygen")
-   install(DIRECTORY ${PROJECT_BINARY_DIR}/docs/html DESTINATION share/doc/biogears/)
-endif()
+#if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
+#    find_package(Doxygen REQUIRED)
+#    if(NOT DOXYGEN_FOUND)
+#        message(FATAL_ERROR "Doxygen is needed to build the documentation.")
+#    endif()
+#
+#    set(doxyfile_in ${CMAKE_SOURCE_DIR}/share/doc/cmake-common.doxy)
+#    set(doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+#
+#    configure_file(${doxyfile_in} ${doxyfile} @ONLY)
+#
+#    add_custom_target(doxygen ALL
+#        COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
+#        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc
+#        COMMENT "Generating API documentation with Doxygen"
+#        VERBATIM)
+#
+#   set_target_properties(doxygen PROPERTIES
+#                          DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+#                          CXX_STANDARD 11
+#                          FOLDER "Other"
+#                          PROJECT_LABEL "Doxygen")
+#   install(DIRECTORY ${PROJECT_BINARY_DIR}/outputs/docs/html DESTINATION share/doc/biogears/)
+#endif()

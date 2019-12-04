@@ -144,18 +144,43 @@ set (allocation_args "-Xms64M" "-Xmx1G" "-Xmn64M" "-Xss4m")
 #    USES_TERMINAL
 #)
 if(Biogears_BUILD_DOCUMENTATION)
-    add_custom_target(gen-website-docs
-        #COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.SystemValidation
-        #COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.testing.validation.PatientValidation
+    add_custom_target(docs-prepare
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD #cdm
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md #cdm
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md #cdm
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx #cdm
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava.config 
-        COMMAND cd doc    #I hate windows
-        COMMAND cd doxygen 
+        VERBATIM
+        USES_TERMINAL
+  )
+  add_custom_target(docs-doxygen
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
+        VERBATIM
+        USES_TERMINAL
+  )
+
+#-rwxr-xr-x 1 root root 105066 Nov 26 19:05 Doxyfile
+-rwxr-xr-x 1 root root     78 Dec  4 19:43 Mainpage.html
+-rwxr-xr-x 1 root root   5516 Dec  4 19:43 customdoxygen.css
+-rwxr-xr-x 1 root root   2084 Dec  4 19:43 footer.html
+-rwxr-xr-x 1 root root   4465 Dec  4 19:43 header.html
+drwxrwxrwx 2 root root      0 Dec  4 21:47 html
+drwxrwxrwx 2 root root      0 Dec  4 21:47 latex
+
+  add_custom_target(docs-stage
+        COMMAND mkdir ../documentation
+	COMMAND  ${CMAKE_COMMAND} -e cp html/error.html  ../documentation/
+	COMMAND  ${CMAKE_COMMAND} -e cp html/index.html  ../documentation/
+	COMMAND  ${CMAKE_COMMAND} -e cp html/privacy.html  ../documentation/
+	COMMAND  ${CMAKE_COMMAND} -e cp html/releases.html  ../documentation/
+	COMMAND  ${CMAKE_COMMAND} -e cp html/terms.html  ../documentation/
+	COMMAND  ${CMAKE_COMMAND} -e cp -r html ../documentation
+	COMMAND  ${CMAKE_COMMAND} -e cp -r latex ../documentation
+	COMMAND  ${CMAKE_COMMAND} -e cp footer.html ../documentation
+	COMMAND  ${CMAKE_COMMAND} -e cp header.html ../documentation
+	COMMAND  ${CMAKE_COMMAND} -e cp Mainpage.html ../documentation
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
         VERBATIM
         USES_TERMINAL
   )
@@ -305,8 +330,12 @@ add_custom_target(rebase-tests
 
 #add_dependencies(gen-states  ${PROJECT_NAME})
 #add_dependencies(gen-data  ${PROJECT_NAME})
-if(Biogears_BUILD_DOCUMENTATION)
-  add_dependencies(gen-website-docs  ${PROJECT_NAME})
+
+option(Biogears_BUILD_WEBSITE "Use Java to build the website" ON)
+if(Biogears_BUILD_WEBSITE)
+  add_dependencies(docs-prepare ${PROJECT_NAME})
+  add_dependencies(docs-doxygen ${PROJECT_NAME} docs-prepare)
+  add_dependencies(docs-stage   ${PROJECT_NAME} docs-doxygen)
 endif()
 add_dependencies(run-system-validation  ${PROJECT_NAME})
 #add_dependencies(report-system-validation  ${PROJECT_NAME})
