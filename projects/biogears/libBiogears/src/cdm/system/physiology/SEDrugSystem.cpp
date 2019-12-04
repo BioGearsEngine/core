@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -192,7 +193,7 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
   if (m_BronchodilationLevel != nullptr)
     data.BronchodilationLevel(std::unique_ptr<CDM::ScalarFractionData>(m_BronchodilationLevel->Unload()));
   if (m_FeverChange != nullptr)
-    data.FeverChange(std::unique_ptr<CDM::ScalarFractionData>(m_FeverChange->Unload()));
+    data.FeverChange(std::unique_ptr<CDM::ScalarTemperatureData>(m_FeverChange->Unload()));
   if (m_HeartRateChange != nullptr)
     data.HeartRateChange(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateChange->Unload()));
   if (m_HemorrhageChange != nullptr)
@@ -264,18 +265,18 @@ bool SEDrugSystem::HasFeverChange() const
   return m_FeverChange == nullptr ? false : m_FeverChange->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalarFraction& SEDrugSystem::GetFeverChange()
+SEScalarTemperature& SEDrugSystem::GetFeverChange()
 {
   if (m_FeverChange == nullptr)
-    m_FeverChange = new SEScalarFraction();
+    m_FeverChange = new SEScalarTemperature();
   return *m_FeverChange;
 }
 //-------------------------------------------------------------------------------
-double SEDrugSystem::GetFeverChange() const
+double SEDrugSystem::GetFeverChange(const TemperatureUnit& unit) const
 {
   if (m_FeverChange == nullptr)
     return SEScalar::dNaN();
-  return m_FeverChange->GetValue();
+  return m_FeverChange->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
 

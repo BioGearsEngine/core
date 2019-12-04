@@ -89,7 +89,7 @@ void Drugs::Initialize()
 {
   BioGearsSystem::Initialize();
   GetBronchodilationLevel().SetValue(0.0);
-  GetFeverChange().SetValue(0.0);
+  GetFeverChange().SetValue(0.0, TemperatureUnit::C);
   GetHeartRateChange().SetValue(0.0, FrequencyUnit::Per_min);
   GetHemorrhageChange().SetValue(0.0);
   GetMeanBloodPressureChange().SetValue(0.0, PressureUnit::mmHg);
@@ -887,6 +887,7 @@ void Drugs::CalculateDrugEffects()
   double deltaPulsePressure_mmHg = (deltaSystolicBP_mmHg - deltaDiastolicBP_mmHg);
 
   //Set values on the CDM System Values
+  GetFeverChange().SetValue(deltaCoreTemp_degC, TemperatureUnit::C);
   GetHeartRateChange().SetValue(deltaHeartRate_Per_min, FrequencyUnit::Per_min);
   GetHemorrhageChange().SetValue(hemorrhageFlowRecoveryFraction);
   GetMeanBloodPressureChange().SetValue(deltaMeanPressure_mmHg, PressureUnit::mmHg);
@@ -894,6 +895,7 @@ void Drugs::CalculateDrugEffects()
   GetRespirationRateChange().SetValue(deltaRespirationRate_Per_min, FrequencyUnit::Per_min);
   GetTidalVolumeChange().SetValue(deltaTidalVolume_mL, VolumeUnit::mL);
   GetNeuromuscularBlockLevel().SetValue(neuromuscularBlockLevel);
+  GetPainToleranceChange().SetValue(painToleranceChange);
   GetSedationLevel().SetValue(sedationLevel);
   GetBronchodilationLevel().SetValue(bronchodilationLevel);
   GetTubularPermeabilityChange().SetValue(deltaTubularPermeability);

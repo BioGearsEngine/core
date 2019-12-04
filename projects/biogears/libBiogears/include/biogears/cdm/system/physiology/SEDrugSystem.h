@@ -22,6 +22,8 @@ class SEScalar;
 class SEScalarFraction;
 class SEScalarMass;
 class MassUnit;
+class SEScalarTemperature;
+class TemperatureUnit;
 class SEScalarPressure;
 class PressureUnit;
 class SEScalarFrequency;
@@ -62,8 +64,8 @@ public:
   double GetBronchodilationLevel() const;
 
   bool HasFeverChange() const;
-  SEScalarFraction& GetFeverChange();
-  double GetFeverChange() const;
+  SEScalarTemperature& GetFeverChange();
+  double GetFeverChange(const TemperatureUnit& unit) const;
 
   bool HasHeartRateChange() const;
   SEScalarFrequency& GetHeartRateChange();
@@ -117,7 +119,7 @@ public:
 protected:
   SEScalar* m_AntibioticActivity;
   SEScalarFraction* m_BronchodilationLevel;
-  SEScalarFraction* m_FeverChange;
+  SEScalarTemperature* m_FeverChange;
   SEScalarFrequency* m_HeartRateChange;
   SEScalarFraction* m_HemorrhageChange;
   SEScalarPressure* m_MeanBloodPressureChange;

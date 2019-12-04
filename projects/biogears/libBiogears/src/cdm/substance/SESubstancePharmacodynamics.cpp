@@ -26,9 +26,11 @@ SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   m_DiastolicPressureModifier = nullptr;
   m_EC50 = nullptr;
   m_EMaxShapeParameter = nullptr;
+  m_FeverModifier = nullptr;
   m_HeartRateModifier = nullptr;
   m_HemorrhageModifier = nullptr;
   m_NeuromuscularBlock = nullptr;
+  m_PainModifier = nullptr;
   m_PupillaryResponse = nullptr;
   m_RespirationRateModifier = nullptr;
   m_Sedation = nullptr;
@@ -51,9 +53,11 @@ void SESubstancePharmacodynamics::Clear()
   SAFE_DELETE(m_DiastolicPressureModifier);
   SAFE_DELETE(m_EC50);
   SAFE_DELETE(m_EMaxShapeParameter);
+  SAFE_DELETE(m_FeverModifier);
   SAFE_DELETE(m_HeartRateModifier);
   SAFE_DELETE(m_HemorrhageModifier);
   SAFE_DELETE(m_NeuromuscularBlock);
+  SAFE_DELETE(m_PainModifier);
   SAFE_DELETE(m_PupillaryResponse);
   SAFE_DELETE(m_RespirationRateModifier);
   SAFE_DELETE(m_Sedation);
@@ -76,11 +80,15 @@ bool SESubstancePharmacodynamics::IsValid() const
     return false;
   if (!HasEMaxShapeParameter())
     return false;
+  if (!HasFeverModifier())
+    return false;
   if (!HasHeartRateModifier())
     return false;
   if (!HasHemorrhageModifier())
     return false;
   if (!HasNeuromuscularBlock())
+    return false;
+  if (!HasPainModifier())
     return false;
   if (!HasPupillaryResponse())
     return false;
@@ -118,12 +126,16 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
     return &GetEC50();
   if (name.compare("EMaxShapeParameter") == 0)
     return &GetEMaxShapeParameter();
+  if (name.compare("FeverModifier") == 0)
+    return &GetFeverModifier();
   if (name.compare("HeartRateModifier") == 0)
     return &GetHeartRateModifier();
   if (name.compare("HemorrhageModifier") == 0)
     return &GetHemorrhageModifier();
   if (name.compare("NeuromuscularBlock") == 0)
     return &GetNeuromuscularBlock();
+  if (name.compare("PainModifier") == 0)
+    return &GetPainModifier();
   if (name.compare("RespirationRateModifier") == 0)
     return &GetRespirationRateModifier();
   if (name.compare("Sedation") == 0)
@@ -148,9 +160,11 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   GetDiastolicPressureModifier().Load(in.DiastolicPressureModifier());
   GetEC50().Load(in.EC50());
   GetEMaxShapeParameter().Load(in.EMaxShapeParameter());
+  GetFeverModifier().Load(in.FeverModifier());
   GetHeartRateModifier().Load(in.HeartRateModifier());
   GetHemorrhageModifier().Load(in.HemorrhageModifier());
   GetNeuromuscularBlock().Load(in.NeuromuscularBlock());
+  GetPainModifier().Load(in.PainModifier());
   GetPupillaryResponse().Load(in.PupillaryResponse());
   GetRespirationRateModifier().Load(in.RespirationRateModifier());
   GetSedation().Load(in.Sedation());
@@ -183,12 +197,16 @@ void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& dat
     data.EC50(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EC50->Unload()));
   if (HasEMaxShapeParameter())
     data.EMaxShapeParameter(std::unique_ptr<CDM::ScalarData>(m_EMaxShapeParameter->Unload()));
+  if (HasFeverModifier())
+    data.FeverModifier(std::unique_ptr<CDM::ScalarFractionData>(m_FeverModifier->Unload()));
   if (HasHeartRateModifier())
     data.HeartRateModifier(std::unique_ptr<CDM::ScalarFractionData>(m_HeartRateModifier->Unload()));
   if (HasHemorrhageModifier())
     data.HemorrhageModifier(std::unique_ptr<CDM::ScalarFractionData>(m_HemorrhageModifier->Unload()));
   if (HasNeuromuscularBlock())
     data.NeuromuscularBlock(std::unique_ptr<CDM::ScalarFractionData>(m_NeuromuscularBlock->Unload()));
+  if (HasPainModifier())
+    data.PainModifier(std::unique_ptr<CDM::ScalarFractionData>(m_PainModifier->Unload()));
   if (HasPupillaryResponse())
     data.PupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_PupillaryResponse->Unload()));
   if (HasRespirationRateModifier())

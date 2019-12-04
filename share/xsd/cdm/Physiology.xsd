@@ -187,7 +187,7 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>
 					<xs:element name="AntibioticActivity" type="ScalarData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="BronchodilationLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-					<xs:element name="FeverChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
+					<xs:element name="FeverChange" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="HeartRateChange" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
 					<xs:element name="HemorrhageChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
                     <xs:element name="MeanBloodPressureChange" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
