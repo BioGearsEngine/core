@@ -61,6 +61,10 @@ public:
   SEScalarFraction& GetBronchodilationLevel();
   double GetBronchodilationLevel() const;
 
+  bool HasFeverChange() const;
+  SEScalarFraction& GetFeverChange();
+  double GetFeverChange() const;
+
   bool HasHeartRateChange() const;
   SEScalarFrequency& GetHeartRateChange();
   double GetHeartRateChange(const FrequencyUnit& unit) const;
@@ -76,6 +80,10 @@ public:
   bool HasNeuromuscularBlockLevel() const;
   SEScalarFraction& GetNeuromuscularBlockLevel();
   double GetNeuromuscularBlockLevel() const;
+
+  bool HasPainToleranceChange() const;
+  SEScalarFraction& GetPainToleranceChange();
+  double GetPainToleranceChange() const;
 
   bool HasPulsePressureChange() const;
   SEScalarPressure& GetPulsePressureChange();
@@ -109,10 +117,12 @@ public:
 protected:
   SEScalar* m_AntibioticActivity;
   SEScalarFraction* m_BronchodilationLevel;
+  SEScalarFraction* m_FeverChange;
   SEScalarFrequency* m_HeartRateChange;
   SEScalarFraction* m_HemorrhageChange;
   SEScalarPressure* m_MeanBloodPressureChange;
   SEScalarFraction* m_NeuromuscularBlockLevel;
+  SEScalarFraction* m_PainToleranceChange;
   SEScalarPressure* m_PulsePressureChange;
   SEPupillaryResponse* m_PupillaryResponse;
   SEScalarFrequency* m_RespirationRateChange;

@@ -89,10 +89,12 @@ void Drugs::Initialize()
 {
   BioGearsSystem::Initialize();
   GetBronchodilationLevel().SetValue(0.0);
+  GetFeverChange().SetValue(0.0);
   GetHeartRateChange().SetValue(0.0, FrequencyUnit::Per_min);
   GetHemorrhageChange().SetValue(0.0);
   GetMeanBloodPressureChange().SetValue(0.0, PressureUnit::mmHg);
   GetNeuromuscularBlockLevel().SetValue(0.0);
+  GetPainToleranceChange().SetValue(0.0);
   GetPulsePressureChange().SetValue(0.0, PressureUnit::mmHg);
   GetPupillaryResponse().GetSizeModifier().SetValue(0);
   GetPupillaryResponse().GetReactivityModifier().SetValue(0);
@@ -741,6 +743,7 @@ void Drugs::CalculatePartitionCoefficients()
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculateDrugEffects()
 {
+  double deltaCoreTemp_degC = 0;
   double deltaHeartRate_Per_min = 0;
   double hemorrhageFlowRecoveryFraction = 0;
   double deltaDiastolicBP_mmHg = 0;
@@ -748,6 +751,7 @@ void Drugs::CalculateDrugEffects()
   double deltaRespirationRate_Per_min = 0;
   double deltaTidalVolume_mL = 0;
   double neuromuscularBlockLevel = 0;
+  double painToleranceChange = 0;
   double sedationLevel = 0;
   double bronchodilationLevel = 0;
   double concentrationEffects_unitless = 0;
@@ -815,6 +819,8 @@ void Drugs::CalculateDrugEffects()
     // stabilization and restrict drugs to post-feedback stabilization. Alternatively, we could base the drug effect on a baseline
     // concentration which is normally zero but which gets set to a new baseline concentration at the end of feedback (see chemoreceptor
     // and the blood gas setpoint reset for example).
+    deltaCoreTemp_degC += m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C) * pd.GetFeverModifier().GetValue() * concentrationEffects_unitless;
+    
     deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
 
     hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue() * 1.0e-4) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
@@ -838,6 +844,8 @@ void Drugs::CalculateDrugEffects()
     }
 
     neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
+
+    painToleranceChange += pd.GetPainModifier().GetValue() * concentrationEffects_unitless;
 
     bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
 

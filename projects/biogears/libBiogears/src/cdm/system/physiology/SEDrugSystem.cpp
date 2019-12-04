@@ -26,10 +26,12 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 constexpr char idAntibioticActivity[] = "AntibioticActivity";
 constexpr char idBronchodilationLevel[] = "BronchodilationLevel";
+constexpr char idFeverChange[] = "FeverChange";
 constexpr char idHeartRateChange[] = "HeartRateChange";
 constexpr char idHemorrhageChange[] = "HemorrhageChange";
 constexpr char idMeanBloodPressureChange[] = "MeanBloodPressureChange";
 constexpr char idNeuromuscularBlockLevel[] = "NeuromuscularBlockLevel";
+constexpr char idPainToleranceChange[] = "PainToleranceChange";
 constexpr char idPulsePressureChange[] = "PulsePressureChange";
 constexpr char idRespirationRateChange[] = "RespirationRateChange";
 constexpr char idSedationLevel[] = "SedationLevel";
@@ -43,10 +45,12 @@ SEDrugSystem::SEDrugSystem(Logger* logger)
 {
   m_AntibioticActivity = nullptr;
   m_BronchodilationLevel = nullptr;
+  m_FeverChange = nullptr;
   m_HeartRateChange = nullptr;
   m_HemorrhageChange = nullptr;
   m_MeanBloodPressureChange = nullptr;
   m_NeuromuscularBlockLevel = nullptr;
+  m_PainToleranceChange = nullptr;
   m_PulsePressureChange = nullptr;
   m_PupillaryResponse = nullptr;
   m_RespirationRateChange = nullptr;
@@ -69,10 +73,12 @@ void SEDrugSystem::Clear()
 
   SAFE_DELETE(m_AntibioticActivity);
   SAFE_DELETE(m_BronchodilationLevel);
+  SAFE_DELETE(m_FeverChange);
   SAFE_DELETE(m_HeartRateChange);
   SAFE_DELETE(m_HemorrhageChange);
   SAFE_DELETE(m_MeanBloodPressureChange);
   SAFE_DELETE(m_NeuromuscularBlockLevel);
+  SAFE_DELETE(m_PainToleranceChange);
   SAFE_DELETE(m_PulsePressureChange);
   SAFE_DELETE(m_PupillaryResponse);
   SAFE_DELETE(m_RespirationRateChange);
@@ -91,6 +97,8 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
     GetAntibioticActivity().Load(in.AntibioticActivity().get());
   if (in.BronchodilationLevel().present())
     GetBronchodilationLevel().Load(in.BronchodilationLevel().get());
+  if (in.FeverChange().present())
+    GetFeverChange().Load(in.FeverChange().get());
   if (in.HeartRateChange().present())
     GetHeartRateChange().Load(in.HeartRateChange().get());
   if (in.HemorrhageChange().present())
@@ -99,6 +107,8 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
       GetMeanBloodPressureChange().Load(in.MeanBloodPressureChange().get());
   if (in.NeuromuscularBlockLevel().present())
     GetNeuromuscularBlockLevel().Load(in.NeuromuscularBlockLevel().get());
+  if (in.PainToleranceChange().present())
+    GetPainToleranceChange().Load(in.PainToleranceChange().get());
   if (in.PulsePressureChange().present())
     GetPulsePressureChange().Load(in.PulsePressureChange().get());
   if (in.PupillaryResponse().present())
@@ -128,6 +138,8 @@ const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
     return &GetAntibioticActivity();
   if (name == idBronchodilationLevel)
     return &GetBronchodilationLevel();
+  if (name == idFeverChange)
+    return &GetFeverChange();
   if (name == idHeartRateChange)
     return &GetHeartRateChange();
   if (name == idHemorrhageChange)
@@ -136,6 +148,8 @@ const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
     return &GetMeanBloodPressureChange();
   if (name == idNeuromuscularBlockLevel)
     return &GetNeuromuscularBlockLevel();
+  if (name == idPainToleranceChange)
+    return &GetPainToleranceChange();
   if (name == idPulsePressureChange)
     return &GetPulsePressureChange();
   if (name == idRespirationRateChange)
@@ -177,6 +191,8 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
     data.AntibioticActivity(std::unique_ptr<CDM::ScalarData>(m_AntibioticActivity->Unload()));
   if (m_BronchodilationLevel != nullptr)
     data.BronchodilationLevel(std::unique_ptr<CDM::ScalarFractionData>(m_BronchodilationLevel->Unload()));
+  if (m_FeverChange != nullptr)
+    data.FeverChange(std::unique_ptr<CDM::ScalarFractionData>(m_FeverChange->Unload()));
   if (m_HeartRateChange != nullptr)
     data.HeartRateChange(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateChange->Unload()));
   if (m_HemorrhageChange != nullptr)
@@ -185,6 +201,8 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
     data.MeanBloodPressureChange(std::unique_ptr<CDM::ScalarPressureData>(m_MeanBloodPressureChange->Unload()));
   if (m_NeuromuscularBlockLevel != nullptr)
     data.NeuromuscularBlockLevel(std::unique_ptr<CDM::ScalarFractionData>(m_NeuromuscularBlockLevel->Unload()));
+  if (m_PainToleranceChange != nullptr)
+    data.PainToleranceChange(std::unique_ptr<CDM::ScalarFractionData>(m_PainToleranceChange->Unload()));
   if (m_PulsePressureChange != nullptr)
     data.PulsePressureChange(std::unique_ptr<CDM::ScalarPressureData>(m_PulsePressureChange->Unload()));
   if (m_PupillaryResponse != nullptr)
@@ -239,6 +257,25 @@ double SEDrugSystem::GetBronchodilationLevel() const
   if (m_BronchodilationLevel == nullptr)
     return SEScalar::dNaN();
   return m_BronchodilationLevel->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SEDrugSystem::HasFeverChange() const
+{
+  return m_FeverChange == nullptr ? false : m_FeverChange->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarFraction& SEDrugSystem::GetFeverChange()
+{
+  if (m_FeverChange == nullptr)
+    m_FeverChange = new SEScalarFraction();
+  return *m_FeverChange;
+}
+//-------------------------------------------------------------------------------
+double SEDrugSystem::GetFeverChange() const
+{
+  if (m_FeverChange == nullptr)
+    return SEScalar::dNaN();
+  return m_FeverChange->GetValue();
 }
 //-------------------------------------------------------------------------------
 
@@ -317,6 +354,26 @@ double SEDrugSystem::GetNeuromuscularBlockLevel() const
   if (m_NeuromuscularBlockLevel == nullptr)
     return SEScalar::dNaN();
   return m_NeuromuscularBlockLevel->GetValue();
+}
+//-------------------------------------------------------------------------------
+
+bool SEDrugSystem::HasPainToleranceChange() const
+{
+  return m_PainToleranceChange == nullptr ? false : m_PainToleranceChange->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarFraction& SEDrugSystem::GetPainToleranceChange()
+{
+  if (m_PainToleranceChange == nullptr)
+    m_PainToleranceChange = new SEScalarFraction();
+  return *m_PainToleranceChange;
+}
+//-------------------------------------------------------------------------------
+double SEDrugSystem::GetPainToleranceChange() const
+{
+  if (m_PainToleranceChange == nullptr)
+    return SEScalar::dNaN();
+  return m_PainToleranceChange->GetValue();
 }
 //-------------------------------------------------------------------------------
 

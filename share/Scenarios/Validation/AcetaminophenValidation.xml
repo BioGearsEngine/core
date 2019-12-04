@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>AcetaminophenScenario</Name>
+    <Description>Inject standard patient with Acetaminophen!</Description>
+	<InitialParameters>
+		<PatientFile>StandardMale.xml</PatientFile>
+		<Configuration xsi:type="BioGearsConfigurationData">
+			<DrugsConfiguration>
+        <PDModel>Off</PDModel>
+      </DrugsConfiguration>
+		</Configuration>
+	</InitialParameters>
+    
+  <DataRequests SamplesPerSecond="1">
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Acetaminophen" Unit="ug/mL" Precision="9"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
+  
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Name="PlasmaConcentration" Unit="ug/mL" Precision="6"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Name="MassInBody" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Acetaminophen" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Acetaminophen" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Acetaminophen" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Acetaminophen" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Acetaminophen" Name="MassExcreted" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Acetaminophen" Name="MassExcreted" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Acetaminophen" Name="MassExcreted" Unit="ug" Precision="2"/>
+  </DataRequests>
+	
+	
+    <Action xsi:type="SubstanceOralDoseData" AdminRoute="Gastrointestinal">
+		<Substance>Acetaminophen</Substance>
+		<Dose value="500" unit="mg"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="120" unit="min"/>       
+    </Action>
+</Scenario>

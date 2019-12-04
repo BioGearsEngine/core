@@ -370,7 +370,7 @@ void Nervous::CheckPainStimulus()
   //grab drug effects if there are in the body
   if (m_data.GetDrugs().HasCentralNervousResponse()) {
     double NervousScalar = 10.0;
-    double CNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue();
+    double CNSModifier = m_data.GetDrugs().GetCentralNervousResponse().GetValue(); // MAKE THIS PAIN MODIFIER
     CNSPainBuffer = exp(-CNSModifier * NervousScalar);
   }
 

@@ -329,6 +329,29 @@ double SESubstancePharmacodynamics::GetEMaxShapeParameter() const
   return m_EMaxShapeParameter->GetValue();
 }
 //-----------------------------------------------------------------------------
+bool SESubstancePharmacodynamics::HasFeverModifier() const
+{
+  return (m_FeverModifier == nullptr) ? false : m_FeverModifier->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarFraction& SESubstancePharmacodynamics::GetFeverModifier()
+{
+  if (m_FeverModifier == nullptr) {
+    m_FeverModifier = new SEScalarFraction();
+  }
+
+  return *m_FeverModifier;
+}
+//-----------------------------------------------------------------------------
+double SESubstancePharmacodynamics::GetFeverModifier() const
+{
+  if (m_FeverModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_FeverModifier->GetValue();
+}
+//-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasHeartRateModifier() const
 {
   return (m_HeartRateModifier == nullptr) ? false : m_HeartRateModifier->IsValid();
@@ -396,6 +419,29 @@ double SESubstancePharmacodynamics::GetNeuromuscularBlock() const
   }
 
   return m_NeuromuscularBlock->GetValue();
+}
+//-----------------------------------------------------------------------------
+bool SESubstancePharmacodynamics::HasPainModifier() const
+{
+  return (m_PainModifier == nullptr) ? false : m_PainModifier->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarFraction& SESubstancePharmacodynamics::GetPainModifier()
+{
+  if (m_PainModifier == nullptr) {
+    m_PainModifier = new SEScalarFraction();
+  }
+
+  return *m_PainModifier;
+}
+//-----------------------------------------------------------------------------
+double SESubstancePharmacodynamics::GetPainModifier() const
+{
+  if (m_PainModifier == nullptr) {
+    return SEScalar::dNaN();
+  }
+
+  return m_PainModifier->GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasPupillaryResponse() const

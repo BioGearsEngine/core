@@ -31,11 +31,13 @@
     <Pharmacodynamics>
       <Bronchodilation readOnly="false" value="0"/>
       <DiastolicPressureModifier readOnly="false" value="0.0"/>
-      <EC50 readOnly="false" unit="ug/mL" value="1.0"/>
-      <EMaxShapeParameter readOnly="false" value="1.0"/>
+      <EC50 readOnly="false" unit="ug/mL" value="5.17"/>
+      <EMaxShapeParameter readOnly="false" value="9.98"/>
+	  <FeverModifier readOnly="false" value="0.1"/>
       <HeartRateModifier readOnly="false" value="0.0"/>
       <HemorrhageModifier readOnly="false" value="0"/>
       <NeuromuscularBlock readOnly="false" value="0"/>
+	  <PainModifier readOnly="false" value="0.5"/>
       <PupillaryResponse>
         <ReactivityModifier readOnly="false" value="0.0"/>
         <SizeModifier readOnly="false" value="0.0"/>

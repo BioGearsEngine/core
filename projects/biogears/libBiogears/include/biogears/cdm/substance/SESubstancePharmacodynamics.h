@@ -63,6 +63,10 @@ public:
   virtual SEScalar& GetEMaxShapeParameter();
   virtual double GetEMaxShapeParameter() const;
 
+  virtual bool HasFeverModifier() const;
+  virtual SEScalarFraction& GetFeverModifier();
+  virtual double GetFeverModifier() const;
+
   virtual bool HasHeartRateModifier() const;
   virtual SEScalarFraction& GetHeartRateModifier();
   virtual double GetHeartRateModifier() const;
@@ -74,6 +78,10 @@ public:
   virtual bool HasNeuromuscularBlock() const;
   virtual SEScalarFraction& GetNeuromuscularBlock();
   virtual double GetNeuromuscularBlock() const;
+
+  virtual bool HasPainModifier() const;
+  virtual SEScalarFraction& GetPainModifier();
+  virtual double GetPainModifier() const;
 
   virtual bool HasPupillaryResponse() const;
   virtual SEPupillaryResponse& GetPupillaryResponse();
@@ -116,9 +124,11 @@ protected:
   SEScalarFraction* m_DiastolicPressureModifier;
   SEScalarMassPerVolume* m_EC50;
   SEScalar* m_EMaxShapeParameter;
+  SEScalarFraction* m_FeverModifier;
   SEScalarFraction* m_HeartRateModifier;
   SEScalarFraction* m_HemorrhageModifier;
   SEScalarFraction* m_NeuromuscularBlock;
+  SEScalarFraction* m_PainModifier;
   SEPupillaryResponse* m_PupillaryResponse;
   SEScalarFraction* m_RespirationRateModifier;
   SEScalarFraction* m_Sedation;
