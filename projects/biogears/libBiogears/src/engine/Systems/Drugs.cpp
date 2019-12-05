@@ -763,7 +763,7 @@ void Drugs::CalculateDrugEffects()
   double inhibitorConstant_ug_Per_mL = 1.0; //Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
 
   //Loop over substances
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
+  for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
     if (!sub->HasPD())
       continue;
 
@@ -923,9 +923,7 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
   double plasmaVolume_mL = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL);
   double rate_Per_s = 0.0;
 
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
-    if (!sub->HasPK())
-      continue;
+  for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
 
     //--Assume that vena cava concentration is representative blood average (this is what we do in BloodChemistry) -
     double bloodPlasmaRatio = 1.0; //Assume equal distribution for subs without a defined BP ratio

@@ -111,10 +111,15 @@ void SESubstanceManager::AddActiveSubstance(SESubstance& substance)
 {
   if (IsActive(substance))
     return;
-  if (substance.GetState() == CDM::enumSubstanceState::Gas)
+  if (substance.GetState() == CDM::enumSubstanceState::Gas) {
     m_ActiveGases.push_back(&substance);
-  if (substance.GetState() == CDM::enumSubstanceState::Liquid)
+  }
+  if (substance.GetState() == CDM::enumSubstanceState::Liquid) {
     m_ActiveLiquids.push_back(&substance);
+  }
+  if (substance.HasPK()) {
+    m_ActiveDrugs.push_back(&substance);
+  }
   m_ActiveSubstances.push_back(&substance);
 }
 //-----------------------------------------------------------------------------
@@ -139,6 +144,14 @@ void SESubstanceManager::RemoveActiveSubstance(const SESubstance& substance)
     sub = m_ActiveLiquids.at(iSubstance);
     if (sub == &substance) {
       m_ActiveLiquids.erase(m_ActiveLiquids.begin() + iSubstance);
+      break;
+    }
+  }
+
+  for (unsigned int iSubstance = 0; iSubstance < m_ActiveDrugs.size(); iSubstance++) {
+    sub = m_ActiveDrugs.at(iSubstance);
+    if (sub == &substance) {
+      m_ActiveDrugs.erase(m_ActiveDrugs.begin() + iSubstance);
       break;
     }
   }

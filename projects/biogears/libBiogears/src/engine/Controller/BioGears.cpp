@@ -102,6 +102,8 @@ BioGears::BioGears(Logger* logger)
   m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(*this));
 
   m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(*this));
+
+  m_DiffusionCalculator = std::unique_ptr<DiffusionCalculator>(new DiffusionCalculator(*this));
 }
 
 BioGears::BioGears(const std::string& logFileName, const std::string& working_dir)
@@ -235,6 +237,8 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
 
   Info("Initializing Substances");
   m_Substances->InitializeSubstances(); // Sets all concentrations and such of all substances for all compartments, need to do this after we figure out what's in the environment
+
+  //Note:  Diffusion Calculator is initialized in Tissue::SetUp because it depends on so many Tissue parameters
 
   Info("Initializing Systems");
   m_CardiovascularSystem->Initialize();
@@ -918,6 +922,7 @@ BioGears::~BioGears()
 
 EngineState BioGears::GetState() { return m_State; }
 SaturationCalculator& BioGears::GetSaturationCalculator() { return *m_SaturationCalculator; }
+DiffusionCalculator& BioGears::GetDiffusionCalculator() { return *m_DiffusionCalculator; }
 BioGearsSubstances& BioGears::GetSubstances() { return *m_Substances; }
 SEPatient& BioGears::GetPatient() { return *m_Patient; }
 SEBloodChemistrySystem& BioGears::GetBloodChemistry() { return *m_BloodChemistrySystem; }
@@ -935,6 +940,7 @@ SEEnvironment& BioGears::GetEnvironment() { return *m_Environment; }
 
 const EngineState BioGears::GetState() const { return m_State; }
 const SaturationCalculator& BioGears::GetSaturationCalculator() const { return *m_SaturationCalculator; }
+const DiffusionCalculator& BioGears::GetDiffusionCalculator() const { return *m_DiffusionCalculator; }
 const BioGearsSubstances& BioGears::GetSubstances() const { return *m_Substances; }
 const SEPatient& BioGears::GetPatient() const { return *m_Patient; }
 const SEBloodChemistrySystem& BioGears::GetBloodChemistry() const { return *m_BloodChemistrySystem; }

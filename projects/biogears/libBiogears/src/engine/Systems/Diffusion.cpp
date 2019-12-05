@@ -36,8 +36,8 @@ void DiffusionCalculator::Initialize(SESubstanceManager& subMgr)
     if (sub->HasMaximumDiffusionFlux()) {
       m_FacilitatedDiffusionSubstances.emplace_back(sub);
     } else {
-      if (sub->GetMolarMass(MassPerAmountUnit::g_Per_mol) < 1000.0 && sub->GetName() != "Bicarbonate" && sub->GetClassification()!=CDM::enumSubstanceClass::WholeBlood) {
-        //We elect not to transport HCO3 with simple diffusion because it is a charged substance and we need to filter out blood antigens
+      if (sub->GetMolarMass(MassPerAmountUnit::g_Per_mol) < 1000.0 && sub->GetName() != "Bicarbonate" && sub->GetClassification() != CDM::enumSubstanceClass::WholeBlood) {
+        //We elect not to transport HCO3 with simple diffusion because it is a charged substance.   We also need to filter out blood antigens
         m_SimpleDiffusionSubstances.emplace_back(sub);
       }
     }
@@ -76,7 +76,7 @@ void DiffusionCalculator::Initialize(SESubstanceManager& subMgr)
     m_TissueMasses_g(vectorCount) = tissue->GetTotalMass(MassUnit::g);
     vectorCount++;
   }
-
+  std::cout << m_TissueMasses_g;
   int simpleSubCount = 0;
   for (auto simpleSub : m_SimpleDiffusionSubstances) {
     double molarMass_g_Per_mol = simpleSub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
@@ -132,6 +132,11 @@ void DiffusionCalculator::CalculateInstantAndSimpleDiffusion()
 
   Eigen::MatrixXd DeltaMassSimpleVE_ug = timeStep_s * m_PermeabilityCoefficients.asDiagonal() * (m_SimpleSubMatrices.vascular - m_SimpleSubMatrices.extracellular) * m_TissueMasses_g.asDiagonal();
   Eigen::MatrixXd DeltaMassSimpleEI_ug = timeStep_s * m_PermeabilityCoefficients.asDiagonal() * (m_SimpleSubMatrices.extracellular - m_SimpleSubMatrices.intracellular) * m_TissueMasses_g.asDiagonal();
+
+  if (m_data.GetState() >= EngineState::AtSecondaryStableState) {
+    //std::cout << DeltaMassInstantVE_ug.transpose() << std::endl;
+    std::cout << m_VolumeRatiosVascularExtra;
+  }
 
   double massToMoveVE_ug = 0.0;
   double massToMoveEI_ug = 0.0;
