@@ -303,7 +303,7 @@ void Energy::CalculateVitalSigns()
   double skinTemperature_degC = m_skinNode->GetTemperature(TemperatureUnit::C);
   double CoreTempBuffer = 0.0;
   if (m_data.GetDrugs().HasFeverChange()) {
-    double TempScalar = 10.0;
+    double TempScalar = 10000.0;
     double CoreTemperatureModifier = m_data.GetDrugs().GetFeverChange().GetValue(TemperatureUnit::C);
     CoreTempBuffer = -1*exp(-CoreTemperatureModifier * TempScalar);
   }
