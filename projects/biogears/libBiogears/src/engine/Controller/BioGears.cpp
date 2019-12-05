@@ -2447,7 +2447,7 @@ void BioGears::SetupRenal()
   double openSwitch_mmHg_s_Per_mL = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
   //Resistances with some tuning multipliers
   double urineTuningMultiplier = 0.58;
-  double arteryTuningMultiplier = 0.8;
+  double arteryTuningMultiplier = 0.5;
   double reabsorptionTuningMultiplier = 0.8;
 
   double renalArteryResistance_mmHg_s_Per_mL = Convert(0.0250 * arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);

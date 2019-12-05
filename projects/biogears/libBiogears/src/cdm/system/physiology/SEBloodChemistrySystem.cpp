@@ -91,6 +91,8 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_VenousBloodPH = nullptr;
   m_VolumeFractionNeutralPhospholipidInPlasma = nullptr;
   m_VolumeFractionNeutralLipidInPlasma = nullptr;
+  m_WhiteBloodCellCount = nullptr;
+
 
   m_ArterialCarbonDioxidePressure = nullptr;
   m_ArterialOxygenPressure = nullptr;
@@ -139,6 +141,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_VenousBloodPH);
   SAFE_DELETE(m_VolumeFractionNeutralPhospholipidInPlasma);
   SAFE_DELETE(m_VolumeFractionNeutralLipidInPlasma);
+  SAFE_DELETE(m_WhiteBloodCellCount);
 
 
   SAFE_DELETE(m_PulmonaryVenousOxygenPressure);
@@ -209,6 +212,8 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     return &GetVolumeFractionNeutralPhospholipidInPlasma();
   if (name == idVolumeFractionNeutralLipidInPlasma)
     return &GetVolumeFractionNeutralLipidInPlasma();
+  if (name == idWhiteBloodCellCount)
+      return &GetWhiteBloodCellCount();
   if (name == idArterialCarbonDioxidePressure)
     return &GetArterialCarbonDioxidePressure();
   if (name == idArterialOxygenPressure)
@@ -294,6 +299,8 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
     GetVolumeFractionNeutralPhospholipidInPlasma().Load(in.VolumeFractionNeutralPhospholipidInPlasma().get());
   if (in.VolumeFractionNeutralLipidInPlasma().present())
     GetVolumeFractionNeutralLipidInPlasma().Load(in.VolumeFractionNeutralLipidInPlasma().get());
+  if (in.WhiteBloodCellCount().present())
+      GetWhiteBloodCellCount().Load(in.WhiteBloodCellCount().get());
 
   if (in.ArterialCarbonDioxidePressure().present())
     GetArterialCarbonDioxidePressure().Load(in.ArterialCarbonDioxidePressure().get());
@@ -377,6 +384,8 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
     data.VolumeFractionNeutralPhospholipidInPlasma(std::unique_ptr<CDM::ScalarFractionData>(m_VolumeFractionNeutralPhospholipidInPlasma->Unload()));
   if (m_VolumeFractionNeutralLipidInPlasma != nullptr)
     data.VolumeFractionNeutralLipidInPlasma(std::unique_ptr<CDM::ScalarFractionData>(m_VolumeFractionNeutralLipidInPlasma->Unload()));
+  if (m_WhiteBloodCellCount != nullptr)
+      data.WhiteBloodCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_WhiteBloodCellCount->Unload()));
 
   if (m_ArterialCarbonDioxidePressure != nullptr)
     data.ArterialCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_ArterialCarbonDioxidePressure->Unload()));
@@ -897,6 +906,28 @@ double SEBloodChemistrySystem::GetVolumeFractionNeutralLipidInPlasma() const
     return SEScalar::dNaN();
   return m_VolumeFractionNeutralLipidInPlasma->GetValue();
 }
+
+//-------------------------------------------------------------------------------
+
+bool SEBloodChemistrySystem::HasWhiteBloodCellCount() const
+{
+    return m_WhiteBloodCellCount == nullptr ? false : m_WhiteBloodCellCount->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarAmountPerVolume& SEBloodChemistrySystem::GetWhiteBloodCellCount()
+{
+    if (m_WhiteBloodCellCount == nullptr)
+        m_WhiteBloodCellCount = new SEScalarAmountPerVolume();
+    return *m_WhiteBloodCellCount;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetWhiteBloodCellCount(const AmountPerVolumeUnit& unit) const
+{
+    if (m_WhiteBloodCellCount == nullptr)
+        return SEScalar::dNaN();
+    return m_WhiteBloodCellCount->GetValue(unit);
+}
+
 //-------------------------------------------------------------------------------
 bool SEBloodChemistrySystem::HasArterialCarbonDioxidePressure() const
 {

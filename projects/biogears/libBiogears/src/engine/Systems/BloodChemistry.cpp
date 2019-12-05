@@ -103,6 +103,7 @@ void BloodChemistry::Initialize()
   GetBloodSpecificHeat().SetValue(3617, HeatCapacitancePerMassUnit::J_Per_K_kg);
   GetVolumeFractionNeutralLipidInPlasma().SetValue(0.0023);
   GetVolumeFractionNeutralPhospholipidInPlasma().SetValue(0.0013);
+  GetWhiteBloodCellCount().SetValue(5000.0, AmountPerVolumeUnit::ct_Per_uL);
   GetPhosphate().SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
@@ -961,10 +962,10 @@ void BloodChemistry::ManageSIRS()
   double neutrophilActive = m_InflammatoryResponse->GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); //m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
+  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); 
   double wbcAbsolute_ct_Per_uL = wbcCount_ct_Per_uL * (1.0 + neutrophilActive / 0.25);
   m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
-  //GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+  GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the tissue integrity output from the inflammation model to track other Systemic Inflammatory metrics.  These relationships were all
   //empirically determined to time symptom onset (i.e. temperature > 38 degC) with the appropriate stage of sepsis
