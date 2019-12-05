@@ -53,9 +53,10 @@ public:
   void set_html();
   void set_md();
   void set_xml();
+  void set_web();
   void gen_tables_single_sheet(const char* validation_file, const char* baseline_file);
   void gen_tables_single_sheet(std::string validation_file, std::string baseline_file);
-  void gen_tables();
+  void gen_tables(char table_type);
   void ParseReferenceCSV(const char* filename);
   void ParseReferenceCSV(std::string filename);
   void ParseBaselineCSV(const char* filename);

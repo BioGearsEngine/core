@@ -40,7 +40,8 @@ void print_help() {
 
     std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, GENSEPSIS, VERIFY, GENTABLES ,VERSION]\n"
                                 "[THREADS N]\n" 
-                                "[TEST FILE [FILE]..., SCENARIO FILE [FILE]..., VALIDATE patient|drug|system|all\n\n";
+                                "[TEST FILE [FILE]..., SCENARIO FILE [FILE]..., VALIDATE patient|drug|system|all\n"
+                                "[GENTABLES html|md|xml|web|all]\n\n";
 
     std::cout << "Flags: \n";
     std::cout << "j : Thread control -j N\n";
@@ -57,11 +58,11 @@ void print_help() {
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "H","HELP","GENDATA", "GENSTATES", "GENSEPSIS", "VERIFY", "GENTABLES" ,"VERSION" } //Options
+    { "H","HELP","GENDATA", "GENSTATES", "VERIFY", "VERSION" } //Options
     ,
     { "J", "THREADS" } //Keywords
     ,
-    { "TEST", "SCENARIO", "VALIDATE" } //MultiWords
+    { "TEST", "SCENARIO", "VALIDATE", "GENTABLES" } //MultiWords
   );
   
 
@@ -196,9 +197,27 @@ int main(int argc, char** argv)
   driver.stop_when_empty();
   driver.join();
 
-  if (args.Option("GENTABLES")) {
+  if (args.MultiWordFound("GENTABLES")) {
     biogears::ReportWriter report_writer;
-    report_writer.gen_tables();
+    auto tables = args.MultiWord("GENTABLES");
+    for (auto& table : tables) {
+      std::transform(table.begin(), table.end(), table.begin(), ::tolower);
+      if (table == "html") {
+        report_writer.gen_tables(0);
+      } else if (table == "md") {
+        report_writer.gen_tables(1);
+      } else if (table == "xml") {
+        report_writer.gen_tables(2);
+      } else if (table == "web") {
+        report_writer.gen_tables(3);
+      } else if (table == "all") {
+        report_writer.gen_tables(0);
+        report_writer.gen_tables(1);
+        report_writer.gen_tables(2);
+      } else {
+        std::cout << "Warning: " << table << " is not a valid keyword.\n";
+      }
+    }
   }
 
   return 0;

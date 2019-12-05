@@ -48,7 +48,7 @@ void ReportWriter::set_html()
   table_row_end = "</td></tr>\n";
   table_end = "</table>\n";
   body_end = "</body></html>\n";
-  file_extension = ".xml";
+  file_extension = ".html";
 }
 
 void ReportWriter::set_md()
@@ -85,6 +85,24 @@ void ReportWriter::set_xml()
   file_extension = ".xml";
 }
 
+void ReportWriter::set_web()
+{ // For website generation if the doxygen preprocessing isn't working correctly 
+  // with md files you should be able to just generate html files with the .md extension.
+  // Doxygen will find the table and put it in the correct page.
+  body_begin = "<html><body>\n";
+  table_begin = "<table border=\"1\">\n";
+  table_row_begin = "<tr>";
+  table_row_begin_green = "<tr bgcolor=#32CD32>";
+  table_row_begin_red = "<tr bgcolor=#FF0000>";
+  table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
+  table_second_line = "";
+  table_item_begin = "<td>";
+  table_item_end = "</td>";
+  table_row_end = "</td></tr>\n";
+  table_end = "</table>\n";
+  body_end = "</body></html>\n";
+  file_extension = ".md";
+}
 
 void ReportWriter::gen_tables_single_sheet(const char* validation_file, const char* baseline_file)
 {
@@ -103,7 +121,7 @@ void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::str
   clear();
 }
 
-void ReportWriter::gen_tables()
+void ReportWriter::gen_tables(char table_type)
 {
   std::vector<std::string> validation_files{ "BloodChemistryValidation.csv",
                                              "CardiovascularValidation.csv",
@@ -130,13 +148,21 @@ void ReportWriter::gen_tables()
     CalculateAverages();
     logger->Info("Successfully calculated averages of file: " + baseline_files[i]);
     ExtractValues();
-    ExtractValuesList();
+    //ExtractValuesList();
     logger->Info("Successfully populated data structures with validation data");
     Validate();
     logger->Info("Successfully ran validation");
     PopulateTables();
     logger->Info("Successfully populated tables vector");
-    set_html();
+    if (table_type == 0) {
+      set_html();
+    } else if (table_type == 1) {
+      set_md();
+    } else if (table_type == 2) {
+      set_xml();
+    } else {
+      set_web();
+    }
     to_table();
     logger->Info("Successfully generated table: " + split(validation_files[i],'.')[0]);
     clear();
