@@ -2037,7 +2037,7 @@ bool SEInflammatoryResponse::HasInflammationSource(CDM::enumInflammationSource::
 Tree<const char*> SEInflammatoryResponse::GetPhysiologyRequestGraph() const
 {
   
-return Tree<const char*> { classname() }
+return Tree<const char*> { "InflammatoryResponse" }
     .emplace_back(idLocalPathogen)
     .emplace_back(idLocalMacrophage)
     .emplace_back(idLocalNeutrophil)
