@@ -41,7 +41,7 @@ public:
   SEBloodChemistrySystem(Logger* logger);
   ~SEBloodChemistrySystem() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); } //! Hopefully this returns a unique ID for every type
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
   static constexpr char const* const TypeTag() { return "SEBloodChemistrySystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
@@ -435,113 +435,120 @@ protected:
 class BIOGEARS_API SEInflammatoryResponse {
 public:
   SEInflammatoryResponse();
-  virtual ~SEInflammatoryResponse();
+  ~SEInflammatoryResponse();
 
-  virtual void Clear();
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
+  static constexpr char const* const TypeTag() { return "SEInflammatoryResponse"; }
+  const char* classname() const  { return TypeTag(); }
+  size_t hash_code() const  { return TypeHash(); }
 
-  virtual bool Load(const CDM::InflammatoryResponseData& in);
-  virtual CDM::InflammatoryResponseData* Unload() const;
-  virtual bool IsValid();
+  void Clear();
+
+  bool Load(const CDM::InflammatoryResponseData& in);
+  CDM::InflammatoryResponseData* Unload() const;
+  bool IsValid();
 
   void Initialize();
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const char* name);
+  const SEScalar* GetScalar(const std::string& name);
 
 protected:
-  virtual void Unload(CDM::InflammatoryResponseData& data) const;
+  void Unload(CDM::InflammatoryResponseData& data) const;
 
 public:
-  virtual bool HasLocalPathogen() const;
-  virtual SEScalar& GetLocalPathogen();
-  virtual double GetLocalPathogen() const;
+  bool HasLocalPathogen() const;
+  SEScalar& GetLocalPathogen();
+  double GetLocalPathogen() const;
 
-  virtual bool HasLocalBarrier() const;
-  virtual SEScalar& GetLocalBarrier();
-  virtual double GetLocalBarrier() const;
+  bool HasLocalBarrier() const;
+  SEScalar& GetLocalBarrier();
+  double GetLocalBarrier() const;
 
-  virtual bool HasLocalMacrophage() const;
-  virtual SEScalar& GetLocalMacrophage();
-  virtual double GetLocalMacrophage() const;
+  bool HasLocalMacrophage() const;
+  SEScalar& GetLocalMacrophage();
+  double GetLocalMacrophage() const;
 
-  virtual bool HasLocalNeutrophil() const;
-  virtual SEScalar& GetLocalNeutrophil();
-  virtual double GetLocalNeutrophil() const;
+  bool HasLocalNeutrophil() const;
+  SEScalar& GetLocalNeutrophil();
+  double GetLocalNeutrophil() const;
 
-  virtual bool HasActiveTLR() const {return m_ActiveTLR == CDM::enumOnOff::value(-1) ? false : true;};
-  virtual CDM::enumOnOff GetActiveTLR() { return m_ActiveTLR; };
-  virtual void SetActiveTLR(CDM::enumOnOff value) { m_ActiveTLR = value; };
+  bool HasActiveTLR() const {return m_ActiveTLR == CDM::enumOnOff::value(-1) ? false : true;};
+  CDM::enumOnOff GetActiveTLR() { return m_ActiveTLR; };
+  void SetActiveTLR(CDM::enumOnOff value) { m_ActiveTLR = value; };
 
-  virtual bool HasCatecholamines() const;
-  virtual SEScalar& GetCatecholamines();
-  virtual double GetCatecholamines() const;
+  bool HasCatecholamines() const;
+  SEScalar& GetCatecholamines();
+  double GetCatecholamines() const;
 
-  virtual bool HasConstitutiveNOS() const;
-  virtual SEScalar& GetConstitutiveNOS();
-  virtual double GetConstitutiveNOS() const;
+  bool HasConstitutiveNOS() const;
+  SEScalar& GetConstitutiveNOS();
+  double GetConstitutiveNOS() const;
 
-  virtual bool HasInducibleNOSPre() const;
-  virtual SEScalar& GetInducibleNOSPre();
-  virtual double GetInducibleNOSPre() const;
+  bool HasInducibleNOSPre() const;
+  SEScalar& GetInducibleNOSPre();
+  double GetInducibleNOSPre() const;
 
-  virtual bool HasInducibleNOS() const;
-  virtual SEScalar& GetInducibleNOS();
-  virtual double GetInducibleNOS() const;
+  bool HasInducibleNOS() const;
+  SEScalar& GetInducibleNOS();
+  double GetInducibleNOS() const;
 
-  virtual bool HasInterleukin6() const;
-  virtual SEScalar& GetInterleukin6();
-  virtual double GetInterleukin6() const;
+  bool HasInterleukin6() const;
+  SEScalar& GetInterleukin6();
+  double GetInterleukin6() const;
 
-  virtual bool HasInterleukin10() const;
-  virtual SEScalar& GetInterleukin10();
-  virtual double GetInterleukin10() const;
+  bool HasInterleukin10() const;
+  SEScalar& GetInterleukin10();
+  double GetInterleukin10() const;
 
-  virtual bool HasInterleukin12() const;
-  virtual SEScalar& GetInterleukin12();
-  virtual double GetInterleukin12() const;
+  bool HasInterleukin12() const;
+  SEScalar& GetInterleukin12();
+  double GetInterleukin12() const;
 
-  virtual bool HasMacrophageResting() const;
-  virtual SEScalar& GetMacrophageResting();
-  virtual double GetMacrophageResting() const;
+  bool HasMacrophageResting() const;
+  SEScalar& GetMacrophageResting();
+  double GetMacrophageResting() const;
 
-  virtual bool HasMacrophageActive() const;
-  virtual SEScalar& GetMacrophageActive();
-  virtual double GetMacrophageActive() const;
+  bool HasMacrophageActive() const;
+  SEScalar& GetMacrophageActive();
+  double GetMacrophageActive() const;
 
-  virtual bool HasNeutrophilResting() const;
-  virtual SEScalar& GetNeutrophilResting();
-  virtual double GetNeutrophilResting() const;
+  bool HasNeutrophilResting() const;
+  SEScalar& GetNeutrophilResting();
+  double GetNeutrophilResting() const;
 
-  virtual bool HasNeutrophilActive() const;
-  virtual SEScalar& GetNeutrophilActive();
-  virtual double GetNeutrophilActive() const;
+  bool HasNeutrophilActive() const;
+  SEScalar& GetNeutrophilActive();
+  double GetNeutrophilActive() const;
 
-  virtual bool HasNitrate() const;
-  virtual SEScalar& GetNitrate();
-  virtual double GetNitrate() const;
+  bool HasNitrate() const;
+  SEScalar& GetNitrate();
+  double GetNitrate() const;
 
-  virtual bool HasNitricOxide() const;
-  virtual SEScalar& GetNitricOxide();
-  virtual double GetNitricOxide() const;
+  bool HasNitricOxide() const;
+  SEScalar& GetNitricOxide();
+  double GetNitricOxide() const;
 
-  virtual bool HasBloodPathogen() const;
-  virtual SEScalar& GetBloodPathogen();
-  virtual double GetBloodPathogen() const;
+  bool HasBloodPathogen() const;
+  SEScalar& GetBloodPathogen();
+  double GetBloodPathogen() const;
 
-  virtual bool HasTissueIntegrity() const;
-  virtual SEScalar0To1& GetTissueIntegrity();
-  virtual double GetTissueIntegrity() const;
+  bool HasTissueIntegrity() const;
+  SEScalar0To1& GetTissueIntegrity();
+  double GetTissueIntegrity() const;
 
-  virtual bool HasTrauma() const;
-  virtual SEScalar& GetTrauma();
-  virtual double GetTrauma() const;
+  bool HasTrauma() const;
+  SEScalar& GetTrauma();
+  double GetTrauma() const;
 
-  virtual bool HasTumorNecrosisFactor() const;
-  virtual SEScalar& GetTumorNecrosisFactor();
-  virtual double GetTumorNecrosisFactor() const;
+  bool HasTumorNecrosisFactor() const;
+  SEScalar& GetTumorNecrosisFactor();
+  double GetTumorNecrosisFactor() const;
 
-  virtual bool HasInflammationSources() const;
-  virtual std::vector<CDM::enumInflammationSource>& GetInflammationSources();
-  virtual bool HasInflammationSource(CDM::enumInflammationSource::value src);
+  bool HasInflammationSources() const;
+  std::vector<CDM::enumInflammationSource>& GetInflammationSources();
+  bool HasInflammationSource(CDM::enumInflammationSource::value src);
+
+  Tree<const char*> GetPhysiologyRequestGraph() const;
 
 protected:
   SEScalar* m_LocalPathogen;

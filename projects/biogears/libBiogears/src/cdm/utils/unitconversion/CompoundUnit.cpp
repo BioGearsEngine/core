@@ -28,7 +28,8 @@ CCompoundUnit::CCompoundUnit()
   , m_bStaleDimension(true)
   , m_bDBFlag(false)
   , m_bExplicitDBFlag(false)
-  , m_bExplicitNonDBFlag(false){};
+  , m_bExplicitNonDBFlag(false)
+  , m_strUnit (""){};
 //----------------------------------------------------------------------------
 // Construct directly from a unit string specification
 CCompoundUnit::CCompoundUnit(const char* unitString)
@@ -45,6 +46,7 @@ CCompoundUnit::CCompoundUnit(const std::string& unitString)
   , m_bDBFlag(false)
   , m_bExplicitDBFlag(false)
   , m_bExplicitNonDBFlag(false)
+  , m_strUnit("")
 {
   ParseString(unitString);
 }
@@ -645,7 +647,7 @@ bool CCompoundUnit::IsOfType(const std::string& quantityName)
 //----------------------------------------------------------------------------
 const char* CCompoundUnit::GetString() const
 {
-  return m_strUnit.c_str();
+  return (m_strUnit.empty()) ? "N/A" : m_strUnit.c_str();
 }
 //----------------------------------------------------------------------------
 std::ostream& CCompoundUnit::PrintSelf(std::ostream& output) const

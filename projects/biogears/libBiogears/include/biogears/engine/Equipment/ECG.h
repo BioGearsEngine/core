@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 #include <biogears/schema/biogears/BioGearsEnvironment.hxx>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGears.h>  
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
 namespace biogears {
@@ -37,7 +37,7 @@ protected:
 public:
   virtual ~ECG() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }  //! Hopefully this returns a unique ID for every type
+  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
   static constexpr char const * const  TypeTag() { return "ECG"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }

@@ -30,6 +30,10 @@ SEUnitScalar::~SEUnitScalar()
 //------------------------------------------------------------------------------
 double SEUnitScalar::GetValue() const
 {
-  return GetValue(GetUnit()->GetString());
+  if (GetUnit()) {
+    return GetValue(GetUnit()->GetString());
+  } else {
+    return std::numeric_limits<double>::quiet_NaN();
+  }
 }
 }
