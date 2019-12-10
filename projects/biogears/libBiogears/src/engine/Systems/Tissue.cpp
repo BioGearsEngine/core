@@ -690,7 +690,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_PatientActions->HasHemorrhage()) {
     double maxBleedingRate_mL_Per_min = 200.0;
     double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
-    mandatoryMuscleAnaerobicFraction = 0.25 * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
+    mandatoryMuscleAnaerobicFraction = 0.5 * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
   }
 
   //Reusable values for looping
