@@ -374,27 +374,6 @@ void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProdu
       }
     }
 
-    //Diffuse if necessary
-    if (usingDiffusion) {
-      if (!activeDiffusion) {
-        tsu.MoveMassByInstantDiffusion(cCapillaries, cTissue, O2, deltaT_s);
-        tsu.MoveMassByInstantDiffusion(cCapillaries, cTissue, CO2, deltaT_s);
-        cCapillaries.Balance(BalanceLiquidBy::Mass);
-        cTissue.Balance(BalanceLiquidBy::Mass);
-
-      } else {
-        //Ions:  Vascular to Extracellular
-        tsu.MoveMassByInstantDiffusion(cCapillaries, tisExtra, Sodium, deltaT_s);
-        tsu.MoveMassByInstantDiffusion(cCapillaries, tisExtra, Potassium, deltaT_s);
-        tsu.MoveMassByInstantDiffusion(cCapillaries, tisExtra, Calcium, deltaT_s);
-        tsu.MoveMassByInstantDiffusion(cCapillaries, tisExtra, Chloride, deltaT_s);
-
-        cCapillaries.Balance(BalanceLiquidBy::Mass);
-        tisExtra.Balance(BalanceLiquidBy::Mass);
-        tisIntra.Balance(BalanceLiquidBy::Mass);
-      }
-    }
-
     //convert 'Next' values to current
     calc.PostProcess(*Circuit);
 
@@ -484,24 +463,8 @@ void BioGearsEngineTest::AcidBaseFourCompartmentTest(const std::string& sOutputD
 {
   FourCompartmentTest(true, false, false, false, sOutputDirectory);
 }
-void BioGearsEngineTest::FiveCompartmentTestWithDiffusion(const std::string& sOutputDirectory)
-{
-  FourCompartmentTest(false, false, true, false, sOutputDirectory);
-}
 void BioGearsEngineTest::AcidBaseFourCompartmentTestWithProductionConsumption(const std::string& sOutputDirectory)
 {
   FourCompartmentTest(true, true, false, false, sOutputDirectory);
-}
-void BioGearsEngineTest::AcidBaseFiveCompartmentTestWithDiffusion(const std::string& sOutputDirectory)
-{
-  FourCompartmentTest(true, false, true, false, sOutputDirectory);
-}
-void BioGearsEngineTest::AcidBaseFiveCompartmentTestWithProductionConsumptionAndDiffusion(const std::string& sOutputDirectory)
-{
-  FourCompartmentTest(true, true, true, false, sOutputDirectory);
-}
-void BioGearsEngineTest::FiveCompartmentTestWithActiveDiffusion(const std::string& sOutputDirectory)
-{
-  FourCompartmentTest(false, false, true, true, sOutputDirectory);
 }
 }

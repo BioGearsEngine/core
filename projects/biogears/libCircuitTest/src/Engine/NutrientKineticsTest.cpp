@@ -418,15 +418,6 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
       fed = true;
     }
 
-    if (usingAbsorption) {
-      //Absorb any nutrients in small intestine chyme to blood
-      tsu.MoveMassByActiveTransport(*cSmallIntestineChyme, *cSmallIntestineVascular, aminoAcids, .00157, deltaT_s); //Amino acid absorption rates vary from 1.3 to 10 g/h (https://www.ncbi.nlm.nih.gov/pubmed/16779921)
-      tsu.MoveMassByActiveTransport(*cSmallIntestineChyme, *cSmallIntestineVascular, triacylglycerol, .0053, deltaT_s);
-      tsu.MoveMassByActiveTransport(*cSmallIntestineChyme, *cSmallIntestineVascular, glucose, .0125, deltaT_s); //Apparently can absorb 30-60 g per hour (http://journals.lww.com/acsm-msse/Fulltext/2009/03000/Nutrition_and_Athletic_Performance.27.aspx)
-      cSmallIntestineChyme->Balance(BalanceLiquidBy::Mass);
-      cSmallIntestineVascular->Balance(BalanceLiquidBy::Mass);
-    }
-
     //Insulin has a validated production rate and a BS clearance rate to get it stable (Note: Guyton says insulin production at 90 mg/dL glucose concentration should be
     // 25 ng/min/kg, which is about 300 pmol/min, double what we have using this curve from Tolic; also, we won't capture insulin behavior for very high glucose concentrations, see Guyton p 991)
     //Glucagon has a validated clearance rate and a BS production rate to get it stable
@@ -636,10 +627,6 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
         }
       }
     }
-
-    //Diffuse to tissues
-    if (useDiffusion)
-      NutrientDiffusion(vascularCompartments, extracellularCompartments, bg, tissueTotalMasses, deltaT_s, trk, time);
 
     double CO2Produced_mol = 0;
     double O2Consumed_mol = 0;
@@ -919,107 +906,6 @@ void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDy
   file.close();
 }
 
-//Mimic Tissue::CalculateDiffusion() but with nutrient tweaks if necessary
-void BioGearsEngineTest::NutrientDiffusion(std::vector<SELiquidCompartment*>& vascularCompartments, std::vector<SELiquidCompartment*>& extracellularCompartments, BioGears& bg, std::vector<double>& tissueTotalMasses, double deltaT_s, DataTrack& trk, double time)
-{
-  Tissue& tsu = (Tissue&)bg.GetTissue();
-
-  //Since this unit test only uses a subset of the tissues in BioGears, we'll keep track of which one we're dealing with
-  //based on an ordered index. It's annoying, but it's better than replicating all of Tissue's SetUp.
-  for (int tissueIndex = 0; tissueIndex < extracellularCompartments.size(); tissueIndex++) {
-    SELiquidCompartment* ECtissueCompartment = extracellularCompartments.at(tissueIndex);
-    SELiquidCompartment* vascularCompartment = vascularCompartments.at(tissueIndex);
-
-    std::string ICName = ECtissueCompartment->GetName();
-    ICName.replace(ICName.find("Extracellular"), 13, "Intracellular"); //irresponsible hacky way to find a corresponding IC compartment
-    SELiquidCompartment* ICtissueCompartment = bg.GetCompartments().GetLiquidCompartment(ICName);
-
-    double movedMass_ug; //only used for possible debugging output
-
-    //for each active substance
-    for (SESubstance* sub : bg.GetSubstances().GetActiveSubstances()) {
-      //We have to make an exception for the brain and TAGs, since TAG can't cross blood-brain barrier
-      if (sub->GetName() == "Triacylglycerol"  && ECtissueCompartment->GetName().find("Brain") != std::string::npos)
-        continue;
-
-      //Gases get moved by instant diffusion
-      if (sub->GetState() == CDM::enumSubstanceState::Gas) {
-        //Gases get moved by instant diffusion only
-        //Note: in the current Tissue::CalculateDiffusion(), gases move by instant diffusion, and THEN
-        //have a contribution by simple diffusion, causing possible overshoot. This is removed here.
-        movedMass_ug = tsu.MoveMassByInstantDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, deltaT_s);
-        if (ICtissueCompartment != nullptr)
-          movedMass_ug = tsu.MoveMassByInstantDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, deltaT_s);
-      }
-      //Sodium is currently an oddball handled by instant diffusion, but we may want to change to simple and/or active when we do other ions
-      else if (sub->GetName() == "Sodium") {
-        movedMass_ug = tsu.MoveMassByInstantDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, deltaT_s);
-        if (ICtissueCompartment != nullptr)
-          movedMass_ug = tsu.MoveMassByInstantDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, deltaT_s);
-      }
-      //All non-gas substances (besides sodium) use either simple, facilitated, or active diffusion
-      else {
-        double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-
-        //Simple diffusion calculates a permeability based on molecular weight. Even large molecules will diffuse, though slowly.
-        //We want to prevent movement of large molecules like proteins completely. A gate of 1000 g/mol will filter out things like
-        //albumin, insulin, etc while allowing glucose, ions, and others to be governed by their molecular weight.
-        //Note: it doesn't consider lipophilicity, so TAG will need to be artificially tweaked using other diffusion methods.
-        if (molarMass_g_Per_mol < 1000) {
-          // Compute the vascular to extracellular permeability coefficient
-          // This is the coefficient per gram of tissue independent of the tissue type.
-          // This uses the Renkin and Curry data for capillary exchange as reported in \cite fournier2011basic
-          // Divide by 100 is because the Renkin-Curry equations are in per hectogram units, and 100 g/hg
-          /// \todo I believe we can optimize with a cache of these values. Also, we can cache permeabilityCoefficient_mL_Per_s_g which is not a function of the tissue properties
-          double vToECpermeabilityCoefficient_mL_Per_s_g = 0;
-          double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
-          if (molecularRadius_nm < 1.0)
-            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * std::pow(molecularRadius_nm, -1.223) / 100.0;
-          else
-            vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * std::pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
-
-          // Multiply by tissue mass to get the tissue-dependent coefficient.
-          double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissueTotalMasses.at(tissueIndex);
-          // A tuning factor helps tune the dynamics - note that concentrations will ALWAYS equilibrate in steady state given enough time regardless of the permeability
-          double vToECPermeabilityTuningFactor = 1.0;
-          double ECToICPermeabilityTuningFactor = 1.0;
-          movedMass_ug = tsu.MoveMassBySimpleDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, vToECPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, deltaT_s);
-          //trk.Track(ECtissueCompartment->GetName() + sub->GetName() + "_SimpleDiffusionMass", time, movedMass_ug);
-
-          //Assume EC to IC permeability is the same as V to EC; can use tuning factor if desired
-          if (ICtissueCompartment != nullptr)
-            movedMass_ug = tsu.MoveMassBySimpleDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, ECToICPermeabilityTuningFactor * vToECpermeabilityCoefficient_mL_Per_s, deltaT_s);
-        }
-
-        //Now facilitated diffusion
-        if (sub->HasMaximumDiffusionFlux()) {
-          double massToAreaCoefficient_cm2_Per_g = 1.0; /// \todo Define relationship between tissue mass and membrane area.
-          double capCoverage_cm2 = massToAreaCoefficient_cm2_Per_g * tissueTotalMasses.at(tissueIndex);
-          double maximumMassFlux = sub->GetMaximumDiffusionFlux(MassPerAreaTimeUnit::g_Per_cm2_s);
-          double combinedCoefficient_g_Per_s = maximumMassFlux * capCoverage_cm2;
-          movedMass_ug = tsu.MoveMassByFacilitatedDiffusion(*vascularCompartment, *ECtissueCompartment, *sub, combinedCoefficient_g_Per_s, deltaT_s);
-          //trk.Track(ECtissueCompartment->GetName() + sub->GetName() + "_FacilitatedDiffusionMass", time, movedMass_ug);
-
-          if (ICtissueCompartment != nullptr)
-            movedMass_ug = tsu.MoveMassByFacilitatedDiffusion(*ECtissueCompartment, *ICtissueCompartment, *sub, combinedCoefficient_g_Per_s, deltaT_s);
-        }
-
-        //Last, active diffusion (inactive here for now)
-        //double pumpRate_g_Per_s = 0.0;
-        /// \todo Compute the pump rate from an empirically-determined baseline pump rate.
-        //movedMass_ug = tsu.MoveMassByActiveTransport(*vascularCompartment, *ECtissueCompartment, *sub, pumpRate_g_Per_s, deltaT_s);
-        //if (ICtissueCompartment != nullptr)
-        //movedMass_ug = tsu.MoveMassByActiveTransport(*ECtissueCompartment, ICtissueCompartment, *sub, pumpRate_g_Per_s, deltaT_s);
-      }
-
-      //Now that mass has been moved, balance to set concentrations and molarities
-      vascularCompartment->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
-      ECtissueCompartment->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
-      if (ICtissueCompartment != nullptr)
-        ICtissueCompartment->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
-    }
-  }
-}
 
 //Manage intracellular substance masses based on energy requested
 void BioGearsEngineTest::ProduceAndConsume(double baseEnergyRequested_kcal, double exerciseEnergyRequested_kcal, bool isAnaerobic, BioGears& bg, double deltaT_s, double brainFlowFraction, double& muscleGlycogen_g, double& CO2Produced_mol, double& O2Consumed_mol, double& brainEnergyDeficit_kcal, double& muscleEnergyDeficit_kcal, double& lactateFromGlucose_g, DataTrack& trk)

@@ -142,7 +142,6 @@ public:
 
 protected:
   void NutrientKineticsTest(bool usingAbsorption, bool usingDynamicHormones, bool usingGlycogen, bool usingProteinStorage, bool usingFatStorage, bool fullStores, bool useDiffusion, bool useConsumption, bool usingLipogenesis, bool usingGluconeogenesis, bool isAnaerobic, double exerciseWork_W, const std::string& sOutputDirectory, double testDuration_hr, MealType mealType = None, std::string testName = "Custom");
-  void NutrientDiffusion(std::vector<SELiquidCompartment*>& vascularCompartments, std::vector<SELiquidCompartment*>& extracellularCompartments, BioGears& bg, std::vector<double>& tissueTotalMasses, double deltaT_s, DataTrack& trk, double time);
   void ProduceAndConsume(double baseEnergyRequested_kcal, double exerciseEnergyRequested_kcal, bool isAnaerobic, BioGears& bg, double deltaT_s, double brainFlowFraction, double& muscleGlycogen_g, double& CO2Produced_mol, double& O2Consumed_mol, double& brainEnergyDeficit_kcal, double& muscleEnergyDeficit_kcal, double& lactateFromGlucose_g, DataTrack& trk);
   void DigestionTest(const std::string& sOutputDirectory, MealType = None);
   void AbsorptionTest(const std::string& sOutputDirectory, MealType = None);
@@ -165,17 +164,13 @@ public:
   void DiffusionClearanceExcretionTests(const std::string& rptDirectory);
   void AlveolarCarbonDioxideDiffusionTest(const std::string& rptDirectory);
   void AlveolarOxygenDiffusionTest(const std::string& rptDirectory);
-  void InstantPlusSimpleDiffusionTest(const std::string& rptDirectory);
-  void SimpleDiffusionTwoCompartmentTest(const std::string& rptDirectory);
-  void SimpleDiffusionFourCompartmentTest(const std::string& rptDirectory);
-  void SimpleDiffusionHierarchyTest(const std::string& rptDirectory);
+  void EigenDiffusionTest(const std::string& rptDirectory);
   void FacilitatedDiffusionTest(const std::string& rptDirectory);
   void TissueCombinedTransportTest(const std::string& rptDirectory);
 
 protected:
   void DistributeMass(SETestSuite& testSuite);
   void PerfusionLimitedDiffusionTest(SETestSuite& testSuite);
-  void InstantDiffusionTest(SETestSuite& testSuite);
 
   void GenericClearanceTest(SETestSuite& testSuite);
   void GenericExcretionTest(SETestSuite& testSuite);

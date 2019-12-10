@@ -162,17 +162,8 @@ void BioGearsEngineTest::FillFunctionMap()
     std::make_pair("AlveolarOxygenDiffusionTest",
       &BioGearsEngineTest::AlveolarOxygenDiffusionTest));
   bgeMap.insert(
-    std::make_pair("InstantPlusSimpleDiffusionTest",
-      &BioGearsEngineTest::InstantPlusSimpleDiffusionTest));
-  bgeMap.insert(
-    std::make_pair("SimpleDiffusionTwoCompartmentTest",
-      &BioGearsEngineTest::SimpleDiffusionTwoCompartmentTest));
-  bgeMap.insert(
-    std::make_pair("SimpleDiffusionFourCompartmentTest",
-      &BioGearsEngineTest::SimpleDiffusionFourCompartmentTest));
-  bgeMap.insert(
-    std::make_pair("SimpleDiffusionHierarchyTest",
-      &BioGearsEngineTest::SimpleDiffusionHierarchyTest));
+    std::make_pair("EigenDiffusionTest",
+      &BioGearsEngineTest::EigenDiffusionTest));
   bgeMap.insert(std::make_pair("FacilitatedDiffusionTest",
     &BioGearsEngineTest::FacilitatedDiffusionTest));
   bgeMap.insert(
@@ -211,19 +202,9 @@ void BioGearsEngineTest::FillFunctionMap()
     std::make_pair("AcidBaseFourCompartmentTest",
       &BioGearsEngineTest::AcidBaseFourCompartmentTest));
   bgeMap.insert(
-    std::make_pair("FiveCompartmentTestWithDiffusion",
-      &BioGearsEngineTest::FiveCompartmentTestWithDiffusion));
-  bgeMap.insert(
     std::make_pair("AcidBaseFourCompartmentTestWithProductionConsumption",
       &BioGearsEngineTest::
         AcidBaseFourCompartmentTestWithProductionConsumption));
-  bgeMap.insert(std::make_pair(
-    "AcidBaseFiveCompartmentTestWithDiffusion",
-    &BioGearsEngineTest::AcidBaseFiveCompartmentTestWithDiffusion));
-  bgeMap.insert(std::make_pair(
-    "AcidBaseFiveCompartmentTestWithProductionConsumptionAndDiffusion",
-    &BioGearsEngineTest::
-      AcidBaseFiveCompartmentTestWithProductionConsumptionAndDiffusion));
 
   bgeMap.insert(
     std::make_pair("CustomNutrientKineticsTest",

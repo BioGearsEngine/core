@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/engine/Systems/Diffusion.h>
 #include <biogears/engine/Systems/Tissue.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
@@ -38,6 +39,7 @@ void BioGearsEngineTest::DistributeMass(SETestSuite& testSuite)
   TimingProfile timer;
   BioGears bg(testSuite.GetLogger());
   Tissue& tsu = (Tissue&)bg.GetTissue();
+  DiffusionCalculator& diffCalc = (DiffusionCalculator&)bg.GetDiffusionCalculator();
   // First test case
   SETestCase& testCase = testSuite.CreateTestCase();
   testCase.SetName("DistributeMassToHierarchy");
@@ -95,7 +97,7 @@ void BioGearsEngineTest::DistributeMass(SETestSuite& testSuite)
   double expected_L2C2_g = L2C2_g + (delta_g * L2C2_mL / total_mL);
   double expected_L2C3_g = L2C3_g + (delta_g * L2C3_mL / total_mL);
 
-  tsu.DistributeMassbyVolumeWeighted(L0C0, *sub, delta_g, MassUnit::g);
+  diffCalc.DistributeMassbyVolumeWeighted(L0C0, *sub, delta_g, MassUnit::g);
 
   double L2C0_calc = L2C0.GetSubstanceQuantity(*sub)->GetMass(MassUnit::g);
   if (std::abs(L2C0_calc - expected_L2C0_g) > ZERO_APPROX)
@@ -147,7 +149,7 @@ void BioGearsEngineTest::DistributeMass(SETestSuite& testSuite)
   expected_L2C2_g = L2C2_g + (delta_g * L2C2_g / total_g);
   expected_L2C3_g = L2C3_g + (delta_g * L2C3_g / total_g);
 
-  tsu.DistributeMassbyMassWeighted(L0C0, *sub, delta_g, MassUnit::g);
+  diffCalc.DistributeMassbyMassWeighted(L0C0, *sub, delta_g, MassUnit::g);
 
   L2C0_calc = L2C0.GetSubstanceQuantity(*sub)->GetMass(MassUnit::g);
   if (std::abs(L2C0_calc - expected_L2C0_g) > ZERO_APPROX)
@@ -197,7 +199,7 @@ void BioGearsEngineTest::DistributeMass(SETestSuite& testSuite)
   expected_L2C2_g = 0.;
   expected_L2C3_g = 0.;
 
-  tsu.DistributeMassbyMassWeighted(L0C0, *sub, delta_g, MassUnit::g);
+  diffCalc.DistributeMassbyMassWeighted(L0C0, *sub, delta_g, MassUnit::g);
 
   L2C0_calc = L2C0.GetSubstanceQuantity(*sub)->GetMass(MassUnit::g);
   if (std::abs(L2C0_calc - expected_L2C0_g) > ZERO_APPROX)
@@ -220,6 +222,7 @@ void BioGearsEngineTest::PerfusionLimitedDiffusionTest(SETestSuite& testSuite)
 {
   BioGears bg(testSuite.GetLogger());
   Tissue& tsu = (Tissue&)bg.GetTissue();
+  DiffusionCalculator& diffCalc = (DiffusionCalculator&)bg.GetDiffusionCalculator();
   TimingProfile timer;
   double timestep_s = 1. / 90.;
   SESubstance* sub = bg.GetSubstances().GetSubstance("Ketamine");
@@ -249,6 +252,7 @@ void BioGearsEngineTest::PerfusionLimitedDiffusionTest(SETestSuite& testSuite)
   vascular.GetVolume().SetValue(bVol_mL, VolumeUnit::mL);
   vascular.GetSubstanceQuantity(*sub)->GetConcentration().SetValue(bConc_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
   vascular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Concentration);
+  double vascularStartMass = vascular.GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
   intracellular.GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Mass);
 
   SELiquidCompartmentLink& flow = bg.GetCompartments().CreateLiquidLink(intracellular, vascular, "ExtravascularExchange");
@@ -258,10 +262,14 @@ void BioGearsEngineTest::PerfusionLimitedDiffusionTest(SETestSuite& testSuite)
 
   bg.GetCompartments().StateChange();
 
-  double rtnMassInc_ug = tsu.PerfusionLimitedDiffusion(tissue, vascular, *sub, PartitionCoeff, timestep_s);
+  DiffusionCalculator::DiffusionCompartmentSet diffSet = { &tissue, &vascular, &extracellular, &intracellular };
+
+  diffCalc.CalculatePerfusionLimitedDiffusion(diffSet, *sub, PartitionCoeff);
 
   // Check
   double MassIncrement_ug = bFlow_mL_Per_s * timestep_s * ((bConc_ug_Per_mL) - ((tissueMass_ug / matrixVolume_mL) / PartitionCoeff));
+  double vascularEndMass = diffSet.vascular->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug);
+  double rtnMassInc_ug = vascularStartMass - vascularEndMass;
   if (std::abs(rtnMassInc_ug - MassIncrement_ug) > 1.e-10) {
     testCase1.AddFailure("PerfusionLimitedDiffusion returned unexpected mass increment.");
   }
@@ -403,428 +411,154 @@ void BioGearsEngineTest::AlveolarCarbonDioxideDiffusionTest(const std::string& r
   trk2.WriteTrackToFile(rptFile.c_str());
 }
 
-void BioGearsEngineTest::InstantPlusSimpleDiffusionTest(const std::string& rptDirectory)
+void BioGearsEngineTest::EigenDiffusionTest(const std::string& rptDirectory)
 {
-  // Second test - cmpt2 and cmpt4 are connected by instant diffusion, cmpt2 and cmpt1 by simple and cmpt2 and cmpt3 by simple
-  //        cmpt1 <-> cmpt2 <-> cmpt3
-  //                    |
-  //                  cmpt4
-  // Expect cmpt2 and cmpt4 to quickly equilibrate, while the others take more time
+  m_Logger->ResetLogFile(rptDirectory + "/EigenDiffusionTest.log");
   BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
-  double timestep_s = 1.0 / 90;
-  SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
-  bg.GetSubstances().AddActiveSubstance(*o2);
-  SELiquidCompartment& cmpt1 = bg.GetCompartments().CreateLiquidCompartment("cmpt1");
-  SELiquidCompartment& cmpt2 = bg.GetCompartments().CreateLiquidCompartment("cmpt2");
-  SELiquidCompartment& cmpt3 = bg.GetCompartments().CreateLiquidCompartment("cmpt3");
-  SELiquidCompartment& cmpt4 = bg.GetCompartments().CreateLiquidCompartment("cmpt4");
+  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.SetupPatient();
+  bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
+  bg.m_Config->EnableTissue(CDM::enumOnOff::On);
+  bg.CreateCircuitsAndCompartments();
 
-  DataTrack trk;
-  std::string rptFile = rptDirectory + "/InstantPlusSimpleDiffusionTest.csv";
-  double time = 0.0;
+  std::string matrixFile = rptDirectory + "/EigenDiffusionTest.csv";
+  DataTrack matrixTrk;
 
-  double permeabilityCoefficient21_mL_Per_s = 5.0;
-  double permeabilityCoefficient23_mL_Per_s = 500.0;
+  //Use sodium, potassium, and chloride as model substances
+  SESubstance* Na = &bg.GetSubstances().GetSodium();
+  SESubstance* K = &bg.GetSubstances().GetPotassium();
+  SESubstance* Cl = &bg.GetSubstances().GetChloride();
 
-  cmpt1.GetSubstanceQuantity(*o2)->GetConcentration().SetValue(100.0, MassPerVolumeUnit::g_Per_L);
-  cmpt2.GetSubstanceQuantity(*o2)->GetConcentration().SetValue(100.0, MassPerVolumeUnit::g_Per_L);
-  cmpt3.GetSubstanceQuantity(*o2)->GetConcentration().SetValue(100.0, MassPerVolumeUnit::g_Per_L);
-  cmpt4.GetSubstanceQuantity(*o2)->GetConcentration().SetValue(0.0, MassPerVolumeUnit::g_Per_L);
-  cmpt1.GetVolume().SetValue(1.0, VolumeUnit::L);
-  cmpt2.GetVolume().SetValue(5.0, VolumeUnit::L);
-  cmpt3.GetVolume().SetValue(20.0, VolumeUnit::L);
-  cmpt4.GetVolume().SetValue(10.0, VolumeUnit::L);
-  cmpt1.Balance(BalanceLiquidBy::Concentration);
-  cmpt2.Balance(BalanceLiquidBy::Concentration);
-  cmpt3.Balance(BalanceLiquidBy::Concentration);
-  cmpt4.Balance(BalanceLiquidBy::Concentration);
+  bg.GetSubstances().AddActiveSubstance(*Na);
+  bg.GetSubstances().AddActiveSubstance(*K);
+  bg.GetSubstances().AddActiveSubstance(*Cl);
 
-  trk.Track("cmpt1Mass_g", time, cmpt1.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-  trk.Track("cmpt2Mass_g", time, cmpt2.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-  trk.Track("cmpt3Mass_g", time, cmpt3.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-  trk.Track("cmpt4Mass_g", time, cmpt4.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-  trk.Track("cmpt1Conc_g_Per_L", time, cmpt1.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
-  trk.Track("cmpt2Conc_g_Per_L", time, cmpt2.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
-  trk.Track("cmpt3Conc_g_Per_L", time, cmpt3.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
-  trk.Track("cmpt4Conc_g_Per_L", time, cmpt4.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
+  std::vector<SESubstance*> subs = { Na, K, Cl };
 
-  for (int i = 0; i < 3600; i++) {
-    tsu.MoveMassByInstantDiffusion(cmpt2, cmpt4, *o2, timestep_s);
-    tsu.MoveMassBySimpleDiffusion(cmpt2, cmpt1, *o2, permeabilityCoefficient21_mL_Per_s, timestep_s);
-    tsu.MoveMassBySimpleDiffusion(cmpt2, cmpt3, *o2, permeabilityCoefficient23_mL_Per_s, timestep_s);
-    cmpt1.Balance(BalanceLiquidBy::Mass);
-    cmpt2.Balance(BalanceLiquidBy::Mass);
-    cmpt3.Balance(BalanceLiquidBy::Mass);
-    cmpt4.Balance(BalanceLiquidBy::Mass);
-    time += timestep_s;
-    trk.Track("cmpt1Mass_g", time, cmpt1.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-    trk.Track("cmpt2Mass_g", time, cmpt2.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-    trk.Track("cmpt3Mass_g", time, cmpt3.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-    trk.Track("cmpt4Mass_g", time, cmpt4.GetSubstanceQuantity(*o2)->GetMass(MassUnit::g));
-    trk.Track("cmpt1Conc_g_Per_L", time, cmpt1.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
-    trk.Track("cmpt2Conc_g_Per_L", time, cmpt2.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
-    trk.Track("cmpt3Conc_g_Per_L", time, cmpt3.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
-    trk.Track("cmpt4Conc_g_Per_L", time, cmpt4.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L));
+  //Grab some existing compartments--notice that this test was done using BioGears Lite
+  SELiquidCompartment* liverVas = bg.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver);
+  SELiquidCompartment* liverTis = bg.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LiverExtracellular);
+  SELiquidCompartment* skinVas = bg.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Skin);
+  SELiquidCompartment* skinTis = bg.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular);
+  SELiquidCompartment* muscleVas = bg.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Muscle);
+  SELiquidCompartment* muscleTis = bg.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::MuscleExtracellular);
+
+  //Set concentrations.  Liver uses vascular and intra values in engine and other cmpts mix the values so that we can see
+  //different progressions towards equilibrium
+  liverVas->GetSubstanceQuantity(*Na)->GetConcentration().SetValue(145.0, MassPerVolumeUnit::mg_Per_L);
+  liverVas->GetSubstanceQuantity(*K)->GetConcentration().SetValue(4.5, MassPerVolumeUnit::mg_Per_L);
+  liverVas->GetSubstanceQuantity(*Cl)->GetConcentration().SetValue(105.0, MassPerVolumeUnit::mg_Per_L);
+  liverTis->GetSubstanceQuantity(*Na)->GetConcentration().SetValue(20.0, MassPerVolumeUnit::mg_Per_L);
+  liverTis->GetSubstanceQuantity(*K)->GetConcentration().SetValue(120.0, MassPerVolumeUnit::mg_Per_L);
+  liverTis->GetSubstanceQuantity(*Cl)->GetConcentration().SetValue(15.0, MassPerVolumeUnit::mg_Per_L);
+
+  skinVas->GetSubstanceQuantity(*Na)->GetConcentration().SetValue(50.0, MassPerVolumeUnit::mg_Per_L);
+  skinVas->GetSubstanceQuantity(*K)->GetConcentration().SetValue(40.0, MassPerVolumeUnit::mg_Per_L);
+  skinVas->GetSubstanceQuantity(*Cl)->GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_L);
+  skinTis->GetSubstanceQuantity(*Na)->GetConcentration().SetValue(100.0, MassPerVolumeUnit::mg_Per_L);
+  skinTis->GetSubstanceQuantity(*K)->GetConcentration().SetValue(20.0, MassPerVolumeUnit::mg_Per_L);
+  skinTis->GetSubstanceQuantity(*Cl)->GetConcentration().SetValue(200.0, MassPerVolumeUnit::mg_Per_L);
+
+  muscleVas->GetSubstanceQuantity(*Na)->GetConcentration().SetValue(5.0, MassPerVolumeUnit::mg_Per_L);
+  muscleVas->GetSubstanceQuantity(*K)->GetConcentration().SetValue(80.0, MassPerVolumeUnit::mg_Per_L);
+  muscleVas->GetSubstanceQuantity(*Cl)->GetConcentration().SetValue(500.0, MassPerVolumeUnit::mg_Per_L);
+  muscleTis->GetSubstanceQuantity(*Na)->GetConcentration().SetValue(75.0, MassPerVolumeUnit::mg_Per_L);
+  muscleTis->GetSubstanceQuantity(*K)->GetConcentration().SetValue(70.0, MassPerVolumeUnit::mg_Per_L);
+  muscleTis->GetSubstanceQuantity(*Cl)->GetConcentration().SetValue(1.0, MassPerVolumeUnit::mg_Per_L);
+
+  liverVas->Balance(BalanceLiquidBy::Concentration);
+  liverTis->Balance(BalanceLiquidBy::Concentration);
+  skinVas->Balance(BalanceLiquidBy::Concentration);
+  skinTis->Balance(BalanceLiquidBy::Concentration);
+  muscleVas->Balance(BalanceLiquidBy::Concentration);
+  muscleTis->Balance(BalanceLiquidBy::Concentration);
+
+  //Let's simulate 3- minutes
+  double simTime_s = 60.0 * 60.0;
+  double currentTime_s = 0.0;
+  double timestep_s = 1.0 / 50.0;
+
+  //Make matrices to hold concentrations--3x3 structered [Na, K, Cl] x [Liver, Skin, Muscle]
+  //This probably is not the most efficient way to initialize these matrices but we'll worry about that later
+  Eigen::Matrix3d vascular_mM;
+  Eigen::Matrix3d tissue_mM;
+
+  vascular_mM << 145.0, 50.0, 5.0, 4.5, 40.0, 80.0, 105.0, 10.0, 500.0;
+  tissue_mM << 20.0, 100.0, 75.0, 120.0, 20.0, 70.0, 15.0, 200.0, 1.0;
+
+  //Make a matrix to cache permeability coefficients and populate it so that pCoeff for Na, K, Cl are on diagonal in that order
+  Eigen::Matrix3d pCoeff = Eigen::Matrix3d::Zero();
+  for (int i = 0; i < subs.size(); i++) {
+    double molarMass_g_Per_mol = subs[i]->GetMolarMass(MassPerAmountUnit::g_Per_mol);
+    double molecularRadius_nm = 0.0348 * std::pow(molarMass_g_Per_mol, 0.4175);
+    double vToECpermeabilityCoefficient_mL_Per_s_g = 0.0287 * std::pow(molecularRadius_nm, -2.920) / 100.0; // This is only valid if the molecular radius is > 1.0 nm.
+    if (molecularRadius_nm < 1.0)
+      vToECpermeabilityCoefficient_mL_Per_s_g = 0.0184 * std::pow(molecularRadius_nm, -1.223) / 100.0;
+
+    // Multiply by tissue mass to get the tissue-dependent coefficient.
+    double tissueMass = 0.1; //Just assume this is the same for all of them--1000x less than assumed in standard loop above to account for mg to ug conversion
+    double vToECpermeabilityCoefficient_mL_Per_s = vToECpermeabilityCoefficient_mL_Per_s_g * tissueMass;
+
+    pCoeff(i, i) = vToECpermeabilityCoefficient_mL_Per_s;
   }
 
-  trk.WriteTrackToFile(rptFile.c_str());
-}
+  std::vector<std::pair<SELiquidCompartment*, SELiquidCompartment*>> vascularTissuePair; //Need to store like this to preserve order
+  vascularTissuePair.emplace_back(std::make_pair(liverVas, liverTis));
+  vascularTissuePair.emplace_back(std::make_pair(skinVas, skinTis));
+  vascularTissuePair.emplace_back(std::make_pair(muscleVas, muscleTis));
 
-void BioGearsEngineTest::InstantDiffusionTest(SETestSuite& testSuite)
-{
-  TimingProfile timer;
-  BioGears bg(testSuite.GetLogger());
-  Tissue& tsu = (Tissue&)bg.GetTissue();
-  double timestep_s = 1.0 / 90;
-  SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
-  bg.GetSubstances().AddActiveSubstance(*o2);
-  SELiquidCompartment& cmpt1 = bg.GetCompartments().CreateLiquidCompartment("cmpt1");
-  SELiquidCompartment& cmpt2 = bg.GetCompartments().CreateLiquidCompartment("cmpt2");
-  SELiquidCompartment& cmpt3 = bg.GetCompartments().CreateLiquidCompartment("cmpt3");
-  SELiquidCompartment& cmpt4 = bg.GetCompartments().CreateLiquidCompartment("cmpt4");
+  Eigen::Matrix3d deltaM;
+  while (currentTime_s < simTime_s) {
+    deltaM = timestep_s * pCoeff * (vascular_mM - tissue_mM);
+    for (int i = 0; i < vascularTissuePair.size(); i++) {
+      for (int j = 0; j < subs.size(); j++) {
+        vascularTissuePair[i].first->GetSubstanceQuantity(*subs[j])->GetMass().IncrementValue(-deltaM(j, i), MassUnit::mg);
+        vascularTissuePair[i].first->GetSubstanceQuantity(*subs[j])->Balance(BalanceLiquidBy::Mass);
+        vascular_mM(j, i) = vascularTissuePair[i].first->GetSubstanceQuantity(*subs[j])->GetConcentration(MassPerVolumeUnit::mg_Per_L);
+        vascularTissuePair[i].second->GetSubstanceQuantity(*subs[j])->GetMass().IncrementValue(deltaM(j, i), MassUnit::mg);
+        vascularTissuePair[i].second->GetSubstanceQuantity(*subs[j])->Balance(BalanceLiquidBy::Mass);
+        tissue_mM(j, i) = vascularTissuePair[i].second->GetSubstanceQuantity(*subs[j])->GetConcentration(MassPerVolumeUnit::mg_Per_L);
+      }
+    }
 
-  // First test - simple two compartment instant diffusion test
-  timer.Start("Test");
-  SETestCase& testCase1 = testSuite.CreateTestCase();
-  testCase1.SetName("InstantDiffusionTest");
+    matrixTrk.Track("LiverVascular_Na", currentTime_s, liverVas->GetSubstanceQuantity(*Na)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("LiverVascular_K", currentTime_s, liverVas->GetSubstanceQuantity(*K)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("LiverVascular_Cl", currentTime_s, liverVas->GetSubstanceQuantity(*Cl)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("LiverTissue_Na", currentTime_s, liverTis->GetSubstanceQuantity(*Na)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("LiverTissue_K", currentTime_s, liverTis->GetSubstanceQuantity(*K)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("LiverTissue_Cl", currentTime_s, liverTis->GetSubstanceQuantity(*Cl)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("MuscleVascular_Na", currentTime_s, muscleVas->GetSubstanceQuantity(*Na)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("MuscleVascular_K", currentTime_s, muscleVas->GetSubstanceQuantity(*K)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("MuscleVascular_Cl", currentTime_s, muscleVas->GetSubstanceQuantity(*Cl)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("MuscleTissue_Na", currentTime_s, muscleTis->GetSubstanceQuantity(*Na)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("MuscleTissue_K", currentTime_s, muscleTis->GetSubstanceQuantity(*K)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("MuscleTissue_Cl", currentTime_s, muscleTis->GetSubstanceQuantity(*Cl)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("SkinVascular_Na", currentTime_s, skinVas->GetSubstanceQuantity(*Na)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("SkinVascular_K", currentTime_s, skinVas->GetSubstanceQuantity(*K)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("SkinVascular_Cl", currentTime_s, skinVas->GetSubstanceQuantity(*Cl)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("SkinTissue_Na", currentTime_s, skinTis->GetSubstanceQuantity(*Na)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("SkinTissue_K", currentTime_s, skinTis->GetSubstanceQuantity(*K)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
+    matrixTrk.Track("SkinTissue_Cl", currentTime_s, skinTis->GetSubstanceQuantity(*Cl)->GetConcentration(MassPerVolumeUnit::mg_Per_L));
 
-  cmpt1.GetSubstanceQuantity(*o2)->GetConcentration().SetValue(100.0, MassPerVolumeUnit::g_Per_L);
-  cmpt2.GetSubstanceQuantity(*o2)->GetConcentration().SetValue(0.0, MassPerVolumeUnit::g_Per_L);
-
-  cmpt1.GetVolume().SetValue(1.0, VolumeUnit::L);
-  cmpt2.GetVolume().SetValue(10.0, VolumeUnit::L);
-  cmpt1.Balance(BalanceLiquidBy::Concentration);
-  cmpt2.Balance(BalanceLiquidBy::Concentration);
-
-  tsu.MoveMassByInstantDiffusion(cmpt1, cmpt2, *o2, timestep_s);
-  cmpt1.Balance(BalanceLiquidBy::Mass);
-  cmpt2.Balance(BalanceLiquidBy::Mass);
-
-  if (std::abs(cmpt1.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L) - cmpt2.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L)) > ZERO_APPROX)
-    testCase1.AddFailure("Unequal concentrations after instant diffusion.");
-  if (std::abs(cmpt1.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L) - 9.0909090909090909) > ZERO_APPROX)
-    testCase1.AddFailure("Compartment 1 concentration after instant diffusion not as expected.");
-  if (std::abs(cmpt2.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_L) - 9.0909090909090909) > ZERO_APPROX)
-    testCase1.AddFailure("Compartment 2 concentration after instant diffusion not as expected.");
-
-  testCase1.GetDuration().SetValue(timer.GetElapsedTime_s("Test"), TimeUnit::s);
-
-  /// \todo This methodology assumes binary compartments. It works in prototype for multiple compartment instant diffusion, but needs to be tested beyond two compartments.
-}
-
-void BioGearsEngineTest::SimpleDiffusionTwoCompartmentTest(const std::string& rptDirectory)
-{
-  // Second test case --
-  // Tests the diffusion between two tissue liquid compartments
-  // Calculated permeability coefficient
-  BioGears bg(m_Logger);
-  Tissue& tsu = (Tissue&)bg.GetTissue();
-  double timestep_s = 1.0 / 90;
-  SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
-  bg.GetSubstances().AddActiveSubstance(*o2);
-  SETissueCompartment& tissue = bg.GetCompartments().CreateTissueCompartment("Tissue");
-  SELiquidCompartment& cmpt1_IC = bg.GetCompartments().CreateLiquidCompartment("cmpt1_IC");
-  SELiquidCompartment& cmpt2_EC = bg.GetCompartments().CreateLiquidCompartment("cmpt2_EC");
-
-  DataTrack trk2;
-  std::string rptFile = rptDirectory + "/SimpleDiffusionTwoCompartmentTest.csv";
-  double time = 0.0;
-
-  double ecVol_mL = 40.0;
-  double icVol_mL = 30.0;
-  double ecMass_g = 1.0;
-  double icMass_g = 20.0;
-
-  cmpt2_EC.GetVolume().SetValue(ecVol_mL, VolumeUnit::mL);
-  cmpt1_IC.GetVolume().SetValue(icVol_mL, VolumeUnit::mL);
-  cmpt2_EC.GetSubstanceQuantity(*o2)->GetMass().SetValue(ecMass_g, MassUnit::g);
-  cmpt1_IC.GetSubstanceQuantity(*o2)->GetMass().SetValue(icMass_g, MassUnit::g);
-  cmpt2_EC.Balance(BalanceLiquidBy::Mass);
-  cmpt1_IC.Balance(BalanceLiquidBy::Mass);
-
-  tissue.GetTotalMass().SetValue(500.0, MassUnit::g);
-
-  double molarMass = o2->GetMolarMass().GetValue(MassPerAmountUnit::g_Per_mol);
-  double molecularRadius = 0.0348 * std::pow(molarMass, 0.4175);
-  double permeabilityCoefficient_mL_Per_s_hg;
-  if (molecularRadius > 1.0) {
-    permeabilityCoefficient_mL_Per_s_hg = 0.0287 * std::pow(molecularRadius, -2.920);
-  } else {
-    permeabilityCoefficient_mL_Per_s_hg = 0.0184 * std::pow(molecularRadius, -1.223);
+    currentTime_s += timestep_s;
   }
 
-  // The tissue mass baseline is a constant property of the tissue - values can be found in the ICRP and other sources
-  // We use the tissue mass as a stand-in for surface area, follow the lead of Renkin and Curry
-  // Here are the rules for the different types of compartments
-  // Vascular to tissue (in BioGears it is always extracellular, but it doesn't matter)
-  // The mass is the tissue compartment mass
-  // Tissue to tissue
-  // The mass is always the smaller of the two (the smaller area will be the max area for diffusion)
-  double permeabilityCoefficient_mL_Per_s = permeabilityCoefficient_mL_Per_s_hg / 100.0 * tissue.GetTotalMass(MassUnit::g);
+  matrixTrk.WriteTrackToFile(matrixFile.c_str());
 
-  trk2.Track("ExtracellularMass_g", time, cmpt2_EC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-  trk2.Track("IntracellularMass_g", time, cmpt1_IC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-  trk2.Track("ExtracellularConc_g_Per_mL", time, cmpt2_EC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk2.Track("IntracellularConc_g_Per_mL", time, cmpt1_IC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-
-  for (int i = 0; i < 3600; i++) {
-    tsu.MoveMassBySimpleDiffusion(cmpt1_IC, cmpt2_EC, *o2, permeabilityCoefficient_mL_Per_s, timestep_s);
-    cmpt2_EC.Balance(BalanceLiquidBy::Mass);
-    cmpt1_IC.Balance(BalanceLiquidBy::Mass);
-    time += timestep_s;
-    ecMass_g = cmpt2_EC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g);
-    icMass_g = cmpt1_IC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g);
-    double ecConc_g_Per_mL = cmpt2_EC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL);
-    double icConc_g_Per_mL = cmpt1_IC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL);
-    trk2.Track("ExtracellularMass_g", time, ecMass_g);
-    trk2.Track("IntracellularMass_g", time, icMass_g);
-    trk2.Track("ExtracellularConc_g_Per_mL", time, ecConc_g_Per_mL);
-    trk2.Track("IntracellularConc_g_Per_mL", time, icConc_g_Per_mL);
-  }
-
-  trk2.WriteTrackToFile(rptFile.c_str());
-}
-
-void BioGearsEngineTest::SimpleDiffusionFourCompartmentTest(const std::string& rptDirectory)
-{
-  // Now we will add two more compartments and test two things
-  // First, that the concentration does not change within a time slice
-  // Second, that the concentrations equilibrate appropriately
-  //              / cmpt1
-  //     cmpt4 <->  cmpt2
-  //              \ cmpt3
-  // Artificial permeability coefficient
-  BioGears bg(m_Logger);
-  Tissue& tsu = (Tissue&)bg.GetTissue();
-  double timestep_s = 1.0 / 90;
-  SESubstance* o2 = bg.GetSubstances().GetSubstance("Oxygen");
-  bg.GetSubstances().AddActiveSubstance(*o2);
-  SETissueCompartment& tissue = bg.GetCompartments().CreateTissueCompartment("Tissue");
-  SELiquidCompartment& cmpt1_IC = bg.GetCompartments().CreateLiquidCompartment("cmpt1_IC");
-  SELiquidCompartment& cmpt2_EC = bg.GetCompartments().CreateLiquidCompartment("cmpt2_EC");
-  SELiquidCompartment& cmpt3_LQ = bg.GetCompartments().CreateLiquidCompartment("cmpt3_LQ");
-  SELiquidCompartment& cmpt4_LQ = bg.GetCompartments().CreateLiquidCompartment("cmpt4_LQ");
-
-  DataTrack trk3;
-  std::string rptFile = rptDirectory + "/SimpleDiffusionFourCompartmentTest.csv";
-  double time = 0.0;
-
-  // Initialize
-  double v3Mass_g = 10.0;
-  double v4Mass_g = 0.0;
-  double v3Vol_mL = 20.0;
-  double v4Vol_mL = 50.0;
-  double ecVol_mL = 10.0;
-  double icVol_mL = 50.0;
-  double ecMass_g = 2.5;
-  double icMass_g = 2.0;
-  cmpt2_EC.GetVolume().SetValue(ecVol_mL, VolumeUnit::mL);
-  cmpt1_IC.GetVolume().SetValue(icVol_mL, VolumeUnit::mL);
-  cmpt3_LQ.GetVolume().SetValue(v3Vol_mL, VolumeUnit::mL);
-  cmpt4_LQ.GetVolume().SetValue(v4Vol_mL, VolumeUnit::mL);
-  cmpt2_EC.GetSubstanceQuantity(*o2)->GetMass().SetValue(ecMass_g, MassUnit::g);
-  cmpt1_IC.GetSubstanceQuantity(*o2)->GetMass().SetValue(icMass_g, MassUnit::g);
-  cmpt3_LQ.GetSubstanceQuantity(*o2)->GetMass().SetValue(v3Mass_g, MassUnit::g);
-  cmpt4_LQ.GetSubstanceQuantity(*o2)->GetMass().SetValue(v4Mass_g, MassUnit::g);
-  cmpt4_LQ.Balance(BalanceLiquidBy::Mass);
-  cmpt3_LQ.Balance(BalanceLiquidBy::Mass);
-  cmpt2_EC.Balance(BalanceLiquidBy::Mass);
-  cmpt1_IC.Balance(BalanceLiquidBy::Mass);
-
-  // Make it a little faster for this test
-  double permeabilityCoefficient_mL_Per_s = 20.0;
-
-  tsu.MoveMassBySimpleDiffusion(cmpt1_IC, cmpt4_LQ, *o2, permeabilityCoefficient_mL_Per_s, timestep_s);
-  tsu.MoveMassBySimpleDiffusion(cmpt2_EC, cmpt4_LQ, *o2, permeabilityCoefficient_mL_Per_s, timestep_s);
-  tsu.MoveMassBySimpleDiffusion(cmpt3_LQ, cmpt4_LQ, *o2, permeabilityCoefficient_mL_Per_s, timestep_s);
-
-  double v3CalculatedConcentration_g_Per_mL = cmpt3_LQ.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_mL);
-  double v4CalculatedConcentration_g_Per_mL = cmpt4_LQ.GetSubstanceQuantity(*o2)->GetConcentration(MassPerVolumeUnit::g_Per_mL);
-  double v3ExpectedConcentration_g_Per_mL = (v3Mass_g / v3Vol_mL);
-  double v4ExpectedConcentration_g_Per_mL = (v4Mass_g / v4Vol_mL);
-
-  // Ok, now balance
-  cmpt4_LQ.Balance(BalanceLiquidBy::Mass);
-  cmpt3_LQ.Balance(BalanceLiquidBy::Mass);
-  cmpt2_EC.Balance(BalanceLiquidBy::Mass);
-  cmpt1_IC.Balance(BalanceLiquidBy::Mass);
-  trk3.Track("cmpt1mass_g", time, cmpt1_IC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-  trk3.Track("cmpt2mass_g", time, cmpt2_EC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-  trk3.Track("cmpt3mass_g", time, cmpt3_LQ.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-  trk3.Track("cmpt4mass_g", time, cmpt4_LQ.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-  trk3.Track("cmpt1conc_g_Per_mL", time, cmpt1_IC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk3.Track("cmpt2conc_g_Per_mL", time, cmpt2_EC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk3.Track("cmpt3conc_g_Per_mL", time, cmpt3_LQ.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk3.Track("cmpt4conc_g_Per_mL", time, cmpt4_LQ.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-
-  for (int i = 0; i < 3600; i++) {
-    tsu.MoveMassBySimpleDiffusion(cmpt1_IC, cmpt4_LQ, *o2, permeabilityCoefficient_mL_Per_s, timestep_s);
-    tsu.MoveMassBySimpleDiffusion(cmpt2_EC, cmpt4_LQ, *o2, permeabilityCoefficient_mL_Per_s, timestep_s);
-    tsu.MoveMassBySimpleDiffusion(cmpt3_LQ, cmpt4_LQ, *o2, permeabilityCoefficient_mL_Per_s, timestep_s);
-    cmpt4_LQ.Balance(BalanceLiquidBy::Mass);
-    cmpt3_LQ.Balance(BalanceLiquidBy::Mass);
-    cmpt2_EC.Balance(BalanceLiquidBy::Mass);
-    cmpt1_IC.Balance(BalanceLiquidBy::Mass);
-    time += timestep_s;
-    trk3.Track("cmpt1mass_g", time, cmpt1_IC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-    trk3.Track("cmpt2mass_g", time, cmpt2_EC.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-    trk3.Track("cmpt3mass_g", time, cmpt3_LQ.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-    trk3.Track("cmpt4mass_g", time, cmpt4_LQ.GetSubstanceQuantity(*o2)->GetMass().GetValue(MassUnit::g));
-    trk3.Track("cmpt1conc_g_Per_mL", time, cmpt1_IC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk3.Track("cmpt2conc_g_Per_mL", time, cmpt2_EC.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk3.Track("cmpt3conc_g_Per_mL", time, cmpt3_LQ.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk3.Track("cmpt4conc_g_Per_mL", time, cmpt4_LQ.GetSubstanceQuantity(*o2)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  }
-
-  // Write data to file
-  trk3.WriteTrackToFile(rptFile.c_str());
-}
-
-void BioGearsEngineTest::SimpleDiffusionHierarchyTest(const std::string& rptDirectory)
-{
-  // Tests diffusion with distribution for hierarchical compartments
-  //                                       L0C0        <---->        M0C0
-  //                                      /    \                    /  |  \
-  //                                  L1C0      L1C1            M1C0  M1C1 M1C2  <--Only these cmpts have data
-  //                                  /  \      /  \
-  // Only these cmpts have data--> L2C0  L2C1 L2C2 L2C3
-  // Artificial permeability coefficient
-
-  BioGears bg(m_Logger);
-  Tissue& tsu = (Tissue&)bg.GetTissue();
-  double timestep_s = 1.0 / 90;
-  SESubstance* sub = bg.GetSubstances().GetSubstance("Desflurane");
-  bg.GetSubstances().AddActiveSubstance(*sub);
-
-  DataTrack trk4;
-  std::string rptFile = rptDirectory + "/SimpleDiffusionHierarchyTest.csv";
-  double time = 0.0;
-
-  SELiquidCompartment& L0C0 = bg.GetCompartments().CreateLiquidCompartment("L0C0");
-  SELiquidCompartment& L1C0 = bg.GetCompartments().CreateLiquidCompartment("L1C0");
-  SELiquidCompartment& L1C1 = bg.GetCompartments().CreateLiquidCompartment("L1C1");
-  SELiquidCompartment& L2C0 = bg.GetCompartments().CreateLiquidCompartment("L2C0");
-  SELiquidCompartment& L2C1 = bg.GetCompartments().CreateLiquidCompartment("L2C1");
-  SELiquidCompartment& L2C2 = bg.GetCompartments().CreateLiquidCompartment("L2C2");
-  SELiquidCompartment& L2C3 = bg.GetCompartments().CreateLiquidCompartment("L2C3");
-  SELiquidCompartment& M0C0 = bg.GetCompartments().CreateLiquidCompartment("M0C0");
-  SELiquidCompartment& M1C0 = bg.GetCompartments().CreateLiquidCompartment("M1C0");
-  SELiquidCompartment& M1C1 = bg.GetCompartments().CreateLiquidCompartment("M1C1");
-  SELiquidCompartment& M1C2 = bg.GetCompartments().CreateLiquidCompartment("M1C2");
-
-  // Build up the hierarchy
-  L0C0.AddChild(L1C0);
-  L0C0.AddChild(L1C1);
-  L1C0.AddChild(L2C0);
-  L1C0.AddChild(L2C1);
-  L1C1.AddChild(L2C2);
-  L1C1.AddChild(L2C3);
-  M0C0.AddChild(M1C0);
-  M0C0.AddChild(M1C1);
-  M0C0.AddChild(M1C2);
-  bg.GetCompartments().StateChange(); // Call this, AFTER YOU SET UP YOUR HIERARCHY, to ensure all parent compartments have their link data
-
-  double Lvol_mL = 10.0;
-  double Mvol_mL = 8.0;
-  double M1C2mol_fraction = 0.01;
-  L2C0.GetVolume().SetValue(Lvol_mL, VolumeUnit::mL);
-  L2C1.GetVolume().SetValue(Lvol_mL, VolumeUnit::mL);
-  L2C2.GetVolume().SetValue(Lvol_mL, VolumeUnit::mL);
-  L2C3.GetVolume().SetValue(Lvol_mL, VolumeUnit::mL);
-  M1C0.GetVolume().SetValue(Mvol_mL, VolumeUnit::mL);
-  M1C1.GetVolume().SetValue(Mvol_mL, VolumeUnit::mL);
-  M1C2.GetVolume().SetValue(Mvol_mL, VolumeUnit::mL);
-
-  double Lmolarity_mmol_Per_mL = 10.0;
-  double Mmolarity_mmol_Per_mL = 0.0;
-  L2C0.GetSubstanceQuantity(*sub)->GetMolarity().SetValue(Lmolarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
-  L2C1.GetSubstanceQuantity(*sub)->GetMolarity().SetValue(0.5 * Lmolarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
-  L2C2.GetSubstanceQuantity(*sub)->GetMolarity().SetValue(2.0 * Lmolarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
-  L2C3.GetSubstanceQuantity(*sub)->GetMolarity().SetValue(1.5 * Lmolarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
-  M1C0.GetSubstanceQuantity(*sub)->GetMolarity().SetValue(Mmolarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
-  M1C1.GetSubstanceQuantity(*sub)->GetMolarity().SetValue(Mmolarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
-  M1C2.GetSubstanceQuantity(*sub)->GetMolarity().SetValue(Mmolarity_mmol_Per_mL * M1C2mol_fraction, AmountPerVolumeUnit::mmol_Per_mL); // He has less moles
-
-  L2C0.Balance(BalanceLiquidBy::Molarity);
-  L2C1.Balance(BalanceLiquidBy::Molarity);
-  L2C2.Balance(BalanceLiquidBy::Molarity);
-  L2C3.Balance(BalanceLiquidBy::Molarity);
-  M1C0.Balance(BalanceLiquidBy::Molarity);
-  M1C1.Balance(BalanceLiquidBy::Molarity);
-  M1C2.Balance(BalanceLiquidBy::Molarity);
-
-  double permeabilityCoefficient_mL_Per_s = 2.0;
-
-  trk4.Track("L0C0_mass_g", time, L0C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("L1C0_mass_g", time, L1C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("L1C1_mass_g", time, L1C1.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("L2C0_mass_g", time, L2C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("L2C1_mass_g", time, L2C1.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("L2C2_mass_g", time, L2C2.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("L2C3_mass_g", time, L2C3.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("M0C0_mass_g", time, M0C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("M1C0_mass_g", time, M1C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("M1C1_mass_g", time, M1C1.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("M1C2_mass_g", time, M1C2.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-  trk4.Track("L0C0_conc_g_Per_mL", time, L0C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("L1C0_conc_g_Per_mL", time, L1C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("L1C1_conc_g_Per_mL", time, L1C1.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("L2C0_conc_g_Per_mL", time, L2C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("L2C1_conc_g_Per_mL", time, L2C1.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("L2C2_conc_g_Per_mL", time, L2C2.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("L2C3_conc_g_Per_mL", time, L2C3.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("M0C0_conc_g_Per_mL", time, M0C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("M1C0_conc_g_Per_mL", time, M1C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("M1C1_conc_g_Per_mL", time, M1C1.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  trk4.Track("M1C2_conc_g_Per_mL", time, M1C2.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-
-  for (int i = 0; i < 3600; i++) {
-    tsu.MoveMassBySimpleDiffusion(L0C0, M0C0, *sub, permeabilityCoefficient_mL_Per_s, timestep_s);
-    L2C0.Balance(BalanceLiquidBy::Mass);
-    L2C1.Balance(BalanceLiquidBy::Mass);
-    L2C2.Balance(BalanceLiquidBy::Mass);
-    L2C3.Balance(BalanceLiquidBy::Mass);
-    M1C0.Balance(BalanceLiquidBy::Mass);
-    M1C1.Balance(BalanceLiquidBy::Mass);
-    M1C2.Balance(BalanceLiquidBy::Mass);
-    time += timestep_s;
-    trk4.Track("L0C0_mass_g", time, L0C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("L1C0_mass_g", time, L1C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("L1C1_mass_g", time, L1C1.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("L2C0_mass_g", time, L2C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("L2C1_mass_g", time, L2C1.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("L2C2_mass_g", time, L2C2.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("L2C3_mass_g", time, L2C3.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("M0C0_mass_g", time, M0C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("M1C0_mass_g", time, M1C0.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("M1C1_mass_g", time, M1C1.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("M1C2_mass_g", time, M1C2.GetSubstanceQuantity(*sub)->GetMass().GetValue(MassUnit::g));
-    trk4.Track("L0C0_conc_g_Per_mL", time, L0C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("L1C0_conc_g_Per_mL", time, L1C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("L1C1_conc_g_Per_mL", time, L1C1.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("L2C0_conc_g_Per_mL", time, L2C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("L2C1_conc_g_Per_mL", time, L2C1.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("L2C2_conc_g_Per_mL", time, L2C2.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("L2C3_conc_g_Per_mL", time, L2C3.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("M0C0_conc_g_Per_mL", time, M0C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("M1C0_conc_g_Per_mL", time, M1C0.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("M1C1_conc_g_Per_mL", time, M1C1.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-    trk4.Track("M1C2_conc_g_Per_mL", time, M1C2.GetSubstanceQuantity(*sub)->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_mL));
-  }
-
-  trk4.WriteTrackToFile(rptFile.c_str());
 }
 
 void BioGearsEngineTest::FacilitatedDiffusionTest(const std::string& rptDirectory)
 {
   BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
-  double timestep_s = 1.0 / 90;
+  DiffusionCalculator& diffCalc = (DiffusionCalculator&)bg.GetDiffusionCalculator();
   SESubstance* sub = bg.GetSubstances().GetSubstance("Glucose");
   bg.GetSubstances().AddActiveSubstance(*sub);
+  double timestep_s = 0.02;
   SETissueCompartment& tissue = bg.GetCompartments().CreateTissueCompartment("Tissue");
   SELiquidCompartment& tissueExtracellular = bg.GetCompartments().CreateLiquidCompartment("Extracellular");
+  SELiquidCompartment& tissueIntracellular = bg.GetCompartments().CreateLiquidCompartment("Intracellular");
   SELiquidCompartment& vascular = bg.GetCompartments().CreateLiquidCompartment("Vascular");
 
   DataTrack trk1;
@@ -832,11 +566,16 @@ void BioGearsEngineTest::FacilitatedDiffusionTest(const std::string& rptDirector
   double time = 0.0;
 
   tissueExtracellular.GetVolume().SetValue(45.0, VolumeUnit::mL);
+  tissueIntracellular.GetVolume().SetValue(200.0, VolumeUnit::mL);
   vascular.GetVolume().SetValue(100.0, VolumeUnit::mL);
   tissueExtracellular.GetSubstanceQuantity(*sub)->GetMass().SetValue(2.9, MassUnit::g);
+  tissueIntracellular.GetSubstanceQuantity(*sub)->GetMass().SetValue(1.0, MassUnit::g);
   vascular.GetSubstanceQuantity(*sub)->GetMass().SetValue(5.0, MassUnit::g);
   tissueExtracellular.Balance(BalanceLiquidBy::Mass);
+  tissueIntracellular.Balance(BalanceLiquidBy::Mass);
   vascular.Balance(BalanceLiquidBy::Mass);
+  
+  DiffusionCalculator::DiffusionCompartmentSet diffSet = { &tissue, &vascular, &tissueExtracellular, &tissueIntracellular };
 
   double capCoverage_cm2 = 90.0; /// \todo Relate capillary coverage to tissue mass.
   double maximumMassFlux = sub->GetMaximumDiffusionFlux(MassPerAreaTimeUnit::g_Per_cm2_s);
@@ -848,7 +587,7 @@ void BioGearsEngineTest::FacilitatedDiffusionTest(const std::string& rptDirector
   trk1.Track("ExtracellularConc_g_Per_mL", time, ECconc_g_Per_mL);
 
   for (int i = 0; i < 180; i++) {
-    tsu.MoveMassByFacilitatedDiffusion(vascular, tissueExtracellular, *sub, combinedCoefficient_g_Per_s, timestep_s);
+    diffCalc.CalculateFacilitatedDiffusion(diffSet, *sub, combinedCoefficient_g_Per_s);
     vascular.Balance(BalanceLiquidBy::Mass);
     tissueExtracellular.Balance(BalanceLiquidBy::Mass);
     time += timestep_s;
@@ -920,14 +659,6 @@ void BioGearsEngineTest::DiffusionClearanceExcretionTests(const std::string& rpt
   ts1.SetName("PerfusionLimitedDiffusionTest");
   PerfusionLimitedDiffusionTest(ts1);
 
-  //SETestSuite& ts5 = testReport.CreateTestSuite();
-  //ts5.SetName("ActiveTransportTest");
-  //ActiveTransportTest(ts5, rptDirectory);
-
-  SETestSuite& ts6 = testReport.CreateTestSuite();
-  ts6.SetName("InstantDiffusionTest");
-  InstantDiffusionTest(ts6);
-
   //SETestSuite& ts7 = testReport.CreateTestSuite();
   //ts6.SetName("GenericClearanceTest");
   //GenericClearanceTest(ts7);
@@ -942,8 +673,8 @@ void BioGearsEngineTest::DiffusionClearanceExcretionTests(const std::string& rpt
 void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirectory)
 {
   enum testCases { ExtraIntra = 0,
-    VascExtra = 1,
-    Combined = 2 };
+                   VascExtra = 1,
+                   Combined = 2 };
   int testRun = VascExtra;
   m_Logger->ResetLogFile(rptDirectory + "/TissueCombinedTransportTest.log");
   std::string circuitFile = rptDirectory + "/TissueTransportCircuit.csv";
@@ -959,6 +690,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   DataTrack trk;
 
   Tissue& tsu = (Tissue&)bg.GetTissue();
+  DiffusionCalculator& diffCalc = (DiffusionCalculator&)bg.GetDiffusionCalculator();
   bg.GetPatient().Load("./patients/StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
@@ -984,7 +716,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   double stabilizationTime = 30; //min
   double simTime = 360; //Total sim length
   double startInfuse = 30.0;
-  double endInfuse = -1.0;  //Means we won't do infusion
+  double endInfuse = -1.0; //Means we won't do infusion
   bool testSaline = true;
   //Substance concentrations
   double Na_Extra = 145.0;
@@ -1040,9 +772,9 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   double targetGradient_mmHg = 3.0;
   double hydrostaticGradient_mmHg = targetGradient_mmHg + albReflection * (capillaryCOP_mmHg - interstitialCOP_mmHg);
   double e1NodePressure = muscleVascularPressure_mmHg - capillaryCOP_mmHg; //We're assuming the pressure drop across the resistor between Ex1 and Ex2 is very small
-  double e3NodePressure = muscleVascularPressure_mmHg - hydrostaticGradient_mmHg; 
+  double e3NodePressure = muscleVascularPressure_mmHg - hydrostaticGradient_mmHg;
   double e2NodePressure = e3NodePressure - interstitialCOP_mmHg;
-  double targetFlow_mL_Per_min = targetGradient_mmHg / vascularToExtraResistance_mmHg_min_Per_mL; 
+  double targetFlow_mL_Per_min = targetGradient_mmHg / vascularToExtraResistance_mmHg_min_Per_mL;
   double ivRate_mL_Per_s = (0.05 + 0.247 + 0.14) * 1000.0 / 3600.0; //1 L per hour to mL/s, scaled down to available volume in this circuit
   double salineNa_mg_Per_mL = 3.54;
   double salineCl_mg_Per_mL = 5.46;
@@ -1053,10 +785,8 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   double albuminDiffusive_ug_Per_min;
   double albuminConvective_ug_Per_min;
   double lymphSensitivity = 0.4 * targetFlow_mL_Per_min;
-  double lymphFlow_mL_Per_s=0.0;
+  double lymphFlow_mL_Per_s = 0.0;
   double interstitialPressureBaseline_mmHg;
-
-
 
   //Extra<->Intra Test Circuit
   SEFluidCircuit* IEcircuit = &circuits.CreateFluidCircuit("CircuitDeSoleil");
@@ -1286,8 +1016,6 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
         Extra.Balance(BalanceLiquidBy::Mass);
       }
 
-      //tsu.CoupledIonTransport(MuscleTissue, Bloodstream, Extra, Intra, E1ToI1, dt, &Na, &K, &Cl);
-
       calc.Process(*IEcircuit, dt);
 
       ICF_L = Intra.GetVolume(VolumeUnit::L);
@@ -1366,15 +1094,6 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
     }
 
     for (int j = 0; j < simTime * 60 / dt; j++) {
-      //Diffuse ions by instant diffusion
-      //Note:  "mass-moved" variable doesn't matter, function just needs to return a double
-      for (auto ion : subs) {
-        if (ion->GetName() == "Albumin")
-          continue;
-        tsu.MoveMassByInstantDiffusion(cMuscle, cExtraCell, *ion, dt);
-        cMuscle.GetSubstanceQuantity(*ion)->Balance(BalanceLiquidBy::Mass);
-        cExtraCell.GetSubstanceQuantity(*ion)->Balance(BalanceLiquidBy::Mass);
-      }
 
       //Need to move the albumin manually--by definition a positive value is from capillary to interstitial
       //Don't worry about "DistributeMass" functions because we don't have any child compartments to worry about here
@@ -1394,10 +1113,10 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
       //Calculate next osmotic pressure gradient
       Alb_Vasc_g_Per_dL = cMuscle.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
       Alb_Extra_g_Per_dL = cExtraCell.GetSubstanceQuantity(Alb)->GetConcentration(MassPerVolumeUnit::g_Per_dL);
-      capillaryCOP_mmHg =  2.1 * Alb_Vasc_g_Per_dL + 0.16 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.009 * std::pow(Alb_Vasc_g_Per_dL, 3);
-      interstitialCOP_mmHg =  2.1 * Alb_Extra_g_Per_dL + 0.16 * std::pow(Alb_Extra_g_Per_dL, 2) + 0.009 * std::pow(Alb_Extra_g_Per_dL, 3);
-      pPlasmaCOP.GetNextPressureSource().SetValue(albReflection*capillaryCOP_mmHg, PressureUnit::mmHg);
-      pInterstitialCOP.GetNextPressureSource().SetValue(albReflection*interstitialCOP_mmHg, PressureUnit::mmHg);
+      capillaryCOP_mmHg = 2.1 * Alb_Vasc_g_Per_dL + 0.16 * std::pow(Alb_Vasc_g_Per_dL, 2) + 0.009 * std::pow(Alb_Vasc_g_Per_dL, 3);
+      interstitialCOP_mmHg = 2.1 * Alb_Extra_g_Per_dL + 0.16 * std::pow(Alb_Extra_g_Per_dL, 2) + 0.009 * std::pow(Alb_Extra_g_Per_dL, 3);
+      pPlasmaCOP.GetNextPressureSource().SetValue(albReflection * capillaryCOP_mmHg, PressureUnit::mmHg);
+      pInterstitialCOP.GetNextPressureSource().SetValue(albReflection * interstitialCOP_mmHg, PressureUnit::mmHg);
 
       //Adjust lymph flow
       //pEx3ToLymph.GetNextPressureSource().SetValue(nVeins.GetPressure(PressureUnit::mmHg) - veinsPressure_mmHg, PressureUnit::mmHg);
@@ -1502,7 +1221,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
 
       //Need to move the albumin manually--by definition a positive value is from capillary to interstitial
       //Don't worry about "DistributeMass" functions because we don't have any child compartments to worry about here
-     
+
       cMuscle.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(-massVascularToInterstitial_ug, MassUnit::ug);
       cExtraCell.GetSubstanceQuantity(Alb)->GetMass().IncrementValue(massVascularToInterstitial_ug, MassUnit::ug);
       cMuscle.GetSubstanceQuantity(Alb)->Balance(BalanceLiquidBy::Mass);
