@@ -8,7 +8,7 @@
   <!--System Data Requests-->	
   <DataRequests>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="FiltrationFraction" Precision="2"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate" Unit="mL/min" Precision="0"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate" Unit="L/day" Precision="0"/>	
 	
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftAfferentArterioleResistance" Unit="mmHg min/mL" Precision="4"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftBowmansCapsulesHydrostaticPressure" Unit="mmHg" Precision="0"/>
@@ -18,8 +18,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularCapillariesHydrostaticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationRate" Unit="mL/min" Precision="0"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationSurfaceArea" Unit="m^2" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationRate" Unit="L/day" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFiltrationSurfaceArea" Unit="cm^2" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftGlomerularFluidPermeability" Precision="1"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftNetFiltrationPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftNetReabsorptionPressure" Unit="mmHg" Precision="0"/>
@@ -27,7 +27,7 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftPeritubularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftReabsorptionFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftReabsorptionRate" Unit="mL/min" Precision="0"/>	
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularReabsorptionFiltrationSurfaceArea" Unit="m^2" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularReabsorptionFiltrationSurfaceArea" Unit="cm^2" Precision="1"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularReabsorptionFluidPermeability" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularHydrostaticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftTubularOsmoticPressure" Unit="mmHg" Precision="0"/>
@@ -43,8 +43,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularCapillariesHydrostaticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationRate" Unit="mL/min" Precision="0"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationSurfaceArea" Unit="m^2" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationRate" Unit="L/day" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFiltrationSurfaceArea" Unit="cm^2" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightGlomerularFluidPermeability" Precision="1"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightNetFiltrationPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightNetReabsorptionPressure" Unit="mmHg" Precision="0"/>
@@ -52,7 +52,7 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightPeritubularCapillariesOsmoticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightReabsorptionFiltrationCoefficient" Unit="mL/min mmHg" Precision="1"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightReabsorptionRate" Unit="mL/min" Precision="0"/>	
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularReabsorptionFiltrationSurfaceArea" Unit="m^2" Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularReabsorptionFiltrationSurfaceArea" Unit="cm^2" Precision="1"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularReabsorptionFluidPermeability" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularHydrostaticPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightTubularOsmoticPressure" Unit="mmHg" Precision="0"/>

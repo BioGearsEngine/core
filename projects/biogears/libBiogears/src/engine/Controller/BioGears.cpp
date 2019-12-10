@@ -2446,14 +2446,14 @@ void BioGears::SetupRenal()
   ///// Circuit Parameters//////
   double openSwitch_mmHg_s_Per_mL = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
   //Resistances with some tuning multipliers
-  double urineTuningMultiplier = 0.65;
-  double arteryTuningMultiplier = 0.2;
-  double reabsorptionTuningMultiplier = 0.3;
-  double gfrTuning = 0.0003;
-  double efferentTuning = 1.5;
+  double urineTuningMultiplier = 1.0;
+  double arteryTuningMultiplier = 0.6;
+  double reabsorptionTuningMultiplier = 1.1;
+  double gfrTuning = 1.0;
+  double efferentTuning = 1.1; 
 
   double renalArteryResistance_mmHg_s_Per_mL = Convert(0.0250 * arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  double afferentResistance_mmHg_s_Per_mL = Convert(0.0417, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+  double afferentResistance_mmHg_s_Per_mL = Convert(0.0417* arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double efferentResistance_mmHg_s_Per_mL = Convert(0.0763 * efferentTuning, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double glomerularResistance_mmHg_s_Per_mL = Convert(0.0019 * gfrTuning, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double peritubularResistance_mmHg_s_Per_mL = Convert(0.0167, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
