@@ -279,9 +279,11 @@
       <DiastolicPressureModifier readOnly="false" value="-0.25"/>
       <EC50 readOnly="false" unit="ug/mL" value="0.0009"/>
       <EMaxShapeParameter readOnly="false" value="10"/>
+      <FeverModifier readOnly="false" value="0"/>
       <HeartRateModifier readOnly="false" value="0.45"/>
       <HemorrhageModifier readOnly="false" value="0"/>
       <NeuromuscularBlock readOnly="false" value="0"/>
+      <PainModifier readOnly="false" value="0"/>
       <PupillaryResponse>
         <ReactivityModifier readOnly="false" value="0"/>
         <SizeModifier readOnly="false" value="0.34"/>
@@ -412,10 +414,17 @@
     <Name>Creatinine</Name>
     <MolarMass readOnly="false" unit="g/mol" value="113.12"/>
     <State>Liquid</State>
+<<<<<<< HEAD
     <BloodConcentration readOnly="false" unit="ug/mL" value="10.9156937786026"/>
     <MassInBody readOnly="false" unit="ug" value="427645.374622066"/>
     <MassInBlood readOnly="false" unit="ug" value="60931.0863398849"/>
     <MassInTissue readOnly="false" unit="ug" value="366714.288282181"/>
+=======
+    <BloodConcentration readOnly="false" unit="ug/mL" value="10.955064112987"/>
+    <MassInBody readOnly="false" unit="ug" value="428753.263134096"/>
+    <MassInBlood readOnly="false" unit="ug" value="62230.348068654"/>
+    <MassInTissue readOnly="false" unit="ug" value="366522.915065442"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -691,8 +700,13 @@
     <Name>Antigen_B</Name>
     <Classification>WholeBlood</Classification>
     <MolarMass readOnly="false" unit="g/mol" value="991.972"/>
+<<<<<<< HEAD
     <MassInBody readOnly="false" unit="ug" value="45048.6971345278"/>
     <MassInBlood readOnly="false" unit="ug" value="45048.6971345278"/>
+=======
+    <MassInBody readOnly="false" unit="ug" value="45117.7784089059"/>
+    <MassInBlood readOnly="false" unit="ug" value="45117.7784089059"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <MassInTissue readOnly="false" unit="ug" value="0"/>
     <Antigen>B</Antigen>
     <Clearance>
@@ -881,12 +895,23 @@
   </System>
   <System xsi:type="BioGearsDrugSystemData">
     <AntibioticActivity readOnly="false" value="0"/>
+<<<<<<< HEAD
     <BronchodilationLevel readOnly="false" value="6.24931975545917e-15"/>
     <HeartRateChange readOnly="false" unit="1/min" value="6.85900948769908e-13"/>
+=======
+    <BronchodilationLevel readOnly="false" value="6.37198777488427e-15"/>
+    <FeverChange readOnly="false" unit="degC" value="0"/>
+    <HeartRateChange readOnly="false" unit="1/min" value="6.99364511877542e-13"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <HemorrhageChange readOnly="false" value="0"/>
     <MeanBloodPressureChange readOnly="false" unit="mmHg" value="1.40176464300641e-13"/>
     <NeuromuscularBlockLevel readOnly="false" value="0"/>
+<<<<<<< HEAD
     <PulsePressureChange readOnly="false" unit="mmHg" value="1.56998750161075e-12"/>
+=======
+    <PainToleranceChange readOnly="false" value="0"/>
+    <PulsePressureChange readOnly="false" unit="mmHg" value="1.59970393479234e-12"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>
       <SizeModifier readOnly="false" value="7.08256238952039e-15"/>
@@ -1016,6 +1041,7 @@
     <RightTubularReabsorptionFiltrationSurfaceArea readOnly="false" unit="m^2" value="2.5"/>
     <RightTubularReabsorptionFluidPermeability readOnly="false" unit="mL/s mmHg m^2" value="0.0424214641046923"/>
     <UrinationRate readOnly="false" unit="mL/min" value="0"/>
+<<<<<<< HEAD
     <UrineOsmolality readOnly="false" unit="mOsm/kg" value="139.028661723357"/>
     <UrineOsmolarity readOnly="false" unit="mOsm/L" value="492.434218425538"/>
     <UrineProductionRate readOnly="false" unit="mL/s" value="0.00635103428384364"/>
@@ -1023,6 +1049,15 @@
     <UrineSpecificGravity readOnly="false" value="3.56693038097131"/>
     <UrineVolume readOnly="false" unit="mL" value="1.53847527151515"/>
     <UrineUreaNitrogenConcentration readOnly="false" unit="g/L" value="7.2505492978001"/>
+=======
+    <UrineOsmolality readOnly="false" unit="mOsm/kg" value="148.239443685577"/>
+    <UrineOsmolarity readOnly="false" unit="mOsm/L" value="521.95738078258"/>
+    <UrineProductionRate readOnly="false" unit="mL/s" value="0.00872324294245406"/>
+    <MeanUrineOutput readOnly="false" unit="mL/day" value="1365.47607293803"/>
+    <UrineSpecificGravity readOnly="false" value="3.54586354066502"/>
+    <UrineVolume readOnly="false" unit="mL" value="1.47593980364737"/>
+    <UrineUreaNitrogenConcentration readOnly="false" unit="g/L" value="7.55015913375415"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <Urinating>false</Urinating>
     <LeftAfferentResistance_mmHg_s_Per_mL>2.2</LeftAfferentResistance_mmHg_s_Per_mL>
     <RightAfferentResistance_mmHg_s_Per_mL>2.2</RightAfferentResistance_mmHg_s_Per_mL>
@@ -1097,15 +1132,26 @@
     <HadBronchoconstriction>false</HadBronchoconstriction>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
+<<<<<<< HEAD
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.54336315213452"/>
+=======
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.69471338014568"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <DehydrationFraction readOnly="false" value="0"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="8184.78485597396"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="30139.9911072318"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
+<<<<<<< HEAD
     <IntracellularFluidVolume readOnly="false" unit="mL" value="21955.2062512579"/>
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="34866.7605703585"/>
     <OxygenConsumptionRate readOnly="false" unit="mL/s" value="3.88338944080734"/>
     <RespiratoryExchangeRatio readOnly="false" value="0.855242410775443"/>
+=======
+    <IntracellularFluidVolume readOnly="false" unit="mL" value="22171.8892284812"/>
+    <TotalBodyFluidVolume readOnly="false" unit="mL" value="34875.7124395701"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="2.85661764672579"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.884160941729352"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1117,11 +1163,19 @@
     <StoredProtein readOnly="false" unit="g" value="109.998812150545"/>
     <StoredFat readOnly="false" unit="g" value="14175.2980699266"/>
     <RestingPatientMass_kg>67.5015</RestingPatientMass_kg>
+<<<<<<< HEAD
     <RestingFluidMass_kg>32.9905678165987</RestingFluidMass_kg>
     <O2ConsumedRunningAverage_mL_Per_s numSamples="27" sum="104.754915489454"/>
     <CO2ProducedRunningAverage_mL_Per_s numSamples="27" sum="95.578090390487"/>
     <RespiratoryQuotientRunningAverage numSamples="27" sum="23.0903485761925"/>
     <FatigueRunningAverage numSamples="0" sum="0"/>
+=======
+    <RestingFluidMass_kg>33.0010106555569</RestingFluidMass_kg>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="13" sum="37.1078005827892"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="13" sum="34.939148106531"/>
+    <RespiratoryQuotientRunningAverage numSamples="13" sum="11.4727680093044"/>
+    <FatigueRunningAverage numSamples="36" sum="0"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
   </System>
   <System xsi:type="BioGearsEnvironmentData">
     <Name>Unknown Environment</Name>
@@ -1452,12 +1506,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50507905341623"/>
         <Mass readOnly="false" unit="ug" value="2382.38779369259"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58200337652295e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50669878541188"/>
+        <Mass readOnly="false" unit="ug" value="2445.84114916484"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58363621696165e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -1717,12 +1780,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.4886444293526"/>
         <Mass readOnly="false" unit="ug" value="16.1365200862741"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.05735287178999e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="10.4046638477464"/>
+        <Mass readOnly="false" unit="ug" value="15.3566575164597"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.04888684839355e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -2516,12 +2588,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50930453545749"/>
         <Mass readOnly="false" unit="ug" value="3205.19162182634"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58626305526516e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.51438290726506"/>
+        <Mass readOnly="false" unit="ug" value="3201.3149748276"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.59138252618527e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -3315,12 +3396,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950702365628835"/>
         <Mass readOnly="true" unit="ug" value="567.649191626147"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.58396371700849e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950881545735701"/>
+        <Mass readOnly="true" unit="ug" value="569.735381670323"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.58577001907011e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -3582,12 +3672,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.5093268431781"/>
         <Mass readOnly="false" unit="ug" value="101.374933039194"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58628554352149e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.51083746862589"/>
+        <Mass readOnly="false" unit="ug" value="103.265635436359"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58780839441626e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -3848,12 +3947,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50948581628208"/>
         <Mass readOnly="false" unit="ug" value="114.861391168896"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58644580319009e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.51134000811659"/>
+        <Mass readOnly="false" unit="ug" value="114.988819862949"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58831500094417e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -4379,12 +4487,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50555506171356"/>
         <Mass readOnly="false" unit="ug" value="351.412867418057"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58248323714133e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50739602482211"/>
+        <Mass readOnly="false" unit="ug" value="351.480926371015"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58433909910976e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -5178,12 +5295,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.53855640230998"/>
         <Mass readOnly="false" unit="ug" value="2295.29124538453"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.61575165660924e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.53950114302303"/>
+        <Mass readOnly="false" unit="ug" value="2292.38292438375"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.61670404308089e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -6096,12 +6222,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00949895722899272"/>
         <Mass readOnly="true" unit="ug" value="3233.32571632631"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.5758320083558e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950050022072896"/>
+        <Mass readOnly="true" unit="ug" value="3232.76416651279"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.57738748747844e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -6364,12 +6499,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950514107770504"/>
         <Mass readOnly="true" unit="ug" value="2870.60771720417"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.5820659027725e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950673462108547"/>
+        <Mass readOnly="true" unit="ug" value="2698.59390143093"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.58367234265228e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -6630,12 +6774,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00892106770934586"/>
         <Mass readOnly="true" unit="ug" value="575.598190826551"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="8.99326564595156e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.0090298561642555"/>
+        <Mass readOnly="true" unit="ug" value="619.393532274668"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.10293452260296e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -6896,12 +7049,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.4995737003819"/>
         <Mass readOnly="false" unit="ug" value="894.925717339479"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57645346882967e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.49977168223604"/>
+        <Mass readOnly="false" unit="ug" value="894.643392682927"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.57665305294508e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -7162,12 +7324,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50505966673782"/>
         <Mass readOnly="false" unit="ug" value="30.3900224502626"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58198383294873e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50666253819866"/>
+        <Mass readOnly="false" unit="ug" value="32.3148407350684"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58359967640081e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -7444,12 +7615,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.5018542307267"/>
         <Mass readOnly="false" unit="ug" value="458.190352549587"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57875245543897e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50261486662607"/>
+        <Mass readOnly="false" unit="ug" value="457.552004115728"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.57951924714213e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -7992,12 +8172,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.6253850631607"/>
         <Mass readOnly="false" unit="ug" value="33.9719793387641"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.07113759896052e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="10.7163939505417"/>
+        <Mass readOnly="false" unit="ug" value="36.42693346635"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.08031214092149e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -8259,12 +8448,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.6021171115747"/>
         <Mass readOnly="false" unit="ug" value="34.190414128392"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.06879197311766e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="10.7156140435199"/>
+        <Mass readOnly="false" unit="ug" value="36.7173484023782"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.08023351904286e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -8527,12 +8725,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50518793831314"/>
         <Mass readOnly="false" unit="ug" value="1237.81754924822"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58211314262211e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50686022094381"/>
+        <Mass readOnly="false" unit="ug" value="1219.82629450922"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58379895898655e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -9326,12 +9533,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00892106770940739"/>
         <Mass readOnly="true" unit="ug" value="287.799095415253"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="8.99326564601359e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00902985616424205"/>
+        <Mass readOnly="true" unit="ug" value="309.696766136875"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.1029345225894e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -9593,12 +9809,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50183998046565"/>
         <Mass readOnly="false" unit="ug" value="691.865973898553"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57873808985098e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50259715614561"/>
+        <Mass readOnly="false" unit="ug" value="690.900795479559"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.57950139333128e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -10403,12 +10628,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950524962796708"/>
         <Mass readOnly="true" unit="ug" value="2436.93891573345"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.58217533152859e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950693906917948"/>
+        <Mass readOnly="true" unit="ug" value="2459.54620593345"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.58387844533865e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -10673,12 +10907,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00862100632684949"/>
         <Mass readOnly="true" unit="ug" value="183.994681388528"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="8.69077587557863e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00878607256793034"/>
+        <Mass readOnly="true" unit="ug" value="199.3431405479"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="8.85717799285699e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -10940,12 +11183,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.54020491047202"/>
         <Mass readOnly="false" unit="ug" value="30.5023904714587"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.61741350609899e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.51192765068019"/>
+        <Mass readOnly="false" unit="ug" value="32.3327377910129"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58890739928162e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -11216,12 +11468,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50529914034485"/>
         <Mass readOnly="false" unit="ug" value="607.247896408883"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58222524460857e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50696377828777"/>
+        <Mass readOnly="false" unit="ug" value="647.740492039649"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58390335441703e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -11482,12 +11743,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50530629825423"/>
         <Mass readOnly="false" unit="ug" value="453.81243520038"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58223246044669e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50704454592805"/>
+        <Mass readOnly="false" unit="ug" value="466.265016550175"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58398477570743e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -11748,12 +12018,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50520908411312"/>
         <Mass readOnly="false" unit="ug" value="1375.87858412419"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58213445955443e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50689062449948"/>
+        <Mass readOnly="false" unit="ug" value="1345.54069734363"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.5838296085973e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -12014,12 +12293,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50506865918985"/>
         <Mass readOnly="false" unit="ug" value="51.9327327664552"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58199289817641e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50667848078707"/>
+        <Mass readOnly="false" unit="ug" value="55.2483815194976"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58361574801211e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -12280,12 +12568,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.51019494138794"/>
         <Mass readOnly="false" unit="ug" value="51.8716812602701"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58716066722441e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50597650446428"/>
+        <Mass readOnly="false" unit="ug" value="55.1052440694779"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58290809061574e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -12547,12 +12844,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.310096824893"/>
         <Mass readOnly="false" unit="ug" value="54.9398749996507"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.03935361329685e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="10.8646164282261"/>
+        <Mass readOnly="false" unit="ug" value="61.5512801530903"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.09525434470187e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -12812,12 +13118,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.9421944009243"/>
         <Mass readOnly="false" unit="ug" value="7.76895802465626"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.10307492559511e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="11.2282403002969"/>
+        <Mass readOnly="false" unit="ug" value="7.97205061321082"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.13191101163107e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -13612,12 +13927,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50297496153317"/>
         <Mass readOnly="false" unit="ug" value="4798.69881078166"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57988225628664e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50439710626174"/>
+        <Mass readOnly="false" unit="ug" value="4792.10572702044"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58131591039035e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -13878,12 +14202,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950525424685648"/>
         <Mass readOnly="true" unit="ug" value="4783.63188853003"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.58217998779853e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950694437578442"/>
+        <Mass readOnly="true" unit="ug" value="4828.06046246523"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.5838837948898e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -14954,12 +15287,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.51591624695206"/>
         <Mass readOnly="false" unit="ug" value="6419.60595126341"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.59292827514493e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.51961405354693"/>
+        <Mass readOnly="false" unit="ug" value="6412.88496544953"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.59665600797898e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -15753,12 +16095,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50647831495644"/>
         <Mass readOnly="false" unit="ug" value="320.533739305614"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58341396224535e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50825467900989"/>
+        <Mass readOnly="false" unit="ug" value="320.869836886178"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58520470236044e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -16019,12 +16370,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50505435250602"/>
         <Mass readOnly="false" unit="ug" value="115.293505416249"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58197847570901e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50666050254601"/>
+        <Mass readOnly="false" unit="ug" value="120.818984197061"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58359762427368e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -16285,12 +16645,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50545644719045"/>
         <Mass readOnly="false" unit="ug" value="343.980026081526"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58238382453381e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50725059939205"/>
+        <Mass readOnly="false" unit="ug" value="344.201516451838"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.584192496756e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -16824,12 +17193,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950530077198951"/>
         <Mass readOnly="true" unit="ug" value="1200.18954027597"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.58222688945808e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950696631472764"/>
+        <Mass readOnly="true" unit="ug" value="1283.13234409781"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.58390591138424e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -17090,12 +17468,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950530744247134"/>
         <Mass readOnly="true" unit="ug" value="891.612538596346"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.58223361392392e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950704428478651"/>
+        <Mass readOnly="true" unit="ug" value="917.003444670636"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.58398451245248e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -17365,12 +17752,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950521588339854"/>
         <Mass readOnly="true" unit="ug" value="2691.82980965771"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.58214131386626e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.0095068988014702"/>
+        <Mass readOnly="true" unit="ug" value="2627.92467369678"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.583837851744e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -17631,12 +18027,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50505966673781"/>
         <Mass readOnly="false" unit="ug" value="30.3900224502625"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58198383294872e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50666253819866"/>
+        <Mass readOnly="false" unit="ug" value="32.3148407350683"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58359967640081e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -17913,12 +18318,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.5018542307267"/>
         <Mass readOnly="false" unit="ug" value="458.190352549587"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57875245543897e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50261486662607"/>
+        <Mass readOnly="false" unit="ug" value="457.552004115728"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.57951924714213e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -18461,12 +18875,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.6253850629087"/>
         <Mass readOnly="false" unit="ug" value="33.9719793379586"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.07113759893512e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="10.7163939505967"/>
+        <Mass readOnly="false" unit="ug" value="36.4269334665371"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.08031214092704e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -18728,12 +19151,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.6021171113095"/>
         <Mass readOnly="false" unit="ug" value="34.1904141275459"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.06879197309092e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="10.7156140435759"/>
+        <Mass readOnly="false" unit="ug" value="36.7173484025667"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.08023351904851e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -18997,12 +19429,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50535174680571"/>
         <Mass readOnly="false" unit="ug" value="1169.75642865034"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58227827681196e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50704927970053"/>
+        <Mass readOnly="false" unit="ug" value="1015.39777003553"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58398954779019e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -19796,12 +20237,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00892106770928433"/>
         <Mass readOnly="true" unit="ug" value="287.799095411298"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="8.99326564588954e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00902985616426896"/>
+        <Mass readOnly="true" unit="ug" value="309.696766137793"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.10293452261652e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -20063,12 +20513,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50183998046565"/>
         <Mass readOnly="false" unit="ug" value="691.865973898553"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57873808985098e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50259715614561"/>
+        <Mass readOnly="false" unit="ug" value="690.900795479559"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.57950139333128e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -20871,12 +21330,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00950525904337763"/>
         <Mass readOnly="true" unit="ug" value="2346.69297279657"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="9.58218482313778e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00950694988635075"/>
+        <Mass readOnly="true" unit="ug" value="2368.51425653177"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="9.58388935005298e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -21141,12 +21609,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.00862100632672246"/>
         <Mass readOnly="true" unit="ug" value="183.994681385825"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="8.69077587545058e-06"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.00878607256795782"/>
+        <Mass readOnly="true" unit="ug" value="199.34314054852"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="8.8571779928847e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -21408,12 +21885,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.54020491024176"/>
         <Mass readOnly="false" unit="ug" value="30.5023904707225"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.61741350586686e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.5119276507317"/>
+        <Mass readOnly="false" unit="ug" value="32.3327377911881"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58890739933355e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -21684,12 +22170,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.5053024430024"/>
         <Mass readOnly="false" unit="ug" value="592.941643867086"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58222857399443e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50696890046382"/>
+        <Mass readOnly="false" unit="ug" value="635.391852058165"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.5839085180467e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -21950,12 +22445,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50530862853794"/>
         <Mass readOnly="false" unit="ug" value="437.800103395966"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58223480958933e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50704401464945"/>
+        <Mass readOnly="false" unit="ug" value="450.738428120461"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58398424012921e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -22216,12 +22720,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50522299232834"/>
         <Mass readOnly="false" unit="ug" value="1315.95122553352"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58214848032842e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50690738116745"/>
+        <Mass readOnly="false" unit="ug" value="1282.38397635315"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58384650087648e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -22482,12 +22995,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50506865918985"/>
         <Mass readOnly="false" unit="ug" value="51.9327327664553"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58199289817641e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50667848078707"/>
+        <Mass readOnly="false" unit="ug" value="55.2483815194976"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58361574801211e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -22748,12 +23270,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.51019494115711"/>
         <Mass readOnly="false" unit="ug" value="51.8716812590181"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58716066699172e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50597650451592"/>
+        <Mass readOnly="false" unit="ug" value="55.1052440697746"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.5829080906678e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -23015,12 +23546,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.3100968248337"/>
         <Mass readOnly="false" unit="ug" value="54.9398749993351"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.03935361329087e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="10.8646164282384"/>
+        <Mass readOnly="false" unit="ug" value="61.5512801531601"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.09525434470312e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -23280,12 +23820,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="10.9421944008971"/>
         <Mass readOnly="false" unit="ug" value="7.76895802463693"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="1.10307492559236e-05"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="11.2282403003003"/>
+        <Mass readOnly="false" unit="ug" value="7.97205061321322"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="1.13191101163141e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -24079,12 +24628,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.51973883217568"/>
         <Mass readOnly="false" unit="ug" value="1403.21270872765"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.59678179643747e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.52147923469505"/>
+        <Mass readOnly="false" unit="ug" value="1404.36164614254"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.59853628398286e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -24608,12 +25166,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.49852542383026"/>
         <Mass readOnly="false" unit="ug" value="1791.47918081574"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57539670860696e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50099559138492"/>
+        <Mass readOnly="false" unit="ug" value="1791.34303992112"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.57788686715443e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -24874,12 +25441,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.49936305430074"/>
         <Mass readOnly="false" unit="ug" value="546.920818171086"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.57624111799601e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50006953439144"/>
+        <Mass readOnly="false" unit="ug" value="546.777733908739"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.57695331560915e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -25672,12 +26248,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.5047128262459"/>
         <Mass readOnly="false" unit="ug" value="660.378951245365"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58163418548699e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50614000043404"/>
+        <Mass readOnly="false" unit="ug" value="660.174561534926"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58307290975354e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -25952,12 +26537,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="true" unit="mg/mL" value="0.0109421944009107"/>
         <Mass readOnly="true" unit="ug" value="15.5379160492932"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="true" unit="mmol/mL" value="1.10307492559374e-05"/>
+=======
+        <Concentration readOnly="true" unit="mg/mL" value="0.0112282403002986"/>
+        <Mass readOnly="true" unit="ug" value="15.944101226424"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="true" unit="mmol/mL" value="1.13191101163124e-05"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>
@@ -26218,12 +26812,21 @@
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>Antigen_B</Substance>
+<<<<<<< HEAD
         <Concentration readOnly="false" unit="ug/mL" value="9.50534134171228"/>
         <Mass readOnly="false" unit="ug" value="9093.73116269904"/>
         <MassCleared readOnly="false" unit="mg" value="0"/>
         <MassDeposited readOnly="false" unit="mg" value="0"/>
         <MassExcreted readOnly="false" unit="mg" value="0"/>
         <Molarity readOnly="false" unit="mmol/mL" value="9.58226778751041e-06"/>
+=======
+        <Concentration readOnly="false" unit="ug/mL" value="9.50706440761565"/>
+        <Mass readOnly="false" unit="ug" value="9198.23891618884"/>
+        <MassCleared readOnly="false" unit="mg" value="0"/>
+        <MassDeposited readOnly="false" unit="mg" value="0"/>
+        <MassExcreted readOnly="false" unit="mg" value="0"/>
+        <Molarity readOnly="false" unit="mmol/mL" value="9.58400479813508e-06"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
       </SubstanceQuantity>
       <SubstanceQuantity>
         <Substance>RedBloodCell</Substance>

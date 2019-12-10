@@ -819,7 +819,7 @@ void Drugs::CalculateDrugEffects()
     // stabilization and restrict drugs to post-feedback stabilization. Alternatively, we could base the drug effect on a baseline
     // concentration which is normally zero but which gets set to a new baseline concentration at the end of feedback (see chemoreceptor
     // and the blood gas setpoint reset for example).
-    deltaCoreTemp_degC += m_data.GetEnergy().GetCoreTemperature().GetValue(TemperatureUnit::C) * pd.GetFeverModifier().GetValue() * concentrationEffects_unitless;
+    deltaCoreTemp_degC -= 37.0 * pd.GetFeverModifier().GetValue() * concentrationEffects_unitless; //using 37.0 as baseline core temperature
     
     deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
 

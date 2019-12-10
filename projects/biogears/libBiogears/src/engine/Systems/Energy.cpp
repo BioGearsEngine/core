@@ -301,13 +301,10 @@ void Energy::CalculateVitalSigns()
 {
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
   double skinTemperature_degC = m_skinNode->GetTemperature(TemperatureUnit::C);
-  double CoreTempBuffer = 0.0;
-  if (m_data.GetDrugs().HasFeverChange()) {
-    double TempScalar = 10000.0;
-    double CoreTemperatureModifier = m_data.GetDrugs().GetFeverChange().GetValue(TemperatureUnit::C);
-    CoreTempBuffer = -1*exp(-CoreTemperatureModifier * TempScalar);
+  if (m_data.GetDrugs().HasFeverChange() && GetCoreTemperature().GetValue(TemperatureUnit::C) > 37.0) { // Modifier for current drugs should not be able to increase core temperature
+    coreTemperature_degC += m_data.GetDrugs().GetFeverChange().GetValue(TemperatureUnit::C);
+    LLIM(coreTemperature_degC, 36.5); // Tylenol will not lower your basal core temperature
   }
-  coreTemperature_degC += CoreTempBuffer;
   GetCoreTemperature().SetValue(coreTemperature_degC, TemperatureUnit::C);
   GetSkinTemperature().SetValue(skinTemperature_degC, TemperatureUnit::C);
   std::stringstream ss;

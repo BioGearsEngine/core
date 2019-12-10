@@ -44,6 +44,7 @@
     <Density readOnly="false" unit="g/m^3" value="1251"/>
     <MolarMass readOnly="false" unit="g/mol" value="28.0134"/>
     <State>Gas</State>
+<<<<<<< HEAD
     <MassInBody readOnly="false" unit="ug" value="567310.131694755"/>
     <MassInBlood readOnly="false" unit="ug" value="96356.6291458262"/>
     <MassInTissue readOnly="false" unit="ug" value="470953.502548929"/>
@@ -51,6 +52,15 @@
     <DiffusingCapacity readOnly="false" unit="mL/s mmHg" value="0.257591128902395"/>
     <EndTidalFraction readOnly="false" value="0.794169166978579"/>
     <EndTidalPressure readOnly="false" unit="cmH2O" value="820.483435697202"/>
+=======
+    <MassInBody readOnly="false" unit="ug" value="473860.24406661"/>
+    <MassInBlood readOnly="false" unit="ug" value="65130.3606879186"/>
+    <MassInTissue readOnly="false" unit="ug" value="408729.883378692"/>
+    <AlveolarTransfer readOnly="false" unit="mL/s" value="0.00291376351605183"/>
+    <DiffusingCapacity readOnly="false" unit="mL/s mmHg" value="0.17742876958797"/>
+    <EndTidalFraction readOnly="false" value="0.79321262307879"/>
+    <EndTidalPressure readOnly="false" unit="cmH2O" value="819.49972585875"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <RelativeDiffusionCoefficient readOnly="false" value="0.53"/>
     <SolubilityCoefficient readOnly="false" unit="1/atm" value="0.012"/>
     <Clearance>
@@ -276,9 +286,11 @@
       <DiastolicPressureModifier readOnly="false" value="-0.25"/>
       <EC50 readOnly="false" unit="ug/mL" value="0.0009"/>
       <EMaxShapeParameter readOnly="false" value="10"/>
+      <FeverModifier readOnly="false" value="0"/>
       <HeartRateModifier readOnly="false" value="0.45"/>
       <HemorrhageModifier readOnly="false" value="0"/>
       <NeuromuscularBlock readOnly="false" value="0"/>
+      <PainModifier readOnly="false" value="0"/>
       <PupillaryResponse>
         <ReactivityModifier readOnly="false" value="0"/>
         <SizeModifier readOnly="false" value="0.34"/>
@@ -878,12 +890,23 @@
   </System>
   <System xsi:type="BioGearsDrugSystemData">
     <AntibioticActivity readOnly="false" value="0"/>
+<<<<<<< HEAD
     <BronchodilationLevel readOnly="false" value="3.83944517034188e-15"/>
     <HeartRateChange readOnly="false" unit="1/min" value="4.2140251869606e-13"/>
+=======
+    <BronchodilationLevel readOnly="false" value="7.30984534648674e-15"/>
+    <FeverChange readOnly="false" unit="degC" value="0"/>
+    <HeartRateChange readOnly="false" unit="1/min" value="8.02300099004642e-13"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <HemorrhageChange readOnly="false" value="0"/>
     <MeanBloodPressureChange readOnly="false" unit="mmHg" value="8.69658420195461e-14"/>
     <NeuromuscularBlockLevel readOnly="false" value="0"/>
+<<<<<<< HEAD
     <PulsePressureChange readOnly="false" unit="mmHg" value="9.67305471073873e-13"/>
+=======
+    <PainToleranceChange readOnly="false" value="0"/>
+    <PulsePressureChange readOnly="false" unit="mmHg" value="1.83058913397932e-12"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>
       <SizeModifier readOnly="false" value="4.35137119305413e-15"/>
@@ -1013,6 +1036,7 @@
     <RightTubularReabsorptionFiltrationSurfaceArea readOnly="false" unit="m^2" value="2.5"/>
     <RightTubularReabsorptionFluidPermeability readOnly="false" unit="mL/s mmHg m^2" value="0.0455606003354351"/>
     <UrinationRate readOnly="false" unit="mL/min" value="0"/>
+<<<<<<< HEAD
     <UrineOsmolality readOnly="false" unit="mOsm/kg" value="217.719910363"/>
     <UrineOsmolarity readOnly="false" unit="mOsm/L" value="589.011619352961"/>
     <UrineProductionRate readOnly="false" unit="mL/s" value="0.0290295585568315"/>
@@ -1020,6 +1044,15 @@
     <UrineSpecificGravity readOnly="false" value="2.72443509977558"/>
     <UrineVolume readOnly="false" unit="mL" value="1.51549884382341"/>
     <UrineUreaNitrogenConcentration readOnly="false" unit="g/L" value="8.57095307145111"/>
+=======
+    <UrineOsmolality readOnly="false" unit="mOsm/kg" value="145.535407827611"/>
+    <UrineOsmolarity readOnly="false" unit="mOsm/L" value="519.466962915067"/>
+    <UrineProductionRate readOnly="false" unit="mL/s" value="0.0172630865435037"/>
+    <MeanUrineOutput readOnly="false" unit="mL/day" value="1351.31556089722"/>
+    <UrineSpecificGravity readOnly="false" value="3.59451265350843"/>
+    <UrineVolume readOnly="false" unit="mL" value="1.47021577458338"/>
+    <UrineUreaNitrogenConcentration readOnly="false" unit="g/L" value="7.45966749821028"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <Urinating>false</Urinating>
     <LeftAfferentResistance_mmHg_s_Per_mL>2.2</LeftAfferentResistance_mmHg_s_Per_mL>
     <RightAfferentResistance_mmHg_s_Per_mL>2.2</RightAfferentResistance_mmHg_s_Per_mL>
@@ -1094,6 +1127,7 @@
     <HadBronchoconstriction>false</HadBronchoconstriction>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
+<<<<<<< HEAD
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.73641301675833"/>
     <DehydrationFraction readOnly="false" value="0"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="9250.99759087371"/>
@@ -1103,6 +1137,17 @@
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="39868.5184685849"/>
     <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.03033463222678"/>
     <RespiratoryExchangeRatio readOnly="false" value="0.86892487899112"/>
+=======
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.78069168933138"/>
+    <DehydrationFraction readOnly="false" value="0"/>
+    <ExtracellularFluidVolume readOnly="false" unit="mL" value="9079.00448602414"/>
+    <ExtravascularFluidVolume readOnly="false" unit="mL" value="34415.6955764425"/>
+    <IntracellularFluidPH readOnly="false" value="7"/>
+    <IntracellularFluidVolume readOnly="false" unit="mL" value="25336.6910904183"/>
+    <TotalBodyFluidVolume readOnly="false" unit="mL" value="39871.9399235197"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="2.96012282922811"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.880467087944002"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1114,11 +1159,19 @@
     <StoredProtein readOnly="false" unit="g" value="109.99591908324"/>
     <StoredFat readOnly="false" unit="g" value="16298.5564834608"/>
     <RestingPatientMass_kg>77.6122029</RestingPatientMass_kg>
+<<<<<<< HEAD
     <RestingFluidMass_kg>37.723591767508</RestingFluidMass_kg>
     <O2ConsumedRunningAverage_mL_Per_s numSamples="22" sum="88.5968977059088"/>
     <CO2ProducedRunningAverage_mL_Per_s numSamples="22" sum="81.9743962557651"/>
     <RespiratoryQuotientRunningAverage numSamples="22" sum="19.0793679924148"/>
     <FatigueRunningAverage numSamples="18" sum="0"/>
+=======
+    <RestingFluidMass_kg>37.7300402150646</RestingFluidMass_kg>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="43" sum="127.263479458808"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="43" sum="119.478502766182"/>
+    <RespiratoryQuotientRunningAverage numSamples="43" sum="37.8383465689915"/>
+    <FatigueRunningAverage numSamples="8" sum="0"/>
+>>>>>>> f/ntatum-Tylenol: Final edits
   </System>
   <System xsi:type="BioGearsEnvironmentData">
     <Name>Unknown Environment</Name>
