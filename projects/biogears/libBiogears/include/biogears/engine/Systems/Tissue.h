@@ -86,40 +86,22 @@ protected:
   // Process Methods
   void CalculateDiffusion();
   void CalculatePulmonaryCapillarySubstanceTransfer();
+  void AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonary, SELiquidCompartment& vascular, SESubstance& sub, double DiffusingCapacityO2_mL_Per_s_mmHg, double timestep_s);
   void CalculateVitals();
   void CheckGlycogenLevels();
   void ManageSubstancesAndSaturation();
 
 
-  // Postprocess Methods
-
   //conditions
   void Dehydrate();
 
-  // Tissue System
+  // Tissue Nutrients
   void CalculateMetabolicConsumptionAndProduction(double time);
   void SetStarvationState();
 
-  // Diffusion Utilities
-  void DistributeMassbyVolumeWeighted(SELiquidCompartment& cmpt, const SESubstance& sub, double mass, const MassUnit& unit);
-  void DistributeMassbyMassWeighted(SELiquidCompartment& cmpt, const SESubstance& sub, double mass, const MassUnit& unit);
-
-  double PerfusionLimitedDiffusion(SETissueCompartment& tissue, SELiquidCompartment& vascular, const SESubstance& sub, double partitionCoeff, double timestep_s);
-  void AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonary, SELiquidCompartment& vascular, SESubstance& sub, double DiffusingCapacityO2_mL_Per_s_mmHg, double timestep_s);
-  //
-  double MoveMassByInstantDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double timestep_s);
-  double MoveMassBySimpleDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double permeabilityCofficient_mL_Per_s, double timestep_s);
-  //
-  double MoveMassByFacilitatedDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double combinedCoefficient_g_Per_s, double timestep_s);
-  double MoveMassByConvection(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub, double timestep_s);
-  void CoupledIonTransport(SETissueCompartment& tissue, SELiquidCompartment& extra, SELiquidCompartment& intra, SELiquidCompartment& vascular);
-  double AlbuminTransport(SELiquidCompartment& vascular, SELiquidCompartment& extra, SETissueCompartment& tissue, double timestep_s);
+  //Tissue fluid exchange
   void CalculateTissueFluidFluxes();
-
   void CalculateOncoticPressure();
-
-  double SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double extraK_mM, double potential_V);
-  double CalciumPump(double intraCa_M);
 
   //Override
   void ProcessOverride();
@@ -199,7 +181,6 @@ protected:
   std::map<SETissueCompartment*, SEFluidCircuitPath*> m_InterstitialCopPaths;
   std::map<SETissueCompartment*, SEFluidCircuitPath*> m_ExtraToIntraPaths;
   std::map<SETissueCompartment*, SEFluidCircuitPath*> m_EndothelialResistancePaths;
-  std::map<SELiquidCompartment*, SEFluidCircuitPath*> m_LymphPaths;
   std::vector<SETissueCompartment*> m_ConsumptionProdutionTissues;
   std::string m_AnaerobicTissues;
 };

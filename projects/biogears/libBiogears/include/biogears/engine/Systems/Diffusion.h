@@ -26,6 +26,7 @@ class SELiquidCompartment;
 
 class BIOGEARS_API DiffusionCalculator : public Loggable {
   friend class BioGears;
+  friend class BioGearsEngineTest;
 
 protected:
   DiffusionCalculator(BioGears& bg);
@@ -56,16 +57,29 @@ public:
   ~DiffusionCalculator() = default;
   void Initialize(SESubstanceManager& subMgr);
   void SetDiffusionState();
-  void CalculateInstantAndSimpleDiffusion();
+  void CalculateLinearDiffusionMethods();
+  void CalculateNonLinearDiffusionMethods();
 
   std::vector<DiffusionCompartmentSet>& GetDiffusionSets() { return m_DiffusionSets; };
   std::vector<SESubstance*>& GetFacilitatedDiffusionSubstances() { return m_FacilitatedDiffusionSubstances; };
   std::vector<SESubstance*>& GetInstantDiffusionSubstances() { return m_InstantDiffusionSubstances; };
   std::vector<SESubstance*>& GetSimpleDiffusionSubstances() { return m_SimpleDiffusionSubstances; };
 
+protected:
+  void CalculateActiveIonDiffusion(DiffusionCompartmentSet& cmptSet);
+  void CalculateMacromoleculeDiffusion(DiffusionCompartmentSet& cmptSet, const SESubstance& sub);
+  void CalculatePassiveLymphDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub);
+  void CalculateFacilitatedDiffusion(DiffusionCompartmentSet& cmptSet, const SESubstance& sub, double combinedCoefficient_g_Per_s);
+  void CalculatePerfusionLimitedDiffusion(DiffusionCompartmentSet& cmptSet, const SESubstance& sub, double partitionCoeff);
+
 private:
   void DistributeMassbyVolumeWeighted(SELiquidCompartment& cmpt, const SESubstance& sub, double mass, const MassUnit& unit);
   void DistributeMassbyMassWeighted(SELiquidCompartment& cmpt, const SESubstance& sub, double mass, const MassUnit& unit);
+  double SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double extraK_mM, double potential_V);
+  double CalciumPump(double intraCa_M);
+
+  double m_dt_s;
+
   std::vector<SESubstance*> m_SimpleDiffusionSubstances;
   std::vector<SESubstance*> m_InstantDiffusionSubstances;
   std::vector<SESubstance*> m_FacilitatedDiffusionSubstances;
