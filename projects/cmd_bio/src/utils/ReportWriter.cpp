@@ -36,72 +36,72 @@ ReportWriter::~ReportWriter()
 
 void ReportWriter::set_html()
 {
-  body_begin = "<html><body>\n";
-  table_begin = "<table border=\"1\">\n";
-  table_row_begin = "<tr>";
-  table_row_begin_green = "<tr bgcolor=#32CD32>";
-  table_row_begin_red = "<tr bgcolor=#FF0000>";
-  table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
-  table_second_line = "";
-  table_item_begin = "<td>";
-  table_item_end = "</td>";
-  table_row_end = "</td></tr>\n";
-  table_end = "</table>\n";
-  body_end = "</body></html>\n";
-  file_extension = ".html";
+  _body_begin = "<html><body>\n";
+  _table_begin = "<table border=\"1\">\n";
+  _table_row_begin = "<tr>";
+  _table_row_begin_green = "<tr bgcolor=#32CD32>";
+  _table_row_begin_red = "<tr bgcolor=#FF0000>";
+  _table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
+  _table_second_line = "";
+  _table_item_begin = "<td>";
+  _table_item_end = "</td>";
+  _table_row_end = "</td></tr>\n";
+  _table_end = "</table>\n";
+  _body_end = "</body></html>\n";
+  _file_extension = ".html";
 }
 
 void ReportWriter::set_md()
 {
-  body_begin = "";
-  table_begin = "";
-  table_row_begin = "";
-  table_row_begin_green = "<span class=\"success\">";
-  table_row_begin_red = "<span class=\"danger\">";
-  table_row_begin_yellow = "<span class=\"warning\">";
-  table_second_line = "---|---|---|---|---|\n";
-  table_item_begin = "";
-  table_item_end = "|";
-  table_row_end = "</span>|\n";
-  table_end = "\n";
-  body_end = "\n";
-  file_extension = ".md";
+  _body_begin = "";
+  _table_begin = "";
+  _table_row_begin = "";
+  _table_row_begin_green = "<span class=\"success\">";
+  _table_row_begin_red = "<span class=\"danger\">";
+  _table_row_begin_yellow = "<span class=\"warning\">";
+  _table_second_line = "---|---|---|---|---|\n";
+  _table_item_begin = "";
+  _table_item_end = "|";
+  _table_row_end = "</span>|\n";
+  _table_end = "\n";
+  _body_end = "\n";
+  _file_extension = ".md";
 }
 
 void ReportWriter::set_xml()
 {
-  body_begin = "<xml><body>\n";
-  table_begin = "<table border=\"1\">\n";
-  table_row_begin = "<tr>";
-  table_row_begin_green = "<tr bgcolor=#32CD32>";
-  table_row_begin_red = "<tr bgcolor=#FF0000>";
-  table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
-  table_second_line = "";
-  table_item_begin = "<td>";
-  table_item_end = "</td>";
-  table_row_end = "</td></tr>\n";
-  table_end = "</table>\n";
-  body_end = "</body></xml>\n";
-  file_extension = ".xml";
+  _body_begin = "<xml><body>\n";
+  _table_begin = "<table border=\"1\">\n";
+  _table_row_begin = "<tr>";
+  _table_row_begin_green = "<tr bgcolor=#32CD32>";
+  _table_row_begin_red = "<tr bgcolor=#FF0000>";
+  _table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
+  _table_second_line = "";
+  _table_item_begin = "<td>";
+  _table_item_end = "</td>";
+  _table_row_end = "</td></tr>\n";
+  _table_end = "</table>\n";
+  _body_end = "</body></xml>\n";
+  _file_extension = ".xml";
 }
 
 void ReportWriter::set_web()
 { // For website generation if the doxygen preprocessing isn't working correctly 
   // with md files you should be able to just generate html files with the .md extension.
   // Doxygen will find the table and put it in the correct page.
-  body_begin = "<html><body>\n";
-  table_begin = "<table border=\"1\">\n";
-  table_row_begin = "<tr>";
-  table_row_begin_green = "<tr bgcolor=#32CD32>";
-  table_row_begin_red = "<tr bgcolor=#FF0000>";
-  table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
-  table_second_line = "";
-  table_item_begin = "<td>";
-  table_item_end = "</td>";
-  table_row_end = "</td></tr>\n";
-  table_end = "</table>\n";
-  body_end = "</body></html>\n";
-  file_extension = ".md";
+  _body_begin = "<html><body>\n";
+  _table_begin = "<table border=\"1\">\n";
+  _table_row_begin = "<tr>";
+  _table_row_begin_green = "<tr bgcolor=#32CD32>";
+  _table_row_begin_red = "<tr bgcolor=#FF0000>";
+  _table_row_begin_yellow = "<tr bgcolor=#FFFF99>";
+  _table_second_line = "";
+  _table_item_begin = "<td>";
+  _table_item_end = "</td>";
+  _table_row_end = "</td></tr>\n";
+  _table_end = "</table>\n";
+  _body_end = "</body></html>\n";
+  _file_extension = ".md";
 }
 
 void ReportWriter::gen_tables_single_sheet(const char* validation_file, const char* baseline_file)
@@ -173,49 +173,49 @@ void ReportWriter::gen_tables(char table_type)
 
 int ReportWriter::to_table()
 {
-  report.append(body_begin);
+  report.append(_body_begin);
   //...Do work
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
     std::string table;
     std::string table_name = table_itr->first;
-    table += std::string(table_begin);
+    table += std::string(_table_begin);
     for (int i = 0; i < table_itr->second.size(); i++) {
       std::string line;
       if (table_itr->second[i].result == Green) {
-        line += (i == 0) ? table_row_begin : table_row_begin_green;
+        line += (i == 0) ? _table_row_begin : _table_row_begin_green;
       } else if (table_itr->second[i].result == Red) {
-        line += (i == 0) ? table_row_begin : table_row_begin_red;
+        line += (i == 0) ? _table_row_begin : _table_row_begin_red;
       } else if (table_itr->second[i].result == Yellow) { //This line isn't technically necessary, but I'm leaving it in for readability
-        line += (i == 0) ? table_row_begin : table_row_begin_yellow;
+        line += (i == 0) ? _table_row_begin : _table_row_begin_yellow;
       }
-      line += table_item_begin;
+      line += _table_item_begin;
       line += table_itr->second[i].field_name;
-      line += table_item_end;
-      line += table_item_begin;
+      line += _table_item_end;
+      line += _table_item_begin;
       line += table_itr->second[i].expected_value;
-      line += table_item_end;
-      line += table_item_begin;
+      line += _table_item_end;
+      line += _table_item_begin;
       line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
-      line += table_item_end;
-      line += table_item_begin;
+      line += _table_item_end;
+      line += _table_item_begin;
       line += table_itr->second[i].percent_error;
-      line += table_item_end;
-      line += table_item_begin;
+      line += _table_item_end;
+      line += _table_item_begin;
       line += table_itr->second[i].notes;
-      line += table_row_end;
+      line += _table_row_end;
       table.append(line);
       if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
-        table.append(table_second_line);
+        table.append(_table_second_line);
       }
     }
-    table += std::string(table_end);
+    table += std::string(_table_end);
     // This block saves out the html tables for website generation
     std::ofstream file;
-    file.open("validation/" + table_name + "ValidationTable" + file_extension);
+    file.open("validation/" + table_name + "ValidationTable" + _file_extension);
     if (!file) {
       return 1;
     }
-    file << (std::string(body_begin) + table + std::string(body_end));
+    file << (std::string(_body_begin) + table + std::string(_body_end));
     file.close();
     table.clear();
   }

@@ -38,10 +38,9 @@
 
 void print_help() {
 
-    std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, GENSEPSIS, VERIFY, GENTABLES ,VERSION]\n"
+    std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
                                 "[THREADS N]\n" 
-                                "[TEST FILE [FILE]..., SCENARIO FILE [FILE]..., VALIDATE patient|drug|system|all\n"
-                                "[GENTABLES html|md|xml|web|all]\n\n";
+                                "[TEST FILE [FILE]..., SCENARIO FILE [FILE]..., VALIDATE patient|drug|system|all, GENTABLES html|md|xml|web|all]\n\n";
 
     std::cout << "Flags: \n";
     std::cout << "j : Thread control -j N\n";
@@ -58,7 +57,7 @@ void print_help() {
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "H","HELP","GENDATA", "GENSTATES", "VERIFY", "VERSION" } //Options
+    { "H","HELP","GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "VERSION" } //Options
     ,
     { "J", "THREADS" } //Keywords
     ,

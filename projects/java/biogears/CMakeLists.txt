@@ -160,16 +160,8 @@ if(Biogears_BUILD_DOCUMENTATION)
         USES_TERMINAL
   )
 
-#-rwxr-xr-x 1 root root 105066 Nov 26 19:05 Doxyfile
--rwxr-xr-x 1 root root     78 Dec  4 19:43 Mainpage.html
--rwxr-xr-x 1 root root   5516 Dec  4 19:43 customdoxygen.css
--rwxr-xr-x 1 root root   2084 Dec  4 19:43 footer.html
--rwxr-xr-x 1 root root   4465 Dec  4 19:43 header.html
-drwxrwxrwx 2 root root      0 Dec  4 21:47 html
-drwxrwxrwx 2 root root      0 Dec  4 21:47 latex
-
   add_custom_target(docs-stage
-        COMMAND mkdir ../documentation
+    COMMAND mkdir ../documentation
 	COMMAND  ${CMAKE_COMMAND} -e cp html/error.html  ../documentation/
 	COMMAND  ${CMAKE_COMMAND} -e cp html/index.html  ../documentation/
 	COMMAND  ${CMAKE_COMMAND} -e cp html/privacy.html  ../documentation/
@@ -355,9 +347,6 @@ add_dependencies(rebase-tests  ${PROJECT_NAME})
 if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
  #add_dependencies(gen-states stage_runtime )
  #add_dependencies(gen-data stage_runtime )
-if(Biogears_BUILD_DOCUMENTATION )
- add_dependencies(gen-website-docs stage_runtime )
-endif()
  add_dependencies(run-system-validation stage_runtime )
 # add_dependencies(report-system-validation stage_runtime )
  add_dependencies(run-patient-validation stage_runtime )
@@ -376,9 +365,6 @@ set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
 
 #set_target_properties(gen-states PROPERTIES FOLDER "Java/Generate" )
 #set_target_properties(gen-data   PROPERTIES FOLDER "Java/Generate" )
-if(Biogears_BUILD_DOCUMENTATION)
-  set_target_properties(gen-website-docs   PROPERTIES FOLDER "Java/Generate" )
-endif()
 
 set_target_properties(run-system-validation    PROPERTIES FOLDER "Java/Validation" )
 #set_target_properties(report-system-validation PROPERTIES FOLDER "Java/Validation" )
