@@ -666,16 +666,16 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double CO2_Per_AA = 1.5;
   double Urea_Per_AA = .5;
   double O2_Per_AA = 1.875; //assuming RQ is .8 for AA, this should be 1.875
-  double ATP_Per_TAG = 330; //Assuming all 3 fatty chains are palmitate, not consumed at theoretical yield (so 106 ATP each), and 12 ATP from glycerol backbone to pyruvate to Citric Acid Cycle \cite boron2012medical p 1231
-  double CO2_Per_TAG = 55; // \cite meerman2014when
-  double O2_Per_TAG = 78;
+  double ATP_Per_TAG = ATP_Per_TAG = 3 * 106 + 22; // Assuming triplamitin as predominant triglyceride:  106 ATP per palmitate (3), 22 ATP from glycerol \cite Lehninger Principles of BioChem
+  double CO2_Per_TAG = 51; // From complete combustion of tripalmitin (C51H98O6)
+  double O2_Per_TAG = 72.5;  // From complete combustion of tripalmitin (C51H98O6)
   double aerobic_ATP_Per_Glycogen = ATP_Per_Glucose + 1; //Since muscle glycogen is already phosphorylated, we get more ATP from it than when we split glucose by glycolysis \cite guyton2006medical p 904
   double anaerobic_ATP_Per_Glycogen = 3;
   double lactate_Per_Glycogen = 2;
   double anaerobic_ATP_Per_Glucose = 2;
   double lactate_Per_Glucose = 2;
   double glucose_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_Glucose / 686; //686 kcal/mol energy generated when burning glucose completely via bomb calorimeter \cite boron2012medical
-  double TAG_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_TAG / (3 * 2340 + 686); //Palmitic acid free energy is 2340 kcal, glycerol is similar to glucose, so assume 686 \cite voet2013fundamentals
+  double TAG_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_TAG / (7554.0); //From NIST website (can't just assume you add 3 palmitins and a glycerol, not how bond enthalpy works)
   double AA_CellularEfficiency = energyPerMolATP_kcal * ATP_Per_AA / 387.189; //Alanine heat of combustion is 1.62 MJ/mol \cite livesey1984energy
   double ketones_CellularEfficiency = glucose_CellularEfficiency; //Assuming the same as glucose
   double mandatoryMuscleAnaerobicFraction = 0.028; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical

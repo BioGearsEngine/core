@@ -446,6 +446,7 @@ void Respiratory::AtSteadyState()
   m_Patient->GetExpiratoryReserveVolume().SetValue(expiratoryReserveVolume_L, VolumeUnit::L);
   m_Patient->GetInspiratoryReserveVolume().SetValue(inspiratoryReserveVolume_L, VolumeUnit::L);
   m_Patient->GetInspiratoryCapacity().SetValue(inspiratoryCapacity_L, VolumeUnit::L);
+  m_Patient->GetRespiratoryDriverAmplitudeBaseline().Set(GetRespirationDriverPressure());
 
   std::string typeString = "Initial Stabilization Homeostasis: ";
   if (m_data.GetState() == EngineState::AtSecondaryStableState)

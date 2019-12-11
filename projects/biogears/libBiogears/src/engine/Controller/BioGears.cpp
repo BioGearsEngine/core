@@ -792,7 +792,7 @@ bool BioGears::SetupPatient()
     //-4.8 = driver pressure at 16 bpm.
     baselineDriverPressure_cmH2O = -4.8 + 0.125 * (respirationRate_bpm - 16);
   }
-  baselineDriverPressure_cmH2O = -5.5;
+  baselineDriverPressure_cmH2O = -5.25;
   //Scale target pressure as ratio of calculated FRC to Standard Male FRC
   double standardFRC_L = 2.31332;
   baselineDriverPressure_cmH2O *= functionalResidualCapacity_L / standardFRC_L;

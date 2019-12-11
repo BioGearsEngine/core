@@ -400,9 +400,7 @@ void BloodChemistry::Process()
     sub->GetMassInBody().SetValue(bloodMass_ug + tissueMass_ug, MassUnit::ug);
     sub->GetMassInBlood().SetValue(bloodMass_ug, MassUnit::ug);
     sub->GetMassInTissue().SetValue(tissueMass_ug, MassUnit::ug);
-
   }
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -854,15 +852,15 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   LLIM(m_d3Agglutinate_ct, 0.0);
   m_4Agglutinate_ct = newC4RBC;
   LLIM(m_4Agglutinate_ct, 0.0);
-  if ((m_donorRBC_ct +m_2Agglutinate_ct + m_d3Agglutinate_ct) == 0.0) {
+  if ((m_donorRBC_ct + m_2Agglutinate_ct + m_d3Agglutinate_ct) == 0.0) {
     patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, false, m_data.GetSimulationTime());
   }
 
   // Agglutination and cell death will likewise release items the blood cells were carrying into the blood stream and make them less useful to the body
   //The tuning parameters below tune the physiological response of HTR through hemoglobin removal (cleared renally), lowering of blood oxygen, and increase in metabolic demand
   double effectTune_Hb = 1.1;
-  double oxygenTune = 50000.0; 
-  double metabolismTune = 750.0; 
+  double oxygenTune = 50000.0;
+  double metabolismTune = 750.0;
 
   double newAggglutinates = (m_4Agglutinate_ct + (m_p3Agglutinate_ct / 12.0)) - m_RemovedRBC_ct; // p3Agglutinates partially removed to scale for controlled donor cells (multiplied by 4 in next step)
 
@@ -872,11 +870,11 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   BLIM(deadPatientCells_pct, 0.0, 1.0);
   double liveDonorCell_pct = 1.0 - deadDonorCells_pct;
   double livePatientCell_pct = 1.0 - deadPatientCells_pct;
-  
+
   double deadCells_percent = ((newAggglutinates * 4.0) / TotalRBC); //4.0 cells in a "stable" agglutinate
   BLIM(deadCells_percent, 0.0, 1.0);
   double liveCells_percent = (1.0 - (deadCells_percent));
-  double Hb_percent = (1.0 - (deadCells_percent* effectTune_Hb));
+  double Hb_percent = (1.0 - (deadCells_percent * effectTune_Hb));
   double lostOxygen_percent = deadCells_percent * oxygenTune;
   double liveOxygen_percent = 1.0 - lostOxygen_percent;
   double metabolicIncrease = (deadCells_percent * metabolismTune);
