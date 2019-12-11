@@ -38,6 +38,10 @@ import mil.tatrc.physiology.utilities.FindObjects.BagMethod;
 import mil.tatrc.physiology.utilities.Log;
 import mil.tatrc.physiology.utilities.StringUtils;
 
+/*
+*  Last Edited: lmarin, June 2019
+*/
+
 /**
  * This class will generate markdown tables
  * for some important cdm data structures
@@ -253,7 +257,7 @@ public class CDM2MD
                         writer.print("|"+"List of SESubstanceCompoundComponent");
                         writer.print("|"+"@ref SubstanceCompoundComponentTable");
                     }
-                    else if(bag.propertyName.equals("GasFraction")) // Lucas Marin, added June 2019 ////////////////////////////////////////////////////////////
+                    else if(bag.propertyName.equals("GasFraction")) 
                     { 
                         writer.print("|"+"List of GasFraction");
                         writer.print("|"+"@ref MechanicalVentilationTable");

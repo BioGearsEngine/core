@@ -120,7 +120,6 @@ endfunction()
 
 genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/outputs/jar/BioGears.jar
-#        ${PROJECT_BINARY_DIR}/outputs/jar/BioGearsGUI.jar#
         ${PROJECT_BINARY_DIR}/outputs/jar/BioGearsEngine.jar 
         ${PROJECT_BINARY_DIR}/outputs/jar/CommonDataModel.jar 
         ${PROJECT_BINARY_DIR}/outputs/jar/DataModelBindings.jar

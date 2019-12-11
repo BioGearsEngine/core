@@ -22,7 +22,7 @@ import mil.tatrc.physiology.utilities.Log;
 
 /**
  * @author abray
- *
+ * Last Edited: lmarin, June 21, 2019
  */
 public class CSVContents
 {
@@ -105,7 +105,7 @@ public class CSVContents
         List<FileHeader> headers = zipFile.getFileHeaders();
         for(FileHeader header : headers)
         {
-          if(header.getFileName().endsWith(".csv") || header.getFileName().endsWith(".txt")) // Lucas - Edited June 21, 2019 ///////////////////////////////////////////////////
+          if(header.getFileName().endsWith(".csv") || header.getFileName().endsWith(".txt"))
           {
             buff = new BufferedReader(new InputStreamReader(zipFile.getInputStream(header)));
             break;// We expect results zips to only contain 1 text file
