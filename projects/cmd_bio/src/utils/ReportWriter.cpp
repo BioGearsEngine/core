@@ -33,7 +33,12 @@ ReportWriter::~ReportWriter()
 {
   logger = nullptr;
 }
-
+/*
+ * The functions set_html(), set_md(), set_xml(), and set_web(), change the type of file produced by calling to_table()
+ */
+//-------------------------------------------------------------------------------
+///! \brief Sets the table type to html, meaning to_table() will produce html files
+//-------------------------------------------------------------------------------
 void ReportWriter::set_html()
 {
   _body_begin = "<html><body>\n";
@@ -50,7 +55,9 @@ void ReportWriter::set_html()
   _body_end = "</body></html>\n";
   _file_extension = ".html";
 }
-
+//-------------------------------------------------------------------------------
+///! \brief Sets the table type to md, meaning to_table() will produce md files
+//-------------------------------------------------------------------------------
 void ReportWriter::set_md()
 {
   _body_begin = "";
@@ -67,7 +74,9 @@ void ReportWriter::set_md()
   _body_end = "\n";
   _file_extension = ".md";
 }
-
+//-------------------------------------------------------------------------------
+///! \brief Sets the table type to xml, meaning to_table() will produce xml files
+//-------------------------------------------------------------------------------
 void ReportWriter::set_xml()
 {
   _body_begin = "<xml><body>\n";
@@ -85,6 +94,9 @@ void ReportWriter::set_xml()
   _file_extension = ".xml";
 }
 
+//-------------------------------------------------------------------------------
+///! \brief Sets the table type to web, meaning to_table() will produce html files with the .md file extension
+//-------------------------------------------------------------------------------
 void ReportWriter::set_web()
 { // For website generation if the doxygen preprocessing isn't working correctly 
   // with md files you should be able to just generate html files with the .md extension.
@@ -104,23 +116,50 @@ void ReportWriter::set_web()
   _file_extension = ".md";
 }
 
-void ReportWriter::gen_tables_single_sheet(const char* validation_file, const char* baseline_file)
+void ReportWriter::gen_tables_single_sheet(const char* validation_file, const char* baseline_file, char table_type)
 {
-  gen_tables_single_sheet(std::string(validation_file), std::string(baseline_file));
+  gen_tables_single_sheet(std::string(validation_file), std::string(baseline_file), table_type);
 }
-
-void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::string baseline_file)
+//-------------------------------------------------------------------------------
+/// \brief Takes in a single sheet, unlike gen_tables which takes in a list of validation and baselines files
+/// It is essentially one iteration of the for loop in gen_tables
+/// \param validation_file: std::string name of file containing validation data
+/// \param baseline_file: std::string name of file containing baseline data
+/// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
+//-------------------------------------------------------------------------------
+void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::string baseline_file, char table_type)
 {
+  logger->Info("Generating table: " + split(validation_file,'.')[0]);
+  logger->SetConsolesetConversionPattern("\t%m%n");
   ParseReferenceCSV(validation_file);
   ParseBaselineCSV(baseline_file);
   CalculateAverages();
+  logger->Info("Successfully calculated averages of file: " + baseline_file);
   ExtractValues();
+  logger->Info("Successfully populated data structures with validation data");
   Validate();
+  logger->Info("Successfully ran validation");
   PopulateTables();
+  logger->Info("Successfully populated tables vector");
+  if (table_type == 0) {
+    set_html();
+  } else if (table_type == 1) {
+    set_md();
+  } else if (table_type == 2) {
+    set_xml();
+  } else {
+    set_web();
+  }
   to_table();
+  logger->Info("Successfully generated table: " + split(validation_file, '.')[0]);
   clear();
+  logger->SetConsolesetConversionPattern("%d [%p] %m%n");
 }
-
+//-------------------------------------------------------------------------------
+ /// \brief Takes a list of validation files and results files from biogears and produces
+ /// validation tables for our documentation.
+ /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
+//-------------------------------------------------------------------------------
 void ReportWriter::gen_tables(char table_type)
 {
   std::vector<std::string> validation_files{ "BloodChemistryValidation.csv",
@@ -148,7 +187,6 @@ void ReportWriter::gen_tables(char table_type)
     CalculateAverages();
     logger->Info("Successfully calculated averages of file: " + baseline_files[i]);
     ExtractValues();
-    //ExtractValuesList();
     logger->Info("Successfully populated data structures with validation data");
     Validate();
     logger->Info("Successfully ran validation");
@@ -170,16 +208,18 @@ void ReportWriter::gen_tables(char table_type)
   }
   return;
 }
-
+//-------------------------------------------------------------------------------
+ /// \brief Takes the data stored in tables (a map pairing table names (std::string) to a list of TableRow objects (std::vector<biogears::TableRow>)
+ /// and prints out a full validation table for each item in tables.
+//-------------------------------------------------------------------------------
 int ReportWriter::to_table()
 {
   report.append(_body_begin);
-  //...Do work
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
     std::string table;
     std::string table_name = table_itr->first;
     table += std::string(_table_begin);
-    for (int i = 0; i < table_itr->second.size(); i++) {
+    for (int i = 0; i < table_itr->second.size(); i++) { // This loop iterates through every TableRow inside table_itr
       std::string line;
       if (table_itr->second[i].result == Green) {
         line += (i == 0) ? _table_row_begin : _table_row_begin_green;
@@ -242,7 +282,12 @@ void ReportWriter::ParseBaselineCSV(std::string filename)
 {
   ParseCSV(filename, this->biogears_results);
 }
-
+//-------------------------------------------------------------------------------
+/// \brief Parses a CSV file and loads it into a 2 dimension vector data, which represents a CSV.
+/// data[y] represents an individual row of the CSV file, while data[y][x] represents an individual cell.
+/// \param filename: Name of the CSV file to be parsed
+/// \param data: Two dimensional vector for storing data from CSV file
+//-------------------------------------------------------------------------------
 void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& data)
 {
   std::ifstream file{ filename };
@@ -253,17 +298,17 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
   std::string line;
   int line_number = 0;
   int index = 0;
-  while (std::getline(file, line)) {
+  while (std::getline(file, line)) { //This loop reads in the file line by line
     std::string cell;
     std::vector<std::string> vec;
     data.push_back(vec);
-    for (int i = 0; i < line.size(); i++) {
+    for (int i = 0; i < line.size(); i++) { // This loop iterates through the current line character by character
       if (line[i] == ',') {
         data[line_number].push_back(ltrim(cell));
         cell.clear();
-      } else if (line[i] == '"') {
-        while (true) {
-          ++i;
+      } else if (line[i] == '"') { //This check is necessary because certain cells may contain newline characters, and
+        while (true) {             //std::getline treats any newline character as the end of a line, this means that 
+          ++i;                     //certain cells are split across two calls of std::getline
           if (i == line.size()) {
             std::string next_line;
             std::getline(file, next_line);
@@ -285,7 +330,11 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
   }
   logger->Info("Successfully parsed file: " + filename);
 }
-
+//-------------------------------------------------------------------------------
+/// \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
+/// and inserts the TableRow into a map
+/// \param filename: Name of XML file to be parsed
+//-------------------------------------------------------------------------------
 void ReportWriter::ParseXML(std::string& filename)
 {
   std::ifstream file{ filename };
@@ -294,20 +343,20 @@ void ReportWriter::ParseXML(std::string& filename)
     return;
   }
   std::string line;
-  while (std::getline(file, line)) {
-    size_t name_index = line.find("p1:");
+  while (std::getline(file, line)) {        // This loop reads in the XML file line by line, then pulls out the value name, the unit name, and the value
+    size_t name_index = line.find("p1:");   // The value name is always preceded by "p1:"
     if(name_index == std::string::npos || line.find("/p1:") != std::string::npos) {
       continue;
     }
     name_index += 3;
     size_t name_end = line.find(" ",name_index);
-    size_t unit_index = line.find("unit=\"",name_end);
+    size_t unit_index = line.find("unit=\"",name_end); //The unit name is always preceded by "unit="
     if (unit_index == std::string::npos) {
       continue;
     }
     unit_index += 6;
     size_t unit_end = line.find("\"",unit_index);
-    size_t value_index = line.find("value=\"",unit_end) + 7;
+    size_t value_index = line.find("value=\"",unit_end) + 7; //The value is always preceded by "value="
     size_t value_end = line.find("\"/", value_index);
     biogears::TableRow xmlRow;
     std::string name = trim(line.substr(name_index, name_end - name_index));
@@ -320,28 +369,31 @@ void ReportWriter::ParseXML(std::string& filename)
   }
 }
 
-
+//-------------------------------------------------------------------------------
+/// \brief Takes the information from biogears_results, which one of the results CSV files, averages them, creates
+/// a TableRow object for each one, and inserts them into a map of table rows
+//-------------------------------------------------------------------------------
 void ReportWriter::CalculateAverages()
 {
   std::vector<biogears::TableRow> rows;
   std::vector<int> row_items;
-  for (int i = 0; i < biogears_results[0].size(); i++) {
+  for (int i = 0; i < biogears_results[0].size(); i++) { // This iterates across the top row of the CSV, which is the name of each value
     biogears::TableRow row;
     row.field_name = biogears_results[0][i];
     row.expected_value = "0.0";
     row.engine_value = 0.0;
     rows.push_back(row);
-    row_items.push_back(0);
-  }
+    row_items.push_back(0); // Because not every value was measured the same amount of times, we need to track this
+  }                         // in order to take the average of each value
   
-  for (int i = 1; i < biogears_results.size(); i++) {
-    for (int k = 0; k < biogears_results[i].size(); k++) {
+  for (int i = 1; i < biogears_results.size(); i++) {         // Because the data is stored in columns, we have to iterate down from each cell
+    for (int k = 0; k < biogears_results[i].size(); k++) {    // of the second row
       try {
-        if(trim(biogears_results[i][k]) != "") {
-          rows[k].engine_value += std::stod(biogears_results[i][k]);
-          ++row_items[k];
+        if(trim(biogears_results[i][k]) != "") { //if trim returns an empty string, it means the cell is empty
+          rows[k].engine_value += std::stod(biogears_results[i][k]); 
+          ++row_items[k]; // Further down we'll calculate the average of these values by dividing engine_value by row_items
         }
-      } catch (std::exception& e) {
+      } catch (std::exception& e) { // This usually occurs if one of the cells contains non-numeric characters, std::stod will throw an exception
         logger->Error(std::string("Error: ") + e.what());
         logger->Error("Cell Contents: " + biogears_results[i][k]);
         throw(e);
@@ -349,13 +401,16 @@ void ReportWriter::CalculateAverages()
     }
   }
   for (int i = 0; i < rows.size(); i++) {
-    rows[i].engine_value /= row_items[i];
+    rows[i].engine_value /= row_items[i]; // This line calculates the average of a value
     std::string field_name_with_units = rows[i].field_name;
     TableRow row = rows[i]; //So field_name_with_units looks like "Name(Unit)", which is why it gets split to just be "Name"
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(trim(split(field_name_with_units, '(')[0]), row));
   }
 }
-
+//-------------------------------------------------------------------------------
+/// \brief Extracts the values from validation_data, which is one of the validation CSV files, and
+/// creates a ReferenceValue object for each column
+//-------------------------------------------------------------------------------
 void ReportWriter::ExtractValues()
 {
   for (int i = 1; i < validation_data.size(); i++) {
@@ -391,6 +446,10 @@ void ReportWriter::ExtractValues()
     reference_values.push_back(ref);
   }
 }
+
+/*
+ * This function is not currently in use, it's part of planned future upgrades to the ReportWriter
+ */
 void ReportWriter::ExtractValuesList()
 {
   for (int i = 1; i < validation_data.size(); i++) {
@@ -426,17 +485,21 @@ void ReportWriter::ExtractValuesList()
     }
   }
 }
+//-------------------------------------------------------------------------------
+/// \brief Takes each item in the vector reference_values and searches table_row_map for the corresponding
+/// TableRow, it then checks the biogears result against the validation data and marks it Green, Yellow, or Red
+//-------------------------------------------------------------------------------
 void ReportWriter::Validate()
 {
   for (biogears::ReferenceValue ref : reference_values) {
     logger->Info(ref.value_name);
     auto table_row_itr = table_row_map.find(trim(ref.value_name));
-    if (table_row_itr == table_row_map.end()) {
+    if (table_row_itr == table_row_map.end()) { // Certain reference values might not be present in biogears results
       logger->Info(std::string("  Not Found"));
       continue;
     }
-    biogears::TableRow table_row = table_row_itr->second;
-    if (ref.is_range) {
+    biogears::TableRow table_row = table_row_itr->second; // Validation data either takes the form of a single value, or a range
+    if (ref.is_range) {                                   // If it's a range the we first check whether the value is in range, and if not check how far out of range it is
       table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + "@" + ref.reference;
       if (ref.reference_range.first <= table_row.engine_value && ref.reference_range.second >= table_row.engine_value) {
         table_row.result = Green;
@@ -455,7 +518,7 @@ void ReportWriter::Validate()
         }
         table_row.percent_error = "Outside Bounds";
       }
-    } else {
+    } else { //For a value, we check how closely the biogears data matches the validation data
       table_row.expected_value = std::to_string(ref.reference_value) + "@" + ref.reference;
       if(std::fabs(ref.reference_value - table_row.engine_value) <= 0.000001) {
         table_row.percent_error = "0.0%";
@@ -478,7 +541,10 @@ void ReportWriter::Validate()
     table_row_itr->second = table_row;
   }
 }
-
+//-------------------------------------------------------------------------------
+/// \brief Populates the map tables, each entry in the map is a vector of TableRows representing an individual table,
+/// the key is always the table's name
+//-------------------------------------------------------------------------------
 void ReportWriter::PopulateTables()
 {
   for (auto itr = table_row_map.begin(); itr != table_row_map.end(); ++itr) {
@@ -495,7 +561,9 @@ void ReportWriter::PopulateTables()
     }
   }
 }
-
+//-------------------------------------------------------------------------------
+/// \brief Clears all of the data structures used in gen_tables, does not reset the value of pointers
+//-------------------------------------------------------------------------------
 void ReportWriter::clear()
 {
   tables.clear();
