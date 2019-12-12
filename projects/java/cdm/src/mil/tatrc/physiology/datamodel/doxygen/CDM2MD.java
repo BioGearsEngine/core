@@ -17,30 +17,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import mil.tatrc.physiology.datamodel.bind.EnumAnesthesiaMachineEvent;
-import mil.tatrc.physiology.datamodel.bind.EnumPatientEvent;
-import mil.tatrc.physiology.datamodel.compartment.SECompartment;
-import mil.tatrc.physiology.datamodel.patient.SEPatient;
-import mil.tatrc.physiology.datamodel.patient.actions.SEConsciousRespirationCommand;
-import mil.tatrc.physiology.datamodel.patient.actions.SEPatientAction;
-import mil.tatrc.physiology.datamodel.patient.assessments.SEPatientAssessment;
-import mil.tatrc.physiology.datamodel.patient.conditions.SEPatientCondition;
-import mil.tatrc.physiology.datamodel.patient.nutrition.SENutrition;
-import mil.tatrc.physiology.datamodel.properties.SEFunction;
-import mil.tatrc.physiology.datamodel.properties.SEScalar;
-import mil.tatrc.physiology.datamodel.system.environment.actions.SEEnvironmentAction;
-import mil.tatrc.physiology.datamodel.system.environment.conditions.SEEnvironmentCondition;
-import mil.tatrc.physiology.datamodel.system.equipment.anesthesia.actions.SEAnesthesiaMachineAction;
-import mil.tatrc.physiology.datamodel.system.equipment.inhaler.actions.SEInhalerAction;
+
 import mil.tatrc.physiology.utilities.FileUtils;
 import mil.tatrc.physiology.utilities.FindObjects;
 import mil.tatrc.physiology.utilities.FindObjects.BagMethod;
 import mil.tatrc.physiology.utilities.Log;
 import mil.tatrc.physiology.utilities.StringUtils;
 
+
 /*
 *  Last Edited: lmarin, June 2019
 */
+
+
+import mil.tatrc.physiology.datamodel.bind.*;
 
 /**
  * This class will generate markdown tables
@@ -65,85 +55,12 @@ public class CDM2MD
             writer.append("=======================\n");
             
             List<String> skipProperties = new ArrayList<String>();
-        skipProperties.add("Comment");
-        skipProperties.add("ScenarioTime");
-
-      // PATIENT
-            WriteDoxyTable(SEPatient.class, "Patient", writer, skipProperties);     
-            WriteDoxyTable(EnumPatientEvent.class, "Patient", writer, skipProperties);  
-            Set<Class<? extends SEPatientAction>> pActions = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.patient.actions", SEPatientAction.class);
-            for(Class<?> c : pActions)
-                WriteDoxyTable(c, "PatientActions", writer, skipProperties);
-            Set<Class<? extends SEConsciousRespirationCommand>> cmds = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.patient.actions", SEConsciousRespirationCommand.class);
-            for(Class<?> c : cmds)
-                WriteDoxyTable(c, "PatientActions", writer, skipProperties);
-            Set<Class<? extends SEPatientCondition>> pConditions = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.patient.conditions", SEPatientCondition.class);
-            for(Class<?> c : pConditions)
-                WriteDoxyTable(c, "PatientConditions", writer, skipProperties);
-            Set<Class<? extends SEPatientAssessment>> pAsses = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.patient.assessments", SEPatientAssessment.class);
-            for(Class<?> c : pAsses)
-                WriteDoxyTable(c, "PatientAssessments", writer, skipProperties);
-            Set<Class<? extends Object>> pNutrition = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.patient.nutrition");
-            for(Class<?> c : pNutrition)
-                WriteDoxyTable(c, "PatientNutrition", writer, skipProperties);
+      //skipProperties.add("Comment");
+      //skipProperties.add("ScenarioTime");
             
-            // ENVIRONMENT
-            Set<Class<? extends Object>> env = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.system.environment");
-            for(Class<?> c : env)
-                WriteDoxyTable(c, "Environment", writer, skipProperties);
-            Set<Class<? extends SEEnvironmentAction>> eActions = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.system.environment.actions", SEEnvironmentAction.class);
-            for(Class<?> c : eActions)
-                WriteDoxyTable(c, "EnvironmentActions", writer, skipProperties);
-            Set<Class<? extends SEEnvironmentCondition>> eConditions = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.system.environment.conditions", SEEnvironmentCondition.class);
-            for(Class<?> c : eConditions)
-                WriteDoxyTable(c, "EnvironmentConditions", writer, skipProperties);
-            
-            // ANESTHESIA MACHINE
-
-            WriteDoxyTable(EnumAnesthesiaMachineEvent.class, "Anesthesia", writer, skipProperties); 
-            Set<Class<? extends Object>> anes = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.system.equipment.anesthesia");
-            for(Class<?> c : anes)
-                WriteDoxyTable(c, "Anesthesia", writer, skipProperties);
-            Set<Class<? extends SEAnesthesiaMachineAction>> aActions = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.system.equipment.anesthesia.actions", SEAnesthesiaMachineAction.class);
-            for(Class<?> c : aActions)
-                WriteDoxyTable(c, "AnesthesiaActions", writer, skipProperties);
-            
-            // ECG
-            Set<Class<? extends Object>> ecg = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.system.equipment.electrocardiogram");
-            for(Class<?> c : ecg)
-                WriteDoxyTable(c, "ElectroCardioGram", writer, skipProperties);
-            
-            // INHALER
-            Set<Class<? extends Object>> inhaler = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.system.equipment.inhaler");
-            for(Class<?> c : inhaler)
-                WriteDoxyTable(c, "Inhaler", writer, skipProperties);
-            Set<Class<? extends SEInhalerAction>> iActions = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.system.equipment.inhaler.actions", SEInhalerAction.class);
-            for(Class<?> c : iActions)
-                WriteDoxyTable(c, "InhalerActions", writer, skipProperties);
-            
-            // PHYSIOLOGY
-            Set<Class<? extends Object>> phys = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.system.physiology");
-            for(Class<?> c : phys)
-                WriteDoxyTable(c, "Physiology", writer, skipProperties);
-            
-          // SUBSTSANCE
-            Set<Class<? extends Object>> subs = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.substance");
-            for(Class<?> c : subs)
-                WriteDoxyTable(c, "Substance", writer, skipProperties);
-            Set<Class<? extends Object>> subQs = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.substance.quantity");
-            for(Class<?> c : subQs)
-                WriteDoxyTable(c, "SubstanceQuantity", writer, skipProperties);
-            
-            // COMPARTMENT
-            Set<Class<? extends SECompartment>> cmpts = FindObjects.findClassSubTypes("mil.tatrc.physiology.datamodel.compartment",SECompartment.class);
-            for(Class<?> c : cmpts)
-                WriteDoxyTable(c, "Compartment", writer, skipProperties);
-            
-          // SCENARIO
-            Set<Class<? extends Object>> sce = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.scenario");
+      Set<Class<? extends Object>> sce = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.bind");
             for(Class<?> c : sce)
-                WriteDoxyTable(c, "Scenario", writer, skipProperties);
-
+        WriteDoxyTable(c, "CDM", writer, skipProperties);
             writer.close();
 
         } 
@@ -274,16 +191,20 @@ public class CDM2MD
                     }
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     else
-                        Log.error("Unsupported List type for :"+bag.propertyName+" on table "+tableName);
+              writer.print("|"+"List of " + bag.propertyName);
+              writer.print("|"+"@ref " + bag.propertyName);
+              //Log.error("Unsupported List type for :"+bag.propertyName+" on table "+tableName);
                     
                 }
                 else
                 {
                     writer.print("|"+pad(bag.returnType.getSimpleName(),maxColumnLength[1]));
-                    if(SEScalar.class.isAssignableFrom(bag.returnType) || 
-                            Enum.class.isAssignableFrom(bag.returnType) ||
-                            String.class.isAssignableFrom(bag.returnType) ||
-                            SEFunction.class.isAssignableFrom(bag.returnType))
+            if(
+                Enum.class.isAssignableFrom(bag.returnType) 
+                || String.class.isAssignableFrom(bag.returnType) 
+                //|| SEScalar.class.isAssignableFrom(bag.returnType) 
+                //|| SEFunction.class.isAssignableFrom(bag.returnType)
+                )
                         writer.print("|"+pad(descPrepend+"_"+bag.propertyName,maxColumnLength[2]));
                     else
                     {

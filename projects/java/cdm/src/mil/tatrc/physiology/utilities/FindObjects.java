@@ -44,17 +44,17 @@ public class FindObjects
   }
   public static Set<Class<? extends Object>> findAllClasses(String packageName)
   {
-  	List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
-  	classLoadersList.add(ClasspathHelper.contextClassLoader());
-  	classLoadersList.add(ClasspathHelper.staticClassLoader());
+    List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
+    classLoadersList.add(ClasspathHelper.contextClassLoader());
+    classLoadersList.add(ClasspathHelper.staticClassLoader());
 
-  	Reflections reflections = new Reflections(new ConfigurationBuilder()
-  	    .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
-  	    .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-  	    .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
-  	
-  	Set<Class<? extends Object>> allClasses = reflections.getSubTypesOf(Object.class);
-  	return allClasses;
+    Reflections reflections = new Reflections(new ConfigurationBuilder()
+        .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
+        .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+        .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
+    
+    Set<Class<? extends Object>> allClasses = reflections.getSubTypesOf(Object.class);
+    return allClasses;
   }
   
   /** This is a VERY brute force way of looking for class relationships */
@@ -138,62 +138,29 @@ public class FindObjects
   /** Analyze the provided class for atomics */
   public static List<BagMethod> getBagMethods(Class<?> clazz, List<String> skipProperties)
   {
-  	//if(clazz.getSimpleName().equals("ConsumeMeal"))
-  	//	Log.info("break");
-    // Get all methods we care about (get and has methods)
-    String methodName;
+    String methodName = "";
     Map<String,Method> methodMap = new HashMap<String,Method>();
     Method[] methods=clazz.getMethods();
     // Let's get all method names of methods we care about
     // Or at least with out ones we don't care about...
     for(Method method : methods)
     {
-      methodName=method.getName();
-      if(methodName.length()<3)
-        continue;     
-      if(!methodName.startsWith("has")&&!methodName.startsWith("get"))
-        continue;
-        
-      if(methodName.startsWith("get"))
-      {
-        if(method.getGenericParameterTypes().length!=0)
-          continue;
-      }
-      else if(methodName.startsWith("has")&&method.getGenericParameterTypes().length!=0)
-        continue;       
+      methodName=method.getName();  
       methodMap.put(methodName,method);
     }
     
-    // Now bin them by type name:
-    String property;    
+  String property;    
     List<BagMethod> bagMethods = new ArrayList<BagMethod>();
     for (String name : methodMap.keySet())
     {
-      if (name.startsWith("has"))
-      {
-      	property = name.substring(3);
-      	if(skipProperties!=null)
-      	{
-      		boolean found=false;
-      		for(String skip : skipProperties)
-      		{
-      			if(property.equals(skip))
-      			{
-      				found=true;
-      				break;
-      			}
-      		}
-      		if(found)
-      			continue;
-      	}
+      if( name.startsWith("get")){
         BagMethod found = new BagMethod();
         found.me = clazz;
-        found.propertyName = property;
-        found.has = methodMap.get("has" + property);
-        found.get = methodMap.get("get" + property);
+        found.propertyName = name.substring(3);
+        found.get = methodMap.get(name);
         if(found.get != null)
         {
-        	bagMethods.add(found);
+          bagMethods.add(found);
           found.returnType = found.get.getReturnType();
         }
       }

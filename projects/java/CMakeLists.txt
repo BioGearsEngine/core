@@ -168,9 +168,6 @@ set(CMAKE_JAVA_COMPILE_FLAGS -nowarn)
 if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
 	add_subdirectory(schema)
 	add_subdirectory(cdm)
-	add_subdirectory(engine)
-	#add_subdirectory(gui)
-	#add_subdirectory(howto)
 
   #We need to patch CMAKE To make a distributable jar 
   #CMAKE needs an add_distributable_jar which compiles no files but simply merges

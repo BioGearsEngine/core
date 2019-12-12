@@ -149,7 +149,3 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
 endif()
 
 message(STATUS "")
-
-if (NOT (Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS) )
-  message(WARNING "SDK examples require the use of gen-states which requires ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS and a copy of the Java development kit.")
-endif()
