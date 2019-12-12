@@ -498,6 +498,7 @@ void ReportWriter::Validate()
       logger->Info(std::string("  Not Found"));
       continue;
     }
+
     biogears::TableRow table_row = table_row_itr->second; // Validation data either takes the form of a single value, or a range
     if (ref.is_range) {                                   // If it's a range the we first check whether the value is in range, and if not check how far out of range it is
       table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + "@" + ref.reference;
@@ -518,6 +519,7 @@ void ReportWriter::Validate()
         }
         table_row.percent_error = "Outside Bounds";
       }
+
     } else { //For a value, we check how closely the biogears data matches the validation data
       table_row.expected_value = std::to_string(ref.reference_value) + "@" + ref.reference;
       if(std::fabs(ref.reference_value - table_row.engine_value) <= 0.000001) {
