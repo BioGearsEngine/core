@@ -36,7 +36,14 @@ help_message =  """
 """
 
 error_message_argc = """
-  Error: Incorrect number of arguments
+  ERROR: Incorrect number of arguments
+"""
+
+warning_message = """
+  WARNING: You have not selected 'runtime' as your working directory. 
+  This program assumes that 'runtime' will be the working directory. 
+  Running it somewhere else could have unforeseen consequences.
+  Do you still want to run the program? (y/n)
 """
 
 # This is a list of directories that cmd_bio writes out to when we run scenarios
@@ -58,7 +65,18 @@ def preprocess(sourcedir,workdir):
   source_dir += sourcedir + '/'
   runtime_dir = os.path.dirname(os.path.realpath(__file__))+'/'
   runtime_dir += workdir + '/'
-
+  os.chdir(runtime_dir)
+  print(os.path.dirname(os.path.realpath(__file__)))
+  if os.path.dirname(os.path.realpath(__file__)).rpartition('\\')[2] != 'runtime' and os.path.dirname(os.path.realpath(__file__)).rpartition('/')[2] != 'runtime': 
+    print(warning_message)
+    while True:
+      ans = input()
+      if (ans.lower() == 'y') or (ans.lower() == 'yes'):
+        break
+      elif (ans.lower() == 'n') or (ans.lower() == 'no'):
+        return
+      else:
+        print(" Input not recognized, enter 'yes' if you still want to run the program, or 'no' if you would like to abort.")
   # This copies all of the filew from the source directory to the working directory
   os.chdir(source_dir)
   print(source_dir)
@@ -94,16 +112,21 @@ def preprocess(sourcedir,workdir):
   # and get copied into runtime, the following code then moves them all to the directory doxygen looks in
   print("")
   os.chdir(runtime_dir)
+  os.mkdir('validation')
   for file in glob.glob(os.path.join(runtime_dir,'*PatientValidationTable.md')):
     print(file)
     shutil.copy(file,runtime_dir+'validation')
+    os.remove(file)
 
   # These files aren't currently getting generated, this is a temporary fix which checks if they're present, and adds them to the expected location
   print("")
   os.chdir(runtime_dir) 
   shutil.copy('UrinalysisValidationTable.md',runtime_dir+'validation')
+  os.remove('UrinalysisValidationTable.md')
   shutil.copy('RespiratoryValidationTable.md',runtime_dir+'validation')
+  os.remove('RespiratoryValidationTable.md')
   shutil.copy('RespiratoryCompartmentsValidationTable.md',runtime_dir+'validation') 
+  os.remove('RespiratoryCompartmentsValidationTable.md')
   os.chdir(runtime_dir)
   for file in glob.glob(os.path.join(runtime_dir,'*ValidationResults.zip')):
     print(file)
@@ -118,10 +141,14 @@ def preprocess(sourcedir,workdir):
     os.mkdir('baselines')  
   os.chdir(runtime_dir)
   shutil.copy('RenalTGFFeedbackOutput.zip',runtime_dir+'UnitTests/BioGearsTests/baselines')
+  os.remove('RenalTGFFeedbackOutput.zip')
   shutil.copy('CardiovascularCircuitOutput.zip',runtime_dir+'UnitTests/BioGearsTests/baselines')
+  os.remove('CardiovascularCircuitOutput.zip')
   #shutil.copy('ColdWaterSubmersionResults.zip',runtime_dir+'Scenarios/EnergyEnvironment/baselines')
   shutil.copy('SimpleDiffusionFourCompartmentTest.zip',runtime_dir+'UnitTests/BioGearsTests/baselines')
+  os.remove('SimpleDiffusionFourCompartmentTest.zip')
   shutil.copy('RespiratoryValidationPFT@120.02s.xml',runtime_dir+'Scenarios/Validation')  
+  os.remove('RespiratoryValidationPFT@120.02s.xml')
 
   os.chdir(runtime_dir+'Scenarios/Showcase')
   shutil.copy('HeatStrokeResultsCMP@2610.2s.xml',runtime_dir);  
