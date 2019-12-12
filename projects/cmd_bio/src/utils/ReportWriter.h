@@ -54,13 +54,13 @@ public:
   void set_md();
   void set_xml();
   void set_web();
-  void gen_tables_single_sheet(const char* validation_file, const char* baseline_file, char table_type);
-  void gen_tables_single_sheet(std::string validation_file, std::string baseline_file, char table_type);
+  void gen_tables_single_sheet(const char* reference_file, const char* results_file, char table_type);
+  void gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type);
   void gen_tables(char table_type);
   void ParseReferenceCSV(const char* filename);
   void ParseReferenceCSV(std::string filename);
-  void ParseBaselineCSV(const char* filename);
-  void ParseBaselineCSV(std::string filename);
+  void ParseResultsCSV(const char* filename);
+  void ParseResultsCSV(std::string filename);
   void CalculateAverages();
   void ExtractValues();
   void ExtractValuesList();

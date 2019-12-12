@@ -1,0 +1,101 @@
+AlveolarArterialGradient,mmHg,"[5,14]",costanzo2006brs,,Respiratory
+CarricoIndex,mmHg,452,guyton2006medical,95 mmHg / 0.21,Respiratory
+EndTidalCarbonDioxideFraction,,"[0.054, 0.059]",Levitzky2013pulmonary,,Respiratory
+ExpiratoryFlow,L/s,0.44,gupta2010characterizing,,Respiratory
+InspiratoryExpiratoryRatio,,"[0.25, 0.50]",Levitzky2013pulmonary,,Respiratory
+InspiratoryFlow,L/s,0.4,gupta2010characterizing,,Respiratory
+PulmonaryCompliance,L/cmH2O,"[0.06, 0.14]",Levitzky2013pulmonary,,Respiratory
+PulmonaryResistance,cmH2O s/L,"[1.01, 1.99]",dubois1956new,,Respiratory
+RespirationRate,1/ min,"[12.0, 20.0],
+[13.0, 19.0]","silverthorn2013human,
+mantoni2007reduced",,Respiratory
+SpecificVentilation,,0.23,Levitzky2013pulmonary,,Respiratory
+TidalVolume,mL,7,Levitzky2013pulmonary,,Respiratory
+TotalAlveolarVentilation,L/min,0.08,Levitzky2013pulmonary,,Respiratory
+TotalDeadSpaceVentilation,L/min,0.032,Levitzky2013pulmonary,,Respiratory
+TotalLungVolume,L,0.0335,Levitzky2013pulmonary,,Respiratory
+TotalPulmonaryVentilation,L/min,0.112,Levitzky2013pulmonary,,Respiratory
+TranspulmonaryPressure,cmH2O,"[5.2, 7.2]",guyton2006medical,Assume P<sub>atm</sub> = 1033.2 cmH2O,Respiratory
+Trachea-Pressure,cmH2O,"[1033.2, 1034.2]",guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+Trachea-Pressure,cmH2O,"[1032.2, 1033.2]",guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+Trachea-Oxygen-PartialPressure,mmHg,"[150.0, 160.0],
+149.0","silverthorn2013human, 
+Levitzky2013pulmonary",,RespiratoryCompartments
+Trachea-Oxygen-PartialPressure,mmHg,120,Levitzky2013pulmonary,,RespiratoryCompartments
+Trachea-CarbonDioxide-PartialPressure,mmHg,"[27.0, 43.0]",Levitzky2013pulmonary,,RespiratoryCompartments
+Trachea-CarbonDioxide-PartialPressure,mmHg,"[0.235, 0.250],
+0.300","silverthorn2013human, 
+Levitzky2013pulmonary",,RespiratoryCompartments
+LeftPleuralCavity-Pressure,cmH2O,1028.2,guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+LeftPleuralCavity-Pressure,cmH2O,1025.7,guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+RightPleuralCavity-Pressure,cmH2O,1028.2,guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+RightPleuralCavity-Pressure,cmH2O,1025.7,guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+PulmonaryLungs-Volume,L,0.03,Levitzky2013pulmonary,,RespiratoryCompartments
+PulmonaryLungs-Volume,L,0.037,Levitzky2013pulmonary,,RespiratoryCompartments
+LeftLungPulmonary-Pressure,cmH2O,"[1034.0, 1038.2],
+1034.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+LeftLungPulmonary-Pressure,cmH2O,"[1028.2, 1032.4],
+1032.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+RightLungPulmonary-Pressure,cmH2O,"[1034.0, 1038.2],
+1034.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+RightLungPulmonary-Pressure,cmH2O,"[1028.2, 1032.4],
+1032.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+LeftAlveoli-Volume,L,0.0126,Levitzky2013pulmonary,,RespiratoryCompartments
+LeftAlveoli-Volume,L,0.0158,Levitzky2013pulmonary,,RespiratoryCompartments
+LeftAlveoli-Pressure,cmH2O,"[1034.0, 1038.2],
+1034.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+LeftAlveoli-Pressure,cmH2O,"[1028.2, 1032.4],
+1032.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+LeftAlveoli-Oxygen-PartialPressure,mmHg,"98.0,
+100.0,
+104.0","silverthorn2013human,
+lloyd1958relation,
+Levitzky2013pulmonary",,RespiratoryCompartments
+LeftAlveoli-CarbonDioxide-PartialPressure,mmHg,"40.0,
+40.0,
+54.4","silverthorn2013human,
+Levitzky2013pulmonary,
+lloyd1958relation",,RespiratoryCompartments
+RightAlveoli-Volume,L,0.0154,Levitzky2013pulmonary,,RespiratoryCompartments
+RightAlveoli-Volume,L,0.0193,Levitzky2013pulmonary,,RespiratoryCompartments
+RightAlveoli-Pressure,cmH2O,"[1034.0, 1038.2],
+1034.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+RightAlveoli-Pressure,cmH2O,"[1028.2, 1032.4],
+1032.2","otis1947measurement,
+guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
+RightAlveoli-Oxygen-PartialPressure,mmHg,"98.0,
+100.0,
+104.0","silverthorn2013human,
+lloyd1958relation,
+Levitzky2013pulmonary",,RespiratoryCompartments
+RightAlveoli-CarbonDioxide-PartialPressure,mmHg,"40.0,
+40.0,
+54.4","silverthorn2013human,
+Levitzky2013pulmonary,
+lloyd1958relation",,RespiratoryCompartments
+LeftBronchi-Volume,L,0.0009,Levitzky2013pulmonary,,RespiratoryCompartments
+LeftBronchi-Oxygen-PartialPressure,mmHg,"[104.0, 149.0]",Levitzky2013pulmonary,,RespiratoryCompartments
+LeftBronchi-CarbonDioxide-PartialPressure,mmHg,"[0.03, 40.0]",Levitzky2013pulmonary,,RespiratoryCompartments
+RightBronchi-Volume,L,0.0011,Levitzky2013pulmonary,,RespiratoryCompartments
+RightBronchi-Oxygen-PartialPressure,mmHg,"[104.0, 149.0]",Levitzky2013pulmonary,,RespiratoryCompartments
+RightBronchi-CarbonDioxide-PartialPressure,mmHg,"[0.03, 40.0]",Levitzky2013pulmonary,,RespiratoryCompartments
+ExpiratoryReserveVolume,L,0.015,wikipedia,,PulmonaryFunctionTest
+ForcedVitalCapacity*,mL,0.06,Levitzky2013pulmonary,,PulmonaryFunctionTest
+ForcedExpiratoryVolume*,L,"[3.496, 4.188]",crapo1981reference,,PulmonaryFunctionTest
+ForcedExpiratoryFlow*,L/s,"[2.76, 4.13]",crapo1981reference,,PulmonaryFunctionTest
+FunctionalResidualCapacity,L,0.03,Levitzky2013pulmonary,,PulmonaryFunctionTest
+InspiratoryCapacity,L,0.05,wikipedia,,PulmonaryFunctionTest
+InspiratoryReserveVolume,L,0.043,wikipedia,,PulmonaryFunctionTest
+MaximumVoluntaryVentilation*,L/s,"[140.0, 180.0]",wikipedia,,PulmonaryFunctionTest
+PeakExpiratoryFlow*,L/s,0.44,gupta2010,,PulmonaryFunctionTest
+ResidualVolume,L,0.015,wikipedia,,PulmonaryFunctionTest
+SlowVitalCapacity*,L,0.06,Levitzky2013pulmonary,,PulmonaryFunctionTest
+TotalLungCapacity,L,0.08,wikipedia,,PulmonaryFunctionTest
+VitalCapacity,L,0.06,Levitzky2013pulmonary,,PulmonaryFunctionTest

@@ -3,10 +3,10 @@
 #include "string-helpers.h"
 #include <cmath>
 #include <fstream>
-#include <iostream>
-#include <sstream>
-#include <numeric>
 #include <iomanip>
+#include <iostream>
+#include <numeric>
+#include <sstream>
 
 namespace biogears {
 
@@ -116,9 +116,9 @@ void ReportWriter::set_web()
   _file_extension = ".md";
 }
 
-void ReportWriter::gen_tables_single_sheet(const char* validation_file, const char* baseline_file, char table_type)
+void ReportWriter::gen_tables_single_sheet(const char* reference_file, const char* results_file, char table_type)
 {
-  gen_tables_single_sheet(std::string(validation_file), std::string(baseline_file), table_type);
+  gen_tables_single_sheet(std::string(reference_file), std::string(results_file), table_type);
 }
 //-------------------------------------------------------------------------------
 /// \brief Takes in a single sheet, unlike gen_tables which takes in a list of validation and baselines files
@@ -127,14 +127,14 @@ void ReportWriter::gen_tables_single_sheet(const char* validation_file, const ch
 /// \param baseline_file: std::string name of file containing baseline data
 /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
 //-------------------------------------------------------------------------------
-void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::string baseline_file, char table_type)
+void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type)
 {
-  logger->Info("Generating table: " + split(validation_file,'.')[0]);
+  logger->Info("Generating table: " + split(reference_file,'.')[0]);
   logger->SetConsolesetConversionPattern("\t%m%n");
-  ParseReferenceCSV(validation_file);
-  ParseBaselineCSV(baseline_file);
+  ParseReferenceCSV(reference_file);
+  ParseResultsCSV(results_file);
   CalculateAverages();
-  logger->Info("Successfully calculated averages of file: " + baseline_file);
+  logger->Info("Successfully calculated averages of file: " + reference_file);
   ExtractValues();
   logger->Info("Successfully populated data structures with validation data");
   Validate();
@@ -151,7 +151,7 @@ void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::str
     set_web();
   }
   to_table();
-  logger->Info("Successfully generated table: " + split(validation_file, '.')[0]);
+  logger->Info("Successfully generated table: " + split(reference_file, '.')[0]);
   clear();
   logger->SetConsolesetConversionPattern("%d [%p] %m%n");
 }
@@ -162,30 +162,33 @@ void ReportWriter::gen_tables_single_sheet(std::string validation_file, std::str
 //-------------------------------------------------------------------------------
 void ReportWriter::gen_tables(char table_type)
 {
-  std::vector<std::string> validation_files{ "BloodChemistryValidation.csv",
-                                             "CardiovascularValidation.csv",
-                                             "EnergyValidation.csv",
-                                             "EndocrineValidation.csv",
-                                             "RenalValidation.csv",
-                                             "TissueValidation.csv" };
-  std::vector<std::string> baseline_files{ "BloodChemistryValidationResults.csv",
-                                           "CardiovascularValidationResults.csv",
-                                           "EnergyValidationResults.csv",
-                                           "EndocrineValidationResults.csv",
-                                           "RenalValidationResults.csv",
-                                           "TissueValidationResults.csv" };
+  std::vector<std::string> reference_files{ "BloodChemistryValidation.csv",
+                                            "CardiovascularValidation.csv",
+                                            "EnergyValidation.csv",
+                                            "EndocrineValidation.csv",
+                                            "RenalValidation.csv",
+                                            "RespiratoryValidation.csv",
+                                            "TissueValidation.csv" };
+  std::vector<std::string> results_files{ "Scenarios/Validation/BloodChemistryValidationResults.csv",
+                                          "Scenarios/Validation/CardiovascularValidationResults.csv",
+                                          "Scenarios/Validation/EnergyValidationResults.csv",
+                                          "Scenarios/Validation/EndocrineValidationResults.csv",
+                                          "Scenarios/Validation/RenalValidationResults.csv",
+                                          "Scenarios/Validation/RespiratoryValidationResults.csv",
+                                          "Scenarios/Validation/TissueValidationResults.csv" };
   std::vector<std::string> xml_files { "HeatStrokeResultsCMP@2610.2s.xml" };
 
-  for (int i = 0; i < validation_files.size(); i++) {
-    logger->Info("Generating table: " + split(validation_files[i],'.')[0]);
+
+  for (int i = 0; i < reference_files.size(); i++) {
+    logger->Info("Generating table: " + split(reference_files[i], '.')[0]);
     logger->SetConsolesetConversionPattern("\t%m%n");
-    ParseReferenceCSV(std::string(validation_files[i]));
-    ParseBaselineCSV(std::string(baseline_files[i]));
+    ParseReferenceCSV(std::string(reference_files[i]));
+    ParseResultsCSV(std::string(results_files[i]));
     if (i == 0) {
       ParseXML(xml_files[0]);
     }
     CalculateAverages();
-    logger->Info("Successfully calculated averages of file: " + baseline_files[i]);
+    logger->Info("Successfully calculated averages of file: " + results_files[i]);
     ExtractValues();
     logger->Info("Successfully populated data structures with validation data");
     Validate();
@@ -202,7 +205,7 @@ void ReportWriter::gen_tables(char table_type)
       set_web();
     }
     to_table();
-    logger->Info("Successfully generated table: " + split(validation_files[i],'.')[0]);
+    logger->Info("Successfully generated table: " + split(reference_files[i], '.')[0]);
     clear();
     logger->SetConsolesetConversionPattern("%d [%p] %m%n");
   }
@@ -259,7 +262,7 @@ int ReportWriter::to_table()
     file.close();
     table.clear();
   }
-  
+
   return 0;
 }
 
@@ -273,12 +276,12 @@ void ReportWriter::ParseReferenceCSV(std::string filename)
   ParseCSV(filename, this->validation_data);
 }
 
-void ReportWriter::ParseBaselineCSV(const char* filename)
+void ReportWriter::ParseResultsCSV(const char* filename)
 {
-  ParseBaselineCSV(std::string(filename));
+  ParseResultsCSV(std::string(filename));
 }
 
-void ReportWriter::ParseBaselineCSV(std::string filename)
+void ReportWriter::ParseResultsCSV(std::string filename)
 {
   ParseCSV(filename, this->biogears_results);
 }
@@ -424,7 +427,7 @@ void ReportWriter::ExtractValues()
       std::vector<std::string> value_range = split(split(validation_data[i][2].substr(1), ']')[0], ',');
       try {
         ref.reference_range = std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1]));
-      } catch(std::exception& e) {
+      } catch (std::exception& e) {
         logger->Error(std::string("Error: ") + e.what());
         logger->Error("Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
         throw(e);
@@ -522,13 +525,13 @@ void ReportWriter::Validate()
 
     } else { //For a value, we check how closely the biogears data matches the validation data
       table_row.expected_value = std::to_string(ref.reference_value) + "@" + ref.reference;
-      if(std::fabs(ref.reference_value - table_row.engine_value) <= 0.000001) {
+      if (std::fabs(ref.reference_value - table_row.engine_value) <= 0.000001) {
         table_row.percent_error = "0.0%";
         table_row.result = Green;
       } else {
-        double error = (std::fabs(ref.reference_value - table_row.engine_value)/((ref.reference_value + table_row.engine_value)/2));
+        double error = (std::fabs(ref.reference_value - table_row.engine_value) / ((ref.reference_value + table_row.engine_value) / 2));
         error = std::fabs(error);
-        table_row.percent_error = std::to_string(error*100) + "%";
+        table_row.percent_error = std::to_string(error * 100) + "%";
         if (error < 0.10) {
           table_row.result = Green;
         } else if (0.10 <= error && error <= 0.25) {
