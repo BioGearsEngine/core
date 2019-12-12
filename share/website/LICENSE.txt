@@ -1,0 +1,6 @@
+/* Copyright (C) Applied Research Associates - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * December 2019
+ * Unless otherwise noted all files in this folder and its subdirectories are for personal use only and can not be distributed publiclly with out permission. They are included for developer reference material for this source code clone only. 
+ */
