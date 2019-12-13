@@ -1,6 +1,6 @@
 FiltrationFraction,,0.2,guyton2006medical,GFR/RenalPlasmaFlow,Renal
 GlomerularFiltrationRate,L/day,180,guyton2006medical,,Renal
-RenalBloodFlow,mL/min,"1200, 1064","valtin1995renal,
+RenalBloodFlow,mL/min,"[1064, 1200] ","valtin1995renal,
 valentin2002icrp",,Renal
 RenalPlasmaFlow,mL/min,660,valtin1995renal,Dependent on Hematocrit,Renal
 RenalVascularResistance,mmHg min/mL,0.08,guyton2006medical,,Renal
@@ -101,7 +101,7 @@ Bicarbonate-Clearance-RenalReabsorptionRate,g/day,274.46796,valtin1995renal,conv
 Calcium-Clearance-RenalExcretionRate,g/day,"[0.1, 0.2]
 ",blaine2014renal,converted from 0.0053 mEq/min,RenalSubstances
 Calcium-Clearance-RenalFiltrationRate,g/day,10,blaine2014renal,converted from 0.5 mEq/min,RenalSubstances
-Calcium-Clearance-RenalReabsorptionRate,g/day,"[9.9,9.8]",blaine2014renal,Calc from (Filtration - Excretion) <br> converted from 0.4947 mEq/min,RenalSubstances
+Calcium-Clearance-RenalReabsorptionRate,g/day,"[9.8, 9.9]",blaine2014renal,Calc from (Filtration - Excretion) <br> converted from 0.4947 mEq/min,RenalSubstances
 Creatinine-Clearance-RenalExcretionRate,mg/min,"[0.625,1.875]",valtin1995renal,,RenalSubstances
 Creatinine-Clearance-RenalFiltrationRate,mg/min,"[0.625,1.875]",valtin1995renal,,RenalSubstances
 Creatinine-Clearance-RenalReabsorptionRate,mg/min,0,guyton2006medical,,RenalSubstances
