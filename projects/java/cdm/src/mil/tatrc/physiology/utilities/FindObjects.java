@@ -26,6 +26,10 @@ import org.reflections.Reflections;
 import org.reflections.scanners.*;
 import org.reflections.util.*;
 
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * @author abray
  *
@@ -53,7 +57,15 @@ public class FindObjects
         .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
         .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
     
-    Set<Class<? extends Object>> allClasses = reflections.getSubTypesOf(Object.class);
+    Comparator comparator = new Comparator<Class<? extends Object>>() {
+      @Override
+      public int compare(Class<? extends Object> o1, Class<? extends Object> o2) {
+        return o1.getSimpleName().compareTo(o2.getSimpleName());
+      }
+    };
+
+    SortedSet<Class<? extends Object>> allClasses = new  TreeSet<Class<? extends Object>>(comparator);
+    allClasses.addAll(reflections.getSubTypesOf(Object.class));
     return allClasses;
   }
   
@@ -154,16 +166,24 @@ public class FindObjects
     for (String name : methodMap.keySet())
     {
       if( name.startsWith("get")){
-        BagMethod found = new BagMethod();
-        found.me = clazz;
-        found.propertyName = name.substring(3);
-        found.get = methodMap.get(name);
-        if(found.get != null)
-        {
-          bagMethods.add(found);
-          found.returnType = found.get.getReturnType();
+        //Filter getClass() Java Object Interface
+
+        switch(name){
+          case "getClass":
+            continue;
+          default:
+            BagMethod found = new BagMethod();
+            found.me = clazz;
+            found.propertyName = name.substring(3);
+            found.get = methodMap.get(name);
+            if(found.get != null)
+            {
+              bagMethods.add(found);
+              found.returnType = found.get.getReturnType();
+            }
         }
       }
+
     }
     return bagMethods;
   }

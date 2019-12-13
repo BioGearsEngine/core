@@ -22,6 +22,12 @@ namespace biogears {
 class SEScalarVolumePerTime;
 
 class BIOGEARS_API SEHemorrhage : public SEPatientAction {
+//! \class SEHemorrhage
+//! \brief Patient Action for submitting hemorrhage events
+//!
+//! Two major fields Compartment and InitialRate
+//! SEScalarVolumePerTime InitialRate
+//! std::string Compartment "Map Key for referring to the Hemorrhage in the future"
 public:
   SEHemorrhage();
   virtual ~SEHemorrhage() override;

@@ -44,12 +44,10 @@ public class CDM2MD
     {
         try
         {
-            String destDir = "./markdown"; // This might be a bug, I don't know if he meant to put it in doc/markdown
-
-            FileUtils.delete(destDir);
+      String destDir = "./doc/doxygen/processed_md/"; // This might be a bug, I don't know if he meant to put it in doc/markdown
             FileUtils.createDirectory(destDir);
 
-            PrintWriter writer=new PrintWriter(destDir+"/CDMTable.md", "UTF-8");
+      PrintWriter writer=new PrintWriter(destDir+"CDMTables.md", "UTF-8");
             
             writer.append("CDM Tables {#CDMTables}\n");
             writer.append("=======================\n");
@@ -59,8 +57,13 @@ public class CDM2MD
       //skipProperties.add("ScenarioTime");
             
       Set<Class<? extends Object>> sce = FindObjects.findAllClasses("mil.tatrc.physiology.datamodel.bind");
-            for(Class<?> c : sce)
+      for(Class<?> c : sce) {
+        if( c.getSimpleName().startsWith("Scalar")
+            || c.getSimpleName() == "PropertyData"
+
+         ){ continue;}
         WriteDoxyTable(c, "CDM", writer, skipProperties);
+      }
             writer.close();
 
         } 
@@ -74,16 +77,9 @@ public class CDM2MD
     protected static void WriteDoxyTable(Class<?> c, String xsdFile, PrintWriter writer, List<String> skipProperties)
   {     
         String tableName = c.getSimpleName();
-        if(tableName.startsWith("SE"))
-            tableName = tableName.substring(2);
-        if(tableName.startsWith("Enum"))
+    if(tableName.startsWith("Enum")){
             tableName = tableName.substring(4);
-        String descPrepend;
-        if(c.isEnum())
-            descPrepend = "@copybrief "+xsdFile+"_enum"+tableName;
-        else
-            descPrepend = "@copybrief "+xsdFile+"_"+tableName+"Data";
-        
+    }
     String columnHeaders[] = new String[3];
     int maxColumnLength[] = new int[columnHeaders.length];
     columnHeaders[0] = "Property Name";
@@ -123,6 +119,12 @@ public class CDM2MD
       if(bag.returnType.getSimpleName().length()>maxColumnLength[1])
         maxColumnLength[1] = bag.returnType.getSimpleName().length();           
     }
+    String descPrepend;
+    if(c.isEnum()){ 
+      descPrepend = "@copybrief mil.tatric.physiology::datamodel::enum"+tableName; }
+    else{ 
+      descPrepend = "@copybrief biogears::SE"+tableName.substring(0, tableName.length()-4); 
+    }
     maxColumnLength[2] = descPrepend.length()+maxColumnLength[0];
     
     try
@@ -130,7 +132,7 @@ public class CDM2MD
       // Create file and start the table        
         writer.println("");
         writer.println("@anchor "+StringUtils.removeSpaces(tableName)+"Table");
-        writer.println("## "+StringUtils.spaceCamelCase(tableName));
+      writer.println("## "+ tableName);
         writer.println(descPrepend+"");
         
         if(!bagMethods.isEmpty())
@@ -191,8 +193,8 @@ public class CDM2MD
                     }
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     else
-              writer.print("|"+"List of " + bag.propertyName);
-              writer.print("|"+"@ref " + bag.propertyName);
+              writer.print("|"+pad("List of SE" + bag.propertyName + "s",maxColumnLength[1]));
+              writer.print("|"+pad("@ref " + bag.propertyName + "Table",maxColumnLength[2]));
               //Log.error("Unsupported List type for :"+bag.propertyName+" on table "+tableName);
                     
                 }
@@ -202,15 +204,15 @@ public class CDM2MD
             if(
                 Enum.class.isAssignableFrom(bag.returnType) 
                 || String.class.isAssignableFrom(bag.returnType) 
-                //|| SEScalar.class.isAssignableFrom(bag.returnType) 
-                //|| SEFunction.class.isAssignableFrom(bag.returnType)
+                || bag.returnType.getSimpleName().startsWith("Scalar") 
+                || bag.returnType.getSimpleName().startsWith("Function") 
                 )
-                        writer.print("|"+pad(descPrepend+"_"+bag.propertyName,maxColumnLength[2]));
+            {
+                  writer.print("|"+pad(descPrepend+"::Get"+ bag.propertyName.replace("_","::"),maxColumnLength[2]));
+            }
                     else
                     {
                         String refTable = bag.returnType.getSimpleName();
-                        if(refTable.startsWith("SE"))
-                            refTable = refTable.substring(2);
                         writer.print("|"+pad("@ref "+refTable+"Table",maxColumnLength[2]));
                     }
                 }
@@ -236,8 +238,8 @@ public class CDM2MD
     }
     catch(Exception ex)
     {
-      Log.error("Could not pad "+s+" with a max of "+max,ex);
-      return "";
+      //Log.error("Could not pad "+s+" with a max of "+max,ex);
+      return s;
     }
   }
 

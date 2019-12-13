@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 	
 	<!-- @brief Base Patient Action type -->
 	<xs:complexType name="PatientActionData" abstract="true">
+    <xs:annotation><xs:documentation>Base Patient Action Type</xs:documentation></xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="ActionData"/>
 		</xs:complexContent>

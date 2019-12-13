@@ -136,6 +136,12 @@ const char* SEHemorrhage::GetCompartment_cStr() const
   return m_Compartment.c_str();
 }
 //-----------------------------------------------------------------------------
+//!
+//!  \brief String representing the location of the event.
+//!  \return std::string
+//!
+//!  Only a single hemorrhage can exist at the exsact same compartment string
+//!  Any string value can be used. Submitting the same value overwrites the previous event.
 std::string SEHemorrhage::GetCompartment() const
 {
   return m_Compartment;
@@ -166,6 +172,10 @@ bool SEHemorrhage::HasInitialRate() const
   return m_InitialRate == nullptr ? false : true;
 }
 //-----------------------------------------------------------------------------
+//!
+//!  \brief SEScalarVolumePerTime flow rate of the hemorrhage at occurance
+//!  \return SEScalarVolumePerTime
+//!  Setting Initial Rate to 0 is the effective way of removing/curing a hemorrhage.
 SEScalarVolumePerTime& SEHemorrhage::GetInitialRate()
 {
   if (m_InitialRate == nullptr)

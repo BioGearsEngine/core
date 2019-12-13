@@ -191,23 +191,6 @@ if(Biogears_BUILD_DOCUMENTATION)
 endif()
 
 
-set (args "CDMUnitTestsJava.config")
-add_custom_target(run-cdm-tests
-    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    VERBATIM
-    USES_TERMINAL
-)
-set (args "BGEUnitTestsJava.config")
-add_custom_target(run-bge-tests
-    COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"   mil.tatrc.physiology.utilities.testing.TestDriver ${args}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    VERBATIM
-    USES_TERMINAL
-)
-
-
-
 
 option(Biogears_BUILD_WEBSITE "Use Java to build the website" ON)
 if(Biogears_BUILD_WEBSITE)
@@ -218,3 +201,14 @@ endif()
 if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
  add_dependencies(docs-prepare stage_runtime )
 endif()
+ set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
+ set_target_properties(Java_CommonDataModel PROPERTIES FOLDER "Java/jar")
+ set_target_properties(Java_DataModelBindings PROPERTIES FOLDER "Java/jar")
+ set_target_properties(docs-prepare PROPERTIES FOLDER "Java/website")
+ set_target_properties(docs-doxygen PROPERTIES FOLDER "Java/website")
+ set_target_properties(docs-stage PROPERTIES FOLDER "Java/website")
+ set_target_properties(cdm2md PROPERTIES FOLDER "Java/website")
+ set_target_properties(doxygenpreprocess PROPERTIES FOLDER "Java/website")
+ set_target_properties(xsdtodoxygen      PROPERTIES FOLDER "Java/website")
+ set_target_properties(javaplot          PROPERTIES FOLDER "Java/website")
+ set_target_properties(run_doxygen       PROPERTIES FOLDER "Java/website")
