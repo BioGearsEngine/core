@@ -44,8 +44,8 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"                           Name="Pressure"        Unit="cmH2O" Precision="0"/>
  	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
@@ -141,11 +141,11 @@
   
   <!-- Aerosol Compartments -->
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Mouth"          Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	  
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Carina"         Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Trachea"         Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftAlveoli"    Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftDeadSpace"  Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftBronchi"  Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAlveoli"   Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightDeadSpace" Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBronchi" Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
   </DataRequests>
 	
     <Action xsi:type="AdvanceTimeData">

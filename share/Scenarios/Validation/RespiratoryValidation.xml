@@ -28,9 +28,9 @@
 	<DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                         Unit="g"         Precision="4"/>
 	
 	<!--Compartment Data Requests -->
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina" Name="Pressure" Unit="cmH2O" Precision="4"/>	
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea" Name="Pressure" Unit="cmH2O" Precision="4"/>	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
 	
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftPleuralCavity" Name="Pressure" Unit="cmH2O" Precision="4"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightPleuralCavity" Name="Pressure" Unit="cmH2O" Precision="4"/>
@@ -49,13 +49,14 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
 
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftDeadSpace" Name="Volume" Unit="L" Precision="4"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftDeadSpace" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftDeadSpace" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftBronchi" Name="Volume" Unit="mL" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftBronchi" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftBronchi" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
 	
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightDeadSpace" Name="Volume" Unit="L" Precision="4"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightDeadSpace" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightDeadSpace" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>  
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightBronchi" Name="Volume" Unit="mL" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightBronchi" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightBronchi" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>  
+
   </DataRequests> 
 	
     <Action xsi:type="AdvanceTimeData">

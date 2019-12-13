@@ -206,13 +206,8 @@
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="CentralControllerCO2PressureSetPoint" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The ventilatory response gain factor for the brain central sensory center based on the CO2 difference from normal blood gas levels. -->
-          <xs:element name="CentralVentilatoryControllerGain" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="PeripheralControllerCO2PressureSetPoint" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The ventilatory response gain factor for the carotid artery peripheral sensory center based on the O2 and CO2 difference from normal blood gas levels. -->
-          <xs:element name="PeripheralVentilatoryControllerGain" type="ScalarData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="PleuralComplianceSensitivity" type="ScalarInverseVolumeData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="PulmonaryVentilationRateMaximum" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The maximum rate before permanent damage to the lungs occurs. -->
-          <xs:element name="VentilationTidalVolumeIntercept" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="VentilatoryOcclusionPressure" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>

@@ -559,22 +559,6 @@ protected:
   /** Respiratory */
   //////////////////
 public:
-  virtual bool HasCentralControllerCO2PressureSetPoint() const;
-  virtual SEScalarPressure& GetCentralControllerCO2PressureSetPoint();
-  virtual double GetCentralControllerCO2PressureSetPoint(const PressureUnit& unit) const;
-
-  virtual bool HasCentralVentilatoryControllerGain() const;
-  virtual SEScalar& GetCentralVentilatoryControllerGain();
-  virtual double GetCentralVentilatoryControllerGain() const;
-
-  virtual bool HasPeripheralControllerCO2PressureSetPoint() const;
-  virtual SEScalarPressure& GetPeripheralControllerCO2PressureSetPoint();
-  virtual double GetPeripheralControllerCO2PressureSetPoint(const PressureUnit& unit) const;
-
-  virtual bool HasPeripheralVentilatoryControllerGain() const;
-  virtual SEScalar& GetPeripheralVentilatoryControllerGain();
-  virtual double GetPeripheralVentilatoryControllerGain() const;
-
   virtual bool HasPleuralComplianceSensitivity() const;
   virtual SEScalarInverseVolume& GetPleuralComplianceSensitivity();
   virtual double GetPleuralComplianceSensitivity(const InverseVolumeUnit& unit) const;
@@ -583,22 +567,13 @@ public:
   virtual SEScalarVolumePerTime& GetPulmonaryVentilationRateMaximum();
   virtual double GetPulmonaryVentilationRateMaximum(const VolumePerTimeUnit& unit) const;
 
-  virtual bool HasVentilationTidalVolumeIntercept() const;
-  virtual SEScalarVolume& GetVentilationTidalVolumeIntercept();
-  virtual double GetVentilationTidalVolumeIntercept(const VolumeUnit& unit) const;
-
   virtual bool HasVentilatoryOcclusionPressure() const;
   virtual SEScalarPressure& GetVentilatoryOcclusionPressure();
   virtual double GetVentilatoryOcclusionPressure(const PressureUnit& unit) const;
 
 protected:
-  SEScalarPressure* m_CentralControllerCO2PressureSetPoint;
-  SEScalar* m_CentralVentilatoryControllerGain;
-  SEScalarPressure* m_PeripheralControllerCO2PressureSetPoint;
-  SEScalar* m_PeripheralVentilatoryControllerGain;
   SEScalarInverseVolume* m_PleuralComplianceSensitivity;
   SEScalarVolumePerTime* m_PulmonaryVentilationRateMaximum;
-  SEScalarVolume* m_VentilationTidalVolumeIntercept;
   SEScalarPressure* m_VentilatoryOcclusionPressure;
 
   /////////////

@@ -128,8 +128,6 @@ private:
   void DoRightNeedleDecompression(double dFlowResistance);
   // Aerosol Deposition and various Effects
   void ProcessAerosolSubstances();
-  // Driver/Conscious Breath
-  /**/ double VolumeToDriverPressure(double TargetVolume);
 
   //Process
   void CalculateVitalSigns();
@@ -173,7 +171,6 @@ private:
   double m_InstantaneousFunctionalResidualCapacity_L;
   double m_MaxDriverPressure_cmH2O;
   double m_PeakRespiratoryDrivePressure_cmH2O;
-  double m_TargetTidalVolume_L;
   double m_VentilationFrequency_Per_min;
   double m_VentilationToTidalVolumeSlope;
 
@@ -194,14 +191,11 @@ private:
 
 
   // Configuration parameters
-  double m_CentralControlGainConstant;
   double m_dDefaultOpenResistance_cmH2O_s_Per_L;
   double m_dDefaultClosedResistance_cmH2O_s_Per_L;
-  double m_PeripheralControlGainConstant;
   double m_PleuralComplianceSensitivity_Per_L;
   double m_dRespOpenResistance_cmH2O_s_Per_L;
   double m_dRespClosedResistance_cmH2O_s_Per_L;
-  double m_VentilationTidalVolumeIntercept;
   double m_VentilatoryOcclusionPressure_cmH2O;
   // State between functions (i.e. shared between methods in preprocess, set to a default value at the start of preprocess)
   double m_AverageLocalTissueBronchodilationEffects;

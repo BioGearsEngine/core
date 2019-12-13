@@ -142,7 +142,6 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ArterialOxygenBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorFatigueScale" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="BloodGasInteractionBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="PeripheralInteractionBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ChemoreceptorFiringRateSetPoint_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CentralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -211,8 +210,6 @@ specific language governing permissions and limitations under the License.
           <xs:element name="MaxDriverPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PeakRespiratoryDrivePressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="VentilationFrequency_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="TargetTidalVolume_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="VentilationToTidalVolumeSlope" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <!-- Conscious Breathing -->
           <xs:element name="ConsciousBreathing" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ConsciousRespirationPeriod_s" type="xs:double" minOccurs="1" maxOccurs="1"/>

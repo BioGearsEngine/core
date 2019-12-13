@@ -45,8 +45,8 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"                           Name="Pressure"        Unit="cmH2O" Precision="0"/>
  	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
@@ -148,38 +148,31 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
-    <Action xsi:type="AnesthesiaMachineConfigurationData">
+        <Action xsi:type="AnesthesiaMachineConfigurationData">
 		<Configuration>
-      <Connection>Mask</Connection>
-			<InletFlow value="5.0" unit="L/min"/>
-			<InspiratoryExpiratoryRatio value="0.5"/>
-			<OxygenFraction value="0.23"/>
+			<Connection>Mask</Connection>
+			<InletFlow value="7.5" unit="L/min"/>
+			<OxygenFraction value="0.3"/>
 			<OxygenSource>Wall</OxygenSource>
 			<PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
 			<PrimaryGas>Nitrogen</PrimaryGas>
-			<RespiratoryRate value="16.0" unit="1/min"/>
-			<VentilatorPressure value="0" unit="cmH2O"/>
-			<OxygenBottleOne>
-				<Volume value="660" unit="L"/>
-			</OxygenBottleOne>
-			<OxygenBottleTwo>
-				<Volume value="660" unit="L"/>
-			</OxygenBottleTwo>
+			<VentilatorPressure value="10.0" unit="cmH2O"/>
       </Configuration>
-    </Action>  
+    </Action>
+	<!--Give time for respiratory metrics to stabilize after mask is applied-->
     <Action xsi:type="AdvanceTimeData">
-        <Time value="50" unit="s"/>       
+        <Time value="15" unit="min"/>       
     </Action>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>
-        <LeftChamber>
-          <State>On</State>
-          <SubstanceFraction value="0.06"/>					
-          <Substance>Desflurane</Substance>
-        </LeftChamber>
+			<LeftChamber>
+				<State>On</State>
+				<SubstanceFraction value="0.06"/>			  
+				<Substance>Desflurane</Substance>
+			</LeftChamber>
       </Configuration>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="1000" unit="s"/>       
+        <Time value="30" unit="min"/>       
     </Action>
 </Scenario>

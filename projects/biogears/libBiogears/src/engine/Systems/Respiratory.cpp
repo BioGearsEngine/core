@@ -66,7 +66,7 @@ Respiratory::Respiratory(BioGears& bg)
   , m_AerosolTransporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, GetLogger())
 {
   Clear();
-  m_TuningFile = "./Tuning/RespiratoryCircuit.csv";
+  m_TuningFile = "";
 }
 
 Respiratory::~Respiratory()
@@ -154,13 +154,12 @@ void Respiratory::Initialize()
 
   //Driver
   //Basically a Y-shift for the driver
-  m_DefaultDrivePressure_cmH2O = -10.0;
-  m_MaxDriverPressure_cmH2O = -10.0 * m_Patient->GetVitalCapacity(VolumeUnit::L) / 2.0;   //Max tidal volume is 50% of vital capacity, and driver is set up so that 1 cmH2O decrease in pressure -> 0.1 L increase in TV
+  m_DefaultDrivePressure_cmH2O = -5.0;
+  m_MaxDriverPressure_cmH2O = -10.0 * m_Patient->GetVitalCapacity(VolumeUnit::L) / 2.0; //Max tidal volume is 50% of vital capacity, and driver is set up so that 1 cmH2O decrease in pressure -> 0.1 L increase in TV
   m_ElapsedBreathingCycleTime_min = 0.0;
   m_BreathTimeExhale_min = 0.0;
   m_BreathingCycle = false;
   m_BreathingCycleTime_s = 0.0;
-  m_TargetTidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   m_VentilationFrequency_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
   m_DriverPressureMin_cmH2O = m_DefaultDrivePressure_cmH2O;
@@ -249,9 +248,7 @@ bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
   m_MaxDriverPressure_cmH2O = in.MaxDriverPressure_cmH2O();
   m_PeakRespiratoryDrivePressure_cmH2O = in.PeakRespiratoryDrivePressure_cmH2O();
 
-  m_TargetTidalVolume_L = in.TargetTidalVolume_L();
   m_VentilationFrequency_Per_min = in.VentilationFrequency_Per_min();
-  m_VentilationToTidalVolumeSlope = in.VentilationToTidalVolumeSlope();
   m_ArterialO2Average_mmHg.Load(in.ArterialOxygenAverage_mmHg());
   m_ArterialCO2Average_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
 
@@ -304,9 +301,7 @@ void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
   data.MaxDriverPressure_cmH2O(m_MaxDriverPressure_cmH2O);
   data.PeakRespiratoryDrivePressure_cmH2O(m_PeakRespiratoryDrivePressure_cmH2O);
 
-  data.TargetTidalVolume_L(m_TargetTidalVolume_L);
   data.VentilationFrequency_Per_min(m_VentilationFrequency_Per_min);
-  data.VentilationToTidalVolumeSlope(m_VentilationToTidalVolumeSlope);
   data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2Average_mmHg.Unload()));
   data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2Average_mmHg.Unload()));
 
@@ -343,9 +338,6 @@ void Respiratory::SetUp()
   m_dDefaultClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultClosedFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dRespOpenResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetRespiratoryOpenResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dRespClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetRespiratoryClosedResistance(FlowResistanceUnit::cmH2O_s_Per_L);
-  m_PeripheralControlGainConstant = m_data.GetConfiguration().GetPeripheralVentilatoryControllerGain();
-  m_CentralControlGainConstant = m_data.GetConfiguration().GetCentralVentilatoryControllerGain();
-  m_VentilationTidalVolumeIntercept = m_data.GetConfiguration().GetVentilationTidalVolumeIntercept(VolumeUnit::L);
   m_VentilatoryOcclusionPressure_cmH2O = m_data.GetConfiguration().GetVentilatoryOcclusionPressure(PressureUnit::cmH2O); //This increases the absolute max driver pressure
   m_PleuralComplianceSensitivity_Per_L = m_data.GetConfiguration().GetPleuralComplianceSensitivity(InverseVolumeUnit::Inverse_L);
   //Compartments
@@ -1000,7 +992,7 @@ void Respiratory::ProcessDriverActions()
   }
 
   //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications. m_MaxDriverPressure is set up to correspond to this maximum tidal volume
-  m_PeakRespiratoryDrivePressure_cmH2O = std::max(m_PeakRespiratoryDrivePressure_cmH2O, m_MaxDriverPressure_cmH2O);    //"Max" somewhat of a misnomer, since driver pressures are negative
+  m_PeakRespiratoryDrivePressure_cmH2O = std::max(m_PeakRespiratoryDrivePressure_cmH2O, m_MaxDriverPressure_cmH2O); //"Max" somewhat of a misnomer, since driver pressures are negative
   //Maximum allowable respiration frequency
   double maximumVentilationFrequency_Per_min = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min) / (m_Patient->GetVitalCapacity(VolumeUnit::L) / 2.0);
 
@@ -1368,8 +1360,9 @@ void Respiratory::ProcessConsciousRespiration(SEConsciousRespirationCommand& cmd
     m_ConsciousRespirationPeriod_s = m_ConsciousRespirationRemainingPeriod_s;
 
     //Pressure effects
+    double lastVolume_L = GetTotalLungVolume(VolumeUnit::L);
     double TargetVolume_L = m_InitialResidualVolume_L + m_InitialExpiratoryReserveVolume_L * (1.0 - m_ExpiratoryReserveVolumeFraction);
-    m_ConsciousEndPressure_cmH2O = VolumeToDriverPressure(TargetVolume_L);
+    m_ConsciousEndPressure_cmH2O = m_DriverPressure_cmH2O - 10.0 * (TargetVolume_L - lastVolume_L);
 
     return;
   }
@@ -1380,8 +1373,9 @@ void Respiratory::ProcessConsciousRespiration(SEConsciousRespirationCommand& cmd
     m_ConsciousRespirationPeriod_s = m_ConsciousRespirationRemainingPeriod_s;
 
     //Pressure effects
+    double lastVolume_L = GetTotalLungVolume(VolumeUnit::L);
     double TargetVolume_L = m_InitialFunctionalResidualCapacity_L + m_InitialInspiratoryCapacity_L * m_InspiratoryCapacityFraction;
-    m_ConsciousEndPressure_cmH2O = VolumeToDriverPressure(TargetVolume_L);
+    m_ConsciousEndPressure_cmH2O = m_DriverPressure_cmH2O - 10.0 * (TargetVolume_L - lastVolume_L);
 
     return;
   }
@@ -1702,6 +1696,14 @@ void Respiratory::CalculateVitalSigns()
     }
   }
 
+  //Zero out if waiting longer than 30 s -- this means that our lowest supported respiration rate is ~1.3/min
+  if (m_ElapsedBreathingCycleTime_min > 0.75) {
+    GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
+    GetTidalVolume().SetValue(0.0, VolumeUnit::L);
+    GetTotalAlveolarVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
+    GetTotalPulmonaryVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
+  }
+
   /// \todo Move to blood chemistry
   // Although it is called respiratory acidosis/alkalosis, the detection and event setting is actually a part of the @ref BloodChemistrySystem
   // The terms "metabolic" and "respiratory" refer to the origin of the acid-base disturbance
@@ -1991,23 +1993,6 @@ void Respiratory::UpdateGasDiffusionSurfaceArea(double dFractionArea, double dLe
   AlveoliDiffusionArea_cm2 = dLeftScaleFactor * LeftLungRatio * AlveoliDiffusionArea_cm2 + dRightScaleFactor * RightLungRatio * AlveoliDiffusionArea_cm2;
 
   m_Patient->GetAlveoliSurfaceArea().SetValue(AlveoliDiffusionArea_cm2, AreaUnit::cm2);
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Peak Driver Pressure Based on Target Volume
-///
-/// \param  TargetVolume_L        Target tidal volume, including residual capacity (L)
-///
-/// \return Peak Driver Pressure    The driver pressure required to achieve target tidal volume  (cm H2O)
-///
-/// \details
-/// This method returns the peak driver pressure as a function of target tidal volume. The equation
-/// used is constructed from respiratory unit test data (see RespiratoryDriverTest).
-//--------------------------------------------------------------------------------------------------
-double Respiratory::VolumeToDriverPressure(double TargetVolume_L)
-{
-  return -0.3743 * std::pow(TargetVolume_L, 5.0) + 7.4105 * std::pow(TargetVolume_L, 4.0) - 57.076 * std::pow(TargetVolume_L, 3.0) + 214.11 * std::pow(TargetVolume_L, 2.0) - 404.97 * TargetVolume_L + 262.22;
 }
 
 //--------------------------------------------------------------------------------------------------

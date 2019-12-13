@@ -54,8 +54,8 @@
 		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"                           Name="Pressure"        Unit="cmH2O" Precision="0"/>
 		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
 		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
-		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
-		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
+		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
+		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
 		
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
@@ -77,18 +77,18 @@
 	<!-- Anything action specific data needed for verification of this scenario -->			  
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Ambient"        Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>   
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Mouth"          Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	  
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Carina"         Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Trachea"         Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftAlveoli"    Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftDeadSpace"  Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftBronchi"  Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAlveoli"   Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightDeadSpace" Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBronchi" Substance="ForestFireParticulate" Name="Concentration" Unit="ug/L" Precision="4"/>	
     
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Mouth"          Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Carina"         Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Trachea"         Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftAlveoli"    Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftDeadSpace"  Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftBronchi"  Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAlveoli"   Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightDeadSpace" Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBronchi" Substance="ForestFireParticulate" Name="MassDeposited" Unit="ug"  Precision="4"/>
 
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExpiratoryFlow"                 Unit="L/s"       Precision="4"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="InspiratoryFlow"                Unit="L/s"       Precision="4"/>

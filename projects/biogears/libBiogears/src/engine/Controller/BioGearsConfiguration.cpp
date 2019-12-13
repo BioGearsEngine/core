@@ -143,13 +143,8 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_RightTubularReabsorptionFilteringSurfaceAreaBaseline(nullptr)
   , m_TargetSodiumDelivery(nullptr)
   // Respiratory
-  , m_CentralControllerCO2PressureSetPoint(nullptr)
-  , m_CentralVentilatoryControllerGain(nullptr)
-  , m_PeripheralControllerCO2PressureSetPoint(nullptr)
-  , m_PeripheralVentilatoryControllerGain(nullptr)
   , m_PleuralComplianceSensitivity(nullptr)
   , m_PulmonaryVentilationRateMaximum(nullptr)
-  , m_VentilationTidalVolumeIntercept(nullptr)
   , m_VentilatoryOcclusionPressure(nullptr)
   // Tissue
   , m_TissueEnabled(CDM::enumOnOff::value(-1))
@@ -268,13 +263,8 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_TargetSodiumDelivery);
 
   // Respiratory
-  SAFE_DELETE(m_CentralControllerCO2PressureSetPoint);
-  SAFE_DELETE(m_CentralVentilatoryControllerGain);
-  SAFE_DELETE(m_PeripheralControllerCO2PressureSetPoint);
-  SAFE_DELETE(m_PeripheralVentilatoryControllerGain);
   SAFE_DELETE(m_PleuralComplianceSensitivity);
   SAFE_DELETE(m_PulmonaryVentilationRateMaximum);
-  SAFE_DELETE(m_VentilationTidalVolumeIntercept);
   SAFE_DELETE(m_VentilatoryOcclusionPressure);
 
   //Tissue
@@ -398,13 +388,8 @@ void BioGearsConfiguration::Initialize()
   GetTargetSodiumDelivery().SetValue(0.201, MassPerTimeUnit::g_Per_min);
 
   // Respiratory
-  GetCentralControllerCO2PressureSetPoint().SetValue(35.5, PressureUnit::mmHg);
-  GetCentralVentilatoryControllerGain().SetValue(1.44); //How much to add to the amplitude when the CO2 is off
-  GetPeripheralControllerCO2PressureSetPoint().SetValue(35.5, PressureUnit::mmHg);
-  GetPeripheralVentilatoryControllerGain().SetValue(30.24); //How much to add to the amplitude when the CO2 is off
   GetPleuralComplianceSensitivity().SetValue(5.0, InverseVolumeUnit::Inverse_L);
   GetPulmonaryVentilationRateMaximum().SetValue(150.0, VolumePerTimeUnit::L_Per_min);
-  GetVentilationTidalVolumeIntercept().SetValue(0.3, VolumeUnit::L);
   GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); //This increases the absolute max driver pressure
 
   // Tissue
@@ -704,20 +689,10 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   // Respiratory
   if (in.RespiratoryConfiguration().present()) {
     const CDM::RespiratoryConfigurationData& config = in.RespiratoryConfiguration().get();
-    if (config.CentralControllerCO2PressureSetPoint().present())
-      GetCentralControllerCO2PressureSetPoint().Load(config.CentralControllerCO2PressureSetPoint().get());
-    if (config.CentralVentilatoryControllerGain().present())
-      GetCentralVentilatoryControllerGain().Load(config.CentralVentilatoryControllerGain().get());
-    if (config.PeripheralControllerCO2PressureSetPoint().present())
-      GetPeripheralControllerCO2PressureSetPoint().Load(config.PeripheralControllerCO2PressureSetPoint().get());
-    if (config.PeripheralVentilatoryControllerGain().present())
-      GetPeripheralVentilatoryControllerGain().Load(config.PeripheralVentilatoryControllerGain().get());
     if (config.PleuralComplianceSensitivity().present())
       GetPleuralComplianceSensitivity().Load(config.PleuralComplianceSensitivity().get());
     if (config.PulmonaryVentilationRateMaximum().present())
       GetPulmonaryVentilationRateMaximum().Load(config.PulmonaryVentilationRateMaximum().get());
-    if (config.VentilationTidalVolumeIntercept().present())
-      GetVentilationTidalVolumeIntercept().Load(config.VentilationTidalVolumeIntercept().get());
     if (config.VentilatoryOcclusionPressure().present())
       GetVentilatoryOcclusionPressure().Load(config.VentilatoryOcclusionPressure().get());
   }
@@ -946,20 +921,10 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
 
   // Respiratory
   CDM::RespiratoryConfigurationData* resp(new CDM::RespiratoryConfigurationData());
-  if (m_CentralControllerCO2PressureSetPoint != nullptr)
-    resp->CentralControllerCO2PressureSetPoint(std::unique_ptr<CDM::ScalarPressureData>(m_CentralControllerCO2PressureSetPoint->Unload()));
-  if (HasCentralVentilatoryControllerGain())
-    resp->CentralVentilatoryControllerGain(std::unique_ptr<CDM::ScalarData>(m_CentralVentilatoryControllerGain->Unload()));
-  if (m_PeripheralControllerCO2PressureSetPoint != nullptr)
-    resp->PeripheralControllerCO2PressureSetPoint(std::unique_ptr<CDM::ScalarPressureData>(m_PeripheralControllerCO2PressureSetPoint->Unload()));
-  if (HasPeripheralVentilatoryControllerGain())
-    resp->PeripheralVentilatoryControllerGain(std::unique_ptr<CDM::ScalarData>(m_PeripheralVentilatoryControllerGain->Unload()));
   if (HasPleuralComplianceSensitivity())
     resp->PleuralComplianceSensitivity(std::unique_ptr<CDM::ScalarInverseVolumeData>(m_PleuralComplianceSensitivity->Unload()));
   if (m_PulmonaryVentilationRateMaximum != nullptr)
     resp->PulmonaryVentilationRateMaximum(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_PulmonaryVentilationRateMaximum->Unload()));
-  if (HasVentilationTidalVolumeIntercept())
-    resp->VentilationTidalVolumeIntercept(std::unique_ptr<CDM::ScalarVolumeData>(m_VentilationTidalVolumeIntercept->Unload()));
   if (HasVentilatoryOcclusionPressure())
     resp->VentilatoryOcclusionPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VentilatoryOcclusionPressure->Unload()));
   data.RespiratoryConfiguration(std::unique_ptr<CDM::RespiratoryConfigurationData>(resp));
@@ -2308,73 +2273,6 @@ SEScalarMassPerTime& BioGearsConfiguration::GetTargetSodiumDelivery()
 //////////////////
 /** Respiratory */
 //////////////////
-bool BioGearsConfiguration::HasCentralControllerCO2PressureSetPoint() const
-{
-  return m_CentralControllerCO2PressureSetPoint == nullptr ? false : m_CentralControllerCO2PressureSetPoint->IsValid();
-}
-SEScalarPressure& BioGearsConfiguration::GetCentralControllerCO2PressureSetPoint()
-{
-  if (m_CentralControllerCO2PressureSetPoint == nullptr)
-    m_CentralControllerCO2PressureSetPoint = new SEScalarPressure();
-  return *m_CentralControllerCO2PressureSetPoint;
-}
-double BioGearsConfiguration::GetCentralControllerCO2PressureSetPoint(const PressureUnit& unit) const
-{
-  if (m_CentralControllerCO2PressureSetPoint == nullptr)
-    return SEScalar::dNaN();
-  return m_CentralControllerCO2PressureSetPoint->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasCentralVentilatoryControllerGain() const
-{
-  return m_CentralVentilatoryControllerGain == nullptr ? false : m_CentralVentilatoryControllerGain->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetCentralVentilatoryControllerGain()
-{
-  if (m_CentralVentilatoryControllerGain == nullptr)
-    m_CentralVentilatoryControllerGain = new SEScalar();
-  return *m_CentralVentilatoryControllerGain;
-}
-double BioGearsConfiguration::GetCentralVentilatoryControllerGain() const
-{
-  if (m_CentralVentilatoryControllerGain == nullptr)
-    return SEScalar::dNaN();
-  return m_CentralVentilatoryControllerGain->GetValue();
-}
-
-bool BioGearsConfiguration::HasPeripheralControllerCO2PressureSetPoint() const
-{
-  return m_PeripheralControllerCO2PressureSetPoint == nullptr ? false : m_PeripheralControllerCO2PressureSetPoint->IsValid();
-}
-SEScalarPressure& BioGearsConfiguration::GetPeripheralControllerCO2PressureSetPoint()
-{
-  if (m_PeripheralControllerCO2PressureSetPoint == nullptr)
-    m_PeripheralControllerCO2PressureSetPoint = new SEScalarPressure();
-  return *m_PeripheralControllerCO2PressureSetPoint;
-}
-double BioGearsConfiguration::GetPeripheralControllerCO2PressureSetPoint(const PressureUnit& unit) const
-{
-  if (m_PeripheralControllerCO2PressureSetPoint == nullptr)
-    return SEScalar::dNaN();
-  return m_PeripheralControllerCO2PressureSetPoint->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasPeripheralVentilatoryControllerGain() const
-{
-  return m_PeripheralVentilatoryControllerGain == nullptr ? false : m_PeripheralVentilatoryControllerGain->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetPeripheralVentilatoryControllerGain()
-{
-  if (m_PeripheralVentilatoryControllerGain == nullptr)
-    m_PeripheralVentilatoryControllerGain = new SEScalar();
-  return *m_PeripheralVentilatoryControllerGain;
-}
-double BioGearsConfiguration::GetPeripheralVentilatoryControllerGain() const
-{
-  if (m_PeripheralVentilatoryControllerGain == nullptr)
-    return SEScalar::dNaN();
-  return m_PeripheralVentilatoryControllerGain->GetValue();
-}
 
 bool BioGearsConfiguration::HasPleuralComplianceSensitivity() const
 {
@@ -2427,20 +2325,4 @@ double BioGearsConfiguration::GetVentilatoryOcclusionPressure(const PressureUnit
   return m_VentilatoryOcclusionPressure->GetValue(unit);
 }
 
-bool BioGearsConfiguration::HasVentilationTidalVolumeIntercept() const
-{
-  return m_VentilationTidalVolumeIntercept == nullptr ? false : m_VentilationTidalVolumeIntercept->IsValid();
-}
-SEScalarVolume& BioGearsConfiguration::GetVentilationTidalVolumeIntercept()
-{
-  if (m_VentilationTidalVolumeIntercept == nullptr)
-    m_VentilationTidalVolumeIntercept = new SEScalarVolume();
-  return *m_VentilationTidalVolumeIntercept;
-}
-double BioGearsConfiguration::GetVentilationTidalVolumeIntercept(const VolumeUnit& unit) const
-{
-  if (m_VentilationTidalVolumeIntercept == nullptr)
-    return SEScalar::dNaN();
-  return m_VentilationTidalVolumeIntercept->GetValue(unit);
-}
 }

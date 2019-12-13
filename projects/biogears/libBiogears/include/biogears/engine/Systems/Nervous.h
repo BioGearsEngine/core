@@ -73,7 +73,6 @@ protected:
   double m_AfferentChemoreceptor_Hz;
   double m_ArterialOxygenBaseline_mmHg;
   double m_ArterialCarbonDioxideBaseline_mmHg;
-  double m_BloodGasInteractionBaseline;
   double m_CerebralCarbonDioxideSetPoint_mmHg;
   double m_BaroreceptorFatigueScale;
   double m_ChemoreceptorFiringRateSetPoint_Hz;
@@ -81,9 +80,6 @@ protected:
   double m_CentralPressureDelta_cmH2O;
   double m_PeripheralFrequencyDelta_Per_min;
   double m_PeripheralPressureDelta_cmH2O;
-
-  double m_PreviousCO2Concentration;
-  double m_DynamicCO2Signal;
 
   // Stateless member variable (Set in SetUp())
   bool m_FeedbackActive;

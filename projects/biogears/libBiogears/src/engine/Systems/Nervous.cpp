@@ -72,7 +72,6 @@ void Nervous::Initialize()
 
   m_AfferentChemoreceptor_Hz = 3.5;
   m_BaroreceptorFatigueScale = 0.0;
-  m_BloodGasInteractionBaseline = 1.4;
   m_ChemoreceptorFiringRateSetPoint_Hz = m_AfferentChemoreceptor_Hz;
   m_CentralFrequencyDelta_Per_min = 0.0;
   m_CentralPressureDelta_cmH2O = 0.0;
@@ -100,7 +99,6 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_ArterialOxygenBaseline_mmHg = in.ArterialOxygenBaseline_mmHg();
   m_ArterialCarbonDioxideBaseline_mmHg = in.ArterialCarbonDioxideBaseline_mmHg();
   m_BaroreceptorFatigueScale = in.BaroreceptorFatigueScale();
-  m_BloodGasInteractionBaseline = in.BloodGasInteractionBaseline();
   m_ChemoreceptorFiringRateSetPoint_Hz = in.ChemoreceptorFiringRateSetPoint_Hz();
   m_CentralFrequencyDelta_Per_min = in.CentralFrequencyDelta_Per_min();
   m_CentralPressureDelta_cmH2O = in.CentralPressureDelta_cmH2O();
@@ -122,7 +120,6 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.ArterialOxygenBaseline_mmHg(m_ArterialOxygenBaseline_mmHg);
   data.ArterialCarbonDioxideBaseline_mmHg(m_ArterialCarbonDioxideBaseline_mmHg);
   data.BaroreceptorFatigueScale(m_BaroreceptorFatigueScale);
-  data.BloodGasInteractionBaseline(m_BloodGasInteractionBaseline);
   data.ChemoreceptorFiringRateSetPoint_Hz(m_ChemoreceptorFiringRateSetPoint_Hz);
   data.CentralFrequencyDelta_Per_min(m_CentralFrequencyDelta_Per_min);
   data.CentralPressureDelta_cmH2O(m_CentralPressureDelta_cmH2O);
@@ -163,8 +160,6 @@ void Nervous::SetUp()
   m_ArterialCarbonDioxideBaseline_mmHg = 40.0;
   m_CerebralCarbonDioxideSetPoint_mmHg = 45.0;
   m_DrugRespirationEffects = 0.0;
-  m_PreviousCO2Concentration = 0.45;
-  m_DynamicCO2Signal = 0.0;
 }
 
 void Nervous::AtSteadyState()
@@ -560,12 +555,12 @@ void Nervous::ChemoreceptorFeedback()
 
   //Adjust inputs to differential equations so that they approach their setpoints (i.e. baseline signal) when drugs that modifiy CNS are present
   //The peripherial input is not adjusted because the afferent signal is already accounted for.
-  const double afferentFiringInput = psi * std::exp(-5.0 * m_DrugRespirationEffects) + m_ChemoreceptorFiringRateSetPoint_Hz * (1.0 - std::exp(-5.0 * m_DrugRespirationEffects));
-  const double centralInput = (arterialCO2Pressure_mmHg - m_ArterialCarbonDioxideBaseline_mmHg) * std::exp(-5.0 * m_DrugRespirationEffects);
+  const double afferentFiringInput = psi * std::exp(-3.5 * m_DrugRespirationEffects) + m_ChemoreceptorFiringRateSetPoint_Hz * (1.0 - std::exp(-3.5 * m_DrugRespirationEffects));
+  const double centralInput = (arterialCO2Pressure_mmHg - m_ArterialCarbonDioxideBaseline_mmHg) * std::exp(-3.5 * m_DrugRespirationEffects);
   const double peripheralInput = (m_AfferentChemoreceptor_Hz - m_ChemoreceptorFiringRateSetPoint_Hz);
   m_data.GetDataTrack().Probe("PeripheralInput", peripheralInput);
   //Evaluate model derivatives pertaining to change in chemoreceptor firing rate, and changes in central and peripheral contributions to ventilation
-  const double dFiringRate_Hz = (-m_AfferentChemoreceptor_Hz + psi) / tau_Peripheral * m_dt_s;
+  const double dFiringRate_Hz = (-m_AfferentChemoreceptor_Hz + afferentFiringInput) / tau_Peripheral * m_dt_s;
   const double dFrequencyCentral_Per_min = (-m_CentralFrequencyDelta_Per_min + gain_c_F * centralInput) / tau_c_F * m_dt_s;
   const double dPressureCentral_cmH2O = (-m_CentralPressureDelta_cmH2O + gain_c_P * centralInput) / tau_c_P * m_dt_s;
   const double dFrequencyPeripheral_Per_min = (-m_PeripheralFrequencyDelta_Per_min + gain_p_F * peripheralInput) / tau_p_F * m_dt_s;

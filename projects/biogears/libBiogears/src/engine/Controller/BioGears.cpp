@@ -780,7 +780,7 @@ bool BioGears::SetupPatient()
     err = true;
   }
 
-  double tidalVolume_L = 37.0 * weight_kg / 1000.0 - functionalResidualCapacity_L;
+  double tidalVolume_L = 7.0 * weight_kg / 1000.0;
   double targetVent_L_Per_min = tidalVolume_L * respirationRate_bpm;
   m_Patient->GetTotalVentilationBaseline().SetValue(targetVent_L_Per_min, VolumePerTimeUnit::L_Per_min);
 
@@ -796,7 +796,8 @@ bool BioGears::SetupPatient()
   double standardFRC_L = 2.31332;
   baselineDriverPressure_cmH2O *= functionalResidualCapacity_L / standardFRC_L;
 
-  BLIM(baselineDriverPressure_cmH2O, -5.8, -3.5);
+  baselineDriverPressure_cmH2O = -5.25;
+  BLIM(baselineDriverPressure_cmH2O, -10.0, -3.5);
   m_Patient->GetRespiratoryDriverAmplitudeBaseline().SetValue(baselineDriverPressure_cmH2O, PressureUnit::cmH2O);
 
   double vitalCapacity = totalLungCapacity_L - residualVolume_L;
@@ -4540,7 +4541,7 @@ void BioGears::SetupRespiratory()
   //Standard lung parameters
   double AmbientPressure_cmH2O = 1033.23; //1 atm
   double FunctionalResidualCapacity_L = 2.313;
-  double LungResidualVolume_L = 1.234;
+  double LungResidualVolume_L = m_Patient->GetResidualVolume(VolumeUnit::L);
   double OpenResistance_cmH2O_s_Per_L = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
 
   //Compliances
@@ -4600,11 +4601,11 @@ void BioGears::SetupRespiratory()
   LeftPleuralConnection.GetPressure().SetValue(AmbientPressure_cmH2O, PressureUnit::cmH2O);
   // Right Pleural
   SEFluidCircuitNode& RightPleuralCavity = cRespiratory.CreateNode(BGE::RespiratoryNode::RightPleuralCavity);
-  RightPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O, PressureUnit::cmH2O);
+  RightPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O-5.0, PressureUnit::cmH2O);
   RightPleuralCavity.GetVolumeBaseline().SetValue(0.0085, VolumeUnit::L);
   // Left Pleural
   SEFluidCircuitNode& LeftPleuralCavity = cRespiratory.CreateNode(BGE::RespiratoryNode::LeftPleuralCavity);
-  LeftPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O, PressureUnit::cmH2O);
+  LeftPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O-5.0, PressureUnit::cmH2O);
   LeftPleuralCavity.GetVolumeBaseline().SetValue(0.0085, VolumeUnit::L);
   // Node for left chest leak
   SEFluidCircuitNode& LeftChestLeak = cRespiratory.CreateNode(BGE::RespiratoryNode::LeftChestLeak);
