@@ -136,7 +136,7 @@ void ReportWriter::gen_tables()
     logger->Info("Successfully ran validation");
     PopulateTables();
     logger->Info("Successfully populated tables vector");
-    set_md();
+    set_html();
     to_table();
     logger->Info("Successfully generated table: " + split(validation_files[i],'.')[0]);
     clear();
@@ -416,7 +416,17 @@ void ReportWriter::Validate()
         table_row.result = Green;
         table_row.percent_error = "Within Bounds";
       } else {
-        table_row.result = Red;
+        const double median_to_bound = (ref.reference_range.second - ref.reference_range.first)/2.0;
+        const double reference_median = ref.reference_range.first + median_to_bound;
+        const double warning_range_lower = reference_median * 0.75;
+        const double warning_range_upper = reference_median *  1.25;
+
+        if (ref.reference_range.first > table_row.engine_value && warning_range_lower <= table_row.engine_value
+            || ref.reference_range.second < table_row.engine_value && warning_range_upper >= table_row.engine_value) {
+          table_row.result = Yellow;
+        } else {
+          table_row.result = Red;
+        }
         table_row.percent_error = "Outside Bounds";
       }
     } else {
