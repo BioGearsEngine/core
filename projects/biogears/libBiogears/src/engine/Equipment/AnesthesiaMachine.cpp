@@ -25,8 +25,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -682,26 +682,34 @@ void AnesthesiaMachine::CalculateCyclePhase()
 {
   //Determine where we are in the cycle
   m_currentbreathingCycleTime.IncrementValue(m_dt_s, TimeUnit::s);
-  if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) > m_totalBreathingCycleTime.GetValue(TimeUnit::s)) //End of the cycle
-  {
-    m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
-    m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  if (GetConnection() == CDM::enumAnesthesiaMachineConnection::Mask) {
+    if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfInhale)) {
+      m_inhaling = true;
+    } else {
+      m_inhaling = false;
+    }
+  } else {
+    if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) > m_totalBreathingCycleTime.GetValue(TimeUnit::s)) //End of the cycle
+    {
+      m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
+      m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
 
-    double dVentilationFrequency_PerMin = GetRespiratoryRate(FrequencyUnit::Per_min);
-    if (dVentilationFrequency_PerMin > 0) {
-      m_totalBreathingCycleTime.SetValue(60.0 / dVentilationFrequency_PerMin, TimeUnit::s); //Total time of one breathing cycle
+      double dVentilationFrequency_PerMin = GetRespiratoryRate(FrequencyUnit::Per_min);
+      if (dVentilationFrequency_PerMin > 0) {
+        m_totalBreathingCycleTime.SetValue(60.0 / dVentilationFrequency_PerMin, TimeUnit::s); //Total time of one breathing cycle
+      }
+
+      double IERatio = GetInspiratoryExpiratoryRatio().GetValue();
+      m_inspirationTime.SetValue(IERatio * m_totalBreathingCycleTime.GetValue(TimeUnit::s) / (1.0 + IERatio), TimeUnit::s);
     }
 
-    double IERatio = GetInspiratoryExpiratoryRatio().GetValue();
-    m_inspirationTime.SetValue(IERatio * m_totalBreathingCycleTime.GetValue(TimeUnit::s) / (1.0 + IERatio), TimeUnit::s);
-  }
-
-  if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) < m_inspirationTime.GetValue(TimeUnit::s)) //Inspiration
-  {
-    m_inhaling = true;
-  } else //Expiration
-  {
-    m_inhaling = false;
+    if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) < m_inspirationTime.GetValue(TimeUnit::s)) //Inspiration
+    {
+      m_inhaling = true;
+    } else //Expiration
+    {
+      m_inhaling = false;
+    }
   }
 }
 

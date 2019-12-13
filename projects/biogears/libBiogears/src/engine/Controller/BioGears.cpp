@@ -786,13 +786,12 @@ bool BioGears::SetupPatient()
 
   //Stabilization goes faster if we start the driver with a good amplitude that pushes blood gas levels to setpoint.
   //Based off testing, this relationship holds up well between RR = 12 and RR = 16 for Standard Male.
-  double baselineDriverPressure_cmH2O = -5.8 + 0.25 * (respirationRate_bpm - 12.0);
+  double baselineDriverPressure_cmH2O = -6.5 + 0.3125 * (respirationRate_bpm - 12.0);
   //Adjust driver pressure relationship for respiration rates > 16 (slope of driver - RR line decreases)
   if (respirationRate_bpm > 16.0) {
     //-4.8 = driver pressure at 16 bpm.
     baselineDriverPressure_cmH2O = -4.8 + 0.125 * (respirationRate_bpm - 16);
   }
-  baselineDriverPressure_cmH2O = -5.25;
   //Scale target pressure as ratio of calculated FRC to Standard Male FRC
   double standardFRC_L = 2.31332;
   baselineDriverPressure_cmH2O *= functionalResidualCapacity_L / standardFRC_L;

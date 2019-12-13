@@ -512,8 +512,8 @@ void Nervous::ChemoreceptorFeedback()
   //Chemoreceptor gains--Tuned to data from Reynold, 1972 and Reynolds, 1973 (cited in Cheng, 2016)
   double gain_p_P = 1.0;
   double gain_p_F = 0.70;
-  double gain_c_P = 0.75;
-  double gain_c_F = 0.70; //cp=0.55
+  double gain_c_P = 0.65;
+  double gain_c_F = 0.70;
   //Afferent peripheral constants
   const double firingRateMin_Hz = 0.835;
   const double firingRateMax_Hz = 12.3;
@@ -537,9 +537,7 @@ void Nervous::ChemoreceptorFeedback()
 
   //Note that this method uses instantaneous values of blood gas levels, not running averages
   const double arterialO2Pressure_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
-  double arterialCO2Pressure_mmHg = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
-
-  //arterialCO2Pressure_mmHg = m_ArterialCarbonDioxideBaseline_mmHg;
+  const double arterialCO2Pressure_mmHg = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
 
   //Magosso and Ursino cite findings that central chemoreceptors are less sensitive at sub-normal levels of CO2 than to super-normal levels
   if (arterialCO2Pressure_mmHg < m_ArterialCarbonDioxideBaseline_mmHg) {
@@ -587,8 +585,6 @@ void Nervous::ChemoreceptorFeedback()
   double nextRespirationRate_Per_min;
   double nextDrivePressure_cmH2O;
 
-  //Need to bring in metabolic effects
-
   m_AfferentChemoreceptor_Hz += dFiringRate_Hz * m_dt_s;
   m_AfferentChemoreceptor_Hz = std::max(0.0, m_AfferentChemoreceptor_Hz);
   m_CentralFrequencyDelta_Per_min += dFrequencyCentral_Per_min;
@@ -598,6 +594,22 @@ void Nervous::ChemoreceptorFeedback()
 
   nextRespirationRate_Per_min = baselineRespirationRate_Per_min + m_CentralFrequencyDelta_Per_min + m_PeripheralFrequencyDelta_Per_min;
   nextDrivePressure_cmH2O = baselineDrivePressure_cmH2O - m_CentralPressureDelta_cmH2O - m_PeripheralPressureDelta_cmH2O;
+
+  //Apply metabolic effects. The modifier is tuned to achieve the correct respiratory response for near maximal exercise.
+  //A linear relationship is assumed for the respiratory effects due to increased metabolic exertion
+  //Old driver multiplied a target ventilation by the metabolic modifier.  Since Vent (L/min) = RR(/min) * TV(L), we'll mulitply 
+  //the next respiration rate and next drive pressure by sqrt(modifier).  Relationship between driver pressure and TV is
+  //approx linear (e.g. 10% change in pressure -> 10% change in TV), so this should achieve desired effect
+  double TMR_W = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W);
+  double BMR_W = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
+  double energyDeficit_W = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::W);
+  double metabolicFraction = (TMR_W + energyDeficit_W) / BMR_W;
+  double tunedVolumeMetabolicSlope = 0.2;
+  double metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
+  nextRespirationRate_Per_min *= metabolicModifier;
+  nextDrivePressure_cmH2O *= metabolicModifier;
+ 
+
   if (m_data.GetState() >= EngineState::AtSecondaryStableState) {
     m_data.GetRespiratory().GetRespirationDriverFrequency().SetValue(nextRespirationRate_Per_min, FrequencyUnit::Per_min);
   }
@@ -648,12 +660,12 @@ void Nervous::ChemoreceptorFeedback()
   if (modifier < 0.001)
     modifier = 0.0;
 
-  //GetChemoreceptorHeartRateScale().SetValue(maxHeartRateDelta * modifier);
+  GetChemoreceptorHeartRateScale().SetValue(maxHeartRateDelta * modifier);
 
   // Calculate the normalized change in heart elastance
   double normalizedHeartElastance = 1.0;
   /// \todo Compute and apply chemoreceptor-mediated contractility changes
-  //GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
+  GetChemoreceptorHeartElastanceScale().SetValue(normalizedHeartElastance);
 }
 
 //--------------------------------------------------------------------------------------------------

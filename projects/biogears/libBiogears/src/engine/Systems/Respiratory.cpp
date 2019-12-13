@@ -155,7 +155,7 @@ void Respiratory::Initialize()
   //Driver
   //Basically a Y-shift for the driver
   m_DefaultDrivePressure_cmH2O = -10.0;
-  m_MaxDriverPressure_cmH2O = -50.0;
+  m_MaxDriverPressure_cmH2O = -10.0 * m_Patient->GetVitalCapacity(VolumeUnit::L) / 2.0;   //Max tidal volume is 50% of vital capacity, and driver is set up so that 1 cmH2O decrease in pressure -> 0.1 L increase in TV
   m_ElapsedBreathingCycleTime_min = 0.0;
   m_BreathTimeExhale_min = 0.0;
   m_BreathingCycle = false;
@@ -580,8 +580,8 @@ void Respiratory::UpdatePleuralCompliance()
   dRightPleuralCompliance = LIMIT(dRightPleuralCompliance, 1e-6, 0.05);
   dLeftPleuralCompliance = LIMIT(dLeftPleuralCompliance, 1e-6, 0.05);
 
- // m_RightPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dRightPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
- // m_LeftPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dLeftPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
+  // m_RightPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dRightPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
+  // m_LeftPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dLeftPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -897,7 +897,6 @@ void Respiratory::RespiratoryDriver()
     {
       m_PeakRespiratoryDrivePressure_cmH2O = GetRespirationDriverPressure(PressureUnit::cmH2O);
       m_VentilationFrequency_Per_min = GetRespirationDriverFrequency(FrequencyUnit::Per_min);
-
       //All actions that effect the target tidal volume and respiration rate are processed in the function below.  The
       //ventilation frequency (m_VentilationFrequency_Per_min) is calculated in this function.
       ProcessDriverActions();
@@ -989,10 +988,10 @@ void Respiratory::ProcessDriverActions()
     infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.5);
   }
 
-  //Apply modifiers to tidal volume.  Cardiac arrest and neuromuscular block are multiplicative while drug change is additive
-  m_TargetTidalVolume_L *= cardiacArrestEffect;
-  m_TargetTidalVolume_L *= NMBModifier;
-  m_TargetTidalVolume_L += DrugsTVChange_L;
+  //Apply tidal volume modifiers by adjusting the peak driver pressure
+  m_PeakRespiratoryDrivePressure_cmH2O *= cardiacArrestEffect;
+  m_PeakRespiratoryDrivePressure_cmH2O *= NMBModifier;
+  m_PeakRespiratoryDrivePressure_cmH2O *= (1.0 + DrugsTVChange_L / m_Patient->GetTidalVolumeBaseline(VolumeUnit::L));
 
   //update PH during stabilization
   if (m_data.GetState() < EngineState::Active) {
@@ -1000,18 +999,18 @@ void Respiratory::ProcessDriverActions()
     m_data.GetBloodChemistry().GetArterialBloodPHBaseline().SetValue(m_arterialPHBaseline);
   }
 
-  //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications.  The Respiration Rate will make up for the Alveoli Ventilation difference
-  double dHalfVitalCapacity_L = m_Patient->GetVitalCapacity(VolumeUnit::L) / 2;
-  double dMaximumPulmonaryVentilationRate = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min);
-  m_TargetTidalVolume_L = std::min(m_TargetTidalVolume_L, dHalfVitalCapacity_L);
-  
+  //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications. m_MaxDriverPressure is set up to correspond to this maximum tidal volume
+  m_PeakRespiratoryDrivePressure_cmH2O = std::max(m_PeakRespiratoryDrivePressure_cmH2O, m_MaxDriverPressure_cmH2O);    //"Max" somewhat of a misnomer, since driver pressures are negative
+  //Maximum allowable respiration frequency
+  double maximumVentilationFrequency_Per_min = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min) / (m_Patient->GetVitalCapacity(VolumeUnit::L) / 2.0);
+
   m_VentilationFrequency_Per_min += infectionModifier;
   m_VentilationFrequency_Per_min *= painModifier;
   m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
   m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
 
   //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
-  m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, dMaximumPulmonaryVentilationRate / dHalfVitalCapacity_L);
+  m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, maximumVentilationFrequency_Per_min);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1609,7 +1608,7 @@ void Respiratory::CalculateVitalSigns()
   //Record values at the breathing inflection points (i.e. switch between inhale and exhale)
   // Temporal tolerance to avoid accidental entry in the the inhalation and exhalation code blocks
   // dTimeTol = One fourth of the smallest possible period between breaths for a human. 60 breaths per
-  // minute is a typical upper limit, so dTimeTol = 1 / (60 *4) = 0.004167 seconds.
+  // minute is a typical upper limit, so dTimeTol = 1 / (60 *4) = 0.004167 minutes.
   double dTimeTol = 0.004167;
   m_ElapsedBreathingCycleTime_min += m_dt_min;
   if (m_BreathingCycle && ((GetTotalLungVolume(VolumeUnit::L) - m_PreviousTotalLungVolume_L) > ZERO_APPROX)
@@ -2114,7 +2113,7 @@ void Respiratory::TuneCircuit()
     if (timeInCycle_s < inTime_s) {
       nextDriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + (-driveAmplitude_cmH2O / (inTime_s * expTime_s) * std::pow(timeInCycle_s, 2.0) + driveAmplitude_cmH2O * cycleTime_s / (inTime_s * expTime_s) * timeInCycle_s);
     } else {
-      nextDriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O+ driveAmplitude_cmH2O / (1.0 - std::exp(-expTime_s / tau_s)) * (std::exp(-(timeInCycle_s - inTime_s) / tau_s) - std::exp(-expTime_s / tau_s));
+      nextDriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O + driveAmplitude_cmH2O / (1.0 - std::exp(-expTime_s / tau_s)) * (std::exp(-(timeInCycle_s - inTime_s) / tau_s) - std::exp(-expTime_s / tau_s));
     }
     m_DriverPressurePath->GetNextPressureSource().SetValue(nextDriverPressure_cmH2O, PressureUnit::cmH2O);
     m_Calculator.Process(RespiratoryCircuit, m_dt_s);
