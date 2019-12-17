@@ -103,7 +103,6 @@ void BloodChemistry::Initialize()
   GetBloodSpecificHeat().SetValue(3617, HeatCapacitancePerMassUnit::J_Per_K_kg);
   GetVolumeFractionNeutralLipidInPlasma().SetValue(0.0023);
   GetVolumeFractionNeutralPhospholipidInPlasma().SetValue(0.0013);
-  GetWhiteBloodCellCount().SetValue(5000.0, AmountPerVolumeUnit::ct_Per_uL);
   GetPhosphate().SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
@@ -289,6 +288,7 @@ void BloodChemistry::Process()
     GetPulseOximetry().Set(GetOxygenSaturation());
   }
 
+
   // This Hemoglobin Content is the mass of the hemoglobin only, not the hemoglobin and bound gas.
   // So we have to take our 4 Hb species masses and remove the mass of the gas.
   // Step 1) Get the mass of the bound species, which includes the mass of the bound gas.
@@ -323,6 +323,10 @@ void BloodChemistry::Process()
       CalculateHemolyticTransfusionReaction();
     }
   }
+
+  //set white blood cell count
+  const double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  GetWhiteBloodCellCount().SetValue(wbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   const double RedBloodCellCount_ct_Per_uL = m_venaCavaRBC->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   double RedBloodCellCount_ct = (RedBloodCellCount_ct_Per_uL)*TotalBloodVolume_mL * 1000;
@@ -438,6 +442,8 @@ void BloodChemistry::CheckBloodSubstanceLevels()
   double hyperglycemiaLevel_mg_Per_dL = 200;
   double lacticAcidosisLevel_mg_Per_dL = 44;
   double ketoacidosisLevel_mg_Per_dL = 122;
+
+
 
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));

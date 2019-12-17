@@ -28,7 +28,7 @@ Renal Dynamics Choices,,,,,,,,,,,,,,,,  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 or all below,,,,,,,,,,,,,,,,  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
      ChargeInBlood,,,,,Negative,Positive,Negative,Positive,Positive,,,,Positive,Positive,Neutral,Neutral,Negative,,Neutral,,,,,,,,,Neutral,,,,,,,,,,,,,Negative,,,,,,,,,,,,
      FractionUnboundInPlasma,,,,,1,1,1,1,1,,,,1,1,1,1,1,,1,,,,,,,,,0.55,,,,,,,,,,,,,1,,,,,,,,,,,,
-     ReabsorptionRatio,,,,,12.5,1.8,1.4,3,1.8,,,,INF,0,INF,INF,0.114,,0.001,,,,,,,,,1,,,,,,,,,,,,,INF,,,,,,,,,,,,
+     ReabsorptionRatio,,,,,12.5,0.8,0.9,3,1.8,,,,INF,0,INF,INF,0.114,,0.001,,,,,,,,,1,,,,,,,,,,,,,INF,,,,,,,,,,,,
      TransportMaximum,,,,,INF mg/min,INF mg/min,INF mg/min,INF mg/min,INF mg/min,,,,INF mg/min,0.0 g/min,0.375 g/min,INF mg/min,0.075 g/min,,INF mg/min,,,,,,,,,INF mg/min,,,,,,,,,,,,,30 mg/min,,,,,,,,,,,,
 Cell Regulation,,,,,,,,,,,,,,,,  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 CellDeathRate,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0E6 1/s,2.0E6 1/s,4.63E6 1/s,2.0E6 1/s,1.16E5 1/s

@@ -43,10 +43,11 @@ The BioGears source is structured as follows:
 
 - Updates to CMD_BIO executable for batch validation and scenario execution
 - Website generation python preprocess tool 
-- Transmucosal fentynal implementation
+- Transmucosal Fentanyl implementation
   - oral diffusion through the mucosa layer and a model for GI transit and small intestine absorption
 - Hemorrhage model updates 
   - Direct model connection to energy and nutrient model 
+- Tourniquet action for use with Hemorrhage scenarios
 - **New drug:** Tranexamic Acid
   - Validated for use in a hemorrhage scenario to decrease bleed rates 
 - Propofol validation and bug fixes
@@ -54,7 +55,7 @@ The BioGears source is structured as follows:
   - Added cerebral autoregulation, hemorrhage, and updated TBI model
 - **New drugs:** Moxifloxacin and Ertapenem (intravenous and intra-arterial)
   - Used in sepsis model, validated for treatment guidelines
-- Validation updates to Fentynal drug
+- Validation updates to Fentanyl drug
   - Updated tissue volumes, updated perfusion limited diffusion method, and updates to PK values  
 - New override functionality
   - Heart rate, respiration rate, and blood pressure values may now be set while running a conformant engine
@@ -71,7 +72,6 @@ The BioGears source is structured as follows:
 - Updated website generation and layout
 - Patient blood type added as patient parameter
 - General CMAKE updates to the build system 
-- Tourniquet action for use with Hemorrhage scenarios
 
 
 
