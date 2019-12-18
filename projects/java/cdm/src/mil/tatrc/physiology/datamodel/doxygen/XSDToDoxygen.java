@@ -73,11 +73,19 @@ public class XSDToDoxygen
       {
         DefGroup dg = xsdRoot.getDefGroup();
         xsdRoot.name = dg.bareName;
+
+        //Due to changes in how I generate the TABLES
+        //I need a simpler namespacing
+        xsdRoot.name = "CDM";
       }
       else
       {
-        String fn = inputFile.getName();
-        xsdRoot.name = fn.substring(0, fn.indexOf('.'));
+        // String fn = inputFile.getName();
+        // xsdRoot.name = fn.substring(0, fn.indexOf('.'));
+
+        //Due to changes in how I generate the TABLES
+        //I need a simpler namespacing
+        xsdRoot.name = "CDM";
       }
       
       xsdStack.addLast(xsdRoot);
@@ -91,13 +99,21 @@ public class XSDToDoxygen
     {
       System.out.println ("Writing: "+outputFile.getAbsolutePath());
       ixxWriter = new PrintWriter(new FileWriter(outputFile));
+      ixxWriter.println ("/**");
+      ixxWriter.println ("* @defgroup CDM CDM");
+      ixxWriter.println ("* @{");
       for (XSDTree root : roots)
       {
-        ixxWriter.println ("/**");
-        writeTree(root);
-        ixxWriter.println (" */");
+
+        for ( XSDTree child : root.children)
+        {
+          writeTree(child);
+        }
+        
         ixxWriter.println ();
       }
+      ixxWriter.println ("*}");
+      ixxWriter.println ("*/");
     }
     finally
     {

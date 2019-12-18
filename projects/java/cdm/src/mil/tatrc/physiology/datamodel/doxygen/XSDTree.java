@@ -49,7 +49,7 @@ public class XSDTree
     XSDTree t = this;
     while (t != null)
     {
-      if (sb.length() > 0)
+      if (sb.length() > 0 && t.name != "")
       {
         sb.insert(0, '_');
       }

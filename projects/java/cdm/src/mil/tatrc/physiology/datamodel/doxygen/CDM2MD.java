@@ -121,9 +121,9 @@ public class CDM2MD
     }
     String descPrepend;
     if(c.isEnum()){ 
-      descPrepend = "@copybrief mil.tatric.physiology::datamodel::enum"+tableName; }
+      descPrepend = "@copybrief mil.tatric.physiology_datamodel_enum"+tableName; }
     else{ 
-      descPrepend = "@copybrief biogears::SE"+tableName.substring(0, tableName.length()-4); 
+      descPrepend = "@copybrief CDM_"+tableName; 
     }
     maxColumnLength[2] = descPrepend.length()+maxColumnLength[0];
     
@@ -208,7 +208,7 @@ public class CDM2MD
                 || bag.returnType.getSimpleName().startsWith("Function") 
                 )
             {
-                  writer.print("|"+pad(descPrepend+"::Get"+ bag.propertyName.replace("_","::"),maxColumnLength[2]));
+                  writer.print("|"+pad(descPrepend+ "_" + bag.propertyName.replace("_","_"),maxColumnLength[2]));
             }
                     else
                     {
