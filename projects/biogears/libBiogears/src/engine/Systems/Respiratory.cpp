@@ -196,7 +196,7 @@ void Respiratory::Initialize()
   //System data
   double TidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   double RespirationRate_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
-  double DeadSpace_L = m_LeftBronchi->GetVolumeBaseline(VolumeUnit::L) + m_RightBronchi->GetVolumeBaseline(VolumeUnit::L);
+  double DeadSpace_L = m_LeftBronchi->GetVolumeBaseline(VolumeUnit::L) + m_RightBronchi->GetVolumeBaseline(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
   GetTidalVolume().SetValue(TidalVolume_L, VolumeUnit::L);
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
@@ -1630,7 +1630,7 @@ void Respiratory::CalculateVitalSigns()
     double dBottomBreathTotalVolume_L = GetTotalLungVolume(VolumeUnit::L);
     m_InstantaneousFunctionalResidualCapacity_L = dBottomBreathTotalVolume_L;
     double dBottomBreathAlveoliVolume_L = m_RightAlveoli->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftAlveoli->GetNextVolume().GetValue(VolumeUnit::L);
-    double dBottomBreathDeadSpaceVolume_L = m_RightBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftBronchi->GetNextVolume().GetValue(VolumeUnit::L);
+    double dBottomBreathDeadSpaceVolume_L = m_RightBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
     double dBottomBreathPleuralPressure_cmH2O = dPleuralPressure_cmH2O;
 
     double TidalVolume_L = std::abs(m_TopBreathTotalVolume_L - dBottomBreathTotalVolume_L);
@@ -1664,7 +1664,7 @@ void Respiratory::CalculateVitalSigns()
     m_BreathingCycle = true;
     m_TopBreathTotalVolume_L = GetTotalLungVolume(VolumeUnit::L);
     m_TopBreathAlveoliVolume_L = m_RightAlveoli->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftAlveoli->GetNextVolume().GetValue(VolumeUnit::L);
-    m_TopBreathDeadSpaceVolume_L = m_RightBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftBronchi->GetNextVolume().GetValue(VolumeUnit::L);
+    m_TopBreathDeadSpaceVolume_L = m_RightBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
     m_TopBreathPleuralPressure_cmH2O = dPleuralPressure_cmH2O;
 
     //We want the peak Trachea O2 value - this should be the inspired value
