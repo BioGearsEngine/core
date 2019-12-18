@@ -40,6 +40,7 @@ public:
 
   void SetValue(double d, const Unit& unit);
   virtual double GetValue(const Unit& unit) const;
+  virtual double GetValue() const final;
 
   double GetValue(const char* unit) const override;
   double GetValue(const std::string& unit) const override;

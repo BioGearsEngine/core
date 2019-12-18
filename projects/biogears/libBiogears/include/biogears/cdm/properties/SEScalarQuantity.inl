@@ -66,7 +66,7 @@ void SEScalarQuantity<Unit>::Invalidate()
   if (m_readOnly) {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
     throw CommonDataModelException("Scalar is marked read-only");
-  
+
 #else
     return;
 #endif
@@ -88,11 +88,9 @@ void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in)
 {
   this->Clear();
   SEProperty::Load(in);
-  if (in.unit().present())
-  {
+  if (in.unit().present()) {
     this->SetValue(in.value(), Unit::GetCompoundUnit(in.unit().get()));
-  }
-  else
+  } else
     throw CommonDataModelException("ScalarQuantity attempted to load a ScalarData with no unit, must have a unit.");
   m_readOnly = in.readOnly();
 }
@@ -152,6 +150,16 @@ void SEScalarQuantity<Unit>::Copy(const SEScalarQuantity<Unit>& s)
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
+double SEScalarQuantity<Unit>::GetValue() const
+{
+  if (m_unit) {
+    return GetValue(*m_unit); 
+  }
+  return SEScalar::dNaN();
+}
+
+//-------------------------------------------------------------------------------
+template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 {
 #if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
@@ -173,7 +181,7 @@ double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const char* unit) const
 {
-  return GetValue(std::string{ unit });
+  return GetValue(std::string { unit });
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -262,9 +270,9 @@ auto SEScalarQuantity<Unit>::Increment(const SEScalarQuantity<Unit>& s) -> SESca
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-auto SEScalarQuantity<Unit>::IncrementValue(double d, const char* unit)->SEScalarQuantity&
+auto SEScalarQuantity<Unit>::IncrementValue(double d, const char* unit) -> SEScalarQuantity&
 {
-  return IncrementValue(d, std::string{ unit });
+  return IncrementValue(d, std::string { unit });
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -296,9 +304,9 @@ auto SEScalarQuantity<Unit>::Decrement(const SEScalarQuantity& s) -> SEScalarQua
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-auto SEScalarQuantity<Unit>::DecrementValue(double d, const char* unit)->SEScalarQuantity&
+auto SEScalarQuantity<Unit>::DecrementValue(double d, const char* unit) -> SEScalarQuantity&
 {
-  return DecrementValue(d, std::string{ unit });
+  return DecrementValue(d, std::string { unit });
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -395,7 +403,7 @@ bool SEScalarQuantity<Unit>::operator!=(const SEScalarQuantity& rhs) const
 template <typename Unit>
 auto SEScalarQuantity<Unit>::operator+(const SEScalarQuantity& rhs) const -> SEScalarQuantity
 {
-  SEScalarQuantity result{ *this };
+  SEScalarQuantity result { *this };
   return result.Increment(rhs);
 }
 //-------------------------------------------------------------------------------
@@ -408,7 +416,7 @@ auto SEScalarQuantity<Unit>::operator+=(const SEScalarQuantity& rhs) -> SEScalar
 template <typename Unit>
 auto SEScalarQuantity<Unit>::operator-(const SEScalarQuantity& rhs) const -> SEScalarQuantity
 {
-  SEScalarQuantity result{ *this };
+  SEScalarQuantity result { *this };
   return result.Decrement(rhs);
 }
 //-------------------------------------------------------------------------------
@@ -421,7 +429,7 @@ auto SEScalarQuantity<Unit>::operator-=(const SEScalarQuantity& rhs) -> SEScalar
 template <typename Unit>
 auto SEScalarQuantity<Unit>::operator/(const SEScalar& rhs) const -> SEScalarQuantity
 {
-  SEScalarQuantity result{ *this };
+  SEScalarQuantity result { *this };
   return result.Divide(rhs);
 }
 //-------------------------------------------------------------------------------
@@ -434,7 +442,7 @@ auto SEScalarQuantity<Unit>::operator/=(const SEScalar& rhs) -> SEScalarQuantity
 template <typename Unit>
 auto SEScalarQuantity<Unit>::operator*(const SEScalar& rhs) const -> SEScalarQuantity
 {
-  SEScalarQuantity result{ *this };
+  SEScalarQuantity result { *this };
   return result.Multiply(rhs);
 }
 //-------------------------------------------------------------------------------
