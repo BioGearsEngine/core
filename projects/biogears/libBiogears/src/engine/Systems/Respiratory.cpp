@@ -1017,8 +1017,22 @@ void Respiratory::ProcessDriverActions()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::AirwayObstruction()
 {
-  if (!m_PatientActions->HasAirwayObstruction())
-    return;
+  const double lastAirwayResistance = m_MouthToTrachea->GetResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+  const double baselineAirwayResistance = m_MouthToTrachea->GetResistanceBaseline().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+
+  if (!m_PatientActions->HasAirwayObstruction()) {
+    if (std::abs((lastAirwayResistance - baselineAirwayResistance) / baselineAirwayResistance) < 0.01) {
+      //If there's < 1% difference from baseline, than either there was never an obstruction or we are back to normal after removing an obstruction
+      return;
+    } else {
+      //We get to this block if there was an obstruction that was just removed.  When AirwayObstruction is deactivated, we can't step from large resistance
+      //back to baseline in one go, or else the respiratory circuit becomes unstable.  Instead, gradually move resistance back to baseline
+      const double scale = 0.02;
+      const double nextAirwayResistance = lastAirwayResistance + scale * (baselineAirwayResistance - lastAirwayResistance);
+      m_MouthToTrachea->GetNextResistance().SetValue(nextAirwayResistance, FlowResistanceUnit::cmH2O_s_Per_L);
+      return;
+    }
+  }
 
   double Severity = m_PatientActions->GetAirwayObstruction()->GetSeverity().GetValue();
   double AirwayResistance = m_MouthToTrachea->GetNextResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1039,8 +1053,26 @@ void Respiratory::AirwayObstruction()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::BronchoConstriction()
 {
-  if (!m_PatientActions->HasBronchoconstriction())
-    return;
+  const double lastLeftBronchiResistance = m_TracheaToLeftBronchi->GetResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+  const double baselineLeftBronchiResistance = m_TracheaToLeftBronchi->GetResistanceBaseline().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+  const double lastRightBronchiResistance = m_TracheaToRightBronchi->GetResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+  const double baselineRightBronchiResistance = m_TracheaToRightBronchi->GetResistanceBaseline().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+
+  if (!m_PatientActions->HasBronchoconstriction()) {
+    if (std::abs((lastLeftBronchiResistance - baselineLeftBronchiResistance) / baselineLeftBronchiResistance) < 0.01 && std::abs((lastRightBronchiResistance - baselineRightBronchiResistance) / baselineRightBronchiResistance) < 0.01) {
+      //If there's < 1% difference from baseline on both sides, than either there was never a constriction action or we are back to normal after removing a constriction action
+      return;
+    } else {
+      //We get to this block if there was a constriction action that was just removed.  When Bronchoconstriction is deactivated, we can't step from large resistance
+      //back to baseline in one go, or else the respiratory circuit becomes unstable.  Instead, gradually move resistance back to baseline
+      const double scale = 0.02;
+      const double nextLeftBronchiResistance = lastLeftBronchiResistance + scale * (baselineLeftBronchiResistance - lastLeftBronchiResistance);
+      const double nextRightBronchiResistance = lastRightBronchiResistance + scale * (baselineRightBronchiResistance - lastRightBronchiResistance);
+      m_TracheaToLeftBronchi->GetNextResistance().SetValue(nextLeftBronchiResistance, FlowResistanceUnit::cmH2O_s_Per_L);
+      m_TracheaToRightBronchi->GetNextResistance().SetValue(nextRightBronchiResistance, FlowResistanceUnit::cmH2O_s_Per_L);
+      return;
+    }
+  }
 
   double LeftBronchiResistance = m_TracheaToLeftBronchi->GetNextResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
   double RightBronchiResistance = m_TracheaToRightBronchi->GetNextResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
