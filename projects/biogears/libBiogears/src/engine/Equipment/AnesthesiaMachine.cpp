@@ -685,7 +685,8 @@ void AnesthesiaMachine::CalculateCyclePhase()
   if (GetConnection() == CDM::enumAnesthesiaMachineConnection::Mask) {
     if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfInhale)) {
       m_inhaling = true;
-    } else {
+    }
+    if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfExhale)) {
       m_inhaling = false;
     }
   } else {
