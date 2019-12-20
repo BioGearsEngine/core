@@ -150,9 +150,25 @@ void DiffusionCalculator::CalculateLinearDiffusionMethods()
       intracellularSubQ = diffSet.intracellular->GetSubstanceQuantity(*instantSub);
 
       //Bound massToMoveVE:  >0 --> leaving vascular (bounded by available in vascular), <0 means leaving extracellular (bounded by available in extracellular)
-      massToMoveVE_ug > 0.0 ? massToMoveVE_ug = std::min(massToMoveVE_ug, vascularSubQ->GetMass(MassUnit::ug)) : std::min(massToMoveVE_ug, extracellularSubQ->GetMass(MassUnit::ug));
+      if (massToMoveVE_ug > 0.0) {
+        if (vascularSubQ->GetMass(MassUnit::ug) - massToMoveVE_ug < ZERO_APPROX) {
+          massToMoveVE_ug = vascularSubQ->GetMass(MassUnit::ug);
+        }
+      } else {
+        if (extracellularSubQ->GetMass(MassUnit::ug) - (-massToMoveVE_ug) < ZERO_APPROX) {
+          massToMoveVE_ug = -extracellularSubQ->GetMass(MassUnit::ug);
+        }
+      }
       //Bound massToMoveEI:  >0 --> leaving extracellular (bounded by available extracelllar), < 0 means leaving intracellular (bounded by available intracellular)
-      massToMoveEI_ug > 0.0 ? massToMoveEI_ug = std::min(massToMoveEI_ug, extracellularSubQ->GetMass(MassUnit::ug)) : std::min(massToMoveEI_ug, intracellularSubQ->GetMass(MassUnit::ug));
+      if (massToMoveEI_ug > 0.0) {
+        if (extracellularSubQ->GetMass(MassUnit::ug) - massToMoveEI_ug < ZERO_APPROX) {
+          massToMoveEI_ug = extracellularSubQ->GetMass(MassUnit::ug);
+        }
+      } else {
+        if (intracellularSubQ->GetMass(MassUnit::ug) - (-massToMoveEI_ug) < ZERO_APPROX) {
+          massToMoveEI_ug = -intracellularSubQ->GetMass(MassUnit::ug);
+        }
+      }
 
       //For all distribute methods, we use VolumeWeighted when mass is entering a compartment and MassWeighted when mass is exiting
       if (!diffSet.vascular->HasChildren()) {
@@ -187,9 +203,25 @@ void DiffusionCalculator::CalculateLinearDiffusionMethods()
       intracellularSubQ = diffSet.intracellular->GetSubstanceQuantity(*simpleSub);
 
       //Bound massToMoveVE:  >0 --> leaving vascular (bounded by available in vascular), <0 means leaving extracellular (bounded by available in extracellular)
-      massToMoveVE_ug > 0.0 ? massToMoveVE_ug = std::min(massToMoveVE_ug, vascularSubQ->GetMass(MassUnit::ug)) : std::min(massToMoveVE_ug, extracellularSubQ->GetMass(MassUnit::ug));
+      if (massToMoveVE_ug > 0.0) {
+        if (vascularSubQ->GetMass(MassUnit::ug) - massToMoveVE_ug < ZERO_APPROX) {
+          massToMoveVE_ug = vascularSubQ->GetMass(MassUnit::ug);
+        }
+      } else {
+        if (extracellularSubQ->GetMass(MassUnit::ug) - (-massToMoveVE_ug) < ZERO_APPROX) {
+          massToMoveVE_ug = -extracellularSubQ->GetMass(MassUnit::ug);
+        }
+      }
       //Bound massToMoveEI:  >0 --> leaving extracellular (bounded by available extracelllar), < 0 means leaving intracellular (bounded by available intracellular)
-      massToMoveEI_ug > 0.0 ? massToMoveEI_ug = std::min(massToMoveEI_ug, extracellularSubQ->GetMass(MassUnit::ug)) : std::min(massToMoveEI_ug, intracellularSubQ->GetMass(MassUnit::ug));
+      if (massToMoveEI_ug > 0.0) {
+        if (extracellularSubQ->GetMass(MassUnit::ug) - massToMoveEI_ug < ZERO_APPROX) {
+          massToMoveEI_ug = extracellularSubQ->GetMass(MassUnit::ug);
+        }
+      } else {
+        if (intracellularSubQ->GetMass(MassUnit::ug) - (-massToMoveEI_ug) < ZERO_APPROX) {
+          massToMoveEI_ug = -intracellularSubQ->GetMass(MassUnit::ug);
+        }
+      }
 
       //For all distribute methods, we use VolumeWeighted when mass is entering a compartment and MassWeighted when mass is exiting
       if (!diffSet.vascular->HasChildren()) {
@@ -279,36 +311,51 @@ void DiffusionCalculator::CalculateFacilitatedDiffusion(DiffusionCompartmentSet&
   SELiquidSubstanceQuantity* extracellularSubQ = extracellular.GetSubstanceQuantity(sub);
   SELiquidSubstanceQuantity* intracellularSubQ = intracellular.GetSubstanceQuantity(sub);
 
-  double massToMoveVE_g = combinedCoefficient_g_Per_s * (vascularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL) - extracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL))
+  double massToMoveVE_ug = 1.0e6 * combinedCoefficient_g_Per_s * (vascularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL) - extracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL))
     / (sub.GetMichaelisCoefficient() + (vascularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL) - extracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL))) * m_dt_s;
-  massToMoveVE_g = std::min(massToMoveVE_g, vascularSubQ->GetMass(MassUnit::g));
-  double massToMoveEI_g = combinedCoefficient_g_Per_s * (extracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL) - intracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL))
+
+  double massToMoveEI_ug = 1.0e6 * combinedCoefficient_g_Per_s * (extracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL) - intracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL))
     / (sub.GetMichaelisCoefficient() + (extracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL) - intracellularSubQ->GetConcentration(MassPerVolumeUnit::g_Per_mL))) * m_dt_s;
-  massToMoveEI_g = std::min(massToMoveEI_g, extracellularSubQ->GetMass(MassUnit::ug));
 
   //Bound massToMoveVE:  >0 --> leaving vascular (bounded by available in vascular), <0 means leaving extracellular (bounded by available in extracellular)
-  massToMoveVE_g > 0.0 ? massToMoveVE_g = std::min(massToMoveVE_g, vascularSubQ->GetMass(MassUnit::g)) : std::min(massToMoveVE_g, extracellularSubQ->GetMass(MassUnit::g));
+  if (massToMoveVE_ug > 0.0) {
+    if (vascularSubQ->GetMass(MassUnit::ug) - massToMoveVE_ug < ZERO_APPROX) {
+      massToMoveVE_ug = vascularSubQ->GetMass(MassUnit::ug);
+    }
+  } else {
+    if (extracellularSubQ->GetMass(MassUnit::ug) - (-massToMoveVE_ug) < ZERO_APPROX) {
+      massToMoveVE_ug = -extracellularSubQ->GetMass(MassUnit::ug);
+    }
+  }
   //Bound massToMoveEI:  >0 --> leaving extracellular (bounded by available extracelllar), < 0 means leaving intracellular (bounded by available intracellular)
-  massToMoveEI_g > 0.0 ? massToMoveEI_g = std::min(massToMoveEI_g, extracellularSubQ->GetMass(MassUnit::g)) : std::min(massToMoveEI_g, intracellularSubQ->GetMass(MassUnit::g));
+  if (massToMoveEI_ug > 0.0) {
+    if (extracellularSubQ->GetMass(MassUnit::ug) - massToMoveEI_ug < ZERO_APPROX) {
+      massToMoveEI_ug = extracellularSubQ->GetMass(MassUnit::ug);
+    }
+  } else {
+    if (intracellularSubQ->GetMass(MassUnit::ug) - (-massToMoveEI_ug) < ZERO_APPROX) {
+      massToMoveEI_ug = -intracellularSubQ->GetMass(MassUnit::ug);
+    }
+  }
 
   //For all distribute methods, we use VolumeWeighted when mass is entering a compartment and MassWeighted when mass is exiting
   if (!vascular.HasChildren()) {
-    vascularSubQ->GetMass().IncrementValue(-massToMoveVE_g, MassUnit::g);
+    vascularSubQ->GetMass().IncrementValue(-massToMoveVE_ug, MassUnit::ug);
   } else {
     //massToMoveVE > 0 --> leaving vascular, < 0 --> entering vascular
-    massToMoveVE_g > 0.0 ? DistributeMassbyMassWeighted(vascular, sub, -massToMoveVE_g, MassUnit::g) : DistributeMassbyVolumeWeighted(vascular, sub, -massToMoveVE_g, MassUnit::g);
+    massToMoveVE_ug > 0.0 ? DistributeMassbyMassWeighted(vascular, sub, -massToMoveVE_ug, MassUnit::ug) : DistributeMassbyVolumeWeighted(vascular, sub, -massToMoveVE_ug, MassUnit::ug);
   }
   if (!extracellular.HasChildren()) {
-    extracellularSubQ->GetMass().IncrementValue(massToMoveVE_g - massToMoveEI_g, MassUnit::g);
+    extracellularSubQ->GetMass().IncrementValue(massToMoveVE_ug - massToMoveEI_ug, MassUnit::ug);
   } else {
     //(massToMoveVE - massToMoveEI) > 0 --> entering extracellular, < 0 --> leaving extracellular
-    (massToMoveVE_g - massToMoveEI_g) > 0.0 ? DistributeMassbyVolumeWeighted(extracellular, sub, massToMoveVE_g - massToMoveEI_g, MassUnit::g) : DistributeMassbyMassWeighted(extracellular, sub, massToMoveVE_g - massToMoveEI_g, MassUnit::g);
+    (massToMoveVE_ug - massToMoveEI_ug) > 0.0 ? DistributeMassbyVolumeWeighted(extracellular, sub, massToMoveVE_ug - massToMoveEI_ug, MassUnit::ug) : DistributeMassbyMassWeighted(extracellular, sub, massToMoveVE_ug - massToMoveEI_ug, MassUnit::ug);
   }
   if (!intracellular.HasChildren()) {
-    intracellularSubQ->GetMass().IncrementValue(massToMoveEI_g, MassUnit::g);
+    intracellularSubQ->GetMass().IncrementValue(massToMoveEI_ug, MassUnit::ug);
   } else {
     //massToMoveEI > 0 --> entering intracellular, < 0 --> leaving intracellular
-    massToMoveEI_g > 0.0 ? DistributeMassbyVolumeWeighted(intracellular, sub, massToMoveEI_g, MassUnit::g) : DistributeMassbyMassWeighted(intracellular, sub, massToMoveEI_g, MassUnit::g);
+    massToMoveEI_ug > 0.0 ? DistributeMassbyVolumeWeighted(intracellular, sub, massToMoveEI_ug, MassUnit::ug) : DistributeMassbyMassWeighted(intracellular, sub, massToMoveEI_ug, MassUnit::ug);
   }
 
   vascularSubQ->Balance(BalanceLiquidBy::Mass);
@@ -348,8 +395,16 @@ void DiffusionCalculator::CalculatePerfusionLimitedDiffusion(DiffusionCompartmen
     massToMoveVI_ug = 0;
   }
 
-  //Bound massToMoveVE:  >0 --> leaving vascular (bounded by available in vascular), <0 means leaving intracellular (bounded by available in intracellular)
-  massToMoveVI_ug > 0.0 ? massToMoveVI_ug = std::min(massToMoveVI_ug, vSubQ->GetMass(MassUnit::ug)) : std::min(massToMoveVI_ug, tSubQ->GetMass(MassUnit::ug));
+  //Bound massToMoveVI:  >0 --> leaving vascular (bounded by available in vascular), <0 means leaving extracellular (bounded by available in extracellular)
+  if (massToMoveVI_ug > 0.0) {
+    if (vSubQ->GetMass(MassUnit::ug) - massToMoveVI_ug < ZERO_APPROX) {
+      massToMoveVI_ug = vSubQ->GetMass(MassUnit::ug);
+    }
+  } else {
+    if (tSubQ->GetMass(MassUnit::ug) - (-massToMoveVI_ug) < ZERO_APPROX) {
+      massToMoveVI_ug = -tSubQ->GetMass(MassUnit::ug);
+    }
+  }
 
   //For all distribute methods, we use VolumeWeighted when mass is entering a compartment and MassWeighted when mass is exiting
   if (!vascular.HasChildren()) {

@@ -569,11 +569,11 @@ void Respiratory::UpdatePleuralCompliance()
   dRightPleuralCompliance = (dRightPleuralVolume - dRightPleuralVolumeBaseline) * m_PleuralComplianceSensitivity_Per_L * dRightPleuralCompliance + dRightPleuralCompliance;
   dLeftPleuralCompliance = (dLeftPleuralVolume - dLeftPleuralVolumeBaseline) * m_PleuralComplianceSensitivity_Per_L * dLeftPleuralCompliance + dLeftPleuralCompliance;
 
-  dRightPleuralCompliance = LIMIT(dRightPleuralCompliance, 1e-6, 0.05);
-  dLeftPleuralCompliance = LIMIT(dLeftPleuralCompliance, 1e-6, 0.05);
+  dRightPleuralCompliance = LIMIT(dRightPleuralCompliance, 0.024, 24.);
+  dLeftPleuralCompliance = LIMIT(dLeftPleuralCompliance, 0.024, 24.);
 
-  // m_RightPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dRightPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
-  // m_LeftPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dLeftPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
+  //m_RightPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dRightPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
+  //m_LeftPleuralCavityToRespiratoryMuscle->GetNextCompliance().SetValue(dLeftPleuralCompliance, FlowComplianceUnit::L_Per_cmH2O);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -913,6 +913,7 @@ void Respiratory::RespiratoryDriver()
     } else {
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
     }
+    
 
     Apnea();
 
@@ -1104,6 +1105,7 @@ void Respiratory::BronchoDilation()
   //Dilation effect values have max effect at 1 and below -1, so anything outside of that will maintain that effect.
   double bronchoDilationEffect = m_data.GetDrugs().GetBronchodilationLevel().GetValue();
   double resTrack = 0.0;
+
   if (bronchoDilationEffect != 0.0) {
     //Note: It'll pretty much always get in here because there's epinephrine present
     // Get the path resistances
@@ -1116,9 +1118,10 @@ void Respiratory::BronchoDilation()
       dRightBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespClosedResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
     } else //negative, therefore constriction
     {
+      //Constrictive effects stack more rapidly in new driver, so base of resistance function has been changed from 10 to 2.
       bronchoDilationEffect = std::min(-bronchoDilationEffect, 1.0);
-      dLeftBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dLeftBronchiResistance, bronchoDilationEffect);
-      dRightBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
+      dLeftBronchiResistance = GeneralMath::ResistanceFunction(2.0, m_dRespOpenResistance_cmH2O_s_Per_L, dLeftBronchiResistance, bronchoDilationEffect);
+      dRightBronchiResistance = GeneralMath::ResistanceFunction(2.0, m_dRespOpenResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
       resTrack = dRightBronchiResistance;
     }
     m_TracheaToLeftBronchi->GetNextResistance().SetValue(dLeftBronchiResistance, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1637,6 +1640,7 @@ void Respiratory::CalculateVitalSigns()
   // minute is a typical upper limit, so dTimeTol = 1 / (60 *4) = 0.004167 minutes.
   double dTimeTol = 0.004167;
   m_ElapsedBreathingCycleTime_min += m_dt_min;
+
   if (m_BreathingCycle && ((GetTotalLungVolume(VolumeUnit::L) - m_PreviousTotalLungVolume_L) > ZERO_APPROX)
       && (m_ElapsedBreathingCycleTime_min > dTimeTol)) {
     m_Patient->SetEvent(CDM::enumPatientEvent::StartOfInhale, true, m_data.GetSimulationTime());
@@ -1845,17 +1849,16 @@ void Respiratory::CalculateVitalSigns()
 void Respiratory::UpdateObstructiveResistance()
 {
   if ((!m_PatientActions->HasAsthmaAttack() && !m_data.GetConditions().HasChronicObstructivePulmonaryDisease())
-      || GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) < 0.0) // Only on exhalation
+      || !m_BreathingCycle) // Only on exhalation
   {
     return;
   }
-
   double combinedResistanceScalingFactor = 1.0;
   //Asthma attack on
   if (m_PatientActions->HasAsthmaAttack()) {
     double dSeverity = m_PatientActions->GetAsthmaAttack()->GetSeverity().GetValue();
     // Resistance function: Base = 10, Min = 10, Max = 1750 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 1750.0, 10.0, dSeverity);
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 1750, 10.0, dSeverity);
     combinedResistanceScalingFactor = dResistanceScalingFactor;
   }
   //COPD on

@@ -634,7 +634,6 @@ bool BioGears::SetupPatient()
     Info(ss);
   }
 
-
   //Blood Volume ---------------------------------------------------------------
   /// \cite Morgan2006Clinical
   double bloodVolume_mL;
@@ -2463,10 +2462,10 @@ void BioGears::SetupRenal()
   double arteryTuningMultiplier = 0.6;
   double reabsorptionTuningMultiplier = 1.1;
   double gfrTuning = 1.0;
-  double efferentTuning = 1.1; 
+  double efferentTuning = 1.1;
 
   double renalArteryResistance_mmHg_s_Per_mL = Convert(0.0250 * arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  double afferentResistance_mmHg_s_Per_mL = Convert(0.0417* arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+  double afferentResistance_mmHg_s_Per_mL = Convert(0.0417 * arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double efferentResistance_mmHg_s_Per_mL = Convert(0.0763 * efferentTuning, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double glomerularResistance_mmHg_s_Per_mL = Convert(0.0019 * gfrTuning, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double peritubularResistance_mmHg_s_Per_mL = Convert(0.0167, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
@@ -4556,6 +4555,7 @@ void BioGears::SetupRespiratory()
   double mouthToTracheaResistance_cmH2O_s_Per_L = tracheaResistancePercent * totalPulmonaryResistance_cmH2O_s_Per_L;
   double tracheaToBronchiResistance_cmH2O_s_Per_L = bronchiResistancePercent * totalPulmonaryResistance_cmH2O_s_Per_L;
   double bronchiToAlveoliResistance_cmH2O_s_Per_L = alveoliResistancePercent * totalPulmonaryResistance_cmH2O_s_Per_L;
+
   //Target volumes are end-expiratory (i.e. bottom of breathing cycle, pressure = ambient pressure)
   double larynxVolume_mL = 34.4;
   double tracheaVolume_mL = 6.63;
@@ -4600,11 +4600,11 @@ void BioGears::SetupRespiratory()
   LeftPleuralConnection.GetPressure().SetValue(AmbientPressure_cmH2O, PressureUnit::cmH2O);
   // Right Pleural
   SEFluidCircuitNode& RightPleuralCavity = cRespiratory.CreateNode(BGE::RespiratoryNode::RightPleuralCavity);
-  RightPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O-5.0, PressureUnit::cmH2O);
+  RightPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O - 5.0, PressureUnit::cmH2O);
   RightPleuralCavity.GetVolumeBaseline().SetValue(0.0085, VolumeUnit::L);
   // Left Pleural
   SEFluidCircuitNode& LeftPleuralCavity = cRespiratory.CreateNode(BGE::RespiratoryNode::LeftPleuralCavity);
-  LeftPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O-5.0, PressureUnit::cmH2O);
+  LeftPleuralCavity.GetPressure().SetValue(AmbientPressure_cmH2O - 5.0, PressureUnit::cmH2O);
   LeftPleuralCavity.GetVolumeBaseline().SetValue(0.0085, VolumeUnit::L);
   // Node for left chest leak
   SEFluidCircuitNode& LeftChestLeak = cRespiratory.CreateNode(BGE::RespiratoryNode::LeftChestLeak);
@@ -4625,9 +4625,9 @@ void BioGears::SetupRespiratory()
   SEFluidCircuitPath& MouthToTrachea = cRespiratory.CreatePath(Mouth, Trachea, BGE::RespiratoryPath::MouthToTrachea);
   MouthToTrachea.GetResistanceBaseline().SetValue(mouthToTracheaResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuitPath& TracheaToRightBronchi = cRespiratory.CreatePath(Trachea, RightBronchi, BGE::RespiratoryPath::TracheaToRightBronchi);
-  TracheaToRightBronchi.GetResistanceBaseline().SetValue(tracheaToBronchiResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L);  //Circuit math assumes equal resistances left/right
+  TracheaToRightBronchi.GetResistanceBaseline().SetValue(tracheaToBronchiResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L); //Circuit math assumes equal resistances left/right
   SEFluidCircuitPath& TracheaToLeftBronchi = cRespiratory.CreatePath(Trachea, LeftBronchi, BGE::RespiratoryPath::TracheaToLeftBronchi);
-  TracheaToLeftBronchi.GetResistanceBaseline().SetValue(tracheaToBronchiResistance_cmH2O_s_Per_L/2.0, FlowResistanceUnit::cmH2O_s_Per_L);
+  TracheaToLeftBronchi.GetResistanceBaseline().SetValue(tracheaToBronchiResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuitPath& RightBronchiToRightPleuralConnection = cRespiratory.CreatePath(RightBronchi, RightPleuralConnection, BGE::RespiratoryPath::RightBronchiToRightPleuralConnection);
   RightBronchiToRightPleuralConnection.GetComplianceBaseline().SetValue(bronchiCompliance_L_Per_cmH2O * RightLungRatio, FlowComplianceUnit::L_Per_cmH2O);
   RightBronchiToRightPleuralConnection.SetNextPolarizedState(CDM::enumOpenClosed::Closed);
@@ -4635,7 +4635,7 @@ void BioGears::SetupRespiratory()
   LeftBronchiToLeftPleuralConnection.GetComplianceBaseline().SetValue(bronchiCompliance_L_Per_cmH2O * LeftLungRatio, FlowComplianceUnit::L_Per_cmH2O);
   LeftBronchiToLeftPleuralConnection.SetNextPolarizedState(CDM::enumOpenClosed::Closed);
   SEFluidCircuitPath& RightBronchiToRightAlveoli = cRespiratory.CreatePath(RightBronchi, RightAlveoli, BGE::RespiratoryPath::RightBronchiToRightAlveoli);
-  RightBronchiToRightAlveoli.GetResistanceBaseline().SetValue(bronchiToAlveoliResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L);    //Circuit math assumes equal resistances left/right
+  RightBronchiToRightAlveoli.GetResistanceBaseline().SetValue(bronchiToAlveoliResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L); //Circuit math assumes equal resistances left/right
   SEFluidCircuitPath& LeftBronchiToLeftAlveoli = cRespiratory.CreatePath(LeftBronchi, LeftAlveoli, BGE::RespiratoryPath::LeftBronchiToLeftAlveoli);
   LeftBronchiToLeftAlveoli.GetResistanceBaseline().SetValue(bronchiToAlveoliResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuitPath& RightAlveoliToRightPleuralConnection = cRespiratory.CreatePath(RightAlveoli, RightPleuralConnection, BGE::RespiratoryPath::RightAlveoliToRightPleuralConnection);
