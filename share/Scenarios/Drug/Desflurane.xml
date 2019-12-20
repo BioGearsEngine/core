@@ -148,15 +148,15 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
-        <Action xsi:type="AnesthesiaMachineConfigurationData">
-		<Configuration>
-			<Connection>Mask</Connection>
-			<InletFlow value="7.5" unit="L/min"/>
-			<OxygenFraction value="0.3"/>
-			<OxygenSource>Wall</OxygenSource>
-			<PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
-			<PrimaryGas>Nitrogen</PrimaryGas>
-			<VentilatorPressure value="10.0" unit="cmH2O"/>
+	<Action xsi:type="AnesthesiaMachineConfigurationData">
+      <Configuration>
+        <Connection>Mask</Connection>
+		<InletFlow value="6.0" unit="L/min"/>
+        <OxygenFraction value="0.25"/>
+        <OxygenSource>Wall</OxygenSource>
+        <PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
+        <PrimaryGas>Nitrogen</PrimaryGas>
+        <VentilatorPressure value="0.0" unit="cmH2O"/>
       </Configuration>
     </Action>
 	<!--Give time for respiratory metrics to stabilize after mask is applied-->

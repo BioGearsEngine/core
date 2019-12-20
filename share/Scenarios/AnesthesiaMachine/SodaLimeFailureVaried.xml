@@ -88,9 +88,10 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="s"/>       
     </Action>
+    <Action xsi:type="IntubationData" Type="Tracheal"/>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
-       <Configuration>
-          <Connection>Mask</Connection>
+      <Configuration>
+        <Connection>Tube</Connection>
         <InletFlow value="5.0" unit="L/min"/>
         <InspiratoryExpiratoryRatio value="0.5"/>
         <OxygenFraction value="0.23"/>
@@ -106,7 +107,7 @@
           <Volume value="660" unit="L"/>
         </OxygenBottleTwo>
       </Configuration>
-    </Action>  
+    </Action> 
     <Action xsi:type="SodaLimeFailureData">
         <Severity value="0.0"/>
     </Action>    

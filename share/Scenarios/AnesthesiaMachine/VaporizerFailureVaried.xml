@@ -82,21 +82,13 @@
     </Action>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>
-          <Connection>Mask</Connection>
-        <InletFlow value="5.0" unit="L/min"/>
-        <InspiratoryExpiratoryRatio value="0.5"/>
-        <OxygenFraction value="0.23"/>
+        <Connection>Mask</Connection>
+		<InletFlow value="6.0" unit="L/min"/>
+        <OxygenFraction value="0.25"/>
         <OxygenSource>Wall</OxygenSource>
         <PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
-        <PrimaryGas>Air</PrimaryGas>
-        <RespiratoryRate value="16.0" unit="1/min"/>
+        <PrimaryGas>Nitrogen</PrimaryGas>
         <VentilatorPressure value="0.0" unit="cmH2O"/>
-        <OxygenBottleOne>
-          <Volume value="660" unit="L"/>
-        </OxygenBottleOne>
-        <OxygenBottleTwo>
-          <Volume value="660" unit="L"/>
-        </OxygenBottleTwo>
       </Configuration>
     </Action>
     <Action xsi:type="AdvanceTimeData">

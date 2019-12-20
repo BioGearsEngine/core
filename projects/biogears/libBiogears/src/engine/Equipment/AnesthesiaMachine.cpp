@@ -301,6 +301,13 @@ void AnesthesiaMachine::PreProcess()
 {
   if (m_data.GetActions().GetAnesthesiaMachineActions().HasConfiguration()) {
     ProcessConfiguration(*m_data.GetActions().GetAnesthesiaMachineActions().GetConfiguration());
+    if (GetConnection() == CDM::enumAnesthesiaMachineConnection::Mask) {
+      //When connecting a mask, we assume the patient is initially breathing spontaneously.  m_inhaling defaults to true, but if patient is exhaling
+      //when mask is applied then we need to set m_inhaling to false (otherwise the expiratory valve will be closed and patient will not be able to exhale that cycle)
+      if (m_data.GetRespiratory().GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) > ZERO_APPROX) {
+        m_inhaling = false;
+      }
+    }
     m_data.GetActions().GetAnesthesiaMachineActions().RemoveConfiguration();
   }
   //Do nothing if the machine is off and not initialized
@@ -683,6 +690,7 @@ void AnesthesiaMachine::CalculateCyclePhase()
   //Determine where we are in the cycle
   m_currentbreathingCycleTime.IncrementValue(m_dt_s, TimeUnit::s);
   if (GetConnection() == CDM::enumAnesthesiaMachineConnection::Mask) {
+    //In the mask setting, we assume that the patient is spontaneously breathing. We therefore sync the inhale/exhale logic with the respiratory system
     if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfInhale)) {
       m_inhaling = true;
     }
