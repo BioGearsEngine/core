@@ -183,12 +183,14 @@ private:
   double m_ConsciousStartPressure_cmH2O;
   double m_ConsciousEndPressure_cmH2O;
 
+  //Action Removal
+  bool m_HadAirwayObstruction;
+  bool m_HadBronchoconstriction;
+
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
   double m_dt_min;
   bool m_hadApnea; 
-
-
 
   // Configuration parameters
   double m_dDefaultOpenResistance_cmH2O_s_Per_L;

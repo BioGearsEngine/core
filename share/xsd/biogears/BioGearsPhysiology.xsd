@@ -218,6 +218,9 @@ specific language governing permissions and limitations under the License.
           <xs:element name="InspiratoryCapacityFraction" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ConsciousStartPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ConsciousEndPressure_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <!-- Action ramp down -->
+		  <xs:element name="HadAirwayObstruction" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="HadBronchoconstriction" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
