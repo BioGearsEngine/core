@@ -282,7 +282,12 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetDiastolicArterialPressureOverride().Invalidate();
   }
   if (in.MeanArterialPressureOverride().present()) {
-    GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
+    if (!in.DiastolicArterialPressureOverride().present() || !in.SystolicArterialPressureOverride().present()) {
+      GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
+    } else {
+      Warning("If overriding systolic or diastolic pressures, the mean arterial pressure will change according to those changes.");
+      GetMAPOverride().Invalidate();
+    }
   } else {
     GetMAPOverride().Invalidate();
   }
@@ -2166,17 +2171,12 @@ void SEOverride::ToString(std::ostream& str) const
   if (HasDiastolicArterialPressureOverride()) {
     str << "\n\tDiastolic Arterial Pressure: ";
     HasDiastolicArterialPressureOverride() ? str << *m_DiastolicArtPressureOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tDiastolic Arterial Pressure has a lower bound of 0 mmHg and an upper bound of 200 mmHg.";
-    }
     str << std::flush;
   }
   if (HasMAPOverride()) {
     str << "\n\tMean Arterial Pressure: ";
     HasMAPOverride() ? str << *m_MeanArtPressureOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tMean Arterial Pressure has a lower bound of 60 mmHg and an upper bound of 105 mmHg.";
-    } else {
+    if (m_OverrideConformance == CDM::enumOnOff::Off) {
       str << "\n\tPharmacodynamics affecting this value have been turned off due to conformance being turned off.";
     }
     str << std::flush;
@@ -2202,9 +2202,6 @@ void SEOverride::ToString(std::ostream& str) const
   if (HasSystolicArterialPressureOverride()) {
     str << "\n\tSystolic Arterial Pressure: ";
     HasSystolicArterialPressureOverride() ? str << *m_SystolicArtPressureOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tSystolic Arterial Pressure has a lower bound of 0 mmHg and an upper bound of 300 mmHg.";
-    }
     str << std::flush;
   }
   if (HasInsulinSynthesisRateOverride()) {
@@ -2466,9 +2463,6 @@ void SEOverride::ToString(std::ostream& str) const
   if (HasRespirationRateOverride()) {
     str << "\n\tRespiration Rate: ";
     HasRespirationRateOverride() ? str << *m_RespirationRateOR : str << "Not Set";
-    if (m_OverrideConformance == CDM::enumOnOff::On) {
-      str << "\n\tRespiration Rate has a lower bound of 0 breaths/min and an upper bound of 60 breaths/min.";
-    }
     str << std::flush;
   }
   if (HasTidalVolumeOverride()) {
