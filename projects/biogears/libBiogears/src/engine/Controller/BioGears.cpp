@@ -1944,7 +1944,7 @@ void BioGears::SetupCardiovascular()
   vRightHeart.AddChild(vRightVentricle);
   SELiquidCompartment& vLeftHeart = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::LeftHeart);
   vLeftHeart.AddChild(vLeftAtrium);
-  vLeftHeart.AddChild(vRightAtrium);
+  vLeftHeart.AddChild(vLeftVentricle);
   SELiquidCompartment& vHeart = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::Heart);
   vHeart.AddChild(vMyocardium);
   vHeart.AddChild(vLeftHeart);
