@@ -84,7 +84,8 @@ protected:
   double m_ArterialCarbonDioxideBaseline_mmHg;
   double m_BaroreceptorOffset;
   double m_BaroreceptorOperatingPoint_mmHg;
-  double m_CentralVentilationDelta_L_Per_min;
+  double m_CentralFrequencyDelta_Per_min;
+  double m_CentralPressureDelta_cmH2O;
   std::vector<double> m_CerebralArteriesEffectors_Large;
   std::vector<double> m_CerebralArteriesEffectors_Small;
   double m_CerebralOxygenSaturationBaseline;
@@ -101,7 +102,8 @@ protected:
   double m_IntrinsicHeartRate;
   double m_ResistanceModifier;
   double m_PeripheralBloodGasInteractionBaseline_Hz;
-  double m_PeripheralVentilationDelta_L_Per_min;
+  double m_PeripheralFrequencyDelta_Per_min;
+  double m_PeripheralPressureDelta_cmH2O;
   double m_SympatheticHeartSignalBaseline;
   double m_SympatheticPeripheralSignalBaseline;
   double m_SympatheticPeripheralSignalFatigue;
@@ -121,7 +123,6 @@ protected:
   SESubstance* m_Sarin;
   SEPatient* m_Patient;
   bool m_blockActive;
-  double m_DrugRespirationEffects;
   double m_painStimulusDuration_s;
   double m_painVASDuration_s;
   double m_painVAS;

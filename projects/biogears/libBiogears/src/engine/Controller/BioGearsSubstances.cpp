@@ -242,7 +242,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LargeIntestine), Hb_total_mM, 0.80879, 0.0586749, 0.16279, 1.40653, 26.1167, 7.36877);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftArm), Hb_total_mM, 0.979174, 0.136914, 0.0286486, 1.25161, 25.8455, 7.41492);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftLeg), Hb_total_mM, 0.979174, 0.136914, 0.0286486, 1.25161, 25.8455, 7.41492);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftHeart), Hb_total_mM, 0.979185, 0.136723, 0.0287056, 1.24629, 25.8356, 7.4166);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftAtrium), Hb_total_mM, 0.974919, 0.129622, 0.0281731, 1.30089, 25.9384, 7.3997);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftVentricle), Hb_total_mM, 0.974919, 0.129622, 0.0281731, 1.30089, 25.9384, 7.3997);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryArteries), Hb_total_mM, 0.767886, 0.0534961, 0.156613, 1.40149, 26.1084, 7.37019);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryCapillaries), Hb_total_mM, 0.985388, 0.155977, 0.0286948, 1.24095, 25.8257, 7.4183);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryVeins), Hb_total_mM, 0.97884, 0.136049, 0.028664, 1.25052, 25.8435, 7.41526);
@@ -254,44 +255,30 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftRenalVein), Hb_total_mM, 0.793614, 0.0558172, 0.0663554, 1.35408, 26.0284, 7.3838);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftBowmansCapsules), 0.0, 0.0, 0.0773075, 0.0, 1.07857, 0.0, 7.47375);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftTubules), 0.0, 0.0, 0.0773075, 0.0, 1.07857, 0.0, 7.47375);
-  //----------------------------------------
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftAtrium), Hb_total_mM, 0.974919, 0.129622, 0.0281731, 1.30089, 25.9384, 7.3997);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftVentricle), Hb_total_mM, 0.974919, 0.129622, 0.0281731, 1.30089, 25.9384, 7.3997);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftLeg), Hb_total_mM, 0.974914, 0.129637, 0.0281665, 1.30153, 25.9395, 7.39951);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftPeritubularCapillaries), Hb_total_mM, 0.89667, 0.0757891, 0.0873866, 1.36599, 26.0518, 7.38039);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryArteries), Hb_total_mM, 0.813117, 0.0591941, 0.146207, 1.39669, 26.1035, 7.3716);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryCapillaries), Hb_total_mM, 0.983029, 0.149863, 0.0281766, 1.29193, 25.9223, 7.40244);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryVeins), Hb_total_mM, 0.974924, 0.129359, 0.0282471, 1.29371, 25.9255, 7.40189);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftRenalArtery), Hb_total_mM, 0.941145, 0.0945363, 0.0484668, 1.34704, 26.0194, 7.38592);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::LeftRenalVein), Hb_total_mM, 0.859657, 0.0668517, 0.112249, 1.37857, 26.0731, 7.37676);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Liver), Hb_total_mM, 0.729017, 0.0500882, 0.21436, 1.43708, 26.1698, 7.36032);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Muscle), Hb_total_mM, 0.830253, 0.0616652, 0.130118, 1.38785, 26.0887, 7.37411);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Myocardium), Hb_total_mM, 0.829366, 0.0615371, 0.13173, 1.38874, 26.0902, 7.37386);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Pericardium), Hb_total_mM, 0.725881, 0.0491881, 0.142507, 1.39215, 26.0959, 7.37289);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightAfferentArteriole), Hb_total_mM, 0.927186, 0.0870192, 0.0595885, 1.35232, 26.0285, 7.38437);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightArm), Hb_total_mM, 0.974914, 0.129637, 0.0281665, 1.30153, 25.9395, 7.39951);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightEfferentArteriole), Hb_total_mM, 0.907413, 0.0791142, 0.072315, 1.35842, 26.0389, 7.38259);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightGlomerularCapillaries), Hb_total_mM, 0.9209, 0.0773075, 0.031322, 1.07857, 25.5034, 7.47375);
-  //No Hb through glomerular ultrafiltration
-  //InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightBowmansCapsules), 0.0, 0.0, 0.0773075, 0.0, 1.07857, 25.5034, 7.47375);
-
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightBowmansCapsules), 0.0, 0.0, 0.0773075, 0.0, 1.07857, 0.0, 7.47375);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightTubules), 0.0, 0.0, 0.0773075, 0.0, 1.07857, 0.0, 7.47375);
-  //----------------------------------------
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Liver), Hb_total_mM, 0.694139, 0.0475359, 0.23313, 1.48128, 26.2371, 7.34828);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Muscle), Hb_total_mM, 0.81665, 0.0593731, 0.116863, 1.38015, 26.0727, 7.37626);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Myocardium), Hb_total_mM, 0.812295, 0.0587268, 0.115255, 1.37918, 26.0711, 7.37654);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Pericardium), Hb_total_mM, 0.725886, 0.0491383, 0.142794, 1.3923, 26.0931, 7.37279);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightArm), Hb_total_mM, 0.979174, 0.136914, 0.0286486, 1.25161, 25.8455, 7.41492);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightLeg), Hb_total_mM, 0.979174, 0.136914, 0.0286486, 1.25161, 25.8455, 7.41492);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightAtrium), Hb_total_mM, 0.813115, 0.0591938, 0.14621, 1.39669, 26.1035, 7.3716);
   InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightVentricle), Hb_total_mM, 0.813115, 0.0591938, 0.14621, 1.39669, 26.1035, 7.3716);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightLeg), Hb_total_mM, 0.974914, 0.129637, 0.0281665, 1.30153, 25.9395, 7.39951);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPeritubularCapillaries), Hb_total_mM, 0.89667, 0.0757891, 0.0873866, 1.36599, 26.0518, 7.38039);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPulmonaryArteries), Hb_total_mM, 0.813117, 0.0591941, 0.146207, 1.39669, 26.1035, 7.3716);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPulmonaryCapillaries), Hb_total_mM, 0.982298, 0.148493, 0.0279498, 1.31484, 25.9632, 7.39548);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPulmonaryVeins), Hb_total_mM, 0.974936, 0.130199, 0.0280263, 1.31523, 25.9638, 7.39537);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery), Hb_total_mM, 0.941145, 0.0945363, 0.0484668, 1.34704, 26.0194, 7.38592);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightRenalVein), Hb_total_mM, 0.859657, 0.0668517, 0.112249, 1.37857, 26.0731, 7.37676);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Skin), Hb_total_mM, 0.82836, 0.061373, 0.131491, 1.38858, 26.09, 7.3739);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::SmallIntestine), Hb_total_mM, 0.842176, 0.0636112, 0.122046, 1.3836, 26.0816, 7.37532);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Splanchnic), Hb_total_mM, 0.817051, 0.0597293, 0.141898, 1.39428, 26.0995, 7.37228);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Spleen), Hb_total_mM, 0.830039, 0.0616463, 0.131757, 1.38878, 26.0903, 7.37385);
-  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::VenaCava), Hb_total_mM, 0.813122, 0.0591948, 0.146203, 1.39669, 26.1035, 7.3716);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPulmonaryArteries), Hb_total_mM, 0.767984, 0.0535061, 0.15652, 1.40144, 26.1083, 7.3702);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPulmonaryCapillaries), Hb_total_mM, 0.985967, 0.157818, 0.028811, 1.22967, 25.8045, 7.42191);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPulmonaryVeins), Hb_total_mM, 0.979632, 0.137542, 0.0287797, 1.23899, 25.822, 7.41892);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightRenalArtery), Hb_total_mM, 0.928045, 0.0860069, 0.0287127, 1.29903, 25.9319, 7.40022);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightAfferentArteriole), Hb_total_mM, 0.900918, 0.0762668, 0.0286836, 1.33099, 25.9884, 7.3906);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightGlomerularCapillaries), Hb_total_mM, 0.875895, 0.0696264, 0.0356313, 1.34054, 26.005, 7.38778);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightEfferentArteriole), Hb_total_mM, 0.851963, 0.0647313, 0.0562525, 1.34992, 26.0212, 7.38502);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightPeritubularCapillaries), Hb_total_mM, 0.828783, 0.0607991, 0.0672768, 1.35493, 26.0298, 7.38355);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightRenalVein), Hb_total_mM, 0.793614, 0.0558172, 0.0663554, 1.35408, 26.0284, 7.3838);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightBowmansCapsules), 0.0, 0.0, 0.0773075, 0.0, 1.07857, 0.0, 7.47375);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::RightTubules), 0.0, 0.0, 0.0773075, 0.0, 1.07857, 0.0, 7.47375);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Skin), Hb_total_mM, 0.810316, 0.05849, 0.120255, 1.38186, 26.0756, 7.37577);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::SmallIntestine), Hb_total_mM, 0.834933, 0.0623863, 0.131529, 1.38876, 26.0871, 7.3738);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Splanchnic), Hb_total_mM, 0.815514, 0.0595619, 0.154558, 1.40173, 26.1088, 7.37012);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::Spleen), Hb_total_mM, 0.81215, 0.0587058, 0.115229, 1.37916, 26.071, 7.37654);
+  InitializeBloodGases(*cmpts.GetLiquidCompartment(BGE::VascularCompartment::VenaCava), Hb_total_mM, 0.767376, 0.0534397, 0.15668, 1.40152, 26.1084, 7.37018);
 
 
   //Tissues

@@ -75,18 +75,14 @@ void Nervous::Initialize()
   m_FeedbackActive = false;
   m_blockActive = false;
 
-  m_CentralFrequencyDelta_Per_min = 0.0;
-  m_CentralPressureDelta_cmH2O = 0.0;
-  m_PeripheralFrequencyDelta_Per_min = 0.0;
-  m_PeripheralPressureDelta_cmH2O = 0.0;
-
-
   m_AfferentChemoreceptor_Hz = 3.65;
   m_AfferentPulmonaryStretchReceptor_Hz = 5.75;
   m_AfferentStrain = 0.04;
   m_AfferentStrainBaseline = 0.9 * (1.0 - std::sqrt(1.0 / 3.0));
   m_BaroreceptorOffset = 0.0;
   m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+  m_CentralFrequencyDelta_Per_min = 0.0;
+  m_CentralPressureDelta_cmH2O = 0.0;
   m_CerebralArteriesEffectors_Large = std::vector<double>(3);
   m_CerebralArteriesEffectors_Small = std::vector<double>(3);
   m_CerebralOxygenSaturationBaseline = 0.0;
@@ -103,6 +99,8 @@ void Nervous::Initialize()
   m_IntrinsicHeartRate = 1.5 * m_data.GetPatient().GetHeartRateBaseline(FrequencyUnit::Per_min); //Approx guess -- should be higher than baseline since baseline assumes some vagal outflow
   m_ResistanceModifier = 0.0;
   m_PeripheralBloodGasInteractionBaseline_Hz = 0.0;
+  m_PeripheralFrequencyDelta_Per_min = 0.0;
+  m_PeripheralPressureDelta_cmH2O = 0.0;
   m_SympatheticHeartSignalBaseline = 0.175;
   m_SympatheticPeripheralSignalBaseline = 0.2;
   m_SympatheticPeripheralSignalFatigue = 0.0;
@@ -148,7 +146,6 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_AfferentPulmonaryStretchReceptor_Hz = in.AfferentPulmonaryStrechReceptor_Hz();
   m_AfferentStrain = in.AfferentStrain();
   m_AfferentStrainBaseline = in.AfferentStrainBaseline();
-  m_BaroreceptorFatigueScale = in.BaroreceptorFatigueScale();
   m_BaroreceptorOffset = in.BaroreceptorOffset();
   m_BaroreceptorOperatingPoint_mmHg = in.BaroreceptorOperatingPoint_mmHg();
   m_CerebralArteriesEffectors_Large.clear();
@@ -203,7 +200,6 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.AfferentPulmonaryStrechReceptor_Hz(m_AfferentPulmonaryStretchReceptor_Hz);
   data.AfferentStrain(m_AfferentStrain);
   data.AfferentStrainBaseline(m_AfferentStrainBaseline);
-  data.BaroreceptorFatigueScale(m_BaroreceptorFatigueScale);
   data.BaroreceptorOffset(m_BaroreceptorOffset);
   data.BaroreceptorOperatingPoint_mmHg(m_BaroreceptorOperatingPoint_mmHg);
   for (auto eLarge : m_CerebralArteriesEffectors_Large) {
@@ -272,7 +268,6 @@ void Nervous::AtSteadyState()
 {
   if (m_data.GetState() == EngineState::AtInitialStableState) {
     m_FeedbackActive = true;
-    SetBaroreceptorFrequencyComponents(std::vector<double>(3), FrequencyUnit::Hz); //Vector of 0's
   }
 
 
