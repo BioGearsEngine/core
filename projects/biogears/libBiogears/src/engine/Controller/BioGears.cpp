@@ -206,8 +206,8 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
 
   Info("Initializing Systems");
   m_CardiovascularSystem->Initialize();
-  m_RespiratorySystem->Initialize();
   m_AnesthesiaMachine->Initialize();
+  m_RespiratorySystem->Initialize();
   m_GastrointestinalSystem->Initialize();
   m_HepaticSystem->Initialize();
   m_RenalSystem->Initialize();

@@ -3,7 +3,7 @@
     <Name>Desflurane</Name>
     <Description>Patient breathing in Desflurane</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
-   
+   <!-- <EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile> -->
 	<!-- Base system data required for all scenario verification -->
   <DataRequests>
   <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
@@ -142,11 +142,9 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="Desflurane"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"  Substance="Desflurane"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
 	
-	
   </DataRequests>
-	
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="30" unit="s"/>       
+	 <Action xsi:type="AdvanceTimeData">
+        <Time value="5" unit="s"/>       
     </Action>
 	<Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>
@@ -154,14 +152,14 @@
 		<InletFlow value="6.0" unit="L/min"/>
         <OxygenFraction value="0.25"/>
         <OxygenSource>Wall</OxygenSource>
-        <PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
+        <PositiveEndExpiredPressure value="0.75" unit="cmH2O"/>
         <PrimaryGas>Nitrogen</PrimaryGas>
-        <VentilatorPressure value="0.0" unit="cmH2O"/>
+        <VentilatorPressure value="1.75" unit="cmH2O"/>
       </Configuration>
     </Action>
 	<!--Give time for respiratory metrics to stabilize after mask is applied-->
     <Action xsi:type="AdvanceTimeData">
-        <Time value="15" unit="min"/>       
+        <Time value="5" unit="min"/>       
     </Action>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>

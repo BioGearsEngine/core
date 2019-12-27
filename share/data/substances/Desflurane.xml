@@ -48,7 +48,7 @@
     <RespirationRateModifier readOnly="false" value="0"/>
     <Sedation readOnly="false" value="0"/>
     <SystolicPressureModifier readOnly="false" value="-0.35"/>
-    <TidalVolumeModifier readOnly="false" value="-0.55"/>
+    <TidalVolumeModifier readOnly="false" value="-0.75"/>
     <TubularPermeabilityModifier readOnly="false" value="0"/>
     <CentralNervousModifier readOnly="false" value="0"/>
     <AntibacterialEffect readOnly="false" unit="1/hr" value="0"/>
