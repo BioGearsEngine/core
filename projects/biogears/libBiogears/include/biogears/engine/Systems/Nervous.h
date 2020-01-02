@@ -73,7 +73,7 @@ protected:
   void AfferentResponse();
   void CentralSignalProcess();
   void EfferentResponse();
-  void CerebralAutoregulation();
+  void LocalAutoregulation();
 
   // Serializable member variables (Set in Initialize and in schema)
   double m_AfferentChemoreceptor_Hz;  //*AC
@@ -95,11 +95,15 @@ protected:
   double m_CerebralBloodFlowInput_mL_Per_s;
   double m_ComplianceModifier;
   double m_HeartElastanceModifier;
+  double m_HeartOxygenBaseline;
   double m_HypocapniaThresholdHeart;
   double m_HypocapniaThresholdPeripheral;
   double m_HypoxiaThresholdHeart;
   double m_HypoxiaThresholdPeripheral;
   double m_IntrinsicHeartRate;
+  double m_MuscleOxygenBaseline;
+  double m_OxygenAutoregulatorHeart;
+  double m_OxygenAutoregulatorMuscle;
   double m_ResistanceModifier;
   double m_PeripheralBloodGasInteractionBaseline_Hz;
   double m_PeripheralFrequencyDelta_Per_min;

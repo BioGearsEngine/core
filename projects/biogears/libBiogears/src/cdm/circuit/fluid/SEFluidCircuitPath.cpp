@@ -18,14 +18,12 @@ namespace biogears {
 	  , m_FluidSourceNode(src)
 	  , m_FluidTargetNode(tgt)
 	{
-	  m_CardiovascularRegion = (CDM::enumResistancePathType::value)-1;
 	}
 	SEFluidCircuitPath::SEFluidCircuitPath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name)
 	  : SECircuitPath<SEScalarVolumePerTime, SEScalarFlowResistance, SEScalarFlowCompliance, SEScalarFlowInertance, SEScalarPressure, SEScalarVolume>(src, tgt, name)
 	  , m_FluidSourceNode(src)
 	  , m_FluidTargetNode(tgt)
 	{
-	  m_CardiovascularRegion = (CDM::enumResistancePathType::value)-1;
 	}
 
 	SEFluidCircuitPath::~SEFluidCircuitPath()
@@ -36,7 +34,6 @@ namespace biogears {
 	void SEFluidCircuitPath::Clear()
 	{
 	  SECircuitPath::Clear();
-	  m_CardiovascularRegion = (CDM::enumResistancePathType::value)-1;
 	}
 
 	bool SEFluidCircuitPath::Load(const CDM::FluidCircuitPathData& in)
@@ -78,8 +75,6 @@ namespace biogears {
 		GetPressureSourceBaseline().Load(in.PressureSourceBaseline().get());
 	  if (in.ValveBreakdownPressure().present())
 		GetValveBreakdownPressure().Load(in.ValveBreakdownPressure().get());
-	  if (in.CardiovascularRegion().present())
-		SetCardiovascularRegion(in.CardiovascularRegion().get());
 
 	  return HasValidElements();
 	}
@@ -130,8 +125,6 @@ namespace biogears {
 		data.PressureSourceBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_PotentialSourceBaseline->Unload()));
 	  if (HasValveBreakdownPressure())
 		data.ValveBreakdownPressure(std::unique_ptr<CDM::ScalarPressureData>(m_ValveBreakdownPotential->Unload()));
-	  if (HasCardiovascularRegion())
-		data.CardiovascularRegion(m_CardiovascularRegion);
 	}
 
 	////////////////////////////////
@@ -407,21 +400,5 @@ namespace biogears {
 	  if (m_ValveBreakdownPotential == nullptr)
 		return SEScalar::dNaN();
 	  return m_ValveBreakdownPotential->GetValue(unit);
-	}
-	bool SEFluidCircuitPath::HasCardiovascularRegion() const
-	{
-	  return m_CardiovascularRegion == ((CDM::enumResistancePathType::value)-1) ? false : true;
-	}
-	CDM::enumResistancePathType::value SEFluidCircuitPath::GetCardiovascularRegion() const
-	{
-	  return m_CardiovascularRegion;
-	}
-	void SEFluidCircuitPath::SetCardiovascularRegion(CDM::enumResistancePathType::value pType)
-	{
-	  m_CardiovascularRegion = pType;
-	}
-	void SEFluidCircuitPath::InvalidateCardiovascularRegion()
-	{
-	  m_CardiovascularRegion = (CDM::enumResistancePathType::value)-1;
 	}
 }

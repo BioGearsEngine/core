@@ -206,6 +206,7 @@ void Respiratory::Initialize()
   double TidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   double RespirationRate_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   double DeadSpace_L = m_LeftBronchi->GetVolumeBaseline(VolumeUnit::L) + m_RightBronchi->GetVolumeBaseline(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
+  GetTotalLungVolume().SetValue(m_PreviousTotalLungVolume_L, VolumeUnit::L);
   GetTidalVolume().SetValue(TidalVolume_L, VolumeUnit::L);
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
@@ -1664,7 +1665,7 @@ void Respiratory::CalculateVitalSigns()
   // minute is a typical upper limit, so dTimeTol = 1 / (60 *4) = 0.004167 minutes.
   double dTimeTol = 0.004167;
   m_ElapsedBreathingCycleTime_min += m_dt_min;
-
+  m_data.GetDataTrack().Probe("Timer", m_ElapsedBreathingCycleTime_min * 60.0);
   if (m_BreathingCycle && ((GetTotalLungVolume(VolumeUnit::L) - m_PreviousTotalLungVolume_L) > ZERO_APPROX)
       && (m_ElapsedBreathingCycleTime_min > dTimeTol)) {
     m_Patient->SetEvent(CDM::enumPatientEvent::StartOfInhale, true, m_data.GetSimulationTime());
@@ -1759,7 +1760,6 @@ void Respiratory::CalculateVitalSigns()
   //Zero out if waiting longer than 30 s -- this means that our lowest supported respiration rate is ~1.3/min
   if (m_ElapsedBreathingCycleTime_min > 0.75) {
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
-    GetTidalVolume().SetValue(0.0, VolumeUnit::L);
     GetTotalAlveolarVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
     GetTotalPulmonaryVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
   }

@@ -44,29 +44,29 @@ protected:
   void Unload(CDM::NervousSystemData& data) const;
 
 public:
-  bool HasBaroreceptorHeartRateScale() const;
-  SEScalar& GetBaroreceptorHeartRateScale();
-  double GetBaroreceptorHeartRateScale() const;
+  bool HasAutoregulatedHeartResistanceScale() const;
+  SEScalar& GetAutoregulatedHeartResistanceScale();
+  double GetAutoregulatedHeartResistanceScale() const;
 
-  bool HasBaroreceptorHeartElastanceScale() const;
-  SEScalar& GetBaroreceptorHeartElastanceScale();
-  double GetBaroreceptorHeartElastanceScale() const;
+  bool HasAutoregulatedMuscleResistanceScale() const;
+  SEScalar& GetAutoregulatedMuscleResistanceScale();
+  double GetAutoregulatedMuscleResistanceScale() const;
 
-  bool HasBaroreceptorResistanceScale() const;
-  SEScalar& GetBaroreceptorResistanceScale();
-  double GetBaroreceptorResistanceScale() const;
+  bool HasEfferentHeartRateScale() const;
+  SEScalar& GetEfferentHeartRateScale();
+  double GetEfferentHeartRateScale() const;
 
-  bool HasBaroreceptorComplianceScale() const;
-  SEScalar& GetBaroreceptorComplianceScale();
-  double GetBaroreceptorComplianceScale() const;
+  bool HasEfferentHeartElastanceScale() const;
+  SEScalar& GetEfferentHeartElastanceScale();
+  double GetEfferentHeartElastanceScale() const;
 
-  bool HasChemoreceptorHeartRateScale() const;
-  SEScalar& GetChemoreceptorHeartRateScale();
-  double GetChemoreceptorHeartRateScale() const;
+  bool HasEfferentResistanceScale() const;
+  SEScalar& GetEfferentResistanceScale();
+  double GetEfferentResistanceScale() const;
 
-  bool HasChemoreceptorHeartElastanceScale() const;
-  SEScalar& GetChemoreceptorHeartElastanceScale();
-  double GetChemoreceptorHeartElastanceScale() const;
+  bool HasEfferentComplianceScale() const;
+  SEScalar& GetEfferentComplianceScale();
+  double GetEfferentComplianceScale() const;
 
   bool HasLeftEyePupillaryResponse() const;
   SEPupillaryResponse& GetLeftEyePupillaryResponse();
@@ -82,43 +82,16 @@ public:
   const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
   void RemoveRightEyePupillaryResponse();
 
-  bool HasResistanceScaleCerebral() const;
-  SEScalar& GetResistanceScaleCerebral();
-  double GetResistanceScaleCerebral() const;
-
-  bool HasResistanceScaleExtrasplanchnic() const;
-  SEScalar& GetResistanceScaleExtrasplanchnic();
-  double GetResistanceScaleExtrasplanchnic() const;
-
-  bool HasResistanceScaleMuscle() const;
-  SEScalar& GetResistanceScaleMuscle();
-  double GetResistanceScaleMuscle() const;
-
-  bool HasResistanceScaleSplanchnic() const;
-  SEScalar& GetResistanceScaleSplanchnic();
-  double GetResistanceScaleSplanchnic() const;
-
-  bool HasResistanceScaleVentricle() const;
-  SEScalar& GetResistanceScaleVentricle();
-  double GetResistanceScaleVentricle() const;
-
-  bool HasResistanceScales() const;
 
 protected:
-  SEScalar* m_BaroreceptorHeartRateScale;
-  SEScalar* m_BaroreceptorHeartElastanceScale;
-  SEScalar* m_BaroreceptorResistanceScale;
-  SEScalar* m_BaroreceptorComplianceScale;
+  SEScalar* m_AutoregulatedHeartResistanceScale;
+  SEScalar* m_AutoregulatedMuscleResistanceScale;
+  SEScalar* m_EfferentHeartRateScale;
+  SEScalar* m_EfferentHeartElastanceScale;
+  SEScalar* m_EfferentResistanceScale;
+  SEScalar* m_EfferentComplianceScale;
   SEPupillaryResponse* m_LeftEyePupillaryResponse;
   SEPupillaryResponse* m_RightEyePupillaryResponse;
   SEScalar* m_PainVisualAnalogueScale;
-  SEScalar* m_ChemoreceptorHeartRateScale;
-  SEScalar* m_ChemoreceptorHeartElastanceScale;
-
-  SEScalar* m_ResistanceScaleCerebral;
-  SEScalar* m_ResistanceScaleExtrasplanchnic;
-  SEScalar* m_ResistanceScaleMuscle;
-  SEScalar* m_ResistanceScaleSplanchnic;
-  SEScalar* m_ResistanceScaleVentricle;
 };
 }

@@ -18,38 +18,29 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-  constexpr char idBaroreceptorHeartRateScale[] = "BaroreceptorHeartRateScale";
-  constexpr char idBaroreceptorHeartElastanceScale[] = "BaroreceptorHeartElastanceScale";
-  constexpr char idBaroreceptorResistanceScale[] = "BaroreceptorResistanceScale";
-  constexpr char idBaroreceptorComplianceScale[] = "BaroreceptorComplianceScale";
-  constexpr char idChemoreceptorHeartRateScale[] = "ChemoreceptorHeartRateScale";
-  constexpr char idChemoreceptorHeartElastanceScale[] = "ChemoreceptorHeartElastanceScale";
-  constexpr char idPainVisualAnalogueScale[] = "PainVisualAnalogueScale";
-  constexpr char idLeftEyePupillaryResponse[] = "LeftEyePupillaryResponse";
-  constexpr char idRightEyePupillaryResponse[] = "RightEyePupillaryResponse";
-  constexpr char idResistanceScaleCerebral[] = "ResistanceScaleCerebral";
-  constexpr char idResistanceScaleExtrasplanchnic[] = "ResistanceScaleExtrasplanchnic";
-  constexpr char idResistanceScaleMuscle[] = "ResistanceScaleMuscle";
-  constexpr char idResistanceScaleSplanchnic[] = "ResistanceScaleSplanchnic";
-  constexpr char idResistanceScaleVentricle[] = "ResistanceScaleVentricle";
+constexpr char idAutoregulatedHeartResistanceScale[] = "AutoregulatedHeartResistanceScale";
+constexpr char idAutoregulatedMuscleResistanceScale[] = "AutoregulatedMuscleResistanceScale";
+constexpr char idEfferentHeartRateScale[] = "EfferentHeartRateScale";
+constexpr char idEfferentHeartElastanceScale[] = "EfferentHeartElastanceScale";
+constexpr char idEfferentResistanceScale[] = "EfferentResistanceScale";
+constexpr char idEfferentComplianceScale[] = "EfferentComplianceScale";
+constexpr char idPainVisualAnalogueScale[] = "PainVisualAnalogueScale";
+constexpr char idLeftEyePupillaryResponse[] = "LeftEyePupillaryResponse";
+constexpr char idRightEyePupillaryResponse[] = "RightEyePupillaryResponse";
 
 SENervousSystem::SENervousSystem(Logger* logger)
   : SESystem(logger)
 {
-  m_BaroreceptorHeartRateScale = nullptr;
-  m_BaroreceptorHeartElastanceScale = nullptr;
-  m_BaroreceptorResistanceScale = nullptr;
-  m_BaroreceptorComplianceScale = nullptr;
-  m_ChemoreceptorHeartRateScale = nullptr;
-  m_ChemoreceptorHeartElastanceScale = nullptr;
+  m_AutoregulatedHeartResistanceScale = nullptr;
+  m_AutoregulatedMuscleResistanceScale = nullptr;
+  m_EfferentHeartRateScale = nullptr;
+  m_EfferentHeartElastanceScale = nullptr;
+  m_EfferentResistanceScale = nullptr;
+  m_EfferentComplianceScale = nullptr;
+
   m_LeftEyePupillaryResponse = nullptr;
   m_RightEyePupillaryResponse = nullptr;
   m_PainVisualAnalogueScale = nullptr;
-  m_ResistanceScaleCerebral = nullptr;
-  m_ResistanceScaleExtrasplanchnic = nullptr;
-  m_ResistanceScaleMuscle = nullptr;
-  m_ResistanceScaleSplanchnic = nullptr;
-  m_ResistanceScaleVentricle = nullptr;
 }
 //-------------------------------------------------------------------------------
 
@@ -62,20 +53,15 @@ SENervousSystem::~SENervousSystem()
 void SENervousSystem::Clear()
 {
   SESystem::Clear();
-  SAFE_DELETE(m_BaroreceptorHeartRateScale);
-  SAFE_DELETE(m_BaroreceptorHeartElastanceScale);
-  SAFE_DELETE(m_BaroreceptorResistanceScale);
-  SAFE_DELETE(m_BaroreceptorComplianceScale);
-  SAFE_DELETE(m_ChemoreceptorHeartRateScale);
-  SAFE_DELETE(m_ChemoreceptorHeartElastanceScale);
+  SAFE_DELETE(m_AutoregulatedHeartResistanceScale);
+  SAFE_DELETE(m_AutoregulatedMuscleResistanceScale);
+  SAFE_DELETE(m_EfferentHeartRateScale);
+  SAFE_DELETE(m_EfferentHeartElastanceScale);
+  SAFE_DELETE(m_EfferentResistanceScale);
+  SAFE_DELETE(m_EfferentComplianceScale);
   SAFE_DELETE(m_LeftEyePupillaryResponse);
   SAFE_DELETE(m_RightEyePupillaryResponse);
   SAFE_DELETE(m_PainVisualAnalogueScale);
-  SAFE_DELETE(m_ResistanceScaleCerebral);
-  SAFE_DELETE(m_ResistanceScaleExtrasplanchnic);
-  SAFE_DELETE(m_ResistanceScaleMuscle);
-  SAFE_DELETE(m_ResistanceScaleSplanchnic);
-  SAFE_DELETE(m_ResistanceScaleVentricle);
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SENervousSystem::GetScalar(const char* name)
@@ -85,31 +71,20 @@ const SEScalar* SENervousSystem::GetScalar(const char* name)
 //-------------------------------------------------------------------------------
 const SEScalar* SENervousSystem::GetScalar(const std::string& name)
 {
-  if (name == idBaroreceptorHeartRateScale)
-    return &GetBaroreceptorHeartRateScale();
-  if (name == idBaroreceptorHeartElastanceScale)
-    return &GetBaroreceptorHeartElastanceScale();
-  if (name == idBaroreceptorResistanceScale)
-    return &GetBaroreceptorResistanceScale();
-  if (name == idBaroreceptorComplianceScale)
-    return &GetBaroreceptorComplianceScale();
-  if (name == idChemoreceptorHeartRateScale)
-    return &GetChemoreceptorHeartRateScale();
-  if (name == idChemoreceptorHeartElastanceScale)
-    return &GetChemoreceptorHeartElastanceScale();
+  if (name == idAutoregulatedHeartResistanceScale)
+    return &GetAutoregulatedHeartResistanceScale();
+  if (name == idAutoregulatedMuscleResistanceScale)
+    return &GetAutoregulatedMuscleResistanceScale();
+  if (name == idEfferentHeartRateScale)
+    return &GetEfferentHeartRateScale();
+  if (name == idEfferentHeartElastanceScale)
+    return &GetEfferentHeartElastanceScale();
+  if (name == idEfferentResistanceScale)
+    return &GetEfferentResistanceScale();
+  if (name == idEfferentComplianceScale)
+    return &GetEfferentComplianceScale();
   if (name == idPainVisualAnalogueScale)
     return &GetPainVisualAnalogueScale();
-  if (name == idResistanceScaleCerebral)
-    return &GetResistanceScaleCerebral();
-  if (name == idResistanceScaleExtrasplanchnic)
-    return &GetResistanceScaleExtrasplanchnic();
-  if (name == idResistanceScaleMuscle)
-    return &GetResistanceScaleMuscle();
-  if (name == idResistanceScaleSplanchnic)
-    return &GetResistanceScaleSplanchnic();
-  if (name == idResistanceScaleVentricle)
-    return &GetResistanceScaleVentricle();
-
 
   size_t split = name.find('-');
   if (split != name.npos) {
@@ -127,34 +102,24 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
 bool SENervousSystem::Load(const CDM::NervousSystemData& in)
 {
   SESystem::Load(in);
-  if (in.BaroreceptorHeartRateScale().present())
-    GetBaroreceptorHeartRateScale().Load(in.BaroreceptorHeartRateScale().get());
-  if (in.BaroreceptorHeartElastanceScale().present())
-    GetBaroreceptorHeartElastanceScale().Load(in.BaroreceptorHeartElastanceScale().get());
-  if (in.BaroreceptorResistanceScale().present())
-    GetBaroreceptorResistanceScale().Load(in.BaroreceptorResistanceScale().get());
-  if (in.BaroreceptorComplianceScale().present())
-    GetBaroreceptorComplianceScale().Load(in.BaroreceptorComplianceScale().get());
-  if (in.ChemoreceptorHeartRateScale().present())
-    GetChemoreceptorHeartRateScale().Load(in.ChemoreceptorHeartRateScale().get());
-  if (in.ChemoreceptorHeartElastanceScale().present())
-    GetChemoreceptorHeartElastanceScale().Load(in.ChemoreceptorHeartElastanceScale().get());
+  if (in.AutoregulatedHeartResistanceScale().present())
+    GetAutoregulatedHeartResistanceScale().Load(in.AutoregulatedHeartResistanceScale().get());
+  if (in.AutoregulatedMuscleResistanceScale().present())
+    GetAutoregulatedMuscleResistanceScale().Load(in.AutoregulatedMuscleResistanceScale().get());
+  if (in.EfferentHeartRateScale().present())
+    GetEfferentHeartRateScale().Load(in.EfferentHeartRateScale().get());
+  if (in.EfferentHeartElastanceScale().present())
+    GetEfferentHeartElastanceScale().Load(in.EfferentHeartElastanceScale().get());
+  if (in.EfferentResistanceScale().present())
+    GetEfferentResistanceScale().Load(in.EfferentResistanceScale().get());
+  if (in.EfferentComplianceScale().present())
+    GetEfferentComplianceScale().Load(in.EfferentComplianceScale().get());
   if (in.PainVisualAnalogueScale().present())
     GetPainVisualAnalogueScale().Load(in.PainVisualAnalogueScale().get());
   if (in.LeftEyePupillaryResponse().present())
     GetLeftEyePupillaryResponse().Load(in.LeftEyePupillaryResponse().get());
   if (in.RightEyePupillaryResponse().present())
     GetRightEyePupillaryResponse().Load(in.RightEyePupillaryResponse().get());
-  if (in.ResistanceScaleCerebral().present())
-    GetResistanceScaleCerebral().Load(in.ResistanceScaleCerebral().get());
-  if (in.ResistanceScaleExtrasplanchnic().present())
-    GetResistanceScaleExtrasplanchnic().Load(in.ResistanceScaleExtrasplanchnic().get());
-  if (in.ResistanceScaleMuscle().present())
-    GetResistanceScaleMuscle().Load(in.ResistanceScaleMuscle().get());
-  if (in.ResistanceScaleSplanchnic().present())
-    GetResistanceScaleSplanchnic().Load(in.ResistanceScaleSplanchnic().get());
-  if (in.ResistanceScaleVentricle().present())
-    GetResistanceScaleVentricle().Load(in.ResistanceScaleVentricle().get());
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -170,153 +135,141 @@ CDM::NervousSystemData* SENervousSystem::Unload() const
 void SENervousSystem::Unload(CDM::NervousSystemData& data) const
 {
   SESystem::Unload(data);
-  if (m_BaroreceptorHeartRateScale != nullptr)
-    data.BaroreceptorHeartRateScale(std::unique_ptr<CDM::ScalarData>(m_BaroreceptorHeartRateScale->Unload()));
-  if (m_BaroreceptorHeartElastanceScale != nullptr)
-    data.BaroreceptorHeartElastanceScale(std::unique_ptr<CDM::ScalarData>(m_BaroreceptorHeartElastanceScale->Unload()));
-  if (m_BaroreceptorResistanceScale != nullptr)
-    data.BaroreceptorResistanceScale(std::unique_ptr<CDM::ScalarData>(m_BaroreceptorResistanceScale->Unload()));
-  if (m_BaroreceptorComplianceScale != nullptr)
-    data.BaroreceptorComplianceScale(std::unique_ptr<CDM::ScalarData>(m_BaroreceptorComplianceScale->Unload()));
-  if (m_ChemoreceptorHeartRateScale != nullptr)
-    data.ChemoreceptorHeartRateScale(std::unique_ptr<CDM::ScalarData>(m_ChemoreceptorHeartRateScale->Unload()));
-  if (m_ChemoreceptorHeartElastanceScale != nullptr)
-    data.ChemoreceptorHeartElastanceScale(std::unique_ptr<CDM::ScalarData>(m_ChemoreceptorHeartElastanceScale->Unload()));
+  if (m_AutoregulatedHeartResistanceScale != nullptr)
+    data.AutoregulatedHeartResistanceScale(std::unique_ptr<CDM::ScalarData>(m_AutoregulatedHeartResistanceScale->Unload()));
+  if (m_AutoregulatedMuscleResistanceScale != nullptr)
+    data.AutoregulatedMuscleResistanceScale(std::unique_ptr<CDM::ScalarData>(m_AutoregulatedMuscleResistanceScale->Unload()));
+  if (m_EfferentHeartRateScale != nullptr)
+    data.EfferentHeartRateScale(std::unique_ptr<CDM::ScalarData>(m_EfferentHeartRateScale->Unload()));
+  if (m_EfferentHeartElastanceScale != nullptr)
+    data.EfferentHeartElastanceScale(std::unique_ptr<CDM::ScalarData>(m_EfferentHeartElastanceScale->Unload()));
+  if (m_EfferentResistanceScale != nullptr)
+    data.EfferentResistanceScale(std::unique_ptr<CDM::ScalarData>(m_EfferentResistanceScale->Unload()));
+  if (m_EfferentComplianceScale != nullptr)
+    data.EfferentComplianceScale(std::unique_ptr<CDM::ScalarData>(m_EfferentComplianceScale->Unload()));
   if (m_PainVisualAnalogueScale != nullptr)
     data.PainVisualAnalogueScale(std::unique_ptr<CDM::ScalarData>(m_PainVisualAnalogueScale->Unload()));
   if (m_LeftEyePupillaryResponse != nullptr)
     data.LeftEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_LeftEyePupillaryResponse->Unload()));
   if (m_RightEyePupillaryResponse != nullptr)
     data.RightEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_RightEyePupillaryResponse->Unload()));
-  if (m_ResistanceScaleCerebral != nullptr)
-    data.ResistanceScaleCerebral(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleCerebral->Unload()));
-  if (m_ResistanceScaleExtrasplanchnic != nullptr)
-    data.ResistanceScaleExtrasplanchnic(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleExtrasplanchnic->Unload()));
-  if (m_ResistanceScaleMuscle != nullptr)
-    data.ResistanceScaleMuscle(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleMuscle->Unload()));
-  if (m_ResistanceScaleSplanchnic != nullptr)
-    data.ResistanceScaleSplanchnic(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleSplanchnic->Unload()));
-  if (m_ResistanceScaleVentricle != nullptr)
-    data.ResistanceScaleVentricle(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleVentricle->Unload()));
 }
 //-------------------------------------------------------------------------------
-bool SENervousSystem::HasBaroreceptorHeartRateScale() const
+bool SENervousSystem::HasAutoregulatedHeartResistanceScale() const
 {
-  return m_BaroreceptorHeartRateScale == nullptr ? false : m_BaroreceptorHeartRateScale->IsValid();
+  return m_AutoregulatedHeartResistanceScale == nullptr ? false : m_AutoregulatedHeartResistanceScale->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetBaroreceptorHeartRateScale()
+SEScalar& SENervousSystem::GetAutoregulatedHeartResistanceScale()
 {
-  if (m_BaroreceptorHeartRateScale == nullptr)
-    m_BaroreceptorHeartRateScale = new SEScalar();
-  return *m_BaroreceptorHeartRateScale;
+  if (m_AutoregulatedHeartResistanceScale == nullptr)
+    m_AutoregulatedHeartResistanceScale = new SEScalar();
+  return *m_AutoregulatedHeartResistanceScale;
 }
 //-------------------------------------------------------------------------------
-double SENervousSystem::GetBaroreceptorHeartRateScale() const
+double SENervousSystem::GetAutoregulatedHeartResistanceScale() const
 {
-  if (m_BaroreceptorHeartRateScale == nullptr)
+  if (m_AutoregulatedHeartResistanceScale == nullptr)
     return SEScalar::dNaN();
-  return m_BaroreceptorHeartRateScale->GetValue();
+  return m_AutoregulatedHeartResistanceScale->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SENervousSystem::HasAutoregulatedMuscleResistanceScale() const
+{
+  return m_AutoregulatedMuscleResistanceScale == nullptr ? false : m_AutoregulatedMuscleResistanceScale->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetAutoregulatedMuscleResistanceScale()
+{
+  if (m_AutoregulatedMuscleResistanceScale == nullptr)
+    m_AutoregulatedMuscleResistanceScale = new SEScalar();
+  return *m_AutoregulatedMuscleResistanceScale;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetAutoregulatedMuscleResistanceScale() const
+{
+  if (m_AutoregulatedMuscleResistanceScale == nullptr)
+    return SEScalar::dNaN();
+  return m_AutoregulatedMuscleResistanceScale->GetValue();
+}
+//-------------------------------------------------------------------------------
+bool SENervousSystem::HasEfferentHeartRateScale() const
+{
+  return m_EfferentHeartRateScale == nullptr ? false : m_EfferentHeartRateScale->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetEfferentHeartRateScale()
+{
+  if (m_EfferentHeartRateScale == nullptr)
+    m_EfferentHeartRateScale = new SEScalar();
+  return *m_EfferentHeartRateScale;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetEfferentHeartRateScale() const
+{
+  if (m_EfferentHeartRateScale == nullptr)
+    return SEScalar::dNaN();
+  return m_EfferentHeartRateScale->GetValue();
 }
 //-------------------------------------------------------------------------------
 
-bool SENervousSystem::HasBaroreceptorHeartElastanceScale() const
+bool SENervousSystem::HasEfferentHeartElastanceScale() const
 {
-  return m_BaroreceptorHeartElastanceScale == nullptr ? false : m_BaroreceptorHeartElastanceScale->IsValid();
+  return m_EfferentHeartElastanceScale == nullptr ? false : m_EfferentHeartElastanceScale->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetBaroreceptorHeartElastanceScale()
+SEScalar& SENervousSystem::GetEfferentHeartElastanceScale()
 {
-  if (m_BaroreceptorHeartElastanceScale == nullptr)
-    m_BaroreceptorHeartElastanceScale = new SEScalar();
-  return *m_BaroreceptorHeartElastanceScale;
+  if (m_EfferentHeartElastanceScale == nullptr)
+    m_EfferentHeartElastanceScale = new SEScalar();
+  return *m_EfferentHeartElastanceScale;
 }
 //-------------------------------------------------------------------------------
-double SENervousSystem::GetBaroreceptorHeartElastanceScale() const
+double SENervousSystem::GetEfferentHeartElastanceScale() const
 {
-  if (m_BaroreceptorHeartElastanceScale == nullptr)
+  if (m_EfferentHeartElastanceScale == nullptr)
     return SEScalar::dNaN();
-  return m_BaroreceptorHeartElastanceScale->GetValue();
+  return m_EfferentHeartElastanceScale->GetValue();
 }
 //-------------------------------------------------------------------------------
 
-bool SENervousSystem::HasBaroreceptorResistanceScale() const
+bool SENervousSystem::HasEfferentResistanceScale() const
 {
-  return m_BaroreceptorResistanceScale == nullptr ? false : m_BaroreceptorResistanceScale->IsValid();
+  return m_EfferentResistanceScale == nullptr ? false : m_EfferentResistanceScale->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetBaroreceptorResistanceScale()
+SEScalar& SENervousSystem::GetEfferentResistanceScale()
 {
-  if (m_BaroreceptorResistanceScale == nullptr)
-    m_BaroreceptorResistanceScale = new SEScalar();
-  return *m_BaroreceptorResistanceScale;
+  if (m_EfferentResistanceScale == nullptr)
+    m_EfferentResistanceScale = new SEScalar();
+  return *m_EfferentResistanceScale;
 }
 //-------------------------------------------------------------------------------
-double SENervousSystem::GetBaroreceptorResistanceScale() const
+double SENervousSystem::GetEfferentResistanceScale() const
 {
-  if (m_BaroreceptorResistanceScale == nullptr)
+  if (m_EfferentResistanceScale == nullptr)
     return SEScalar::dNaN();
-  return m_BaroreceptorResistanceScale->GetValue();
+  return m_EfferentResistanceScale->GetValue();
 }
 //-------------------------------------------------------------------------------
 
-bool SENervousSystem::HasBaroreceptorComplianceScale() const
+bool SENervousSystem::HasEfferentComplianceScale() const
 {
-  return m_BaroreceptorComplianceScale == nullptr ? false : m_BaroreceptorComplianceScale->IsValid();
+  return m_EfferentComplianceScale == nullptr ? false : m_EfferentComplianceScale->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetBaroreceptorComplianceScale()
+SEScalar& SENervousSystem::GetEfferentComplianceScale()
 {
-  if (m_BaroreceptorComplianceScale == nullptr)
-    m_BaroreceptorComplianceScale = new SEScalar();
-  return *m_BaroreceptorComplianceScale;
+  if (m_EfferentComplianceScale == nullptr)
+    m_EfferentComplianceScale = new SEScalar();
+  return *m_EfferentComplianceScale;
 }
 //-------------------------------------------------------------------------------
-double SENervousSystem::GetBaroreceptorComplianceScale() const
+double SENervousSystem::GetEfferentComplianceScale() const
 {
-  if (m_BaroreceptorComplianceScale == nullptr)
+  if (m_EfferentComplianceScale == nullptr)
     return SEScalar::dNaN();
-  return m_BaroreceptorComplianceScale->GetValue();
-}
-//-------------------------------------------------------------------------------
-
-bool SENervousSystem::HasChemoreceptorHeartRateScale() const
-{
-  return m_ChemoreceptorHeartRateScale == nullptr ? false : m_ChemoreceptorHeartRateScale->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetChemoreceptorHeartRateScale()
-{
-  if (m_ChemoreceptorHeartRateScale == nullptr)
-    m_ChemoreceptorHeartRateScale = new SEScalar();
-  return *m_ChemoreceptorHeartRateScale;
-}
-//-------------------------------------------------------------------------------
-double SENervousSystem::GetChemoreceptorHeartRateScale() const
-{
-  if (m_ChemoreceptorHeartRateScale == nullptr)
-    return SEScalar::dNaN();
-  return m_ChemoreceptorHeartRateScale->GetValue();
-}
-//-------------------------------------------------------------------------------
-
-bool SENervousSystem::HasChemoreceptorHeartElastanceScale() const
-{
-  return m_ChemoreceptorHeartElastanceScale == nullptr ? false : m_ChemoreceptorHeartElastanceScale->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetChemoreceptorHeartElastanceScale()
-{
-  if (m_ChemoreceptorHeartElastanceScale == nullptr)
-    m_ChemoreceptorHeartElastanceScale = new SEScalar();
-  return *m_ChemoreceptorHeartElastanceScale;
-}
-//-------------------------------------------------------------------------------
-double SENervousSystem::GetChemoreceptorHeartElastanceScale() const
-{
-  if (m_ChemoreceptorHeartElastanceScale == nullptr)
-    return SEScalar::dNaN();
-  return m_ChemoreceptorHeartElastanceScale->GetValue();
+  return m_EfferentComplianceScale->GetValue();
 }
 //-------------------------------------------------------------------------------
 
@@ -386,124 +339,17 @@ void SENervousSystem::RemoveRightEyePupillaryResponse()
 }
 //-------------------------------------------------------------------------------
 
-bool SENervousSystem::HasResistanceScaleCerebral() const
-{
-  return m_ResistanceScaleCerebral == nullptr ? false : m_ResistanceScaleCerebral->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetResistanceScaleCerebral()
-{
-  if (m_ResistanceScaleCerebral == nullptr)
-    m_ResistanceScaleCerebral = new SEScalar();
-  return *m_ResistanceScaleCerebral;
-}
-//-------------------------------------------------------------------------------
-double SENervousSystem::GetResistanceScaleCerebral() const
-{
-  if (m_ResistanceScaleCerebral == nullptr)
-    return SEScalar::dNaN();
-  return m_ResistanceScaleCerebral->GetValue();
-}
-//-------------------------------------------------------------------------------
-bool SENervousSystem::HasResistanceScaleExtrasplanchnic() const
-{
-  return m_ResistanceScaleExtrasplanchnic == nullptr ? false : m_ResistanceScaleExtrasplanchnic->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetResistanceScaleExtrasplanchnic()
-{
-  if (m_ResistanceScaleExtrasplanchnic == nullptr)
-    m_ResistanceScaleExtrasplanchnic = new SEScalar();
-  return *m_ResistanceScaleExtrasplanchnic;
-}
-//-------------------------------------------------------------------------------
-double SENervousSystem::GetResistanceScaleExtrasplanchnic() const
-{
-  if (m_ResistanceScaleExtrasplanchnic == nullptr)
-    return SEScalar::dNaN();
-  return m_ResistanceScaleExtrasplanchnic->GetValue();
-}
-//-------------------------------------------------------------------------------
-bool SENervousSystem::HasResistanceScaleMuscle() const
-{
-  return m_ResistanceScaleMuscle == nullptr ? false : m_ResistanceScaleMuscle->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetResistanceScaleMuscle()
-{
-  if (m_ResistanceScaleMuscle == nullptr)
-    m_ResistanceScaleMuscle = new SEScalar();
-  return *m_ResistanceScaleMuscle;
-}
-//-------------------------------------------------------------------------------
-double SENervousSystem::GetResistanceScaleMuscle() const
-{
-  if (m_ResistanceScaleMuscle == nullptr)
-    return SEScalar::dNaN();
-  return m_ResistanceScaleMuscle->GetValue();
-}
-//-------------------------------------------------------------------------------
-bool SENervousSystem::HasResistanceScaleSplanchnic() const
-{
-  return m_ResistanceScaleSplanchnic == nullptr ? false : m_ResistanceScaleSplanchnic->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetResistanceScaleSplanchnic()
-{
-  if (m_ResistanceScaleSplanchnic == nullptr)
-    m_ResistanceScaleSplanchnic = new SEScalar();
-  return *m_ResistanceScaleSplanchnic;
-}
-//-------------------------------------------------------------------------------
-double SENervousSystem::GetResistanceScaleSplanchnic() const
-{
-  if (m_ResistanceScaleSplanchnic == nullptr)
-    return SEScalar::dNaN();
-  return m_ResistanceScaleSplanchnic->GetValue();
-}
-//-------------------------------------------------------------------------------
-bool SENervousSystem::HasResistanceScaleVentricle() const
-{
-  return m_ResistanceScaleVentricle == nullptr ? false : m_ResistanceScaleVentricle->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalar& SENervousSystem::GetResistanceScaleVentricle()
-{
-  if (m_ResistanceScaleVentricle == nullptr)
-    m_ResistanceScaleVentricle = new SEScalar();
-  return *m_ResistanceScaleVentricle;
-}
-//-------------------------------------------------------------------------------
-double SENervousSystem::GetResistanceScaleVentricle() const
-{
-  if (m_ResistanceScaleVentricle == nullptr)
-    return SEScalar::dNaN();
-  return m_ResistanceScaleVentricle->GetValue();
-}
-//-------------------------------------------------------------------------------
-bool SENervousSystem::HasResistanceScales() const
-{
-  return (HasResistanceScaleCerebral() && HasResistanceScaleExtrasplanchnic() && HasResistanceScaleMuscle() && HasResistanceScaleSplanchnic() && HasResistanceScaleVentricle());
-}
-//-------------------------------------------------------------------------------
-
 Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
-    .emplace_back(idBaroreceptorHeartRateScale)
-    .emplace_back(idBaroreceptorHeartElastanceScale)
-    .emplace_back(idBaroreceptorResistanceScale)
-    .emplace_back(idBaroreceptorComplianceScale)
-    .emplace_back(idChemoreceptorHeartRateScale)
-    .emplace_back(idChemoreceptorHeartElastanceScale)
+  return Tree<const char*>{ classname() }
+    .emplace_back(idAutoregulatedHeartResistanceScale)
+    .emplace_back(idAutoregulatedMuscleResistanceScale)
+    .emplace_back(idEfferentHeartRateScale)
+    .emplace_back(idEfferentHeartElastanceScale)
+    .emplace_back(idEfferentResistanceScale)
+    .emplace_back(idEfferentComplianceScale)
     .emplace_back(idPainVisualAnalogueScale)
     .emplace_back(idLeftEyePupillaryResponse)
-    .emplace_back(idRightEyePupillaryResponse)
-    .emplace_back(idResistanceScaleCerebral)
-    .emplace_back(idResistanceScaleExtrasplanchnic)
-    .emplace_back(idResistanceScaleMuscle)
-    .emplace_back(idResistanceScaleSplanchnic)
-    .emplace_back(idResistanceScaleVentricle)
-  ;
+    .emplace_back(idRightEyePupillaryResponse);
 }
 }

@@ -103,14 +103,8 @@ public:
   virtual SEScalarPressure& GetValveBreakdownPressure();
   virtual double GetValveBreakdownPressure(const PressureUnit& unit) const;
 
-  virtual bool HasCardiovascularRegion() const;
-  CDM::enumResistancePathType::value GetCardiovascularRegion() const;
-  void SetCardiovascularRegion(CDM::enumResistancePathType::value pType);
-  void InvalidateCardiovascularRegion();
-
 protected:
   SEFluidCircuitNode& m_FluidSourceNode;
   SEFluidCircuitNode& m_FluidTargetNode;
-  CDM::enumResistancePathType::value m_CardiovascularRegion;
 };
 }

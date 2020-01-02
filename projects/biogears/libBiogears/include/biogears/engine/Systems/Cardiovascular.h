@@ -240,11 +240,6 @@ private:
   std::vector<SEFluidCircuitPath*> m_systemicResistancePaths;
   std::vector<SEFluidCircuitPath*> m_systemicCompliancePaths;
   std::vector<SEFluidCircuitPath*> m_tissueResistancePaths;
-  std::vector<SEFluidCircuitPath*> m_splanchnicResistancePaths;
-  std::vector<SEFluidCircuitPath*> m_extrasplanchnicResistancePaths;
-  std::vector<SEFluidCircuitPath*> m_ventricleResistancePaths;
-  std::vector<SEFluidCircuitPath*> m_muscleResistancePaths;
-  std::vector<SEFluidCircuitPath*> m_cerebralResistancePaths;
 
   SEPatientActionCollection* m_PatientActions;
 };
