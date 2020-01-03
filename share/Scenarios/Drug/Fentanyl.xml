@@ -27,7 +27,6 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"     Unit="unitless"    Precision="4"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"          Unit="L/min"       Precision="2"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalPulmonaryVentilation"          Unit="L/min"       Precision="2"/>
-    <DataRequest xsi:type="PhysiologyDataRequestData" Name="TargetPulmonaryVentilation"          Unit="L/min"       Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"            Unit="cmH2O"       Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
