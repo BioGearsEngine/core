@@ -122,7 +122,7 @@ genClasspath(java_classpath
         ${PROJECT_BINARY_DIR}/runtime/jar/javax.mail-1.6.1.jar
     )
 set (allocation_args "-Xms64M" "-Xmx1G" "-Xmn64M" "-Xss4m")
-if(Biogears_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_WEBSITE)
   add_custom_target(docs-prepare
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD #cdm
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md #cdm
@@ -141,75 +141,37 @@ if(Biogears_BUILD_DOCUMENTATION)
   )
 
   add_custom_target(docs-stage
-    COMMAND mkdir ../documentation
-	COMMAND  ${CMAKE_COMMAND} -e cp html/error.html  ../documentation/
-	COMMAND  ${CMAKE_COMMAND} -e cp html/index.html  ../documentation/
-	COMMAND  ${CMAKE_COMMAND} -e cp html/privacy.html  ../documentation/
-	COMMAND  ${CMAKE_COMMAND} -e cp html/releases.html  ../documentation/
-	COMMAND  ${CMAKE_COMMAND} -e cp html/terms.html  ../documentation/
-	COMMAND  ${CMAKE_COMMAND} -e cp -r html ../documentation
-	COMMAND  ${CMAKE_COMMAND} -e cp -r latex ../documentation
-	COMMAND  ${CMAKE_COMMAND} -e cp footer.html ../documentation
-	COMMAND  ${CMAKE_COMMAND} -e cp header.html ../documentation
-	COMMAND  ${CMAKE_COMMAND} -e cp Mainpage.html ../documentation
+        COMMAND mkdir ../documentation
+	      COMMAND  ${CMAKE_COMMAND} -e cp html/error.html  ../documentation/
+	      COMMAND  ${CMAKE_COMMAND} -e cp html/index.html  ../documentation/
+	      COMMAND  ${CMAKE_COMMAND} -e cp html/privacy.html  ../documentation/
+	      COMMAND  ${CMAKE_COMMAND} -e cp html/releases.html  ../documentation/
+	      COMMAND  ${CMAKE_COMMAND} -e cp html/terms.html  ../documentation/
+	      COMMAND  ${CMAKE_COMMAND} -e cp -r html ../documentation
+	      COMMAND  ${CMAKE_COMMAND} -e cp -r latex ../documentation
+	      COMMAND  ${CMAKE_COMMAND} -e cp footer.html ../documentation
+	      COMMAND  ${CMAKE_COMMAND} -e cp header.html ../documentation
+	      COMMAND  ${CMAKE_COMMAND} -e cp Mainpage.html ../documentation
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
         VERBATIM
         USES_TERMINAL
   )
-  add_custom_target(cdm2md
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD #cdm
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-  )
-  add_custom_target(doxygenpreprocess
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md #cdm
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodolgy doc/doxygen/processed_md #cdm        
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-  )
-  add_custom_target(xsdtodoxygen
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx #cdm
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-  )
-  add_custom_target(javaplot
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava.config 
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-  )
-  add_custom_target(run_doxygen
-        COMMAND cd doc    #I hate windows
-        COMMAND cd doxygen 
-        COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-  )
 endif()
 
 
 
-option(Biogears_BUILD_WEBSITE "Use Java to build the website" ON)
+option(Biogears_BUILD_WEBSITE "Use Java to build the website" OFF)
 if(Biogears_BUILD_WEBSITE)
   add_dependencies(docs-prepare ${PROJECT_NAME})
   add_dependencies(docs-doxygen ${PROJECT_NAME} docs-prepare)
   add_dependencies(docs-stage   ${PROJECT_NAME} docs-doxygen)
-endif()
-if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
- add_dependencies(docs-prepare stage_runtime )
+  set_target_properties(docs-prepare PROPERTIES FOLDER "Java/website")
+  set_target_properties(docs-doxygen PROPERTIES FOLDER "Java/website")
+  set_target_properties(docs-stage PROPERTIES FOLDER "Java/website")
+  if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
+   add_dependencies(docs-prepare stage_runtime )
+  endif()
 endif()
  set_target_properties(Java_BioGears PROPERTIES FOLDER "Java/jar")
  set_target_properties(Java_CommonDataModel PROPERTIES FOLDER "Java/jar")
  set_target_properties(Java_DataModelBindings PROPERTIES FOLDER "Java/jar")
- set_target_properties(docs-prepare PROPERTIES FOLDER "Java/website")
- set_target_properties(docs-doxygen PROPERTIES FOLDER "Java/website")
- set_target_properties(docs-stage PROPERTIES FOLDER "Java/website")
- set_target_properties(cdm2md PROPERTIES FOLDER "Java/website")
- set_target_properties(doxygenpreprocess PROPERTIES FOLDER "Java/website")
- set_target_properties(xsdtodoxygen      PROPERTIES FOLDER "Java/website")
- set_target_properties(javaplot          PROPERTIES FOLDER "Java/website")
- set_target_properties(run_doxygen       PROPERTIES FOLDER "Java/website")
