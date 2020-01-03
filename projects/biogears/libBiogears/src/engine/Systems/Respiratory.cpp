@@ -1079,6 +1079,7 @@ void Respiratory::BronchoConstriction()
     double RightBronchiResistance = m_TracheaToRightBronchi->GetNextResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
     const double dSeverity = m_PatientActions->GetBronchoconstriction()->GetSeverity().GetValue();
     double dClosedResistance = LeftBronchiResistance;
+
     //Constrictive effects stack more rapidly in new driver, so base of resistance function has been changed from 70 to 10.
     LeftBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dClosedResistance, dSeverity);
     dClosedResistance = RightBronchiResistance;
@@ -1665,7 +1666,7 @@ void Respiratory::CalculateVitalSigns()
   // minute is a typical upper limit, so dTimeTol = 1 / (60 *4) = 0.004167 minutes.
   double dTimeTol = 0.004167;
   m_ElapsedBreathingCycleTime_min += m_dt_min;
-  m_data.GetDataTrack().Probe("Timer", m_ElapsedBreathingCycleTime_min * 60.0);
+ 
   if (m_BreathingCycle && ((GetTotalLungVolume(VolumeUnit::L) - m_PreviousTotalLungVolume_L) > ZERO_APPROX)
       && (m_ElapsedBreathingCycleTime_min > dTimeTol)) {
     m_Patient->SetEvent(CDM::enumPatientEvent::StartOfInhale, true, m_data.GetSimulationTime());
