@@ -387,5 +387,15 @@ install(DIRECTORY
     ${PROJECT_SOURCE_DIR}/share/data
     DESTINATION share/biogears
     FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	FILES_MATCHING 
+	  PATTERN "*.xml"
+	  PATTERN "log4j.properties"
+	  PATTERN "*.csv"
+	  PATTERN "*.xlsx"
+    )
+	install(DIRECTORY 
+    ${PROJECT_SOURCE_DIR}/share/Scenarios
+    DESTINATION share/biogears/data/
+    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
     )
 message(STATUS "")
