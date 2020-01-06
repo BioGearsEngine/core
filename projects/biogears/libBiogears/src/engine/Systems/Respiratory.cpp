@@ -1073,9 +1073,10 @@ void Respiratory::BronchoConstriction()
     double RightBronchiResistance = m_TracheaToRightBronchi->GetNextResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
     const double dSeverity = m_PatientActions->GetBronchoconstriction()->GetSeverity().GetValue();
     double dClosedResistance = LeftBronchiResistance;
-    LeftBronchiResistance = GeneralMath::ResistanceFunction(70.0, m_dRespOpenResistance_cmH2O_s_Per_L, dClosedResistance, dSeverity);
+    //Constrictive effects stack more rapidly in new driver, so base of resistance function has been changed from 70 to 10.
+    LeftBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dClosedResistance, dSeverity);
     dClosedResistance = RightBronchiResistance;
-    RightBronchiResistance = GeneralMath::ResistanceFunction(70.0, m_dRespOpenResistance_cmH2O_s_Per_L, dClosedResistance, dSeverity);
+    RightBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dClosedResistance, dSeverity);
 
     m_TracheaToLeftBronchi->GetNextResistance().SetValue(LeftBronchiResistance, FlowResistanceUnit::cmH2O_s_Per_L);
     m_TracheaToRightBronchi->GetNextResistance().SetValue(RightBronchiResistance, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1137,10 +1138,9 @@ void Respiratory::BronchoDilation()
       dRightBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespClosedResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
     } else //negative, therefore constriction
     {
-      //Constrictive effects stack more rapidly in new driver, so base of resistance function has been changed from 10 to 2.
       bronchoDilationEffect = std::min(-bronchoDilationEffect, 1.0);
-      dLeftBronchiResistance = GeneralMath::ResistanceFunction(2.0, m_dRespOpenResistance_cmH2O_s_Per_L, dLeftBronchiResistance, bronchoDilationEffect);
-      dRightBronchiResistance = GeneralMath::ResistanceFunction(2.0, m_dRespOpenResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
+      dLeftBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dLeftBronchiResistance, bronchoDilationEffect);
+      dRightBronchiResistance = GeneralMath::ResistanceFunction(10.0, m_dRespOpenResistance_cmH2O_s_Per_L, dRightBronchiResistance, bronchoDilationEffect);
       resTrack = dRightBronchiResistance;
     }
     m_TracheaToLeftBronchi->GetNextResistance().SetValue(dLeftBronchiResistance, FlowResistanceUnit::cmH2O_s_Per_L);
