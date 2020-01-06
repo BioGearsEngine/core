@@ -34,7 +34,9 @@ The Stewart approach has been the subject of criticism. Some researchers have us
 A simple oxygen-hemoglobin binding curve.
 
 @anchor bloodchemistry-approach
-### Approach
+### Models
+
+#### Acid-Base and Blood Gas Distribution
 The %BioGears Blood Chemistry system is the link between compartment-level and system-level blood constituent data. It populates system-level concentration and other data from compartment level data. 
 
 Additionally, the blood chemistry computations required to compute acid-base balance and blood gas distribution are performed by the Blood Chemistry system (note that these equations are in the separate Saturation class in the current %BioGears engine). The Blood Chemistry system does not adjust mass or concentration of substances independently, but it does adjust concentrations of substance species. For example, the Blood Chemistry system does not adjust the mass or blood concentration of total carbon dioxide (CO2), but it does compute the concentrations of the constituent CO2 species: dissolved CO2, bound CO2, and bicarbonate. That is, the acid-base and hemoglobin saturation models are used to compute the CO2 species distribution. Similarly, the Blood Chemistry system does not change the total amount of oxygen in a compartment, but it does compute how much oxygen is dissolved and how much is bound to hemoglobin.
@@ -113,6 +115,11 @@ The conservation of mass requires that the respective amounts of oxygen and carb
 </center><br>
 
 The blood gas distribution model is used to compute the acid-base status and gas saturation in every cardiovascular compartment at every time slice. This model is used only for intravascular fluid, which is a lumped model of the intra and extracellular fluid spaces within the blood vessels. In %BioGears, the extravascular fluid does not contain hemoglobin or any substrate for gases to bind.
+
+#### Inflammation Model
+
+BioGears maintains an inflammation model that dictates the sytemic response to pathogen invasion, burn wounds, and hemorrhage.  The model, which is based on the work of @ref chow2005acute @ref nieman2012two @ref brown2015trauma @ref dominguez2017mathematical, accounts for resting and activated macrophages and neutrophils, pro-inflammatory cytokines (tumor necrosis factor, interleukin-6), anti-inflammatory cytokines (interleukin-10), and free radicals (nitric oxide).  The BioGears team has published two articles describing the application of this model 
+to severe burn wounds @ref mcdaniel2019full and [sepsis](https://www.frontiersin.org/articles/10.3389/fphys.2019.01321/full) @ref mcdaniel2019whole.  These sources can be consulted for model equations and parameters, as well as further detail regarding model integration with the BioGears physiology engine.
 
 @anchor bloodchemistry-data-flow
 Data Flow
