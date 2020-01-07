@@ -39,8 +39,6 @@ endif()
 message(STATUS "Configuring ${PROJECT_NAME}")
 SET(MD_MAIN_PAGE "MainPage.md")
 configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
-configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/nocode.doxy.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/NoCode.doxy @ONLY)
-configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/validationtables.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/ValidationTablesJava.config @ONLY)
 
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.java"   "Sources\\")
 
