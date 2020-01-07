@@ -199,13 +199,13 @@ void BioGearsEngineTest::RespiratoryDriverTest(const std::string& sTestDirectory
   double deltaT_s = 1.0 / 90.0;
 
   SEFluidCircuitPath* driverPressurePath = RespCircuit.GetPath(BGE::RespiratoryPath::EnvironmentToRespiratoryMuscle);
-  SEFluidCircuitPath* rightPleuralToRespiratoryMuscle = RespCircuit.GetPath(BGE::RespiratoryPath::RightPleuralToRespiratoryMuscle);
-  SEFluidCircuitPath* leftPleuralToRespiratoryMuscle = RespCircuit.GetPath(BGE::RespiratoryPath::LeftPleuralToRespiratoryMuscle);
+  SEFluidCircuitPath* rightPleuralToRespiratoryMuscle = RespCircuit.GetPath(BGE::RespiratoryPath::RightPleuralCavityToRespiratoryMuscle);
+  SEFluidCircuitPath* leftPleuralToRespiratoryMuscle = RespCircuit.GetPath(BGE::RespiratoryPath::LeftPleuralCavityToRespiratoryMuscle);
 
-  SEFluidCircuitNode* rightPleuralNode = RespCircuit.GetNode(BGE::RespiratoryNode::RightPleural);
-  SEFluidCircuitNode* leftPleuralNode = RespCircuit.GetNode(BGE::RespiratoryNode::LeftPleural);
-  SEFluidCircuitNode* rightDeadSpaceNode = RespCircuit.GetNode(BGE::RespiratoryNode::RightAnatomicDeadSpace);
-  SEFluidCircuitNode* leftDeadSpaceNode = RespCircuit.GetNode(BGE::RespiratoryNode::LeftAnatomicDeadSpace);
+  SEFluidCircuitNode* rightPleuralNode = RespCircuit.GetNode(BGE::RespiratoryNode::RightPleuralCavity);
+  SEFluidCircuitNode* leftPleuralNode = RespCircuit.GetNode(BGE::RespiratoryNode::LeftPleuralCavity);
+  SEFluidCircuitNode* rightDeadSpaceNode = RespCircuit.GetNode(BGE::RespiratoryNode::RightBronchi);
+  SEFluidCircuitNode* leftDeadSpaceNode = RespCircuit.GetNode(BGE::RespiratoryNode::LeftBronchi);
   SEFluidCircuitNode* rightAlveoliNode = RespCircuit.GetNode(BGE::RespiratoryNode::RightAlveoli);
   SEFluidCircuitNode* leftAlveoliNode = RespCircuit.GetNode(BGE::RespiratoryNode::LeftAlveoli);
 
