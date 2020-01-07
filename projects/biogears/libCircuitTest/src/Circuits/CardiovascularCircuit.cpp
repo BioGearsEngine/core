@@ -318,9 +318,9 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
 
   SEFluidCircuitNode* Aorta = cvCircuit.GetNode("Aorta1");
   SEFluidCircuitNode* VenaCava = cvCircuit.GetNode("VenaCava");
-  SEFluidCircuitPath* RightCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::RightHeart1ToRightHeart3);
-  SEFluidCircuitPath* LeftCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::LeftHeart1ToLeftHeart3);
-  SEFluidCircuitPath* HeartLeft = cvCircuit.GetPath(BGE::CardiovascularPath::LeftHeart1ToAorta2);
+  SEFluidCircuitPath* RightCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::RightAtrium1ToGround);
+  SEFluidCircuitPath* LeftCompliance = cvCircuit.GetPath(BGE::CardiovascularPath::LeftAtrium1ToGround);
+  SEFluidCircuitPath* HeartLeft = cvCircuit.GetPath(BGE::CardiovascularPath::LeftVentricle1ToAorta2);
 
   SELiquidSubstanceQuantity* venaCavaN2 = cvGraph.GetCompartment(BGE::VascularCompartment::VenaCava)->GetSubstanceQuantity(bg.GetSubstances().GetN2());
   SELiquidSubstanceQuantity* leftPulmonaryCapillariesN2 = cvGraph.GetCompartment(BGE::VascularCompartment::LeftPulmonaryCapillaries)->GetSubstanceQuantity(bg.GetSubstances().GetN2());

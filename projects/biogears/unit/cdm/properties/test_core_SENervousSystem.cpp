@@ -66,76 +66,52 @@ void TEST_FIXTURE_NAME::TearDown()
   delete es;
   delete logger;
 }
-TEST_F(TEST_FIXTURE_NAME, BaroreceptorHeartRateScale)
+TEST_F(TEST_FIXTURE_NAME, EfferentHeartRateScale)
 {
-  EXPECT_FALSE( es->HasBaroreceptorHeartRateScale());
-  es->GetBaroreceptorHeartRateScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasBaroreceptorHeartRateScale());
-  EXPECT_EQ(1.0, es->GetBaroreceptorHeartRateScale().GetValue());
+  EXPECT_FALSE( es->HasEfferentHeartRateScale());
+  es->GetEfferentHeartRateScale().SetValue(1.0);
+  EXPECT_TRUE( es->HasEfferentHeartRateScale());
+  EXPECT_EQ(1.0, es->GetEfferentHeartRateScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasBaroreceptorHeartRateScale());
-  auto dvalue = ces.GetBaroreceptorHeartRateScale();
+  EXPECT_FALSE( ces.HasEfferentHeartRateScale());
+  auto dvalue = ces.GetEfferentHeartRateScale();
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, BaroreceptorHeartElastanceScale)
+TEST_F(TEST_FIXTURE_NAME, EfferentHeartElastanceScale)
 {
-  EXPECT_FALSE( es->HasBaroreceptorHeartElastanceScale());
-  es->GetBaroreceptorHeartElastanceScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasBaroreceptorHeartElastanceScale());
-  EXPECT_EQ(1.0, es->GetBaroreceptorHeartElastanceScale().GetValue());
+  EXPECT_FALSE( es->HasEfferentHeartElastanceScale());
+  es->GetEfferentHeartElastanceScale().SetValue(1.0);
+  EXPECT_TRUE( es->HasEfferentHeartElastanceScale());
+  EXPECT_EQ(1.0, es->GetEfferentHeartElastanceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasBaroreceptorHeartElastanceScale());
-  auto dvalue = ces.GetBaroreceptorHeartElastanceScale();
+  EXPECT_FALSE( ces.HasEfferentHeartElastanceScale());
+  auto dvalue = ces.GetEfferentHeartElastanceScale();
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, BaroreceptorResistanceScale)
+TEST_F(TEST_FIXTURE_NAME, EfferentResistanceScale)
 {
-  EXPECT_FALSE( es->HasBaroreceptorResistanceScale());
-  es->GetBaroreceptorResistanceScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasBaroreceptorResistanceScale());
-  EXPECT_EQ(1.0, es->GetBaroreceptorResistanceScale().GetValue());
+  EXPECT_FALSE( es->HasEfferentResistanceScale());
+  es->GetEfferentResistanceScale().SetValue(1.0);
+  EXPECT_TRUE( es->HasEfferentResistanceScale());
+  EXPECT_EQ(1.0, es->GetEfferentResistanceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasBaroreceptorResistanceScale());
-  auto dvalue = ces.GetBaroreceptorResistanceScale();
+  EXPECT_FALSE( ces.HasEfferentResistanceScale());
+  auto dvalue = ces.GetEfferentResistanceScale();
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, BaroreceptorComplianceScale)
+TEST_F(TEST_FIXTURE_NAME, EfferentComplianceScale)
 {
-  EXPECT_FALSE( es->HasBaroreceptorComplianceScale());
-  es->GetBaroreceptorComplianceScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasBaroreceptorComplianceScale());
-  EXPECT_EQ(1.0, es->GetBaroreceptorComplianceScale().GetValue());
+  EXPECT_FALSE( es->HasEfferentComplianceScale());
+  es->GetEfferentComplianceScale().SetValue(1.0);
+  EXPECT_TRUE( es->HasEfferentComplianceScale());
+  EXPECT_EQ(1.0, es->GetEfferentComplianceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasBaroreceptorComplianceScale());
-  auto dvalue = ces.GetBaroreceptorComplianceScale();
-  EXPECT_NE(dvalue, dvalue);
-}
-TEST_F(TEST_FIXTURE_NAME, ChemoreceptorHeartRateScale)
-{
-  EXPECT_FALSE( es->HasChemoreceptorHeartRateScale());
-  es->GetChemoreceptorHeartRateScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasChemoreceptorHeartRateScale());
-  EXPECT_EQ(1.0, es->GetChemoreceptorHeartRateScale().GetValue());
-
-  const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasChemoreceptorHeartRateScale());
-  auto dvalue = ces.GetChemoreceptorHeartRateScale();
-  EXPECT_NE(dvalue, dvalue);
-}
-TEST_F(TEST_FIXTURE_NAME, ChemoreceptorHeartElastanceScale)
-{
-  EXPECT_FALSE( es->HasChemoreceptorHeartElastanceScale());
-  es->GetChemoreceptorHeartElastanceScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasChemoreceptorHeartElastanceScale());
-  EXPECT_EQ(1.0, es->GetChemoreceptorHeartElastanceScale().GetValue());
-
-  const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasChemoreceptorHeartElastanceScale());
-  auto dvalue = ces.GetChemoreceptorHeartElastanceScale();
+  EXPECT_FALSE( ces.HasEfferentComplianceScale());
+  auto dvalue = ces.GetEfferentComplianceScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PainVisualAnalogueScale)
