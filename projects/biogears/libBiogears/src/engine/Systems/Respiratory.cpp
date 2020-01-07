@@ -1031,7 +1031,7 @@ void Respiratory::AirwayObstruction()
     double Severity = m_PatientActions->GetAirwayObstruction()->GetSeverity().GetValue();
     double AirwayResistance = m_MouthToTrachea->GetNextResistance().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
     double dClosedResistance = AirwayResistance;
-    AirwayResistance = GeneralMath::ResistanceFunction(20.0, m_dRespOpenResistance_cmH2O_s_Per_L, dClosedResistance, Severity);
+    AirwayResistance = GeneralMath::ResistanceFunction(5.0, m_dRespOpenResistance_cmH2O_s_Per_L, dClosedResistance, Severity);
     m_MouthToTrachea->GetNextResistance().SetValue(AirwayResistance, FlowResistanceUnit::cmH2O_s_Per_L);
 
     //This flag tells this function to ramp down resistors once the Airway obstruction has been deactivated
