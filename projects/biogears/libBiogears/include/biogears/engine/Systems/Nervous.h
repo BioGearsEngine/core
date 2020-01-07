@@ -79,10 +79,8 @@ protected:
   double m_AfferentChemoreceptor_Hz;  //*AC
   double m_AfferentPulmonaryStretchReceptor_Hz;  //*AP
   double m_AfferentStrain;
-  double m_AfferentStrainBaseline;
   double m_ArterialOxygenBaseline_mmHg;
   double m_ArterialCarbonDioxideBaseline_mmHg;
-  double m_BaroreceptorOffset;
   double m_BaroreceptorOperatingPoint_mmHg;
   double m_CentralFrequencyDelta_Per_min;
   double m_CentralPressureDelta_cmH2O;
@@ -118,7 +116,6 @@ protected:
 
   // Stateless member variable (Set in SetUp())
   double m_AfferentBaroreceptor_Hz; //*AB
-  double m_AfferentAtrial_Hz; //*AA
   double m_AfferentThermal_Hz; //*AT
   double m_DrugRespirationEffects;
   bool m_FeedbackActive;

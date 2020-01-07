@@ -141,10 +141,8 @@ specific language governing permissions and limitations under the License.
           <xs:element name="AfferentChemoreceptor_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="AfferentPulmonaryStrechReceptor_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="AfferentStrain" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="AfferentStrainBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ArterialOxygenBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="BaroreceptorOffset" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorOperatingPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="CerebralArteriesEffectors_Large" type="xs:double" minOccurs="3" maxOccurs="3"/><!--@brief Effect of CBF, CO2, and O2 (hence 3 components) on large cerebral arteries-->
 		  <xs:element name="CerebralArteriesEffectors_Small" type="xs:double" minOccurs="3" maxOccurs="3"/><!--@brief Effect of CBF, CO2, and O2 (hence 3 components) on small cerebral arteries-->

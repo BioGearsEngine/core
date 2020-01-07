@@ -77,9 +77,7 @@ void Nervous::Initialize()
 
   m_AfferentChemoreceptor_Hz = 3.55;
   m_AfferentPulmonaryStretchReceptor_Hz = 0.0;
-  m_AfferentStrain = 0.04;
-  m_AfferentStrainBaseline = 0.9 * (1.0 - std::sqrt(1.0 / 3.0));
-  m_BaroreceptorOffset = 0.0;
+  m_AfferentStrain = 0.04226;
   m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
   m_CentralFrequencyDelta_Per_min = 0.0;
   m_CentralPressureDelta_cmH2O = 0.0;
@@ -136,10 +134,8 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_AfferentChemoreceptor_Hz = in.AfferentChemoreceptor_Hz();
   m_AfferentPulmonaryStretchReceptor_Hz = in.AfferentPulmonaryStrechReceptor_Hz();
   m_AfferentStrain = in.AfferentStrain();
-  m_AfferentStrainBaseline = in.AfferentStrainBaseline();
   m_ArterialCarbonDioxideBaseline_mmHg = in.ArterialCarbonDioxideBaseline_mmHg();
   m_ArterialOxygenBaseline_mmHg = in.ArterialOxygenBaseline_mmHg();
-  m_BaroreceptorOffset = in.BaroreceptorOffset();
   m_BaroreceptorOperatingPoint_mmHg = in.BaroreceptorOperatingPoint_mmHg();
   m_CentralFrequencyDelta_Per_min = in.CentralFrequencyDelta_Per_min();
   m_CentralPressureDelta_cmH2O = in.CentralPressureDelta_cmH2O();
@@ -192,10 +188,8 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.AfferentChemoreceptor_Hz(m_AfferentChemoreceptor_Hz);
   data.AfferentPulmonaryStrechReceptor_Hz(m_AfferentPulmonaryStretchReceptor_Hz);
   data.AfferentStrain(m_AfferentStrain);
-  data.AfferentStrainBaseline(m_AfferentStrainBaseline);
   data.ArterialCarbonDioxideBaseline_mmHg(m_ArterialCarbonDioxideBaseline_mmHg);
   data.ArterialOxygenBaseline_mmHg(m_ArterialOxygenBaseline_mmHg);
-  data.BaroreceptorOffset(m_BaroreceptorOffset);
   data.BaroreceptorOperatingPoint_mmHg(m_BaroreceptorOperatingPoint_mmHg);
   data.CentralFrequencyDelta_Per_min(m_CentralFrequencyDelta_Per_min);
   data.CentralPressureDelta_cmH2O(m_CentralPressureDelta_cmH2O);
@@ -260,7 +254,6 @@ void Nervous::SetUp()
   m_ArterialCarbonDioxideBaseline_mmHg = 40.0;
 
   m_AfferentBaroreceptor_Hz = 25.15;
-  m_AfferentAtrial_Hz = 10.0;
   m_SympatheticHeartSignal_Hz = 0.175;
   m_SympatheticPeripheralSignal_Hz = 0.20;
   m_VagalSignal_Hz = 0.80;
@@ -273,6 +266,8 @@ void Nervous::AtSteadyState()
     //Only reset oxygen baselines after initial stabilization because we want conditions (e.g. pneumonia) to put body in state of actively trying to get back to "normal"
     m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
     m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+    m_OxygenAutoregulatorHeart = 0.0;
+    m_OxygenAutoregulatorMuscle = 0.0;
   }
 
   // The set-points (Baselines) get reset at the end of each stabilization period.
@@ -293,10 +288,10 @@ void Nervous::AtSteadyState()
   //Changing the baroreceptor operating point to patient systolic pressure will cause the baroreceptor curve to reset to its central value
   //The offset term accounts for the shift in central point so that m_AfferentBaroreceptor is continuous and does introduce abrupt changes
   //in sympathathetic or vagal signals
-  m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
-  m_BaroreceptorOffset = m_AfferentBaroreceptor_Hz - 25.15;
-  const double wallStrain = 1.0 - std::sqrt(1.0 / 3.0); //This is the wall strain when arterial pressure = operating point (see BaroreceptorFeedback)
-  m_AfferentStrain = 0.1 * wallStrain;
+  //m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+  //m_BaroreceptorOffset = m_AfferentBaroreceptor_Hz - 25.15;
+  //const double wallStrain = 1.0 - std::sqrt(1.0 / 3.0); //This is the wall strain when arterial pressure = operating point (see BaroreceptorFeedback)
+  //m_AfferentStrain = 0.1 * wallStrain;
 
   //Set nervous signal baselines so that efferent effectors output baseline values to Cardiovascular system
   m_SympatheticHeartSignalBaseline = m_SympatheticHeartSignal_Hz;
@@ -340,7 +335,6 @@ void Nervous::Process()
   m_data.GetDataTrack().Probe("Afferent_Baroreceptor", m_AfferentBaroreceptor_Hz);
   m_data.GetDataTrack().Probe("Afferent_Chemoreceptor", m_AfferentChemoreceptor_Hz);
   m_data.GetDataTrack().Probe("Afferent_PulmonaryStretch", m_AfferentPulmonaryStretchReceptor_Hz);
-  m_data.GetDataTrack().Probe("Afferent_Atrial", m_AfferentAtrial_Hz);
   m_data.GetDataTrack().Probe("Ursino_SympatheticNode", m_SympatheticHeartSignal_Hz);
   m_data.GetDataTrack().Probe("Ursino_SympatheticPeripheral", m_SympatheticPeripheralSignal_Hz);
   m_data.GetDataTrack().Probe("Afferent_Strain", m_AfferentStrain);
@@ -374,22 +368,6 @@ void Nervous::AfferentResponse()
   //Generate afferent chemoreceptor signal -- combined respiration drug effects modifier calculated in this function since it primarily affects chemoreceptors
   ChemoreceptorFeedback();
 
-  //Afferent atrial stretch receptors (*aa = afferent atrial)--Input is a filtered venous pressure (less noisy) that is determined first
-  const double ambientPressure_mmHg = m_data.GetCircuits().GetRespiratoryCircuit().GetNode(BGE::EnvironmentNode::Ambient)->GetPressure(PressureUnit::mmHg);
-  const double thoracicPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg) - ambientPressure_mmHg;
-  m_data.GetDataTrack().Probe("ThoracicPressure", thoracicPressure_mmHg);
-  const double lungVenousPressure_mmHg = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::CardiovascularNode::LeftAtrium1)->GetPressure(PressureUnit::mmHg);
-  const double maxAA_Hz = 20.0;
-  const double gainAA_Hz_Per_mmHg = 3.5;
-  const double kAA = maxAA_Hz / (4.0 * gainAA_Hz_Per_mmHg);
-  const double tauAA_s = 30.0;
-  const double dTransmuralPressure = (1.0 / tauAA_s) * (-m_TransmuralPressureInput_mmHg + (lungVenousPressure_mmHg - thoracicPressure_mmHg));
-  m_TransmuralPressureInput_mmHg += (dTransmuralPressure * m_dt_s);
-  if (!m_FeedbackActive) {
-    m_TransmuralPressureBaseline_mmHg = m_TransmuralPressureInput_mmHg;
-  }
-  m_AfferentAtrial_Hz = maxAA_Hz / (1.0 + std::exp((m_TransmuralPressureBaseline_mmHg - m_TransmuralPressureInput_mmHg) / kAA));
-
   //Generate afferent lung stretch receptor signal (*ap = afferent pulmonary) -- push this input towards baseline when anesthetics/opioids are effecting respiratory drive
   const double tauAP_s = 2.0;
   const double gainAP_Hz_Per_L = 11.25;
@@ -412,16 +390,16 @@ void Nervous::CentralSignalProcess()
   //--------Determine sympathetic signal to heart (SH) and periphery (SP)-------------------------------------------------------
   //Sympathetic signal constants
   const double kS = 0.0675;
-  const double xSatSH = 50.0; //73.0;
-  const double xBasalSH = 23.59;
+  const double xSatSH = 50.0;
+  const double xBasalSH = 3.85;
   const double oxygenHalfMaxSH = 45.0;
   const double kOxygenSH = 6.0;
-  const double xCO2SH = 0.25; //1.0;
+  const double xCO2SH = 0.25;
   const double xSatSP = 15.0;
-  const double xBasalSP = 0.0;
+  const double xBasalSP = 1.9;
   const double oxygenHalfMaxSP = 30.0;
   const double kOxygenSP = 2.0;
-  const double xCO2SP = 0.25; //1.5;
+  const double xCO2SP = 0.25;
   const double tauIschemia = 30.0;
   const double tauCO2 = 20.0;
 
@@ -450,11 +428,10 @@ void Nervous::CentralSignalProcess()
 
   //Weights of sympathetic signal to heart (i.e. sino-atrial node)--AB = Afferent baroreceptor, AC = Afferent chemoreceptor, AA = Afferent atrial (cardiopulmonary), AT = Afferent thermal
   const double wSH_AB = -1.0;
-  const double wSH_AA = 0.0;
   const double wSH_AC = 1.0;
   const double wSH_AT = -1.0;
 
-  const double exponentSH = kS * (wSH_AB * m_AfferentBaroreceptor_Hz + wSH_AA * m_AfferentAtrial_Hz + wSH_AC * m_AfferentChemoreceptor_Hz - firingThresholdSH + 10.2);
+  const double exponentSH = kS * (wSH_AB * m_AfferentBaroreceptor_Hz + wSH_AC * m_AfferentChemoreceptor_Hz - firingThresholdSH);
   m_SympatheticHeartSignal_Hz = std::exp(exponentSH);
 
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
@@ -462,7 +439,7 @@ void Nervous::CentralSignalProcess()
   const double wSP_AC = 1.716;
   const double wSP_AP = -0.34;
   const double wSP_AT = 1.0;
-  const double exponentSP = kS * (wSP_AB * m_AfferentBaroreceptor_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz - firingThresholdSP + wSP_AP * 5.6);
+  const double exponentSP = kS * (wSP_AB * m_AfferentBaroreceptor_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz - firingThresholdSP);
   m_SympatheticPeripheralSignal_Hz = std::exp(exponentSP);
 
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
@@ -488,9 +465,9 @@ void Nervous::CentralSignalProcess()
   //-------Determine vagal (parasympathetic) signal to heart------------------------------------------------------------------
   const double kV = 7.06;
   const double wV_AB = 1.0;
-  const double wV_AC = 0.05; //0.2;
-  const double wV_AP = -0.03; //-0.103;
-  const double hypoxiaThresholdV = 0.0 - 0.525 + 0.5768; //Accounting for lung stretch offset
+  const double wV_AC = 0.05;
+  const double wV_AP = -0.03;
+  const double hypoxiaThresholdV = 0.0518; //Accounting for lung stretch offset
   const double baroreceptorScaleFactor = 1.2; //Maps vagal signal from Ursino2000Acute to scale in Randall2019Model (basis for heart rate feedback method)
   const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset AtSteadyState because we want continuous signals)
   const double cardiopulmonaryBaseline_Hz = 10.0;
@@ -592,10 +569,11 @@ void Nervous::BaroreceptorFeedback()
   const double strainSignal = wallStrain - m_AfferentStrain;
 
   //Convert strain signal to be on same basis as Ursino model--this puts deviations in wall strain on same basis as other signals
-  const double fBaroMax = 47.78 + m_BaroreceptorOffset;
-  const double fBaroMin = 2.52 + m_BaroreceptorOffset;
+  const double fBaroMax = 47.78;
+  const double fBaroMin = 2.52;
   const double kBaro = 0.075 * (1.0 - 2.0 * drugEffect);
-  const double baroExponent = std::exp((strainSignal - m_AfferentStrainBaseline) / kBaro);
+  const double baselineStrainSignal = 0.9 * (1.0 - std::sqrt(1.0 / 3.0));  //Derived by calculating wallStrain when systolic pressure = operating pressure and setting m_AfferentStrain = kVoigt * wallStrain (steady state)
+  const double baroExponent = std::exp((strainSignal - baselineStrainSignal) / kBaro);
   m_AfferentBaroreceptor_Hz = (fBaroMin + fBaroMax * baroExponent) / (1.0 + baroExponent);
 
   //Update setpoint

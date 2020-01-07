@@ -9,5 +9,5 @@
   <ProteinDigestionRate readOnly="false" unit="g/min" value="0.157"/>
   <Calcium readOnly="false" unit="mg" value="500"/>
   <Sodium readOnly="false" unit="g" value="1"/>
-  <Water readOnly="false" unit="L" value="0.5"/>
+  <Water readOnly="false" unit="L" value="0.0"/>
 </Nutrition>
