@@ -172,7 +172,7 @@ void HowToEngineUse()
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set(BGE::VascularCompartment::Aorta, *O2, "PartialPressure");
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set(BGE::VascularCompartment::Aorta, *CO2, "PartialPressure");
   bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Lungs, "Volume");
-  bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Carina, "InFlow");
+  bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Trachea, "InFlow");
 
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEngineUse.csv");
 
@@ -249,7 +249,7 @@ void HowToEngineUse()
   // Here we will test the flow of air in the carina compartment. A positive flow is an inhale and a negative flow is an exhale.
   // We can get the amount of CO2 exhaled and O2 inhaled by looking at the volume fraction of the carina of a particular substance
 
-  const SEGasCompartment* carina = bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Carina);
+  const SEGasCompartment* carina = bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea);
   if (carina->GetInFlow(VolumePerTimeUnit::L_Per_s) > 0) { // We are inhaling, so let's grab the amount of O2 coming into the body
     bg->GetLogger()->Info(std::stringstream() << "O2 Inhaled " << carina->GetSubstanceQuantity(*O2)->GetVolume(VolumeUnit::mL) << VolumeUnit::mL);
   } else { // We are exhaling, so let's grab the amount of CO2 that is leaving the body
