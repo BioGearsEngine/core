@@ -289,8 +289,8 @@ bool ReportWriter::to_table()
     std::ofstream file;
 
 #if _WIN32
-    _mkdir("doc");
-    _mkdir("doc/validation");
+    _mkdir("doc", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    _mkdir("doc/validation",  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #else
     mkdir("doc");
     mkdir("doc/validation");

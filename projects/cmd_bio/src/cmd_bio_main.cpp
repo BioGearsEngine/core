@@ -192,6 +192,12 @@ int main(int argc, char** argv)
     driver.queue(configs);
   }
 
+  driver.run();
+  driver.stop_when_empty();
+  driver.join();
+
+
+  //We want Gentables to run after all other work has finished
   if (args.MultiWordFound("GENTABLES")) {
     biogears::ReportWriter report_writer;
     auto tables = args.MultiWord("GENTABLES");
@@ -215,9 +221,6 @@ int main(int argc, char** argv)
     }
   }
 
-  driver.run();
-  driver.stop_when_empty();
-  driver.join();
 
   return 0;
 }
