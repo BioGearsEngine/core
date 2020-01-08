@@ -8,6 +8,12 @@
 #include <numeric>
 #include <sstream>
 
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
+
 namespace biogears {
 
 TableRow::TableRow() {}
@@ -116,31 +122,35 @@ void ReportWriter::set_web()
   _file_extension = ".md";
 }
 
-void ReportWriter::gen_tables_single_sheet(const char* reference_file, const char* results_file, char table_type)
+bool ReportWriter::gen_tables_single_sheet(const char* reference_file, const char* results_file, char table_type)
 {
-  gen_tables_single_sheet(std::string(reference_file), std::string(results_file), table_type);
+  return gen_tables_single_sheet(std::string(reference_file), std::string(results_file), table_type);
 }
 //-------------------------------------------------------------------------------
 /// \brief Takes in a single sheet, unlike gen_tables which takes in a list of validation and baselines files
 /// It is essentially one iteration of the for loop in gen_tables
-/// \param validation_file: std::string name of file containing validation data
-/// \param baseline_file: std::string name of file containing baseline data
+/// \param reference_file: std::string name of file containing validation data
+/// \param results_file: std::string name of file containing baseline data
 /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
 //-------------------------------------------------------------------------------
-void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type)
+
+bool ReportWriter::gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type)
+
 {
   logger->Info("Generating table: " + split(reference_file,'.')[0]);
   logger->SetConsolesetConversionPattern("\t%m%n");
-  ParseReferenceCSV(reference_file);
-  ParseResultsCSV(results_file);
-  CalculateAverages();
-  logger->Info("Successfully calculated averages of file: " + reference_file);
+
+  bool success = false;
+  success = ParseReferenceCSV(reference_file);
+  success &= ParseResultsCSV(results_file);
+  if (CalculateAverages()) {
+    //logger->Info("Successfully calculated averages of file: " + results_file);
   ExtractValues();
-  logger->Info("Successfully populated data structures with validation data");
+    //logger->Info("Successfully populated data structures with validation data");
   Validate();
-  logger->Info("Successfully ran validation");
+    //logger->Info("Successfully ran validation");
   PopulateTables();
-  logger->Info("Successfully populated tables vector");
+    //logger->Info("Successfully populated tables vector");
   if (table_type == 0) {
     set_html();
   } else if (table_type == 1) {
@@ -154,13 +164,18 @@ void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
   logger->Info("Successfully generated table: " + split(reference_file, '.')[0]);
   clear();
   logger->SetConsolesetConversionPattern("%d [%p] %m%n");
+  } else {
+    logger->Info("Failed to generate table: " + split(reference_file, '.')[0]);
+    return false;
+  }
+  return true;
 }
 //-------------------------------------------------------------------------------
  /// \brief Takes a list of validation files and results files from biogears and produces
  /// validation tables for our documentation.
  /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
 //-------------------------------------------------------------------------------
-void ReportWriter::gen_tables(char table_type)
+bool ReportWriter::gen_tables(TYPE table_type)
 {
   std::vector<std::string> reference_files{ "BloodChemistryValidation.csv",
                                             "CardiovascularValidation.csv",
@@ -179,43 +194,61 @@ void ReportWriter::gen_tables(char table_type)
   std::vector<std::string> xml_files { "HeatStrokeResultsCMP@2610.2s.xml" };
 
 
+  bool success = true;
   for (int i = 0; i < reference_files.size(); i++) {
     logger->Info("Generating table: " + split(reference_files[i], '.')[0]);
     logger->SetConsolesetConversionPattern("\t%m%n");
-    ParseReferenceCSV(std::string(reference_files[i]));
-    ParseResultsCSV(std::string(results_files[i]));
-    if (i == 0) {
-      ParseXML(xml_files[0]);
-    }
-    CalculateAverages();
-    logger->Info("Successfully calculated averages of file: " + results_files[i]);
-    ExtractValues();
-    logger->Info("Successfully populated data structures with validation data");
+    bool no_faults = false;
+    if (ParseReferenceCSV(std::string(reference_files[i]))) {
+      if (ParseResultsCSV(std::string(results_files[i]))) {
+        if (i == 0 && ParseXML(xml_files[0])) {
+          success = false;
+          continue;
+        }
+        if (CalculateAverages()) {
+          //logger->Info("Successfully calculated averages of file: " + results_files[i]);
+          if (ExtractValues()) {
+            //logger->Info("Successfully populated data structures with validation data");
     Validate();
-    logger->Info("Successfully ran validation");
+            //logger->Info("Successfully ran validation");
     PopulateTables();
-    logger->Info("Successfully populated tables vector");
-    if (table_type == 0) {
+            //logger->Info("Successfully populated tables vector");
+            if (table_type == HTML) {
       set_html();
-    } else if (table_type == 1) {
+            } else if (table_type == MD) {
       set_md();
-    } else if (table_type == 2) {
+            } else if (table_type == XML) {
       set_xml();
     } else {
       set_web();
     }
-    to_table();
-    logger->Info("Successfully generated table: " + split(reference_files[i], '.')[0]);
+
+            if (!to_table()) {
+              logger->Error("Failed to write table: " + split(reference_files[i], '.')[0]);
+            } else {
+
     clear();
     logger->SetConsolesetConversionPattern("%d [%p] %m%n");
+              no_faults = true;
+            }
+          }
   }
-  return;
+      }
+    }
+    if (no_faults) {
+      logger->Info("Successfully generated table: " + split(reference_files[i], '.')[0]);
+    } else {
+      logger->Error("Failed generating table: " + split(reference_files[i], '.')[0]);
+    }
+    success &= no_faults;
+  }
+  return success;
 }
 //-------------------------------------------------------------------------------
  /// \brief Takes the data stored in tables (a map pairing table names (std::string) to a list of TableRow objects (std::vector<biogears::TableRow>)
  /// and prints out a full validation table for each item in tables.
 //-------------------------------------------------------------------------------
-int ReportWriter::to_table()
+bool ReportWriter::to_table()
 {
   report.append(_body_begin);
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
@@ -254,36 +287,47 @@ int ReportWriter::to_table()
     table += std::string(_table_end);
     // This block saves out the html tables for website generation
     std::ofstream file;
-    file.open("validation/" + table_name + "ValidationTable" + _file_extension);
+
+#if _WIN32
+    _mkdir("doc");
+    _mkdir("doc/validation");
+#else
+    mkdir("doc");
+    mkdir("doc/validation");
+#endif
+
+    file.open("doc/validation/" + table_name + "ValidationTable" + _file_extension);
     if (!file) {
-      return 1;
+      return false;
     }
     file << (std::string(_body_begin) + table + std::string(_body_end));
     file.close();
     table.clear();
   }
 
-  return 0;
+  return true;
 }
 
-void ReportWriter::ParseReferenceCSV(const char* filename)
+bool ReportWriter::ParseReferenceCSV(const char* filename)
 {
-  ParseReferenceCSV(std::string(filename));
+  return ParseReferenceCSV(std::string(filename));
 }
 
-void ReportWriter::ParseReferenceCSV(std::string filename)
+bool ReportWriter::ParseReferenceCSV(std::string filename)
 {
-  ParseCSV(filename, this->validation_data);
+  return ParseCSV(filename, this->validation_data);
 }
 
-void ReportWriter::ParseResultsCSV(const char* filename)
+
+bool ReportWriter::ParseResultsCSV(const char* filename)
 {
-  ParseResultsCSV(std::string(filename));
+  return ParseResultsCSV(std::string(filename));
 }
 
-void ReportWriter::ParseResultsCSV(std::string filename)
+bool ReportWriter::ParseResultsCSV(std::string filename)
+
 {
-  ParseCSV(filename, this->biogears_results);
+  return ParseCSV(filename, this->biogears_results);
 }
 //-------------------------------------------------------------------------------
 /// \brief Parses a CSV file and loads it into a 2 dimension vector data, which represents a CSV.
@@ -291,12 +335,12 @@ void ReportWriter::ParseResultsCSV(std::string filename)
 /// \param filename: Name of the CSV file to be parsed
 /// \param data: Two dimensional vector for storing data from CSV file
 //-------------------------------------------------------------------------------
-void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& data)
+bool ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& data)
 {
   std::ifstream file{ filename };
   if (!file.is_open()) {
     logger->Error("Error opening: " + filename);
-    return;
+    return false;
   }
   std::string line;
   int line_number = 0;
@@ -332,18 +376,19 @@ void ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
     ++line_number;
   }
   logger->Info("Successfully parsed file: " + filename);
+  return true;
 }
 //-------------------------------------------------------------------------------
 /// \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
 /// and inserts the TableRow into a map
 /// \param filename: Name of XML file to be parsed
 //-------------------------------------------------------------------------------
-void ReportWriter::ParseXML(std::string& filename)
+bool ReportWriter::ParseXML(std::string& filename)
 {
   std::ifstream file{ filename };
   if (!file.is_open()) {
     logger->Error("Error opening: " + filename);
-    return;
+    return false;
   }
   std::string line;
   while (std::getline(file, line)) {        // This loop reads in the XML file line by line, then pulls out the value name, the unit name, and the value
@@ -370,13 +415,15 @@ void ReportWriter::ParseXML(std::string& filename)
     xmlRow.engine_value = std::stod(value);
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(name,xmlRow));
   }
+
+  return true;
 }
 
 //-------------------------------------------------------------------------------
 /// \brief Takes the information from biogears_results, which one of the results CSV files, averages them, creates
 /// a TableRow object for each one, and inserts them into a map of table rows
 //-------------------------------------------------------------------------------
-void ReportWriter::CalculateAverages()
+bool ReportWriter::CalculateAverages()
 {
   std::vector<biogears::TableRow> rows;
   std::vector<int> row_items;
@@ -399,7 +446,7 @@ void ReportWriter::CalculateAverages()
       } catch (std::exception& e) { // This usually occurs if one of the cells contains non-numeric characters, std::stod will throw an exception
         logger->Error(std::string("Error: ") + e.what());
         logger->Error("Cell Contents: " + biogears_results[i][k]);
-        throw(e);
+        return false;
       }
     }
   }
@@ -409,12 +456,13 @@ void ReportWriter::CalculateAverages()
     TableRow row = rows[i]; //So field_name_with_units looks like "Name(Unit)", which is why it gets split to just be "Name"
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(trim(split(field_name_with_units, '(')[0]), row));
   }
+  return true;
 }
 //-------------------------------------------------------------------------------
 /// \brief Extracts the values from validation_data, which is one of the validation CSV files, and
 /// creates a ReferenceValue object for each column
 //-------------------------------------------------------------------------------
-void ReportWriter::ExtractValues()
+bool ReportWriter::ExtractValues()
 {
   for (int i = 1; i < validation_data.size(); i++) {
     biogears::ReferenceValue ref;
@@ -430,7 +478,7 @@ void ReportWriter::ExtractValues()
       } catch (std::exception& e) {
         logger->Error(std::string("Error: ") + e.what());
         logger->Error("Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
-        throw(e);
+        return false;
       }
     } else {
       ref.is_range = false;
@@ -440,7 +488,7 @@ void ReportWriter::ExtractValues()
       } catch (std::exception& e) {
         logger->Error(std::string("Error: ") + e.what());
         logger->Error("Cell Contents: " + value[0]);
-        throw(e);
+        return false;
       }
     }
     ref.reference = split(validation_data[i][3], ',')[0];
@@ -448,12 +496,13 @@ void ReportWriter::ExtractValues()
     ref.table_name = validation_data[i][5];
     reference_values.push_back(ref);
   }
+  return true;
 }
 
 /*
  * This function is not currently in use, it's part of planned future upgrades to the ReportWriter
  */
-void ReportWriter::ExtractValuesList()
+bool ReportWriter::ExtractValuesList()
 {
   for (int i = 1; i < validation_data.size(); i++) {
     biogears::ReferenceValue ref;
@@ -472,7 +521,7 @@ void ReportWriter::ExtractValuesList()
         } catch (std::exception& e) {
           logger->Error(std::string("Error: ") + e.what());
           logger->Error("Cell Contents: " + values.substr(j ,eod - j));
-          throw(e);
+          return false;
         }
       } else if (values[j] == '[') {
         std::vector<std::string> value_range = split(values.substr(j + 1, values.find_first_of(']', j + 1) - (1 + j)),',');
@@ -481,12 +530,13 @@ void ReportWriter::ExtractValuesList()
         } catch (std::exception& e) {
           logger->Error(std::string("Error: ") + e.what());
           logger->Error("Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
-          throw(e);
+          return false;
         }
         j = values.find_first_of(']', j + 1);
       }
     }
   }
+  return true;
 }
 //-------------------------------------------------------------------------------
 /// \brief Takes each item in the vector reference_values and searches table_row_map for the corresponding
@@ -495,7 +545,7 @@ void ReportWriter::ExtractValuesList()
 void ReportWriter::Validate()
 {
   for (biogears::ReferenceValue ref : reference_values) {
-    logger->Info(ref.value_name);
+    //logger->Info(ref.value_name);
     auto table_row_itr = table_row_map.find(trim(ref.value_name));
     if (table_row_itr == table_row_map.end()) { // Certain reference values might not be present in biogears results
       logger->Info(std::string("  Not Found"));

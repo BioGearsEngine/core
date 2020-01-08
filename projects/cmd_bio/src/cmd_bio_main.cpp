@@ -40,7 +40,7 @@ void print_help() {
 
     std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
                                 "[THREADS N]\n" 
-                                "[TEST FILE [FILE]..., SCENARIO FILE [FILE]..., VALIDATE patient|drug|system|all, GENTABLES html|md|xml|web|all]\n\n";
+                                "[TEST FILE [FILE]...], pSCENARIO FILE [FILE]...], VALIDATE patient|drug|system|all], [GENTABLES html|md|xml|web|all]\n\n";
 
     std::cout << "Flags: \n";
     std::cout << "j : Thread control -j N\n";
@@ -192,32 +192,32 @@ int main(int argc, char** argv)
     driver.queue(configs);
   }
 
-  driver.run();
-  driver.stop_when_empty();
-  driver.join();
-
   if (args.MultiWordFound("GENTABLES")) {
     biogears::ReportWriter report_writer;
     auto tables = args.MultiWord("GENTABLES");
     for (auto& table : tables) {
       std::transform(table.begin(), table.end(), table.begin(), ::tolower);
       if (table == "html") {
-        report_writer.gen_tables(0);
+        report_writer.gen_tables(biogears::ReportWriter::HTML);
       } else if (table == "md") {
-        report_writer.gen_tables(1);
+        report_writer.gen_tables(biogears::ReportWriter::MD);
       } else if (table == "xml") {
-        report_writer.gen_tables(2);
+        report_writer.gen_tables(biogears::ReportWriter::XML);
       } else if (table == "web") {
-        report_writer.gen_tables(3);
+        report_writer.gen_tables(biogears::ReportWriter::WEB);
       } else if (table == "all") {
-        report_writer.gen_tables(0);
-        report_writer.gen_tables(1);
-        report_writer.gen_tables(2);
+        report_writer.gen_tables(biogears::ReportWriter::HTML);
+        report_writer.gen_tables(biogears::ReportWriter::MD);
+        report_writer.gen_tables(biogears::ReportWriter::XML);
       } else {
         std::cout << "Warning: " << table << " is not a valid keyword.\n";
       }
     }
   }
+
+  driver.run();
+  driver.stop_when_empty();
+  driver.join();
 
   return 0;
 }

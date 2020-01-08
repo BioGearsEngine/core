@@ -302,12 +302,12 @@ Validation results for system and compartment quantities are listed in Tables&nb
 <br><center>
 *Table 2. Validation of the resting physiologic state comparison of system-level outputs from %BioGears to referenced values. System-level outputs show favorable agreement with validation data.*
 </center>
-@insert validation/CardiovascularValidationTable.md
+@insert doc/validation/CardiovascularValidationTable.md
 
 <br><center>
 *Table 3. Validation of the resting physiologic state comparison of compartment-level outputs from %BioGears to referenced values. The compartments are currently validated on a flow/volume basis. Flows and most of the volumes show good agreement with validation values.*
 </center>
-@insert validation/CardiovascularCompartmentsValidationTable.md
+@insert doc/validation/CardiovascularCompartmentsValidationTable.md
 
 Compartment-level quantities show reasonable agreement with the validation values. All of the flows match the reference values within ~10&nbsp;percent. The volumes show some moderate differences for a few specific compartments. The aorta compartment volume is much smaller than the validated value. The compliance on this compartment needed to remain low in order to preserve the arterial pressure waveform, which led to less volume than expected. Similarly, the vena cava compliance was set in order to maintain the correct cardiac output and arterial pressures; therefore, its expected volume was limited. The right heart pressures and volumes show some disagreement with the validation data. The minimum values for right heart pressure and volume are much lower than valid ranges. This is due to restriction of unstressed volume in the right heart, which currently has an unstressed volume of zero. An increase in unstressed volume would shift the pressure volume minimums up, while also preserving the maximum values within their respective ranges. The %Cardiovascular System is tuned to vitals output validation (Table&nbsp;2), as well as good agreement with insults' and interventions&rsquo; expected trends and values (see the following section).  In addition, compartment validation was achieved on a reasonable level.
 
