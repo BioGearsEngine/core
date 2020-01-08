@@ -289,11 +289,11 @@ bool ReportWriter::to_table()
     std::ofstream file;
 
 #if _WIN32
-    _mkdir("doc", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    _mkdir("doc/validation",  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    _mkdir("doc");
+    _mkdir("doc/validation");
 #else
-    mkdir("doc");
-    mkdir("doc/validation");
+    mkdir("doc",  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir("doc/validation",  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
 
     file.open("doc/validation/" + table_name + "ValidationTable" + _file_extension);
