@@ -81,6 +81,9 @@ public class RespiratoryPFTPlotter implements Plotter
   {    
     //fill PlotJob with needed data if it doesn't exist
     PlotJob job = (PlotJob)listener;
+	//Plotter will look for the files it needs relative to the work directory
+	//If this fails it will fall back to a baseline location if one was 
+	//Provided to cmake at the time this file was generated
     if(job.dataPath == null || job.dataPath.isEmpty())
     {job.dataPath = "Scenarios/"+job.verificationDirectory+"/baselines/";}
     if(! Files.exists(Paths.get(job.dataPath)))

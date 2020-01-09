@@ -26,8 +26,9 @@ set(doxygen_dot_dir "C:/Program Files/graphviz-2.38/release/bin/")
 ###############################################################################
 # Requirments
 ###############################################################################
-if(Biogears_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_WEBSITE)
     find_package(Perl REQUIRED)
+	find_package(Doxygen REQUIRED)
 endif()
 ###############################################################################
 #Code Generation
@@ -126,7 +127,8 @@ if(Biogears_BUILD_WEBSITE)
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md #cdm
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodology doc/doxygen/processed_md #cdm
         COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx #cdm
-        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava.config 
+        #COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava-1_2.config
+        #COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.utilities.csv.plots.PlotDriver PlotRunJava-2_2.config 
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         VERBATIM
         USES_TERMINAL
@@ -139,18 +141,10 @@ if(Biogears_BUILD_WEBSITE)
   )
 
   add_custom_target(docs-stage
-        COMMAND mkdir ../documentation
-	      COMMAND  ${CMAKE_COMMAND} -e cp html/error.html  ../documentation/
-	      COMMAND  ${CMAKE_COMMAND} -e cp html/index.html  ../documentation/
-	      COMMAND  ${CMAKE_COMMAND} -e cp html/privacy.html  ../documentation/
-	      COMMAND  ${CMAKE_COMMAND} -e cp html/releases.html  ../documentation/
-	      COMMAND  ${CMAKE_COMMAND} -e cp html/terms.html  ../documentation/
-	      COMMAND  ${CMAKE_COMMAND} -e cp -r html ../documentation
-	      COMMAND  ${CMAKE_COMMAND} -e cp -r latex ../documentation
-	      COMMAND  ${CMAKE_COMMAND} -e cp footer.html ../documentation
-	      COMMAND  ${CMAKE_COMMAND} -e cp header.html ../documentation
-	      COMMAND  ${CMAKE_COMMAND} -e cp Mainpage.html ../documentation
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
+        COMMAND ${CMAKE_COMMAND} -E  make_directory output/documentation
+        COMMAND  ${CMAKE_COMMAND} -E copy_directory doxygen/html/ output/documentation
+        COMMAND  ${CMAKE_COMMAND} -E tar cz output/documentation.zip     output/documentation
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/
         VERBATIM
         USES_TERMINAL
   )
@@ -160,9 +154,9 @@ endif()
 
 option(Biogears_BUILD_WEBSITE "Use Java to build the website" OFF)
 if(Biogears_BUILD_WEBSITE)
-  add_dependencies(docs-prepare ${PROJECT_NAME})
-  add_dependencies(docs-doxygen ${PROJECT_NAME} docs-prepare)
-  add_dependencies(docs-stage   ${PROJECT_NAME} docs-doxygen)
+  #add_dependencies(docs-prepare ${PROJECT_NAME})
+  #add_dependencies(docs-doxygen ${PROJECT_NAME} docs-prepare)
+  #add_dependencies(docs-stage   ${PROJECT_NAME} docs-doxygen)
   set_target_properties(docs-prepare PROPERTIES FOLDER "Java/website" EXCLUDE_FROM_ALL ON)
   set_target_properties(docs-doxygen PROPERTIES FOLDER "Java/website" EXCLUDE_FROM_ALL ON)
   set_target_properties(docs-stage PROPERTIES FOLDER "Java/website"   EXCLUDE_FROM_ALL ON)

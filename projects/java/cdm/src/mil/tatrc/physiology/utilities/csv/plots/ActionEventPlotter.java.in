@@ -88,22 +88,44 @@ public class ActionEventPlotter implements Plotter
   {    
     //fill PlotJob with needed data if it doesn't exist
     PlotJob job = (PlotJob)listener;
-    if(job.dataPath == null || job.dataPath.isEmpty())
-    { job.dataPath ="Scenarios/"+job.verificationDirectory+"/baselines/"; }
-    if(! Files.exists(Paths.get(job.dataPath)))
-    { job.dataPath = Paths.get(verificationDirectory,job.dataPath).toString();  }
+    
+	//Plotter will look for the files it needs relative to the work directory
+	//If this fails it will fall back to a baseline location if one was 
+	//Provided to cmake at the time this file was generated
+
+	if(job.dataPath == null || job.dataPath.isEmpty()) { 
+      job.dataPath ="Scenarios/"+job.verificationDirectory+"/baselines/"; 
+    }
+    if(! Files.exists(Paths.get(job.dataPath))) { 
+      job.dataPath = Paths.get(verificationDirectory,job.dataPath).toString();
+    }
+
+
     if(job.logPath == null || job.logPath.isEmpty())
-    { job.logPath ="Scenarios/"+job.verificationDirectory+"/baselines/"; }
-    if(! Files.exists(Paths.get(job.logPath)))
-    { job.logPath = Paths.get(verificationDirectory,job.logPath).toString();  }
-    if(job.scenarioPath == null || job.scenarioPath.isEmpty())
-    { job.scenarioPath = "Scenarios/"+job.verificationDirectory+"/"; }
-    if(job.dataFile == null || job.dataFile.isEmpty())
-    { job.dataFile = job.name + "Results.zip"; }
-    if(job.logFile == null || job.logFile.isEmpty())
-    { job.logFile = job.name + "Results.zip"; }
-    if(job.scenarioFile == null || job.scenarioFile.isEmpty())
-    { job.scenarioFile = job.name + ".xml"; }
+    { 
+      job.logPath ="Scenarios/"+job.verificationDirectory+"/baselines/"; 
+    }
+    if(! Files.exists(Paths.get(job.logPath))) {
+      job.logPath = Paths.get(verificationDirectory,job.logPath).toString();  
+    }
+    
+	if(job.scenarioPath == null || job.scenarioPath.isEmpty()) { 
+      job.scenarioPath = "Scenarios/"+job.verificationDirectory+"/"; 
+    }
+    
+	if(job.dataFile == null || job.dataFile.isEmpty()) { 
+      job.dataFile = job.name + "Results.zip"; 
+    }
+    
+	if(job.logFile == null || job.logFile.isEmpty())
+    { 
+      job.logFile = job.name + "Results.zip"; 
+    }
+    
+	if(job.scenarioFile == null || job.scenarioFile.isEmpty())
+    {
+      job.scenarioFile = job.name + ".xml";
+    }
     
     //get all events from Log file
     if(!job.skipAllEvents)
@@ -385,10 +407,10 @@ public class ActionEventPlotter implements Plotter
     for(AEEntry entry : allActionsAndEvents)
     {
       try {
-	    dataSet.addSeries(plotTool.createXYSeries(entry.type + entry.name,entry.times,entry.YVals));
+        dataSet.addSeries(plotTool.createXYSeries(entry.type + entry.name,entry.times,entry.YVals));
       } catch ( NullPointerException ex) {
-		//log.Error("Something Wrong")
-	  }
+        //log.Error("Something Wrong")
+    }
     }
     
     //If we have experimental data, try to load it and create a dataset for it
