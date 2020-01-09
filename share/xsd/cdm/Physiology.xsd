@@ -301,13 +301,14 @@ specific language governing permissions and limitations under the License.
     <xs:complexType name="NervousSystemData">
         <xs:complexContent>
             <xs:extension base="SystemData">
-                <xs:sequence>
-					<xs:element name="AutoregulatedMuscleResistanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="AutoregulatedHeartResistanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>       
-                    <xs:element name="EfferentHeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
-                    <xs:element name="EfferentHeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
-                    <xs:element name="EfferentResistanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->
-                    <xs:element name="EfferentComplianceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular compliance multiplier used to scale the heart rate due to baroreceptor feedback-->
+                <xs:sequence>    
+                    <xs:element name="HeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
+                    <xs:element name="HeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
+                    <xs:element name="ResistanceScaleExtrasplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ResistanceScaleMuscle" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->
+                    <xs:element name="ResistanceScaleMyocardium" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ResistanceScaleSplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ComplianceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular compliance multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="LeftEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->   		
                     <xs:element name="PainVisualAnalogueScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Computed visual analogue scale due to stimulus and patient susceptibility-->
 					<xs:element name="RightEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->                                      

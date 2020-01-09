@@ -200,7 +200,7 @@ void Energy::PreProcess()
   CalculateMetabolicHeatGeneration();
   CalculateSweatRate();
   UpdateHeatResistance();
-  ManageEnergyDeficit();
+  //ManageEnergyDeficit();
   Exercise();
 }
 

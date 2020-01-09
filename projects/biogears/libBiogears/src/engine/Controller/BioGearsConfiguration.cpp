@@ -51,21 +51,6 @@ namespace biogears {
 BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   : PhysiologyEngineConfiguration(substances.GetLogger())
   , m_Substances(substances)
-  // Barorecptors
-  , m_ResponseSlope(nullptr)
-  , m_HeartRateDistributedTimeDelay(nullptr)
-  , m_HeartElastanceDistributedTimeDelay(nullptr)
-  , m_SystemicResistanceDistributedTimeDelay(nullptr)
-  , m_VenousComplianceDistributedTimeDelay(nullptr)
-  , m_NormalizedHeartRateIntercept(nullptr)
-  , m_NormalizedHeartRateSympatheticSlope(nullptr)
-  , m_NormalizedHeartRateParasympatheticSlope(nullptr)
-  , m_NormalizedHeartElastanceIntercept(nullptr)
-  , m_NormalizedHeartElastanceSympatheticSlope(nullptr)
-  , m_NormalizedResistanceIntercept(nullptr)
-  , m_NormalizedResistanceSympatheticSlope(nullptr)
-  , m_NormalizedComplianceIntercept(nullptr)
-  , m_NormalizedComplianceParasympatheticSlope(nullptr)
   // Blood Chemistry
   , m_MeanCorpuscularHemoglobin(nullptr)
   , m_MeanCorpuscularVolume(nullptr)
@@ -159,22 +144,6 @@ BioGearsConfiguration::~BioGearsConfiguration()
 void BioGearsConfiguration::Clear()
 {
   PhysiologyEngineConfiguration::Clear();
-
-  // Barorecptors
-  SAFE_DELETE(m_ResponseSlope);
-  SAFE_DELETE(m_HeartRateDistributedTimeDelay);
-  SAFE_DELETE(m_HeartElastanceDistributedTimeDelay);
-  SAFE_DELETE(m_SystemicResistanceDistributedTimeDelay);
-  SAFE_DELETE(m_VenousComplianceDistributedTimeDelay);
-  SAFE_DELETE(m_NormalizedHeartRateIntercept);
-  SAFE_DELETE(m_NormalizedHeartRateSympatheticSlope);
-  SAFE_DELETE(m_NormalizedHeartRateParasympatheticSlope);
-  SAFE_DELETE(m_NormalizedHeartElastanceIntercept);
-  SAFE_DELETE(m_NormalizedHeartElastanceSympatheticSlope);
-  SAFE_DELETE(m_NormalizedResistanceIntercept);
-  SAFE_DELETE(m_NormalizedResistanceSympatheticSlope);
-  SAFE_DELETE(m_NormalizedComplianceIntercept);
-  SAFE_DELETE(m_NormalizedComplianceParasympatheticSlope);
 
   // Blood Chemistry
   SAFE_DELETE(m_MeanCorpuscularHemoglobin);
@@ -282,22 +251,6 @@ void BioGearsConfiguration::Initialize()
   GetDynamicStabilizationCriteria().Load("config/DynamicStabilization.xml");
   //GetTimedStabilizationCriteria().Load("config/TimedStabilization.xml");
   m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off); // Turn on to include stabilization tracking for debugging
-
-  // Baroreceptors
-  GetResponseSlope().SetValue(12.0); //nu
-  GetHeartRateDistributedTimeDelay().SetValue(20.0, TimeUnit::s);
-  GetHeartElastanceDistributedTimeDelay().SetValue(20.0, TimeUnit::s);
-  GetSystemicResistanceDistributedTimeDelay().SetValue(30.0, TimeUnit::s);
-  GetVenousComplianceDistributedTimeDelay().SetValue(60.0, TimeUnit::s);
-  GetNormalizedHeartRateIntercept().SetValue(0.26); //Gamma Heart Rate
-  GetNormalizedHeartRateSympatheticSlope().SetValue(1.73); //Alpha Heart Rate
-  GetNormalizedHeartRateParasympatheticSlope().SetValue(0.25); //Beta Heart Rate
-  GetNormalizedHeartElastanceIntercept().SetValue(0.95); //Gamma Heart Elastance
-  GetNormalizedHeartElastanceSympatheticSlope().SetValue(0.1); //Alpha Elastance
-  GetNormalizedResistanceIntercept().SetValue(0.4); //Gamma Resistance
-  GetNormalizedResistanceSympatheticSlope().SetValue(1.2); //Alpha Resistance
-  GetNormalizedComplianceIntercept().SetValue(0.7); //Gamma Compliance
-  GetNormalizedComplianceParasympatheticSlope().SetValue(0.6); //Alpha Compliance
 
   //Blood Chemistry
   GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
@@ -442,39 +395,6 @@ bool BioGearsConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& f
 bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
 {
   PhysiologyEngineConfiguration::Load(in);
-
-  //Barorecptors
-  if (in.BaroreceptorConfiguration().present()) {
-    const CDM::BaroreceptorConfigurationData& config = in.BaroreceptorConfiguration().get();
-    if (config.ResponseSlope().present())
-      GetResponseSlope().Load(config.ResponseSlope().get());
-    if (config.HeartRateDistributedTimeDelay().present())
-      GetHeartRateDistributedTimeDelay().Load(config.HeartRateDistributedTimeDelay().get());
-    if (config.HeartElastanceDistributedTimeDelay().present())
-      GetHeartElastanceDistributedTimeDelay().Load(config.HeartElastanceDistributedTimeDelay().get());
-    if (config.SystemicResistanceDistributedTimeDelay().present())
-      GetSystemicResistanceDistributedTimeDelay().Load(config.SystemicResistanceDistributedTimeDelay().get());
-    if (config.VenousComplianceDistributedTimeDelay().present())
-      GetVenousComplianceDistributedTimeDelay().Load(config.VenousComplianceDistributedTimeDelay().get());
-    if (config.NormalizedHeartRateIntercept().present())
-      GetNormalizedHeartRateIntercept().Load(config.NormalizedHeartRateIntercept().get());
-    if (config.NormalizedHeartRateSympatheticSlope().present())
-      GetNormalizedHeartRateSympatheticSlope().Load(config.NormalizedHeartRateSympatheticSlope().get());
-    if (config.NormalizedHeartRateParasympatheticSlope().present())
-      GetNormalizedHeartRateParasympatheticSlope().Load(config.NormalizedHeartRateParasympatheticSlope().get());
-    if (config.NormalizedHeartElastanceIntercept().present())
-      GetNormalizedHeartElastanceIntercept().Load(config.NormalizedHeartElastanceIntercept().get());
-    if (config.NormalizedHeartElastanceSympatheticSlope().present())
-      GetNormalizedHeartElastanceSympatheticSlope().Load(config.NormalizedHeartElastanceSympatheticSlope().get());
-    if (config.NormalizedResistanceIntercept().present())
-      GetNormalizedResistanceIntercept().Load(config.NormalizedResistanceIntercept().get());
-    if (config.NormalizedResistanceSympatheticSlope().present())
-      GetNormalizedResistanceSympatheticSlope().Load(config.NormalizedResistanceSympatheticSlope().get());
-    if (config.NormalizedComplianceIntercept().present())
-      GetNormalizedComplianceIntercept().Load(config.NormalizedComplianceIntercept().get());
-    if (config.NormalizedComplianceParasympatheticSlope().present())
-      GetNormalizedComplianceParasympatheticSlope().Load(config.NormalizedComplianceParasympatheticSlope().get());
-  }
 
   // Blood Chemistry
   if (in.BloodChemistryConfiguration().present()) {
@@ -719,38 +639,6 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
 {
   PhysiologyEngineConfiguration::Unload(data);
 
-  // Barorecptor
-  CDM::BaroreceptorConfigurationData* baro(new CDM::BaroreceptorConfigurationData());
-  if (HasResponseSlope())
-    baro->ResponseSlope(std::unique_ptr<CDM::ScalarData>(m_ResponseSlope->Unload()));
-  if (HasHeartRateDistributedTimeDelay())
-    baro->HeartRateDistributedTimeDelay(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRateDistributedTimeDelay->Unload()));
-  if (HasHeartElastanceDistributedTimeDelay())
-    baro->HeartElastanceDistributedTimeDelay(std::unique_ptr<CDM::ScalarTimeData>(m_HeartElastanceDistributedTimeDelay->Unload()));
-  if (HasSystemicResistanceDistributedTimeDelay())
-    baro->SystemicResistanceDistributedTimeDelay(std::unique_ptr<CDM::ScalarTimeData>(m_SystemicResistanceDistributedTimeDelay->Unload()));
-  if (HasVenousComplianceDistributedTimeDelay())
-    baro->VenousComplianceDistributedTimeDelay(std::unique_ptr<CDM::ScalarTimeData>(m_VenousComplianceDistributedTimeDelay->Unload()));
-  if (HasNormalizedHeartRateIntercept())
-    baro->NormalizedHeartRateIntercept(std::unique_ptr<CDM::ScalarData>(m_NormalizedHeartRateIntercept->Unload()));
-  if (HasNormalizedHeartRateSympatheticSlope())
-    baro->NormalizedHeartRateSympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedHeartRateSympatheticSlope->Unload()));
-  if (HasNormalizedHeartRateParasympatheticSlope())
-    baro->NormalizedHeartRateParasympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedHeartRateParasympatheticSlope->Unload()));
-  if (HasNormalizedHeartElastanceIntercept())
-    baro->NormalizedHeartElastanceIntercept(std::unique_ptr<CDM::ScalarData>(m_NormalizedHeartElastanceIntercept->Unload()));
-  if (HasNormalizedHeartElastanceSympatheticSlope())
-    baro->NormalizedHeartElastanceSympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedHeartElastanceSympatheticSlope->Unload()));
-  if (HasNormalizedResistanceIntercept())
-    baro->NormalizedResistanceIntercept(std::unique_ptr<CDM::ScalarData>(m_NormalizedResistanceIntercept->Unload()));
-  if (HasNormalizedResistanceSympatheticSlope())
-    baro->NormalizedResistanceSympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedResistanceSympatheticSlope->Unload()));
-  if (HasNormalizedComplianceIntercept())
-    baro->NormalizedComplianceIntercept(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceIntercept->Unload()));
-  if (HasNormalizedComplianceParasympatheticSlope())
-    baro->NormalizedComplianceParasympatheticSlope(std::unique_ptr<CDM::ScalarData>(m_NormalizedComplianceParasympatheticSlope->Unload()));
-  data.BaroreceptorConfiguration(std::unique_ptr<CDM::BaroreceptorConfigurationData>(baro));
-
   // Blood Chemistry
   CDM::BloodChemistryConfigurationData* bc(new CDM::BloodChemistryConfigurationData());
   if (HasMeanCorpuscularHemoglobin())
@@ -934,247 +822,6 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   if (HasEnableTissue())
     tissue->EnableTissue(m_TissueEnabled);
   data.TissueConfiguration(std::unique_ptr<CDM::TissueConfigurationData>(tissue));
-}
-
-////////////////////
-/** Baroreceptors */
-////////////////////
-bool BioGearsConfiguration::HasResponseSlope() const
-{
-  return m_ResponseSlope == nullptr ? false : m_ResponseSlope->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetResponseSlope()
-{
-  if (m_ResponseSlope == nullptr)
-    m_ResponseSlope = new SEScalar();
-  return *m_ResponseSlope;
-}
-double BioGearsConfiguration::GetResponseSlope() const
-{
-  if (m_ResponseSlope == nullptr)
-    return SEScalar::dNaN();
-  return m_ResponseSlope->GetValue();
-}
-
-bool BioGearsConfiguration::HasHeartRateDistributedTimeDelay() const
-{
-  return m_HeartRateDistributedTimeDelay == nullptr ? false : m_HeartRateDistributedTimeDelay->IsValid();
-}
-SEScalarTime& BioGearsConfiguration::GetHeartRateDistributedTimeDelay()
-{
-  if (m_HeartRateDistributedTimeDelay == nullptr)
-    m_HeartRateDistributedTimeDelay = new SEScalarTime();
-  return *m_HeartRateDistributedTimeDelay;
-}
-double BioGearsConfiguration::GetHeartRateDistributedTimeDelay(const TimeUnit& unit) const
-{
-  if (m_HeartRateDistributedTimeDelay == nullptr)
-    return SEScalar::dNaN();
-  return m_HeartRateDistributedTimeDelay->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasHeartElastanceDistributedTimeDelay() const
-{
-  return m_HeartElastanceDistributedTimeDelay == nullptr ? false : m_HeartElastanceDistributedTimeDelay->IsValid();
-}
-SEScalarTime& BioGearsConfiguration::GetHeartElastanceDistributedTimeDelay()
-{
-  if (m_HeartElastanceDistributedTimeDelay == nullptr)
-    m_HeartElastanceDistributedTimeDelay = new SEScalarTime();
-  return *m_HeartElastanceDistributedTimeDelay;
-}
-double BioGearsConfiguration::GetHeartElastanceDistributedTimeDelay(const TimeUnit& unit) const
-{
-  if (m_HeartElastanceDistributedTimeDelay == nullptr)
-    return SEScalar::dNaN();
-  return m_HeartElastanceDistributedTimeDelay->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasSystemicResistanceDistributedTimeDelay() const
-{
-  return m_SystemicResistanceDistributedTimeDelay == nullptr ? false : m_SystemicResistanceDistributedTimeDelay->IsValid();
-}
-SEScalarTime& BioGearsConfiguration::GetSystemicResistanceDistributedTimeDelay()
-{
-  if (m_SystemicResistanceDistributedTimeDelay == nullptr)
-    m_SystemicResistanceDistributedTimeDelay = new SEScalarTime();
-  return *m_SystemicResistanceDistributedTimeDelay;
-}
-double BioGearsConfiguration::GetSystemicResistanceDistributedTimeDelay(const TimeUnit& unit) const
-{
-  if (m_SystemicResistanceDistributedTimeDelay == nullptr)
-    return SEScalar::dNaN();
-  return m_SystemicResistanceDistributedTimeDelay->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasVenousComplianceDistributedTimeDelay() const
-{
-  return m_VenousComplianceDistributedTimeDelay == nullptr ? false : m_VenousComplianceDistributedTimeDelay->IsValid();
-}
-SEScalarTime& BioGearsConfiguration::GetVenousComplianceDistributedTimeDelay()
-{
-  if (m_VenousComplianceDistributedTimeDelay == nullptr)
-    m_VenousComplianceDistributedTimeDelay = new SEScalarTime();
-  return *m_VenousComplianceDistributedTimeDelay;
-}
-double BioGearsConfiguration::GetVenousComplianceDistributedTimeDelay(const TimeUnit& unit) const
-{
-  if (m_VenousComplianceDistributedTimeDelay == nullptr)
-    return SEScalar::dNaN();
-  return m_VenousComplianceDistributedTimeDelay->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasNormalizedHeartRateIntercept() const
-{
-  return m_NormalizedHeartRateIntercept == nullptr ? false : m_NormalizedHeartRateIntercept->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedHeartRateIntercept()
-{
-  if (m_NormalizedHeartRateIntercept == nullptr)
-    m_NormalizedHeartRateIntercept = new SEScalar();
-  return *m_NormalizedHeartRateIntercept;
-}
-double BioGearsConfiguration::GetNormalizedHeartRateIntercept() const
-{
-  if (m_NormalizedHeartRateIntercept == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedHeartRateIntercept->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedHeartRateSympatheticSlope() const
-{
-  return m_NormalizedHeartRateSympatheticSlope == nullptr ? false : m_NormalizedHeartRateSympatheticSlope->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedHeartRateSympatheticSlope()
-{
-  if (m_NormalizedHeartRateSympatheticSlope == nullptr)
-    m_NormalizedHeartRateSympatheticSlope = new SEScalar();
-  return *m_NormalizedHeartRateSympatheticSlope;
-}
-double BioGearsConfiguration::GetNormalizedHeartRateSympatheticSlope() const
-{
-  if (m_NormalizedHeartRateSympatheticSlope == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedHeartRateSympatheticSlope->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedHeartRateParasympatheticSlope() const
-{
-  return m_NormalizedHeartRateParasympatheticSlope == nullptr ? false : m_NormalizedHeartRateParasympatheticSlope->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedHeartRateParasympatheticSlope()
-{
-  if (m_NormalizedHeartRateParasympatheticSlope == nullptr)
-    m_NormalizedHeartRateParasympatheticSlope = new SEScalar();
-  return *m_NormalizedHeartRateParasympatheticSlope;
-}
-double BioGearsConfiguration::GetNormalizedHeartRateParasympatheticSlope() const
-{
-  if (m_NormalizedHeartRateParasympatheticSlope == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedHeartRateParasympatheticSlope->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedHeartElastanceIntercept() const
-{
-  return m_NormalizedHeartElastanceIntercept == nullptr ? false : m_NormalizedHeartElastanceIntercept->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedHeartElastanceIntercept()
-{
-  if (m_NormalizedHeartElastanceIntercept == nullptr)
-    m_NormalizedHeartElastanceIntercept = new SEScalar();
-  return *m_NormalizedHeartElastanceIntercept;
-}
-double BioGearsConfiguration::GetNormalizedHeartElastanceIntercept() const
-{
-  if (m_NormalizedHeartElastanceIntercept == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedHeartElastanceIntercept->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedHeartElastanceSympatheticSlope() const
-{
-  return m_NormalizedHeartElastanceSympatheticSlope == nullptr ? false : m_NormalizedHeartElastanceSympatheticSlope->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedHeartElastanceSympatheticSlope()
-{
-  if (m_NormalizedHeartElastanceSympatheticSlope == nullptr)
-    m_NormalizedHeartElastanceSympatheticSlope = new SEScalar();
-  return *m_NormalizedHeartElastanceSympatheticSlope;
-}
-double BioGearsConfiguration::GetNormalizedHeartElastanceSympatheticSlope() const
-{
-  if (m_NormalizedHeartElastanceSympatheticSlope == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedHeartElastanceSympatheticSlope->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedResistanceIntercept() const
-{
-  return m_NormalizedResistanceIntercept == nullptr ? false : m_NormalizedResistanceIntercept->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedResistanceIntercept()
-{
-  if (m_NormalizedResistanceIntercept == nullptr)
-    m_NormalizedResistanceIntercept = new SEScalar();
-  return *m_NormalizedResistanceIntercept;
-}
-double BioGearsConfiguration::GetNormalizedResistanceIntercept() const
-{
-  if (m_NormalizedResistanceIntercept == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedResistanceIntercept->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedResistanceSympatheticSlope() const
-{
-  return m_NormalizedResistanceSympatheticSlope == nullptr ? false : m_NormalizedResistanceSympatheticSlope->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedResistanceSympatheticSlope()
-{
-  if (m_NormalizedResistanceSympatheticSlope == nullptr)
-    m_NormalizedResistanceSympatheticSlope = new SEScalar();
-  return *m_NormalizedResistanceSympatheticSlope;
-}
-double BioGearsConfiguration::GetNormalizedResistanceSympatheticSlope() const
-{
-  if (m_NormalizedResistanceSympatheticSlope == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedResistanceSympatheticSlope->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedComplianceIntercept() const
-{
-  return m_NormalizedComplianceIntercept == nullptr ? false : m_NormalizedComplianceIntercept->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedComplianceIntercept()
-{
-  if (m_NormalizedComplianceIntercept == nullptr)
-    m_NormalizedComplianceIntercept = new SEScalar();
-  return *m_NormalizedComplianceIntercept;
-}
-double BioGearsConfiguration::GetNormalizedComplianceIntercept() const
-{
-  if (m_NormalizedComplianceIntercept == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedComplianceIntercept->GetValue();
-}
-
-bool BioGearsConfiguration::HasNormalizedComplianceParasympatheticSlope() const
-{
-  return m_NormalizedComplianceParasympatheticSlope == nullptr ? false : m_NormalizedComplianceParasympatheticSlope->IsValid();
-}
-SEScalar& BioGearsConfiguration::GetNormalizedComplianceParasympatheticSlope()
-{
-  if (m_NormalizedComplianceParasympatheticSlope == nullptr)
-    m_NormalizedComplianceParasympatheticSlope = new SEScalar();
-  return *m_NormalizedComplianceParasympatheticSlope;
-}
-double BioGearsConfiguration::GetNormalizedComplianceParasympatheticSlope() const
-{
-  if (m_NormalizedComplianceParasympatheticSlope == nullptr)
-    return SEScalar::dNaN();
-  return m_NormalizedComplianceParasympatheticSlope->GetValue();
 }
 
 //////////////////////

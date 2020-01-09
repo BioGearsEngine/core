@@ -157,23 +157,24 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ComplianceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HeartElastanceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="HeartOxygenBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="HeartRateModifierSympathetic" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="HeartRateModifierVagal" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="HypocapniaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="HypocapniaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HypoxiaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HypoxiaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="IntrinsicHeartRate" type="xs:double" minOccurs="1" maxOccurs="1"/><!--@brief Heart rate w/ no sympathetic or parasympathetic signals-->
+		  <xs:element name="IntrinsicHeartPeriod_s" type="xs:double" minOccurs="1" maxOccurs="1"/><!--@brief Heart rate w/ no sympathetic or parasympathetic signals-->
 		  <xs:element name="MuscleOxygenBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="OxygenAutoregulatorHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="OxygenAutoregulatorMuscle" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="PeripheralFrequencyDelta_Per_min" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="PeripheralPressureDelta_cmH2O" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="ResistanceModifier" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="SympatheticHeartSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="SympatheticPeripheralSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ResistanceModifierExtrasplanchnic" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ResistanceModifierMuscle" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="ResistanceModifierSplanchnic" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="SympatheticPeripheralSignalFatigue" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="TransmuralPressureBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="TransmuralPressureInput_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="VagalSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

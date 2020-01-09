@@ -66,52 +66,88 @@ void TEST_FIXTURE_NAME::TearDown()
   delete es;
   delete logger;
 }
-TEST_F(TEST_FIXTURE_NAME, EfferentHeartRateScale)
+TEST_F(TEST_FIXTURE_NAME, HeartRateScale)
 {
-  EXPECT_FALSE( es->HasEfferentHeartRateScale());
-  es->GetEfferentHeartRateScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasEfferentHeartRateScale());
-  EXPECT_EQ(1.0, es->GetEfferentHeartRateScale().GetValue());
+  EXPECT_FALSE( es->HasHeartRateScale());
+  es->GetHeartRateScale().SetValue(1.0);
+  EXPECT_TRUE( es->HasHeartRateScale());
+  EXPECT_EQ(1.0, es->GetHeartRateScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasEfferentHeartRateScale());
-  auto dvalue = ces.GetEfferentHeartRateScale();
+  EXPECT_FALSE( ces.HasHeartRateScale());
+  auto dvalue = ces.GetHeartRateScale();
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, EfferentHeartElastanceScale)
+TEST_F(TEST_FIXTURE_NAME, HeartElastanceScale)
 {
-  EXPECT_FALSE( es->HasEfferentHeartElastanceScale());
-  es->GetEfferentHeartElastanceScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasEfferentHeartElastanceScale());
-  EXPECT_EQ(1.0, es->GetEfferentHeartElastanceScale().GetValue());
+  EXPECT_FALSE( es->HasHeartElastanceScale());
+  es->GetHeartElastanceScale().SetValue(1.0);
+  EXPECT_TRUE( es->HasHeartElastanceScale());
+  EXPECT_EQ(1.0, es->GetHeartElastanceScale().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasEfferentHeartElastanceScale());
-  auto dvalue = ces.GetEfferentHeartElastanceScale();
+  EXPECT_FALSE( ces.HasHeartElastanceScale());
+  auto dvalue = ces.GetHeartElastanceScale();
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, EfferentResistanceScale)
+TEST_F(TEST_FIXTURE_NAME, ResistanceScaleExtrasplanchnic)
 {
-  EXPECT_FALSE( es->HasEfferentResistanceScale());
-  es->GetEfferentResistanceScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasEfferentResistanceScale());
-  EXPECT_EQ(1.0, es->GetEfferentResistanceScale().GetValue());
+  EXPECT_FALSE( es->HasResistanceScaleExtrasplanchnic());
+  es->GetResistanceScaleExtrasplanchnic().SetValue(1.0);
+  EXPECT_TRUE( es->HasResistanceScaleExtrasplanchnic());
+  EXPECT_EQ(1.0, es->GetResistanceScaleExtrasplanchnic().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasEfferentResistanceScale());
-  auto dvalue = ces.GetEfferentResistanceScale();
+  EXPECT_FALSE( ces.HasResistanceScaleExtrasplanchnic());
+  auto dvalue = ces.GetResistanceScaleExtrasplanchnic();
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, EfferentComplianceScale)
+TEST_F(TEST_FIXTURE_NAME, ResistanceScaleMuscle)
 {
-  EXPECT_FALSE( es->HasEfferentComplianceScale());
-  es->GetEfferentComplianceScale().SetValue(1.0);
-  EXPECT_TRUE( es->HasEfferentComplianceScale());
-  EXPECT_EQ(1.0, es->GetEfferentComplianceScale().GetValue());
+  EXPECT_FALSE(es->HasResistanceScaleMuscle());
+  es->GetResistanceScaleMuscle().SetValue(1.0);
+  EXPECT_TRUE(es->HasResistanceScaleMuscle());
+  EXPECT_EQ(1.0, es->GetResistanceScaleMuscle().GetValue());
 
   const biogears::SENervousSystem ces(logger);
-  EXPECT_FALSE( ces.HasEfferentComplianceScale());
-  auto dvalue = ces.GetEfferentComplianceScale();
+  EXPECT_FALSE(ces.HasResistanceScaleMuscle());
+  auto dvalue = ces.GetResistanceScaleMuscle();
+  EXPECT_NE(dvalue, dvalue);
+}
+TEST_F(TEST_FIXTURE_NAME, ResistanceScaleMyocardium)
+{
+  EXPECT_FALSE(es->HasResistanceScaleMyocardium());
+  es->GetResistanceScaleMyocardium().SetValue(1.0);
+  EXPECT_TRUE(es->HasResistanceScaleMyocardium());
+  EXPECT_EQ(1.0, es->GetResistanceScaleMyocardium().GetValue());
+
+  const biogears::SENervousSystem ces(logger);
+  EXPECT_FALSE(ces.HasResistanceScaleMyocardium());
+  auto dvalue = ces.GetResistanceScaleMyocardium();
+  EXPECT_NE(dvalue, dvalue);
+}
+TEST_F(TEST_FIXTURE_NAME, ResistanceScaleSplanchnic)
+{
+  EXPECT_FALSE(es->HasResistanceScaleSplanchnic());
+  es->GetResistanceScaleSplanchnic().SetValue(1.0);
+  EXPECT_TRUE(es->HasResistanceScaleSplanchnic());
+  EXPECT_EQ(1.0, es->GetResistanceScaleSplanchnic().GetValue());
+
+  const biogears::SENervousSystem ces(logger);
+  EXPECT_FALSE(ces.HasResistanceScaleSplanchnic());
+  auto dvalue = ces.GetResistanceScaleSplanchnic();
+  EXPECT_NE(dvalue, dvalue);
+}
+TEST_F(TEST_FIXTURE_NAME, ComplianceScale)
+{
+  EXPECT_FALSE( es->HasComplianceScale());
+  es->GetComplianceScale().SetValue(1.0);
+  EXPECT_TRUE( es->HasComplianceScale());
+  EXPECT_EQ(1.0, es->GetComplianceScale().GetValue());
+
+  const biogears::SENervousSystem ces(logger);
+  EXPECT_FALSE( ces.HasComplianceScale());
+  auto dvalue = ces.GetComplianceScale();
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, PainVisualAnalogueScale)

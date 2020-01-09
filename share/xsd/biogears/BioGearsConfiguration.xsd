@@ -14,29 +14,6 @@
   
   <xs:include schemaLocation="../cdm/Environment.xsd"/>
   <xs:include schemaLocation="../cdm/EngineConfiguration.xsd"/>
-  
-  <xs:complexType name="BaroreceptorConfigurationData">
-    <xs:complexContent>
-      <xs:extension base="ObjectData">
-        <xs:sequence>
-          <xs:element name="ResponseSlope" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="HeartRateDistributedTimeDelay" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="HeartElastanceDistributedTimeDelay" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="SystemicResistanceDistributedTimeDelay" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="VenousComplianceDistributedTimeDelay" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedHeartRateIntercept" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedHeartRateSympatheticSlope" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedHeartRateParasympatheticSlope" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedHeartElastanceIntercept" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedHeartElastanceSympatheticSlope" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedResistanceIntercept" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedResistanceSympatheticSlope" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedComplianceIntercept" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="NormalizedComplianceParasympatheticSlope" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
     
   <xs:complexType name="BloodChemistryConfigurationData">
     <xs:complexContent>
@@ -227,8 +204,7 @@
   <xs:complexType name="BioGearsConfigurationData">
     <xs:complexContent>
       <xs:extension base="PhysiologyEngineConfigurationData">
-        <xs:sequence>         
-          <xs:element name="BaroreceptorConfiguration"     type="BaroreceptorConfigurationData" minOccurs="0" maxOccurs="1"/>     
+        <xs:sequence>              
           <xs:element name="BloodChemistryConfiguration"   type="BloodChemistryConfigurationData" minOccurs="0" maxOccurs="1"/> 
           <xs:element name="CardiovascularConfiguration"   type="CardiovascularConfigurationData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="CircuitConfiguration"          type="CircuitConfigurationData" minOccurs="0" maxOccurs="1"/> 

@@ -13,12 +13,11 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
+#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-
 
 namespace biogears {
 class BIOGEARS_API SENervousSystem : public SESystem {
@@ -27,7 +26,7 @@ public:
   ~SENervousSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SENervousSystem"; }
+  static constexpr char const* const TypeTag() { return "SENervousSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -40,33 +39,38 @@ public:
   CDM::NervousSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::NervousSystemData& data) const;
 
 public:
-  bool HasAutoregulatedHeartResistanceScale() const;
-  SEScalar& GetAutoregulatedHeartResistanceScale();
-  double GetAutoregulatedHeartResistanceScale() const;
+  bool HasComplianceScale() const;
+  SEScalar& GetComplianceScale();
+  double GetComplianceScale() const;
 
-  bool HasAutoregulatedMuscleResistanceScale() const;
-  SEScalar& GetAutoregulatedMuscleResistanceScale();
-  double GetAutoregulatedMuscleResistanceScale() const;
+  bool HasHeartRateScale() const;
+  SEScalar& GetHeartRateScale();
+  double GetHeartRateScale() const;
 
-  bool HasEfferentHeartRateScale() const;
-  SEScalar& GetEfferentHeartRateScale();
-  double GetEfferentHeartRateScale() const;
+  bool HasHeartElastanceScale() const;
+  SEScalar& GetHeartElastanceScale();
+  double GetHeartElastanceScale() const;
 
-  bool HasEfferentHeartElastanceScale() const;
-  SEScalar& GetEfferentHeartElastanceScale();
-  double GetEfferentHeartElastanceScale() const;
+  bool HasResistanceScaleExtrasplanchnic() const;
+  SEScalar& GetResistanceScaleExtrasplanchnic();
+  double GetResistanceScaleExtrasplanchnic() const;
 
-  bool HasEfferentResistanceScale() const;
-  SEScalar& GetEfferentResistanceScale();
-  double GetEfferentResistanceScale() const;
+  bool HasResistanceScaleMuscle() const;
+  SEScalar& GetResistanceScaleMuscle();
+  double GetResistanceScaleMuscle() const;
 
-  bool HasEfferentComplianceScale() const;
-  SEScalar& GetEfferentComplianceScale();
-  double GetEfferentComplianceScale() const;
+  bool HasResistanceScaleMyocardium() const;
+  SEScalar& GetResistanceScaleMyocardium();
+  double GetResistanceScaleMyocardium() const;
+
+  bool HasResistanceScaleSplanchnic() const;
+  SEScalar& GetResistanceScaleSplanchnic();
+  double GetResistanceScaleSplanchnic() const;
 
   bool HasLeftEyePupillaryResponse() const;
   SEPupillaryResponse& GetLeftEyePupillaryResponse();
@@ -82,14 +86,15 @@ public:
   const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
   void RemoveRightEyePupillaryResponse();
 
-
 protected:
-  SEScalar* m_AutoregulatedHeartResistanceScale;
-  SEScalar* m_AutoregulatedMuscleResistanceScale;
-  SEScalar* m_EfferentHeartRateScale;
-  SEScalar* m_EfferentHeartElastanceScale;
-  SEScalar* m_EfferentResistanceScale;
-  SEScalar* m_EfferentComplianceScale;
+  SEScalar* m_ComplianceScale;
+  SEScalar* m_HeartRateScale;
+  SEScalar* m_HeartElastanceScale;
+  SEScalar* m_ResistanceScaleExtrasplanchnic;
+  SEScalar* m_ResistanceScaleMuscle;
+  SEScalar* m_ResistanceScaleMyocardium;
+  SEScalar* m_ResistanceScaleSplanchnic;
+
   SEPupillaryResponse* m_LeftEyePupillaryResponse;
   SEPupillaryResponse* m_RightEyePupillaryResponse;
   SEScalar* m_PainVisualAnalogueScale;

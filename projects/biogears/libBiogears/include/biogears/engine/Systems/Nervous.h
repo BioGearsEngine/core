@@ -38,7 +38,7 @@ public:
   virtual ~Nervous() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "Nervous"; }
+  static constexpr char const* const TypeTag() { return "Nervous"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -76,8 +76,8 @@ protected:
   void LocalAutoregulation();
 
   // Serializable member variables (Set in Initialize and in schema)
-  double m_AfferentChemoreceptor_Hz;  //*AC
-  double m_AfferentPulmonaryStretchReceptor_Hz;  //*AP
+  double m_AfferentChemoreceptor_Hz; //*AC
+  double m_AfferentPulmonaryStretchReceptor_Hz; //*AP
   double m_AfferentStrain;
   double m_ArterialOxygenBaseline_mmHg;
   double m_ArterialCarbonDioxideBaseline_mmHg;
@@ -94,25 +94,25 @@ protected:
   double m_ComplianceModifier;
   double m_HeartElastanceModifier;
   double m_HeartOxygenBaseline;
+  double m_HeartRateModifierSympathetic;
+  double m_HeartRateModifierVagal;
   double m_HypocapniaThresholdHeart;
   double m_HypocapniaThresholdPeripheral;
   double m_HypoxiaThresholdHeart;
   double m_HypoxiaThresholdPeripheral;
-  double m_IntrinsicHeartRate;
+  double m_IntrinsicHeartPeriod_s;
   double m_MuscleOxygenBaseline;
   double m_OxygenAutoregulatorHeart;
   double m_OxygenAutoregulatorMuscle;
-  double m_ResistanceModifier;
   double m_PeripheralBloodGasInteractionBaseline_Hz;
   double m_PeripheralFrequencyDelta_Per_min;
   double m_PeripheralPressureDelta_cmH2O;
-  double m_SympatheticHeartSignalBaseline;
-  double m_SympatheticPeripheralSignalBaseline;
+  double m_ResistanceModifierExtrasplanchnic;
+  double m_ResistanceModifierMuscle;
+  double m_ResistanceModifierSplanchnic;
   double m_SympatheticPeripheralSignalFatigue;
   double m_TransmuralPressureInput_mmHg;
   double m_TransmuralPressureBaseline_mmHg;
-  double m_VagalSignalBaseline;
-
 
   // Stateless member variable (Set in SetUp())
   double m_AfferentBaroreceptor_Hz; //*AB
@@ -131,5 +131,6 @@ protected:
   double m_SympatheticHeartSignal_Hz;
   double m_SympatheticPeripheralSignal_Hz;
   double m_VagalSignal_Hz;
+
 };
 }
