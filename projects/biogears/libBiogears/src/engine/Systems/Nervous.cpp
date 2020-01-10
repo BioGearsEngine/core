@@ -334,11 +334,6 @@ void Nervous::Process()
   m_data.GetDataTrack().Probe("HypoxiaThreshold_Peripheral", m_HypoxiaThresholdPeripheral);
   m_data.GetDataTrack().Probe("HypocapniaThreshold_Heart", m_HypocapniaThresholdHeart);
   m_data.GetDataTrack().Probe("HypocapniaThreshold_Peripheral", m_HypocapniaThresholdPeripheral);
-  m_data.GetDataTrack().Probe("Transmural Pressure_Filter", m_TransmuralPressureInput_mmHg);
-  m_data.GetDataTrack().Probe("Transmural Pressure_Baseline", m_TransmuralPressureBaseline_mmHg);
-  m_data.GetDataTrack().Probe("ResistanceModifierExtra", m_ResistanceModifierExtrasplanchnic);
-  m_data.GetDataTrack().Probe("ResistanceModifierMuscle", m_ResistanceModifierMuscle);
-  m_data.GetDataTrack().Probe("ResistanceModifierSplanchnic", m_ResistanceModifierSplanchnic);
   m_data.GetDataTrack().Probe("BaroreceptorOperatingPoint", m_BaroreceptorOperatingPoint_mmHg);
   m_data.GetDataTrack().Probe("SympatheticFatigue", m_SympatheticPeripheralSignalFatigue);
   m_data.GetDataTrack().Probe("HeartRateMod_Sympathetic", m_HeartRateModifierSympathetic);
@@ -372,8 +367,6 @@ void Nervous::AfferentResponse()
   //const double pulmonaryStretchInput = gainAP_Hz_Per_L * tidalVolume_L;
   const double pulmonaryStretchInput = std::max(0.0, lungVolume_L - lungVolumeThreshold_L);
   const double dFrequencyAP_Hz = (1.0 / tauAP_s) * (-m_AfferentPulmonaryStretchReceptor_Hz + gainAP_Hz_Per_L * pulmonaryStretchInput);
-  m_data.GetDataTrack().Probe("PulmonaryStretchInput", pulmonaryStretchInput);
-  m_data.GetDataTrack().Probe("LungVolume", lungVolume_L);
   m_AfferentPulmonaryStretchReceptor_Hz += dFrequencyAP_Hz * m_dt_s;
 
   //Afferent thermal receptors (*AT)--may do these later, but for now leave at baseline so as to not disrupt model
@@ -389,7 +382,7 @@ void Nervous::CentralSignalProcess()
   const double fSInf = 2.1;
   const double fS0 = 16.11;
   const double fSMax = 60.0;
-  const double xSatSH = 53.0;
+  const double xSatSH = 40.0;
   const double xBasalSH = 3.85;
   const double oxygenHalfMaxSH = 45.0;
   const double kOxygenSH = 6.0;
@@ -466,16 +459,17 @@ void Nervous::CentralSignalProcess()
 
   //-------Determine vagal (parasympathetic) signal to heart------------------------------------------------------------------
   const double kV = 7.06;
-  const double fVInf = 6.3;
-  const double fV0 = 3.2;
-  const double wV_AC = 0.2; //0.05;
-  const double wV_AP = -0.103; //-0.03;
-  const double hypoxiaThresholdV = -2.0; //0.56
+  const double fVInf = 8.0;
+  const double fV0 = 1.5;
+  const double wV_AC = 0.2;
+  const double wV_AP = -0.103;
+  const double hypoxiaThresholdV = 0.72;
   const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset AtSteadyState because we want continuous signals)
 
   const double exponentV = (m_AfferentBaroreceptor_Hz - baroreceptorBaseline_Hz) / kV;
   m_VagalSignal_Hz = (fV0 + fVInf * std::exp(exponentV)) / (1.0 + std::exp(exponentV));
   m_VagalSignal_Hz += (wV_AC * m_AfferentChemoreceptor_Hz + wV_AP * m_AfferentPulmonaryStretchReceptor_Hz - hypoxiaThresholdV);
+  m_VagalSignal_Hz = std::max(m_VagalSignal_Hz, 0.0);
 }
 
 void Nervous::EfferentResponse()
@@ -825,21 +819,8 @@ void Nervous::LocalAutoregulation()
   m_OxygenAutoregulatorHeart += dHeartAutoEffect * m_dt_s;
   m_OxygenAutoregulatorMuscle += dMuscleAutoEffect * m_dt_s;
 
-  m_data.GetDataTrack().Probe("MuscleO2Parameter", m_OxygenAutoregulatorMuscle);
-  m_data.GetDataTrack().Probe("HeartO2Parameter", m_OxygenAutoregulatorHeart);
-  m_data.GetDataTrack().Probe("MuscleO2Baseline", m_MuscleOxygenBaseline);
-  m_data.GetDataTrack().Probe("HeartO2Baseline", m_HeartOxygenBaseline);
-  m_data.GetDataTrack().Probe("MuscleO2", muscleOxygenMolarity);
-  m_data.GetDataTrack().Probe("HeartO2", heartOxygenMolarity);
-
-  m_data.GetDataTrack().Probe("MuscleO2Pressure", m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetPartialPressure(PressureUnit::mmHg));
-
-  m_data.GetDataTrack().Probe("MuscleResistanceFractionChange", 1.0 / (1.0 + m_OxygenAutoregulatorMuscle));
-  m_data.GetDataTrack().Probe("HeartResistanceFractionChange", 1.0 / (1.0 + m_OxygenAutoregulatorHeart));
-
   double nextMuscleResistance = GetResistanceScaleMuscle().GetValue();
   nextMuscleResistance *= (1.0 / (1.0 + m_OxygenAutoregulatorMuscle));
-  m_data.GetDataTrack().Probe("MuscleNormalized_PostLocal", nextMuscleResistance);
 
    if (m_FeedbackActive) {
     GetResistanceScaleMyocardium().SetValue(1.0 / (1.0 + m_OxygenAutoregulatorHeart));

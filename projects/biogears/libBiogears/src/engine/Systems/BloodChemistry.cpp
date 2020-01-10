@@ -1030,7 +1030,7 @@ void BloodChemistry::InflammatoryResponse()
         initialPathogen = 5.0e6;
         break;
       case CDM::enumInfectionSeverity::Severe:
-        initialPathogen = 1.0e7;
+        initialPathogen = 2.5e7;
         break;
       default:
         initialPathogen = 1.0e6; //Default to very mild infection
