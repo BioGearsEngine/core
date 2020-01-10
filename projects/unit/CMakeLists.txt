@@ -53,7 +53,9 @@ if(${PROJECT_NAME}_BUILD_TEST)
 list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   
   )
-
+  if (CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
+	  set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -d2SSAOptimizer-" )
+	endif()
   add_executable(unittest
     ${UNITTEST_SOURCES}
     ${UNITTEST_HEADERS}
@@ -126,7 +128,7 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   )
 
      target_compile_definitions(unittest PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
-     target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
+     target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}>)
 
   target_link_libraries(unittest
     ${UNITTEST_LIBRARIES}

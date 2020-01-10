@@ -38,6 +38,9 @@ function(add_howto name)
     ###############################################################################
     #Define Logic
     ###############################################################################  
+	if (CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
+	  set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -d2SSAOptimizer-" )
+	endif()
     add_executable(${TARGET_NAME} ${${EXAMPLE_NAME}_SOURCES} ${${EXAMPLE_NAME}_HEADERS})
     
     set_target_properties(${TARGET_NAME}
@@ -52,7 +55,7 @@ function(add_howto name)
         )
 
      target_compile_definitions(${TARGET_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
-     target_compile_options(${TARGET_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
+     target_compile_options(${TARGET_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}>)
   
     ###############################################################################
     # COMPILATION & LINKAGE MODIFICATIONS
@@ -133,7 +136,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   )
 
   target_compile_definitions(howto-common  PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
-  target_compile_options(howto-common  PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
+  target_compile_options(howto-common  PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}>)
   
   add_custom_target(howtos COMMENT "Meta Target for compiling all howtos")
   
