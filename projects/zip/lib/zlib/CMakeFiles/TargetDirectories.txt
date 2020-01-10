@@ -1,8 +1,0 @@
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/zlib.dir
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/zlibstatic.dir
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/example.dir
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/minigzip.dir
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/INSTALL.dir
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/RUN_TESTS.dir
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/ALL_BUILD.dir
-D:/remotes/sed-stash/biogears/master/projects/zip/lib/zlib/CMakeFiles/ZERO_CHECK.dir

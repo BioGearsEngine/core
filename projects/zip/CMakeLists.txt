@@ -74,7 +74,7 @@ if(MZ_ZLIB AND NOT MZ_LIBCOMP)
 
         message(STATUS "Using ZLIB ${ZLIB_REPOSITORY} ${ZLIB_TAG}")
 
-        set(ZLIB_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/zlib)
+        set(ZLIB_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/extern/zlib)
         set(ZLIB_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/install/zlib)
         set(ZLIB_INCLUDE_DIRS ${ZLIB_INSTALL_DIR}/include)
 
