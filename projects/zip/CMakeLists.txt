@@ -107,7 +107,6 @@ if(MZ_ZLIB AND NOT MZ_LIBCOMP)
                 endif()
             endif()
         endforeach()
-
         ExternalProject_Add(zlib
             PREFIX zlib
             GIT_REPOSITORY ${ZLIB_REPOSITORY}
@@ -117,7 +116,7 @@ if(MZ_ZLIB AND NOT MZ_LIBCOMP)
             INSTALL_DIR ${ZLIB_INSTALL_DIR}
             BUILD_BYPRODUCTS ${ZLIB_BYPRODUCTS}
             UPDATE_COMMAND ""
-            CMAKE_ARGS "${CMAKE_ARGS};-DCMAKE_INSTALL_PREFIX:STRING=${ZLIB_INSTALL_DIR}")
+            CMAKE_ARGS "${CMAKE_ARGS};-DCMAKE_INSTALL_PREFIX:STRING=${ZLIB_INSTALL_DIR};-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE};-DCMAKE_ROOT_FIND_PATH=${CMAKE_ROOT_FIND_PATH};-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
 
         include_directories(${ZLIB_INCLUDE_DIRS})
     endif()
