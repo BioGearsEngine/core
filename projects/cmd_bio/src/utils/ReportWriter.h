@@ -1,5 +1,8 @@
-#include <memory>
+#ifndef CMD_BIO_REPORTWRITER_H
+#define CMD_BIO_REPORTWRITER_H
+
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -7,8 +10,7 @@
 
 namespace biogears {
 
-enum color
-{
+enum color {
   Green = 0,
   Red = 1,
   Yellow = 2
@@ -47,7 +49,10 @@ public:
 
 class ReportWriter {
 public:
-  enum TYPE { HTML, MD, XML, WEB};
+  enum TYPE { HTML,
+              MD,
+              XML,
+              WEB };
   ReportWriter();
   ~ReportWriter();
   bool to_table();
@@ -56,13 +61,10 @@ public:
   void set_xml();
   void set_web();
 
-  bool gen_tables_single_sheet(const char* reference_file, const char* results_file, char table_type);
   bool gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type);
   bool gen_tables(TYPE table_type);
-  bool ParseReferenceCSV(const char* filename);
-  bool ParseReferenceCSV(std::string filename);
-  bool ParseResultsCSV(const char* filename);
-  bool ParseResultsCSV(std::string filename);
+  bool ParseReferenceCSV(const std::string filename);
+  bool ParseResultsCSV(const std::string filename);
   bool CalculateAverages();
   bool ExtractValues();
   bool ExtractValuesList();
@@ -72,8 +74,9 @@ public:
   void clear(); // This does not reset the value of the pointers
 
 private:
-  bool ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& vec);
-  bool ParseXML(std::string& filename);
+  bool ParseCSV(std::istream& stream, std::vector<std::vector<std::string>>& vec);
+  bool ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& vec);
+  bool ParseXML(const std::string&, const std::string& filename);
   std::map<std::string, std::vector<biogears::TableRow>> tables;
   std::map<std::string, biogears::TableRow> table_row_map;
   std::vector<biogears::ReferenceValue> reference_values;
@@ -82,19 +85,20 @@ private:
   std::string report;
 
   std::unique_ptr<biogears::Logger> logger;
-  char const * _body_begin;
-  char const * _table_begin;
-  char const * _table_row_begin;
-  char const * _table_row_begin_green;
-  char const * _table_row_begin_red;
-  char const * _table_row_begin_yellow;
-  char const * _table_second_line;
-  char const * _table_item_begin;
-  char const * _table_item_end;
-  char const * _table_row_end;
-  char const * _table_end;
-  char const * _body_end;
-  char const * _file_extension;
+  char const* _body_begin;
+  char const* _table_begin;
+  char const* _table_row_begin;
+  char const* _table_row_begin_green;
+  char const* _table_row_begin_red;
+  char const* _table_row_begin_yellow;
+  char const* _table_second_line;
+  char const* _table_item_begin;
+  char const* _table_item_end;
+  char const* _table_row_end;
+  char const* _table_end;
+  char const* _body_end;
+  char const* _file_extension;
 };
 
 } // end namespace biogears
+#endif //CMD_BIO_REPORTWRITER_H

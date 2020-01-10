@@ -44,8 +44,10 @@ add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.h"   "Headers\\Private\
 add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.hpp"   "Headers\\Private\\")
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
 add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.c" "Sources\\")
+configure_file(src/utils/KnownPaths.h.in src/utils/KnownPaths.h )
+set(${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS}  ${CMAKE_CURRENT_BINARY_DIR}/src/utils/KnownPaths.h)
+source_group(  "Headers\\Private\\utils"  FILES "${CMAKE_CURRENT_BINARY_DIR}/src/utils/KnownPaths.h" )
 
-set(${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
 set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
 ###############################################################################
 #Define Logic
@@ -76,27 +78,17 @@ set_target_properties(${PROJECT_NAME}
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
   target_compile_definitions(${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
-  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
+  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}> PRIVATE $<$<PLATFORM_ID:Windows>:/INCREMENTAL:YES>)
 ###############################################################################
 # COMPILATION & LINKAGE MODIFICATIONS
 ###############################################################################
-
-list(APPEND ${PREFIX}_INCLUDES
-      ${PREFIX}_INCLUDE_DIR
-      ${PREFIX}_PRIVATE_INCLUDE_DIR
-      ${PREFIX}_GENERATED_INCLUDE_DIR
-      bio_INCLUDE_DIR
-)
-list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
-
-foreach( ITEM IN LISTS ${PREFIX}_INCLUDES)
-  message(STATUS "  ${${ITEM}}")
-endforeach()
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ )
 set(${PREFIX}_LIBS
       ${CMAKE_THREAD_LIBS_INIT}
       ${CMAKE_DL_LIBS}
       Biogears::libbiogears_cdm
       Biogears::libbiogears
+	  minizip::lib
     )
 if( ${ROOT_PROJECT}_BUILD_CIRCUIT_TESTS )
   list(APPEND ${PREFIX}_LIBS Biogears::libbiogears_test_circuit)

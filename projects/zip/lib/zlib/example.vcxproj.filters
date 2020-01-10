@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\remotes\sed-stash\biogears\master\projects\zip\lib\zlib\test\example.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\remotes\sed-stash\biogears\master\projects\zip\lib\zlib\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{B0F0C3CE-11CE-348E-91F2-2B5CB584D441}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

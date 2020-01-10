@@ -1,0 +1,7 @@
+D:/remotes/sed-stash/biogears/master/build-msvc15/projects/zip/install/zlib/lib/zlibd.lib
+D:/remotes/sed-stash/biogears/master/build-msvc15/projects/zip/install/zlib/bin/zlibd.dll
+D:/remotes/sed-stash/biogears/master/build-msvc15/projects/zip/install/zlib/lib/zlibstaticd.lib
+D:/remotes/sed-stash/biogears/master/build-msvc15/projects/zip/install/zlib/include/zconf.h
+D:/remotes/sed-stash/biogears/master/build-msvc15/projects/zip/install/zlib/include/zlib.h
+D:/remotes/sed-stash/biogears/master/build-msvc15/projects/zip/install/zlib/share/man/man3/zlib.3
+D:/remotes/sed-stash/biogears/master/build-msvc15/projects/zip/install/zlib/share/pkgconfig/zlib.pc

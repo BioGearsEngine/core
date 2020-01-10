@@ -8,6 +8,19 @@
 #include <numeric>
 #include <sstream>
 
+#include "mz.h"
+#include "mz_os.h"
+#include "mz_strm.h"
+#include "mz_strm_buf.h"
+#include "mz_strm_split.h"
+#include "mz_zip.h"
+#include "mz_zip_rw.h"
+#include <biogears/filesystem/path.h>
+
+#include "mz_strm_mem.h"
+
+#include "KnownPaths.h"
+
 #ifdef _WIN32
 #include <direct.h>
 #else
@@ -104,7 +117,7 @@ void ReportWriter::set_xml()
 ///! \brief Sets the table type to web, meaning to_table() will produce html files with the .md file extension
 //-------------------------------------------------------------------------------
 void ReportWriter::set_web()
-{ // For website generation if the doxygen preprocessing isn't working correctly 
+{ // For website generation if the doxygen preprocessing isn't working correctly
   // with md files you should be able to just generate html files with the .md extension.
   // Doxygen will find the table and put it in the correct page.
   _body_begin = "<html><body>\n";
@@ -122,10 +135,6 @@ void ReportWriter::set_web()
   _file_extension = ".md";
 }
 
-bool ReportWriter::gen_tables_single_sheet(const char* reference_file, const char* results_file, char table_type)
-{
-  return gen_tables_single_sheet(std::string(reference_file), std::string(results_file), table_type);
-}
 //-------------------------------------------------------------------------------
 /// \brief Takes in a single sheet, unlike gen_tables which takes in a list of validation and baselines files
 /// It is essentially one iteration of the for loop in gen_tables
@@ -137,7 +146,7 @@ bool ReportWriter::gen_tables_single_sheet(const char* reference_file, const cha
 bool ReportWriter::gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type)
 
 {
-  logger->Info("Generating table: " + split(reference_file,'.')[0]);
+  logger->Info("Generating table: " + split(reference_file, '.')[0]);
   logger->SetConsolesetConversionPattern("\t%m%n");
 
   bool success = false;
@@ -145,63 +154,96 @@ bool ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
   success &= ParseResultsCSV(results_file);
   if (CalculateAverages()) {
     //logger->Info("Successfully calculated averages of file: " + results_file);
-  ExtractValues();
+    ExtractValues();
     //logger->Info("Successfully populated data structures with validation data");
-  Validate();
+    Validate();
     //logger->Info("Successfully ran validation");
-  PopulateTables();
+    PopulateTables();
     //logger->Info("Successfully populated tables vector");
-  if (table_type == 0) {
-    set_html();
-  } else if (table_type == 1) {
-    set_md();
-  } else if (table_type == 2) {
-    set_xml();
-  } else {
-    set_web();
-  }
-  to_table();
-  logger->Info("Successfully generated table: " + split(reference_file, '.')[0]);
-  clear();
-  logger->SetConsolesetConversionPattern("%d [%p] %m%n");
+    if (table_type == 0) {
+      set_html();
+    } else if (table_type == 1) {
+      set_md();
+    } else if (table_type == 2) {
+      set_xml();
+    } else {
+      set_web();
+    }
+    to_table();
+    logger->Info("Successfully generated table: " + split(reference_file, '.')[0]);
+    clear();
+    logger->SetConsolesetConversionPattern("%d [%p] %m%n");
   } else {
     logger->Info("Failed to generate table: " + split(reference_file, '.')[0]);
     return false;
   }
   return true;
 }
+//--------------------------------------------------------------------------------
+inline bool file_exists(const std::string& name)
+{
+  if (FILE* file = fopen(name.c_str(), "r")) {
+    fclose(file);
+    return true;
+  } else {
+    return false;
+  }
+}
+//--------------------------------------------------------------------------------
+std::string locateBaseline(biogears::filesystem::path path_s, std::string name)
+{
+  using namespace biogears;
+
+  static const filesystem::path baseline_dir{ Basseline_Directory };
+  filesystem::path baseline = path_s / (name + "Results.csv");
+  if (baseline.exists()) {
+    return baseline.string();
+  }
+  baseline = path_s / "baselines" / (name + "Results.zip");
+  if (baseline.exists()) {
+    return baseline.string();
+  }
+  baseline = baseline_dir / path_s / "baselines" / (name + "Results.zip");
+  if (baseline.exists()) {
+    return baseline.string();
+  }
+  return name + "-NOTFOUND";
+}
 //-------------------------------------------------------------------------------
- /// \brief Takes a list of validation files and results files from biogears and produces
- /// validation tables for our documentation.
- /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
+/// \brief Takes a list of validation files and results files from biogears and produces
+/// validation tables for our documentation.
+/// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
 //-------------------------------------------------------------------------------
 bool ReportWriter::gen_tables(TYPE table_type)
 {
-  std::vector<std::string> reference_files{ "BloodChemistryValidation.csv",
-                                            "CardiovascularValidation.csv",
-                                            "EnergyValidation.csv",
-                                            "EndocrineValidation.csv",
-                                            "RenalValidation.csv",
-                                            "RespiratoryValidation.csv",
-                                            "TissueValidation.csv" };
-  std::vector<std::string> results_files{ "Scenarios/Validation/BloodChemistryValidationResults.csv",
-                                          "Scenarios/Validation/CardiovascularValidationResults.csv",
-                                          "Scenarios/Validation/EnergyValidationResults.csv",
-                                          "Scenarios/Validation/EndocrineValidationResults.csv",
-                                          "Scenarios/Validation/RenalValidationResults.csv",
-                                          "Scenarios/Validation/RespiratoryValidationResults.csv",
-                                          "Scenarios/Validation/TissueValidationResults.csv" };
-  std::vector<std::string> xml_files { "HeatStrokeResultsCMP@2610.2s.xml" };
+  std::vector<std::pair<std::string, std::string>> SystemTables{
+    { "BloodChemistryValidation", "Scenarios/Validation" },
+    { "CardiovascularValidation", "Scenarios/Validation" },
+    { "EnergyValidation", "Scenarios/Validation" },
+    { "EndocrineValidation", "Scenarios/Validation" },
+    { "RenalValidation", "Scenarios/Validation" },
+    { "RespiratoryValidation", "Scenarios/Validation" },
+    { "TissueValidation", "Scenarios/Validation" }
+  };
 
+  std::vector<std::pair<std::string, std::string>> xml_files{
+    {
+      "HeatStrokeResultsCMP@2610.2s.xml",
+      "Scenarios/Showcase",
+    }
+  };
 
   bool success = true;
-  for (int i = 0; i < reference_files.size(); i++) {
-    logger->Info("Generating table: " + split(reference_files[i], '.')[0]);
+  for (int i = 0; i < SystemTables.size(); i++) {
+    clear();
+    logger->Info("Generating table: " + SystemTables[i].first);
     logger->SetConsolesetConversionPattern("\t%m%n");
     bool no_faults = false;
-    if (ParseReferenceCSV(std::string(reference_files[i]))) {
-      if (ParseResultsCSV(std::string(results_files[i]))) {
-        if (i == 0 && ParseXML(xml_files[0])) {
+    const std::string reference_value_file = SystemTables[i].first + ".csv";
+    const std::string library_baseline_file = locateBaseline(SystemTables[i].second, SystemTables[i].first);
+    if (ParseReferenceCSV(reference_value_file)) {
+      if (ParseResultsCSV(library_baseline_file)) {
+        if (i == 0 && !ParseXML(xml_files[0].second, xml_files[0].first)) {
           success = false;
           continue;
         }
@@ -209,44 +251,44 @@ bool ReportWriter::gen_tables(TYPE table_type)
           //logger->Info("Successfully calculated averages of file: " + results_files[i]);
           if (ExtractValues()) {
             //logger->Info("Successfully populated data structures with validation data");
-    Validate();
+            Validate();
             //logger->Info("Successfully ran validation");
-    PopulateTables();
+            PopulateTables();
             //logger->Info("Successfully populated tables vector");
             if (table_type == HTML) {
-      set_html();
+              set_html();
             } else if (table_type == MD) {
-      set_md();
+              set_md();
             } else if (table_type == XML) {
-      set_xml();
-    } else {
-      set_web();
-    }
+              set_xml();
+            } else {
+              set_web();
+            }
 
             if (!to_table()) {
-              logger->Error("Failed to write table: " + split(reference_files[i], '.')[0]);
+              logger->Error("Failed to write table: " + SystemTables[i].first);
             } else {
 
-    clear();
-    logger->SetConsolesetConversionPattern("%d [%p] %m%n");
+              clear();
+              logger->SetConsolesetConversionPattern("%d [%p] %m%n");
               no_faults = true;
             }
           }
-  }
+        }
       }
     }
     if (no_faults) {
-      logger->Info("Successfully generated table: " + split(reference_files[i], '.')[0]);
+      logger->Info("Successfully generated table: " + SystemTables[i].first);
     } else {
-      logger->Error("Failed generating table: " + split(reference_files[i], '.')[0]);
+      logger->Error("Failed generating table: " + SystemTables[i].first);
     }
     success &= no_faults;
   }
   return success;
 }
 //-------------------------------------------------------------------------------
- /// \brief Takes the data stored in tables (a map pairing table names (std::string) to a list of TableRow objects (std::vector<biogears::TableRow>)
- /// and prints out a full validation table for each item in tables.
+/// \brief Takes the data stored in tables (a map pairing table names (std::string) to a list of TableRow objects (std::vector<biogears::TableRow>)
+/// and prints out a full validation table for each item in tables.
 //-------------------------------------------------------------------------------
 bool ReportWriter::to_table()
 {
@@ -292,8 +334,8 @@ bool ReportWriter::to_table()
     _mkdir("doc");
     _mkdir("doc/validation");
 #else
-    mkdir("doc",  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir("doc/validation",  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir("doc", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir("doc/validation", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
 
     file.open("doc/validation/" + table_name + "ValidationTable" + _file_extension);
@@ -308,24 +350,12 @@ bool ReportWriter::to_table()
   return true;
 }
 
-bool ReportWriter::ParseReferenceCSV(const char* filename)
-{
-  return ParseReferenceCSV(std::string(filename));
-}
-
-bool ReportWriter::ParseReferenceCSV(std::string filename)
+bool ReportWriter::ParseReferenceCSV(const std::string filename)
 {
   return ParseCSV(filename, this->validation_data);
 }
 
-
-bool ReportWriter::ParseResultsCSV(const char* filename)
-{
-  return ParseResultsCSV(std::string(filename));
-}
-
-bool ReportWriter::ParseResultsCSV(std::string filename)
-
+bool ReportWriter::ParseResultsCSV(const std::string filename)
 {
   return ParseCSV(filename, this->biogears_results);
 }
@@ -335,13 +365,8 @@ bool ReportWriter::ParseResultsCSV(std::string filename)
 /// \param filename: Name of the CSV file to be parsed
 /// \param data: Two dimensional vector for storing data from CSV file
 //-------------------------------------------------------------------------------
-bool ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::string>>& data)
+bool ReportWriter::ParseCSV(std::istream& file, std::vector<std::vector<std::string>>& data)
 {
-  std::ifstream file{ filename };
-  if (!file.is_open()) {
-    logger->Error("Error opening: " + filename);
-    return false;
-  }
   std::string line;
   int line_number = 0;
   int index = 0;
@@ -354,8 +379,8 @@ bool ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
         data[line_number].push_back(ltrim(cell));
         cell.clear();
       } else if (line[i] == '"') { //This check is necessary because certain cells may contain newline characters, and
-        while (true) {             //std::getline treats any newline character as the end of a line, this means that 
-          ++i;                     //certain cells are split across two calls of std::getline
+        while (true) { //std::getline treats any newline character as the end of a line, this means that
+          ++i; //certain cells are split across two calls of std::getline
           if (i == line.size()) {
             std::string next_line;
             std::getline(file, next_line);
@@ -375,45 +400,119 @@ bool ReportWriter::ParseCSV(std::string& filename, std::vector<std::vector<std::
     cell.clear();
     ++line_number;
   }
-  logger->Info("Successfully parsed file: " + filename);
+  //logger->Info("Successfully parsed file: " + filename);
   return true;
+}
+bool ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& data)
+{
+  auto ext = split(filename, '.').back();
+  if (ext == "zip") {
+    mz_zip_file* file_info = NULL;
+    uint32_t ratio = 0;
+    int16_t level = 0;
+    int32_t err = MZ_OK;
+    struct tm tmu_date;
+    const char* string_method = NULL;
+    char crypt = ' ';
+    void* reader = NULL;
+
+    mz_zip_reader_create(&reader);
+    err = mz_zip_reader_open_file(reader, filename.c_str());
+    if (err != MZ_OK) {
+      mz_zip_reader_delete(&reader);
+      return err;
+    }
+
+    biogears::filesystem::path entry{ filename };
+    entry = entry.filename();
+    std::string internal_file = split(entry.string(), '.')[0] + ".csv";
+    err = mz_zip_reader_locate_entry(reader, internal_file.c_str(), true);
+
+    if (err != MZ_OK) {
+      printf("Error %" PRId32 " going to first entry in archive\n", err);
+      mz_zip_reader_delete(&reader);
+      return err;
+    }
+
+    err = mz_zip_reader_entry_get_info(reader, &file_info);
+    if (err != MZ_OK) {
+      printf("Error %" PRId32 " getting entry info in archive\n", err);
+      return err;
+    }
+    err = mz_zip_reader_entry_open(reader);
+    if (err < 0)
+      return err;
+    char* buffer = new char[file_info->uncompressed_size + 1];
+    memset(buffer, '\0', file_info->uncompressed_size + 1);
+    err = mz_zip_reader_entry_read(reader, buffer, file_info->uncompressed_size);
+    
+    std::istringstream stream{ buffer };
+    bool parseResult = ParseCSV(stream, data);
+    if (err < 0)
+      return err;
+
+    err = mz_zip_reader_entry_close(reader);
+    if (err != MZ_OK)
+      return err;
+
+    delete[] buffer;
+
+    mz_zip_reader_delete(&reader);
+
+    if (err == MZ_END_OF_LIST)
+      return MZ_OK;
+
+    return parseResult;
+  } else if (ext == "csv") {
+    std::ifstream file{ filename };
+    if (file.is_open()) {
+      return ParseCSV(file, data);
+    } else {
+      logger->Error("Error opening: " + filename);
+      return false;
+    }
+    } else {
+    return false;
+  }
 }
 //-------------------------------------------------------------------------------
 /// \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
 /// and inserts the TableRow into a map
 /// \param filename: Name of XML file to be parsed
 //-------------------------------------------------------------------------------
-bool ReportWriter::ParseXML(std::string& filename)
+bool ReportWriter::ParseXML(const std::string& path, const std::string& filename)
 {
-  std::ifstream file{ filename };
+  filesystem::path full_path{ path };
+  full_path /= filename;
+  std::ifstream file{ full_path.string() };
   if (!file.is_open()) {
     logger->Error("Error opening: " + filename);
     return false;
   }
   std::string line;
-  while (std::getline(file, line)) {        // This loop reads in the XML file line by line, then pulls out the value name, the unit name, and the value
-    size_t name_index = line.find("p1:");   // The value name is always preceded by "p1:"
-    if(name_index == std::string::npos || line.find("/p1:") != std::string::npos) {
+  while (std::getline(file, line)) { // This loop reads in the XML file line by line, then pulls out the value name, the unit name, and the value
+    size_t name_index = line.find("p1:"); // The value name is always preceded by "p1:"
+    if (name_index == std::string::npos || line.find("/p1:") != std::string::npos) {
       continue;
     }
     name_index += 3;
-    size_t name_end = line.find(" ",name_index);
-    size_t unit_index = line.find("unit=\"",name_end); //The unit name is always preceded by "unit="
+    size_t name_end = line.find(" ", name_index);
+    size_t unit_index = line.find("unit=\"", name_end); //The unit name is always preceded by "unit="
     if (unit_index == std::string::npos) {
       continue;
     }
     unit_index += 6;
-    size_t unit_end = line.find("\"",unit_index);
-    size_t value_index = line.find("value=\"",unit_end) + 7; //The value is always preceded by "value="
+    size_t unit_end = line.find("\"", unit_index);
+    size_t value_index = line.find("value=\"", unit_end) + 7; //The value is always preceded by "value="
     size_t value_end = line.find("\"/", value_index);
     biogears::TableRow xmlRow;
     std::string name = trim(line.substr(name_index, name_end - name_index));
     std::string unit = trim(line.substr(unit_index, unit_end - unit_index));
     std::string value = trim(line.substr(value_index, value_end - value_index));
-    xmlRow.field_name = name+"("+unit+")";
+    xmlRow.field_name = name + "(" + unit + ")";
     xmlRow.expected_value = "0.0";
     xmlRow.engine_value = std::stod(value);
-    table_row_map.insert(std::pair<std::string, biogears::TableRow>(name,xmlRow));
+    table_row_map.insert(std::pair<std::string, biogears::TableRow>(name, xmlRow));
   }
 
   return true;
@@ -434,13 +533,13 @@ bool ReportWriter::CalculateAverages()
     row.engine_value = 0.0;
     rows.push_back(row);
     row_items.push_back(0); // Because not every value was measured the same amount of times, we need to track this
-  }                         // in order to take the average of each value
-  
-  for (int i = 1; i < biogears_results.size(); i++) {         // Because the data is stored in columns, we have to iterate down from each cell
-    for (int k = 0; k < biogears_results[i].size(); k++) {    // of the second row
+  } // in order to take the average of each value
+
+  for (int i = 1; i < biogears_results.size(); i++) { // Because the data is stored in columns, we have to iterate down from each cell
+    for (int k = 0; k < biogears_results[i].size(); k++) { // of the second row
       try {
-        if(trim(biogears_results[i][k]) != "") { //if trim returns an empty string, it means the cell is empty
-          rows[k].engine_value += std::stod(biogears_results[i][k]); 
+        if (trim(biogears_results[i][k]) != "") { //if trim returns an empty string, it means the cell is empty
+          rows[k].engine_value += std::stod(biogears_results[i][k]);
           ++row_items[k]; // Further down we'll calculate the average of these values by dividing engine_value by row_items
         }
       } catch (std::exception& e) { // This usually occurs if one of the cells contains non-numeric characters, std::stod will throw an exception
@@ -520,11 +619,11 @@ bool ReportWriter::ExtractValuesList()
           j += ((eod - j) + 1);
         } catch (std::exception& e) {
           logger->Error(std::string("Error: ") + e.what());
-          logger->Error("Cell Contents: " + values.substr(j ,eod - j));
+          logger->Error("Cell Contents: " + values.substr(j, eod - j));
           return false;
         }
       } else if (values[j] == '[') {
-        std::vector<std::string> value_range = split(values.substr(j + 1, values.find_first_of(']', j + 1) - (1 + j)),',');
+        std::vector<std::string> value_range = split(values.substr(j + 1, values.find_first_of(']', j + 1) - (1 + j)), ',');
         try {
           ref.reference_ranges.push_back(std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1])));
         } catch (std::exception& e) {
@@ -548,21 +647,21 @@ void ReportWriter::Validate()
     //logger->Info(ref.value_name);
     auto table_row_itr = table_row_map.find(trim(ref.value_name));
     if (table_row_itr == table_row_map.end()) { // Certain reference values might not be present in biogears results
-      logger->Info(std::string("  Not Found"));
+      logger->Info(trim(ref.value_name) + "  Not Found");
       continue;
     }
 
     biogears::TableRow table_row = table_row_itr->second; // Validation data either takes the form of a single value, or a range
-    if (ref.is_range) {                                   // If it's a range the we first check whether the value is in range, and if not check how far out of range it is
+    if (ref.is_range) { // If it's a range the we first check whether the value is in range, and if not check how far out of range it is
       table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + "@cite " + ref.reference;
       if (ref.reference_range.first <= table_row.engine_value && ref.reference_range.second >= table_row.engine_value) {
         table_row.result = Green;
         table_row.percent_error = "Within Bounds";
       } else {
-        const double median_to_bound = (ref.reference_range.second - ref.reference_range.first)/2.0;
+        const double median_to_bound = (ref.reference_range.second - ref.reference_range.first) / 2.0;
         const double reference_median = ref.reference_range.first + median_to_bound;
         const double warning_range_lower = reference_median * 0.75;
-        const double warning_range_upper = reference_median *  1.25;
+        const double warning_range_upper = reference_median * 1.25;
 
         if (ref.reference_range.first > table_row.engine_value && warning_range_lower <= table_row.engine_value
             || ref.reference_range.second < table_row.engine_value && warning_range_upper >= table_row.engine_value) {
