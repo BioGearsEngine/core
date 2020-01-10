@@ -194,7 +194,7 @@ std::string locateBaseline(biogears::filesystem::path path_s, std::string name)
 {
   using namespace biogears;
 
-  static const filesystem::path baseline_dir{ Basseline_Directory };
+  static const filesystem::path baseline_dir{ Baseline_Directory };
   filesystem::path baseline = path_s / (name + "Results.csv");
   if (baseline.exists()) {
     return baseline.string();

@@ -2,7 +2,7 @@
 #define CMD_BIO_KNOWNPATH_H
 
 namespace biogears {
-	const char* Basseline_Directory = "@Biogears_Baseline_DIR@";
+	const char* Baseline_Directory = "@Biogears_Baseline_DIR@";
 }
 
 #endif //CMD_BIO_KNOWNPATH_H
