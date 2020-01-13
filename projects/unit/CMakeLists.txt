@@ -54,7 +54,7 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main
   
   )
   if (CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
-	  set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -d2SSAOptimizer-" )
+	  
 	endif()
   add_executable(unittest
     ${UNITTEST_SOURCES}

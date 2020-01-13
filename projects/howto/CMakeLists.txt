@@ -39,7 +39,7 @@ function(add_howto name)
     #Define Logic
     ###############################################################################  
 	if (CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
-	  set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -d2SSAOptimizer-" )
+	  
 	endif()
     add_executable(${TARGET_NAME} ${${EXAMPLE_NAME}_SOURCES} ${${EXAMPLE_NAME}_HEADERS})
     

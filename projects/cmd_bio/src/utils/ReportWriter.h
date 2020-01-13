@@ -55,28 +55,29 @@ public:
               WEB };
   ReportWriter();
   ~ReportWriter();
-  bool to_table();
+  void to_table();
   void set_html();
   void set_md();
   void set_xml();
   void set_web();
 
-  bool gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type);
-  bool gen_tables(TYPE table_type);
-  bool ParseReferenceCSV(const std::string filename);
-  bool ParseResultsCSV(const std::string filename);
-  bool CalculateAverages();
-  bool ExtractValues();
-  bool ExtractValuesList();
+  void gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type);
+  void gen_tables(TYPE table_type);
+  void ParseReferenceCSV(const std::string filename);
+  void ParseResultsCSV(const std::string filename);
+  void CalculateAverages();
+  void ExtractValues();
+  void ExtractValuesList();
 
   void Validate();
   void PopulateTables();
   void clear(); // This does not reset the value of the pointers
 
 private:
-  bool ParseCSV(std::istream& stream, std::vector<std::vector<std::string>>& vec);
-  bool ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& vec);
-  bool ParseXML(const std::string&, const std::string& filename);
+  void ParseCSV(std::istream& stream, std::vector<std::vector<std::string>>& vec);
+  void ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& vec);
+  void ParseXML(std::istream& stream);
+  void ParseXML(const std::string& filename, const std::string test);
   std::map<std::string, std::vector<biogears::TableRow>> tables;
   std::map<std::string, biogears::TableRow> table_row_map;
   std::vector<biogears::ReferenceValue> reference_values;

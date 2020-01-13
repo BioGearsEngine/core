@@ -89,16 +89,36 @@ def archive_command(args):
     archive(args.root, args.path, args.recurse, False)
 
 def archive (root, path, recurse, clean):
-    log( "archive(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_2 )
-    valid_regex = '[.](txt|csv)'
+    log( "archive(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_3 )
+    valid_regex = "[.]xml"
     absolute_path = os.path.join(root ,path)
-    basename,extension     = os.path.splitext(absolute_path)
-    output_path = os.path.join(_output_directory,os.path.relpath(basename,_root_directory))
-    if( os.path.isfile(absolute_path) ):
-        if ( re.match( valid_regex, extension) ):
-            destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
-            compress_and_store(absolute_path, destination)
-            
+    if( os.path.isfile(absolute_path)):
+     basename,extension = os.path.splitext(absolute_path)
+     output_path = os.path.join(_output_directory, os.path.relpath(basename, _root_directory)) 
+     scenario_file = absolute_path
+     results_file = basename + "Results.csv"
+
+     scenario_regex_match = re.match( valid_regex, extension)
+     results_file_exists = os.path.exists(results_file)
+     
+     if(scenario_regex_match and results_file_exists):
+       destination = os.path.join(os.path.join( os.path.dirname(output_path), _baseline_dir ), os.path.basename(basename)+"Results"+archive_extension)
+       log("{0}".format(os.path.basename(destination)),LOG_LEVEL_1)
+       compress_and_store( scenario_file, destination, True)
+       compress_and_store( basename + ".log", destination)
+
+       scenario_file_dir = os.path.dirname(os.path.abspath(results_file))
+       scenario_file_dir = scenario_file_dir if os.path.exists(scenario_file_dir) else "."
+       for file in os.listdir(scenario_file_dir):
+         scenario_regex = os.path.basename(basename) + "Results.*"
+         if ( re.match(scenario_regex, file)):
+           results_file = os.path.join( os.path.dirname(results_file), file)
+           compress_and_store( results_file, destination)
+     else:
+       if(scenario_regex_match):
+         err("{0} Scenario is missing a results file".format(absolute_path),LOG_LEVEL_0)
+       
+
     elif(os.path.isdir(absolute_path)):
         if(recurse):
             for file in os.listdir(absolute_path):
@@ -121,7 +141,7 @@ def rebase_command(args):
     rebase(args.root, args.path, args.recurse, False)
 
 def rebase (root, path, recurse, clean):
-    log( "rebase(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_2 )
+    log( "rebase(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_3 )
     valid_regex = '[.](xml)'
     absolute_path = os.path.join(root ,path)
     basename,extension     = os.path.splitext(absolute_path)
@@ -132,11 +152,9 @@ def rebase (root, path, recurse, clean):
             p = subprocess.Popen([_scenario_driver,absolute_path], stderr=subprocess.STDOUT, cwd=_runtime_directory)
             p.wait()
             destination  = os.path.join( os.path.dirname(output_path) , _baseline_dir )
-            results = basename+"Results.csv";
-            if( os.path.exists(results)):
-                compress_and_store(results, destination)
-            else:
-                err("Unable to locate {0}".format(results), LOG_LEVEL_0)
+            results = basename+"Results.xml)";
+            #NOTE: This was a very big refactor Not 100% sure works
+            archive(root,path,False,False)     
     elif(os.path.isdir(absolute_path)):
         if(recurse):
             for file in os.listdir(absolute_path):
@@ -147,26 +165,28 @@ def rebase (root, path, recurse, clean):
     else:
         err("{0} is not a valid results file".format(absolute_path),LOG_LEVEL_0)
 
-def compress_and_store(source,destination):
+def compress_and_store(source,destination,truncate=False):
     source_dir  =  os.path.dirname(source)
     source_name =  os.path.basename(source)
     name, ext   =  os.path.splitext(source_name)
-    archive_name = name + archive_extension
+
+    archive_path = os.path.dirname(destination)
+    archive_name = os.path.basename(destination)
 
     rcode = True
-    if ( not os.path.exists( destination )):
-        os.makedirs( destination )
+    if ( not os.path.exists( archive_path )):
+        os.makedirs( archive_path )
 
-    archive = os.path.join(destination, archive_name)
+    archive = os.path.join(archive_path, archive_name)
     
-    if ( os.path.exists( archive) ):
+    if ( os.path.exists( archive) and truncate):
         try:
-            log("removing {0}".format(archive),LOG_LEVEL_2)
+            log("removing {0}".format(archive),LOG_LEVEL_3)
             os.remove(archive)
         except OSError:
             err("Unable to remove {0}".format(archive), LOG_LEVEL_0A)
     if os.path.exists(source):
-        log("{0} -> {1}".format(source,archive),LOG_LEVEL_1)
+        log("{0} -> {1}".format(source,archive),LOG_LEVEL_2)
 
         format = zipfile.ZIP_DEFLATED
         if _compression_format == 'lzma':
@@ -174,25 +194,10 @@ def compress_and_store(source,destination):
         elif _compression_format == 'bzip':
             format = zipfile.ZIP_BZIP2
         
-        zip = zipfile.ZipFile( archive , mode='w', compression=format )
+        zip = zipfile.ZipFile( archive , mode='a', compression=format )
         try:
-            log( "Archiving {0} in {1}".format(source,archive), LOG_LEVEL_2)
+            log( "Archiving {0} in {1}".format(source,archive), LOG_LEVEL_3)
             zip.write( source, source_name )
-
-            result_log_name = source_name.replace('Results.csv','.csv').replace('.csv','.log')
-            result_log_path = os.path.join(source_dir,result_log_name)
-            if( os.path.exists( result_log_path) ):
-              zip.write( result_log_path, result_log_name )
-            else:
-              log("No file {} found".format(result_log_path),LOG_LEVEL_2)
-            
-              test_log_name = source_name.replace('.csv','Test.log')
-              test_log_path = os.path.join(source_dir,test_log_name)
-              if( os.path.exists(test_log_path) ): 
-                zip.write( test_log_path, test_log_name )
-              else:
-                log("No file {} found".format(test_log_path),LOG_LEVEL_2)
-
         except ValueError:
             err("Unable to write to {0}".format(archive), LOG_LEVEL_0)
             rcode = False

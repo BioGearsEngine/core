@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <iostream>
 #include <numeric>
+#include <regex>
 #include <sstream>
 
 #include "mz.h"
@@ -16,10 +17,12 @@
 #include "mz_zip.h"
 #include "mz_zip_rw.h"
 #include <biogears/filesystem/path.h>
+#include <biogears/string/manipulation.h>
 
 #include "mz_strm_mem.h"
 
 #include "KnownPaths.h"
+#include "dir.h"
 
 #ifdef _WIN32
 #include <direct.h>
@@ -143,41 +146,38 @@ void ReportWriter::set_web()
 /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
 //-------------------------------------------------------------------------------
 
-bool ReportWriter::gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type)
+void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type)
 
 {
   logger->Info("Generating table: " + split(reference_file, '.')[0]);
+  //TODO: This is a great example on how SetConsoleSetConversionPattern should be pushConsoleSetCOnversionPattern and popConsoleSetConversionPattern
+  //TODO: We should not expect people to know what conversion pattern it was before they changed it.
+
   logger->SetConsolesetConversionPattern("\t%m%n");
 
-  bool success = false;
-  success = ParseReferenceCSV(reference_file);
-  success &= ParseResultsCSV(results_file);
-  if (CalculateAverages()) {
-    //logger->Info("Successfully calculated averages of file: " + results_file);
-    ExtractValues();
-    //logger->Info("Successfully populated data structures with validation data");
-    Validate();
-    //logger->Info("Successfully ran validation");
-    PopulateTables();
-    //logger->Info("Successfully populated tables vector");
-    if (table_type == 0) {
-      set_html();
-    } else if (table_type == 1) {
-      set_md();
-    } else if (table_type == 2) {
-      set_xml();
-    } else {
-      set_web();
-    }
-    to_table();
-    logger->Info("Successfully generated table: " + split(reference_file, '.')[0]);
-    clear();
-    logger->SetConsolesetConversionPattern("%d [%p] %m%n");
+  ParseReferenceCSV(reference_file);
+  ParseResultsCSV(results_file);
+  CalculateAverages();
+  logger->Debug("Successfully calculated averages of file: " + results_file);
+  ExtractValues();
+  logger->Debug("Successfully populated data structures with validation data");
+  Validate();
+  logger->Debug("Successfully ran validation");
+  PopulateTables();
+  logger->Debug("Successfully populated tables vector");
+  if (table_type == 0) {
+    set_html();
+  } else if (table_type == 1) {
+    set_md();
+  } else if (table_type == 2) {
+    set_xml();
   } else {
-    logger->Info("Failed to generate table: " + split(reference_file, '.')[0]);
-    return false;
+    set_web();
   }
-  return true;
+  to_table();
+  logger->Debug("Successfully generated table: " + split(reference_file, '.')[0]);
+  clear();
+  logger->SetConsolesetConversionPattern("%d [%p] %m%n");
 }
 //--------------------------------------------------------------------------------
 inline bool file_exists(const std::string& name)
@@ -209,12 +209,37 @@ std::string locateBaseline(biogears::filesystem::path path_s, std::string name)
   }
   return name + "-NOTFOUND";
 }
+//--------------------------------------------------------------------------------
+std::string resolveTestLocation(biogears::filesystem::path baseline, std::string test)
+{
+  using namespace biogears;
+
+  static const filesystem::path baseline_dir{ Baseline_Directory };
+
+  auto ext = baseline.extension();
+  if (ext == "zip") {
+    return baseline.str();
+  } else {
+    std::regex re{ R"((.*Results)(.*))" };
+    std::smatch m;
+    auto bl = baseline.string();
+    if (std::regex_match(bl, m, re)) {
+      baseline = m[1].str() + test;
+
+      auto dir_list = biogears::filesystem::dirlist(baseline.parent_path().string(), baseline.filename().string() + ".*[.]xml");
+      if (dir_list.size()) {
+        return dir_list[0];
+      }
+    }
+  }
+  return test + "-NOTFOUND";
+}
 //-------------------------------------------------------------------------------
 /// \brief Takes a list of validation files and results files from biogears and produces
 /// validation tables for our documentation.
 /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
 //-------------------------------------------------------------------------------
-bool ReportWriter::gen_tables(TYPE table_type)
+void ReportWriter::gen_tables(TYPE table_type)
 {
   std::vector<std::pair<std::string, std::string>> SystemTables{
     { "BloodChemistryValidation", "Scenarios/Validation" },
@@ -226,71 +251,60 @@ bool ReportWriter::gen_tables(TYPE table_type)
     { "TissueValidation", "Scenarios/Validation" }
   };
 
-  std::vector<std::pair<std::string, std::string>> xml_files{
-    {
-      "HeatStrokeResultsCMP@2610.2s.xml",
-      "Scenarios/Showcase",
-    }
+  //Map of SystemTables to required test. Second paramater i
+  std::map<std::string, std::vector<std::string>> test_files{
+    { "BloodChemistryValidation", { "CMP" } }
   };
 
   bool success = true;
   for (int i = 0; i < SystemTables.size(); i++) {
-    clear();
-    logger->Info("Generating table: " + SystemTables[i].first);
-    logger->SetConsolesetConversionPattern("\t%m%n");
-    bool no_faults = false;
-    const std::string reference_value_file = SystemTables[i].first + ".csv";
-    const std::string library_baseline_file = locateBaseline(SystemTables[i].second, SystemTables[i].first);
-    if (ParseReferenceCSV(reference_value_file)) {
-      if (ParseResultsCSV(library_baseline_file)) {
-        if (i == 0 && !ParseXML(xml_files[0].second, xml_files[0].first)) {
-          success = false;
-          continue;
-        }
-        if (CalculateAverages()) {
-          //logger->Info("Successfully calculated averages of file: " + results_files[i]);
-          if (ExtractValues()) {
-            //logger->Info("Successfully populated data structures with validation data");
-            Validate();
-            //logger->Info("Successfully ran validation");
-            PopulateTables();
-            //logger->Info("Successfully populated tables vector");
-            if (table_type == HTML) {
-              set_html();
-            } else if (table_type == MD) {
-              set_md();
-            } else if (table_type == XML) {
-              set_xml();
-            } else {
-              set_web();
-            }
-
-            if (!to_table()) {
-              logger->Error("Failed to write table: " + SystemTables[i].first);
-            } else {
-
-              clear();
-              logger->SetConsolesetConversionPattern("%d [%p] %m%n");
-              no_faults = true;
-            }
+    try {
+      bool no_faults = false;
+      const std::string reference_value_file = SystemTables[i].first + ".csv";
+      const std::string library_baseline_file = locateBaseline(SystemTables[i].second, SystemTables[i].first);
+      clear();
+      logger->SetConsolesetConversionPattern(SystemTables[i].first + ".md %n");
+      logger->Info("");
+      logger->SetConsolesetConversionPattern("\t[%p]%m%n");
+      ParseReferenceCSV(reference_value_file);
+      ParseResultsCSV(library_baseline_file);
+      if (test_files[SystemTables[i].first].size()) {
+        for (auto test : test_files[SystemTables[i].first]) {
+          try {
+            ParseXML(resolveTestLocation(library_baseline_file, test), test);
+          } catch (std::runtime_error e) {
+            logger->Error(biogears::asprintf("Unable to parse %s for %s \n\t %s", test, SystemTables[i].first.c_str(), e.what()));
+            success = false;
+            continue;
           }
         }
       }
+      CalculateAverages();
+      ExtractValues();
+      Validate();
+      PopulateTables();
+      if (table_type == HTML) {
+        set_html();
+      } else if (table_type == MD) {
+        set_md();
+      } else if (table_type == XML) {
+        set_xml();
+      } else {
+        set_web();
+      }
+      to_table();
+    } catch (std::runtime_error e) {
+      logger->Error("Failure generating " + SystemTables[i].first + "\n\t " + e.what());
+      success &= false;
     }
-    if (no_faults) {
-      logger->Info("Successfully generated table: " + SystemTables[i].first);
-    } else {
-      logger->Error("Failed generating table: " + SystemTables[i].first);
-    }
-    success &= no_faults;
+    clear();
   }
-  return success;
 }
 //-------------------------------------------------------------------------------
 /// \brief Takes the data stored in tables (a map pairing table names (std::string) to a list of TableRow objects (std::vector<biogears::TableRow>)
 /// and prints out a full validation table for each item in tables.
 //-------------------------------------------------------------------------------
-bool ReportWriter::to_table()
+void ReportWriter::to_table()
 {
   report.append(_body_begin);
   for (auto table_itr = tables.begin(); table_itr != tables.end(); ++table_itr) {
@@ -337,25 +351,23 @@ bool ReportWriter::to_table()
     mkdir("doc", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     mkdir("doc/validation", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
-
-    file.open("doc/validation/" + table_name + "ValidationTable" + _file_extension);
+    auto filename = "doc/validation/" + table_name + "ValidationTable" + _file_extension;
+    file.open(filename);
     if (!file) {
-      return false;
+      throw std::runtime_error(biogears::asprintf("Unable to open file %s", filename.c_str()));
     }
     file << (std::string(_body_begin) + table + std::string(_body_end));
     file.close();
     table.clear();
   }
-
-  return true;
 }
 
-bool ReportWriter::ParseReferenceCSV(const std::string filename)
+void ReportWriter::ParseReferenceCSV(const std::string filename)
 {
   return ParseCSV(filename, this->validation_data);
 }
 
-bool ReportWriter::ParseResultsCSV(const std::string filename)
+void ReportWriter::ParseResultsCSV(const std::string filename)
 {
   return ParseCSV(filename, this->biogears_results);
 }
@@ -365,7 +377,7 @@ bool ReportWriter::ParseResultsCSV(const std::string filename)
 /// \param filename: Name of the CSV file to be parsed
 /// \param data: Two dimensional vector for storing data from CSV file
 //-------------------------------------------------------------------------------
-bool ReportWriter::ParseCSV(std::istream& file, std::vector<std::vector<std::string>>& data)
+void ReportWriter::ParseCSV(std::istream& file, std::vector<std::vector<std::string>>& data)
 {
   std::string line;
   int line_number = 0;
@@ -401,9 +413,8 @@ bool ReportWriter::ParseCSV(std::istream& file, std::vector<std::vector<std::str
     ++line_number;
   }
   //logger->Info("Successfully parsed file: " + filename);
-  return true;
 }
-bool ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& data)
+void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& data)
 {
   auto ext = split(filename, '.').back();
   if (ext == "zip") {
@@ -420,7 +431,7 @@ bool ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
     err = mz_zip_reader_open_file(reader, filename.c_str());
     if (err != MZ_OK) {
       mz_zip_reader_delete(&reader);
-      return err;
+      throw std::runtime_error(biogears::asprintf("minizip error detected errorno=%i", err));
     }
 
     biogears::filesystem::path entry{ filename };
@@ -429,68 +440,51 @@ bool ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
     err = mz_zip_reader_locate_entry(reader, internal_file.c_str(), true);
 
     if (err != MZ_OK) {
-      printf("Error %" PRId32 " going to first entry in archive\n", err);
       mz_zip_reader_delete(&reader);
-      return err;
+      throw std::runtime_error(biogears::asprintf("Error % " PRId32 " Locating % s\n ", err, internal_file.c_str()));
     }
 
     err = mz_zip_reader_entry_get_info(reader, &file_info);
     if (err != MZ_OK) {
-      printf("Error %" PRId32 " getting entry info in archive\n", err);
-      return err;
+      mz_zip_reader_delete(&reader);
+      throw std::runtime_error(biogears::asprintf("Error %" PRId32 " getting entry info in archive\n", err));
     }
     err = mz_zip_reader_entry_open(reader);
-    if (err < 0)
-      return err;
-    char* buffer = new char[file_info->uncompressed_size + 1];
-    memset(buffer, '\0', file_info->uncompressed_size + 1);
-    err = mz_zip_reader_entry_read(reader, buffer, file_info->uncompressed_size);
-    
-    std::istringstream stream{ buffer };
-    bool parseResult = ParseCSV(stream, data);
-    if (err < 0)
-      return err;
+    if (err < 0) {
+      mz_zip_reader_delete(&reader);
+      throw std::runtime_error(biogears::asprintf("Error %" PRId32 " opening entry in archive\n", err));
+    }
+    auto buffer = std::vector<char>(file_info->uncompressed_size + 1, '\0');
+    err = mz_zip_reader_entry_read(reader, &buffer[0], file_info->uncompressed_size);
+    if (err < 0) {
+      mz_zip_reader_delete(&reader);
+      throw std::runtime_error(biogears::asprintf("Error %" PRId32 " reading entry in archive\n", err));
+    }
+    std::istringstream stream{ &buffer[0] };
+    ParseCSV(stream, data);
 
     err = mz_zip_reader_entry_close(reader);
-    if (err != MZ_OK)
-      return err;
-
-    delete[] buffer;
-
+    if (err != MZ_OK) {
+      mz_zip_reader_delete(&reader);
+      throw std::runtime_error(biogears::asprintf("Error %" PRId32 " closing entry in archive\n", err));
+    }
     mz_zip_reader_delete(&reader);
-
-    if (err == MZ_END_OF_LIST)
-      return MZ_OK;
-
-    return parseResult;
   } else if (ext == "csv") {
     std::ifstream file{ filename };
     if (file.is_open()) {
       return ParseCSV(file, data);
     } else {
-      logger->Error("Error opening: " + filename);
-      return false;
+      throw std::runtime_error("error opening: " + filename);
     }
-    } else {
-    return false;
+  } else {
+    throw std::runtime_error(biogears::asprintf("error unable to find %s", filename.c_str()));
   }
 }
 //-------------------------------------------------------------------------------
-/// \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
-/// and inserts the TableRow into a map
-/// \param filename: Name of XML file to be parsed
-//-------------------------------------------------------------------------------
-bool ReportWriter::ParseXML(const std::string& path, const std::string& filename)
+void ReportWriter::ParseXML(std::istream& stream)
 {
-  filesystem::path full_path{ path };
-  full_path /= filename;
-  std::ifstream file{ full_path.string() };
-  if (!file.is_open()) {
-    logger->Error("Error opening: " + filename);
-    return false;
-  }
   std::string line;
-  while (std::getline(file, line)) { // This loop reads in the XML file line by line, then pulls out the value name, the unit name, and the value
+  while (std::getline(stream, line)) { // This loop reads in the XML file line by line, then pulls out the value name, the unit name, and the value
     size_t name_index = line.find("p1:"); // The value name is always preceded by "p1:"
     if (name_index == std::string::npos || line.find("/p1:") != std::string::npos) {
       continue;
@@ -514,15 +508,100 @@ bool ReportWriter::ParseXML(const std::string& path, const std::string& filename
     xmlRow.engine_value = std::stod(value);
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(name, xmlRow));
   }
+}
+//-------------------------------------------------------------------------------
+/// \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
+/// and inserts the TableRow into a map
+/// \param filename: Name of XML file to be parsed
+//-------------------------------------------------------------------------------
+void ReportWriter::ParseXML(const std::string& filename, std::string test)
+{
+  auto ext = split(filename, '.').back();
+  if (ext == "zip") {
+    mz_zip_file* file_info = NULL;
+    uint32_t ratio = 0;
+    int16_t level = 0;
+    int32_t err = MZ_OK;
+    struct tm tmu_date;
+    const char* string_method = NULL;
+    char crypt = ' ';
+    void* reader = NULL;
 
-  return true;
+    mz_zip_reader_create(&reader);
+    err = mz_zip_reader_open_file(reader, filename.c_str());
+    if (err != MZ_OK) {
+      mz_zip_reader_delete(&reader);
+      throw std::runtime_error(biogears::asprintf("Error %" PRId32 " opening  archive %s\n", err, filename.c_str()));
+    }
+
+    biogears::filesystem::path entry{ filename };
+    entry = entry.filename();
+
+    err = mz_zip_reader_goto_first_entry(reader);
+    if (err != MZ_OK) {
+      mz_zip_reader_delete(&reader);
+      throw std::runtime_error(biogears::asprintf("Error % " PRId32 " going to first entry in archive\n", err));
+    }
+
+    do {
+      err = mz_zip_reader_entry_get_info(reader, &file_info);
+      if (err != MZ_OK) {
+        mz_zip_reader_delete(&reader);
+        throw std::runtime_error(biogears::asprintf("Error %" PRId32 " getting  entry info from archive\n", err));
+      }
+
+      std::regex re{ ".*" + test + ".*" };
+      std::smatch m;
+      std::string entry_name = file_info->filename;
+      if (std::regex_match(entry_name, m, re)) {
+        err = mz_zip_reader_entry_open(reader);
+        if (err < 0) {
+          mz_zip_reader_delete(&reader);
+          throw std::runtime_error(biogears::asprintf("Error %" PRId32 "  opening entry in archive\n", err));
+        }
+        auto buffer = std::vector<char>(file_info->uncompressed_size + 1, '\0');
+        err = mz_zip_reader_entry_read(reader, &buffer[0], file_info->uncompressed_size);
+        if (err < 0) {
+          mz_zip_reader_delete(&reader);
+          throw std::runtime_error(biogears::asprintf("Error %" PRId32 "  reading entry in archive\n", err));
+        }
+
+        std::istringstream stream{ &buffer[0] };
+        ParseXML(stream);
+
+        err = mz_zip_reader_entry_close(reader);
+        if (err != MZ_OK) {
+          mz_zip_reader_delete(&reader);
+          throw std::runtime_error(biogears::asprintf("Error %" PRId32 "  closing entry in archive\n", err));
+        }
+        break;
+      }
+      err = mz_zip_reader_goto_next_entry(reader);
+      if (err != MZ_OK && err != MZ_END_OF_LIST) {
+        printf("Error %" PRId32 " going to next entry in archive\n", err);
+        break;
+      }
+
+    } while (err == MZ_OK);
+
+    mz_zip_reader_delete(&reader);
+    return;
+  } else if (ext == "xml") {
+    filesystem::path full_path{ filename };
+    std::ifstream file{ full_path.string() };
+    if (!file.is_open()) {
+      throw std::runtime_error("Error opening: " + filename);
+    }
+    return ParseXML(file);
+  }
+  throw std::runtime_error(biogears::asprintf("Unsupported extension %s for file %s", ext.c_str(), filename.c_str()));
 }
 
 //-------------------------------------------------------------------------------
 /// \brief Takes the information from biogears_results, which one of the results CSV files, averages them, creates
 /// a TableRow object for each one, and inserts them into a map of table rows
 //-------------------------------------------------------------------------------
-bool ReportWriter::CalculateAverages()
+void ReportWriter::CalculateAverages()
 {
   std::vector<biogears::TableRow> rows;
   std::vector<int> row_items;
@@ -543,9 +622,7 @@ bool ReportWriter::CalculateAverages()
           ++row_items[k]; // Further down we'll calculate the average of these values by dividing engine_value by row_items
         }
       } catch (std::exception& e) { // This usually occurs if one of the cells contains non-numeric characters, std::stod will throw an exception
-        logger->Error(std::string("Error: ") + e.what());
-        logger->Error("Cell Contents: " + biogears_results[i][k]);
-        return false;
+        throw std::runtime_error(std::string(e.what()) + "\n\t" + "Cell Contents: " + biogears_results[i][k]);
       }
     }
   }
@@ -555,13 +632,12 @@ bool ReportWriter::CalculateAverages()
     TableRow row = rows[i]; //So field_name_with_units looks like "Name(Unit)", which is why it gets split to just be "Name"
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(trim(split(field_name_with_units, '(')[0]), row));
   }
-  return true;
 }
 //-------------------------------------------------------------------------------
 /// \brief Extracts the values from validation_data, which is one of the validation CSV files, and
 /// creates a ReferenceValue object for each column
 //-------------------------------------------------------------------------------
-bool ReportWriter::ExtractValues()
+void ReportWriter::ExtractValues()
 {
   for (int i = 1; i < validation_data.size(); i++) {
     biogears::ReferenceValue ref;
@@ -575,9 +651,8 @@ bool ReportWriter::ExtractValues()
       try {
         ref.reference_range = std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1]));
       } catch (std::exception& e) {
-        logger->Error(std::string("Error: ") + e.what());
-        logger->Error("Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
-        return false;
+        throw std::runtime_error(std::string("Error: ") + e.what() + "\n\tCell Contents: [" + value_range[0] + "," + value_range[1] + "]");
+        ;
       }
     } else {
       ref.is_range = false;
@@ -585,9 +660,7 @@ bool ReportWriter::ExtractValues()
       try {
         ref.reference_value = std::stod(value[0]);
       } catch (std::exception& e) {
-        logger->Error(std::string("Error: ") + e.what());
-        logger->Error("Cell Contents: " + value[0]);
-        return false;
+        throw std::runtime_error(std::string("Error: ") + e.what() + "\n\t" + "Cell Contents: " + value[0]);
       }
     }
     ref.reference = split(validation_data[i][3], ',')[0];
@@ -595,13 +668,12 @@ bool ReportWriter::ExtractValues()
     ref.table_name = validation_data[i][5];
     reference_values.push_back(ref);
   }
-  return true;
 }
 
 /*
  * This function is not currently in use, it's part of planned future upgrades to the ReportWriter
  */
-bool ReportWriter::ExtractValuesList()
+void ReportWriter::ExtractValuesList()
 {
   for (int i = 1; i < validation_data.size(); i++) {
     biogears::ReferenceValue ref;
@@ -618,24 +690,19 @@ bool ReportWriter::ExtractValuesList()
           ref.reference_values.push_back(std::stod(values.substr(j, eod - j)));
           j += ((eod - j) + 1);
         } catch (std::exception& e) {
-          logger->Error(std::string("Error: ") + e.what());
-          logger->Error("Cell Contents: " + values.substr(j, eod - j));
-          return false;
+          throw std::runtime_error(std::string("Error: ") + e.what() + "\n\t" + "Cell Contents: " + values.substr(j, eod - j));
         }
       } else if (values[j] == '[') {
         std::vector<std::string> value_range = split(values.substr(j + 1, values.find_first_of(']', j + 1) - (1 + j)), ',');
         try {
           ref.reference_ranges.push_back(std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1])));
         } catch (std::exception& e) {
-          logger->Error(std::string("Error: ") + e.what());
-          logger->Error("Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
-          return false;
+          throw std::runtime_error(std::string("Error: ") + e.what() + "\n\t" + "Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
         }
         j = values.find_first_of(']', j + 1);
       }
     }
   }
-  return true;
 }
 //-------------------------------------------------------------------------------
 /// \brief Takes each item in the vector reference_values and searches table_row_map for the corresponding
@@ -647,7 +714,7 @@ void ReportWriter::Validate()
     //logger->Info(ref.value_name);
     auto table_row_itr = table_row_map.find(trim(ref.value_name));
     if (table_row_itr == table_row_map.end()) { // Certain reference values might not be present in biogears results
-      logger->Info(trim(ref.value_name) + "  Not Found");
+      logger->Warning(trim(ref.value_name) + "  Not Found");
       continue;
     }
 

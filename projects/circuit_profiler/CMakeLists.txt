@@ -66,7 +66,7 @@ if (${PREFIX}_BUILD_STATIC)
 endif()
 
 if (CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
-  set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -d2SSAOptimizer-" )
+  
 endif()
 add_executable(${PROJECT_NAME} ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
 
