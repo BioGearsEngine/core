@@ -34,12 +34,12 @@ body, table, div, p, dl, a, ul, span, li, ol{
     height: auto;
     /* Negative indent footer by its height */
     margin: 0 auto -60px;
-    /* Pad bottom by footer height */
-    padding: 0 0 60px;
+    /* Pad top by nav bar height and bottom by footer height */
+    padding: 50px 0 60px;
 }
 
 #top {
-	margin-top: 25px;
+	margin-top: 0;
 }
 
 /* Set the fixed height of the footer here */

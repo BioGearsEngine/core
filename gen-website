@@ -1,0 +1,58 @@
+#!/bin/bash
+
+cd /opt/biogears/core/build
+
+# Build BioGears
+echo "Building BioGears ..."
+cmake -DCMAKE_INSTALL_PREFIX=/opt/biogears/usr -DBiogears_BUILD_WEBSITE=ON -DBiogears_BUILD_JAVATOOLS=ON -DBiogears_BUILD_HOWTOS=OFF -DBiogears_BUILD_TEST=OFF -DCMAKE_BUILD_TYPE=Release .. && make -j2
+
+cd runtime
+
+echo "Finished building BioGears"
+sleep 5
+
+if [ "${GENSTATES}" == "true" ]; then
+    echo "Running cmd_bio GENSTATES ..."
+    ../outputs/Release/bin/cmd_bio GENSTATES
+fi
+
+echo "Passed GENSTATES"
+sleep 5
+
+if [ "${VALIDATE}" == "true" ]; then
+    echo "Running cmd_bio VALIDATE all ..."
+    ../outputs/Release/bin/cmd_bio VALIDATE all
+fi
+
+echo "Passed VALIDATE"
+sleep 5
+
+# Only run if starting from a clean build of BioGears... running and validating everything from scratch
+
+# Always run this
+echo "Running cmd_bio GENTABLES ..."
+../outputs/Release/bin/cmd_bio GENTABLES all
+
+echo "Passed GENTABLES"
+sleep 5
+
+# Copy non-regenerated files from share/website into runtime and reorganizes files in runtime+
+python3 ../../share/website/WebsiteGenerationPreProcess.py /opt/biogears/core/share/website /opt/biogears/core/build/runtime
+
+echo "Passed WebGenPreProcess"
+sleep 5
+
+# Preprocess MD files for website generation and create graphs
+cmake --build .. --target docs-prepare
+
+echo "Passed docs-prepare"
+sleep 5
+
+# Run Doxygen
+cmake --build .. --target docs-doxygen
+
+echo "Passed docs-doxygen"
+sleep 5
+
+# Copy files into documentation folder
+cmake --build .. --target docs-stage

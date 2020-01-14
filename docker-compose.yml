@@ -1,0 +1,32 @@
+version: "2"
+
+services:
+
+    biogears-external:
+        build:
+          context: ./docker/external
+          dockerfile: Dockerfile
+        image: biogears-external
+
+
+    biogears-builder:
+        image: biogears-external
+        working_dir: /opt/biogears/core/build
+        volumes:
+          - ./:/opt/biogears/core
+          - ../validation:/opt/biogears/validation
+        tty: true
+
+    biogears-webgen:
+      build:
+          context: ./docker/webgen
+          dockerfile: Dockerfile
+      image: biogears-webgen
+      working_dir: /opt/biogears/core
+      command: bash -c "./gen-website"
+      environment:
+          GENSTATES: 'false'
+          VALIDATE: 'false'
+      volumes:
+          - ./:/opt/biogears/core
+      tty: true
