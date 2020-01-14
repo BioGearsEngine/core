@@ -273,7 +273,7 @@ void ReportWriter::gen_tables(TYPE table_type)
           try {
             ParseXML(resolveTestLocation(library_baseline_file, test), test);
           } catch (std::runtime_error e) {
-            logger->Error(biogears::asprintf("Unable to parse %s for %s \n\t %s", test, SystemTables[i].first.c_str(), e.what()));
+            logger->Error(biogears::asprintf("Unable to parse %s for %s \n\t %s", test.c_str(), SystemTables[i].first.c_str(), e.what()));
             success = false;
             continue;
           }
