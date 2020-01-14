@@ -40,7 +40,8 @@ void print_help() {
 
     std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
                                 "[THREADS N]\n" 
-                                "[TEST FILE [FILE]...], pSCENARIO FILE [FILE]...], VALIDATE patient|drug|system|all], [GENTABLES html|md|xml|web|all]\n\n";
+                                "[TEST FILE [FILE]...], [CONFIG FILE [FILE]...] [SCENARIO FILE [FILE]...], [VALIDATE patient|drug|system|all]\n"
+                                "[GENTABLES html|md|xml|web|all]\n\n";
 
     std::cout << "Flags: \n";
     std::cout << "j : Thread control -j N\n";
@@ -61,7 +62,7 @@ int main(int argc, char** argv)
     ,
     { "J", "THREADS" } //Keywords
     ,
-    { "TEST", "SCENARIO", "VALIDATE", "GENTABLES" } //MultiWords
+    { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES" } //MultiWords
   );
   
 
@@ -179,6 +180,14 @@ int main(int argc, char** argv)
   if (run_verification) { // run-verification
     const auto runs = biogears::Config("VerificationScenarios.config");
     driver.queue(runs);
+  }
+
+  if (args.MultiWordFound("CONFIG")) {
+    auto configs = biogears::Config{  };
+    for (auto& arg : args.MultiWord("CONFIG")) {
+      const auto runs = biogears::Config(arg);
+      driver.queue(runs);
+    }
   }
 
   if (args.MultiWordFound("SCENARIO")) {
