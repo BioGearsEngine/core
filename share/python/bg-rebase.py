@@ -90,7 +90,8 @@ def archive_command(args):
 
 def archive (root, path, recurse, clean):
     log( "archive(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_3 )
-    valid_regex = "[.]xml"
+    scenario_regex= "[.]xml"
+    results_regex = ".+Results.+[.]xml"
     absolute_path = os.path.join(root ,path)
     if( os.path.isfile(absolute_path)):
      basename,extension = os.path.splitext(absolute_path)
@@ -98,9 +99,9 @@ def archive (root, path, recurse, clean):
      scenario_file = absolute_path
      results_file = basename + "Results.csv"
 
-     scenario_regex_match = re.match( valid_regex, extension)
+     scenario_regex_match = re.match( scenario_regex, extension)
+     results_regex_match= re.match( results_regex, scenario_file)
      results_file_exists = os.path.exists(results_file)
-     
      if(scenario_regex_match and results_file_exists):
        destination = os.path.join(os.path.join( os.path.dirname(output_path), _baseline_dir ), os.path.basename(basename)+"Results"+archive_extension)
        log("{0}".format(os.path.basename(destination)),LOG_LEVEL_1)
@@ -115,7 +116,7 @@ def archive (root, path, recurse, clean):
            results_file = os.path.join( os.path.dirname(results_file), file)
            compress_and_store( results_file, destination)
      else:
-       if(scenario_regex_match):
+       if(scenario_regex_match and results_regex_match is None):
          err("{0} Scenario is missing a results file".format(absolute_path),LOG_LEVEL_0)
        
 
@@ -142,12 +143,13 @@ def rebase_command(args):
 
 def rebase (root, path, recurse, clean):
     log( "rebase(root:{0}, path:{1}, recurse:{2}, clean:{3})".format(root,path,recurse,clean), LOG_LEVEL_3 )
-    valid_regex = '[.](xml)'
+    scenario_regex= "[.]xml"
+    results_regex = ".+Results.+[.]xml"
     absolute_path = os.path.join(root ,path)
     basename,extension     = os.path.splitext(absolute_path)
     output_path = os.path.join(_output_directory,os.path.relpath(basename,_root_directory))
     if( os.path.isfile(absolute_path) ):
-        if ( re.match( valid_regex, extension) ):
+        if ( re.match( scenario_regex, extension) and re.match( results_regex, path) is None):
             #Execute Rebase Utility
             p = subprocess.Popen([_scenario_driver,absolute_path], stderr=subprocess.STDOUT, cwd=_runtime_directory)
             p.wait()
