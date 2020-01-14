@@ -31,7 +31,7 @@ namespace filesystem {
       }
       closedir(dir);
     } else {
-      throw std::runtime_error(biogears::asprintf("Unable to list directory containing %s", path));
+      throw std::runtime_error(biogears::asprintf("Unable to list directory containing %s", path.c_str()));
     }
     return result;
   }
