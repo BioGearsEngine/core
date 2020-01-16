@@ -34,7 +34,9 @@ void SETourniquet::Clear()
 //-----------------------------------------------------------------------------
 bool SETourniquet::IsValid() const
 {
-  return SEPatientAction::IsValid() && HasCompartment() && HasTourniquetLevel();
+  const std::vector<std::string> validCmpts{ "LeftArm", "LeftLeg", "RightArm", "RightLeg" };
+  return SEPatientAction::IsValid() && HasCompartment() && HasTourniquetLevel()
+    && std::find(validCmpts.begin(), validCmpts.end(), GetCompartment()) != validCmpts.end();
 }
 //-----------------------------------------------------------------------------
 bool SETourniquet::IsActive() const

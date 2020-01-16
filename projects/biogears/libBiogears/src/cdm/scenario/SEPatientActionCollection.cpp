@@ -108,7 +108,7 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasBurnWound())
     to.push_back(GetBurnWound()->Unload());
   if (HasCardiacArrest())
-      to.push_back(GetCardiacArrest()->Unload());
+    to.push_back(GetCardiacArrest()->Unload());
   if (HasChestCompressionForce())
     to.push_back(GetChestCompressionForce()->Unload());
   if (HasChestCompressionForceScale())
@@ -408,9 +408,9 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
   const CDM::InfectionData* infect = dynamic_cast<const CDM::InfectionData*>(&action);
   if (infect != nullptr) {
-	  if (m_Infection == nullptr){
-		m_Infection = new SEInfection();
-	  }
+    if (m_Infection == nullptr) {
+      m_Infection = new SEInfection();
+    }
     m_Infection->Load(*infect);
     if (!m_Infection->IsActive()) {
       RemoveInfection();
@@ -545,64 +545,73 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
   const CDM::TourniquetData* tournData = dynamic_cast<const CDM::TourniquetData*>(&action);
   if (tournData != nullptr) {
-    SETourniquet* myTourn = m_Tourniquets[tournData->Compartment()];
-    std::vector<std::string> validCmpts{ "LeftArm", "LeftLeg", "RightArm", "RightLeg" };
-    bool matchingHem = true;
-    bool validCmpt = true;
+    auto tItr = m_Tourniquets.find(tournData->Compartment());
+
+    bool matchingHem = false;
+    bool validCmpt = false;
     std::stringstream warn;
-    if (myTourn == nullptr) {
-      if (m_Hemorrhages[tournData->Compartment()] != nullptr) {
-        myTourn = new SETourniquet();
-        m_Tourniquets[tournData->Compartment()] = myTourn;
+    if (m_Hemorrhages.find(tournData->Compartment()) != m_Hemorrhages.end()) {
+      matchingHem = true;
+      SETourniquet* tourniquet = std::make_unique<SETourniquet>().release();
+      if (tItr != m_Tourniquets.end()) {
+        tourniquet = m_Tourniquets[tournData->Compartment()];
+        tourniquet->Load(*tournData);
+        validCmpt = true;
       } else {
-        matchingHem = false;
-        warn << "\n\t Tourniquet cannot be applied to a compartment without a hemorrhage" << std::endl;
+        tourniquet->Load(*tournData);
+        if (tourniquet->IsValid()) {
+          m_Tourniquets[tournData->Compartment()] = tourniquet;
+          tItr = m_Tourniquets.find(tournData->Compartment());
+          validCmpt = true;
+        } else {
+          tourniquet->Clear();
+          warn << "\t Invalid tourniquet location:  Valid options are LeftArm, LeftLeg, RightArm, RightLeg" << std::endl;
+        }
       }
-	  if (std::find(validCmpts.begin(), validCmpts.end(), tournData->Compartment()) == validCmpts.end()) {
-        validCmpt = false;
-		warn << "\t Invalid tourniquet location:  Valid options are LeftArm, LeftLeg, RightArm, RightLeg" << std::endl;
-	  }
-    }
-    if (matchingHem && validCmpt) {
-      myTourn->Load(*tournData);
-      if (!myTourn->IsActive()) {
-        RemoveTourniquet(myTourn->GetCompartment());
-        return true;
-      }
-      return IsValid(*myTourn);
     } else {
-      Warning(warn);
-      return false;
+      warn << "\n\t Tourniquet cannot be applied to a compartment without a hemorrhage" << std::endl;
     }
-  }
-
-  const CDM::UrinateData* urinate = dynamic_cast<const CDM::UrinateData*>(&action);
-  if (urinate != nullptr) {
-    if (m_Urinate == nullptr)
-      m_Urinate = new SEUrinate();
-    m_Urinate->Load(*urinate);
-    if (!m_Urinate->IsActive()) {
-      RemoveUrinate();
+  if (matchingHem && validCmpt) {
+    auto turniquet = tItr->second;
+    turniquet->Load(*tournData);
+    if (!turniquet->IsActive()) {
+      RemoveTourniquet(turniquet->GetCompartment());
       return true;
     }
-    return IsValid(*m_Urinate);
+    return IsValid(*turniquet);
+  } else {
+    Warning(warn);
+    return false;
   }
+}
 
-  const CDM::OverrideData* orData = dynamic_cast<const CDM::OverrideData*>(&action);
-  if (orData != nullptr) {
-    if (m_OverrideAction == nullptr)
-      m_OverrideAction = new SEOverride();
-    m_OverrideAction->Load(*orData);
-    if (!m_OverrideAction->IsActive()) {
-      RemoveOverride();
-      return true;
-    }
-    return IsValid(*m_OverrideAction);
+const CDM::UrinateData* urinate = dynamic_cast<const CDM::UrinateData*>(&action);
+if (urinate != nullptr) {
+  if (m_Urinate == nullptr)
+    m_Urinate = new SEUrinate();
+  m_Urinate->Load(*urinate);
+  if (!m_Urinate->IsActive()) {
+    RemoveUrinate();
+    return true;
   }
+  return IsValid(*m_Urinate);
+}
 
-  /// \error Unsupported Action
-  Error("Unsupported Action");
-  return false;
+const CDM::OverrideData* orData = dynamic_cast<const CDM::OverrideData*>(&action);
+if (orData != nullptr) {
+  if (m_OverrideAction == nullptr)
+    m_OverrideAction = new SEOverride();
+  m_OverrideAction->Load(*orData);
+  if (!m_OverrideAction->IsActive()) {
+    RemoveOverride();
+    return true;
+  }
+  return IsValid(*m_OverrideAction);
+}
+
+/// \error Unsupported Action
+Error("Unsupported Action");
+return false;
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::IsValid(const SEPatientAction& action)
@@ -1173,7 +1182,6 @@ bool SEPatientActionCollection::AdministerSubstance(const CDM::SubstanceAdminist
       return true;
     }
     return IsValid(*myOralDose);
-  
   }
 
   const CDM::SubstanceCompoundInfusionData* cSubInfusion = dynamic_cast<const CDM::SubstanceCompoundInfusionData*>(&subAdmin);
