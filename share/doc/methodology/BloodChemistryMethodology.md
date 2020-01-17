@@ -172,37 +172,37 @@ The %BioGears Engine triggers an HTR event when an incompatibility is detected. 
 
 HTR Equations
 
-\f[\[K\left( {i,j} \right) = \frac{{\left( {{D_i} + {D_j}} \right)\left( {{R_i} + {R_j}} \right)}}{{\left( {4{D_1}{\rm{ }}{R_1}{\rm{ }}} \right)}}\] \f]
+\f[K\left( {i,j} \right) = \frac{{\left( {{D_i} + {D_j}} \right)\left( {{R_i} + {R_j}} \right)}}{{\left( {4{D_1}{\rm{ }}{R_1}{\rm{ }}} \right)}} \f]
 <center>
 <i>Equation 13. Probablity of cellular collision between cluster of i cells and cluster of j cells</i>
 </center><br>
 
-\f[\[{C_{\left( {rbc,p} \right)}}\left( {t + 1} \right) = RBC\left( t \right) + \left( {RB{C_{birth}} * dt} \right) - (RB{C_{death}} * dt) - dt(\left( {K\left( {1,1} \right) * RBC\left( t \right) * RB{C_T}\left( t \right)} \right) + \left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RBC\left( t \right)} \right) + (K\left( {3,1} \right) * {C_{3d}}\left( t \right) * RBC\left( t \right)))\] \f]
+\f[{C_{\left( {rbc,p} \right)}}\left( {t + 1} \right) = RBC\left( t \right) + \left( {RB{C_{birth}} * dt} \right) - (RB{C_{death}} * dt) - dt(\left( {K\left( {1,1} \right) * RBC\left( t \right) * RB{C_T}\left( t \right)} \right) + \left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RBC\left( t \right)} \right) + (K\left( {3,1} \right) * {C_{3d}}\left( t \right) * RBC\left( t \right))) \f]
 <center>
 <i>Equation 14. Concentration of patient red blood cells</i>
 </center><br>
 
-\f[\[{C_{\left( {rbc,d} \right)}}\left( {t + 1} \right) = RB{C_T}\left( t \right) - (RB{C_{death}} * dt) - dt(\left( {K\left( {1,1} \right) * RBC\left( t \right) * RB{C_T}\left( t \right)} \right) + \left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RB{C_T}\left( t \right)} \right) + (K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RB{C_T}\left( t \right)))\] \f]
+\f[{C_{\left( {rbc,d} \right)}}\left( {t + 1} \right) = RB{C_T}\left( t \right) - (RB{C_{death}} * dt) - dt(\left( {K\left( {1,1} \right) * RBC\left( t \right) * RB{C_T}\left( t \right)} \right) + \left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RB{C_T}\left( t \right)} \right) + (K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RB{C_T}\left( t \right))) \f]
 <center>
 <i>Equation 15. Concentration of donor red blood cells</i>
 </center><br>
 
-\f[\[{C_2}\left( {t + 1} \right) = {C_2}\left( t \right) + dt(\left( {K\left( {1,1} \right) * RBC\left( t \right) * RB{C_T}\left( t \right)} \right) - \left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RBC\left( t \right)} \right) - (K\left( {2,1} \right) * {C_2}(t) * RB{C_T}\left( t \right)) + ((K(2,2) * {C_2}\left( t \right) * {C_2}\left( t \right))))\] \f]
+\f[{C_2}\left( {t + 1} \right) = {C_2}\left( t \right) + dt(\left( {K\left( {1,1} \right) * RBC\left( t \right) * RB{C_T}\left( t \right)} \right) - \left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RBC\left( t \right)} \right) - (K\left( {2,1} \right) * {C_2}(t) * RB{C_T}\left( t \right)) + ((K(2,2) * {C_2}\left( t \right) * {C_2}\left( t \right)))) \f]
 <center>
 <i>Equation 16. Concentration of red blood cell pairings (1 donor/1 patient</i>
 </center><br>
 
-\f[\[{C_{3,p}}\left( {t + 1} \right) = {C_{3p}}\left( t \right) + dt(\left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RBC\left( t \right)} \right) - \left( {K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RB{C_T}\left( t \right)} \right))\] \f]
+\f[{C_{3,p}}\left( {t + 1} \right) = {C_{3p}}\left( t \right) + dt(\left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RBC\left( t \right)} \right) - \left( {K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RB{C_T}\left( t \right)} \right)) \f]
 <center>
 <i>Equation 17a. Concentration of triads (2 patient/1 donor) of red blood cells</i>
 </center><br>
 
-\f[\[{C_{3,d}}\left( {t + 1} \right) = {C_{3d}}\left( t \right) + dt(\left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RB{C_T}\left( t \right)} \right) - \left( {K\left( {3,1} \right) * {C_{3d}}\left( t \right) * RBC\left( t \right)} \right))\] \f]
+\f[{C_{3,d}}\left( {t + 1} \right) = {C_{3d}}\left( t \right) + dt(\left( {K\left( {2,1} \right) * {C_2}\left( t \right) * RB{C_T}\left( t \right)} \right) - \left( {K\left( {3,1} \right) * {C_{3d}}\left( t \right) * RBC\left( t \right)} \right)) \f]
 <center>
 <i>Equation 17b. Concentration of triads (1 patient/2 donor) of red blood cells</i>
 </center><br>
 
-\f[\[{C_4}\left( {t + 1} \right) = {C_4}\left( t \right) + dt(\left( {\left( {K\left( {2,2} \right) * {C_2}\left( t \right) * {C_2}\left( t \right)} \right)} \right) + (K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RB{C_T}\left( t \right)) + \left( {K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RBC\left( t \right)} \right))\] \f]
+\f[{C_4}\left( {t + 1} \right) = {C_4}\left( t \right) + dt(\left( {\left( {K\left( {2,2} \right) * {C_2}\left( t \right) * {C_2}\left( t \right)} \right)} \right) + (K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RB{C_T}\left( t \right)) + \left( {K\left( {3,1} \right) * {C_{3p}}\left( t \right) * RBC\left( t \right)} \right)) \f]
 <center>
 <i>Equation 18. Concentration of red blood cell "stable" agglutinates</i>
 </center><br>

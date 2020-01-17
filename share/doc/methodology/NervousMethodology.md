@@ -148,14 +148,14 @@ Where x<sub>HR</sub>, x<sub>E</sub>, x<sub>R</sub> and x<sub>C</sub> are the rel
 The chemoreceptors are cells that are sensitive to changes in blood gas concentration. Peripheral chemosensitive cells--located in the aortic arch--detect fluctuations in both arterial carbon dioxide and oxygen partial pressures.  The central chemoreceptors, which reside in the central nervous system (CNS), respond to changes in cerebral blood pH caused by irregular carbon dioxide levels.  It is assumed in this model that carbon dioxide transport across the blood-brain barrier and equilibration therein are rapid processes; that is, it assumed that the central chemoreceptor response is proportional to deviations in arterial carbon dioxide.  As sympathetic activators, the chemoreceptors also increase the heart rate and contractility.
 
 ####Respiratory Control
-Control of respiration is based on the model developed by Albanese, Magosso, and Ursino in @cite ursino2001acute, @cite magosso2001mathematical, and @cite ursino2002theoretical.  It is assumed that the central and peripheral feedback define deviations from baseline patient ventilation (set in %BioGears during system stabilization) and that their contributions are independent (and thus additive).  
+Control of respiration is based on the model developed by Albanese, Magosso, and Ursino in @cite ursino2000acute, @cite magosso2001mathematical, and @cite ursino2002theoretical.  It is assumed that the central and peripheral feedback define deviations from baseline patient ventilation (set in %BioGears during system stabilization) and that their contributions are independent (and thus additive).  
 
 \f[\dot{V_{target}} = \dot{V_{base}} + \delta\dot{V_{c}} + \delta\dot{V_{p}} \f]
 <center>
 *Equation 8.*
 </center><br>
 
-Clearly, the blood gas levels are normal, central (\delta\dot{V<sub>c</sub>}) and peripheral (\delta\dot{V<sub>p</sub>}) changes in ventilation are 0, and target ventilation (\dot{V<sub>target</sub>}) equals patient baseline ventilation (\dot{V<sub>base</sub>}).
+Clearly, the blood gas levels are normal, central V<sub>c</sub> and peripheral V<sub>p</sub> changes in ventilation are 0, and target ventilation V<sub>target</sub> equals patient baseline ventilation V<sub>base</sub>.
 
 The evolution of the central chemoreceptor feedback is assumed to be a function of arterial carbon dioxide partial pressure (P<sub>CO<sub>2</sub></sub>) deviation from its normal set point (P<sub>CO<sub>2,set</sub></sub> = 40 mmHg).
 
@@ -164,7 +164,7 @@ The evolution of the central chemoreceptor feedback is assumed to be a function 
 *Equation 9.*
 </center><br>
 
-The parameters \tau<sub>c</sub> and g<sub>c</sub> are the time constant and control gain associated with the central response, respectively.  Equation 9 is identical to that reported in @magosso2001mathematical, except that a delay term is omitted.  This omission is a result of being currently unable to model delay differential equations in %BioGears.  
+The parameters &tau;<sub>c</sub> and &tau;g<sub>c</sub> are the time constant and control gain associated with the central response, respectively.  Equation 9 is identical to that reported in @magosso2001mathematical, except that a delay term is omitted.  This omission is a result of being currently unable to model delay differential equations in %BioGears.  
 
 The form of the peripheral feedback in Equation 10 is similar to Equation 9, but the response is dictated by a nerve firing rate that is a function of the combined action of carbon dioxide and oxygen.  Equations 11-12 show how this firing rate (f(t)) is calculated.
 
@@ -173,12 +173,12 @@ The form of the peripheral feedback in Equation 10 is similar to Equation 9, but
 *Equation 10.*
 </center><br>
 
-\f[ \frac{df}{dt} = \frac{1}{\tau_{f}}\left(-f(t) + \psi\right)
+\f[ \frac{df}{dt} = \frac{1}{\tau_{f}}\left(-f(t) + \psi\right) \f]
 <center>
 *Equation 11.*
 </center><br>
 
-\f[ \psi = \frac{f_{max} + f_{min}*exp\left(\frac{P_{O_{2}} - P_{O_{2,half}}}{k_{O_{2}}}\right)}{1 + exp\left(\frac{P_{O_{2}} - P_{O_{2,half}}}{k_{O_{2}}}\right)}*\left[K*ln\left(\frac{P_{CO_{2}}}{P_{CO_{2,set}}} + \gamma\right] \f]
+\f[ \psi = \frac{f_{max} + f_{min}*exp\left(\frac{P_{O_{2}} - P_{O_{2,half}}}{k_{O_{2}}}\right)}{1 + exp\left(\frac{P_{O_{2}} - P_{O_{2,half}}}{k_{O_{2}}}\right)}*\left[K*ln\left(\frac{P_{CO_{2}}}{P_{CO_{2,set}}}\right) + \gamma\right] \f]
 <center>
 *Equation 12.*
 </center><br>

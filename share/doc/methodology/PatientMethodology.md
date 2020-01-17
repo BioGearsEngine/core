@@ -66,7 +66,7 @@ Features and Capabilities
 |	Total Lung Capacity	|	Optional	|	\f[Tlc[mL] = 80W[kg]\f]	|	 -	|	 -	|	@cite ganong1995review	|
 |	Residual Volume	|	Optional	|	\f[Rv[mL] = 16W[kg]\f]	|	 -	|	 -	|	@cite ganong1995review	|
 |	Lean Body Mass	|	Unallowed	|	\f[Lbm = W(1 - Ff)\f]	|	 -	|	 -	|		|
-|	Body Density	|	Unallowed	|	\f[Bd = {{\left( {\frac{{4.95}}{{Ff + 4.5}} + \frac{{4.57}}{{Ff + 4.142}}} \right)} \mathord{\left/  {\vphantom {{\left( {\frac{{4.95}}{{Ff + 4.5}} + \frac{{4.57}}{{Ff + 4.142}}} \right)} 2}} \right.  \kern-\nulldelimiterspace} 2}\f]	|	 -	|	 -	|	Average of Siri @cite siri1961body and Brozek @cite brovzek1963densitometric equations.	|
+|	Body Density	|	Unallowed	|	\f[Bd = {{\left( {\frac{{4.95}}{{Ff + 4.5}} + \frac{{4.57}}{{Ff + 4.142}}} \right)} \mathord{\left/  {\vphantom {{\left( {\frac{{4.95}}{{Ff + 4.5}} + \frac{{4.57}}{{Ff + 4.142}}} \right)} 2}} \right} 2}\f]	|	 -	|	 -	|	Average of Siri @cite siri1961body and Brozek @cite brovzek1963densitometric equations.	|
 |	Mean Arterial Pressure	|	Unallowed	|	\f[Map = \frac{1}{3}Sys + \frac{2}{3}Dia\f]	|	 -	|	 -	|	@cite guyton2006medical	|
 |	Tidal Volume Baseline	|	Unallowed	|	\f[Tv[mL] = 37W[kg] - Frc[mL]\f]	|	 -	|	 -	|	@cite ganong1995review	|
 |	Expiratory Reserve Volume	|	Unallowed	|	\f[Erv = Frc - Rv\f]	|	 -	|	 -	|	@cite ganong1995review	|

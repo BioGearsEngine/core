@@ -61,7 +61,7 @@ A static gastric secretion flow rate of 2.46 mL/min is used to manually move wat
 Digestion of nutrients in %BioGears is modeled as an enzymatic process that aims to replicate product formation in the human body as nutrients travel through the gastrointestinal system. The enzyme-substrate interaction and product formation is modeled using Michaelis-Menten kinetics describing the following process: 
 
 \f[\left[ E \right] + \left[ S \right] \mathbin{\lower.3ex\hbox{$\buildrel\textstyle\rightarrow\over
-{\smash{\leftarrow}\vphantom{_{\vbox to.5ex{\vss}}}}$}} \left[ {ES} \right] \to \left[ E \right] + \left[ P \right].\f]
+{\smash{\leftarrow}}$}} \left[ {ES} \right] \to \left[ E \right] + \left[ P \right].\f]
 <center>
 *Equation 1*
 </center><br>
