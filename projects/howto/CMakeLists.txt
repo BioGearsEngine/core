@@ -53,7 +53,7 @@ function(add_howto name)
         )
 
      target_compile_definitions(${TARGET_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
-     target_compile_options(${TARGET_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+     target_compile_options(${TARGET_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  )
   
     ###############################################################################
     # COMPILATION & LINKAGE MODIFICATIONS
