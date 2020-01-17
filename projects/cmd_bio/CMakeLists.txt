@@ -64,9 +64,7 @@ endif()
 if (${PREFIX}_BUILD_STATIC)
   add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
 endif()
-if (CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
-	  
-endif()
+
 add_executable(${PROJECT_NAME} ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
 set_target_properties(${PROJECT_NAME}
   PROPERTIES

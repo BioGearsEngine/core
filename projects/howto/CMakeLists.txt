@@ -38,9 +38,7 @@ function(add_howto name)
     ###############################################################################
     #Define Logic
     ###############################################################################  
-	if (CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019")
-	  
-	endif()
+
     add_executable(${TARGET_NAME} ${${EXAMPLE_NAME}_SOURCES} ${${EXAMPLE_NAME}_HEADERS})
     
     set_target_properties(${TARGET_NAME}

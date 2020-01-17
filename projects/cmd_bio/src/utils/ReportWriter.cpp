@@ -179,7 +179,10 @@ void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
   clear();
   logger->SetConsolesetConversionPattern("%d [%p] %m%n");
 }
+
 //--------------------------------------------------------------------------------
+//  \brief True when the filename provided is readable using fopen else false
+//
 inline bool file_exists(const std::string& name)
 {
   if (FILE* file = fopen(name.c_str(), "r")) {
@@ -190,6 +193,16 @@ inline bool file_exists(const std::string& name)
   }
 }
 //--------------------------------------------------------------------------------
+//
+//  \brief Returns a string representing the path.join(name) or the fallback location
+//         returns path_s.join(name) if it exist else
+//         returns path_s/baselines/name+Results.zip if it exists else
+//         returns baseline_dir/path_s/baselines/name+Results.zip else
+//         returns name + -NOTFOUND
+//
+//   The value of baseline_dir is determined by CMAKE durring code configuration
+//   from the cmake variable Biogears_Baseline_DIRot
+//
 std::string locateBaseline(biogears::filesystem::path path_s, std::string name)
 {
   using namespace biogears;
@@ -374,7 +387,7 @@ void ReportWriter::ParseResultsCSV(const std::string filename)
 //-------------------------------------------------------------------------------
 /// \brief Parses a CSV file and loads it into a 2 dimension vector data, which represents a CSV.
 /// data[y] represents an individual row of the CSV file, while data[y][x] represents an individual cell.
-/// \param filename: Name of the CSV file to be parsed
+/// \param file: The CSV in istream form.  Stream must be open and valid
 /// \param data: Two dimensional vector for storing data from CSV file
 //-------------------------------------------------------------------------------
 void ReportWriter::ParseCSV(std::istream& file, std::vector<std::vector<std::string>>& data)
@@ -414,6 +427,13 @@ void ReportWriter::ParseCSV(std::istream& file, std::vector<std::vector<std::str
   }
   //logger->Info("Successfully parsed file: " + filename);
 }
+
+//-------------------------------------------------------------------------------
+/// \brief Searches the filename for CSV data and passes it to ParseCSV(std::istream*, data)
+/// \param filename: Name of file to aquire the csv data from.
+///                  If the name is a zip file then the name with out an extension + .csv will be pulled form the archive and read
+/// \param data: Two dimensional vector for storing data from CSV file
+//-------------------------------------------------------------------------------
 void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& data)
 {
   auto ext = split(filename, '.').back();
@@ -481,6 +501,10 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
   }
 }
 //-------------------------------------------------------------------------------
+//! \param stdl::istream : XML Input in stream form.  
+//!
+//! \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
+/// and inserts the TableRow into a map
 void ReportWriter::ParseXML(std::istream& stream)
 {
   std::string line;
@@ -510,9 +534,13 @@ void ReportWriter::ParseXML(std::istream& stream)
   }
 }
 //-------------------------------------------------------------------------------
-/// \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
-/// and inserts the TableRow into a map
+/// \brief Determines if the XML is part of a baseline archive or a raw file.
+///        If it is in a raw file the raw file is read in to a stream and passed to ParseXML(std::istream&)
+///        If it is in an archive then the value of test is used as a REGEX search match in the form of ".*test.*"
+///        To find the right entry in the archive to read in and send to ParseXML(std::istream&)
+///
 /// \param filename: Name of XML file to be parsed
+/// \param test: The value of test will be used when filename ends in .zip by creating the regex ".*test.*"
 //-------------------------------------------------------------------------------
 void ReportWriter::ParseXML(const std::string& filename, std::string test)
 {
