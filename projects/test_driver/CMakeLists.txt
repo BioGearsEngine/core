@@ -81,7 +81,7 @@ set_target_properties(${PROJECT_NAME}
   )
    
   target_compile_definitions(${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
-  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${CMAKE_BUILD_PARALLEL_LEVEL}>)
+  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 ###############################################################################
 # COMPILATION & LINKAGE MODIFICATIONS
 ###############################################################################
