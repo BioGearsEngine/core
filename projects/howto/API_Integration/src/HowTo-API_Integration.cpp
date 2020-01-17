@@ -17,14 +17,16 @@ specific language governing permissions and limitations under the License.
 // Include the various types you will be using in your code
 
 #include <biogears/cdm/patient/actions/SEInfection.h>
+#include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
+#include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
+#include <biogears/cdm/system/environment/SEActiveHeating.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
+#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
-#include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
-#include <biogears/cdm/system/environment/SEActiveHeating.h>
-#include <biogears/cdm/patient/actions/SEUrinate.h>
+#include <biogears/cdm/patient/SEPatient.h>
 //!
 //! All action functions take in an entine and a verying number of params based on the SEAction type being applied
 //!
@@ -35,9 +37,28 @@ specific language governing permissions and limitations under the License.
 //! but does not make any promises that the ptr to engine isn't copied or used outside
 
 //!
+//!  Applies an SEHemmorhage to the given engine.
+//!
+//!  SEHemorrhage has two initial values needed for this function
+//!  std::string compartment -- Where the tourniquet will be applied [LeftLeg,RightLeg,LeftArm,RightArm]
+//!  double -- Initial flow rate we assume its given in ml_Per_min
+bool action_apply_hemorrhage(std::unique_ptr<biogears::BioGearsEngine>& engine,
+                             std::string compartment, double initial_rate_ml_Per_min)
+{
+  auto hemorrhage = biogears::SEHemorrhage();
+  hemorrhage.SetCompartment(compartment);
+  hemorrhage.GetInitialRate().SetValue(10., biogears::VolumePerTimeUnit::mL_Per_min);
+  if (hemorrhage.IsValid()) {
+    engine->ProcessAction(hemorrhage);
+    return true;
+  } else {
+    return false;
+  }
+}
+//!
 //!  Applies an SETourniquet to the given engine.
 //!
-//!  SECompartment has two members
+//!  SETourniquet has two members
 //!  std::string compartment -- Where the tourniquet will be applied [LeftLeg,RightLeg,LeftArm,RightArm]
 //!  CDM::enumTourniquetApplicationLevel -- Applied, Misapplied, None
 bool action_apply_tourniquet(std::unique_ptr<biogears::BioGearsEngine>& engine,
@@ -113,7 +134,14 @@ bool action_tension_pneumothorax(std::unique_ptr<biogears::BioGearsEngine>& engi
     return false;
   }
 }
+
 //-------------------------------------------------------------------------------
+//!  Applies an needle decompression to the patient
+//!
+//!  SENeedleDecompression has several members.
+//! \param enumSide Left, Right
+//! \param bool  Active/Not-Active  {On/Off}
+
 bool action_needle_decompression(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumSide side, bool active)
 {
   auto needleD = biogears::SENeedleDecompression();
@@ -127,6 +155,14 @@ bool action_needle_decompression(std::unique_ptr<biogears::BioGearsEngine>& engi
   }
 }
 //-------------------------------------------------------------------------------
+//!  Applies an O2 Mask for the patient
+//!
+//!  O2 Mask is part of the Biogears Anesthesia Machine
+//!  We first supply a Anesthesia Machine configuration then activate the mask
+//!
+//! \param o2_fraction -- Percentage of pure O^2 supplied by the mask
+//! \param tank 1 volume -- Assumed in letters
+//! \param tank 2 volume -- Assumed in letters
 bool action_o2_mask(std::unique_ptr<biogears::BioGearsEngine>& engine, double o2_fraction, double o2_volume1, double o2_volume2)
 {
 
@@ -156,6 +192,14 @@ bool action_o2_mask(std::unique_ptr<biogears::BioGearsEngine>& engine, double o2
   }
 }
 //-------------------------------------------------------------------------------
+//!  Applies an infection to the patient
+//!
+//!  Untreated Infections lead to Septic conditions, Antibotics do affect
+//!  the infection based on the mic_mg_Per_l given for an individual infection
+//!
+//! \param severity  -- Eliminated, Mild, Moderate, Severe
+//! \param location -- Compartmant Key on where the Infection Starts
+//! \param mic_mg_Per_l -- Minimal Inhibitory Condition for the given infection
 bool action_infection(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumInfectionSeverity severity, std::string location, double mic_mg_Per_l)
 {
   auto sepsis = biogears::SEInfection();
@@ -172,6 +216,11 @@ bool action_infection(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::en
 //!
 //!  A end user might want to create a call back function for this one.  b
 //!  Based on a timer
+//!
+//!  \param blood_volume_ml -- Amount of blood in the bag
+//!  \param flowrate_ml_Per_min -- how fast the blood leaves the bag
+//!
+//!  You must recall this function with a 0 flowrate to terminate the transfusion
 //-------------------------------------------------------------------------------
 bool action_bloodtransfuction(std::unique_ptr<biogears::BioGearsEngine>& engine, double blood_volume_ml, double flowrate_ml_Per_min)
 {
@@ -187,6 +236,13 @@ bool action_bloodtransfuction(std::unique_ptr<biogears::BioGearsEngine>& engine,
   }
 }
 //-------------------------------------------------------------------------------
+//!
+//!  Applies an Acrtive heating element to the  environment
+//!
+//!  \param wattage --  Number of watts provided to the patient by the heating element
+//!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
+//!
+//!  You must recall this function with a 0 flowrate to terminate the transfusion
 bool action_thermal_blanket(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
 {
   auto thermalApplication = biogears::SEThermalApplication();
@@ -199,9 +255,15 @@ bool action_thermal_blanket(std::unique_ptr<biogears::BioGearsEngine>& engine, d
   } else {
     return false;
   }
-
 }
 //-------------------------------------------------------------------------------
+//!
+//!  Applies an Pain Stimulus to the Patient
+//!
+//!  \param location -- A Key to where the pain stimulus occured can be any value
+//!  \param severity -- [0.0,1.0] of how bad the pain is
+//!
+//!  You must recall this function with a 0 severity and the same location to terminate the stimulus
 bool action_pain_stimulus(std::unique_ptr<biogears::BioGearsEngine>& engine, std::string location, double severity)
 {
   auto pain = biogears::SEPainStimulus();
@@ -215,6 +277,10 @@ bool action_pain_stimulus(std::unique_ptr<biogears::BioGearsEngine>& engine, std
   }
 }
 //-------------------------------------------------------------------------------
+
+//!
+//! Patient will urinate until the blader nears zero volume
+//!
 bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 {
   auto relief = biogears::SEUrinate();
@@ -237,22 +303,41 @@ bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 struct BioGearsPlugin::Implementation {
   std::unique_ptr<biogears::BioGearsEngine> engine;
 
-  std::atomic_bool simulation_running = false;
-  std::atomic_bool simulation_started = false;
-  std::atomic_bool simulation_finished = false;
+  std::atomic_bool simulation_running{ false };
+  std::atomic_bool simulation_started{ false };
+  std::atomic_bool simulation_finished{ false };
   std::thread simulation_thread;
 };
 
 //-------------------------------------------------------------------------------
-BioGearsPlugin::BioGearsPlugin(std::string name) 
-:_pimpl(std::make_unique<Implementation>())
+BioGearsPlugin::BioGearsPlugin(std::string name)
+  : _pimpl(std::make_unique<Implementation>())
 {
   using namespace biogears;
 
   _pimpl->engine = std::make_unique<BioGearsEngine>(name + ".log");
   _pimpl->engine->GetLogger()->Info("HowToAPI_Integration");
   if (!_pimpl->engine->LoadState("states/StandardMale@0s.xml")) {
-    _pimpl->engine->GetLogger()->Error("Could not load state, check the error");
+    _pimpl->engine->GetLogger()->Warning("Could not load patient state falling back to patient file.");
+    
+    if (!_pimpl->engine->InitializeEngine("patients/StandardMale.xml")) {
+      _pimpl->engine->GetLogger()->Warning("Could not load patient falling back to manually creating a patient.");
+      biogears::SEPatient patient{_pimpl->engine->GetLogger()};
+      patient.SetName("StandardMale");
+      patient.SetGender(CDM::enumSex::Male);
+      patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
+      patient.GetWeight().SetValue(170, biogears::MassUnit::lb);
+      patient.GetHeight().SetValue(71, biogears::LengthUnit::in);
+      patient.GetBodyFatFraction().SetValue(0.21);
+      patient.SetBloodType(CDM::enumBloodType::AB);
+      patient.SetBloodRh(true);
+      patient.GetHeartRateBaseline().SetValue(72, biogears::FrequencyUnit::Per_min);
+      patient.GetRespirationRateBaseline().SetValue(16, biogears::FrequencyUnit::Per_min);
+      patient.GetDiastolicArterialPressureBaseline().SetValue(73.5, biogears::PressureUnit::mmHg);
+      patient.GetSystolicArterialPressureBaseline().SetValue(114, biogears::PressureUnit::mmHg);
+    _pimpl->engine->InitializeEngine(patient);
+    }
+    _pimpl->engine->GetLogger()->Info("Initializing Patient. This could take a moment.");
   }
 }
 //-------------------------------------------------------------------------------
@@ -275,27 +360,29 @@ void BioGearsPlugin::run()
   using namespace std::chrono_literals;
 
   if (!_pimpl->simulation_thread.joinable()) {
-    _pimpl->simulation_running = true;
+    _pimpl->simulation_running.store(true);
     _pimpl->simulation_thread = std::thread{
       [&]() {
-        _pimpl->simulation_started = true;
+        _pimpl->simulation_started.store(true);
         while (_pimpl->simulation_running) {
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-
-
           //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
           //But you could imagine creating a vector of common conditions and then pushing and poping them in to
           //This function as the patient changes locations.
 
-         
           auto conditions = biogears::SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
           auto* N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen");
           auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
           auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
-          
+
           conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
           conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
           conditions.GetAmbientTemperature().SetValue(10.0, TemperatureUnit::C);
@@ -313,9 +400,9 @@ void BioGearsPlugin::run()
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           action_tension_pneumothorax(_pimpl->engine, CDM::enumSide::Left, CDM::enumPneumothoraxType::Open, 0.5);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          action_needle_decompression(_pimpl->engine,CDM::enumSide::Left, true);
+          action_needle_decompression(_pimpl->engine, CDM::enumSide::Left, true);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          action_o2_mask(_pimpl->engine,.5, 3.,0.);
+          action_o2_mask(_pimpl->engine, .5, 3., 0.);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           action_infection(_pimpl->engine, CDM::enumInfectionSeverity::Mild, "LeftLeg", 0.2);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
@@ -326,7 +413,7 @@ void BioGearsPlugin::run()
           action_pain_stimulus(_pimpl->engine, "LeftLeg", 0.3);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           action_urinate(_pimpl->engine);
-          _pimpl->simulation_finished = true;
+          _pimpl->simulation_finished.store(true);
         }
       }
     };
@@ -342,7 +429,7 @@ void BioGearsPlugin::join()
 //-------------------------------------------------------------------------------
 void BioGearsPlugin::stop()
 {
-  _pimpl->simulation_running = false;
+  _pimpl->simulation_running.store(false);
 }
 //-------------------------------------------------------------------------------
 bool BioGearsPlugin::isRunning()
