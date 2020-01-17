@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <atomic>
 #include <thread>
 // Include the various types you will be using in your code
+
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>

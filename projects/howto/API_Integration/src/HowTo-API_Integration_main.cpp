@@ -1,9 +1,11 @@
-#include <iostream>
-
 #include "HowTo-API_Integration.h"
-#include "HowToTracker.h"
 
-int main( int argc, char* argv[] )
+#include <chrono>
+#include <iostream>
+#include <thread>
+#include <sstream>
+
+int main(int argc, char* argv[])
 {
   BioGearsPlugin plugin("HowTo-API_Integration");
   plugin.run();
