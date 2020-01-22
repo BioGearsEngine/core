@@ -254,6 +254,9 @@ void Nervous::BaroreceptorFeedback()
   //First calculate the sympathetic and parasympathetic firing rates:
   double nu = m_data.GetConfiguration().GetResponseSlope();
   double meanArterialPressure_mmHg = m_data.GetCardiovascular().GetMeanArterialPressure(PressureUnit::mmHg);
+  //if (m_data.GetActions().GetPatientActions().HasOverride() && m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+  //  meanArterialPressure_mmHg = m_Patient->GetMeanArterialPressureBaseline(PressureUnit::mmHg);
+  //}
   //Adjusting the mean arterial pressure set-point to account for cardiovascular drug effects
   double meanArterialPressureSetPoint_mmHg = m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg) //m_MeanArterialPressureNoFeedbackBaseline_mmHg
     + m_data.GetEnergy().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);

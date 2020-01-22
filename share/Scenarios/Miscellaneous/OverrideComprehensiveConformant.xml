@@ -93,8 +93,10 @@
 		<Time value="5" unit="min"/>		
 	</Action>
 	<Action xsi:type="OverrideData" State="On" Conformant="On">
-		<HeartRateOverride value="125" unit="1/min"/>
-		<RespirationRateOverride value="25" unit="1/min"/>		
+		<DiastolicArterialPressureOverride value="80" unit="mmHg"/>
+		<HeartRateOverride value="95" unit="1/min"/>
+		<SystolicArterialPressureOverride value="110" unit="mmHg"/>
+		<RespirationRateOverride value="18" unit="1/min"/>	
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="5" unit="min"/>		

@@ -164,6 +164,12 @@ private:
 
   double m_minIndividialSystemicResistance__mmHg_s_Per_mL;
   double m_OverrideHR_Conformant_Per_min;
+  double m_OverrideLHEMin_Conformant_mmHg;
+  double m_OverrideRHEMin_Conformant_mmHg;
+  double m_OverrideLHEMax_Conformant_mmHg;
+  double m_OverrideRHEMax_Conformant_mmHg;
+  double m_overrideTime_s;
+  bool m_OverrideOnOffCheck = false;
 
   SEFluidCircuitCalculator m_circuitCalculator;
   SELiquidTransporter m_transporter;

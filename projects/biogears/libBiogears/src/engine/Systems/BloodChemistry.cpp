@@ -239,6 +239,8 @@ void BloodChemistry::SetUp()
   m_venaCavaTriacylglycerol = m_venaCava->GetSubstanceQuantity(*triaclyglycerol);
   m_venaCavaUrea = m_venaCava->GetSubstanceQuantity(*urea);
 
+  GetRedBloodCellCount().SetValue(m_venaCavaRBC->GetMolarity(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
+
   SELiquidCompartment* pulmonaryArteries = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::PulmonaryArteries);
   m_pulmonaryArteriesO2 = pulmonaryArteries->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
   m_pulmonaryArteriesCO2 = pulmonaryArteries->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
@@ -338,7 +340,7 @@ void BloodChemistry::Process()
   double RedBloodCellVolume_mL = RedBloodCellCount_ct * m_redBloodCellVolume_mL;
   GetHematocrit().SetValue((RedBloodCellVolume_mL / TotalBloodVolume_mL));
   // Yes, we are giving GetRedBloodCellCount a concentration, because that is what it is, but clinically, it is known as RedBloodCellCount
-  GetRedBloodCellCount().SetValue(RedBloodCellCount_ct / m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::L), AmountPerVolumeUnit::ct_Per_L);
+  GetRedBloodCellCount().SetValue(RedBloodCellCount_ct / m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL), AmountPerVolumeUnit::ct_Per_uL);
   GetPlasmaVolume().SetValue(TotalBloodVolume_mL - RedBloodCellVolume_mL, VolumeUnit::mL); //Look into changing to account for platelets and wbc too
 
   // Concentrations

@@ -130,11 +130,11 @@ The current list of override parameters (with conformance compatible parameters 
 - <b>White Blood Cell Count</b>
 - <b>Blood Volume</b>
 - <b>Cardiac Output</b>
-- <b>Diastolic Arterial Pressure</b>
+- <b>Diastolic Arterial Pressure</b> - Conf.
 - <b>Heart Rate</b> - Conf.
 - <b>Heart Stroke Volume</b>
-- <b>Mean Arterial Pressure</b>
-- <b>Systolic Arterial Pressure</b>
+- <b>Mean Arterial Pressure</b> - Conf.
+- <b>Systolic Arterial Pressure</b> - Conf.
 - <b>Insulin Synthesis Rate</b>
 - <b>Glucagon Synthesis Rate</b>
 - <b>Acheived Exercise Level</b>
