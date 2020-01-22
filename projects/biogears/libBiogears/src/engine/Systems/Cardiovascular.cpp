@@ -930,29 +930,7 @@ void Cardiovascular::CalculateVitalSigns()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::RecordAndResetCardiacCycle()
 {
-  //double meanArterialPressureOverride_mmHg = 0.0;
-  //double systolicOverride_mmHg = m_CardiacCycleAortaPressureHigh_mmHg;
-  //double diastolicOverride_mmHg = m_CardiacCycleAortaPressureLow_mmHg;
-  //if (m_data.GetActions().GetPatientActions().HasOverride()
-  //    && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-  //  if (m_data.GetActions().GetPatientActions().GetOverride()->HasSystolicArterialPressureOverride()) {
-  //    systolicOverride_mmHg = m_data.GetActions().GetPatientActions().GetOverride()->GetSystolicArterialPressureOverride(PressureUnit::mmHg);
-  //  }
-  //  if (m_data.GetActions().GetPatientActions().GetOverride()->HasDiastolicArterialPressureOverride()) {
-  //    diastolicOverride_mmHg = m_data.GetActions().GetPatientActions().GetOverride()->GetDiastolicArterialPressureOverride(PressureUnit::mmHg);
-  //  }
-  //  if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
-  //    meanArterialPressureOverride_mmHg = m_data.GetActions().GetPatientActions().GetOverride()->GetMAPOverride(PressureUnit::mmHg);
-  //  } else if (m_data.GetActions().GetPatientActions().GetOverride()->HasSystolicArterialPressureOverride() || m_data.GetActions().GetPatientActions().GetOverride()->HasDiastolicArterialPressureOverride()) {
-  //    meanArterialPressureOverride_mmHg = ((2.0 * diastolicOverride_mmHg) + systolicOverride_mmHg) / 3.0;
-  //  }
-  //}
-  //if (systolicOverride_mmHg > diastolicOverride_mmHg) {
-  //  m_CardiacCycleAortaPressureHigh_mmHg = systolicOverride_mmHg;
-  //  m_CardiacCycleAortaPressureLow_mmHg = diastolicOverride_mmHg;
-  //} else {
-  //  Fatal("Systolic and Diastolic Pressure Override Values Do Not Make Sense!"); // Error vs Fatal
-  //}
+
   GetSystolicArterialPressure().SetValue(m_CardiacCycleAortaPressureHigh_mmHg, PressureUnit::mmHg);
   GetDiastolicArterialPressure().SetValue(m_CardiacCycleAortaPressureLow_mmHg, PressureUnit::mmHg);
   GetPulmonarySystolicArterialPressure().SetValue(m_CardiacCyclePulmonaryArteryPressureHigh_mmHg, PressureUnit::mmHg);
@@ -968,14 +946,7 @@ void Cardiovascular::RecordAndResetCardiacCycle()
   GetCardiacIndex().SetValue(GetCardiacOutput().GetValue(VolumePerTimeUnit::mL_Per_min) / m_patient->GetSkinSurfaceArea(AreaUnit::m2), VolumePerTimeAreaUnit::mL_Per_min_m2);
 
   // Running means
-  // Mean Arterial Pressure
   GetMeanArterialPressure().SetValue(m_CardiacCycleArterialPressure_mmHg.Value(), PressureUnit::mmHg);
-
-  /*if (meanArterialPressureOverride_mmHg == 0.0) {
-    GetMeanArterialPressure().SetValue(m_CardiacCycleArterialPressure_mmHg.Value(), PressureUnit::mmHg);
-  } else {
-    GetMeanArterialPressure().SetValue(meanArterialPressureOverride_mmHg, PressureUnit::mmHg);
-  }*/
 
   m_CardiacCycleArterialPressure_mmHg.Reset();
 
@@ -1496,63 +1467,6 @@ void Cardiovascular::HeartDriver()
   m_pRightHeart->GetNextCompliance().SetValue(1.0 / m_RightHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
   m_pLeftHeart->GetNextCompliance().SetValue(1.0 / m_LeftHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
 
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  // Check blood pressure overrides to affect circuit
-  //double meanArterialPressureOverride_mmHg = GetMeanArterialPressure().GetValue(PressureUnit::mmHg);
-  //double meanArterialPressureChange_mmHg = 1.0;
-  //double systolicOverride_mmHg = GetSystolicArterialPressure().GetValue(PressureUnit::mmHg);
-  //double systolicChange_mmHg = 0.0;
-  //double diastolicOverride_mmHg = GetDiastolicArterialPressure().GetValue(PressureUnit::mmHg);
-  //double diastolicChange_mmHg = 0.0;
-  //if (m_data.GetActions().GetPatientActions().HasOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-  //  SEOverride* override = m_data.GetActions().GetPatientActions().GetOverride();
-  //  if (override->HasSystolicArterialPressureOverride()) {
-  //    systolicOverride_mmHg = override->GetSystolicArterialPressureOverride().GetValue(PressureUnit::mmHg);
-  //  }
-  //  if (override->HasDiastolicArterialPressureOverride()) {
-  //    diastolicOverride_mmHg = override->GetDiastolicArterialPressureOverride().GetValue(PressureUnit::mmHg);
-  //  }
-  //  if (systolicOverride_mmHg > 0.0 || diastolicOverride_mmHg > 0.0) {
-  //    meanArterialPressureOverride_mmHg = ((2. * diastolicOverride_mmHg) + systolicOverride_mmHg) / 3.0;
-  //    //override->GetMAPOverride().SetValue(meanArterialPressureOverride_mmHg, PressureUnit::mmHg);
-  //  }
-  //  if (override->HasMAPOverride()) {
-  //    meanArterialPressureOverride_mmHg = override->GetMAPOverride().GetValue(PressureUnit::mmHg);
-  //    meanArterialPressureChange_mmHg = (meanArterialPressureOverride_mmHg - GetMeanArterialPressure(PressureUnit::mmHg)) / GetMeanArterialPressure(PressureUnit::mmHg);
-  //    diastolicOverride_mmHg *= (1. + meanArterialPressureChange_mmHg);
-  //    systolicOverride_mmHg *= (1. + meanArterialPressureChange_mmHg);
-  //  }
-  //  const double meanBP_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
-  //  const double sysBP_mmHg = GetSystolicArterialPressure().GetValue(PressureUnit::mmHg);
-  //  const double diaBP_mmHg = GetDiastolicArterialPressure().GetValue(PressureUnit::mmHg);
-  //  double checkAortaPressure = m_Aorta->GetPressure().GetValue(PressureUnit::mmHg);
-  //  if (systolicOverride_mmHg > sysBP_mmHg && checkAortaPressure > meanBP_mmHg) {
-  //    checkAortaPressure *= 1.01;
-  //    ULIM(checkAortaPressure, systolicOverride_mmHg);
-  //    SEFluidCircuitNode* Aorta1Node = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Aorta1);
-  //    Aorta1Node->GetPressure().SetReadOnly(false);
-  //    Aorta1Node->GetPressure().SetValue(checkAortaPressure,PressureUnit::mmHg);
-  //  } else if (systolicOverride_mmHg < sysBP_mmHg && checkAortaPressure > meanBP_mmHg) {
-  //    checkAortaPressure *= 0.99;
-  //    LLIM(checkAortaPressure, systolicOverride_mmHg);
-  //    SEFluidCircuitNode* Aorta1Node = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Aorta1);
-  //    Aorta1Node->GetPressure().SetReadOnly(false);
-  //    Aorta1Node->GetPressure().SetValue(checkAortaPressure, PressureUnit::mmHg);
-  //  }
-  //  if (diastolicOverride_mmHg > diaBP_mmHg && checkAortaPressure < meanBP_mmHg) {
-  //    checkAortaPressure *= 1.01;
-  //    ULIM(checkAortaPressure, diastolicOverride_mmHg);
-  //    SEFluidCircuitNode* Aorta1Node = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Aorta1);
-  //    Aorta1Node->GetPressure().SetReadOnly(false);
-  //    Aorta1Node->GetPressure().SetValue(checkAortaPressure, PressureUnit::mmHg);
-  //  } else if (diastolicOverride_mmHg < diaBP_mmHg && checkAortaPressure < meanBP_mmHg) {
-  //    checkAortaPressure *= 0.99;
-  //    LLIM(checkAortaPressure, diastolicOverride_mmHg);
-  //    SEFluidCircuitNode* Aorta1Node = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Aorta1);
-  //    Aorta1Node->GetPressure().SetReadOnly(false);
-  //    Aorta1Node->GetPressure().SetValue(checkAortaPressure, PressureUnit::mmHg);
-  //  }
-  //}
   /*double checkAortaPressure1 = 0.;
   if (m_Aorta->HasPressure())
     checkAortaPressure1 = m_Aorta->GetPressure().GetValue(PressureUnit::mmHg);
@@ -1593,7 +1507,6 @@ void Cardiovascular::BeginCardiacCycle()
     m_RightHeartElastanceMax_mmHg_Per_mL *= m_data.GetNervous().GetBaroreceptorHeartElastanceScale().GetValue();
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////
   // Check blood pressure overrides to affect circuit
   double meanArterialPressureOverride_mmHg = GetMeanArterialPressure().GetValue(PressureUnit::mmHg);
   double meanArterialPressureChange_pct = 0.0;
@@ -1660,11 +1573,6 @@ void Cardiovascular::BeginCardiacCycle()
       m_OverrideOnOffCheck == false;
     }
   }
-
-  m_data.GetDataTrack().Probe("test_leftmax", m_LeftHeartElastanceMax_mmHg_Per_mL);
-  m_data.GetDataTrack().Probe("test_rightmax", m_RightHeartElastanceMax_mmHg_Per_mL);
-  m_data.GetDataTrack().Probe("test_leftmin", m_LeftHeartElastanceMin_mmHg_Per_mL);
-  m_data.GetDataTrack().Probe("test_rightmin", m_RightHeartElastanceMin_mmHg_Per_mL);
 
   double HeartDriverFrequency_Per_Min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
 
