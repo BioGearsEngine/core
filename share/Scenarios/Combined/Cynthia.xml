@@ -97,35 +97,33 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="s"/>       
     </Action>
+	    <Action xsi:type="IntubationData" Type="Tracheal"/>
+    <Action xsi:type="AnesthesiaMachineConfigurationData">
+      <Configuration>
+        <Connection>Tube</Connection>
+        <InletFlow value="5.0" unit="L/min"/>
+        <InspiratoryExpiratoryRatio value="0.5"/>
+        <OxygenFraction value="0.23"/>
+        <OxygenSource>Wall</OxygenSource>
+        <PositiveEndExpiredPressure value="1.0" unit="cmH2O"/>
+        <PrimaryGas>Nitrogen</PrimaryGas>
+        <RespiratoryRate value="16.0" unit="1/min"/>
+        <VentilatorPressure value="8.5" unit="cmH2O"/>
+        <OxygenBottleOne>
+          <Volume value="660" unit="L"/>
+        </OxygenBottleOne>
+        <OxygenBottleTwo>
+          <Volume value="660" unit="L"/>
+        </OxygenBottleTwo>
+      </Configuration>
+    </Action> 
     <Action xsi:type="AirwayObstructionData">
         <Severity value="1.0"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="150" unit="s"/>       
     </Action>
- 	<Action xsi:type="AnesthesiaMachineConfigurationData">
-		<Configuration>    
-			<Connection>Mask</Connection>
-			<InletFlow value="5.0" unit="L/min"/>
-			<InspiratoryExpiratoryRatio value="0.5"/>
-			<OxygenFraction value="0.23"/>
-			<OxygenSource>Wall</OxygenSource>
-			<PositiveEndExpiredPressure value="1.0" unit="cmH2O"/>
-			<PrimaryGas>Nitrogen</PrimaryGas>
-			<RespiratoryRate value="16.0" unit="1/min"/>
-			<VentilatorPressure value="10.5" unit="cmH2O"/>
-			<OxygenBottleOne>
-				<Volume value="660" unit="L"/>
-			</OxygenBottleOne>
-			<OxygenBottleTwo>
-				<Volume value="660" unit="L"/>
-			</OxygenBottleTwo>
-		</Configuration>
-	</Action>  
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="10" unit="s"/>       
-    </Action>
-	    <Action xsi:type="AirwayObstructionData">
+	<Action xsi:type="AirwayObstructionData">
         <Severity value="0.0"/>
     </Action>
     <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
@@ -140,16 +138,7 @@
         <Substance>Rocuronium</Substance>
         <Concentration value="3100" unit="ug/mL"/>
         <Dose value="20" unit="mL"/>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="90" unit="s"/>       
-    </Action>
-    <Action xsi:type="IntubationData" Type="Tracheal"/>
-    <Action xsi:type="AnesthesiaMachineConfigurationData">
-      <Configuration>
-        <Connection>Tube</Connection>
-      </Configuration>
-    </Action>    
+    </Action>  
     <Action xsi:type="AdvanceTimeData">
         <Time value="500" unit="s"/>       
     </Action>
