@@ -187,8 +187,15 @@ add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZL
 add_library(zlib::zlib ALIAS zlib)
 add_library(zlib::static ALIAS zlibstatic)
 
-set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
-set_target_properties(zlib PROPERTIES SOVERSION 1)
+set_target_properties(zlib PROPERTIES 
+  FOLDER "Libraries/extern"
+  DEFINE_SYMBOL ZLIB_DLL
+ SOVERSION 1
+ )
+ set_target_properties(zlibstatic PROPERTIES 
+  FOLDER "Libraries/extern"
+ )
+
 
 target_include_directories(zlib PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
