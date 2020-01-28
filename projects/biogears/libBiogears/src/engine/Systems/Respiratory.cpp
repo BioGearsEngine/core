@@ -1872,8 +1872,7 @@ void Respiratory::CalculateVitalSigns()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::UpdateObstructiveResistance()
 {
-  if ((!m_PatientActions->HasAsthmaAttack() && !m_data.GetConditions().HasChronicObstructivePulmonaryDisease())
-      || !m_BreathingCycle) // Only on exhalation
+  if ((!m_PatientActions->HasAsthmaAttack() && !m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) || GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) < 0.0)
   {
     return;
   }
@@ -1945,7 +1944,7 @@ void Respiratory::UpdateIERatio()
   if (combinedSeverity > 0.0) {
     //The respiratory driver is very sensitive to the IEScaleFactor.  It does not take to decrease output IE Ratio significanlty.  Found that
     //bounding at 0.85 worked well.
-    m_IEscaleFactor = 1.0 - 0.85 * combinedSeverity;
+    m_IEscaleFactor = 1.0 - 0.15 * combinedSeverity;
     //When albuterol is administered, the bronchodilation also causes the IE ratio to correct itself
     m_IEscaleFactor *= exp(7728.4 * m_AverageLocalTissueBronchodilationEffects);
 
