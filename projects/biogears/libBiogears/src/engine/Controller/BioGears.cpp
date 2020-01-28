@@ -2681,6 +2681,7 @@ void BioGears::SetupRenal()
   // RightNetGlomerularCapillariesToNetBowmansCapsules //
   SEFluidCircuitPath& RightNetGlomerularCapillariesToNetBowmansCapsules = cRenal.CreatePath(RightNetGlomerularCapillaries, RightNetBowmansCapsules, BGE::RenalPath::RightNetGlomerularCapillariesToNetBowmansCapsules);
   RightNetGlomerularCapillariesToNetBowmansCapsules.GetResistanceBaseline().SetValue(glomerularFilterResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+  RightNetGlomerularCapillariesToNetBowmansCapsules.SetNextPolarizedState(CDM::enumOpenClosed::Open);
   //////////////////////////////////////////////
   // RightBowmansCapsulesToNetBowmansCapsules //
   SEFluidCircuitPath& RightBowmansCapsulesToNetBowmansCapsules = cRenal.CreatePath(RightBowmansCapsules, RightNetBowmansCapsules, BGE::RenalPath::RightBowmansCapsulesToNetBowmansCapsules);
@@ -2772,6 +2773,7 @@ void BioGears::SetupRenal()
   // LeftNetGlomerularCapillariesToNetBowmansCapsules //
   SEFluidCircuitPath& LeftNetGlomerularCapillariesToNetBowmansCapsules = cRenal.CreatePath(LeftNetGlomerularCapillaries, LeftNetBowmansCapsules, BGE::RenalPath::LeftNetGlomerularCapillariesToNetBowmansCapsules);
   LeftNetGlomerularCapillariesToNetBowmansCapsules.GetResistanceBaseline().SetValue(glomerularFilterResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+  LeftNetGlomerularCapillariesToNetBowmansCapsules.SetNextPolarizedState(CDM::enumOpenClosed::Open);
   //////////////////////////////////////////////
   // LeftBowmansCapsulesToNetBowmansCapsules //
   SEFluidCircuitPath& LeftBowmansCapsulesToNetBowmansCapsules = cRenal.CreatePath(LeftBowmansCapsules, LeftNetBowmansCapsules, BGE::RenalPath::LeftBowmansCapsulesToNetBowmansCapsules);
