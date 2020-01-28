@@ -114,7 +114,7 @@
     </Action>
 	<!-- Stage 2 -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.075"/>
+        <Intensity value="0.12"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="6.0" unit="min"/>       
@@ -127,7 +127,7 @@
     </Action>
 	<!-- Stage 3 -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.1583"/>
+        <Intensity value="0.2"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="6.0" unit="min"/>       
@@ -140,7 +140,7 @@
     </Action>
 	<!-- Stage 4 -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.3583"/>
+        <Intensity value="0.5"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="6.0" unit="min"/>       

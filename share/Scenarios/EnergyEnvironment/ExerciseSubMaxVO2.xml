@@ -106,37 +106,37 @@
     </Action>
 	<!-- Exercise at about the anaerobic threshold -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.03"/>
+        <Intensity value="0.1"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.04"/>
+        <Intensity value="0.14"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.06"/>
+        <Intensity value="0.16"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.09"/>
+        <Intensity value="0.19"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.13"/>
+        <Intensity value="0.23"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.18"/>
+        <Intensity value="0.28"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       

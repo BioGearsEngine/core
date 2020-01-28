@@ -106,7 +106,7 @@
     </Action>
 	<!-- Exercise at a moderate level for an hour -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.234"/>
+        <Intensity value="0.4"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="min"/>       
