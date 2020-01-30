@@ -228,7 +228,8 @@ function(configure_version_information _SUCESS_CHECK)
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_VARIABLE _GIT_REV
                     RESULT_VARIABLE  _RESULT_VARIABLE
-                                    ERROR_QUIET)
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    ERROR_QUIET)
     
     if(_RESULT_VARIABLE EQUAL 0)
       message(STATUS "GIT_REV=${_GIT_REV}")
@@ -251,11 +252,20 @@ function(configure_version_information _SUCESS_CHECK)
         list(GET _GIT_FULL_REV_LIST 3 _VERSION_TWEAK)
         math(EXPR _last "${_len} - 1")
         list(GET _GIT_FULL_REV_LIST ${_last}  _VERSION_HASH )
-        
       else()
         set(_CLEAN_BUILD true)
         set(_VERSION_TWEAK 0)
-        list(GET _GIT_FULL_REV_LIST 3 _VERSION_HASH )
+        if(_len EQUAL 4)
+          list(GET _GIT_FULL_REV_LIST 3 _VERSION_HASH )
+        else()
+           execute_process(COMMAND ${GIT_EXECUTABLE}  rev-parse --short HEAD
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    OUTPUT_VARIABLE _GIT_REV
+                    RESULT_VARIABLE _RESULT_VARIABLE
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    ERROR_QUIET)
+           set(_VERSION_HASH "g${_GIT_REV}")
+        endif()
       endif()
       string(STRIP "${_VERSION_HASH}" _VERSION_HASH )
       set( ${_SUCESS_CHECK} True PARENT_SCOPE)
@@ -288,13 +298,13 @@ function(configure_version_information _SUCESS_CHECK)
       set( ${ROOT_PROJECT_NAME}_LIB_VERSION   "${_VERSION_MAJOR}.${_VERSION_MINOR}" PARENT_SCOPE)
     endif()
     if (_VERSION_TAG)
-      set( ${ROOT_PROJECT_NAME}_VERSION_TAG   ${_VERSION_TAG} PARENT_SCOPE)
+      set( ${ROOT_PROJECT_NAME}_VERSION_TAG   "${_VERSION_TAG}" PARENT_SCOPE)
     endif()
     if (_CLEAN_BUILD)
-      set( ${ROOT_PROJECT_NAME}_CLEAN_BUILD   ${_CLEAN_BUILD} PARENT_SCOPE)
+      set( ${ROOT_PROJECT_NAME}_CLEAN_BUILD   "${_CLEAN_BUILD}" PARENT_SCOPE)
     endif()
     if(_VERSION_HASH)
-      set( ${ROOT_PROJECT_NAME}_VERSION_HASH  ${_VERSION_HASH}  PARENT_SCOPE)
+      set( ${ROOT_PROJECT_NAME}_VERSION_HASH  "${_VERSION_HASH}"  PARENT_SCOPE)
     endif()
  endif() 
   
