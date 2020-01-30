@@ -39,8 +39,10 @@ The BioGears source is structured as follows:
   - howto/ - libbiogears SDK examples
     -  unit/ - Unit test harness used for testing libbiogears components
 
-## What's new in ver 7.3 (December 15, 2019)
-
+## What's new in ver 7.3 (January 30, 2020)
+- Custom Compound Infusion 
+- Respiratory Improvments and Tuning
+- Improved website generation targets
 - Updates to CMD_BIO executable for batch validation and scenario execution
 - Website generation python preprocess tool 
 - Transmucosal Fentanyl implementation
