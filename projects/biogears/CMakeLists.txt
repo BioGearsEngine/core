@@ -367,6 +367,7 @@ else()
    endif()
 endif() #NOT ${PREFIX}_BUILD_STATIC
  
+
 install(DIRECTORY 
     libBiogears/include/biogears
     libCDM/include/biogears
@@ -379,13 +380,13 @@ install(DIRECTORY
   
 install(DIRECTORY 
     ${PROJECT_SOURCE_DIR}/share/xsd 
-    DESTINATION share/biogears
+    DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
     FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
     )
 
 install(DIRECTORY 
     ${PROJECT_SOURCE_DIR}/share/data
-    DESTINATION share/biogears
+    DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
     FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
 	FILES_MATCHING 
 	  PATTERN "*.xml"
@@ -393,9 +394,11 @@ install(DIRECTORY
 	  PATTERN "*.csv"
 	  PATTERN "*.xlsx"
     )
-	install(DIRECTORY 
+install(DIRECTORY 
     ${PROJECT_SOURCE_DIR}/share/Scenarios
-    DESTINATION share/biogears/data/
+    DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}/data/
     FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+	FILES_MATCHING 
+	PATTERN "*.xml"
     )
 message(STATUS "")

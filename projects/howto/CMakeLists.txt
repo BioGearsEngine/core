@@ -1,5 +1,5 @@
 option(${ROOT_PROJECT_NAME}_BUILD_HOWTOS     "Select to build sdk how to examples." ON)
-
+cmake_policy(SET CMP0087 NEW)
 function(add_howto name)
   ###############################################################################
   # Step 1:  Set the name of this example to a unique identifier
@@ -85,6 +85,12 @@ function(add_howto name)
    
     add_dependencies(howtos ${TARGET_NAME})
      
+	install(TARGETS ${TARGET_NAME} EXPORT howtos
+     RUNTIME DESTINATION bin/howtos
+     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+     ARCHIVE DESTINATION lib
+  )
+
   endif(BUILD_EX_${EXAMPLE_NAME})
 endfunction(add_howto)
 
@@ -97,7 +103,7 @@ else()
   foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER _${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/lib")
-    set(CMAKE_PDB_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/lib")
+    set(CMAKE_PDB_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER}    "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/lib")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/bin")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/bin")
   endforeach(OUTPUTCONFIG)
@@ -144,6 +150,40 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
     add_howto( ${dir} )
   endif()
   endforeach()
+  install(CODE "
+		include(BundleUtilities)
+
+		function(EXELIST result curdir)
+		file(GLOB children RELATIVE \${curdir} \${curdir}/*)
+		set(dirlist \"\")
+		foreach(child \${children})
+			if(NOT IS_DIRECTORY \${curdir}/\${child} AND \${child} MATCHES \".*${CMAKE_EXECUTABLE_SUFFIX}\" )
+			list(APPEND dirlist \${curdir}/\${child})
+			set(\${result} \${dirlist} PARENT_SCOPE)
+			return()
+			endif()
+		endforeach()
+		endfunction()
+
+		set(CONFIG_SUFFIX ${CMAKE_${CONFIG}_POSTFIX})
+
+		set(CMAKE_PREFIX_PATH  \"${CMAKE_PREFIX_PATH}\")
+
+		foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
+		list(APPEND THIRD_PARTY  \${_dir})
+		list(APPEND THIRD_PARTY_LIB \${_dir}/lib)
+		list(APPEND THIRD_PARTY_BIN \${_dir}/bin)
+		endforeach()
+
+
+		EXELIST(TARGET ${CMAKE_INSTALL_PREFIX}/bin/howtos )
+
+		fixup_bundle(\${TARGET}
+						\"\"
+						\"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;${CMAKE_LIBRARY_OUTPUT_DIRECTORY};${CMAKE_ARCHIVE_OUTPUT_DIRECTORY$};${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\"
+   
+		)
+	")
 endif()
 
 message(STATUS "")

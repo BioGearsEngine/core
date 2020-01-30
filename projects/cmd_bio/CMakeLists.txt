@@ -111,5 +111,39 @@ endif()
      ARCHIVE DESTINATION lib
   )
 
+  install(CODE "
+  include(BundleUtilities)
+
+  function(EXELIST result curdir)
+    file(GLOB children RELATIVE \${curdir} \${curdir}/*)
+    set(dirlist \"\")
+    foreach(child \${children})
+      if(NOT IS_DIRECTORY \${curdir}/\${child} AND \${child} MATCHES \".*${CMAKE_EXECUTABLE_SUFFIX}\" )
+        list(APPEND dirlist \${curdir}/\${child})
+	    set(\${result} \${dirlist} PARENT_SCOPE)
+	    return()
+      endif()
+    endforeach()
+  endfunction()
+
+  set(CONFIG_SUFFIX ${CMAKE_${CONFIG}_POSTFIX})
+
+  set(CMAKE_PREFIX_PATH  \"${CMAKE_PREFIX_PATH}\")
+
+  foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
+    list(APPEND THIRD_PARTY  \${_dir})
+    list(APPEND THIRD_PARTY_LIB \${_dir}/lib)
+    list(APPEND THIRD_PARTY_BIN \${_dir}/bin)
+  endforeach()
+
+
+   EXELIST(TARGET ${CMAKE_INSTALL_PREFIX}/bin )
+
+   fixup_bundle(\${TARGET}
+                  \"\"
+                 \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\"
+   
+   )
+")
 message(STATUS "")
 endif()
