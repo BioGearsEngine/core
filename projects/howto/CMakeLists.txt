@@ -94,20 +94,6 @@ function(add_howto name)
   endif(BUILD_EX_${EXAMPLE_NAME})
 endfunction(add_howto)
 
-set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
-if(UNIX)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/howto/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/howto/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/howto/bin)
-else()
-  foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-    string(TOUPPER _${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/lib")
-    set(CMAKE_PDB_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER}    "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/lib")
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/bin")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER} "${OUTPUT_PREFIX}/${OUTPUTCONFIG}/bin")
-  endforeach(OUTPUTCONFIG)
-endif()
 ############################################################################
 # Step 1:
 #         Examples are almost never order dependent just add them as we  find
@@ -150,6 +136,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
     add_howto( ${dir} )
   endif()
   endforeach()
+if(NOT CMAKE_CROSSCOMPILING)
   install(CODE "
 		include(BundleUtilities)
 
@@ -184,6 +171,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
    
 		)
 	")
+endif()
 endif()
 
 message(STATUS "")

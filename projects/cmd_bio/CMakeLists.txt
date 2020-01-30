@@ -3,6 +3,7 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.8.0)
 cmake_policy(VERSION 3.8.0)
+cmake_policy(SET CMP0087 NEW)
 ###############################################################################
 # Options
 ###############################################################################
@@ -110,7 +111,7 @@ endif()
      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
      ARCHIVE DESTINATION lib
   )
-
+if(NOT CMAKE_CROSSCOMPILING)
   install(CODE "
   include(BundleUtilities)
 
@@ -141,9 +142,10 @@ endif()
 
    fixup_bundle(\${TARGET}
                   \"\"
-                 \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\"
+                 \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;${CMAKE_LIBRARY_OUTPUT_DIRECTORY};${CMAKE_ARCHIVE_OUTPUT_DIRECTORY$};${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\"
    
    )
 ")
+endif()
 message(STATUS "")
 endif()
