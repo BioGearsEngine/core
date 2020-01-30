@@ -79,13 +79,13 @@ function(add_howto name)
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
-	  if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
+    if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
       add_dependencies(${TARGET_NAME} stage_runtime)
     endif()
    
     add_dependencies(howtos ${TARGET_NAME})
      
-	install(TARGETS ${TARGET_NAME} EXPORT howtos
+  install(TARGETS ${TARGET_NAME} EXPORT howtos
      RUNTIME DESTINATION bin/howtos
      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
      ARCHIVE DESTINATION lib
@@ -136,42 +136,41 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
     add_howto( ${dir} )
   endif()
   endforeach()
-if(NOT CMAKE_CROSSCOMPILING)
+if(NOT CMAKE_CROSSCOMPILING AND NOT APPLE)
   install(CODE "
-		include(BundleUtilities)
+    include(BundleUtilities)
 
-		function(EXELIST result curdir)
-		file(GLOB children RELATIVE \${curdir} \${curdir}/*)
-		set(dirlist \"\")
-		foreach(child \${children})
-			if(NOT IS_DIRECTORY \${curdir}/\${child} AND \${child} MATCHES \".*${CMAKE_EXECUTABLE_SUFFIX}\" )
-			list(APPEND dirlist \${curdir}/\${child})
-			set(\${result} \${dirlist} PARENT_SCOPE)
-			return()
-			endif()
-		endforeach()
-		endfunction()
+    function(EXELIST result curdir)
+    file(GLOB children RELATIVE \${curdir} \${curdir}/*)
+    set(dirlist \"\")
+    foreach(child \${children})
+      if(NOT IS_DIRECTORY \${curdir}/\${child} AND \${child} MATCHES \".*${CMAKE_EXECUTABLE_SUFFIX}\" )
+      list(APPEND dirlist \${curdir}/\${child})
+      set(\${result} \${dirlist} PARENT_SCOPE)
+      return()
+      endif()
+    endforeach()
+    endfunction()
 
-		set(CONFIG_SUFFIX ${CMAKE_${CONFIG}_POSTFIX})
+    set(CONFIG_SUFFIX ${CMAKE_${CONFIG}_POSTFIX})
 
-		set(CMAKE_PREFIX_PATH  \"${CMAKE_PREFIX_PATH}\")
+    set(CMAKE_PREFIX_PATH  \"${CMAKE_PREFIX_PATH}\")
 
-		foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
-		list(APPEND THIRD_PARTY  \${_dir})
-		list(APPEND THIRD_PARTY_LIB \${_dir}/lib)
-		list(APPEND THIRD_PARTY_BIN \${_dir}/bin)
-		endforeach()
+    foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
+    list(APPEND THIRD_PARTY  \${_dir})
+    list(APPEND THIRD_PARTY_LIB \${_dir}/lib)
+    list(APPEND THIRD_PARTY_BIN \${_dir}/bin)
+    endforeach()
 
 
-		EXELIST(TARGET ${CMAKE_INSTALL_PREFIX}/bin/howtos )
+    EXELIST(TARGET ${CMAKE_INSTALL_PREFIX}/bin/howtos )
 
-		fixup_bundle(\${TARGET}
-						\"\"
-						\"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;${CMAKE_LIBRARY_OUTPUT_DIRECTORY};${CMAKE_ARCHIVE_OUTPUT_DIRECTORY$};${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\"
+    fixup_bundle(\${TARGET}
+        \"\"
+            \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;${CMAKE_INSTALL_PREFIX}/bin;${CMAKE_INSTALL_PREFIX}/lib;${CMAKE_LIBRARY_OUTPUT_DIRECTORY};${CMAKE_ARCHIVE_OUTPUT_DIRECTORY};${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\"
    
-		)
-	")
+    )
+  ")
 endif()
 endif()
-
 message(STATUS "")
