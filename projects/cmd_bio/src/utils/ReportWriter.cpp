@@ -501,7 +501,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
   }
 }
 //-------------------------------------------------------------------------------
-//! \param stdl::istream : XML Input in stream form.  
+//! \param stdl::istream : XML Input in stream form.
 //!
 //! \brief Parses an XML file containing results from biogears, puts the relevant data into a TableRow object,
 /// and inserts the TableRow into a map
@@ -747,8 +747,13 @@ void ReportWriter::Validate()
     }
 
     biogears::TableRow table_row = table_row_itr->second; // Validation data either takes the form of a single value, or a range
+    std::regex valid_citation("[a-zA-Z0-9]");
     if (ref.is_range) { // If it's a range the we first check whether the value is in range, and if not check how far out of range it is
-      table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + "@cite " + ref.reference;
+      if (std::regex_match(ref.reference, valid_citation) && ref.reference.length() != 0) {
+        table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + "@cite " + ref.reference;
+      } else {
+        table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + ref.reference;
+      }
       if (ref.reference_range.first <= table_row.engine_value && ref.reference_range.second >= table_row.engine_value) {
         table_row.result = Green;
         table_row.percent_error = "Within Bounds";
@@ -768,7 +773,11 @@ void ReportWriter::Validate()
       }
 
     } else { //For a value, we check how closely the biogears data matches the validation data
-      table_row.expected_value = std::to_string(ref.reference_value) + "@cite " + ref.reference;
+      if (std::regex_match(ref.reference, valid_citation) && ref.reference.length() != 0) {
+        table_row.expected_value = std::to_string(ref.reference_value) + "@cite " + ref.reference;
+      } else {
+        table_row.expected_value = std::to_string(ref.reference_value) + ref.reference;
+      }
       if (std::fabs(ref.reference_value - table_row.engine_value) <= 0.000001) {
         table_row.percent_error = "0.0%";
         table_row.result = Green;
