@@ -747,9 +747,9 @@ void ReportWriter::Validate()
     }
 
     biogears::TableRow table_row = table_row_itr->second; // Validation data either takes the form of a single value, or a range
-    std::regex valid_citation("[a-zA-Z0-9]");
+    std::regex valid_citation("[a-zA-Z0-9]+");
     if (ref.is_range) { // If it's a range the we first check whether the value is in range, and if not check how far out of range it is
-      if (std::regex_match(ref.reference, valid_citation) && ref.reference.length() != 0) {
+      if (std::regex_match(ref.reference, valid_citation)) {
         table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + "@cite " + ref.reference;
       } else {
         table_row.expected_value = "[" + std::to_string(ref.reference_range.first) + "," + std::to_string(ref.reference_range.second) + "]" + ref.reference;
@@ -773,7 +773,7 @@ void ReportWriter::Validate()
       }
 
     } else { //For a value, we check how closely the biogears data matches the validation data
-      if (std::regex_match(ref.reference, valid_citation) && ref.reference.length() != 0) {
+      if (std::regex_match(ref.reference, valid_citation)) {
         table_row.expected_value = std::to_string(ref.reference_value) + "@cite " + ref.reference;
       } else {
         table_row.expected_value = std::to_string(ref.reference_value) + ref.reference;
