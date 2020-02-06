@@ -311,8 +311,8 @@ bool SESubstanceManager::LoadSubstanceDirectory()
   ScopedFileSystemLock lock;
 
   std::string workingDirectory = GetCurrentWorkingDirectory();
-
-  dir = opendir(std::string(ResolvePath(std::string("substances/"))).c_str());
+  std::string resolved_path = ResolvePath(std::string("substances/")) + "/";
+  dir = opendir(resolved_path.c_str());
 
   if (dir != nullptr) {
     CDM::ObjectData* obj;
@@ -330,7 +330,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
       sub = nullptr;
       subData = nullptr;
       ss.str("");
-      ss << workingDirectory << "substances/" << ent->d_name;
+      ss << resolved_path  << ent->d_name;
       if (!IsDirectory(ent) && strlen(ent->d_name) > 2) {
         data = Serializer::ReadFile(ss.str(), GetLogger());
         ss.str("");
