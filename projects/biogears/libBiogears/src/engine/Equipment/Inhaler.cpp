@@ -33,6 +33,11 @@ Constructors
 ========================
 */
 
+auto Inhaler::make_unique(BioGears& bg) -> std::unique_ptr<Inhaler>
+{
+  return std::unique_ptr<Inhaler>(new Inhaler(bg));
+}
+
 Inhaler::Inhaler(BioGears& bg)
   : SEInhaler(bg.GetSubstances())
   , m_data(bg)

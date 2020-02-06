@@ -39,6 +39,7 @@ class BIOGEARS_API Energy : public SEEnergySystem, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Energy>;
   Energy(BioGears& bg);
   BioGears& m_data;
 

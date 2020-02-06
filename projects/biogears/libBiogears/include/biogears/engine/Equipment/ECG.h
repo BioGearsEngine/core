@@ -31,6 +31,7 @@ class BIOGEARS_API ECG : public SEElectroCardioGram, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<ECG>;
   ECG(BioGears& bg);
   BioGears& m_data;
 

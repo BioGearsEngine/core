@@ -29,6 +29,7 @@ class BIOGEARS_API DiffusionCalculator : public Loggable {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<DiffusionCalculator>;
   DiffusionCalculator(BioGears& bg);
 
   void ClearConcentrations();

@@ -39,6 +39,11 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 // #define VERBOSE
 namespace biogears {
+auto Nervous::make_unique(BioGears& bg) -> std::unique_ptr<Nervous>
+{
+  return std::unique_ptr<Nervous>(new Nervous(bg));
+}
+
 Nervous::Nervous(BioGears& bg)
   : SENervousSystem(bg.GetLogger())
   , m_data(bg)

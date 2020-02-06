@@ -25,6 +25,7 @@ class BIOGEARS_API BioGearsCompartments : public SECompartmentManager {
   friend class BioGearsSubstances;
 
 public:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCompartments>;
   BioGearsCompartments(BioGears& data);
   virtual ~BioGearsCompartments();
 

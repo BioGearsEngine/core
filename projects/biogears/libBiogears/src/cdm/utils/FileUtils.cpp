@@ -139,10 +139,14 @@ std::string ResolvePath(const std::string& path)
     return "";
   } else if (given_path.is_absolute()) {
     return given_path.string();
-  } else if (filesystem::path{ cwd }.is_absolute()) {
+  } else if (filesystem::normalize(cwd).is_absolute()) {
+
     return filesystem::normalize(cwd / given_path).string();
   } else {
-    return filesystem::normalize(filesystem::path::getcwd() / cwd / given_path).string();
+    auto origin = filesystem::path::getcwd();
+    cwd;
+    given_path;
+    return filesystem::normalize(origin/cwd/given_path).string();
   }
   //TODO -- IS this right? If the user wants a relative library CWD is that realtive to the actual CWD
   //TODO -- Document this behavior for sure.

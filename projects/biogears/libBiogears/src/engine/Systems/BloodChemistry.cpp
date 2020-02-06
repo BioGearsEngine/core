@@ -36,6 +36,11 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
 namespace biogears {
+auto BloodChemistry::make_unique(BioGears& bg) -> std::unique_ptr<BloodChemistry>
+{
+  return std::unique_ptr<BloodChemistry>(new BloodChemistry(bg));
+}
+
 BloodChemistry::BloodChemistry(BioGears& bg)
   : SEBloodChemistrySystem(bg.GetLogger())
   , m_data(bg)

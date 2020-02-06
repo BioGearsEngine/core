@@ -34,6 +34,7 @@ class BIOGEARS_API Gastrointestinal : public SEGastrointestinalSystem, public Bi
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>;
   Gastrointestinal(BioGears& bg);
   BioGears& m_data;
 

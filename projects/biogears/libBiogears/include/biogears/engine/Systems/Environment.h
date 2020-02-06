@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsEnvironment.hxx>
+#include "Saturation.h"
 
 namespace biogears {
 class SEPatient;
@@ -36,6 +37,7 @@ class BIOGEARS_API Environment : public SEEnvironment, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Environment>;
   Environment(BioGears& bg);
   BioGears& m_data;
 

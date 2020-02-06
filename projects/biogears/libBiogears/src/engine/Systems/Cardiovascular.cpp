@@ -52,6 +52,11 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
+auto Cardiovascular::make_unique(BioGears& bg) -> std::unique_ptr<Cardiovascular>
+{
+  return std::unique_ptr<Cardiovascular>(new Cardiovascular(bg));
+}
+
 Cardiovascular::Cardiovascular(BioGears& bg)
   : SECardiovascularSystem(bg.GetLogger())
   , m_data(bg)

@@ -25,6 +25,11 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
+auto Hepatic::make_unique(BioGears& bg) -> std::unique_ptr<Hepatic>
+{
+  return std::unique_ptr<Hepatic>(new Hepatic(bg));
+}
+
 Hepatic::Hepatic(BioGears& bg)
   : SEHepaticSystem(bg.GetLogger())
   , m_data(bg)

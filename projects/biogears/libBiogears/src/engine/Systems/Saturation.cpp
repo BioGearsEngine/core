@@ -131,6 +131,11 @@ public:
   }
 };
 
+auto SaturationCalculator::make_unique(BioGears& bg) -> std::unique_ptr<SaturationCalculator>
+{
+  return std::unique_ptr<SaturationCalculator>(new SaturationCalculator(bg));
+}
+
 SaturationCalculator::SaturationCalculator(BioGears& bg)
   : Loggable(bg.GetLogger())
   , m_data(bg)

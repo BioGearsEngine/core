@@ -69,6 +69,11 @@ namespace biogears {
 double Tissue::m_hepaticCO2Produced_mol;
 double Tissue::m_hepaticO2Consumed_mol;
 
+auto Tissue::make_unique(BioGears& bg) -> std::unique_ptr<Tissue>
+{
+  return std::unique_ptr<Tissue>(new Tissue(bg));
+}
+
 Tissue::Tissue(BioGears& bg)
   : SETissueSystem(bg.GetLogger())
   , m_data(bg)

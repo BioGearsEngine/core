@@ -34,6 +34,7 @@ class BIOGEARS_API Endocrine : public SEEndocrineSystem, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>;
   Endocrine(BioGears& bg);
   BioGears& m_data;
 

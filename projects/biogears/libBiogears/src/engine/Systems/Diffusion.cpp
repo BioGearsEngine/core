@@ -18,6 +18,11 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
+auto DiffusionCalculator::make_unique(BioGears& bg) -> std::unique_ptr<DiffusionCalculator>
+{
+  return std::unique_ptr<DiffusionCalculator>(new DiffusionCalculator(bg));
+}
+
 DiffusionCalculator::DiffusionCalculator(BioGears& bg)
   : Loggable(bg.GetLogger())
   , m_data(bg)

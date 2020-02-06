@@ -37,6 +37,7 @@ class BIOGEARS_API AnesthesiaMachine : public SEAnesthesiaMachine, public BioGea
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<AnesthesiaMachine>;
   AnesthesiaMachine(BioGears& bg);
   BioGears& m_data;
 

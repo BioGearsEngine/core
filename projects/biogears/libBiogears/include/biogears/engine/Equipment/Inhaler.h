@@ -35,6 +35,7 @@ class BIOGEARS_API Inhaler : public SEInhaler, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Inhaler>;
   Inhaler(BioGears& bg);
   BioGears& m_data;
 

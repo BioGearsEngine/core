@@ -45,6 +45,11 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
+auto Renal::make_unique(BioGears& bg) -> std::unique_ptr<Renal>
+{
+  return std::unique_ptr<Renal>(new Renal(bg));
+}
+
 Renal::Renal(BioGears& bg)
   : SERenalSystem(bg.GetLogger())
   , m_data(bg)

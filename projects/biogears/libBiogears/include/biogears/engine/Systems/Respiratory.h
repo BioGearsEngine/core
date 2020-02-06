@@ -55,6 +55,7 @@ class BIOGEARS_API Respiratory : public SERespiratorySystem, public BioGearsSyst
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Respiratory>;
   Respiratory(BioGears& bg);
   BioGears& m_data;
 

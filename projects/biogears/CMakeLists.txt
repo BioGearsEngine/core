@@ -183,11 +183,14 @@ else()
 	message(STATUS "${PREFIX}_cdm_LIBS=${${PREFIX}_cdm_LIBS}")
     target_link_libraries(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_cdm_LIBS} )
 
-  install(TARGETS lib${PROJECT_NAME}_cdm
-      RUNTIME DESTINATION bin
-      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-      ARCHIVE DESTINATION lib
+  install(TARGETS lib${PROJECT_NAME}_cdm  EXPORT lib${PROJECT_NAME}
+      RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+      ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
    )
+   if(WIN32)
+	 install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}_cdm> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+   endif()
   ###############################################################################
   # libBiogears
   ###############################################################################
@@ -240,11 +243,14 @@ else()
   )
   message(STATUS "${PREFIX}_LIBS=${${PREFIX}_LIBS}")
   target_link_libraries(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_LIBS} )
-  install(TARGETS lib${PROJECT_NAME}_cdm EXPORT libBiogears
-      RUNTIME DESTINATION bin
-      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-      ARCHIVE DESTINATION lib
+  install(TARGETS lib${PROJECT_NAME} EXPORT lib${PROJECT_NAME}
+      RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+      ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
    )
+   if(WIN32)
+		install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+   endif()
   ###############################################################################
   # libBiogears_circuit_test
   ###############################################################################
@@ -287,11 +293,14 @@ else()
     target_link_libraries(lib${PROJECT_NAME}_circuit_test  PUBLIC ${${PREFIX}_CIRCUIT_TEST_LIBS} )
 
 
-     install(TARGETS lib${PROJECT_NAME}_circuit_test EXPORT libBiogears
-         RUNTIME DESTINATION bin
-         LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-         ARCHIVE DESTINATION lib
+     install(TARGETS lib${PROJECT_NAME}_circuit_test EXPORT lib${PROJECT_NAME}
+         RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+         LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+         ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
       )
+	  if(WIN32)
+	    install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}_circuit_test> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+	  endif()
    endif()
   ###############################################################################
   # libBiogears_jni
@@ -335,37 +344,29 @@ else()
     target_link_libraries(lib${PROJECT_NAME}_jni  PUBLIC ${${PREFIX}_jni_LIBS} )
 
 
-     install(TARGETS lib${PROJECT_NAME}_jni EXPORT libBiogears
-         RUNTIME DESTINATION bin
-         LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-         ARCHIVE DESTINATION lib
+     install(TARGETS lib${PROJECT_NAME}_jni EXPORT lib${PROJECT_NAME}
+         RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+         LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+         ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
       )
+	  if(WIN32)
+		 install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}_jni> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+	  endif()
    endif()
 endif() #${PREFIX}_BUILD_STATIC
-
 
 ######################################################################################################
 # INSTALL LOGIC
 ######################################################################################################
- install(TARGETS lib${PROJECT_NAME} EXPORT libBiogears
-     RUNTIME DESTINATION bin
-     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-     ARCHIVE DESTINATION lib
+ install(TARGETS lib${PROJECT_NAME} EXPORT lib${PROJECT_NAME}
+     RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+     ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
   )
-
-
-if(NOT ${PREFIX}_BUILD_STATIC)
   if(WIN32)
-    install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}> DESTINATION bin OPTIONAL)
+	install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
   endif()
-else()
-   if(WIN32)
-      foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-          string(TOUPPER _${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
-          install(FILES "${CMAKE_PDB_OUTPUT_DIRECTORY${OUTPUTCONFIG_UPPER}}/*.pdb" DESTINATION lib CONFIGURATIONS ${OUTPUTCONFIG} OPTIONAL)
-      endforeach(OUTPUTCONFIG)
-   endif()
-endif() #NOT ${PREFIX}_BUILD_STATIC
+
  
 
 install(DIRECTORY 

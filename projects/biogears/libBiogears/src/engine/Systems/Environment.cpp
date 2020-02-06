@@ -44,6 +44,11 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
+auto Environment::make_unique(BioGears& bg) -> std::unique_ptr<Environment>
+{
+  return std::unique_ptr<Environment>(new Environment(bg));
+}
+
 Environment::Environment(BioGears& bg)
   : SEEnvironment(bg.GetSubstances())
   , m_data(bg)

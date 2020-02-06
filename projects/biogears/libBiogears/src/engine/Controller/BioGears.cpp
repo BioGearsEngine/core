@@ -60,50 +60,7 @@ BioGears::BioGears(Logger* logger)
     m_Logger->SetForward(this);
   }
 
-  m_CurrentTime = std::unique_ptr<SEScalarTime>(new SEScalarTime());
-  m_SimulationTime = std::unique_ptr<SEScalarTime>(new SEScalarTime());
-  m_CurrentTime->SetValue(0, TimeUnit::s);
-  m_SimulationTime->SetValue(0, TimeUnit::s);
-  m_Logger->SetLogTime(m_SimulationTime.get());
-
-  m_Substances = std::unique_ptr<BioGearsSubstances>(new BioGearsSubstances(*this));
-  m_Substances->LoadSubstanceDirectory();
-
-  m_Patient = std::unique_ptr<SEPatient>(new SEPatient(GetLogger()));
-
-  m_Config = std::unique_ptr<BioGearsConfiguration>(new BioGearsConfiguration(*m_Substances));
-  m_Config->Initialize();
-
-  m_SaturationCalculator = std::unique_ptr<SaturationCalculator>(new SaturationCalculator(*this));
-
-  m_Actions = std::unique_ptr<SEActionManager>(new SEActionManager(*m_Substances));
-  m_Conditions = std::unique_ptr<SEConditionManager>(new SEConditionManager(*m_Substances));
-
-  m_Environment = std::unique_ptr<Environment>(new Environment(*this));
-
-  m_BloodChemistrySystem = std::unique_ptr<BloodChemistry>(new BloodChemistry(*this));
-  m_CardiovascularSystem = std::unique_ptr<Cardiovascular>(new Cardiovascular(*this));
-  m_EndocrineSystem = std::unique_ptr<Endocrine>(new Endocrine(*this));
-  m_EnergySystem = std::unique_ptr<Energy>(new Energy(*this));
-  m_GastrointestinalSystem = std::unique_ptr<Gastrointestinal>(new Gastrointestinal(*this));
-  m_HepaticSystem = std::unique_ptr<Hepatic>(new Hepatic(*this));
-  m_NervousSystem = std::unique_ptr<Nervous>(new Nervous(*this));
-  m_RenalSystem = std::unique_ptr<Renal>(new Renal(*this));
-  m_RespiratorySystem = std::unique_ptr<Respiratory>(new Respiratory(*this));
-  m_DrugSystem = std::unique_ptr<Drugs>(new Drugs(*this));
-  m_TissueSystem = std::unique_ptr<Tissue>(new Tissue(*this));
-
-  m_ECG = std::unique_ptr<ECG>(new ECG(*this));
-
-  m_AnesthesiaMachine = std::unique_ptr<AnesthesiaMachine>(new AnesthesiaMachine(*this));
-
-  m_Inhaler = std::unique_ptr<Inhaler>(new Inhaler(*this));
-
-  m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(*this));
-
-  m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(*this));
-
-  m_DiffusionCalculator = std::unique_ptr<DiffusionCalculator>(new DiffusionCalculator(*this));
+  SetUp();
 }
 
 BioGears::BioGears(const std::string& logFileName, const std::string& working_dir)
@@ -123,48 +80,7 @@ BioGears::BioGears(Logger* logger, const std::string& working_dir)
     m_Logger->SetForward(this);
   }
 
-  m_CurrentTime = std::unique_ptr<SEScalarTime>(new SEScalarTime());
-  m_SimulationTime = std::unique_ptr<SEScalarTime>(new SEScalarTime());
-  m_CurrentTime->SetValue(0, TimeUnit::s);
-  m_SimulationTime->SetValue(0, TimeUnit::s);
-  m_Logger->SetLogTime(m_SimulationTime.get());
-
-  m_Substances = std::unique_ptr<BioGearsSubstances>(new BioGearsSubstances(*this));
-  m_Substances->LoadSubstanceDirectory();
-
-  m_Patient = std::unique_ptr<SEPatient>(new SEPatient(GetLogger()));
-
-  m_Config = std::unique_ptr<BioGearsConfiguration>(new BioGearsConfiguration(*m_Substances));
-  m_Config->Initialize();
-
-  m_SaturationCalculator = std::unique_ptr<SaturationCalculator>(new SaturationCalculator(*this));
-
-  m_Actions = std::unique_ptr<SEActionManager>(new SEActionManager(*m_Substances));
-  m_Conditions = std::unique_ptr<SEConditionManager>(new SEConditionManager(*m_Substances));
-
-  m_Environment = std::unique_ptr<Environment>(new Environment(*this));
-
-  m_BloodChemistrySystem = std::unique_ptr<BloodChemistry>(new BloodChemistry(*this));
-  m_CardiovascularSystem = std::unique_ptr<Cardiovascular>(new Cardiovascular(*this));
-  m_EndocrineSystem = std::unique_ptr<Endocrine>(new Endocrine(*this));
-  m_EnergySystem = std::unique_ptr<Energy>(new Energy(*this));
-  m_GastrointestinalSystem = std::unique_ptr<Gastrointestinal>(new Gastrointestinal(*this));
-  m_HepaticSystem = std::unique_ptr<Hepatic>(new Hepatic(*this));
-  m_NervousSystem = std::unique_ptr<Nervous>(new Nervous(*this));
-  m_RenalSystem = std::unique_ptr<Renal>(new Renal(*this));
-  m_RespiratorySystem = std::unique_ptr<Respiratory>(new Respiratory(*this));
-  m_DrugSystem = std::unique_ptr<Drugs>(new Drugs(*this));
-  m_TissueSystem = std::unique_ptr<Tissue>(new Tissue(*this));
-
-  m_ECG = std::unique_ptr<ECG>(new ECG(*this));
-
-  m_AnesthesiaMachine = std::unique_ptr<AnesthesiaMachine>(new AnesthesiaMachine(*this));
-
-  m_Inhaler = std::unique_ptr<Inhaler>(new Inhaler(*this));
-
-  m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(*this));
-
-  m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(*this));
+  SetUp();
 }
 
 DataTrack& BioGears::GetDataTrack()
@@ -173,6 +89,54 @@ DataTrack& BioGears::GetDataTrack()
     m_DataTrack = new DataTrack();
   }
   return *m_DataTrack;
+}
+
+void BioGears::SetUp()
+{
+  m_CurrentTime = std::make_unique<SEScalarTime>();
+  m_SimulationTime = std::make_unique<SEScalarTime>();
+  m_CurrentTime->SetValue(0, TimeUnit::s);
+  m_SimulationTime->SetValue(0, TimeUnit::s);
+  m_Logger->SetLogTime(m_SimulationTime.get());
+
+  m_Substances = std::make_unique<BioGearsSubstances>(*this);
+  m_Substances->LoadSubstanceDirectory();
+
+  m_Patient = std::make_unique<SEPatient>(GetLogger());
+
+  m_Config = std::make_unique<BioGearsConfiguration>(*m_Substances);
+  m_Config->Initialize();
+
+  m_SaturationCalculator = SaturationCalculator::make_unique(*this);
+
+  m_Actions = std::make_unique<SEActionManager>(*m_Substances);
+  m_Conditions = std::make_unique<SEConditionManager>(*m_Substances);
+
+  m_Environment = Environment::make_unique(*this);
+
+  m_BloodChemistrySystem = BloodChemistry::make_unique(*this);
+  m_CardiovascularSystem = Cardiovascular::make_unique(*this);
+  m_EndocrineSystem = Endocrine::make_unique(*this);
+  m_EnergySystem = Energy::make_unique(*this);
+  m_GastrointestinalSystem = Gastrointestinal::make_unique(*this);
+  m_HepaticSystem = Hepatic::make_unique(*this);
+  m_NervousSystem = Nervous::make_unique(*this);
+  m_RenalSystem = Renal::make_unique(*this);
+  m_RespiratorySystem = Respiratory::make_unique(*this);
+  m_DrugSystem = Drugs::make_unique(*this);
+  m_TissueSystem = Tissue::make_unique(*this);
+
+  m_ECG = ECG::make_unique(*this);
+
+  m_AnesthesiaMachine = AnesthesiaMachine::make_unique(*this);
+
+  m_Inhaler = Inhaler::make_unique(*this);
+
+  m_Compartments = BioGearsCompartments::make_unique(*this);
+
+  m_Circuits = BioGearsCircuits::make_unique(*this);
+
+  m_DiffusionCalculator = DiffusionCalculator::make_unique(*this);
 }
 
 bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)

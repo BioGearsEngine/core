@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <memory>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
@@ -35,6 +37,9 @@ protected:
   friend struct error_functor;
   friend class BioGears;
   friend class BioGearsEngineTest;
+
+
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<SaturationCalculator>;
 
   SaturationCalculator(BioGears& bg);
   BioGears& m_data;

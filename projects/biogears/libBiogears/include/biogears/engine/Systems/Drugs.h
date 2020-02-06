@@ -42,6 +42,7 @@ class BIOGEARS_API Drugs : public SEDrugSystem, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Drugs>;
   Drugs(BioGears& bg);
   BioGears& m_data;
 

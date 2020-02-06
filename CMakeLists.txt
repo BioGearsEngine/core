@@ -44,7 +44,12 @@ endif()
 # Add Repository Subdirectories
 ###############################################################################
 add_subdirectory(projects)
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT scenario_driver)
+if(TARGET scenario_driver)
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT scenario_driver)
+endif()
+if(TARGET cmd_bio)
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT cmd_bio)
+endif()
 
 if(NOT TARGET STAGE)
   ###############################################################################

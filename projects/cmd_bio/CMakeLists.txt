@@ -138,13 +138,13 @@ if(NOT CMAKE_CROSSCOMPILING AND NOT APPLE)
   endforeach()
 
 
-   EXELIST(TARGET ${CMAKE_INSTALL_PREFIX}/bin )
+    EXELIST(TARGET \\\"${CMAKE_INSTALL_PREFIX}/bin/\\\" )
 
-   fixup_bundle(\${TARGET}
-                  \"\"
-                 \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;${CMAKE_LIBRARY_OUTPUT_DIRECTORY};${CMAKE_ARCHIVE_OUTPUT_DIRECTORY$};${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\"
+    fixup_bundle(\"\${TARGET}\"\"
+        \"\"
+            \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;\\\"${CMAKE_INSTALL_PREFIX}/bin\\\";\\\"${CMAKE_INSTALL_PREFIX}/lib\\\";\\\"${CMAKE_LIBRARY_OUTPUT_DIRECTORY}\\\";\\\"${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}\\\";\\\"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\\\"\"
    
-   )
+    )
 ")
 endif()
 message(STATUS "")

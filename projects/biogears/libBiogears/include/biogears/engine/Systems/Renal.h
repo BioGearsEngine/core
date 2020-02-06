@@ -39,6 +39,7 @@ class BIOGEARS_API Renal : public SERenalSystem, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Renal>;
   Renal(BioGears& bg);
   BioGears& m_data;
 

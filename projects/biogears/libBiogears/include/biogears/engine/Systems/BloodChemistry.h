@@ -40,6 +40,7 @@ class BIOGEARS_API BloodChemistry : public SEBloodChemistrySystem, public BioGea
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<BloodChemistry>;
   BloodChemistry(BioGears& bg);
   BioGears& m_data;
 

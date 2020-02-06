@@ -30,6 +30,7 @@ class BIOGEARS_API Nervous : public SENervousSystem, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Nervous>;
   Nervous(BioGears& bg);
   BioGears& m_data;
 

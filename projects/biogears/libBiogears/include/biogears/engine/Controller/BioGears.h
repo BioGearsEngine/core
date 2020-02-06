@@ -237,5 +237,8 @@ protected:
 
   // Flag to destroy the logger or not
   bool myLogger;
+
+private:
+  void SetUp();
 };
 }

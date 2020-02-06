@@ -42,6 +42,7 @@ class BIOGEARS_API Tissue : public SETissueSystem, public BioGearsSystem {
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Tissue>;
   Tissue(BioGears& bg);
   BioGears& m_data;
 

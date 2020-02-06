@@ -29,6 +29,11 @@ Constructors
 ========================
 */
 
+auto ECG::make_unique(BioGears& bg) -> std::unique_ptr<ECG>
+{
+  return std::unique_ptr<ECG>(new ECG(bg));
+}
+
 ECG::ECG(BioGears& bg)
   : SEElectroCardioGram(bg.GetLogger())
   , m_data(bg)

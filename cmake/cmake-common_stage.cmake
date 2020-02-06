@@ -1,6 +1,6 @@
 include(BundleUtilities)
 include(cmake-common_cache.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/cmake-common_logic.cmake)
+include("${PROJECT_SOURCE_DIR}/cmake/cmake-common_logic.cmake")
 ############/############################################################################################
 #
 # Source File Managment Macros
@@ -69,6 +69,6 @@ EXELIST(projects ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 foreach( project IN LISTS projects)
 	fixup_bundle(${project}
                   ""
-                 "${THIRD_PARTY_LIB};${THIRD_PARTY_BIN}"
+                 "'${THIRD_PARTY_LIB}';'${THIRD_PARTY_BIN}'"
 	  )
 endforeach()

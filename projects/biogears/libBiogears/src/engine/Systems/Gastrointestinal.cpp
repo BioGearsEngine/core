@@ -37,6 +37,11 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 //#define logMeal
 namespace biogears {
+auto Gastrointestinal::make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>
+{
+  return std::unique_ptr<Gastrointestinal>(new Gastrointestinal(bg));
+}
+
 Gastrointestinal::Gastrointestinal(BioGears& bg)
   : SEGastrointestinalSystem(bg.GetLogger())
   , m_data(bg)

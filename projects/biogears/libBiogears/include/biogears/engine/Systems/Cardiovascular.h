@@ -48,6 +48,7 @@ class BIOGEARS_API Cardiovascular : public SECardiovascularSystem, public BioGea
   friend class BioGearsEngineTest;
 
 protected:
+  static auto make_unique(BioGears& bg) -> std::unique_ptr<Cardiovascular>;
   Cardiovascular(BioGears& bg);
   BioGears& m_data;
 

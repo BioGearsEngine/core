@@ -58,6 +58,11 @@ namespace biogears {
 //Should be commented out, unless debugging/tuning
 // #define TUNING
 
+auto Respiratory::make_unique(BioGears& bg) -> std::unique_ptr<Respiratory>
+{
+  return std::unique_ptr<Respiratory>(new Respiratory(bg));
+}
+
 Respiratory::Respiratory(BioGears& bg)
   : SERespiratorySystem(bg.GetLogger())
   , m_data(bg)

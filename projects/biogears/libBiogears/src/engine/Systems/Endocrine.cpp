@@ -33,6 +33,11 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
+auto Endocrine::make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>
+{
+  return std::unique_ptr<Endocrine>(new Endocrine(bg));
+}
+
 Endocrine::Endocrine(BioGears& bg)
   : SEEndocrineSystem(bg.GetLogger())
   , m_data(bg)

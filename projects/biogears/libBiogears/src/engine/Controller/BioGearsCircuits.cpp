@@ -17,6 +17,11 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 
+auto BioGearsCircuits::make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCircuits>
+{
+  return std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(bg));
+}
+
 BioGearsCircuits::BioGearsCircuits(BioGears& bg)
   : SECircuitManager(bg.GetLogger())
   , m_data(bg)

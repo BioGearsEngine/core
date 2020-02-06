@@ -36,6 +36,11 @@ namespace biogears {
 ========================
 */
 
+auto AnesthesiaMachine::make_unique(BioGears& bg) -> std::unique_ptr<AnesthesiaMachine>
+{
+  return std::unique_ptr<AnesthesiaMachine>(new AnesthesiaMachine(bg));
+}
+
 AnesthesiaMachine::AnesthesiaMachine(BioGears& bg)
   : SEAnesthesiaMachine(bg.GetSubstances())
   , m_data(bg)

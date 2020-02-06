@@ -149,9 +149,9 @@ function(create_cache_file)
   set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
   file(WRITE ${CacheForScript} "")
   file(APPEND ${CacheForScript} "set(ROOT_PROJECT_NAME ${ROOT_PROJECT_NAME})\n")
-  file(APPEND ${CacheForScript} "set(PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})\n")
-  file(APPEND ${CacheForScript} "set(CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR})\n")
-  file(APPEND ${CacheForScript} "set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH})\n")
+  file(APPEND ${CacheForScript} "set(PROJECT_SOURCE_DIR \"${PROJECT_SOURCE_DIR}\")\n")
+  file(APPEND ${CacheForScript} "set(CMAKE_BINARY_DIR \"${CMAKE_BINARY_DIR}\")\n")
+  file(APPEND ${CacheForScript} "set(CMAKE_PREFIX_PATH \"${CMAKE_PREFIX_PATH}\")\n")
   file(APPEND ${CacheForScript} "set(CMAKE_EXECUTABLE_SUFFIX ${CMAKE_EXECUTABLE_SUFFIX})\n")
   file(APPEND ${CacheForScript} "set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/lib)\n")
   file(APPEND ${CacheForScript} "set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_PREFIX}/lib)\n")
@@ -167,7 +167,7 @@ endfunction()
 function(create_stage)
   add_custom_target(STAGE 
     ${CMAKE_COMMAND} 
-    -DCMAKE_INSTALL_CONFIG_NAME=$<CONFIG> -P ${CMAKE_SOURCE_DIR}/cmake/cmake-common_stage.cmake
+    -DCMAKE_INSTALL_CONFIG_NAME=$<CONFIG> -P "${CMAKE_SOURCE_DIR}/cmake/cmake-common_stage.cmake"
     )
   set_target_properties(STAGE
       PROPERTIES
@@ -332,7 +332,7 @@ if(MSVC AND NOT __PROJECT_SUFFIX_SET)
   if(${CMAKE_PROJECT_NAME}_PROJECT_SUFFIX)
     project(${CMAKE_PROJECT_NAME}_${${CMAKE_PROJECT_NAME}_PROJECT_SUFFIX})
   else()
-    get_filename_component(source_dirname ${PROJECT_SOURCE_DIR} NAME)
+    get_filename_component(source_dirname "${PROJECT_SOURCE_DIR}" NAME)
     if ( NOT source_dirname STREQUAL "core")
       project(${CMAKE_PROJECT_NAME}_${source_dirname})
     endif()
