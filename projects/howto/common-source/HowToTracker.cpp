@@ -29,12 +29,17 @@ HowToTracker::~HowToTracker()
 void HowToTracker::AdvanceModelTime(double time_s)
 {	
 	// This samples the engine at each time step
+  double elapsed_time = 0.0;
 	int count = static_cast<int>(time_s / m_dT_s);
 	for (int i = 0; i <= count; i++)
 	{		
 		m_Engine.AdvanceModelTime();  // Compute 1 time step
 
 		// Pull Track will pull data from the engine and append it to the file
-		m_Engine.GetEngineTrack()->TrackData(m_Engine.GetSimulationTime(TimeUnit::s));
+    if (elapsed_time >= 1.0 / m_Engine.GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond()) {
+      m_Engine.GetEngineTrack()->TrackData(m_Engine.GetSimulationTime(TimeUnit::s));
+      elapsed_time -= 1.0 / m_Engine.GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond();
+    }
+    elapsed_time += m_dT_s;
 	}
 }
