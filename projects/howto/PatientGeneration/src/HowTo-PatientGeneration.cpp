@@ -84,7 +84,7 @@ bool HowToPatientGeneration(std::string name, double mic_g_per_l, double apply_a
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*bg->GetSubstanceManager().GetSubstance("Tazobactam"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
 
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(long_name + ".csv");
-  bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1 / (5 * 60));
+  bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1. / (5. * 60.));
 
   HowToTracker tracker(*bg);
   SEInfection infection {};
