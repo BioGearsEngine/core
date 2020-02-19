@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
 {
   BioGearsPlugin plugin("HowTo-API_Integration");
   plugin.run();
+  std::this_thread::sleep_for(std::chrono::seconds(15));
   plugin.stop();
   auto start_time = std::chrono::steady_clock::now();
   std::stringstream ss;
