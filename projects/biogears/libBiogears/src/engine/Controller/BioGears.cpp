@@ -46,19 +46,16 @@ BioGears::BioGears(const std::string& logFileName)
   : BioGears(new Logger(logFileName))
 {
 
-  myLogger = true;
+  m_logger_self_managed = true;
   m_DataTrack = nullptr;
 }
 
 BioGears::BioGears(Logger* logger)
-  : Loggable(logger)
+  : m_Logger(logger)
 {
 
-  myLogger = false;
+  m_logger_self_managed = false;
   m_DataTrack = nullptr;
-  if (!m_Logger->HasForward()) { // Don't override a forwarder, if there already is one there
-    m_Logger->SetForward(this);
-  }
 
   SetUp();
 }
@@ -66,19 +63,16 @@ BioGears::BioGears(Logger* logger)
 BioGears::BioGears(const std::string& logFileName, const std::string& working_dir)
   : BioGears(new Logger(logFileName, working_dir), working_dir)
 {
-  myLogger = true;
+  m_logger_self_managed = true;
   m_DataTrack = nullptr;
 }
 
 BioGears::BioGears(Logger* logger, const std::string& working_dir)
-  : Loggable(logger)
+  : m_Logger(logger)
 {
   SetCurrentWorkingDirectory(working_dir);
-  myLogger = false;
+  m_logger_self_managed = false;
   m_DataTrack = nullptr;
-  if (!m_Logger->HasForward()) { // Don't override a forwarder, if there already is one there
-    m_Logger->SetForward(this);
-  }
 
   SetUp();
 }
@@ -142,12 +136,12 @@ void BioGears::SetUp()
 bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
 {
   m_State = EngineState::NotReady;
-  Info("Configuring patient");
+  m_Logger->Info("Configuring patient");
   if (!SetupPatient()) {
     return false;
   }
 
-  Info("Resetting Substances");
+  m_Logger->Info("Resetting Substances");
   m_Substances->Reset();
 
   // Clear all substances and reload the original data
@@ -155,14 +149,14 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   // This will preserve the pointer to the substance, but not any pointers
   // to any substance child objects, those will need to be fixed up, if they exist
 
-  Info("Initializing Configuration");
+  m_Logger->Info("Initializing Configuration");
   m_Config->Initialize(); // Load up Defaults
   if (config != nullptr) {
-    Info("Merging Provided Configuration");
+    m_Logger->Info("Merging Provided Configuration");
     m_Config->Merge(*config);
   }
   // Now, Let's see if there is anything to merge into our base configuration
-  Info("Merging OnDisk Configuration");
+  m_Logger->Info("Merging OnDisk Configuration");
   BioGearsConfiguration cFile(*m_Substances);
   cFile.Load("BioGearsConfiguration.xml");
   m_Config->Merge(cFile);
@@ -190,7 +184,7 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
 
   // This will also Initialize the environment
   // Due to needing the initial environment values for circuits to construct properly
-  Info("Creating Circuits and Compartments");
+  m_Logger->Info("Creating Circuits and Compartments");
   CreateCircuitsAndCompartments();
 
   m_AirwayMode = CDM::enumBioGearsAirwayMode::Free;
@@ -199,12 +193,12 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   m_SimulationTime->SetValue(0, TimeUnit::s);
   m_Logger->SetLogTime(m_SimulationTime.get());
 
-  Info("Initializing Substances");
+  m_Logger->Info("Initializing Substances");
   m_Substances->InitializeSubstances(); // Sets all concentrations and such of all substances for all compartments, need to do this after we figure out what's in the environment
 
   //Note:  Diffusion Calculator is initialized in Tissue::SetUp because it depends on so many Tissue parameters
 
-  Info("Initializing Systems");
+  m_Logger->Info("Initializing Systems");
   m_CardiovascularSystem->Initialize();
   m_AnesthesiaMachine->Initialize();
   m_RespiratorySystem->Initialize();
@@ -241,9 +235,7 @@ void BioGears::SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode)
     m_Compartments->UpdateAirwayGraph();
   }
   m_AirwayMode = mode;
-  std::stringstream ss;
-  ss << "Airway Mode : " << m_AirwayMode;
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Airway Mode : " << m_AirwayMode);
 }
 
 void BioGears::SetIntubation(CDM::enumOnOff::value s)
@@ -260,12 +252,10 @@ void BioGears::SetIntubation(CDM::enumOnOff::value s)
 bool BioGears::SetupPatient()
 {
   bool err = false;
-  std::stringstream ss;
-
   //Gender is the only thing we absolutely need to be defined
   //Everything else is either derived or assumed to be a "standard" value
   if (!m_Patient->HasGender()) {
-    Error("Patient must provide a gender.");
+    m_Logger->Error("Patient must provide a gender.");
     err = true;
   }
 
@@ -276,17 +266,14 @@ bool BioGears::SetupPatient()
   double ageStandard_yr = 44.0;
   if (!m_Patient->HasAge()) {
     m_Patient->GetAge().SetValue(ageStandard_yr, TimeUnit::yr);
-    ss << "No patient age set. Using the standard value of " << ageStandard_yr << " years.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient age set. Using the standard value of " << ageStandard_yr << " years.");
   }
   age_yr = m_Patient->GetAge().GetValue(TimeUnit::yr);
   if (age_yr < ageMin_yr) {
-    ss << "Patient age of " << age_yr << " years is too young. We do not model pediatrics. Minimum age allowed is " << ageMin_yr << " years.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient age of " << age_yr << " years is too young. We do not model pediatrics. Minimum age allowed is " << ageMin_yr << " years.");
     err = true;
   } else if (age_yr > ageMax_yr) {
-    ss << "Patient age of " << age_yr << " years is too old. We do not model geriatrics. Maximum age allowed is " << ageMax_yr << " years.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient age of " << age_yr << " years is too old. We do not model geriatrics. Maximum age allowed is " << ageMax_yr << " years.");
     err = true;
   }
 
@@ -294,16 +281,14 @@ bool BioGears::SetupPatient()
   double painStandard = 0.0;
   if (!m_Patient->HasPainSusceptibility()) {
     m_Patient->GetPainSusceptibility().SetValue(painStandard);
-    ss << "No patient pain susceptibility set " << painStandard << " being used.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient pain susceptibility set " << painStandard << " being used.");
   }
 
   //SWEAT SUSCEPTIBILITY -----------------------------------------------------------------------------------
   double sweatStandard = 0.0;
   if (!m_Patient->HasHyperhidrosis()) {
     m_Patient->GetHyperhidrosis().SetValue(sweatStandard);
-    ss << "No patient sweat susceptibility set " << sweatStandard << " being used.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient sweat susceptibility set " << sweatStandard << " being used.");
   }
 
   //HEIGHT ---------------------------------------------------------------
@@ -328,22 +313,19 @@ bool BioGears::SetupPatient()
   }
   if (!m_Patient->HasHeight()) {
     m_Patient->GetHeight().SetValue(heightStandard_cm, LengthUnit::cm);
-    ss << "No patient height set. Using the standard value of " << heightStandard_cm << " cm.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient height set. Using the standard value of " << heightStandard_cm << " cm.");
   }
   double height_cm = m_Patient->GetHeight().GetValue(LengthUnit::cm);
   double height_ft = Convert(height_cm, LengthUnit::cm, LengthUnit::ft);
   //Check for outrageous values
   if (height_ft < 4.5 || height_ft > 7.0) {
-    Error("Patient height setting is outrageous. It must be between 4.5 and 7.0 ft");
+    m_Logger->Error("Patient height setting is outrageous. It must be between 4.5 and 7.0 ft");
     err = true;
   }
   if (height_cm < heightMin_cm) {
-    ss << "Patient height of " << height_cm << " cm is outside of typical ranges - below 3rd percentile (" << heightMax_cm << " cm). No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Patient height of " << height_cm << " cm is outside of typical ranges - below 3rd percentile (" << heightMax_cm << " cm). No guarantees of model validity.");
   } else if (height_cm > heightMax_cm) {
-    ss << "Patient height of " << height_cm << " cm is outside of typical ranges - above 97th percentile(" << heightMin_cm << " cm). No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Patient height of " << height_cm << " cm is outside of typical ranges - above 97th percentile(" << heightMin_cm << " cm). No guarantees of model validity.");
   }
 
   //WEIGHT ---------------------------------------------------------------
@@ -358,27 +340,22 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasWeight()) {
     weight_kg = BMIStandard_kg_per_m2 * std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
     m_Patient->GetWeight().SetValue(weight_kg, MassUnit::kg);
-    ss << "No patient weight set. Using the standard BMI value of 21.75 kg/m^2, resulting in a weight of " << weight_kg << " kg.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient weight set. Using the standard BMI value of 21.75 kg/m^2, resulting in a weight of " << weight_kg << " kg.");
   }
   weight_kg = m_Patient->GetWeight(MassUnit::kg);
   BMI_kg_per_m2 = weight_kg / std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
   if (BMI_kg_per_m2 > BMIObese_kg_per_m2) {
-    ss << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << "  kg/m^2 is too high. Obese patients must be modeled by adding/using a condition. Maximum BMI allowed is " << BMIObese_kg_per_m2 << " kg/m^2.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << "  kg/m^2 is too high. Obese patients must be modeled by adding/using a condition. Maximum BMI allowed is " << BMIObese_kg_per_m2 << " kg/m^2.");
     err = true;
   }
   if (BMI_kg_per_m2 > BMIOverweight_kg_per_m2) {
-    ss << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << " kg/m^2 is overweight. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << " kg/m^2 is overweight. No guarantees of model validity.");
   }
   if (BMI_kg_per_m2 < BMIUnderweight_kg_per_m2) {
-    ss << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << " kg/m^2 is underweight. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << " kg/m^2 is underweight. No guarantees of model validity.");
   }
   if (BMI_kg_per_m2 < BMISeverelyUnderweight_kg_per_m2) {
-    ss << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << " kg/m^2 is too low. Severly underweight patients must be modeled by adding/using a condition. Maximum BMI allowed is " << BMISeverelyUnderweight_kg_per_m2 << " kg/m^2.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient Body Mass Index (BMI) of " << BMI_kg_per_m2 << " kg/m^2 is too low. Severly underweight patients must be modeled by adding/using a condition. Maximum BMI allowed is " << BMISeverelyUnderweight_kg_per_m2 << " kg/m^2.");
     err = true;
   }
 
@@ -406,36 +383,30 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasBodyFatFraction()) {
     fatFraction = fatFractionStandard;
     m_Patient->GetBodyFatFraction().SetValue(fatFraction);
-    ss << "No patient body fat fraction set. Using the standard value of " << fatFraction << ".";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient body fat fraction set. Using the standard value of " << fatFraction << ".");
   }
   fatFraction = m_Patient->GetBodyFatFraction().GetValue();
   if (fatFraction > fatFractionMax) {
-    ss << "Patient body fat fraction of " << fatFraction << " is too high. Obese patients must be modeled by adding/using a condition. Maximum body fat fraction allowed is " << fatFractionMax << ".";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient body fat fraction of " << fatFraction << " is too high. Obese patients must be modeled by adding/using a condition. Maximum body fat fraction allowed is " << fatFractionMax << ".");
     err = true;
   } else if (fatFraction < fatFractionMin) {
-    ss << "Patient body fat fraction  " << fatFraction << " is too low. Patients must have essential fat. Minimum body fat fraction allowed is " << fatFractionMin << ".";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient body fat fraction  " << fatFraction << " is too low. Patients must have essential fat. Minimum body fat fraction allowed is " << fatFractionMin << ".");
     err = true;
   }
 
   //Lean Body Mass ---------------------------------------------------------------
   if (m_Patient->HasLeanBodyMass()) {
-    ss << "Patient lean body mass cannot be set. It is determined by weight and body fat fraction.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient lean body mass cannot be set. It is determined by weight and body fat fraction.");
     err = true;
   }
   double leanBodyMass_kg = weight_kg * (1.0 - fatFraction);
   m_Patient->GetLeanBodyMass().SetValue(leanBodyMass_kg, MassUnit::kg);
-  ss << "Patient lean body mass computed and set to " << leanBodyMass_kg << " kg.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient lean body mass computed and set to " << leanBodyMass_kg << " kg.");
 
   //Muscle Mass ---------------------------------------------------------------
   // \cite janssen2000skeletal
   if (m_Patient->HasMuscleMass()) {
-    ss << "Patient muscle mass cannot be set directly. It is determined by a percentage of weight.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient muscle mass cannot be set directly. It is determined by a percentage of weight.");
     err = true;
   }
 
@@ -445,13 +416,11 @@ bool BioGears::SetupPatient()
     m_Patient->GetMuscleMass().SetValue(weight_kg * .384, MassUnit::kg);
   }
 
-  ss << "Patient muscle mass computed and set to " << m_Patient->GetMuscleMass().GetValue(MassUnit::kg) << " kg.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient muscle mass computed and set to " << m_Patient->GetMuscleMass().GetValue(MassUnit::kg) << " kg.");
 
   //Body Density ---------------------------------------------------------------
   if (m_Patient->HasBodyDensity()) {
-    ss << "Patient body density cannot be set. It is determined using body fat fraction.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient body density cannot be set. It is determined using body fat fraction.");
     err = true;
   }
   //Using the average of Siri and Brozek formulas
@@ -461,8 +430,7 @@ bool BioGears::SetupPatient()
   double BrozekBodyDensity_g_Per_cm3 = 4.57 / (fatFraction + 4.142);
   double bodyDensity_g_Per_cm3 = (SiriBodyDensity_g_Per_cm3 + BrozekBodyDensity_g_Per_cm3) / 2.0;
   m_Patient->GetBodyDensity().SetValue(bodyDensity_g_Per_cm3, MassPerVolumeUnit::g_Per_cm3);
-  ss << "Patient body density computed and set to " << bodyDensity_g_Per_cm3 << " g/cm^3.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient body density computed and set to " << bodyDensity_g_Per_cm3 << " g/cm^3.");
 
   //Heart Rate ---------------------------------------------------------------
   double heartRate_bpm;
@@ -474,27 +442,22 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasHeartRateBaseline()) {
     heartRate_bpm = heartStandard_bpm;
     m_Patient->GetHeartRateBaseline().SetValue(heartRate_bpm, FrequencyUnit::Per_min);
-    ss << "No patient heart rate baseline set. Using the standard value of " << heartRate_bpm << " bpm.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient heart rate baseline set. Using the standard value of " << heartRate_bpm << " bpm.");
   }
   heartRate_bpm = m_Patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
   if (heartRateTachycardia_bpm < heartRate_bpm) {
     if (heartRate_bpm <= heartRateMax_bpm) {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is tachycardic";
-      Info(ss);
+      m_Logger->Info(std::stringstream() << "Patient heart rate baseline of " << heartRate_bpm << " bpm is tachycardic");
     } else {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " exceeds maximum stable value of " << heartRateMax_bpm << " bpm.  Resetting heart rate baseline to " << heartRateMax_bpm;
       m_Patient->GetHeartRateBaseline().SetValue(heartRateMax_bpm, FrequencyUnit::Per_min);
-      Info(ss);
+      m_Logger->Info(std::stringstream() << "Patient heart rate baseline of " << heartRate_bpm << " exceeds maximum stable value of " << heartRateMax_bpm << " bpm.  Resetting heart rate baseline to " << heartRateMax_bpm);
     }
   } else if (heartRate_bpm < heartRateBradycardia_bpm) {
     if (heartRateMin_bpm <= heartRate_bpm) {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " bpm is bradycardic";
-      Info(ss);
+      m_Logger->Info(std::stringstream() << "Patient heart rate baseline of " << heartRate_bpm << " bpm is bradycardic");
     } else {
-      ss << "Patient heart rate baseline of " << heartRate_bpm << " exceeds minimum stable value of " << heartRateMin_bpm << " bpm.  Resetting heart rate baseline to " << heartRateMin_bpm;
       m_Patient->GetHeartRateBaseline().SetValue(heartRateMin_bpm, FrequencyUnit::Per_min);
-      Info(ss);
+      m_Logger->Info(std::stringstream() << "Patient heart rate baseline of " << heartRate_bpm << " exceeds minimum stable value of " << heartRateMin_bpm << " bpm.  Resetting heart rate baseline to " << heartRateMin_bpm);
     }
   }
 
@@ -502,25 +465,20 @@ bool BioGears::SetupPatient()
   double computedHeartRateMaximum_bpm = 208.0 - (0.7 * m_Patient->GetAge(TimeUnit::yr));
   if (!m_Patient->HasHeartRateMaximum()) {
     m_Patient->GetHeartRateMaximum().SetValue(computedHeartRateMaximum_bpm, FrequencyUnit::Per_min);
-    ss << "No patient heart rate maximum set. Using a computed value of " << computedHeartRateMaximum_bpm << " bpm.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient heart rate maximum set. Using a computed value of " << computedHeartRateMaximum_bpm << " bpm.");
   } else {
     if (m_Patient->GetHeartRateMaximum(FrequencyUnit::Per_min) < heartRate_bpm) {
-      ss << "Patient heart rate maximum must be greater than the baseline heart rate.";
-      Error(ss);
+      m_Logger->Error(std::stringstream() << "Patient heart rate maximum must be greater than the baseline heart rate.");
       err = true;
     }
-    ss << "Specified patient heart rate maximum of " << m_Patient->GetHeartRateMaximum(FrequencyUnit::Per_min) << " bpm differs from computed value of " << computedHeartRateMaximum_bpm << " bpm. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified patient heart rate maximum of " << m_Patient->GetHeartRateMaximum(FrequencyUnit::Per_min) << " bpm differs from computed value of " << computedHeartRateMaximum_bpm << " bpm. No guarantees of model validity.");
   }
   if (!m_Patient->HasHeartRateMinimum()) {
     m_Patient->GetHeartRateMinimum().SetValue(0.001, FrequencyUnit::Per_min);
-    ss << "No patient heart rate minimum set. Using a default value of " << 0.001 << " bpm.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient heart rate minimum set. Using a default value of " << 0.001 << " bpm.");
   }
   if (m_Patient->GetHeartRateMinimum(FrequencyUnit::Per_min) > heartRate_bpm) {
-    ss << "Patient heart rate minimum must be less than the baseline heart rate.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient heart rate minimum must be less than the baseline heart rate.");
     err = true;
   }
 
@@ -537,46 +495,38 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasSystolicArterialPressureBaseline()) {
     systolic_mmHg = systolicStandard_mmHg;
     m_Patient->GetSystolicArterialPressureBaseline().SetValue(systolic_mmHg, PressureUnit::mmHg);
-    ss << "No patient systolic pressure baseline set. Using the standard value of " << systolic_mmHg << " mmHg.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient systolic pressure baseline set. Using the standard value of " << systolic_mmHg << " mmHg.");
   }
   systolic_mmHg = m_Patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   if (systolic_mmHg < systolicMin_mmHg) {
-    ss << "Patient systolic pressure baseline of " << systolic_mmHg << " mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum systolic pressure baseline allowed is " << systolicMin_mmHg << " mmHg.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient systolic pressure baseline of " << systolic_mmHg << " mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum systolic pressure baseline allowed is " << systolicMin_mmHg << " mmHg.");
     err = true;
   } else if (systolic_mmHg > systolicMax_mmHg) {
-    ss << "Patient systolic pressure baseline of " << systolic_mmHg << " mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum systolic pressure baseline allowed is " << systolicMax_mmHg << " mmHg.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient systolic pressure baseline of " << systolic_mmHg << " mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum systolic pressure baseline allowed is " << systolicMax_mmHg << " mmHg.");
     err = true;
   }
 
   if (!m_Patient->HasDiastolicArterialPressureBaseline()) {
     diastolic_mmHg = diastolicStandard_mmHg;
     m_Patient->GetDiastolicArterialPressureBaseline().SetValue(diastolic_mmHg, PressureUnit::mmHg);
-    ss << "No patient diastolic pressure baseline set. Using the standard value of " << diastolic_mmHg << " mmHg.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient diastolic pressure baseline set. Using the standard value of " << diastolic_mmHg << " mmHg.");
   }
   diastolic_mmHg = m_Patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
   if (diastolic_mmHg < diastolicMin_mmHg) {
-    ss << "Patient diastolic pressure baseline of " << diastolic_mmHg << " mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum diastolic pressure baseline allowed is " << diastolicMin_mmHg << " mmHg.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient diastolic pressure baseline of " << diastolic_mmHg << " mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum diastolic pressure baseline allowed is " << diastolicMin_mmHg << " mmHg.");
     err = true;
   } else if (diastolic_mmHg > diastolicMax_mmHg) {
-    ss << "Patient diastolic pressure baseline of " << diastolic_mmHg << " mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum diastolic pressure baseline allowed is " << diastolicMax_mmHg << " mmHg.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient diastolic pressure baseline of " << diastolic_mmHg << " mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum diastolic pressure baseline allowed is " << diastolicMax_mmHg << " mmHg.");
     err = true;
   }
 
   if (diastolic_mmHg > 0.75 * systolic_mmHg) {
-    ss << "Patient baseline pulse pressure (systolic vs. diastolic pressure fraction) of " << diastolic_mmHg / systolic_mmHg << " is abnormally narrow. Minimum fraction allowed is " << narrowestPulseFactor << " .";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient baseline pulse pressure (systolic vs. diastolic pressure fraction) of " << diastolic_mmHg / systolic_mmHg << " is abnormally narrow. Minimum fraction allowed is " << narrowestPulseFactor << " .");
     err = true;
   }
 
   if (m_Patient->HasMeanArterialPressureBaseline()) {
-    ss << "Patient mean arterial pressure baseline cannot be set. It is determined through homeostatic simulation.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient mean arterial pressure baseline cannot be set. It is determined through homeostatic simulation.");
     err = true;
   }
   double MAP_mmHg = 1.0 / 3.0 * systolic_mmHg + 2.0 / 3.0 * diastolic_mmHg;
@@ -588,14 +538,12 @@ bool BioGears::SetupPatient()
   bool defaultBloodRh = true;
   if (!m_Patient->HasBloodRh()) {
     m_Patient->SetBloodRh(defaultBloodRh);
-    ss << "Patient's blood Rh factor has not been set. Defaulting to  " << defaultBloodRh;
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "Patient's blood Rh factor has not been set. Defaulting to  " << defaultBloodRh);
   }
 
   if (!m_Patient->HasBloodType()) {
     m_Patient->SetBloodType(defaultBloodType_ABO);
-    ss << "Patient's blood type antigen has not been set. Defaulting to  " << defaultBloodType_ABO;
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "Patient's blood type antigen has not been set. Defaulting to  " << defaultBloodType_ABO);
   }
 
   //Blood Volume ---------------------------------------------------------------
@@ -607,21 +555,17 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasBloodVolumeBaseline()) {
     bloodVolume_mL = computedBloodVolume_mL;
     m_Patient->GetBloodVolumeBaseline().SetValue(bloodVolume_mL, VolumeUnit::mL);
-    ss << "No patient blood volume baseline set. Using a computed value of " << computedBloodVolume_mL << " mL.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient blood volume baseline set. Using a computed value of " << computedBloodVolume_mL << " mL.");
   }
   bloodVolume_mL = m_Patient->GetBloodVolumeBaseline(VolumeUnit::mL);
   if (bloodVolume_mL != computedBloodVolume_mL) {
-    ss << "Specified patient blood volume baseline of " << bloodVolume_mL << " mL differs from computed value of " << computedBloodVolume_mL << " mL. No guarantees of model validity and there is a good chance the patient will not reach a starting homeostatic point.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified patient blood volume baseline of " << bloodVolume_mL << " mL differs from computed value of " << computedBloodVolume_mL << " mL. No guarantees of model validity and there is a good chance the patient will not reach a starting homeostatic point.");
   }
   if (bloodVolume_mL < bloodVolumeMin_mL) {
-    ss << "Patient blood volume baseline of " << bloodVolume_mL << " mL is too low. Hypovolemia must be modeled by adding/using a condition. Minimum blood volume baseline allowed is " << bloodVolumeMin_mL << " mL.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient blood volume baseline of " << bloodVolume_mL << " mL is too low. Hypovolemia must be modeled by adding/using a condition. Minimum blood volume baseline allowed is " << bloodVolumeMin_mL << " mL.");
     err = true;
   } else if (bloodVolume_mL > bloodVolumeMax_mL) {
-    ss << "Patient blood volume baseline of " << bloodVolume_mL << " mL is too high. Excessive volume must be modeled by adding/using a condition. Maximum blood volume baseline allowed is " << bloodVolumeMax_mL << " mL.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient blood volume baseline of " << bloodVolume_mL << " mL is too high. Excessive volume must be modeled by adding/using a condition. Maximum blood volume baseline allowed is " << bloodVolumeMax_mL << " mL.");
     err = true;
   }
 
@@ -634,19 +578,16 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasRespirationRateBaseline()) {
     respirationRate_bpm = respirationRateStandard_bpm;
     m_Patient->GetRespirationRateBaseline().SetValue(respirationRate_bpm, FrequencyUnit::Per_min);
-    ss << "No patient respiration rate baseline set. Using the standard value of " << respirationRate_bpm << " bpm.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient respiration rate baseline set. Using the standard value of " << respirationRate_bpm << " bpm.");
   }
 
   respirationRate_bpm = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
 
   if (respirationRate_bpm > respirationRateMax_bpm) {
-    ss << "Patient respiration rate baseline of " << respirationRate_bpm << " bpm is too high. Non-healthy values must be modeled by adding/using a condition. Maximum respiration rate baseline allowed is " << respirationRateMax_bpm << " bpm.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient respiration rate baseline of " << respirationRate_bpm << " bpm is too high. Non-healthy values must be modeled by adding/using a condition. Maximum respiration rate baseline allowed is " << respirationRateMax_bpm << " bpm.");
     err = true;
   } else if (respirationRate_bpm < respirationRateMin_bpm) {
-    ss << "Patient respiration rate baseline of " << respirationRate_bpm << " bpm is too low. Non-healthy values must be modeled by adding/using a condition. Minimum respiration rate baseline allowed is " << respirationRateMin_bpm << " bpm.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient respiration rate baseline of " << respirationRate_bpm << " bpm is too low. Non-healthy values must be modeled by adding/using a condition. Minimum respiration rate baseline allowed is " << respirationRateMin_bpm << " bpm.");
     err = true;
   }
 
@@ -658,17 +599,14 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasRightLungRatio()) {
     rightLungRatio = rightLungRatioStandard;
     m_Patient->GetRightLungRatio().SetValue(rightLungRatio);
-    ss << "No patient right lung ratio set. Using the standard value of " << rightLungRatio << ".";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient right lung ratio set. Using the standard value of " << rightLungRatio << ".");
   }
   rightLungRatio = m_Patient->GetRightLungRatio().GetValue();
   if (rightLungRatio > rightLungRatioMax) {
-    ss << "Patient right lung ratio of " << rightLungRatio << " is too high. Non-healthy values must be modeled by adding/using a condition. Maximum right lung ratio allowed is " << rightLungRatioMax << ".";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient right lung ratio of " << rightLungRatio << " is too high. Non-healthy values must be modeled by adding/using a condition. Maximum right lung ratio allowed is " << rightLungRatioMax << ".");
     err = true;
   } else if (rightLungRatio < rightLungRatioMin) {
-    ss << "Patient right lung ratio of " << rightLungRatio << " is too low. Non-healthy values must be modeled by adding/using a condition. Minimum right lung ratio allowed is " << rightLungRatioMin << ".";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient right lung ratio of " << rightLungRatio << " is too low. Non-healthy values must be modeled by adding/using a condition. Minimum right lung ratio allowed is " << rightLungRatioMin << ".");
     err = true;
   }
 
@@ -680,13 +618,11 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasTotalLungCapacity()) {
     totalLungCapacity_L = computedTotalLungCapacity_L;
     m_Patient->GetTotalLungCapacity().SetValue(totalLungCapacity_L, VolumeUnit::L);
-    ss << "No patient total lung capacity set. Using a computed value of " << computedTotalLungCapacity_L << " L.";
-    Info(ss);
+        m_Logger->Info(std::stringstream() << "No patient total lung capacity set. Using a computed value of " << computedTotalLungCapacity_L << " L.");
   }
   totalLungCapacity_L = m_Patient->GetTotalLungCapacity(VolumeUnit::L);
   if (totalLungCapacity_L != computedTotalLungCapacity_L) {
-    ss << "Specified total lung capacity of " << totalLungCapacity_L << " L differs from computed value of " << computedTotalLungCapacity_L << " L. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified total lung capacity of " << totalLungCapacity_L << " L differs from computed value of " << computedTotalLungCapacity_L << " L. No guarantees of model validity.");
   }
 
   double functionalResidualCapacity_L;
@@ -694,13 +630,11 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasFunctionalResidualCapacity()) {
     functionalResidualCapacity_L = computedFunctionalResidualCapacity_L;
     m_Patient->GetFunctionalResidualCapacity().SetValue(functionalResidualCapacity_L, VolumeUnit::L);
-    ss << "No patient functional residual capacity set. Using a computed value of " << computedFunctionalResidualCapacity_L << " L.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient functional residual capacity set. Using a computed value of " << computedFunctionalResidualCapacity_L << " L.");
   }
   functionalResidualCapacity_L = m_Patient->GetFunctionalResidualCapacity(VolumeUnit::L);
   if (functionalResidualCapacity_L != computedFunctionalResidualCapacity_L) {
-    ss << "Specified functional residual capacity of " << functionalResidualCapacity_L << " L differs from computed value of " << computedFunctionalResidualCapacity_L << " L. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified functional residual capacity of " << functionalResidualCapacity_L << " L differs from computed value of " << computedFunctionalResidualCapacity_L << " L. No guarantees of model validity.");
   }
 
   double residualVolume_L;
@@ -708,38 +642,31 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasResidualVolume()) {
     residualVolume_L = computRedesidualVolume_L;
     m_Patient->GetResidualVolume().SetValue(residualVolume_L, VolumeUnit::L);
-    ss << "No patient residual volume set. Using a computed value of " << computRedesidualVolume_L << " L.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient residual volume set. Using a computed value of " << computRedesidualVolume_L << " L.");
   }
   residualVolume_L = m_Patient->GetResidualVolume(VolumeUnit::L);
   if (residualVolume_L != computRedesidualVolume_L) {
-    ss << "Specified residual volume of " << residualVolume_L << " L differs from computed value of " << computRedesidualVolume_L << " L. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified residual volume of " << residualVolume_L << " L differs from computed value of " << computRedesidualVolume_L << " L. No guarantees of model validity.");
   }
 
   if (m_Patient->HasTidalVolumeBaseline()) {
-    ss << "Patient tidal volume baseline cannot be set. It is determined through homeostatic simulation.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient tidal volume baseline cannot be set. It is determined through homeostatic simulation.");
     err = true;
   }
   if (m_Patient->HasVitalCapacity()) {
-    ss << "Patient vital capacity cannot be set. It is directly computed via other lung volume patient parameters.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient vital capacity cannot be set. It is directly computed via other lung volume patient parameters.");
     err = true;
   }
   if (m_Patient->HasExpiratoryReserveVolume()) {
-    ss << "Patient expiratory reserve volume cannot be set. It is directly computed via other lung volume patient parameters.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient expiratory reserve volume cannot be set. It is directly computed via other lung volume patient parameters.");
     err = true;
   }
   if (m_Patient->HasInspiratoryReserveVolume()) {
-    ss << "Patient inspiratory reserve volume cannot be set. It is directly computed via other lung volume patient parameters.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient inspiratory reserve volume cannot be set. It is directly computed via other lung volume patient parameters.");
     err = true;
   }
   if (m_Patient->HasInspiratoryCapacity()) {
-    ss << "Patient inspiratory capacity cannot be set. It is directly computed via other lung volume patient parameters.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "Patient inspiratory capacity cannot be set. It is directly computed via other lung volume patient parameters.");
     err = true;
   }
 
@@ -768,29 +695,23 @@ bool BioGears::SetupPatient()
   double inspiratoryCapacity = totalLungCapacity_L - functionalResidualCapacity_L;
   //No negative volumes
   if (totalLungCapacity_L < 0.0 || functionalResidualCapacity_L < 0.0 || residualVolume_L < 0.0 || tidalVolume_L < 0.0 || vitalCapacity < 0.0 || expiratoryReserveVolume < 0.0 || inspiratoryReserveVolume < 0.0 || inspiratoryCapacity < 0.0) {
-    ss << "All patient lung volumes must be positive.";
-    Error(ss);
+    m_Logger->Error(std::stringstream() << "All patient lung volumes must be positive.");
     err = true;
   }
   m_Patient->GetTidalVolumeBaseline().SetValue(tidalVolume_L, VolumeUnit::L); //This is overwritten after stabilization
-  ss << "Patient tidal volume computed and set to " << tidalVolume_L << " L.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient tidal volume computed and set to " << tidalVolume_L << " L.");
 
   m_Patient->GetVitalCapacity().SetValue(vitalCapacity, VolumeUnit::L);
-  ss << "Patient vital capacity computed and set to " << vitalCapacity << " L.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient vital capacity computed and set to " << vitalCapacity << " L.");
 
   m_Patient->GetExpiratoryReserveVolume().SetValue(expiratoryReserveVolume, VolumeUnit::L);
-  ss << "Patient expiratory reserve volume computed and set to " << expiratoryReserveVolume << " L.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient expiratory reserve volume computed and set to " << expiratoryReserveVolume << " L.");
 
   m_Patient->GetInspiratoryReserveVolume().SetValue(inspiratoryReserveVolume, VolumeUnit::L);
-  ss << "Patient inspiratory reserve volume computed and set to " << inspiratoryReserveVolume << " L.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient inspiratory reserve volume computed and set to " << inspiratoryReserveVolume << " L.");
 
   m_Patient->GetInspiratoryCapacity().SetValue(inspiratoryCapacity, VolumeUnit::L);
-  ss << "Patient inspiratory capacity computed and set to " << inspiratoryCapacity << " L.";
-  Info(ss);
+  m_Logger->Info(std::stringstream() << "Patient inspiratory capacity computed and set to " << inspiratoryCapacity << " L.");
 
   //Alveoli Surface Area ---------------------------------------------------------------
   /// \cite roberts2000gaseous
@@ -803,13 +724,11 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasAlveoliSurfaceArea()) {
     alveoliSurfaceArea_m2 = computedAlveoliSurfaceArea_m2;
     m_Patient->GetAlveoliSurfaceArea().SetValue(alveoliSurfaceArea_m2, AreaUnit::m2);
-    ss << "No patient alveoli surface area set. Using a computed value of " << computedAlveoliSurfaceArea_m2 << " m^2.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient alveoli surface area set. Using a computed value of " << computedAlveoliSurfaceArea_m2 << " m^2.");
   }
   alveoliSurfaceArea_m2 = m_Patient->GetAlveoliSurfaceArea(AreaUnit::m2);
   if (alveoliSurfaceArea_m2 != computedAlveoliSurfaceArea_m2) {
-    ss << "Specified alveoli surface area of " << alveoliSurfaceArea_m2 << " m^2 differs from computed value of " << computedAlveoliSurfaceArea_m2 << " m^2. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified alveoli surface area of " << alveoliSurfaceArea_m2 << " m^2 differs from computed value of " << computedAlveoliSurfaceArea_m2 << " m^2. No guarantees of model validity.");
   }
 
   //Skin Surface Area ---------------------------------------------------------------
@@ -819,13 +738,11 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasSkinSurfaceArea()) {
     skinSurfaceArea_m2 = computSkinSurfaceArea_m2;
     m_Patient->GetSkinSurfaceArea().SetValue(skinSurfaceArea_m2, AreaUnit::m2);
-    ss << "No patient skin surface area set. Using a computed value of " << computSkinSurfaceArea_m2 << " m^2.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient skin surface area set. Using a computed value of " << computSkinSurfaceArea_m2 << " m^2.");
   }
   skinSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
   if (skinSurfaceArea_m2 != computSkinSurfaceArea_m2) {
-    ss << "Specified skin surface area of " << skinSurfaceArea_m2 << " cm differs from computed value of " << computSkinSurfaceArea_m2 << " cm. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified skin surface area of " << skinSurfaceArea_m2 << " cm differs from computed value of " << computSkinSurfaceArea_m2 << " cm. No guarantees of model validity.");
   }
 
   //Basal Metabolic Rate ---------------------------------------------------------------
@@ -839,14 +756,12 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasBasalMetabolicRate()) {
     BMR_kcal_Per_day = computBMR_kcal_Per_day;
     m_Patient->GetBasalMetabolicRate().SetValue(BMR_kcal_Per_day, PowerUnit::kcal_Per_day);
-
-    ss << "No patient basal metabolic rate set. Using a computed value of " << computBMR_kcal_Per_day << " kcal/day.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient basal metabolic rate set. Using a computed value of " << computBMR_kcal_Per_day << " kcal/day.");
   }
   BMR_kcal_Per_day = m_Patient->GetBasalMetabolicRate(PowerUnit::kcal_Per_day);
   if (BMR_kcal_Per_day != computBMR_kcal_Per_day) {
-    ss << "Specified basal metabolic rate of " << BMR_kcal_Per_day << " kcal/day differs from computed value of " << computBMR_kcal_Per_day << " kcal/day. No guarantees of model validity.";
-    Warning(ss);
+
+    m_Logger->Warning(std::stringstream() << "Specified basal metabolic rate of " << BMR_kcal_Per_day << " kcal/day differs from computed value of " << computBMR_kcal_Per_day << " kcal/day. No guarantees of model validity.");
   }
 
   //Maximum Work Rate ---------------------------------------------------------------
@@ -872,14 +787,11 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasMaxWorkRate()) {
     maxWorkRate_W = computedMaxWorkRate_W;
     m_Patient->GetMaxWorkRate().SetValue(maxWorkRate_W, PowerUnit::W);
-
-    ss << "No patient maximum work rate set. Using a computed value of " << computedMaxWorkRate_W << " Watts.";
-    Info(ss);
+    m_Logger->Info(std::stringstream() << "No patient maximum work rate set. Using a computed value of " << computedMaxWorkRate_W << " Watts.");
   }
   maxWorkRate_W = m_Patient->GetMaxWorkRate(PowerUnit::W);
   if (maxWorkRate_W != computedMaxWorkRate_W) {
-    ss << "Specified maximum work rate of " << maxWorkRate_W << " Watts differs from computed value of " << computedMaxWorkRate_W << " Watts. No guarantees of model validity.";
-    Warning(ss);
+    m_Logger->Warning(std::stringstream() << "Specified maximum work rate of " << maxWorkRate_W << " Watts differs from computed value of " << computedMaxWorkRate_W << " Watts. No guarantees of model validity.");
   }
 
   if (err) {
@@ -890,10 +802,8 @@ bool BioGears::SetupPatient()
 
 BioGears::~BioGears()
 {
-  if (myLogger) {
+  if (m_logger_self_managed) {
     SAFE_DELETE(m_Logger);
-  } else { //Turn off forwarding for this logger
-    m_Logger->SetForward(nullptr);
   }
 }
 
@@ -1058,17 +968,8 @@ bool BioGears::GetPatientAssessment(SEPatientAssessment& assessment)
     return m_RenalSystem->CalculateUrinalysis(*u);
   }
 
-  Error("Unsupported patient assessment");
+  m_Logger->Error("Unsupported patient assessment");
   return false;
-}
-
-void BioGears::ForwardFatal(const std::string& msg, const std::string& origin)
-{
-  std::string err;
-  err.append(msg);
-  err.append(" ");
-  err.append(origin);
-  throw PhysiologyEngineException(err);
 }
 
 bool BioGears::CreateCircuitsAndCompartments()
@@ -1142,7 +1043,7 @@ bool BioGears::CreateCircuitsAndCompartments()
 
 void BioGears::SetupCardiovascular()
 {
-  Info("Setting Up Cardiovascular");
+  m_Logger->Info("Setting Up Cardiovascular");
   bool male = m_Patient->GetGender() == CDM::enumSex::Male ? true : false;
   double RightLungRatio = m_Patient->GetRightLungRatio().GetValue();
   double LeftLungRatio = 1 - RightLungRatio;
@@ -1396,7 +1297,7 @@ void BioGears::SetupCardiovascular()
     }
   }
   if (blood_mL > bloodVolume_mL) {
-    Error("Blood volume greater than total blood volume");
+    m_Logger->Error("Blood volume greater than total blood volume");
   }
 
   SEFluidCircuitNode& Pericardium = cCardiovascular.CreateNode(BGE::CardiovascularNode::Pericardium1);
@@ -1700,7 +1601,7 @@ void BioGears::SetupCardiovascular()
     if (p->HasCapacitanceBaseline()) {
       SEFluidCircuitNode& src = p->GetSourceNode();
       if (!src.HasVolumeBaseline()) {
-        Fatal("Compliance paths must have a volume baseline.");
+        m_Logger->Fatal("Compliance paths must have a volume baseline.");
       }
       double pressure = src.GetPressure(PressureUnit::mmHg);
       double volume = src.GetVolumeBaseline(VolumeUnit::mL);
@@ -2243,7 +2144,7 @@ void BioGears::SetupCardiovascular()
 
 void BioGears::SetupCerebral()
 {
-  Info("Setting up Cerebral");
+  m_Logger->Info("Setting up Cerebral");
 
   SEFluidCircuit& CerebralCircuit = m_Circuits->GetCerebralCircuit();
   SEFluidCircuit& CardioCircuit = m_Circuits->GetCardiovascularCircuit();
@@ -2491,7 +2392,7 @@ void BioGears::SetupCerebral()
 
 void BioGears::SetupRenal()
 {
-  Info("Setting Up Renal");
+  m_Logger->Info("Setting Up Renal");
   //////////////////////////
   // Circuit Interdependence
   SEFluidCircuit& cCardiovascular = m_Circuits->GetCardiovascularCircuit();
@@ -3274,7 +3175,7 @@ void BioGears::SetupRenal()
 
 void BioGears::SetupTissue()
 {
-  Info("Setting Up Tissue");
+  m_Logger->Info("Setting Up Tissue");
   SEFluidCircuit& cCardiovascular = m_Circuits->GetCardiovascularCircuit();
   SEFluidCircuit& cCombinedCardiovascular = m_Circuits->GetActiveCardiovascularCircuit();
   SELiquidCompartmentGraph& gCombinedCardiovascular = m_Compartments->GetActiveCardiovascularGraph();
@@ -4576,7 +4477,7 @@ void BioGears::SetupTissue()
 
 void BioGears::SetupRespiratory()
 {
-  Info("Setting Up Respiratory");
+  m_Logger->Info("Setting Up Respiratory");
   double RightLungRatio = m_Patient->GetRightLungRatio().GetValue();
   double LeftLungRatio = 1 - RightLungRatio;
 
@@ -4903,7 +4804,7 @@ void BioGears::SetupRespiratory()
 
 void BioGears::SetupGastrointestinal()
 {
-  Info("Setting Up Gastrointestinal");
+  m_Logger->Info("Setting Up Gastrointestinal");
   // Circuit
   SEFluidCircuit& cCombinedCardiovascular = m_Circuits->GetActiveCardiovascularCircuit();
 
@@ -4944,7 +4845,7 @@ void BioGears::SetupGastrointestinal()
 
 void BioGears::SetupAnesthesiaMachine()
 {
-  Info("Setting Up Anesthesia Machine");
+  m_Logger->Info("Setting Up Anesthesia Machine");
   /////////////////////// Circuit Interdependencies
   double AmbientPressure_cmH2O = 1033.23; // = 1 atm // Also defined in SetupRespiratoryCircuit
   SEFluidCircuit& cRespiratory = m_Circuits->GetRespiratoryCircuit();
@@ -5187,7 +5088,7 @@ void BioGears::SetupAnesthesiaMachine()
 
 void BioGears::SetupInhaler()
 {
-  Info("Setting Up Inhaler");
+  m_Logger->Info("Setting Up Inhaler");
   /////////////////////// Circuit Interdependencies
   double dLowResistance = 0.01; // Also defined in SetupRespiratoryCircuit
   SEFluidCircuit& cRespiratory = m_Circuits->GetRespiratoryCircuit();
@@ -5270,7 +5171,7 @@ void BioGears::SetupInhaler()
 
 void BioGears::SetupMechanicalVentilator()
 {
-  Info("Setting Up MechanicalVentilator");
+  m_Logger->Info("Setting Up MechanicalVentilator");
   /////////////////////// Circuit Interdependencies
   SEFluidCircuit& cRespiratory = m_Circuits->GetRespiratoryCircuit();
   SEGasCompartmentGraph& gRespiratory = m_Compartments->GetRespiratoryGraph();
@@ -5319,7 +5220,7 @@ void BioGears::SetupMechanicalVentilator()
 
 void BioGears::SetupExternalTemperature()
 {
-  Info("Setting Up External Temperature");
+  m_Logger->Info("Setting Up External Temperature");
   SEThermalCircuit& exthermal = m_Circuits->GetExternalTemperatureCircuit();
 
   double dNoResistance = m_Config->GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W);
@@ -5411,7 +5312,7 @@ void BioGears::SetupExternalTemperature()
 
 void BioGears::SetupInternalTemperature()
 {
-  Info("Setting Up Internal Temperature");
+  m_Logger->Info("Setting Up Internal Temperature");
   SEThermalCircuit& cIntemperature = m_Circuits->GetInternalTemperatureCircuit();
 
   SEThermalCircuitNode& Core = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalCore);
@@ -5458,5 +5359,9 @@ void BioGears::SetupInternalTemperature()
   InternalCoreToGround.MapPath(CoreToTemperatureGround);
   SEThermalCompartmentLink& InternalSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalCore, BGE::TemperatureLink::InternalSkinToGround);
   InternalSkinToGround.MapPath(SkinToTemperatureGround);
+}
+Logger* BioGears::GetLogger() const
+{
+  return m_Logger;
 }
 }

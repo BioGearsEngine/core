@@ -1197,6 +1197,7 @@ void Cardiovascular::Hemorrhage()
 
   //We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
   //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
+  
   for (auto tPair : tourniquets) {
     tournCmpt = tPair.first;
     tourniquet = tPair.second;

@@ -68,19 +68,20 @@ void GeneralMath::CalculateConcentration(const SEScalarMass& mass, const SEScala
   if (mass_ug < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Mass is negative:" << mass_ug << " ug. Setting concentration to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     mass_ug = 0.0;
   }
   if (volume_mL < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     volume_mL = 0.0;
   }
-  if (volume_mL == 0.0)
+  if (volume_mL == 0.0) {
     concentration.SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
-  else
+  } else {
     concentration.SetValue(mass_ug / volume_mL, MassPerVolumeUnit::ug_Per_mL);
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -95,13 +96,13 @@ void GeneralMath::CalculateMass(const SEScalarVolume& volume, const SEScalarMass
   if (concentration_ug_Per_mL < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateMass: Mass is negative:" << concentration_ug_Per_mL << " ug/mL. Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     concentration_ug_Per_mL = 0.0;
   }
   if (volume_mL < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateMass: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     volume_mL = 0.0;
   }
   mass.SetValue(volume_mL * concentration_ug_Per_mL, MassUnit::ug);
@@ -119,7 +120,7 @@ void GeneralMath::CalculateHenrysLawConcentration(const SESubstance& substance, 
   if (pp_mmHg < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateHenrysLawConcentration: Pressure is negative:" << pp_mmHg << " mmHg. Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     pp_mmHg = 0.0;
   }
   double density_ug_Per_mL = substance.GetDensity(MassPerVolumeUnit::ug_Per_mL);
@@ -158,7 +159,7 @@ void GeneralMath::CalculatePartialPressureInGas(const SEScalarFraction& volumeFr
   if (VolumeFraction < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Volume Fraction is negative:" << VolumeFraction << ". Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     VolumeFraction = 0.0;
   }
   partialPressure.SetValue(VolumeFraction * pressure_cmH2O, PressureUnit::cmH2O);
@@ -176,7 +177,7 @@ void GeneralMath::CalculatePartialPressureInLiquid(const SESubstance& substance,
   if (concentration_ug_Per_mL < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateConcentration: Concentration is negative:" << concentration_ug_Per_mL << " ug/mL. Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     concentration_ug_Per_mL = 0.0;
   }
   double density_ug_Per_mL = substance.GetDensity(MassPerVolumeUnit::ug_Per_mL);
@@ -200,13 +201,13 @@ void GeneralMath::CalculateSpecificGravity(const SEScalarMass& mass, const SESca
   if (totalmass_g < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateSpecificGravity: Mass is negative:" << totalmass_g << " ug. Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     totalmass_g = 0.0;
   }
   if (volume_mL < 0.0) {
     std::stringstream ss;
     ss << "GeneralMath::CalculateSpecificGravity: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
-    logger->Error(ss);
+    logger->Error(ss.str());
     volume_mL = 0.0;
   }
   if (volume_mL == 0.0)

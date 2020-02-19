@@ -90,13 +90,13 @@ bool Serializer::Initialize(Logger* logger)
   if (!parser->loadGrammar(shortDir.c_str(), Grammar::SchemaGrammarType, true)) {
     err << "Error: unable to load : " << shortDir << std::ends;
     /// \error Unable to recognize schema grammar
-    logger->Error(err);
+    logger->Error(err.str());
     return false;
   }
   if (eh.failed()) { // TODO append error some how
     err << "Error loading : " << shortDir << std::ends;
     /// \error Unable to load
-    logger->Error(err);
+    logger->Error(err.str());
     return false;
   }
   parser->release();
@@ -192,7 +192,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
     /// \error Error reading xml file
     err << "Error reading xml file " << xmlFile << "\n"
         << eh.getError() << std::ends;
-    logger->Error(err);
+    logger->Error(err.str());
     return std::unique_ptr<CDM::ObjectData>();
   }
   // Let's see what kind of object this is
@@ -233,7 +233,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
 
   /// \error Unsupported root tag
   err << "Unsupported root tag " << name << " found in xml file " << xmlFile << std::ends;
-  logger->Error(err);
+  logger->Error(err.str());
   return obj;
 }
 //-----------------------------------------------------------------------------

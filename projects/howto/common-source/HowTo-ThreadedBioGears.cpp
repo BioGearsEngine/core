@@ -49,17 +49,18 @@ void HowToThreadedBioGears()
       std::cin >> location;
       bgThread.GetLogger()->Info("Type an initial bleeding rate (in mL/min), then hit ENTER: ");
       std::cin >> rate;
-      if (rate <= ZERO_APPROX)
+      if (rate <= ZERO_APPROX) {
         out = "Stop hemorrhage in " + location;
-      else
+      } else {
         out = "Hemorrhage in " + location + " with initial bleeding rate = " + std::to_string(rate) + " mL/min";
+      }
       bgThread.GetLogger()->Info(out);
       bgThread.SetHemorrhage(location, rate);
       break;
     case 3:
       bgThread.GetLogger()->Info("Enter IV Fluids Rate in mL/min : ");
       std::cin >> rate;
-      bgThread.GetLogger()->Info(std::stringstream() << rate);
+      bgThread.GetLogger()->Info(std::to_string(rate));
       bgThread.SetIVFluidsFlow_mL_Per_min(rate);
       break;
     case 4:
@@ -131,14 +132,30 @@ void BioGearsThread::Status()
 { // On demand call to print vitals to the screen
   m_mutex.lock();
   m_bg->GetLogger()->Info("");
-  m_bg->GetLogger()->Info(std::stringstream() << "Simulation Time : " << m_bg->GetSimulationTime(TimeUnit::s) << "s");
-  m_bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << m_bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
-  m_bg->GetLogger()->Info(std::stringstream() << "Blood Volume : " << m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL);
-  m_bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << m_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  m_bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
+  std::stringstream ss;
+  ss << "Simulation Time : " << m_bg->GetSimulationTime(TimeUnit::s) << "s";
+  m_bg->GetLogger()->Info(ss.str());
+  ss.str("");
+  ss << "Cardiac Output : " << m_bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min;
+  m_bg->GetLogger()->Info(ss.str());
+  ss.str("");
+  ss << "Blood Volume : " << m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL;
+  m_bg->GetLogger()->Info(ss.str());
+  ss.str("");
+  ss << "Mean Arterial Pressure : " << m_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg;
+  m_bg->GetLogger()->Info(ss.str());
+  ss.str("");
+  ss << "Systolic Pressure : " << m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg;
+  m_bg->GetLogger()->Info(ss.str());
+  ss.str("");
+  ss << "Diastolic Pressure : " << m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg;
+  m_bg->GetLogger()->Info(ss.str());
+  ss.str("");
+  ss << "Heart Rate : " << m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm";
+  m_bg->GetLogger()->Info(ss.str());
+  ss.str("");
+  ss << "Respiration Rate : " << m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm";
+  m_bg->GetLogger()->Info(ss.str());
   m_bg->GetLogger()->Info("");
   m_mutex.unlock();
 }

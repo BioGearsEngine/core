@@ -306,7 +306,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       substance = substances.GetSubstance(bolusData->Substance());
       if (substance == nullptr) {
         ss << "Unknown substance : " << bolusData->Substance();
-        substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+        substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
       }
       SESubstanceBolus* a = new SESubstanceBolus(*substance);
       a->Load(*bolusData);
@@ -318,7 +318,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
 		substance = substances.GetSubstance(oralData->Substance());
 		if (substance == nullptr) {
 			ss << "Unknown substance : " << oralData->Substance();
-			substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+			substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
 		}
 		SESubstanceOralDose* od = new SESubstanceOralDose(*substance);
 		od->Load(*oralData);
@@ -330,7 +330,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       substance = substances.GetSubstance(subInfuzData->Substance());
       if (substance == nullptr) {
         ss << "Unknown substance : " << subInfuzData->Substance();
-        substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+        substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
       }
       SESubstanceInfusion* a = new SESubstanceInfusion(*substance);
       a->Load(*subInfuzData);
@@ -342,7 +342,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       compound = substances.GetCompound(subCInfuzData->SubstanceCompound());
       if (compound == nullptr) {
         ss << "Unknown substance : " << subCInfuzData->SubstanceCompound();
-        substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+        substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
       }
       SESubstanceCompoundInfusion* a = new SESubstanceCompoundInfusion(*compound);
       a->Load(*subCInfuzData);
