@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
-class SEScalar;
+class SEScalarPower;
 
 class BIOGEARS_API SEExercise : public SEPatientAction {
 public:
@@ -41,12 +41,12 @@ public:
   virtual bool HasIntensity() const;
   virtual SEScalar0To1& GetIntensity();
   virtual bool HasDesiredWorkRate() const;
-  virtual SEScalar& GetDesiredWorkRate();
+  virtual SEScalarPower& GetDesiredWorkRate();
 
   virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Intensity;
-  SEScalar* m_DesiredWorkRate;
+  SEScalarPower* m_DesiredWorkRate;
 };
 }

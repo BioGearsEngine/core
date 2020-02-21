@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEExercise.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
 
 namespace biogears {
 SEExercise::SEExercise()
@@ -43,10 +43,8 @@ bool SEExercise::IsActive() const
 {
   if (HasIntensity()) {
     return !m_Intensity->IsZero();
-  } else if (HasDesiredWorkRate()) {
-    return !m_DesiredWorkRate->IsZero();
   } else {
-      return false;
+    return HasDesiredWorkRate();
   }
 }
 
@@ -74,7 +72,7 @@ void SEExercise::Unload(CDM::ExerciseData& data) const
     data.Intensity(std::unique_ptr<CDM::Scalar0To1Data>(m_Intensity->Unload()));
   }
   if (m_DesiredWorkRate != nullptr) {
-    data.DesiredWorkRate(std::unique_ptr<CDM::ScalarData>(m_DesiredWorkRate->Unload()));
+    data.DesiredWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_DesiredWorkRate->Unload()));
   }
 }
 
@@ -93,10 +91,10 @@ bool SEExercise::HasDesiredWorkRate() const
 {
   return m_DesiredWorkRate == nullptr ? false : m_DesiredWorkRate->IsValid();
 }
-SEScalar& SEExercise::GetDesiredWorkRate()
+SEScalarPower& SEExercise::GetDesiredWorkRate()
 {
   if (m_DesiredWorkRate == nullptr)
-    m_DesiredWorkRate = new SEScalar();
+    m_DesiredWorkRate = new SEScalarPower();
   return *m_DesiredWorkRate;
 }
 

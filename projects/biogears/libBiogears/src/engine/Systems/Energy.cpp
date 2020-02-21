@@ -217,7 +217,7 @@ void Energy::PreProcess()
 void Energy::Exercise()
 {
   double exerciseIntensity = 0.0;
-  double DesiredWorkRate = 0.0;
+  double DesiredWorkRate_W = 0.0;
   const double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   const double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   const double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
@@ -228,8 +228,8 @@ void Energy::Exercise()
     if (m_PatientActions->GetExercise()->HasIntensity()) {
       exerciseIntensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
     } else if ((m_PatientActions->GetExercise()->HasDesiredWorkRate())) {
-      DesiredWorkRate = m_PatientActions->GetExercise()->GetDesiredWorkRate().GetValue();
-      exerciseIntensity = DesiredWorkRate / maxWorkRate_W;
+      DesiredWorkRate_W = m_PatientActions->GetExercise()->GetDesiredWorkRate().GetValue(PowerUnit::W);
+      exerciseIntensity = DesiredWorkRate_W / maxWorkRate_W;
       if (exerciseIntensity > 1) {
         exerciseIntensity = 1;
         Warning("Desired work rate over max work rate. Desired work rate can be a value between 0 and 1200 W. Proceeding with max work rate.");

@@ -125,7 +125,7 @@
 	
 	<!-- Stage 1 -->
     <Action xsi:type="ExerciseData">
-        <DesiredWorkRate value="500"/>
+        <DesiredWorkRate value="500" unit="W"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="min"/>       
