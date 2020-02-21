@@ -1,7 +1,7 @@
 Data Type,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound
 Compound Name,Saline,SalineSlowDrip,RingersLactate,PiperacillinTazobactam,Blood_ABNegative,Blood_ABPositive,Blood_ANegative,Blood_APositive,Blood_BNegative,Blood_BPositive,Blood_ONegative,Blood_OPositive,Plasma
-Classification,,,,,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,
-BloodRHFactor,,,,,false,true,false,true,false,true,false,true,
+Classification,,,,,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood
+BloodRHFactor,,,,,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,
 ,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
 Component Name,Sodium,Sodium,Sodium,Piperacillin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Sodium
 Concentration,0.354 g/dL,0.354 g/dL,0.299 g/dL,0.2 g/mL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,0.3335 g/dL
