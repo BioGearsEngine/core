@@ -4,17 +4,17 @@ EndTidalCarbonDioxideFraction,,0.055,Levitzky2013pulmonary,,Respiratory
 ExpiratoryFlow,L/s,0.44,gupta2010characterizing,,Respiratory
 InspiratoryExpiratoryRatio,,0.5,Levitzky2013pulmonary,,Respiratory
 InspiratoryFlow,L/s,0.4,gupta2010characterizing,,Respiratory
-PulmonaryCompliance,L/cmH2O,"[0.06, 0.14]",Levitzky2013pulmonary,,Respiratory
+PulmonaryCompliance,L/cmH2O,0.2,Levitzky2013pulmonary,,Respiratory
 PulmonaryResistance,cmH2O s/L,"[1.01, 1.99]",dubois1956new,,Respiratory
 RespirationRate,1/ min,"[12.0, 20.0],
 [13.0, 19.0]","silverthorn2013human,
 mantoni2007reduced",,Respiratory
 SpecificVentilation,,0.21,Levitzky2013pulmonary,,Respiratory
 TidalVolume,mL,540,Boron2017Medical,7mL/kg * 77 kg BioGears standard patient,Respiratory
-TotalAlveolarVentilation,L/min,6.16,Levitzky2013pulmonary,"Assuming dead space to tidal volume ratio = 150 : 500 and RR range [12,16]",Respiratory
-TotalDeadSpaceVentilation,L/min,"[1.2,2.4]",Levitzky2013pulmonary,"Assuming dead space to tidal volume ratio = 150 : 500 and RR range [12,16]",Respiratory
-TotalLungVolume,L,"[4.9, 6.4]",Boron2017Medical,,Respiratory
-TotalPulmonaryVentilation,L/min,"[6,8]",Levitzky2013pulmonary,,Respiratory
+TotalAlveolarVentilation,L/min,6.16,Levitzky2013pulmonary,                                               ,Respiratory
+TotalDeadSpaceVentilation,L/min,1.2,Levitzky2013pulmonary,,Respiratory
+TotalLungVolume,L,3.2,Boron2017Medical,Expected assumes avg. FRC = 3.0 L and avg. TV = 500 mL,Respiratory
+TotalPulmonaryVentilation,L/min,7,Levitzky2013pulmonary,"Expected assumes avg. TV = 500 mL and RR in range [12,16]",Respiratory
 TranspulmonaryPressure,cmH2O,"[5.2, 7.2]",guyton2006medical,Assume P<sub>atm</sub> = 1033.2 cmH2O,Respiratory
 Trachea-Pressure,cmH2O,"[1033.2, 1034.2]",guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
 Trachea-Pressure,cmH2O,"[1032.2, 1033.2]",guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
@@ -30,8 +30,7 @@ LeftPleuralCavity-Pressure,cmH2O,1028.2,guyton2006medical,Assume  P<sub>atm</sub
 LeftPleuralCavity-Pressure,cmH2O,1025.7,guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
 RightPleuralCavity-Pressure,cmH2O,1028.2,guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
 RightPleuralCavity-Pressure,cmH2O,1025.7,guyton2006medical,Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
-PulmonaryLungs-Volume,L,0.03,Levitzky2013pulmonary,,RespiratoryCompartments
-PulmonaryLungs-Volume,L,0.037,Levitzky2013pulmonary,,RespiratoryCompartments
+PulmonaryLungs-Volume,L,2.6,Levitzky2013pulmonary,0.037 L / kg * 70 kg ,RespiratoryCompartments
 LeftLungPulmonary-Pressure,cmH2O,"[1034.0, 1038.2],
 1034.2","otis1947measurement,
 guyton2006medical",Assume  P<sub>atm</sub> = 1033.2 cmH2O,RespiratoryCompartments
@@ -80,10 +79,10 @@ RightAlveoli-CarbonDioxide-PartialPressure,mmHg,"40.0,
 54.4","silverthorn2013human,
 Levitzky2013pulmonary,
 lloyd1958relation",,RespiratoryCompartments
-LeftBronchi-Volume,L,0.0693,Levitzky2013pulmonary,,RespiratoryCompartments
+LeftBronchi-Volume,mL,71.25,Levitzky2013pulmonary,150 mL total * LeftLungRatio,RespiratoryCompartments
 LeftBronchi-Oxygen-PartialPressure,mmHg,"[104.0, 149.0]",Levitzky2013pulmonary,,RespiratoryCompartments
 LeftBronchi-CarbonDioxide-PartialPressure,mmHg,"[0.03, 40.0]",Levitzky2013pulmonary,,RespiratoryCompartments
-RightBronchi-Volume,L,0.0847,Levitzky2013pulmonary,,RespiratoryCompartments
+RightBronchi-Volume,mL,78.75,Levitzky2013pulmonary,150 mL total * RightLungRatio,RespiratoryCompartments
 RightBronchi-Oxygen-PartialPressure,mmHg,"[104.0, 149.0]",Levitzky2013pulmonary,,RespiratoryCompartments
 RightBronchi-CarbonDioxide-PartialPressure,mmHg,"[0.03, 40.0]",Levitzky2013pulmonary,,RespiratoryCompartments
 PatientExpiratoryReserveVolume,L,1.32,Ganong2010Review,,Respiratory

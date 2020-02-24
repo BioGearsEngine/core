@@ -628,7 +628,7 @@ bool BioGears::SetupPatient()
   //Respiration Rate ---------------------------------------------------------------
   //Note: This is overwritten after stabilization
   double respirationRate_bpm;
-  double respirationRateStandard_bpm = 16.0;
+  double respirationRateStandard_bpm = 14.0;
   double respirationRateMax_bpm = 20.0;
   double respirationRateMin_bpm = 12.0;
   if (!m_Patient->HasRespirationRateBaseline()) {
@@ -704,7 +704,7 @@ bool BioGears::SetupPatient()
   }
 
   double residualVolume_L;
-  double computRedesidualVolume_L = 16.0 * weight_kg / 1000.0;
+  double computRedesidualVolume_L = 20.0 * weight_kg / 1000.0;
   if (!m_Patient->HasResidualVolume()) {
     residualVolume_L = computRedesidualVolume_L;
     m_Patient->GetResidualVolume().SetValue(residualVolume_L, VolumeUnit::L);
@@ -4510,7 +4510,7 @@ void BioGears::SetupRespiratory()
 
   //Compliances
   double tracheaCompliance_L_Per_cmH2O = 0.00238;
-  double bronchiCompliance_L_Per_cmH2O = 0.03;
+  double bronchiCompliance_L_Per_cmH2O = 0.0305;
   double alveoliCompliance_L_Per_cmH2O = 0.175;
   double pleuralCompliance_L_Per_cmH2O = 0.21;
   //Resistance
@@ -4525,7 +4525,7 @@ void BioGears::SetupRespiratory()
   //Target volumes are end-expiratory (i.e. bottom of breathing cycle, pressure = ambient pressure)
   double larynxVolume_mL = 34.4;
   double tracheaVolume_mL = 6.63;
-  double totalBronchiVolume_mL = 20.0;
+  double totalBronchiVolume_mL = 15.0;
   double totalAlveoliVolume_L = LungResidualVolume_L;
   //-----Set up nodes---------------------
   // Mouth

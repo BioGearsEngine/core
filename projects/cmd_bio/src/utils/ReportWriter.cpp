@@ -207,7 +207,7 @@ std::string locateBaseline(biogears::filesystem::path path_s, std::string name)
 {
   using namespace biogears;
 
-  static const filesystem::path baseline_dir{ Baseline_Directory };
+  static const filesystem::path baseline_dir { Baseline_Directory };
   filesystem::path baseline = path_s / (name + "Results.csv");
   if (baseline.exists()) {
     return baseline.string();
@@ -227,13 +227,13 @@ std::string resolveTestLocation(biogears::filesystem::path baseline, std::string
 {
   using namespace biogears;
 
-  static const filesystem::path baseline_dir{ Baseline_Directory };
+  static const filesystem::path baseline_dir { Baseline_Directory };
 
   auto ext = baseline.extension();
   if (ext == "zip") {
     return baseline.str();
   } else {
-    std::regex re{ R"((.*Results)(.*))" };
+    std::regex re { R"((.*Results)(.*))" };
     std::smatch m;
     auto bl = baseline.string();
     if (std::regex_match(bl, m, re)) {
@@ -254,7 +254,7 @@ std::string resolveTestLocation(biogears::filesystem::path baseline, std::string
 //-------------------------------------------------------------------------------
 void ReportWriter::gen_tables(TYPE table_type)
 {
-  std::vector<std::pair<std::string, std::string>> SystemTables{
+  std::vector<std::pair<std::string, std::string>> SystemTables {
     { "BloodChemistryValidation", "Scenarios/Validation" },
     { "CardiovascularValidation", "Scenarios/Validation" },
     { "EnergyValidation", "Scenarios/Validation" },
@@ -265,7 +265,7 @@ void ReportWriter::gen_tables(TYPE table_type)
   };
 
   //Map of SystemTables to required test. Second paramater i
-  std::map<std::string, std::vector<std::string>> test_files{
+  std::map<std::string, std::vector<std::string>> test_files {
     { "BloodChemistryValidation", { "CMP" } }
   };
 
@@ -454,7 +454,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
       throw std::runtime_error(biogears::asprintf("minizip error detected errorno=%i", err));
     }
 
-    biogears::filesystem::path entry{ filename };
+    biogears::filesystem::path entry { filename };
     entry = entry.filename();
     std::string internal_file = split(entry.string(), '.')[0] + ".csv";
     err = mz_zip_reader_locate_entry(reader, internal_file.c_str(), true);
@@ -480,7 +480,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
       mz_zip_reader_delete(&reader);
       throw std::runtime_error(biogears::asprintf("Error %" PRId32 " reading entry in archive\n", err));
     }
-    std::istringstream stream{ &buffer[0] };
+    std::istringstream stream { &buffer[0] };
     ParseCSV(stream, data);
 
     err = mz_zip_reader_entry_close(reader);
@@ -490,7 +490,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
     }
     mz_zip_reader_delete(&reader);
   } else if (ext == "csv") {
-    std::ifstream file{ filename };
+    std::ifstream file { filename };
     if (file.is_open()) {
       return ParseCSV(file, data);
     } else {
@@ -562,7 +562,7 @@ void ReportWriter::ParseXML(const std::string& filename, std::string test)
       throw std::runtime_error(biogears::asprintf("Error %" PRId32 " opening  archive %s\n", err, filename.c_str()));
     }
 
-    biogears::filesystem::path entry{ filename };
+    biogears::filesystem::path entry { filename };
     entry = entry.filename();
 
     err = mz_zip_reader_goto_first_entry(reader);
@@ -578,7 +578,7 @@ void ReportWriter::ParseXML(const std::string& filename, std::string test)
         throw std::runtime_error(biogears::asprintf("Error %" PRId32 " getting  entry info from archive\n", err));
       }
 
-      std::regex re{ ".*" + test + ".*" };
+      std::regex re { ".*" + test + ".*" };
       std::smatch m;
       std::string entry_name = file_info->filename;
       if (std::regex_match(entry_name, m, re)) {
@@ -594,7 +594,7 @@ void ReportWriter::ParseXML(const std::string& filename, std::string test)
           throw std::runtime_error(biogears::asprintf("Error %" PRId32 "  reading entry in archive\n", err));
         }
 
-        std::istringstream stream{ &buffer[0] };
+        std::istringstream stream { &buffer[0] };
         ParseXML(stream);
 
         err = mz_zip_reader_entry_close(reader);
@@ -615,8 +615,8 @@ void ReportWriter::ParseXML(const std::string& filename, std::string test)
     mz_zip_reader_delete(&reader);
     return;
   } else if (ext == "xml") {
-    filesystem::path full_path{ filename };
-    std::ifstream file{ full_path.string() };
+    filesystem::path full_path { filename };
+    std::ifstream file { full_path.string() };
     if (!file.is_open()) {
       throw std::runtime_error("Error opening: " + filename);
     }
@@ -638,6 +638,8 @@ void ReportWriter::CalculateAverages()
     row.field_name = biogears_results[0][i];
     row.expected_value = "0.0";
     row.engine_value = 0.0;
+    row.max_value = 0.0;
+    row.min_value = 0.0;
     rows.push_back(row);
     row_items.push_back(0); // Because not every value was measured the same amount of times, we need to track this
   } // in order to take the average of each value
@@ -646,7 +648,10 @@ void ReportWriter::CalculateAverages()
     for (int k = 0; k < biogears_results[i].size(); k++) { // of the second row
       try {
         if (trim(biogears_results[i][k]) != "") { //if trim returns an empty string, it means the cell is empty
-          rows[k].engine_value += std::stod(biogears_results[i][k]);
+          double engineValue = std::stod(biogears_results[i][k]);
+          rows[k].engine_value += engineValue;
+          rows[k].max_value = engineValue > rows[k].max_value ? engineValue : rows[k].max_value;
+          rows[k].min_value = engineValue < rows[k].min_value ? engineValue : rows[k].min_value;
           ++row_items[k]; // Further down we'll calculate the average of these values by dividing engine_value by row_items
         }
       } catch (std::exception& e) { // This usually occurs if one of the cells contains non-numeric characters, std::stod will throw an exception
@@ -656,6 +661,10 @@ void ReportWriter::CalculateAverages()
   }
   for (int i = 0; i < rows.size(); i++) {
     rows[i].engine_value /= row_items[i]; // This line calculates the average of a value
+    //Inspiratory flow and expiratory flow are validated against their maximum values.  If we have more data requests validated in this way we should probably make a map of these things or something
+    if (rows[i].field_name.compare("InspiratoryFlow(L/s)") == 0 || rows[i].field_name.compare("ExpiratoryFlow(L/s)") == 0) {
+      rows[i].engine_value = rows[i].max_value;
+    }
     std::string field_name_with_units = rows[i].field_name;
     TableRow row = rows[i]; //So field_name_with_units looks like "Name(Unit)", which is why it gets split to just be "Name"
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(trim(split(field_name_with_units, '(')[0]), row));

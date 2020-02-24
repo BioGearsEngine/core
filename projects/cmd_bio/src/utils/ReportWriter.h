@@ -28,6 +28,8 @@ public:
   std::string notes; //
   std::string table_name;
   double engine_value; //
+  double max_value;   //used to track max value of data request--not shown in final table because not set in to_table function
+  double min_value;   //used to track min value of data request--not shown in final table because not set in to_table function
   color result;
 };
 
