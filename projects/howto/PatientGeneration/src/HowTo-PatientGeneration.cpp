@@ -42,8 +42,10 @@ constexpr double to_seconds(double n_minutes) { return n_minutes * 60; }
 ///
 /// \param std::string name - Log file name
 /// \param double mic_g_per_l - (gram/litter) Minimal Inhibitory Concentration of the Sepsis Infection (Affects Antibiotic response)
+/// \param int severity - 0 = low 1 = moderate 2 = severe ; Initial Severity of the Bacterial Infection
 /// \param double apply_at_m - (minutes) how far after the initial infection we want o apply antibiotics
 /// \param double application_interval_m - (minutes) How often after the first antibiotics application we reapply antibiotics
+/// \param std::string patient-state- Path to a patient state relative to the working directory
 /// \param double duration_hr - (hours) Total simulation lenght in hours
 /// \details
 ///   Timeline -> Stablization ->  Apply Infection Moderate with MIC ->  AdvanceTime by apply_at -> apply antibiotics
@@ -199,6 +201,7 @@ bool HowToPatientGeneration(std::string name, int severity, double mic_g_per_l, 
           time_since_antibiotic_treatment_min += hours(1);
           time_since_feeding_min += hours(1);
         } else {
+          //Not Applying Antibiotics and less then an hour until the next application
           auto time_remaining = application_interval_m - time_since_antibiotic_treatment_min;
           tracker.AdvanceModelTime(time_remaining_min);
           applying_antibiotics = true;
