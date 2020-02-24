@@ -189,6 +189,8 @@ protected:
   bool Initialize(const PhysiologyEngineConfiguration* config);
   bool SetupPatient();
 
+  void SetUp();
+
   // Notify systems that steady state has been achieved
   virtual void AtSteadyState(EngineState state);
   void PreProcess();
@@ -241,7 +243,5 @@ protected:
   bool m_logger_self_managed;
   Logger* m_Logger;
 
-private:
-  void SetUp();
 };
 }

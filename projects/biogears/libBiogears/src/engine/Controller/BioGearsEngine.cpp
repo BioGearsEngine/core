@@ -161,6 +161,9 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime)
 {
+
+  BioGears::SetUp();
+
   m_ss.str("");
   m_ss.clear();
   // We could preserve the tracker, but I think I want to force the user to set it up
