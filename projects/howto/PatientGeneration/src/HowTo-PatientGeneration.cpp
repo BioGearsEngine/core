@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
+#include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
@@ -26,6 +27,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/string/manipulation.h>
 using namespace biogears;
+
+//Helper expressions to convert the input to minutes
+constexpr double weeks(double n_weeks) { return n_weeks * 7. * 24. * 60.; }
+constexpr double days(double n_days) { return n_days * 24. * 60.; }
+constexpr double hours(double n_hours) { return n_hours * 60.; }
+constexpr double minutes(double n_minutes) { return n_minutes; }
+constexpr double seconds(double n_seconds) { return n_seconds / 60.; }
+
+constexpr double to_seconds(double n_minutes) { return n_minutes * 60; }
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Run a Sepsis scenario with variable paramaters
@@ -40,9 +50,26 @@ using namespace biogears;
 ///   Until duration has passed apply antibiotics every application interval
 ///
 //--------------------------------------------------------------------------------------------------
-bool HowToPatientGeneration(std::string name, double mic_g_per_l, double apply_at_m, double application_interval_m, double duration_hr)
+bool HowToPatientGeneration(std::string name, int severity, double mic_g_per_l, double apply_at_m, double application_interval_m, std::string patient, double duration_hr)
 {
-  std::string long_name = name + asprintf("-%fg_Per_l-%fm-%fm-%fhr", mic_g_per_l, apply_at_m, application_interval_m, duration_hr);
+  auto eSeverity = CDM::enumInfectionSeverity::value::Eliminated;
+  char const* sSeverity = "Eliminated";
+  switch (severity) {
+  default:
+  case 0:
+    eSeverity = CDM::enumInfectionSeverity::value::Mild;
+    sSeverity = "Mild";
+    break;
+  case 1:
+    eSeverity = CDM::enumInfectionSeverity::value::Moderate;
+    sSeverity = "Moderate";
+    break;
+  case 2:
+    eSeverity = CDM::enumInfectionSeverity::value::Severe;
+    sSeverity = "Severe";
+    break;
+  }
+  std::string long_name = name + asprintf("-%s-%fg_Per_l-%fm-%fm-%fhr", sSeverity, apply_at_m, application_interval_m, duration_hr);
 
   // Create the engine and load the patient
   Logger logger(name + ".log");
@@ -87,8 +114,8 @@ bool HowToPatientGeneration(std::string name, double mic_g_per_l, double apply_a
   bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1. / (5. * 60.));
 
   HowToTracker tracker(*bg);
-  SEInfection infection {};
-  infection.SetSeverity(CDM::enumInfectionSeverity::Moderate);
+  SEInfection infection{};
+  infection.SetSeverity(eSeverity);
   SEScalarMassPerVolume infection_mic;
   infection_mic.SetValue(mic_g_per_l, MassPerVolumeUnit::g_Per_L);
   infection.GetMinimumInhibitoryConcentration().Set(infection_mic);
@@ -97,35 +124,90 @@ bool HowToPatientGeneration(std::string name, double mic_g_per_l, double apply_a
   auto& substances = bg->GetSubstanceManager();
 
   SESubstanceCompound* PiperacillinTazobactam = bg->GetSubstanceManager().GetCompound("PiperacillinTazobactam");
-  SESubstanceCompoundInfusion full_antibiotics_bag { *PiperacillinTazobactam };
-  SESubstanceCompoundInfusion empty_antibiotics_bag { *PiperacillinTazobactam };
+  SESubstanceCompoundInfusion full_antibiotics_bag{ *PiperacillinTazobactam };
+  SESubstanceCompoundInfusion empty_antibiotics_bag{ *PiperacillinTazobactam };
   full_antibiotics_bag.GetBagVolume().SetValue(20.0, VolumeUnit::mL);
   empty_antibiotics_bag.GetBagVolume().SetValue(20.0, VolumeUnit::mL);
   full_antibiotics_bag.GetRate().SetValue(0.667, VolumePerTimeUnit::mL_Per_min);
   empty_antibiotics_bag.GetRate().SetValue(0, VolumePerTimeUnit::mL_Per_min);
   //Load substances we might use
 
-  tracker.AdvanceModelTime(apply_at_m * 60);
-  bg->ProcessAction(full_antibiotics_bag);
-  tracker.AdvanceModelTime(full_antibiotics_bag.GetBagVolume().GetValue(VolumeUnit::mL) * full_antibiotics_bag.GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * 60);
-  bg->ProcessAction(empty_antibiotics_bag);
-  auto time_remaining_min = duration_hr * 60 - bg->GetSimulationTime(TimeUnit::min);
-  while (0 < time_remaining_min) {
-    if (0 < time_remaining_min - application_interval_m) {
-      tracker.AdvanceModelTime(application_interval_m * 60);
-      bg->ProcessAction(full_antibiotics_bag);
-      tracker.AdvanceModelTime(full_antibiotics_bag.GetBagVolume().GetValue(VolumeUnit::mL) * full_antibiotics_bag.GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * 60);
-      bg->ProcessAction(empty_antibiotics_bag);
-    } else {
-      tracker.AdvanceModelTime(time_remaining_min * 60);
+  double time_remaining_min = hours(duration_hr);
+  double time_since_feeding_min = 0;
+  double time_since_antibiotic_treatment_min = 0;
+  double time_applying_antibiotics_min = 0;
+
+  bool first_treatment_occured = false;
+  bool applying_antibiotics = true;
+
+  while (0. < time_remaining_min) {
+    auto current_time = bg->GetSimulationTime(TimeUnit::min);
+
+    if (time_since_feeding_min > hours(8)) {
+      time_since_feeding_min -= hours(8);
+      SEConsumeNutrients meal;
+      meal.GetNutrition().GetCarbohydrate().SetValue(50, MassUnit::g);
+      meal.GetNutrition().GetFat().SetValue(10, MassUnit::g);
+      meal.GetNutrition().GetProtein().SetValue(20, MassUnit::g);
+      meal.GetNutrition().GetCalcium().SetValue(100, MassUnit::g);
+      meal.GetNutrition().GetWater().SetValue(480, VolumeUnit::mL);
+      meal.GetNutrition().GetSodium().SetValue(2, MassUnit::g);
+      //meal.GetNutrition().GetCarbohydrateDigestionRate().SetValue(50, VolumeUnit::mL);
+      //meal.GetNutrition().GetFatDigestionRate().MassUnit::g(50, VolumeUnit::mL);
+      //meal.GetNutrition().GetProteinDigestionRate().SetValue(50, VolumeUnit::mL);
+      bg->ProcessAction(meal);
     }
-    time_remaining_min = duration_hr * 60 - bg->GetSimulationTime(TimeUnit::min);
+
+    if (first_treatment_occured) {
+
+    } else {
+      if (apply_at_m > current_time) {
+        bg->ProcessAction(full_antibiotics_bag);
+        first_treatment_occured = true;
+        applying_antibiotics = true;
+      }
+    }
+
+    if (time_remaining_min < hours(1)) {
+      tracker.AdvanceModelTime(to_seconds(time_remaining_min));
+    } else {
+      if (applying_antibiotics) {
+        auto volume_applied = full_antibiotics_bag.GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * time_applying_antibiotics_min;
+
+       
+        if (volume_applied + full_antibiotics_bag.GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * hours(1) < full_antibiotics_bag.GetBagVolume().GetValue(VolumeUnit::mL)) {
+          //Case : Applying Antibotics and more then an hour of bag left
+          tracker.AdvanceModelTime(hours(1));
+          time_since_antibiotic_treatment_min = 0;
+          time_since_feeding_min += hours(1);
+        } else {
+          //Case : Applying Antibotics with less then an hour in the bag left
+          auto volume_remaining = full_antibiotics_bag.GetBagVolume().GetValue(VolumeUnit::mL) - volume_applied;
+          auto time_remaining = volume_remaining / full_antibiotics_bag.GetRate().GetValue(VolumePerTimeUnit::mL_Per_min);
+          tracker.AdvanceModelTime(time_remaining);
+
+          time_since_antibiotic_treatment_min = 0;
+          time_since_feeding_min += time_remaining;
+
+          bg->ProcessAction(empty_antibiotics_bag);
+          applying_antibiotics = false;
+        }
+      } else {
+        if (time_since_antibiotic_treatment_min + hours(1) < application_interval_m) {
+          //Not Applying Antibiotics and over an hour until the next application
+          tracker.AdvanceModelTime(hours(1));
+          time_since_antibiotic_treatment_min += hours(1);
+          time_since_feeding_min += hours(1);
+        } else {
+          auto time_remaining = application_interval_m - time_since_antibiotic_treatment_min;
+          tracker.AdvanceModelTime(time_remaining_min);
+          applying_antibiotics = true;
+        }
+      }
+    }
+
+    time_remaining_min = hours(duration_hr) - bg->GetSimulationTime(TimeUnit::min);
   }
-
-  // Asthma Attack Stops
-
-  // Advance some time while the patient catches their breath
-  tracker.AdvanceModelTime(200);
 
   return true;
 }

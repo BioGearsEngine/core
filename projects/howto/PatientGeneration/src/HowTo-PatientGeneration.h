@@ -12,4 +12,4 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-bool HowToPatientGeneration(std::string name, double mic_g_Per_l, double apply_at_m, double application_interval_m, double duration_hr);
+bool HowToPatientGeneration(std::string name, int severity, double mic_g_Per_l, double apply_at_m, double application_interval_m, std::string patient, double duration_hr);

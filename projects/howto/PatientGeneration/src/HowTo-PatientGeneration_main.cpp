@@ -16,13 +16,21 @@ void print_help()
 {
 
   std::cout << "Usage howto-patientgeneration\n"
-               "[threads N] [duration N] trials INPUTS [INPUTS...]"
+               "[threads N] [duration N] [patient FILE] trials INPUTS [INPUTS...]"
                "[config [FILE]]\n\n";
 
   std::cout << "Flags: \n";
   std::cout << "j : Thread control -j N\n";
-  std::cout << "d : Duration control\n";
+  std::cout << "d : Duration control N number of hours total simulation will take\n";
+  std::cout << "p : Patient file to be used in trials\n";
   std::cout << "h : Print this message\n";
+  std::cout << "\n\n";
+  std::cout << "INPUTS = [severity, mic_g_Per_l,  apply_at_m,  application_interval_m]\n";
+  std::cout << "severity = {0=Low, 1=Moderate, 2=Severe}\n";
+  std::cout << "mic_g_Per_l = Minimal Inhibitory Concentration for the infections substance\n";
+  std::cout << "apply_at_m = n number of minutes till the first application of antibiotics\n";
+  std::cout << "application_interval_m = N Number of minutes following an antibiotic application until it is reapplied\n";
+
   std::cout << std::endl;
   exit(0);
 }
@@ -30,7 +38,8 @@ void print_help()
 using csv = std::vector<std::vector<std::string>>;
 using csv_row = std::vector<std::string>;
 
-std::string printVector(std::vector<std::string> input) {
+std::string printVector(std::vector<std::string> input)
+{
   std::string rValue;
   for (auto& v : input) {
     rValue = rValue + v + ';';
@@ -90,7 +99,6 @@ bool parse_line(std::string& line, csv_row& row, std::ifstream& input)
   if (token_start < token_end) {
     row.emplace_back(biogears::trim(std::string(token_start, token_end)));
   } else if (token_start == token_end) {
-
   }
   return rValue;
 }
@@ -104,7 +112,7 @@ auto read_csv(std::string path, std::string filename) -> csv
 {
 
   auto filePath = (path.empty()) ? filename : path + "/" + filename;
-  std::ifstream input { filePath };
+  std::ifstream input{ filePath };
   std::string line = "";
   std::string token = "";
 
@@ -119,7 +127,7 @@ auto read_csv(std::string path, std::string filename) -> csv
     }
     return result;
   } else {
-    throw std::runtime_error { "Error opening given file " + filePath };
+    throw std::runtime_error{ "Error opening given file " + filePath };
   }
 }
 
@@ -134,14 +142,14 @@ int main(int argc, char** argv)
   biogears::Arguments args(
     { "H", "HELP" } //Options
     ,
-    { "J", "THREADS", "D", "DURATION", "CONFIG" } //Keywords
+    { "J", "THREADS", "D", "DURATION", "P", "PATIENT", "CONFIG" } //Keywords
     ,
     { "TRIALS" } //MultiWords
   );
 
   unsigned int thread_count = std::thread::hardware_concurrency() - 1;
   unsigned int trial_duration = 6;
-
+  std::string trial_patient = "states/StandardMale@0s.xml";
   if (!args.parse(argc, argv) || args.Option("HELP") || args.Option("H") || args.empty()) {
     print_help();
   }
@@ -181,11 +189,29 @@ int main(int argc, char** argv)
     }
   }
 
+  if (args.KeywordFound("P")) {
+    try {
+      trial_patient = args.Keyword("P");
+    } catch (std::exception) {
+      std::cerr << "Error: P given but no Patient file found\n";
+      exit(1);
+    }
+  }
+
+  if (args.KeywordFound("PATIENT")) {
+    try {
+      trial_patient = args.Keyword("PATIENT");
+    } catch (std::exception) {
+      std::cerr << "Error: Patient given but no Patient file found\n";
+      exit(1);
+    }
+  }
+
   if (args.KeywordFound("CONFIG")) {
     std::string filename = args.Keyword("CONFIG");
 
     auto trials = read_csv("", filename);
-    if (trials.size() > 1 && trials[0].size() > 0) {
+    if (trials.size() > 2 && trials[0].size() > 0) {
       try {
         trial_duration = std::stoi(trials[0][0]);
       } catch (std::exception e) {
@@ -201,32 +227,41 @@ int main(int argc, char** argv)
           exit(1);
         }
       }
-      trials.erase(trials.begin());
 
-      biogears::ThreadPool pool { thread_count };
+      if (trials[1].size() > 0) {
+          trial_patient = trials[1][0];
+      }
+
+      trials.erase(trials.begin(), trials.begin() + 1);
+
+      biogears::ThreadPool pool{ thread_count };
       auto channel = pool.get_source();
 
       auto count = 1; //Danger 1 Indexed
       std::stringstream ss;
       for (auto& params : trials) {
-        if (params.size() >= 3) {
+        if (params.size() >= 4) {
           try {
-            double mic = std::stod(params[0]);
-            double apply_at = std::stod(params[1]);
-            double application_interval = std::stod(params[2]);
-            double duration = (params.size() > 3) ? std::stod(params[3])
+            int severity = std::stoi(params[0]);
+            double mic = std::stod(params[1]);
+            double apply_at = std::stod(params[2]);
+            double application_interval = std::stod(params[3]);
+
+            double duration = (params.size() > 4) ? std::stod(params[4])
                                                   : trial_duration;
+            auto patient = (params.size() > 5) ? params[5]
+                                               : trial_patient;
 
             ss.str("");
             ss << "Trial " << count;
             std::string name = ss.str();
-            channel->insert([=]() { return HowToPatientGeneration(name, mic, apply_at, application_interval, duration); });
+            channel->insert([=]() { return HowToPatientGeneration(name, severity, mic, apply_at, application_interval, patient, duration); });
           } catch (std::exception) {
             std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << printVector(params) << "invalid double conversion.\n";
             exit(1);
           }
         } else {
-          std::cerr << "Warn: Skipping Malformed tria1 " << count << " with paramaters " << printVector(params)<< "\n";
+          std::cerr << "Warn: Skipping Malformed tria1 " << count << " with paramaters " << printVector(params) << "\n";
           exit(1);
         }
         ++count;
@@ -244,24 +279,27 @@ int main(int argc, char** argv)
     }
   } else if (args.MultiWordFound("TRIALS")) {
     auto trials = args.MultiWord("TRIALS");
-    biogears::ThreadPool pool { thread_count };
+    biogears::ThreadPool pool{ thread_count };
     auto channel = pool.get_source();
 
     auto count = 1; //Danger 1 Indexed
     std::stringstream ss;
     for (auto& trial : trials) {
       auto params = biogears::string_split(trial, ",");
-      if (params.size() >= 3) {
+      if (params.size() >= 4) {
         try {
-          double mic = std::stod(params[0]);
-          double apply_at = std::stod(params[1]);
-          double application_interval = std::stod(params[2]);
-          double duration = (params.size() > 3) ? std::stod(params[3])
+          int severity = std::stoi(params[0]);
+          double mic = std::stod(params[1]);
+          double apply_at = std::stod(params[2]);
+          double application_interval = std::stod(params[3]);
+          double duration = (params.size() > 4) ? std::stod(params[4])
                                                 : trial_duration;
+          auto patient = (params.size() > 5) ? params[5]
+                                             : trial_patient;
           ss.str("");
           ss << "Trial " << count;
           std::string name = ss.str();
-          channel->insert([=]() { return HowToPatientGeneration(name, mic, apply_at, application_interval, duration); });
+          channel->insert([=]() { return HowToPatientGeneration(name, severity, mic, apply_at, application_interval, patient, duration); });
         } catch (std::exception) {
           std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << trial << "invalid double conversion.\n";
           exit(1);
