@@ -47,6 +47,7 @@ specific language governing permissions and limitations under the License.
 #include "SEScalarPressureTimePerVolumeArea.h"
 #include "SEScalarTemperature.h"
 #include "SEScalarTime.h"
+#include "SEScalarTimeMassPerVolume.h"
 #include "SEScalarVolume.h"
 #include "SEScalarVolumePerTime.h"
 #include "SEScalarVolumePerTimeArea.h"
