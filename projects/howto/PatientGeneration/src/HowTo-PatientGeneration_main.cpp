@@ -11,7 +11,7 @@
 
 #include <biogears/string/manipulation.h>
 #include <biogears/threading/thread_pool.h>
-
+#include <biogears/filesystem/path.h>
 void print_help()
 {
 
@@ -232,7 +232,7 @@ int main(int argc, char** argv)
           trial_patient = trials[1][0];
       }
 
-      trials.erase(trials.begin(), trials.begin() + 1);
+      trials.erase(trials.begin(), trials.begin()+2);
 
       biogears::ThreadPool pool{ thread_count };
       auto channel = pool.get_source();
@@ -252,10 +252,9 @@ int main(int argc, char** argv)
             auto patient = (params.size() > 5) ? params[5]
                                                : trial_patient;
 
-            ss.str("");
-            ss << "Trial " << count;
+            auto patientFile = biogears::filesystem::path(patient);
             std::string name = ss.str();
-            channel->insert([=]() { return HowToPatientGeneration(name, severity, mic, apply_at, application_interval, patient, duration); });
+            channel->insert([=]() { return HowToPatientGeneration(patientFile.filename().str(), severity, mic, apply_at, application_interval, patient, duration); });
           } catch (std::exception) {
             std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << printVector(params) << "invalid double conversion.\n";
             exit(1);
@@ -283,7 +282,7 @@ int main(int argc, char** argv)
     auto channel = pool.get_source();
 
     auto count = 1; //Danger 1 Indexed
-    std::stringstream ss;
+
     for (auto& trial : trials) {
       auto params = biogears::string_split(trial, ",");
       if (params.size() >= 4) {
@@ -296,10 +295,8 @@ int main(int argc, char** argv)
                                                 : trial_duration;
           auto patient = (params.size() > 5) ? params[5]
                                              : trial_patient;
-          ss.str("");
-          ss << "Trial " << count;
-          std::string name = ss.str();
-          channel->insert([=]() { return HowToPatientGeneration(name, severity, mic, apply_at, application_interval, patient, duration); });
+          auto patientFile = biogears::filesystem::path(patient);
+          channel->insert([=]() { return HowToPatientGeneration(patientFile.filename().str(), severity, mic, apply_at, application_interval, patient, duration); });
         } catch (std::exception) {
           std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << trial << "invalid double conversion.\n";
           exit(1);

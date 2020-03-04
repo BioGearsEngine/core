@@ -71,8 +71,8 @@ bool HowToPatientGeneration(std::string name, int severity, double mic_g_per_l, 
     sSeverity = "Severe";
     break;
   }
-  std::string long_name = name + asprintf("-%s-%fg_Per_l-%fm-%fm-%fhr", sSeverity, apply_at_m, application_interval_m, duration_hr);
-
+  auto long_name = asprintf("%s_%s_Inhibition_%0.0fg_Per_l_%0.0fm-%0.0fm-%0.0fhr", name.c_str(), sSeverity, mic_g_per_l, apply_at_m, application_interval_m, duration_hr);
+ 
   // Create the engine and load the patient
   Logger logger(name + ".log");
   std::unique_ptr<
