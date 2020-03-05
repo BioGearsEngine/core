@@ -53,81 +53,85 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
 {
   auto scenarioData =  std::unique_ptr<CDM::ScenarioData>(scenario.Unload());
   auto memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
-    try {
-      m_CustomExec = cExec;
+  memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
+  if (!memory_safe_scenario->Load(*scenarioData)) {
+    return false;
+  }
+  try {
+    m_CustomExec = cExec;
 
-      // Initialize the engine with a state or initial parameters
-      if (scenarioData->EngineStateFile().present()) {
-        m_Engine.LoadState(scenarioData->EngineStateFile().get());
+    // Initialize the engine with a state or initial parameters
+    if (scenarioData->EngineStateFile().present()) {
+      m_Engine.LoadState(scenarioData->EngineStateFile().get());
 
-        //SEScenario is a flawed design that requires the memory state of a
-        //Physiology Engine to remain constant over the scenario and makes
-        //State loading a nightmare. The class needs to be depricated this entire
-        //Driver could just read from the Serial layer and standup Actions and Datarequiest
-        //When we know the physiolgoy engine is good to go and not try to cashe state.
+      //SEScenario is a flawed design that requires the memory state of a
+      //Physiology Engine to remain constant over the scenario and makes
+      //State loading a nightmare. The class needs to be depricated this entire
+      //Driver could just read from the Serial layer and standup Actions and Datarequiest
+      //When we know the physiolgoy engine is good to go and not try to cashe state.
 
-        memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
-        if (!memory_safe_scenario->Load(*scenarioData)) {
-          return false;
-        }
-
-
-        // WE ARE OVERWRITING ANY DATA REQUESTS IN THE STATE WITH WHATS IN THE SCENARIO!!!
-        // Make a copy of the data requests, not this clears out data requests from the engine
-        CDM::DataRequestsData* drData = memory_safe_scenario->GetDataRequestManager().Unload();
-        m_Engine.GetEngineTrack()->GetDataRequestManager().Load(*drData, m_Engine.GetSubstanceManager());
-        delete drData;
-        //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
-        m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
-      } else if (scenarioData->InitialParameters().present()) {
-
-        m_Engine.GetEngineTrack()->GetDataRequestManager().Load(scenarioData->DataRequests().get(), m_Engine.GetSubstanceManager());
-
-        //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
-        m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
-
-        auto& params = memory_safe_scenario->GetInitialParameters();
-        // Do we have any conditions
-        std::vector<const SECondition*> conditions;
-        for (SECondition* c : params.GetConditions()) {
-          conditions.push_back(c);
-        }
-
-        if (params.HasPatientFile()) {
-          // Set up the patient
-          std::string pFile = "";
-          pFile += params.GetPatientFile();
-          if (!m_Engine.InitializeEngine(pFile, &conditions, &params.GetConfiguration())) {
-            Error("Unable to initialize engine");
-            return false;
-          }
-        } else if (params.HasPatient()) {
-          if (!m_Engine.InitializeEngine(params.GetPatient(), &conditions, &params.GetConfiguration())) {
-            Error("Unable to initialize engine");
-            return false;
-          }
-        } else {
-          Error("No patient provided");
-          return false;
-        }
-      } else {
-        Error("No initial engine parameters set");
+      memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
+      if (!memory_safe_scenario->Load(*scenarioData)) {
         return false;
       }
 
-      if (scenarioData->AutoSerialization().present()) {
-        CreateFilePath(scenarioData->AutoSerialization()->Directory()); // Note method assumes you have a file and it ignores it
+
+      // WE ARE OVERWRITING ANY DATA REQUESTS IN THE STATE WITH WHATS IN THE SCENARIO!!!
+      // Make a copy of the data requests, not this clears out data requests from the engine
+      CDM::DataRequestsData* drData = memory_safe_scenario->GetDataRequestManager().Unload();
+      m_Engine.GetEngineTrack()->GetDataRequestManager().Load(*drData, m_Engine.GetSubstanceManager());
+      delete drData;
+      //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
+      m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
+    } else if (scenarioData->InitialParameters().present()) {
+
+      m_Engine.GetEngineTrack()->GetDataRequestManager().Load(scenarioData->DataRequests().get(), m_Engine.GetSubstanceManager());
+
+      //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
+      m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
+
+      auto& params = memory_safe_scenario->GetInitialParameters();
+      // Do we have any conditions
+      std::vector<const SECondition*> conditions;
+      for (SECondition* c : params.GetConditions()) {
+        conditions.push_back(c);
       }
-      return ProcessActions(*memory_safe_scenario);
-    } catch (CommonDataModelException& ex) {
-      Error(ex.what());
-    } catch (std::exception& ex) {
-      Error(ex.what());
-    } catch (...) {
-      Error("Caught unknown exception, ending simulation");
+
+      if (params.HasPatientFile()) {
+        // Set up the patient
+        std::string pFile = "";
+        pFile += params.GetPatientFile();
+        if (!m_Engine.InitializeEngine(pFile, &conditions, &params.GetConfiguration())) {
+          Error("Unable to initialize engine");
+          return false;
+        }
+      } else if (params.HasPatient()) {
+        if (!m_Engine.InitializeEngine(params.GetPatient(), &conditions, &params.GetConfiguration())) {
+          Error("Unable to initialize engine");
+          return false;
+        }
+      } else {
+        Error("No patient provided");
+        return false;
+      }
+    } else {
+      Error("No initial engine parameters set");
+      return false;
     }
-    return false;
-  };
+
+    if (scenarioData->AutoSerialization().present()) {
+      CreateFilePath(scenarioData->AutoSerialization()->Directory()); // Note method assumes you have a file and it ignores it
+    }
+    return ProcessActions(*memory_safe_scenario);
+  } catch (CommonDataModelException& ex) {
+    Error(ex.what());
+  } catch (std::exception& ex) {
+    Error(ex.what());
+  } catch (...) {
+    Error("Caught unknown exception, ending simulation");
+  }
+  return false;
+};
 
 //-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec)
