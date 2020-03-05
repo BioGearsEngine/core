@@ -163,6 +163,8 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
 {
 
   BioGears::SetUp();
+  m_EngineTrack = PhysiologyEngineTrack(*this);
+  m_DataTrack = &m_EngineTrack.GetDataTrack();
 
   m_ss.str("");
   m_ss.clear();

@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
-#include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEGenericScalar.h>
+#include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 #include <biogears/cdm/utils/DataTrack.h>
 namespace biogears {
@@ -29,21 +29,21 @@ class SESubstanceManager;
 class SECompartmentManager;
 
 enum class CompartmentUpdate { None,
-  InFlow,
-  OutFlow,
-  HeatTransferRateIn,
-  HeatTransferRateOut,
-  Volume,
-  Pressure,
-  Heat,
-  Temperature,
-  VolumeFraction,
-  Mass,
-  Concentration,
-  pH,
-  Molarity,
-  PartialPressure,
-  Saturation };
+                               InFlow,
+                               OutFlow,
+                               HeatTransferRateIn,
+                               HeatTransferRateOut,
+                               Volume,
+                               Pressure,
+                               Heat,
+                               Temperature,
+                               VolumeFraction,
+                               Mass,
+                               Concentration,
+                               pH,
+                               Molarity,
+                               PartialPressure,
+                               Saturation };
 
 class SEDataRequestScalar : public SEGenericScalar {
 public:
@@ -79,10 +79,12 @@ class BIOGEARS_API PhysiologyEngineTrack : public Loggable {
 public:
   PhysiologyEngineTrack(PhysiologyEngine& engine);
   PhysiologyEngineTrack(SEPatient& patient,
-    SESubstanceManager& subMgr,
-    SECompartmentManager& cmptMgr,
-    const std::vector<SESystem*>& physiology,
-    const std::vector<SESystem*>& equipment);
+                        SESubstanceManager& subMgr,
+                        SECompartmentManager& cmptMgr,
+                        const std::vector<SESystem*>& physiology,
+                        const std::vector<SESystem*>& equipment);
+  PhysiologyEngineTrack(PhysiologyEngineTrack&&);
+  PhysiologyEngineTrack& operator=(PhysiologyEngineTrack&& rhs);
   virtual ~PhysiologyEngineTrack();
 
   void Clear(); // Remove all requests and close the results file
@@ -108,9 +110,9 @@ protected:
   std::ofstream m_ResultsStream;
   SEDataRequestManager m_DataRequestMgr;
 
-  SEPatient& m_Patient;
-  SESubstanceManager& m_SubMgr;
-  SECompartmentManager& m_CmptMgr;
+  SEPatient* m_Patient;
+  SESubstanceManager* m_SubMgr;
+  SECompartmentManager* m_CmptMgr;
 
   SEEnvironment* m_Environment;
   std::vector<SESystem*> m_PhysiologySystems;

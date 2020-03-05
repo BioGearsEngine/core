@@ -18,7 +18,7 @@ SEDataRequestManager::SEDataRequestManager(Logger* logger)
   : Loggable(logger)
   , m_SamplesPerSecond(1.0)
   , m_ResultsFile("")
- 
+
 {
   m_DefaultDecimalFormatting = nullptr;
   m_OverrideDecimalFormatting = nullptr;
@@ -70,7 +70,7 @@ void SEDataRequestManager::SetWorkingDir(const std::string& name)
   m_WorkingDir = name;
 }
 //-----------------------------------------------------------------------------
-std::string SEDataRequestManager::GetResovedFilePath() const{ return m_WorkingDir + m_ResultsFile; }
+std::string SEDataRequestManager::GetResovedFilePath() const { return m_WorkingDir + m_ResultsFile; }
 //-----------------------------------------------------------------------------
 void SEDataRequestManager::Clear()
 {
@@ -113,14 +113,20 @@ CDM::DataRequestsData* SEDataRequestManager::Unload() const
 void SEDataRequestManager::Unload(CDM::DataRequestsData& data) const
 {
   data.SamplesPerSecond(m_SamplesPerSecond);
-  if (HasResultsFilename())
+  if (HasResultsFilename()) {
     data.Filename(m_ResultsFile);
-  if (HasDefaultDecimalFormatting())
+  }
+  if (HasDefaultDecimalFormatting()) {
     data.DefaultDecimalFormatting(std::unique_ptr<CDM::DecimalFormatData>(m_DefaultDecimalFormatting->Unload()));
-  if (HasOverrideDecimalFormatting())
+  }
+  if (HasOverrideDecimalFormatting()) {
     data.OverrideDecimalFormatting(std::unique_ptr<CDM::DecimalFormatData>(m_OverrideDecimalFormatting->Unload()));
-  for (SEDataRequest* dr : m_Requests)
-    data.DataRequest().push_back(std::unique_ptr<CDM::DataRequestData>(dr->Unload()));
+  }
+  for (auto& dr : m_Requests) {
+    auto ptr = dr->Unload();
+    auto uptr = std::unique_ptr<CDM::DataRequestData>(ptr);
+    data.DataRequest().push_back(std::move(uptr));
+  }
 }
 //-----------------------------------------------------------------------------
 bool SEDataRequestManager::HasDefaultDecimalFormatting() const

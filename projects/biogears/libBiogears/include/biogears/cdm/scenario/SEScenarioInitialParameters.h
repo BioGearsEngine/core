@@ -26,9 +26,9 @@ class PhysiologyEngineConfiguration;
 class BIOGEARS_API SEScenarioInitialParameters : public Loggable {
 protected:
   friend SEScenario;
-
   SEScenarioInitialParameters(SESubstanceManager& subMgr);
   virtual ~SEScenarioInitialParameters();
+  
 
 public:
   virtual void Clear(); //clear memory

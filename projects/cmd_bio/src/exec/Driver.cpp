@@ -205,6 +205,7 @@ void Driver::queue_Scenario(Executor exec)
       sce.GetInitialParameters().SetPatient(patient);
     } break;
     }
+
     console_logger.Info("Starting " + ex.Name());
     try {
       BioGearsScenarioExec bse { *eng };
@@ -265,7 +266,6 @@ void Driver::queue_Scenario(Executor exec)
     }
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
     exec.Patient(scenario->InitialParameters()->Patient().get().Name());
-
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::INLINE, scenario->InitialParameters()->Patient().get()));
   } else {
     std::cout << "Skipping " << exec.Name() << " no patient specified.\n";

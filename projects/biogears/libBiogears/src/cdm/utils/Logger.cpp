@@ -263,7 +263,7 @@ void Loggable::Error(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Info(const char* msg, const char* origin) const
 {
-  Error(std::string{ msg }, std::string{ origin });
+  Info(std::string{ msg }, std::string{ origin });
 }
 void Loggable::Info(const std::string& msg, const std::string& origin) const
 {
@@ -283,7 +283,7 @@ void Loggable::Info(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Warning(const char* msg, const char* origin) const
 {
-  Error(std::string{ msg }, std::string{ origin });
+  Warning(std::string{ msg }, std::string{ origin });
 }
 void Loggable::Warning(const std::string& msg, const std::string& origin) const
 {
@@ -303,11 +303,10 @@ void Loggable::Warning(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Fatal(const char* msg, const char* origin) const
 {
-  Error(std::string{ msg }, std::string{ origin });
+  Fatal(std::string{ msg }, std::string{ origin });
 }
 void Loggable::Fatal(const std::string& msg, const std::string& origin) const
 {
-  std::cerr << "FATAL:" << msg << " : " << origin << std::endl;
   if (m_Logger) {
     m_Logger->Fatal(msg, origin);
   } else {
@@ -324,7 +323,7 @@ void Loggable::Fatal(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Debug(const char* msg, const char* origin) const
 {
-  Error(std::string{ msg }, std::string{ origin });
+  Debug(std::string{ msg }, std::string{ origin });
 }
 void Loggable::Debug(const std::string& msg, const std::string& origin) const
 {

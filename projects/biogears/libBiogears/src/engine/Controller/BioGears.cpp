@@ -87,6 +87,7 @@ DataTrack& BioGears::GetDataTrack()
 
 void BioGears::SetUp()
 {
+  m_DataTrack = nullptr;
   m_CurrentTime = std::make_unique<SEScalarTime>();
   m_SimulationTime = std::make_unique<SEScalarTime>();
   m_CurrentTime->SetValue(0, TimeUnit::s);

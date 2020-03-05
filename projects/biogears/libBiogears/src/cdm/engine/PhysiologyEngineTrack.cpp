@@ -61,9 +61,9 @@ std::string Space2Underscore(const std::string& str)
 PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
   , m_DataRequestMgr(engine.GetLogger())
-  , m_Patient((SEPatient&)engine.GetPatient())
-  , m_SubMgr((SESubstanceManager&)engine.GetSubstanceManager())
-  , m_CmptMgr((SECompartmentManager&)engine.GetCompartments())
+  , m_Patient(&(SEPatient&)engine.GetPatient())
+  , m_SubMgr(&(SESubstanceManager&)engine.GetSubstanceManager())
+  , m_CmptMgr(&(SECompartmentManager&)engine.GetCompartments())
 {
 
   // TODO We are not handling nullptr well here...
@@ -117,12 +117,12 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine)
 }
 
 PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceManager& subMgr, SECompartmentManager& cmptMgr,
-  const std::vector<SESystem*>& physiology, const std::vector<SESystem*>& equipment)
+                                             const std::vector<SESystem*>& physiology, const std::vector<SESystem*>& equipment)
   : Loggable(patient.GetLogger())
   , m_DataRequestMgr(patient.GetLogger())
-  , m_Patient(patient)
-  , m_SubMgr(subMgr)
-  , m_CmptMgr(cmptMgr)
+  , m_Patient(&patient)
+  , m_SubMgr(&subMgr)
+  , m_CmptMgr(&cmptMgr)
 {
   for (auto* p : physiology)
     m_PhysiologySystems.push_back(p);
@@ -130,7 +130,36 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceMana
     m_EquipmentSystems.push_back(e);
   m_ForceConnection = false;
 }
-
+PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngineTrack&& obj)
+  : m_ForceConnection(std::move(obj.m_ForceConnection))
+  , m_DataTrack(std::move(obj.m_DataTrack))
+  , m_ss(std::move(obj.m_ss))
+  , m_ResultsStream(std::move(obj.m_ResultsStream))
+  , m_DataRequestMgr(std::move(obj.m_DataRequestMgr))
+  , m_Patient(obj.m_Patient)
+  , m_SubMgr(obj.m_SubMgr)
+  , m_CmptMgr(obj.m_CmptMgr)
+  , m_Environment(std::move(obj.m_Environment))
+  , m_PhysiologySystems(std::move(obj.m_PhysiologySystems))
+  , m_EquipmentSystems(std::move(obj.m_EquipmentSystems))
+  , m_Request2Scalar(std::move(obj.m_Request2Scalar))
+{
+}
+PhysiologyEngineTrack& PhysiologyEngineTrack::operator=(PhysiologyEngineTrack&& rhs)
+{
+  m_ForceConnection = std::move(rhs.m_ForceConnection);
+  m_DataTrack = std::move(rhs.m_DataTrack);
+  m_ss = std::move(rhs.m_ss);
+  m_ResultsStream = std::move(rhs.m_ResultsStream);
+  m_DataRequestMgr = std::move(rhs.m_DataRequestMgr);
+  m_Patient = rhs.m_Patient;
+  m_SubMgr  = rhs.m_SubMgr;
+  m_CmptMgr = rhs.m_CmptMgr;
+  m_Environment = std::move(rhs.m_Environment);
+  m_PhysiologySystems = std::move(rhs.m_PhysiologySystems);
+  m_EquipmentSystems = std::move(rhs.m_EquipmentSystems);
+  m_Request2Scalar = std::move(rhs.m_Request2Scalar);
+}
 PhysiologyEngineTrack::~PhysiologyEngineTrack()
 {
   Clear();
@@ -188,7 +217,7 @@ void PhysiologyEngineTrack::PullData()
     ds = m_Request2Scalar[dr];
     if (ds == nullptr) {
       Error("You cannot modify CSV Results file data requests in the middle of a run.");
-      Error(std::string{ "Ignoring data request " } +dr->GetName());
+      Error(std::string{ "Ignoring data request " } + dr->GetName());
       continue;
     }
     if (!ds->HasScalar()) {
@@ -200,7 +229,7 @@ void PhysiologyEngineTrack::PullData()
       if (ds->HasUnit()) {
         if (dr->GetUnit() == nullptr)
           dr->SetUnit(*ds->GetUnit());
-        m_DataTrack.Probe(ds->Heading, ds->GetValue( dr->GetUnit()->GetString() ));
+        m_DataTrack.Probe(ds->Heading, ds->GetValue(dr->GetUnit()->GetString()));
       } else
         m_DataTrack.Probe(ds->Heading, ds->GetValue());
     } else if (ds->IsInfinity())
@@ -347,16 +376,16 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   }
   const SEGasCompartmentDataRequest* gasDR = dynamic_cast<const SEGasCompartmentDataRequest*>(&dr);
   if (gasDR != nullptr) {
-    if (!m_CmptMgr.HasGasCompartment(gasDR->GetCompartment())) {
-      Error(std::string{"Unknown gas compartment : "} + gasDR->GetCompartment());
+    if (!m_CmptMgr->HasGasCompartment(gasDR->GetCompartment())) {
+      Error(std::string{ "Unknown gas compartment : " } + gasDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
-    SEGasCompartment* gasCmpt = (SEGasCompartment*)m_CmptMgr.GetGasCompartment(gasDR->GetCompartment());
+    SEGasCompartment* gasCmpt = (SEGasCompartment*)m_CmptMgr->GetGasCompartment(gasDR->GetCompartment());
 
     if (gasDR->HasSubstance()) {
       // Activate this substance so compartments have it
-      m_SubMgr.AddActiveSubstance(*gasDR->GetSubstance());
+      m_SubMgr->AddActiveSubstance(*gasDR->GetSubstance());
       if (gasCmpt->HasChildren()) {
         if (name == "Volume")
           ds.UpdateProperty = CompartmentUpdate::Volume;
@@ -388,16 +417,16 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   }
   const SELiquidCompartmentDataRequest* liquidDR = dynamic_cast<const SELiquidCompartmentDataRequest*>(&dr);
   if (liquidDR != nullptr) {
-    if (!m_CmptMgr.HasLiquidCompartment(liquidDR->GetCompartment())) {
-      Error(std::string{ "Unknown liquid compartment : " } +liquidDR->GetCompartment());
+    if (!m_CmptMgr->HasLiquidCompartment(liquidDR->GetCompartment())) {
+      Error(std::string{ "Unknown liquid compartment : " } + liquidDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
-    SELiquidCompartment* liquidCmpt = (SELiquidCompartment*)m_CmptMgr.GetLiquidCompartment(liquidDR->GetCompartment());
+    SELiquidCompartment* liquidCmpt = (SELiquidCompartment*)m_CmptMgr->GetLiquidCompartment(liquidDR->GetCompartment());
 
     if (liquidDR->HasSubstance()) {
       // Activate this substance so compartments have it
-      m_SubMgr.AddActiveSubstance(*liquidDR->GetSubstance());
+      m_SubMgr->AddActiveSubstance(*liquidDR->GetSubstance());
       if (liquidCmpt->HasChildren()) {
         if (name == "Mass")
           ds.UpdateProperty = CompartmentUpdate::Mass;
@@ -433,12 +462,12 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   }
   const SEThermalCompartmentDataRequest* thermalDR = dynamic_cast<const SEThermalCompartmentDataRequest*>(&dr);
   if (thermalDR != nullptr) {
-    if (!m_CmptMgr.HasThermalCompartment(thermalDR->GetCompartment())) {
-      Error(std::string{ "Unknown thermal compartment : " }+thermalDR->GetCompartment());
+    if (!m_CmptMgr->HasThermalCompartment(thermalDR->GetCompartment())) {
+      Error(std::string{ "Unknown thermal compartment : " } + thermalDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
-    SEThermalCompartment* thermalCmpt = (SEThermalCompartment*)m_CmptMgr.GetThermalCompartment(thermalDR->GetCompartment());
+    SEThermalCompartment* thermalCmpt = (SEThermalCompartment*)m_CmptMgr->GetThermalCompartment(thermalDR->GetCompartment());
 
     if (thermalCmpt->HasChildren() || thermalCmpt->HasNodeMapping()) {
       if (name == "Heat")
@@ -459,25 +488,25 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   }
   const SETissueCompartmentDataRequest* tissueDR = dynamic_cast<const SETissueCompartmentDataRequest*>(&dr);
   if (tissueDR != nullptr) {
-    if (!m_CmptMgr.HasTissueCompartment(tissueDR->GetCompartment())) {
-      Error(std::string{ "Unknown tissue compartment : " }+tissueDR->GetCompartment());
+    if (!m_CmptMgr->HasTissueCompartment(tissueDR->GetCompartment())) {
+      Error(std::string{ "Unknown tissue compartment : " } + tissueDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
-    SETissueCompartment* tissueCmpt = (SETissueCompartment*)m_CmptMgr.GetTissueCompartment(tissueDR->GetCompartment());
+    SETissueCompartment* tissueCmpt = (SETissueCompartment*)m_CmptMgr->GetTissueCompartment(tissueDR->GetCompartment());
     ds.SetScalar(tissueCmpt->GetScalar(name), dr);
     return true;
   }
   if (dynamic_cast<const SEPatientDataRequest*>(&dr) != nullptr) {
     // casting of the const to modify the patient
-    ds.SetScalar(m_Patient.GetScalar(name), dr);
+    ds.SetScalar(m_Patient->GetScalar(name), dr);
     return true;
   }
   const SESubstanceDataRequest* subDR = dynamic_cast<const SESubstanceDataRequest*>(&dr);
   if (subDR != nullptr) {
     // Removing const because I want to allocate and grab scalars to track for later
     SESubstance* sub = (SESubstance*)subDR->GetSubstance();
-    m_SubMgr.AddActiveSubstance(*sub);
+    m_SubMgr->AddActiveSubstance(*sub);
     if (subDR->HasCompartment()) { // I don't really have a generic/reflexive way of doing this...yet
       if (subDR->GetName() == "PartitionCoefficient") {
         SESubstanceTissuePharmacokinetics& tk = sub->GetPK().GetTissueKinetics(subDR->GetCompartment());
@@ -497,7 +526,7 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
 void SEDataRequestScalar::SetScalar(const SEScalar* s, SEDataRequest& dr)
 {
   if (s == nullptr) {
-    Fatal(std::string{ "Unknown Data Request : " } +dr.GetName());
+    Fatal(std::string{ "Unknown Data Request : " } + dr.GetName());
     return;
   }
   SEGenericScalar::SetScalar(*s);

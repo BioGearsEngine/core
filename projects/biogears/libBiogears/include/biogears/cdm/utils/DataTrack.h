@@ -38,6 +38,8 @@ class BIOGEARS_API DataTrack : public Loggable {
 public:
   DataTrack();
   DataTrack(Logger* m_Log);
+  DataTrack(DataTrack&&) = default;
+  DataTrack& operator=(DataTrack&&) = default;
   ~DataTrack();
 
   void Clear();
