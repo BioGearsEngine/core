@@ -2,7 +2,7 @@ enable_language(CXX)
 
 option(${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
 option(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
-option(${ROOT_PROJECT_NAME}_STAGE_RUNTIME "Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
+option(${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR"Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
 
 find_path (
   ${ROOT_PROJECT_NAME}_Baseline_DIR

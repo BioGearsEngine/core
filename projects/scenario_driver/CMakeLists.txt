@@ -104,8 +104,8 @@ set(${PREFIX}_LIBS
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
 target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )
  
-if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME) 
-add_dependencies(${PROJECT_NAME} stage_runtime)
+if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR) 
+add_dependencies(${PROJECT_NAME} prepare_runtime_dir)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
