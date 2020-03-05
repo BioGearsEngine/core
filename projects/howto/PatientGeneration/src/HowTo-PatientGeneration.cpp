@@ -140,7 +140,7 @@ bool HowToPatientGeneration(std::string name, int severity, double mic_g_per_l, 
   double time_applying_antibiotics_min = 0;
 
   bool first_treatment_occured = false;
-  bool applying_antibiotics = true;
+  bool applying_antibiotics = false;
 
   while (0. < time_remaining_min) {
     auto current_time = bg->GetSimulationTime(TimeUnit::min);
@@ -151,26 +151,24 @@ bool HowToPatientGeneration(std::string name, int severity, double mic_g_per_l, 
       meal.GetNutrition().GetCarbohydrate().SetValue(50, MassUnit::g);
       meal.GetNutrition().GetFat().SetValue(10, MassUnit::g);
       meal.GetNutrition().GetProtein().SetValue(20, MassUnit::g);
-      meal.GetNutrition().GetCalcium().SetValue(100, MassUnit::g);
+      meal.GetNutrition().GetCalcium().SetValue(100, MassUnit::mg);
       meal.GetNutrition().GetWater().SetValue(480, VolumeUnit::mL);
-      meal.GetNutrition().GetSodium().SetValue(2, MassUnit::g);
+      meal.GetNutrition().GetSodium().SetValue(1, MassUnit::g);
       //meal.GetNutrition().GetCarbohydrateDigestionRate().SetValue(50, VolumeUnit::mL);
       //meal.GetNutrition().GetFatDigestionRate().MassUnit::g(50, VolumeUnit::mL);
       //meal.GetNutrition().GetProteinDigestionRate().SetValue(50, VolumeUnit::mL);
       bg->ProcessAction(meal);
-    }
-
-    if (first_treatment_occured) {
+    }     if (first_treatment_occured) {
 
     } else {
-      if (apply_at_m > current_time) {
+      if (apply_at_m < current_time) {
         bg->ProcessAction(full_antibiotics_bag);
         first_treatment_occured = true;
         applying_antibiotics = true;
       }
     }
 
-    if (time_remaining_min < hours(1)) {
+    if (hours(1) > time_remaining_min) {
       tracker.AdvanceModelTime(to_seconds(time_remaining_min));
     } else {
       if (applying_antibiotics) {
@@ -178,33 +176,32 @@ bool HowToPatientGeneration(std::string name, int severity, double mic_g_per_l, 
 
        
         if (volume_applied + full_antibiotics_bag.GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * hours(1) < full_antibiotics_bag.GetBagVolume().GetValue(VolumeUnit::mL)) {
-          //Case : Applying Antibotics and more then an hour of bag left
-          tracker.AdvanceModelTime(hours(1));
-          time_since_antibiotic_treatment_min = 0;
-          time_since_feeding_min += hours(1);
-        } else {
           //Case : Applying Antibotics with less then an hour in the bag left
           auto volume_remaining = full_antibiotics_bag.GetBagVolume().GetValue(VolumeUnit::mL) - volume_applied;
           auto time_remaining = volume_remaining / full_antibiotics_bag.GetRate().GetValue(VolumePerTimeUnit::mL_Per_min);
-          tracker.AdvanceModelTime(time_remaining);
+          tracker.AdvanceModelTime(to_seconds(time_remaining));
 
           time_since_antibiotic_treatment_min = 0;
           time_since_feeding_min += time_remaining;
 
           bg->ProcessAction(empty_antibiotics_bag);
           applying_antibiotics = false;
+        } else {
+          //Case : Applying Antibotics and more then an hour of bag left
+          tracker.AdvanceModelTime(to_seconds(hours(1)));
+          time_since_antibiotic_treatment_min = 0;
+          time_since_feeding_min += hours(1);
         }
       } else {
-        if (time_since_antibiotic_treatment_min + hours(1) < application_interval_m) {
-          //Not Applying Antibiotics and over an hour until the next application
-          tracker.AdvanceModelTime(hours(1));
-          time_since_antibiotic_treatment_min += hours(1);
-          time_since_feeding_min += hours(1);
-        } else {
+        if (application_interval_m  < time_since_antibiotic_treatment_min + hours(1)) {
           //Not Applying Antibiotics and less then an hour until the next application
           auto time_remaining = application_interval_m - time_since_antibiotic_treatment_min;
-          tracker.AdvanceModelTime(time_remaining_min);
+          tracker.AdvanceModelTime(to_seconds(time_remaining));
           applying_antibiotics = true;
+        } else {
+          //Not Applying Antibiotics and over an hour until the next appli          tracker.AdvanceModelTime(to_seconds(hours(1)));
+          time_since_antibiotic_treatment_min += hours(1);
+          time_since_feeding_min += hours(1);
         }
       }
     }
