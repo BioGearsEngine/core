@@ -374,7 +374,7 @@ bool Config::process(Tokenizer&& tokens)
     } else if (token == "subject") {
       error_context = token;
       valid_state &= handle_assignment(tokenItr, tokens.end(), _email_subject);
-    } else if (token == "recepients") {
+    } else if (token == "recipients") {
       error_context = token;
       std::string recipents;
       valid_state &= handle_assignment(tokenItr, tokens.end(), recipents);
