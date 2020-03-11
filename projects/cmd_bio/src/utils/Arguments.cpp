@@ -70,6 +70,9 @@ bool Arguments::parse(int argc, char* argv[])
   }
   for (auto& arg : args )
   { //Iterate over the args and strip occurances of -- 
+    if (arg.length() == 1) {
+      continue;
+    }
     auto res = std::mismatch(prefix.begin(), prefix.end(), arg.begin());
     if (res.first == prefix.end())
     {

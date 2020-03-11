@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     try {
       thread_count = std::stoi(args.Keyword("J"));
     } catch (std::exception) {
-      std::cerr << "Error: J given but " << args.Keyword("J") << "is not a valid Integer.\n";
+      std::cerr << "Error: J given but " << args.Keyword("J") << " is not a valid Integer.\n";
       exit(1);
     }
   }
