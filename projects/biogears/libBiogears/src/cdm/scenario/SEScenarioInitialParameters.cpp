@@ -89,7 +89,7 @@ void SEScenarioInitialParameters::Unload(CDM::ScenarioInitialParametersData& dat
 //-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::IsValid() const
 {
-  if (!HasPatientFile() && HasPatient())
+  if (HasPatientFile() && HasPatient())
     return false;
   return true;
 }

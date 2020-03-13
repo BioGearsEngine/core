@@ -208,6 +208,8 @@ def plot(root_dir, source, skip_count, plotTime):
                     unit = col[unitIndex:len(col)]
                     plotCol = col.replace(unit,'')
                 
+                pltTitle = re.sub("([a-z])([A-Z])","\g<1> \g<2>", plotCol)
+                
                 #Unit Test outputs sometimes put '/' in unit names, which throws off SaveFig function. Replace '/' with 'per'
                 if plotCol.find('/')!=-1:
                     plotCol = plotCol.replace('/','Per')
@@ -221,10 +223,10 @@ def plot(root_dir, source, skip_count, plotTime):
                             plt.plot(xBase,yBase,'xkcd:apple green',linestyle=':',label='Baseline')
                         except KeyError:
                             err('No baseline information for {}'.format(plotCol),LOG_LEVEL_0)
-                    plt.title(plotCol)
+                    plt.title(pltTitle)
                     plt.ylim([plotMin,plotMax])
                     plt.xlabel(xLabel)
-                    plt.ylabel(plotCol + unit)
+                    plt.ylabel(pltTitle + " " + unit)
                     plt.grid()
                     plt.legend()
                     figName = os.path.join(out_dir,"{}.png".format(plotCol))
