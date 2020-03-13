@@ -38,9 +38,9 @@
 
 void print_help() {
 
-    std::cout << "Usage cmd_bio [HELP GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
+    std::cout << "Usage cmd_bio [HELP, GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
                                 "[THREADS N]\n" 
-                                "[TEST FILE [FILE]...], [CONFIG FILE [FILE]...] [SCENARIO FILE [FILE]...], [VALIDATE patient|drug|system|all]\n"
+                                "[CONFIG [FILE]...], [SCENARIO [FILE]...], [TEST cdm|bge], [VALIDATE patient|drug|system|all]\n"
                                 "[GENTABLES html|md|xml|web|all]\n\n";
 
     std::cout << "Flags: \n";
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     try {
       thread_count = std::stoi(args.Keyword("THREADS"));
     } catch (std::exception) {
-      std::cerr << "Error: THREADS given but " << args.Keyword("THREADS") << "is not a valid Integer.\n";
+      std::cerr << "Error: THREADS given but " << args.Keyword("THREADS") << " is not a valid Integer.\n";
       exit(1);
     }
   }
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     generators.push_back(std::make_unique<biogears::NutritionGenerator>());
     generators.push_back(std::make_unique<biogears::CompoundGenerator>());
     for (auto& gen : generators) {
-      std::cout << "Generating Data:" << gen->Path() << gen->Filename() << "\n";
+      std::cout << "Generating Data: " << gen->Path() << gen->Filename() << "\n";
       gen->parse();
       gen->save();
       std::cout << "\n\n";
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
         biogears::Config runs{ "BGEUnitTests.config" };
         driver.queue(runs);
       } else {
-        std::cout << "Warning: No Test known as " << test << "exists.\n";
+        std::cout << "Warning: No Test known as " << test << " exists.\n";
       }
     }
   }
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
       } else if (test == "all") {
         run_patient_validation = run_drug_validation = run_system_validation = run_verification = true;
       } else {
-        std::cout << "Warning: No Validation known as " << test << "exists.\n";
+        std::cout << "Warning: No Validation known as " << test << " exists.\n";
       }
     }
   }

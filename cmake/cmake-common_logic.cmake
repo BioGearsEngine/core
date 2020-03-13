@@ -268,6 +268,7 @@ function(configure_version_information _SUCESS_CHECK)
         endif()
       endif()
       string(STRIP "${_VERSION_HASH}" _VERSION_HASH )
+	  string(SUBSTRING "${_VERSION_HASH}" 1 -1 _VERSION_HASH)
       set( ${_SUCESS_CHECK} True PARENT_SCOPE)
     endif() 
     #Pull the commit date of the last GIT TAG 
