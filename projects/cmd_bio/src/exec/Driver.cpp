@@ -245,7 +245,6 @@ void Driver::queue_Scenario(Executor exec)
   // TODO: Test for EngineState file and call an appropriate launcher
   // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
   if (scenario->EngineStateFile().present()) {
-    std::cout << "Skipping " << exec.Name() << "\n\t -- This launcher does not currently support Serialized States\n";
     exec.Patient(scenario->EngineStateFile().get());
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::STATE, empty_patient_data));
     return;
@@ -265,7 +264,6 @@ void Driver::queue_Scenario(Executor exec)
       _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::FILE, empty_patient_data));
     }
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
-    std::cout << "Skipping " << exec.Name() << "\n\t -- This launcher does not currently support inline patient definitions\n";
     exec.Patient(scenario->InitialParameters()->Patient().get().Name());
 
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::INLINE, scenario->InitialParameters()->Patient().get()));
