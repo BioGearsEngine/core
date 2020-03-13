@@ -427,7 +427,7 @@ bool Config::process(Tokenizer&& tokens)
           valid_state &= false;
         }
       } else {
-        std::cerr << "Error: @" << tokenItr->value << "not a valid expression only @group is.\n";
+        std::cerr << "Error: @" << tokenItr->value << " not a valid expression only @group is.\n";
         valid_state &= false;
       }
     } else if (token == "driver") {
@@ -571,7 +571,7 @@ bool handle_driver_definition(Tokenizer::token_list::iterator& tokenItr, Tokeniz
         driver_name = next->value;
         current_mode = ParseMode::PARENT;
       } else {
-        std::cerr << "Error: Keyword Driver must be followed by a vaklid ID \n";
+        std::cerr << "Error: Keyword Driver must be followed by a valid ID \n";
         return false;
       }
     } else if (current_mode == ParseMode::PARENT) {
@@ -588,7 +588,7 @@ bool handle_driver_definition(Tokenizer::token_list::iterator& tokenItr, Tokeniz
               if (next->value == "{") {
                 current_mode = ParseMode::OPTIONS;
               } else {
-                std::cerr << "Error: Driver  " << driver_name << ": " << next->value << "must be followed by valid option block"
+                std::cerr << "Error: Driver  " << driver_name << ": " << next->value << " must be followed by valid option block"
                           << next->value << " found instead\n";
                 return false;
               }

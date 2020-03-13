@@ -67,7 +67,7 @@ void Driver::queue(const Config& runs)
       queue_Scenario(exec);
       break;
     default:
-      std::cerr << "Unsupported Driver type " << exec.Driver() << "please update your biogears libraries ";
+      std::cerr << "Unsupported Driver type " << exec.Driver() << " please update your biogears libraries ";
       break;
     }
   }
@@ -270,7 +270,7 @@ void Driver::queue_Scenario(Executor exec)
 
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::INLINE, scenario->InitialParameters()->Patient().get()));
   } else {
-    std::cout << "Skipping " << exec.Name() << " no patient specificed.\n";
+    std::cout << "Skipping " << exec.Name() << " no patient specified.\n";
     return;
   }
 }
