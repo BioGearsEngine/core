@@ -16,7 +16,7 @@ This project is a command line implementation of BioGears for processing Scenari
 
 **GENSEPSIS**: Generate stabilized sepsis states at various levels of infection and progression.
 
-**VERIFY**: Run Verification.config.
+**VERIFY**: Run VerificationScenarios.config.
 
 **VERSION**: Print out version string.
 
