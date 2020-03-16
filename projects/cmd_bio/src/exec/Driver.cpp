@@ -156,7 +156,7 @@ void Driver::queue_Scenario(Executor exec)
     auto split_patient_path = split(trimed_patient_path, '/');
     auto patient_no_extension = split(split_patient_path.back(), '.').front();
 
-    //NOTE: This looses non relative prefixes as the split will eat the leading path_seperator
+    //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
     std::string parent_dir;
     for (auto dir = split_scenario_path.begin(); dir != split_scenario_path.end(); ++dir) {
       if (dir + 1 != split_scenario_path.end()) {
@@ -237,10 +237,10 @@ void Driver::queue_Scenario(Executor exec)
     std::cout << e;
     return;
   }
-  // The Biogears Schema states that ScenarioData supports the following booot strap tags
+  // The Biogears Schema states that ScenarioData supports the following boot strap tags
   // 1. EngineStateFile -- Overrides PatientFile and Patient tag and skips initialization using the state file
   // 2. PatientFile -- External file which will be read in with a patient definition
-  // 3. Patient -- Inline Patient definition simaler to PatientFile
+  // 3. Patient -- Inline Patient definition similar to PatientFile
   // Currently only Patient File is supported by this function
   // TODO: Test for EngineState file and call an appropriate launcher
   // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
