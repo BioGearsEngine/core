@@ -44,6 +44,7 @@ void print_help() {
                                 "[GENTABLES html|md|xml|web|all]\n\n";
 
     std::cout << "Flags: \n";
+    std::cout << "v : Print Version\n";
     std::cout << "j : Thread control -j N\n";
     std::cout << "h : Print this message\n";
     std::cout << std::endl;
@@ -58,7 +59,7 @@ void print_help() {
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "H","HELP","GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "VERSION" } //Options
+    { "H","HELP","GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" } //Options
     ,
     { "J", "THREADS" } //Keywords
     ,
@@ -76,10 +77,11 @@ int main(int argc, char** argv)
     print_help();
   }
 
-  if (args.Option("VERSION")) {
+  if (args.Option("VERSION") || args.Option("V") ) {
     std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
     exit(0);
   }
+
   if (args.KeywordFound("THREADS")) {
     try {
       thread_count = std::stoi(args.Keyword("THREADS"));
