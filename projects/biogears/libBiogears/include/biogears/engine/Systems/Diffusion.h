@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 
 #include <Eigen/Core>
 
+#include <memory>
+
 namespace biogears {
 class MassUnit;
 class BioGears;
