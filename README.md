@@ -193,6 +193,8 @@ Contributing
 -------------
 Details will be filled in shortly. In the meantime if you have a contribution or issue to post/push feel free to contact abaird@ara.com with the details. 
 
+You can access our public slack through our [development website](https://www.biogears.dev/).
+
 Additional Documentation
 --------------------------
 For more detailed documentation including model discussions and implementation details can be found at www.BioGearsEngine.com
