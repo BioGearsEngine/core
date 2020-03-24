@@ -11,10 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <memory>
+
+#include <Eigen/Core>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <Eigen/Core>
 
 namespace biogears {
 class MassUnit;
