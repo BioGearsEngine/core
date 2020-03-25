@@ -1,11 +1,11 @@
 Overview
 ==========
 
-BioGears® source code is hosted here and will be developed through this public repository to encourage community facing development. In addition we also support official stable releases. Our latest deployment (found under releases) is still in a beta phase, and is intended to be an intermediate release to showcase the capabilities of the BioGears® Physiology Engine. The current version of the software includes examples of all types of engine interfaces, but does not include all of the functionality or physiologic systems that will be present in the final product. This version of the software is meant to elicit feedback and enhance community involvement in establishing end product expectations.
+BioGears® source code is hosted here and will be developed through this public repository to encourage community facing development. In addition, we also support official stable releases. Our latest deployment (found under releases) is still in a beta phase, and is intended to be an intermediate release to showcase the capabilities of the BioGears® Physiology Engine. The current version of the software includes examples of all types of engine interfaces, but does not include all of the functionality or physiologic systems that will be present in the final product. This version of the software is meant to elicit feedback and enhance community involvement in establishing end product expectations.
 
 What is BioGears®
 ------------------
-BioGears®  is a C++ based, open source, multi-platform (Windows, Mac, and Linux), comprehensive human physiology engine that will drive medical education, research, and training technologies. BioGears enables accurate and consistent physiology simulation across the medical community. The engine can be used as a standalone application or integrated with simulators, sensor interfaces, and models of all fidelities.
+BioGears® is a C++ based, open source, multi-platform (Windows, Mac, and Linux), comprehensive human physiology engine that will drive medical education, research, and training technologies. BioGears enables accurate and consistent physiology simulation across the medical community. The engine can be used as a standalone application or integrated with simulators, sensor interfaces, and models of all fidelities.
 
 BioGears high-level objectives
 --------------------------------
@@ -17,27 +17,27 @@ BioGears high-level objectives
 
 Building Source
 ======
-Refer to our github wiki for build requirments [here](https://github.com/BioGearsEngine/core/wiki)
+Refer to our GitHub Wiki for build requirments [here](https://github.com/BioGearsEngine/core/wiki)
 
 
 Structure 
 ------------
 The BioGears source is structured as follows:
-- cmake/ - Custom CMake scripts needed by the biuld system including some JAVA search behavior overrides
-  - common/ - package files for common cmake deps
-  - toolchains/ - Templates for cmake toolchain files
-- share/ - Non source files
-  - astyle/  - Astyle template for formating source (depricated)
-  - data/ - BioGears configuration files for various senarios 
-  - doc/ - BioGears documentation files (doxygen,markdown,...)
-  - etc/ - Other
-  - jar/ - Jar files for BioGears JAVA based components hopefully deprecated soon.
-  - xsd/ - XSD definition files for the Common Data Model.
-- projects/
-  - java/  - JNI utilities for running biogears
-    - biogears/ - Core code for libbiogears 
-  - howto/ - libbiogears SDK examples
-    -  unit/ - Unit test harness used for testing libbiogears components
+- `cmake/` - Custom CMake scripts needed by the build system, including some JAVA search behavior overrides
+  - `common/` - package files for common CMake deps
+  - `toolchains/` - Templates for CMake toolchain files
+- `share/` - Non-source files
+  - `astyle/`  - Astyle template for formating source (deprecated)
+  - `data/` - BioGears configuration files for various scenarios 
+  - `doc/` - BioGears documentation files (doxygen, markdown, ...)
+  - `etc/` - Other
+  - `jar/` - Jar files for BioGears JAVA based components hopefully deprecated soon
+  - `xsd/` - XSD definition files for the Common Data Model
+- `projects/`
+  - `java/`  - JNI utilities for running biogears
+    - `biogears/` - Core code for libbiogears
+  - `howto/` - libbiogears SDK examples
+    -  `unit/` - Unit test harness used for testing libbiogears components
 
 ## What's new in ver 7.3 (January 30, 2020)
 - Custom Compound Infusion 
@@ -53,9 +53,9 @@ The BioGears source is structured as follows:
 - **New drug:** Tranexamic Acid
   - Validated for use in a hemorrhage scenario to decrease bleed rates 
 - Propofol validation and bug fixes
-- Expansion of the cerebral circuit to a larger more complex system
-  - Added cerebral autoregulation, hemorrhage, and updated TBI model
-- **New drugs:** Moxifloxacin and Ertapenem (intravenous and intra-arterial)
+- Expansion of the cerebral circuit to a larger, more complex system
+  - Added cerebral auto-regulation, hemorrhage, and updated TBI model
+- **New drugs:** Moxifloxacin and Ertapenem (intra-venous and intra-arterial)
   - Used in sepsis model, validated for treatment guidelines
 - Validation updates to Fentanyl drug
   - Updated tissue volumes, updated perfusion limited diffusion method, and updates to PK values  
@@ -69,7 +69,7 @@ The BioGears source is structured as follows:
   - May be used in sepsis scenarios for management of infection 
   - New future tylenol drug for moderate pain management 
 - python plotter util updates to batch plot csv files generated by BioGears
-- New complex How-to files covering burn and sepsis for developers use 
+- New complex How-to files covering burn and sepsis, for developers use
 - Modifications to SE classes to support Unreal Engine integration
 - Updated website generation and layout
 - Patient blood type added as patient parameter
@@ -98,9 +98,9 @@ The BioGears source is structured as follows:
   - User defined total body surface area input 
   - Inflammation cascade validated for long running scenarios (24 hr +)
   - Validated for traditional treatment protocols with USISR SMEs
-- New unit testing framework (Google Test) to better support multiplatform functionality 
+- New unit testing framework (Google Test) to better support multi-platform functionality 
   - Unit Test harness is a separate project in CMAKE which can be controlled with Biogears_BUILD_TEST variable
-- Introduced const char* DLL interfaces for all functions dealing with std::string to avoid windows related issues dealing with XSD implicitly exporting string through inheritance
+- Introduced const char* DLL interfaces for all functions dealing with std::string to avoid Windows-related issues dealing with XSD implicitly exporting string through inheritance
 - Updated functionality to tension pneumothorax to fix bug in bilateral behavior 
 - Updated hemorrhage bugs to update blood gas levels and metabolic requirements 
   - Validated with University of Washington
@@ -134,8 +134,8 @@ The BioGears source is structured as follows:
 - Update build process to be entirely supported by CMAKE
   - Removed Apache Ant dependency 
   - Updated build directory and runtime directory dependencies
-- Full build support for arm platforms 
- - Updates to source to support all major platforms: mac, win, linux, and Arm 
+- Full build support for ARM platforms 
+ - Updates to source to support all major platforms: Mac, Windows, Linux, and ARM
 - Updated build architecture to python buildbot libraries 
   - 8 concurrent nightly builds to ensure multi-platform support
 - Setup mirroring onto our new github repository 
@@ -168,7 +168,7 @@ The BioGears source is structured as follows:
 
 Programmatics
 ===============
-BioGears was originally developed under the TATRC funded project: W81XWH-13-2-0068.
+BioGears was originally developed under the TATRC funded project: W81XWH-13-2-0068  
 BioGears development is currently funded under the following contracts:
   - W81XWH-17-C-0172
   - W911NF-17-D-0006
@@ -177,9 +177,9 @@ BioGears development is currently funded under the following contracts:
 Disclaimer:
 
 This work is supported by the US Army Medical Research and Materiel Command. The views, opinions and/or findings contained in this report are those of the author(s) and should not be construed as an official Department of the Army position, policy, or decision unless so designated by other documentation.
-BioGears is released under the Apache 2.0 liscense.
+BioGears is released under the Apache 2.0 License.
 
-BioGears has Publications papers and abstracts on several systems and clinical scenarios.
+BioGears has Publication papers and abstracts on several systems and clinical scenarios.
 
 Additional Information
 ======================
@@ -191,9 +191,9 @@ We support the [contributor covenant](https://github.com/BioGearsEngine/Engine/b
 
 Contributing 
 -------------
-Details will be filled in shortly. In the meantime if you have a contribution or issue to post/push feel free to contact abaird@ara.com with the details. 
+Details will be filled in shortly. In the meantime, if you have a contribution or issue to post/push feel free to contact abaird@ara.com with the details. 
 
-You can access our public slack through our [development website](https://www.biogears.dev/).
+You can access our public Slack through our [development website](https://www.biogears.dev/).
 
 Additional Documentation
 --------------------------
