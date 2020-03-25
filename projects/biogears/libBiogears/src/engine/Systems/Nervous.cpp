@@ -356,7 +356,7 @@ void Nervous::CheckPainStimulus()
   double patientSusceptability = m_Patient->GetPainSusceptibility().GetValue();
   double susceptabilityMapping = GeneralMath::LinearInterpolator(-1.0, 1.0, 0.0, 2.0, patientSusceptability); //mapping [-1,1] -> [0, 2] for scaling the pain stimulus
   double severity = 0.0;
-  double decayRate_per_s = 0.0;
+  double halfLife_s = 0.0;
   double painVASMapping = 0.0; //for each location map the [0,1] severity to the [0,10] VAS scale
   double tempPainVAS = 0.0; //sum, scale and store the patient score
   double CNSPainBuffer = 1.0;
@@ -385,9 +385,10 @@ void Nervous::CheckPainStimulus()
   for (auto pain : pains) {
     p = pain.second;
     severity = p->GetSeverity().GetValue();
-    decayRate_per_s = p->GetDecayRate().GetValue(FrequencyUnit::Per_s);
-    severity = severity - (decayRate_per_s * m_painStimulusDuration_s);
-    LLIM(severity, 0.0);
+    if (p->HasHalfLife()) {
+      halfLife_s = p->GetHalfLife().GetValue(TimeUnit::s);
+      severity = severity * (std::pow(0.5, (m_painStimulusDuration_s / halfLife_s)));
+    }
     painVASMapping = 10.0 * severity;
 
     tempPainVAS += (painVASMapping * susceptabilityMapping * CNSPainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
@@ -395,8 +396,9 @@ void Nervous::CheckPainStimulus()
 
   //advance time over the duration of the stimulus
 
-  if (severity < ZERO_APPROX)
+  if (severity < ZERO_APPROX) {
     m_painVASDuration_s += m_dt_s;
+  }
 
   m_painStimulusDuration_s += m_dt_s;
 

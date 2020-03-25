@@ -15,7 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+
 
 namespace biogears {
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {
@@ -41,8 +42,8 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
-  virtual bool HasDecayRate() const;
-  virtual SEScalarFrequency& GetDecayRate();
+  virtual bool HasHalfLife() const;
+  virtual SEScalarTime& GetHalfLife();
 
   virtual bool HasLocation() const;
   virtual const char* GetLocation_cStr() const;
@@ -54,7 +55,7 @@ public:
 
 protected:
   SEScalar0To1* m_Severity;
-  SEScalarFrequency* m_DecayRate = 0;
+  SEScalarTime* m_HalfLife;
   std::string m_Location;
 };
 }

@@ -17,7 +17,7 @@ SEPainStimulus::SEPainStimulus()
   : SEPatientAction()
 {
   m_Severity = nullptr;
-  m_DecayRate = 0; //default value unless user specified
+  m_HalfLife = nullptr;
   m_Location = "";
 }
 //-----------------------------------------------------------------------------
@@ -31,7 +31,7 @@ void SEPainStimulus::Clear()
 
   SEPatientAction::Clear();
   SAFE_DELETE(m_Severity);
-  SAFE_DELETE(m_DecayRate);
+  SAFE_DELETE(m_HalfLife);
   m_Location.clear();
 }
 //-----------------------------------------------------------------------------
@@ -49,10 +49,10 @@ bool SEPainStimulus::Load(const CDM::PainStimulusData& in)
 {
   SEPatientAction::Load(in);
   GetSeverity().Load(in.Severity());
-  if (in.DecayRate().present()) {
-    GetDecayRate().Load(in.DecayRate().get());
+  if (in.HalfLife().present()) {
+    GetHalfLife().Load(in.HalfLife().get());
   } else {
-    GetDecayRate().SetValue(0.0, FrequencyUnit::Per_s);
+    GetHalfLife().Invalidate();
   }
   m_Location = in.Location();
   return true;
@@ -70,8 +70,8 @@ void SEPainStimulus::Unload(CDM::PainStimulusData& data) const
   SEPatientAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-  if (HasDecayRate())
-    data.DecayRate(std::unique_ptr<CDM::ScalarFrequencyData>(m_DecayRate->Unload()));
+  if (HasHalfLife())
+    data.HalfLife(std::unique_ptr<CDM::ScalarTimeData>(m_HalfLife->Unload()));
   if (HasLocation())
     data.Location(m_Location);
 }
@@ -88,16 +88,16 @@ SEScalar0To1& SEPainStimulus::GetSeverity()
   return *m_Severity;
 }
 //-----------------------------------------------------------------------------
-bool SEPainStimulus::HasDecayRate() const
+bool SEPainStimulus::HasHalfLife() const
 {
-  return m_DecayRate == nullptr ? false : m_DecayRate->IsValid();
+  return m_HalfLife == nullptr ? false : m_HalfLife->IsValid();
 }
 //-----------------------------------------------------------------------------
-SEScalarFrequency& SEPainStimulus::GetDecayRate()
+SEScalarTime& SEPainStimulus::GetHalfLife()
 {
-  if (m_DecayRate == nullptr)
-    m_DecayRate = new SEScalarFrequency();
-  return *m_DecayRate;
+  if (m_HalfLife == nullptr)
+    m_HalfLife = new SEScalarTime();
+  return *m_HalfLife;
 }
 //-----------------------------------------------------------------------------
 std::string SEPainStimulus::GetLocation() const
@@ -143,8 +143,8 @@ void SEPainStimulus::ToString(std::ostream& str) const
     str << *m_Severity;
     str << "\n\tLocation: ";
     HasLocation() ? str << GetLocation() : str << "No Location Set";
-    if (m_DecayRate->GetValue() > 0.0) {
-      str << "\n\tPain Decay Rate: " << m_DecayRate;
+    if (HasHalfLife()) {
+      str << "\n\tHalfLife: " << m_HalfLife;
     }
     str << std::flush;
   }
