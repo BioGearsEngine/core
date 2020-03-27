@@ -34,10 +34,24 @@ The BioGears source is structured as follows:
   - `jar/` - Jar files for BioGears JAVA based components hopefully deprecated soon
   - `xsd/` - XSD definition files for the Common Data Model
 - `projects/`
-  - `java/`  - JNI utilities for running biogears
-    - `biogears/` - Core code for libbiogears
+  - `biogears` - Main Engine Source for building libbiogears libbiogears-cdm
+  - `biogears-common` - Helper framework for c++ with no third party dependeincies
+  - `cmd_bio`  - Primary Command Line Utility for using BioGears 
   - `howto/` - libbiogears SDK examples
-    -  `unit/` - Unit test harness used for testing libbiogears components
+  - `java/`  - JNI utilities for running biogears
+  - `unit/`  - Unit test harness used for testing libbiogears components
+  - `zip/`   - Self hosted copy of https://github.com/nmoinvaz/minizip. A cmd_bio third part dep
+  
+biogears
+biogears-common
+circuit_profiler
+cmd_bio
+howto
+java
+scenario_driver
+test_driver
+unit
+zip
 
 ## What's new in ver 7.3 (January 30, 2020)
 - Custom Compound Infusion 
