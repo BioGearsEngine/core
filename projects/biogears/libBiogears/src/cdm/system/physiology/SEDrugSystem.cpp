@@ -524,10 +524,12 @@ Tree<const char*> SEDrugSystem::GetPhysiologyRequestGraph() const
 {
   return Tree<const char*>{ classname() }
     .emplace_back(idBronchodilationLevel)
+    .emplace_back(idFeverChange)
     .emplace_back(idHeartRateChange)
     .emplace_back(idHemorrhageChange)
     .emplace_back(idMeanBloodPressureChange)
     .emplace_back(idNeuromuscularBlockLevel)
+    .emplace_back(idPainToleranceChange)
     .emplace_back(idPulsePressureChange)
     .emplace_back(idRespirationRateChange)
     .emplace_back(idSedationLevel)
