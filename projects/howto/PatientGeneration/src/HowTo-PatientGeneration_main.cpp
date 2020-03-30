@@ -25,8 +25,9 @@ void print_help()
   std::cout << "p : Patient file to be used in trials\n";
   std::cout << "h : Print this message\n";
   std::cout << "\n\n";
-  std::cout << "INPUTS = [severity, mic_g_Per_l,  apply_at_m,  application_interval_m]\n";
-  std::cout << "severity = {0=Low, 1=Moderate, 2=Severe}\n";
+  std::cout << "INPUTS = [severity, plan,  mic_g_Per_l,  apply_at_m,  application_interval_m]\n";
+  std::cout << "severity = {None, Low, Moderate, Severe}\n";
+  std::cout << "plan = {None, Standard, Refresh, EGDT, Random}\n";
   std::cout << "mic_g_Per_l = Minimal Inhibitory Concentration for the infections substance\n";
   std::cout << "apply_at_m = n number of minutes till the first application of antibiotics\n";
   std::cout << "application_interval_m = N Number of minutes following an antibiotic application until it is reapplied\n";
@@ -242,19 +243,20 @@ int main(int argc, char** argv)
       for (auto& params : trials) {
         if (params.size() >= 4) {
           try {
-            int severity = std::stoi(params[0]);
-            double mic = std::stod(params[1]);
-            double apply_at = std::stod(params[2]);
-            double application_interval = std::stod(params[3]);
+            std::string severity = params[0];
+            std::string plan = params[1];
+            double mic = std::stod(params[2]);
+            double apply_at = std::stod(params[3]);
+            double application_interval = std::stod(params[4]);
 
-            double duration = (params.size() > 4) ? std::stod(params[4])
+            double duration = (params.size() > 4) ? std::stod(params[5])
                                                   : trial_duration;
-            auto patient = (params.size() > 5) ? params[5]
+            auto patient = (params.size() > 5) ? params[6]
                                                : trial_patient;
 
             auto patientFile = biogears::filesystem::path(patient);
             std::string name = ss.str();
-            channel->insert([=]() { return HowToPatientGeneration(patientFile.filename().str(), severity, mic, apply_at, application_interval, patient, duration); });
+            channel->insert([=]() { return HowToPatientGeneration(patientFile.filename().str(), severity, plan, mic, apply_at, application_interval, patient, duration); });
           } catch (std::exception) {
             std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << printVector(params) << "invalid double conversion.\n";
             exit(1);
@@ -287,16 +289,17 @@ int main(int argc, char** argv)
       auto params = biogears::string_split(trial, ",");
       if (params.size() >= 4) {
         try {
-          int severity = std::stoi(params[0]);
-          double mic = std::stod(params[1]);
-          double apply_at = std::stod(params[2]);
-          double application_interval = std::stod(params[3]);
-          double duration = (params.size() > 4) ? std::stod(params[4])
+          std::string severity = params[0];
+          std::string plan = params[1];
+          double mic = std::stod(params[2]);
+          double apply_at = std::stod(params[3]);
+          double application_interval = std::stod(params[4]);
+
+          double duration = (params.size() > 4) ? std::stod(params[5])
                                                 : trial_duration;
-          auto patient = (params.size() > 5) ? params[5]
-                                             : trial_patient;
-          auto patientFile = biogears::filesystem::path(patient);
-          channel->insert([=]() { return HowToPatientGeneration(patientFile.filename().str(), severity, mic, apply_at, application_interval, patient, duration); });
+          auto patient = (params.size() > 5) ? params[6]
+                                              : trial_patient;
+          channel->insert([=]() { return HowToPatientGeneration(patient.filename().str(), severity, plan, mic, apply_at, application_interval, patient, duration); });
         } catch (std::exception) {
           std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << trial << "invalid double conversion.\n";
           exit(1);
