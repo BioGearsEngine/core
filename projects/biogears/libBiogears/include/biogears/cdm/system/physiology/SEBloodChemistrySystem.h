@@ -21,6 +21,8 @@ class SEScalar;
 class SEScalar0To1;
 class SEScalarMass;
 class MassUnit;
+class SEScalarTime;
+class TimeUnit;
 class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
 class SEScalarHeatCapacitancePerMass;
@@ -476,6 +478,10 @@ public:
   CDM::enumOnOff GetActiveTLR() { return m_ActiveTLR; };
   void SetActiveTLR(CDM::enumOnOff value) { m_ActiveTLR = value; };
 
+  bool HasAutonomicResponseLevel() const;
+  SEScalar& GetAutonomicResponseLevel();
+  double GetAutonomicResponseLevel() const;
+
   bool HasCatecholamines() const;
   SEScalar& GetCatecholamines();
   double GetCatecholamines() const;
@@ -544,6 +550,10 @@ public:
   SEScalar& GetTumorNecrosisFactor();
   double GetTumorNecrosisFactor() const;
 
+  bool HasInflammationTime() const;
+  SEScalarTime& GetInflammationTime();
+  double GetInflammationTime(const TimeUnit& unit) const;
+
   bool HasInflammationSources() const;
   std::vector<CDM::enumInflammationSource>& GetInflammationSources();
   bool HasInflammationSource(CDM::enumInflammationSource::value src);
@@ -556,6 +566,7 @@ protected:
   SEScalar* m_LocalNeutrophil;
   SEScalar* m_LocalBarrier;
   CDM::enumOnOff::value m_ActiveTLR;
+  SEScalar* m_AutonomicResponseLevel;
   SEScalar* m_Catecholamines;
   SEScalar* m_ConstitutiveNOS;
   SEScalar* m_InducibleNOSPre;
@@ -573,6 +584,7 @@ protected:
   SEScalar0To1* m_TissueIntegrity;
   SEScalar* m_Trauma;
   SEScalar* m_TumorNecrosisFactor;
+  SEScalarTime* m_InflammationTime;
   std::vector<CDM::enumInflammationSource> m_InflammationSources;
 };
 }

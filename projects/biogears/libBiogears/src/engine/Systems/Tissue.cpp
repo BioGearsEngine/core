@@ -1762,9 +1762,9 @@ void Tissue::CalculateTissueFluidFluxes()
   }
 
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
+    double resistanceModifier = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
       SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
-      double resistanceModifier = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
       if (t->GetName() != BGE::TissueCompartment::Brain) {
         res->GetNextResistance().SetValue(res->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * resistanceModifier, FlowResistanceUnit::mmHg_min_Per_mL);
       }

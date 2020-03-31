@@ -988,12 +988,19 @@ void Respiratory::ProcessDriverActions()
   double painVAS = 0.1 * m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
   double painModifier = 1.0 + 0.75 * (painVAS / (painVAS + 0.2));
 
-  //Process infection effects--this won't lead to large change until infection tends towards sepsis
+  //Process inflammation effects--separate modifiers since different time scales are involved
   double infectionModifier = 0.0;
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+  double hemorrhageModifier = 0.0;
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
+    auto& inflammation = m_data.GetBloodChemistry().GetInflammatoryResponse();
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
     double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
-    infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.5);
+    if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Infection)) {  
+      infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.5);
+    }
+    if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
+      hemorrhageModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.3);
+    }
   }
 
   //Apply tidal volume modifiers by adjusting the peak driver pressure
@@ -1013,6 +1020,7 @@ void Respiratory::ProcessDriverActions()
   double maximumVentilationFrequency_Per_min = m_data.GetConfiguration().GetPulmonaryVentilationRateMaximum(VolumePerTimeUnit::L_Per_min) / (m_Patient->GetVitalCapacity(VolumeUnit::L) / 2.0);
 
   m_VentilationFrequency_Per_min += infectionModifier;
+  m_VentilationFrequency_Per_min += hemorrhageModifier;
   m_VentilationFrequency_Per_min *= painModifier;
   m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
   m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
@@ -1666,7 +1674,7 @@ void Respiratory::CalculateVitalSigns()
   // minute is a typical upper limit, so dTimeTol = 1 / (60 *4) = 0.004167 minutes.
   double dTimeTol = 0.004167;
   m_ElapsedBreathingCycleTime_min += m_dt_min;
- 
+
   if (m_BreathingCycle && ((GetTotalLungVolume(VolumeUnit::L) - m_PreviousTotalLungVolume_L) > ZERO_APPROX)
       && (m_ElapsedBreathingCycleTime_min > dTimeTol)) {
     m_Patient->SetEvent(CDM::enumPatientEvent::StartOfInhale, true, m_data.GetSimulationTime());
@@ -1873,8 +1881,7 @@ void Respiratory::CalculateVitalSigns()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::UpdateObstructiveResistance()
 {
-  if ((!m_PatientActions->HasAsthmaAttack() && !m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) || GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) < 0.0)
-  {
+  if ((!m_PatientActions->HasAsthmaAttack() && !m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) || GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) < 0.0) {
     return;
   }
   double combinedResistanceScalingFactor = 1.0;
@@ -2182,7 +2189,6 @@ void Respiratory::TuneCircuit()
     if (compartment->HasVolume())
       compartment->Balance(BalanceGasBy::VolumeFraction);
   }
-
 }
 
 //--------------------------------------------------------------------------------------------------

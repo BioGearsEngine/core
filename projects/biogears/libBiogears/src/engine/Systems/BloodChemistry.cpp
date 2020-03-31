@@ -1048,6 +1048,12 @@ void BloodChemistry::InflammatoryResponse()
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
     }
   }
+  if (m_data.GetActions().GetPatientActions().HasHemorrhage()) {
+    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Hemorrhage) == sources.end()) {
+      m_InflammatoryResponse->GetAutonomicResponseLevel().SetValue(1.0); 
+      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Hemorrhage);
+    }
+  }
 
   //Perform this check after looking for inflammatory actions (otherwise we'll never process)
   if (!m_InflammatoryResponse->HasInflammationSources()) {
@@ -1055,7 +1061,7 @@ void BloodChemistry::InflammatoryResponse()
   }
 
   //------------------Previous State--------------------------------------
-  double PT = 0.0, MT = 0.0, NT = 0.0, B = 0.0, PB = 0.0, MR = 0.0, MA = 0.0, NR = 0.0, NA = 0.0, ER = 0.0, EA = 0.0, eNOS = 0.0, iNOSd = 0.0, iNOS = 0.0, NO3 = 0.0, NO = 0.0, I6 = 0.0, I10 = 0.0, I12 = 0.0, TNF = 0.0, TI = 0.0, TR = 0.0, R = 0.0;
+  double PT = 0.0, MT = 0.0, NT = 0.0, B = 0.0, PB = 0.0, MR = 0.0, MA = 0.0, NR = 0.0, NA = 0.0, ER = 0.0, EA = 0.0, eNOS = 0.0, iNOSd = 0.0, iNOS = 0.0, NO3 = 0.0, NO = 0.0, I6 = 0.0, I10 = 0.0, I12 = 0.0, TNF = 0.0, TI = 0.0, TR = 0.0, R = 0.0, A = 0.0, CA = 0.0, iTime = 0.0;
   PT = m_InflammatoryResponse->GetLocalPathogen().GetValue(); //Local tissue pathogen
   MT = m_InflammatoryResponse->GetLocalMacrophage().GetValue(); //Local tissue macrophages
   NT = m_InflammatoryResponse->GetLocalNeutrophil().GetValue(); //Local tissue neutrophil
@@ -1075,8 +1081,11 @@ void BloodChemistry::InflammatoryResponse()
   I10 = m_InflammatoryResponse->GetInterleukin10().GetValue(); //Blood interleukin-10
   I12 = m_InflammatoryResponse->GetInterleukin12().GetValue(); //Blood interleukin-12
   TNF = m_InflammatoryResponse->GetTumorNecrosisFactor().GetValue(); //Blood tumor-necrosis factor
+  CA = m_InflammatoryResponse->GetCatecholamines().GetValue();
+  A = m_InflammatoryResponse->GetAutonomicResponseLevel().GetValue();
   TI = m_InflammatoryResponse->GetTissueIntegrity().GetValue(); //Global tissue integrity
   TR = m_InflammatoryResponse->GetTrauma().GetValue(); //Trauma
+  iTime = m_InflammatoryResponse->GetInflammationTime(TimeUnit::hr);
 
   //------------------------------Model Parameters-----------------------------
   //Time
@@ -1110,6 +1119,8 @@ void BloodChemistry::InflammatoryResponse()
   double xPS = 1.3e4; //Saturation of background immune response
   //Trauma decay
   double kTr = 0.0; //Base value--will be adjusted during burn/hemorrhage (see below)
+  //Volume and blood pressure effect
+  double fB = 0.0;        //0 except during hemorrhage
   //Macrophage interaction
   double kML = 1.01e2, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 37.5, xMD = 0.75, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
   //Activate macrophage interactions
@@ -1132,8 +1143,10 @@ void BloodChemistry::InflammatoryResponse()
   double kCA = 0.1, kCATR = 0.16;
   //IL12
   double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
+  //Autonomic response
+  double kAuto = 0.0;   //Base value--will be adjusted during burn/hemorrhage (see below)
   //Damage
-  double kD6 = 0.125, kD = 0.15, xD6 = 0.85, xDNO = 0.5, hD6 = 6.0;
+  double kD6 = 0.125, kD = 0.15, kDB = 1.0, xD6 = 0.85, xDNO = 0.5, hD6 = 6.0;
   double kDTR = 0.0; //This is a base value that will be adjusted as a function of type and severity of trauma
   double tiMin = 0.2; //Minimum tissue integrity allowed
 
@@ -1152,10 +1165,21 @@ void BloodChemistry::InflammatoryResponse()
   if (PB > ZERO_APPROX) {
     ManageSIRS();
   }
+  if (m_InflammatoryResponse->HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
+    double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
+    volumeEffect = std::min(volumeEffect, 1.0);
+    if (volumeEffect < 1.0) {
+      fB = std::pow(1.0 - volumeEffect, 2.0) / (std::pow(0.25, 2.0) + std::pow(1.0 - volumeEffect, 2.0));
+    }
+    kTr = 2.5;
+    kDTR = 0.0;
+    kD = 0.5;
+    kAuto = -2.0 * iTime / 1.35;
+  }
 
   //---------------------State equations----------------------------------------------
   //Differential containers
-  double dPT = 0.0, dMT = 0.0, dNT = 0.0, dBT = 0.0, dPB = 0.0, dMR = 0.0, dMA = 0.0, dNR = 0.0, dNA = 0.0, dER = 0.0, dEA = 0.0, dENOS = 0.0, dINOSd = 0.0, dINOS = 0.0, dNO3 = 0.0, dI6 = 0.0, dI10 = 0.0, dI12 = 0.0, dTNF = 0.0, dTI = 0.0, dTR = 0.0, dB = 0.0;
+  double dPT = 0.0, dMT = 0.0, dNT = 0.0, dBT = 0.0, dPB = 0.0, dMR = 0.0, dMA = 0.0, dNR = 0.0, dNA = 0.0, dER = 0.0, dEA = 0.0, dENOS = 0.0, dINOSd = 0.0, dINOS = 0.0, dNO3 = 0.0, dI6 = 0.0, dI10 = 0.0, dI12 = 0.0, dTNF = 0.0, dTI = 0.0, dTR = 0.0, dB = 0.0, dCA = 0.0, dA = 0.0;
   //TLR state depends on the last TLR state and the tissue pathogen populaton
   if (PT > pUpper) {
     R = 1.0; //TLR always active if pathogen above max threshold
@@ -1182,10 +1206,10 @@ void BloodChemistry::InflammatoryResponse()
   dB = kapB / (1.0 + epsBP * R) * B * (1.0 - B) - psiBP * R * B - psiBN * NT * B;
   dPB = (kapP - antibacterialEffect) * PB + thetaP * PT / (1.0 + epsPB * B) - kPS * PB / (xPS + PB) - kPN * NA * GeneralMath::HillActivation(PB, xPN, 2.0);
   dTR = -kTr * TR; //This is assumed to be the driving force for burn
-  dMR = -((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
-  dMA = ((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
-  dNR = -(kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
-  dNA = (kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNA * NA;
+  dMR = -((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR + kMB * fB) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
+  dMA = ((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR + kMB * fB) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
+  dNR = -(kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR + kNB * fB) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
+  dNA = (kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR + kNB * fB) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNA * NA;
   dINOS = kINOS * (iNOSd - iNOS);
   dINOSd = (kINOSN * NA + kINOSM * MA + kINOSEC * (std::pow(xINOSTNF, 2.0) * GeneralMath::HillActivation(TNF, xINOSTNF, 2.0) + kINOS6 * std::pow(xINOS6, 2.0) * GeneralMath::HillActivation(I6, xINOS6, 2.0))) * GeneralMath::HillInhibition(I10, xINOS10, 2.0) * GeneralMath::HillInhibition(NO, xINOSNO, 4.0) - kINOSd * iNOSd;
   dENOS = kENOSEC * GeneralMath::HillInhibition(TNF, xENOSTNF, 1.0) * GeneralMath::HillInhibition(PB, xENOSL, 1.0) * GeneralMath::HillInhibition(TR, xENOSTR, 4.0) - kENOS * eNOS;
@@ -1194,7 +1218,9 @@ void BloodChemistry::InflammatoryResponse()
   dI6 = (k6N * NA + MA) * (k6M + k6TNF * GeneralMath::HillActivation(TNF, x6TNF, 2.0) + k6NO * GeneralMath::HillActivation(NO, x6NO, 2.0)) * GeneralMath::HillInhibition(I10, x610, 2.0) * GeneralMath::HillInhibition(I6, x66, h66) + k6 * (s6 - I6);
   dI10 = (k10N * NA + MA) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(I6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(I12, x1012, 4.0) + k10R) - k10 * (I10 - s10);
   dI12 = k12M * MA * GeneralMath::HillInhibition(I10, x1210, 2.0) - k12 * I12;
-  dTI = kD * (1.0 - TI) * (TI - tiMin) * TI - (TI - tiMin) * (kD6 * GeneralMath::HillActivation(I6, xD6, hD6) + kDTR * TR) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
+  dCA = kCATR * A - kCA * CA;
+  dA = kAuto * A;
+  dTI = kD * (1.0 - TI) * (TI - tiMin) * TI - (TI - tiMin) * (kDB * fB + kD6 * GeneralMath::HillActivation(I6, xD6, hD6) + kDTR * TR) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
 
   //------------------------Update State-----------------------------------------------
   m_InflammatoryResponse->GetLocalPathogen().IncrementValue(dPT * dt_hr * scale);
@@ -1215,10 +1241,13 @@ void BloodChemistry::InflammatoryResponse()
   m_InflammatoryResponse->GetInterleukin6().IncrementValue(dI6 * dt_hr * scale);
   m_InflammatoryResponse->GetInterleukin10().IncrementValue(dI10 * dt_hr * scale);
   m_InflammatoryResponse->GetInterleukin12().IncrementValue(dI12 * dt_hr * scale);
+  m_InflammatoryResponse->GetCatecholamines().IncrementValue(dCA * dt_hr * scale);
+  m_InflammatoryResponse->GetAutonomicResponseLevel().IncrementValue(dA * dt_hr * scale);
   m_InflammatoryResponse->GetTissueIntegrity().IncrementValue(dTI * dt_hr * scale);
   NO = iNOS * (1.0 + kNOMA * (m_InflammatoryResponse->GetMacrophageActive().GetValue() + m_InflammatoryResponse->GetNeutrophilActive().GetValue())) + eNOS; //Algebraic relationship, not differential
   m_InflammatoryResponse->GetNitricOxide().SetValue(NO);
   m_InflammatoryResponse->SetActiveTLR(TLR);
+  m_InflammatoryResponse->GetInflammationTime().IncrementValue(dt_hr, TimeUnit::hr);
 
   //------------------------Check to see if infection-induced inflammation has resolved sufficient to eliminate action-----------------------
   //Note that even though we remove the infection, we leave the inflammation source active.  This is because we want the inflammation markers
