@@ -255,8 +255,12 @@ int main(int argc, char** argv)
                                                : trial_patient;
 
             auto patientFile = biogears::filesystem::path(patient);
-            std::string name = ss.str();
-            channel->insert([=]() { return HowToPatientGeneration(patientFile.filename().str(), severity, plan, mic, apply_at, application_interval, patient, duration); });
+
+            PatientRun trial;
+            trial.patient_name(patient).patient_state(patientFile).infection_severity(severity).treatment_plan(plan);
+            trial.mic_g_Per_l(mic).apply_at_m(apply_at).apply_at_m(application_interval).duration_hr(duration);
+            channel->insert([=]() mutable { return trial.run(); });
+
           } catch (std::exception) {
             std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << printVector(params) << "invalid double conversion.\n";
             exit(1);
@@ -298,8 +302,16 @@ int main(int argc, char** argv)
           double duration = (params.size() > 4) ? std::stod(params[5])
                                                 : trial_duration;
           auto patient = (params.size() > 5) ? params[6]
-                                              : trial_patient;
-          channel->insert([=]() { return HowToPatientGeneration(patient.filename().str(), severity, plan, mic, apply_at, application_interval, patient, duration); });
+                                             : trial_patient;
+
+          auto patientFile = biogears::filesystem::path(patient);
+          PatientRun trial;
+
+          trial.patient_name(patient).patient_state(patient).infection_severity(severity).treatment_plan(plan);
+          trial.mic_g_Per_l(mic).apply_at_m(apply_at).apply_at_m(application_interval).duration_hr(duration);
+
+          channel->insert([=]() { return trial.run(); });
+
         } catch (std::exception) {
           std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << trial << "invalid double conversion.\n";
           exit(1);
