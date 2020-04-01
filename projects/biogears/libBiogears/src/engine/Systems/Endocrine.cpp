@@ -310,7 +310,8 @@ void Endocrine::ReleaseEpinephrine()
     double severity = s->GetSeverity().GetValue();
 
     //The highest stress multiplier we currently support is 30
-    releaseMultiplier += GeneralMath::LinearInterpolator(0, 1, 0, 30, severity);
+    releaseMultiplier += GeneralMath::LinearInterpolator(0, 1, 0, 40.0, severity);
+    //releaseMultiplier += GeneralMath::LogisticFunction(35.0, 0.25, 0.5, severity);
   }
 
   // If we have a pain response, release more epi

@@ -995,7 +995,7 @@ void Respiratory::ProcessDriverActions()
     auto& inflammation = m_data.GetBloodChemistry().GetInflammatoryResponse();
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
     double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
-    if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Infection)) {  
+    if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.5);
     }
     if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
@@ -1771,6 +1771,7 @@ void Respiratory::CalculateVitalSigns()
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
     GetTotalAlveolarVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
     GetTotalPulmonaryVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
+    GetTidalVolume().SetValue(0.0, VolumeUnit::mL);
   }
 
   /// \todo Move to blood chemistry
